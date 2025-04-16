@@ -32,7 +32,7 @@ const Response = ({ useWindowState = false }) => {
           if (draftFile) {
             Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: draftFile?.filestoreId, customName: `${state?.responseId}_Draft` });
           } else {
-            setShowToast({ label: t("No file with templateIdentifier 'DraftComplete' found"), type: "error" });
+            setShowToast({ label: t("NO_DRAFT_FILE_FOUND"), type: "error" });
           }
         }
       }

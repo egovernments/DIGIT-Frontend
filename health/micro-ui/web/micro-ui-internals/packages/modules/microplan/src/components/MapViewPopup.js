@@ -29,20 +29,26 @@ const ViewElement = ({ type, label }) => {
     switch (type) {
       case "Village":
         return (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" fill="#C2C80E" stroke="#D6D5D4" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="27" height="39" viewBox="0 0 27 39" fill="none">
             <path
-              d="M5 18V10.5L9.5 6L14 10.5V18H10.25V14.25H8.75V18H5ZM8.75 12.75H10.25V11.25H8.75V12.75ZM15.5 18V9.88125L11.6188 6H13.7375L17 9.2625V18H15.5ZM18.5 18V8.64375L15.8563 6H17.975L20 8.025V18H18.5Z"
+              d="M13.5 0C6.05571 0 0 6.123 0 13.65C0 23.8875 13.5 39 13.5 39C13.5 39 27 23.8875 27 13.65C27 6.123 20.9443 0 13.5 0Z"
+              fill="#C2C80E"
+            />
+            <path
+              d="M5 20V11.25L10.4 6L15.8 11.25V20H11.3V15.625H9.5V20H5ZM9.5 13.875H11.3V12.125H9.5V13.875ZM17.6 20V10.5281L12.9425 6H15.485L19.4 9.80625V20H17.6ZM21.2 20V9.08437L18.0275 6H20.57L23 8.3625V20H21.2Z"
               fill="white"
             />
           </svg>
         );
       case "Facility":
         return (
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-            <rect x="0.5" y="0.5" width="23" height="23" rx="3.5" fill="#C84C0E" stroke="#D6D5D4" />
+          <svg xmlns="http://www.w3.org/2000/svg" width="27" height="39" viewBox="0 0 27 39" fill="none">
             <path
-              d="M5 18V10.5L9.5 6L14 10.5V18H10.25V14.25H8.75V18H5ZM8.75 12.75H10.25V11.25H8.75V12.75ZM15.5 18V9.88125L11.6188 6H13.7375L17 9.2625V18H15.5ZM18.5 18V8.64375L15.8563 6H17.975L20 8.025V18H18.5Z"
+              d="M13.5 0C6.05571 0 0 6.123 0 13.65C0 23.8875 13.5 39 13.5 39C13.5 39 27 23.8875 27 13.65C27 6.123 20.9443 0 13.5 0Z"
+              fill="#C2C80E"
+            />
+            <path
+              d="M5 20V11.25L10.4 6L15.8 11.25V20H11.3V15.625H9.5V20H5ZM9.5 13.875H11.3V12.125H9.5V13.875ZM17.6 20V10.5281L12.9425 6H15.485L19.4 9.80625V20H17.6ZM21.2 20V9.08437L18.0275 6H20.57L23 8.3625V20H21.2Z"
               fill="white"
             />
           </svg>
@@ -142,12 +148,14 @@ const ViewMap = ({ lat, long, type }) => {
       type === "Village"
         ? `
 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="39" viewBox="0 0 27 39" fill="none">
-<path d="M13.5 0C6.05571 0 0 6.123 0 13.65C0 23.8875 13.5 39 13.5 39C13.5 39 27 23.8875 27 13.65C27 6.123 20.9443 0 13.5 0Z" fill="#C84C0E"/>
+<path d="M13.5 0C6.05571 0 0 6.123 0 13.65C0 23.8875 13.5 39 13.5 39C13.5 39 27 23.8875 27 13.65C27 6.123 20.9443 0 13.5 0Z" fill="#C2C80E"/>
+<path d="M5 20V11.25L10.4 6L15.8 11.25V20H11.3V15.625H9.5V20H5ZM9.5 13.875H11.3V12.125H9.5V13.875ZM17.6 20V10.5281L12.9425 6H15.485L19.4 9.80625V20H17.6ZM21.2 20V9.08437L18.0275 6H20.57L23 8.3625V20H21.2Z" fill="white"/>
 </svg>
     `
         : `
 <svg xmlns="http://www.w3.org/2000/svg" width="27" height="39" viewBox="0 0 27 39" fill="none">
-<path d="M13.5 0C6.05571 0 0 6.123 0 13.65C0 23.8875 13.5 39 13.5 39C13.5 39 27 23.8875 27 13.65C27 6.123 20.9443 0 13.5 0Z" fill="#42BBFF"/>
+<path d="M13.5 0C6.05571 0 0 6.123 0 13.65C0 23.8875 13.5 39 13.5 39C13.5 39 27 23.8875 27 13.65C27 6.123 20.9443 0 13.5 0Z" fill="#C2C80E"/>
+<path d="M5 20V11.25L10.4 6L15.8 11.25V20H11.3V15.625H9.5V20H5ZM9.5 13.875H11.3V12.125H9.5V13.875ZM17.6 20V10.5281L12.9425 6H15.485L19.4 9.80625V20H17.6ZM21.2 20V9.08437L18.0275 6H20.57L23 8.3625V20H21.2Z" fill="white"/>
 </svg>
     `,
     iconSize: [40, 40], // Adjust based on your SVG size
@@ -194,9 +202,18 @@ const ViewMap = ({ lat, long, type }) => {
     }
 
     // Create new marker
-    const marker = L.marker([latitude, longitude], { draggable: false, icon: customSVGIcon })
-      .bindPopup(`<b>Location</b><br>Lat: ${latitude}<br>Long: ${longitude}`)
-      .openPopup();
+    const marker = L.marker([latitude, longitude], { draggable: false, icon: customSVGIcon }).bindPopup(
+      `<b>${type}</b><br>Lat: ${latitude}<br>Long: ${longitude}`
+    );
+
+    // Add event listeners for hover effect
+    marker.on("mouseover", function () {
+      marker.openPopup();
+    });
+
+    marker.on("mouseout", function () {
+      marker.closePopup();
+    });
 
     // Add marker to the map
     marker.addTo(mapInstance);
@@ -264,7 +281,7 @@ const ViewMap = ({ lat, long, type }) => {
   );
 };
 
-const MapViewPopup = ({ setShowPopup, type, bounds,heading }) => {
+const MapViewPopup = ({ setShowPopup, type, bounds, heading }) => {
   const { t } = useTranslation();
   return (
     <PopUp
@@ -296,16 +313,14 @@ const MapViewPopup = ({ setShowPopup, type, bounds,heading }) => {
   );
 };
 
-const MapViewPopupWrapper = (
-  {
-    type = "Village",
-    bounds = { latitude: -25.953724, longitude: 32.588711 },
-    buttonLabel = "ViewMap",
-    buttonTitle = "ViewMap",
-    popupHeading = "Village A" 
-    // remove hardcoded default values after implementation
-  }
-) => {
+const MapViewPopupWrapper = ({
+  type = "Village",
+  bounds = { latitude: -25.953724, longitude: 32.588711 },
+  buttonLabel = "ViewMap",
+  buttonTitle = "ViewMap",
+  popupHeading = "Village A",
+  // remove hardcoded default values after implementation
+}) => {
   const [showPopup, setShowPopup] = useState(false);
 
   return (
@@ -318,16 +333,9 @@ const MapViewPopupWrapper = (
         type="button"
         title={buttonTitle}
       />
-      {showPopup && (
-        <MapViewPopup
-          setShowPopup={setShowPopup}
-          type={type}
-          bounds={bounds}
-          heading={popupHeading}
-        />
-      )}
+      {showPopup && <MapViewPopup setShowPopup={setShowPopup} type={type} bounds={bounds} heading={popupHeading} />}
     </>
   );
 };
 
-export default MapViewPopupWrapper;
+export default MapViewPopup;

@@ -1424,8 +1424,11 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
+      const [showMapPopup, setShowMapPopup] = useState(false);
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+      const MapViewPopup = Digit.ComponentRegistryService.getComponent("MapViewPopup");
       const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
+      const [refreshKey, setRefreshKey, clearRefreshKey] = Digit.Hooks.useSessionStorage("FACILITY_POPUP_KEY", 0);
 
       switch (key) {
         case `MICROPLAN_FACILITY_${column?.projectType}_CAPACITY`:
@@ -1436,10 +1439,10 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return <div style={{display:"flex", gap:".5rem"}}>
-          {t(row?.residingBoundary)}
-          <VillageHierarchyTooltipWrapper  boundaryCode={row?.residingBoundary}/>
-        </div>
+          return <div style={{ display: "flex", gap: ".5rem" }}>
+            {t(row?.residingBoundary)}
+            <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
+          </div>
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
@@ -1452,15 +1455,15 @@ export const UICustomizations = {
                 icon="ArrowForward"
                 iconFill=""
                 isSuffix
+                title={t(key)}
                 label={t(key)}
-                onClick={() => setShowPopup(true)}
+                onClick={() => {setShowPopup(true);}}
                 // removed this because due to popup crashing on dev
                 // onClick={() => console.log("temp action")}
                 options={[]}
                 optionsKey=""
                 size="medium"
                 style={{}}
-                title={t(key)}
                 variation="primary"
               />
               {showPopup && (
@@ -1468,7 +1471,38 @@ export const UICustomizations = {
                   detail={row}
                   onClose={() => {
                     setShowPopup(false);
+                    setRefreshKey(prev => prev + 1);
+                    window.dispatchEvent(new Event("refreshKeyUpdated"));
                   }}
+                />
+              )}
+            </>
+          );
+        case "VIEW_ON_MAP":
+          return (
+            <>
+              <ButtonNew
+                className=""
+                icon="MyLocation"
+                iconFill=""
+                isSuffix
+                title={t(key)}
+                label={t(key)}
+                onClick={() => {
+                  setShowMapPopup(true);
+                }}
+                options={[]}
+                optionsKey=""
+                size="medium"
+                style={{}}
+                variation="link"
+              />
+              {showMapPopup && (
+                <MapViewPopup
+                  type={"Facility"}
+                  bounds={{ latitude: row?.additionalDetails?.latitude, longitude: row?.additionalDetails?.longitude }}
+                  heading={row?.facilityName}
+                  setShowPopup={setShowMapPopup}
                 />
               )}
             </>
