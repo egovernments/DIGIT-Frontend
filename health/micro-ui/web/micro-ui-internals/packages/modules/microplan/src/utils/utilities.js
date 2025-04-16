@@ -225,7 +225,9 @@ const formValidator = (formData, key, state, t) => {
   
 
   const newColumnsValidator = () => {
-    const invalidEntries = formData.filter(item => !isValidColumnValue(item));
+    const invalidEntries = Array.isArray(formData)
+  ? formData.filter(item => !isValidColumnValue(item))  // Keep items that are invalid
+  : [];
     if (invalidEntries.length > 0) {
       return { key: "error", label: "ERROR_INVALID_COL_NAME" }
     }
