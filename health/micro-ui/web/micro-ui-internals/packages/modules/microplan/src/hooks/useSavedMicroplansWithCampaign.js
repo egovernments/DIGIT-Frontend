@@ -10,6 +10,7 @@ const useSavedMicroplansWithCampaign = (reqCriteria) => {
 
   // Throttled version of the fetch function
   const throttledFetch = async () => {
+
     const now = Date.now(); // Current timestamp
     const timeSinceLastCall = now - lastCallTimeRef.current;
 
@@ -29,8 +30,8 @@ const useSavedMicroplansWithCampaign = (reqCriteria) => {
     throttledFetch,
     {
       ...config,
-      cacheTime: 0, // Don't cache results
-      staleTime: 0, // Always consider data stale
+      cacheTime: 10000, 
+      staleTime: 10000, 
       onError: (err) =>
         console.error("Error fetching saved microplans:", err),
     }
