@@ -119,8 +119,32 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
     return [];
   }
 
-  function getroledata() {
-    return data?.MdmsRes?.["ACCESSCONTROL-ROLES"]?.roles?.map(role => { return { code: role.code, name: role?.name ? role?.name : " ", labelKey: 'ACCESSCONTROL_ROLES_ROLES_' + role.code } });
+ async function getroledata() {
+    const token = localStorage.getItem("token");
+
+    const response = await fetch("https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/roles", {
+      method: "GET",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json"
+      }
+    });
+  
+    if (!response.ok) {
+      console.error("Failed to fetch roles from Keycloak", response.statusText);
+      return [];
+    }
+  
+    const roles = await response.json();
+
+  
+    return roles.map(role => ({
+      code: role.name,
+      name: role.name,
+      labelKey: role.name,
+      roleId: role.id
+    }));
+    // return data?.MdmsRes?.["ACCESSCONTROL-ROLES"]?.roles?.map(role => { return { code: role.code, name: role?.name ? role?.name : " ", labelKey: 'ACCESSCONTROL_ROLES_ROLES_' + role.code } });
   }
 
   if (isLoading) {
@@ -171,8 +195,16 @@ function Jurisdiction({
 
 
   const [BoundaryType, selectBoundaryType] = useState([]);
+  const [options, setOptions] = useState([]);
   const [Boundary, selectboundary] = useState([]);
   const { data: cities, isCityLoading } = Digit.Hooks.useTenants();
+  useEffect(() => {
+    async function fetchRoles() {
+      const data = await getroledata(roleoption);
+      setOptions(data);
+    }
+    fetchRoles();
+  }, []);
   useEffect(() => {
     selectBoundaryType(
       data?.MdmsRes?.["egov-location"]["TenantBoundary"]
@@ -316,7 +348,7 @@ function Jurisdiction({
               isMandatory={true}
               defaultUnit="Selected"
               selected={jurisdiction?.roles}
-              options={getroledata(roleoption)}
+              options={options}
               onSelect={selectrole}
               optionsKey="labelKey"
               t={t}

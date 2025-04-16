@@ -416,12 +416,37 @@ const Response = () => {
         }),
       });
 
-      if (mapResponse.ok) {
-        setToast({ show: true, message: "User created and mapped successfully!", error: false });
-      } else {
+      if (!mapResponse.ok) {
         const errorData = await mapResponse.json();
         setToast({ show: true, message: errorData?.error || "Failed to map user", error: true });
+        return;
       }
+
+      const roleMappingResponse = await fetch(
+        `https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users/${foundUser.id}/role-mappings/realm`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body: JSON.stringify(state?.roles || []),
+        }
+      );
+  
+      if (roleMappingResponse.ok) {
+        setToast({ show: true, message: "User created, mapped, and role assigned successfully!", error: false });
+      } else {
+        const errorData = await roleMappingResponse.json();
+        setToast({ show: true, message: errorData?.error || "Role mapping failed", error: true });
+      }
+
+      // if (mapResponse.ok) {
+      //   setToast({ show: true, message: "User created and mapped successfully!", error: false });
+      // } else {
+      //   const errorData = await mapResponse.json();
+      //   setToast({ show: true, message: errorData?.error || "Failed to map user", error: true });
+      // }
     } catch (error) {
       setToast({ show: true, message: "An error occurred during user creation", error: true });
     }

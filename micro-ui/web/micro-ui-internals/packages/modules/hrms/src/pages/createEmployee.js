@@ -139,8 +139,8 @@ const CreateEmployee = () => {
     }
   };
 
-  const navigateToAcknowledgement = ({ id, message, email,name}) => {
-    history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message,email,name, showID: true, showChildren: false });
+  const navigateToAcknowledgement = ({ id, message,roles, email,name}) => {
+    history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message,roles,email,name, showID: true, showChildren: false });
   };
 
 
@@ -177,6 +177,7 @@ const CreateEmployee = () => {
       return;
     }
     let roles = data?.Jurisdictions?.map((ele) => {
+      console.log("croles",ele);
       return ele.roles?.map((item) => {
         if(isMultiRootTenant){
           item["tenantId"] = tenantId;
@@ -189,6 +190,7 @@ const CreateEmployee = () => {
     });
 
     const mappedroles = [].concat.apply([], roles);
+    console.log("mapped",mappedroles);
     let Employees = [
       {
         tenantId: tenantId,
@@ -235,8 +237,12 @@ const CreateEmployee = () => {
                 });
               },
               onSuccess: async (data) => {
-                const ema =  data?.Employees?.[0]?.user.emailId
-                navigateToAcknowledgement({ id: data?.Employees?.[0]?.uuid,email: data?.Employees?.[0]?.user?.emailId,name: data?.Employees?.[0]?.user?.name, message: "Employee created successfullly add username and password for user setup" });
+                console.log("navigate2",mappedroles);
+                const formattedRoles = mappedroles.map(({ name, roleId }) => ({
+                  name,
+                  id: roleId,
+                }));
+                navigateToAcknowledgement({ id: data?.Employees?.[0]?.uuid, roles: formattedRoles,email: data?.Employees?.[0]?.user?.emailId,name: data?.Employees?.[0]?.user?.name, message: "Employee created successfullly add username and password for user setup" });
               },
             }
           );
@@ -256,7 +262,7 @@ const CreateEmployee = () => {
             });
           },
           onSuccess: async (data) => {
-            const ema =  data?.Employees?.[0]?.user.emailId
+            console.log("navigate2",mappedroles);
             navigateToAcknowledgement({ id: data?.Employees?.[0]?.code,email: data?.Employees?.[0]?.user?.emailId, message: "HRMS_CREATE_EMPLOYEE_RESPONSE_MESSAGE" });
             // navigateToAcknowledgement(Employees);
           },
