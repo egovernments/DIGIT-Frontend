@@ -33,7 +33,7 @@ const ProductsPageComponent = ({detailsConfig}) => {
             <Button
               className="explore-button"
               variation="secondary"
-              label={t("COMMON_EXPLORE") + " →"}
+              label={`${t("COMMON_EXPLORE")} →`}
               onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
             />
           </Card>

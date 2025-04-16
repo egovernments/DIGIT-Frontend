@@ -50,7 +50,7 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
     {
       path: searchParams.get("module") ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
       content: t(`APPLICATON_MODULE_CRUMB_${searchParams.get("module")}`),
-      show: searchParams.get("module") ? true : false,
+      show: !!searchParams.get("module"),
     },
   ];
 
