@@ -81,6 +81,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   const [windowWidth, setWindowWidth] = React.useState(window.innerWidth);
   const [errors, setErrors] = React.useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
 
   const mapConfigToRegExp = (config) => {
     return (
@@ -454,7 +455,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
             style={{ marginTop: "0rem", marginBottom: "1.5rem" }}
             crumbs={[
               {
-                internalLink: `/${window?.contextPath}/employee`,
+                internalLink: isMultiRootTenant ? `/${window?.contextPath}/employee/sandbox/landing` : `/${window?.contextPath}/employee`,
                 content: t("ES_COMMON_HOME"),
                 show: true,
               },
