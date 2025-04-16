@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-hrms",
-  "version": "1.8.11",
+  "version": "1.8.12",
   "description": "HRMS",
   "license": "MIT",
   "main": "dist/index.js",
@@ -25,5 +25,13 @@
     "rooks": "^4.4.0"
   },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
-  "keywords": ["digit","egov","dpg","digit-ui","hrms","employee","management"]
+  "keywords": [
+    "digit",
+    "egov",
+    "dpg",
+    "digit-ui",
+    "hrms",
+    "employee",
+    "management"
+  ]
 }
