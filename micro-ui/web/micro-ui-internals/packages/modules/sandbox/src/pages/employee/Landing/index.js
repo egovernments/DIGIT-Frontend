@@ -17,7 +17,7 @@ const Landing = () => {
       },
     }
   );
-  if(isLoading) return <Loader variant={"PageLoader"} />;
+  if (isLoading) return <Loader variant="PageLoader" />;
   return (
     <LandingComponent config={sandboxConfig} />
   );
