@@ -6,38 +6,13 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS);
-  const [dates, setDates] = useState({
-    startDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || today,
-    endDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || today,
-  });
-  const [startDate, setStartDate] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate); // Set default start date to today
-  const [endDate, setEndDate] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate); // Default end date
+  const [startDate, setStartDate] = useState(today); // Set default start date to today
+  const [endDate, setEndDate] = useState(); // Default end date
   const [executionCount, setExecutionCount] = useState(0);
   const [error, setError] = useState(null);
   const [startValidation, setStartValidation] = useState(null);
   const searchParams = new URLSearchParams(location.search);
 
-
-  useEffect(() => {
-    setDates({
-      startDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate,
-      endDate: props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate,
-    });
-    setStartDate(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate);
-    setEndDate(props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate);
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_DATE?.campaignDates]);
-
-  useEffect(() => {
-    if (props?.props?.isSubmitting && !endDate && !startDate) {
-      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY", endDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else if (props?.props?.isSubmitting && !startDate) {
-      setError({ startDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else if (props?.props?.isSubmitting && !endDate) {
-      setError({ endDate: "CAMPAIGN_FIELD_MANDATORY" });
-    } else if (!props?.props?.isSubmitting) {
-      setError(null);
-    }
-  }, [props?.props?.isSubmitting]);
   useEffect(() => {
     if (!startDate && startValidation) {
       setError({ startDate: "CAMPAIGN_START_DATE_ERROR" });

@@ -2,9 +2,10 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
-import { Stepper, Toast, Button, Footer, Loader , FormComposerV2 } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer, Loader , FormComposerV2} from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
+import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -13,7 +14,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
   const [loader, setLoader] = useState(null);
-  const [defaultFormValues, setDefaultFormValues] = useState({});
   const searchParams = new URLSearchParams(location.search);
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -53,12 +53,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       .filter((config) => config.form.length > 0);
   };
 
-  useEffect(() => {
-    if (params && Object.keys(params).length > 0) {
-      setDefaultFormValues(params); // this will trigger re-render
-    }
-  }, [params]);
-
   const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
 
   useEffect(() => {
@@ -78,42 +72,36 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
-  const  handleValidate = (formData) => {
-    const key = Object.keys(formData)?.[0];
-    switch (key) {
-      case "DateSelection":
-        const startDateObj = new Date(formData?.DateSelection?.startDate);
-        const endDateObj = new Date(formData?.DateSelection?.endDate);
-        if (!formData?.DateSelection?.startDate || !formData?.DateSelection?.endDate) {
-          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_DATE_MISSING")}` });
-          return false;
-        } else if (endDateObj.getTime() === startDateObj.getTime()) {
-          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_EQUAL_START_DATE")}` });
-          return false;
-        } else if (endDateObj.getTime() < startDateObj) {
-          setShowToast({ key: "error", label: `${t("HCM_CAMPAIGN_END_DATE_BEFORE_START_DATE")}` });
-          return false;
-        } else {
-          setShowToast(null);
-          return true;
-        }
-      default:
-        break;
-    }
-  };
-
   const onSubmit = async (formData) => {
-    const validDates = handleValidate(formData);
-    if (validDates === false) {
+    const projectType = formData?.CampaignType?.code;
+
+    const validDates = handleCreateValidate(formData);
+    if (validDates?.label) {
+      setShowToast({ key: "error", label: t(validDates.label) });
       return;
     }
-
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     setTotalFormData((prevData) => ({
       ...prevData,
       [name]: formData,
     }));
-    setParams({ ...params, ...formData });
+
+    if (typeof params?.CampaignName === "object" || !params?.CampaignName) {
+      const formattedDate = new Date()
+        .toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+        })
+        .replace(/ /g, "_")
+        .toLowerCase();
+
+      const campaignName = `${projectType}_${formattedDate}`;
+
+      setParams({ ...params, CampaignName: campaignName });
+    } else {
+      setParams({ ...params, ...formData });
+    }
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
       setCurrentKey(currentKey + 1);
@@ -149,17 +137,16 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
     const key = parseInt(filteredSteps[0].key);
     const name = filteredSteps?.[0]?.name;
-   if (Object.keys(totalFormData).includes(name)) {
-      setCurrentKey(step+1);
-    }
-    else return ;
+    if (Object.keys(totalFormData).includes(name)) {
+      setCurrentKey(step + 1);
+    } else return;
   };
   return (
     <React.Fragment>
       {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
       <Stepper
         customSteps={["HCM_CAMPAIGN_TYPE_DETAILS", "HCM_CAMPAIGN_NAME_DETAILS", "HCM_CAMPAIGN_DATE_DETAILS"]}
-        currentStep={currentKey }
+        currentStep={currentKey}
         onStepClick={onStepperClick}
         activeSteps={currentKey}
       />
@@ -171,7 +158,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
           };
         })}
         onSubmit={onSubmit}
-      defaultValues = {params}
+        defaultValues={params}
         showSecondaryLabel={currentKey > 1 ? true : false}
         secondaryLabel={t("HCM_BACK")}
         actionClassName={"actionBarClass"}
@@ -192,6 +179,5 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     </React.Fragment>
   );
 };
-
 
 export default CreateCampaign;
