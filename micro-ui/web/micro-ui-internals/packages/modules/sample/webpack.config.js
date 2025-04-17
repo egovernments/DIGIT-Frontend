@@ -1,5 +1,4 @@
 const path = require("path");
-const webpack = require("webpack");
 
 module.exports = {
   mode: "development",
@@ -8,7 +7,7 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
     library: {
-      name: "@egovernments/digit-ui-module-workbench",
+      name: "@egovernments/digit-ui-module-sample",
       type: "umd",
     },
     globalObject: 'this', // Add this line to ensure compatibility in different environments
@@ -30,14 +29,13 @@ module.exports = {
       root: 'ReactDOM',
     },
     'react-i18next': 'react-i18next',
-    'react-router-dom': 'react-router-dom',
-    "@tanstack/react-query": "@tanstack/react-query"
+    'react-router-dom': 'react-router-dom'
   },
   module: {
     rules: [
       {
         test: /\.js$/,
-        //exclude: /node_modules/,
+        exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
@@ -46,18 +44,5 @@ module.exports = {
         },
       },
     ],
-  },
-  plugins: [
-    new webpack.ProvidePlugin({
-      process: "process/browser",
-    }),
-    // new CleanWebpackPlugin(),
-    // new BundleAnalyzerPlugin(),
-    // new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
-  ],
-  resolve: {
-    fallback: {
-      process: require.resolve("process/browser"),
-    },
   },
 };

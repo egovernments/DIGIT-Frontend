@@ -20,6 +20,7 @@ import { initWorkbenchComponents } from "../../workbench/src/Module";
 // import {Hooks} from "@egovernments/digit-ui-libraries"
 // import Hooks from "../../../libraries/src/hooks";
 import { initI18n } from "@egovernments/digit-ui-libraries";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
@@ -35,7 +36,8 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   const data=getStore(initData) || {};
   const i18n = getI18n();
   initWorkbenchComponents();
-  if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
+  initSampleComponents();
+    if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
   return (
