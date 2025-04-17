@@ -1,5 +1,3 @@
-import React from "react";
-
 export const handleCreateValidate = (formData) => {
   const key = Object.keys(formData)?.[0];
 

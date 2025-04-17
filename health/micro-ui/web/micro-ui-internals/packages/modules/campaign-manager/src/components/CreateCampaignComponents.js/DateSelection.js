@@ -11,7 +11,6 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [error, setError] = useState(null);
   const [startValidation, setStartValidation] = useState(null);
-  const searchParams = new URLSearchParams(location.search);
 
   useEffect(() => {
     if (!startDate && startValidation) {
