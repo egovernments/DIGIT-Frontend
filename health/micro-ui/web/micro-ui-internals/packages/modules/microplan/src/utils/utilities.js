@@ -212,27 +212,39 @@ const formValidator = (formData, key, state, t) => {
     return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" };
   }
 
-  function isValidColumnValue(val) {
-    // Allow empty string
-    if (val === "") return true;
-
-    // Allow letters, numbers, and spaces only
+  const newColumnsValidator = (formData) => {
+    // Return null if formData is not an array
+    if (!Array.isArray(formData)) return null;
+  
+    // Regex: allow letters, numbers, and spaces only
     const noSpecialCharsExceptSpace = /^[A-Za-z0-9 ]+$/;
 
-    return noSpecialCharsExceptSpace.test(val);
-  }
+    const seen = new Set(); // To track unique non-empty values
+    // Loop through each value
+    for (let val of formData) {
+      // Allow empty strings
+      if (val === "") continue;
+  
+      // Check length first
+      if (val.length > 200) {
+        return { key: "error", label: "COLUMN_NAME_TOO_LONG" };
+      }
+  
+      // Check allowed characters
+      if (!noSpecialCharsExceptSpace.test(val)) {
+        return { key: "error", label: "ERROR_INVALID_COL_NAME" };
+      }
+      if (seen.has(val.trim())) {
 
-
-
-  const newColumnsValidator = () => {
-    const invalidEntries = Array.isArray(formData)
-      ? formData.filter(item => !isValidColumnValue(item))  // Keep items that are invalid
-      : [];
-    if (invalidEntries.length > 0) {
-      return { key: "error", label: "ERROR_INVALID_COL_NAME" }
+        return { key: "error", label: "DUPLICATE_COLUMN_NAME" };
+      }
+      seen.add(val.trim());
     }
+  
+    // If all values are valid
     return null;
   };
+  
 
   //here we'll validate formData based on the config
   switch (key) {
