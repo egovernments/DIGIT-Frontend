@@ -66,7 +66,8 @@ const AddColumnsWrapper = ({ formData, onSelect, props: customProps }) => {
             onSelect(customProps.name, colValues.map((item) => (item.value)));
             setExecutionCount((prevCount) => prevCount + 1);
         }
-    },[colValues]);
+    });
+
     return (
         <div>
             <AddColContext.Provider value={{ addNewCol, deleteCol, setColValues, setColumnsToDelete, setShowDeletePopup }}>
