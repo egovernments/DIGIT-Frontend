@@ -132,7 +132,6 @@ const FacilityCatchmentMapping = () => {
     config: {
         enabled: true,
         select: (data) => {
-          console.log("data",data);
           return data?.ProcessInstances;
       },
     },
@@ -206,7 +205,6 @@ const FacilityCatchmentMapping = () => {
     
   }});
 
-  console.log("planObject",planObject,data)
  
 
 
