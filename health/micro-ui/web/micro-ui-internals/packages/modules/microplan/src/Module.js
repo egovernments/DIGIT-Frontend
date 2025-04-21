@@ -1,5 +1,5 @@
 import { Loader } from "@egovernments/digit-ui-react-components";
-import React,{useState} from "react";
+import React,{useState,useEffect,useMemo} from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import MicroplanCard from "./components/MicroplanCard";
@@ -40,23 +40,41 @@ import AddColumns from "./components/AddColumns";
 import AddColumnsWrapper from "./components/AddColumnsWrapper";
 import MapViewPopup from "./components/MapViewPopup";
 
-export const MicroplanModule = ({ stateCode, userType, tenants }) => {
+export const MicroplanModule = React.memo(({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = useMemo(() => Digit.ULBService.getCurrentTenantId(), []);
   const [lowestHierarchy,setLowestHierarchy] = useState("") 
-  const { data: BOUNDARY_HIERARCHY_TYPE } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "HierarchySchema" }], {
+  const { data: BOUNDARY_HIERARCHY_TYPE_DATA } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-ADMIN-CONSOLE", [{ name: "HierarchySchema" }], {
     select: (data) => {
-      const item = data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema?.find(
+      return data?.["HCM-ADMIN-CONSOLE"]?.HierarchySchema?.find(
         (item) => item.type === "microplan"
       );
-       setLowestHierarchy(item.lowestHierarchy)
-        return item?.hierarchy
-      },
+    },
   },{schemaCode:"BASE_MASTER_DATA_INITIAL"});
 
-  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({BOUNDARY_HIERARCHY_TYPE,tenantId});
+  const BOUNDARY_HIERARCHY_TYPE = BOUNDARY_HIERARCHY_TYPE_DATA?.hierarchy;
+  useEffect(() => {
+    if (BOUNDARY_HIERARCHY_TYPE_DATA?.lowestHierarchy) {
+      setLowestHierarchy(BOUNDARY_HIERARCHY_TYPE_DATA.lowestHierarchy);
+    }
+  }, [BOUNDARY_HIERARCHY_TYPE_DATA]);
+  
+  const relationshipParams = useMemo(() => ({
+    BOUNDARY_HIERARCHY_TYPE,
+    tenantId,
+  }), [BOUNDARY_HIERARCHY_TYPE, tenantId]);
 
-  const moduleCode = ["Microplanning","campaignmanager", "workbench", "mdms", "schema", "hcm-admin-schemas"];
+  const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch(relationshipParams);
+
+  const moduleCode = useMemo(() => [
+    "Microplanning",
+    "campaignmanager",
+    "workbench",
+    "mdms",
+    "schema",
+    "hcm-admin-schemas"
+  ], []);
+
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading: isBoundaryLocalisationLoading, data: boundaryStore } = Digit.Services.useStore({
     stateCode,
@@ -78,7 +96,7 @@ export const MicroplanModule = ({ stateCode, userType, tenants }) => {
       <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} hierarchyData={hierarchyData} BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} lowestHierarchy={lowestHierarchy}/>
     </ProviderContext>
   );
-};
+});
 
 const componentsToRegister = {
   MicroplanModule,
