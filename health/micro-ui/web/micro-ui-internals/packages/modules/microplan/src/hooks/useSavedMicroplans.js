@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 const useSavedMicroplans = (reqCriteria) => {
   const { body, config, params, state, url } = reqCriteria;
+  const { tabId = undefined} = Digit.Hooks.useQueryParams();
 
   const lastCallTimeRef = useRef(0); // Keeps track of last call time between renders
 
@@ -22,8 +23,8 @@ const useSavedMicroplans = (reqCriteria) => {
   };
 
   const { isLoading, data, isFetching, refetch } = useQuery(
-    ["SAVED_MICROPLANS", url],
-    throttledFetch,
+    ["SAVED_MICROPLANS", url,tabId],
+    ()=>throttledFetch(),
     {
       ...config,
       cacheTime: 10000,
