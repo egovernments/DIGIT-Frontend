@@ -813,6 +813,8 @@ import { UserManagementSvg } from "./svg/UserManagementSvg";
 import { OpenMicroplanSvg } from "./svg/OpenMicroplanSvg";
 import { SetUpMicroplanSvg } from "./svg/SetUpMicroplanSvg";
 import { AddCircle } from "./svg/AddCircle";
+import { GlobeLocationPin } from "./svg/GlobeLocationPin";
+import { NewWindow } from "./svg/NewWindow";
 
 export {
   AddCircle,
@@ -1629,5 +1631,7 @@ export {
   Warehouse,
   ContractIcon,
   HRIcon,
-  MeasurementMuktaIcon
+  MeasurementMuktaIcon,
+  GlobeLocationPin,
+  NewWindow
 };
