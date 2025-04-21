@@ -98,7 +98,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
       const campaignName = `${projectType}_${formattedDate}`;
 
-      setParams({ ...params, CampaignName: campaignName });
+      setParams({ ...params, ...formData ,CampaignName: campaignName });
     } else {
       setParams({ ...params, ...formData });
     }
