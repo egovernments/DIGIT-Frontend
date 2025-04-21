@@ -110,7 +110,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   //Generic mutation to handle creation and updation of resources(plan/project)
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
 
-  const throttledUpdateResources = useThrottle(updateResources,2000)
+  const throttledUpdateResources = useThrottle(updateResources,250)
 
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
@@ -186,11 +186,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setTotalFormData(params);
   }, [params]);
 
-  const handleUpdates = async (propsForMutate) => {
+  const handleUpdates =(propsForMutate) => {
     setLoader(true);
-    if(propsForMutate?.config?.name==="NEW_COLUMNS"){
-      await new Promise(resolve => setTimeout(resolve, 2000));   //The useThrottle in throttledUpdateResources makes one call every 2 secs
-    }
     throttledUpdateResources(propsForMutate, {
       onSuccess: (data) => {
         // Check if there is a redirectTo property in the response
