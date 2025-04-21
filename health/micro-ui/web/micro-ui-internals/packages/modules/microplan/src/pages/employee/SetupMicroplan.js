@@ -186,8 +186,11 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setTotalFormData(params);
   }, [params]);
 
-  const handleUpdates = (propsForMutate) => {
+  const handleUpdates = async (propsForMutate) => {
     setLoader(true);
+    if(propsForMutate?.config?.name==="NEW_COLUMNS"){
+      await new Promise(resolve => setTimeout(resolve, 2000));
+    }
     throttledUpdateResources(propsForMutate, {
       onSuccess: (data) => {
         // Check if there is a redirectTo property in the response
