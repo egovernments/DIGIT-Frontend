@@ -189,7 +189,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const handleUpdates = async (propsForMutate) => {
     setLoader(true);
     if(propsForMutate?.config?.name==="NEW_COLUMNS"){
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise(resolve => setTimeout(resolve, 2000));   //The useThrottle in throttledUpdateResources makes one call every 2 secs
     }
     throttledUpdateResources(propsForMutate, {
       onSuccess: (data) => {
