@@ -13,6 +13,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
+  const [initialLoading, setInitialLoading] = useState(true);
   const [campaignType, setCampaignType] = useState(campaignTypeSession);
   const [disease, setDisease] = useState(
     diseaseSession
@@ -22,6 +23,13 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
       }
   );
   const [distributionStrat, setDistributionStrat] = useState(distributionStratSession);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setInitialLoading(false);
+    }, 4000); // 4 seconds
+  
+    return () => clearTimeout(timer); // Cleanup if unmounted
+  }, []);
   useEffect(() => {
     setCampaignType(campaignTypeSession);
     setDisease(diseaseSession ? diseaseSession : { code: "MALARIA" });
@@ -78,7 +86,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     }
   });
 
-  if (isLoading) {
+  if (initialLoading || isLoading) {
     return <Loader />;
   }
 
