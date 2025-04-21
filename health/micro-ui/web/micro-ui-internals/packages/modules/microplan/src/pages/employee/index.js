@@ -1,6 +1,6 @@
 import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import BreadCrumbNew from "./BreadCrumbNew";
-import React, { useEffect } from "react";
+import React, { useEffect,useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Switch, useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
@@ -87,10 +87,13 @@ const ProjectBreadCrumb = ({ location }) => {
   return <BreadCrumbNew crumbs={crumbs} />;
 };
 
-const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {
+const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData, lowestHierarchy : lowestHierarchy1 }) => {
   const { dispatch } = useMyContext();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const BOUNDARY_HIERARCHY_TYPE = useMemo(() => BoundaryHierarchy, [BoundaryHierarchy]);
+  const hierarchyData = useMemo(() => propsHierarchyData, [propsHierarchyData]);
+  const lowestHierarchy = useMemo(() => lowestHierarchy1, [lowestHierarchy1]);
   //destroying session
   useEffect(() => {
     const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
