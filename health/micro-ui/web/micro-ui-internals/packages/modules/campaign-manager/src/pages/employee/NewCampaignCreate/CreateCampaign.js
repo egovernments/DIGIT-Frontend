@@ -89,7 +89,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     if (typeof params?.CampaignName === "object" || !params?.CampaignName) {
       const formattedDate = new Date()
         .toLocaleDateString("en-GB", {
-          day: "2-digit",
           month: "long",
           year: "numeric",
         })
@@ -122,7 +121,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         {
           onSuccess: async (result) => {
             setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
-            history.push(`/${window.contextPath}/employee/campaign/view-details`);
+            history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`);
           },
           onError: (error, result) => {
             const errorCode = error?.response?.data?.Errors?.[0]?.code;

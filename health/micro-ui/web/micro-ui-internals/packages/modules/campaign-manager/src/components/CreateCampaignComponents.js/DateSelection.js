@@ -7,10 +7,17 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS);
-  const [startDate, setStartDate] = useState(today); // Set default start date to today
-  const [endDate, setEndDate] = useState(); // Default end date
+  const [startDate, setStartDate] = useState(formData?.DateSelection?.startDate); // Set default start date to today
+  const [endDate, setEndDate] = useState(formData?.DateSelection?.endDate); // Default end date
   const [error, setError] = useState(null);
   const [startValidation, setStartValidation] = useState(null);
+
+  useEffect(() => {
+    if (formData?.DateSelection) {
+      setStartDate(formData.DateSelection.startDate);
+      setEndDate(formData.DateSelection.endDate);
+    }
+  }, [formData]);
 
   useEffect(() => {
     if (startDate || endDate) {

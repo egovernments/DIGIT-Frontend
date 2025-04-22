@@ -210,5 +210,9 @@ header {
   margin: 0rem;
 }
 .digit-description{
-  display: none;
+  display: contents;
+}
+.create-campaign-disable{
+  opacity: .5;
+  background: #c5c5c5 !important;
 }

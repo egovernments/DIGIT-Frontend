@@ -57,6 +57,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const actionBar = searchParams.get("actionBar");
   const source = searchParams.get("source");
   const microplanName = searchParams.get("microName");
+  const campaignNumber = searchParams.get("campaignNumber");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -544,7 +545,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
 
   const onSubmit = async (formData, cc) => {
     if(isSubmit){
-      history.push(`/${window.contextPath}/employee/campaign/view-details`);
+      history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
       return ;
     }
     setIsSubmitting(true);

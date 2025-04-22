@@ -21,9 +21,10 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink }) => {
             history.push(`/${window.contextPath}/employee/campaign/${navLink}`);
           }}
           variation="primary"
+          style={{ width: '19rem' }}
         />
       </div>
-      <div>{desc}</div>
+      <div className="details-desc">{desc}</div>
     </Card>
   );
 };

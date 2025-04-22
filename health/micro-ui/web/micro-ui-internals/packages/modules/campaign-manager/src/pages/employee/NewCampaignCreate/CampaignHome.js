@@ -11,7 +11,7 @@ const CampaignHome = () => {
 
   return (
     <Card>
-      <HeaderComponent className="header-style">{t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}</HeaderComponent>
+      <HeaderComponent className="campaign-header-style">{t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}</HeaderComponent>
       <p className="name-description">{t(`HCM_CREATE_CAMPAIGN_DESCRIPTION`)}</p>
       <div className={"containerStyle"}>
         <div
