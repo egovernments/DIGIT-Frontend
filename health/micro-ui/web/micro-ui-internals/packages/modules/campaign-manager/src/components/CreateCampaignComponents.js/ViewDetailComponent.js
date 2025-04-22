@@ -1,7 +1,7 @@
 import { Button, Card, HeaderComponent } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { GlobeLocationPin } from "../icons/GlobeLocationPin";
+import { GlobeLocationPin }  from "@egovernments/digit-ui-svg-components";
 import { useHistory } from "react-router-dom";
 
 const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink }) => {

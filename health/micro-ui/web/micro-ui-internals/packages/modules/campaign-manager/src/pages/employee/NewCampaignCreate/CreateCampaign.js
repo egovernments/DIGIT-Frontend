@@ -122,6 +122,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         {
           onSuccess: async (result) => {
             setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+            history.push(`/${window.contextPath}/employee/campaign/view-details`);
           },
           onError: (error, result) => {
             const errorCode = error?.response?.data?.Errors?.[0]?.code;
@@ -163,8 +164,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         secondaryLabel={t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
-        // cardClassName="setup-campaign-card"
-        noCardStyle={false}
+        // cardClassName="create-campaign-card"
+        noCardStyle={currentKey === 3}
         onSecondayActionClick={onSecondayActionClick}
         label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />

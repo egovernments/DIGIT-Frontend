@@ -20,7 +20,7 @@ const CampaignHome = () => {
             // Add functionality for importing existing campaign
           }}
         >
-          <SVG.SystemUpdateAlt />
+          <SVG.SystemUpdateAlt width="40" height="40"/>
           <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
 

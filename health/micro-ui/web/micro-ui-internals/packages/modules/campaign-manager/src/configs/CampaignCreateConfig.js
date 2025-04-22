@@ -6,7 +6,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
           stepCount: "1",
           key: "1",
           name: "HCM_CAMPAIGN_TYPE",
-          head: "HCM_CAMPAIGN_TYPE",
+          head: "HCM_SELECT_CAMPAIGN_TYPE_QUES",
           subHead: "HCM_CAMPAIGN_TYPE_DESC",
           sectionSubHeadClassName : "SubHeadingClass",
           body: [
@@ -32,7 +32,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
           stepCount: "2",
           key: "2",
           name: "HCM_CAMPAIGN_NAME",
-          head: "HCM_CAMPAIGN_NAME",
+          head: "HCM_CAMPAIGN_NAME_QUES",
           subHead: "HCM_CAMPAIGN_NAME_DESC",
           sectionSubHeadClassName : "SubHeadingClass",
           body: [

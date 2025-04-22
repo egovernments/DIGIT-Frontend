@@ -38,9 +38,9 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
   }, [startDate, endDate]);
 
   return (
-    <div style={{ paddingTop: "0rem" }}>
+    <Card>
       <HeaderComponent className={"date-header"}>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
-      <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESCRIPTION`)}</p>
+      <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
         <div className="campaign-dates">
           <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
@@ -83,7 +83,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
           />
         </div>
       </LabelFieldPair>
-    </div>
+    </Card>
   );
 };
 
