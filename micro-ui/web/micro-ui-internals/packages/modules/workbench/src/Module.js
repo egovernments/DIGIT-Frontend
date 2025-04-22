@@ -11,7 +11,7 @@ import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
 import LevelCards from "./components/LevelCards";
 import { Loader } from "@egovernments/digit-ui-components";
-import { useStore } from "../../../libraries/src/services";
+// import { useStore } from "../../../libraries/src/services";
 
 import * as parsingUtils from "../src/utils/ParsingUtils"
 
@@ -25,7 +25,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   // const queryClient  = new QueryClient();
   console.log("I'm digit from wb", Digit)
   Digit.Services = window.Digit.Services;
-  const { isLoading, data: store } = useStore({
+  const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
