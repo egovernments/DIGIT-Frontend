@@ -346,4 +346,26 @@
   transition: box-shadow 0.3s ease-in-out;
   background-color: #fff;
 }
+.details-heading{
+  display: flex;
+  justify-content: space-between;
+}
+.icon-heading{
+  gap: 1rem;
+  display: flex;
+}
+.detail-header{
+  color: theme(digitv2.lightTheme.primary-2);
+  font-weight: 700;
+  size: 24px;
+}
+.detail-desc{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+.create-campaign-disable{
+  opacity: .5;
+  background: #c5c5c5 !important;
+}
 

@@ -47,6 +47,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
+  const isSubmit = searchParams.get("submit");
   const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
@@ -542,6 +543,10 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   }, [showToast]);
 
   const onSubmit = async (formData, cc) => {
+    if(isSubmit){
+      history.push(`/${window.contextPath}/employee/campaign/view-details`);
+      return ;
+    }
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -1047,6 +1052,8 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
             ? null
             : noAction === "false"
             ? null
+            : isSubmit === true
+            ? t("HCM_NEXT")
             : filteredConfig?.[0]?.form?.[0]?.isLast === true
             ? t("HCM_SUBMIT")
             : t("HCM_NEXT")
