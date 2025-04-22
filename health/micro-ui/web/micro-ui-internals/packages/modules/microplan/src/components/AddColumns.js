@@ -36,7 +36,8 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
             </span>
           </div>
 
-          <div className="fieldv1-deleteIcon-container addColumnsScreen">
+          <div className="fieldv1-deleteIcon-container">
+            <div className="new-columns-screen">
             <FieldV1
               type="text"
               name={`field-${index}`}
@@ -49,6 +50,7 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
                 if (event.key === "Enter") event.preventDefault();
               }}
             />
+            </div>
             <div className="hypothesis-delete-button">
               <Button
                 icon="Delete"
