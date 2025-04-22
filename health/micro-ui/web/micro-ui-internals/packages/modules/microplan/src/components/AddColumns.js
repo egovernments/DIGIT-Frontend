@@ -36,7 +36,7 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
             </span>
           </div>
 
-          <div className="fieldv1-deleteIcon-container">
+          <div className="fieldv1-deleteIcon-container addColumnsScreen">
             <FieldV1
               type="text"
               name={`field-${index}`}
