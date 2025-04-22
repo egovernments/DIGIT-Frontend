@@ -99,6 +99,16 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("CREATE_CAMPAIGN"),
       show: pathVar.match("create-campaign") ? true : false,
     },
+    {
+      path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
+      content: t("CREATE_CAMPAIGN_HOME"),
+      show: pathVar.match("campaign-home") ? true : false,
+    },
+    {
+      path: pathVar === "create-campaign" ? "" : `/${window?.contextPath}/employee/campaign/create-campaign`,
+      content: t("CREATE_CAMPAIGN"),
+      show: pathVar.match("create-campaign") ? true : false,
+    },
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;

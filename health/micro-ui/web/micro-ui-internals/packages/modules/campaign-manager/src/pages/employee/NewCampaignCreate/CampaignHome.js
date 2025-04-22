@@ -1,9 +1,9 @@
-import { Button, Card, HeaderComponent } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React from "react";
 import { useHistory } from "react-router-dom";
-import { NewWindow } from "../../../components/icons/NewWindow";
-import { System_update_alt } from "../../../components/icons/System_update_alt";
+import { SVG } from "@egovernments/digit-ui-components";
+import { NewWindow }  from "@egovernments/digit-ui-svg-components";
 
 const CampaignHome = () => {
   const { t } = useTranslation();
@@ -20,7 +20,7 @@ const CampaignHome = () => {
             // Add functionality for importing existing campaign
           }}
         >
-          <System_update_alt /> 
+          <SVG.SystemUpdateAlt />
           <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
 

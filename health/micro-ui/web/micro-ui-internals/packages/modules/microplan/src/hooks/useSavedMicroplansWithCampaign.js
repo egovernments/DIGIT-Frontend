@@ -4,6 +4,7 @@ import { useRef } from "react";
 
 const useSavedMicroplansWithCampaign = (reqCriteria) => {
   const { body, config, params, state, url } = reqCriteria;
+  const { tabId = undefined} = Digit.Hooks.useQueryParams();
 
   // To track the last time the fetch function was executed
   const lastCallTimeRef = useRef(0);
@@ -26,8 +27,8 @@ const useSavedMicroplansWithCampaign = (reqCriteria) => {
 
   // React Query with throttled fetch
   const { isLoading, data, isFetching, refetch } = useQuery(
-    ["SAVED_MICROPLANS", url],
-    throttledFetch,
+    ["SAVED_MICROPLANS", url,tabId],
+    () => throttledFetch(),
     {
       ...config,
       cacheTime: 10000, 

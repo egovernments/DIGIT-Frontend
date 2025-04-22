@@ -80,7 +80,7 @@ const FacilityCatchmentMapping = () => {
 
   const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
-  const { isLoading: isLoadingPlanObject, data: planObject } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+  const { isLoading: isLoadingPlanObject, data: planObject, refetch:refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
     {
       PlanConfigurationSearchCriteria: {
         tenantId,
@@ -88,6 +88,22 @@ const FacilityCatchmentMapping = () => {
       },
     }
   );
+
+  useEffect(() => {
+    // Handler function to call on event dispatch
+    const handleRefetch = () => {
+      refetch(); // Triggers the custom hook's refetch
+    };
+
+    // Add the event listener
+    window.addEventListener('refreshKeyUpdated', handleRefetch);
+
+    // Cleanup to avoid memory leaks
+    return () => {
+      window.removeEventListener('refreshKeyUpdated', handleRefetch);
+    };
+  }, [refetch]); // refetchPlan is stable, good to list
+
 
 
   const planFacilitySearchConfig = {
@@ -188,6 +204,8 @@ const FacilityCatchmentMapping = () => {
       userRole = "FACILITY_CATCHMENT_MAPPER";
     
   }});
+
+ 
 
 
 
