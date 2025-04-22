@@ -263,7 +263,7 @@ const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );import { initLibraries } from "@egovernments/digit-ui-libraries";
 
-const enabledModules = ["assignment", "HRMS", "Workbench"];
+const enabledModules = ["assignment", "HRMS", "Workbench","Utilities"];
 
 const initTokens = (stateCode) => {
   console.log(window.globalConfigs, "window.globalConfigs");

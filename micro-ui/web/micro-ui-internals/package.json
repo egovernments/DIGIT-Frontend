@@ -22,27 +22,28 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
-    "build:svg-components": "cd packages/svg-components && yarn build",
-    "build:ui-components": "cd packages/ui-components && yarn build",
-    "build:react-components": "cd packages/react-components && yarn build",
-    "build:libraries": "cd packages/libraries && yarn build",
+    "buildD:svg-components": "cd packages/svg-components && yarn build",
+    "buildD:ui-components": "cd packages/ui-components && yarn build",
+    "buildD:react-components": "cd packages/react-components && yarn build",
+    "buildD:libraries": "cd packages/libraries && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
+    "build:sample": "cd packages/modules/sample && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",
-    "clean": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:workbench && yarn clean:assignment && yarn clean:example && yarn clean:ui-components-dist && yarn clean:react-components-dist && yarn clean:libraries-dist && yarn clean:core-dist && yarn clean:workbench-dist && yarn clean:assignment-dist && yarn clean:yarnLock",
-    "clean-nm": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:assignment && yarn clean:example",
+    "clean": "rm -rf node_modules && yarn clean:core && yarn clean:workbench && yarn clean:assignment && yarn clean:example && yarn clean:core-dist && yarn clean:workbench-dist && yarn clean:assignment-dist && yarn clean:yarnLock",
+    "clean-nm": "rm -rf node_modules && yarn clean:core && yarn clean:assignment && yarn clean:example",
     "clean-dist": "yarn clean:ui-components-dist && yarn clean:react-components-dist && yarn clean:libraries-dist && yarn clean:core-dist && yarn clean:assignment-dist && yarn clean:workbench-dist",
-    "clean:ui-components": "cd packages/ui-components && rm -rf node_modules",
-    "clean:react-components": "cd packages/react-components && rm -rf node_modules",
-    "clean:libraries": "cd packages/libraries && rm -rf node_modules",
+    "cleanD:ui-components": "cd packages/ui-components && rm -rf node_modules",
+    "cleanD:react-components": "cd packages/react-components && rm -rf node_modules",
+    "cleanD:libraries": "cd packages/libraries && rm -rf node_modules",
     "clean:core": "cd packages/modules/core && rm -rf node_modules",
     "clean:workbench": "cd packages/modules/workbench && rm -rf node_modules",
     "clean:assignment": "cd packages/modules/assignment && rm -rf node_modules",
     "clean:example": "cd example && rm -rf node_modules",
     "clean:ui-components-dist": "cd packages/ui-components && rm -rf dist",
     "clean:react-components-dist": "cd packages/react-components && rm -rf dist",
-    "clean:libraries-dist": "cd packages/libraries && rm -rf dist",
+    "cleanD:libraries-dist": "cd packages/libraries && rm -rf dist",
     "clean:core-dist": "cd packages/modules/core && rm -rf dist",
     "clean:workbench-dist": "cd packages/modules/workbench && rm -rf dist",
     "clean:assignment-dist": "cd packages/modules/assignment && rm -rf dist",
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
+    "dotenv-webpack": "^8.0.0",
     "eslint-config-react-app": "^7.0.1",
     "html-webpack-plugin": "^5.6.3",
     "husky": "7.0.4",
@@ -65,8 +67,7 @@
     "vite": "^6.1.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0",
-    "dotenv-webpack": "^8.0.0"
+    "webpack-dev-server": "^5.2.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.62.16"
@@ -89,6 +90,7 @@
     "react-hook-form": "7.52.2",
     "react-i18next": "15.0.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "6.25.1"
+    "react-router-dom": "6.25.1",
+    "url": "^0.11.4"
   }
 }

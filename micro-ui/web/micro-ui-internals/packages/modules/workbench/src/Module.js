@@ -11,12 +11,12 @@ import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
 import LevelCards from "./components/LevelCards";
 import { Loader } from "@egovernments/digit-ui-components";
-import { useStore } from "../../../libraries/src/services";
+// import { useStore } from "../../../libraries/src/services";
 
 import * as parsingUtils from "../src/utils/ParsingUtils"
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
+  const moduleCode = ["workbench", "mdms", "schema", "hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
   // const location = useLocation();
   // console.log("I'm location from wb module.js", location)
@@ -25,7 +25,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   // const queryClient  = new QueryClient();
   console.log("I'm digit from wb", Digit)
   Digit.Services = window.Digit.Services;
-  const { isLoading, data: store } = useStore({
+  const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
@@ -33,7 +33,7 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   });
   console.log("isloading from wb", isLoading)
   if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"} />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return <TourProvider>
@@ -91,11 +91,11 @@ const setupLibraries = (Library, service, method) => {
 /* To Overide any existing config/middlewares  we need to use similar method */
 const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  setupLibraries("Utils","parsingUtils",{...window?.Digit?.Utils?.parsingUtils,...parsingUtils})
+  setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils })
 };
 
 
- const initWorkbenchComponents = () => {
+const initWorkbenchComponents = () => {
   overrideHooks();
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
@@ -103,4 +103,4 @@ const updateCustomConfigs = () => {
   });
 };
 
-export {initWorkbenchComponents, DigitJSONForm};
+export { initWorkbenchComponents, DigitJSONForm };

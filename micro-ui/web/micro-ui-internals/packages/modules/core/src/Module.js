@@ -16,10 +16,11 @@ import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 // import {useInitStore} from "../libraries/src/hooks/store" 
 // import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
-import { initWorkbenchComponents } from "../../workbench/src/Module";
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 // import {Hooks} from "@egovernments/digit-ui-libraries"
 // import Hooks from "../../../libraries/src/hooks";
 import { initI18n } from "@egovernments/digit-ui-libraries";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
@@ -27,15 +28,16 @@ console.log(Digit.Hooks);
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   console.log("inside DigitUIWrapper of core");
   // window.Digit["Hooks"] = Hooks || {};
-  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+  const { isLoading, data: initData = {} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   console.log("seeeeeeee")
   if (isLoading) {
     return <Loader page={true} />;
   }
-  const data=getStore(initData) || {};
+  const data = getStore(initData) || {};
   const i18n = getI18n();
   initWorkbenchComponents();
-  if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
+  initSampleComponents();
+  if (!Digit.ComponentRegistryService.getComponent("PrivacyComponent")) {
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
   return (
@@ -122,46 +124,46 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
   return (
     <QueryClientProvider client={queryClient}>
       <ErrorBoundary>
-          <ComponentProvider.Provider value={registry}>
-            <PrivacyProvider.Provider
-              value={{
-                privacy: privacy?.[window.location.pathname],
-                resetPrivacy: (_data) => {
-                  Digit.Utils.setPrivacyObject({});
-                  setPrivacy({});
-                },
-                getPrivacy: () => {
-                  const privacyObj = Digit.Utils.getPrivacyObject();
-                  setPrivacy(privacyObj);
-                  return privacyObj;
-                },
-                /*  Descoped method to update privacy object  */
-                updatePrivacyDescoped: (_data) => {
-                  const privacyObj = Digit.Utils.getAllPrivacyObject();
-                  const newObj = { ...privacyObj, [window.location.pathname]: _data };
-                  Digit.Utils.setPrivacyObject({ ...newObj });
-                  setPrivacy(privacyObj?.[window.location.pathname] || {});
-                },
-                /**
-                 * Main Method to update the privacy object anywhere in the application
-                 *
-                 * @author jagankumar-egov
-                 *
-                 * Feature :: Privacy
-                 *
-                 * @example
-                 *    const { privacy , updatePrivacy } = Digit.Hooks.usePrivacyContext();
-                 */
-                updatePrivacy: (uuid, fieldName) => {
-                  setPrivacy(Digit.Utils.updatePrivacy(uuid, fieldName) || {});
-                },
-              }}
-            >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding} />
-            </PrivacyProvider.Provider>
-          </ComponentProvider.Provider>
+        <ComponentProvider.Provider value={registry}>
+          <PrivacyProvider.Provider
+            value={{
+              privacy: privacy?.[window.location.pathname],
+              resetPrivacy: (_data) => {
+                Digit.Utils.setPrivacyObject({});
+                setPrivacy({});
+              },
+              getPrivacy: () => {
+                const privacyObj = Digit.Utils.getPrivacyObject();
+                setPrivacy(privacyObj);
+                return privacyObj;
+              },
+              /*  Descoped method to update privacy object  */
+              updatePrivacyDescoped: (_data) => {
+                const privacyObj = Digit.Utils.getAllPrivacyObject();
+                const newObj = { ...privacyObj, [window.location.pathname]: _data };
+                Digit.Utils.setPrivacyObject({ ...newObj });
+                setPrivacy(privacyObj?.[window.location.pathname] || {});
+              },
+              /**
+               * Main Method to update the privacy object anywhere in the application
+               *
+               * @author jagankumar-egov
+               *
+               * Feature :: Privacy
+               *
+               * @example
+               *    const { privacy , updatePrivacy } = Digit.Hooks.usePrivacyContext();
+               */
+              updatePrivacy: (uuid, fieldName) => {
+                setPrivacy(Digit.Utils.updatePrivacy(uuid, fieldName) || {});
+              },
+            }}
+          >
+            <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding} />
+          </PrivacyProvider.Provider>
+        </ComponentProvider.Provider>
       </ErrorBoundary>
-      </QueryClientProvider>
+    </QueryClientProvider>
   );
 };
 
