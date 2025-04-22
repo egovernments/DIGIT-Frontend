@@ -80,6 +80,14 @@ const CampaignDetails = React.memo(({ onSelect, props: customProps, ...props }) 
     return state?.MicroplanCampaignTypes?.map((item) => item.code) || [];
   }, [state?.MicroplanCampaignTypes]);
 
+  useEffect(()=>{
+    onSelect(customProps.name, {
+      distributionStrat,
+      disease,
+      campaignType,
+    });
+  })
+
   const handleSelect = useCallback(() => {
     onSelect(customProps.name, {
       distributionStrat,
