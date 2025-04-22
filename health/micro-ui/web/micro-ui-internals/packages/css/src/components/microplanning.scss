@@ -2580,6 +2580,21 @@ $border-color: rgba(214, 213, 212, 1);
   }
 }
 
+.fieldv1-deleteIcon-container{
+  &.addColumnsScreen {
+    .label-field-wrapper {
+      max-width: 37.5rem;
+      .digit-field {
+        max-width: 37.5rem;
+        width: 100%;
+        .digit-text-input-field {
+          max-width: 37.5rem;
+        }
+      }
+    }
+  }
+}
+
 .assumption-label {
   display: flex;
   flex-wrap: wrap;
