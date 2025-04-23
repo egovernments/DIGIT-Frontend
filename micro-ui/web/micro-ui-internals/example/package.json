@@ -14,7 +14,7 @@
   },
   "devDependencies": {
     "@egovernments/digit-ui-libraries": "1.8.1-webpack-22",
-    "@egovernments/digit-ui-module-core": "1.9.1-test.100",
+    "@egovernments/digit-ui-module-core": "1.8.1-test.100",
     "@egovernments/digit-ui-components": "0.0.2-webpack-21",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
     "@egovernments/digit-ui-module-assignment": "0.0.1",
