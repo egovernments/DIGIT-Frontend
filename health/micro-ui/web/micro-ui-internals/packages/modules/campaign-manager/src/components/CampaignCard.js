@@ -58,6 +58,12 @@ const CampaignCard = () => {
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },
+    {
+      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      link: `/workbench-ui/employee/campaign/campaign-home`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },  
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION"),
     //   link: `/workbench-ui/employee/campaign/app-configuration`,
