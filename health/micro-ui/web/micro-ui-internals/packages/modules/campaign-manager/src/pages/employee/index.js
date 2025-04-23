@@ -17,6 +17,7 @@ import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
 import CampaignHome from "./NewCampaignCreate/CampaignHome";
 import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
+import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -184,6 +185,7 @@ const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hier
             component={() => <CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
           />
           <PrivateRoute path={`${path}/campaign-home`} component={() => <CampaignHome />} />
+          <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
         </AppContainer>
       </Switch>
     </React.Fragment>

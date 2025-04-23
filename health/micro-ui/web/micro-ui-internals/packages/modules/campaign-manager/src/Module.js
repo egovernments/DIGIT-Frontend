@@ -55,6 +55,7 @@ import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
 import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
 import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
+import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
 
 /**
  * MDMS Module name
@@ -172,7 +173,8 @@ const componentsToRegister = {
   UploadDataMappingWrapper,
   DataUploadWrapper,
   AppConfigurationWrapper,
-  DateSelection
+  DateSelection,
+  ViewDetailComponent
 };
 
 const overrideHooks = () => {

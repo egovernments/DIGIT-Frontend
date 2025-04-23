@@ -47,6 +47,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
+  const isSubmit = searchParams.get("submit");
   const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
@@ -56,6 +57,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const actionBar = searchParams.get("actionBar");
   const source = searchParams.get("source");
   const microplanName = searchParams.get("microName");
+  const campaignNumber = searchParams.get("campaignNumber");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -542,6 +544,10 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   }, [showToast]);
 
   const onSubmit = async (formData, cc) => {
+    if(isSubmit){
+      history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+      return ;
+    }
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -1047,6 +1053,8 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
             ? null
             : noAction === "false"
             ? null
+            : isSubmit === true
+            ? t("HCM_NEXT")
             : filteredConfig?.[0]?.form?.[0]?.isLast === true
             ? t("HCM_SUBMIT")
             : t("HCM_NEXT")
