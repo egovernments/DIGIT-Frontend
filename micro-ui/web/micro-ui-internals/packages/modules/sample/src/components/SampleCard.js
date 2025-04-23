@@ -20,17 +20,17 @@ const SampleCard = () => {
      
       {
         label: t("Individual Create"),
-        link: `/${window?.contextPath}/employee/sample/individual-create`,
+        link: `/${window?.contextPath}/employee/utilities/individual-create`,
       },
   
       {
         label: t("Individual Search"),
-        link: `/${window?.contextPath}/employee/sample/individual-search`,
+        link: `/${window?.contextPath}/employee/utilities/individual-search`,
 
       },
       {
         label: t("Individual View"),
-        link: `/${window?.contextPath}/employee/sample/individual-view??tenantId=pg.citya&estimateNumber=ES/2023-24/002390&projectNumber=PJ/2023-24/02/002830`,
+        link: `/${window?.contextPath}/employee/utilities/individual-view??tenantId=pg.citya&estimateNumber=ES/2023-24/002390&projectNumber=PJ/2023-24/02/002830`,
 
       },
       // {
@@ -43,35 +43,35 @@ const SampleCard = () => {
       // },
       {
         label: t("Sample Create"),
-        link: `/${window?.contextPath}/employee/sample/sample-create`,
+        link: `/${window?.contextPath}/employee/utilities/sample-create`,
       },
       {
         label: t("Sample Search"),
-        link: `/${window?.contextPath}/employee/sample/sample-search`,
+        link: `/${window?.contextPath}/employee/utilities/sample-search`,
       },
       {
         label: t("Individual Tab Search"),
-        link: `/${window?.contextPath}/employee/sample/tab-search-individual`,
+        link: `/${window?.contextPath}/employee/utilities/tab-search-individual`,
       },
       {
         label: t("New UI Components"),
-        link: `/${window?.contextPath}/employee/sample/components`,
+        link: `/${window?.contextPath}/employee/utilities/components`,
       },
       {
         label: t("Create"),
-        link: `/${window?.contextPath}/employee/sample/create`,
+        link: `/${window?.contextPath}/employee/utilities/create`,
       },
       {
         label: t("Search"),
-        link: `/${window?.contextPath}/employee/sample/search`,
+        link: `/${window?.contextPath}/employee/utilities/search`,
       },
       {
         label: t("Inbox"),
-        link: `/${window?.contextPath}/employee/sample/inbox`,
+        link: `/${window?.contextPath}/employee/utilities/inbox`,
       },
       {
         label: t("View"),
-        link: `/${window?.contextPath}/employee/sample/view`,
+        link: `/${window?.contextPath}/employee/utilities/view`,
       },
     ],
   };

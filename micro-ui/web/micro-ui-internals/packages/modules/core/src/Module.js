@@ -99,7 +99,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
   var Digit = window.Digit || {};
   initI18n();
   console.log("usestate", useState);
-  const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
+  const [privacy, setPrivacy] = useState(() => Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({
     defaultOptions: {

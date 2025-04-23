@@ -27,8 +27,8 @@
     "buildD:react-components": "cd packages/react-components && yarn build",
     "buildD:libraries": "cd packages/libraries && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
-    "build:sample": "cd packages/modules/sample && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
+    "build:sample": "cd packages/modules/sample && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",
     "clean": "rm -rf node_modules && yarn clean:core && yarn clean:workbench && yarn clean:assignment && yarn clean:example && yarn clean:core-dist && yarn clean:workbench-dist && yarn clean:assignment-dist && yarn clean:yarnLock",
@@ -41,7 +41,7 @@
     "clean:workbench": "cd packages/modules/workbench && rm -rf node_modules",
     "clean:assignment": "cd packages/modules/assignment && rm -rf node_modules",
     "clean:example": "cd example && rm -rf node_modules",
-    "clean:ui-components-dist": "cd packages/ui-components && rm -rf dist",
+    "cleanD:ui-components-dist": "cd packages/ui-components && rm -rf dist",
     "clean:react-components-dist": "cd packages/react-components && rm -rf dist",
     "cleanD:libraries-dist": "cd packages/libraries && rm -rf dist",
     "clean:core-dist": "cd packages/modules/core && rm -rf dist",
@@ -56,6 +56,8 @@
     "fast-uri": "2.1.0"
   },
   "devDependencies": {
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
     "clean-webpack-plugin": "^4.0.0",
     "dotenv-webpack": "^8.0.0",
     "eslint-config-react-app": "^7.0.1",

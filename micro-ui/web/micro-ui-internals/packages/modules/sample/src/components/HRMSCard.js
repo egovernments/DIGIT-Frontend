@@ -15,15 +15,15 @@ const HRMSCard = () => {
     links: [
       {
         label: t("HRMS Create"),
-        link: `/${window?.contextPath}/employee/sample/hrms-create`,
+        link: `/${window?.contextPath}/employee/utilities/hrms-create`,
       },
       {
         label: t("HRMS Search"),
-        link: `/${window?.contextPath}/employee/sample/hrms-search`,
+        link: `/${window?.contextPath}/employee/utilities/hrms-search`,
       },
       {
         label: t("HRMS View Details"),
-        link: `/${window?.contextPath}/employee/sample/hrms-view`,
+        link: `/${window?.contextPath}/employee/utilities/hrms-view`,
       },
       
     ],
