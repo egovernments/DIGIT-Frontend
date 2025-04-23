@@ -82,7 +82,7 @@ const CampaignDetails = React.memo(({ onSelect, props: customProps, ...props }) 
   }, [state?.MicroplanCampaignTypes]);
 
   useEffect(() => {
-    if (executionCount < 5) {
+    if (executionCount < 5 && campaignType && disease && distributionStrat) {
       onSelect(customProps.name, {
         distributionStrat,
         disease,
