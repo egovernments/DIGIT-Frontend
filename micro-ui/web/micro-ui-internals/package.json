@@ -30,7 +30,7 @@
     "build:core": "cd packages/modules/core && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",
-    "clean": "rm -rf node_modules && yarn clean:libraries && yarn clean:core && yarn clean:workbench && yarn clean:assignment && yarn clean:example && yarn clean:libraries-dist && yarn clean:core-dist && yarn clean:workbench-dist && yarn clean:assignment-dist && yarn clean:yarnLock",
+    "clean": "rm -rf node_modules && yarn clean:core && yarn clean:workbench && yarn clean:assignment && yarn clean:example && yarn clean:core-dist && yarn clean:workbench-dist && yarn clean:assignment-dist && yarn clean:yarnLock",
     "clean-nm": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:assignment && yarn clean:example",
     "clean-dist": "yarn clean:ui-components-dist && yarn clean:react-components-dist && yarn clean:libraries-dist && yarn clean:core-dist && yarn clean:assignment-dist && yarn clean:workbench-dist",
     "clean:ui-components": "cd packages/ui-components && rm -rf node_modules",
@@ -81,8 +81,8 @@
     ]
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "0.0.2-webpack-20",
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.11",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-21",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "process": "^0.11.10",
