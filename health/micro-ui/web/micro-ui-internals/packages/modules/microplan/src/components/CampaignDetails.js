@@ -25,13 +25,14 @@ const CampaignDetails = React.memo(({ onSelect, props: customProps, ...props }) 
       }
   );
   const [distributionStrat, setDistributionStrat] = useState(distributionStratSession);
+
   useEffect(() => {
     globalRenderCount += 1;
-    if (globalRenderCount == 1 && !(campaignTypeSession === undefined)){
+    if (globalRenderCount == 1 && !(campaignTypeSession === undefined)) {
       setInitialLoading(false);
       setTimeout(() => {
         globalRenderCount = 0;
-      }, 1000); 
+      }, 1000);
     }
     if (globalRenderCount > 2 && !hasVisitedOnce) {
       setInitialLoading(false);
@@ -80,13 +81,16 @@ const CampaignDetails = React.memo(({ onSelect, props: customProps, ...props }) 
     return state?.MicroplanCampaignTypes?.map((item) => item.code) || [];
   }, [state?.MicroplanCampaignTypes]);
 
-  useEffect(()=>{
-    onSelect(customProps.name, {
-      distributionStrat,
-      disease,
-      campaignType,
-    });
-  })
+  useEffect(() => {
+    if (executionCount < 5) {
+      onSelect(customProps.name, {
+        distributionStrat,
+        disease,
+        campaignType,
+      });
+      setExecutionCount((prevCount) => prevCount + 1);
+    }
+  });
 
   const handleSelect = useCallback(() => {
     onSelect(customProps.name, {
@@ -95,7 +99,7 @@ const CampaignDetails = React.memo(({ onSelect, props: customProps, ...props }) 
       campaignType,
     });
   }, [onSelect, customProps.name, distributionStrat, disease, campaignType]);
-  
+
   useEffect(() => {
     handleSelect();
   }, [handleSelect]);

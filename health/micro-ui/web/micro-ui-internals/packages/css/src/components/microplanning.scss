@@ -2566,6 +2566,7 @@ $border-color: rgba(214, 213, 212, 1);
   cursor: pointer;
   margin-left: 1rem;
   font-size: 1.2rem;
+  width:10rem;
 }
 
 .fieldv1-deleteIcon-container {
@@ -2576,6 +2577,21 @@ $border-color: rgba(214, 213, 212, 1);
 
   .digit-field{
     min-width: 25rem !important;
+  }
+}
+
+.fieldv1-deleteIcon-container{
+  &.addColumnsScreen {
+    .label-field-wrapper {
+      max-width: 37.5rem;
+      .digit-field {
+        max-width: 37.5rem;
+        width: 100%;
+        .digit-text-input-field {
+          max-width: 37.5rem;
+        }
+      }
+    }
   }
 }
 
