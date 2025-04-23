@@ -129,7 +129,17 @@ const CampaignDetails = () => {
       <div className="campaign-details-header">
         <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
         <Tag label={campaignData?.campaignName} showIcon={false} className={"campaign-view-tag"} type={"warning"} stroke={true}></Tag>
-        <Tag label={campaignData?.deliveryRules?.length > 1 ? "HCM_MULTIROUND" : "HCM_INDIVIDUAL"}  showIcon={false} className={"campaign-view-tag"} type={"monochrome"} stroke={true}></Tag>
+        <Tag
+          label={
+            campaignData?.deliveryRules?.length > 1
+              ? t("HCM_MULTIROUND")
+              : t("HCM_INDIVIDUAL")
+          }
+          showIcon={false}
+          className="campaign-view-tag"
+          type="monochrome"
+          stroke={true}
+        />
         </div>
         <div className="dates">{week}</div>
         <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
