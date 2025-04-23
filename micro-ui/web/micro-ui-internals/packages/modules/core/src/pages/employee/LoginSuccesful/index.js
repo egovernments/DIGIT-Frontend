@@ -23,9 +23,12 @@ const setEmployeeDetail = (userObject, token) => {
 
 const SuccessPage = () => {
   const { keycloak } = useKeycloak();
+  const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const history = useHistory();
   const [username, setUsername] = useState(null);
   const [user, setUser] = useState(null);
+  const { stateInfo } = storeData || {};
+  const tenantId = stateInfo?.code;
   // const [userDetails, setUserDetails] = useState(null); // To store user API response
   const isLogin =false;
   const [newToken, setNewToken] = useState(null);
@@ -40,17 +43,17 @@ const SuccessPage = () => {
   // }, [keycloak.token]);
 
   useEffect(() => {
-    if (keycloak.token) {
+    if (keycloak.token ) {
       const decodedToken = jwt_decode(keycloak.token);
       setUsername(decodedToken?.preferred_username || "Unknown User");
     }
-  }, [keycloak.token]); 
+  }, [keycloak.token, tenantId]); 
   
   useEffect(() => {
-    if (keycloak.token) {
+    if (keycloak.token ) {
       fetchnewttoken();
     }
-  }, [keycloak.token]);// This depends on keycloak.token
+  }, [keycloak.token,tenantId]);// This depends on keycloak.token
   
   // useEffect(() => {
   //   if (username !== "Unknown User") {
@@ -83,12 +86,12 @@ const SuccessPage = () => {
   }, [user]);
 
   const fetchnewttoken = async () => {
-    if ( !keycloak.token) {
+    if ( !keycloak.token ) {
       console.error("Username or access token not available!");
       return;
     }
 
-    const url = `https://digit-lts.digit.org/keycloak-test/realms/SDFG/protocol/openid-connect/token`;
+    const url = `http://localhost:8081/realms/${tenantId}/protocol/openid-connect/token`;
     try {
       const response = await fetch(url, {
         method: "POST",

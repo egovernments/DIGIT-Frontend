@@ -12,20 +12,13 @@ const LanguageSelection = () => {
   const { stateInfo } = storeData || {};
   const { keycloak } = useKeycloak();
   const [infoMessage, setInfoMessage] = useState("");
-  // const navigate = useNavigate();
 
-  // useEffect(() => {
-  //   // Redirect to success page if authenticated
-  //   if (keycloak.authenticated) {
-  //     navigate("/success");
-  //   }
-  // }, [keycloak, navigate]);
-
-  console.log("language-sel",keycloak);
+ const tenantId = stateInfo?.code;
+console.log("langu",tenantId);
 
   const handleLogin = () => {
     keycloak.login({
-      redirectUri: window.location.origin + "/sandbox-ui/SDFG/employee/user/success", // Redirect after login
+      redirectUri: `${window.location.origin}/sandbox-ui/${tenantId}/employee/user/success`, // Redirect after login
     });
   };
 
@@ -43,8 +36,8 @@ const LanguageSelection = () => {
           <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>
         </div>
         <div className="button-container" style={{ display: "flex", flexDirection: "column", gap: "16px", alignItems: "center" }}>
-          <Button label="Login by password" onClick={handleLogin} />
-          <Button label="Show Access Token" onClick={handleShowAccessToken} />
+          <Button label="Login by Keycloak" onClick={handleLogin} />
+          {/* <Button label="Show Access Token" onClick={handleShowAccessToken} /> */}
           <Card>
             <p>{infoMessage}</p>
           </Card>
