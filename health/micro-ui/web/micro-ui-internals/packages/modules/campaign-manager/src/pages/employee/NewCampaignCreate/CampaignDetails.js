@@ -9,7 +9,7 @@ const CampaignDetails = () => {
   const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
-  const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();;
+  const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
