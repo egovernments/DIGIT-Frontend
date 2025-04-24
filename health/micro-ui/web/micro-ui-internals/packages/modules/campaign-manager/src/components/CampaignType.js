@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
+import { UploadIcon, FileIcon, DeleteIconv2, Toast, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { AlertCard, LabelFieldPair } from "@egovernments/digit-ui-components";
-import { Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock , Card , HeaderComponent} from "@egovernments/digit-ui-components";
+import { AlertCard, LabelFieldPair, Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper,HeaderComponent, TextBlock, Card } from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
@@ -16,7 +16,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const [showPopUp, setShowPopUp] = useState(null);
   const [canUpdate, setCanUpdate] = useState(null);
   const searchParams = new URLSearchParams(location.search);
-  const [currentStep , setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
   const source = searchParams.get("source");
   const [key, setKey] = useState(() => {
@@ -210,7 +210,6 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
         )}
       </div>
     </>
-
   );
 };
 

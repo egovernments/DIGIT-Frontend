@@ -53,10 +53,13 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
 import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
 import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
-
+//App config import
+import AppPreview from "./components/AppPreview";
+import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
+import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
+import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
 /**
  * MDMS Module name
  */
@@ -93,7 +96,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
 
   const moduleCode = BOUNDARY_HIERARCHY_TYPE
     ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
-    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -172,9 +175,12 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  AppConfigurationWrapper,
+  AppPreview,
+  AppConfigurationParentLayer: AppConfigurationParentLayer,
+  FormBuilder,
+  AppConfigurationParentRedesign,
   DateSelection,
-  ViewDetailComponent
+  ViewDetailComponent,
 };
 
 const overrideHooks = () => {
