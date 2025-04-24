@@ -91,7 +91,7 @@ const SuccessPage = () => {
       return;
     }
 
-    const url = `http://localhost:8081/realms/${tenantId}/protocol/openid-connect/token`;
+    const url = `https://digit-lts.digit.org/keycloak-test/realms/${tenantId}/protocol/openid-connect/token`;
     try {
       const response = await fetch(url, {
         method: "POST",

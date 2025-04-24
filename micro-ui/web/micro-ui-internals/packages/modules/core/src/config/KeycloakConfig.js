@@ -24,7 +24,7 @@ console.log("initen", tenantId);
 
 // Create a single instance of Keycloak
 const keycloak = new Keycloak({
-  url: 'http://localhost:8081/',
+  url: 'https://digit-lts.digit.org/keycloak-test/',
   realm: tenantId || 'SDFG',
   clientId: 'sandbox-ui-client',
 });

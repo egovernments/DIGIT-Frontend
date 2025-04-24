@@ -319,6 +319,7 @@ const Response = () => {
   const queryStrings = Digit.Hooks.useQueryParams();
   const { state } = useLocation();
   const { email } = location.state || {};
+  const tenantId = Digit.ULBService.getStateId();
 
   const [isResponseSuccess, setIsResponseSuccess] = useState(queryStrings?.isSuccess === "true");
   const [username, setUsername] = useState("");
@@ -357,7 +358,8 @@ const Response = () => {
 
     try {
       // Create user
-      const createUserResponse = await fetch("https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users", {
+      const createUserUrl = `https://digit-lts.digit.org/keycloak-test/admin/realms/${tenantId}/users`;
+      const createUserResponse = await fetch(createUserUrl, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -374,7 +376,7 @@ const Response = () => {
 
       // Search for the user to get UUID
       const searchUserResponse = await fetch(
-        `https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users?username=${username}`,
+        `https://digit-lts.digit.org/keycloak-test/admin/realms/${tenantId}/users?username=${username}`,
         {
           method: "GET",
           headers: {
@@ -423,7 +425,7 @@ const Response = () => {
       }
 
       const roleMappingResponse = await fetch(
-        `https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/users/${foundUser.id}/role-mappings/realm`,
+        `https://digit-lts.digit.org/keycloak-test/admin/realms/${tenantId}/users/${foundUser.id}/role-mappings/realm`,
         {
           method: "POST",
           headers: {
