@@ -60,9 +60,9 @@ const HRMSCreate = () => {
   return (
     <div>
       {/* Header component with translation support */}
-      <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+      {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
           {t("CREATE_INDIVIDUAL")}
-        </HeaderComponent>
+        </HeaderComponent> */}
       {/* Form component to create an individual */}
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}

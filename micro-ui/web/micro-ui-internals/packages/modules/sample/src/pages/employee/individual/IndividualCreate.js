@@ -2,8 +2,9 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { FormComposerV2, HeaderComponent } from "@egovernments/digit-ui-components";
-import { newConfig } from "../../../configs/IndividualCreateConfig";
+// import { newConfig } from "../../../configs/IndividualCreateConfig";
 import { transformIndividualCreateData } from "../../../utils/createUtils";
+import { config as newConfig } from "../../../configs/SampleCreateConfig";
 // import { newConfig } from "../../configs/IndividualCreateConfig";
 // import { transformIndividualCreateData } from "../../utils/createUtils";
 
@@ -24,7 +25,7 @@ const IndividualCreate = () => {
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
-  const onSubmit = async(data) => {
+  const onSubmit = async (data) => {
     console.log(data, "data");
     await mutation.mutate(
       {
@@ -39,9 +40,9 @@ const IndividualCreate = () => {
   };
   return (
     <div>
-        <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-          {t("CREATE_INDIVIDUAL")}
-        </HeaderComponent>
+      {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+        {t("CREATE_INDIVIDUAL")}
+      </HeaderComponent> */}
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
         config={newConfig.map((config) => {

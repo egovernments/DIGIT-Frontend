@@ -17,7 +17,7 @@ const Create = () => {
   /* use newConfig instead of commonFields for local development in case needed */
 
   const configs = CreateConfig ? CreateConfig : CreateConfig;
-
+  console.log(configs)
   return (
     <FormComposerV2
       heading={t("Application Heading")}

@@ -96,11 +96,11 @@ const AdditionalComponent = ({ onSelect, ...props }) => {
             </div>
           ) : null}
           <LabelFieldPair removeMargin={true}>
-            <HeaderComponent className={`label`}>
+            {/* <HeaderComponent className={`label`}>
               <div className={`label-container`}>
                 <label className={`label-styles`}>{`${t("Document Type")}`}</label>
               </div>
-            </HeaderComponent>
+            </HeaderComponent> */}
             <Dropdown
               style={{ width: "100%" }}
               t={t}
@@ -113,11 +113,11 @@ const AdditionalComponent = ({ onSelect, ...props }) => {
             />
           </LabelFieldPair>
           <LabelFieldPair removeMargin={true}>
-            <HeaderComponent className={`label`}>
+            {/* <HeaderComponent className={`label`}>
               <div className={`label-container`}>
                 <label className={`label-styles`}>{`${t("Document ID")}`}</label>
               </div>
-            </HeaderComponent>
+            </HeaderComponent> */}
             <div className="digit-field">
             <TextInput
               name="name"

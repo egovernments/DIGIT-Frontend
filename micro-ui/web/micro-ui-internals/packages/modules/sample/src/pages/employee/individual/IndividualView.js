@@ -110,9 +110,9 @@ const IndividualViewDetails = (props) => {
   }
   return (
     <>
-      <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+      {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
         {t("INDIVIDUAL DETAILS")}
-      </HeaderComponent>
+      </HeaderComponent> */}
       <div className="campaign-summary-container">{data && <ViewComposer data={data} />}</div>
     </>
   );

@@ -98,9 +98,9 @@ const HRMSViewDetails = (props) => {
   }
   return (
     <>
-        <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+        {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
           {t("Employee Details")}
-        </HeaderComponent>
+        </HeaderComponent> */}
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>

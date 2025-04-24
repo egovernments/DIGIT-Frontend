@@ -163,9 +163,9 @@ import {
   
     return (
       <React.Fragment>
-        <HeaderComponent styles={textStyles}>{"New Components"}</HeaderComponent>
+        {/* <HeaderComponent styles={textStyles}>{"New Components"}</HeaderComponent> */}
         <div style={{ ...commonDivStyle, marginTop: "24px" }}>
-          <HeaderComponent styles={textStyles}>{"Accordion"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Accordion"}</HeaderComponent> */}
           <Accordion
             icon="Accessibility"
             number={1}
@@ -181,9 +181,9 @@ import {
           </Accordion>
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>
+          {/* <HeaderComponent styles={textStyles}>
             {"Accordion List"}
-          </HeaderComponent>
+          </HeaderComponent> */}
           <AccordionList addDivider>
             <Accordion number={1} title="Accordion 1">
               Lorem Ipsum is simply dummy text of the printing and typesetting

@@ -1,4 +1,4 @@
-import { Loader, FormComposerV2  } from "@egovernments/digit-ui-react-components";
+import { Loader, FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -14,7 +14,7 @@ export const config = [
         isMandatory: false,
         type: "text",
         disable: false,
-        populators: { name: "salutation", error: "Required", validation: { pattern: /^[A-Za-z]+$/i , maxlength:5} },
+        populators: { name: "salutation", error: "Required", validation: { pattern: /^[A-Za-z]+$/i, maxlength: 5 } },
       },
       {
         inline: true,
@@ -27,7 +27,7 @@ export const config = [
       {
         isMandatory: true,
         type: "radio",
-                key: "genders",
+        key: "genders",
         label: "Gender",
         disable: false,
         populators: {
@@ -56,7 +56,7 @@ export const config = [
         description: "Please enter a valid Date of birth",
         type: "date",
         disable: false,
-        populators: { name: "dob", error: "Required", validation: { required:true, } },
+        populators: { name: "dob", error: "Required", validation: { required: true, } },
       },
       {
         label: "Phone number",
@@ -65,19 +65,19 @@ export const config = [
         disable: false,
         populators: { name: "phNumber", error: "sample error message", validation: { min: 5999999999, max: 9999999999 } },
       },
-      
+
       {
         "label": "COMMON_WARD",
         "type": "locationdropdown",
         "isMandatory": false,
         "disable": false,
         "populators": {
-            "name": "ward",
-            "type": "ward",
-            "optionsKey": "i18nKey",
-            "defaultText": "COMMON_SELECT_WARD",
-            "selectedText": "COMMON_SELECTED",
-            "allowMultiSelect": false
+          "name": "ward",
+          "type": "ward",
+          "optionsKey": "i18nKey",
+          "defaultText": "COMMON_SELECT_WARD",
+          "selectedText": "COMMON_SELECTED",
+          "allowMultiSelect": false
         }
       },
       {
@@ -97,22 +97,22 @@ export const config = [
         "type": "amount",
         "disable": false,
         "preProcess": {
-            "convertStringToRegEx": [
-              "populators.validation.pattern"
-            ]
+          "convertStringToRegEx": [
+            "populators.validation.pattern"
+          ]
         },
         "populators": {
-          "prefix":"₹ ",
-            "name": "amountInRs",
-            "error": "PROJECT_PATTERN_ERR_MSG_PROJECT_ESTIMATED_COST",
-            "validation": {
-              "pattern": "^[1-9]\\d*(\\.\\d+)?$",
-              "maxlength" : 16,
-              "step" : "0.01",
-              "min" : 0,
-              "max" : 5000000
-            }
+          "prefix": "₹ ",
+          "name": "amountInRs",
+          "error": "PROJECT_PATTERN_ERR_MSG_PROJECT_ESTIMATED_COST",
+          "validation": {
+            "pattern": "^[1-9]\\d*(\\.\\d+)?$",
+            "maxlength": 16,
+            "step": "0.01",
+            "min": 0,
+            "max": 5000000
           }
+        }
       }
     ],
   },
@@ -128,7 +128,7 @@ export const config = [
         disable: false,
         populators: { name: "additionalDetails", error: "sample error message", validation: { pattern: /^[A-Za-z]+$/i } },
       },
-   
+
       {
         isMandatory: true,
         key: "genders",
