@@ -915,7 +915,7 @@ export const UICustomizations = {
                 }
               }
               if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
+                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
                   row.campaignDetails.id
                 }&setup-completed=true`;
               }
