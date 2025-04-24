@@ -53,7 +53,6 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
 import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
 import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
 //App config import
@@ -180,7 +179,6 @@ const componentsToRegister = {
   AppConfigurationParentLayer: AppConfigurationParentLayer,
   FormBuilder,
   AppConfigurationParentRedesign,
-  AppConfigurationWrapper,
   DateSelection,
   ViewDetailComponent,
 };
