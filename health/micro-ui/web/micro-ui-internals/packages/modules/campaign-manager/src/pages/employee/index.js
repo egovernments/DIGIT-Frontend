@@ -15,6 +15,8 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
+import FormBuilder from "./appConfigurationScreenParent/FormBuilder";
+import SchemaBuilder from "./appConfigurationScreenParent/SchemaBuilder";
 import CampaignHome from "./NewCampaignCreate/CampaignHome";
 import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
@@ -128,7 +130,8 @@ const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hier
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
-  const AppConfigurationWrapper = Digit?.ComponentRegistryService?.getComponent("AppConfigurationWrapper");
+  const AppConfigurationParentLayer = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentLayer");
+  const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
   
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
@@ -181,6 +184,10 @@ const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hier
           <PrivateRoute path={`${path}/boundary/data`} component={() => <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
+          <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
+          <PrivateRoute path={`${path}/app-configuration-redesign`} component={() => <AppConfigurationParentRedesign />} />
+          <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
+          <PrivateRoute path={`${path}/schema-builder-configuration`} component={() => <SchemaBuilder />} />
           <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
           <PrivateRoute
             path={`${path}/create-campaign`}

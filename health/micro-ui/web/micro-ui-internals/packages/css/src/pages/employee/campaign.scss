@@ -242,8 +242,52 @@
   }
 }
 
+.date-style {
+  max-width: 37.5rem;
+  display: flex;
+  gap: 1rem;
+}
+.app-preview {
+  display: flex;
+  width: 25rem;
+  height: 40rem;
+  overflow-y: auto;
+  border: 0rem solid #ccc;
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  .digit-card-header {
+    color: #0b4b66;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .digit-card-text {
+    color: #787878;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 137%;
+  }
+}
+.mobile-top {
+  background-color: theme(digitv2.lightTheme.header-sidenav);
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  color: theme(digitv2.lightTheme.paper);
+  font-size: 1.5rem;
+  font-weight: theme(digitv2.fontWeight.bold);
+  width: 100%;
+  /* Full width */
+  box-sizing: border-box;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
 .appConfiglabelField {
-  padding: 3rem 1rem;
+  padding: 1rem;
   background-color: #eee;
   border: 1px solid #d6d5d4;
   border-radius: 0.5rem;
@@ -265,6 +309,7 @@
 }
 .appConfiglabelField-label {
   width: 25rem;
+  margin-bottom: 0.5rem;
 }
 .app-config-actionBar {
   z-index: 9999;
@@ -274,34 +319,33 @@
   max-width: 35rem;
 
   .digit-popup-footer {
+    padding-top: 0 !important;
 
-      padding-top: 0 !important;
+    .digit-popup-footer-buttons {
+      width: 100% !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
 
-      .digit-popup-footer-buttons {
-          width: 100% !important;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-
-          .digit-button-secondary {
-              width: 100%;
-          }
-
-          .digit-button-primary {
-              width: 100%;
-          }
+      .digit-button-secondary {
+        width: 100%;
       }
+
+      .digit-button-primary {
+        width: 100%;
+      }
+    }
   }
 
   .digit-popup-children-wrap {
-      padding-top: 0 !important;
-      overflow: visible;
+    padding-top: 0 !important;
+    overflow: visible;
   }
 }
 .rdt_TableBody {
-  border: 1px solid #ccc !important; 
+  border: 1px solid #ccc !important;
   width: 100% !important;
 }
-.rdt_Table{
+.rdt_Table {
   width: 100% !important;
 }
 .campaign-header-style{
@@ -389,6 +433,7 @@
 .campaign-view-tag{
   margin-left: 1rem;
 }
+
 .module-card{
   width: 20rem;
   height: 16.6rem;
@@ -401,3 +446,4 @@
   grid-gap: 1.5rem;
   padding: 1rem;
 }
+
