@@ -1,6 +1,6 @@
-import React, { createContext, useContext, useEffect, useReducer, useRef, useState } from "react";
+import React, { createContext, Fragment, useContext, useEffect, useReducer, useRef, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Footer, Button, Divider, Loader, PopUp, SidePanel } from "@egovernments/digit-ui-components";
+import { Footer, Button, Divider, Loader, PopUp, SidePanel, Dropdown, LabelFieldPair, TextInput, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -8,6 +8,9 @@ import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AppPreview from "../../../components/AppPreview";
+import { dummyMaster } from "../../../configs/dummyMaster";
+import { useCustomT } from "./useCustomT";
+import { add } from "lodash";
 // import { dummyMaster } from "../../configs/dummyMaster";
 
 const AppConfigContext = createContext();
@@ -89,9 +92,24 @@ const reducer = (state = initialState, action, updateLocalization) => {
           return item;
         }),
       };
+    case "ADD_ACTION_LABEL":
+      return {
+        ...state,
+        screenData: state?.screenData?.map((item, index) => {
+          if (item?.name === action?.payload?.currentScreen?.name) {
+            return {
+              ...item,
+              actionLabel: action.payload.actionLabel,
+            };
+          }
+          return item;
+        }),
+      };
+
     case "ADD_FIELD":
       return {
         ...state,
+        isPopup: true,
         screenData: state?.screenData?.map((item, index) => {
           if (item?.name === action?.payload?.currentScreen?.name) {
             return {
@@ -103,9 +121,9 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
-                        id: crypto.randomUUID(),
-                        type: "text",
-                        label: "LABEL",
+                        jsonPath: crypto.randomUUID(),
+                        type: action.payload.fieldData?.type?.type,
+                        label: action.payload.fieldData?.label,
                         active: true,
                       },
                     ],
@@ -240,9 +258,12 @@ function AppConfigurationWrapper({ screenConfig }) {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const [showPopUp, setShowPopUp] = useState(false);
+  const [popupData, setPopupData] = useState(null);
+  const [addFieldData, setAddFieldData] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
-  const module = "dummy-localisation";
+  const localeModule = searchParams.get("localeModule");
+  const module = localeModule ? localeModule : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
   const [showToast, setShowToast] = useState(null);
@@ -267,6 +288,22 @@ function AppConfigurationWrapper({ screenConfig }) {
     },
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
+  // const isLoadingAppConfigMdmsData = false;
+  // useEffect(() => {
+  //   dispatch({
+  //     type: "MASTER_DATA",
+  //     state: {
+  //       screenConfig: screenConfig,
+  //       ...dummyMaster?.["HCM-ADMIN-CONSOLE"],
+  //       AppFieldType: dummyMaster?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
+  //       // ...dummyMaster,
+  //     },
+  //   });
+  // }, [dummyMaster]);
+
+  const openAddFieldPopup = (data) => {
+    setPopupData(data);
+  };
 
   useEffect(() => {
     dispatch({
@@ -319,22 +356,68 @@ function AppConfigurationWrapper({ screenConfig }) {
     setShowPopUp(false);
     setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
+
   return (
-    <AppConfigContext.Provider value={{ state, dispatch }}>
-      <DndProvider backend={HTML5Backend}>
-        <AppFieldScreenWrapper onSubmit={onSubmit} />
-      </DndProvider>
-      {state?.drawerField && (
+    <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
+      <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem" }}>
+        <Button
+          className="app-configure-action-button"
+          variation="secondary"
+          label={t("BACK")}
+          title={t("BACK")}
+          icon="ArrowBack"
+          onClick={() => back()}
+        />
+        <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+        {/* <DndProvider backend={HTML5Backend}>
+          <AppFieldScreenWrapper onSubmit={onSubmit} />
+        </DndProvider> */}
+        <Button
+          className="app-configure-action-button"
+          variation="secondary"
+          label={t("NEXT")}
+          title={t("NEXT")}
+          icon="ArrowForward"
+          isSuffix={true}
+          onClick={() => onSubmit(state)}
+        />
+      </div>
+
+      {true && (
         <SidePanel
           bgActive
-          className=""
+          className="app-configuration-side-panel"
+          defaultOpenWidth={369}
           closedContents={[]}
           closedFooter={[<en />]}
           closedHeader={[]}
           closedSections={[]}
           defaultClosedWidth=""
-          defaultOpenWidth=""
-          footer={[]}
+          footer={[
+            <div className="app-configure-drawer-footer-container">
+              <Button
+                className="app-configure-drawer-footer-button"
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                icon={"Translate"}
+                label={t("ADD_LOCALISATION")}
+                onClick={() => {
+                  setShowPopUp(true);
+                }}
+              />
+              {/* <Button
+                className="app-configure-drawer-footer-button"
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("PREVIEW")}
+                onClick={() => {
+                  setShowPreview(true);
+                }}
+              /> */}
+            </div>,
+          ]}
           header={[
             <div className="typography heading-m" style={{ color: "#0B4B66" }}>
               {t("FIELD_CONFIGURATION")}
@@ -346,33 +429,54 @@ function AppConfigurationWrapper({ screenConfig }) {
           sections={[]}
           styles={{}}
           type="static"
-          addClose={true}
-          onClose={() =>
-            dispatch({
-              type: "UNSELECT_DRAWER_FIELD",
-            })
-          }
+          // addClose={true}
+          // onClose={() =>
+          // dispatch({
+          // type: "UNSELECT_DRAWER_FIELD",
+          // })
+          // }
         >
-          <DrawerFieldComposer />
-          <Divider />
-          <Button
-            type={"button"}
-            size={"large"}
-            variation={"primary"}
-            label={t("ADD_LOCALISATION")}
-            onClick={() => {
-              setShowPopUp(true);
-            }}
-          />
-          <Button
-            type={"button"}
-            size={"large"}
-            variation={"secondary"}
-            label={t("PREVIEW")}
-            onClick={() => {
-              setShowPreview(true);
-            }}
-          />
+          {state?.drawerField ? (
+            <>
+              <Button
+                className=""
+                variation="secondary"
+                label={t("BACK")}
+                title={t("BACK")}
+                icon="ArrowBack"
+                size="small"
+                onClick={() =>
+                  dispatch({
+                    type: "UNSELECT_DRAWER_FIELD",
+                  })
+                }
+              />
+              <DrawerFieldComposer />
+              <Divider />
+              {/* <Button
+                type={"button"}
+                size={"large"}
+                variation={"primary"}
+                label={t("ADD_LOCALISATION")}
+                onClick={() => {
+                  setShowPopUp(true);
+                }}
+              /> */}
+              {/* <Button
+                type={"button"}
+                size={"large"}
+                variation={"secondary"}
+                label={t("PREVIEW")}
+                onClick={() => {
+                  setShowPreview(true);
+                }}
+              /> */}
+            </>
+          ) : (
+            <DndProvider backend={HTML5Backend}>
+              <AppFieldScreenWrapper />
+            </DndProvider>
+          )}
         </SidePanel>
       )}
       {showPreview && (
@@ -400,7 +504,7 @@ function AppConfigurationWrapper({ screenConfig }) {
           ]}
           sortFooterChildren={true}
         >
-          <AppPreview data={state?.screenData?.[0]} />
+          <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} />
         </PopUp>
       )}
       {showPopUp && (
@@ -441,6 +545,89 @@ function AppConfigurationWrapper({ screenConfig }) {
           <AppLocalisationTable />
         </PopUp>
       )}
+      {popupData && (
+        <PopUp
+          className="app-config-add-field-popup"
+          type={"default"}
+          heading={t("ADD_FIELD_POP_HEADING")}
+          children={[
+            <LabelFieldPair>
+              <div className="product-label-field">
+                <span>{`${t("ADD_FIELD_LABEL")}`}</span>
+                <span className="mandatory-span">*</span>
+              </div>
+              <TextInput
+                // style={{ maxWidth: "40rem" }}
+                name="name"
+                value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
+                onChange={(event) => {
+                  updateLocalization(
+                    `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_LABELONE`,
+                    Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                    event.target.value
+                  );
+                  setAddFieldData((prev) => ({
+                    ...prev,
+                    label: `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_LABELONE`,
+                  }));
+                }}
+              />
+            </LabelFieldPair>,
+            <LabelFieldPair>
+              <div className="product-label-field">
+                <span>{`${t("ADD_FIELD_TYPE")}`}</span>
+                <span className="mandatory-span">*</span>
+              </div>
+              <Dropdown
+                // style={}
+                variant={""}
+                t={t}
+                option={state?.MASTER_DATA?.AppFieldType}
+                optionKey={"type"}
+                selected={addFieldData?.type}
+                select={(value) => {
+                  setAddFieldData((prev) => ({ ...prev, type: value }));
+                }}
+              />
+            </LabelFieldPair>,
+          ]}
+          onOverlayClick={() => {
+            setPopupData(null);
+          }}
+          onClose={() => {
+            setPopupData(null);
+          }}
+          equalWidthButtons={"false"}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CLOSE")}
+              onClick={() => {
+                setPopupData(null);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                dispatch({
+                  type: "ADD_FIELD",
+                  payload: {
+                    ...popupData,
+                    fieldData: addFieldData,
+                  },
+                });
+                setPopupData(null);
+                setAddFieldData(null);
+              }}
+            />,
+          ]}
+        ></PopUp>
+      )}
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
@@ -449,17 +636,6 @@ function AppConfigurationWrapper({ screenConfig }) {
           onClose={closeToast}
         />
       )}
-      <Footer
-        actionFields={[
-          <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />,
-          <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />,
-        ]}
-        className=""
-        maxActionFieldsAllowed={5}
-        setactionFieldsToRight
-        sortActionFields
-        style={{}}
-      />
       {/* <ActionBar className="app-config-actionBar">
         {showBack && <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />}
         <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />

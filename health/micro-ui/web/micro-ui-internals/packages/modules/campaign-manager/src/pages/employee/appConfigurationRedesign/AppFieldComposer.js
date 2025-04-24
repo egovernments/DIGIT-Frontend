@@ -1,10 +1,11 @@
-import { LabelFieldPair, TextInput, Dropdown, CheckBox, InfoCard, TooltipWrapper, TextArea } from "@egovernments/digit-ui-components";
+import { Tag, LabelFieldPair, TextInput, Dropdown, CheckBox, InfoCard, TooltipWrapper, TextArea } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { InfoOutline } from "@egovernments/digit-ui-svg-components";
+import { dummyMaster } from "../../../configs/dummyMaster";
 
 const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
   return (
@@ -81,6 +82,71 @@ const Field = ({
   ...props
 }) => {
   switch (type) {
+    case "textarea":
+      return (
+        <>
+          {infoText && (
+            <InfoCard
+              populators={{
+                name: "infocard",
+              }}
+              variant="default"
+              text={t(infoText)}
+            />
+          )}
+          <LabelFieldPair
+            className={
+              !headerFields
+                ? `appConfigLabelField ${
+                    config?.id
+                      ? config?.id === state?.drawerField?.id
+                        ? "selected"
+                        : ""
+                      : config?.jsonPath === state?.drawerField?.jsonPath
+                      ? "selected"
+                      : ""
+                  }`
+                : "appConfigHeaderLabelField"
+            }
+          >
+            <div className="appConfigLabelField-label">
+              <span>{`${t(label)}`}</span>
+              {Mandatory && <span className="mandatory-span">*</span>}
+              {helpText && (
+                <span className="icon-wrapper">
+                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                </span>
+              )}
+            </div>
+            {!headerFields ? (
+              <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+            ) : (
+              <TextArea type="textarea" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+            )}
+            {isDelete && (
+              <div
+                onClick={(e) => {
+                  onDelete();
+                }}
+                style={{
+                  cursor: "pointer",
+                  fontWeight: "600",
+                  marginLeft: "1rem",
+                  fontSize: "1rem",
+                  color: PRIMARY_COLOR,
+                  display: "flex",
+                  gap: "0.5rem",
+                  alignItems: "center",
+                  marginTop: "1rem",
+                }}
+              >
+                <DustbinIcon />
+              </div>
+            )}
+          </LabelFieldPair>
+        </>
+      );
+
     case "text":
     case "textInput":
       return (
@@ -97,7 +163,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -106,22 +172,29 @@ const Field = ({
                       ? "selected"
                       : ""
                   }`
-                : ""
+                : "appConfigHeaderLabelField"
             }
           >
-            <div className="appConfiglabelField-label">
-              <span>{`${t(label)}`}</span>
-              {Mandatory && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
+            <div className="appConfigLabelField-label-container">
+              <div className="appConfigLabelField-label">
+                <span>{`${t(label)}`}</span>
+                {Mandatory && <span className="mandatory-span">*</span>}
+                {helpText && (
+                  <span className="icon-wrapper">
+                    <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                  </span>
+                )}
+              </div>
+              {!headerFields ? (
+                <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+              ) : (
+                <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
               )}
             </div>
-            <TextInput className="appConfiglabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
             {isDelete && (
               <div
                 onClick={(e) => {
+                  e.stopPropagation();
                   onDelete();
                 }}
                 style={{
@@ -159,7 +232,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -171,7 +244,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -181,7 +254,7 @@ const Field = ({
               )}
             </div>
             <Dropdown
-              className="appConfiglabelField-Input"
+              className="appConfigLabelField-Input"
               // style={}
               variant={""}
               t={t}
@@ -231,7 +304,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -243,7 +316,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -253,7 +326,7 @@ const Field = ({
               )}
             </div>
             <MdmsDropdown
-              className="appConfiglabelField-Input"
+              className="appConfigLabelField-Input"
               variant={""}
               t={t}
               option={dropDownOptions}
@@ -307,7 +380,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -319,7 +392,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -328,7 +401,7 @@ const Field = ({
                 </span>
               )}
             </div>
-            <TextInput type="date" className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
+            <TextInput type="date" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
             {isDelete && (
               <div
                 onClick={(e) => {
@@ -369,7 +442,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -381,7 +454,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -390,7 +463,7 @@ const Field = ({
                 </span>
               )}
             </div>
-            <TextInput type="numeric" className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
+            <TextInput type="numeric" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
             {isDelete && (
               <div
                 onClick={(e) => {
@@ -431,7 +504,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -443,7 +516,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -452,7 +525,7 @@ const Field = ({
                 </span>
               )}
             </div>
-            <TextInput type="number" className="appConfiglabelField-Input" name={""} value={value} onChange={() => {}} />
+            <TextInput type="number" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
             {isDelete && (
               <div
                 onClick={(e) => {
@@ -492,7 +565,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -504,7 +577,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {required && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -554,7 +627,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -566,7 +639,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {Mandatory && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -575,67 +648,7 @@ const Field = ({
                 </span>
               )}
             </div>
-            <TextInput type="time" className="appConfiglabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
-            )}
-          </LabelFieldPair>
-        </>
-      );
-    case "textarea":
-      return (
-        <>
-          {infoText && (
-            <InfoCard
-              populators={{
-                name: "infocard",
-              }}
-              variant="default"
-              text={t(infoText)}
-            />
-          )}
-          <LabelFieldPair
-            className={
-              !headerFields
-                ? `appConfiglabelField ${
-                    config?.id
-                      ? config?.id === state?.drawerField?.id
-                        ? "selected"
-                        : ""
-                      : config?.jsonPath === state?.drawerField?.jsonPath
-                      ? "selected"
-                      : ""
-                  }`
-                : ""
-            }
-          >
-            <div className="appConfiglabelField-label">
-              <span>{`${t(label)}`}</span>
-              {Mandatory && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <TextArea type="textarea" name={""} className="appConfiglabelField-Input" value={value} onChange={() => {}} />
+            <TextInput type="time" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
             {isDelete && (
               <div
                 onClick={(e) => {
@@ -674,7 +687,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -686,7 +699,7 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {Mandatory && <span className="mandatory-span">*</span>}
               {helpText && (
@@ -697,7 +710,7 @@ const Field = ({
             </div>
             <TextInput
               type="text"
-              className="appConfiglabelField-Input"
+              className="appConfigLabelField-Input"
               name={""}
               value={value}
               onChange={(event) => onChange(event)}
@@ -732,7 +745,7 @@ const Field = ({
           <LabelFieldPair
             className={
               !headerFields
-                ? `appConfiglabelField ${
+                ? `appConfigLabelField ${
                     config?.id
                       ? config?.id === state?.drawerField?.id
                         ? "selected"
@@ -744,11 +757,11 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfiglabelField-label">
+            <div className="appConfigLabelField-label">
               <span>{`${t(label)}`}</span>
               {Mandatory && <span className="mandatory-span">*</span>}
             </div>
-            <TextInput className="appConfiglabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+            <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
             {isDelete && (
               <div
                 onClick={(e) => {
@@ -805,7 +818,7 @@ function AppFieldComposer({
         onSelectField();
       }}
       className="app-config-field-wrapper"
-      style={{ width: "50%" }}
+      style={{}}
     >
       <Field
         t={t}

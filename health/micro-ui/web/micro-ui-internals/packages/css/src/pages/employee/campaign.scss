@@ -246,13 +246,27 @@
   gap: 1rem;
 }
 .app-preview {
+  display: flex;
   width: 25rem;
+  height: 40rem;
+  overflow-y: auto;
   border: 0rem solid #ccc;
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   font-family: Arial, sans-serif;
+  .digit-card-header {
+    color: #0b4b66;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .digit-card-text {
+    color: #787878;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 137%;
+  }
 }
 .mobile-top {
   background-color: theme(digitv2.lightTheme.header-sidenav);
@@ -271,7 +285,7 @@
 }
 
 .appConfiglabelField {
-  padding: 3rem 1rem;
+  padding: 1rem;
   background-color: #eee;
   border: 1px solid #d6d5d4;
   border-radius: 0.5rem;
@@ -293,6 +307,7 @@
 }
 .appConfiglabelField-label {
   width: 25rem;
+  margin-bottom: 0.5rem;
 }
 .app-config-actionBar {
   z-index: 9999;
@@ -330,7 +345,4 @@
 }
 .rdt_Table {
   width: 100% !important;
-}
-.digit-slider-container.static.right.open {
-  z-index: 9999;
 }

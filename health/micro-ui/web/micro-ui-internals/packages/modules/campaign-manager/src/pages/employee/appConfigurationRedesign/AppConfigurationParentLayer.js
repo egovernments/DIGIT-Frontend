@@ -1,18 +1,20 @@
 import { Loader, Stepper, Toast } from "@egovernments/digit-ui-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { useHistory } from "react-router-dom";
+import { dummyMaster } from "../../../configs/dummyMaster";
 
 const Tabs = ({ numberTabs, onTabChange }) => {
   const { t } = useTranslation();
   return (
-    <div className="campaign-tabs">
+    <div className="configure-app-tabs">
       {numberTabs.map((_, index) => (
         <button
           key={index}
           type="button"
-          className={`campaign-tab-head ${_.active === true ? "active" : ""} hover`}
+          className={`configure-app-tab-head ${_.active === true ? "active" : ""} hover`}
           onClick={() => onTabChange(_, index)}
         >
           <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(_.parent)}</p>
@@ -28,11 +30,18 @@ const dispatcher = (state, action) => {
       return {
         appTemplate: action.data,
         currentTemplate: action.data,
+        actualTemplate: action.template,
       };
     case "SETBACK":
       return {
         ...state,
-        appData: state.appData ? [...state.appData, ...action.data] : [...action.data],
+        currentTemplate: state.currentTemplate.map((i) => {
+          if (i.name === action.data?.[0].name) {
+            return action.data?.[0];
+          }
+          return i;
+        }),
+        // appData: state.appData ? [...state.appData, ...action.data] : [...action.data],
       };
     case "SETFORM":
       return {
@@ -43,6 +52,103 @@ const dispatcher = (state, action) => {
       return state;
   }
 };
+
+function correctTypeFinder(input) {
+  if (input.type === "string" && input.format === "locality") {
+    return "dropdown";
+  } else if (input.type === "string" && input.format === "date") {
+    return "datePicker";
+  } else {
+    return "textInput";
+  }
+}
+
+function restructure(data1) {
+  return data1.map((page) => {
+    const cardFields = page.properties.map((field) => ({
+      type: correctTypeFinder(field),
+      dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
+      label: field.label || "",
+      value: field.value || "",
+      active: true,
+      jsonPath: field.fieldName || "",
+      metaData: {},
+      required: field.required || false,
+      deleteFlag: false,
+    }));
+
+    return {
+      name: page.label || page.page || "UNKNOWN",
+      cards: [
+        {
+          fields: cardFields,
+          headerFields: [
+            {
+              type: "text",
+              label: "SCREEN_HEADING",
+              value: page.label || "",
+              active: true,
+              jsonPath: "ScreenHeading",
+              metaData: {},
+              required: true,
+            },
+            {
+              type: "textarea",
+              label: "SCREEN_DESCRIPTION",
+              value: page.label || "",
+              active: true,
+              jsonPath: "Description",
+              metaData: {},
+              required: true,
+            },
+          ],
+        },
+      ],
+      order: page.order + 1,
+      config: {
+        enableComment: false,
+        enableFieldAddition: true,
+        allowFieldsAdditionAt: ["body"],
+        enableSectionAddition: false,
+        allowCommentsAdditionAt: ["body"],
+      },
+      parent: "REGISTRATION",
+    };
+  });
+}
+
+function guessPageName(label) {
+  const map = {
+    BENE_LOCATION: "beneficiaryLocation",
+    BENE_HOUSE: "HouseDetails",
+    // Add more mappings as needed
+  };
+  return map[label] || label;
+}
+function reverseRestructure(updatedData) {
+  return updatedData.map((section, index) => {
+    const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => ({
+      type: "string", // assume string, or customize if needed
+      format: "string", // or derive from field.type
+      enums: field.dropDownOptions || [],
+      label: field.label || "",
+      order: fieldIndex,
+      value: field.value || "",
+      hidden: false, // can't be derived from updatedData unless explicitly added
+      required: field.required || false,
+      fieldName: field.jsonPath || "",
+    }));
+
+    return {
+      page: guessPageName(section.name),
+      type: "object",
+      label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
+      description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
+      order: index,
+      properties,
+    };
+  });
+}
 
 const AppConfigurationParentRedesign = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -170,6 +276,12 @@ const AppConfigurationParentRedesign = () => {
     }
   }, [showToast]);
 
+  // useEffect(() => {
+  //   if (!NewisLoadingAppConfigMdmsData && NewAppConfigMdmsData) {
+  //     const temp = restructure(NewAppConfigMdmsData?.SimplifiedAppConfig?.[0]?.pages);
+  //   }
+  // }, [NewAppConfigMdmsData, NewisLoadingAppConfigMdmsData]);
+
   useEffect(() => {
     if (formData || formId) {
       parentDispatch({
@@ -177,9 +289,11 @@ const AppConfigurationParentRedesign = () => {
         data: convertDataFormat(formData, AppConfigMdmsData?.[masterName]),
       });
     } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
+      const temp = restructure(AppConfigMdmsData?.[masterName]?.[0]?.pages);
       parentDispatch({
         key: "SET",
-        data: [...AppConfigMdmsData?.[masterName]],
+        data: [...temp],
+        template: AppConfigMdmsData?.[masterName],
       });
     }
   }, [isLoadingAppConfigMdmsData, AppConfigMdmsData, formData]);
@@ -201,27 +315,27 @@ const AppConfigurationParentRedesign = () => {
           name: k.name,
           isLast: j === t.length - 1 ? true : false,
           isFirst: j === 0 ? true : false,
-          active: j === 0 ? true : false,
+          active: j === currentStep - 1 ? true : false,
         }))
     );
-  }, [parentState?.currentTemplate, numberTabs]);
+  }, [parentState?.currentTemplate, numberTabs, currentStep]);
 
-  useEffect(() => {
-    setStepper((prev) => {
-      return prev.map((i, c) => {
-        if (c === currentStep - 1) {
-          return {
-            ...i,
-            active: true,
-          };
-        }
-        return {
-          ...i,
-          active: false,
-        };
-      });
-    });
-  }, [currentStep]);
+  // useEffect(() => {
+  //   setStepper((prev) => {
+  //     return prev.map((i, c) => {
+  //       if (c === currentStep - 1) {
+  //         return {
+  //           ...i,
+  //           active: true,
+  //         };
+  //       }
+  //       return {
+  //         ...i,
+  //         active: false,
+  //       };
+  //     });
+  //   });
+  // }, [currentStep]);
 
   useEffect(() => {
     if (variant === "app" && parentState?.currentTemplate?.length > 0 && currentStep && numberTabs?.length > 0) {
@@ -309,14 +423,22 @@ const AppConfigurationParentRedesign = () => {
       parentDispatch({
         key: "SETBACK",
         data: screenData,
+        isSubmit: stepper?.find((i) => i.active)?.isLast ? true : false,
       });
       if (stepper?.find((i) => i.active)?.isLast) {
-        const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
+        const reverseData = reverseRestructure(parentState?.currentTemplate);
+        // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
+        const reverseFormat = {
+          name: "REGISTRATIONFLOW",
+          version: "1.0",
+          pages: reverseData,
+        };
+
         await mutate(
           {
             moduleName: "HCM-ADMIN-CONSOLE",
-            masterName: "DummyAppConfig",
-            data: { ...screenData?.[0] },
+            masterName: masterName,
+            data: { reverseData },
           },
           {
             onError: (error, variables) => {
@@ -355,13 +477,14 @@ const AppConfigurationParentRedesign = () => {
   };
   const back = () => {
     if (stepper?.find((i) => i.active)?.isFirst) {
-      setShowToast({ key: "ERROR", label: "CANNOT_GO_BACK" });
+      setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
     } else {
       setCurrentStep((prev) => prev - 1);
     }
   };
   return (
     <div>
+      <Header className="app-config-header">{t(`${currentScreen?.[0]?.name}`)}</Header>
       {variant === "app" && (
         <Tabs
           numberTabs={numberTabs}
@@ -384,7 +507,7 @@ const AppConfigurationParentRedesign = () => {
           }}
         />
       )}
-      {variant === "app" && (
+      {/* {variant === "app" && (
         <Stepper
           customSteps={[...stepper?.map((i) => i.name)]}
           currentStep={currentStep}
@@ -392,7 +515,7 @@ const AppConfigurationParentRedesign = () => {
           activeSteps={0}
           className={"appConfig-flow-stepper"}
         />
-      )}
+      )} */}
       <ImpelComponentWrapper
         variant={variant}
         screenConfig={currentScreen}

@@ -1,5 +1,6 @@
 import React, { Fragment, useEffect, useState } from "react";
 import AppLocalisationWrapper from "./AppLocalisationWrapper";
+import { dummyMaster } from "../../../configs/dummyMaster";
 
 function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
@@ -19,6 +20,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     { schemaCode: "APP_FIELD_TYPE_FETCH_IMPE" } //mdmsv2
   );
 
+  // const AppConfigMdmsData = dummyMaster?.[MODULE_CONSTANTS]?.[fieldMasterName];
   function restructure(temp) {
     const xx = temp.map((item, index, arr) => {
       return {
@@ -164,7 +166,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
         ? formBuilderRestructure(state?.screenData)
         : variant === "schema"
         ? convertToJSONSchema(state?.screenData?.[0])
-        : restructure(state?.screenData);
+        : state?.screenData;
     submit(restructuredData);
   };
 

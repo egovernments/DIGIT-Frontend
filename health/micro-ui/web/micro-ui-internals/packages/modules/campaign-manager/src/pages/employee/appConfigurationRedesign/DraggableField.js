@@ -47,7 +47,7 @@ function DraggableField({
   drag(drop(ref));
   return (
     <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
-      <span style={{ cursor: "grab", marginRight: "8px" }}>☰</span>
+      <span style={{ cursor: "grab", marginRight: "8px", lineHeight: "1" }}>⋮</span>
       <AppFieldComposer
         type={type}
         label={label}

@@ -1,14 +1,16 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useTranslation } from "react-i18next";
-import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar } from "@egovernments/digit-ui-components";
+import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 import { useCustomT } from "./useCustomT";
 import DraggableField from "./DraggableField";
+import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
 function AppFieldScreenWrapper() {
-  const { state, dispatch } = useAppConfigContext();
+  const { state, dispatch, openAddFieldPopup } = useAppConfigContext();
+  const { locState, updateLocalization } = useAppLocalisationContext();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   const formId = searchParams.get("formId");
@@ -35,7 +37,7 @@ function AppFieldScreenWrapper() {
     <React.Fragment>
       {currentCard?.cards?.map(({ fields, description, header, headerFields }, index, card) => {
         return (
-          <Card className="appConfigScreenCard">
+          <>
             {headerFields?.map(({ type, label, active, required, value }, indx, cx) => (
               <AppFieldComposer
                 type={type}
@@ -59,6 +61,7 @@ function AppFieldScreenWrapper() {
               />
             ))}
             <Divider />
+            <div className="slider-header">Fields</div>
             {fields?.map(
               ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
                 return (
@@ -109,24 +112,30 @@ function AppFieldScreenWrapper() {
             )}
             {currentCard?.config?.enableFieldAddition && (
               <Button
-                className={"campaign-type-alert-button"}
+                className={"app-config-drawer-button"}
                 type={"button"}
-                size={"large"}
-                variation={"primary"}
+                size={"medium"}
+                icon={"AddIcon"}
+                variation={"teritiary"}
                 label={t("ADD_FIELD")}
                 onClick={() => {
-                  dispatch({
-                    type: "ADD_FIELD",
-                    payload: {
-                      currentScreen: currentCard,
-                      currentCard: card[index],
-                    },
+                  openAddFieldPopup({
+                    currentScreen: currentCard,
+                    currentCard: card[index],
                   });
+                  // dispatch({
+                  //   type: "ADD_FIELD",
+                  //   payload: {
+                  //     currentScreen: currentCard,
+                  //     currentCard: card[index],
+                  //     isPopup: true,
+                  //   },
+                  // });
                   return;
                 }}
               />
             )}
-          </Card>
+          </>
         );
       })}
       {currentCard?.config?.enableSectionAddition && (
@@ -147,6 +156,32 @@ function AppFieldScreenWrapper() {
           }}
         />
       )}
+      <Divider className="app-config-drawer-action-divider" />
+      <LabelFieldPair className="app-preview-app-config-drawer-action-button">
+        <div className="">
+          <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+        </div>
+        <TextInput
+          // style={{ maxWidth: "40rem" }}
+          name="name"
+          value={useCustomT(currentCard?.actionLabel)}
+          onChange={(event) => {
+            updateLocalization(
+              `REGISTRATION_ACTION_BUTTON_LABEL`,
+              Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+              event.target.value
+            );
+            dispatch({
+              type: "ADD_ACTION_LABEL",
+              payload: {
+                currentScreen: currentCard,
+                actionLabel: `REGISTRATION_ACTION_BUTTON_LABEL`,
+              },
+            });
+            return;
+          }}
+        />
+      </LabelFieldPair>
     </React.Fragment>
   );
 }

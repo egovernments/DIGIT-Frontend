@@ -441,7 +441,7 @@ function DrawerFieldComposer() {
           <TextArea
             type="textarea"
             name={""}
-            className="appConfiglabelField-Input"
+            className="appConfigLabelField-Input"
             value={drawerState?.curl || ""}
             onChange={(e) => {
               setDrawerState((prev) => ({

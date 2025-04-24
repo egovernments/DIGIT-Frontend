@@ -31,6 +31,9 @@ const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
 function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parentDispatch, ...props }) {
   const [locState, locDispatch] = useReducer(locReducer, initialState);
+  const searchParams = new URLSearchParams(location.search);
+  const localeModule = searchParams.get("localeModule");
+
   const addMissingKey = (code) => {
     locDispatch({ type: "ADD_MISSING_KEY", payload: { code } });
   };
@@ -46,7 +49,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: "dev",
     locale: enabledModules,
-    module: "hcm-dummy-module",
+    module: localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module",
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
       staleTime: 0,
