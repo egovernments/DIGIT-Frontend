@@ -229,7 +229,6 @@ const AppConfigurationParentRedesign = () => {
   useEffect(() => {
     if (!isLoading && formData && formId) {
       const temp = restructure(formData?.data?.pages);
-      debugger;
       parentDispatch({
         key: "SET",
         data: [...temp],

@@ -2,8 +2,6 @@ import { useMutation } from "react-query";
 
 const upsertSchemaConfig = async (req, tenantId) => {
   try {
-    debugger;
-
     const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
     const response = await Digit.CustomService.getResponse({
