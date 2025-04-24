@@ -29,7 +29,6 @@ const CampaignDetails = () => {
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-
   const data = {
     cards: [
       {
@@ -43,7 +42,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_BOUNDARY_SELECT_HEADING"),
               desc: t("HCM_SELECT_BOUNDARY_DESC"),
               buttonLabel: campaignData?.boundaries?.length>0 ? t("HCM_EDIT_BOUNDARY_BUTTON") : t("HCM_SELECT_BOUNDARY_BUTTON"),
-              navLink: `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}`,
+              navLink: `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
             },
           },
         ],
@@ -58,8 +57,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_DELIVERY_HEADING"),
               desc: t("HCM_DELIVERY_DESC"),
-              buttonLabel: campaignData?.deliveryRules?.length>0 ? t("HCM_EDIT_DELIVERY_BUTTON") : t("HCM_DELIVERY_BUTTON"),
-              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}`,
+              buttonLabel: campaignData?.deliveryRules?.[0]?.cycles?.length>0 ? t("HCM_EDIT_DELIVERY_BUTTON") : t("HCM_DELIVERY_BUTTON"),
+              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
             },
           },
         ],
@@ -75,7 +74,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
               buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
-              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}`,
+              navLink: `app-modules`,
             },
           },
         ],
@@ -91,7 +90,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_UPLOAD_DATA_HEADING"),
               desc: t("HCM_UPLOAD_DATA_DESC"),
               buttonLabel: campaignData?.resources?.length>0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
-              navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}`,
+              navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
             },
           },
         ],
@@ -107,7 +106,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_CHECKLIST_HEADING"),
               desc: t("HCM_CHECKLIST_DESC"),
               buttonLabel: t("HCM_CHECKLIST_BUTTON"),
-              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}`,
+              navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}`,
             },
           },
         ],
@@ -129,17 +128,7 @@ const CampaignDetails = () => {
       <div className="campaign-details-header">
         <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
         <Tag label={campaignData?.campaignName} showIcon={false} className={"campaign-view-tag"} type={"warning"} stroke={true}></Tag>
-        <Tag
-          label={
-            campaignData?.deliveryRules?.length > 1
-              ? t("HCM_MULTIROUND")
-              : t("HCM_INDIVIDUAL")
-          }
-          showIcon={false}
-          className="campaign-view-tag"
-          type="monochrome"
-          stroke={true}
-        />
+        <Tag label={campaignData?.deliveryRules?.length > 1 ? "HCM_MULTIROUND" : "HCM_INDIVIDUAL"}  showIcon={false} className={"campaign-view-tag"} type={"monochrome"} stroke={true}></Tag>
         </div>
         <div className="dates">{week}</div>
         <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>

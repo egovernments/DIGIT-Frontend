@@ -543,11 +543,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     }
   }, [showToast]);
 
-  const onSubmit = async (formData, cc) => {
-    if(isSubmit){
-      history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
-      return ;
-    }
+  const onSubmit = async (formData, cc) => {    
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -900,6 +896,13 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     }
     if (isDraft === "true" && isSkip !== "false") {
       updateUrlParams({ skip: "false" });
+    }
+    if(isSubmit){
+      setShouldUpdate(true);
+      if(currentKey == 6 || currentKey == 9 || currentKey == 16){
+        history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+      }
+      return ;
     }
     return;
   };
