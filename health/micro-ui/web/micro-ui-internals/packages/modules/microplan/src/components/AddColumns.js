@@ -29,16 +29,15 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
     <Card>
       <Header className="summary-main-heading">{t("MP_ADD_NEW_COLUMNS_HEADER")} </Header>
       {colValues?.map((item, index) => (
-        <LabelFieldPair key={index} className="mp-hypothesis-label-field" style={{ alignItems: "center" }}>
+        <LabelFieldPair key={index} className="mp-hypothesis-label-field addColumnsScreen" style={{ alignItems: "center" }}>
           <div className="assumption-label">
             <span className="assumption-label-icon-wrapper">
               <span className="assumption-label-icon-wrapper-label">{`${t(`MP_COLUMN_ADDITION`)} ${index+1}`}</span>
             </span>
           </div>
 
-          <div className="fieldv1-deleteIcon-container">
-            <div className="new-columns-screen">
-            <FieldV1
+          <div className="fieldv1-deleteIcon-container addColumnsScreen">
+          <FieldV1
               type="text"
               name={`field-${index}`}
               value={item.value || ""}
@@ -50,7 +49,6 @@ const AddColumns = ({ colValues: initialColValues, setShowToast }) => {
                 if (event.key === "Enter") event.preventDefault();
               }}
             />
-            </div>
             <div className="hypothesis-delete-button">
               <Button
                 icon="Delete"
