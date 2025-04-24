@@ -433,3 +433,17 @@
 .campaign-view-tag{
   margin-left: 1rem;
 }
+
+.module-card{
+  width: 20rem;
+  height: 16.6rem;
+  border: 1px;
+  border-radius: 0.75rem;
+}
+.modules-container{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  grid-gap: 1.5rem;
+  padding: 1rem;
+}
+
