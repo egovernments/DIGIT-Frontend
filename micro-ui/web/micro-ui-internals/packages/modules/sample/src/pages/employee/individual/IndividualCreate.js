@@ -2,9 +2,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { FormComposerV2, HeaderComponent } from "@egovernments/digit-ui-components";
-// import { newConfig } from "../../../configs/IndividualCreateConfig";
+import { newConfig } from "../../../configs/IndividualCreateConfig";
 import { transformIndividualCreateData } from "../../../utils/createUtils";
-import { config as newConfig } from "../../../configs/SampleCreateConfig";
 // import { newConfig } from "../../configs/IndividualCreateConfig";
 // import { transformIndividualCreateData } from "../../utils/createUtils";
 
