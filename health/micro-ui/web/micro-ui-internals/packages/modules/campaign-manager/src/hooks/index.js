@@ -23,6 +23,7 @@ import useUpsertFormBuilderConfig from "./useUpsertFormBuilderConfig";
 import { useMDMSV2Search } from "./useMDMSV2Search";
 import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
 import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
+import useUpdateAppConfig from "./useUpdateAppConfig";
 
 const UserService = {};
 
@@ -55,6 +56,7 @@ const campaign = {
   useUpsertFormBuilderConfig,
   useMDMSV2Search,
   useUpdateFormBuilderConfig,
+  useUpdateAppConfig,
   useUpsertSchemaConfig,
 };
 
