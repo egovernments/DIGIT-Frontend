@@ -42,15 +42,6 @@ const AppModule = () => {
                 history.push(`/${window.contextPath}/employee/campaign/app-features?code=${module?.code}`)
               }}
             />
-            {/* {module?.features.length > 0 && (
-              <div style={{ marginTop: "1rem" }}>
-                {module.features.map((feature, idx) => (
-                  <div key={idx}>
-                    <strong>{feature.code}</strong> - {feature.description}
-                  </div>
-                ))}
-              </div>
-            )} */}
           </Card>
         ))}
       </div>

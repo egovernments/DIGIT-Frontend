@@ -47,14 +47,6 @@ const AppFeatures = () => {
       <div>
         <HeaderComponent className="campaign-header-style">{t(`HCM_CHOOSE_FEATURE_FOR_APP`)}</HeaderComponent>
         <Toggle
-          Toggle1Label=""
-          Toggle2Label=""
-          Toggle3Label=""
-          additionalWrapperClass=""
-          errorStyle={null}
-          innerStyles={{}}
-          inputRef={null}
-          label=""
           name="toggleOptions"
           numberOfToggleItems={toggleOptions.length}
           onChange={function noRefCheck() {}}
@@ -65,10 +57,7 @@ const AppFeatures = () => {
           options={toggleOptions}
           optionsKey="code"
           selectedOption={code}
-          style={{}}
-          t={function noRefCheck() {}}
           type="toggle"
-          value=""
         />
       </div>
       <div className="modules-container">
