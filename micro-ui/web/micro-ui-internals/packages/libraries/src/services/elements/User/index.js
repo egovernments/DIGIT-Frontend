@@ -30,8 +30,9 @@ export const UserService = {
       return authResponse;
   },
   logoutUser: (keycloak) => {
+    const tenantId = Digit.ULBService.getStateId();
     keycloak.logout({
-      redirectUri: window.location.origin + "/sandbox-ui/SDFG/employee/user/language-selection", // where to go after logout
+      redirectUri: `${window.location.origin}/sandbox-ui/${tenantId}/employee/user/language-selection`, // where to go after logout
     });
     // let user = UserService.getUser();
     // if (!user || !user.info || !user.access_token) return false;
