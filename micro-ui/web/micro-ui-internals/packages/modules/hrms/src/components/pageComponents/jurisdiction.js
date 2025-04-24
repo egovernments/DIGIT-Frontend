@@ -122,7 +122,7 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
  async function getroledata() {
     const token = localStorage.getItem("token");
 
-    const response = await fetch("https://digit-lts.digit.org/keycloak-test/admin/realms/SDFG/roles", {
+    const response = await fetch(`https://digit-lts.digit.org/keycloak-test/admin/realms/${tenantId}/roles`, {
       method: "GET",
       headers: {
         "Authorization": `Bearer ${token}`,
