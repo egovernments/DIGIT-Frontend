@@ -408,7 +408,7 @@ const Response = () => {
         body: JSON.stringify({
           Individual: {
             id: state?.id,
-            tenantId: "SDFG",
+            tenantId: tenantId,
             userUuid: foundUser.id,
           },
           RequestInfo: {
