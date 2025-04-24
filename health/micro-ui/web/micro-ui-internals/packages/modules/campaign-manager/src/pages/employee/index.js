@@ -18,6 +18,8 @@ import FetchFromMicroplan from "../../components/fetchFromMicroplan";
 import CampaignHome from "./NewCampaignCreate/CampaignHome";
 import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
+import AppModule from "./NewCampaignCreate/AppModule";
+import AppFeatures from "./NewCampaignCreate/AppFeatures";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -186,6 +188,8 @@ const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hier
           />
           <PrivateRoute path={`${path}/campaign-home`} component={() => <CampaignHome />} />
           <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
+          <PrivateRoute path={`${path}/app-modules`} component={() => <AppModule />} />
+          <PrivateRoute path={`${path}/app-features`} component={() => <AppFeatures/>} />
         </AppContainer>
       </Switch>
     </React.Fragment>

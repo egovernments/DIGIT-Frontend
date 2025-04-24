@@ -327,46 +327,46 @@ const UpdateChecklist = () => {
         return { codes: codes, local: local };
     };
 
-    function getFilteredLocaleEntries(quesArray, localeArray) {
+    function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
         const messages = new Set();
-      
         let activeCount = 0;
-
+      
         if (helpText?.trim()) {
-            messages.add(helpText.trim());
-          }
+          messages.add(helpText.trim());
+        }
       
-        // Collect all active question titles, options, helpTexts, and sub-question titles
-        quesArray.forEach((question) => {
-          if (!question?.isActive) return;
+        function traverseQuestions(questions, prefix = "") {
+          questions.forEach((question, qIndex) => {
+            if (!question?.isActive) return;
       
-          activeCount++;
-          const prefix = `${activeCount}) `;
+            const currentPrefix = prefix ? `${prefix}.${qIndex + 1}` : `${++activeCount}`;
+            const formattedPrefix = `${currentPrefix}) `;
       
-          if (question.title) messages.add(prefix + question.title.trim());
-          if (question.helpText) messages.add(question.helpText.trim());
+            if (question.title) messages.add(formattedPrefix + question.title.trim());
+            if (question.helpText) messages.add(question.helpText.trim());
       
-          if (Array.isArray(question.options)) {
-            question.options.forEach((option) => {
-              if (option.label) messages.add(option.label.trim());
+            if (Array.isArray(question.options)) {
+              question.options.forEach((option) => {
+                if (option.label) messages.add(option.label.trim());
       
-              if (Array.isArray(option.subQuestions)) {
-                option.subQuestions.forEach((subQ) => {
-                  if (subQ.isActive) {
-                    if (subQ.title) messages.add(subQ.title.trim());
-                    if (subQ.helpText) messages.add(subQ.helpText.trim());
-                  }
-                });
-              }
-            });
-          }
-        });
+                if (Array.isArray(option.subQuestions)) {
+                  traverseQuestions(option.subQuestions, currentPrefix);
+                }
+              });
+            }
       
-        // Now filter locale entries by matching message
+            if (Array.isArray(question.subQuestions)) {
+              traverseQuestions(question.subQuestions, currentPrefix);
+            }
+          });
+        }
+      
+        traverseQuestions(quesArray);
+      
         const filteredLocales = localeArray.filter((entry) =>
           messages.has(entry.message?.trim())
         );
-
+      
         return filteredLocales;
       }
 
