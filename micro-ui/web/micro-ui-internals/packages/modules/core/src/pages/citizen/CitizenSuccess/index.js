@@ -33,7 +33,7 @@ const setCitizenDetail = (userObject, token, tenantId) => {
 };
 
 const CuccessPage = () => {
-  const tenantId = "SDFG";
+  const tenantId = Digit.ULBService.getStateId();
   const { t } = useTranslation();
   const history = useHistory();
   const { keycloak } = useKeycloak();
@@ -62,7 +62,7 @@ const CuccessPage = () => {
     const individualSearchCriteria = {
     url: "/individual/v1/_search",
     params: {
-      tenantId: "SDFG",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },
@@ -99,7 +99,7 @@ const CuccessPage = () => {
     const filteredRoles = user?.info?.roles?.filter((role) => role.tenantId === Digit.SessionStorage.get("Employee.tenantId"));
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
-    setCitizenDetail(user?.info, user?.access_token, "SDFG");
+    setCitizenDetail(user?.info, user?.access_token, tenantId);
     // setEmployeeDetail(user?.info, user?.access_token);
     // let redirectPath = `/${window?.globalPath}/user/setup`;
     // let redirectPath = `/${window?.contextPath}/citizen/select-location`;
@@ -127,7 +127,7 @@ const CuccessPage = () => {
       return;
     }
 
-    const url = `https://digit-lts.digit.org/keycloak-test/realms/SDFG/protocol/openid-connect/token`;
+    const url = `https://digit-lts.digit.org/keycloak-test/realms/${tenantId}/protocol/openid-connect/token`;
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -200,10 +200,10 @@ const CuccessPage = () => {
           roles: decodedToken.realm_access?.roles.map((role) => ({
             name: role,
             code: role.toUpperCase(),
-            tenantId: "SDFG",
+            tenantId: tenantId,
           })) || [],
           active: true,
-          tenantId: "SDFG",
+          tenantId: tenantId,
         };
       console.log("token check",newToken.expires_in)
       const tokens = {
@@ -241,7 +241,7 @@ const CuccessPage = () => {
       let redirectPath = `/${window?.contextPath}/citizen/select-location`;
     history.push({
       pathname: redirectPath,
-      state: { tenant: "SDFG" },
+      state: { tenant: tenantId },
     });
     } catch (err) {
       console.error("Error setting user details:", err);

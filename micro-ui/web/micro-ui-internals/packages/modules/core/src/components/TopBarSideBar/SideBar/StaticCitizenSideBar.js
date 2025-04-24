@@ -84,6 +84,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const user = Digit.UserService.getUser();
+  const citizenTenant=  Digit.ULBService.getStateId();
   let isMobile = window.Digit.Utils.browser.isMobile();
    const { keycloak } = useKeycloak();
   const [isEmployee, setisEmployee] = useState(false);
@@ -119,7 +120,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     // localStorage.clear();
     // sessionStorage.clear();
     keycloak.login({
-      redirectUri: window.location.origin + "/sandbox-ui/SDFG/citizen/success", // Redirect after login
+      redirectUri: `${window.location.origin}/sandbox-ui/${citizenTenant}/citizen/success` // Redirect after login
     });
     // history.push(`/${window?.contextPath}/citizen/login`);
   };

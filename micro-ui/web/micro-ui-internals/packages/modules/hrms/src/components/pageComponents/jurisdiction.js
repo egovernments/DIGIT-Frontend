@@ -19,7 +19,7 @@ const makeDefaultValues = (sessionFormData) => {
 }
 
 const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getStateId();
   const [inactiveJurisdictions, setInactiveJurisdictions] = useState([]);
   const { data: data = {}, isLoading } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "HRMSRolesandDesignation") || {};
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
