@@ -53,11 +53,14 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
+import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
+import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
+import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
+//App config import
 import AppPreview from "./components/AppPreview";
 import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
 import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
 import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
-
 /**
  * MDMS Module name
  */
@@ -69,7 +72,7 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  * @returns The CampaignModule component returns either a Loader component if data is still loading, or
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
-const CampaignModule = ({ stateCode, userType, tenants }) => {
+const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleName = Digit.Utils.campaign.getModuleName();
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
@@ -123,7 +126,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
       </TourProvider>
     </ErrorBoundary>
   );
-};
+});
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
@@ -176,7 +179,10 @@ const componentsToRegister = {
   AppPreview,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
   FormBuilder,
-  AppConfigurationParentRedesign
+  AppConfigurationParentRedesign,
+  AppConfigurationWrapper,
+  DateSelection,
+  ViewDetailComponent,
 };
 
 const overrideHooks = () => {

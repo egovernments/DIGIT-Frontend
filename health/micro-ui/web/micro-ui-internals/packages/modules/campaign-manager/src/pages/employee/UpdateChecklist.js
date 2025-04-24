@@ -10,6 +10,7 @@ import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
 
 const UpdateChecklist = () => {
     const { t } = useTranslation();
+    const module = "hcm-checklist";
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const campaignName = searchParams.get("campaignName");
@@ -29,9 +30,9 @@ const UpdateChecklist = () => {
     const [searching, setSearching] = useState(true);
     const [viewData, setViewData] = useState(null);
     let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+    const presentLocale = Digit?.SessionStorage.get("locale");
     const { mutateAsync } = Digit.Hooks.campaign.useUpdateChecklist(tenantId);
     const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
-    module = "hcm-checklist";
     let processedData = [];
     let checklistName = `${checklistType} ${role}`;
     const [submitting, setSubmitting] = useState(false);
@@ -156,7 +157,7 @@ const UpdateChecklist = () => {
         return organizedQuestions;
     }
 
-  const { data: searchLocalisationData } = Digit.Hooks.campaign.useSearchLocalisation({
+  const { data: searchLocalisationData, refetch } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: tenantId,
     locale: currentLocales,
     module: module,
@@ -174,7 +175,7 @@ const UpdateChecklist = () => {
   function enrichLocalizationData(localArray, searchLocalizationData) {
     const existingCodeLocales = localArray.map(item => `${item.code}|${item.locale}`);
     
-    const entriesToAdd = searchLocalizationData.filter(searchItem => {
+    const entriesToAdd = searchLocalizationData?.filter(searchItem => {
       const codeLocaleKey = `${searchItem.code}|${searchItem.locale}`;
       
       return existingCodeLocales.includes(codeLocaleKey) === false && 
@@ -322,13 +323,71 @@ const UpdateChecklist = () => {
                 generateCode(question, '', index);
             }
         });
-        if(searchLocalisationData){
-        const enrichedArray = enrichLocalizationData(local, searchLocalisationData);
-        setLocalisationData(enrichedArray);
-        }
 
         return { codes: codes, local: local };
     };
+
+    function getFilteredLocaleEntries(quesArray, localeArray) {
+        const messages = new Set();
+      
+        let activeCount = 0;
+
+        if (helpText?.trim()) {
+            messages.add(helpText.trim());
+          }
+      
+        // Collect all active question titles, options, helpTexts, and sub-question titles
+        quesArray.forEach((question) => {
+          if (!question?.isActive) return;
+      
+          activeCount++;
+          const prefix = `${activeCount}) `;
+      
+          if (question.title) messages.add(prefix + question.title.trim());
+          if (question.helpText) messages.add(question.helpText.trim());
+      
+          if (Array.isArray(question.options)) {
+            question.options.forEach((option) => {
+              if (option.label) messages.add(option.label.trim());
+      
+              if (Array.isArray(option.subQuestions)) {
+                option.subQuestions.forEach((subQ) => {
+                  if (subQ.isActive) {
+                    if (subQ.title) messages.add(subQ.title.trim());
+                    if (subQ.helpText) messages.add(subQ.helpText.trim());
+                  }
+                });
+              }
+            });
+          }
+        });
+      
+        // Now filter locale entries by matching message
+        const filteredLocales = localeArray.filter((entry) =>
+          messages.has(entry.message?.trim())
+        );
+
+        return filteredLocales;
+      }
+
+      function freshMessage(currentLocalisationData, enrichedArray) {
+        const common = enrichedArray.filter((enrichedItem) => {
+          const match = currentLocalisationData.find((localItem) => {
+            const localeMessage = localItem[enrichedItem.locale]; // e.g., en_IN
+            return (
+              localItem.code === enrichedItem.code &&
+              localItem.module === enrichedItem.module &&
+              localeMessage === enrichedItem.message
+            );
+          });
+          return match !== undefined;
+        });
+
+        setLocalisationData(common);
+      
+        return common;
+      }
+      
 
     // Helper function remains unchanged as it already handles both active and inactive questions
     function createQuestionObject(item, tenantId, idCodeMap) {
@@ -482,6 +541,7 @@ const UpdateChecklist = () => {
             const data = await mutateAsync(payload);
 
             if (data.success) { // Replace with your actual condition
+                refetch();
                 history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
                     message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
                     preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
@@ -577,7 +637,9 @@ const UpdateChecklist = () => {
                                     onClick={() => {
                                         const processed = organizeQuestions(tempFormData);
                                         const { local: generatedLocal } = generateCodes(processed);
-                                        // setLocalisationData(generatedLocal);
+                                        const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
+                                        const enrichedArray = enrichLocalizationData(generatedLocal, searchLocalisationData);
+                                        const fresh = freshMessage(currentLocalisationData , enrichedArray);
                                         setShowLocalisationPopup(true);
                                         setShowPopUp(false);
                                     }}
@@ -642,6 +704,7 @@ const UpdateChecklist = () => {
                             className="localisation-popup-container"
                             heading={t("ADD_TRANSLATIONS")}
                             onClose={() => setShowLocalisationPopup(false)}
+                            onOverlayClick={() => setShowLocalisationPopup(false)}
                         >
                             <LocalisationEditorPopup
                                 locales={currentLocales.filter(local => local !== locale)}

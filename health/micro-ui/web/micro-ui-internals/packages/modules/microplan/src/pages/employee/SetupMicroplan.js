@@ -23,14 +23,14 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const [showToast, setShowToast] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const { campaignId, microplanId, key, ...queryParams } = Digit.Hooks.useQueryParams();
-  const searchParams = new URLSearchParams(location.search);
+
   const [isLastVerticalStep, setIsLastVerticalStep] = useState(() => {
-    const searchParams = new URLSearchParams(location.search);
-    return searchParams.get("isLastVerticalStep");
+    const { isLastVerticalStep:isLastVerticalStepParam } = Digit.Hooks.useQueryParams();
+    return isLastVerticalStepParam;
   });
   const [isFormulaLastVerticalStep, setIsFormulaLastVerticalStep] = useState(() => {
-    const searchParams = new URLSearchParams(location.search);
-    return searchParams.get("isFormulaLastVerticalStep");
+    const { isFormulaLastVerticalStep:isFormulaLastVerticalStepParam } = Digit.Hooks.useQueryParams();
+    return isFormulaLastVerticalStepParam;
   });
   const setupCompleted = queryParams?.["setup-completed"];
   const [shouldUpdate, setShouldUpdate] = useState(false);
@@ -85,7 +85,8 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
       },
     },
     {
-      enabled: microplanId ? true : false,
+      enabled: !!microplanId ,
+      // enabled:false
       // queryKey: currentKey,
     }
   );
@@ -109,7 +110,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   //Generic mutation to handle creation and updation of resources(plan/project)
   const { mutate: updateResources, ...rest } = Digit.Hooks.microplanv1.useCreateUpdatePlanProject();
 
-  const throttledUpdateResources = useThrottle(updateResources,2000)
+  const throttledUpdateResources = useThrottle(updateResources,250)
 
   const filterMicroplanConfig = (microplanConfig, currentKey) => {
     return microplanConfig
@@ -185,7 +186,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
     setTotalFormData(params);
   }, [params]);
 
-  const handleUpdates = (propsForMutate) => {
+  const handleUpdates =(propsForMutate) => {
     setLoader(true);
     throttledUpdateResources(propsForMutate, {
       onSuccess: (data) => {
@@ -261,7 +262,6 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   const onSubmit = (formData) => {
     // setIsSubmittting to true -> to run inline validations within the components
     setIsSubmitting(true);
-
     //config
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const currentConfBody = filteredConfig?.[0]?.form?.[0]?.body?.[0];
@@ -372,12 +372,12 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
   }
 
   const getNextActionLabel = () => {
-    if ((currentKey === 7 || currentKey === 9) && isLastVerticalStep && isLastVerticalStep === "false") {
+    if ((currentKey === 7 || currentKey === 10) && isLastVerticalStep && isLastVerticalStep === "false") {
       return null;
     } else if (currentKey === 8 && isFormulaLastVerticalStep && isFormulaLastVerticalStep === "false") {
       return null;
     } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.isLast) {
-      return t("MP_COMPLETE_SETUP");
+      return t("MP_COMPLETE_DRAFT");
     } else {
       return t("MP_SAVE_PROCEED");
     }
@@ -396,6 +396,7 @@ const SetupMicroplan = ({ hierarchyType, hierarchyData }) => {
           "MP_MANAGING_DATA",
           "MICROPLAN_ASSUMPTIONS",
           "FORMULA_CONFIGURATION",
+          "MP_DATA_VALIDATION",
           "ROLE_ACCESS_CONFIGURATION",
           "SUMMARY",
         ]}

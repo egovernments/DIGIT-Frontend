@@ -95,6 +95,7 @@ module.exports = function (app) {
     "/boundary-service",
     "/product",
     "/plan-service",
+    "/resource-generator",
     "/health-project",
     "/health-service-request",
     "/census-service",

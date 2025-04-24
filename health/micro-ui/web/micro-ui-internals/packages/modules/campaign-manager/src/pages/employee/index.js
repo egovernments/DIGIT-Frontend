@@ -17,6 +17,9 @@ import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
 import FormBuilder from "./appConfigurationScreenParent/FormBuilder";
 import SchemaBuilder from "./appConfigurationScreenParent/SchemaBuilder";
+import CampaignHome from "./NewCampaignCreate/CampaignHome";
+import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
+import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -88,6 +91,16 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("UPDATE_CAMPAIGN"),
       show: pathVar.match("update-campaign") ? true : false,
     },
+    {
+      path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
+      content: t("CREATE_CAMPAIGN_HOME"),
+      show: pathVar.match("campaign-home") ? true : false,
+    },
+    {
+      path: pathVar === "create-campaign" ? "" : `/${window?.contextPath}/employee/campaign/create-campaign`,
+      content: t("CREATE_CAMPAIGN"),
+      show: pathVar.match("create-campaign") ? true : false,
+    },
   ];
 
   return <BreadCrumb className="campaign-breadcrumb" crumbs={crumbs} spanStyle={{ maxWidth: "min-content" }} />;
@@ -101,7 +114,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * the `Switch` component, there are several `PrivateRoute` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
-const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
+const App = React.memo(({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
   const location = useLocation();
   const userId = Digit.UserService.getUser().info.uuid;
   const BOUNDARY_HIERARCHY_TYPE = useMemo(() => BoundaryHierarchy, [BoundaryHierarchy]);
@@ -167,16 +180,23 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/boundary/create`} component={() => <BoundaryRelationCreate />} />
           <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={() => <ViewBoundary />} />
           <PrivateRoute path={`${path}/boundary/data`} component={() => <ViewHierarchy />} />
-          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign />} />
+          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
           <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
           <PrivateRoute path={`${path}/app-configuration-redesign`} component={() => <AppConfigurationParentRedesign />} />
           <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
           <PrivateRoute path={`${path}/schema-builder-configuration`} component={() => <SchemaBuilder />} />
+          <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
+          <PrivateRoute
+            path={`${path}/create-campaign`}
+            component={() => <CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
+          <PrivateRoute path={`${path}/campaign-home`} component={() => <CampaignHome />} />
+          <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
   );
-};
+});
 
 export default App;

@@ -2,7 +2,7 @@ import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew, Dropdown } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew, Dropdown,Toast } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -795,7 +795,51 @@ export const UICustomizations = {
         return data;
       },
       additionalCustomizations: (row, key, column, value, t, searchResult) => {
-  
+        const [showToast, setShowToast] = useState(false);
+        const tenantId = Digit.ULBService.getCurrentTenantId();
+        const microplanId = row?.id;
+
+        const { data: rootEstimationApprover } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+          tenantId: tenantId,
+          body: {
+            PlanEmployeeAssignmentSearchCriteria: {
+              tenantId: tenantId,
+              planConfigurationId: microplanId,
+              role: ["ROOT_PLAN_ESTIMATION_APPROVER"],
+              active: true,
+            },
+          },
+          config: {
+            enabled: true,
+          },
+        });
+
+        const { data: rootPopulationApprover } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+          tenantId,
+          body: {
+            PlanEmployeeAssignmentSearchCriteria: {
+              tenantId,
+              planConfigurationId: microplanId,
+              role: ["ROOT_POPULATION_DATA_APPROVER"],
+              active: true,
+            },
+          },
+          config: { enabled: true },
+        });
+
+        const { data: rootFacilityMapper } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+          tenantId,
+          body: {
+            PlanEmployeeAssignmentSearchCriteria: {
+              tenantId,
+              planConfigurationId: microplanId,
+              role: ["ROOT_FACILITY_CATCHMENT_MAPPER"],
+              active: true,
+            },
+          },
+          config: { enabled: true },
+        });
+        
         switch (key) {
           case "ACTIONS":
             // TODO : Replace dummy file id with real file id when API is ready
@@ -805,31 +849,70 @@ export const UICustomizations = {
             let options = [];
   
             if (row?.status == "DRAFT") {
-              options = [{ code: "1", name: "MP_ACTIONS_EDIT_SETUP" }];
+              options = [
+                { code: "1", name: "MP_ACTIONS_EDIT_SETUP" },
+                { code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },
+                { code: "3", name: "MP_ACTIONS_FREEZE_MICROPLAN" },
+              ];
             } else {
               options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
             }
   
-            const handleDownload = () => {
+            const handleDownload = ({type}) => {
               
-              const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
+              const template = type === "Estimations" ? "Estimations" : "DraftComplete";
+              const fileId = row?.files.find((item) => item.templateIdentifier === template)?.filestoreId;
               if (!fileId) {
-                    console.error("Population template file not found");
-                    return;
-                  }
+                setShowToast({ label: t("NO_DRAFT_FILE_FOUND") });
+                return;
+              }
               const campaignName = row?.name || "";
+              const customName = type === "Estimations" ? campaignName : `${campaignName}_DRAFT`;
               Digit.Utils.campaign.downloadExcelWithCustomName({
                 fileStoreId: fileId,
-                customName: campaignName
+                customName: customName,
               });
             };
   
-            const onActionSelect = (e) => {
+            const onActionSelect = async (e,row) => {
               if (e.name === "MP_ACTIONS_EDIT_SETUP") {
                 const key = parseInt(row?.additionalDetails?.key);
-                const resolvedKey = key === 8 ? 7 : key === 9 ? 10 : key || 2;
+                const resolvedKey = key === 8 ? 7 : key === 10 ? 11 : key || 2;
                 const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
                 window.location.href = url;
+              }
+              if (e.name === "MP_ACTIONS_DOWNLOAD_DRAFT") {
+                if (row?.status == "DRAFT" && row?.assumptions.length > 0 && row?.operations.length > 0) {
+                  handleDownload({ type: "Draft" });
+                } else {
+                  setShowToast({ label: t("PLEASE_UPDATE_THE_SETUP_INFORMATION_BEFORE_DOWNLOADING_DRAFT") });
+                }
+              }
+              if (e.name === "MP_ACTIONS_FREEZE_MICROPLAN") {
+                if (
+                  row?.status == "DRAFT" &&
+                  row?.assumptions.length > 0 &&
+                  row?.operations.length > 0 &&
+                  rootEstimationApprover?.data?.length > 0 &&
+                  rootPopulationApprover?.data?.length > 0 &&
+                  rootFacilityMapper?.data?.length > 0
+                ) {
+                  const triggeredFromMain = "OPEN_MICROPLANS";
+                  const response = await Digit.Hooks.microplanv1.useCompleteSetUpFlow({
+                    tenantId,
+                    microplanId,
+                    triggeredFrom: triggeredFromMain,
+                  });
+                  if (response && !response?.isError) {
+                    window.history.pushState(response?.state, "", response?.redirectTo);
+                    window.dispatchEvent(new PopStateEvent("popstate", { state: response?.state }));
+                  }
+                  if (response && response?.isError) {
+                    console.error(`ERR_FAILED_TO_COMPLETE_SETUP`);
+                  }
+                } else {
+                  setShowToast({ label:t("PLEASE_FINISH_THE_DRAFT_BEFORE_FREEZING") });
+                }
               }
               if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
                 window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
@@ -838,11 +921,16 @@ export const UICustomizations = {
               }
             };
   
+            const handleToast = () => {
+              setShowToast(false);
+            };
+
             return (
+              <>
               <div>
                 {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                   <div>
-                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId} />
+                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={()=>handleDownload({type:"Estimations"})} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId} />
                   </div>
                 ) : (
                   <div className={"action-button-open-microplan"}>
@@ -857,12 +945,14 @@ export const UICustomizations = {
                         optionsKey="name"
                         showBottom={true}
                         isSearchable={false}
-                        onOptionSelect={(item) => onActionSelect(item)}
+                        onOptionSelect={(item) => onActionSelect(item, row)}
                       />
                     </div>
                   </div>
                 )}
               </div>
+              {showToast && <Toast type={showToast?.type || "warning"} label={showToast?.label} onClose={handleToast} />}
+              </>
             );
   
           case "NAME_OF_MICROPLAN":
@@ -1334,8 +1424,11 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [showPopup, setShowPopup] = useState(false);
+      const [showMapPopup, setShowMapPopup] = useState(false);
       const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
+      const MapViewPopup = Digit.ComponentRegistryService.getComponent("MapViewPopup");
       const VillageHierarchyTooltipWrapper = Digit.ComponentRegistryService.getComponent("VillageHierarchyTooltipWrapper");
+      const [refreshKey, setRefreshKey, clearRefreshKey] = Digit.Hooks.useSessionStorage("FACILITY_POPUP_KEY", 0);
 
       switch (key) {
         case `MICROPLAN_FACILITY_${column?.projectType}_CAPACITY`:
@@ -1346,10 +1439,10 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return <div style={{display:"flex", gap:".5rem"}}>
-          {t(row?.residingBoundary)}
-          <VillageHierarchyTooltipWrapper  boundaryCode={row?.residingBoundary}/>
-        </div>
+          return <div style={{ display: "flex", gap: ".5rem" }}>
+            {t(row?.residingBoundary)}
+            <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
+          </div>
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
@@ -1362,15 +1455,15 @@ export const UICustomizations = {
                 icon="ArrowForward"
                 iconFill=""
                 isSuffix
+                title={t(key)}
                 label={t(key)}
-                onClick={() => setShowPopup(true)}
+                onClick={() => {setShowPopup(true);}}
                 // removed this because due to popup crashing on dev
                 // onClick={() => console.log("temp action")}
                 options={[]}
                 optionsKey=""
                 size="medium"
                 style={{}}
-                title={t(key)}
                 variation="primary"
               />
               {showPopup && (
@@ -1378,7 +1471,38 @@ export const UICustomizations = {
                   detail={row}
                   onClose={() => {
                     setShowPopup(false);
+                    setRefreshKey(prev => prev + 1);
+                    window.dispatchEvent(new Event("refreshKeyUpdated"));
                   }}
+                />
+              )}
+            </>
+          );
+        case "VIEW_ON_MAP":
+          return (
+            <>
+              <ButtonNew
+                className=""
+                icon="MyLocation"
+                iconFill=""
+                isSuffix
+                title={t(key)}
+                label={t(key)}
+                onClick={() => {
+                  setShowMapPopup(true);
+                }}
+                options={[]}
+                optionsKey=""
+                size="medium"
+                style={{}}
+                variation="link"
+              />
+              {showMapPopup && (
+                <MapViewPopup
+                  type={"Facility"}
+                  bounds={{ latitude: row?.additionalDetails?.latitude, longitude: row?.additionalDetails?.longitude }}
+                  heading={row?.facilityName}
+                  setShowPopup={setShowMapPopup}
                 />
               )}
             </>

@@ -1,5 +1,5 @@
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect ,useMemo} from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import facilityMappingConfig from "../../configs/FacilityMappingConfig";
@@ -16,13 +16,11 @@ const FacilityCatchmentMapping = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const user = Digit.UserService.getUser();
   const userRoles = user?.info?.roles?.map((roleData) => roleData?.code);
-  const [showPopup, setShowPopup] = useState(false);
   const FacilityPopUp = Digit.ComponentRegistryService.getComponent("FacilityPopup");
-  const [currentRow, setCurrentRow] = useState(null);
   const [projectType, setProjectType] = useState('');
   const [disabledAction, setDisabledAction] = useState(false);
   const [censusQueryName, setCensusQueryName] = useState("censusData");
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [refreshKey, setRefreshKey] = useState(() => Digit.SessionStorage.get("FACILITY_POPUP_KEY"));
   // Check if the user has the 'rootfacilitycatchmentmapper' role
   const isRootApprover = userRoles?.includes("ROOT_FACILITY_CATCHMENT_MAPPER");
 
@@ -82,7 +80,7 @@ const FacilityCatchmentMapping = () => {
 
   const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
-  const { isLoading: isLoadingPlanObject, data: planObject } = Digit.Hooks.microplanv1.useSearchPlanConfig(
+  const { isLoading: isLoadingPlanObject, data: planObject, refetch:refetchPlan } = Digit.Hooks.microplanv1.useSearchPlanConfig(
     {
       PlanConfigurationSearchCriteria: {
         tenantId,
@@ -90,6 +88,22 @@ const FacilityCatchmentMapping = () => {
       },
     }
   );
+
+  useEffect(() => {
+    // Handler function to call on event dispatch
+    const handleRefetch = () => {
+      refetch(); // Triggers the custom hook's refetch
+    };
+
+    // Add the event listener
+    window.addEventListener('refreshKeyUpdated', handleRefetch);
+
+    // Cleanup to avoid memory leaks
+    return () => {
+      window.removeEventListener('refreshKeyUpdated', handleRefetch);
+    };
+  }, [refetch]); // refetchPlan is stable, good to list
+
 
 
   const planFacilitySearchConfig = {
@@ -132,8 +146,17 @@ const FacilityCatchmentMapping = () => {
 
   useEffect(() => {
     // refreshing the screen to get the updated assigned villages count
-  }, [refreshKey]);
-
+    const handleRefreshKeyUpdate = () => {
+      const updatedKey = Digit.SessionStorage.get("FACILITY_POPUP_KEY");
+      setRefreshKey(updatedKey);
+    };
+  
+    window.addEventListener("refreshKeyUpdated", handleRefreshKeyUpdate);
+  
+    return () => {
+      window.removeEventListener("refreshKeyUpdated", handleRefreshKeyUpdate);
+    };
+  }, []);
 
   const handleActionBarClick = () => {
     setactionBarPopUp(true);
@@ -162,12 +185,8 @@ const FacilityCatchmentMapping = () => {
     }
   }, [campaignObject]);
 
-  const onClickRow = (row) => {
-    setShowPopup(true)
-    setCurrentRow(row.original)
-  }
 
-  const config = facilityMappingConfig(projectType, disabledAction);
+  const config = useMemo(() => facilityMappingConfig(projectType, disabledAction), [projectType, disabledAction]);
 
   if (isPlanEmpSearchLoading || isLoading || isLoadingPlanObject || isLoadingCampaignObject || isProcessLoading ||isPlanFacilityLoading)
     return <Loader />
@@ -185,6 +204,8 @@ const FacilityCatchmentMapping = () => {
       userRole = "FACILITY_CATCHMENT_MAPPER";
     
   }});
+
+ 
 
 
 
@@ -207,11 +228,6 @@ const FacilityCatchmentMapping = () => {
       <div className="inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
-          additionalConfig={{
-            resultsTable: {
-              onClickRow,
-            }
-          }}
         ></InboxSearchComposer>
       </div>
 
@@ -236,18 +252,6 @@ const FacilityCatchmentMapping = () => {
           sortActionFields
         />}
 
-      {showPopup && currentRow && (
-        <FacilityPopUp
-          detail={currentRow}
-          onClose={() => {
-            setShowPopup(false);
-            setCurrentRow(null);
-            setCensusQueryName(`censusData${Date.now()}`);
-            setRefreshKey((prev) => prev+1); 
-          }}
-          // updateDetails={setCurrentRow}
-        />
-      )}
 
       {actionBarPopUp && (
         <ConfirmationPopUp

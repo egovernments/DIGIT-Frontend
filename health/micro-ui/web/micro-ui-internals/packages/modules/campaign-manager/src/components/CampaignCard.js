@@ -60,7 +60,7 @@ const CampaignCard = () => {
     },
     {
       label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
-      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=AppScreenConfigTemplateSchema&fieldType=AppFieldType&prefix=APPONE`,
+      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
@@ -70,6 +70,11 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
+      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      link: `/workbench-ui/employee/campaign/campaign-home`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },  
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION"),
     //   link: `/workbench-ui/employee/campaign/app-configuration`,

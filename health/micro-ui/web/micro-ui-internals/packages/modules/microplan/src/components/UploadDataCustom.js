@@ -561,6 +561,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
     },
   };
+
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
   const fetchTemplate = async () => {
@@ -621,7 +622,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
 
     poll();
     return () => clearTimeout(timeoutId);
-  }, [isPolling]);
+  }, [isPolling,type]);
 
   useEffect(()=>{
     if(isDownloadClicked && fileData){
@@ -632,7 +633,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   // Restarting polling whenever the page refreshes
   useEffect(() => {
     setIsPolling(true);
-  }, []);
+  }, [type]);
 
   const downloadTemplate = async () => {
     if (!fileData || !isDownloadClicked){

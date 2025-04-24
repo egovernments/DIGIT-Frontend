@@ -53,6 +53,7 @@ const CreateChecklist = () => {
   const { languages, stateInfo } = storeData || {};
   const currentLocales = languages?.map(locale => locale.value);
 
+  const presentLocale = Digit?.SessionStorage.get("locale") || locale;
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
@@ -237,7 +238,7 @@ const CreateChecklist = () => {
       {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
-        message: helpText || ".",
+        message: helpText || "",
         module: "hcm-checklist"
       }
     );
@@ -353,7 +354,48 @@ const CreateChecklist = () => {
 
     return { codes: codes, local: local };
   };
+  
+  function getFilteredLocaleEntries(quesArray, localeArray) {
+  const messages = new Set();
 
+  let activeCount = 0;
+
+  if (helpText?.trim()) {
+    messages.add(helpText.trim());
+  }
+
+  // Collect all active question titles, options, helpTexts, and sub-question titles
+  quesArray.forEach((question) => {
+    if (!question?.isActive) return;
+
+    activeCount++;
+    const prefix = `${activeCount}) `;
+
+    if (question.title) messages.add(prefix + question.title.trim());
+    if (question.helpText) messages.add(question.helpText.trim());
+
+    if (Array.isArray(question.options)) {
+      question.options.forEach((option) => {
+        if (option.label) messages.add(option.label.trim());
+
+        if (Array.isArray(option.subQuestions)) {
+          option.subQuestions.forEach((subQ) => {
+            if (subQ.isActive) {
+              if (subQ.title) messages.add(subQ.title.trim());
+              if (subQ.helpText) messages.add(subQ.helpText.trim());
+            }
+          });
+        }
+      });
+    }
+  });
+
+  // Now filter locale entries by matching message
+  const filteredLocales = localeArray.filter((entry) =>
+    messages.has(entry.message?.trim())
+  );
+  return filteredLocales;
+}
   // Helper function remains unchanged as it already handles both active and inactive questions
   function createQuestionObject(item, tenantId, idCodeMap) {
     let labelsArray = [];
@@ -483,7 +525,7 @@ const CreateChecklist = () => {
     let allLocalisations = [...uniqueLocal, ...translations].filter(
       (value, index, self) =>
         index === self.findIndex((t) => t.code === value.code && t.locale === value.locale)
-    );
+    ).filter((item) => item.message !== "");
 
     setSubmitting(true);
     try {
@@ -608,7 +650,8 @@ const CreateChecklist = () => {
                   onClick={() => {
                     const processed = organizeQuestions(tempFormData);
                     const { local: generatedLocal } = generateCodes(processed);
-                    setLocalisationData(generatedLocal);
+                    const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
+                    setLocalisationData(currentLocalisationData);
                     setShowLocalisationPopup(true);
                     setShowPopUp(false);
                   }}
@@ -693,11 +736,14 @@ const CreateChecklist = () => {
               className="localisation-popup-container"
               heading={t("ADD_TRANSLATIONS")}
               onClose={() => setShowLocalisationPopup(false)}
+              onOverlayClick={() => {
+                setShowLocalisationPopup(false);
+              }}
             >
               <LocalisationEditorPopup
-                locales={currentLocales.filter(local => local !== locale)}
-                languages = {languages.filter(item => item.value !== locale)}
-                currentLocale={locale}
+                locales={currentLocales.filter(local => local !== presentLocale)}
+                languages = {languages.filter(item => item.value !== presentLocale)}
+                currentLocale={presentLocale}
                 localisationData={localisationData}
                 onSave={(translations) => {
                   onSubmit(null, 1, tempFormData, translations);
