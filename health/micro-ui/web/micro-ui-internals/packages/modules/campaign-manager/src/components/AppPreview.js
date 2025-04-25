@@ -270,9 +270,9 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
               )}
             </div>
           ))}
-          {card.fields
-            .filter((field) => field.active)
-            .map((field, fieldIndex) => (
+          {card?.fields
+            ?.filter((field) => field.active)
+            ?.map((field, fieldIndex) => (
               <div
                 className={
                   selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
@@ -282,7 +282,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                     : ""
                 }
                 key={fieldIndex}
-                style={{ margin: "10px 0", padding: "1rem" }}
+                // style={{ margin: "10px 0", padding: "1rem" }}
               >
                 <div>
                   {t(field.label)}

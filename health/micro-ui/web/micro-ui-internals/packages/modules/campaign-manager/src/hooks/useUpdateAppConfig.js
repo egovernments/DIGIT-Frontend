@@ -1,16 +1,20 @@
 import { useMutation } from "react-query";
 
-const upsertSchemaConfig = async (req, tenantId) => {
+const updateAppConfigService = async (req, tenantId) => {
   try {
     const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
     const response = await Digit.CustomService.getResponse({
-      url: `/${mdms_context_path}/v2/_create/${req.moduleName}.${req.masterName}`,
+      url: `/${mdms_context_path}/v2/_update/${req.moduleName}.${req.masterName}`,
       body: {
         Mdms: {
           tenantId: tenantId,
           schemaCode: `${req.moduleName}.${req.masterName}`,
-          data: { ...req.data },
+          id: req?.data?.id,
+          uniqueIdentifier: req?.data?.uniqueIdentifier,
+          isActive: req?.data?.isActive,
+          data: { ...req.data.data },
+          auditDetails: req?.data?.auditDetails,
         },
       },
     });
@@ -20,10 +24,10 @@ const upsertSchemaConfig = async (req, tenantId) => {
   }
 };
 
-const useUpsertSchemaConfig = (tenantId) => {
+const useUpdateAppConfig = (tenantId) => {
   return useMutation((reqData) => {
-    return upsertSchemaConfig(reqData, tenantId);
+    return updateAppConfigService(reqData, tenantId);
   });
 };
 
-export default useUpsertSchemaConfig;
+export default useUpdateAppConfig;

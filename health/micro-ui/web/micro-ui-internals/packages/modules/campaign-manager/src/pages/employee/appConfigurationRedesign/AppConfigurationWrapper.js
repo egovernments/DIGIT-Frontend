@@ -263,7 +263,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   const localeModule = searchParams.get("localeModule");
-  const module = localeModule ? localeModule : "hcm-dummy-module";
+  const module = localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
   const [showToast, setShowToast] = useState(null);
@@ -302,7 +302,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   // }, [dummyMaster]);
 
   const openAddFieldPopup = (data) => {
-    setPopupData(data);
+    setPopupData({ ...data, id: crypto.randomUUID() });
   };
 
   useEffect(() => {
@@ -332,7 +332,7 @@ function AppConfigurationWrapper({ screenConfig }) {
         .map((item) => ({
           code: item.code,
           message: item[locale] || "",
-          module: item.module || "hcm-dummy-module",
+          module: localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module",
           locale: locale,
         }))
         .filter((item) => item.message !== "");
@@ -562,13 +562,13 @@ function AppConfigurationWrapper({ screenConfig }) {
                 value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
                 onChange={(event) => {
                   updateLocalization(
-                    `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_LABELONE`,
+                    `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
                     Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
                     event.target.value
                   );
                   setAddFieldData((prev) => ({
                     ...prev,
-                    label: `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_LABELONE`,
+                    label: `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
                   }));
                 }}
               />

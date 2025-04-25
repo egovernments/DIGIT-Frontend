@@ -33,7 +33,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   const [locState, locDispatch] = useReducer(locReducer, initialState);
   const searchParams = new URLSearchParams(location.search);
   const localeModule = searchParams.get("localeModule");
-
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const addMissingKey = (code) => {
     locDispatch({ type: "ADD_MISSING_KEY", payload: { code } });
   };
@@ -47,7 +47,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   const enabledModules = ["en_IN", "pt_IN", "fr_IN"];
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
-    tenantId: "dev",
+    tenantId: tenantId,
     locale: enabledModules,
     module: localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module",
     isMultipleLocale: enabledModules?.length > 1 ? true : false,

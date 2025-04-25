@@ -996,6 +996,7 @@ tbody {
   gap: 0.5rem;
 }
 .app-preview-selected {
+  margin: 10px -1rem;
   padding: 1rem;
   background-color: #c84c0e33;
   border: 1px solid #c84c0e33;
@@ -1017,7 +1018,9 @@ tbody {
 }
 .app-config-add-field-popup {
   width: 35rem !important;
-
+  .digit-popup-children-wrap {
+    overflow: visible !important;
+  }
   .digit-label-field-pair {
     display: flex;
     align-items: center;
