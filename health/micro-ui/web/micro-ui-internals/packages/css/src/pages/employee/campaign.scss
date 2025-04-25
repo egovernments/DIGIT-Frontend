@@ -435,8 +435,8 @@
 }
 
 .module-card{
-  width: 20rem;
-  height: 16.6rem;
+  width: auto;
+  height: auto;
   border: 1px;
   border-radius: 0.75rem;
 }
@@ -445,5 +445,8 @@
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   grid-gap: 1.5rem;
   padding: 1rem;
+}
+.campaign-module-button{
+  width: auto;
 }
 
