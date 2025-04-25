@@ -56,15 +56,21 @@ const CampaignCard = () => {
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },
+    // {
+    //   label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
+    //   link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
+    // {
+    //   label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB"),
+    //   link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&fieldType=FormBuilderFieldType&prefix=FORMONE`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
     {
-      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
-      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-    },
-    {
-      label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB"),
-      link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&fieldType=FormBuilderFieldType&prefix=FORMONE`,
+      label: t("ACTION_TEST_APP_CONFIGURATION_3.0"),
+      link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE&formId=default`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
