@@ -63,11 +63,11 @@ const AppFeatures = () => {
       <div className="modules-container">
         {selectedFeatures?.map((module, index) => (
           <Card className={"module-card"}>
-            <HeaderComponent className={"detail-header"}>{module.code}</HeaderComponent>
+            <HeaderComponent className={"detail-header"}>{t(module.code)}</HeaderComponent>
             <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-            <p>{module.description}</p>
+            <p style={{margin: "0rem"}}>{t(module.description)}</p>
             <Button
-              className={"campaign-type-alert-button"}
+              className={"campaign-module-button"}
               type={"button"}
               size={"large"}
               variation={"primary"}
