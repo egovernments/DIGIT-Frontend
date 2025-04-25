@@ -44,11 +44,11 @@ mutation.mutate({
  * @returns {Object} Returns the object which contains data and isLoading flag
  */
 
-const useCustomAPIMutationHook = ({ url, params, body, headers={}, config = {}, plainAccessRequest, changeQueryName = "Random" }) => {
+const useCustomAPIMutationHook = ({ url, params, body, headers={}, method = "POST", config = {}, plainAccessRequest, changeQueryName = "Random" }) => {
   const client = useQueryClient();
 
   const { isLoading, data, isFetching, ...rest } = useMutation(
-    (data) => CustomService.getResponse({ url, params: { ...params, ...data?.params }, body: { ...body, ...data?.body }, plainAccessRequest, headers: { ...headers, ...data?.headers } }),
+    (data) => CustomService.getResponse({ url, params: { ...params, ...data?.params }, body: { ...body, ...data?.body }, plainAccessRequest, headers: { ...headers, ...data?.headers }, method }),
     {
       cacheTime: 0,
       ...config,

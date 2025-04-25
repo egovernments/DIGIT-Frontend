@@ -1,7 +1,7 @@
 # Changelog
 
 ## [1.8.13]  [25-Apr-2025]
-- Updated Custom mutation hook to handle header param in request
+- Updated Custom mutation hook and usecutsomAPI hook to handle header and method in request.
 
 ## [1.8.11]  [11-Mar-2025]
 - Added new function to remove localisation cache
