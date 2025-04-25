@@ -17,7 +17,8 @@ const AppModule = () => {
       select: (data) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.AppModuleSchema;
       },
-    }
+    },
+    { schemaCode: `${"CONSOLE_MDMS_MODULENAME"}.AppModuleSchema` }
   );
 
 
