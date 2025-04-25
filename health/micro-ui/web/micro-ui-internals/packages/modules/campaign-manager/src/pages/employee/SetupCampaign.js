@@ -899,7 +899,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     }
     if(isSubmit){
       setShouldUpdate(true);
-      if(currentKey == 6 || currentKey == 9 || currentKey == 16){
+      if(currentKey == 6 || currentKey == 9 || currentKey == 15){
         history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
       }
       return ;
