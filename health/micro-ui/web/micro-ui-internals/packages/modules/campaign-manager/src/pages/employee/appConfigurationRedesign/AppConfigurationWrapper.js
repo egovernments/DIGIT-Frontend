@@ -270,7 +270,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName }, { name: "DrawerPanelConfig" }, { name: "AppScreenLocalisationConfig" }],
+    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName }, { name: "DrawerPanelConfig" }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -403,7 +403,7 @@ function AppConfigurationWrapper({ screenConfig }) {
                 icon={"Translate"}
                 label={t("ADD_LOCALISATION")}
                 onClick={() => {
-                  // setShowPopUp(true);
+                  setShowPopUp(true);
                 }}
               />
               {/* <Button
