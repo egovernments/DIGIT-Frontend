@@ -56,6 +56,7 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
+    "dotenv-webpack": "^8.0.0",
     "eslint-config-react-app": "^7.0.1",
     "html-webpack-plugin": "^5.6.3",
     "husky": "7.0.4",
@@ -65,8 +66,7 @@
     "vite": "^6.1.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0",
-    "dotenv-webpack": "^8.0.0"
+    "webpack-dev-server": "^5.2.0"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.62.16"
@@ -81,14 +81,43 @@
     ]
   },
   "dependencies": {
+    "@babel/core": "^7.26.10",
+    "@babel/plugin-proposal-private-property-in-object": "7.21.0",
+    "@babel/preset-env": "^7.26.9",
+    "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-components": "0.0.2-webpack-21",
+    "@egovernments/digit-ui-libraries": "1.8.1-webpack-22",
+    "@egovernments/digit-ui-module-core": "1.8.1-test.100",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
+    "@tanstack/react-query": "^5.62.16",
+    "babel-loader": "^9",
+    "clean-webpack-plugin": "4.0.0",
+    "cross-env": "^7.0.3",
+    "css-loader": "5.2.6",
+    "dotenv-webpack": "^8.0.0",
+    "eslint-config-react-app": "^7.0.1",
+    "html-webpack-plugin": "^5.6.3",
+    "http-proxy-middleware": "1.3.1",
+    "husky": "7.0.4",
+    "lint-staged": "12.3.7",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
+    "npm-run-all": "4.1.5",
+    "prettier": "2.1.2",
     "process": "^0.11.10",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
     "react-hook-form": "7.52.2",
     "react-i18next": "15.0.0",
     "react-redux": "^9.2.0",
-    "react-router-dom": "6.25.1"
+    "react-router-dom": "6.25.1",
+    "style-loader": "2.0.0",
+    "terser-brunch": "^4.1.0",
+    "url": "^0.11.4",
+    "vite": "^6.1.0",
+    "web-vitals": "1.1.2",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   }
 }
