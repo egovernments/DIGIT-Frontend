@@ -46,7 +46,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         },
         onSuccess: async (data) => {
           history.push({
-            pathname: `/${window?.globalPath}/user/otp`,
+            pathname: `${window.location.origin}/sandbox-ui/${data?.Tenants[0]?.code}/employee/user/language-selection`,
             state: { email: data?.Tenants[0]?.email, tenant: data?.Tenants[0]?.code },
           });
         },

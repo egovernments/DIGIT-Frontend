@@ -230,7 +230,7 @@ const CuccessPage = () => {
         {
           url: `/individual/v1/_create`,
           params: { tenantId },
-          body: transformIndividualCreateData(data,de.sub),
+          body: transformIndividualCreateData(data,de.sub,tenantId),
           config: {
             enable: true,
           },

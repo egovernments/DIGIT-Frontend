@@ -1,7 +1,7 @@
-export const transformIndividualCreateData = (data,de)=>{
+export const transformIndividualCreateData = (data,de,tenant)=>{
     return {
         Individual: {
-          tenantId: "SDFG",
+          tenantId: tenant,
           name: {
             givenName: data.applicantname,
           },
@@ -46,11 +46,11 @@ export const transformIndividualCreateData = (data,de)=>{
         //   isSystemUser: null,
           userDetails: {
               username: data.phno,
-              tenantId: "SDFG",
+              tenantId: tenant,
               roles: [
                   {
                       code: "CITIZEN",
-                      tenantId: "SDFG"
+                      tenantId: tenant
                   }
               ],
               "type": "CITIZEN"
