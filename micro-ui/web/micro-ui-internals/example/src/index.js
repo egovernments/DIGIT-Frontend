@@ -9,11 +9,11 @@ import { Hooks } from "@egovernments/digit-ui-libraries";
 
 // Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks;
+window.Digit.Hooks = Hooks; 
 const queryClient = new QueryClient();
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
-); import { initLibraries } from "@egovernments/digit-ui-libraries";
+);import { initLibraries } from "@egovernments/digit-ui-libraries";
 
 const enabledModules = ["assignment", "HRMS", "Workbench"];
 
@@ -58,41 +58,41 @@ const initDigitUI = () => {
   // console.log("initWorkbenchComponents", initWorkbenchComponents)
   // initWorkbenchComponents();
   window.contextPath =
-    window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-
+  window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  
   // const stateCode = Digit?.ULBService?.getStateId();
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
-
+  
   const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
   root.render(
     <QueryClientProvider client={queryClient}>
       <MainApp stateCode={stateCode} enabledModules={enabledModules} />
     </QueryClientProvider>
-  );
+    );
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
   const [isReady, setIsReady] = useState(false);
   const [loaded, setLoaded] = useState(false);
-
-
-
+  
+  
+  
   useEffect(() => {
-
+    
     initLibraries().then(() => {
-      console.log(Digit, window?.Digit);
+      console.log(Digit,window?.Digit);
       // initAssignmentComponents();
-
+      
       setIsReady(true)
     });
     // initWorkbenchComponents();
-
+    
   }, []);
 
   useEffect(() => {
     initTokens(stateCode);
-    setLoaded(true);
-  }, [stateCode, isReady]);
+     setLoaded(true);
+  }, [stateCode,isReady]);
 
   if (!loaded) {
     return <div>Loading...</div>;
@@ -100,14 +100,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-      {window.Digit && (
-        <DigitUILazy
-          stateCode={stateCode}
-          enabledModules={enabledModules}
-          defaultLanding="home"
-        />
-      )}
-    </Suspense>
+    {window.Digit && (
+      <DigitUILazy
+        stateCode={stateCode}
+        enabledModules={enabledModules}
+        defaultLanding="employee"
+      />
+    )}
+  </Suspense>
   );
 };
 
