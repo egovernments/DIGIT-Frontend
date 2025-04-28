@@ -45,8 +45,14 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
           });
         },
         onSuccess: async (data) => {
+          // const url = `/sandbox-ui/${data?.Tenants[0]?.code}/employee/user/language-selection`;
+          // console.log("signupurl", url);
+          // window.location.href = url; 
+          // console.log("signupdata",data);
+          // const url = `/${window?.contextPath}/SDFG/employee/user/language-selection`;;
+          // console.log("signupurl",url);
           history.push({
-            pathname: `${window.location.origin}/sandbox-ui/${data?.Tenants[0]?.code}/employee/user/language-selection`,
+            pathname: `/${window?.globalPath}/user/setup`,
             state: { email: data?.Tenants[0]?.email, tenant: data?.Tenants[0]?.code },
           });
         },

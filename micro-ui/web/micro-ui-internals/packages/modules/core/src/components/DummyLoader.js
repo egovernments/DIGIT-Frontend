@@ -30,10 +30,12 @@ const DummyLoaderScreen = () => {
     if (currentStep === steps.length) {
       clearInterval(stepInterval); // Clear the interval to stop further updates
       const navigateTimeout = setTimeout(() => {
-        history.push({
-          pathname: `/${window?.globalPath}/user/url`,
-          state: { tenant: tenant },
-        });
+        const url = `/sandbox-ui/${tenant}/employee/user/language-selection`;
+        window.location.href = url; 
+        // history.push({
+        //   pathname: `/${window?.globalPath}/user/url`,
+        //   state: { tenant: tenant },
+        // });
       }, 1000);
 
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
