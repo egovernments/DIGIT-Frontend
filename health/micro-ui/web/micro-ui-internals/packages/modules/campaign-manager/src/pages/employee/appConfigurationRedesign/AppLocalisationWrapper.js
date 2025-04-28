@@ -1,5 +1,6 @@
-import React, { createContext, useContext, useEffect, useReducer } from "react";
+import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
+import { Loader } from "@egovernments/digit-ui-components";
 
 const initialState = [];
 const AppLocalisationContext = createContext();
@@ -18,7 +19,8 @@ const locReducer = (state = initialState, action) => {
       if (state.find((item) => item.code === action.payload.code)) {
         return state;
       } else {
-        return [...state, { code: action.payload.code, en_IN: "", pt_IN: "", fr_IN: "" }];
+        const newEntry = action.payload.enabledModules.reduce((acc, locale) => ({ ...acc, [locale.value]: "" }), { code: action.payload.code });
+        return [...state, newEntry];
       }
     case "UPDATE_LOCALIZATION":
       return state.map((item) => (item.code === action.payload.code ? { ...item, [action.payload.locale]: action.payload.message } : item));
@@ -34,8 +36,11 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   const searchParams = new URLSearchParams(location.search);
   const localeModule = searchParams.get("localeModule");
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
+  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+
   const addMissingKey = (code) => {
-    locDispatch({ type: "ADD_MISSING_KEY", payload: { code } });
+    locDispatch({ type: "ADD_MISSING_KEY", payload: { code, enabledModules } });
   };
   const updateLocalization = (code, locale, message) => {
     locDispatch({
@@ -44,11 +49,23 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
     });
   };
 
-  const enabledModules = ["en_IN", "pt_IN", "fr_IN"];
-  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const { isLoading: isLoadingAppScreenLocalisationConfig, data: AppScreenLocalisationConfig } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    MODULE_CONSTANTS,
+    [{ name: "AppScreenLocalisationConfig" }],
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      select: (data) => {
+        return data?.[MODULE_CONSTANTS]?.["AppScreenLocalisationConfig"]?.[0];
+      },
+    },
+    { schemaCode: "APP_MASTER_DATA_LOCALISATION" } //mdmsv2
+  );
+
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: tenantId,
-    locale: enabledModules,
+    locale: enabledModules?.length > 1 ? enabledModules?.map((i) => i.value) : enabledModules?.[0]?.value,
     module: localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module",
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
@@ -74,7 +91,9 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   }, [localisationData, isLoading]);
 
   return (
-    <AppLocalisationContext.Provider value={{ locState, locDispatch, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch }}>
+    <AppLocalisationContext.Provider
+      value={{ locState, enabledModules, locDispatch, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch }}
+    >
       <AppConfigurationWrapper screenConfig={screenConfig} />
     </AppLocalisationContext.Provider>
   );
