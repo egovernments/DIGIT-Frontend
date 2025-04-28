@@ -18,8 +18,8 @@ const inboxSearchConfig = () => {
         uiConfig: {
           type: "filter",
           headerStyle: null,
-          primaryLabel: "Apply Filters",
-          secondaryLabel: "Clear Filters",
+          primaryLabel: "HRMS_APPLY_FILTERS",
+          secondaryLabel: "HRMS_CLEAR_FILTER",
           minReqFields: 1,
           defaultValues: {
             roles: [],

@@ -1,6 +1,6 @@
 /**
  * Generates an ordered list of boundary types from a hierarchical boundary structure.
- * 
+ *
  * @param {Array} tenantBoundary - Array representing the boundary hierarchy.
  * @returns {Array} - Ordered list of boundary types.
  */
@@ -10,7 +10,7 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
 
   /**
    * Recursive function to traverse the boundary hierarchy.
-   * 
+   *
    * @param {Object} node - Current boundary node.
    * @param {number} currentOrder - Order level in the hierarchy.
    */
@@ -32,7 +32,7 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
 
 /**
  * Initializes the HRMS module by fetching staff, project, and boundary data.
- * 
+ *
  * @param {Object} params - Function parameters.
  * @param {string} params.tenantId - Tenant identifier.
  * @throws {Error} - Throws an error if fetching fails.
@@ -104,9 +104,7 @@ const initializeHrmsModule = async ({ tenantId }) => {
     }
 
     // Extract national project ID from the first project
-    const nationalProjectId = projects[0]?.projectHierarchy
-      ? projects[0]?.projectHierarchy?.split(".")[0]
-      : projects[0]?.id;
+    const nationalProjectId = projects[0]?.projectHierarchy ? projects[0]?.projectHierarchy?.split(".")[0] : projects[0]?.id;
 
     // Fetch national-level project details
     const fetchNationalProjectData = await Digit.CustomService.getResponse({
@@ -147,7 +145,9 @@ const initializeHrmsModule = async ({ tenantId }) => {
       userService: false,
       params: {
         tenantId: tenantId,
+
         hierarchyType: hierarchyType,
+
         includeChildren: true,
         codes: nationalLevelProject?.address?.boundary,
         boundaryType: nationalLevelProject?.address?.boundaryType,

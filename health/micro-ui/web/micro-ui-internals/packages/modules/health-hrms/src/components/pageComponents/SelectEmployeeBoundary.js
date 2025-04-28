@@ -73,7 +73,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   return (
     <LabelFieldPair>
       <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-        {t("Boundary")} *{/*input.isMandatory ? " * " : null*/}
+        {t("HRM_BOUNDARY_LABEL")} *{/*input.isMandatory ? " * " : null*/}
       </CardLabel>
 
       <div style={{ width: "100%" }}>

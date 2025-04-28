@@ -1,6 +1,6 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Button, TextArea, Toast, Dropdown, TextInput, FileUpload, FieldV1 } from "@egovernments/digit-ui-components";
+import { PopUp, Button, Toast, Dropdown, FileUpload, FieldV1 } from "@egovernments/digit-ui-components";
 import { convertEpochToDate } from "../../utils/utlis";
 
 const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
@@ -32,7 +32,7 @@ const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
   };
 
   return (
-    <>
+    <React.Fragment>
       <PopUp
         style={{ width: "700px" }}
         onClose={() => {
@@ -132,7 +132,7 @@ const DeactivatePopUp = ({bussnessBtnLabel, label, onClose, onSubmit }) => {
         ]}
       />
       {showToast && <Toast style={{ zIndex: 10001 }} label={showToast.label} type={showToast.key} onClose={() => setShowToast(null)} />}
-    </>
+    </React.Fragment>
   );
 };
 

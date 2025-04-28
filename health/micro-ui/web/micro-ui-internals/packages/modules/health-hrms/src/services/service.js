@@ -4,12 +4,12 @@ import { convertEpochToDate } from "../utils/utlis";
 import employeeDetailsFetch from "./emp_details";
 
 /**
-* Checks if a user exists with the given phone number.
-* Calls the HRMS service to search for employees based on phone number.
-* @param {Object} data - The form data containing phone number.
-* @param {string} tenantId - The tenant ID.
-* @returns {boolean} - True if user exists, false otherwise.
-*/
+ * Checks if a user exists with the given phone number.
+ * Calls the HRMS service to search for employees based on phone number.
+ * @param {Object} data - The form data containing phone number.
+ * @param {string} tenantId - The tenant ID.
+ * @returns {boolean} - True if user exists, false otherwise.
+ */
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
     //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
@@ -28,7 +28,7 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
 /**
  * Checks if a user exists with the given employee ID.
  * Calls the HRMS service to search for employees based on the provided employee ID.
- * 
+ *
  * @param {Object} data - The form data containing the employee ID.
  * @param {string} tenantId - The tenant ID.
  * @returns {boolean} - Returns true if the user exists, otherwise false.
@@ -56,7 +56,7 @@ export const checkIfUserExist = async (data, tenantId) => {
 /**
  * Creates a payload for adding a new employee/user.
  * This function formats the given data into a structure that the HRMS system expects.
- * 
+ *
  * @param {Object} data - The form data containing employee details.
  * @param {string} tenantId - The tenant ID.
  * @returns {Array} - Returns an array containing the new employee data payload.
@@ -111,7 +111,7 @@ export const formPayloadToCreateUser = (data, tenantId) => {
 /**
  * Creates a payload for updating an existing employee/user.
  * This function formats the given data and merges it with existing user data.
- * 
+ *
  * @param {Object} data - The form data containing updated employee details.
  * @param {Array} userExisting - The existing user data.
  * @param {string} tenantId - The tenant ID.
@@ -199,7 +199,7 @@ function formJuridiction(data, tenantId) {
 
 /**
  * Edits and formats the default values for an employee/user.
- * This function extracts necessary details from the given data and prepares an object 
+ * This function extracts necessary details from the given data and prepares an object
  * with structured default values, making it suitable for pre-filling forms.
  *
  * @param {Array} data - The user data containing employee details.
@@ -236,8 +236,7 @@ export const editDefaultUserValue = (data, tenantId) => {
       name: `COMMON_GENDER_${data[0]?.user?.gender}` || "",
     },
 
-    RolesAssigned: data[0]?.user.roles.map((e) => e),
-
+    RolesAssigned: (data?.[0]?.user?.roles || []).map((e) => e),
     SelectDateofBirthEmployment: convertEpochToDate(data[0]?.user?.dob),
     BoundaryComponent: data[0]?.jurisdictions.map((ele, index) => {
       return Object.assign({}, ele, {
@@ -277,7 +276,7 @@ export const editDefaultUserValue = (data, tenantId) => {
 
 /**
  * Edits and formats the default values for assignment data.
- * This function processes assignment-related data, extracting necessary details and 
+ * This function processes assignment-related data, extracting necessary details and
  * returning an object suitable for pre-filling forms.
  *
  * @param {Array} data - The assignment data array.
@@ -310,7 +309,7 @@ export const editDefaultAssignmentValue = (data, tenantId) => {
 
 /**
  * Searches for staff members based on the provided criteria.
- * This function calls `employeeDetailsFetch` to retrieve staff details 
+ * This function calls `employeeDetailsFetch` to retrieve staff details
  * related to a specific project or criteria.
  *
  * @param {Object} data - The search criteria, including filters.

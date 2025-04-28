@@ -26,12 +26,25 @@ const EmployeeDetailScreen = () => {
   const { id } = useParams();
   const [campaign, setcampaign] = useState([]);
 
+  const { data: mdmsData, isLoading: isLoadings } = Digit.Hooks.useCommonMDMS(
+    Digit.ULBService.getStateId(),
+    "egov-hrms",
+    ["ActiveWorkflowActions", "DeactiveWorkflows"],
+    {
+      select: (data) => {
+        return data?.["egov-hrms"];
+      },
+      retry: false,
+      enable: false,
+    }
+  );
+
   /**
-  * Fetches employee details based on the provided employee ID (`id`) and tenant ID (`tenantId`)
-  * `isLoading`: Indicates if the data is still being fetched
-  * `isError`: Indicates if there was an error during the fetch
-  * `error`: Contains error details if the request fails
-  * `data`: Contains the fetched employee data
+   * Fetches employee details based on the provided employee ID (`id`) and tenant ID (`tenantId`)
+   * `isLoading`: Indicates if the data is still being fetched
+   * `isError`: Indicates if there was an error during the fetch
+   * `error`: Contains error details if the request fails
+   * `data`: Contains the fetched employee data
    */
   const { isLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
@@ -57,9 +70,11 @@ const EmployeeDetailScreen = () => {
 
   const getActiveWorkFlowActions = (employeeDetails) => {
     if (employeeDetails?.user?.roles?.some((role) => role?.code === "SYSTEM_ADMINISTRATOR")) {
-      return activeworkflowActions.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD");
+      return mdmsData.ActiveWorkflowActions
+        ? mdmsData.ActiveWorkflowActions.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD")
+        : activeworkflowActions.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD");
     }
-    return activeworkflowActions;
+    return mdmsData?.ActiveWorkflowActions ? mdmsData?.ActiveWorkflowActions : activeworkflowActions;
   };
 
   const deActivateUser = async (comment, date, reason, order) => {
@@ -104,7 +119,7 @@ const EmployeeDetailScreen = () => {
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: error?.Employees?.[0],
               description: null,
-              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
               back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
@@ -150,7 +165,7 @@ const EmployeeDetailScreen = () => {
               info: t("HR_EMPLOYEE_ID_LABEL"),
               fileName: error?.Employees?.[0],
               description: null,
-              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION`),
+              message: t(`EMPLOYEE_RESPONSE_UPDATE_ACTION_ERROR`),
               back: t(`CORE_COMMON_GO_TO_HOME`),
               backlink: `/${window.contextPath}/employee`,
             });
@@ -443,7 +458,13 @@ const EmployeeDetailScreen = () => {
                     break;
                 }
               }}
-              options={data?.Employees[0].isActive ? getActiveWorkFlowActions(data?.Employees?.[0]) : deactiveworkflowActions}
+              options={
+                data?.Employees[0].isActive
+                  ? getActiveWorkFlowActions(data?.Employees?.[0])
+                  : mdmsData?.DeactiveWorkflows
+                  ? mdmsData?.DeactiveWorkflows
+                  : deactiveworkflowActions
+              }
               optionsKey="name"
               style={{}}
               title=""

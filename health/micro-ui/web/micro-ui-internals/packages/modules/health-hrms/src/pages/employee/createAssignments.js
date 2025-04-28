@@ -28,8 +28,6 @@ const AssignCampaign = ({ editCampaign = false }) => {
   const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CampaignAssignmentFieldsConfig"], {
     select: (data) => {
-      console.log(data?.["egov-hrms"].CampaignAssignmentFieldsConfig);
-      
       return data?.["egov-hrms"]?.CampaignAssignmentFieldsConfig;
     },
     retry: false,
@@ -165,6 +163,7 @@ const AssignCampaign = ({ editCampaign = false }) => {
   }
 
   const config = mdmsData ? mdmsData : campaignAssignmentConfig;
+  //const config =  campaignAssignmentConfig;
 
   return (
     <div style={{ marginBottom: "80px" }}>

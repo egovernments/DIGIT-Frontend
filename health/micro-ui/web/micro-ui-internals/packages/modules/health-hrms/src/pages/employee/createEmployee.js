@@ -277,10 +277,14 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const fConfig = mdmsData ? mdmsData : newConfig;
 
+  //const fConfig =  newConfig;
+
   const config = isEdit
     ? fConfig.map((section) => ({
         ...section,
-        body: section.body.filter((field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword"),
+        body: section.body.filter(
+          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "BoundaryComponent"
+        ),
       }))
     : fConfig;
 

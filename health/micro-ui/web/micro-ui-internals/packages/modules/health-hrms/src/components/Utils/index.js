@@ -39,18 +39,7 @@ export const convertEpochFormateToDate = (dateEpoch) => {
 
 /* function returns only the city which user has access to  */
 /* exceptional incase of state level user , where return all cities*/
-export const getCityThatUserhasAccess = (cities = []) => {
-  const userInfo = Digit.UserService.getUser();
-  let roleObject = {};
-  userInfo?.info?.roles.map((roleData) => {
-    roleObject[roleData?.code] = roleObject[roleData?.code] ? [...roleObject[roleData?.code], roleData?.tenantId] : [roleData?.tenantId];
-  });
-  const tenant = Digit.ULBService.getCurrentTenantId();
-  if (roleObject[Digit.Utils?.hrmsRoles?.[0]].includes(Digit.ULBService.getStateId())) {
-    return cities;
-  }
-  return cities.filter((city) => roleObject[Digit.Utils?.hrmsRoles?.[0]]?.includes(city?.code));
-};
+
 
 export const deleteProjectStaff = async (projectStaff) => {
   Digit.ProjectService.delete_staff(projectStaff).then((res) => {});
