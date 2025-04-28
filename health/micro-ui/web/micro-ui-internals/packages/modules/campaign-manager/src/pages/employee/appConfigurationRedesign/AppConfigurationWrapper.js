@@ -403,7 +403,7 @@ function AppConfigurationWrapper({ screenConfig }) {
                 icon={"Translate"}
                 label={t("ADD_LOCALISATION")}
                 onClick={() => {
-                  setShowPopUp(true);
+                  // setShowPopUp(true);
                 }}
               />
               {/* <Button
