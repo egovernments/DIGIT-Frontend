@@ -66,13 +66,14 @@ const GenerateXlsxNew = ({ inputRef, jsonData, skipHeader, sheetName, localeData
     worksheet.columns = columnOrder.map((col) => ({
       header: col,
       key: col,
-      width: Math.max(col.length, ...updatedFormattedData.map((row) => (row[col] ? row[col].length : 0))) + 2,
+      width: 40,
     }));
 
     await worksheet.protect("editDefaultMessage"); 
 
     // Unlock all columns first (Excel locks everything by default)**
     worksheet.columns.forEach((col) => {
+      col.alignment = { wrapText: true, vertical: 'top' }; 
       col.protection = { locked: false }; // Unlock all columns
     });
   
@@ -87,7 +88,7 @@ const GenerateXlsxNew = ({ inputRef, jsonData, skipHeader, sheetName, localeData
     const blob = new Blob([buffer], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" });
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
-    link.download = "template.xlsx";
+    link.download = `${sheetName || "template"}.xlsx`;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);

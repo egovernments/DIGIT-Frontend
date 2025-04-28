@@ -1,3 +1,6 @@
+## [1.0.22]  [28-Apr-2025]
+- Localization Bulk Upload - Updated SheetName and Column Widths
+
 ## [1.0.21]  [8-Apr-2025]
 - Manage Sidebars
 
