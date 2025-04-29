@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "production", // Set mode to development
+  mode: "development", // Set mode to development
   entry: path.resolve(__dirname, 'src/index.js'),
   devtool: "source-map", // Enable source maps for easier debugging in development
   module: {

@@ -9,14 +9,14 @@ import { DigitApp, DigitAppWrapper } from "./App";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
 import ChangeCity from "./components/ChangeCity";
 import ChangeLanguage from "./components/ChangeLanguage";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 // import {useInitStore} from "../libraries/src/hooks/store" 
 // import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
-import { initWorkbenchComponents } from "../../workbench/src/Module";
+// import { initWorkbenchComponents } from "../../workbench/src/Module";
 // import {Hooks} from "@egovernments/digit-ui-libraries"
 // import Hooks from "../../../libraries/src/hooks";
 import { initI18n } from "@egovernments/digit-ui-libraries";
@@ -34,7 +34,13 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   }
   const data=getStore(initData) || {};
   const i18n = getI18n();
-  initWorkbenchComponents();
+  // initWorkbenchComponents();
+  
+  // Object.values(initObj).forEach((initFn) => {
+  //   console.log("I'm inside foreach")
+  //   console.log("initfn", initFn)
+  //     initFn(); // dynamically call each functio
+  // });
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
@@ -92,10 +98,11 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding, initAllModules }) => {
   console.log("inside digitui of core");
   var Digit = window.Digit || {};
   initI18n();
+  initAllModules();
   console.log("usestate", useState);
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
@@ -157,7 +164,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding} />
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding}/>
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
       </ErrorBoundary>
