@@ -73,7 +73,7 @@ function restructure(data1) {
       active: true,
       jsonPath: field.fieldName || "",
       metaData: {},
-      required: field.required || false,
+      Mandatory: field.required || false,
       deleteFlag: false,
       isLocalised: field.isLocalised ? true : false,
     }));
@@ -138,7 +138,7 @@ function reverseRestructure(updatedData) {
       order: fieldIndex,
       value: field.value || "",
       hidden: false, // can't be derived from updatedData unless explicitly added
-      required: field.required || false,
+      required: field.Mandatory || false,
       fieldName: field.jsonPath || "",
     }));
 
@@ -236,10 +236,6 @@ const AppConfigurationParentRedesign = () => {
         template: formData?.data,
         appIdData: formData?.data,
       });
-      // parentDispatch({
-      //   key: "SET",
-      //   data: convertDataFormat(formData, AppConfigMdmsData?.[masterName]),
-      // });
     } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
       const temp = restructure(AppConfigMdmsData?.[masterName]?.[0]?.pages);
       parentDispatch({

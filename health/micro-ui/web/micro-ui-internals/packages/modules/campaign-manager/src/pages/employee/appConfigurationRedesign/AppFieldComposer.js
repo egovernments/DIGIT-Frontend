@@ -1,4 +1,13 @@
-import { Tag, LabelFieldPair, TextInput, Dropdown, CheckBox, InfoCard, TooltipWrapper, TextArea } from "@egovernments/digit-ui-components";
+import {
+  Tag,
+  LabelFieldPair,
+  TextInput,
+  Dropdown,
+  CheckBox,
+  AlertCard as InfoCard,
+  TooltipWrapper,
+  TextArea,
+} from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
