@@ -135,6 +135,7 @@ const Field = ({
             {isDelete && (
               <div
                 onClick={(e) => {
+                  e.stopPropagation();
                   onDelete();
                 }}
                 style={{
@@ -824,6 +825,7 @@ function AppFieldComposer({
     <div
       ref={componentRef}
       onClick={(e) => {
+        e.stopPropagation();
         onSelectField();
       }}
       className="app-config-field-wrapper"

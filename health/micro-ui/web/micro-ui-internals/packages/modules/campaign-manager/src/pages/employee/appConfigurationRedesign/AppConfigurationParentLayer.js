@@ -82,6 +82,7 @@ function restructure(data1) {
       name: page.label || page.page || "UNKNOWN",
       cards: [
         {
+          header: crypto.randomUUID(),
           fields: cardFields,
           headerFields: [
             {
