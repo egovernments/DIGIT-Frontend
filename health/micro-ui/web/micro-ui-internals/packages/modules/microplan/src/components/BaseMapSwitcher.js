@@ -29,8 +29,8 @@ const BaseMapSwitcher = ({ baseMaps, showBaseMapSelector, setShowBaseMapSelector
         tabIndex={0}
         style={{display:"flex"}}
       >
-        <p className="map-filter-layers">{t("LAYERS")}</p>
-        <div className="layer-icon">{DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"rgba(255, 255, 255, 1)"} />}</div>
+        <p className="map-filter-layers microplan">{t("LAYERS")}</p>
+        <div className="layer-icon">{DigitSvgs.Layers && <DigitSvgs.Layers width={"1.667rem"} height={"1.667rem"} fill={"#C84C0E"} />}</div>
       </div>
       <div className="base-map-area-wrapper" ref={basemapRef}>
         {showBaseMapSelector && (
