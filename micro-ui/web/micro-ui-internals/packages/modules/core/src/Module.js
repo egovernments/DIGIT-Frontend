@@ -98,11 +98,11 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding, initAllModules }) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
   console.log("inside digitui of core");
   var Digit = window.Digit || {};
   initI18n();
-  initAllModules();
+  // initAllModules();
   console.log("usestate", useState);
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
