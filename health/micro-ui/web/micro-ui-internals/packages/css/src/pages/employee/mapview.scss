@@ -127,6 +127,10 @@
                 margin: 0;
                 padding: 0;
                 color: theme(digitv2.lightTheme.paper);
+
+                &.microplan{
+                  color: theme(digitv2.lightTheme.primary);
+                }
             }
 
             .layer-icon {
