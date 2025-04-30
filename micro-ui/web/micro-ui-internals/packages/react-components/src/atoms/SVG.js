@@ -787,7 +787,9 @@ import {
     HRIcon,
     MeasurementMuktaIcon,
     GlobeLocationPin,
-    NewWindow
+    NewWindow,
+    OutpatientMed,
+    AdUnits
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1581,5 +1583,7 @@ import {
     HRIcon,
     MeasurementMuktaIcon,
     GlobeLocationPin,
-    NewWindow
+    NewWindow,
+    OutpatientMed,
+    AdUnits
   }

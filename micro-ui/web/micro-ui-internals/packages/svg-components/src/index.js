@@ -815,6 +815,8 @@ import { SetUpMicroplanSvg } from "./svg/SetUpMicroplanSvg";
 import { AddCircle } from "./svg/AddCircle";
 import { GlobeLocationPin } from "./svg/GlobeLocationPin";
 import { NewWindow } from "./svg/NewWindow";
+import { OutpatientMed } from "./svg/OutpatientMed";
+import { AdUnits } from "./svg/AdUnits";
 
 export {
   AddCircle,
@@ -1633,5 +1635,7 @@ export {
   HRIcon,
   MeasurementMuktaIcon,
   GlobeLocationPin,
-  NewWindow
+  NewWindow,
+  OutpatientMed,
+  AdUnits
 };

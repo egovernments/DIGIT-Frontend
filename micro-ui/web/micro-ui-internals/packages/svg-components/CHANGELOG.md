@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.15]  [30-April-2025]
+- Added OutpatientMed and AdUnits icons
+
 ## [1.0.15]  [21-Feb-2025]
 - Publishing a new version for more stability & as part of Components Release
 
