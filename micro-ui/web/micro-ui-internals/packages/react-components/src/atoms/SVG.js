@@ -788,8 +788,8 @@ import {
     MeasurementMuktaIcon,
     GlobeLocationPin,
     NewWindow,
-    Outpatient_med,
-    Ad_units
+    OutpatientMed,
+    AdUnits
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1584,6 +1584,6 @@ import {
     MeasurementMuktaIcon,
     GlobeLocationPin,
     NewWindow,
-    Outpatient_med,
-    Ad_units
+    OutpatientMed,
+    AdUnits
   }

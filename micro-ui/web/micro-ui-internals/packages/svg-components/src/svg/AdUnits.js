@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { COLOR_FILL } from "./constants";
 
-export const Ad_units = ({ className, height = "38", width = "24", style = {}, fill = COLOR_FILL, onClick = null }) => {
+export const AdUnits = ({ className, height = "38", width = "24", style = {}, fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg
       width={width}
@@ -22,7 +22,7 @@ export const Ad_units = ({ className, height = "38", width = "24", style = {}, f
   );
 };
 
-Ad_units.propTypes = {
+AdUnits.propTypes = {
   /** custom width of the svg icon */
   width: PropTypes.string,
   /** custom height of the svg icon */

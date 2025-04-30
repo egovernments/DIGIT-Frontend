@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { COLOR_FILL } from "./constants";
 
-export const Outpatient_med = ({ className, height = "30", width = "38", style = {}, fill = COLOR_FILL, onClick = null }) => {
+export const OutpatientMed = ({ className, height = "30", width = "38", style = {}, fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg
       width={width}
@@ -22,7 +22,7 @@ export const Outpatient_med = ({ className, height = "30", width = "38", style =
   );
 };
 
-Outpatient_med.propTypes = {
+OutpatientMed.propTypes = {
   /** custom width of the svg icon */
   width: PropTypes.string,
   /** custom height of the svg icon */
