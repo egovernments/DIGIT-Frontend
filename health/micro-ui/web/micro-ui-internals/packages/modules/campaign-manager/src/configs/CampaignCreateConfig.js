@@ -34,6 +34,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
           name: "HCM_CAMPAIGN_NAME",
           head: "HCM_CAMPAIGN_NAME_QUES",
           subHead: "HCM_CAMPAIGN_NAME_DESC",
+          callAPI: "true",
           sectionSubHeadClassName : "SubHeadingClass",
           body: [
             {
