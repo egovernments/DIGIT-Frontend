@@ -6,15 +6,20 @@ import { Stepper, Toast, Button, Footer, Loader , FormComposerV2} from "@egovern
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
+import { transformUpdateData } from "../../../utils/transformUpdateDats";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
   const history = useHistory();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [totalFormData, setTotalFormData] = useState({});
+  const [isDataCreating, setIsDataCreating] = useState(false);
   const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
   const [loader, setLoader] = useState(null);
   const searchParams = new URLSearchParams(location.search);
+  const skip = searchParams.get("skip");
+  const id = searchParams.get("id");
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -61,7 +66,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
   const config = filteredConfig?.[0];
 
-  const reqCreate = {
+  const reqCreateCreate = {
     url: `/project-factory/v1/project-type/create`,
     params: {},
     body: {},
@@ -70,9 +75,23 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     },
   };
 
-  const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+  const reqCreateUpdate = {
+    url: `/project-factory/v1/project-type/update`,
+    params: {},
+    body: {},
+    config: {
+      enable: false,
+    },
+  };
+
+
+  const mutationCreate = Digit.Hooks.useCustomAPIMutationHook(reqCreateCreate);
+
+  const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqCreateUpdate);
 
   const onSubmit = async (formData) => {
+    const isLast = filteredConfig?.[0]?.form?.[0]?.isLast;
+    const isMandatory = filteredConfig?.[0]?.form?.[0]?.callAPI;
     const projectType = formData?.CampaignType?.code;
 
     const validDates = handleCreateValidate(formData);
@@ -102,30 +121,71 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setParams({ ...params, ...formData });
     }
 
-    if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
+    const updatedTotalFormData = {
+      ...totalFormData,
+      [name]: formData,
+      ...(formData?.DateSelection && !totalFormData?.HCM_CAMPAIGN_DATE ? { HCM_CAMPAIGN_DATE: { DateSelection: formData.DateSelection } } : {}),
+      ...(formData?.CampaignName && !totalFormData?.HCM_CAMPAIGN_NAME ? { HCM_CAMPAIGN_NAME: { CampaignName: formData.CampaignName } } : {}),
+    };
+
+    if(isMandatory && !skip){
+      setIsDataCreating(true);
+      await mutationCreate.mutate(
+            {
+              url: `/project-factory/v1/project-type/create`,
+              body: transformCreateData({ totalFormData: updatedTotalFormData, hierarchyType }),
+              config: {
+                enable: true,
+              },
+            },
+            {
+              onSuccess: async (result) => {
+                updateUrlParams({ skip: true , id: result?.CampaignDetails?.id});
+                setCurrentKey(currentKey + 1);
+              },
+              onError: (error, result) => {
+                const errorCode = error?.response?.data?.Errors?.[0]?.code;
+                setShowToast({ key: "error", label: t(errorCode) });
+              },
+              onSettled: () => {
+                // This will always run after the mutation completes
+                setIsDataCreating(false);
+                // Final function logic here
+              },
+            }
+          );
+    }
+    else if(currentKey == 1){
       setCurrentKey(currentKey + 1);
-    } else {
-      const updatedTotalFormData = {
-        ...totalFormData,
-        ...(name === "HCM_CAMPAIGN_DATE" ? { [name]: formData } : {}),
-        ...(!totalFormData?.HCM_CAMPAIGN_DATE && formData?.DateSelection ? { HCM_CAMPAIGN_DATE: { DateSelection: formData.DateSelection } } : {}),
-      };
-      await mutation.mutate(
+    }
+    else{
+      setIsDataCreating(true);
+      await mutationUpdate.mutate(
         {
-          url: `/project-factory/v1/project-type/create`,
-          body: transformCreateData({ totalFormData: updatedTotalFormData, hierarchyType }),
+          url: `/project-factory/v1/project-type/update`,
+          body: transformUpdateData({ totalFormData: updatedTotalFormData, hierarchyType , id }),
           config: {
             enable: true,
           },
         },
         {
           onSuccess: async (result) => {
+            if(currentKey == 3){
             setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
             history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`);
+            }
+            else{
+              setCurrentKey(currentKey + 1);
+            }
           },
           onError: (error, result) => {
             const errorCode = error?.response?.data?.Errors?.[0]?.code;
-            setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+            setShowToast({ key: "error", label: t(errorCode) });
+          },
+          onSettled: () => {
+            // This will always run after the mutation completes
+            setIsDataCreating(false);
+            // Final function logic here
           },
         }
       );
@@ -163,9 +223,9 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         secondaryLabel={t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"
-        // cardClassName="create-campaign-card"
         noCardStyle={currentKey === 3}
         onSecondayActionClick={onSecondayActionClick}
+        isDisabled={isDataCreating}
         label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
       {showToast && (

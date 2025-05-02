@@ -1,10 +1,9 @@
 import { Button, Card, HeaderComponent } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { GlobeLocationPin }  from "@egovernments/digit-ui-svg-components";
 import { useHistory } from "react-router-dom";
 
-const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink }) => {
+const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , icon }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -12,7 +11,7 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink }) => {
     <Card style={{ marginBottom: "1.5rem" }}>
       <div className="details-heading">
         <div className="icon-heading">
-          <GlobeLocationPin />
+          {icon}
           <HeaderComponent className={"detail-header"}>{headingName}</HeaderComponent>
         </div>
         <Button
@@ -20,7 +19,7 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink }) => {
           onClick={() => {
             history.push(`/${window.contextPath}/employee/campaign/${navLink}`);
           }}
-          variation="primary"
+          variation={type}
           style={{ width: '19rem' }}
         />
       </div>

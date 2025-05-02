@@ -46,8 +46,8 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
 
   return (
     <Card>
-      <HeaderComponent className={"date-header"}>{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
-      <p className="dates-description">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
+      <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
+      <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
         <div className="campaign-dates">
           <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
