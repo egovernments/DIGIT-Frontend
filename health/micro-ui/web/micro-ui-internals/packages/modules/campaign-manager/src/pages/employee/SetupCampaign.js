@@ -900,7 +900,10 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     if(isSubmit){
       setShouldUpdate(true);
       if(currentKey == 6 || currentKey == 9 || currentKey == 15){
-        history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+        setTimeout(() => {
+          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        }, 500);
       }
       return ;
     }
