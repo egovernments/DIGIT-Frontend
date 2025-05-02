@@ -12,10 +12,10 @@ const Tabs = ({ availableLocales, onTabChange, setActiveLocale, activeLocale }) 
         <button
           key={index}
           type="button"
-          className={`campaign-tab-head ${_ === activeLocale ? "active" : ""} hover`}
+          className={`campaign-tab-head ${_?.value === activeLocale?.value ? "active" : ""} hover`}
           onClick={() => onTabChange(_, index)}
         >
-          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(_)}</p>
+          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(_?.label)}</p>
         </button>
       ))}
     </div>
@@ -24,7 +24,7 @@ const Tabs = ({ availableLocales, onTabChange, setActiveLocale, activeLocale }) 
 export const AppLocalisationTable = ({ data }) => {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const availableLocales = ["en_IN", "pt_IN", "fr_IN"].filter((locale) => locale !== currentLocale);
+  const availableLocales = (Digit?.SessionStorage.get("initData")?.languages || []).filter((locale) => locale?.value !== currentLocale);
   const [activeLocale, setActiveLocale] = useState(availableLocales[0]);
 
   const columns = [
@@ -39,9 +39,9 @@ export const AppLocalisationTable = ({ data }) => {
         return (
           <TextInput
             name="translation"
-            value={row?.[activeLocale]}
+            value={row?.[activeLocale?.value]}
             onChange={(event) => {
-              updateLocalization(row?.code, activeLocale, event.target.value);
+              updateLocalization(row?.code, activeLocale?.value, event.target.value);
             }}
           />
         );
@@ -64,7 +64,7 @@ export const AppLocalisationTable = ({ data }) => {
       </div>
 
       {/* Data Table */}
-      <DataTable title={`Translations for ${activeLocale.toUpperCase()}`} columns={columns} data={locState} pagination highlightOnHover />
+      <DataTable title={`LABEL_TRANSLATIONS_FOR_${activeLocale.label.toUpperCase()}`} columns={columns} data={locState} pagination highlightOnHover />
     </div>
   );
 };

@@ -270,9 +270,9 @@ const ViewMap = ({ lat, long, type }) => {
               <div className="north-arrow">{DigitSvgs.NorthArrow && <DigitSvgs.NorthArrow width={"40px"} height={"40px"} fill={"#FFFFFF"} />}</div>
               <CustomScaleControl map={map} t={t} />
             </div>
-            <div className="bottom-right-map-subcomponents">
+            {/* <div className="bottom-right-map-subcomponents">
               <ViewElement label={type} type={type} />
-            </div>
+            </div> */}
           </div>
         </Card>
       </Card>

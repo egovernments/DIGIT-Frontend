@@ -29,7 +29,8 @@ const AppFeatures = () => {
       select: (data) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.AppModuleSchema;
       },
-    }
+    },
+    { schemaCode: `${"CONSOLE_MDMS_MODULENAME"}.AppModuleSchema` }
   );
 
   const selectedModule = modulesData?.find((module) => module.code === code);
@@ -73,7 +74,9 @@ const AppFeatures = () => {
               variation={"primary"}
               label={t("ES_CAMPAIGN_SELECT")}
               onClick={() => {
-                history.push(`/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`)
+                history.push(
+                  `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE&formId=default`
+                );
               }}
             />
           </Card>
