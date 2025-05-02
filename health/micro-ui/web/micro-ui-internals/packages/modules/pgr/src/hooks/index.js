@@ -5,6 +5,7 @@ import useFetchBoundaries from "./boundary/useFetchBoundaries";
 import useCreateComplaint from "./pgr/useCreateComplaint";
 import usePGRSearch from "./pgr/usePGRSearch";
 import usePGRUpdate from "./pgr/usePGRUpdate";
+import useServiceDefs from "./pgr/useServiceDefs";
 
 const pgr = {
   useProjectSearch,
@@ -13,6 +14,7 @@ const pgr = {
   useCreateComplaint,
   usePGRSearch,
   usePGRUpdate,
+  useServiceDefs,
 };
 
 

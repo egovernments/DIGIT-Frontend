@@ -8,9 +8,9 @@ const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PAT
 const Urls = {
   pgr: {
     inboxSearch: `/inbox/v2/_search`,
-    search: `/pgr-services/v2/request/_search`,
-    create: `/pgr-services/v2/request/_create`,
-    update: `/pgr-services/v2/request/_update`,
+    search: `/health-pgr-services/v2/request/_search`,
+    create: `/health-pgr-services/v2/request/_create`,
+    update: `/health-pgr-services/v2/request/_update`,
   },
   workflow: {
     processSearch: `egov-workflow-v2/egov-wf/process/_search`,

@@ -15,7 +15,7 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 

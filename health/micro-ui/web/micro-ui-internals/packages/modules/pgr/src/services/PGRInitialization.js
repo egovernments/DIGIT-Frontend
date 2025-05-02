@@ -1,8 +1,72 @@
+/**
+ * Initializes PGR module-specific configurations.
+ * 
+ * This function:
+ * 1. Fetches boundary hierarchy data for the given tenant.
+ * 2. Derives the boundary type order (used to build nested boundary dropdowns).
+ * 3. Stores the derived boundary type order in session storage under "boundaryHierarchyOrder".
+ * 
+ * @param {Object} config - The configuration object
+ * @param {string} config.tenantId - The tenant ID for which the boundary hierarchy should be initialized
+ * 
+ * @throws Will throw an error if the boundary data cannot be fetched
+ */
+const initializePGRModule = async ({ tenantId }) => {
+  // Get hierarchy type from global config or fallback to "HIERARCHYTEST"
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+
+  // Get current logged-in user from session (not used further here, but could be used for logging/debugging)
+  let user = Digit?.SessionStorage.get("User");
+
+  try {
+    // Call boundary-service to get hierarchical boundary data with children included
+    const fetchBoundaryData = await Digit.CustomService.getResponse({
+      url: `/boundary-service/boundary-relationships/_search`,
+      useCache: false,
+      method: "POST",
+      userService: false,
+      params: {
+        tenantId: tenantId,
+        hierarchyType: hierarchyType,
+        includeChildren: true,
+      }
+    });
+
+    if (!fetchBoundaryData) {
+      throw new Error("Couldn't fetch boundary data");
+    }
+
+    // Extract the order of boundary types using a depth-first traversal
+    const boundaryHierarchyOrder = getBoundaryTypeOrder(fetchBoundaryData?.TenantBoundary?.[0]?.boundary);
+
+    // Store the ordered boundary types in session storage for use in dropdown components
+    Digit.SessionStorage.set("boundaryHierarchyOrder", boundaryHierarchyOrder);
+
+
+  } catch (error) {
+    // Throw readable errors if available from backend, otherwise generic error
+    if (error?.response?.data?.Errors) {
+      throw new Error(error.response.data.Errors[0].message);
+    }
+    throw new Error("An unknown error occurred");
+  }
+};
+
+/**
+ * Given a nested boundary tree, this function computes the order of unique boundary types.
+ * 
+ * Example:
+ *  - If the hierarchy is: Country -> Province -> District, it returns:
+ *    [{ code: "Country", order: 1 }, { code: "Province", order: 2 }, { code: "District", order: 3 }]
+ * 
+ * @param {Array} tenantBoundary - Array of root boundary nodes with nested children
+ * @returns {Array} Ordered list of unique boundary type codes
+ */
 const getBoundaryTypeOrder = (tenantBoundary) => {
   const order = [];
   const seenTypes = new Set();
 
-  // Recursive function to traverse the hierarchy
+  // Recursive DFS to capture boundary type hierarchy
   const traverse = (node, currentOrder) => {
     if (!seenTypes.has(node.boundaryType)) {
       order.push({ code: node.boundaryType, order: currentOrder });
@@ -13,132 +77,10 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
     }
   };
 
-  // Process the root boundaries
+  // Start traversal from each top-level boundary node
   tenantBoundary.forEach((boundary) => traverse(boundary, 1));
 
   return order;
-};
-
-const initializePGRModule = async ({ tenantId }) => {
-
-  const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
-  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
-  const hierarchyType = "HIERARCHYTEST";
-
-  let user = Digit?.SessionStorage.get("User");
-
-  try {
-    const response = await Digit.CustomService.getResponse({
-      url: `/${projectContextPath}/staff/v1/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        "tenantId": tenantId,
-        "offset": 0,
-        "limit": 100
-      },
-      body: {
-        "ProjectStaff": {
-          "staffId": [user?.info?.uuid]
-        }
-      },
-    });
-    if (!response) {
-      throw new Error("No Staff found");
-    }
-    const staffs = response?.ProjectStaff;
-    if (!staffs || staffs?.length === 0) {
-      throw new Error("No Staff found");
-    }
-    const fetchProjectData = await Digit.CustomService.getResponse({
-      url: `/${projectContextPath}/v1/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        "tenantId": tenantId,
-        "offset": 0,
-        "limit": 100
-      },
-      body: {
-        Projects: staffs?.map((staff) => {
-          return {
-            "id": staff?.projectId,
-            "tenantId": tenantId,
-          };
-        })
-      }
-    });
-    if (!fetchProjectData) {
-      throw new Error("Projects not found");
-    }
-    const projects = fetchProjectData?.Project;
-    if (!projects || projects?.length === 0) {
-      throw new Error("No linked projects found");
-    }
-
-    const nationalProjectId = projects?.[0]?.projectHierarchy != null ? projects?.[0]?.projectHierarchy?.split(".")?.[0] : projects?.[0]?.id;
-
-    const fetchNationalProjectData = await Digit.CustomService.getResponse({
-      url: `/${projectContextPath}/v1/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        "tenantId": tenantId,
-        "offset": 0,
-        "limit": 100
-      },
-      body: {
-        Projects: [
-          {
-            "id": nationalProjectId,
-            "tenantId": tenantId,
-          }
-        ]
-      }
-    });
-    if (!fetchNationalProjectData) {
-      throw new Error("National level Project not found");
-    }
-    const nationalLevelProject = fetchNationalProjectData?.Project?.[0];
-    if (!nationalLevelProject) {
-      throw new Error("No linked projects found");
-    }
-
-
-    const fetchBoundaryData = await Digit.CustomService.getResponse({
-      url: `/boundary-service/boundary-relationships/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        tenantId: tenantId,
-        hierarchyType: hierarchyType,
-        includeChildren: true,
-        codes: nationalLevelProject?.address?.boundary,
-        boundaryType: nationalLevelProject?.address?.boundaryType,
-      }
-    });
-
-    if (!fetchBoundaryData) {
-      throw new Error("Couldn't fetch boundary data");
-    }
-
-    const boundaryHierarchyOrder = getBoundaryTypeOrder(fetchBoundaryData?.TenantBoundary?.[0]?.boundary);
-    Digit.SessionStorage.set("boundaryHierarchyOrder", boundaryHierarchyOrder);
-
-
-
-    Digit.SessionStorage.set("staffProjects", projects);
-
-  } catch (error) {
-    if (error?.response?.data?.Errors) {
-      throw new Error(error.response.data.Errors[0].message);
-    }
-    throw new Error("An unknown error occurred");
-  }
 };
 
 export default initializePGRModule;

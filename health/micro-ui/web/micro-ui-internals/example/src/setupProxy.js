@@ -28,6 +28,7 @@ module.exports = function (app) {
     "/localization",
     "/egov-workflow-v2",
     "/pgr-services",
+    "/health-pgr-services",
     "/filestore",
     "/egov-hrms",
     "/user-otp",

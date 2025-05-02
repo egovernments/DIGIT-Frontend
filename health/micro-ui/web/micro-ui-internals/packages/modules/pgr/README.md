@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-npm install --save egovernments/digit-ui-module-pgr
+npm install --save egovernments/digit-ui-module-health-pgr
 ```
 
 ## Limitation
@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-pgr" :"0.0.1",
+"@egovernments/digit-ui-module-health-pgr" :"0.0.1",
 ```
 
 then navigate to App.js
@@ -33,7 +33,7 @@ then navigate to App.js
 ```jsx
 /** add this import **/
 
-import { initPGRComponents } from "egovernments/digit-ui-module-pgr"
+import { initPGRComponents } from "egovernments/digit-ui-module-health-pgr"
 
 /** inside enabledModules add this new module key **/
 
@@ -67,7 +67,6 @@ const initDigitUI = () => {
 
 Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
-[Microplan Module Documentation](https://docs.digit.org/public-health/v1.7/setup/configuration/ui-configuration)
 
 ## Maintainer
 
