@@ -4,10 +4,6 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
-  console.log("BoundaryComponent config", config);
-  console.log("BoundaryComponent formData", formData);
-  console.log("BoundaryComponent userType", userType);
-  console.log("BoundaryComponent onSelect", onSelect);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries(tenantId);
 

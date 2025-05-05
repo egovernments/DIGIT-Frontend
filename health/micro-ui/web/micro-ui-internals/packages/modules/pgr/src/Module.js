@@ -18,7 +18,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-  const hierarchyType =  "HIERARCHYTEST";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
   const moduleCode = ["pgr", `boundary-${hierarchyType}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
@@ -33,12 +33,10 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
     tenantId: tenantId,
   });
 
-  console.log("PGR INITIALIZING", isPGRInitializing);
 
-  if (isLoading || isPGRInitializing ) {
+  if (isLoading || isPGRInitializing) {
     return <Loader />;
   } else {
-    console.log("return Employee App");
     return (
       <ProviderContext>
         <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />

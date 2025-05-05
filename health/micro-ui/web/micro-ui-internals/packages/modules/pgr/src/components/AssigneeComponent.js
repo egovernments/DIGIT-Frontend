@@ -3,9 +3,6 @@ import React, { useEffect, useState } from "react";
 import { Dropdown, Loader } from "@egovernments/digit-ui-components";
 
 const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
-  console.log("AssigneeComponent -> config", config);
-  console.log("AssigneeComponent -> onSelect", onSelect);
-  console.log("AssigneeComponent -> formState", formState);
   const { t } = useTranslation();
   const [assignees, setAssignees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
@@ -75,10 +72,8 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
 
   // Handle employee selection
   const handleEmployeeSelect = (employee) => {
-    console.log("AssigneeComponent -> handleEmployeeSelect -> employee", employee);
     setSelectedEmployee(employee);
     if (employee && config?.key) {
-      console.log("Selecting Empluee", employee);
       onSelect(config.key, employee);
     }
   };
@@ -95,7 +90,6 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
         optionKey="name"
         selected={selectedEmployee}
         select={(value) => {
-          console.log("AssigneeComponent -> value", value);
           handleEmployeeSelect(value);
         }}
         placeholder={t("CS_COMMON_SELECT_EMPLOYEE")}

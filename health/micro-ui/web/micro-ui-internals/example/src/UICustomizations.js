@@ -1514,20 +1514,5 @@ export const UICustomizations = {
           return t("ES_COMMON_NA");
       }
     },
-    populateLocalityReqCriteria : () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-
-      return {
-        url: "/boundary-service/boundary-relationships/_search",
-        params: { tenantId, hierarchyType:"HIERARCHYTEST",},
-        body: {},
-        config: {
-          enabled: true,
-          select: (data) => {
-            return data;
-          },
-        },
-      };
-    }
   },
 };

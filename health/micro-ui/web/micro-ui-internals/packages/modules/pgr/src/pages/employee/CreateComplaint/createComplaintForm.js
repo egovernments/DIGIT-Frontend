@@ -81,7 +81,6 @@ const CreateComplaintForm = ({
    * Handles form submission event
    */
   const onFormSubmit = (_data) => {
-    console.log("onFormSubmit", _data);
     setInputFormData(_data);
 
     const payload = formPayloadToCreateComplaint(_data, tenantId, user?.info);

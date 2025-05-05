@@ -20,7 +20,7 @@ const getBoundaryTypeOrder = (tenantBoundary) => {
   };
   
   const fetchBoundaries = async ({ tenantId }) => {
-    const hierarchyType =  "HIERARCHYTEST";
+    const hierarchyType =  window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
     try {
       const fetchBoundaryData = await Digit.CustomService.getResponse({
         url: `/boundary-service/boundary-relationships/_search`,
