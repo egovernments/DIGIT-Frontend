@@ -67,8 +67,8 @@
         }
 
         .map-view-element-icon{
-          width: 1.5rem;
-          height: 1.5rem;
+          width: 1.688rem;
+          height: 2.438rem;
         }
       }
     }
@@ -127,6 +127,10 @@
                 margin: 0;
                 padding: 0;
                 color: theme(digitv2.lightTheme.paper);
+
+                &.microplan{
+                  color: theme(digitv2.lightTheme.primary);
+                }
             }
 
             .layer-icon {

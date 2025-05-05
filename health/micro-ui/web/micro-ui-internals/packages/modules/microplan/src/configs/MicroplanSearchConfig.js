@@ -25,7 +25,8 @@ const defaultSearchValues = {
           // filterFormJsonPath: "requestBody.MdmsCriteria.customs",
           searchFormJsonPath: "requestBody.PlanConfigurationSearchCriteria",
         },
-
+        customHookName: "microplanv1.useSavedMicroplans", 
+        
         sections: {
           search: {
             uiConfig: {
@@ -108,10 +109,9 @@ const defaultSearchValues = {
             },
             show: true,
           },
-         // customHookName: "microplanv1.useSavedMicroplans", 
           
         },
-        customHookName:"microplanv1.useSavedMicroplans"
+        // customHookName:"microplanv1.useSavedMicroplans"
       },
 
  

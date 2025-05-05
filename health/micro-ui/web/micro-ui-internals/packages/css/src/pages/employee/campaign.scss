@@ -52,9 +52,11 @@
 }
 .name-description {
   margin: 0rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 .dates-description {
   margin: 0rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 .selecting-boundary-div {
   padding-top: 0.5rem;
@@ -240,8 +242,52 @@
   }
 }
 
+.date-style {
+  max-width: 37.5rem;
+  display: flex;
+  gap: 1rem;
+}
+.app-preview {
+  display: flex;
+  width: 25rem;
+  height: 40rem;
+  overflow-y: auto;
+  border: 1px solid theme(digitv2.lightTheme.primary);;
+  border-radius: 1rem;
+  background-color: white;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+  .digit-card-header {
+    color: #0b4b66;
+    font-size: 2rem;
+    font-weight: 700;
+  }
+  .digit-card-text {
+    color: #787878;
+    font-weight: 400;
+    font-size: 0.875rem;
+    line-height: 137%;
+  }
+}
+.mobile-top {
+  background-color: theme(digitv2.lightTheme.header-sidenav);
+  height: 4rem;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  color: theme(digitv2.lightTheme.paper);
+  font-size: 1.5rem;
+  font-weight: theme(digitv2.fontWeight.bold);
+  width: 100%;
+  /* Full width */
+  box-sizing: border-box;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
+}
+
 .appConfiglabelField {
-  padding: 3rem 1rem;
+  padding: 1rem;
   background-color: #eee;
   border: 1px solid #d6d5d4;
   border-radius: 0.5rem;
@@ -263,6 +309,7 @@
 }
 .appConfiglabelField-label {
   width: 25rem;
+  margin-bottom: 0.5rem;
 }
 .app-config-actionBar {
   z-index: 9999;
@@ -272,33 +319,137 @@
   max-width: 35rem;
 
   .digit-popup-footer {
+    padding-top: 0 !important;
 
-      padding-top: 0 !important;
+    .digit-popup-footer-buttons {
+      width: 100% !important;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
 
-      .digit-popup-footer-buttons {
-          width: 100% !important;
-          display: grid;
-          grid-template-columns: 1fr 1fr;
-
-          .digit-button-secondary {
-              width: 100%;
-          }
-
-          .digit-button-primary {
-              width: 100%;
-          }
+      .digit-button-secondary {
+        width: 100%;
       }
+
+      .digit-button-primary {
+        width: 100%;
+      }
+    }
   }
 
   .digit-popup-children-wrap {
-      padding-top: 0 !important;
-      overflow: visible;
+    padding-top: 0 !important;
+    overflow: visible;
   }
 }
 .rdt_TableBody {
-  border: 1px solid #ccc !important; 
+  border: 1px solid #ccc !important;
   width: 100% !important;
 }
-.rdt_Table{
+.rdt_Table {
   width: 100% !important;
 }
+.campaign-header-style{
+  color: theme(digitv2.lightTheme.header-sidenav);
+  font-size: 2.5rem;
+}
+.SubHeadingClass{
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-weight: 400;
+  font-size: 1rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+.date-header{
+  width: 100% !important;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-weight: 700;
+  font-size: 40px;
+}
+.descStyle {
+  font-family: "Roboto";
+  font-weight: 500;
+  font-size: 24px;
+  color: #C84C0E;
+  text-align: center;
+  margin-top: 1.5rem;
+}
+.containerStyle{
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2rem;
+  gap: 2rem;
+}
+.cardStyle {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 400px;
+  height: 139px;
+  border: 1.5px solid #C84C0E;
+  border-radius: 4px;
+  margin: 1rem;
+  cursor: pointer;
+  flex-direction: column;
+  text-align: center;
+  transition: box-shadow 0.3s ease-in-out;
+  background-color: #fff;
+}
+.create-campaign-card{
+  gap: 0;
+  grid-gap: 0;
+}
+.details-heading{
+  display: flex;
+  justify-content: space-between;
+}
+.icon-heading{
+  gap: 1rem;
+  display: flex;
+}
+.detail-desc{
+  margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+.dates{
+  margin-top: 0.5rem;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+}
+.detail-header{
+  color: theme(digitv2.lightTheme.primary-2);
+  font-size: theme(digitv2.fontSize.heading-m);
+}
+.details-desc{
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+}
+.campaign-details-header{
+  display: flex;
+}
+.campaign-view-tag{
+  margin-left: 1rem;
+}
+
+.module-card{
+  width: auto;
+  height: auto;
+  border: 1px;
+  border-radius: 0.75rem;
+}
+.modules-container{
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
+  grid-gap: 1.5rem;
+  padding: 1rem;
+}
+.campaign-module-button{
+  width: auto;
+}
+.date-selection {
+  width: 100% !important;
+}
+

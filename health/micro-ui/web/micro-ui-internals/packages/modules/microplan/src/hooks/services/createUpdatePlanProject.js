@@ -941,20 +941,12 @@ const createUpdatePlanProject = async (req) => {
             },
           });
         
-          const draftResponse = await addColumnsForPlan({
-            DraftDetails: { planConfigurationId: microplanId, tenantId }
-          });
-          if (!draftResponse) {
-            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_DRAFT_PLAN" });
-            return;
-          }
-        
           // Safely extract existing plan columns (default to empty array)
           const existingColumns = fetchedPlan?.additionalDetails?.addColumns || [];
         
           // Safely extract new column values from form data
-          const newColumnValues = Array.isArray(totalFormData?.NEW_COLUMNS?.newColumns?.colValues)
-            ? totalFormData.NEW_COLUMNS.newColumns.colValues.filter(item => item?.value !== "")
+          const newColumnValues = Array.isArray(totalFormData?.NEW_COLUMNS?.newColumns)
+            ? totalFormData.NEW_COLUMNS.newColumns.filter(item => item !== "")
             : [];
         
           // Function to compare existing and new columns based on 'value'
@@ -982,7 +974,9 @@ const createUpdatePlanProject = async (req) => {
             additionalDetails: {
               ...fetchedPlan.additionalDetails,
               key: key,
-              addColumns: newColumnValues,
+              newColumns:  newColumnValues.filter(
+                item => item !== null && item !== undefined && item !== ''
+              )
             },
           };
         
@@ -994,10 +988,19 @@ const createUpdatePlanProject = async (req) => {
             setCurrentStep(prev => prev + 1);
             Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
             Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
-            return { triggeredFrom };
+            
           } else {
             setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
           }
+
+          const draftResponse = await addColumnsForPlan({
+            DraftDetails: { planConfigurationId: microplanId, tenantId }
+          });
+          if (!draftResponse) {
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_DRAFT_PLAN" });
+            return;
+          }
+          return { triggeredFrom };
         
         }
         

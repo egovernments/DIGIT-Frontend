@@ -5,10 +5,10 @@
 @import "./villageView.scss";
 @import "./facility.scss";
 
-.results-table-wrapper{
+.results-table-wrapper {
   margin-bottom: 2rem;
 
-  .pagination{
+  .pagination {
     margin-bottom: 2rem;
   }
 }
@@ -30,7 +30,6 @@
   margin-left: 3.5rem;
 }
 
-
 .main.digit-home-main {
   margin-left: 60px;
 
@@ -40,7 +39,6 @@
     padding-right: 0;
     margin-bottom: 0rem;
     min-height: calc(100vh - 10em);
-
 
     .ground-container.digit-home-ground {
       padding: 0;
@@ -424,7 +422,7 @@ tbody {
 
     .digit-button-primary {
       height: 1.5rem;
-      background-color: #d4351c !important;
+      background-color: #d4351c;
 
       .icon-label-container.primary.large {
         font-size: 14px;
@@ -493,7 +491,7 @@ tbody {
   justify-content: space-between;
 
   .submit-bar {
-    background-color: #c84c0e !important;
+    background-color: #c84c0e;
     width: max-content;
     padding-left: 1.5rem;
     padding-right: 1.5rem;
@@ -762,12 +760,23 @@ tbody {
   width: unset !important;
 }
 
-
-.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .search-wrapper .search-field-wrapper.search.custom-both-clear-search .search-button-wrapper .submit-bar {
+.inbox-search-wrapper
+  .inbox-search-component-wrapper
+  .sections-parent.search
+  .search-wrapper
+  .search-field-wrapper.search.custom-both-clear-search
+  .search-button-wrapper
+  .submit-bar {
   background-color: theme(digitv2.lightTheme.primary) !important;
 }
 
-.inbox-search-wrapper .inbox-search-component-wrapper .sections-parent.search .search-wrapper .search-field-wrapper.search.custom-both-clear-search .search-button-wrapper .link-label {
+.inbox-search-wrapper
+  .inbox-search-component-wrapper
+  .sections-parent.search
+  .search-wrapper
+  .search-field-wrapper.search.custom-both-clear-search
+  .search-button-wrapper
+  .link-label {
   color: theme(digitv2.lightTheme.primary) !important;
 }
 
@@ -783,7 +792,7 @@ tbody {
   border-top-right-radius: 0.25rem;
   border-bottom-left-radius: 0rem;
   border-bottom-right-radius: 0rem;
-  padding: .75rem;
+  padding: 0.75rem;
   padding-left: 1.5rem;
   padding-right: 1.5rem;
   border: 0.063rem solid;
@@ -802,7 +811,7 @@ tbody {
 .parent-group {
   border-width: 0.063rem;
   background: theme(digitv2.lightTheme.paper-secondary);
-  border-color: #D4D5D6;
+  border-color: #d4d5d6;
   border-radius: 0.25rem;
   padding: 1rem;
   padding-bottom: 0rem;
@@ -811,7 +820,7 @@ tbody {
 .summary-parent-group {
   border-width: 0.063rem;
   background: theme(digitv2.lightTheme.paper-secondary);
-  border-color: #D4D5D6;
+  border-color: #d4d5d6;
   border-radius: 0.25rem;
   padding: 1rem;
 }
@@ -823,7 +832,7 @@ tbody {
 .summary-group {
   border-width: 0.063rem;
   background: theme(digitv2.lightTheme.paper-secondary);
-  border-color: #D4D5D6;
+  border-color: #d4d5d6;
   border-radius: 0.25rem;
   padding: 1rem;
 }
@@ -838,7 +847,6 @@ tbody {
 .card-container2 {
   width: -webkit-fill-available;
   padding-bottom: 1.5rem;
-
 }
 
 .card-container-delivery {
@@ -853,13 +861,11 @@ tbody {
   padding-bottom: 1rem;
 }
 
-
 .view-campaign-details-card {
-
-  .view-composer-header-section{
+  .view-composer-header-section {
     margin-bottom: 1.5rem;
-    header{
-      margin:0rem;
+    header {
+      margin: 0rem;
     }
   }
   .employee-data-table {
@@ -886,7 +892,6 @@ tbody {
       &.last {
         margin: 0rem;
       }
-
     }
   }
 }
@@ -898,7 +903,132 @@ tbody {
 }
 
 .digit-landing-page-wrapper {
-  .digit-landing-page-card{
+  .digit-landing-page-card {
     min-width: fit-content;
   }
+}
+/* APP CONFIG CSS REDESIGN */
+.configure-app-tabs {
+  .configure-app-tab-head {
+    border: 1px solid #d6d5d4;
+    border-radius: 0.25rem;
+    padding: 0.5rem 1rem;
+    min-width: 2.5rem;
+    height: 2rem;
+    background-color: #ffffff;
+    width: 10rem;
+  }
+  .configure-app-tab-head.active {
+    background-color: #c84c0e;
+    font-weight: 700;
+    color: #ffffff;
+  }
+}
+.digit-card-component.appConfigScreenCard {
+  width: 50%;
+  margin: 0rem 1.5rem;
+  border-radius: 0.75rem;
+}
+
+.app-configure-action-button {
+  border-radius: 0.75rem;
+  padding: 1.25rem 3.8rem;
+  height: 4rem;
+  width: 15rem;
+  min-width: 12.5rem;
+}
+.app-configuration-side-panel {
+  width: 23rem;
+  background-color: #ffffff;
+}
+.appConfigHeaderLabelField {
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.appConfigLabelField {
+  padding: 1rem;
+  background-color: #fafafa;
+  border: 1px solid #d6d5d4;
+  border-radius: 0.5rem;
+  width: 18rem;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+.appConfigLabelField.selected {
+  background-color: #f477381a;
+  border: 1px solid #c84c0e;
+}
+.app-config-field-tag {
+  background-color: #0057bd0d !important;
+  border: 0.0031rem solid #0b4b66;
+  color: #0b4b66;
+  font-size: 0.75rem;
+  font-weight: 400;
+}
+.app-configure-drawer-footer-button {
+  margin: auto;
+}
+.app-configure-drawer-footer-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: center;
+  .app-configure-drawer-footer-button {
+    width: 100%;
+  }
+}
+.appConfigLabelField-label {
+  margin-bottom: 0.5rem;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #787878;
+}
+.app-preview-action-button {
+  margin-top: auto;
+  margin-bottom: 0;
+  width: 100%;
+  text-align: center;
+}
+.app-preview-app-config-drawer-action-button {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.app-preview-selected {
+  margin: 10px -1rem;
+  padding: 1rem;
+  background-color: #c84c0e33;
+  border: 1px solid #c84c0e33;
+  border-radius: 1rem;
+}
+.app-config-header {
+  color: #0b4b66 !important;
+  font-weight: 700;
+  font-size: 2.5rem;
+}
+.appConfigLabelField-label-container {
+  width: 100%;
+}
+.app-config-drawer-button {
+  width: 100%;
+}
+.app-preview-sub-heading {
+  font-family: "Roboto";
+}
+.app-config-add-field-popup {
+  width: 35rem !important;
+  .digit-popup-children-wrap {
+    overflow: visible !important;
+  }
+  .digit-label-field-pair {
+    display: flex;
+    align-items: center;
+    .product-label-field {
+      width: 15rem !important;
+    }
+  }
+}
+.app-config-drawer-action-divider {
+  margin-top: auto;
 }

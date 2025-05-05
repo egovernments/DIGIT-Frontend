@@ -106,12 +106,12 @@ header {
   margin-bottom: 0rem;
 }
 .digit-button-primary {
-  background-color: theme(digitv2.lightTheme.primary) !important;
+  background-color: theme(digitv2.lightTheme.primary);
 }
 .digit-button-secondary {
   .icon-label-container {
     h2 {
-      color: theme(digitv2.lightTheme.primary) !important;
+      color: theme(digitv2.lightTheme.primary);
     }
   }
 }
@@ -208,4 +208,11 @@ header {
 }
 .wbh-header-container{
   margin: 0rem;
+}
+.digit-description{
+  display: contents !important;
+}
+.create-campaign-disable{
+  opacity: .5;
+  background: #c5c5c5 !important;
 }
