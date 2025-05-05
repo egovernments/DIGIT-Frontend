@@ -11,6 +11,7 @@ const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
   const local = useLocation();
   const { fromCampaignSupervisor } = local?.state || false;
+  // TODO : NEED TO UPDATE THESE CRUMBS
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -48,7 +49,7 @@ const ProjectBreadCrumb = ({ location }) => {
 };
 
 const App = ({ path, stateCode, userType, tenants }) => {
-
+  const location = useLocation();
   return (
     <Switch>
       <AppContainer className="ground-container">
