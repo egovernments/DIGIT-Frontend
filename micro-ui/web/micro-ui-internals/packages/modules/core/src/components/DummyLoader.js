@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
 const DummyLoaderScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const { tenant } = location.state || {};
@@ -30,7 +30,7 @@ const DummyLoaderScreen = () => {
     if (currentStep === steps.length) {
       clearInterval(stepInterval); // Clear the interval to stop further updates
       const navigateTimeout = setTimeout(() => {
-        history.push({
+        navigate({
           pathname: `/${window?.globalPath}/user/url`,
           state: { tenant: tenant },
         });

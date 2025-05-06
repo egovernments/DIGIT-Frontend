@@ -12,7 +12,7 @@
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
   "scripts": {
     "example": "cd example && npm run start",
-    "build": "webpack  --mode=development --node-env=production --config webpack.config.js",
+    "build": "webpack  --mode=development --node-env=development --config webpack.config.js",
     "prepare": "yarn build",
     "predeploy": "cd example && yarn install && yarn run build",
     "deploy": "gh-pages -d example/build"

@@ -1,6 +1,6 @@
 import { Dropdown } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
   if (searcher == "") return str;
@@ -14,7 +14,7 @@ const ChangeCity = (prop) => {
   const [dropDownData, setDropDownData] = useState(null);
   const [selectCityData, setSelectCityData] = useState([]);
   const [selectedCity, setSelectedCity] = useState([]); //selectedCities?.[0]?.value
-  const history = useHistory();
+  const navigate = useNavigate();
   const isDropdown = prop.dropdown || false;
   let selectedCities = [];
 
@@ -30,7 +30,7 @@ const ChangeCity = (prop) => {
     setDropDownData(city);
     if (window.location.href.includes(`/${window?.contextPath}/employee/`)) {
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-      history.replace(redirectPath);
+      navigate(redirectPath, { replace: true });
     }
     window.location.reload();
   };
