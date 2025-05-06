@@ -1,7 +1,7 @@
 import React, { useRef, useEffect, useState } from "react";
 import { Sidebar, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import MediaQuery from 'react-responsive';
 
 
@@ -11,7 +11,7 @@ const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit?.ULBService?.getStateId();
 
   function extractLeftIcon(data = {}) {
@@ -84,30 +84,31 @@ const EmployeeSideBar = () => {
     return configEmployeeSideBar;
   };
 
-  const navigateToRespectiveURL = (history = {}, url = "") => {
-    if (url == "/") {
-      return;
-    } 
+  const navigateToRespectiveURL = (navigate, url = "") => {
+    if (url === "/") return;
+  
     if (url?.indexOf(`/${window?.contextPath}`) === -1) {
       const hostUrl = window.location.origin;
-      let updatedUrl=null;
-      if(isMultiRootTenant){
-        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+      let updatedUrl = null;
+  
+      if (isMultiRootTenant) {
+        url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
         updatedUrl = url;
-        history.push(updatedUrl);
-      }
-      else{
-        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? hostUrl + "/employee/" + url : hostUrl + url;
-        window.location.href = updatedUrl;
+        navigate(updatedUrl); 
+      } else {
+        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1)
+          ? hostUrl + "/employee/" + url
+          : hostUrl + url;
+        window.location.href = updatedUrl; 
       }
     } else {
-      history.push(url);
-    } 
+      navigate(url); 
+    }
   };
 
   const onItemSelect = ({ item, index, parentIndex }) => {
     if (item?.navigationUrl) {
-      navigateToRespectiveURL(history, item?.navigationUrl);
+      navigateToRespectiveURL(navigate, item?.navigationUrl);
     } else {
       return;
     } 
