@@ -52,8 +52,8 @@
     "react-redux": "9.2.0",
     "redux": "5.0.0",
     "xlsx": "0.17.5",
-    "@egovernments/digit-ui-components": "0.0.2-webpack-20",
-    "@egovernments/digit-ui-svg-components": "1.0.0-webpack-20",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-21",
+    "@egovernments/digit-ui-svg-components": "1.0.0-webpack-21",
     "@tanstack/react-query": "^5.62.16"
   },
   "browserslist": {

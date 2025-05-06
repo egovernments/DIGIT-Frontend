@@ -232,7 +232,7 @@
 import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom"; // Replaced useHistory with useNavigate
+import { useNavigate } from "react-router-dom"; 
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 // import { useTranslation } from "react-i18next";
@@ -270,7 +270,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   // const { t } = useTranslation();
   console.log(t("CORE_LOGIN_USERNAME"), "translate")
 
-  const navigate = useNavigate(); // Replaced useHistory with useNavigate
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     if (!user) {

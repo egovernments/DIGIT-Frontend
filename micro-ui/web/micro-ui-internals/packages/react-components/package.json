@@ -52,8 +52,8 @@
     "dist"
   ],
   "dependencies": {
-    "@egovernments/digit-ui-svg-components": "1.0.0-webpack-20",
-    "@egovernments/digit-ui-components": "0.0.2-webpack-20",
+    "@egovernments/digit-ui-svg-components": "1.0.0-webpack-21",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-21",
     "@googlemaps/js-api-loader": "1.13.10",
     "@hookform/resolvers": "1.3.7",
     "ajv": "8.11.2",

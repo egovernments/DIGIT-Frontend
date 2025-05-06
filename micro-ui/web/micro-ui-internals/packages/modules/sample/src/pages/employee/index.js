@@ -1,9 +1,9 @@
 
-import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
+// import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Routes } from "react-router-dom";
+import { Routes,Route } from "react-router-dom";
 
 
 const SampleBreadCrumbs = ({ location }) => {
@@ -26,12 +26,7 @@ const App = ({  stateCode, userType, tenants }) => {
   console.log("Sample index.js is Hitting")
   return (
     <Routes>
-      <AppContainer className="ground-container">
-        <React.Fragment>
-          <SampleBreadCrumbs location={location} />
-        </React.Fragment>
-        <PrivateRoute path={`demo`} component={() => <div>deweew</div>} />
-      </AppContainer>
+        <Route path={`demo`} element={<div>deweew</div>} />
     </Routes>
   );
 };
