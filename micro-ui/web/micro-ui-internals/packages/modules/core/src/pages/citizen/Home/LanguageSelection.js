@@ -1,12 +1,12 @@
 import { PageBasedInput, Loader, RadioButtons, CardHeader } from "@egovernments/digit-ui-components";
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import useStore from "../../../../libraries/src/hooks/useStore"
 
 const LanguageSelection = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const { data: { languages, stateInfo } = {}, isLoading } = Digit.Hooks.useStore.getInitData();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
@@ -31,7 +31,7 @@ const LanguageSelection = () => {
   );
 
   function onSubmit() {
-    history.push(`/${window?.contextPath}/citizen/select-location`);
+    navigate(`/${window?.contextPath}/citizen/select-location`);
   }
 
   return isLoading ? (
