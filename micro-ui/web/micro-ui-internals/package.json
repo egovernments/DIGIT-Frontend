@@ -26,7 +26,7 @@
     "build:ui-components": "cd packages/ui-components && yarn build",
     "build:react-components": "cd packages/react-components && yarn build",
     "build:libraries": "cd packages/libraries && yarn build",
-    "build:workbench": "cd packages/modules/workbench && yarn build",
+    "build:sample": "cd packages/modules/sample && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",

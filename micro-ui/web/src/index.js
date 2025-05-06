@@ -120,12 +120,12 @@
 //   // initWorkbenchComponents();
 //   window.contextPath =
 //   window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  
+
 //   const stateCode = Digit?.ULBService?.getStateId();
-  
+
 //   const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
 //   root.render(
-    
+
 //       <MainApp stateCode={stateCode} enabledModules={enabledModules} />
 //     );
 // };
@@ -137,19 +137,19 @@
 // // const MainApp = ({ stateCode, enabledModules }) => {
 // //   const [isReady, setIsReady] = useState(false);
 // //   const [loaded, setLoaded] = useState(false);
-  
-  
-  
+
+
+
 // //   useEffect(() => {
-    
+
 // //     initLibraries().then(() => {
 // //       console.log(Digit,window?.Digit);
 // //       // initAssignmentComponents();
-      
+
 // //       setIsReady(true)
 // //     });
 // //     // initWorkbenchComponents();
-    
+
 // //   }, []);
 
 // //   useEffect(() => {
@@ -197,7 +197,7 @@
 // //   const employeeInfo = window.localStorage.getItem("Employee.user-info");
 // //   const employeeTenantId = window.localStorage.getItem("Employee.tenant-id");
 // //   const userTypeInfo = userType === "CITIZEN" || userType === "QACT" ? "citizen" : "employee";
-  
+
 // //   window.Digit.SessionStorage.set("user_type", userTypeInfo);
 // //   window.Digit.SessionStorage.set("userType", userTypeInfo);
 
@@ -255,10 +255,11 @@ import { initGlobalConfigs } from "./globalConfig";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initI18n } from "@egovernments/digit-ui-libraries";
+import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
 
 // Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks; 
+window.Digit.Hooks = Hooks;
 const queryClient = new QueryClient();
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
@@ -266,7 +267,7 @@ const DigitUILazy = lazy(() =>
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 
-const enabledModules = ["assignment", "HRMS", "Workbench"];
+const enabledModules = ["assignment", "HRMS", "Workbench","Utilities"];
 
 const initTokens = (stateCode) => {
   console.log(window.globalConfigs, "window.globalConfigs");
@@ -309,17 +310,17 @@ const initDigitUI = () => {
   // console.log("initWorkbenchComponents", initWorkbenchComponents)
   // initWorkbenchComponents();
   window.contextPath =
-  window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  
+    window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+
   // const stateCode = Digit?.ULBService?.getStateId();
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
-  
+
   const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
   root.render(
     <QueryClientProvider client={queryClient}>
       <MainApp stateCode={stateCode} enabledModules={enabledModules} />
     </QueryClientProvider>
-    );
+  );
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
@@ -329,23 +330,24 @@ const MainApp = ({ stateCode, enabledModules }) => {
   // const initAllModules = ()=>{
   //   initWorkbenchComponents();
   // }
-  
+
   useEffect(() => {
-    
+
     initLibraries().then(() => {
-      console.log(Digit,window?.Digit);
+      console.log(Digit, window?.Digit);
       // initAssignmentComponents();
       // initWorkbenchComponents();
-      
+      initSampleComponents();
+
       setIsReady(true)
     });
-    
+
   }, []);
 
   useEffect(() => {
     initTokens(stateCode);
-     setLoaded(true);
-  }, [stateCode,isReady]);
+    setLoaded(true);
+  }, [stateCode, isReady]);
 
   if (!loaded) {
     return <div>Loading...</div>;
@@ -353,14 +355,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-    {window.Digit && (
-      <DigitUILazy
-        stateCode={stateCode}
-        enabledModules={enabledModules}
-        defaultLanding="employee"
-      />
-    )}
-  </Suspense>
+      {window.Digit && (
+        <DigitUILazy
+          stateCode={stateCode}
+          enabledModules={enabledModules}
+          defaultLanding="employee"
+        />
+      )}
+    </Suspense>
   );
 };
 
