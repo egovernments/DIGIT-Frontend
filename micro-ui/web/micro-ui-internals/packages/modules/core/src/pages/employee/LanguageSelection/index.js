@@ -2,13 +2,13 @@ import { Button, Card ,SubmitBar, Loader} from "@egovernments/digit-ui-component
 import {CustomButton} from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 const defaultLanguage= {label:"English",value:Digit.Utils.getDefaultLanguage()};
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { languages, stateInfo } = storeData || {};
   let defaultLanguages=languages;
   if(!defaultLanguages || defaultLanguages?.length==0){
@@ -22,7 +22,7 @@ const LanguageSelection = () => {
   };
 
   const handleSubmit = (event) => {
-    history.push(`/${window?.contextPath}/employee/user/login`);
+    navigate(`/${window?.contextPath}/employee/user/login`);
   };
 
   if (isLoading) return <Loader/>;

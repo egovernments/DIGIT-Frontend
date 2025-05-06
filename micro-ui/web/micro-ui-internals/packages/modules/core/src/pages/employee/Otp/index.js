@@ -2,7 +2,7 @@ import React, { useState ,useEffect} from "react";
 import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import { Route, Switch, useRouteMatch, useNavigate, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 
@@ -26,7 +26,7 @@ const setEmployeeDetail = (userObject, token) => {
 const Otp = ({ isLogin = false }) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const [showToast, setShowToast] = useState(null);
   const [isOtpValid, setIsOtpValid] = useState(false);
@@ -123,10 +123,10 @@ const Otp = ({ isLogin = false }) => {
 
 
     if (isLogin) {
-      history.push(redirectPathOtpLogin);
+      navigate(redirectPathOtpLogin);
       return;
     } else {
-      history.push({
+      navigate({
         pathname: redirectPath,
         state: { tenant: tenant },
       });

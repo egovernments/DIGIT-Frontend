@@ -1,7 +1,7 @@
 import React, { useRef ,useState, useEffect} from "react";
 import { BackLink, Button, Card, CardHeader, CardLabel, CardText, FieldV1, SVG, TextInput } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 
@@ -9,7 +9,6 @@ const ViewUrl = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { tenant } = location.state || {};
-  const history = useHistory();
   const ref = useRef(null);
   const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
   const [buttonDisabled, setButtonDisabled]= useState(true);
