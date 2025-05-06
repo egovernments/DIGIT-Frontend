@@ -70,6 +70,7 @@ const MdmsDropdown = ({
 
 const Field = ({
   t,
+  isDrawer = true,
   headerFields,
   type,
   label,
@@ -118,40 +119,74 @@ const Field = ({
                 : "appConfigHeaderLabelField"
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {Mandatory && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            {!headerFields ? (
-              <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             ) : (
-              <TextArea type="textarea" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
-            )}
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {Mandatory && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                {!headerFields ? (
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                ) : (
+                  <TextArea type="textarea" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+                )}
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -185,42 +220,76 @@ const Field = ({
                 : "appConfigHeaderLabelField"
             }
           >
-            <div className="appConfigLabelField-label-container">
-              <div className="appConfigLabelField-label">
-                <span>{`${t(label)}`}</span>
-                {Mandatory && <span className="mandatory-span">*</span>}
-                {helpText && (
-                  <span className="icon-wrapper">
-                    <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                  </span>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
                 )}
-              </div>
-              {!headerFields ? (
-                <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-              ) : (
-                <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
-              )}
-            </div>
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                    {Mandatory && <span className="mandatory-span">*</span>}
+                    {helpText && (
+                      <span className="icon-wrapper">
+                        <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                      </span>
+                    )}
+                  </div>
+                  {!headerFields ? (
+                    <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  ) : (
+                    <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+                  )}
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -254,45 +323,83 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <Dropdown
-              className="appConfigLabelField-Input"
-              // style={}
-              variant={""}
-              t={t}
-              option={dropDownOptions}
-              optionKey={"name"}
-              selected={null}
-              select={() => {}}
-            />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  // e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {required && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                {!headerFields ? (
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                ) : (
+                  <Dropdown
+                    className="appConfigLabelField-Input"
+                    // style={}
+                    variant={""}
+                    t={t}
+                    option={dropDownOptions}
+                    optionKey={"name"}
+                    selected={null}
+                    select={() => {}}
+                  />
+                )}
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      // e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -326,48 +433,82 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <MdmsDropdown
-              className="appConfigLabelField-Input"
-              variant={""}
-              t={t}
-              option={dropDownOptions}
-              optionKey={"code"}
-              selected={null}
-              select={() => {}}
-              props={props}
-              moduleName={rest?.moduleMaster?.moduleName}
-              masterName={rest?.moduleMaster?.masterName}
-              rest={rest}
-            />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  // e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {required && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <MdmsDropdown
+                  className="appConfigLabelField-Input"
+                  variant={""}
+                  t={t}
+                  option={dropDownOptions}
+                  optionKey={"code"}
+                  selected={null}
+                  select={() => {}}
+                  props={props}
+                  moduleName={rest?.moduleMaster?.moduleName}
+                  masterName={rest?.moduleMaster?.masterName}
+                  rest={rest}
+                />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      // e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -402,36 +543,70 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <TextInput type="date" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  // e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {required && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <TextInput type="date" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      // e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -464,36 +639,70 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <TextInput type="numeric" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  // e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {required && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <TextInput type="numeric" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      // e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -526,36 +735,70 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <TextInput type="number" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  // e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {required && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <TextInput type="number" className="appConfigLabelField-Input" name={""} value={value} onChange={() => {}} />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      // e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -587,36 +830,70 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {required && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <CheckBoxes isLabelFirst={false} t={t} option={dropDownOptions} optionKey={"name"} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  // e.stopPropagation();
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {required && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <CheckBoxes isLabelFirst={false} t={t} option={dropDownOptions} optionKey={"name"} />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      // e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -649,35 +926,69 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {Mandatory && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <TextInput type="time" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {Mandatory && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <TextInput type="time" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
@@ -709,42 +1020,76 @@ const Field = ({
                 : ""
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {Mandatory && <span className="mandatory-span">*</span>}
-              {helpText && (
-                <span className="icon-wrapper">
-                  <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                </span>
-              )}
-            </div>
-            <TextInput
-              type="text"
-              className="appConfigLabelField-Input"
-              name={""}
-              value={value}
-              onChange={(event) => onChange(event)}
-              populators={{ prefix: rest?.countryPrefix }}
-            />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {Mandatory && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <TextInput
+                  type="text"
+                  className="appConfigLabelField-Input"
+                  name={""}
+                  value={value}
+                  onChange={(event) => onChange(event)}
+                  populators={{ prefix: rest?.countryPrefix }}
+                />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>
