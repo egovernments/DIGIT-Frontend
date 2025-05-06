@@ -1,7 +1,7 @@
 import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import React,{Fragment} from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import {useNavigate, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
@@ -68,7 +68,8 @@ const TopBar = ({
   
   const CitizenHomePageTenantId = Digit?.ULBService?.getCitizenCurrentTenant(true);
 
-  let history = useHistory();
+  // let history = useHistory();
+  const navigate = useNavigate()
   const { pathname } = useLocation();
 
   const conditionsToDisableNotificationCountTrigger = () => {
@@ -96,7 +97,7 @@ const TopBar = ({
   };
 
   function onNotificationIconClick() {
-    history.push(`/${window?.contextPath}/citizen/engagement/notifications`);
+    navigate(`/${window?.contextPath}/citizen/engagement/notifications`);
   }
 
   const urlsToDisableNotificationIcon = (pathname) =>

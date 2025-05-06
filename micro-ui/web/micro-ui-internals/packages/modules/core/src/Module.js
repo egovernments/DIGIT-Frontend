@@ -14,12 +14,12 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
-// import {useInitStore} from "../libraries/src/hooks/store" 
+// import {useInitStore} from "../libraries/src/hooks/store"
 // import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
 // import { initWorkbenchComponents } from "../../workbench/src/Module";
 // import {Hooks} from "@egovernments/digit-ui-libraries"
 // import Hooks from "../../../libraries/src/hooks";
-import { initI18n } from "@egovernments/digit-ui-libraries";
+// import { initI18n } from "@egovernments/digit-ui-libraries";
 
 console.log("inside module.js of core")
 console.log(Digit.Hooks);
@@ -101,7 +101,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
 export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
   console.log("inside digitui of core");
   var Digit = window.Digit || {};
-  initI18n();
+  // initI18n();
   // initAllModules();
   console.log("usestate", useState);
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});

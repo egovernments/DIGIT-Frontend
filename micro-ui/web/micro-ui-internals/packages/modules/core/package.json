@@ -26,9 +26,9 @@
     "@egovernments/digit-ui-components": "0.0.2-webpack-21",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
     "@egovernments/digit-ui-module-workbench": "1.0.19-test.1",
-    "react-i18next": "11.16.2",
+    "react-i18next": "15.0.0",
     "react-redux": "7.2.8",
-    "react-router-dom": "5.3.0",
+    "react-router-dom": "6.25.1",
     "react-tooltip": "4.1.2",
     "redux": "5.0.0",
     "redux-thunk": "2.4.1"

@@ -96,8 +96,10 @@ const updateCustomConfigs = () => {
 
 
  const initWorkbenchComponents = () => {
+  console.log("i'm initWorkbenchComponents")
   overrideHooks();
   updateCustomConfigs();
+  console.log("componentsToRegister", componentsToRegister)
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
