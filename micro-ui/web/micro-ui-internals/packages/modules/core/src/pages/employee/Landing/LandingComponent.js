@@ -1,7 +1,7 @@
 import React, { Fragment } from "react";
 import { Header, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components"; // Importing the required DIGIT UI components
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import YoutubeVideo from "./YoutubeVideo";
 
@@ -9,7 +9,7 @@ const LandingComponent = ({ config }) => {
   const { t } = useTranslation(); // To handle translations (if needed)
   const { heading, subsections, url } = config;
   let redirectPathOtpLogin = `/${window?.contextPath}/employee/user/landing/select-role`;
-  const history = useHistory();
+  const navigate = useNavigate();
 
   return (
     <div className="custom-landing-container">
@@ -87,7 +87,7 @@ const LandingComponent = ({ config }) => {
             isSuffix={true}
             onClick={(e) => {
               e.preventDefault();
-              history.push(redirectPathOtpLogin);
+              navigate(redirectPathOtpLogin);
             }}
           />
         </div>

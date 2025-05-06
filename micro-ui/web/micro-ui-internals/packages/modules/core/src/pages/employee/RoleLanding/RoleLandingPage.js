@@ -1,14 +1,11 @@
 import React from "react";
 import { Card, CardText, CardHeader, Button, Header } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { externalConfig } from "./RoleLandingConfig";
 import YoutubeVideo from "../Landing/YoutubeVideo";
 
 const RoleLandingComponent = () => {
   const { t } = useTranslation();
-  const history = useHistory();
-
   const handleButtonClick = (action) => {
     const url = '/' + window.contextPath + action;
     window.open(url, "_blank");
