@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import NoResultsFound from '../../atoms/NoResultsFound';
 import { Loader } from '../../atoms/Loader';
 import _ from 'lodash';
-import { useHistory } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // const sampleSearchResult = [
 //   {
@@ -51,7 +51,7 @@ const MobileSearchResultsv1 = ({
   fullConfig,
 }) => {
   const { t } = useTranslation();
-  const history = useHistory()
+  const navigate = useNavigate()
   const { apiDetails } = fullConfig;
   const resultsKey = config.resultsJsonPath;
 
@@ -74,11 +74,11 @@ const MobileSearchResultsv1 = ({
       submitButtonLabel:config?.actionButtonLabelMobileCard,
       handleDetailCardClick:(obj)=>{ //fn when action button on card is clicked
         const linkToPushTo = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.onCardActionClick(obj)
-        history.push(linkToPushTo)
+        navigate(linkToPushTo)
       },
       handleSelect:(obj)=>{
        const linkToPushTo = Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.onCardClick(obj)
-       history.push(linkToPushTo)
+       navigate(linkToPushTo)
         // Digit?.Customizations?.[apiDetails?.masterName]?.[apiDetails?.moduleName]?.onCardActionClick(obj)
       }, //fn when card container is clicked
       mode:"tqm",
