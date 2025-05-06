@@ -3,7 +3,7 @@
 import { Button, LandingPageCard  } from "@egovernments/digit-ui-components";
 import React, { Fragment } from "react";
 import { ArrowRightInbox } from "./svgindex";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 
 
 /**
@@ -28,7 +28,7 @@ const EmployeeModuleCard = ({
   buttonSize = "medium",
 }) => {
   // Hook for navigation
-  const history = useHistory();
+  const navigate = useNavigate();
 
   /**
    * Handles navigation when a link is clicked.
@@ -37,7 +37,7 @@ const EmployeeModuleCard = ({
    */
   const handleLinkClick = (link) => {
     link?.includes(`${window?.contextPath}/`)
-      ? history?.push(link) // Internal navigation
+      ? navigate(link) // Internal navigation
       : (window.location.href = link); // External navigation
   };
 
@@ -97,7 +97,7 @@ const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, class
           <span className="text removeHeight">{moduleName}</span>
           <span className="link">
             <a href={subHeaderLink}>
-              <span className={"inbox-total"} style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }} onClick={()=>history.push(`${link}`)}>
+              <span className={"inbox-total"} style={{ display: "flex", alignItems: "center", color: "#F47738", fontWeight: "bold" }} onClick={()=>navigate(`${link}`)}>
                 {subHeader || "-"}
                 <span style={{ marginLeft: "10px" }}>
                   {" "}

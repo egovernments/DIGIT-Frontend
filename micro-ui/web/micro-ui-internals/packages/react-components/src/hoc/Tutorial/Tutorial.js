@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import Joyride, { ACTIONS, EVENTS, LIFECYCLE, STATUS } from 'react-joyride';
-import { useHistory } from 'react-router-dom';
 
 let theme = {
   // primaryColor: '#ad7bff',
@@ -13,7 +12,7 @@ let theme = {
 };
 
 const Tutorial = ({ tutorial, updateTutorial, ...props }) => {
-  const history = useHistory()
+
   const { run, stepIndex, steps } = tutorial;
   
   //UseEffect to update theme externally

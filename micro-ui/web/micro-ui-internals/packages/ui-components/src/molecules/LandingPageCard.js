@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, Divider, Button, StringManipulator } from "../atoms";
 import { iconRender } from "../utils/iconRender";
 import { Colors } from "../constants/colors/colorconstants";
@@ -21,14 +21,14 @@ const LandingPageCard = ({
   centreChildren,
   endChildren
 }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleMetricClick = (link, count) => {
     onMetricClick && onMetricClick(link, count);
   };
 
   const handleLinkClick = ({ link, label, icon }) => {
-    link?.includes(`${window?.contextPath}/`) ? history?.push(link) : window.location.href = link;
+    link?.includes(`${window?.contextPath}/`) ? navigate(link) : window.location.href = link;
   };
   const primaryIconColor = Colors.lightTheme.primary[1];
   const secondaryIconColor = Colors.lightTheme.paper.primary;
