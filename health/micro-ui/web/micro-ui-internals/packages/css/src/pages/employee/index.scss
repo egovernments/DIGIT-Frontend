@@ -1032,3 +1032,14 @@ tbody {
 .app-config-drawer-action-divider {
   margin-top: auto;
 }
+.app-preview-field-pair {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  .digit-field {
+    width: 100%;
+    .digit-description {
+      display: flex !important;
+    }
+  }
+}
