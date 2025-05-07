@@ -40,7 +40,6 @@ const RolesAssigned = ({ config, onSelect, formData }) => {
     if (!selectBoundariesEvent) return;
     if (selectBoundariesEvent.length === 0) {
       setSelectedRole([]);
-      return;
     }
 
     //otherwise your event object would look like this [[a,b],[a,b]] bs' are the boundaries that we need
@@ -49,7 +48,6 @@ const RolesAssigned = ({ config, onSelect, formData }) => {
     });
 
     onSelect(config.key, boundariesInEvent);
-    // setSelectedRole(boundariesInEvent);
   };
 
   if (isLoading) {

@@ -78,7 +78,7 @@ const EmployeeDetailScreen = () => {
   };
 
   const deActivateUser = async (comment, date, reason, order) => {
-    let datak = {
+    let employeeData = {
       ...data?.Employees[0], // Keep existing data
       isActive: false, // Update isActive to false
       deactivationDetails: [
@@ -95,7 +95,7 @@ const EmployeeDetailScreen = () => {
       // Call the mutation function to update the employee status
       await mutationUpdate.mutateAsync(
         {
-          Employees: [datak],
+          Employees: [employeeData],
         },
         {
           onSuccess: (res) => {
@@ -133,7 +133,7 @@ const EmployeeDetailScreen = () => {
   };
 
   const activateUser = async (comment, date, reason, order) => {
-    let datak = {
+    let employeeData = {
       ...data?.Employees[0], // Keep existing data
       isActive: true, // Update isActive to false
     };
@@ -141,7 +141,7 @@ const EmployeeDetailScreen = () => {
     try {
       await mutationUpdate.mutateAsync(
         {
-          Employees: [datak],
+          Employees: [employeeData],
         },
         {
           onSuccess: (res) => {

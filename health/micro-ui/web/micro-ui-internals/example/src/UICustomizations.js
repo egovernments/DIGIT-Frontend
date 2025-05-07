@@ -1634,7 +1634,7 @@ export const UICustomizations = {
       }
     },
   },
-  SearchDefaultConfigMain: {
+  HRMSInboxConfig: {
     preProcess: (data) => {
       // filterForm
       // params

@@ -58,14 +58,6 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
     }
   };
 
-  /**
-   * Check if a boundary type is allowed to be selected.
-   */
-  const isBoundaryAllowed = (boundaryType) => {
-    if (!lowestLevelBoundaryType) return true;
-    return boundaryHierarchy.indexOf(boundaryType) <= boundaryHierarchy.indexOf(lowestLevelBoundaryType);
-  };
-
   if (isBoundaryLoading) {
     return <Loader />;
   }

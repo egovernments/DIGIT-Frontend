@@ -5,7 +5,6 @@ import { useHistory } from "react-router-dom";
 import { configEmployeeActiveApplication } from "./Modal/EmployeeActivation";
 import { configEmployeeApplication } from "./Modal/EmployeeAppliaction";
 import { configEmployeePasswordReset } from "./Modal/EmployeePasswordReset";
-import Header from "@egovernments/digit-ui-module-core/src/components/Header";
 
 /**
  * handles multiple employee-related actions
@@ -234,50 +233,6 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
           formId="modal-action"
         >
           <CardText style={{ margin: "9px" }}>{t("HR_READY_TO_SUBMIT_TEXT")}</CardText>
-        </Modal>
-      );
-    case "PASSWORD_RESET":
-      return (
-        <Modal
-          headerBarMain={<Heading label={t(config?.label?.heading)} />}
-          headerBarEnd={<CloseBtn onClick={closeModal} />}
-          actionCancelOnSubmit={closeModal}
-          hideSubmit={true}
-          formId="modal-action"
-        >
-          {resendOtp && (
-            <Toast
-              error={resendOtp.key === "error"}
-              isDleteBtn="true"
-              label={t(resendOtp.key === "success" ? `OTP_REQUEST_SENT` : resendOtp.action)}
-              onClose={() => setResendOtpToast(null)}
-              style={{ maxWidth: "670px" }}
-            />
-          )}
-          <FormComposer
-            config={config?.form}
-            cardStyle={{ margin: "auto", minWidth: "408px" }}
-            className="loginFormStyleEmployee"
-            buttonStyle={{ maxWidth: "100%", width: "100%" }}
-            noBoxShadow
-            inline
-            submitInForm
-            onSubmit={submit}
-            label={t("RESET_PASSWORD")}
-            formId="modal-action"
-          >
-            <CardText style={{ "text-align": "center" }}>
-              {`${t(`CS_LOGIN_OTP_TEXT`)} `}
-              <b>
-                {" "}
-                {maskEmail(userInfo?.emailId)}
-                <OTPInput length={6} onChange={setOtp} value={otp} />
-                <p className="card-text-button" style={{ cursor: "pointer" }} onClick={sendOtp}>
-                  {t("CS_RESEND_OTP")}
-                </p>
-              </b>
-            </CardText>
-          </FormComposer>
         </Modal>
       );
     default:

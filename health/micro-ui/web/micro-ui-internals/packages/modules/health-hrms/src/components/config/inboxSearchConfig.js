@@ -209,7 +209,7 @@ const inboxSearchConfig = () => {
 
     apiDetails: {
       masterName: "commonUiConfig", // Master data module for UI config
-      moduleName: "SearchDefaultConfigMain", // Configuration module name
+      moduleName: "HRMSInboxConfig", // Configuration module name
       requestBody: {}, // Request body (empty for now)
       serviceName: Urls.hrms.search, // API endpoint for search
       requestParam: {

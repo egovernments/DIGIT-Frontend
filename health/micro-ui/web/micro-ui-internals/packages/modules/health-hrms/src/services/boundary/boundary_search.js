@@ -31,8 +31,6 @@ const fetchBoundaries = async ({ tenantId }) => {
         tenantId: tenantId,
         hierarchyType: hierarchyType,
         includeChildren: true,
-        // codes: nationalLevelProject?.address?.boundary,
-        // boundaryType: nationalLevelProject?.address?.boundaryType,
       },
     });
 
