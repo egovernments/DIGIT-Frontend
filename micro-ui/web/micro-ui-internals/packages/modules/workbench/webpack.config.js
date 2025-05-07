@@ -15,6 +15,9 @@ module.exports = {
   },
   resolve: {
     extensions: [".js"],
+    fallback: {
+      process: require.resolve("process/browser"),
+    }
   },
   externals: {
     react: {
@@ -55,9 +58,4 @@ module.exports = {
     // new BundleAnalyzerPlugin(),
     // new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
   ],
-  resolve: {
-    fallback: {
-      process: require.resolve("process/browser"),
-    },
-  },
 };
