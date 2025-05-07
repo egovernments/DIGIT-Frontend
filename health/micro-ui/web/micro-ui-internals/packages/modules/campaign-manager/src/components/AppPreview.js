@@ -1,6 +1,7 @@
-import React from "react";
-import { Card, CardText, TextInput, SelectionTag, Dropdown, CardHeader, Button } from "@egovernments/digit-ui-components";
+import React, { Fragment } from "react";
+import { Card, CardText, TextInput, SelectionTag, Dropdown, CardHeader, Button, TooltipWrapper, AlertCard } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -273,24 +274,40 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
           {card?.fields
             ?.filter((field) => field.active)
             ?.map((field, fieldIndex) => (
-              <div
-                className={
-                  selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
-                    ? "app-preview-selected"
-                    : selectedField?.id && selectedField?.id === field?.id
-                    ? "app-preview-selected"
-                    : ""
-                }
-                key={fieldIndex}
-                // style={{ margin: "10px 0", padding: "1rem" }}
-              >
-                <div>
-                  {t(field.label)}
-                  {field.required && " *"}
+              <>
+                {field?.infoText && (
+                  <AlertCard
+                    populators={{
+                      name: "infocard",
+                    }}
+                    variant="default"
+                    text={t(field?.infoText)}
+                  />
+                )}
+                <div
+                  className={
+                    selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                      ? "app-preview-selected"
+                      : selectedField?.id && selectedField?.id === field?.id
+                      ? "app-preview-selected"
+                      : ""
+                  }
+                  key={fieldIndex}
+                  // style={{ margin: "10px 0", padding: "1rem" }}
+                >
+                  <div style={{ marginBottom: "0.5rem" }}>
+                    <span>{`${t(field.label)}`}</span>
+                    {(field.required || field.Mandatory) && <span className="mandatory-span">*</span>}
+                    {field?.helpText && (
+                      <span className="icon-wrapper">
+                        <TooltipWrapper content={t(field?.helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                      </span>
+                    )}
+                  </div>
+                  {/* Call renderField function to render the specific component */}
+                  {renderField(field, t)}
                 </div>
-                {/* Call renderField function to render the specific component */}
-                {renderField(field, t)}
-              </div>
+              </>
             ))}
           <Button
             className="app-preview-action-button"

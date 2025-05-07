@@ -147,7 +147,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                 if (j.header === action.payload.currentCard?.header) {
                   return {
                     ...j,
-                    fields: j.fields?.filter((k) => k.id !== action.payload.currentField.id),
+                    fields: j.fields?.filter((k) => k.jsonPath !== action.payload.currentField.jsonPath),
                   };
                 }
                 return j;
@@ -403,7 +403,7 @@ function AppConfigurationWrapper({ screenConfig }) {
                 icon={"Translate"}
                 label={t("ADD_LOCALISATION")}
                 onClick={() => {
-                  // setShowPopUp(true);
+                  setShowPopUp(true);
                 }}
               />
               {/* <Button
