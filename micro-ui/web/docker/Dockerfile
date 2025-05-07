@@ -30,7 +30,7 @@ RUN cd web \
 
 # Explicitly list the directory with exact casing
 RUN cd web && echo "Checking the exact casing of the module directory..."
-RUN cd web && ls -al node_modules/@egovernments/digit-ui-module-workbench
+RUN cd web && ls -al node_modules/@egovernments/digit-ui-module-core
 
 RUN cd web && echo "Starting webpack build..."
 RUN cd web && yarn build:webpack
