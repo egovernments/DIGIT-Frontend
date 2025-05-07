@@ -338,8 +338,8 @@ const MainApp = ({ stateCode, enabledModules }) => {
       console.log(Digit, window?.Digit);
       // initAssignmentComponents();
       // initWorkbenchComponents();
-      initWorkbenchComponents();
       initSampleComponents();
+      initWorkbenchComponents();
       setIsReady(true)
     });
 
