@@ -28,6 +28,7 @@
     "build:libraries": "cd packages/libraries && yarn build",
     "build:sample": "cd packages/modules/sample && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
+    "build:workbench": "cd packages/modules/workbench && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",
     "clean": "rm -rf node_modules && yarn clean:core && clean:react-components && clean:ui-components && clean:svg-components && clean:libraries && yarn clean:workbench && yarn clean:assignment && yarn clean:example && yarn clean:core-dist && yarn clean:workbench-dist && yarn clean:assignment-dist && clean:ui-components-dist && yarn clean:react-components-dist && clean:svg-components-dist && yarn clean:libraries-dist && yarn clean:yarnLock",

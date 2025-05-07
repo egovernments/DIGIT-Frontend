@@ -1,8 +1,9 @@
+// workbench/index.js or similar file
 import { TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
-// import { useLocation } from "react-router-dom";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { useMatch } from "react-router-dom";
+import { Loader } from "@egovernments/digit-ui-components";
+
 import EmployeeApp from "./pages/employee";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
@@ -10,37 +11,34 @@ import HRMSCard from "./components/HRMSCard";
 import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
 import LevelCards from "./components/LevelCards";
-import { Loader } from "@egovernments/digit-ui-components";
-// import { useStore } from "../../../libraries/src/services";
-
-import * as parsingUtils from "../src/utils/ParsingUtils"
+import * as parsingUtils from "../src/utils/ParsingUtils";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
-  const { path, url } = useRouteMatch();
-  // const location = useLocation();
-  // console.log("I'm location from wb module.js", location)
+  const moduleCode = ["workbench", "mdms", "schema", "hcm-admin-schemas"];
+  const match = useMatch("/employee/workbench/*");
+  const path = match?.pathnameBase || "";
+
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
-  // const queryClient  = new QueryClient();
-  console.log("I'm digit from wb", Digit)
+
   Digit.Services = window.Digit.Services;
+
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
-    modulePrefix
+    modulePrefix,
   });
-  console.log("isloading from wb", isLoading)
+
   if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"} />;
+    return <Loader page={true} variant="PageLoader" />;
   }
 
-  return <TourProvider>
-    <EmployeeApp path={path} stateCode={stateCode} />
-    {/* <div>TEST</div> */}
-  </TourProvider>
-  // return <div>TEST</div>
+  return (
+    <TourProvider>
+      <EmployeeApp path={path} stateCode={stateCode} />
+    </TourProvider>
+  );
 };
 
 const componentsToRegister = {
@@ -48,61 +46,58 @@ const componentsToRegister = {
   WorkbenchCard,
   DigitJSONForm,
   LevelCards,
-  DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
-  HRMSCard // Overridden the HRMS card as per workbench
+  DSSCard: null,
+  HRMSCard,
 };
 
-const overrideHooks = () => {
-  Object.keys(CustomisedHooks).map((ele) => {
-    if (ele === "Hooks") {
-      Object.keys(CustomisedHooks[ele]).map((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
-          setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
-        });
-      });
-    } else if (ele === "Utils") {
-      Object.keys(CustomisedHooks[ele]).map((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
-          setupHooks(hook, method, CustomisedHooks[ele][hook][method], false);
-        });
-      });
-    } else {
-      Object.keys(CustomisedHooks[ele]).map((method) => {
-        setupLibraries(ele, method, CustomisedHooks[ele][method]);
-      });
-    }
-  });
-};
-
-/* To Overide any existing hook we need to use similar method */
 const setupHooks = (HookName, HookFunction, method, isHook = true) => {
   window.Digit = window.Digit || {};
-  window.Digit[isHook ? "Hooks" : "Utils"] = window.Digit[isHook ? "Hooks" : "Utils"] || {};
-  window.Digit[isHook ? "Hooks" : "Utils"][HookName] = window.Digit[isHook ? "Hooks" : "Utils"][HookName] || {};
-  window.Digit[isHook ? "Hooks" : "Utils"][HookName][HookFunction] = method;
+  const section = isHook ? "Hooks" : "Utils";
+  window.Digit[section] = window.Digit[section] || {};
+  window.Digit[section][HookName] = window.Digit[section][HookName] || {};
+  window.Digit[section][HookName][HookFunction] = method;
 };
-/* To Overide any existing libraries  we need to use similar method */
+
 const setupLibraries = (Library, service, method) => {
   window.Digit = window.Digit || {};
   window.Digit[Library] = window.Digit[Library] || {};
   window.Digit[Library][service] = method;
 };
 
-/* To Overide any existing config/middlewares  we need to use similar method */
-const updateCustomConfigs = () => {
-  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
-  setupLibraries("Utils","parsingUtils",{...window?.Digit?.Utils?.parsingUtils,...parsingUtils})
+const overrideHooks = () => {
+  Object.keys(CustomisedHooks).forEach((ele) => {
+    if (ele === "Hooks" || ele === "Utils") {
+      const isHook = ele === "Hooks";
+      Object.keys(CustomisedHooks[ele]).forEach((hook) => {
+        Object.keys(CustomisedHooks[ele][hook]).forEach((method) => {
+          setupHooks(hook, method, CustomisedHooks[ele][hook][method], isHook);
+        });
+      });
+    } else {
+      Object.keys(CustomisedHooks[ele]).forEach((method) => {
+        setupLibraries(ele, method, CustomisedHooks[ele][method]);
+      });
+    }
+  });
 };
 
+const updateCustomConfigs = () => {
+  setupLibraries("Customizations", "commonUiConfig", {
+    ...window?.Digit?.Customizations?.commonUiConfig,
+    ...UICustomizations,
+  });
+  setupLibraries("Utils", "parsingUtils", {
+    ...window?.Digit?.Utils?.parsingUtils,
+    ...parsingUtils,
+  });
+};
 
- const initWorkbenchComponents = () => {
-  console.log("i'm initWorkbenchComponents")
+const initWorkbenchComponents = () => {
   overrideHooks();
   updateCustomConfigs();
-  console.log("componentsToRegister", componentsToRegister)
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };
 
-export {initWorkbenchComponents, DigitJSONForm};
+export { initWorkbenchComponents, DigitJSONForm };

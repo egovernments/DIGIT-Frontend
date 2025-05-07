@@ -1,7 +1,7 @@
-import { Card,  SVG } from "@egovernments/digit-ui-react-components";
+import { Card, SVG } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { buildLocalizationMessages } from "./localizationUtility";
@@ -36,7 +36,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }, [defaultFormData]);
 
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
     params: {},
@@ -65,14 +65,14 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const body = api?.requestBody
     ? { ...api?.requestBody }
     : {
-        Mdms: {
-          tenantId: tenantId,
-          schemaCode: `${moduleName}.${masterName}`,
-          uniqueIdentifier: null,
-          data: {},
-          isActive: true,
-        },
-      };
+      Mdms: {
+        tenantId: tenantId,
+        schemaCode: `${moduleName}.${masterName}`,
+        uniqueIdentifier: null,
+        data: {},
+        isActive: true,
+      },
+    };
   const reqCriteriaAdd = {
     url: api ? api?.url : Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "create"),
     params: {},
@@ -87,9 +87,8 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const gotoView = () => {
     setTimeout(() => {
-      history.push(
-        `/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${moduleName}&masterName=${masterName}${
-          from ? `&from=${from}` : ""
+      navigate(
+        `/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${moduleName}&masterName=${masterName}${from ? `&from=${from}` : ""
         }`
       );
     }, 2000);
@@ -117,41 +116,41 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const tranformLocModuleName = (localModuleName) => {
     if (!localModuleName) return null;
-      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
 
   const schemaCodeToValidate = `${moduleName}.${masterName}`;
   const onSubmit = async (data, additionalProperties) => {
     const validationConfig = Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate];
-    if (!validationConfig?.validateForm){
+    if (!validationConfig?.validateForm) {
       console.warn(`No validation configuration found for schema: ${schemaCodeToValidate}`);
-    }else{
-    const validation = await validationConfig.validateForm(data, { tenantId: tenantId });
-    if (validation && !validation?.isValid) {
-      setShowToast(t(validation.message) || t('VALIDATION_ERROR_DEFAULT'));
-      setShowErrorToast(true);
-      toggleSpinner(false);
-      return;
+    } else {
+      const validation = await validationConfig.validateForm(data, { tenantId: tenantId });
+      if (validation && !validation?.isValid) {
+        setShowToast(t(validation.message) || t('VALIDATION_ERROR_DEFAULT'));
+        setShowErrorToast(true);
+        toggleSpinner(false);
+        return;
+      }
     }
-  }
     let locale = Digit.StoreData.getCurrentLanguage();
     toggleSpinner(true);
-  
+
     const onSuccess = async (resp) => {
       // After main MDMS add success
       const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       setShowErrorToast(false);
-  
+
       const locModuleName = `digit-mdms-${schema?.code}`;
       const messages = buildLocalizationMessages(additionalProperties, locModuleName, locale);
-  
+
       if (messages.length > 0) {
         const localizationBody = {
           tenantId: tenantId,
           messages: messages,
         };
-  
+
         // Perform localization upsert
         localizationMutation.mutate(
           {
@@ -183,14 +182,14 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
         gotoView();
       }
     };
-  
+
     const onError = (resp) => {
       toggleSpinner(false);
       setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
       setShowErrorToast(true);
       closeToast();
     };
-  
+
     _.set(body, api?.requestJson ? api?.requestJson : "Mdms.data", { ...data });
     mutation.mutate(
       {
@@ -233,7 +232,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
             }
           }
         });
-        
+
         setFormSchema({ ...schema });
         setDisableForm(true);
         setTimeout(() => {
@@ -272,7 +271,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const uiJSONSchema = formSchema?.["definition"]?.["x-ui-schema"];
   return (
     <React.Fragment>
-      {spinner &&  <Loader page={true} variant={"OverlayLoader"} />}
+      {spinner && <Loader page={true} variant={"OverlayLoader"} />}
       {formSchema && (
         <DigitJSONForm
           schema={formSchema}

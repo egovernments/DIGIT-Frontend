@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Switch, useLocation } from "react-router-dom";
+import { Routes, useLocation } from "react-router-dom";
 // import { Routes, Route } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer } from "@egovernments/digit-ui-react-components";
@@ -121,7 +121,7 @@ const App = ({ path }) => {
         {!isBoundaryPath && <WorkbenchHeader />}
       </div>
 
-      <Switch>
+      <Routes>
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
           <PrivateRoute path={`${path}/localisation-search`} component={() => <LocalisationSearch />} />
@@ -138,7 +138,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary />} />
           <PrivateRoute path={`${path}/upload-boundary-pure`} component={() => <UploadBoundaryPure />} />
         </AppContainer>
-      </Switch>
+      </Routes>
     </React.Fragment>
   );
 };

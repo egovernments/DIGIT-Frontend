@@ -256,6 +256,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initI18n } from "@egovernments/digit-ui-libraries";
 import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 // Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
@@ -337,6 +338,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
       console.log(Digit, window?.Digit);
       // initAssignmentComponents();
       // initWorkbenchComponents();
+      initWorkbenchComponents();
       initSampleComponents();
       setIsReady(true)
     });
