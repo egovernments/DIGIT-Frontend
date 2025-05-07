@@ -566,3 +566,21 @@ tbody tr:last-child td:last-child .digit-dropdown-employee-select-wrap .digit-dr
     width: 18.125rem !important;
   }
 }
+
+.bold-column{
+  font-weight: 700;
+  width: 9rem;
+  margin-top: 0.6rem;
+}
+
+.fieldv1-deleteIcon-container.addColumnsScreen .label-field-wrapper {
+  max-width: 37.5rem;
+
+  .digit-field{
+    width: 100%;
+  }
+}
+
+.mp-hypothesis-label-field.addColumnsScreen .assumption-label{
+  width: 20%;
+}

@@ -1,6 +1,6 @@
 import { AppContainer, BreadCrumb, Loader, PrivateRoute } from "@egovernments/digit-ui-react-components";
 import BreadCrumbNew from "./BreadCrumbNew";
-import React, { useEffect } from "react";
+import React, { useEffect,useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Switch, useLocation } from "react-router-dom";
 import SetupMicroplan from "./SetupMicroplan";
@@ -87,10 +87,13 @@ const ProjectBreadCrumb = ({ location }) => {
   return <BreadCrumbNew crumbs={crumbs} />;
 };
 
-const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hierarchyData, lowestHierarchy }) => {
+const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData, lowestHierarchy : lowestHierarchy1 }) => {
   const { dispatch } = useMyContext();
   const location = useLocation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const BOUNDARY_HIERARCHY_TYPE = useMemo(() => BoundaryHierarchy, [BoundaryHierarchy]);
+  const hierarchyData = useMemo(() => propsHierarchyData, [propsHierarchyData]);
+  const lowestHierarchy = useMemo(() => lowestHierarchy1, [lowestHierarchy1]);
   //destroying session
   useEffect(() => {
     const pathVar = location.pathname.replace(`${path}/`, "").split("?")?.[0];
@@ -247,7 +250,7 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
           path={`${path}/setup-microplan`}
           component={() => <SetupMicroplan hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
         />
-        <PrivateRoute path={`${path}/microplan-search`} component={() => <MicroplanSearch></MicroplanSearch>} />
+        <PrivateRoute path={`${path}/microplan-search`} component={MicroplanSearch} />
         <PrivateRoute path={`${path}/user-management`} component={() => <UserManagement></UserManagement>} />
         <PrivateRoute path={`${path}/user-download`} component={() => <UserDownload />} />
         <PrivateRoute path={`${path}/select-activity`} component={() => <ChooseActivity />} />
@@ -258,9 +261,9 @@ const App = ({ path, stateCode, userType, tenants, BOUNDARY_HIERARCHY_TYPE, hier
         <PrivateRoute path={`${path}/plan-inbox`} component={() => <PlanInbox />} />
         <PrivateRoute path={`${path}/upload-user`} component={() => <UserUpload />} />
         <PrivateRoute path={`${path}/village-view`} component={() => <VillageView />} />
-        <PrivateRoute path={`${path}/my-microplans`} component={() => <MyMicroplans />} />
+        <PrivateRoute path={`${path}/my-microplans`} component={MyMicroplans} />
         <PrivateRoute path={`${path}/upload-user-success`} component={() => <Response />} />
-        <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/setup-completed-response`} component={() => <Response useWindowState={true}/>} />
         <PrivateRoute path={`${path}/draft-completed-response`} component={() => <Response />} />
         <PrivateRoute path={`${path}/population-finalise-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/assign-facilities-to-villages`} component={() => <FacilityCatchmentMapping />} />

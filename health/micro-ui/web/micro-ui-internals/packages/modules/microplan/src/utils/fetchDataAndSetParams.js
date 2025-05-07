@@ -206,5 +206,14 @@ export const fetchDataAndSetParams = (  state, setParams, campaignObject, planOb
       }
       draftFormData.FORMULA_CONFIGURATION = { formulaConfiguration : {formulaConfigValues :  formulaConfigValues} };
     }
+    const newColumns=planObject?.additionalDetails?.newColumns;
+    if (newColumns) {
+      if (!draftFormData["NEW_COLUMNS"]) {
+        draftFormData["NEW_COLUMNS"] = {};
+      }
+    
+      draftFormData["NEW_COLUMNS"]["newColumns"] = newColumns;
+    }
+    
     setParams(draftFormData);
   };

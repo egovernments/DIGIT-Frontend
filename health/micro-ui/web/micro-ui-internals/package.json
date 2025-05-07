@@ -27,6 +27,8 @@
     "dev:microplan": "cd packages/modules/microplan && yarn start",
     "dev:healthpayments": "cd packages/modules/health-payments && yarn start",
     "dev:healthhrms": "cd packages/modules/health-hrms && yarn start",
+    "dev:pgr": "cd packages/modules/pgr && yarn start",
+    "dev:health-dss": "cd packages/modules/health-dss && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "build:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn build",
@@ -34,6 +36,8 @@
     "build:microplan": "cd packages/modules/microplan && yarn build",
     "build:healthpayments": "cd packages/modules/health-payments && yarn build",
     "build:healthhrms": "cd packages/modules/health-hrms && yarn build",
+    "build:pgr": "cd packages/modules/pgr && yarn build",
+    "build:health-dss": "cd packages/modules/health-dss && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },

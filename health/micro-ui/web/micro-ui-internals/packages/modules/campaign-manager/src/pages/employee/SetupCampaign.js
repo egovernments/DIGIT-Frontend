@@ -26,7 +26,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
  * triggers API calls to create or update the campaign
  */
 
-const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
+const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -47,6 +47,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const isPreview = searchParams.get("preview");
+  const isSubmit = searchParams.get("submit");
   const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
   const isDraft = searchParams.get("draft");
@@ -56,6 +57,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
   const actionBar = searchParams.get("actionBar");
   const source = searchParams.get("source");
   const microplanName = searchParams.get("microName");
+  const campaignNumber = searchParams.get("campaignNumber");
   const [isDraftCreated, setIsDraftCreated] = useState(false);
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -895,6 +897,16 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     if (isDraft === "true" && isSkip !== "false") {
       updateUrlParams({ skip: "false" });
     }
+    if (isSubmit) {
+      setShouldUpdate(true);
+      if(currentKey == 6 || currentKey == 9 || currentKey == 15){
+        setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+        setTimeout(() => {
+          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        }, 500);
+      }
+      return;
+    }
     return;
   };
 
@@ -1047,6 +1059,8 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
             ? null
             : noAction === "false"
             ? null
+            : isSubmit === true
+            ? t("HCM_NEXT")
             : filteredConfig?.[0]?.form?.[0]?.isLast === true
             ? t("HCM_SUBMIT")
             : t("HCM_NEXT")
@@ -1092,6 +1106,6 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
       )}
     </React.Fragment>
   );
-});
+};
 
-export default SetupCampaign;
+export default React.memo(SetupCampaign);

@@ -14,6 +14,8 @@ import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmwor
 import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
+import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
 var Digit = window.Digit || {};
 
@@ -26,7 +28,8 @@ const enabledModules = [
   //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
   "Microplan",
-  "Payments"
+  "Payments",
+  "PGR",
   //added to check fsm
   // "FSM"
 ];
@@ -74,6 +77,8 @@ const initDigitUI = () => {
   initMicroplanComponents();
   initPaymentComponents();
   initHRMSComponents();
+  initPGRComponents();
+  initDSSComponents();
 
   const moduleReducers = (initData) => initData;
 

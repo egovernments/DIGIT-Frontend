@@ -28,6 +28,7 @@ module.exports = function (app) {
     "/localization",
     "/egov-workflow-v2",
     "/pgr-services",
+    "/health-pgr-services",
     "/filestore",
     "/egov-hrms",
     "/user-otp",
@@ -108,7 +109,8 @@ module.exports = function (app) {
     "/health-project/staff/v1/_search",
     "/health-project/v1/_search",
     "/health-individual",
-    "/health-hrms/employees"
+    "/health-hrms/employees",
+    "/inbox/v2/_search",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

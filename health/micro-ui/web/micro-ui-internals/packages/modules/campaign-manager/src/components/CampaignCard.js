@@ -1,15 +1,14 @@
 import { useTranslation } from "react-i18next";
 
-
 import React, { Fragment } from "react";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const ROLES = {
-  CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
-  BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
-  MICROPLAN_INTEGRATOR:["MICROPLAN_CAMPAIGN_INTEGRATOR"],
-  CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
-  NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
+  CAMPAIGN_MANAGER: ["CAMPAIGN_MANAGER", "MICROPLAN_CAMPAIGN_INTEGRATOR"],
+  BOUNDARY_MANAGER: ["BOUNDARY_MANAGER"],
+  MICROPLAN_INTEGRATOR: ["MICROPLAN_CAMPAIGN_INTEGRATOR"],
+  CAMPAIGN_MANAGER_ONLY: ["CAMPAIGN_MANAGER"],
+  NATIONAL_SUPERVISOR: ["NATIONAL_SUPERVISOR"],
 };
 
 /**
@@ -22,29 +21,28 @@ const ROLES = {
 
 const CampaignCard = () => {
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
-  return null;
+    return null;
   }
 
   const { t } = useTranslation();
-  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
- 
-  let links = [
+  const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
 
+  let links = [
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER_ONLY
+      roles: ROLES.CAMPAIGN_MANAGER_ONLY,
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
-    },  
-    { 
+    },
+    {
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
-      roles: ROLES.MICROPLAN_INTEGRATOR
+      roles: ROLES.MICROPLAN_INTEGRATOR,
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -56,6 +54,30 @@ const CampaignCard = () => {
       label: t("BOUNDARY_MANAGEMENT"),
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
+      // count: isLoading?"-":data
+    },
+    // {
+    //   label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
+    //   link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
+    // {
+    //   label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB"),
+    //   link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&fieldType=FormBuilderFieldType&prefix=FORMONE`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
+    // {
+    //   label: t("ACTION_TEST_APP_CONFIGURATION_3.0"),
+    //   link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE&formId=default`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
+    {
+      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      link: `/workbench-ui/employee/campaign/campaign-home`,
+      roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
     // {
