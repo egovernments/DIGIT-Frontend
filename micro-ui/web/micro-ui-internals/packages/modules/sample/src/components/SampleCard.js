@@ -8,7 +8,7 @@ const SampleCard = () => {
 
   const propsForModuleCard = {
     Icon: "BeenHere",
-    moduleName: t("Sample"),
+    moduleName: t("ABG_COMMON_TABLE_COL_ACTION"),
     kpis: [
 
     ],
