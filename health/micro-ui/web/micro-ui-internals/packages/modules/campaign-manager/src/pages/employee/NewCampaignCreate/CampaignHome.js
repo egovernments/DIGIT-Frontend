@@ -1,6 +1,6 @@
 import { Card, HeaderComponent } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React from "react";
+import React, {useEffect} from "react";
 import { useHistory } from "react-router-dom";
 import { SVG } from "@egovernments/digit-ui-components";
 import { NewWindow }  from "@egovernments/digit-ui-svg-components";
@@ -8,6 +8,10 @@ import { NewWindow }  from "@egovernments/digit-ui-svg-components";
 const CampaignHome = () => {
   const { t } = useTranslation();
   const history = useHistory();
+
+  useEffect(() => {
+      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
+    }, []);
 
   return (
     <Card>

@@ -26,6 +26,26 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
                 },
               },
             },
+            {
+              isMandatory: false,
+              key: "CycleSelection",
+              type: "component",
+              component: "CycleSelection",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+              },
+              populators: {
+                name: "CycleSelection",
+                // optionsKey: "code",
+                error: "ES__REQUIRED",
+                required: true,
+              },
+            },
           ],
         },
         {
