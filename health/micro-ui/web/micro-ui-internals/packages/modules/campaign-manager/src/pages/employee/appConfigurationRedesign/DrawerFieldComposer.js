@@ -15,6 +15,7 @@ const whenToShow = (panelItem, drawerState) => {
     case "infoText":
     case "label":
     case "helpText":
+    case "tooltip":
     case "innerLabel":
       return "text";
       break;
