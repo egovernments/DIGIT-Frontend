@@ -28,9 +28,9 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
             },
             {
               isMandatory: false,
-              key: "BeneficiarySelection",
+              key: "CycleSelection",
               type: "component",
-              component: "BeneficiarySelection",
+              component: "CycleSelection",
               withoutLabel: true,
               withoutLabelFieldPair: true,
               disable: false,
@@ -40,7 +40,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
                 isSubmitting: isSubmitting,
               },
               populators: {
-                name: "BeneficiarySelection",
+                name: "CycleSelection",
                 // optionsKey: "code",
                 error: "ES__REQUIRED",
                 required: true,

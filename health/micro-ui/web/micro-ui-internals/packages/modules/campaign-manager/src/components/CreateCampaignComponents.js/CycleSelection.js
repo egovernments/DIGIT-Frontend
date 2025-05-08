@@ -2,7 +2,7 @@ import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { FieldV1, Card, LabelFieldPair, RadioButtons } from "@egovernments/digit-ui-components";
 
-const BeneficiarySelection = ({ onSelect, formData, ...props }) => {
+const CycleSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const [selectedOption, setSelectedOption] = useState(null);
 
@@ -12,16 +12,18 @@ const BeneficiarySelection = ({ onSelect, formData, ...props }) => {
   ];
 
   useEffect(() => {
-    if (formData?.CampaignType?.type === "singleround") {
-      setSelectedOption("HCM_SINGLE_ROUND");
-    } else if (formData?.CampaignType?.type === "multiround") {
-      setSelectedOption("HCM_MULTI_ROUND");
+    if(formData?.CampaignType?.code === "DEFAULT"){
+      setSelectedOption(null);
     }
-    
-  }, [formData]);
+    else if (formData?.CampaignType?.cycles?.length > 1 ) {
+      setSelectedOption("HCM_MULTI_ROUND");
+    } else {
+      setSelectedOption("HCM_SINGLE_ROUND");
+    }    
+  }, [formData?.CampaignType?.code]);
 
   useEffect(() =>{
-    onSelect("BeneficiarySelection", selectedOption);
+    onSelect("CycleSelection", selectedOption);
 
   },[selectedOption])
 
@@ -32,7 +34,7 @@ const BeneficiarySelection = ({ onSelect, formData, ...props }) => {
         <RadioButtons
           onSelect={(selected) => {
             setSelectedOption(selected.code);
-            onSelect(selected);
+            // onSelect(selected.code);
           }}
           options={options}
           optionsKey="name"
@@ -45,4 +47,4 @@ const BeneficiarySelection = ({ onSelect, formData, ...props }) => {
   );
 };
 
-export default BeneficiarySelection;
+export default CycleSelection;
