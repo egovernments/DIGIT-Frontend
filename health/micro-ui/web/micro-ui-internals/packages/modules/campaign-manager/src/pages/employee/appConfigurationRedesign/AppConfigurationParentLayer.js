@@ -234,6 +234,7 @@ function reverseRestructure(updatedData) {
         tooltip: field.tooltip || "",
         infoText: field.infoText || "",
         innerLabel: field.innerLabel || "",
+        errorMessage: field.errorMessage || "",
         ...typeAndFormat,
       };
     });
@@ -243,6 +244,7 @@ function reverseRestructure(updatedData) {
       type: "object",
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
+      actionLabel: section?.actionLabel || "",
       order: index,
       properties,
     };
@@ -290,6 +292,7 @@ const AppConfigurationParentRedesign = () => {
     config: {
       enabled: formId ? true : false,
       select: (data) => {
+        console.log("APPCONFIGDATA", data);
         return data?.mdms?.[0];
       },
     },

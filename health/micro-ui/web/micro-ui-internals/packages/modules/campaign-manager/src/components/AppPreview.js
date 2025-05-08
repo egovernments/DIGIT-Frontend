@@ -333,14 +333,26 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   placeholder={t(field?.innerLabel) || ""}
                   populators={{
                     title: t(field?.label),
-                    fieldPairClassName: "app-preview-field-pair",
+                    fieldPairClassName: `app-preview-field-pair ${
+                      selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                        ? `app-preview-selected`
+                        : selectedField?.id && selectedField?.id === field?.id
+                        ? `app-preview-selected`
+                        : ``
+                    }`,
+                    mdmsConfig: field?.isMdms
+                      ? {
+                          moduleName: field?.moduleMaster?.moduleName,
+                          masterName: field?.moduleMaster?.masterName,
+                        }
+                      : null,
                     options: field?.dropDownOptions,
-                    optionsKey: "name",
+                    optionsKey: field?.isMdms ? "code" : "name",
                     component: getFieldType(field) === "custom" ? renderField(field, t) : null,
                   }}
                   required={field?.required || field?.Mandatory}
                   type={getFieldType(field) || "text"}
-                  value={field?.defaultValue || ""}
+                  value={field?.defaultValue === true ? "" : field?.defaultValue || ""}
                 />
               );
               // return (

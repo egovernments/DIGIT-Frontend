@@ -252,12 +252,15 @@
   width: 25rem;
   height: 40rem;
   overflow-y: auto;
-  border: 1px solid theme(digitv2.lightTheme.primary);;
+  border: 1px solid theme(digitv2.lightTheme.primary);
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   font-family: Arial, sans-serif;
+  .digit-card-component {
+    height: max-content;
+  }
   .digit-card-header {
     color: #0b4b66;
     font-size: 2rem;
@@ -348,18 +351,18 @@
 .rdt_Table {
   width: 100% !important;
 }
-.campaign-header-style{
+.campaign-header-style {
   color: theme(digitv2.lightTheme.header-sidenav);
   font-size: 2.5rem;
 }
-.SubHeadingClass{
+.SubHeadingClass {
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-weight: 400;
   font-size: 1rem;
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
 }
-.date-header{
+.date-header {
   width: 100% !important;
   color: theme(digitv2.lightTheme.primary-2);
   font-weight: 700;
@@ -369,11 +372,11 @@
   font-family: "Roboto";
   font-weight: 500;
   font-size: 24px;
-  color: #C84C0E;
+  color: #c84c0e;
   text-align: center;
   margin-top: 1.5rem;
 }
-.containerStyle{
+.containerStyle {
   display: flex;
   justify-content: center;
   flex-wrap: wrap;
@@ -386,7 +389,7 @@
   align-items: center;
   width: 400px;
   height: 139px;
-  border: 1.5px solid #C84C0E;
+  border: 1.5px solid #c84c0e;
   border-radius: 4px;
   margin: 1rem;
   cursor: pointer;
@@ -395,61 +398,60 @@
   transition: box-shadow 0.3s ease-in-out;
   background-color: #fff;
 }
-.create-campaign-card{
+.create-campaign-card {
   gap: 0;
   grid-gap: 0;
 }
-.details-heading{
+.details-heading {
   display: flex;
   justify-content: space-between;
 }
-.icon-heading{
+.icon-heading {
   gap: 1rem;
   display: flex;
 }
-.detail-desc{
+.detail-desc {
   margin-top: 1.5rem;
   margin-bottom: 1.5rem;
   color: theme(digitv2.lightTheme.text-color-secondary);
 }
-.dates{
+.dates {
   margin-top: 0.5rem;
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-size: theme(digitv2.fontSize.heading-s);
 }
-.detail-header{
+.detail-header {
   color: theme(digitv2.lightTheme.primary-2);
   font-size: theme(digitv2.fontSize.heading-m);
 }
-.details-desc{
+.details-desc {
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-size: theme(digitv2.fontSize.heading-s);
 }
-.campaign-details-header{
+.campaign-details-header {
   display: flex;
 }
-.campaign-view-tag{
+.campaign-view-tag {
   margin-left: 1rem;
 }
 
-.module-card{
+.module-card {
   width: auto;
   height: auto;
   border: 1px;
   border-radius: 0.75rem;
 }
-.modules-container{
+.modules-container {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
   grid-gap: 1.5rem;
   padding: 1rem;
 }
-.campaign-module-button{
+.campaign-module-button {
   width: auto;
 }
 .date-selection {
   width: 100% !important;
 }
-

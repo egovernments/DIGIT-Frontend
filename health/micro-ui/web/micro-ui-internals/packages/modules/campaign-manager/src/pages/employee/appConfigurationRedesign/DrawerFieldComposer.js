@@ -67,7 +67,13 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               className=""
               type={"text"}
               name="title"
-              value={isLocalisable ? useCustomT(drawerState?.[panelItem.label]) : drawerState?.[panelItem.label]}
+              value={
+                isLocalisable
+                  ? useCustomT(drawerState?.[panelItem.label])
+                  : drawerState?.[panelItem.label] === true
+                  ? ""
+                  : drawerState?.[panelItem.label]
+              }
               onChange={(event) => {
                 if (isLocalisable) {
                   updateLocalization(
