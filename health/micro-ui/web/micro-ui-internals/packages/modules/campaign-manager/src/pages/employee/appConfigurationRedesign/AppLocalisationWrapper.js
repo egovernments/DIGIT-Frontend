@@ -92,7 +92,18 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
 
   return (
     <AppLocalisationContext.Provider
-      value={{ locState, enabledModules, locDispatch, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch }}
+      value={{
+        locState,
+        enabledModules,
+        locDispatch,
+        AppScreenLocalisationConfig,
+        addMissingKey,
+        updateLocalization,
+        onSubmit,
+        back,
+        showBack,
+        parentDispatch,
+      }}
     >
       <AppConfigurationWrapper screenConfig={screenConfig} />
     </AppLocalisationContext.Provider>

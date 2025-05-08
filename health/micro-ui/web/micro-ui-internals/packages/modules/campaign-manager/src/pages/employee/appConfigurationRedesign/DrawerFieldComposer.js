@@ -17,6 +17,8 @@ const whenToShow = (panelItem, drawerState) => {
     case "helpText":
     case "tooltip":
     case "innerLabel":
+    case "errorMessage":
+    case "defaultValue":
       return "text";
       break;
     case "min":
@@ -37,8 +39,11 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization }) => {
+const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
   const { t } = useTranslation();
+  const isLocalisable = AppScreenLocalisationConfig?.fields
+    ?.find((i) => i.fieldType === drawerState?.type)
+    ?.localisableProperties?.includes(panelItem?.label);
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   switch (panelItem?.fieldType) {
@@ -62,21 +67,30 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               className=""
               type={"text"}
               name="title"
-              value={useCustomT(drawerState?.[panelItem.label])}
+              value={isLocalisable ? useCustomT(drawerState?.[panelItem.label]) : drawerState?.[panelItem.label]}
               onChange={(event) => {
-                updateLocalization(
-                  `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                    drawerState?.jsonPath || drawerState?.id
-                  }`,
-                  Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
-                  event.target.value
-                );
-                setDrawerState((prev) => ({
-                  ...prev,
-                  [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                    drawerState?.jsonPath || drawerState?.id
-                  }`,
-                }));
+                if (isLocalisable) {
+                  updateLocalization(
+                    `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                      drawerState?.jsonPath || drawerState?.id
+                    }`,
+                    Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                    event.target.value
+                  );
+                  setDrawerState((prev) => ({
+                    ...prev,
+                    [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                      drawerState?.jsonPath || drawerState?.id
+                    }`,
+                  }));
+                  return;
+                } else {
+                  setDrawerState((prev) => ({
+                    ...prev,
+                    [panelItem.label]: event.target.value,
+                  }));
+                  return;
+                }
               }}
               placeholder={""}
             />
@@ -161,7 +175,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
 
 function DrawerFieldComposer() {
   const { t } = useTranslation();
-  const { locState, updateLocalization } = useAppLocalisationContext();
+  const { locState, updateLocalization, AppScreenLocalisationConfig } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
   const [showPopup, setShowPopup] = useState(null);
   const [drawerState, setDrawerState] = useState({
@@ -260,6 +274,7 @@ function DrawerFieldComposer() {
                 setDrawerState={setDrawerState}
                 state={state}
                 updateLocalization={updateLocalization}
+                AppScreenLocalisationConfig={AppScreenLocalisationConfig}
               />
             </div>
           );

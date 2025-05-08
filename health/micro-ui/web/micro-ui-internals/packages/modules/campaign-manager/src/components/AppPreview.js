@@ -326,7 +326,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                     step: "",
                   }}
                   description={t(field?.helpText) || null}
-                  error=""
+                  error={t(field?.errorMessage) || null}
                   infoMessage={t(field?.tooltip) || null}
                   label={getFieldType(field) === "checkbox" ? null : t(field?.label)}
                   onChange={function noRefCheck() {}}
@@ -340,7 +340,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   }}
                   required={field?.required || field?.Mandatory}
                   type={getFieldType(field) || "text"}
-                  value=""
+                  value={field?.defaultValue || ""}
                 />
               );
               // return (
