@@ -7,8 +7,8 @@ const BeneficiarySelection = ({ onSelect, formData, ...props }) => {
   const [selectedOption, setSelectedOption] = useState(null);
 
   const options = [
-    { code: "HCM_SINGLE_ROUND", name: "HCM_SINGLE_ROUND" },
-    { code: "HCM_MULTI_ROUND", name: "HCM_MULTI_ROUND" },
+    { code: "HCM_SINGLE_ROUND", name: t("HCM_SINGLE_ROUND") },
+    { code: "HCM_MULTI_ROUND", name: t("HCM_MULTI_ROUND") },
   ];
 
   useEffect(() => {
@@ -20,10 +20,15 @@ const BeneficiarySelection = ({ onSelect, formData, ...props }) => {
     
   }, [formData]);
 
+  useEffect(() =>{
+    onSelect("BeneficiarySelection", selectedOption);
+
+  },[selectedOption])
+
   return (
     <>
     {formData?.CampaignType && (
-      <LabelFieldPair style={{paddingLeft : "36.5rem" , marginBottom : "0rem"}}>
+      <LabelFieldPair className="beneficiary-selection-label">
         <RadioButtons
           onSelect={(selected) => {
             setSelectedOption(selected.code);
