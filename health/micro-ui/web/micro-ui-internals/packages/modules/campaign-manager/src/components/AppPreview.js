@@ -1,6 +1,18 @@
-import React from "react";
-import { Card, CardText, TextInput, SelectionTag, Dropdown, CardHeader, Button } from "@egovernments/digit-ui-components";
+import React, { Fragment } from "react";
+import {
+  Card,
+  CardText,
+  TextInput,
+  SelectionTag,
+  Dropdown,
+  CardHeader,
+  Button,
+  TooltipWrapper,
+  AlertCard,
+  FieldV1,
+} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -253,6 +265,40 @@ const renderField = (field, t) => {
   }
 };
 
+const getFieldType = (field) => {
+  switch (field.type) {
+    case "text":
+    case "textInput":
+      return "text";
+    case "number":
+      return "number";
+    case "textarea":
+      return "textarea";
+    case "time":
+      return "time";
+    case "mobileNumber":
+      return "mobileNumber";
+    case "checkbox":
+      return "checkbox";
+    case "Selection":
+      return "checkbox";
+    case "numeric":
+    case "counter":
+      return "numeric";
+    case "dropdown":
+    case "dropDown":
+      return "dropdown";
+    case "MdmsDropdown":
+      return "custom";
+    case "date":
+    case "dobPicker":
+    case "datePicker":
+    case "dob":
+      return "date";
+    default:
+      return "text";
+  }
+};
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
   return (
     <div className="app-preview">
@@ -272,26 +318,71 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
           ))}
           {card?.fields
             ?.filter((field) => field.active)
-            ?.map((field, fieldIndex) => (
-              <div
-                className={
-                  selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
-                    ? "app-preview-selected"
-                    : selectedField?.id && selectedField?.id === field?.id
-                    ? "app-preview-selected"
-                    : ""
-                }
-                key={fieldIndex}
-                // style={{ margin: "10px 0", padding: "1rem" }}
-              >
-                <div>
-                  {t(field.label)}
-                  {field.required && " *"}
-                </div>
-                {/* Call renderField function to render the specific component */}
-                {renderField(field, t)}
-              </div>
-            ))}
+            ?.map((field, fieldIndex) => {
+              return (
+                <FieldV1
+                  charCount={field?.charCount}
+                  config={{
+                    step: "",
+                  }}
+                  description={t(field?.helpText) || null}
+                  error={t(field?.errorMessage) || null}
+                  infoMessage={t(field?.tooltip) || null}
+                  label={getFieldType(field) === "checkbox" ? null : t(field?.label)}
+                  onChange={function noRefCheck() {}}
+                  placeholder={t(field?.innerLabel) || ""}
+                  populators={{
+                    title: t(field?.label),
+                    fieldPairClassName: "app-preview-field-pair",
+                    options: field?.dropDownOptions,
+                    optionsKey: "name",
+                    component: getFieldType(field) === "custom" ? renderField(field, t) : null,
+                  }}
+                  required={field?.required || field?.Mandatory}
+                  type={getFieldType(field) || "text"}
+                  value={field?.defaultValue || ""}
+                />
+              );
+              // return (
+              //   <>
+              //     {field?.infoText && (
+              //       <AlertCard
+              //         populators={{
+              //           name: "infocard",
+              //         }}
+              //         variant="default"
+              //         text={t(field?.infoText)}
+              //       />
+              //     )}
+              //     <div
+              //       className={
+              //         selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+              //           ? "app-preview-selected"
+              //           : selectedField?.id && selectedField?.id === field?.id
+              //           ? "app-preview-selected"
+              //           : ""
+              //       }
+              //       key={fieldIndex}
+              //       // style={{ margin: "10px 0", padding: "1rem" }}
+              //     >
+              //       <div style={{ marginBottom: "0.5rem" }}>
+              //         <span>{`${t(field.label)}`}</span>
+              //         {(field.required || field.Mandatory) && <span className="mandatory-span">*</span>}
+              //         {field?.tooltip && (
+              //           <span className="icon-wrapper">
+              //             <TooltipWrapper content={t(field?.tooltip)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+              //           </span>
+              //         )}
+              //       </div>
+              //       {/* Call renderField function to render the specific component */}
+              //       <div>
+              //         {renderField(field, t)}
+              //         {field?.helpText && <div className="digit-description">{t(field?.helpText)}</div>}
+              //       </div>
+              //     </div>
+              //   </>
+              // );
+            })}
           <Button
             className="app-preview-action-button"
             variation="primary"

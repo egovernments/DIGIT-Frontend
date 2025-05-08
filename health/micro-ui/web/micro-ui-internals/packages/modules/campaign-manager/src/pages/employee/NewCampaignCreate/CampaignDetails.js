@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import React, { Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-
+import { OutpatientMed , AdUnits , GlobeLocationPin } from "@egovernments/digit-ui-svg-components";
 const CampaignDetails = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -43,6 +43,8 @@ const CampaignDetails = () => {
               desc: t("HCM_SELECT_BOUNDARY_DESC"),
               buttonLabel: campaignData?.boundaries?.length>0 ? t("HCM_EDIT_BOUNDARY_BUTTON") : t("HCM_SELECT_BOUNDARY_BUTTON"),
               navLink: `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
+              type: campaignData?.boundaries?.length>0 ? "secondary" : "primary",
+              icon: <GlobeLocationPin />
             },
           },
         ],
@@ -59,6 +61,8 @@ const CampaignDetails = () => {
               desc: t("HCM_DELIVERY_DESC"),
               buttonLabel: campaignData?.deliveryRules?.[0]?.cycles?.length>0 ? t("HCM_EDIT_DELIVERY_BUTTON") : t("HCM_DELIVERY_BUTTON"),
               navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
+              type: campaignData?.deliveryRules?.[0]?.cycles?.length>0 ? "secondary" : "primary",
+              icon: <OutpatientMed />
             },
           },
         ],
@@ -75,6 +79,7 @@ const CampaignDetails = () => {
               desc: t("HCM_MOBILE_APP_DESC"),
               buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
               navLink: `app-modules`,
+              icon: <AdUnits />
             },
           },
         ],
@@ -91,6 +96,7 @@ const CampaignDetails = () => {
               desc: t("HCM_UPLOAD_DATA_DESC"),
               buttonLabel: campaignData?.resources?.length>0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
+              type: campaignData?.resources?.length>0 ? "secondary" : "primary"
             },
           },
         ],

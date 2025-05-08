@@ -26,7 +26,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
  * triggers API calls to create or update the campaign
  */
 
-const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
+const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -543,7 +543,7 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     }
   }, [showToast]);
 
-  const onSubmit = async (formData, cc) => {    
+  const onSubmit = async (formData, cc) => {
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -897,12 +897,15 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
     if (isDraft === "true" && isSkip !== "false") {
       updateUrlParams({ skip: "false" });
     }
-    if(isSubmit){
+    if (isSubmit) {
       setShouldUpdate(true);
       if(currentKey == 6 || currentKey == 9 || currentKey == 15){
-        history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+        setTimeout(() => {
+          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        }, 500);
       }
-      return ;
+      return;
     }
     return;
   };
@@ -1103,6 +1106,6 @@ const SetupCampaign = React.memo(({ hierarchyType, hierarchyData }) => {
       )}
     </React.Fragment>
   );
-});
+};
 
-export default SetupCampaign;
+export default React.memo(SetupCampaign);

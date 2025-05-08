@@ -64,7 +64,7 @@ export const AppLocalisationTable = ({ data }) => {
       </div>
 
       {/* Data Table */}
-      <DataTable title={`LABEL_TRANSLATIONS_FOR_${activeLocale.label.toUpperCase()}`} columns={columns} data={locState} pagination highlightOnHover />
+      <DataTable title={t(`LABEL_TRANSLATIONS_FOR_${activeLocale.label.toUpperCase()}`)} columns={columns} data={locState} pagination highlightOnHover />
     </div>
   );
 };
