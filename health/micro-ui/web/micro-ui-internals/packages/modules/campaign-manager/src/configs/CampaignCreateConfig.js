@@ -26,6 +26,26 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
                 },
               },
             },
+            {
+              isMandatory: false,
+              key: "BeneficiarySelection",
+              type: "component",
+              component: "BeneficiarySelection",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+                isSubmitting: isSubmitting,
+              },
+              populators: {
+                name: "BeneficiarySelection",
+                // optionsKey: "code",
+                error: "ES__REQUIRED",
+                required: true,
+              },
+            },
           ],
         },
         {

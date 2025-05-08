@@ -60,6 +60,7 @@ import AppPreview from "./components/AppPreview";
 import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
 import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
 import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
+import BeneficiarySelection from "./components/CreateCampaignComponents.js/BeneficiarySelection";
 /**
  * MDMS Module name
  */
@@ -181,6 +182,7 @@ const componentsToRegister = {
   AppConfigurationParentRedesign,
   DateSelection,
   ViewDetailComponent,
+  BeneficiarySelection
 };
 
 const overrideHooks = () => {
