@@ -116,7 +116,6 @@ function correctTypeFinder(input) {
 }
 
 function restructure(data1) {
-  console.log("DJKHDJKDH", data1);
   return data1.map((page) => {
     const cardFields = page.properties.map((field, index) => ({
       // type: correctTypeFinder(field),
