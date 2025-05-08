@@ -294,7 +294,6 @@ const AppConfigurationParentRedesign = () => {
     config: {
       enabled: formId ? true : false,
       select: (data) => {
-        console.log("APPCONFIGDATA", data);
         return data?.mdms?.[0];
       },
     },
