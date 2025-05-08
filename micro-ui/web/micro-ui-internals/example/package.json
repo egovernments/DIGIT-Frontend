@@ -13,10 +13,10 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.1-webpack-22",
+    "@egovernments/digit-ui-libraries": "1.8.1-webpack-23",
     "@egovernments/digit-ui-module-core": "1.8.1-test.100",
-    "@egovernments/digit-ui-components": "0.0.2-webpack-21",
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-22",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.13",
     "@egovernments/digit-ui-module-assignment": "0.0.1",
     "@egovernments/digit-ui-module-workbench": "1.0.19-test.1",
     "@egovernments/digit-ui-module-sample": "1.0.19-test.1",

@@ -18,7 +18,7 @@
     "react-dom": "^19.0.0"
   },
   "dependencies": {
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.13",
     "react-i18next": "15.0.0",
     "react-router-dom": "6.25.1"
   },
