@@ -20,6 +20,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
                 name: "CampaignType",
                 optionsKey: "code", 
                 error: "Required",
+                mdmsv2: true,
                 mdmsConfig: {
                   masterName: "projectTypes", 
                   moduleName: "HCM-PROJECT-TYPES",
