@@ -6,8 +6,9 @@ import { Card, LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-compo
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
+import VerifyBillsSearch from "../../components/VerifyBillsSearch";
 
-const MyBills = () => {
+const FetchBills = (props) => {
 
     const { t } = useTranslation();
     const location = useLocation();
@@ -19,6 +20,7 @@ const MyBills = () => {
     // State Variables
     const [tableData, setTableData] = useState([]);
     const [billID, setBillID] = useState(null);
+    const [billStatus, setBillStatus] = useState(null);
     const [dateRange, setDateRange] = useState({
         startDate: '',
         endDate: '',
@@ -38,7 +40,8 @@ const MyBills = () => {
                 tenantId: tenantId,
                 referenceIds: project?.map(p => p?.id) || [], 
                 ...(billID ? { billNumbers: [billID] } : {}),
-                ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {}),
+                status: billStatus, 
+                // ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {}),
                 pagination: {
                     limit: limitAndOffset.limit,
                     offset: limitAndOffset.offset
@@ -52,7 +55,25 @@ const MyBills = () => {
             },
         },
     };
-
+    const BillData1 = {"bills":[
+       
+        {
+            "billNumber": "123456",
+            "billDate": 1698307200000,
+            "additionalDetails": {
+                "noOfRegisters": 5,
+            },
+            "localityCode": "Locality 1",
+        },
+        {
+            "billNumber": "123456",
+            "billDate": 1698307200000,
+            "additionalDetails": {
+                "noOfRegisters": 5,
+            },
+            "localityCode": "Locality 1",
+        }
+    ]}
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
     const handlePageChange = (page, totalRows) => {
@@ -67,23 +88,23 @@ const MyBills = () => {
     }
 
     useEffect(() => {
-        if (BillData) {
-            setTableData(BillData.bills);
-            setTotalCount(BillData?.pagination?.totalCount);
+        if (BillData1) {
+            setTableData(BillData1.bills);
+            setTotalCount(BillData1.bills.length);
         }
     }, [BillData])
 
     useEffect(() => {
         refetchBill();
-    }, [billID, dateRange, limitAndOffset])
+    }, [billID, billStatus, dateRange, limitAndOffset])
 
-    const onSubmit = (billID, dateRange) => {
+    const onSubmit = (billID,billStatus, dateRange) => {
         setBillID(billID);
-        setDateRange(dateRange);
+        setBillStatus(billStatus);
     };
 
     const onClear = () => {
-        setDateRange({ startDate: '', endDate: '', title: '' });
+        setBillStatus("");
         setBillID("");
     };
 
@@ -95,19 +116,30 @@ const MyBills = () => {
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
-                {t("HCM_AM_MY_BILLS")}
+                {t("HCM_AM_FETCH_BILLS")}
             </Header>
 
 
-            <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
+            <MyBillsSearch onSubmit={onSubmit} onClear={onClear} 
+            // style={{
+            //     marginBottom: "0.1rem",
+            //     marginTop: "0.11rem"
+            // }} 
+            />
 
-            <Card>
-                {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} totalCount={totalCount} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+            <Card 
+            // style={{
+            //     marginBottom: "1rem",
+            //     marginTop: "1rem"
+            // }}
+            >
+                {isFetching ? <Loader />: <MyBillsTable data={tableData} onSelectionChange={props?.onSelectionChange} totalCount={totalCount} isSelectableRows={true} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
+                    
             </Card>
 
         </React.Fragment>
     );
 };
 
-export default MyBills;
+export default FetchBills;

@@ -1,11 +1,12 @@
 import { EmployeeModuleCard, SVG } from "@egovernments/digit-ui-react-components";
-import React, { useEffect,useState } from "react";
+import React, { useEffect,useState, } from "react";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Card, Header, Button, ActionBar, Dropdown, Toast,PopUp } from "@egovernments/digit-ui-components";
-import { CloudDownload } from "../../../../../../../../../micro-ui/web/micro-ui-internals/packages/svg-components/src";
-import { FileUpload } from "../../../../../../../../../micro-ui/web/micro-ui-internals/packages/svg-components/src";
-import MyBills from "../pages/employee/my_bills";
-import VerifyBills from "../pages/employee/verify_bills";
+import { CloudDownload } from "../../../../../../../../../../micro-ui/web/micro-ui-internals/packages/svg-components/src";
+import { FileUpload } from "../../../../../../../../../../micro-ui/web/micro-ui-internals/packages/svg-components/src";
+import MyBills from "./my_bills";
+import FetchBills from "./fetch_bills";
 
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
@@ -22,12 +23,16 @@ const UploadAndFetchBillsCard = () => {
   //   Digit.SessionStorage.del("selectedBoundaryCode");
   //   Digit.SessionStorage.del("boundary");
   // }, []);
-  const [showModal, setShowModal] = useState(false);
+  const [showBillsPopUp, setShowBillsPopUp] = useState(false);
 
-  const openModal = () => setShowModal(true);
-  const closeModal = () => setShowModal(false);
-
+  const openPopUp = () => setShowBillsPopUp(true);
+  const closePopUp = () => setShowBillsPopUp(false);
+  const history = useHistory();
   const { t } = useTranslation();
+  const [selectedBills, setSelectedBills] = useState([]);
+  const handleConfirm = () => {
+    history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`, { selectedBills });
+  };
   // const userInfo = Digit.UserService.getUser();
   // const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
@@ -76,7 +81,7 @@ const UploadAndFetchBillsCard = () => {
 
 <Card
   className="fetch-card hover-highlight"
-  onClick={openModal}
+  onClick={openPopUp}
   style={{
     display: "flex",
     flexDirection: "column",
@@ -99,14 +104,55 @@ const UploadAndFetchBillsCard = () => {
             </div>
           </div>
         </Card>
-        {showModal && (
+        {showBillsPopUp && (
           <PopUp
             type={"default"}
-            heading="BILLS"
-            onOverlayClick={closeModal}
-            onClose={closeModal}
+            // heading="BILLS"
+            onOverlayClick={closePopUp}
+            onClose={closePopUp}
+            style={{
+              // padding: "rem",
+    width: "90vw", // 90% of viewport width
+    maxWidth: "1200px", // optional cap
+    height: "75vh", // or set a specific height if needed
+    maxHeight: "75vh", // optional cap to prevent overflow
+    // overflow: "auto" // ensures scroll if content is still large
+   
+  }}
+  footerChildren={[
+    <Button
+        type={"button"}
+        size={"large"}
+        variation={"secondary"}
+        label={t("CANCEL")}
+        onClick={() => 
+          closePopUp()  
+        }
+    />,
+    <Button
+        isDisabled={selectedBills.length === 0}
+        type={"button"}
+        size={"large"}
+        variation={"primary"}
+        label={t("CONFIRM")}
+        onClick={() => 
+          handleConfirm()
+          // closePopUp()
+          // history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`)
+        }
+    />
+]}
           >
-            <VerifyBills />
+            <FetchBills 
+            onSelectionChange={setSelectedBills}
+            style={{
+              // padding: "rem",
+              // width: "90vw", 
+              // maxWidth: "1200px", 
+              height: "45vh",
+              maxHeight: "45vh", 
+              // overflow: "auto"
+  }}/>
           </PopUp>
         )}
       </div>
@@ -120,7 +166,7 @@ const UploadAndFetchBillsCard = () => {
             variation="secondary"
           />,
           <Button  
-          onClick={openModal}
+          onClick={openPopUp}
             icon="ArrowForward"
             isSuffix
             label={t("HCM_AM_NEXT_LABEL")}

@@ -194,6 +194,10 @@ const MyBillsTable = ({ ...props }) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
 
+    const handleSelectedRowsChange = ({ selectedRows }) => {
+        props?.onSelectionChange(selectedRows);
+      };
+
     return (
         <>
             <DataTable
@@ -211,6 +215,8 @@ const MyBillsTable = ({ ...props }) => {
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
                 paginationRowsPerPageOptions={defaultPaginationValues}
                 fixedHeader={true}
+                onSelectedRowsChange={handleSelectedRowsChange}
+                selectableRows={props?.isSelectableRows}
                 fixedHeaderScrollHeight={"70vh"}
                 paginationComponentOptions={getCustomPaginationOptions(t)}
             />
