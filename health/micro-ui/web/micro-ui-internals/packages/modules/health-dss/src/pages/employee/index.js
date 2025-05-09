@@ -4,13 +4,12 @@ import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
-import Inbox from "./Inbox";
+import CampaignsInbox from "./CampaignsInbox";
+// import L1Main from "./L1Main";
 
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
-  const local = useLocation();
-  const { fromCampaignSupervisor } = local?.state || false;
   // TODO : NEED TO UPDATE THESE CRUMBS
   const crumbs = [
     {
@@ -19,30 +18,19 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      internalLink: `/${window?.contextPath}/employee/payments/project-selection`,
-      content: t("HCM_AM_BREADCRUMBS_PROJECT_SELECTION"),
-      show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "REGISTERS_INBOX" || ((Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
-          Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE") && !fromCampaignSupervisor)
+      internalLink: `/${window?.contextPath}/employee/dss/landing`,
+      content: t("HCM_BREADCRUMBS_LANDING"),
+      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LANDING"
     },
     {
-      internalLink: `/${window?.contextPath}/employee/payments/project-and-aggregation-selection`,
-      content: t("HCM_AM_BREADCRUMBS_PROJECT_AND_AGGREGATION_SELECTION"),
-      show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "GENERATE_BILL" || ((Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
-          Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE") && fromCampaignSupervisor)
+      internalLink: `/${window?.contextPath}/employee/dss/past-campaigns`,
+      content: t("HCM_BREADCRUMBS_PAST_CAMPAIGNS"),
+      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PAST_CAMPAIGNS"
     },
     {
-      internalLink: fromCampaignSupervisor ? `/${window?.contextPath}/employee/payments/generate-bill` : `/${window?.contextPath}/employee/payments/registers-inbox`,
-      content: fromCampaignSupervisor ? t("HCM_AM_BREADCRUMBS_GENERATE_BILLS") : t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
-      show:
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee`,
-      content: t(`HCM_AM_BREADCRUMBS_${Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop())}`),
-      show: true,
+      internalLink: `/${window?.contextPath}/employee/dss/live-campaigns`,
+      content: t("HCM_BREADCRUMBS_LIVE_CAMPAIGNS"),
+      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LIVE_CAMPAIGNS"
     }
   ];
   return <BreadCrumb crumbs={crumbs} />;
@@ -56,8 +44,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/live-campaigns`} component={() => <Inbox />} />
-        <PrivateRoute path={`${path}/past-campaigns`} component={() => <Inbox />} />
+        <PrivateRoute path={`${path}/live-campaigns`} component={() => <CampaignsInbox />} />
+        <PrivateRoute path={`${path}/past-campaigns`} component={() => <CampaignsInbox />} />
+        {/* <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <L1Main stateCode={stateCode} />} /> */}
       </AppContainer>
     </Switch>
   );
