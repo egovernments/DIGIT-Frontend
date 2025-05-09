@@ -31,8 +31,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
               key: "CycleSelection",
               type: "component",
               component: "CycleSelection",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
+              label: "",
               disable: false,
               customProps: {
                 module: "HCM",
