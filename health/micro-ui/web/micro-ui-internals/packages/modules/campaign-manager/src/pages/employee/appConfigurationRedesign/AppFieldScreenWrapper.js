@@ -167,7 +167,7 @@ function AppFieldScreenWrapper() {
           value={useCustomT(currentCard?.actionLabel)}
           onChange={(event) => {
             updateLocalization(
-              `REGISTRATION_ACTION_BUTTON_LABEL`,
+              `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
               Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
               event.target.value
             );
@@ -175,7 +175,7 @@ function AppFieldScreenWrapper() {
               type: "ADD_ACTION_LABEL",
               payload: {
                 currentScreen: currentCard,
-                actionLabel: `REGISTRATION_ACTION_BUTTON_LABEL`,
+                actionLabel: `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
               },
             });
             return;

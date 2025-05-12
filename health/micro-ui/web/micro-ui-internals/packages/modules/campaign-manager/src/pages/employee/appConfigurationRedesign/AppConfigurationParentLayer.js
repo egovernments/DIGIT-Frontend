@@ -1,4 +1,4 @@
-import { Loader, Stepper, Toast } from "@egovernments/digit-ui-components";
+import { Loader, Stepper, Toast, Tooltip } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -53,11 +53,63 @@ const dispatcher = (state, action) => {
   }
 };
 
+const getTypeAndMetaData = (field) => {
+  if (field.type === "string" && field.format === "date") {
+    return {
+      type: "datePicker",
+      startDate: field?.startDate,
+      endDate: field?.endDate,
+    };
+  } else if (field.type === "string" && field.format === "MDMS") {
+    return {
+      type: "MdmsDropdown",
+      moduleName: field?.module,
+      masterName: field?.master,
+      moduleMaster: `${field?.moduleMaster?.moduleName}.${field?.moduleMaster?.masterName}`,
+    };
+  } else if (field.type === "string" && field.format === "textArea") {
+    return {
+      type: "textArea",
+    };
+  } else if (field.type === "integer" && field.format === "incrementer") {
+    return {
+      type: "numeric",
+    };
+  } else if (field.type === "string" && field.format === "select") {
+    return {
+      type: "dropDown",
+      dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
+    };
+  } else if (field.type === "string" && field.format === "mobileNumber") {
+    return {
+      type: "mobileNumber",
+      prefix: field?.prefix,
+    };
+  } else if (field.type === "integer" && field.format === "integer") {
+    return {
+      type: "number",
+      min: field?.min,
+      max: field?.max,
+    };
+  } else {
+    return { type: "textInput" };
+  }
+};
 function correctTypeFinder(input) {
-  if (input.type === "string" && input.format === "locality") {
-    return "dropdown";
-  } else if (input.type === "string" && input.format === "date") {
+  if (input.type === "string" && input.format === "date") {
     return "datePicker";
+  } else if (input.type === "string" && input.format === "MDMS") {
+    return "MdmsDropdown";
+  } else if (input.type === "string" && input.format === "textArea") {
+    return "textArea";
+  } else if (input.type === "integer" && input.format === "incrementer") {
+    return "numeric";
+  } else if (input.type === "string" && input.format === "select") {
+    return "dropdown";
+  } else if (input.type === "string" && input.format === "mobileNumber") {
+    return "mobileNumber";
+  } else if (input.type === "integer" && input.format === "integer") {
+    return "number";
   } else {
     return "textInput";
   }
@@ -65,23 +117,32 @@ function correctTypeFinder(input) {
 
 function restructure(data1) {
   return data1.map((page) => {
-    const cardFields = page.properties.map((field) => ({
-      type: correctTypeFinder(field),
-      dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
+    const cardFields = page.properties.map((field, index) => ({
+      // type: correctTypeFinder(field),
+      // dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
       label: field.label || "",
       value: field.value || "",
       active: true,
       jsonPath: field.fieldName || "",
       metaData: {},
-      required: field.required || false,
+      Mandatory: field.required || false,
       deleteFlag: false,
       isLocalised: field.isLocalised ? true : false,
+      innerLabel: field.innerLabel || "",
+      helpText: field.helpText || "",
+      errorMessage: field?.errorMessage || "",
+      tooltip: field.tooltip || "",
+      infoText: field.infoText || "",
+      order: field.order || 0,
+      ...getTypeAndMetaData(field),
     }));
 
     return {
       name: page.label || page.page || "UNKNOWN",
       cards: [
         {
+          actionLabel: page?.actionLabel || "",
+          header: crypto.randomUUID(),
           fields: cardFields,
           headerFields: [
             {
@@ -128,25 +189,64 @@ function guessPageName(label) {
   };
   return map[label] || label;
 }
+
+const getTypeAndFormat = (field) => {
+  switch (field.type) {
+    case "textInput":
+      return { type: "string", format: "string", maxLength: field?.maxLength };
+    case "textArea":
+      return { type: "string", format: "textArea", charCount: field?.maxLength };
+      break;
+    case "number":
+      return { type: "integer", format: "integer", min: field?.min, max: field?.max };
+      break;
+    case "dropdown":
+    case "dropDown":
+      return { type: "string", format: "select", enums: field?.dropDownOptions || [] };
+      break;
+    case "datePicker":
+    case "dobPicker":
+      return { type: "string", format: "date", startDate: field?.startDate, endDate: field?.endDate };
+      break;
+    case "numeric":
+      return { type: "number", format: "incrementer" };
+      break;
+    case "mobileNumber":
+      return { type: "string", format: "mobileNumber", prefix: field?.prefix };
+      break;
+    case "MdmsDropdown":
+      return { type: "string", format: "MDMS", module: field?.moduleMaster?.moduleName, master: field?.moduleMaster?.masterName };
+    default:
+      return {};
+      break;
+  }
+};
 function reverseRestructure(updatedData) {
   return updatedData.map((section, index) => {
-    const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => ({
-      type: "string", // assume string, or customize if needed
-      format: "string", // or derive from field.type
-      enums: field.dropDownOptions || [],
-      label: field.label || "",
-      order: fieldIndex,
-      value: field.value || "",
-      hidden: false, // can't be derived from updatedData unless explicitly added
-      required: field.required || false,
-      fieldName: field.jsonPath || "",
-    }));
+    const properties = section.cards?.[0]?.fields.map((field, fieldIndex, array) => {
+      const typeAndFormat = getTypeAndFormat(field);
+      return {
+        label: field.label || "",
+        order: fieldIndex,
+        value: field.value || "",
+        hidden: false, // can't be derived from updatedData unless explicitly added
+        required: field.Mandatory || false,
+        fieldName: field.jsonPath || "",
+        helpText: field.helpText || "",
+        tooltip: field.tooltip || "",
+        infoText: field.infoText || "",
+        innerLabel: field.innerLabel || "",
+        errorMessage: field.errorMessage || "",
+        ...typeAndFormat,
+      };
+    });
 
     return {
       page: guessPageName(section.name),
       type: "object",
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
+      actionLabel: section?.actionLabel || "",
       order: index,
       properties,
     };
@@ -236,10 +336,6 @@ const AppConfigurationParentRedesign = () => {
         template: formData?.data,
         appIdData: formData?.data,
       });
-      // parentDispatch({
-      //   key: "SET",
-      //   data: convertDataFormat(formData, AppConfigMdmsData?.[masterName]),
-      // });
     } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
       const temp = restructure(AppConfigMdmsData?.[masterName]?.[0]?.pages);
       parentDispatch({
