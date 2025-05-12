@@ -95,7 +95,8 @@ const getTypeAndMetaData = (field) => {
     return { type: "textInput" };
   }
 };
-function correctTypeFinder(input) {
+
+const correctTypeFinder = (input) => {
   if (input.type === "string" && input.format === "date") {
     return "datePicker";
   } else if (input.type === "string" && input.format === "MDMS") {
@@ -113,82 +114,86 @@ function correctTypeFinder(input) {
   } else {
     return "textInput";
   }
-}
+};
 
-function restructure(data1) {
-  return data1.map((page) => {
-    const cardFields = page.properties.map((field, index) => ({
-      // type: correctTypeFinder(field),
-      // dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
-      label: field.label || "",
-      value: field.value || "",
-      active: true,
-      jsonPath: field.fieldName || "",
-      metaData: {},
-      Mandatory: field.required || false,
-      deleteFlag: false,
-      isLocalised: field.isLocalised ? true : false,
-      innerLabel: field.innerLabel || "",
-      helpText: field.helpText || "",
-      errorMessage: field?.errorMessage || "",
-      tooltip: field.tooltip || "",
-      infoText: field.infoText || "",
-      order: field.order || 0,
-      ...getTypeAndMetaData(field),
-    }));
+const restructure = (data1) => {
+  return data1
+    ?.sort((a, b) => a.order - b.order)
+    .map((page) => {
+      const cardFields = page.properties
+        ?.sort((a, b) => a.order - b.order)
+        ?.map((field, index) => ({
+          // type: correctTypeFinder(field),
+          // dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
+          label: field.label || "",
+          value: field.value || "",
+          active: true,
+          jsonPath: field.fieldName || "",
+          metaData: {},
+          Mandatory: field.required || false,
+          deleteFlag: false,
+          isLocalised: field.isLocalised ? true : false,
+          innerLabel: field.innerLabel || "",
+          helpText: field.helpText || "",
+          errorMessage: field?.errorMessage || "",
+          tooltip: field.tooltip || "",
+          infoText: field.infoText || "",
+          order: field.order,
+          ...getTypeAndMetaData(field),
+        }));
 
-    return {
-      name: page.label || page.page || "UNKNOWN",
-      cards: [
-        {
-          header: crypto.randomUUID(),
-          fields: cardFields,
-          headerFields: [
-            {
-              type: "text",
-              label: "SCREEN_HEADING",
-              value: page.label || "",
-              active: true,
-              jsonPath: "ScreenHeading",
-              metaData: {},
-              required: true,
-              isLocalised: page.label ? true : false,
-            },
-            {
-              type: "textarea",
-              label: "SCREEN_DESCRIPTION",
-              value: page.description || "",
-              active: true,
-              jsonPath: "Description",
-              metaData: {},
-              required: true,
-              isLocalised: page.description ? true : false,
-            },
-          ],
+      return {
+        name: page.label || page.page || "UNKNOWN",
+        cards: [
+          {
+            header: crypto.randomUUID(),
+            fields: cardFields,
+            headerFields: [
+              {
+                type: "text",
+                label: "SCREEN_HEADING",
+                value: page.label || "",
+                active: true,
+                jsonPath: "ScreenHeading",
+                metaData: {},
+                required: true,
+                isLocalised: page.label ? true : false,
+              },
+              {
+                type: "textarea",
+                label: "SCREEN_DESCRIPTION",
+                value: page.description || "",
+                active: true,
+                jsonPath: "Description",
+                metaData: {},
+                required: true,
+                isLocalised: page.description ? true : false,
+              },
+            ],
+          },
+        ],
+        actionLabel: page?.actionLabel || "",
+        order: page.order,
+        config: {
+          enableComment: false,
+          enableFieldAddition: true,
+          allowFieldsAdditionAt: ["body"],
+          enableSectionAddition: false,
+          allowCommentsAdditionAt: ["body"],
         },
-      ],
-      actionLabel: page?.actionLabel || "",
-      order: page.order + 1,
-      config: {
-        enableComment: false,
-        enableFieldAddition: true,
-        allowFieldsAdditionAt: ["body"],
-        enableSectionAddition: false,
-        allowCommentsAdditionAt: ["body"],
-      },
-      parent: "REGISTRATION",
-    };
-  });
-}
+        parent: "REGISTRATION",
+      };
+    });
+};
 
-function guessPageName(label) {
+const guessPageName = (label) => {
   const map = {
     BENE_LOCATION: "beneficiaryLocation",
     BENE_HOUSE: "HouseDetails",
     // Add more mappings as needed
   };
   return map[label] || label;
-}
+};
 
 const getTypeAndFormat = (field) => {
   switch (field.type) {
@@ -221,7 +226,8 @@ const getTypeAndFormat = (field) => {
       break;
   }
 };
-function reverseRestructure(updatedData) {
+
+const reverseRestructure = (updatedData) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex, array) => {
       const typeAndFormat = getTypeAndFormat(field);
@@ -251,7 +257,7 @@ function reverseRestructure(updatedData) {
       properties,
     };
   });
-}
+};
 
 const AppConfigurationParentRedesign = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
