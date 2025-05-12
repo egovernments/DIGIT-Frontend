@@ -80,6 +80,9 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
                   additionalCustomization: true,
                 },
               ],
+              tableProps:{
+                tableClassName:"health-dss-inbox-table"
+              },
               enableGlobalSearch: false,
               enableColumnSort: true,
               resultsJsonPath: "Project",
@@ -121,7 +124,12 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               primaryLabel: "ES_COMMON_FILTER",
               minReqFields: 0,
               defaultValues: {
-                inboxFilter: "",
+                inboxFilter: {
+                  filterValues:{
+                  campaignType:[],
+                  boundary:[]
+                  }
+                }
               },
               fields: [
                 {
@@ -222,6 +230,9 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
                   additionalCustomization: true,
                 },
               ],
+              tableProps:{
+                tableClassName:"health-dss-inbox-table"
+              },
               enableGlobalSearch: false,
               enableColumnSort: true,
               resultsJsonPath: "Project",
@@ -258,7 +269,12 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               primaryLabel: "ES_COMMON_FILTER",
               minReqFields: 0,
               defaultValues: {
-                inboxFilter: "",
+                inboxFilter: {
+                  filterValues:{
+                  campaignType:[],
+                  boundary:[]
+                  }
+                }
               },
               fields: [
                 {

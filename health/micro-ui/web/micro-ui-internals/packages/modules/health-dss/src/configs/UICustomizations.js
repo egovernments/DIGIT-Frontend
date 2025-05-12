@@ -83,7 +83,6 @@ export const UICustomizations = {
             } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
           };
           return (
-            <div className={"action-button-open-microplan"}>
               <div style={{ position: "relative" }}>
                 <ButtonNew
                   type="actionButton"
@@ -98,7 +97,6 @@ export const UICustomizations = {
                   onOptionSelect={(item) => onActionSelect(item, row)}
                 />
               </div>
-            </div>
           );
 
         case "CAMPAIGN_NAME":
