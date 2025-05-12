@@ -141,7 +141,6 @@ function restructure(data1) {
       name: page.label || page.page || "UNKNOWN",
       cards: [
         {
-          actionLabel: page?.actionLabel || "",
           header: crypto.randomUUID(),
           fields: cardFields,
           headerFields: [
@@ -168,6 +167,7 @@ function restructure(data1) {
           ],
         },
       ],
+      actionLabel: page?.actionLabel || "",
       order: page.order + 1,
       config: {
         enableComment: false,
