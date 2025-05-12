@@ -23,7 +23,12 @@ const locReducer = (state = initialState, action) => {
         return [...state, newEntry];
       }
     case "UPDATE_LOCALIZATION":
-      return state.map((item) => (item.code === action.payload.code ? { ...item, [action.payload.locale]: action.payload.message } : item));
+      const checkCodeAlreadyPresent = state.some((item) => item.code === action.payload.code);
+      if (checkCodeAlreadyPresent) {
+        return state.map((item) => (item.code === action.payload.code ? { ...item, [action.payload.locale]: action.payload.message } : item));
+      } else {
+        return [...state, { code: action.payload.code, [action.payload.locale]: action.payload.message }];
+      }
 
     case "REMOVE_KEY":
       return state.filter((item) => item.code !== action.payload.code);
@@ -47,6 +52,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
       type: "UPDATE_LOCALIZATION",
       payload: { code, locale, message },
     });
+    return;
   };
 
   const { isLoading: isLoadingAppScreenLocalisationConfig, data: AppScreenLocalisationConfig } = Digit.Hooks.useCustomMDMS(
@@ -92,7 +98,18 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
 
   return (
     <AppLocalisationContext.Provider
-      value={{ locState, enabledModules, locDispatch, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch }}
+      value={{
+        locState,
+        enabledModules,
+        locDispatch,
+        AppScreenLocalisationConfig,
+        addMissingKey,
+        updateLocalization,
+        onSubmit,
+        back,
+        showBack,
+        parentDispatch,
+      }}
     >
       <AppConfigurationWrapper screenConfig={screenConfig} />
     </AppLocalisationContext.Provider>

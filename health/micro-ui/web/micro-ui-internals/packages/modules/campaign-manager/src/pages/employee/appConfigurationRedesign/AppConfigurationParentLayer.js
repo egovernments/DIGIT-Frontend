@@ -130,6 +130,7 @@ function restructure(data1) {
       isLocalised: field.isLocalised ? true : false,
       innerLabel: field.innerLabel || "",
       helpText: field.helpText || "",
+      errorMessage: field?.errorMessage || "",
       tooltip: field.tooltip || "",
       infoText: field.infoText || "",
       order: field.order || 0,
@@ -166,6 +167,7 @@ function restructure(data1) {
           ],
         },
       ],
+      actionLabel: page?.actionLabel || "",
       order: page.order + 1,
       config: {
         enableComment: false,
@@ -234,6 +236,7 @@ function reverseRestructure(updatedData) {
         tooltip: field.tooltip || "",
         infoText: field.infoText || "",
         innerLabel: field.innerLabel || "",
+        errorMessage: field.errorMessage || "",
         ...typeAndFormat,
       };
     });
@@ -243,6 +246,7 @@ function reverseRestructure(updatedData) {
       type: "object",
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
+      actionLabel: section?.actionLabel || "",
       order: index,
       properties,
     };

@@ -996,13 +996,6 @@ tbody {
   flex-direction: column;
   gap: 0.5rem;
 }
-.app-preview-selected {
-  margin: 10px -1rem;
-  padding: 1rem;
-  background-color: #c84c0e33;
-  border: 1px solid #c84c0e33;
-  border-radius: 1rem;
-}
 .app-config-header {
   color: #0b4b66 !important;
   font-weight: 700;
@@ -1016,6 +1009,7 @@ tbody {
 }
 .app-preview-sub-heading {
   font-family: "Roboto";
+  margin: unset;
 }
 .app-config-add-field-popup {
   width: 35rem !important;
@@ -1032,4 +1026,24 @@ tbody {
 }
 .app-config-drawer-action-divider {
   margin-top: auto;
+}
+.app-preview-field-pair {
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  padding: 0.5rem;
+  .digit-header-content.label {
+    width: 70%;
+  }
+  .digit-field {
+    width: 100%;
+    .digit-description {
+      display: flex !important;
+    }
+  }
+}
+.app-preview-field-pair.app-preview-selected {
+  background-color: #c84c0e33;
+  border: 2px solid #c84c0e;
+  border-radius: 1rem;
 }
