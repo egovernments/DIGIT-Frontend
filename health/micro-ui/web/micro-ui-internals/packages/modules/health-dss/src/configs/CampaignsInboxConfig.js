@@ -258,7 +258,7 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               primaryLabel: "ES_COMMON_FILTER",
               minReqFields: 0,
               defaultValues: {
-                roleschosen: "",
+                inboxFilter: "",
               },
               fields: [
                 {

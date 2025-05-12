@@ -28,6 +28,30 @@ function cleanObject(obj) {
   return obj;
 }
 
+const wrapTextStyle = {
+  maxWidth: "15rem",
+  wordWrap: "break-word",
+  whiteSpace: "normal",
+  overflowWrap: "break-word",
+};
+
+const renderText = (value, t) => {
+  if (value && value !== "NA") {
+    return (
+      <div style={wrapTextStyle}>
+        <p>{t(value)}</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <p>{t("NA")}</p>
+      </div>
+    );
+  }
+}
+
+
 export const UICustomizations = {
   CampaignsInboxConfig: {
     preProcess: (data, additionalDetails) => {
@@ -51,12 +75,12 @@ export const UICustomizations = {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
                 row.campaignDetails.id
               }&setup-completed=true`;
-            }
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
             if (e.name == "VIEW_CUSTOM_REPORT") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
                 row.campaignDetails.id
               }&setup-completed=true`;
-            }
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
           };
           return (
             <div className={"action-button-open-microplan"}>
@@ -78,48 +102,10 @@ export const UICustomizations = {
           );
 
         case "CAMPAIGN_NAME":
-          if (value && value !== "NA") {
-            return (
-              <div
-                style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
-                }}
-              >
-                <p>{t(value)}</p>
-              </div>
-            );
-          } else {
-            return (
-              <div>
-                <p>{t("NA")}</p>
-              </div>
-            );
-          }
+          return renderText(value,t);
 
         case "BOUNDARY_NAME":
-          if (value && value != "NA") {
-            return (
-              <div
-                style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
-                }}
-              >
-                <p>{t(value)}</p>
-              </div>
-            );
-          } else {
-            return (
-              <div>
-                <p>{t("NA")}</p>
-              </div>
-            );
-          }
+          return renderText(value,t);
 
         case "START_DATE":
           return (
@@ -136,26 +122,7 @@ export const UICustomizations = {
           );
 
         case "YEAR":
-          if (value && value != "NA") {
-            return (
-              <div
-                style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
-                }}
-              >
-                <p>{t(value)}</p>
-              </div>
-            );
-          } else {
-            return (
-              <div>
-                <p>{t("NA")}</p>
-              </div>
-            );
-          }
+          return renderText(value,t);
 
         case "END_DATE":
           return (
