@@ -77,17 +77,21 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               onChange={(event) => {
                 if (isLocalisable) {
                   updateLocalization(
-                    `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
+                    drawerState?.[panelItem.label]
+                      ? drawerState?.[panelItem.label]
+                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                          drawerState?.jsonPath || drawerState?.id
+                        }`,
                     Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
                     event.target.value
                   );
                   setDrawerState((prev) => ({
                     ...prev,
-                    [panelItem.label]: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
+                    [panelItem.label]: drawerState?.[panelItem.label]
+                      ? drawerState?.[panelItem.label]
+                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                          drawerState?.jsonPath || drawerState?.id
+                        }`,
                   }));
                   return;
                 } else {
@@ -343,7 +347,7 @@ function DrawerFieldComposer() {
         />
       ) : null}
 
-      {((!drawerState?.isMdms && drawerState?.type === "dropdown") || drawerState?.type === "dropDown") && (
+      {!drawerState?.isMdms && (drawerState?.type === "dropdown" || drawerState?.type === "dropDown") && (
         <div
           style={{ padding: "1.5rem", border: "1px solid #c84c0e", borderRadius: "1rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
