@@ -21,11 +21,11 @@ const WorkbenchCard = () => {
       link: `/${window?.contextPath}/employee/workbench/manage-master-data`,
       roles: ROLES.MDMS,
     },
-    // {
-    //   label: t("ACTION_TEST_LOCALISATION"),
-    //   link: `/${window?.contextPath}/employee/workbench/localisation-search`,
-    //   roles: ROLES.LOCALISATION,
-    // },
+    {
+      label: t("ACTION_TEST_LOCALISATION"),
+      link: `/${window?.contextPath}/employee/workbench/localisation-search`,
+      roles: ROLES.LOCALISATION,
+    },
     {
       label: t("ACTION_TEST_UPLOAD_BOUNDARY"),
       link: `/${window?.contextPath}/employee/workbench/upload-boundary`,

@@ -1,9 +1,10 @@
 import { Loader,TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
 // import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
+import AssignmentCard from "./components/AssignmentCard";
 // import HRMSCard from "./components/HRMSCard";
 // import WorkbenchCard from "./components/WorkbenchCard";
 // import DigitJSONForm from "./components/DigitJSONForm";
@@ -16,7 +17,7 @@ export const AssignmentModule = ({ stateCode, userType, tenants }) => {
   console.log("Hi from assignment module")
   // console.log(EmployeeApp);
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
-  const { path, url } = useRouteMatch();
+  // const { pathName } = useMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
 
@@ -30,14 +31,13 @@ export const AssignmentModule = ({ stateCode, userType, tenants }) => {
     return <Loader />;
   }
 
-  return <TourProvider>
-    <EmployeeApp path={path} stateCode={stateCode} />
-  </TourProvider>
+  return <EmployeeApp stateCode={stateCode} />
 };
 
 const componentsToRegister = {
+  UtilitiesCard:AssignmentCard,
   MyTable,
-  AssignmentModule
+  UtilitiesModule: AssignmentModule
 };
 
 // const overrideHooks = () => {

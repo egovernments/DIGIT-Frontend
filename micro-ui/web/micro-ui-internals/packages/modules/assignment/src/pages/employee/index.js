@@ -1,13 +1,12 @@
-import { PrivateRoute } from "@egovernments/digit-ui-react-components";
+// import { Route } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Link, Switch, useLocation } from "react-router-dom";
+import { Link, Routes, Route, useLocation } from "react-router-dom";
 import AssignmentCreate from "./AssignmentCreate";
 import AssignmentSearchs from "./AssignmentSearchs";
 import AssignmentView from "./AssignmentView";
 
-const EmployeeApp = ({ path, url, userType }) => {
-    console.log(path);
+const EmployeeApp = ({ url, userType }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const mobileView = innerWidth <= 640;
@@ -35,27 +34,25 @@ const EmployeeApp = ({ path, url, userType }) => {
   }, [location]);
 
   return (
-    <Switch>
-      <React.Fragment>
-        <div className="ground-container">
+    <div className="ground-container">
           <p className="breadcrumb" style={{ marginLeft: mobileView ? "1vw" : "0px" }}>
             <Link to={`/${window?.contextPath}/employee`} style={{ cursor: "pointer", color: "#666" }}>
               {t("HR_COMMON_BUTTON_HOME")}
             </Link>{" "}
             / <span>{location.pathname === `/${window?.contextPath}/employee/hrms/inbox` ? t("HR_COMMON_HEADER") : t("HR_COMMON_HEADER")}</span>
           </p>
-          <PrivateRoute
-            path={`${path}/inbox`}
-            component={() => (
-              <Inbox parentRoute={path} businessService="hrms" filterComponent="HRMS_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
+          <Routes>
+          <Route
+            path={`inbox`}
+            element = { (
+              <Inbox parentRoute={""} businessService="hrms" filterComponent="HRMS_INBOX_FILTER" initialStates={inboxInitialState} isInbox={true} />
             )}
           />
-          <PrivateRoute path={`${path}/assignment-searchs`} component={() => <AssignmentSearchs />} />
-          <PrivateRoute path={`${path}/assignment-view`} component={() => <AssignmentView />} />
-          <PrivateRoute path={`${path}/assignment-create`} component={() => <AssignmentCreate />} />
+          <Route path={`assignment-searchs`} element = { <AssignmentSearchs />} />
+          <Route path={`assignment-view`} element = { <AssignmentView />} />
+          <Route path={`assignment-create`} element = { <AssignmentCreate />} />
+    </Routes>
         </div>
-      </React.Fragment>
-    </Switch>
   );
 };
 

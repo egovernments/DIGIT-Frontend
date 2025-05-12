@@ -53,32 +53,32 @@ const LocalisationSearch = () => {
       closeToast()
       return
     }
-    const onSuccess = (resp) => {
-      setShowToast({ label: `${t("WBH_LOC_UPDATE_SUCCESS")}` });
-      setShowModal(null)
-      setEditRow(null)
-      setModalConfig(null)
-      // const queryCache = queryClient.getQueryCache()
-      // const queryKeys = queryCache.getAll().map(cache => cache.queryKey) // QueryKey[]
-      // queryClient.invalidateQueries([`/localization/messages/v1/_upsert`,`Random`])
-      // queryClient.invalidateQueries([`/localization/messages/v1/_upsert`,`Random`,`defaultLocale`])
-      closeToast();
-      setCallRefetch(true)
-    };
-    const onError = (resp) => {
-      let label = `${t("WBH_LOC_UPDATE_FAIL")}: `
-      resp?.response?.data?.Errors?.map((err, idx) => {
-        if (idx === resp?.response?.data?.Errors?.length - 1) {
-          label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + '.'
-        } else {
-          label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
-        }
-      })
-      setShowToast({ label, type: "error" });
-      setShowModal(null)
-      setEditRow(null)
-      closeToast();
-    };
+    // const onSuccess = (resp) => {
+    //   setShowToast({ label: `${t("WBH_LOC_UPDATE_SUCCESS")}` });
+    //   setShowModal(null)
+    //   setEditRow(null)
+    //   setModalConfig(null)
+    //   // const queryCache = queryClient.getQueryCache()
+    //   // const queryKeys = queryCache.getAll().map(cache => cache.queryKey) // QueryKey[]
+    //   // queryClient.invalidateQueries([`/localization/messages/v1/_upsert`,`Random`])
+    //   // queryClient.invalidateQueries([`/localization/messages/v1/_upsert`,`Random`,`defaultLocale`])
+    //   closeToast();
+    //   setCallRefetch(true)
+    // };
+    // const onError = (resp) => {
+    //   let label = `${t("WBH_LOC_UPDATE_FAIL")}: `
+    //   resp?.response?.data?.Errors?.map((err, idx) => {
+    //     if (idx === resp?.response?.data?.Errors?.length - 1) {
+    //       label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + '.'
+    //     } else {
+    //       label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ', '
+    //     }
+    //   })
+    //   setShowToast({ label, type: "error" });
+    //   setShowModal(null)
+    //   setEditRow(null)
+    //   closeToast();
+    // };
 
 
     mutation.mutate(
@@ -90,8 +90,8 @@ const LocalisationSearch = () => {
         },
       },
       {
-        onError,
-        onSuccess,
+        // onError,
+        // onSuccess,
       }
     );
 
@@ -139,7 +139,7 @@ const LocalisationSearch = () => {
           </ActionBar>
         }
       </div>
-      <AlertCard additionalElements={[]} label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} variant="default" style={{ marginBottom: "1.5rem", maxWidth: "100%" }} />
+      {/* <AlertCard label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} variant="default" style={{ marginBottom: "1.5rem", maxWidth: "100%" }} /> */}
       {Config && <div className="inbox-search-wrapper">
         <InboxSearchComposer onFormValueChange={formUpdate} configs={Config} additionalConfig={{
           resultsTable: {
