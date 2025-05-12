@@ -343,7 +343,7 @@ function DrawerFieldComposer() {
         />
       ) : null}
 
-      {(drawerState?.type === "dropdown" || drawerState?.type === "dropDown" || drawerState?.type === "checkbox") && (
+      {((!drawerState?.isMdms && drawerState?.type === "dropdown") || drawerState?.type === "dropDown") && (
         <div
           style={{ padding: "1.5rem", border: "1px solid #c84c0e", borderRadius: "1rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}
         >
