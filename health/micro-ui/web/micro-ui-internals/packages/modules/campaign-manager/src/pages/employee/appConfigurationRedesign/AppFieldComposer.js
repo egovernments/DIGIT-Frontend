@@ -125,7 +125,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -161,7 +161,7 @@ const Field = ({
                   )}
                 </div>
                 {!headerFields ? (
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 ) : (
                   <TextArea type="textarea" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
                 )}
@@ -226,7 +226,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -263,7 +263,7 @@ const Field = ({
                     )}
                   </div>
                   {!headerFields ? (
-                    <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                    <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                   ) : (
                     <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
                   )}
@@ -329,7 +329,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -365,7 +365,7 @@ const Field = ({
                   )}
                 </div>
                 {!headerFields ? (
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 ) : (
                   <Dropdown
                     className="appConfigLabelField-Input"
@@ -439,7 +439,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -549,7 +549,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -645,7 +645,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -741,7 +741,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -836,7 +836,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -932,7 +932,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -1026,7 +1026,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={type} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
