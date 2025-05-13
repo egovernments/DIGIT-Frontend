@@ -77,7 +77,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               onChange={(event) => {
                 if (isLocalisable) {
                   updateLocalization(
-                    drawerState?.[panelItem.label]
+                    drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
                       ? drawerState?.[panelItem.label]
                       : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
                           drawerState?.jsonPath || drawerState?.id
@@ -87,11 +87,12 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                   );
                   setDrawerState((prev) => ({
                     ...prev,
-                    [panelItem.label]: drawerState?.[panelItem.label]
-                      ? drawerState?.[panelItem.label]
-                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                          drawerState?.jsonPath || drawerState?.id
-                        }`,
+                    [panelItem.label]:
+                      drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
+                        ? drawerState?.[panelItem.label]
+                        : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                            drawerState?.jsonPath || drawerState?.id
+                          }`,
                   }));
                   return;
                 } else {
@@ -367,9 +368,7 @@ function DrawerFieldComposer() {
                     dropDownOptions: prev?.dropDownOptions?.map((i) => {
                       if (i.code && i.code === item.code) {
                         updateLocalization(
-                          item?.name
-                            ? item?.name
-                            : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
+                          item?.name ? item?.name : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
                           Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
                           event.target.value
                         );
