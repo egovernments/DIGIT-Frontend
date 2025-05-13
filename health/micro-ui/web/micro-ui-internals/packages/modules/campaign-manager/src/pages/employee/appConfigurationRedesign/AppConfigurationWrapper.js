@@ -114,14 +114,14 @@ const reducer = (state = initialState, action, updateLocalization) => {
           if (item?.name === action?.payload?.currentScreen?.name) {
             return {
               ...item,
-              cards: item?.cards?.map((j, k) => {
+              cards: item?.cards?.map((j, k, c) => {
                 if (j.header === action.payload.currentCard?.header) {
                   return {
                     ...j,
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: crypto.randomUUID(),
+                        jsonPath: `${item?.name}_${j.header}_NEW_FIELD_${c.length + 1}`,
                         type: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
                         active: true,
