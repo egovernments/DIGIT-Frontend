@@ -17,11 +17,11 @@ import { useTranslation } from "react-i18next";
 
 const StaticDynamicCard = ({ moduleCode }) => {
   const { t } = useTranslation();
-  const tenantId = Digit?.ULBService?.getCitizenCurrentTenant();
+  const tenantId = Digit.ULBService.getCitizenCurrentTenant();
   const {
     isLoading: isMdmsLoading,
     data: mdmsData,
-  } = Digit.Hooks.useStaticData(Digit?.ULBService?.getStateId());
+  } = Digit.Hooks.useStaticData(Digit.ULBService.getStateId());
   const {
     isLoading: isSearchLoading,
     error,

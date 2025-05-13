@@ -1,3 +1,12 @@
+## [1.0.22]  [28-Apr-2025]
+- Localization Bulk Upload - Updated SheetName and Column Widths
+
+## [1.0.21]  [8-Apr-2025]
+- Manage Sidebars
+
+## [1.0.20]  [25-Mar-2025]
+- Enhancements in Localization Add Screen - Bulk Upload
+
 ## [1.0.19]  [3-Mar-2025]
 - Disabled json-edit-react & enable based on flag
 - Introduced new Globalvariable to enable bulk upload of master dataa 'ENABLE_JSON_EDIT'

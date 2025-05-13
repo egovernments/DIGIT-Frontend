@@ -1,7 +1,7 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-// import useStore from "../../libraries/src/hooks/useStore";
+import ImageComponent from "./ImageComponent";
 
 const Header = ({ showTenant = true }) => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
@@ -12,7 +12,7 @@ const Header = ({ showTenant = true }) => {
 
   return (
     <div className="bannerHeader">
-      <img className="bannerLogo" src={stateInfo?.logoUrl} style={!showTenant ? { borderRight: "unset" } : {}} />
+      <ImageComponent className="bannerLogo" src={stateInfo?.logoUrl} style={!showTenant ? { borderRight: "unset" } : {}} alt="Digit Banner" />
       {showTenant && stateInfo?.code && <p>{t(`TENANT_TENANTS_${stateInfo?.code?.toUpperCase()}`)}</p>}
     </div>
   );

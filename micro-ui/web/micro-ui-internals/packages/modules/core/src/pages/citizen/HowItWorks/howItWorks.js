@@ -1,6 +1,6 @@
 import {
   BackButton,
-  Header,
+  HeaderComponent,
   Loader,
   CloseSvg,
   DownloadImgIcon,
@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 const HowItWorks = ({ module }) => {
   const user = Digit.UserService.getUser();
   const tenantId =
-    user?.info?.tenantId || Digit?.ULBService?.getCurrentTenantId();
+    user?.info?.tenantId || Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const storeData = Digit.SessionStorage.get("initData");
   const stateInfo = storeData.stateInfo;
@@ -53,7 +53,7 @@ const HowItWorks = ({ module }) => {
   };
 
   const { isLoading, data } = Digit.Hooks.useGetHowItWorksJSON(
-    Digit?.ULBService?.getStateId()
+    Digit.ULBService.getStateId()
   );
 
   const mdmsConfigResult =
@@ -77,13 +77,13 @@ const HowItWorks = ({ module }) => {
       <div className="how-it-works-page">
         <BackButton></BackButton>
         <div className="how-it-works-page-header">
-          <Header>
+          <HeaderComponent>
             {t(
               mdmsConfigResult.screenHeader
                 ? mdmsConfigResult.screenHeader
                 : "HOW_IT_WORKS"
             )}
-          </Header>
+          </HeaderComponent>
         </div>
         <div className="language-selector" style={{ margin: "10px" }}>
           {languages.map((language, index) => (

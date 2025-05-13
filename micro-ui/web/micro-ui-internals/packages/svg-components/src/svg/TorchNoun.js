@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
-export const TorchNoun = ({ className, style = {}, height = "20", width = "25", fill = "#F47738", onClick = null }) => {
+export const TorchNoun = ({ className, style = {}, height = "20", width = "25", fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 20 25" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_55046_131540)">

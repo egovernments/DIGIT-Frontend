@@ -20,7 +20,7 @@ function UploadDrawer({ setProfilePic, closeDrawer, userType, removeProfilePic ,
           setError(t("CORE_COMMON_PROFILE_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
-            const response = await Digit.UploadServices.Filestorage(`${userType}-profile`, file, Digit?.ULBService?.getStateId());
+            const response = await Digit.UploadServices.Filestorage(`${userType}-profile`, file, Digit.ULBService.getStateId());
             if (response?.data?.files?.length > 0) {
               const fileStoreId = response?.data?.files[0]?.fileStoreId;
               setUploadedFile(fileStoreId);

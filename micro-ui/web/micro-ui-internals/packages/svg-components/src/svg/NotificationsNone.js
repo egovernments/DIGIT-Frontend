@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
-export const NotificationsNone = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
+export const NotificationsNone = ({ className, height = "24", width = "24", style = {}, fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g clipPath="url(#clip0_176_772)">

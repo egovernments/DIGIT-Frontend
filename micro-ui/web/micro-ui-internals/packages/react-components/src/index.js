@@ -104,6 +104,7 @@ import {
   PropertyHouse,
   PTIcon,
   ReceiptIcon,
+  ReceiptInboxIcon,
   RefreshIcon,
   RefreshSVG,
   RupeeIcon,
@@ -291,6 +292,7 @@ import {SVG} from "./atoms/SVG";
 import Tutorial from "./hoc/Tutorial/Tutorial";
 import { useTourState,TourProvider } from "./hoc/Tutorial/TourProvider";
 import Help from "./hoc/Tutorial/Help";
+import FormComposerCitizen from "./hoc/FormComposerCitizen";
 
 //View Composer
 import ViewComposer from "./hoc/ViewComposer";
@@ -345,6 +347,7 @@ export {
   SubmitBar,
   ButtonSelector,
   LinkButton,
+  ReceiptInboxIcon,
   StatusTable,
   Row,
   LastRow,
@@ -467,6 +470,7 @@ export {
   // hoc
   FormComposer,
   FormComposerV2,
+  FormComposerCitizen,
   RenderFormFields,
   WorkflowTimeline,
   WorkflowActions,

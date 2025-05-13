@@ -139,7 +139,7 @@ const LocalisationSearch = () => {
           </ActionBar>
         }
       </div>
-      <AlertCard additionalElements={[]} label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} variant="default" style={{ marginBottom: "1.5rem", maxWidth: "100%" }} />
+      {/* <AlertCard additionalElements={[]} label={t("WBH_INFO")} text={t("WBH_INFO_MESSAGE")} variant="default" style={{ marginBottom: "1.5rem", maxWidth: "100%" }} /> */}
       {Config && <div className="inbox-search-wrapper">
         <InboxSearchComposer onFormValueChange={formUpdate} configs={Config} additionalConfig={{
           resultsTable: {

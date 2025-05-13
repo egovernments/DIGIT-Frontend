@@ -9,7 +9,7 @@ const FaqComponent = (props) => {
   const { question,isLabelLink, answer,type,actions,content, lastIndex } = props;
   const [isOpen, toggleOpen] = useState(false);
   const { t } = useTranslation();
-  const tenantId = Digit?.ULBService?.getStateId();
+  const tenantId = Digit.ULBService.getStateId();
   const ListTag = type === "number" ? "ol" : "ul";
   return (
     <div className="faqs border-none" onClick={() => toggleOpen(!isOpen)}>

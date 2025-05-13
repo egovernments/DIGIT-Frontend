@@ -84,7 +84,6 @@ const EmployeeModuleCard = ({
 
   // Render the card with the generated configuration
   return <LandingPageCard className={className} buttonSize={buttonSize} {...propsForModuleCard} />;
-  // return <>Hi there</>
 };
 
 

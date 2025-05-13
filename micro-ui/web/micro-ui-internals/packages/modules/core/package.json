@@ -24,7 +24,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.2-webpack-21",
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.12",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.13",
     "@egovernments/digit-ui-module-workbench": "1.0.19-test.1",
     "@egovernments/digit-ui-module-sample": "1.0.19-test.1",
     "react-i18next": "15.0.0",

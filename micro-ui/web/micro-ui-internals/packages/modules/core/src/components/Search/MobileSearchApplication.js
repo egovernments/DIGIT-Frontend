@@ -1,7 +1,7 @@
 import {
   BackButton,
   DetailsCard,
-  Header,
+  HeaderComponent,
   Loader,
   PopUp,
   SearchAction,
@@ -209,7 +209,7 @@ const MobileSearchApplication = ({
           onClick={() => handleExcelDownload(tabledata)}
         />
       </div>
-      <Header>{t("PRIVACY_AUDIT_REPORT")}:</Header>
+      <HeaderComponent>{t("PRIVACY_AUDIT_REPORT")}:</HeaderComponent>
       <div className="digit-search-box">
         <SearchAction
           text={t("ES_COMMON_SEARCH")}

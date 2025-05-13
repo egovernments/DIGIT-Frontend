@@ -1,7 +1,6 @@
 import { Button, Dropdown } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-// import useStore from "../../libraries/src/hooks/useStore"
 
 const ChangeLanguage = (prop) => {
   const isDropdown = prop.dropdown || false;

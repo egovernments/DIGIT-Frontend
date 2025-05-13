@@ -3,7 +3,14 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
-## [1.8.22]  [3-Feb-2025]
+
+## [1.8.19]  [4-Mar-2025]
+- DUCE-254 :  introduced a new formcomposercitizen for citizen variant
+
+## [1.8.17]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
+
+## [1.8.16]  [3-Feb-2025]
 - FEATURE/HCMPRE-2208 : Fixed some loader component issue in inbox & form composers
 
 ## [1.8.15]  [1-Feb-2025]

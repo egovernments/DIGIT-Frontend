@@ -7,6 +7,13 @@ const WorkflowStatusFilter = ({ props, t, populators, formData, inboxResponse })
   //from inbox response get the statusMap and show the relevant statuses
   //here need to filter these options based on logged in user(and test based on single roles in every inbox)(new requirement from vasanth)
 
+  const getTransformedLabel = (populators, row) => {
+    const labelKey = populators?.onlylabelPrefix 
+      ? `${populators.labelPrefix}${row?.state}`
+      : `${populators.labelPrefix}${row?.businessService}_STATE_${row?.state}`;
+    return Digit.Utils.locale.getTransformedLocale(labelKey);
+  };
+
   const [statusMap, setStatusMap] = useState(null);
   useEffect(() => {
     if (inboxResponse) {
@@ -46,7 +53,7 @@ const WorkflowStatusFilter = ({ props, t, populators, formData, inboxResponse })
             }}
             value={row.uuid}
             checked={formData?.[populators.name]?.[row.uuid] ? true : false}
-            label={`${t(Digit.Utils.locale.getTransformedLocale(`${populators.labelPrefix}${row?.businessService}_STATE_${row?.state}`))} (${row?.count || 0})`}
+            label={`${t(getTransformedLabel(populators, row))} (${row?.count || 0})`}
           />
         );
       })}
