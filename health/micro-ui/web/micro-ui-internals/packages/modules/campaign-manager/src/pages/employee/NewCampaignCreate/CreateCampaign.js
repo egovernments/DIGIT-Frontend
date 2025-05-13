@@ -145,11 +145,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         },
         {
           onSuccess: async (result) => {
+            setLoader(true);
             setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
             setTimeout(() => {
-              history.push(
+              history.replace(
                 `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
               );
+              setLoader(false);
             }, 2000);
           },
           onError: (error, result) => {
