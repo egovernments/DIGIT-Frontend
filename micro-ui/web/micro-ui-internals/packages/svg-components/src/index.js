@@ -817,6 +817,8 @@ import { GlobeLocationPin } from "./svg/GlobeLocationPin";
 import { NewWindow } from "./svg/NewWindow";
 import { OutpatientMed } from "./svg/OutpatientMed";
 import { AdUnits } from "./svg/AdUnits";
+import { ListAltCheck } from "./svg/ListAltCheck";
+import { UploadCloud } from "./svg/UploadCloud";
 
 export {
   AddCircle,
@@ -1637,5 +1639,7 @@ export {
   GlobeLocationPin,
   NewWindow,
   OutpatientMed,
-  AdUnits
+  AdUnits,
+  ListAltCheck,
+  UploadCloud
 };
