@@ -1,21 +1,21 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
-import ReactDOM from "react-dom/client"; // Use createRoot from React 18
+import ReactDOM from "react-dom/client";
 import { initGlobalConfigs } from "./globalConfig";
-// import {initAssignmentComponents} from "@egovernments/digit-ui-module-assignment"
-// import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
-// import { BrowserRouter } from "react-router-dom";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 // Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks; 
-// const queryClient = new QueryClient();
+window.Digit.Hooks = Hooks;
+const queryClient = new QueryClient();
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
-);import { initLibraries } from "@egovernments/digit-ui-libraries";
+);
 
-const enabledModules = ["assignment", "HRMS", "Workbench"];
+import { initLibraries } from "@egovernments/digit-ui-libraries";
+
+const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
 
 const initTokens = (stateCode) => {
   console.log(window.globalConfigs, "window.globalConfigs");
@@ -55,40 +55,36 @@ const initTokens = (stateCode) => {
 
 const initDigitUI = () => {
   initGlobalConfigs(); // Ensure global configs are set first
-  // console.log("initWorkbenchComponents", initWorkbenchComponents)
-  // initWorkbenchComponents();
   window.contextPath =
-  window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  
-  const stateCode = Digit?.ULBService?.getStateId();
-  
-  const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
+    window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+
+  // const stateCode = Digit?.ULBService?.getStateId();
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(
-    <MainApp stateCode={stateCode} enabledModules={enabledModules} />);
+    <QueryClientProvider client={queryClient}>
+      <MainApp stateCode={stateCode} enabledModules={enabledModules} />
+    </QueryClientProvider>
+  );
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
   const [isReady, setIsReady] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  
-  
-  
+
   useEffect(() => {
-    
     initLibraries().then(() => {
-      console.log(Digit,window?.Digit);
-      // initAssignmentComponents();
-      
+      console.log(Digit, window?.Digit);
+      initWorkbenchComponents();
       setIsReady(true)
     });
-    // initWorkbenchComponents();
-    
   }, []);
 
   useEffect(() => {
     initTokens(stateCode);
-     setLoaded(true);
-  }, [stateCode,isReady]);
+    setLoaded(true);
+  }, [stateCode, isReady]);
 
   if (!loaded) {
     return <div>Loading...</div>;
@@ -96,14 +92,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-    {window.Digit && (
-      <DigitUILazy
-        stateCode={stateCode}
-        enabledModules={enabledModules}
-        defaultLanding="home"
-      />
-    )}
-  </Suspense>
+      {window.Digit && (
+        <DigitUILazy
+          stateCode={stateCode}
+          enabledModules={enabledModules}
+          defaultLanding="employee"
+        />
+      )}
+    </Suspense>
   );
 };
 
