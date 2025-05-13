@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Switch, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer } from "@egovernments/digit-ui-react-components";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
@@ -17,9 +17,6 @@ import WorkbenchHeader from "../../components/WorkbenchHeader";
 import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
 import UploadBoundary from "./UploadBoundary";
 import UploadBoundaryPure from "./BoundaryUploadPure";
-import SidebarConfig from "./SidebarConfig";
-import SidebarItems from "./SidebarItems";
-import SidebarAddEditItems from "./SidebarAddEditItems";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -75,7 +72,9 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 };
 
 const App = ({ path }) => {
+  console.log("I'm path of wb", path)
   const location = useLocation();
+  
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = MDMSCreateSession;
 
@@ -121,27 +120,25 @@ const App = ({ path }) => {
         {!isBoundaryPath && <WorkbenchHeader />}
       </div>
 
-      <Switch>
         <AppContainer className="workbench">
-          <PrivateRoute path={`${path}/sample`} component={() => <div>Sample Screen loaded</div>} />
-          <PrivateRoute path={`${path}/localisation-search`} component={() => <LocalisationSearch />} />
-          <PrivateRoute path={`${path}/mdms-search`} component={() => <MDMSSearch />} />
-          <PrivateRoute path={`${path}/mdms-add`} component={() => <MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />
-          <PrivateRoute path={`${path}/mdms-add-v2`} component={() => <MDMSAddV2 parentRoute={path} />} />
-          <PrivateRoute path={`${path}/mdms-add-v4`} component={() => <MDMSAddV4 parentRoute={path} />} />
-          <PrivateRoute path={`${path}/mdms-view`} component={() => <MDMSView parentRoute={path} />} />
-          <PrivateRoute path={`${path}/mdms-edit`} component={() => <MDMSEdit parentRoute={path} />} />
-          <PrivateRoute path={`${path}/manage-master-data`} component={() => <MDMSManageMaster parentRoute={path} />} />
-          <PrivateRoute path={`${path}/mdms-search-v2`} component={() => <MDMSSearchv2 parentRoute={path} />} />
-          <PrivateRoute path={`${path}/localisation-add`} component={() => <LocalisationAdd parentRoute={path} />} />
-          <PrivateRoute path={`${path}/create-boundary-hierarchy-type`} component={() => <BoundaryHierarchyTypeAdd />} />
-          <PrivateRoute path={`${path}/upload-boundary`} component={() => <UploadBoundary />} />
-          <PrivateRoute path={`${path}/upload-boundary-pure`} component={() => <UploadBoundaryPure />} />
-          <PrivateRoute path={`${path}/sidebar-search`} component={() => <SidebarConfig />} />
-          <PrivateRoute path={`${path}/sidebar-items`} component={() => <SidebarItems />} />
-          <PrivateRoute path={`${path}/sidebar-manage`} component={() => <SidebarAddEditItems />} />
+      <Routes>
+          <Route path={`${path}/sample`} element={<div>Sample Screen loaded</div>} />
+          <Route path={`${path}/localisation-search`} element={<LocalisationSearch />} />
+          <Route path={`${path}/mdms-search`} element={<MDMSSearch />} />
+          <Route path={`${path}/mdms-add`} element={<MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />
+          <Route path={`${path}/mdms-add-v2`} element={<MDMSAddV2 parentRoute={path} />} />
+          <Route path={`${path}/mdms-add-v4`} element={<MDMSAddV4 parentRoute={path} />} />
+          <Route path={`${path}/mdms-view`} element={<MDMSView parentRoute={path} />} />
+          <Route path={`${path}/mdms-edit`} element={<MDMSEdit parentRoute={path} />} />
+          <Route path={`${path}/manage-master-data`} element={<MDMSManageMaster parentRoute={path} />} />
+          <Route path={`${path}/mdms-search-v2`} element={<MDMSSearchv2 parentRoute={path} />} />
+          <Route path={`${path}/localisation-add`} element={<LocalisationAdd parentRoute={path} />} />
+          <Route path={`${path}/create-boundary-hierarchy-type`} element={<BoundaryHierarchyTypeAdd />} />
+          <Route path={`${path}/upload-boundary`} element={<UploadBoundary />} />
+          <Route path={`${path}/upload-boundary-pure`} element={<UploadBoundaryPure />} />
+        {/* <Route path="manage-master-data" element={<MDMSManageMaster parentRoute={path} />}/> */}
+      </Routes>
         </AppContainer>
-      </Switch>
     </React.Fragment>
   );
 };

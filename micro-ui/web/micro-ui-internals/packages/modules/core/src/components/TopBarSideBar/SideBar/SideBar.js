@@ -18,9 +18,18 @@ import {
 } from "@egovernments/digit-ui-react-components";
 import ReactTooltip from "react-tooltip";
 import { set } from "lodash";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
+const DIGIT_UI_CONTEXTS = [
+  "digit-ui",
+  "works-ui",
+  "workbench-ui",
+  "health-ui",
+  "sanitation-ui",
+  "core-ui",
+  "mgramseva-web",
+];
 
 // Function to recursively get the key of a nested object based on a parent key
 const getKey = (obj, parent) => {
@@ -58,19 +67,23 @@ const findKey = (key = "") => {
 /*
 Used to navigate to other mission's ui if user has access
 */
-const navigateToRespectiveURL = (history = {}, url = "") => {
+const navigateToRespectiveURL = (navigate, url = "") => {
   if (url?.indexOf(`/${window?.contextPath}`) === -1) {
     const hostUrl = window.location.origin;
-    const updatedURL = hostUrl + url;
+    const updatedURL = DIGIT_UI_CONTEXTS?.every(
+      (e) => url?.indexOf(`/${e}`) === -1
+    )
+      ? hostUrl + "/employee/" + url
+      : hostUrl + url;
     window.location.href = updatedURL;
   } else {
-    history.push(url);
+    navigate(url);
   }
 };
 
 const Sidebar = ({ data }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [openItems, setOpenItems] = useState({});
   const [selectedParent, setSelectedParent] = useState(null);
   const [selectedChild, setSelectedChild] = useState(null);
@@ -320,7 +333,7 @@ const Sidebar = ({ data }) => {
                   // setOpenItems({});
                   // setSelectedChildLevelOne(null)
                   navigateToRespectiveURL(
-                    history,
+                    navigate,
                     `${subItems?.item?.navigationURL}`
                   );
                 }}

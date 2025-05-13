@@ -24,7 +24,7 @@ import { Button as ButtonNew } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import reducer, { intialState } from "../../utils/LocAddReducer";
 // import sampleFile from "../../utils/file.xlsx"
-import GenerateXlsxNew from "../../components/GenerateXlsxNew";
+// import GenerateXlsxNew from "../../components/GenerateXlsxNew";
 import { COLOR_FILL } from "../../utils/contants";
 
 const langDropdownConfig = {
@@ -819,7 +819,7 @@ const LocalisationAdd = () => {
           // onClickDownloadSample={callInputClick}
         />
       )}
-      {<GenerateXlsxNew sheetName={choosenModule?.value} inputRef={inputRef} jsonData={jsonResult} localeData={localeData} />}
+      {/* {<GenerateXlsxNew sheetName={choosenModule?.value} inputRef={inputRef} jsonData={jsonResult} localeData={localeData} />} */}
       {/* {
         <div>
           <h2>bobbyhadz.com</h2>

@@ -1,19 +1,17 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef ,useState, useEffect} from "react";
 import { BackLink, Button, Card, CardHeader, CardLabel, CardText, FieldV1, SVG, TextInput } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import ImageComponent from "../../../components/ImageComponent";
 
 const ViewUrl = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const { tenant } = location.state || {};
-  const history = useHistory();
   const ref = useRef(null);
   const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
-  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const [buttonDisabled, setButtonDisabled]= useState(true);
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenant,
     "SandBoxLanding",
@@ -24,8 +22,8 @@ const ViewUrl = () => {
     ],
     {
       enabled: true,
-      staleTime: 0,
-      cacheTime: 0,
+      staleTime:0,
+      gcTime:0,
       select: (data) => {
         return data?.["SandBoxLanding"]?.["LandingPageRoles"];
       },
@@ -33,24 +31,26 @@ const ViewUrl = () => {
   );
 
   useEffect(() => {
-    if (MdmsRes?.[0].url) {
+    if(MdmsRes?.[0].url){
       setButtonDisabled(false);
     }
   }, [MdmsRes]);
 
-  const RoleLandingUrl = MdmsRes?.[0].url;
+  const RoleLandingUrl= MdmsRes?.[0].url;
 
   const roleForLandingPage = (getUserRoles, MdmsRes) => {
     const userRole = getUserRoles?.[0]?.code;
-    return userRole === "SUPERUSER" && MdmsRes.some((page) => page.rolesForLandingPage.includes("SUPERUSER"));
-  };
+    return userRole === "SUPERUSER" && MdmsRes.some(page => page.rolesForLandingPage.includes("SUPERUSER"));
+};
 
   const onButtonClick = () => {
-    if (roleForLandingPage(getUserRoles, MdmsRes)) {
+    if(roleForLandingPage(getUserRoles, MdmsRes)){
       window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
-    } else {
+    }
+    else{
       window.location.href = `/${window?.globalPath}/${tenant}/employee`;
     }
+  
   };
 
   const handleCopyUrl = () => {
@@ -60,7 +60,7 @@ const ViewUrl = () => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink onClick={() => window.history.back()} />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <Card className="card-sandbox">
         <Header showTenant={false} />
@@ -86,7 +86,7 @@ const ViewUrl = () => {
         <Button isDisabled={buttonDisabled} onClick={onButtonClick} label={t("SIGN_IN")}></Button>
       </Card>
       <div className="EmployeeLoginFooter">
-        <ImageComponent
+        <img
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

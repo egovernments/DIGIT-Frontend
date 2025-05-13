@@ -4,7 +4,6 @@ import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { mdmsSchema } from "../../configs/sampleschema";
 import _ from "lodash";
-import { useHistory, useParams } from "react-router-dom";
 
 const MDMSAdd = ({ FormSession }) => {
   // const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -18,7 +17,6 @@ const MDMSAdd = ({ FormSession }) => {
   const [session, setSession] = useState(sessionFormData);
 
   const { t } = useTranslation();
-  const history = useHistory();
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
     params: {},

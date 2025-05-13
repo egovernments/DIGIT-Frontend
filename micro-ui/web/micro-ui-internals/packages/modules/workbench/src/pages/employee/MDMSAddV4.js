@@ -1,7 +1,7 @@
 import { Card, Loader, SVG } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { DigitLoader } from "../../components/DigitLoader";
@@ -45,7 +45,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }, [defaultFormData]);
 
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   /* logics about the schema fetching and overriding with UI Schema */
   const { isLoading: isSchemaLoading, data: schemaData } = Digit.Hooks.workbench.getMDMSSchema(`${moduleName}.${masterName}`, tenantId);
 

@@ -1,5 +1,7 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
+console.log("I'm proxy")
+
 const createProxy = createProxyMiddleware({
   //target: process.env.REACT_APP_PROXY_API || "https://uat.digit.org",
   // target: process.env.REACT_APP_PROXY_API || "https://qa.digit.org",
@@ -57,7 +59,6 @@ module.exports = function (app) {
     "/egov-url-shortening/shortener",
     "/inbox/v1/_search",
     "/inbox/v2/_search",
-    "/inbox-v2/v2/_search",
     "/tl-services",
     "/tl-calculator",
     "/org-services",
@@ -94,7 +95,8 @@ module.exports = function (app) {
     "/project-factory/v1/data/_autoGenerateBoundaryCode",
     "/billing-service/bill/v2/_fetchbill",
     "/tenant-management",
-    "/default-data-handler"
+    "/default-data-handler",
+    "/facility/v1/_create"
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));

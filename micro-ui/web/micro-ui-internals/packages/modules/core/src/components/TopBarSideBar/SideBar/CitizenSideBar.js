@@ -1,22 +1,28 @@
 // import { NavBar } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
-import React, { useState, Fragment, useEffect } from "react";
+import React, { useState, Fragment,useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
-import { Hamburger } from "@egovernments/digit-ui-components";
+import { MobileSidebar } from "@egovernments/digit-ui-components";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
-import ImageComponent from "../../ImageComponent";
+// import useStore from "../../../../libraries/src/hooks/useStore";
+// import useAccessControl from "../../../../libraries/src/hooks/useAccessControl";
+
 
 const Profile = ({ info, stateName, t }) => {
   const [profilePic, setProfilePic] = React.useState(null);
   React.useEffect(async () => {
-    const tenant = Digit.ULBService.getCurrentTenantId();
+    const tenant = Digit?.ULBService?.getCurrentTenantId();
     const uuid = info?.uuid;
     if (uuid) {
-      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+      const usersResponse = await Digit.UserService.userSearch(
+        tenant,
+        { uuid: [uuid] },
+        {}
+      );
 
       if (usersResponse && usersResponse.user && usersResponse?.user?.length) {
         const userDetails = usersResponse.user[0];
@@ -26,16 +32,17 @@ const Profile = ({ info, stateName, t }) => {
     }
   }, [profilePic !== null]);
 
-  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar");
+  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent(
+    "CustomEmployeeTopBar"
+  );
 
   return (
     <div className="profile-section">
       <div className="imageloader imageloader-loaded">
-        <ImageComponent
+        <img
           className="img-responsive img-circle img-Profile"
           src={profilePic ? profilePic : defaultImage}
           style={{ objectFit: "cover", objectPosition: "center" }}
-          alt="Profile Image"
         />
       </div>
       <div id="profile-name" className="label-container name-Profile">
@@ -71,11 +78,11 @@ export const CitizenSideBar = ({
   islinkDataLoading,
   userProfile,
 }) => {
-  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const isMultiRootTenant=Digit.Utils.getMultiRootTenant()
   const { data: storeData, isFetched } = Digit.Hooks.useStore.getInitData();
   const selectedLanguage = Digit.StoreData.getCurrentLanguage();
   const [profilePic, setProfilePic] = useState(null);
-  const { languages, stateInfo } = storeData || {};
+  const {languages, stateInfo } = storeData || {};
   const user = Digit.UserService.getUser();
   const [search, setSearch] = useState("");
   const [dropDownData, setDropDownData] = useState(null);
@@ -84,9 +91,9 @@ export const CitizenSideBar = ({
   const [selected, setselected] = useState(selectedLanguage);
   let selectedCities = [];
   const { isLoading, data } = Digit.Hooks.useAccessControl();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     if (searcher == "") return str;
@@ -112,6 +119,7 @@ export const CitizenSideBar = ({
     setSelectCityData(filteredArray);
   }, [dropDownData]);
 
+
   const closeSidebar = () => {
     Digit.clikOusideFired = true;
     toggleSidebar(false);
@@ -119,7 +127,7 @@ export const CitizenSideBar = ({
 
   useEffect(() => {
     const fetchUserProfile = async () => {
-      const tenant = Digit.ULBService.getCurrentTenantId();
+      const tenant = Digit?.ULBService?.getCurrentTenantId();
       const uuid = user?.info?.uuid;
       if (uuid) {
         const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
@@ -134,6 +142,7 @@ export const CitizenSideBar = ({
       fetchUserProfile();
     }
   }, [profilePic]);
+  
 
   const handleChangeCity = (city) => {
     const loggedInData = Digit.SessionStorage.get("citizen.userRequestObject");
@@ -147,7 +156,7 @@ export const CitizenSideBar = ({
     setDropDownData(city);
     if (window.location.href.includes(`/${window?.contextPath}/employee/`)) {
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-      history.replace(redirectPath);
+      navigate(redirectPath,{replace:true});
     }
     window.location.reload();
   };
@@ -157,27 +166,31 @@ export const CitizenSideBar = ({
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 
-  const handleModuleClick = (url) => {
-    let updatedUrl = null;
-    if (Digit.Utils.getMultiRootTenant()) {
-      updatedUrl = isEmployee
-        ? url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`)
-        : url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`);
-      history.push(updatedUrl);
-      toggleSidebar();
-    } else {
-      url[0] === "/"
-        ? history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
-        : history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
+  const handleModuleClick = (url) => { 
+    let updatedUrl=null;
+    if(Digit.Utils.getMultiRootTenant()){
+      updatedUrl=isEmployee?url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`): url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`);
+      navigate(updatedUrl);
       toggleSidebar();
     }
-  };
+    else{
+      url[0]==="/" ? 
+      navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`) :
+      navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
+      toggleSidebar();
+    }
+
+
+    
+  }
 
   const redirectToLoginPage = () => {
-    if (isEmployee) {
-      history.push(`/${window?.contextPath}/employee/user/language-selection`);
-    } else {
-      history.push(`/${window?.contextPath}/citizen/login`);
+    if(isEmployee){
+     navigate(`/${window?.contextPath}/employee/user/language-selection`);
+    }
+    else{
+      navigate(`/${window?.contextPath}/citizen/login`);
+
     }
     closeSidebar();
   };
@@ -198,22 +211,29 @@ export const CitizenSideBar = ({
     },
   ];
 
+
   let profileItem;
   if (isFetched && user && user.access_token) {
-    profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} />;
+    profileItem = (
+      <Profile info={user?.info} stateName={stateInfo?.name} t={t} />
+    );
     menuItems = menuItems.filter((item) => item?.id !== "login-btn");
   }
 
   let configEmployeeSideBar = {};
-
+  
   if (!isEmployee) {
     Object.keys(linkData)
       ?.sort((x, y) => y.localeCompare(x))
       ?.map((key) => {
         if (linkData[key][0]?.sidebar === "digit-ui-links")
           menuItems.splice(1, 0, {
-            type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath) ? "link" : "external-link",
-            text: t(`ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`),
+            type: linkData[key][0]?.sidebarURL?.includes(window?.contextPath)
+              ? "link"
+              : "external-link",
+            text: t(
+              `ACTION_TEST_${Digit.Utils.locale.getTransformedLocale(key)}`
+            ),
             links: linkData[key],
             icon: linkData[key][0]?.leftIcon,
             link: linkData[key][0]?.sidebarURL,
@@ -231,7 +251,10 @@ export const CitizenSideBar = ({
           } else {
             configEmployeeSideBar[index].push(item);
           }
-        } else if (item.path !== "" && item?.displayName?.toLowerCase().includes(search.toLowerCase())) {
+        } else if (
+          item.path !== "" &&
+          item?.displayName?.toLowerCase().includes(search.toLowerCase())
+        ) {
           let index = item.path.split(".")[0];
           if (index === "TradeLicense") index = "Trade License";
           if (!configEmployeeSideBar[index]) {
@@ -243,8 +266,14 @@ export const CitizenSideBar = ({
       });
     const keys = Object.keys(configEmployeeSideBar);
     for (let i = 0; i < keys?.length; i++) {
-      const getSingleDisplayName = configEmployeeSideBar[keys[i]][0]?.displayName?.toUpperCase()?.replace(/[ -]/g, "_");
-      const getParentDisplayName = keys[i]?.toUpperCase()?.replace(/[ -]/g, "_");
+      const getSingleDisplayName = configEmployeeSideBar[
+        keys[i]
+      ][0]?.displayName
+        ?.toUpperCase()
+        ?.replace(/[ -]/g, "_");
+      const getParentDisplayName = keys[i]
+        ?.toUpperCase()
+        ?.replace(/[ -]/g, "_");
 
       if (configEmployeeSideBar[keys[i]][0].path.indexOf(".") === -1) {
         menuItems.splice(1, 0, {
@@ -254,7 +283,7 @@ export const CitizenSideBar = ({
           icon: configEmployeeSideBar[keys[i]][0]?.leftIcon,
           populators: {
             onClick: () => {
-              history.push(configEmployeeSideBar[keys[i]][0]?.navigationURL);
+              navigate(configEmployeeSideBar[keys[i]][0]?.navigationURL);
               closeSidebar();
             },
           },
@@ -266,7 +295,11 @@ export const CitizenSideBar = ({
           links: configEmployeeSideBar[keys[i]]?.map((ob) => {
             return {
               ...ob,
-              displayName: t(`ACTION_TEST_${ob?.displayName?.toUpperCase()?.replace(/[ -]/g, "_")}`),
+              displayName: t(
+                `ACTION_TEST_${ob?.displayName
+                  ?.toUpperCase()
+                  ?.replace(/[ -]/g, "_")}`
+              ),
             };
           }),
           icon: configEmployeeSideBar[keys[i]][1]?.leftIcon,
@@ -287,37 +320,40 @@ export const CitizenSideBar = ({
   }
 
   /*  URL with openlink wont have sidebar and actions    */
-  if (history.location.pathname.includes("/openlink")) {
+  if (location.pathname.includes("/openlink")) {
     profileItem = <span></span>;
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
 
   menuItems = menuItems?.map((item) => ({
     ...item,
-    label: item?.text || item?.moduleName || "",
-    icon: item?.icon ? item?.icon : undefined,
+    label: item?.text || item?.moduleName || "",  
+    icon: item?.icon ? item?.icon : undefined
   }));
 
-  let city = "";
-  if (Digit.Utils.getMultiRootTenant()) {
-    city = t(`TENANT_TENANTS_${tenantId}`);
-  } else {
-    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`);
+  let city="";
+  if(Digit.Utils.getMultiRootTenant()){
+    city =  t(`TENANT_TENANTS_${tenantId}`)
   }
-  const goToHome = () => {
-    if (isEmployee) {
-      history.push(`/${window?.contextPath}/employee`);
-    } else {
-      history.push(`/${window?.contextPath}/citizen`);
+  else{
+    city =  t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`)
+  }
+  const goToHome= () => {
+    if(isEmployee){
+      navigate(`/${window?.contextPath}/employee`);
+    }else{
+      navigate(`/${window?.contextPath}/citizen`);
     }
-  };
+  }
   const onItemSelect = ({ item, index, parentIndex }) => {
-    if (item?.navigationURL) {
-      handleModuleClick(item?.navigationURL);
-    } else if (item?.link) {
-      handleModuleClick(item?.link);
-    } else if (item?.type === "custom") {
-      switch (item?.key) {
+    if(item?.navigationURL){
+      handleModuleClick(item?.navigationURL)
+    }
+    else if(item?.link){
+      handleModuleClick(item?.link)
+    }
+    else if (item?.type === "custom"){
+      switch(item?.key){
         case "home":
           goToHome();
           toggleSidebar();
@@ -335,8 +371,9 @@ export const CitizenSideBar = ({
           toggleSidebar();
           break;
       }
-    } else {
-      return;
+    }
+    else{
+      return ;
     }
   };
 
@@ -358,54 +395,54 @@ export const CitizenSideBar = ({
   const transformedSelectedCityData = selectCityData?.map((city) => ({
     ...city,
     type: "custom",
-    key: "city",
+    key:"city"
   }));
-
+  
   const transformedLanguageData = languages?.map((language) => ({
     ...language,
     type: "custom",
-    key: "language",
-    icon: "Language",
+    key:"language",
+    icon:"Language"
   }));
 
   const hamburgerItems = [
     {
-      label: "HOME",
-      value: "HOME",
-      icon: "Home",
+      label:"HOME",
+      value:"HOME",
+      icon:"Home",
       // children: transformedSelectedCityData?.length>0 ? transformedSelectedCityData : undefined,
-      type: "custom",
-      key: "home",
+      type:"custom",
+      key:"home",
     },
     {
-      label: city,
-      value: city,
-      children: transformedSelectedCityData?.length > 0 ? transformedSelectedCityData : undefined,
-      type: "custom",
+      label:city,
+      value:city,
+      children: transformedSelectedCityData?.length>0 ? transformedSelectedCityData : undefined,
+      type:"custom",
       icon: "LocationCity",
-      key: "city",
+      key:"city"
     },
     {
       label: t("Language"),
-      children: transformedLanguageData?.length > 0 ? transformedLanguageData : undefined,
-      type: "custom",
+      children: transformedLanguageData?.length>0 ? transformedLanguageData: undefined,
+      type:"custom",
       icon: "Language",
-      key: "language",
+      key:"language"
     },
     {
-      label: t("EDIT_PROFILE"),
-      type: "custom",
+      label:t("EDIT_PROFILE"),
+      type:"custom",
       icon: "Edit",
-      key: "editProfile",
+      key:"editProfile",
     },
     {
-      label: t("Modules"),
+      label:t("Modules"),
       icon: "DriveFileMove",
-      children: transformedMenuItems,
-    },
+      children:transformedMenuItems
+    }
   ];
   return isMobile ? (
-    <Hamburger
+    <MobileSidebar
       items={hamburgerItems}
       profileName={user?.info?.name}
       profileNumber={user?.info?.mobileNumber}
@@ -416,7 +453,7 @@ export const CitizenSideBar = ({
       hideUserManuals={true}
       profile={profilePic ? profilePic : undefined}
       isSearchable={true}
-      onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
+      onSelect={({item,index,parentIndex})=>onItemSelect({item,index,parentIndex})}
     />
   ) : (
     <StaticCitizenSideBar logout={onLogout} />

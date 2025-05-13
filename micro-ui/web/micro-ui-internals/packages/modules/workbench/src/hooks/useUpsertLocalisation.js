@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const useUpsertLocalisation = (tenantId, module, locale) => {
   const createLocalisationService = async (req) => {

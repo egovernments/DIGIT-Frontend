@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState ,useEffect} from "react";
 import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import { Route, Switch, useRouteMatch, useNavigate, useLocation } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import ImageComponent from "../../../components/ImageComponent";
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
@@ -27,13 +26,13 @@ const setEmployeeDetail = (userObject, token) => {
 const Otp = ({ isLogin = false }) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const [showToast, setShowToast] = useState(null);
   const [isOtpValid, setIsOtpValid] = useState(false);
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
-  const [ifSuperUserExists, setIfSuperUserExist] = useState(false);
+  const [ifSuperUserExists, setIfSuperUserExist]= useState(false);
   const { email, tenant } = location.state || {};
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenant,
@@ -45,16 +44,16 @@ const Otp = ({ isLogin = false }) => {
     ],
     {
       enabled: true,
-      staleTime: 0,
-      cacheTime: 0,
+      staleTime:0,
+      gcTime:0,
       select: (data) => {
         return data?.["SandBoxLanding"]?.["LandingPageRoles"];
       },
     }
   );
 
-  const RoleLandingUrl = MdmsRes?.[0].url;
-
+  const RoleLandingUrl= MdmsRes?.[0].url;
+  
   const config = [
     {
       body: [
@@ -101,31 +100,33 @@ const Otp = ({ isLogin = false }) => {
     setEmployeeDetail(user?.info, user?.access_token);
     let redirectPath = `/${window?.globalPath}/user/setup`;
 
+
     const getRedirectPathOtpLogin = (locationPathname, user, MdmsRes, RoleLandingUrl) => {
       const userRole = user?.info?.roles?.[0]?.code;
       const isSuperUser = userRole === "SUPERUSER";
       const contextPath = window?.contextPath;
-
+  
       switch (true) {
-        case locationPathname === "/sandbox-ui/user/otp" && isSuperUser:
-          return `/${contextPath}/employee/sandbox/landing`;
-
-        case isSuperUser && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER"):
-          return `/${contextPath}${RoleLandingUrl}`;
-
-        default:
-          return `/${contextPath}/employee`;
+          case locationPathname === "/sandbox-ui/user/otp" && isSuperUser:
+              return `/${contextPath}/employee/user/landing`;
+  
+          case isSuperUser && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER"):
+              return `/${contextPath}${RoleLandingUrl}`;
+  
+          default:
+              return `/${contextPath}/employee`;
       }
-    };
+  };
+  
+  // Usage
+  const redirectPathOtpLogin = getRedirectPathOtpLogin(location.pathname, user, MdmsRes, RoleLandingUrl);
 
-    // Usage
-    const redirectPathOtpLogin = getRedirectPathOtpLogin(location.pathname, user, MdmsRes, RoleLandingUrl);
 
     if (isLogin) {
-      history.push(redirectPathOtpLogin);
+      navigate(redirectPathOtpLogin);
       return;
     } else {
-      history.push({
+      navigate({
         pathname: redirectPath,
         state: { tenant: tenant },
       });
@@ -184,7 +185,7 @@ const Otp = ({ isLogin = false }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
-        <ImageComponent
+        <img
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

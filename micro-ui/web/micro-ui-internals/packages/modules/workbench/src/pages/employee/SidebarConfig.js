@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { SidebarDataSearchConfig } from "../../configs/SidebarDataSearchConfig"
@@ -10,20 +10,20 @@ const SidebarConfig = () => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-    const history = useHistory();
+    const navigate = useNavigate();
     const moduleName = "ACCESSCONTROL-ACTIONS-TEST"
     const masterName = "actions-test"
 
     const onClickRow = ({ original: row }) => {
         const id = row?.data?.id;
-        history.push(`/${window.contextPath}/employee/workbench/sidebar-items?id=${id}`,
+        navigate(`/${window.contextPath}/employee/workbench/sidebar-items?id=${id}`,
             {
                 data:row
             }
         );
     }
     const addContent = () => {
-        history.push(
+        navigate(
             `/${window.contextPath}/employee/workbench/sidebar-manage?type=add`
         );
     }
