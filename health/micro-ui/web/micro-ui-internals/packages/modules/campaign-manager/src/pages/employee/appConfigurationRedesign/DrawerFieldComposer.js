@@ -87,11 +87,12 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                   );
                   setDrawerState((prev) => ({
                     ...prev,
-                    [panelItem.label]: drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
-                      ? drawerState?.[panelItem.label]
-                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                          drawerState?.jsonPath || drawerState?.id
-                        }`,
+                    [panelItem.label]:
+                      drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
+                        ? drawerState?.[panelItem.label]
+                        : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                            drawerState?.jsonPath || drawerState?.id
+                          }`,
                   }));
                   return;
                 } else {
