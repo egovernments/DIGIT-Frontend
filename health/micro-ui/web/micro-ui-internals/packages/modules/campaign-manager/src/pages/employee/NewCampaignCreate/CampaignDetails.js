@@ -99,7 +99,7 @@ const CampaignDetails = () => {
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
-              icon: <Groups />,
+              icon: <UploadCloud />,
               disabled: campaignData?.boundaries?.length <= 0
             },
           },
