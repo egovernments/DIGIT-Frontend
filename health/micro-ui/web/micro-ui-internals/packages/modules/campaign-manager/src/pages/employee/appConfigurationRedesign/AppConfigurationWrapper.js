@@ -562,7 +562,7 @@ function AppConfigurationWrapper({ screenConfig }) {
                 value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
                 onChange={(event) => {
                   updateLocalization(
-                    addFieldData?.label
+                    addFieldData?.label && addFieldData?.label !== true
                       ? addFieldData?.label
                       : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
                     Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
@@ -570,9 +570,10 @@ function AppConfigurationWrapper({ screenConfig }) {
                   );
                   setAddFieldData((prev) => ({
                     ...prev,
-                    label: addFieldData?.label
-                      ? addFieldData?.label
-                      : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
+                    label:
+                      addFieldData?.label && addFieldData?.label !== true
+                        ? addFieldData?.label
+                        : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
                   }));
                 }}
               />
