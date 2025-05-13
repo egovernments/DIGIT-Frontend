@@ -1,6 +1,7 @@
 import _ from "lodash";
 import axios from "axios";
 import { CustomisedHooks } from "../hooks";
+import { UICustomizations } from "../configs/UICustomizations";
 
 
 
@@ -40,7 +41,7 @@ const setupLibraries = (Library, service, method) => {
 
 /* To Overide any existing config/middlewares  we need to use similar method */
 export const updateCustomConfigs = () => {
-  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig });
+  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
   // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
 };
 

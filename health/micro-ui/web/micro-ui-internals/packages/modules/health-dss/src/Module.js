@@ -5,6 +5,7 @@ import { default as EmployeeApp } from "./pages/employee";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
 import DSSCard from "./components/DSSCard";
+import InboxFilter from "./components/InboxFilter";
 
 export const DSSModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -32,6 +33,7 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   DSSModule,
   DSSCard,
+  InboxFilter
 };
 
 export const initDSSComponents = () => {
