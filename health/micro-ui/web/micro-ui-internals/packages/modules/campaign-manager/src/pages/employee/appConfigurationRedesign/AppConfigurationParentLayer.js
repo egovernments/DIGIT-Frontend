@@ -36,8 +36,8 @@ const dispatcher = (state, action) => {
       return {
         ...state,
         currentTemplate: state.currentTemplate.map((i) => {
-          if (i.name === action.data?.[0].name) {
-            return action.data?.[0];
+          if (i?.name === action?.data?.[0]?.name) {
+            return action?.data?.[0];
           }
           return i;
         }),
@@ -75,7 +75,7 @@ const getTypeAndMetaData = (field) => {
     return {
       type: "numeric",
     };
-  } else if (field.type === "string" && field.format === "select") {
+  } else if (field.type === "string" && (field.format === "select" || field.format === "dropdown")) {
     return {
       type: "dropDown",
       dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
@@ -207,14 +207,17 @@ const getTypeAndFormat = (field) => {
       break;
     case "dropdown":
     case "dropDown":
-      return { type: "string", format: "select", enums: field?.dropDownOptions || [] };
+      return { type: "string", format: "dropdown", enums: field?.dropDownOptions || [] };
       break;
     case "datePicker":
     case "dobPicker":
       return { type: "string", format: "date", startDate: field?.startDate, endDate: field?.endDate };
       break;
     case "numeric":
-      return { type: "number", format: "incrementer" };
+      return { type: "number", format: "increment" };
+      break;
+    case "checkbox":
+      return { type: "boolean", format: "boolean" };
       break;
     case "mobileNumber":
       return { type: "string", format: "mobileNumber", prefix: field?.prefix };
@@ -386,6 +389,7 @@ const AppConfigurationParentRedesign = () => {
   if (isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
     return <Loader />;
   }
+
   const submit = async (screenData) => {
     parentDispatch({
       key: "SETBACK",
@@ -414,7 +418,7 @@ const AppConfigurationParentRedesign = () => {
         },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.message ? error?.message : error });
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });

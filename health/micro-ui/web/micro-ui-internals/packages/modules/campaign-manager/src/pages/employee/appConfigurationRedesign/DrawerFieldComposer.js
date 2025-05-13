@@ -187,6 +187,8 @@ function DrawerFieldComposer() {
   const { t } = useTranslation();
   const { locState, updateLocalization, AppScreenLocalisationConfig } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
+  const searchParams = new URLSearchParams(location.search);
+  const projectType = searchParams.get("prefix");
   const [showPopup, setShowPopup] = useState(null);
   const [drawerState, setDrawerState] = useState({
     ...state?.drawerField,
@@ -358,20 +360,30 @@ function DrawerFieldComposer() {
                 className=""
                 type={"text"}
                 name="title"
-                value={item?.name}
+                value={useCustomT(item?.name)}
                 onChange={(event) => {
                   setDrawerState((prev) => ({
                     ...prev,
                     dropDownOptions: prev?.dropDownOptions?.map((i) => {
-                      if (i.id === item.id) {
+                      if (i.code && i.code === item.code) {
+                        updateLocalization(
+                          item?.name
+                            ? item?.name
+                            : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
+                          Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                          event.target.value
+                        );
                         return {
                           ...i,
-                          name: event.target.value,
+                          name: item?.name
+                            ? item?.name
+                            : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
                         };
                       }
                       return i;
                     }),
                   }));
+                  return;
                 }}
                 placeholder={""}
               />
@@ -379,7 +391,7 @@ function DrawerFieldComposer() {
                 onClick={() =>
                   setDrawerState((prev) => ({
                     ...prev,
-                    dropDownOptions: prev?.dropDownOptions.filter((i) => i.id !== item.id),
+                    dropDownOptions: prev?.dropDownOptions.filter((i) => i.code !== item.code),
                   }))
                 }
                 style={{
@@ -412,13 +424,13 @@ function DrawerFieldComposer() {
                   ? [
                       ...prev?.dropDownOptions,
                       {
-                        id: crypto.randomUUID(),
+                        code: crypto.randomUUID(),
                         name: "",
                       },
                     ]
                   : [
                       {
-                        id: crypto.randomUUID(),
+                        code: crypto.randomUUID(),
                         name: "",
                       },
                     ],
