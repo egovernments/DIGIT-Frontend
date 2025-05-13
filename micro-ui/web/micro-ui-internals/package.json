@@ -86,8 +86,8 @@
     ]
   },
   "dependencies": {
-    "@egovernments/digit-ui-components": "0.0.2-webpack-22",
-    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.13",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-23",
+    "@egovernments/digit-ui-react-components": "1.8.16-upgrade.14",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "process": "^0.11.10",

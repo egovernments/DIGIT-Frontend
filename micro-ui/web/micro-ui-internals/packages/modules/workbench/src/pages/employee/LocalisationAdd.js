@@ -19,11 +19,12 @@ import {
   InfoIconOutline,
   UploadIcon
 } from "@egovernments/digit-ui-react-components";
-import { Toast } from "@egovernments/digit-ui-components";
+import { Toast,PopUp, Loader } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import reducer, { intialState } from "../../utils/LocAddReducer";
 // import sampleFile from "../../utils/file.xlsx"
-import GenerateXlsx from "../../components/GenerateXlsx";
+// import GenerateXlsxNew from "../../components/GenerateXlsxNew";
 import { COLOR_FILL } from "../../utils/contants";
 
 const langDropdownConfig = {
@@ -64,6 +65,14 @@ const localeDropdownConfig = {
   },
 };
 
+const localeDropdownConfigForPopup = {
+  ...localeDropdownConfig,
+  populators: {
+    ...localeDropdownConfig.populators,
+    styles: { width: "100%" },
+    optionsCustomStyle: { top: "2.3rem" ,maxHeight:"200px"},
+  },
+};
 
 function convertObjectOfArraysToSingleArray(objectOfObjects) {
   const arrayOfArrays = Object.values(objectOfObjects)
@@ -154,8 +163,24 @@ const LocalisationAdd = () => {
   const [jsonResultDefault, setJsonResultDefault] = useState(null)
   const [state, dispatch] = useReducer(reducer, intialState);
   const [isDeleted, setIsDeleted] = useState(null)
-  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false)
+  const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
+  const [showModuleDropdownModal, setShowModuleDropdownModal] = useState(false);
+  const [choosenModule, setChoosendModule] = useState(null);
+  const [localizationres, setLocalizationres] = useState(null);
   const inputRef = useRef(null);
+  const [isDownloadDisabled, setIsDownloadDisabled] = useState(true);
+  const [isDownloadLoading, setIsDownloadLoading] = useState(false);
+
+  const { data: localeData } = Digit.Hooks.useCustomMDMS(stateId, "common-masters", [{ name: "StateInfo" }], {
+    select: (data) => {
+      const languages = data["common-masters"].StateInfo?.[0]?.languages || [];
+      const defaultLanguage = {
+        label: "Message",
+        value: "default",
+      };
+      return [defaultLanguage, ...languages];
+    },
+  });
 
   useEffect(() => {
     if (selectedLang && selectedModule) {
@@ -440,16 +465,40 @@ const LocalisationAdd = () => {
     );
   };
 
+  function checkForDuplicateCombinations(messages) {
+    const seenCombinations = new Set();
+  
+    for (let message of messages) {
+      const combination = `${message.code}-${message.message}-${message.locale}-${message.module}`;
+      if (seenCombinations.has(combination)) {
+        return true
+      } else {
+        seenCombinations.add(combination);
+      }
+    }
+  
+    return false;
+  }
+
 
   const handleBulkSubmit = async () => {
     //same key validation
     let hasDuplicateKeycode = false;
-    jsonResult.forEach((json) => {
-      if (hasDuplicatesByKey(json, "code")) {
-        hasDuplicateKeycode = true;
-        return;
-      }
-    });
+    let hasDuplicateKeys = false;
+
+    if(checkForDuplicateCombinations(jsonResult)){
+      hasDuplicateKeys = true;
+      return ;
+    }
+
+
+    if (hasDuplicateKeys) {
+      setShowToast({
+        label: "Duplicate Pairs",
+        type: "error",
+      });
+      return;
+    }
 
     if (hasDuplicateKeycode) {
       setShowToast({
@@ -461,31 +510,44 @@ const LocalisationAdd = () => {
 
     const promises = [];
 
-    for (let i = 0; i < jsonResult.length; i++) {
-      promises.push(
-        mutation.mutateAsync(
-          {
-            params: {},
-            body: {
-              tenantId: stateId,
-              messages: jsonResult[i],
-            },
-          }
-        )
-      );
+    const groupByLocale = (data) => {
+      return data?.[0].reduce((acc, item) => {
+        const locale = item.locale;
+        if (!acc[locale]) {
+          acc[locale] = [];
+        }
+        acc[locale].push(item);
+        return acc;
+      }, {});
+    };
 
-      promises.push(
-        mutation.mutateAsync(
-          {
-            params: {},
-            body: {
-              tenantId: stateId,
-              messages: jsonResultDefault[i],
-            },
-          }
-        )
-      );
-    }
+      // Group data by locale
+  const groupedJsonResult = groupByLocale(jsonResult);
+  const groupedJsonResultDefault = groupByLocale(jsonResultDefault);
+
+  Object.entries(groupedJsonResult).forEach(([locale, messages]) => {
+    promises.push(
+      mutation.mutateAsync({
+        params: {},
+        body: {
+          tenantId: stateId,
+          messages: messages,
+        },
+      })
+    );
+  });
+
+  Object.entries(groupedJsonResultDefault).forEach(([locale, messages]) => {
+    promises.push(
+      mutation.mutateAsync({
+        params: {},
+        body: {
+          tenantId: stateId,
+          messages: messages,
+        },
+      })
+    );
+  });
 
     const onSuccess = (resp) => {
       setShowToast({ label: `${t("WBH_LOC_UPSERT_SUCCESS")}` });
@@ -527,62 +589,74 @@ const LocalisationAdd = () => {
     });
   };
 
+  const localeMap = (Array.isArray(localeData) && localeData?.length > 0 ? localeData : []).reduce((acc, { label, value }) => {
+    acc[label] = value;
+    return acc;
+  }, {});
+
   const onBulkUploadModalSubmit = async (file) => {
     try {
       const result = await Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheetsFile(file);
-      const updatedResult = convertObjectOfArraysToSingleArray(result)
+      const updatedResult = convertObjectOfArraysToSingleArray(result);
+      const fixedUpdatedResult = updatedResult?.flatMap((row) =>
+        Object.keys(localeMap)
+          .filter((key) => row[key] !== undefined && row[key] !== "")
+          .map((key) => ({
+            message: row[key],
+            code: row.code,
+            locale: localeMap[key],
+            module: choosenModule?.value,
+          }))
+      );
       //make result for default locale
-      const updatedResultDefault = updatedResult.map(row => {
+      const updatedResultDefault = updatedResult.map((row) => {
         return {
           ...row,
-          locale: "default"
-        }
-      })
+          locale: localeMap['Message'],
+          module:choosenModule?.value,
+          message:row['Message']
+        };
+      });
 
-      const filteredResult = [filterObjectsByKeys(updatedResult, ["message", "module", "locale", "code"])]
-      const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault, ["message", "module", "locale", "code"])]
+      const filteredResult = [filterObjectsByKeys(fixedUpdatedResult, ["message", "module", "locale", "code"])];
+      const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault, ["message", "module", "locale", "code"])];
 
-      setJsonResult(filteredResult)
-      setJsonResultDefault(filteredResultDefault)
+      setJsonResult(filteredResult);
+      setJsonResultDefault(filteredResultDefault);
     } catch (error) {
       setShowToast({
         label: error.message || "Invalid file type. Please upload an Excel file.",
-        type :"error",
+        type: "error",
       });
-
     }
   };
 
   const handleBulkUpload = async (event) => {
     try {
       const result = await Digit.Utils.parsingUtils.parseXlsToJsonMultipleSheets(event);
-      const updatedResult = convertObjectOfArraysToSingleArray(result)
+      const updatedResult = convertObjectOfArraysToSingleArray(result);
       //make result for default locale
-      const updatedResultDefault = updatedResult.map(row => {
+      const updatedResultDefault = updatedResult.map((row) => {
         return {
           ...row,
-          locale: "default"
-        }
-      })
-
-
-      const filteredResult = [filterObjectsByKeys(updatedResult, ["message", "module", "locale", "code"])]
-      const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault, ["message", "module", "locale", "code"])]
-
+          locale: "default",
+        };
+      });
+      const filteredResult = [filterObjectsByKeys(updatedResult, ["message", "module", "locale", "code"])];
+      const filteredResultDefault = [filterObjectsByKeys(updatedResultDefault, ["message", "module", "locale", "code"])];
       //commenting this code since we can upsert multiple modules in one go(reducing number of api calls)
       // const filteredResult = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResult,"module",["message","module","locale","code"])
 
       // const filteredResultDefault = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResultDefault,"module",["message","module","locale","code"])
 
-      setJsonResult(filteredResult)
-      setJsonResultDefault(filteredResultDefault)
+      setJsonResult(filteredResult);
+      setJsonResultDefault(filteredResultDefault);
       //here the result will contain all the sheets in an object
     } catch (error) {
       setShowToast({
         label: error.message || "Invalid file type. Please upload an Excel file.",
-        type :"error",
+        type: "error",
       });
-
     }
 
     //   const result = await Digit.ParsingUtils.parseXlsToJsonMultipleSheets(event);
@@ -607,15 +681,76 @@ const LocalisationAdd = () => {
 
   useEffect(() => {
     if (jsonResult?.length > 0 && jsonResultDefault?.length > 0) {
-      handleBulkSubmit()
+      handleBulkSubmit();
     }
-  }, [jsonResult, jsonResultDefault])
+  }, [jsonResult, jsonResultDefault]);
 
   const fileValidator = (errMsg) => {
-    setShowToast({ type: "error", label: t("WBH_BULK_UPLOAD_DOC_VALIDATION_MSG") })
-    closeToast()
-    setShowBulkUploadModal(false)
+    setShowToast({ type: "error", label: t("WBH_BULK_UPLOAD_DOC_VALIDATION_MSG") });
+    closeToast();
+    setShowBulkUploadModal(false);
+  };
+
+  useEffect(() => {
+    const fetchAllLocalizations = async () => {
+      if (!localeData.length) return;
+      setIsDownloadLoading(true);
+      const fetchPromises = localeData.map(async (localeItem) => {
+        try {
+          const response = await Digit.CustomService.getResponse({
+            url: `/localization/messages/v1/_search`,
+            params: {
+              tenantId: stateId,
+              locale: localeItem?.value,
+              module: choosenModule?.value,
+            },
+          });
+
+          return response?.messages || [];
+        } catch (error) {
+          console.error(`Error fetching localization details for module: ${module}`, error);
+          return [];
+        }
+      });
+
+      // Wait for all requests to complete
+      const results = await Promise.all(fetchPromises);
+
+      // Flatten the results array and update both states
+      const combinedResults = results.flat();
+      setJsonResult(combinedResults);
+      setLocalizationres(combinedResults);
+      setIsDownloadDisabled(false);
+      setIsDownloadLoading(false);
+    };
+
+    if (choosenModule?.value && localeData.length) {
+      fetchAllLocalizations();
+    }
+  }, [choosenModule?.value, localeData]);
+
+  const handleBulkUploadClick = () =>{
+    setShowModuleDropdownModal(false);
+    setShowBulkUploadModal(true);
   }
+
+  const renderModuleDropdownPopUpChildren = () => {
+      return (
+        <LabelFieldPair style={{ alignItems: "flex-start" }}>
+          <CardLabel>{t("WBH_LOC_SELECT_MODULE")}</CardLabel>
+          <CustomDropdown
+            t={t}
+            label={localeDropdownConfigForPopup?.label}
+            type={localeDropdownConfigForPopup?.type}
+            value={setChoosendModule}
+            onChange={(e) => setChoosendModule(e)}
+            config={localeDropdownConfigForPopup?.populators}
+            disable={localeDropdownConfigForPopup?.disable}
+          />
+          {isDownloadLoading &&  <Loader variant={"OverlayLoader"}></Loader>}
+        </LabelFieldPair>
+      );
+  };
 
 
   return (
@@ -629,12 +764,49 @@ const LocalisationAdd = () => {
             icon={<UploadIcon styles={{ height: "2.2rem", width: "2.2rem" }} />}
             type="button"
             // onButtonClick={callInputClick}
-            onButtonClick={() => setShowBulkUploadModal(true)}
+            onButtonClick={() => setShowModuleDropdownModal(true)}
             className={"header-btn"}
           />
           <input className={"hide-input-type-file"} type="file" accept="xls xlsx" onChange={handleBulkUpload} />
         </div>
       </div>
+      {showModuleDropdownModal && (
+        <PopUp
+          className={"workbench-localization-add-popup"}
+          type={"default"}
+          heading={t("Choose Module for Bulk Upload")}
+          onClose={() => {
+            setShowModuleDropdownModal(false);
+            setIsDownloadDisabled(true);
+          }}
+          onOverlayClick={() => setShowModuleDropdownModal(false)}
+          footerChildren={[
+            <ButtonNew
+              className={""}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("WBH_DOWLOAD_TEMPLATE")}
+              title={t("WBH_DOWLOAD_TEMPLATE")}
+              onClick={callInputClick}
+              isDisabled={isDownloadDisabled}
+            />,
+            <ButtonNew
+              className={""}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("WBH_BULK_UPLOAD")}
+              title={t("WBH_BULK_UPLOAD")}
+              onClick={handleBulkUploadClick}
+              isDisabled={isDownloadDisabled}
+            />,
+          ]}
+          sortFooterChildren={true}
+        >
+          {renderModuleDropdownPopUpChildren()}
+        </PopUp>
+      )}
       {showBulkUploadModal && (
         <FileUploadModal
           heading={"WBH_BULK_UPLOAD_HEADER"}
@@ -644,10 +816,10 @@ const LocalisationAdd = () => {
           onClose={() => setShowBulkUploadModal(false)}
           t={t}
           fileValidator={fileValidator}
-          onClickDownloadSample={callInputClick}
+          // onClickDownloadSample={callInputClick}
         />
       )}
-      {<GenerateXlsx inputRef={inputRef} />}
+      {/* {<GenerateXlsxNew sheetName={choosenModule?.value} inputRef={inputRef} jsonData={jsonResult} localeData={localeData} />} */}
       {/* {
         <div>
           <h2>bobbyhadz.com</h2>

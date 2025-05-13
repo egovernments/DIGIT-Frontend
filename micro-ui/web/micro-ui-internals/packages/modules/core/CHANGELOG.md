@@ -1,7 +1,57 @@
 # Changelog 
 
-## [1.9.1-beta.8] [20-Jan-2024]
-- Updated the react and dependecies to latest version and changed react-query to tanstack/react-query
+## [1.8.33]  [9-April-2025]
+- FEATURE/CCSD-57 :Sandbox Changes
+
+## [1.8.32]  [10-Mar-2025]
+- FEATURE/DUCE-0246 :Userprofile password trimming
+
+## [1.8.31]  [10-Mar-2025]
+- FEATURE/DUCE-246 :Login page username and password trimming 
+
+## [1.8.30]  [07-Mar-2025]
+- BUGFIX/DUCE-243 : Updated breadcrumb and regex validation mapping in user profile
+
+## [1.8.28]  [27-Feb-2025]
+- BUGFIX/SN-162 : Citizen sms otp fix
+
+## [1.8.28]  [27-Feb-2025]
+- BUGFIX/SN-162 : Citizen otp fix in the Login page.
+
+## [1.8.26]  [21-Feb-2025]
+- Publishing a new version for more stability & as part of Components Release
+
+## [1.8.25]  [13-Feb-2025]
+- Added id prop for Privacy Component Checkbox
+
+## [1.8.24]  [3-Feb-2025]
+- Fixed core issues and related found in PGR Ethopia demo
+
+## [1.8.23]  [3-Feb-2025]
+- FEATURE/HCMPRE-1852 : POC for single landing ui for users added extra route for no-top-bar/employee
+
+## [1.8.22]  [3-Feb-2025]
+- FEATURE/HCMPRE-2208  : Fixed some loader component issue 
+- added new prop called allowedUserTypes to restrict any user type if needed
+
+## [1.8.21]  [1-Feb-2025]
+- FEATURE/HCMPRE-1425 : Added the workbench module patches and Updated localisation search screen, and core module #2181
+- Upgraded with new Components in core, workbench screens
+
+## [1.8.19]  [23-Jan-2025]
+- Fixed import issues of new ui-components
+
+## [1.8.18]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: Fixed some console logs 
+
+## [1.8.17]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: accessibility issues of dropdown & checkbox(#2120) 
+
+## [1.8.16]  [23-Jan-2025]
+- FIxed some of FEATURE/HCMPRE-1852 :: accessibility issues of image(#2120) 
+
+## [1.8.15]  [21-Jan-2025]
+- Removed support for any new context path to have employee linked in the url.To use this,the new context path should be linked with employee. 
 
 ## [1.8.13]  [16-Dec-2024]
 - Made validations for name, mobile number, and password fields in user profile update screen configurable through MDMS data

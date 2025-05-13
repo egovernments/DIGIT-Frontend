@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckBox, PopUp, Button, Header } from "@egovernments/digit-ui-components";
+import { CheckBox, PopUp, Button, HeaderComponent } from "@egovernments/digit-ui-components";
 import { LinkButton } from "@egovernments/digit-ui-react-components";
 
 const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) => {
@@ -34,7 +34,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
   return (
     <React.Fragment>
       <div className="digit-privacy-checkbox">
-        <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange}></CheckBox>
+        <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange} id={"privacy-component-check"}></CheckBox>
         <Button
           label={t(`ES_PRIVACY_POLICY`)}
           variation={"link"}

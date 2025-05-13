@@ -1,4 +1,3 @@
-// workbench/index.js or similar file
 import { TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useMatch } from "react-router-dom";
@@ -11,7 +10,9 @@ import HRMSCard from "./components/HRMSCard";
 import WorkbenchCard from "./components/WorkbenchCard";
 import DigitJSONForm from "./components/DigitJSONForm";
 import LevelCards from "./components/LevelCards";
-import * as parsingUtils from "../src/utils/ParsingUtils";
+
+import * as parsingUtils from "../src/utils/ParsingUtils"
+import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["workbench", "mdms", "schema", "hcm-admin-schemas"];
@@ -21,24 +22,19 @@ const WorkbenchModule = ({ stateCode, userType, tenants }) => {
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
 
-  Digit.Services = window.Digit.Services;
-
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
     language,
-    modulePrefix,
+    modulePrefix
   });
-
   if (isLoading) {
-    return <Loader page={true} variant="PageLoader" />;
+    return  <Loader page={true} variant={"PageLoader"} />;
   }
 
-  return (
-    <TourProvider>
-      <EmployeeApp path={path} stateCode={stateCode} />
-    </TourProvider>
-  );
+  return <TourProvider>
+    <EmployeeApp path={path} stateCode={stateCode} />
+  </TourProvider>
 };
 
 const componentsToRegister = {
@@ -46,53 +42,55 @@ const componentsToRegister = {
   WorkbenchCard,
   DigitJSONForm,
   LevelCards,
-  DSSCard: null,
-  HRMSCard,
-};
-
-const setupHooks = (HookName, HookFunction, method, isHook = true) => {
-  window.Digit = window.Digit || {};
-  const section = isHook ? "Hooks" : "Utils";
-  window.Digit[section] = window.Digit[section] || {};
-  window.Digit[section][HookName] = window.Digit[section][HookName] || {};
-  window.Digit[section][HookName][HookFunction] = method;
-};
-
-const setupLibraries = (Library, service, method) => {
-  window.Digit = window.Digit || {};
-  window.Digit[Library] = window.Digit[Library] || {};
-  window.Digit[Library][service] = method;
+  DSSCard: null, // TO HIDE THE DSS CARD IN HOME SCREEN as per workbench
+  HRMSCard ,// Overridden the HRMS card as per workbench
+  CustomSwitch
 };
 
 const overrideHooks = () => {
-  Object.keys(CustomisedHooks).forEach((ele) => {
-    if (ele === "Hooks" || ele === "Utils") {
-      const isHook = ele === "Hooks";
-      Object.keys(CustomisedHooks[ele]).forEach((hook) => {
-        Object.keys(CustomisedHooks[ele][hook]).forEach((method) => {
-          setupHooks(hook, method, CustomisedHooks[ele][hook][method], isHook);
+  Object.keys(CustomisedHooks).map((ele) => {
+    if (ele === "Hooks") {
+      Object.keys(CustomisedHooks[ele]).map((hook) => {
+        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
+          setupHooks(hook, method, CustomisedHooks[ele][hook][method]);
+        });
+      });
+    } else if (ele === "Utils") {
+      Object.keys(CustomisedHooks[ele]).map((hook) => {
+        Object.keys(CustomisedHooks[ele][hook]).map((method) => {
+          setupHooks(hook, method, CustomisedHooks[ele][hook][method], false);
         });
       });
     } else {
-      Object.keys(CustomisedHooks[ele]).forEach((method) => {
+      Object.keys(CustomisedHooks[ele]).map((method) => {
         setupLibraries(ele, method, CustomisedHooks[ele][method]);
       });
     }
   });
 };
 
-const updateCustomConfigs = () => {
-  setupLibraries("Customizations", "commonUiConfig", {
-    ...window?.Digit?.Customizations?.commonUiConfig,
-    ...UICustomizations,
-  });
-  setupLibraries("Utils", "parsingUtils", {
-    ...window?.Digit?.Utils?.parsingUtils,
-    ...parsingUtils,
-  });
+/* To Overide any existing hook we need to use similar method */
+const setupHooks = (HookName, HookFunction, method, isHook = true) => {
+  window.Digit = window.Digit || {};
+  window.Digit[isHook ? "Hooks" : "Utils"] = window.Digit[isHook ? "Hooks" : "Utils"] || {};
+  window.Digit[isHook ? "Hooks" : "Utils"][HookName] = window.Digit[isHook ? "Hooks" : "Utils"][HookName] || {};
+  window.Digit[isHook ? "Hooks" : "Utils"][HookName][HookFunction] = method;
+};
+/* To Overide any existing libraries  we need to use similar method */
+const setupLibraries = (Library, service, method) => {
+  window.Digit = window.Digit || {};
+  window.Digit[Library] = window.Digit[Library] || {};
+  window.Digit[Library][service] = method;
 };
 
-const initWorkbenchComponents = () => {
+/* To Overide any existing config/middlewares  we need to use similar method */
+const updateCustomConfigs = () => {
+  setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...UICustomizations });
+  setupLibraries("Utils","parsingUtils",{...window?.Digit?.Utils?.parsingUtils,...parsingUtils})
+};
+
+
+ const initWorkbenchComponents = () => {
   overrideHooks();
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
@@ -100,4 +98,5 @@ const initWorkbenchComponents = () => {
   });
 };
 
-export { initWorkbenchComponents, DigitJSONForm };
+export   {initWorkbenchComponents, DigitJSONForm};
+
