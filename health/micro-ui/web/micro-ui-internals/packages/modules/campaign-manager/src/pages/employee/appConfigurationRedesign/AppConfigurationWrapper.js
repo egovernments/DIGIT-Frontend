@@ -125,6 +125,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                         type: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
                         active: true,
+                        deleteFlag: true,
                       },
                     ],
                   };
