@@ -131,7 +131,7 @@ const restructure = (data1) => {
           jsonPath: field.fieldName || "",
           metaData: {},
           Mandatory: field.required || false,
-          deleteFlag: false,
+          deleteFlag: field.deleteFlag || false,
           isLocalised: field.isLocalised ? true : false,
           innerLabel: field.innerLabel || "",
           helpText: field.helpText || "",
@@ -207,7 +207,7 @@ const getTypeAndFormat = (field) => {
       break;
     case "dropdown":
     case "dropDown":
-      return { type: "string", format: "dropdown", enums: field?.dropDownOptions || [] };
+      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.code) || [] };
       break;
     case "datePicker":
     case "dobPicker":
@@ -236,7 +236,7 @@ const reverseRestructure = (updatedData) => {
       const typeAndFormat = getTypeAndFormat(field);
       return {
         label: field.label || "",
-        order: fieldIndex,
+        order: fieldIndex + 1,
         value: field.value || "",
         hidden: false, // can't be derived from updatedData unless explicitly added
         required: field.Mandatory || false,
@@ -246,6 +246,7 @@ const reverseRestructure = (updatedData) => {
         infoText: field.infoText || "",
         innerLabel: field.innerLabel || "",
         errorMessage: field.errorMessage || "",
+        deleteFlag: field.deleteFlag || false,
         ...typeAndFormat,
       };
     });
@@ -402,6 +403,7 @@ const AppConfigurationParentRedesign = () => {
       const reverseFormat = {
         name: "REGISTRATIONFLOW",
         version: 1,
+        project: "SMC_2025",
         pages: reverseData,
       };
 
