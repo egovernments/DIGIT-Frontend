@@ -789,7 +789,9 @@ import {
     GlobeLocationPin,
     NewWindow,
     OutpatientMed,
-    AdUnits
+    AdUnits,
+    ListAltCheck,
+    UploadCloud
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1585,5 +1587,7 @@ import {
     GlobeLocationPin,
     NewWindow,
     OutpatientMed,
-    AdUnits
+    AdUnits,
+    ListAltCheck,
+    UploadCloud
   }
