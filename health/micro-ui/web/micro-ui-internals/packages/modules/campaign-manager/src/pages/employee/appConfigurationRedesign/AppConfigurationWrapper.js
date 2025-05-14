@@ -380,8 +380,8 @@ function AppConfigurationWrapper({ screenConfig }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
-          onClick={() => {
-            handleSubmit();
+          onClick={async () => {
+            await handleSubmit();
             onSubmit(state);
           }}
         />
