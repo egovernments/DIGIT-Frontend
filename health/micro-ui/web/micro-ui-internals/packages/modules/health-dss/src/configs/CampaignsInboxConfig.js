@@ -33,15 +33,22 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
               minReqFields: 0,
               defaultValues: {
-                dateRange: "",
+                dateRange: {
+                  startDate:null,
+                  endDate:null
+                },
               },
               fields: [
                 {
                   label: "Date Range",
                   key: "dateRange",
-                  type: "dateRange",
+                  type: "component",
+                  component:"DateRangePicker",
                   isMandatory: false,
                   populators: {
+                    name: "dateRange",
+                  },
+                  customProps: {
                     name: "dateRange",
                   },
                 },
@@ -178,15 +185,22 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
               minReqFields: 0,
               defaultValues: {
-                dateRange: "",
+                dateRange: {
+                  startDate:null,
+                  endDate:null
+                },
               },
               fields: [
                 {
                   label: "Date Range",
                   key: "dateRange",
-                  type: "dateRange",
+                  type: "component",
+                  component:"DateRangePicker",
                   isMandatory: false,
                   populators: {
+                    name: "dateRange",
+                  },
+                  customProps: {
                     name: "dateRange",
                   },
                 },

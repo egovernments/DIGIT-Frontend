@@ -58,8 +58,8 @@ export const UICustomizations = {
       data.body.ProjectStaff = {};
       data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
       data.params.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.params.limit = 100;
-      data.params.offset = 0;
+      data.params.limit = data.state.tableForm.limit;
+      data.params.offset = data.state.tableForm.offset;
       cleanObject(data.body.ProjectStaff);
       return data;
     },
@@ -72,18 +72,13 @@ export const UICustomizations = {
           ];
           const onActionSelect = async (e, row) => {
             if (e.name == "VIEW_DASHBOARD") {
-              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
-                row.campaignDetails.id
-              }&setup-completed=true`;
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
             } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
             if (e.name == "VIEW_CUSTOM_REPORT") {
-              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
-                row.campaignDetails.id
-              }&setup-completed=true`;
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
             } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
           };
           return (
-              <div style={{ position: "relative" }}>
                 <ButtonNew
                   type="actionButton"
                   variation="secondary"
@@ -96,7 +91,6 @@ export const UICustomizations = {
                   isSearchable={false}
                   onOptionSelect={(item) => onActionSelect(item, row)}
                 />
-              </div>
           );
 
         case "CAMPAIGN_NAME":
