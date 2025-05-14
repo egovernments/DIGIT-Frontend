@@ -6,6 +6,7 @@ import { Stepper, Toast, Button, Footer, Loader, FormComposerV2 } from "@egovern
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
+import { transformUpdateData } from "../../../utils/transformUpdateData";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -13,10 +14,12 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [showToast, setShowToast] = useState(null);
   const [totalFormData, setTotalFormData] = useState({});
   const [isDataCreating, setIsDataCreating] = useState(false);
-  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData));
+  const searchParams = new URLSearchParams(location.search);
+  const editName = searchParams.get("editName");
+  const editDate = searchParams.get("editDate");
+  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData , editName , editDate));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
   const [loader, setLoader] = useState(null);
-  const searchParams = new URLSearchParams(location.search);
   const skip = searchParams.get("skip");
   const id = searchParams.get("id");
   const [currentKey, setCurrentKey] = useState(() => {
@@ -60,12 +63,12 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
 
   useEffect(() => {
-    setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey));
+    setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey , editName));
   }, [campaignConfig, currentKey]);
 
   const config = filteredConfig?.[0];
 
-  const reqCreateCreate = {
+  const reqCreate = {
     url: `/project-factory/v1/project-type/create`,
     params: {},
     body: {},
@@ -74,7 +77,18 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     },
   };
 
-  const mutationCreate = Digit.Hooks.useCustomAPIMutationHook(reqCreateCreate);
+  const reqUpdate = {
+    url: `/project-factory/v1/project-type/update`,
+    params: {},
+    body: {},
+    config: {
+      enable: false,
+    },
+  };
+
+  const mutationCreate = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
+
+  const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   const fetchValidCampaignName = async (tenantId, formData) => {
     const res = await Digit.CustomService.getResponse({
@@ -103,7 +117,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       [name]: formData,
     }));
 
-    if (formData?.CampaignName) {
+    if (formData?.CampaignName && !editDate) {
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
@@ -129,7 +143,38 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
       setCurrentKey(currentKey + 1);
-    } else {
+    } 
+    else if(editDate || editName){
+      const updatedTotalFormData = {
+        ...totalFormData,
+        ...(name === "HCM_CAMPAIGN_DATE" ? { [name]: formData } : {}),
+        ...(!totalFormData?.HCM_CAMPAIGN_DATE && formData?.DateSelection ? { HCM_CAMPAIGN_DATE: { DateSelection: formData.DateSelection } } : {}),
+      };
+      await mutationUpdate.mutate(
+        {
+          url: `/project-factory/v1/project-type/create`,
+          body: transformUpdateData({ totalFormData: updatedTotalFormData , hierarchyType , id , params }),
+          config: {
+            enable: true,
+          },
+        },
+        {
+          onSuccess: async (result) => {
+            setShowToast({ key: "success", label: t("HCM_UPDATE_SUCCESS") });
+            setTimeout(() => {
+              history.push(
+                `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
+              );
+            }, 2000);
+          },
+          onError: (error, result) => {
+            const errorCode = error?.response?.data?.Errors?.[0]?.code;
+            setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          },
+        }
+      );
+    }
+    else {
       const updatedTotalFormData = {
         ...totalFormData,
         ...(name === "HCM_CAMPAIGN_DATE" ? { [name]: formData } : {}),
@@ -139,7 +184,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       await mutationCreate.mutate(
         {
           url: `/project-factory/v1/project-type/create`,
-          body: transformCreateData({ totalFormData: updatedTotalFormData, hierarchyType }),
+          body: transformCreateData({ totalFormData: updatedTotalFormData, hierarchyType , params }),
           config: {
             enable: true,
           },

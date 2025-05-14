@@ -1,6 +1,9 @@
 export const handleCreateValidate = (formData) => {
   const key = Object.keys(formData)?.[0];
 
+  if (formData?.CycleSelection === null) {
+    return { label: "HCM_CYCLE_SELECTION_MISSING" };
+  }
   if (key === "DateSelection") {
     const { startDate, endDate } = formData.DateSelection || {};
     if (!startDate || !endDate) {
