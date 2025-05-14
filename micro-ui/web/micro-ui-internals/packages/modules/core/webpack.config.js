@@ -10,7 +10,7 @@ module.exports = {
       name: "@egovernments/digit-ui-module-core",
       type: "umd",
     },
-    globalObject: 'this', // Add this line to ensure compatibility in different environments
+    globalObject: 'this', 
   },
   resolve: {
     extensions: [".js"],

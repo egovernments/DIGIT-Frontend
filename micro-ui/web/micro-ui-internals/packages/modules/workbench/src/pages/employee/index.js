@@ -72,7 +72,6 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 };
 
 const App = ({ path }) => {
-  console.log("I'm path of wb", path)
   const location = useLocation();
   
   const MDMSCreateSession = Digit.Hooks.useSessionStorage("MDMS_add", {});

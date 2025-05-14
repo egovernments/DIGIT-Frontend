@@ -14,33 +14,16 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
-// import {useInitStore} from "../libraries/src/hooks/store"
-// import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
-// import { initWorkbenchComponents } from "../../workbench/src/Module";
-// import {Hooks} from "@egovernments/digit-ui-libraries"
-// import Hooks from "../../../libraries/src/hooks";
-// import { initI18n } from "@egovernments/digit-ui-libraries";
-
-console.log("inside module.js of core")
-console.log(Digit.Hooks);
 
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
-  console.log("inside DigitUIWrapper of core");
-  // window.Digit["Hooks"] = Hooks || {};
+
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
-  console.log("seeeeeeee")
   if (isLoading) {
     return <Loader page={true} />;
   }
   const data=getStore(initData) || {};
   const i18n = getI18n();
-  // initWorkbenchComponents();
-  
-  // Object.values(initObj).forEach((initFn) => {
-  //   console.log("I'm inside foreach")
-  //   console.log("initfn", initFn)
-  //     initFn(); // dynamically call each functio
-  // });
+
   if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
     Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
   }
@@ -52,30 +35,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
             <DigitAppWrapper
               initData={initData}
               stateCode={stateCode}
-              // modules={[
-              //   {
-              //     "module": "assignment",
-              //     "code": "assignment",
-              //     "active": true,
-              //     "order": 13,
-              //     "tenants": [
-              //       {
-              //         "code": "mz"
-              //       }
-              //     ]
-              //   },
-              //   {
-              //     "module": "HRMS",
-              //     "code": "HRMS",
-              //     "active": true,
-              //     "order": 4,
-              //     "tenants": [
-              //       {
-              //         "code": "mz"
-              //       }
-              //     ]
-              //   }
-              // ]}
+              
               modules={initData?.modules}
               appTenants={initData.tenants}
               logoUrl={initData?.stateInfo?.logoUrl}
@@ -99,11 +59,8 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
 };
 
 export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
-  console.log("inside digitui of core");
   var Digit = window.Digit || {};
-  // initI18n();
-  // initAllModules();
-  console.log("usestate", useState);
+
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
   const userType = Digit.UserService.getType();
   const queryClient = new QueryClient({

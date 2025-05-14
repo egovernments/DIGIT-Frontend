@@ -19,7 +19,6 @@ const TopBarSideBar = ({
   islinkDataLoading,
 }) => {
   const [isSidebarOpen, toggleSidebar] = useState(false);
-  // const history = useHistory();
   const navigate = useNavigate()
   const [showDialog, setShowDialog] = useState(false);
   const handleLogout = () => {

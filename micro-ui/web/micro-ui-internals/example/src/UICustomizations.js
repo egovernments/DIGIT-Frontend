@@ -204,19 +204,13 @@ export const UICustomizations = {
         data.body.inbox.moduleSearchCriteria.orgId = selectedOrg?.[0]?.applicationNumber;
       }
 
-      // let selectedWard =  _.clone(data.body.inbox.moduleSearchCriteria.ward ? data.body.inbox.moduleSearchCriteria.ward : null);
-      // delete data.body.inbox.moduleSearchCriteria.ward;
-      // if(selectedWard) {
-      //    data.body.inbox.moduleSearchCriteria.ward = selectedWard?.[0]?.code;
-      // }
+      
 
       let states = _.clone(data.body.inbox.moduleSearchCriteria.state ? data.body.inbox.moduleSearchCriteria.state : []);
       let ward = _.clone(data.body.inbox.moduleSearchCriteria.ward ? data.body.inbox.moduleSearchCriteria.ward : []);
-      // delete data.body.inbox.moduleSearchCriteria.locality;
       delete data.body.inbox.moduleSearchCriteria.state;
       delete data.body.inbox.moduleSearchCriteria.ward;
 
-      // locality = locality?.map((row) => row?.code);
       states = Object.keys(states)?.filter((key) => states[key]);
       ward = ward?.map((row) => row?.code);
 
@@ -430,10 +424,8 @@ export const UICustomizations = {
       return false;
     },
     preProcess: (data) => {
-      // eslint-disable-next-line
       const location = useLocation();
       data.params = { ...data.params };
-      // eslint-disable-next-line
       const { masterName } = useParams();
 
       const searchParams = new URLSearchParams(location.search);
@@ -441,7 +433,6 @@ export const UICustomizations = {
         "SearchProjectConfig": {
           basePath: "Projects", 
           pathConfig: {
-            // id: "id[0]",
             tenantId: "tenantId",
           },
           dateConfig: {

@@ -78,7 +78,6 @@ const Otp = ({ isLogin = false }) => {
   const OtpConfig = [
     {
       texts: {
-        // header: t("CORE_COMMON_OTP_LABEL"),
         header: t("SANDBOX_OTP_VERIFICATION"),
         submitButtonLabel: "CORE_COMMON_SUBMIT",
       },

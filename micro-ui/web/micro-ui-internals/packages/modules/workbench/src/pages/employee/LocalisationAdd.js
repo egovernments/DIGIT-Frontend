@@ -238,14 +238,7 @@ const LocalisationAdd = () => {
               value={state.tableState[row.index]?.code}
               defaultValue={""}
               style={{ marginBottom: "0px" }}
-            // onBlur={(e) => {
-            //   dispatch({type:"UPDATE_ROW_KEYCODE",state:{
-            //     row,
-            //     value:e.target.value,
-            //     id:row.index
-            //   }})
-
-            // }}
+           
             />
           );
         },
@@ -257,29 +250,7 @@ const LocalisationAdd = () => {
           return String(value ? value : t("ES_COMMON_NA"));
         },
       },
-      // {
-      //   Header: t("WBH_LOC_DEFAULT_VALUE"),
-      //   accessor: "defaultMessage",
-      //   Cell: ({ value, col, row, ...rest }) => {
-      //     return (
-      //       <TextInput
-      //         className={"field"}
-      //         textInputStyle={{ width: "70%", marginLeft: "2%" }}
-      //         disabled={true}
-      //         value={state.tableState[row.index]?.message}
-      //         defaultValue={""}
-      //         style={{ marginBottom: "0px" }}
-      //       />
-      //     );
-      //   }
-      // },
-      // {
-      //   Header: t("WBH_LOC_DEFAULT_VALUE"),
-      //   accessor: "module",
-      //   Cell: ({ value, col, row }) => {
-      //     return String(value ? value : t("ES_COMMON_NA"));
-      //   },
-      // },
+     
       {
         Header: t("WBH_LOC_LOCALE"),
         accessor: "locale",
@@ -421,19 +392,7 @@ const LocalisationAdd = () => {
 
       setShowToast({ label,type :"error"});
       closeToast();
-      // dispatch({
-      //   type:"CLEAR_STATE",
-      // })
-      // dispatch({
-      //   type:"ADD_ROW",
-      //   state:{
-      //     code: "",
-      //     message: "",
-      //     locale: selectedLang.value,
-      //     module: selectedModule.value,
-      //     id: 0,
-      //   }
-      // })
+      
     };
 
     mutation.mutate(
@@ -659,20 +618,7 @@ const LocalisationAdd = () => {
       });
     }
 
-    //   const result = await Digit.ParsingUtils.parseXlsToJsonMultipleSheets(event);
-    //  const updatedResult = convertObjectOfArraysToSingleArray(result)
-    //  //make result for default locale
-    //  const updatedResultDefault = updatedResult.map(row=> {
-    //   return {
-    //     ...row,
-    //     locale:"default"
-    //   }
-    //  })
-    //  const filteredResult = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResult,"module",["message","module","locale","code"])
-    //  const filteredResultDefault = splitArrayIntoDynamicSubsetsByPropertyAndKeys(updatedResultDefault,"module",["message","module","locale","code"])
-    //  setJsonResult(filteredResult)
-    //  setJsonResultDefault(filteredResultDefault)
-    //  //here the result will contain all the sheets in an object
+   
   };
 
   const callInputClick = async (event) => {

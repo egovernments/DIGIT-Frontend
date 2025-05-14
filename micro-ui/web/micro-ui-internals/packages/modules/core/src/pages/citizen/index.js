@@ -16,7 +16,6 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
-// import useCustomMDMS from "../../../libraries/src/hooks/useCustomMDMS"
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,

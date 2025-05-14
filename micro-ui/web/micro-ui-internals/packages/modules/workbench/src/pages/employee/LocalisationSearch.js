@@ -58,10 +58,7 @@ const LocalisationSearch = () => {
       setShowModal(null)
       setEditRow(null)
       setModalConfig(null)
-      // const queryCache = queryClient.getQueryCache()
-      // const queryKeys = queryCache.getAll().map(cache => cache.queryKey) // QueryKey[]
-      // queryClient.invalidateQueries([`/localization/messages/v1/_upsert`,`Random`])
-      // queryClient.invalidateQueries([`/localization/messages/v1/_upsert`,`Random`,`defaultLocale`])
+
       closeToast();
       setCallRefetch(true)
     };

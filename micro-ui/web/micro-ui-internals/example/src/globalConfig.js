@@ -1,4 +1,3 @@
-// src/globalConfig.js
 
 var globalConfigs = (function () {
   var contextPath = "digit-ui";
@@ -52,7 +51,6 @@ var globalConfigs = (function () {
   
  export  const initGlobalConfigs = (stateCode) => {
     window.globalConfigs = window.globalConfigs || globalConfigs;
-    console.log("window.globalConfigs:", window.globalConfigs);
   };
   
 

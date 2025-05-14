@@ -5,12 +5,12 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 module.exports = {
   mode: "development",
   entry: path.resolve(__dirname, "src/index.js"),
-  devtool: "eval-source-map", // Faster rebuilds, good for dev
+  devtool: "eval-source-map",
 
   output: {
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
-    publicPath: "/", // Use root for dev
+    publicPath: "/", 
   },
 
   module: {

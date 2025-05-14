@@ -1,4 +1,3 @@
-// import { NavBar } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState, Fragment,useEffect } from "react";
 import { useTranslation } from "react-i18next";
@@ -8,9 +7,6 @@ import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
 import { MobileSidebar } from "@egovernments/digit-ui-components";
 import { LogoutIcon } from "@egovernments/digit-ui-react-components";
-// import useStore from "../../../../libraries/src/hooks/useStore";
-// import useAccessControl from "../../../../libraries/src/hooks/useAccessControl";
-
 
 const Profile = ({ info, stateName, t }) => {
   const [profilePic, setProfilePic] = React.useState(null);
@@ -65,9 +61,7 @@ const Profile = ({ info, stateName, t }) => {
   );
 };
 
-/* 
-Feature :: Citizen Webview sidebar
-*/
+
 export const CitizenSideBar = ({
   isOpen,
   isMobile = false,
@@ -410,7 +404,6 @@ export const CitizenSideBar = ({
       label:"HOME",
       value:"HOME",
       icon:"Home",
-      // children: transformedSelectedCityData?.length>0 ? transformedSelectedCityData : undefined,
       type:"custom",
       key:"home",
     },

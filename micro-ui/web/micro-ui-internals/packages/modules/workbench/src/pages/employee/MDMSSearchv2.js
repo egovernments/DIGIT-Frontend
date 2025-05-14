@@ -71,7 +71,6 @@ const MDMSSearchv2 = () => {
         //when api is working fine change here(thsese are all schemas available in a tenant)
         // const schemas = sampleSchemaResponse.SchemaDefinitions;
         const schemas = data?.SchemaDefinitions
-        console.log("These rae schema", schemas)
         setAvailableSchemas(schemas);
         if (schemas?.length === 1) setCurrentSchema(schemas?.[0])
         //now extract moduleNames and master names from this schema
@@ -94,20 +93,6 @@ const MDMSSearchv2 = () => {
   });
 
 
-  // useEffect(() => {
-  //   setMasterOptions(dropdownData?.mastersAvailable)
-  // }, [dropdownData])
-
-  // useEffect(() => {
-  //   setModuleOptions(dropdownData?.[masterName?.name])
-  // }, [masterName])
-
-  // useEffect(() => {
-  //   //here set current schema based on module and master name
-  //   if(masterName?.name && moduleName?.name){
-  //   setCurrentSchema(availableSchemas.filter(schema => schema.code === `${masterName?.name}.${moduleName?.name}`)?.[0])
-  //   }
-  // }, [moduleName])
 
   useEffect(() => {
     if (currentSchema) {
@@ -119,7 +104,6 @@ const MDMSSearchv2 = () => {
       Object.keys(properties)?.forEach((key) => {
         if (properties[key].type === "string" && !properties[key].format) {
           dropDownOptions.push({
-            // name: key,
             name: key,
             code: key,
             i18nKey: Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`)
@@ -133,27 +117,12 @@ const MDMSSearchv2 = () => {
           : dropDownOptions;
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
       Config.actionLink = Config.actionLink + `?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
-      // Config.apiDetails.serviceName = `/mdms-v2/v2/_search/${currentSchema.code}`
 
 
       Config.additionalDetails = {
         currentSchemaCode: currentSchema.code
       }
-      //set the column config
-
-      // Config.sections.searchResult.uiConfig.columns = [{
-      //   label: "WBH_UNIQUE_IDENTIFIER",
-      //   jsonPath: "uniqueIdentifier",
-      //   additionalCustomization:true
-      // },...dropDownOptions.map(option => {
-      //   return {
-      //     label:option.i18nKey,
-      //     i18nKey:option.i18nKey,
-      //     jsonPath:`data.${option.code}`,
-      //     dontShowNA:true
-      //   }
-      // })]
-
+      
       Config.sections.searchResult.uiConfig.columns = [...dropDownOptions.map(option => {
         return {
           label: option.i18nKey,
@@ -167,10 +136,8 @@ const MDMSSearchv2 = () => {
         i18nKey: "WBH_ISACTIVE",
         jsonPath: `isActive`,
         additionalCustomization: true
-        // dontShowNA:true
       }]
       Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-      console.log("I'm config", Config)
       setUpdatedConfig(Config)
     }
   }, [currentSchema]);

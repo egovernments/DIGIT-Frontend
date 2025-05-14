@@ -2,7 +2,6 @@ import { PageBasedInput, Loader, RadioButtons, CardHeader } from "@egovernments/
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-// import useStore from "../../../../libraries/src/hooks/useStore"
 
 const LanguageSelection = () => {
   const { t } = useTranslation();

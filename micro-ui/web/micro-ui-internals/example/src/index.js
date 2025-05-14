@@ -5,7 +5,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
-// Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
 const queryClient = new QueryClient();
@@ -18,7 +17,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
 
 const initTokens = (stateCode) => {
-  console.log(window.globalConfigs, "window.globalConfigs");
 
   const userType =
     window.sessionStorage.getItem("userType") ||
@@ -54,11 +52,11 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  initGlobalConfigs(); // Ensure global configs are set first
+  initGlobalConfigs(); 
   window.contextPath =
     window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
 
-  // const stateCode = Digit?.ULBService?.getStateId();
+ 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -75,7 +73,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(() => {
-      console.log(Digit, window?.Digit);
       initWorkbenchComponents();
       setIsReady(true)
     });
@@ -103,5 +100,4 @@ const MainApp = ({ stateCode, enabledModules }) => {
   );
 };
 
-// Start the app
 initDigitUI();

@@ -4,9 +4,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "development", // Set mode to development
+  mode: "development",
   entry: path.resolve(__dirname, 'src/index.js'),
-  devtool: "source-map", // Enable source maps for easier debugging in development
+  devtool: "source-map", 
   module: {
     rules: [
       {
@@ -52,13 +52,13 @@ module.exports = {
   resolve: {
     modules: [path.resolve(__dirname, 'src'), 'node_modules'],
     extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    preferRelative: true, // Try resolving relatively if needed
+    preferRelative: true, 
     fallback: {
       process: require.resolve("process/browser"),
     },
   },
   devServer: {
-    static: path.join(__dirname, "dist"), // Change this to "dist"
+    static: path.join(__dirname, "dist"), 
     compress: true,
     port: 3000,
     hot: true,
@@ -141,7 +141,7 @@ module.exports = {
           "/tenant-management",
           "/default-data-handler",
           "/facility/v1/_create"
-        ], // Add all endpoints that need to be proxied
+        ],
         target: "https://unified-qa.digit.org",
         changeOrigin: true,
         secure: false,

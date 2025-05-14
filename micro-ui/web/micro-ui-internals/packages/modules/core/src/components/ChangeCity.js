@@ -13,7 +13,7 @@ const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
 const ChangeCity = (prop) => {
   const [dropDownData, setDropDownData] = useState(null);
   const [selectCityData, setSelectCityData] = useState([]);
-  const [selectedCity, setSelectedCity] = useState([]); //selectedCities?.[0]?.value
+  const [selectedCity, setSelectedCity] = useState([]); 
   const navigate = useNavigate();
   const isDropdown = prop.dropdown || false;
   let selectedCities = [];
@@ -52,7 +52,6 @@ const ChangeCity = (prop) => {
     setSelectCityData(filteredArray);
   }, [dropDownData]);
 
-  // if (isDropdown) {
   return (
     <div style={prop?.mobileView ? { color: "#767676" } : {}}>
       {
@@ -75,24 +74,7 @@ const ChangeCity = (prop) => {
 }
     </div>
   );
-  // } else {
-  //   return (
-  //     <React.Fragment>
-  //       <div style={{ marginBottom: "5px" }}>City</div>
-  //       <div className="language-selector" style={{display: "flex", flexWrap: "wrap"}}>
-  //         {selectCityData?.map((city, index) => (
-  //           <div className="language-button-container" key={index}>
-  //             <CustomButton
-  //               selected={city.value === Digit.SessionStorage.get("Employee.tenantId")}
-  //               text={city.label}
-  //               onClick={() => handleChangeCity(city)}
-  //             ></CustomButton>
-  //           </div>
-  //         ))}
-  //       </div>
-  //     </React.Fragment>
-  //   );
-  // }
+
 };
 
 export default ChangeCity;

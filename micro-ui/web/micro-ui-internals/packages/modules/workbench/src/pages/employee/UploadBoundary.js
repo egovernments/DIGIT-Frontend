@@ -131,7 +131,6 @@ const UploadBoundary = () => {
             closeToast();
           }
         } catch (error) {
-          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };

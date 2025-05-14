@@ -18,7 +18,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
 
 const initTokens = (stateCode) => {
-  console.log(window.globalConfigs, "window.globalConfigs");
 
   const userType =
     window.sessionStorage.getItem("userType") ||
@@ -75,7 +74,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(() => {
-      console.log(Digit, window?.Digit);
       initWorkbenchComponents();
       setIsReady(true)
     });

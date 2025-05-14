@@ -94,9 +94,6 @@ const MDMSManageMaster = () => {
     },
   });
 
-  console.log("mn, mn", masterName, moduleName);
-
-
   useEffect(() => {
     setMasterOptions(dropdownData?.mastersAvailable)
   }, [dropdownData])
@@ -115,50 +112,7 @@ const MDMSManageMaster = () => {
     }
   }, [moduleName])
 
-  // useEffect(() => {
-  //   if (currentSchema) {
-  //     const dropDownOptions = [];
-  //     const {
-  //       definition: { properties },
-  //     } = currentSchema;
-
-  //     Object.keys(properties)?.forEach((key) => {
-  //       if (properties[key].type === "string" && !properties[key].format) {
-  //         dropDownOptions.push({
-  //           // name: key,
-  //           name:key,
-  //           code: key,
-  //           i18nKey:Digit.Utils.locale.getTransformedLocale(`${currentSchema.code}_${key}`)
-  //         });
-  //       }
-  //     });
-
-  //     Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
-  //     Config.actionLink=Config.actionLink+`?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
-  //     // Config.apiDetails.serviceName = `/mdms-v2/v2/_search/${currentSchema.code}`
-
-
-  //     Config.additionalDetails = {
-  //       currentSchemaCode:currentSchema.code
-  //     }
-  //     //set the column config
-
-  //     Config.sections.searchResult.uiConfig.columns = [{
-  //       label: "WBH_UNIQUE_IDENTIFIER",
-  //       jsonPath: "uniqueIdentifier",
-  //       additionalCustomization:true
-  //     },...dropDownOptions.map(option => {
-  //       return {
-  //         label:option.i18nKey,
-  //         i18nKey:option.i18nKey,
-  //         jsonPath:`data.${option.code}`,
-  //         dontShowNA:true
-  //       }
-  //     })]
-
-  //     setUpdatedConfig(Config)
-  //   }
-  // }, [currentSchema]);
+ 
 
   if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
   return (

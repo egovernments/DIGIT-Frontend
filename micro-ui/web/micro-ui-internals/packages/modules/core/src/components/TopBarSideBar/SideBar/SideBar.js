@@ -231,7 +231,6 @@ const Sidebar = ({ data }) => {
                       ? `default-${level} active`
                       : `default-${level}`
                   }`}
-                  // className={`actions`}
 
                   onClick={(e) => {
                     toggleSidebar(key);
@@ -247,13 +246,6 @@ const Sidebar = ({ data }) => {
                       } else return itemToHighlight;
                     });
                     setSelectedChild(null);
-                    // setOpenItems(prevState => {
-                    //   if(Object(openItems)?.keys?.length > 0){
-                    //     return {}
-                    //   }else{
-                    //     return prevState
-                    //   }
-                    // })
                   }}
                   style={{
                     display: "flex",
@@ -330,8 +322,6 @@ const Sidebar = ({ data }) => {
                   setSelectedParent(parentKey); // Update the selected parent when a child is clicked
                   setSelectedChild(keyToHighlight);
                   setSelectedChildLevelOne(null);
-                  // setOpenItems({});
-                  // setSelectedChildLevelOne(null)
                   navigateToRespectiveURL(
                     navigate,
                     `${subItems?.item?.navigationURL}`

@@ -29,12 +29,7 @@ export const Config = {
                     justifyContent: "end",
                     gridColumn: "4"
                 },
-                // submitContainerStyles: {
-                //     flexDirection: "column-reverse",
-                //     marginTop: "2rem",
-                //     alignItems: "center",
-                //     justifyContent: "end"
-                // },
+                
                 headerStyle: null,
                 formClassName: "", //"custom-both-clear-search",
                 primaryLabel: "ES_COMMON_SEARCH",
@@ -48,8 +43,7 @@ export const Config = {
                         code: "WBH_COMMON_ALL",
                         value: "all",
                     }
-                    // createdFrom: "",
-                    // createdTo: "",
+                
                 },
                 fields: [
                     {
@@ -87,36 +81,7 @@ export const Config = {
                             validation: { pattern: {}, maxlength: 140 },
                         },
                     }
-                    // {
-                    //   label: "CREATED_FROM_DATE",
-                    //   type: "date",
-                    //   isMandatory: false,
-                    //   disable: false,
-                    //   key: "createdFrom",
-                    //   preProcess: {
-                    //     updateDependent: ["populators.max"],
-                    //   },
-                    //   populators: { name: "createdFrom", max: "currentDate" },
-                    // },
-                    // {
-                    //   label: "CREATED_TO_DATE",
-                    //   type: "date",
-                    //   isMandatory: false,
-                    //   disable: false,
-                    //   key: "createdTo",
-                    //   preProcess: {
-                    //     updateDependent: ["populators.max"],
-                    //   },
-                    //   populators: {
-                    //     name: "createdTo",
-                    //     error: "DATE_VALIDATION_MSG",
-                    //     max: "currentDate",
-                    //   },
-                    //   additionalValidation: {
-                    //     type: "date",
-                    //     keys: { start: "createdFrom", end: "createdTo" },
-                    //   },
-                    // },
+                    
                 ],
             },
             label: "",

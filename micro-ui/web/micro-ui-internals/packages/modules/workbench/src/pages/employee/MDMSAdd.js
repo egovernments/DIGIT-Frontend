@@ -84,14 +84,7 @@ const MDMSAdd = ({ FormSession }) => {
     );
   };
   const onFormValueChange = (setValue, formData, formState) => {
-    // if (!_.isEqual(sessionFormData, formData)) {
-    //   // const result = _.pickBy(sessionFormData, (v, k) => !_.isEqual(formData[k], v));
-    //   /* update session if any dependency */
-    //   // if (result?.["dependencyField"]) {
-    //   //   setValue("dependentField", );
-    //   // }
-    //   setSessionFormData({ ...sessionFormData, ...formData });
-    // }
+   
     if (!_.isEqual(session, formData)) {
       setSession({ ...session, ...formData });
     }

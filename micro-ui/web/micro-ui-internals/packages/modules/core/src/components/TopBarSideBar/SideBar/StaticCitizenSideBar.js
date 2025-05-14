@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import useStore from "../../../../libraries/src/hooks/useStore"
 import {
   HomeIcon,
   EditPencilIcon,
@@ -115,8 +114,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   }
 
   const redirectToLoginPage = () => {
-    // localStorage.clear();
-    // sessionStorage.clear();
+  
     navigate(`/${window?.contextPath}/citizen/login`);
   };
   const showProfilePage = () => {

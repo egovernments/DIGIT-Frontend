@@ -79,12 +79,7 @@ const SubMenu = ({ item }) => {
                 )}
               </a>
             ) : (
-              // <a className="custom-link" href={getOrigin + "/employee/" + item.navigationURL}>
-              //   <div className="tooltip">
-              //     <p className="p1">{trimModuleName}</p>
-              //     <span className="tooltiptext">{t(`ACTION_TEST_${getModuleName}`)}</span>
-              //   </div>
-              // </a>
+            
               <Link className="custom-link" to={item.navigationURL}>
                 <div data-tip="React-tooltip" data-for={`jk-side-${getModuleName}`}>
                   <span> {trimModuleName} </span>

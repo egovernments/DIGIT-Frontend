@@ -13,8 +13,6 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-// import useStore from "../../../../libraries/src/hooks/useStore"
-// import {useEvents} from "../../../../libraries/src/hooks/events"
 
 const Home = () => {
   const { t } = useTranslation();
@@ -94,11 +92,7 @@ const Home = () => {
         onClick: () =>
           navigate(citizenServicesObj?.props?.[2]?.navigationUrl),
       },
-      // {
-      //     name: t("ACTION_TEST_WATER_AND_SEWERAGE"),
-      //     Icon: <DropIcon/>,
-      //     onClick: () => navigate(`/${window?.contextPath}/citizen`)
-      // },
+    
       {
         name: t(citizenServicesObj?.props?.[3]?.label),
         Icon: <OBPSIcon />,
@@ -144,10 +138,7 @@ const Home = () => {
         onClick: () =>
           navigate(infoAndUpdatesObj?.props?.[3]?.navigationUrl),
       },
-      // {
-      //     name: t("CS_COMMON_HELP"),
-      //     Icon: <HelpIcon/>
-      // }
+    
     ],
     styles: {
       display: "flex",
@@ -161,9 +152,7 @@ const Home = () => {
     <Loader />
   ) : (
     <div className="HomePageContainer">
-      {/* <div className="SideBarStatic">
-        <StaticCitizenSideBar />
-      </div> */}
+   
       <div className="HomePageWrapper">
         {
           <div className="BannerWithSearch">
@@ -172,9 +161,7 @@ const Home = () => {
             ) : (
               <img src={appBannerWebObj?.bannerUrl} />
             )}
-            {/* <div className="Search">
-            <StandaloneSearchBar placeholder={t("CS_COMMON_SEARCH_PLACEHOLDER")} />
-          </div> */}
+     
             <div className="ServicesSection">
               <CardBasedOptions
                 style={{ marginTop: "-30px" }}
