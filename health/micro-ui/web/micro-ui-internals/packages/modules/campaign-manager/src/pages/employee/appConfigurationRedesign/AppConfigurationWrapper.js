@@ -121,7 +121,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: `${item?.name}_${j.header}_NEW_FIELD_${c.length + 1}`,
+                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${j?.fields?.length + 1}`,
                         type: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
                         active: true,
