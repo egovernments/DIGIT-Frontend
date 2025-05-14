@@ -1,5 +1,6 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo , useState } from "react";
 import { Switch, useLocation } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
@@ -33,7 +34,26 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
 
   const search = useLocation().search;
+  const queryParams = new URLSearchParams(search);
+  const history = useHistory();
+  const [campaignNumber, setCampaignNumber] = useState(queryParams.get("campaignNumber"));
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+
+   useEffect(() =>{
+    if(pathVar === "view-details" && campaignNumber){
+      history.push(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,)
+    }
+
+  },[pathVar])
+
+  useEffect(() => {
+    const campaignNumberFromURL = queryParams.get("campaignNumber");
+    if (campaignNumberFromURL !== campaignNumber) {
+      setCampaignNumber(campaignNumberFromURL);  // Update state when campaignNumber changes
+    }
+  }, [queryParams]);
+
   const crumbs = [
     {
       path: `/${window?.contextPath}/employee`,
@@ -45,7 +65,6 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("MY_CAMPAIGN"),
       show:
         pathVar === "my-campaign" ||
-        pathVar === "checklist/search" ||
         pathVar === "checklist/create" ||
         pathVar === "checklist/view" ||
         pathVar === "checklist/update" ||
@@ -54,19 +73,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
           : false,
     },
     {
-      path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      content: t("CREATE_NEW_CAMPAIGN"),
-      show: pathVar === "setup-campaign" ? true : false,
-    },
-    {
       path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
       content: t("UPDATE_DATE_CHANGE"),
       show: pathVar === "update-dates-boundary" ? true : false,
-    },
-    {
-      path: "",
-      content: t("ACTION_LABEL_CONFIGURE_APP"),
-      show: pathVar === "checklist/search" ? true : false,
     },
     {
       path: "",
@@ -102,6 +111,29 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "create-campaign" ? "" : `/${window?.contextPath}/employee/campaign/create-campaign`,
       content: t("CREATE_CAMPAIGN"),
       show: pathVar.match("create-campaign") ? true : false,
+    },
+    {
+      path:
+        pathVar === "view-details"
+          ? ""
+          : `/${window?.contextPath}/employee/campaign/view-details${campaignNumber ? `?campaignNumber=${campaignNumber}` : ""}`,
+      content: t("VIEW_DETAILS"),
+      show: pathVar.match("view-details") || pathVar.match("setup-campaign") ||  pathVar.match("app-modules") ||pathVar === "checklist/search"  ? true : false,
+    },
+    {
+      path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
+      content: t("CREATE_NEW_CAMPAIGN"),
+      show: pathVar === "setup-campaign" ? true : false,
+    },
+    {
+      path: pathVar === "app-modules" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
+      content: t("APP_MODULES"),
+      show: pathVar === "app-modules" ? true : false,
+    },
+     {
+      path: "",
+      content: t("ACTION_LABEL_CONFIGURE_APP"),
+      show: pathVar === "checklist/search" ? true : false,
     },
   ];
 

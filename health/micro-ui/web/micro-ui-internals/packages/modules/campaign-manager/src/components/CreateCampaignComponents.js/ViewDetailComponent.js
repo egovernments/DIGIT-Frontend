@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , icon }) => {
+const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , icon , disabled }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -21,6 +21,7 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , 
           }}
           variation={type}
           style={{ width: '19rem' }}
+          isDisabled = {disabled}
         />
       </div>
       <div className="details-desc">{desc}</div>

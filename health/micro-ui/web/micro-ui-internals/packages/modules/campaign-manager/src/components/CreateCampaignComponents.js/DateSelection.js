@@ -48,8 +48,8 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
     <Card>
       <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
-      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
-        <div className="campaign-dates">
+      <LabelFieldPair >
+        <div className="digit-header-content label   ">
           <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
           <span className="mandatory-date">*</span>
         </div>

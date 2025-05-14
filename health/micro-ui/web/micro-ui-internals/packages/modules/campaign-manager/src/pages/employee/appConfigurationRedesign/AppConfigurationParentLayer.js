@@ -36,8 +36,8 @@ const dispatcher = (state, action) => {
       return {
         ...state,
         currentTemplate: state.currentTemplate.map((i) => {
-          if (i.name === action.data?.[0].name) {
-            return action.data?.[0];
+          if (i?.name === action?.data?.[0]?.name) {
+            return action?.data?.[0];
           }
           return i;
         }),
@@ -75,7 +75,7 @@ const getTypeAndMetaData = (field) => {
     return {
       type: "numeric",
     };
-  } else if (field.type === "string" && field.format === "select") {
+  } else if (field.type === "string" && (field.format === "select" || field.format === "dropdown")) {
     return {
       type: "dropDown",
       dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
@@ -131,7 +131,7 @@ const restructure = (data1) => {
           jsonPath: field.fieldName || "",
           metaData: {},
           Mandatory: field.required || false,
-          deleteFlag: false,
+          deleteFlag: field.deleteFlag || false,
           isLocalised: field.isLocalised ? true : false,
           innerLabel: field.innerLabel || "",
           helpText: field.helpText || "",
@@ -207,14 +207,17 @@ const getTypeAndFormat = (field) => {
       break;
     case "dropdown":
     case "dropDown":
-      return { type: "string", format: "select", enums: field?.dropDownOptions || [] };
+      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.name) || [] };
       break;
     case "datePicker":
     case "dobPicker":
       return { type: "string", format: "date", startDate: field?.startDate, endDate: field?.endDate };
       break;
     case "numeric":
-      return { type: "number", format: "incrementer" };
+      return { type: "number", format: "increment" };
+      break;
+    case "checkbox":
+      return { type: "boolean", format: "boolean" };
       break;
     case "mobileNumber":
       return { type: "string", format: "mobileNumber", prefix: field?.prefix };
@@ -233,7 +236,7 @@ const reverseRestructure = (updatedData) => {
       const typeAndFormat = getTypeAndFormat(field);
       return {
         label: field.label || "",
-        order: fieldIndex,
+        order: fieldIndex + 1,
         value: field.value || "",
         hidden: false, // can't be derived from updatedData unless explicitly added
         required: field.Mandatory || false,
@@ -243,6 +246,7 @@ const reverseRestructure = (updatedData) => {
         infoText: field.infoText || "",
         innerLabel: field.innerLabel || "",
         errorMessage: field.errorMessage || "",
+        deleteFlag: field.deleteFlag || false,
         ...typeAndFormat,
       };
     });
@@ -253,7 +257,7 @@ const reverseRestructure = (updatedData) => {
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
-      order: index,
+      order: index + 1,
       properties,
     };
   });
@@ -386,6 +390,7 @@ const AppConfigurationParentRedesign = () => {
   if (isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
     return <Loader />;
   }
+
   const submit = async (screenData) => {
     parentDispatch({
       key: "SETBACK",
@@ -398,6 +403,7 @@ const AppConfigurationParentRedesign = () => {
       const reverseFormat = {
         name: "REGISTRATIONFLOW",
         version: 1,
+        project: "SMC_2025",
         pages: reverseData,
       };
 
@@ -414,7 +420,7 @@ const AppConfigurationParentRedesign = () => {
         },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.message ? error?.message : error });
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
