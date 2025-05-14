@@ -16,17 +16,30 @@ const InboxFilter = ({ onSelect, props: customProps, ...props }) => {
     limit: 1000,
     offset: 0,
   };
-  const result = Digit.Hooks.DSS.useCampaignsInboxSearch({
-    body,
-    params,
-    config: {},
-  })?.data?.Project;
+  // const result = Digit.Hooks.DSS.useCampaignsInboxSearch({
+  //   body,
+  //   params,
+  //   config: {},
+  // })?.data?.Project;
 
   // TODO : Need to confirm whether to show all the campaigntypes by default or get the unique campaigntypes from response and show them
-  const campaignTypeOptions = [...new Map(result.map((item) => [item.name, { code: item.name, name: item.name }])).values()];
+  // const campaignTypeOptions = [...new Map(result.map((item) => [item.name, { code: item.name, name: item.name }])).values()];
   // TODO : Need to confirm whether to show all the boundaryCodes by default or get the unique boundaryCodes from response and show them
-  const boundaryTypeOptions = [
-    ...new Map(result.map((item) => [item.address?.boundary, { code: item.address?.boundary, name: item.address?.boundary }])).values(),
+  // const boundaryTypeOptions = [
+  //   ...new Map(result.map((item) => [item.address?.boundary, { code: item.address?.boundary, name: item.address?.boundary }])).values(),
+  // ];
+
+  let options = [
+    { code: "1", name: "SMC" },
+    { code: "2", name: "IRS" },
+    { code: "3", name: "INS" },
+  ];
+
+  let options2 = [
+    { code: "1", name: "Gaza" },
+    { code: "2", name: "Sofala" },
+    { code: "3", name: "Nampula" },
+    { code: "4", name: "Tete" },
   ];
 
   const handleDropdownChange = (key, value) => {
@@ -74,7 +87,8 @@ const InboxFilter = ({ onSelect, props: customProps, ...props }) => {
         <div className="custom-filter-names">{t("FILTER_BY_CAMPAIGN_TYPE")}</div>
         <div style={{ width: "100%" }}>
           <MultiSelectDropdown
-            options={campaignTypeOptions}
+            // options={campaignTypeOptions}
+            options={options}
             selected={props?.formData?.inboxFilter?.filterValues?.campaignType?.length === 0 ? [] : filterValues["campaignType"]}
             optionsKey={"name"}
             onSelect={(value) => handleDropdownChange("campaignType", value)}
@@ -86,7 +100,8 @@ const InboxFilter = ({ onSelect, props: customProps, ...props }) => {
         <div className="custom-filter-names">{t("FILTER_BY_BOUNDARY")}</div>
         <div style={{ width: "100%" }}>
           <MultiSelectDropdown
-            options={boundaryTypeOptions}
+            // options={boundaryTypeOptions}
+            options={options2}
             selected={props?.formData?.inboxFilter?.filterValues?.boundary?.length === 0 ? [] : filterValues["boundary"]}
             optionsKey={"name"}
             onSelect={(value) => handleDropdownChange("boundary", value)}
