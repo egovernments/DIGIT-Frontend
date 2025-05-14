@@ -135,6 +135,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         ...(name === "HCM_CAMPAIGN_DATE" ? { [name]: formData } : {}),
         ...(!totalFormData?.HCM_CAMPAIGN_DATE && formData?.DateSelection ? { HCM_CAMPAIGN_DATE: { DateSelection: formData.DateSelection } } : {}),
       };
+      setLoader(true);
       await mutationCreate.mutate(
         {
           url: `/project-factory/v1/project-type/create`,
@@ -145,7 +146,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         },
         {
           onSuccess: async (result) => {
-            setLoader(true);
             setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
             setTimeout(() => {
               history.replace(
@@ -157,6 +157,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
           onError: (error, result) => {
             const errorCode = error?.response?.data?.Errors?.[0]?.code;
             setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+            setLoader(false);
           },
         }
       );
@@ -173,7 +174,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
   return (
     <React.Fragment>
-      {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
+      {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
       <Stepper
         customSteps={["HCM_CAMPAIGN_TYPE_DETAILS", "HCM_CAMPAIGN_NAME_DETAILS", "HCM_CAMPAIGN_DATE_DETAILS"]}
         currentStep={currentKey}
