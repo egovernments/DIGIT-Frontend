@@ -2,11 +2,22 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const dotenv = require("dotenv");
+const fs = require("fs");
+
+// Load .env variables
+const envFile = dotenv.config().parsed || {};
+
+// Make DefinePlugin-compatible keys
+const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
+  acc[`process.env.${key}`] = JSON.stringify(val);
+  return acc;
+}, {});
 
 module.exports = {
   mode: "development",
-  entry: path.resolve(__dirname, 'src/index.js'),
-  devtool: "source-map", 
+  entry: path.resolve(__dirname, "src/index.js"),
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -16,14 +27,14 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"]
-          }
+            plugins: ["@babel/plugin-proposal-optional-chaining"],
+          },
         },
       },
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      }
+      },
     ],
   },
   output: {
@@ -33,32 +44,39 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       minSize: 20000,
       maxSize: 50000,
       enforceSizeThreshold: 50000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 30
+      maxInitialRequests: 30,
     },
   },
   plugins: [
     new webpack.ProvidePlugin({
       process: "process/browser",
     }),
+    new webpack.DefinePlugin(envKeys), // <-- Add this
     new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "public/index.html",
+      templateParameters: {
+        REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+      },
+    }),
   ],
   resolve: {
-    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    preferRelative: true, 
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    preferRelative: true,
     fallback: {
       process: require.resolve("process/browser"),
     },
   },
   devServer: {
-    static: path.join(__dirname, "dist"), 
+    static: path.join(__dirname, "dist"),
     compress: true,
     port: 3000,
     hot: true,
@@ -147,5 +165,6 @@ module.exports = {
         secure: false,
       },
     ],
-}
+  },
 };
+

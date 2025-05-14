@@ -1,6 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { initGlobalConfigs } from "./globalConfig";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
@@ -52,7 +51,6 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  initGlobalConfigs(); 
   window.contextPath =
     window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
 
