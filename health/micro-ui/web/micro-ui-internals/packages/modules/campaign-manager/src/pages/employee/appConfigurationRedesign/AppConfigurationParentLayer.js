@@ -207,7 +207,7 @@ const getTypeAndFormat = (field) => {
       break;
     case "dropdown":
     case "dropDown":
-      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.code) || [] };
+      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.name) || [] };
       break;
     case "datePicker":
     case "dobPicker":
