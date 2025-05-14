@@ -19,7 +19,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
 
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
-    return <Loader page={true} />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const data=getStore(initData) || {};
   const i18n = getI18n();
@@ -58,7 +58,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
   );
 };
 
-export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding }) => {
+export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, defaultLanding ,allowedUserTypes}) => {
   var Digit = window.Digit || {};
 
   const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
