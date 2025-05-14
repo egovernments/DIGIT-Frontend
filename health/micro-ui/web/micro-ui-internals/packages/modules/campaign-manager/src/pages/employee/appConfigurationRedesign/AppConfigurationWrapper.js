@@ -121,7 +121,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: `${item?.name}_${j.header}_NEW_FIELD_${c.length + 1}`,
+                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${j?.fields?.length + 1}`,
                         type: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
                         active: true,
@@ -258,6 +258,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
+  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
@@ -266,7 +267,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const localeModule = searchParams.get("localeModule");
   const module = localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -324,10 +325,9 @@ function AppConfigurationWrapper({ screenConfig }) {
 
   function createLocaleArrays() {
     const result = {};
-
     // Dynamically determine locales
-    const locales = Object.keys(locState[0]).filter((key) => key.includes("_IN") && key !== "en_IN");
-    locales.unshift("en_IN");
+    const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
+    locales.unshift(currentLocale);
     locales.forEach((locale) => {
       result[locale] = locState
         .map((item) => ({
@@ -380,7 +380,10 @@ function AppConfigurationWrapper({ screenConfig }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
-          onClick={() => onSubmit(state)}
+          onClick={async () => {
+            await handleSubmit();
+            onSubmit(state);
+          }}
         />
       </div>
 

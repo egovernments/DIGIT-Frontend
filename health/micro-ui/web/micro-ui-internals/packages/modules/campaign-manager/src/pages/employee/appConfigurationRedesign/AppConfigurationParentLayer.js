@@ -207,7 +207,7 @@ const getTypeAndFormat = (field) => {
       break;
     case "dropdown":
     case "dropDown":
-      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.code) || [] };
+      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.name) || [] };
       break;
     case "datePicker":
     case "dobPicker":
@@ -257,7 +257,7 @@ const reverseRestructure = (updatedData) => {
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
-      order: index,
+      order: index + 1,
       properties,
     };
   });
