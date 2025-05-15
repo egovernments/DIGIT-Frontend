@@ -17,7 +17,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const searchParams = new URLSearchParams(location.search);
   const editName = searchParams.get("editName");
   const editDate = searchParams.get("editDate");
-  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData , editName , editDate));
+  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName, editDate));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
@@ -63,7 +63,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
 
   useEffect(() => {
-    setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey , editName));
+    setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey, editName));
   }, [campaignConfig, currentKey]);
 
   const config = filteredConfig?.[0];
@@ -143,55 +143,32 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
     if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
       setCurrentKey(currentKey + 1);
-    } 
-    else if(editDate || editName){
-      const updatedTotalFormData = {
-        ...totalFormData,
-        ...(name === "HCM_CAMPAIGN_DATE" ? { [name]: formData } : {}),
-        ...(!totalFormData?.HCM_CAMPAIGN_DATE && formData?.DateSelection ? { HCM_CAMPAIGN_DATE: { DateSelection: formData.DateSelection } } : {}),
-      };
-      await mutationUpdate.mutate(
-        {
-          url: `/project-factory/v1/project-type/create`,
-          body: transformUpdateData({ totalFormData: updatedTotalFormData , hierarchyType , id , params }),
-          config: {
-            enable: true,
-          },
-        },
-        {
-          onSuccess: async (result) => {
-            setShowToast({ key: "success", label: t("HCM_UPDATE_SUCCESS") });
-            setTimeout(() => {
-              history.push(
-                `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
-              );
-            }, 2000);
-          },
-          onError: (error, result) => {
-            const errorCode = error?.response?.data?.Errors?.[0]?.code;
-            setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
-          },
-        }
-      );
     }
     else {
-      const updatedTotalFormData = {
-        ...totalFormData,
-        ...(name === "HCM_CAMPAIGN_DATE" ? { [name]: formData } : {}),
-        ...(!totalFormData?.HCM_CAMPAIGN_DATE && formData?.DateSelection ? { HCM_CAMPAIGN_DATE: { DateSelection: formData.DateSelection } } : {}),
-      };
       setLoader(true);
-      await mutationCreate.mutate(
+      const isEdit = editDate || editName;
+      const mutation = isEdit ? mutationUpdate : mutationCreate;
+      const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
+      const payload = transformCreateData({
+        totalFormData,
+        hierarchyType,
+        params,
+        formData,
+        ...(isEdit ? { id } : {}),
+      });
+
+      await mutation.mutate(
         {
-          url: `/project-factory/v1/project-type/create`,
-          body: transformCreateData({ totalFormData: updatedTotalFormData, hierarchyType , params }),
-          config: {
-            enable: true,
-          },
+          url: url,
+          body: payload,
+          config: { enable: true },
         },
         {
           onSuccess: async (result) => {
-            setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
+            setShowToast({
+              key: "success",
+              label: t(editDate || editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
+            });
             setTimeout(() => {
               history.replace(
                 `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
@@ -199,8 +176,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               setLoader(false);
             }, 2000);
           },
-          onError: (error, result) => {
-            const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          onError: () => {
             setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
             setLoader(false);
           },
