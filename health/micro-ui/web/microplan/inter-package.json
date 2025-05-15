@@ -4,7 +4,8 @@
   "main": "index.js",
   "workspaces": [
     "packages/modules/microplan",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/modules/health-dss"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -22,11 +23,13 @@
     "dev:example": "cd example && yarn start",
     "dev:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn start",
     "dev:microplan": "cd packages/modules/microplan && yarn start",
+    "dev:health-dss": "cd packages/modules/health-dss && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
     "build:microplan": "cd packages/modules/microplan && yarn build",
+    "build:health-dss": "cd packages/modules/health-dss && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },

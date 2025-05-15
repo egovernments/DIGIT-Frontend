@@ -33,15 +33,22 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
               minReqFields: 0,
               defaultValues: {
-                dateRange: "",
+                dateRange: {
+                  startDate:null,
+                  endDate:null
+                },
               },
               fields: [
                 {
                   label: "Date Range",
                   key: "dateRange",
-                  type: "dateRange",
+                  type: "component",
+                  component:"DateRangePicker",
                   isMandatory: false,
                   populators: {
+                    name: "dateRange",
+                  },
+                  customProps: {
                     name: "dateRange",
                   },
                 },
@@ -94,14 +101,9 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
             uiConfig: {
               links: [
                 {
-                  text: "BULK_UPLOAD_USERS",
-                  url: "/employee/microplan/upload-user",
-                  roles: ["MICROPLAN_ADMIN"],
-                },
-                {
-                  text: "DOWNLOAD_USER_DATA",
-                  url: "/employee/microplan/user-download",
-                  roles: ["MICROPLAN_ADMIN"],
+                  text: "",
+                  url: "",
+                  roles: [],
                 },
               ],
               label: headerLabel,
@@ -178,15 +180,22 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
               secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
               minReqFields: 0,
               defaultValues: {
-                dateRange: "",
+                dateRange: {
+                  startDate:null,
+                  endDate:null
+                },
               },
               fields: [
                 {
                   label: "Date Range",
                   key: "dateRange",
-                  type: "dateRange",
+                  type: "component",
+                  component:"DateRangePicker",
                   isMandatory: false,
                   populators: {
+                    name: "dateRange",
+                  },
+                  customProps: {
                     name: "dateRange",
                   },
                 },
