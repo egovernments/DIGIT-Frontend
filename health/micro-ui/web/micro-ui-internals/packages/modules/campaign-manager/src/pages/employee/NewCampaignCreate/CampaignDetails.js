@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import React, { Fragment , useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud , Edit } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 const CampaignDetails = () => {
   const { t } = useTranslation();
@@ -178,17 +178,44 @@ const CampaignDetails = () => {
   return (
     <>
       <div className="campaign-details-header">
-        <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
-        <Tag label={campaignData?.campaignName} showIcon={false} className={"campaign-view-tag"} type={"warning"} stroke={true}></Tag>
-        <Tag
-          label={campaignData?.deliveryRules?.[0]?.cycles?.length > 1 ? t("HCM_MULTIROUND") : t("HCM_INDIVIDUAL")}
-          showIcon={false}
-          className={"campaign-view-tag"}
-          type={"monochrome"}
-          stroke={true}
-        ></Tag>
+        <div style={{ display: "flex", alignItems: "baseline", gap: "1rem" }}>
+          <HeaderComponent className={"date-header"}>{campaignData?.campaignName}</HeaderComponent>
+          <div
+            className="hover"
+            onClick={() => {
+              history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}`);
+            }}
+          >
+            <Edit />
+          </div>
+        </div>
+        <div style={{ display: "flex" }}>
+          <Tag label={campaignData?.campaignName} showIcon={false} className={"campaign-view-tag"} type={"warning"} stroke={true}></Tag>
+          <Tag
+            label={campaignData?.deliveryRules?.[0]?.cycles?.length > 1 ? t("HCM_MULTIROUND") : t("HCM_INDIVIDUAL")}
+            showIcon={false}
+            className={"campaign-view-tag"}
+            type={"monochrome"}
+            stroke={true}
+          ></Tag>
+        </div>
       </div>
-      <div className="dates">{week}</div>
+      <div style={{ display: "flex", gap: "1rem" }}>
+        <div className="dates">{week}</div>
+        <div
+          className="hover"
+          style={{
+            height: "20px",
+            width: "20px",
+            alignSelf: "self-end",
+          }}
+          onClick={() => {
+            history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editDate=${true}&id=${campaignData?.id}`);
+          }}
+        >
+          <Edit />
+        </div>
+      </div>
       <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
       <div className="campaign-summary-container">
         <ViewComposer data={data} />

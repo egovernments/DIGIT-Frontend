@@ -59,6 +59,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             withoutLabel={true}
             type="date"
             value={startDate}
+            disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             placeholder={t("HCM_START_DATE")}
             populators={{
               validation: {
@@ -82,6 +83,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
                 min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
               },
             }}
+            disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
             onChange={(d) => {
               setStartValidation(true);

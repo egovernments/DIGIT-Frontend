@@ -4,7 +4,7 @@ import { FieldV1, Card, LabelFieldPair, RadioButtons } from "@egovernments/digit
 
 const CycleSelection = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
-  const [selectedOption, setSelectedOption] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(formData?.CycleSelection);
 
   const options = [
     { code: "HCM_SINGLE_ROUND", name: t("HCM_SINGLE_ROUND") },
@@ -12,15 +12,16 @@ const CycleSelection = ({ onSelect, formData, ...props }) => {
   ];
 
   useEffect(() => {
-    if(formData?.CampaignType?.code === "DEFAULT"){
-      setSelectedOption(null);
-    }
-    else if (formData?.CampaignType?.cycles?.length > 1 ) {
-      setSelectedOption("HCM_MULTI_ROUND");
-    } else {
-      setSelectedOption("HCM_SINGLE_ROUND");
-    }    
-  }, [formData?.CampaignType?.code]);
+  if (formData?.CycleSelection) {
+    setSelectedOption(formData.CycleSelection);
+  } else if (formData?.CampaignType?.code === "DEFAULT") {
+    setSelectedOption(null);
+  } else if (formData?.CampaignType?.cycles?.length > 1) {
+    setSelectedOption("HCM_MULTI_ROUND");
+  } else {
+    setSelectedOption("HCM_SINGLE_ROUND");
+  }
+}, [formData?.CampaignType?.code, formData?.CycleSelection]);
 
   useEffect(() =>{
     onSelect("CycleSelection", selectedOption);
@@ -34,8 +35,8 @@ const CycleSelection = ({ onSelect, formData, ...props }) => {
         <RadioButtons
           onSelect={(selected) => {
             setSelectedOption(selected.code);
-            // onSelect(selected.code);
           }}
+          disabled = {props?.config?.customProps?.disabled}
           options={options}
           optionsKey="name"
           selectedOption={options.find((opt) => opt.code === selectedOption)}
