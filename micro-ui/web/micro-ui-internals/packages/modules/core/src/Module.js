@@ -15,7 +15,7 @@ import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 
-const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
+const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding, allowedUserTypes }) => {
 
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
   if (isLoading) {
@@ -41,6 +41,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
               logoUrl={initData?.stateInfo?.logoUrl}
               logoUrlWhite={initData?.stateInfo?.logoUrlWhite}
               defaultLanding={defaultLanding}
+              allowedUserTypes={allowedUserTypes}
             />
           ) : (
             <DigitApp
@@ -50,6 +51,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding }) => {
               appTenants={initData.tenants}
               logoUrl={initData?.stateInfo?.logoUrl}
               defaultLanding={defaultLanding}
+              allowedUserTypes={allowedUserTypes}
             />
           )}
         </BodyContainer>
@@ -121,7 +123,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, moduleReducers, d
                 },
               }}
             >
-              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding}/>
+              <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding} allowedUserTypes={allowedUserTypes}/>
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
       </ErrorBoundary>

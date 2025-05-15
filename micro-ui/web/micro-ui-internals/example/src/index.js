@@ -91,6 +91,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
         <DigitUILazy
           stateCode={stateCode}
           enabledModules={enabledModules}
+          allowedUserTypes={["employee","citizen"]}
           defaultLanding="employee"
         />
       )}

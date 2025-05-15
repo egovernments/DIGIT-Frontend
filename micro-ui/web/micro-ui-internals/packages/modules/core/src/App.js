@@ -22,6 +22,7 @@ export const DigitApp = ({
   logoUrlWhite,
   initData,
   defaultLanding = "citizen",
+  allowedUserTypes=["citizen","employee"]
 }) => {
   const location = useLocation();
   const pathname = location.pathname;
@@ -84,8 +85,8 @@ export const DigitApp = ({
 
   return (
     <Routes>
-      <Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />
-      <Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />
+      {allowedUserTypes?.some(userType=>userType=="employee")&&<Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />}
+      {allowedUserTypes?.some(userType=>userType=="employee")&&<Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />}
       <Route
         path="*"
         element={<Navigate to={`/${window?.contextPath}/${defaultLanding}`} replace />}
