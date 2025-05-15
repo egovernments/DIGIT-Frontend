@@ -1,4 +1,4 @@
-name: core ui service docker Image CI
+name: core ui service docker Images CI
 
 on:
   push:
