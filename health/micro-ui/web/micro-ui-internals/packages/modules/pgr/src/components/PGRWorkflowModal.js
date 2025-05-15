@@ -41,11 +41,9 @@ const PGRWorkflowModal = ({
     if (!_.isEqual(sessionFormData, formData)) {
       setSessionFormData({ ...sessionFormData, ...formData });
     }
-    debugger
     if (formState.errors.SelectedReason) {
       setError("SelectedReason", { type: "custom", message: t("CORE_COMMON_APPLICANT_NAME_INVALID") }, { shouldFocus: false });
     }
-    debugger
   }
 
   if (!config || !selectedAction) return null;
