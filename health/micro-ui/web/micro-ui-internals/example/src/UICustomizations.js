@@ -10,6 +10,30 @@ import { Button as ButtonNew, Dropdown, Toast, Tag } from "@egovernments/digit-u
 // var Digit = window.Digit || {};
 
 
+const wrapTextStyle = {
+  maxWidth: "15rem",
+  wordWrap: "break-word",
+  whiteSpace: "normal",
+  overflowWrap: "break-word",
+};
+
+const renderText = (value, t) => {
+  if (value && value !== "NA") {
+    return (
+      <div style={wrapTextStyle}>
+        <p>{t(value)}</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <p>{t("NA")}</p>
+      </div>
+    );
+  }
+}
+
+
 const businessServiceMap = {
   "muster roll": "MR",
 };
@@ -1634,59 +1658,156 @@ export const UICustomizations = {
       }
     },
   },
-  HRMSInboxConfig: {
-    preProcess: (data) => {
-      // filterForm
-      // params
-
-      if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
-        const updatedParams = {}; // Temporary object to store updates
-
-        if (data.state.filterForm.roles?.code) {
-          updatedParams.roles = data.state.filterForm.roles.code;
+    CampaignsInboxConfig: {
+      preProcess: (data, additionalDetails) => {
+        data.body.ProjectStaff = {};
+        data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
+        data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+        data.params.limit = data.state.tableForm.limit;
+        data.params.offset = data.state.tableForm.offset;
+        cleanObject(data.body.ProjectStaff);
+        return data;
+      },
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        switch (key) {
+          case "ACTIONS":
+            let options = [
+              { code: "1", name: "VIEW_DASHBOARD" },
+              { code: "2", name: "VIEW_CUSTOM_REPORT" },
+            ];
+          const onActionSelect = async (e, row) => {
+            if (e.name == "VIEW_DASHBOARD") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
+            if (e.name == "VIEW_CUSTOM_REPORT") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
+          };
+            return (
+                  <ButtonNew
+                    type="actionButton"
+                    variation="secondary"
+                    label={t("TAKE_ACTION")}
+                    title={t("TAKE_ACTION")}
+                    options={options}
+                    style={{ width: "20rem" }}
+                    optionsKey="name"
+                    showBottom={true}
+                    isSearchable={false}
+                    onOptionSelect={(item) => onActionSelect(item, row)}
+                  />
+            );
+  
+          case "CAMPAIGN_NAME":
+            return renderText(value,t);
+  
+          case "BOUNDARY_NAME":
+            return renderText(value,t);
+  
+          case "START_DATE":
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+              </div>
+            );
+  
+          case "YEAR":
+            return renderText(value,t);
+  
+          case "END_DATE":
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+              </div>
+            );
+  
+          case "PLANNED_END_DATE":
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+              </div>
+            );
+  
+          default:
+            return null; // Handle any unexpected keys here if needed
         }
-
-        if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
-          updatedParams.isActive = data.state.filterForm.isActive.code;
-        }
-
-        // Update `data.params` only if `updatedParams` has values
-        if (Object.keys(updatedParams).length > 0) {
-          data.params = { ...data.params, ...updatedParams };
-        }
-      }
-
-      return data;
+      },
     },
 
-    additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      console.log("additional customization");
-      switch (key) {
-        case "HR_EMP_ID_LABEL":
-          return (
-            <span className="link">
-              <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
-            </span>
-          );
-
-        case "HR_ROLE_NO_LABEL":
-          return value ? `${value.length}` : t("ES_COMMON_NA");
-
-        case "HR_DESG_LABEL":
-          return value.length > 0 ? t(`${value[0].designation}`) : t("ES_COMMON_NA");
-
-        case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
-          return value ? t(`${value.department}`) : t("ES_COMMON_NA");
-
-        case "MASTERS_LOCALITY":
-          return value ? (
-            <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
-          ) : (
-            t("ES_COMMON_NA")
-          );
-        default:
-          return t("ES_COMMON_NA");
-      }
+    HRMSInboxConfig: {
+      preProcess: (data) => {
+        // filterForm
+        // params
+  
+        if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+          const updatedParams = {}; // Temporary object to store updates
+  
+          if (data.state.filterForm.roles?.code) {
+            updatedParams.roles = data.state.filterForm.roles.code;
+          }
+  
+          if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+            updatedParams.isActive = data.state.filterForm.isActive.code;
+          }
+  
+          // Update `data.params` only if `updatedParams` has values
+          if (Object.keys(updatedParams).length > 0) {
+            data.params = { ...data.params, ...updatedParams };
+          }
+        }
+  
+        return data;
+      },
+  
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        console.log("additional customization");
+        switch (key) {
+          case "HR_EMP_ID_LABEL":
+            return (
+              <span className="link">
+                <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
+              </span>
+            );
+  
+          case "HR_ROLE_NO_LABEL":
+            return value ? `${value.length}` : t("ES_COMMON_NA");
+  
+          case "HR_DESG_LABEL":
+            return value.length > 0 ? t(`${value[0].designation}`) : t("ES_COMMON_NA");
+  
+          case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
+            return value ? t(`${value.department}`) : t("ES_COMMON_NA");
+  
+          case "MASTERS_LOCALITY":
+            return value ? (
+              <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+            ) : (
+              t("ES_COMMON_NA")
+            );
+          default:
+            return t("ES_COMMON_NA");
+        }
+      },
     },
-  },
 };

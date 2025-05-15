@@ -1,6 +1,8 @@
 import utils from "../utils";
+import useCampaignsInboxSearch from "./useCampaignsInboxSearch";
 
 const DSS = {
+  useCampaignsInboxSearch,
 };
 
 const Hooks = {

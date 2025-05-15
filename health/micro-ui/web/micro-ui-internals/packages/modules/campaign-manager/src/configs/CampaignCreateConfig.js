@@ -1,4 +1,4 @@
-export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData) => {
+export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
   return [
     {
       form: [
@@ -15,7 +15,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
               key: "CampaignType",
               type: "dropdown",
               label: "HCM_SELECT_CAMPAIGN_TYPE",
-              disable: false,
+              disable: editName || editDate,
               populators: {
                 name: "CampaignType",
                 optionsKey: "code", 
@@ -33,11 +33,11 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
               type: "component",
               component: "CycleSelection",
               label: "",
-              disable: false,
+              disable: editName || editDate,
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                isSubmitting: isSubmitting,
+                disabled: editName || editDate,
               },
               populators: {
                 name: "CycleSelection",
@@ -54,6 +54,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
           name: "HCM_CAMPAIGN_NAME",
           head: "HCM_CAMPAIGN_NAME_QUES",
           subHead: "HCM_CAMPAIGN_NAME_DESC",
+          disable: editDate,
           callAPI: "true",
           sectionSubHeadClassName : "SubHeadingClass",
           body: [
@@ -62,7 +63,8 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
               key: "CampaignName",
               type: "text",
               label: "HCM_SELECT_CAMPAIGN_NAME",
-              disable: false,
+              placeholder: "HCM_CAMPAIGNNAME_DATE_MONTH_YEAR",
+              disable: editDate,
               populators: {
                 name: "CampaignName",
                 error: "ES__REQUIRED",
@@ -89,8 +91,7 @@ export const CampaignCreateConfig = (totalFormData, dataParams, isSubmitting, su
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData,
-                isSubmitting: isSubmitting,
+                sessionData: totalFormData
               },
               populators: {
                 name: "DateSelection",

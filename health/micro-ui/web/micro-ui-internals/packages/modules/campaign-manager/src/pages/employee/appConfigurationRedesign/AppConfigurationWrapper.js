@@ -114,17 +114,18 @@ const reducer = (state = initialState, action, updateLocalization) => {
           if (item?.name === action?.payload?.currentScreen?.name) {
             return {
               ...item,
-              cards: item?.cards?.map((j, k) => {
+              cards: item?.cards?.map((j, k, c) => {
                 if (j.header === action.payload.currentCard?.header) {
                   return {
                     ...j,
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: crypto.randomUUID(),
+                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${j?.fields?.length + 1}`,
                         type: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
                         active: true,
+                        deleteFlag: true,
                       },
                     ],
                   };
@@ -257,6 +258,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
+  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
@@ -265,7 +267,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   const localeModule = searchParams.get("localeModule");
   const module = localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, "en_IN");
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -323,10 +325,9 @@ function AppConfigurationWrapper({ screenConfig }) {
 
   function createLocaleArrays() {
     const result = {};
-
     // Dynamically determine locales
-    const locales = Object.keys(locState[0]).filter((key) => key.includes("_IN") && key !== "en_IN");
-    locales.unshift("en_IN");
+    const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
+    locales.unshift(currentLocale);
     locales.forEach((locale) => {
       result[locale] = locState
         .map((item) => ({
@@ -379,7 +380,10 @@ function AppConfigurationWrapper({ screenConfig }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
-          onClick={() => onSubmit(state)}
+          onClick={async () => {
+            await handleSubmit();
+            onSubmit(state);
+          }}
         />
       </div>
 
@@ -562,13 +566,18 @@ function AppConfigurationWrapper({ screenConfig }) {
                 value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
                 onChange={(event) => {
                   updateLocalization(
-                    `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
+                    addFieldData?.label && addFieldData?.label !== true
+                      ? addFieldData?.label
+                      : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
                     Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
                     event.target.value
                   );
                   setAddFieldData((prev) => ({
                     ...prev,
-                    label: `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
+                    label:
+                      addFieldData?.label && addFieldData?.label !== true
+                        ? addFieldData?.label
+                        : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
                   }));
                 }}
               />

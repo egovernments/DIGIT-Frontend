@@ -36,8 +36,8 @@ const dispatcher = (state, action) => {
       return {
         ...state,
         currentTemplate: state.currentTemplate.map((i) => {
-          if (i.name === action.data?.[0].name) {
-            return action.data?.[0];
+          if (i?.name === action?.data?.[0]?.name) {
+            return action?.data?.[0];
           }
           return i;
         }),
@@ -75,7 +75,7 @@ const getTypeAndMetaData = (field) => {
     return {
       type: "numeric",
     };
-  } else if (field.type === "string" && field.format === "select") {
+  } else if (field.type === "string" && (field.format === "select" || field.format === "dropdown")) {
     return {
       type: "dropDown",
       dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
@@ -95,7 +95,8 @@ const getTypeAndMetaData = (field) => {
     return { type: "textInput" };
   }
 };
-function correctTypeFinder(input) {
+
+const correctTypeFinder = (input) => {
   if (input.type === "string" && input.format === "date") {
     return "datePicker";
   } else if (input.type === "string" && input.format === "MDMS") {
@@ -113,82 +114,86 @@ function correctTypeFinder(input) {
   } else {
     return "textInput";
   }
-}
+};
 
-function restructure(data1) {
-  return data1.map((page) => {
-    const cardFields = page.properties.map((field, index) => ({
-      // type: correctTypeFinder(field),
-      // dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
-      label: field.label || "",
-      value: field.value || "",
-      active: true,
-      jsonPath: field.fieldName || "",
-      metaData: {},
-      Mandatory: field.required || false,
-      deleteFlag: false,
-      isLocalised: field.isLocalised ? true : false,
-      innerLabel: field.innerLabel || "",
-      helpText: field.helpText || "",
-      errorMessage: field?.errorMessage || "",
-      tooltip: field.tooltip || "",
-      infoText: field.infoText || "",
-      order: field.order || 0,
-      ...getTypeAndMetaData(field),
-    }));
+const restructure = (data1) => {
+  return data1
+    ?.sort((a, b) => a.order - b.order)
+    .map((page) => {
+      const cardFields = page.properties
+        ?.sort((a, b) => a.order - b.order)
+        ?.map((field, index) => ({
+          // type: correctTypeFinder(field),
+          // dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
+          label: field.label || "",
+          value: field.value || "",
+          active: true,
+          jsonPath: field.fieldName || "",
+          metaData: {},
+          Mandatory: field.required || false,
+          deleteFlag: field.deleteFlag || false,
+          isLocalised: field.isLocalised ? true : false,
+          innerLabel: field.innerLabel || "",
+          helpText: field.helpText || "",
+          errorMessage: field?.errorMessage || "",
+          tooltip: field.tooltip || "",
+          infoText: field.infoText || "",
+          order: field.order,
+          ...getTypeAndMetaData(field),
+        }));
 
-    return {
-      name: page.label || page.page || "UNKNOWN",
-      cards: [
-        {
-          header: crypto.randomUUID(),
-          fields: cardFields,
-          headerFields: [
-            {
-              type: "text",
-              label: "SCREEN_HEADING",
-              value: page.label || "",
-              active: true,
-              jsonPath: "ScreenHeading",
-              metaData: {},
-              required: true,
-              isLocalised: page.label ? true : false,
-            },
-            {
-              type: "textarea",
-              label: "SCREEN_DESCRIPTION",
-              value: page.description || "",
-              active: true,
-              jsonPath: "Description",
-              metaData: {},
-              required: true,
-              isLocalised: page.description ? true : false,
-            },
-          ],
+      return {
+        name: page.label || page.page || "UNKNOWN",
+        cards: [
+          {
+            header: crypto.randomUUID(),
+            fields: cardFields,
+            headerFields: [
+              {
+                type: "text",
+                label: "SCREEN_HEADING",
+                value: page.label || "",
+                active: true,
+                jsonPath: "ScreenHeading",
+                metaData: {},
+                required: true,
+                isLocalised: page.label ? true : false,
+              },
+              {
+                type: "textarea",
+                label: "SCREEN_DESCRIPTION",
+                value: page.description || "",
+                active: true,
+                jsonPath: "Description",
+                metaData: {},
+                required: true,
+                isLocalised: page.description ? true : false,
+              },
+            ],
+          },
+        ],
+        actionLabel: page?.actionLabel || "",
+        order: page.order,
+        config: {
+          enableComment: false,
+          enableFieldAddition: true,
+          allowFieldsAdditionAt: ["body"],
+          enableSectionAddition: false,
+          allowCommentsAdditionAt: ["body"],
         },
-      ],
-      actionLabel: page?.actionLabel || "",
-      order: page.order + 1,
-      config: {
-        enableComment: false,
-        enableFieldAddition: true,
-        allowFieldsAdditionAt: ["body"],
-        enableSectionAddition: false,
-        allowCommentsAdditionAt: ["body"],
-      },
-      parent: "REGISTRATION",
-    };
-  });
-}
+        parent: "REGISTRATION",
+      };
+    });
+};
 
-function guessPageName(label) {
+const guessPageName = (label) => {
   const map = {
     BENE_LOCATION: "beneficiaryLocation",
     BENE_HOUSE: "HouseDetails",
     // Add more mappings as needed
   };
   return map[label] || label;
-}
+};
 
 const getTypeAndFormat = (field) => {
   switch (field.type) {
@@ -202,14 +207,17 @@ const getTypeAndFormat = (field) => {
       break;
     case "dropdown":
     case "dropDown":
-      return { type: "string", format: "select", enums: field?.dropDownOptions || [] };
+      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.name) || [] };
       break;
     case "datePicker":
     case "dobPicker":
       return { type: "string", format: "date", startDate: field?.startDate, endDate: field?.endDate };
       break;
     case "numeric":
-      return { type: "number", format: "incrementer" };
+      return { type: "number", format: "increment" };
+      break;
+    case "checkbox":
+      return { type: "boolean", format: "boolean" };
       break;
     case "mobileNumber":
       return { type: "string", format: "mobileNumber", prefix: field?.prefix };
@@ -221,13 +229,14 @@ const getTypeAndFormat = (field) => {
       break;
   }
 };
-function reverseRestructure(updatedData) {
+
+const reverseRestructure = (updatedData) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex, array) => {
       const typeAndFormat = getTypeAndFormat(field);
       return {
         label: field.label || "",
-        order: fieldIndex,
+        order: fieldIndex + 1,
         value: field.value || "",
         hidden: false, // can't be derived from updatedData unless explicitly added
         required: field.Mandatory || false,
@@ -237,6 +246,7 @@ function reverseRestructure(updatedData) {
         infoText: field.infoText || "",
         innerLabel: field.innerLabel || "",
         errorMessage: field.errorMessage || "",
+        deleteFlag: field.deleteFlag || false,
         ...typeAndFormat,
       };
     });
@@ -247,11 +257,11 @@ function reverseRestructure(updatedData) {
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
-      order: index,
+      order: index + 1,
       properties,
     };
   });
-}
+};
 
 const AppConfigurationParentRedesign = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -380,6 +390,7 @@ const AppConfigurationParentRedesign = () => {
   if (isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
     return <Loader />;
   }
+
   const submit = async (screenData) => {
     parentDispatch({
       key: "SETBACK",
@@ -392,6 +403,7 @@ const AppConfigurationParentRedesign = () => {
       const reverseFormat = {
         name: "REGISTRATIONFLOW",
         version: 1,
+        project: "SMC_2025",
         pages: reverseData,
       };
 
@@ -408,7 +420,7 @@ const AppConfigurationParentRedesign = () => {
         },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.message ? error?.message : error });
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
