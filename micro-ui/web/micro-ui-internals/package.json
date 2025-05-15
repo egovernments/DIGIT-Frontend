@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "packages/libraries",
-    "packages/react-components",
-    "packages/svg-components",
-    "packages/ui-components",
     "example",
     "packages/modules/*"
   ],

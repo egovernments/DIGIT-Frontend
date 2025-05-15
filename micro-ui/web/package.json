@@ -10,8 +10,7 @@
   "homepage": "/digit-ui",
   "workspaces": [
     "micro-ui-internals",
-    "micro-ui-internals/packages/modules/*",
-    "micro-ui-internals/packages/*"
+    "micro-ui-internals/packages/modules/*"
   ],
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.2-webpack-23",
@@ -68,7 +67,7 @@
     "build": "GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true react-scripts build",
     "build:prepare": "./build.sh",
     "build:libraries": "cd micro-ui-internals && yarn build",
-    "build:prod": "webpack --mode development",
+    "build:prod": "webpack --mode production",
     "build:webpack": "yarn build:libraries && cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules && cd micro-ui-internals && yarn clean"
   },
