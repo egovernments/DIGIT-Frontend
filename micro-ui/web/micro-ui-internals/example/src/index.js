@@ -1,12 +1,10 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
-const queryClient = new QueryClient();
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );
@@ -59,9 +57,7 @@ const initDigitUI = () => {
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(
-    <QueryClientProvider client={queryClient}>
       <MainApp stateCode={stateCode} enabledModules={enabledModules} />
-    </QueryClientProvider>
   );
 };
 
