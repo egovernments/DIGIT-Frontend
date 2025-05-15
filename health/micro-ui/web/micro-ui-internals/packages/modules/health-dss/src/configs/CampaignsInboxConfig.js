@@ -101,14 +101,9 @@ export const CampaignsInboxConfig = ({ headerLabel }) => {
             uiConfig: {
               links: [
                 {
-                  text: "BULK_UPLOAD_USERS",
-                  url: "/employee/microplan/upload-user",
-                  roles: ["MICROPLAN_ADMIN"],
-                },
-                {
-                  text: "DOWNLOAD_USER_DATA",
-                  url: "/employee/microplan/user-download",
-                  roles: ["MICROPLAN_ADMIN"],
+                  text: "",
+                  url: "",
+                  roles: [],
                 },
               ],
               label: headerLabel,
