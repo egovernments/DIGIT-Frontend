@@ -6,7 +6,6 @@ import { Stepper, Toast, Button, Footer, Loader, FormComposerV2 } from "@egovern
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
-import { transformUpdateData } from "../../../utils/transformUpdateData";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
   const history = useHistory();
