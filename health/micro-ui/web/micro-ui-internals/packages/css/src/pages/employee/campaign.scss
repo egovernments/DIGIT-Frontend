@@ -458,4 +458,12 @@
 .beneficiary-selection-label{
   margin-bottom: 0rem;
 }
+.selected-card {
+  border: 2px solid #f47738;
+  background-color: #fef1e4;
+  position: relative;
+}
+.selected-header {
+  color: theme(digitv2.lightTheme.primary);
+}
 

@@ -78,7 +78,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
               buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
-              navLink: `app-modules`,
+              navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
               icon: <AdUnits />
             },
           },
