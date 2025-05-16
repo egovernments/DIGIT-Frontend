@@ -11,31 +11,31 @@ msg() {
 # yarn build
 # sleep 5
 
-msg "Building and publishing css"
-cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --access public
+# msg "Building and publishing css"
+# cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --access public
 
-# msg "Building and publishing Core module"
-cd "$BASEDIR/packages/modules/core" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+msg "Building and publishing Core module"
+cd "$BASEDIR/packages/modules/core" &&   rm -rf dist && yarn&& npm publish --tag react-19
 
 # msg "Building and publishing Utilities module"
-cd "$BASEDIR/packages/modules/utilities" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/utilities" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 # msg "Building and publishing OpenPayment module"
-cd "$BASEDIR/packages/modules/open-payment" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/open-payment" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 
-# msg "Building and publishing Utilities module"
-cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+msg "Building and publishing Utilities module"
+cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish --tag react-19
 
 
 # msg "Building and publishing svg components"
-cd "$BASEDIR/packages/svg-components" && rm -rf dist && yarn && npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/svg-components" && rm -rf dist && yarn && npm publish --tag workbench-1.1
 
-msg "Building and publishing react-components"
-cd "$BASEDIR/packages/react-components" && rm -rf dist && yarn && npm publish --tag workbench-1.1
+# msg "Building and publishing react-components"
+# cd "$BASEDIR/packages/react-components" && rm -rf dist && yarn && npm publish --tag workbench-1.1
 
-msg "Building and publishing libraries"
-cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --tag workbench-1.1
+# msg "Building and publishing libraries"
+# cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --tag workbench-1.1
 
 
 
@@ -45,16 +45,16 @@ cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --tag wor
 # sleep 5
 
 # msg "Building and publishing Engagement module"
-cd "$BASEDIR/packages/modules/engagement" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/engagement" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 # msg "Building and publishing hrms module"
-cd "$BASEDIR/packages/modules/hrms" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/hrms" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 # msg "Building and publishing DSS module"
-cd "$BASEDIR/packages/modules/dss" &&  rm -rf dist && yarn&& npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/dss" &&  rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 # msg "Building and publishing Common module"
-cd "$BASEDIR/packages/modules/common" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/common" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 
 # msg "Building and publishing pgr module"
