@@ -69,6 +69,7 @@ const AppModule = () => {
 
     if (selectedModules?.length === 0) {
       setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
+      return ;
     }
 
     for (const module of selectedModules) {
