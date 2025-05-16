@@ -2,12 +2,12 @@ name: Digit build upgraded packages workflow
 on:
   push:
     branches:
-      - develop-react19-sub
+      - VersionUpgrade-test5-withPackages
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
   pull_request:
     branches:
-      - develop-react19-sub
+      - VersionUpgrade-test5
   workflow_dispatch:
 jobs:
   docker_image-build:
