@@ -8,10 +8,10 @@ import { SVG } from "@egovernments/digit-ui-components";
 const AppModule = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignType = searchParams.get("projectType");
+  const tenantId = searchParams.get("tenantId");
   const [selectedModuleCodes, setSelectedModuleCodes] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
@@ -124,7 +124,7 @@ const AppModule = () => {
     }
 
     history.push(
-      `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfig4&fieldType=${campaignNumber}&prefix=APPONE&localeModule=APPONE`
+      `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfig4&fieldType=${campaignNumber}&prefix=APPONE&localeModule=APPONE&tenantId=${tenantId}`
     );
   };
 
