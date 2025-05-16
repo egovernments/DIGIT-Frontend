@@ -2,10 +2,11 @@ import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { default as EmployeeApp } from "./pages/employee";
 import SampleCard from "./components/SampleCard";
-// import ViewEstimateComponent from "./components/ViewEstimateComponent";
-// // import { overrideHooks, updateCustomConfigs } from "./utils";
-// import AdditionalComponentWrapper from "./components/AdditionalComponent";
-// import SampleMultiComponent from "./components/SampleMultiComponent";
+import HRMSCard from "./components/HRMSCard";
+import ViewEstimateComponent from "./components/ViewEstimateComponent";
+import { overrideHooks, updateCustomConfigs } from "./utils";
+import AdditionalComponentWrapper from "./components/AdditionalComponent";
+import SampleMultiComponent from "./components/SampleMultiComponent";
 
 // SampleModule component manages the initialization and rendering of the module
 export const SampleModule = ({ stateCode, userType, tenants }) => {
@@ -39,17 +40,26 @@ export const SampleModule = ({ stateCode, userType, tenants }) => {
 
 // Register components to be used in DIGIT's Component Registry
 const componentsToRegister = {
-
+  SampleModule,
+  SampleCard,
   UtilitiesModule: SampleModule,
   UtilitiesCard: SampleCard,
-  // ViewEstimatePage: ViewEstimateComponent,
-  // SampleAdditionalComponent: AdditionalComponentWrapper,
-  // SampleMultiComponent: SampleMultiComponent,
+  HRMSCard,
+  ViewEstimatePage: ViewEstimateComponent,
+  SampleAdditionalComponent: AdditionalComponentWrapper,
+  SampleMultiComponent: SampleMultiComponent,
 };
 
+// Initialize and register module components
 export const initSampleComponents = () => {
   console.log("Sample initSampleComponent is Hitting")
-  
+  // Apply custom hooks overrides
+   overrideHooks();
+
+  // Update custom configuratio
+   updateCustomConfigs();
+
+  // Register each component with the DIGIT Component Registry
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });

@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import { initGlobalConfigs } from "./globalConfig";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Hooks } from "@egovernments/digit-ui-libraries";
-import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
+// import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 // Ensure Digit is defined before using it
@@ -74,10 +74,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
   const [isReady, setIsReady] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
+   useEffect(() => {
     initLibraries().then(() => {
       console.log(Digit, window?.Digit);
-      initSampleComponents();
+      const app = async () => {
+        const { initSampleComponents } = await import("@egovernments/digit-ui-module-sample");
+        await initSampleComponents();
+      }
+      app()
       initWorkbenchComponents();
       setIsReady(true)
     });
