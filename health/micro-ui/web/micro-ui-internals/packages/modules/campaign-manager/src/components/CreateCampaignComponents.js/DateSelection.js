@@ -48,8 +48,8 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
     <Card>
       <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
-      <LabelFieldPair style={{ display: "grid", gridTemplateColumns: "13rem 2fr", alignItems: "start" }}>
-        <div className="campaign-dates">
+      <LabelFieldPair >
+        <div className="digit-header-content label   ">
           <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
           <span className="mandatory-date">*</span>
         </div>
@@ -59,6 +59,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             withoutLabel={true}
             type="date"
             value={startDate}
+            disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             placeholder={t("HCM_START_DATE")}
             populators={{
               validation: {
@@ -82,6 +83,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
                 min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
               },
             }}
+            disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
             onChange={(d) => {
               setStartValidation(true);

@@ -75,7 +75,7 @@ const AppFeatures = () => {
               label={t("ES_CAMPAIGN_SELECT")}
               onClick={() => {
                 history.push(
-                  `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE&formId=default`
+                  `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigTwo&fieldType=AppFieldType&prefix=APPTWO&localeModule=APPTWO&formId=default`
                 );
               }}
             />

@@ -13,7 +13,7 @@
  */
 
 import { FormComposerV2, Toast } from "@egovernments/digit-ui-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import { useHistory } from "react-router-dom";
@@ -32,14 +32,15 @@ const CreateComplaintForm = ({
   const history = useHistory();
 
   const [toast, setToast] = useState({ show: false, label: "", type: "" }); // Toast UI state
-  const [isButtonDisabled, setIsButtonDisabled] = useState(false);          // Submit button state
-  const [inputFormdata, setInputFormData] = useState([]);                   // Store submitted form data
+
 
   const user = Digit.UserService.getUser();
 
   // Hook for creating a complaint
   const { mutate: CreateWOMutation } = Digit.Hooks.pgr.useCreateComplaint(tenantId);
 
+  // Fetch the list of service definitions (e.g., complaint types) for current tenant
+  const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
   // Auto-close toast after 3 seconds
   useEffect(() => {
     if (toast?.show) {
@@ -53,10 +54,12 @@ const CreateComplaintForm = ({
    * Handles input changes and validation in form fields
    */
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors) => {
+    const ComplainantName = formData?.ComplainantName;
+    const selectedUser = formData?.complaintUser?.code;
+  
+    // Check if formData is same as session, otherwise proceed
     if (!_.isEqual(sessionFormData, formData)) {
-      const ComplainantName = formData?.ComplainantName;
-
-      // Validate ComplainantName field against name pattern
+      // Validate name
       if (ComplainantName && !ComplainantName.match(Digit.Utils.getPattern("Name"))) {
         if (!formState.errors.ComplainantName) {
           setError("ComplainantName", {
@@ -67,11 +70,50 @@ const CreateComplaintForm = ({
       } else if (formState.errors.ComplainantName) {
         clearErrors("ComplainantName");
       }
-
-      // Save updated form data in session
-      setSessionFormData({ ...sessionFormData, ...formData });
+  
+      let updatedData = { ...formData };
+  
+      if (selectedUser === "MYSELF") {
+        if (formData.ComplainantName !== user?.info?.name) {
+          setValue("ComplainantName", user?.info?.name);
+          updatedData.ComplainantName = user?.info?.name;
+        }
+        if (formData.ComplainantContactNumber !== user?.info?.mobileNumber) {
+          setValue("ComplainantContactNumber", user?.info?.mobileNumber);
+          updatedData.ComplainantContactNumber = user?.info?.mobileNumber;
+        }
+      } else if (selectedUser === "ANOTHER_USER") {
+        if (formData.ComplainantName !== "") {
+          setValue("ComplainantName", "");
+          updatedData.ComplainantName = "";
+        }
+        if (formData.ComplainantContactNumber !== "") {
+          setValue("ComplainantContactNumber", "");
+          updatedData.ComplainantContactNumber = "";
+        }
+      }
+  
+      // Now sessionFormData includes what you just set
+      setSessionFormData(updatedData);
     }
   };
+  
+     const updatedConfig = useMemo(
+       () =>
+         Digit.Utils.preProcessMDMSConfig(
+           t,
+           createComplaintConfig,
+           {
+             updateDependent: [
+               {
+                 key: "SelectComplaintType",
+                 value: [serviceDefs ? serviceDefs : []],
+               },
+             ],
+           }
+         ),
+       [createComplaintConfig, serviceDefs]
+     );
 
   const handleToastClose = () => {
     setToast({ show: false, label: "", type: "" });
@@ -81,7 +123,6 @@ const CreateComplaintForm = ({
    * Handles form submission event
    */
   const onFormSubmit = (_data) => {
-    setInputFormData(_data);
 
     const payload = formPayloadToCreateComplaint(_data, tenantId, user?.info);
     handleResponseForCreateWO(payload);
@@ -91,19 +132,15 @@ const CreateComplaintForm = ({
    * Makes API call to create complaint and handles response
    */
   const handleResponseForCreateWO = async (payload) => {
-    setIsButtonDisabled(true);
 
     await CreateWOMutation(payload, {
       onError: async () => {
-        setIsButtonDisabled(false);
         setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
       },
       onSuccess: async (responseData) => {
         if (responseData?.ResponseInfo?.Errors) {
-          setIsButtonDisabled(false);
           setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
         } else {
-          setIsButtonDisabled(false);
           sendDataToResponsePage(
             "CS_COMMON_COMPLAINT_SUBMITTED",
             "CS_COMMON_TRACK_COMPLAINT_TEXT",
@@ -131,17 +168,18 @@ const CreateComplaintForm = ({
     });
   };
 
+
   return (
     <React.Fragment>
       <FormComposerV2
         onSubmit={onFormSubmit}
         defaultValues={sessionFormData}
         heading={t("")}
-        config={createComplaintConfig}
+        config={updatedConfig?.form}
         className="custom-form"
         onFormValueChange={onFormValueChange}
         isDisabled={false}
-        label={t("CORE_COMMON_SUBMIT")}
+        label={t("CS_COMMON_SUBMIT")}
       />
 
       {/* Toast Notification for success/failure messages */}

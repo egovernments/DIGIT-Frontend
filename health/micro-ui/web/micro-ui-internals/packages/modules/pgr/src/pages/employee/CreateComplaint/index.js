@@ -13,17 +13,18 @@
  * - Renders the CreateComplaintForm with appropriate props
  */
 
-import React, { useState } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import CreateComplaintForm from "./createComplaintForm";
 import { CreateComplaintConfig } from "../../../configs/CreateComplaintConfig";
+import { useLocation } from "react-router-dom";
 
 const CreateComplaint = () => {
   const { t } = useTranslation();
 
-  const tenant = Digit.ULBService.getStateId();
-
+  // Get current ULB tenant ID
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   // Manage form session state using sessionStorage under key "COMPLAINT_CREATE"
   const CreateComplaintSession = Digit.Hooks.useSessionStorage("COMPLAINT_CREATE", {});
   const [sessionFormData, setSessionFormData, clearSessionFormData] = CreateComplaintSession;
@@ -34,14 +35,22 @@ const CreateComplaint = () => {
     "RAINMAKER-PGR",
     ["CreateComplaintConfig"],
     {
-      select: (data) => data?.["RAINMAKER-PGR"]?.CreateComplaintConfig,
+      select: (data) => data?.["RAINMAKER-PGR"]?.CreateComplaintConfig?.[0],
       retry: false,
       enable: false, // Disabled fetch by default – relies on fallback config
     }
   );
 
+     // Fetch the list of service definitions (e.g., complaint types) for current tenant
+    //  const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
+
   // Use MDMS config if available, otherwise fallback to local static config
-  const configs = mdmsData || CreateComplaintConfig;
+  const configs = mdmsData || CreateComplaintConfig?.CreateComplaintConfig?.[0];
+  
+   /**
+    * Preprocess config using translation and inject complaint types into the serviceCode dropdown
+    */
+
 
   // Show loader while fetching MDMS config
   if (isLoading || !configs) {
@@ -56,7 +65,7 @@ const CreateComplaint = () => {
         sessionFormData={sessionFormData}
         setSessionFormData={setSessionFormData}
         clearSessionFormData={clearSessionFormData}
-        tenantId={tenant}
+        tenantId={tenantId}
         preProcessData={{}} // Reserved for any future data transformation
       />
     </React.Fragment>

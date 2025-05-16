@@ -7,7 +7,8 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
   const [assignees, setAssignees] = useState([]);
   const [selectedEmployee, setSelectedEmployee] = useState(null);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  
+  const hrmsContext = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
+
   // Get roles from config populators
   const { roles = [], department } = config?.populators || {};
 
@@ -17,7 +18,7 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
     data: employeeData, 
     error 
   } = Digit.Hooks.useCustomAPIHook({
-    url: "/egov-hrms/employees/_search",
+    url: `/${hrmsContext}/employees/_search`,
     params: {
       tenantId: tenantId,
       roles: roles.join(","),

@@ -10,6 +10,30 @@ import { Button as ButtonNew, Dropdown, Toast, Tag } from "@egovernments/digit-u
 // var Digit = window.Digit || {};
 
 
+const wrapTextStyle = {
+  maxWidth: "15rem",
+  wordWrap: "break-word",
+  whiteSpace: "normal",
+  overflowWrap: "break-word",
+};
+
+const renderText = (value, t) => {
+  if (value && value !== "NA") {
+    return (
+      <div style={wrapTextStyle}>
+        <p>{t(value)}</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <p>{t("NA")}</p>
+      </div>
+    );
+  }
+}
+
+
 const businessServiceMap = {
   "muster roll": "MR",
 };
@@ -1561,10 +1585,10 @@ export const UICustomizations = {
       }
     
       // --- Handle serviceCode ---
-      let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || []);
-      serviceCodes = serviceCodes?.map((row) => row?.serviceCode);
+      let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
+      serviceCodes = serviceCodes?.serviceCode;
       delete data.body.inbox.moduleSearchCriteria.serviceCode;
-      if (serviceCodes.length > 0) {
+      if (serviceCodes != null) {
         data.body.inbox.moduleSearchCriteria.complaintType = serviceCodes;
       } else {
         delete data.body.inbox.moduleSearchCriteria.complaintType;
@@ -1585,7 +1609,6 @@ export const UICustomizations = {
         delete data.body.inbox.moduleSearchCriteria.locality;
         data.body.inbox.moduleSearchCriteria.area = localityArray;
       } else {
-        delete data.body.inbox.moduleSearchCriteria.locality;
         delete data.body.inbox.moduleSearchCriteria.area;
       }
     
@@ -1634,4 +1657,100 @@ export const UICustomizations = {
       }
     },
   },
+    CampaignsInboxConfig: {
+      preProcess: (data, additionalDetails) => {
+        data.body.ProjectStaff = {};
+        data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
+        data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+        data.params.limit = data.state.tableForm.limit;
+        data.params.offset = data.state.tableForm.offset;
+        cleanObject(data.body.ProjectStaff);
+        return data;
+      },
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        switch (key) {
+          case "ACTIONS":
+            let options = [
+              { code: "1", name: "VIEW_DASHBOARD" },
+              { code: "2", name: "VIEW_CUSTOM_REPORT" },
+            ];
+          const onActionSelect = async (e, row) => {
+            if (e.name == "VIEW_DASHBOARD") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
+            if (e.name == "VIEW_CUSTOM_REPORT") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
+          };
+            return (
+                  <ButtonNew
+                    type="actionButton"
+                    variation="secondary"
+                    label={t("TAKE_ACTION")}
+                    title={t("TAKE_ACTION")}
+                    options={options}
+                    style={{ width: "20rem" }}
+                    optionsKey="name"
+                    showBottom={true}
+                    isSearchable={false}
+                    onOptionSelect={(item) => onActionSelect(item, row)}
+                  />
+            );
+  
+          case "CAMPAIGN_NAME":
+            return renderText(value,t);
+  
+          case "BOUNDARY_NAME":
+            return renderText(value,t);
+  
+          case "START_DATE":
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+              </div>
+            );
+  
+          case "YEAR":
+            return renderText(value,t);
+  
+          case "END_DATE":
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+              </div>
+            );
+  
+          case "PLANNED_END_DATE":
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+              </div>
+            );
+  
+          default:
+            return null; // Handle any unexpected keys here if needed
+        }
+      },
+    },
 };

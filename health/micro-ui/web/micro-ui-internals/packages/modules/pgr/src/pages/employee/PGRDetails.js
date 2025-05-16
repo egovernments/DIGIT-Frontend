@@ -16,8 +16,8 @@ const ACTION_CONFIGS = [
     formConfig: {
       label: {
         heading: "CS_ACTION_ASSIGN",
-        cancel: "CORE_COMMON_CANCEL",
-        submit: "CORE_COMMON_SUBMIT",
+        cancel: "CS_COMMON_CANCEL",
+        submit: "CS_COMMON_SUBMIT",
       },
       form: [
         {
@@ -52,8 +52,8 @@ const ACTION_CONFIGS = [
     formConfig: {
       label: {
         heading: "PGR_ACTION_REJECT",
-        cancel: "CORE_COMMON_CANCEL",
-        submit: "CORE_COMMON_SUBMIT",
+        cancel: "CS_COMMON_CANCEL",
+        submit: "CS_COMMON_SUBMIT",
       },
       form: [
         {
@@ -62,7 +62,7 @@ const ACTION_CONFIGS = [
               isMandatory: true,
               key: "SelectedReason",
               type: "dropdown",
-              label: "CS_MANDATORY_REJECTION_REASON",
+              label: "CS_REJECT_COMPLAINT",
               disable: false,
               populators: {
                 name: "SelectedReason",
@@ -97,8 +97,8 @@ const ACTION_CONFIGS = [
     formConfig: {
       label: {
         heading: "PGR_ACTION_RESOLVE",
-        cancel: "CORE_COMMON_CANCEL",
-        submit: "CORE_COMMON_SUBMIT",
+        cancel: "CS_COMMON_CANCEL",
+        submit: "CS_COMMON_SUBMIT",
       },
       form: [
         {
@@ -150,7 +150,7 @@ const PGRDetails = () => {
   );
 
   // Fetch complaint details
-  const { isLoading, isError, error, data, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch({ serviceRequestId: id }, tenantId);
+  const { isLoading, isError, error, data: pgrData, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch({ serviceRequestId: id }, tenantId);
 
   // Hook to update the complaint
   const { mutate: UpdateComplaintMutation } = Digit.Hooks.pgr.usePGRUpdate(tenantId);
@@ -186,7 +186,7 @@ const PGRDetails = () => {
   // Prepare and submit the update complaint request
   const handleActionSubmit = (_data) => {
     const updateRequest = {
-      service: { ...data?.ServiceWrappers[0].service },
+      service: { ...pgrData?.ServiceWrappers[0].service },
       workflow: {
         action: selectedAction.action,
         assignes: _data?.SelectedAssignee?.userServiceUUID ? [_data?.SelectedAssignee?.userServiceUUID] : null,
@@ -273,7 +273,7 @@ const PGRDetails = () => {
 
       {/* Complaint Summary Card */}
       <div>
-        {data?.ServiceWrappers?.length > 0 ? (
+        {pgrData?.ServiceWrappers?.length > 0 ? (
           <SummaryCard
             asSeperateCards
             header="Heading"
@@ -282,7 +282,53 @@ const PGRDetails = () => {
               {
                 cardType: "primary",
                 fieldPairs: [
-                  // Field items like complaint no, status, date, etc.
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_DETAILS_COMPLAINT_NO"),
+                    type: "text",
+                    value: pgrData?.ServiceWrappers[0].service?.serviceRequestId || "NA",
+                  },
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_DETAILS_COMPLAINT_TYPE"),
+                    type: "text",
+                    value: t(pgrData?.ServiceWrappers[0].service?.serviceCode || "NA"),
+                  },
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_FILED_DATE"),
+                    value: convertEpochFormateToDate(pgrData?.ServiceWrappers[0].service?.auditDetails?.createdTime) || t("NA"),
+                  },
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_DETAILS_AREA"),
+                    value: t(pgrData?.ServiceWrappers[0].service?.address?.locality?.code || "NA"),
+                  },
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
+                    value: t(`CS_COMMON_PGR_STATE_${pgrData?.ServiceWrappers[0].service?.applicationStatus || "NA"}`),
+                  },
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_LANDMARK__DETAILS"),
+                    value: pgrData?.ServiceWrappers[0].service?.address?.landmark || "NA",
+                  },
+                  {
+                    inline: true,
+                    label: t("CS_COMPLAINT_DETAILS_ADDITIONAL_DETAILS_DESCRIPTION"),
+                    value: pgrData?.ServiceWrappers[0].service?.description || "NA",
+                  },
+                  {
+                    inline: true,
+                    label: t("COMPLAINTS_COMPLAINANT_NAME"),
+                    value: pgrData?.ServiceWrappers[0].service?.user?.name || "NA",
+                  },
+                  {
+                    inline: true,
+                    label: t("COMPLAINTS_COMPLAINANT_CONTACT_NUMBER"),
+                    value: pgrData?.ServiceWrappers[0].service?.user?.mobileNumber || "NA",
+                  },
                 ],
               },
               {
@@ -308,20 +354,31 @@ const PGRDetails = () => {
 
       {/* Footer Action Bar */}
       <Footer
-        actionFields={[
-          <Button
-            isDisabled={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0]).length === 0}
-            key="action-button"
-            label={t("ES_COMMON_TAKE_ACTION")}
-            onOptionSelect={(selected) => {
-              setSelectedAction(selected);
-              setOpenModal(true);
-            }}
-            options={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0])}
-            optionsKey="action"
-            type="actionButton"
+      actionFields={[
+        <Button 
+          className="custom-class"
+          isSearchable 
+          onClick={function noRefCheck() {}}
+          menuStyles={{
+                  bottom: "40px",
+                }}
+          isDisabled={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0]).length === 0}
+          key="action-button"
+          label={t("ES_COMMON_TAKE_ACTION")}
+          onOptionSelect={(selected) => {
+            setSelectedAction(selected);
+            setOpenModal(true);
+          }}
+          options={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0])}
+          optionsKey="action"
+          type="actionButton"
           />,
-        ]}
+      ]}
+      className=""
+      maxActionFieldsAllowed={5}
+      setactionFieldsToRight
+      sortActionFields
+      style={{}}
       />
 
       {/* Toast Message */}
@@ -334,7 +391,7 @@ const PGRDetails = () => {
           sessionFormData={sessionFormData}
           setSessionFormData={setSessionFormData}
           clearSessionFormData={clearSessionFormData}
-          config={getUpdatedConfig(selectedAction, workflowData, ACTION_CONFIGS, serviceDefs, data)}
+          config={getUpdatedConfig(selectedAction, workflowData, ACTION_CONFIGS, serviceDefs, pgrData)}
           closeModal={() => setOpenModal(false)}
           onSubmit={handleActionSubmit}
         />
