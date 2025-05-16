@@ -94,7 +94,8 @@ const EmployeeSideBar = () => {
       if(isMultiRootTenant){
         url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
         updatedUrl = url;
-        history.push(updatedUrl);
+        // history.push(updatedUrl);
+        window.location.href = updatedUrl;
       }
       else{
         updatedUrl = hostUrl + url;
@@ -154,6 +155,7 @@ const EmployeeSideBar = () => {
 
   const transformedData = transformData(splitKeyValue(configEmployeeSideBar));
   const sortedTransformedData= sortDataByOrderNumber(transformedData);
+  console.log(sortedTransformedData, "sortedTransformedData");
   if (isLoading) {
     return <Loader />;
   }
