@@ -13,7 +13,7 @@
     "react-dom": "^19.0.0"
   },
   "devDependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.1-webpack-24",
+    "@egovernments/digit-ui-libraries": "1.8.1-webpack-25",
     "@egovernments/digit-ui-module-core": "1.8.1-test.100",
     "@egovernments/digit-ui-components": "0.0.2-webpack-23",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.14",
