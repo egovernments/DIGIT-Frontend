@@ -1,16 +1,17 @@
 // import { FormComposer } from "@egovernments/digit-ui-react-components";
-import { BackLink, Dropdown, Loader, Toast, FormComposerV2 } from "@egovernments/digit-ui-components";
+import { BackLink, Dropdown, Loader,Toast,FormComposerV2 } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import ImageComponent from "../../../components/ImageComponent";
+import { replace } from "lodash";
+
 
 const ForgotPassword = ({ config: propsConfig, t }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const [user, setUser] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(null);
   const getUserType = () => Digit.UserService.getType();
 
@@ -21,7 +22,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
     }
     Digit.UserService.setUser(user);
     const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-    history.replace(redirectPath);
+    navigate(redirectPath, {replace:true});
   }, [user]);
 
   const closeToast = () => {
@@ -43,7 +44,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
     };
     try {
       await Digit.UserService.sendOtp(requestData, data.city.code);
-      history.push(`/${window?.contextPath}/employee/user/change-password?mobile_number=${data.mobileNumber}&tenantId=${data.city.code}`);
+      navigate(`/${window?.contextPath}/employee/user/change-password?mobile_number=${data.mobileNumber}&tenantId=${data.city.code}`);
     } catch (err) {
       setShowToast(err?.response?.data?.error?.fields?.[0]?.message || "Invalid login credentials!");
       setTimeout(closeToast, 5000);
@@ -51,7 +52,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   };
 
   const navigateToLogin = () => {
-    history.replace(`/${window?.contextPath}/employee/login`);
+    navigate(`/${window?.contextPath}/employee/login`);
   };
 
   const [userId, city] = propsConfig.inputs;
@@ -88,7 +89,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackLink onClick={() => window.history.back()} />
+      <BackLink onClick={() => window.history.back()}/>
       </div>
       <FormComposerV2
         onSubmit={onForgotPassword}
@@ -101,8 +102,8 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
         onSecondayActionClick={navigateToLogin}
         heading={propsConfig.texts.header}
         description={propsConfig.texts.description}
-        headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
-        descriptionStyles={{ color: "#787878", textAlign: "center" }}
+        headingStyle={{ textAlign: "center",fontWeight:"bold",color:"#363636" }}
+        descriptionStyles={{color:"#787878",textAlign: "center"}}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="employeeForgotPassword"
       >
@@ -110,7 +111,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
-        <ImageComponent
+        <img
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

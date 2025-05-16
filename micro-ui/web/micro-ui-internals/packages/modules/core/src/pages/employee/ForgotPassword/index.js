@@ -1,12 +1,13 @@
+
 import React, { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
+import { Routes, Route, useMatch } from "react-router-dom";
 import { loginConfig } from "./config";
 import ForgotPasswordComponent from "./forgotPassword";
 
 const EmployeeForgotPassword = () => {
   const { t } = useTranslation();
-  const { path } = useRouteMatch();
+  const match = useMatch();
 
   const params = useMemo(() =>
     loginConfig.map(
@@ -17,16 +18,17 @@ const EmployeeForgotPassword = () => {
         }
         return { ...step, texts };
       },
-      [loginConfig]
+      [loginConfig, t]
     )
   );
 
   return (
-    <Switch>
-      <Route path={`${path}`} exact>
-        <ForgotPasswordComponent config={params[0]} t={t} />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route
+        path={`${match?.pathname || ""}`}
+        element={<ForgotPasswordComponent config={params[0]} t={t} />}
+      />
+    </Routes>
   );
 };
 

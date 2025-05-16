@@ -1,13 +1,14 @@
+
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { SignUpConfig as defaultSignUpConfig  } from "./config";
+import { Routes, Route, useMatch } from "react-router-dom";
+import { SignUpConfig as defaultSignUpConfig } from "./config";
 import Login from "./signUp";
 
-const SignUp = ({stateCode}) => {
+const SignUp = ({ stateCode }) => {
   const { t } = useTranslation();
-  const { path } = useRouteMatch();
-  const [SignUpConfig, setSignUpConfig] = useState(defaultSignUpConfig);
+  const match = useMatch();
+  const [signUpConfig, setSignUpConfig] = useState(defaultSignUpConfig);
   const moduleCode = ["privacy-policy"];
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
@@ -15,31 +16,28 @@ const SignUp = ({stateCode}) => {
     stateCode,
     moduleCode,
     language,
-    modulePrefix
+    modulePrefix,
   });
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["SignUpConfig"], {
     select: (data) => {
       return {
-        config: data?.commonUiConfig?.SignUpConfig
+        config: data?.commonUiConfig?.SignUpConfig,
       };
     },
     retry: false,
   });
 
-  // let SignUpConfig = mdmsData?.config ? mdmsData?.config : defaultSignUpConfig;
   useEffect(() => {
-    if(isLoading == false && mdmsData?.config)
-    {  
-      setSignUpConfig(mdmsData?.config)
-    }else{
-      setSignUpConfig(defaultSignUpConfig)
+    if (!isLoading && mdmsData?.config) {
+      setSignUpConfig(mdmsData?.config);
+    } else {
+      setSignUpConfig(defaultSignUpConfig);
     }
-  },[mdmsData, isLoading])
-
+  }, [mdmsData, isLoading]);
 
   const SignUpParams = useMemo(() =>
-    SignUpConfig.map(
+    signUpConfig.map(
       (step) => {
         const texts = {};
         for (const key in step.texts) {
@@ -47,16 +45,17 @@ const SignUp = ({stateCode}) => {
         }
         return { ...step, texts };
       },
-      [SignUpConfig]
+      [signUpConfig, t]
     )
   );
 
   return (
-    <Switch>
-      <Route path={`${path}`} exact>
-        <Login config={SignUpParams[0]} t={t} />
-      </Route>
-    </Switch>
+    <Routes>
+      <Route
+        path={`${match?.pathname || ""}`}
+        element={<Login config={SignUpParams[0]} t={t} />}
+      />
+    </Routes>
   );
 };
 

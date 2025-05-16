@@ -83,15 +83,7 @@ export const Config = {
                 name: "codes",
             }
           },
-          // {
-          //   label: "WBH_LOC_MESSAGE",
-          //   type: "text",
-          //   isMandatory: false,
-          //   disable: false,
-          //   populators: { 
-          //       name: "message",
-          //   }
-          // },
+        
         ],
       },
       label: "",

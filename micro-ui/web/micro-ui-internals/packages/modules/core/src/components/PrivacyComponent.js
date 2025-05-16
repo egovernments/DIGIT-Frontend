@@ -5,7 +5,7 @@ import { LinkButton } from "@egovernments/digit-ui-react-components";
 
 const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [isChecked, setIsChecked] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, "commonUiConfig", [{ name: "PrivacyPolicy" }], {

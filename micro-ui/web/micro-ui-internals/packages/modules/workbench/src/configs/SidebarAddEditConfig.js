@@ -72,7 +72,6 @@ const SidebarAddEditConfig = ({ t, typeOfAction, icon, users }) => {
                         name: "users",
                         optionsKey: "name",
                         defaultText: '',
-                        // selectedText: "SIDEBAR_SELECTED",
                         allowMultiSelect: true,
                         options: users,
                         isDropdownWithChip: true

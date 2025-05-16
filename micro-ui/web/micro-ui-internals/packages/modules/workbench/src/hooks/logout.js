@@ -34,7 +34,6 @@ export const logoutV1 = async () => {
   try {
     await fetch(`${window.location.origin}/user/v1/_logout?tenantId=${tenantId}`, requestOptions)
       .then((response) => response.json())
-      .catch((error) => console.log("error", error));
   } catch (e) {
   } finally {
     window.localStorage.clear();

@@ -4,7 +4,7 @@ import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "../../components/BulkUpload";
 import GenerateXlsx from "../../components/GenerateXlsx";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import XLSX from "xlsx";
 import { COLOR_FILL } from "../../utils/contants";
 
@@ -14,16 +14,16 @@ const UploadBoundary = () => {
   const stateId = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [selectedValue, setSelectedValue] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(null);
-  const [success , setSuccess] = useState(false);
+  const [success, setSuccess] = useState(false);
 
   const callInputClick = async (event) => {
     inputRef.current.click();
   };
 
   const handleCreateNewHierarchyType = () => {
-    history.push(`/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`);
+    navigate(`/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`);
   };
 
   const handleHierarchyTypeChange = (selectedValue) => {
@@ -91,7 +91,7 @@ const UploadBoundary = () => {
     for (let i = 0; i < headerRow.length; i++) {
       if (headerRow[i] !== expectedHeaders[i]) {
         const boundary = t(`HCM_${headerRow[i].replace(/\s+/g, '_').toUpperCase()}`);
-        if(boundary === t("HCM_BOUNDARY_CODE")){
+        if (boundary === t("HCM_BOUNDARY_CODE")) {
           continue;
         }
         return false;
@@ -131,7 +131,6 @@ const UploadBoundary = () => {
             closeToast();
           }
         } catch (error) {
-          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -233,7 +232,7 @@ const UploadBoundary = () => {
             isDisabled={!selectedValue}
             onButtonClick={callInputClick}
           />
-          <GenerateXlsx inputRef={inputRef} jsonData={[modifiedHierarchy]} skipHeader={true} sheetName="Boundary Data"/>
+          <GenerateXlsx inputRef={inputRef} jsonData={[modifiedHierarchy]} skipHeader={true} sheetName="Boundary Data" />
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} onSuccess={success} />
         {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}

@@ -2,16 +2,15 @@ import { CardSubHeader, FormComposer,CardText} from "@egovernments/digit-ui-reac
 import { BackLink,Toast} from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import SelectOtp from "../../citizen/Login/SelectOtp";
-import ImageComponent from "../../../components/ImageComponent";
 
 const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   const [user, setUser] = useState(null);
   const { mobile_number: mobileNumber, tenantId } = Digit.Hooks.useQueryParams();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [otp, setOtp] = useState("");
   const [isOtpValid, setIsOtpValid] = useState(true);
   const [showToast, setShowToast] = useState(null);
@@ -23,7 +22,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
     }
     Digit.UserService.setUser(user);
     const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-    history.replace(redirectPath);
+    navigate(redirectPath, {replace:true});
   }, [user]);
 
   const closeToast = () => {
@@ -70,7 +69,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   };
 
   const navigateToLogin = () => {
-    history.replace(`/${window?.contextPath}/employee/user/login`);
+    navigate(`/${window?.contextPath}/employee/user/login`, {replace:true});
   };
 
   const [username, password, confirmPassword] = propsConfig.inputs;
@@ -145,7 +144,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
       </FormComposer>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
-        <ImageComponent
+        <img
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

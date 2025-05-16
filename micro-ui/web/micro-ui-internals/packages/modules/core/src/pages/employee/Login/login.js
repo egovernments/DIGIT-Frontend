@@ -1,14 +1,12 @@
 import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom"; 
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
-import ImageComponent from "../../../components/ImageComponent";
 
-/* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
-  if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") {
+  if (Digit.Utils.getMultiRootTenant()) {
     return;
   }
   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
@@ -30,9 +28,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-
-  const history = useHistory();
-  // const getUserType = () => "EMPLOYEE" || Digit.UserService.getType();
+  const navigate = useNavigate(); 
 
   useEffect(() => {
     if (!user) {
@@ -45,42 +41,31 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     setEmployeeDetail(user?.info, user?.access_token);
     let redirectPath = `/${window?.contextPath}/employee`;
 
-    /* logic to redirect back to same screen where we left off  */
+    /* logic to redirect back to same screen where we left off */
     if (window?.location?.href?.includes("from=")) {
       redirectPath = decodeURIComponent(window?.location?.href?.split("from=")?.[1]) || `/${window?.contextPath}/employee`;
     }
 
-    /*  RAIN-6489 Logic to navigate to National DSS home incase user has only one role [NATADMIN]*/
+    /*  RAIN-6489 Logic to navigate to National DSS home in case user has only one role [NATADMIN]*/
     if (user?.info?.roles && user?.info?.roles?.length > 0 && user?.info?.roles?.every((e) => e.code === "NATADMIN")) {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/NURT_DASHBOARD`;
     }
-    /*  RAIN-6489 Logic to navigate to National DSS home incase user has only one role [NATADMIN]*/
+    /*  RAIN-6489 Logic to navigate to National DSS home in case user has only one role [NATADMIN]*/
     if (user?.info?.roles && user?.info?.roles?.length > 0 && user?.info?.roles?.every((e) => e.code === "STADMIN")) {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/home`;
     }
 
-    history.replace(redirectPath);
-  }, [user]);
+    navigate(redirectPath); // Replaced history.replace with navigate
+  }, [user, navigate]);
 
   const onLogin = async (data) => {
-    // if (!data.city) {
-    //   alert("Please Select City!");
-    //   return;
-    // }
-    if(data?.username){
-      data.username=data.username.trim();
-    }
-    if(data?.password){
-      data.password=data.password.trim();
-    }
     setDisable(true);
 
     const requestData = {
       ...data,
-      ...defaultValues,
       userType: "EMPLOYEE",
     };
-    requestData.tenantId = requestData?.city?.code || Digit.ULBService.getStateId();
+    requestData.tenantId = data?.city?.code || Digit?.ULBService?.getStateId();
     delete requestData.city;
     try {
       const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
@@ -99,7 +84,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
   const reqCreate = {
     url: `/user-otp/v1/_send`,
-    params: { tenantId: Digit.ULBService.getStateId() },
+    params: { tenantId: Digit?.ULBService?.getStateId() },
     body: {},
     config: {
       enable: false,
@@ -115,7 +100,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           otp: {
             userName: data.email,
             type: "login",
-            tenantId: Digit.ULBService.getStateId(),
+            tenantId: Digit?.ULBService?.getStateId(),
             userType: "EMPLOYEE",
           },
         },
@@ -131,9 +116,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
-          history.push({
-            pathname: `/${window?.contextPath}/employee/user/login/otp`,
-            state: { email: inputEmail, tenant: Digit.ULBService.getStateId() },
+          navigate(`/${window?.contextPath}/employee/user/login/otp`, {
+            state: { email: inputEmail, tenant: Digit?.ULBService?.getStateId() },
           });
         },
       }
@@ -145,38 +129,33 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   };
 
   const onForgotPassword = () => {
-    history.push(`/${window?.contextPath}/employee/user/forgot-password`);
+    navigate(`/${window?.contextPath}/employee/user/forgot-password`);
   };
-  const defaultTenant = Digit.ULBService.getStateId();
+
   const defaultValue = {
-    code: defaultTenant,
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${defaultTenant}`),
+    code: Digit?.ULBService?.getStateId(),
+    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit?.ULBService?.getStateId()}`),
   };
-
-  const config = [{ body: propsConfig?.inputs }];
-
+  
+  let config = [{ body: propsConfig?.inputs }];
   const { mode } = Digit.Hooks.useQueryParams();
-  if (
-    mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined ) {
+  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
-  const defaultValues = Object.fromEntries(
-    config[0].body
-      .filter(field => field?.populators?.defaultValue && field?.populators?.name)
-      .map(field => [field.populators.name, field.populators.defaultValue])
-  );
+
   const onFormValueChange = (setValue, formData, formState) => {
-    // Extract keys from the config
-    const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);
+
+    const keys = config[0].body.map((field) => field.key);
+
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
       return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
     });
-    // Set disable based on the check
     setDisable(hasEmptyFields);
   };
+
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
@@ -200,20 +179,19 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
         cardSubHeaderClassName="loginCardSubHeaderClassName"
         cardClassName="loginCardClassName"
         buttonClassName="buttonClassName"
-        defaultValues={defaultValues}
       >
         {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-        <ImageComponent
+        <img
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
           }}
-        />{" "}
+        />
       </div>
     </Background>
   );

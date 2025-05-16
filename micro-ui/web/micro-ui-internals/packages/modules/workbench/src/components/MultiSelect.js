@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Select, { components } from "react-select";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {  InfoBannerIcon, Button, Close } from "@egovernments/digit-ui-react-components";
 import MDMSSearchv2Popup from "../pages/employee/MDMSSearchv2Popup";
 import { COLOR_FILL } from "../utils/contants";
@@ -30,7 +30,7 @@ const customStyles = {
 /* Multiple support not added TODO jagan to fix this issue */
 const CustomSelectWidget = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   const {
     options,
@@ -173,7 +173,7 @@ const CustomSelectWidget = (props) => {
     const schemaCode = detail?.schemaCode;
     const [moduleName, masterName] = schemaCode?.split(".");
     const uniqueIdentifier = detail?.uniqueIdentifier;
-    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`);
+    navigate(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`);
   };
   const OptionWithInfo = (props) => {
     const { data } = props;
