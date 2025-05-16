@@ -58,4 +58,4 @@ cd "$BASEDIR/packages/modules/workbench" &&   rm -rf dist && yarn&& npm publish 
 
 
 # msg "Building and publishing pgr module"
-cd "$BASEDIR/packages/modules/pgr" &&   rm -rf dist && yarn&&npm publish --tag workbench-1.1
+# cd "$BASEDIR/packages/modules/pgr" &&   rm -rf dist && yarn&&npm publish --tag workbench-1.1
