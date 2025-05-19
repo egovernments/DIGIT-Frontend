@@ -9,8 +9,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
 
 const initTokens = (stateCode) => {
-  console.log(window.globalConfigs, "window.globalConfigs");
-
   const userType =
     window.sessionStorage.getItem("userType") ||
     process.env.REACT_APP_USER_TYPE ||

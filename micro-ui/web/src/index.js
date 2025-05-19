@@ -1,13 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { initGlobalConfigs } from "./globalConfig";
-import { Hooks } from "@egovernments/digit-ui-libraries";
-// import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-
-// Ensure Digit is defined before using it
-window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );
@@ -17,8 +9,6 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
 
 const initTokens = (stateCode) => {
-  console.log(window.globalConfigs, "window.globalConfigs");
-
   const userType =
     window.sessionStorage.getItem("userType") ||
     process.env.REACT_APP_USER_TYPE ||
@@ -53,11 +43,9 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  initGlobalConfigs(); // Ensure global configs are set first
   window.contextPath =
     window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
 
-  // const stateCode = Digit?.ULBService?.getStateId();
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -73,12 +61,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
    useEffect(() => {
     initLibraries().then(() => {
       console.log(Digit, window?.Digit);
-      const app = async () => {
+      const initMethods = async () => {
         const { initSampleComponents } = await import("@egovernments/digit-ui-module-sample");
+        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");
+
+        await initWorkbenchComponents();
         await initSampleComponents();
       }
-      app()
-      initWorkbenchComponents();
+      initMethods()
       setIsReady(true)
     });
   }, []);
