@@ -13,7 +13,6 @@ function ViewIndividual() {
 
   useEffect(() => {
     const id = searchParams.get("id");
-    console.log("id", id);
     setIndividualId(id); // Set individualId state with the value from URL
   }, [searchParams]);
 
@@ -41,11 +40,6 @@ function ViewIndividual() {
      },
 
   });
-  console.log("testData",testData);
-
-  // if (isLoading) {
-  //   return <Loader />;
-  // }
 
   return (
     <>

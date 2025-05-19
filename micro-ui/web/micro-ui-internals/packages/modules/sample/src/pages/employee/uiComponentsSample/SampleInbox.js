@@ -5,6 +5,7 @@ import { inboxConfig } from "../../../configs/uiComponentsConfigs/inboxConfig";
 const SampleInbox = () => {
   return (
     <div className="digit-inbox-search-wrapper">
+      
       <InboxSearchComposer configs={inboxConfig}></InboxSearchComposer>
     </div>
   );

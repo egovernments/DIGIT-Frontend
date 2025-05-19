@@ -65,11 +65,9 @@ const SampleCreate = () => {
   };
 
   const onSubmit = (data) => {
-    console.log(data, "data");
   };
 
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-    console.log(formData, "formData");
   };
 
   const configs = createConfig;
@@ -83,7 +81,7 @@ const SampleCreate = () => {
 
   return (
     <React.Fragment>
-      <HeaderComponent styles={textStyles}>{"Create"}</HeaderComponent>
+      {/* <HeaderComponent styles={textStyles}>{"Create"}</HeaderComponent> */}
       <FormComposerV2
         label={t("Submit")}
         config={configs.map((config) => {

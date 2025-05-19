@@ -1,12 +1,12 @@
 import React ,{Fragment} from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {  Header,  ViewComposer } from "@egovernments/digit-ui-react-components";
 import {  Loader,HeaderComponent} from "@egovernments/digit-ui-components";
 
 const HRMSViewDetails = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const reqCriteria = {
@@ -98,9 +98,9 @@ const HRMSViewDetails = (props) => {
   }
   return (
     <>
-        <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+        {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
           {t("Employee Details")}
-        </HeaderComponent>
+        </HeaderComponent> */}
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>

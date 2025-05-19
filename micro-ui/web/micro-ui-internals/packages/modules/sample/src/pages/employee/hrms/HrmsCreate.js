@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { FormComposerV2, HeaderComponent, Toast } from "@egovernments/digit-ui-components";
 import { newConfig } from "../../../configs/HRMSCreateConfig";
 import { transformHRMSCreateData } from "../../../utils/createUtils";
@@ -16,7 +16,7 @@ const HRMSCreate = () => {
   const { t } = useTranslation();
   
   // React Router history for navigation
-  const history = useHistory();
+  const navigate = useNavigate();
   
   // API request configuration for employee creation
   const reqCreate = {
@@ -33,7 +33,6 @@ const HRMSCreate = () => {
 
   // Function to handle form submission
   const onSubmit = async (data) => {
-    console.log(data, "data"); // Debug log of submitted form data
 
     await mutation.mutate(
       {
@@ -60,9 +59,9 @@ const HRMSCreate = () => {
   return (
     <div>
       {/* Header component with translation support */}
-      <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+      {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
           {t("CREATE_INDIVIDUAL")}
-        </HeaderComponent>
+        </HeaderComponent> */}
       {/* Form component to create an individual */}
       <FormComposerV2
         label={t("SUBMIT_BUTTON")}
@@ -71,7 +70,6 @@ const HRMSCreate = () => {
         }))}
         defaultValues={{}} // Default values for form fields
         onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-          console.log(formData, "formData"); // Debug log when form values change
         }}
         onSubmit={(data) => onSubmit(data)} // Handle form submission
         fieldStyle={{ marginRight: 0 }}

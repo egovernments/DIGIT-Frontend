@@ -1,46 +1,21 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import { useLocation, useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { useParams } from "react-router-dom";
-import React from "react";
-import {Button,Tag} from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 var Digit = window.Digit || {};
 
-function cleanObject(obj) {
-  for (const key in obj) {
-    if (Object.hasOwn(obj, key)) {
-      if (Array.isArray(obj[key])) {
-        if (obj[key].length === 0) {
-          delete obj[key];
-        }
-      } else if (
-        obj[key] === undefined ||
-        obj[key] === null ||
-        obj[key] === false ||
-        obj[key] === "" || // Check for empty string
-        (typeof obj[key] === "object" && Object.keys(obj[key]).length === 0)
-      ) {
-        delete obj[key];
-      }
-    }
-  }
-  return obj;
-}
-
 const businessServiceMap = {
- 
   "muster roll": "MR",
-  "estimate":"ESTIMATE"
 };
 
 const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
-
+// eslint-disable-next-line
 export const UICustomizations = {
   businessServiceMap,
   updatePayload: (applicationDetails, data, action, businessService) => {
@@ -179,17 +154,13 @@ export const UICustomizations = {
       return businessServiceMap?.contract;
     } else if (moduleCode?.includes("muster roll")) {
       return businessServiceMap?.["muster roll"];
-    }
-    else if (moduleCode?.includes("works.purchase")) {
+    } else if (moduleCode?.includes("works.purchase")) {
       return businessServiceMap?.["works.purchase"];
-    }
-    else if (moduleCode?.includes("works.wages")) {
+    } else if (moduleCode?.includes("works.wages")) {
       return businessServiceMap?.["works.wages"];
-    }
-    else if (moduleCode?.includes("works.supervision")) {
+    } else if (moduleCode?.includes("works.supervision")) {
       return businessServiceMap?.["works.supervision"];
-    }
-    else {
+    } else {
       return businessServiceMap;
     }
   },
@@ -449,6 +420,7 @@ export const UICustomizations = {
     },
   },
   SearchDefaultConfig: {
+
     customValidationCheck: (data) => {
       //checking both to and from date are present
       const { createdFrom, createdTo } = data;
@@ -458,8 +430,10 @@ export const UICustomizations = {
       return false;
     },
     preProcess: (data) => {
+      // eslint-disable-next-line
       const location = useLocation();
       data.params = { ...data.params };
+      // eslint-disable-next-line
       const { masterName } = useParams();
 
       const searchParams = new URLSearchParams(location.search);
@@ -576,20 +550,7 @@ export const UICustomizations = {
           selectConfig: {
           },
           textConfig :["faciltyUsage","localityCode", "storageCapacity","id"]
-        },
-        "SearchProjectFacilityConfig": {
-          basePath: "ProjectFacility", 
-          pathConfig: {
-            id: "id[0]",
-            projectId: "projectId[0]",
-            facilityId: "facilityId[0]"
-          },
-          dateConfig: {
-          },
-          selectConfig: {
-          },
-          textConfig :[]
-        },
+        }
       }
      
       const id = searchParams.get("config")|| masterName;
@@ -641,13 +602,11 @@ export const UICustomizations = {
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
-        case "ID":
-          
+        case "MASTERS_WAGESEEKER_ID":
           return (
             <span className="link">
-              <Link
-                to={`/${window.contextPath}/employee/workbench/mdms-view?tenantId=${tenantId}&projectNumber=${masterName}`}
-              >
+              <Link to={`/${window.contextPath}/employee/masters/view-wageseeker?tenantId=${row?.tenantId}&individualId=${value}`}>
+                {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
               </Link>
             </span>
           );
@@ -688,182 +647,5 @@ export const UICustomizations = {
         return data[keys.start] && data[keys.end] ? () => new Date(data[keys.start]).getTime() <= new Date(data[keys.end]).getTime() : true;
       }
     },
-  },
-  SearchMDMSConfig: {
-    customValidationCheck: (data) => {
-      //checking both to and from date are present
-      const { createdFrom, createdTo, field, value } = data;
-      if (
-        (createdFrom === "" && createdTo !== "") ||
-        (createdFrom !== "" && createdTo === "")
-      )
-        return { type: "warning", label: "ES_COMMON_ENTER_DATE_RANGE" };
-
-      if ((field && !value) || (!field && value)) {
-        return {
-          type: "warning",
-          label: "WBH_MDMS_SEARCH_VALIDATION_FIELD_VALUE_PAIR",
-        };
-      }
-
-      return false;
-    },
-    preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.MdmsCriteria.tenantId = tenantId;
-      const filters = {};
-      const custom = data.body.MdmsCriteria.custom;
-      const { field, value, isActive } = custom || {};
-      filters[field?.code] = value;
-      if (isActive) {
-        if (isActive.value === "all") delete data.body.MdmsCriteria.isActive;
-        else data.body.MdmsCriteria.isActive = isActive?.value;
-      } else {
-        delete data.body.MdmsCriteria.isActive;
-      }
-      data.body.MdmsCriteria.filters = filters;
-      // data.body.MdmsCriteria.limit = 100
-      data.body.MdmsCriteria.limit = data.state.tableForm.limit;
-      data.body.MdmsCriteria.offset = data.state.tableForm.offset;
-      data.body.MdmsCriteria.schemaCode =
-        // additionalDetails?.currentSchemaCode
-        "ACCESSCONTROL-ACTIONS-TEST.actions-test";
-      delete data.body.MdmsCriteria.custom;
-      return data;
-    },
-    additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      switch (key) {
-        case "Active":
-          return (
-            <Tag
-              icon=""
-              label={value ? "Active" : "InActive"}
-              labelStyle={{}}
-              showIcon={false}
-              style={{}}
-              type="success"
-            />
-          );
-        default:
-          return t("ES_COMMON_NA");
-      }
-    },
-    MobileDetailsOnClick: (row, tenantId) => {
-      let link;
-      Object.keys(row).map((key) => {
-        if (key === "MASTERS_WAGESEEKER_ID")
-          link = `/${window.contextPath}/employee/masters/view-wageseeker?tenantId=${tenantId}&wageseekerId=${row[key]}`;
-      });
-      return link;
-    },
-    additionalValidations: (type, data, keys) => {
-      if (type === "date") {
-        return data[keys.start] && data[keys.end]
-          ? () =>
-              new Date(data[keys.start]).getTime() <=
-              new Date(data[keys.end]).getTime()
-          : true;
-      }
-    },
-    selectionHandler: (event) => {
-      console.log(event, "selection handler event");
-    }, // selectionHandler : Is used to handle row selections. gets on object which containes 3 key value pairs:  allSelected(whether all rows are selected or not), selectedCount (no, of rows selected),selectedRows( an array of selected rows)
-    actionSelectHandler: (index, label, selectedRows) => {
-      console.log(index, label, selectedRows, "action handler");
-    }, // actionSelectHandler : Is used to handle onClick functions of table action button on row selections, gets index,label and selectedRows as props
-    footerActionHandler: (index, event) => {
-      console.log(index, "index");
-      console.log(event, "event");
-    }, // footerActionHandler : Is used to handle onclick functions of footer action buttons, gets index and event as props
-    linkColumnHandler: (row) => {
-      console.log(row, "row");
-      const url = `/${window.contextPath}/employee/microplan/view-main?tenantId=${row?.tenantId}&uniqueIdentifier=${row?.uniqueIdentifier}`;
-      window.location.href = url;
-    }, 
-  },
-  SampleInboxConfig: {
-    getSearchRequest: ( prop) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      return {
-        url: `/plan-service/config/_search`,
-        params: {  },
-        body: {
-          CampaignDetails: {
-            "tenantId": tenantId,
-        }
-        },
-        changeQueryName: `boundarySearchForPlanFacility`,
-        config: {
-          enabled: true,
-          select: (data) => {
-            const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
-            return result
-          },
-        },
-      };
-    },
-    additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      if (key === "Facility name") {
-        return (
-          <Button
-            variation="link"
-            label={
-              value
-                ? column.translate
-                  ? t(value)
-                  : value
-                : t("ES_COMMON_NA")
-            }
-            type="button"
-            icon="Edit"
-            size={"medium"}
-          />
-        );
-      }
-      //added this in case we change the key and not updated here , it'll throw that nothing was returned from cell error if that case is not handled here. To prevent that error putting this default
-      return <span>{t(`CASE_NOT_HANDLED`)}</span>;
-    },
-    selectionHandler: (event) => {
-      console.log(event, "selection handler event");
-    },
-    actionSelectHandler: (index, label, selectedRows) => {
-      console.log(index, label, selectedRows, "action handler");
-    },
-    preProcess: (data, additionalDetails) => {
-      const { name, status } = data?.state?.searchForm || {};
-
-      data.body.PlanConfigurationSearchCriteria = {};
-      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
-      // data.body.PlanConfigurationSearchCriteria.limit = 10
-      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
-      data.body.PlanConfigurationSearchCriteria.name = name;
-      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
-      // delete data.body.PlanConfigurationSearchCriteria.pagination
-      data.body.PlanConfigurationSearchCriteria.status = status?.status;
-      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
-      cleanObject(data.body.PlanConfigurationSearchCriteria);
-
-      const dic = {
-        0: [
-          "EXECUTION_TO_BE_DONE",
-          "CENSUS_DATA_APPROVAL_IN_PROGRESS",
-          "CENSUS_DATA_APPROVED",
-          "RESOURCE_ESTIMATION_IN_PROGRESS",
-          "RESOURCE_ESTIMATIONS_APPROVED",
-        ],
-        1: ["EXECUTION_TO_BE_DONE"],
-        2: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
-        3: ["RESOURCE_ESTIMATIONS_APPROVED"],
-      };
-      const url = Digit.Hooks.useQueryParams();
-
-      const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
-      data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
-      return data;
-    },
-    postProcess: (responseArray, uiConfig) => {
-      return responseArray;
-    },
-  },
+  }
 };

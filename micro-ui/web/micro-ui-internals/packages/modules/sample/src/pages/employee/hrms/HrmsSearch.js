@@ -1,12 +1,12 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer,  Button, AddFilled } from "@egovernments/digit-ui-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import searchHRMSConfig from "../../../configs/HRMSSearchConfig";
 
 const HRMSSearch = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const configs = searchHRMSConfig();
 
@@ -19,7 +19,7 @@ const HRMSSearch = () => {
             variation="secondary"
             icon={<AddFilled />}
             onButtonClick={() => {
-              history.push(`/${window?.contextPath}/employee/${configs?.actionLink}`);
+              navigate(`/${window?.contextPath}/employee/${configs?.actionLink}`);
             }}
             type="button"
           />

@@ -25,12 +25,12 @@ config:
         dockerfile: micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
 
-  - name: builds/Digit-Frontend/microplan-ui
+  - name: builds/Digit-Frontend/sandbox-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/microplan/Dockerfile
-        image-name: microplan-ui
-        
+        dockerfile: micro-ui/web/sandbox/Dockerfile
+        image-name: sandbox-ui      
+
   - name: builds/Digit-Frontend/storybook-svg
     build:
     - work-dir: micro-ui/web/micro-ui-internals/packages/svg-components/
@@ -55,3 +55,7 @@ config:
         dockerfile: micro-ui/web/core/Dockerfile
         image-name: core-ui
 
+  - name: builds/Digit-Frontend/utilities/egov-bff
+    build:
+      - work-dir: utilities/egov-bff
+        image-name: egov-bff

@@ -9,19 +9,18 @@ import {
   } from "@egovernments/digit-ui-components";
   import { Header } from "@egovernments/digit-ui-react-components";
   import React, { useEffect, useState } from "react";
-  import { useHistory } from "react-router-dom";
+  import { useNavigate } from "react-router-dom";
   import { useTranslation } from "react-i18next";
   import { SampleConfig } from "../../configs/SampleConfig";
   
   const Create = () => {
     const { t } = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(0);
     const [showpopup, setShowpopup] = useState(false);
     const [showalert, setShowalert] = useState(false);
   
     const onStepClick = (step) => {
-      console.log("step", step);
       setCurrentStep(step);
     };
   
@@ -214,14 +213,12 @@ import {
         size={"large"}
         variation={"secondary"}
         label="Button"
-        onClick={() => console.log("Clicked Button 1")}
       />,
       <Button
         type={"button"}
         size={"large"}
         variation={"primary"}
         label="Button"
-        onClick={() => console.log("Clicked Button 2")}
       />,
     ];
   
@@ -234,8 +231,7 @@ import {
     };
   
     const onSubmit = (data) => {
-      console.log(data, "data");
-      history.push(`/${window.contextPath}/employee/sample/sample-success`);
+      navigate(`/${window.contextPath}/employee/sample/sample-success`);
     };
   
   

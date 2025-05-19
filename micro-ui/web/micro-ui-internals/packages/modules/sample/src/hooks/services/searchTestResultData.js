@@ -17,7 +17,6 @@ export const searchTestResultData = async ({ t, individualId, tenantId }) => {
       },
    
   });
-  console.log("response", response);
 
  
   return {

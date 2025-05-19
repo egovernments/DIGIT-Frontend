@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Banner, Card, LinkLabel, AddFileFilled, ArrowLeftWhite, ActionBar, SubmitBar } from "@egovernments/digit-ui-react-components";
 
 const Response = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const history = useNavigate();
   const queryStrings = Digit.Hooks.useQueryParams();
   const [isResponseSuccess, setIsResponseSuccess] = useState(
     queryStrings?.isSuccess === "true" ? true : queryStrings?.isSuccess === "false" ? false : true
@@ -15,7 +15,7 @@ const Response = () => {
   const navigate = (page) => {
     switch (page) {
       case "home": {
-        history.push(`/${window.contextPath}/employee`);
+        history(`/${window.contextPath}/employee`);
       }
     }
   };

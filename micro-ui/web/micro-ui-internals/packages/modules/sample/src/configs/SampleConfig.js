@@ -160,7 +160,6 @@ export const SampleConfig = () => {
                     error: "Error!",
                     customIcon: "Article",
                     onIconSelection: (event) => {
-                      console.log("Custom icon clicked!", event);
                     },
                   },
                 },

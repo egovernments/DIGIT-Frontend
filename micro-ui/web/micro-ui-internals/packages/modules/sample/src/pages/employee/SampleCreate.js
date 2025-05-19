@@ -1,23 +1,21 @@
 import { FormComposerV2  } from "@egovernments/digit-ui-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { config as CreateConfig } from "../../configs/SampleCreateConfig";
 
 const Create = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const onSubmit = (data) => {
     ///
-    console.log(data, "data");
   };
 
   /* use newConfig instead of commonFields for local development in case needed */
 
   const configs = CreateConfig ? CreateConfig : CreateConfig;
-
   return (
     <FormComposerV2
       heading={t("Application Heading")}
