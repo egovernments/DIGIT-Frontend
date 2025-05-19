@@ -25,7 +25,6 @@ const IndividualCreate = () => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onSubmit = async (data) => {
-    console.log(data, "data");
     await mutation.mutate(
       {
         url: `/individual/v1/_create`,
@@ -51,7 +50,6 @@ const IndividualCreate = () => {
         })}
         defaultValues={{}}
         onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-          console.log(formData, "formData");
         }}
         onSubmit={(data) => onSubmit(data)}
         fieldStyle={{ marginRight: 0 }}

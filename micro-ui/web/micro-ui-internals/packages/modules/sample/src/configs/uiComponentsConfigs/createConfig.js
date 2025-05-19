@@ -155,9 +155,7 @@ export const createConfig = [
           name: "text-With CustomIcon",
           error: "Error!",
           customIcon: "Article",
-          onIconSelection: (event) => {
-            console.log("Custom icon clicked!", event);
-          },
+          onIconSelection: (event) => {          },
         },
       },
       {

@@ -21,7 +21,6 @@ import {
     const [showalert, setShowalert] = useState(false);
   
     const onStepClick = (step) => {
-      console.log("step", step);
       setCurrentStep(step);
     };
   
@@ -214,14 +213,12 @@ import {
         size={"large"}
         variation={"secondary"}
         label="Button"
-        onClick={() => console.log("Clicked Button 1")}
       />,
       <Button
         type={"button"}
         size={"large"}
         variation={"primary"}
         label="Button"
-        onClick={() => console.log("Clicked Button 2")}
       />,
     ];
   
@@ -234,7 +231,6 @@ import {
     };
   
     const onSubmit = (data) => {
-      console.log(data, "data");
       navigate(`/${window.contextPath}/employee/sample/sample-success`);
     };
   

@@ -16,14 +16,12 @@ const PanelCardResponse = () => {
       size={"large"}
       variation={"secondary"}
       label="Button1"
-      onClick={() => console.log("Clicked Button 1")}
     />,
     <Button
       type={"button"}
       size={"large"}
       variation={"primary"}
       label="Button2"
-      onClick={() => console.log("Clicked Button 2")}
     />,
   ];
 

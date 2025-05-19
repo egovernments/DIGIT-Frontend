@@ -37,7 +37,6 @@ import {
     const [selectedOptions, setSlectedOptions] = useState([]);
   
     const onStepClick = (step) => {
-      console.log("step", step);
       setCurrentStep(step);
     };
   
@@ -170,7 +169,6 @@ import {
             icon="Accessibility"
             number={1}
             onToggle={(e) => {
-              console.log(e, "Accordion toggled");
             }}
             title="Section Header"
           >
@@ -212,10 +210,10 @@ import {
               isSearchable
               label="ActionButton"
               onClick={(e) => {
-                console.log(e);
+                 
               }}
               onOptionSelect={(e) => {
-                console.log(e);
+                 
               }}
               options={[
                 {
@@ -312,7 +310,7 @@ import {
             iconFill=""
             label="Back"
             onClick={(e) => {
-              console.log(e);
+               
             }}
             style={{}}
             variant="primary"
@@ -321,7 +319,7 @@ import {
             iconFill=""
             label="Back"
             onClick={(e) => {
-              console.log(e);
+               
             }}
             style={{}}
             variant="secondary"
@@ -330,7 +328,7 @@ import {
             iconFill=""
             label="Back"
             onClick={(e) => {
-              console.log(e);
+               
             }}
             style={{}}
             variant="teritiary"
@@ -1109,7 +1107,7 @@ import {
           <CheckBox
             label="Label"
             onChange={(e) => {
-              console.log(e);
+               
             }}
             style={{}}
             styles={{}}
@@ -1118,7 +1116,7 @@ import {
             isIntermediate
             label="Label"
             onChange={(e) => {
-              console.log(e);
+               
             }}
             style={{}}
             styles={{}}
@@ -1127,7 +1125,7 @@ import {
             checked
             label="Label"
             onChange={(e) => {
-              console.log(e);
+               
             }}
             style={{}}
             styles={{}}
@@ -1143,10 +1141,10 @@ import {
               hideClose={false}
               iconReq="Edit"
               onClick={(e) => {
-                console.log(e);
+                 
               }}
               onTagClick={(e) => {
-                console.log(e);
+                 
               }}
               text="Chip"
             />
@@ -1160,10 +1158,10 @@ import {
               iconReq="Edit"
               isErrorTag
               onClick={(e) => {
-                console.log(e);
+                 
               }}
               onTagClick={(e) => {
-                console.log(e);
+                 
               }}
               text="ErrorChipWithError"
             />
@@ -1337,7 +1335,6 @@ import {
               >
                 {selectedOptions?.length > 0 &&
                   selectedOptions?.map((value, index) => {
-                    console.log(value, "value");
                     return (
                       <Chip
                         key={index}
@@ -1428,7 +1425,7 @@ import {
           <Switch
             label="Switch"
             onToggle={(e) => {
-              console.log(e);
+               
             }}
             shapeOnOff={true}
           />
@@ -1463,10 +1460,10 @@ import {
             itemStyle={{}}
             navStyles={{}}
             onTabClick={(e) => {
-              console.log(e);
+               
             }}
             setActiveLink={(e) => {
-              console.log(e);
+               
             }}
             showNav
             style={{}}
@@ -1547,10 +1544,10 @@ import {
             name="toggleOptions"
             numberOfToggleItems={3}
             onChange={(e) => {
-              console.log(e);
+               
             }}
             onSelect={(e) => {
-              console.log(e);
+               
             }}
             options={[
               {

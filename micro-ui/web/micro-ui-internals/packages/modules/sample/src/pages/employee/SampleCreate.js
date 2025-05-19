@@ -11,13 +11,11 @@ const Create = () => {
 
   const onSubmit = (data) => {
     ///
-    console.log(data, "data");
   };
 
   /* use newConfig instead of commonFields for local development in case needed */
 
   const configs = CreateConfig ? CreateConfig : CreateConfig;
-  console.log(configs)
   return (
     <FormComposerV2
       heading={t("Application Heading")}

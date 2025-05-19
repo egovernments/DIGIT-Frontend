@@ -66,10 +66,8 @@ const AdvancedCreate = () => {
   const { isLoading, data: empData = [] } = Digit.Hooks.useCustomAPIHook(requestCriteria);
   const { isLoading: isLoadingEmpData, data: filteredEmpData = [], revalidate } = Digit.Hooks.useCustomAPIHook(requestCriteria1);
 
-  console.log(empData, "empData", filteredEmpData);
   const onSubmit = (data) => {
     ///
-    console.log(data, "data");
     const onError = (resp) => {
       navigate(`/${window.contextPath}/employee/sample/response?isSuccess=${false}`, { message: "TE_CREATION_FAILED" });
     };
@@ -119,8 +117,7 @@ const AdvancedCreate = () => {
         },
       ],
     });
-    console.log(processedConfig, "processedConfig");
-    return processedConfig?.form;
+        return processedConfig?.form;
   }, [empData, filteredEmpData]);
 
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
@@ -128,7 +125,6 @@ const AdvancedCreate = () => {
       setDept(formData?.department?.code);
       revalidate();
     }
-    console.log(formData, "formData");
   };
   return (
     <FormComposerV2
