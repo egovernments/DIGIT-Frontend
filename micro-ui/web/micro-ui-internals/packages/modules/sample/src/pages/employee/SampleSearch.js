@@ -3,11 +3,11 @@ import { useTranslation } from "react-i18next";
 import { Header, Loader, Button, AddFilled } from "@egovernments/digit-ui-react-components";
 import searchWageSeekerConfig from "../../configs/searchWageSeekerConfig";
 import { InboxSearchComposer } from "@egovernments/digit-ui-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 // not working todo
 const SearchWageSeeker = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const configs = searchWageSeekerConfig();
 
@@ -20,7 +20,7 @@ const SearchWageSeeker = () => {
             variation="secondary"
             icon={<AddFilled />}
             onButtonClick={() => {
-              history.push(`/${window?.contextPath}/employee/${configs?.actionLink}`);
+              navigate(`/${window?.contextPath}/employee/${configs?.actionLink}`);
             }}
             type="button"
           />

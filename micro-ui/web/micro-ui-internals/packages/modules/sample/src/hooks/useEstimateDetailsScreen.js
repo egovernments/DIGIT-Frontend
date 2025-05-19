@@ -1,13 +1,13 @@
+import { useQuery } from "@tanstack/react-query";
 import { WorksSearch } from "../services/elements/works";
-import { useQuery } from "react-query";
 
-const useEstimateDetailsScreen = (t, tenantId, estimateNumber, config,isStateChanged ) => {
-    
-    return useQuery(
-        ["ESTIMATE_WORKS_SEARCH", "ESTIMATE_SEARCH", tenantId, estimateNumber, isStateChanged],
-        () => WorksSearch.viewEstimateScreen(t, tenantId, estimateNumber),
-        {staleTime:0,...config}
-    );
-}
+const useEstimateDetailsScreen = (t, tenantId, estimateNumber, config = {}, isStateChanged = false) => {
+  return useQuery({
+    queryKey: ["ESTIMATE_WORKS_SEARCH", "ESTIMATE_SEARCH", tenantId, estimateNumber, isStateChanged],
+    queryFn: () => WorksSearch.viewEstimateScreen(t, tenantId, estimateNumber),
+    staleTime: 0,
+    ...config,
+  });
+};
 
-export default useEstimateDetailsScreen
+export default useEstimateDetailsScreen;

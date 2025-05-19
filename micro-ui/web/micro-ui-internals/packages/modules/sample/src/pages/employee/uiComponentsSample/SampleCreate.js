@@ -83,7 +83,7 @@ const SampleCreate = () => {
 
   return (
     <React.Fragment>
-      <HeaderComponent styles={textStyles}>{"Create"}</HeaderComponent>
+      {/* <HeaderComponent styles={textStyles}>{"Create"}</HeaderComponent> */}
       <FormComposerV2
         label={t("Submit")}
         config={configs.map((config) => {

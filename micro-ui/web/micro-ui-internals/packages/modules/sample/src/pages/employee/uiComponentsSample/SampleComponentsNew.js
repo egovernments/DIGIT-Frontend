@@ -163,9 +163,9 @@ import {
   
     return (
       <React.Fragment>
-        <HeaderComponent styles={textStyles}>{"New Components"}</HeaderComponent>
+        {/* <HeaderComponent styles={textStyles}>{"New Components"}</HeaderComponent> */}
         <div style={{ ...commonDivStyle, marginTop: "24px" }}>
-          <HeaderComponent styles={textStyles}>{"Accordion"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Accordion"}</HeaderComponent> */}
           <Accordion
             icon="Accessibility"
             number={1}
@@ -181,9 +181,9 @@ import {
           </Accordion>
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>
+          {/* <HeaderComponent styles={textStyles}>
             {"Accordion List"}
-          </HeaderComponent>
+          </HeaderComponent> */}
           <AccordionList addDivider>
             <Accordion number={1} title="Accordion 1">
               Lorem Ipsum is simply dummy text of the printing and typesetting
@@ -204,7 +204,7 @@ import {
           </AccordionList>
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Action Button"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Action Button"}</HeaderComponent> */}
           <Button
               wrapperClassName='sample-action-button'
               wrapperStyles={{width:"fit-content"}}
@@ -239,7 +239,7 @@ import {
             />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Alert Card"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Alert Card"}</HeaderComponent> */}
           <AlertCard
             populators={{
               name: "infocard",
@@ -307,7 +307,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"BackLink"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"BackLink"}</HeaderComponent> */}
           <BackLink
             iconFill=""
             label="Back"
@@ -337,7 +337,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"BreadCrumb"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"BreadCrumb"}</HeaderComponent> */}
           <BreadCrumb
             crumbs={[
               {
@@ -370,9 +370,9 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>
+          {/* <HeaderComponent styles={textStyles}>
             {"Large Sized Buttons"}
-          </HeaderComponent>
+          </HeaderComponent> */}
           <Button
             variation="primary"
             label={"Primary"}
@@ -615,9 +615,9 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>
+          {/* <HeaderComponent styles={textStyles}>
             {"Medium Sized Buttons"}
-          </HeaderComponent>
+          </HeaderComponent> */}
           <Button
             variation="primary"
             label={"Primary"}
@@ -860,9 +860,9 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>
+          {/* <HeaderComponent styles={textStyles}>
             {"Small Sized Buttons"}
-          </HeaderComponent>
+          </HeaderComponent> */}
           <Button
             variation="primary"
             label={"Primary"}
@@ -1105,7 +1105,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Checkbox"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Checkbox"}</HeaderComponent> */}
           <CheckBox
             label="Label"
             onChange={(e) => {
@@ -1134,7 +1134,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Chip"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Chip"}</HeaderComponent> */}
           <div className="digit-tag-container">
             <Chip
               className=""
@@ -1170,13 +1170,13 @@ import {
           </div>
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Divider"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Divider"}</HeaderComponent> */}
           <Divider className="" style={{}} variant="small" />
           <Divider className="" style={{}} variant="medium" />
           <Divider className="" style={{}} variant="large" />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Panels"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Panels"}</HeaderComponent> */}
           <Panels
             animationProps={{
               height: 100,
@@ -1209,7 +1209,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Loader"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Loader"}</HeaderComponent> */}
           <Loader
             animationStyles={{}}
             className=""
@@ -1219,21 +1219,21 @@ import {
           ></Loader>
         </div>
         <div style={commonDivStyle}>
-        <HeaderComponent styles={textStyles}>
+        {/* <HeaderComponent styles={textStyles}>
           {"Multiselect Dropdown"}
-        </HeaderComponent>
+        </HeaderComponent> */}
         <LabelFieldPair
           removeMargin={true}
           className={`digit-formcomposer-fieldpair`}
         >
           {
-            <HeaderComponent className={`label`}>
-              <div className={`label-container`}>
-                <label className={`label-styles`}>
-                  {"MultiSelect Dropdown"}
-                </label>
-              </div>
-            </HeaderComponent>
+            // <HeaderComponent className={`label`}>
+            //   <div className={`label-container`}>
+            //     <label className={`label-styles`}>
+            //       {"MultiSelect Dropdown"}
+            //     </label>
+            //   </div>
+            // </HeaderComponent>
           }
           <div className="digit-field">
             <MultiSelectDropdown
@@ -1371,7 +1371,7 @@ import {
         )}
       </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"OTPInput"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"OTPInput"}</HeaderComponent> */}
           <OTPInput
             label="Enter OTP"
             length={6}
@@ -1381,7 +1381,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"SelectionTag"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"SelectionTag"}</HeaderComponent> */}
           <SelectionTag
             allowMultipleSelection
             errorMessage=""
@@ -1411,7 +1411,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Stepper"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Stepper"}</HeaderComponent> */}
           <Stepper
             populators={{
               name: "stepper",
@@ -1424,7 +1424,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Switch"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Switch"}</HeaderComponent> */}
           <Switch
             label="Switch"
             onToggle={(e) => {
@@ -1434,7 +1434,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Tab"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Tab"}</HeaderComponent> */}
           <Tab
             Tab1Label=""
             Tab2Label=""
@@ -1473,7 +1473,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Tag"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Tag"}</HeaderComponent> */}
           <Tag icon="" label="Tag" labelStyle={{}} showIcon={false} style={{}} />
           <Tag
             icon=""
@@ -1501,7 +1501,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"TextBlock"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"TextBlock"}</HeaderComponent> */}
           <TextBlock
             body="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat."
             caption="Caption"
@@ -1510,7 +1510,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Timeline"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Timeline"}</HeaderComponent> */}
           <Timeline
             label={"Upcoming"}
             variant={"upcoming"}
@@ -1534,7 +1534,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Toggle"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Toggle"}</HeaderComponent> */}
           <Toggle
             Toggle1Label=""
             Toggle2Label=""
@@ -1574,7 +1574,7 @@ import {
           />
         </div>
         <div style={commonDivStyle}>
-          <HeaderComponent styles={textStyles}>{"Tooltip"}</HeaderComponent>
+          {/* <HeaderComponent styles={textStyles}>{"Tooltip"}</HeaderComponent> */}
           <div
             style={{
               alignItems: "center",

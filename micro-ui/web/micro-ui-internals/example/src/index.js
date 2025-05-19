@@ -1,81 +1,110 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState, lazy, Suspense } from "react";
+import ReactDOM from "react-dom/client";
+// import { initGlobalConfigs } from "./globalConfig";
+import { Hooks } from "@egovernments/digit-ui-libraries";
+// import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
+
+// Ensure Digit is defined before using it
+window.Digit = window.Digit || {};
+window.Digit.Hooks = Hooks;
+const DigitUILazy = lazy(() =>
+  import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
+);
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-// import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
-import "@egovernments/digit-ui-sample-css/example/index.css";
 
-import { pgrCustomizations } from "./pgr";
-import { UICustomizations } from "./UICustomizations";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import {initSampleComponents} from "@egovernments/digit-ui-module-sample";
-
-var Digit = window.Digit || {};
-
-const enabledModules = [
-  "DSS",
-  "HRMS",
-  "Workbench",
-  "HCMWORKBENCH",
-  //  "Engagement", "NDSS","QuickPayLinks", "Payment",
-  "Utilities",
-  "Microplanning",
-  "Sample"
-  //added to check fsm
-  // "FSM"
-];
+const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
 
 const initTokens = (stateCode) => {
-  const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
-  const token = window.localStorage.getItem("token") || process.env[`REACT_APP_${userType}_TOKEN`];
+  console.log(window.globalConfigs, "window.globalConfigs");
+
+  const userType =
+    window.sessionStorage.getItem("userType") ||
+    process.env.REACT_APP_USER_TYPE ||
+    "CITIZEN";
+  const token =
+    window.localStorage.getItem("token") ||
+    process.env[`REACT_APP_${userType}_TOKEN`];
 
   const citizenInfo = window.localStorage.getItem("Citizen.user-info");
-
-  const citizenTenantId = window.localStorage.getItem("Citizen.tenant-id") || stateCode;
-
+  const citizenTenantId =
+    window.localStorage.getItem("Citizen.tenant-id") || stateCode;
   const employeeInfo = window.localStorage.getItem("Employee.user-info");
   const employeeTenantId = window.localStorage.getItem("Employee.tenant-id");
 
-  const userTypeInfo = userType === "CITIZEN" || userType === "QACT" ? "citizen" : "employee";
+  const userTypeInfo =
+    userType === "CITIZEN" || userType === "QACT" ? "citizen" : "employee";
   window.Digit.SessionStorage.set("user_type", userTypeInfo);
   window.Digit.SessionStorage.set("userType", userTypeInfo);
 
   if (userType !== "CITIZEN") {
-    window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
-  } else {
-    // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
+    window.Digit.SessionStorage.set("User", {
+      access_token: token,
+      info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo,
+    });
   }
 
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);
 
-  if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
+  if (employeeTenantId && employeeTenantId.length) {
+    window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
+  }
 };
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  window.Digit.Customizations = {
-    PGR: pgrCustomizations,
-    commonUiConfig: UICustomizations
-  };
-  window?.Digit.ComponentRegistryService.setupRegistry({
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
-  });
+  // initGlobalConfigs(); // Ensure global configs are set first
+  window.contextPath =
+    window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
 
-  initUtilitiesComponents();
-  initSampleComponents();
+  // const stateCode = Digit?.ULBService?.getStateId();
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
 
-  const moduleReducers = (initData) => initData;
-
-
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  initTokens(stateCode);
-
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(
+      <MainApp stateCode={stateCode} enabledModules={enabledModules} />
+  );
 };
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+const MainApp = ({ stateCode, enabledModules }) => {
+  const [isReady, setIsReady] = useState(false);
+  const [loaded, setLoaded] = useState(false);
+
+   useEffect(() => {
+    initLibraries().then(() => {
+      console.log(Digit, window?.Digit);
+      const initMethods = async () => {
+        const { initSampleComponents } = await import("@egovernments/digit-ui-module-sample");
+        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");
+
+        await initWorkbenchComponents();
+        await initSampleComponents();
+      }
+      initMethods()
+      setIsReady(true)
+    });
+  }, []);
+
+  useEffect(() => {
+    initTokens(stateCode);
+    setLoaded(true);
+  }, [stateCode, isReady]);
+
+  if (!loaded) {
+    return <div>Loading...</div>;
+  }
+
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      {window.Digit && (
+        <DigitUILazy
+          stateCode={stateCode}
+          enabledModules={enabledModules}
+          defaultLanding="employee"
+        />
+      )}
+    </Suspense>
+  );
+};
+
+// Start the app
+initDigitUI();

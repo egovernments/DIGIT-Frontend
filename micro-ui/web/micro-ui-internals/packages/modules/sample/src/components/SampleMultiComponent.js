@@ -58,11 +58,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
   return (
     <>
       <LabelFieldPair>
-        <HeaderComponent className={`label`}>
+        {/* <HeaderComponent className={`label`}>
           <div className={`label-container`}>
             <label className={`label-styles`}>{`${t("Select Type")}`}</label>
           </div>
-        </HeaderComponent>
+        </HeaderComponent> */}
         <Dropdown
           style={{ width: "100%" }}
           t={t}
@@ -73,11 +73,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
         />
       </LabelFieldPair>
       <LabelFieldPair>
-        <HeaderComponent className={`label`}>
+        {/* <HeaderComponent className={`label`}>
           <div className={`label-container`}>
             <label className={`label-styles`}>{`${t("Select Sub-Type")}`}</label>
           </div>
-        </HeaderComponent>
+        </HeaderComponent> */}
         <Dropdown
           style={{ width: "100%" }}
           t={t}
@@ -89,11 +89,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
       </LabelFieldPair>
       {selectedType?.category && (
         <LabelFieldPair>
-          <HeaderComponent className={`label`}>
+          {/* <HeaderComponent className={`label`}>
             <div className={`label-container`}>
               <label className={`label-styles`}>{`${t("Select Catogory")}`}</label>
             </div>
-          </HeaderComponent>
+          </HeaderComponent> */}
           <Dropdown
             style={{ width: "100%" }}
             t={t}
@@ -106,11 +106,11 @@ const SampleMultiComponent = ({ onSelect, ...props }) => {
       )}
       {selectedType?.role && (
         <LabelFieldPair>
-          <HeaderComponent className={`label`}>
+          {/* <HeaderComponent className={`label`}>
             <div className={`label-container`}>
               <label className={`label-styles`}>{`${t("Select Role")}`}</label>
             </div>
-          </HeaderComponent>
+          </HeaderComponent> */}
           <Dropdown
             style={{ width: "100%" }}
             t={t}

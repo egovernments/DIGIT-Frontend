@@ -1,6 +1,5 @@
-import {  Loader} from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import SampleCard from "./components/SampleCard";
 import HRMSCard from "./components/HRMSCard";
@@ -12,17 +11,17 @@ import SampleMultiComponent from "./components/SampleMultiComponent";
 // SampleModule component manages the initialization and rendering of the module
 export const SampleModule = ({ stateCode, userType, tenants }) => {
   // Get the current route path and URL using React Router
-  const { path, url } = useRouteMatch();
-  
+  console.log("Sample sampleModule is Hitting")
+
   // Get the currently selected tenant ID from DIGIT's ULB Service
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  
+
   // Define the modules that this component depends on
   const moduleCode = ["sample", "common", "workflow"];
-  
+
   // Get the current language selected in the DIGIT Store
   const language = Digit.StoreData.getCurrentLanguage();
-  
+
   // Fetch module-specific store data
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -32,17 +31,19 @@ export const SampleModule = ({ stateCode, userType, tenants }) => {
 
   // Display a loader until the data is available
   if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   // Render the EmployeeApp component with required props
-  return <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />;
+  return <EmployeeApp stateCode={stateCode} userType={userType} tenants={tenants} />;
 };
 
 // Register components to be used in DIGIT's Component Registry
 const componentsToRegister = {
   SampleModule,
   SampleCard,
+  UtilitiesModule: SampleModule,
+  UtilitiesCard: SampleCard,
   HRMSCard,
   ViewEstimatePage: ViewEstimateComponent,
   SampleAdditionalComponent: AdditionalComponentWrapper,
@@ -51,12 +52,13 @@ const componentsToRegister = {
 
 // Initialize and register module components
 export const initSampleComponents = () => {
+  console.log("Sample initSampleComponent is Hitting")
   // Apply custom hooks overrides
-  overrideHooks();
-  
-  // Update custom configurations
-  updateCustomConfigs();
-  
+   overrideHooks();
+
+  // Update custom configuratio
+   updateCustomConfigs();
+
   // Register each component with the DIGIT Component Registry
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);

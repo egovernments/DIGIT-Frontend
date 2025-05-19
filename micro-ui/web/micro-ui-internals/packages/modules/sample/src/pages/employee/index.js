@@ -1,8 +1,9 @@
-import { AppContainer, PrivateRoute } from "@egovernments/digit-ui-react-components";
-import { BreadCrumb } from "@egovernments/digit-ui-components";
 import React from "react";
+import { Routes, Route, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Switch } from "react-router-dom";
+import { AppContainer } from "@egovernments/digit-ui-react-components";
+import { BreadCrumb } from "@egovernments/digit-ui-components";
+
 import Inbox from "./SampleInbox";
 import SearchWageSeeker from "./SampleSearch";
 import AdvancedCreate from "./SampleAdvancedSearch";
@@ -25,8 +26,10 @@ import SampleSearch from "./uiComponentsSample/SampleSearch";
 import SampleInbox from "./uiComponentsSample/SampleInbox";
 import SampleView from "./uiComponentsSample/SampleView";
 
-const SampleBreadCrumbs = ({ location }) => {
+const SampleBreadCrumbs = () => {
   const { t } = useTranslation();
+  const location = useLocation();
+
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -38,44 +41,45 @@ const SampleBreadCrumbs = ({ location }) => {
       show: true,
     },
   ];
+
   return <BreadCrumb crumbs={crumbs} />;
 };
 
-const App = ({ path, stateCode, userType, tenants }) => {
+const App = () => {
+  console.log("Sample index.js is Hitting");
+
   return (
-    <Switch>
-      <AppContainer className="ground-container">
-        <React.Fragment>
-          <SampleBreadCrumbs location={location} />
-        </React.Fragment>
+    <AppContainer className="ground-container">
+      <SampleBreadCrumbs />
+      <Routes>
+        <Route path="/hrms-create" element={<HRMSCreate />} />
+        <Route path="/hrms-search" element={<HRMSSearch />} />
+        <Route path="/hrms-view" element={<HRMSViewDetails />} />
 
-        <PrivateRoute path={`${path}/hrms-create`} component={() => <HRMSCreate></HRMSCreate>} />
-        <PrivateRoute path={`${path}/hrms-search`} component={() => <HRMSSearch></HRMSSearch>} />
-        <PrivateRoute path={`${path}/hrms-view`} component={() => <HRMSViewDetails></HRMSViewDetails>} />
+        <Route path="/individual-create" element={<IndividualCreate />} />
+        <Route path="/individual-search" element={<IndividualSearch />} />
+        <Route path="/individual-view" element={<IndividualViewDetails />} />
 
-        <PrivateRoute path={`${path}/individual-create`} component={() => <IndividualCreate></IndividualCreate>} />
-        <PrivateRoute path={`${path}/individual-search`} component={() => <IndividualSearch></IndividualSearch>} />
-        <PrivateRoute path={`${path}/individual-view`} component={() => <IndividualViewDetails></IndividualViewDetails>} />
+        <Route path="/response" element={<Response />} />
 
-        <PrivateRoute path={`${path}/response`} component={() => <Response></Response>} />
+        <Route path="/sample-create" element={<Create />} />
+        <Route path="/sample-search" element={<SearchWageSeeker />} />
+        <Route path="/sample-view" element={<ViewIndividual />} />
+        <Route path="/sample-components" element={<SampleComponents />} />
+        <Route path="/sample-success" element={<PanelCardResponse />} />
+        <Route path="/tab-search-individual" element={<TabIndividualSearch />} />
+        <Route path="/advanced" element={<AdvancedCreate />} />
+        <Route path="/inbox" element={<Inbox />} />
 
-        <PrivateRoute path={`${path}/sample-create`} component={() => <Create></Create>} />
-        <PrivateRoute path={`${path}/sample-search`} component={() => <SearchWageSeeker></SearchWageSeeker>} />    
-        <PrivateRoute path={`${path}/sample-view`} component={() =>  <ViewIndividual />} />
-        <PrivateRoute path={`${path}/sample-components`} component={() => <SampleComponents />} />
-        <PrivateRoute path={`${path}/sample-success`} component={() => <PanelCardResponse />} />
-        <PrivateRoute path={`${path}/tab-search-individual`} component={() => <TabIndividualSearch />} />
-        <PrivateRoute path={`${path}/advanced`} component={() => <AdvancedCreate></AdvancedCreate>} />
-        <PrivateRoute path={`${path}/inbox`} component={() => <Inbox></Inbox>} />
-        {/* <PrivateRoute path={`${path}/view`} component={() => <View />} /> */}
+        <Route path="/demo" element={<div>deweew</div>} />
 
-        <PrivateRoute path={`${path}/components`} component={() => <SampleComponentsNew />} />
-        <PrivateRoute path={`${path}/create`} component={() => <SampleCreate />} />
-        <PrivateRoute path={`${path}/search`} component={() => <SampleSearch />} />
-        <PrivateRoute path={`${path}/inbox`} component={() => <SampleInbox />} />
-        <PrivateRoute path={`${path}/view`} component={() => <SampleView />} />
-      </AppContainer>
-    </Switch>
+        <Route path="/components" element={<SampleComponentsNew />} />
+        <Route path="/create" element={<SampleCreate />} />
+        <Route path="/search" element={<SampleSearch />} />
+        <Route path="/sample-inbox" element={<SampleInbox />} />
+        <Route path="/view" element={<SampleView />} />
+      </Routes>
+    </AppContainer>
   );
 };
 

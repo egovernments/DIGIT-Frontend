@@ -9,13 +9,13 @@ import {
   } from "@egovernments/digit-ui-components";
   import { Header } from "@egovernments/digit-ui-react-components";
   import React, { useEffect, useState } from "react";
-  import { useHistory } from "react-router-dom";
+  import { useNavigate } from "react-router-dom";
   import { useTranslation } from "react-i18next";
   import { SampleConfig } from "../../configs/SampleConfig";
   
   const Create = () => {
     const { t } = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
     const [currentStep, setCurrentStep] = useState(0);
     const [showpopup, setShowpopup] = useState(false);
     const [showalert, setShowalert] = useState(false);
@@ -235,7 +235,7 @@ import {
   
     const onSubmit = (data) => {
       console.log(data, "data");
-      history.push(`/${window.contextPath}/employee/sample/sample-success`);
+      navigate(`/${window.contextPath}/employee/sample/sample-success`);
     };
   
   

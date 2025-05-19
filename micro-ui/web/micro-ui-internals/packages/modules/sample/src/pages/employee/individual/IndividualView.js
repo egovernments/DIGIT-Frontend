@@ -1,12 +1,12 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 
 const IndividualViewDetails = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const reqCriteria = {
@@ -110,9 +110,9 @@ const IndividualViewDetails = (props) => {
   }
   return (
     <>
-      <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+      {/* <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
         {t("INDIVIDUAL DETAILS")}
-      </HeaderComponent>
+      </HeaderComponent> */}
       <div className="campaign-summary-container">{data && <ViewComposer data={data} />}</div>
     </>
   );

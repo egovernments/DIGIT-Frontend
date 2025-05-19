@@ -1,7 +1,7 @@
 import { Loader, FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import _ from "lodash";
 import { newConfig } from "../../configs/SampleAdvancedSearchConfig";
 
@@ -26,7 +26,7 @@ const AdvancedCreate = () => {
   };
 
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaCreate);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [dept, setDept] = useState("");
   const requestCriteria = {
     url: "/egov-hrms/employees/_search",
@@ -71,11 +71,11 @@ const AdvancedCreate = () => {
     ///
     console.log(data, "data");
     const onError = (resp) => {
-      history.push(`/${window.contextPath}/employee/sample/response?isSuccess=${false}`, { message: "TE_CREATION_FAILED" });
+      navigate(`/${window.contextPath}/employee/sample/response?isSuccess=${false}`, { message: "TE_CREATION_FAILED" });
     };
 
     const onSuccess = (resp) => {
-      history.push(`/${window.contextPath}/employee/sample/response?appNo=${resp.contracts[0].supplementNumber}&isSuccess=${true}`, {
+      navigate(`/${window.contextPath}/employee/sample/response?appNo=${resp.contracts[0].supplementNumber}&isSuccess=${true}`, {
         message: isEdit ? "TE_EDIT_SUCCESS" : "TE_CREATION_SUCCESS",
         showID: true,
         label: "REVISED_WO_NUMBER",
