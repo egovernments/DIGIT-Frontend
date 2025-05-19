@@ -21,10 +21,10 @@ const HRMSCard = () => {
         label: t("HRMS Search"),
         link: `/${window?.contextPath}/employee/utilities/hrms-search`,
       },
-      {
-        label: t("HRMS View Details"),
-        link: `/${window?.contextPath}/employee/utilities/hrms-view`,
-      },
+      // {
+      //   label: t("HRMS View Details"),
+      //   link: `/${window?.contextPath}/employee/utilities/hrms-view`,
+      // },
       
     ],
   };

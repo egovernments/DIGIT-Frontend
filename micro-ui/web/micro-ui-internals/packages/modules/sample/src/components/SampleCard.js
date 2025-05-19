@@ -53,10 +53,10 @@ const SampleCard = () => {
         label: t("Individual Tab Search"),
         link: `/${window?.contextPath}/employee/utilities/tab-search-individual`,
       },
-      {
-        label: t("New UI Components"),
-        link: `/${window?.contextPath}/employee/utilities/components`,
-      },
+      // {
+      //   label: t("New UI Components"),
+      //   link: `/${window?.contextPath}/employee/utilities/components`,
+      // },
       {
         label: t("Create"),
         link: `/${window?.contextPath}/employee/utilities/create`,
@@ -65,14 +65,14 @@ const SampleCard = () => {
         label: t("Search"),
         link: `/${window?.contextPath}/employee/utilities/search`,
       },
-      {
-        label: t("Inbox"),
-        link: `/${window?.contextPath}/employee/utilities/inbox`,
-      },
-      {
-        label: t("View"),
-        link: `/${window?.contextPath}/employee/utilities/view`,
-      },
+      // {
+      //   label: t("Inbox"),
+      //   link: `/${window?.contextPath}/employee/utilities/inbox`,
+      // },
+      // {
+      //   label: t("View"),
+      //   link: `/${window?.contextPath}/employee/utilities/view`,
+      // },
     ],
   };
 

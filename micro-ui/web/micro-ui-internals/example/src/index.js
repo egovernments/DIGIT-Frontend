@@ -1,9 +1,8 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-import { initGlobalConfigs } from "./globalConfig";
+// import { initGlobalConfigs } from "./globalConfig";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 // import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 
 // Ensure Digit is defined before using it
 window.Digit = window.Digit || {};
@@ -53,7 +52,7 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  initGlobalConfigs(); // Ensure global configs are set first
+  // initGlobalConfigs(); // Ensure global configs are set first
   window.contextPath =
     window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
 
@@ -73,12 +72,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
    useEffect(() => {
     initLibraries().then(() => {
       console.log(Digit, window?.Digit);
-      const app = async () => {
+      const initMethods = async () => {
         const { initSampleComponents } = await import("@egovernments/digit-ui-module-sample");
+        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");
+
+        await initWorkbenchComponents();
         await initSampleComponents();
       }
-      app()
-      initWorkbenchComponents();
+      initMethods()
       setIsReady(true)
     });
   }, []);
