@@ -33,7 +33,6 @@ const HRMSCreate = () => {
 
   // Function to handle form submission
   const onSubmit = async (data) => {
-    console.log(data, "data"); // Debug log of submitted form data
 
     await mutation.mutate(
       {
@@ -71,7 +70,6 @@ const HRMSCreate = () => {
         }))}
         defaultValues={{}} // Default values for form fields
         onFormValueChange={(setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-          console.log(formData, "formData"); // Debug log when form values change
         }}
         onSubmit={(data) => onSubmit(data)} // Handle form submission
         fieldStyle={{ marginRight: 0 }}

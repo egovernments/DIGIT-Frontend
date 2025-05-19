@@ -60,7 +60,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
    useEffect(() => {
     initLibraries().then(() => {
-      console.log(Digit, window?.Digit);
       const initMethods = async () => {
         const { initSampleComponents } = await import("@egovernments/digit-ui-module-sample");
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");

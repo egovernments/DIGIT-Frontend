@@ -46,7 +46,6 @@ const SampleBreadCrumbs = () => {
 };
 
 const App = () => {
-  console.log("Sample index.js is Hitting");
 
   return (
     <AppContainer className="ground-container">

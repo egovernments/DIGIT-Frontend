@@ -11,7 +11,6 @@ import SampleMultiComponent from "./components/SampleMultiComponent";
 // SampleModule component manages the initialization and rendering of the module
 export const SampleModule = ({ stateCode, userType, tenants }) => {
   // Get the current route path and URL using React Router
-  console.log("Sample sampleModule is Hitting")
 
   // Get the currently selected tenant ID from DIGIT's ULB Service
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -52,7 +51,6 @@ const componentsToRegister = {
 
 // Initialize and register module components
 export const initSampleComponents = () => {
-  console.log("Sample initSampleComponent is Hitting")
   // Apply custom hooks overrides
    overrideHooks();
 
