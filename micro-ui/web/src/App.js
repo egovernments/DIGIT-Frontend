@@ -4,7 +4,7 @@
 //   paymentConfigs,
 //   PaymentLinks,
 //   PaymentModule,
-// } from "@egovernments/digit-ui-module-common";
+// } from "@egovernments/digit-ui-module-common"; 
 // import {
 //   initPGRComponents,
 //   PGRReducers,
