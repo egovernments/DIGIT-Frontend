@@ -10,8 +10,7 @@
   "homepage": "/digit-ui",
   "workspaces": [
     "micro-ui-internals",
-    "micro-ui-internals/packages/modules/*",
-    "micro-ui-internals/packages/*"
+    "micro-ui-internals/packages/modules/*"
   ],
   "dependencies": {
     "@egovernments/digit-ui-components": "0.0.2-webpack-23",

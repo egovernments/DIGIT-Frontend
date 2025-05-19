@@ -39,8 +39,6 @@ export const SampleModule = ({ stateCode, userType, tenants }) => {
 
 // Register components to be used in DIGIT's Component Registry
 const componentsToRegister = {
-  SampleModule,
-  SampleCard,
   UtilitiesModule: SampleModule,
   UtilitiesCard: SampleCard,
   HRMSCard,
