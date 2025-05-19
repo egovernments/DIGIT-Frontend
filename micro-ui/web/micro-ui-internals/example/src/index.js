@@ -1,12 +1,5 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
-// import { initGlobalConfigs } from "./globalConfig";
-import { Hooks } from "@egovernments/digit-ui-libraries";
-// import { initSampleComponents } from "@egovernments/digit-ui-module-sample";
-
-// Ensure Digit is defined before using it
-window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() =>
   import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
 );
@@ -52,11 +45,9 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  // initGlobalConfigs(); // Ensure global configs are set first
   window.contextPath =
     window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
 
-  // const stateCode = Digit?.ULBService?.getStateId();
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz"
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
