@@ -39,7 +39,7 @@ const PGRSearchInboxConfig = () => {
         search: {
             uiConfig: {
                 headerStyle: null,
-                primaryLabel: 'ES_SEARCH_BOTTON',
+                primaryLabel: 'ACTION_TEST_SEARCH',
                 secondaryLabel: 'CS_COMMON_CLEAR_SEARCH',
                 minReqFields: 1,
                 defaultValues: {
@@ -70,7 +70,7 @@ const PGRSearchInboxConfig = () => {
                         },
                     },
                     {
-                      label: "CS_DATE_RANGE",
+                      label: "EVENTS_DATERANGE_LABEL",
                       type: "dateRange",
                       isMandatory: false,
                       disable: false,
@@ -129,8 +129,8 @@ const PGRSearchInboxConfig = () => {
                 links: [
               {
                 text: "ES_PGR_NEW_COMPLAINT",
-                url: "/employee/pgr/complaint/create",
-                roles: ["SUPERUSER, PGR-ADMIN, PGR_ADMIN, HELPDESK_USER"],
+                url: "/employee/pgr/complaint/create-complaint",
+                roles: ["SUPERUSER", "PGR-ADMIN", "PGR_ADMIN", "HELPDESK_USER"],
                 hyperlink: true,
               },
                 ],
@@ -147,11 +147,12 @@ const PGRSearchInboxConfig = () => {
             uiConfig: {
                 type: 'filter',
                 headerStyle: null,
-                primaryLabel: 'CS_COMMON_FILTER',
+                primaryLabel: 'ES_COMMON_APPLY',
                 formClassName:"filter",
-                secondaryLabel: 'CLEAR_FILTER',
+                secondaryLabel: 'ES_CLEAR_ALL',
                 minReqFields: 0,
                 defaultValues: {
+                    locality: null,
                     assignee: { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" }
                 },
                 fields: [
@@ -181,7 +182,7 @@ const PGRSearchInboxConfig = () => {
                       label: "CS_COMPLAINT_DETAILS_COMPLAINT_SUBTYPE",
                       isMandatory: false,
                       key: "serviceCode",
-                      type: "multiselectdropdown",
+                      type: "dropdown",
                       disable: false,
                       preProcess : {
                         updateDependent : ["populators.options"]
@@ -206,7 +207,7 @@ const PGRSearchInboxConfig = () => {
                           component: "PGRBoundaryComponent",
                           disable: false,
                           populators: {
-                            name: "area",
+                            name: "locality",
                           }
                     },
                     {

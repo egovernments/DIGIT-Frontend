@@ -1585,10 +1585,10 @@ export const UICustomizations = {
       }
     
       // --- Handle serviceCode ---
-      let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || []);
-      serviceCodes = serviceCodes?.map((row) => row?.serviceCode);
+      let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
+      serviceCodes = serviceCodes?.serviceCode;
       delete data.body.inbox.moduleSearchCriteria.serviceCode;
-      if (serviceCodes.length > 0) {
+      if (serviceCodes != null) {
         data.body.inbox.moduleSearchCriteria.complaintType = serviceCodes;
       } else {
         delete data.body.inbox.moduleSearchCriteria.complaintType;
@@ -1609,7 +1609,6 @@ export const UICustomizations = {
         delete data.body.inbox.moduleSearchCriteria.locality;
         data.body.inbox.moduleSearchCriteria.area = localityArray;
       } else {
-        delete data.body.inbox.moduleSearchCriteria.locality;
         delete data.body.inbox.moduleSearchCriteria.area;
       }
     

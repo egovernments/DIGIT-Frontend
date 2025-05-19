@@ -42,13 +42,13 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
             location={location}
             crumbs={[
               {
-                content: t("CORE_COMMON_HOME"), // Home label
+                content: t("ACTION_TEST_HOME"), // Home label
                 internalLink: `/${window?.contextPath}/employee`, // Link to employee home
                 show: true,
               },
               {
                 internalLink: `/${window?.contextPath}/employee/pgr/create-complaint`,
-                content: t("CREATE_COMPLAINT"),
+                content: t("ACTION_TEST_CREATE_COMPLAINT"),
                 show: location.pathname.includes("create-complaint"),
               },
               {
@@ -58,7 +58,7 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
               },
               {
                 internalLink: `/${window?.contextPath}/employee/pgr/complaint-details`,
-                content: t("SEARCH_PGR"),
+                content: t("CS_COMPLAINT_DETAILS_COMPLAINT_DETAILS"),
                 show: location.pathname.includes("complaint-details"),
               }
             ]}
