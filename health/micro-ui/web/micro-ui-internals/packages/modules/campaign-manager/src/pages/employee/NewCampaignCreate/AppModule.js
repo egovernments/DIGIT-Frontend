@@ -13,10 +13,19 @@ const AppModule = () => {
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignType = searchParams.get("projectType");
   const tenantId = searchParams.get("tenantId");
-  const [selectedModuleCodes, setSelectedModuleCodes] = useState([]);
+  const [selectedModuleCodes, setSelectedModuleCodes] = useState(() => {
+    const storedModules = Digit?.SessionStorage.get("SelectedModules");
+    return Array.isArray(storedModules) ? storedModules : [];
+  });
+  const [sessionModuleCodes, setSessionModuleCodes] = useState(() => {
+    const storedModules = Digit?.SessionStorage.get("SelectedModules");
+    return Array.isArray(storedModules) ? storedModules : [];
+  });
   const [showToast, setShowToast] = useState(null);
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const AppConfigSchema = "SimplifiedAppConfig4";
+
+  console.log("selected", selectedModuleCodes);
 
   const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -43,90 +52,204 @@ const AppModule = () => {
     setShowToast(null);
   };
 
+  // const handleNext = async () => {
+  //   // if(selectedModuleCodes.length > 0) window.Digit.SessionStorage.set("SelectedModules", selectedModuleCodes);
+  //   const uniqueModules = [...new Set(selectedModuleCodes)];
+
+  //   if (uniqueModules.length === 0) {
+  //     setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
+  //     return;
+  //   }
+
+  //   Digit.SessionStorage.set("SelectedModules", uniqueModules);
+  //   // Filter only the selected modules from modulesData
+  //   const selectedModules = modulesData.filter((module) => selectedModuleCodes.includes(module.name));
+  //   const baseProjectType = campaignType?.split("-")?.[0]?.toLowerCase();
+  //   const localisationModules = selectedModuleCodes.map((moduleCode) => `hcm-base-${moduleCode.toLowerCase()}-${baseProjectType}`).join(",");
+
+  //   let localisationData = null;
+  //   try {
+  //     localisationData = await Digit.CustomService.getResponse({
+  //       url: `/localization/messages/v1/_search`,
+  //       params: {
+  //         locale: locale,
+  //         module: localisationModules,
+  //         tenantId: tenantId,
+  //       },
+  //     });
+  //   } catch (e) {
+  //     console.error("Failed to fetch localisation data", e);
+  //     setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
+  //     return;
+  //   }
+
+  //   for (const module of selectedModules) {
+  //     const baseModuleKey = `hcm-base-${module.name.toLowerCase()}-${baseProjectType}`;
+  //     const updatedModuleName = `hcm-${module.name.toLowerCase()}-${campaignNumber}`;
+
+  //     const filteredLocalizations = localisationData?.messages?.filter((entry) => entry.module === baseModuleKey);
+  //     const updatedLocalizations =
+  //       filteredLocalizations?.map((entry) => ({
+  //         ...entry,
+  //         module: updatedModuleName,
+  //       })) || [];
+
+  //     if (updatedLocalizations.length > 0) {
+  //       try {
+  //         const response = await Digit.CustomService.getResponse({
+  //           url: `/localization/messages/v1/_upsert`,
+  //           body: {
+  //             tenantId,
+  //             messages: updatedLocalizations,
+  //           },
+  //         });
+  //         console.info(`Localization upserted for ${module.name}:`, response);
+  //       } catch (error) {
+  //         setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
+  //         console.error(`Failed to upsert localization for ${module.name}:`, error);
+  //         return;
+  //       }
+  //     }
+
+  //     const moduleWithProject = {
+  //       ...module,
+  //       project: `${module.name}_${campaignNumber}`,
+  //     };
+
+  //     try {
+  //       const url = getMDMSUrl(true);
+  //       const response = await Digit.CustomService.getResponse({
+  //         url: `${url}/v2/_create/Workbench.UISchema`,
+  //         body: {
+  //           Mdms: {
+  //             tenantId: tenantId,
+  //             schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+  //             data: moduleWithProject,
+  //           },
+  //         },
+  //       });
+
+  //       console.info(`Created module for ${module.name}:`, response);
+  //     } catch (error) {
+  //       setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
+  //       console.error(`Failed to create module for ${module.name}:`, error);
+  //       return;
+  //     }
+  //   }
+
+  //   history.push(
+  //     `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
+  //   );
+  // };
+
   const handleNext = async () => {
-    // Filter only the selected modules from modulesData
-    const selectedModules = modulesData.filter((module) => selectedModuleCodes.includes(module.name));
-    const baseProjectType = campaignType?.split("-")?.[0]?.toLowerCase();
-    const localisationModules = selectedModuleCodes.map((moduleCode) => `hcm-base-${moduleCode.toLowerCase()}-${baseProjectType}`).join(",");
-    if (selectedModules?.length === 0) {
-      setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
-      return;
-    }
+  const uniqueModules = [...new Set(selectedModuleCodes)];
 
-    let localisationData = null;
-    try {
-      localisationData = await Digit.CustomService.getResponse({
-        url: `/localization/messages/v1/_search`,
-        params: {
-          locale: locale,
-          module: localisationModules,
-          tenantId: tenantId,
-        },
-      });
-    } catch (e) {
-      console.error("Failed to fetch localisation data", e);
-      setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
-      return;
-    }
+  if (uniqueModules.length === 0) {
+    setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
+    return;
+  }
 
-    for (const module of selectedModules) {
-      const baseModuleKey = `hcm-base-${module.name.toLowerCase()}-${baseProjectType}`;
-      const updatedModuleName = `hcm-${module.name.toLowerCase()}-${campaignNumber}`;
+  const newModulesToCreate = uniqueModules.filter(
+    (code) => !sessionModuleCodes.includes(code)
+  );
 
-      const filteredLocalizations = localisationData?.messages?.filter((entry) => entry.module === baseModuleKey);
-      const updatedLocalizations =
-        filteredLocalizations?.map((entry) => ({
-          ...entry,
-          module: updatedModuleName,
-        })) || [];
+  if (newModulesToCreate.length === 0) {
+    history.push(
+      `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
+    );
+    return;
+  }
 
-      if (updatedLocalizations.length > 0) {
-        try {
-          const response = await Digit.CustomService.getResponse({
-            url: `/localization/messages/v1/_upsert`,
-            body: {
-              tenantId,
-              messages: updatedLocalizations,
-            },
-          });
-          console.info(`Localization upserted for ${module.name}:`, response);
-        } catch (error) {
-          setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
-          console.error(`Failed to upsert localization for ${module.name}:`, error);
-          return;
-        }
-      }
+  // Update both sessionStorage and session state
+  const updatedSession = [...new Set([...sessionModuleCodes, ...newModulesToCreate])];
+  Digit.SessionStorage.set("SelectedModules", updatedSession);
+  setSessionModuleCodes(updatedSession);
 
-      const moduleWithProject = {
-        ...module,
-        project: `${module.name}_${campaignNumber}`,
-      };
+  const selectedModules = modulesData.filter((module) =>
+    newModulesToCreate.includes(module.name)
+  );
 
+  const baseProjectType = campaignType?.split("-")?.[0]?.toLowerCase();
+  const localisationModules = newModulesToCreate
+    .map((code) => `hcm-base-${code.toLowerCase()}-${baseProjectType}`)
+    .join(",");
+
+  let localisationData = null;
+  try {
+    localisationData = await Digit.CustomService.getResponse({
+      url: `/localization/messages/v1/_search`,
+      params: {
+        locale,
+        module: localisationModules,
+        tenantId,
+      },
+    });
+  } catch (e) {
+    console.error("Failed to fetch localisation data", e);
+    setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
+    return;
+  }
+
+  for (const module of selectedModules) {
+    const baseModuleKey = `hcm-base-${module.name.toLowerCase()}-${baseProjectType}`;
+    const updatedModuleName = `hcm-${module.name.toLowerCase()}-${campaignNumber}`;
+
+    const filteredLocalizations = localisationData?.messages?.filter(
+      (entry) => entry.module === baseModuleKey
+    );
+
+    const updatedLocalizations =
+      filteredLocalizations?.map((entry) => ({
+        ...entry,
+        module: updatedModuleName,
+      })) || [];
+
+    if (updatedLocalizations.length > 0) {
       try {
-        const url = getMDMSUrl(true);
-        const response = await Digit.CustomService.getResponse({
-          url: `${url}/v2/_create/Workbench.UISchema`,
+        await Digit.CustomService.getResponse({
+          url: `/localization/messages/v1/_upsert`,
           body: {
-            Mdms: {
-              tenantId: tenantId,
-              schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
-              data: moduleWithProject,
-            },
+            tenantId,
+            messages: updatedLocalizations,
           },
         });
-
-        console.info(`Created module for ${module.name}:`, response);
       } catch (error) {
-        setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
-        console.error(`Failed to create module for ${module.name}:`, error);
+        console.error(`Failed to upsert localization for ${module.name}:`, error);
+        setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
         return;
       }
     }
 
-    history.push(
-      `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfig4&fieldType=${campaignNumber}&prefix=APPONE&localeModule=APPONE&tenantId=${tenantId}`
-    );
-  };
+    const moduleWithProject = {
+      ...module,
+      project: `${module.name}_${campaignNumber}`,
+    };
+
+    try {
+      const url = getMDMSUrl(true);
+      await Digit.CustomService.getResponse({
+        url: `${url}/v2/_create/Workbench.UISchema`,
+        body: {
+          Mdms: {
+            tenantId,
+            schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+            data: moduleWithProject,
+          },
+        },
+      });
+    } catch (error) {
+      console.error(`Failed to create module for ${module.name}:`, error);
+      setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
+      return;
+    }
+  }
+
+  history.push(
+    `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
+  );
+};
+
 
   if (productTypeLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
