@@ -29,9 +29,15 @@ export const CreateComplaintConfig = {
               key: "ComplaintDate",
               type: "date", // Input type is date picker
               disable: false,
+              preProcess : {
+                updateDependent : ["populators.validation.max"]
+              },
               populators: {
                 name: "ComplaintDate",
                 required: true,
+                validation:{
+                  max: "currentDate"
+                },
                 error: "CORE_COMMON_REQUIRED_ERRMSG"
               },
             },
@@ -59,6 +65,9 @@ export const CreateComplaintConfig = {
               populators: {
                 name: "complaintUser",
                 optionsKey: "name",
+                styles : {
+                  maxWidth : "37.5rem"
+                  },
                 validation: {
                   required: true,
                 },
@@ -104,6 +113,7 @@ export const CreateComplaintConfig = {
                 componentInFront: "+91",
                 validation: {
                   minLength: 10,
+                  maxLength: 10,
                   min: 6000000000,
                   max: 9999999999
                 }, // 10-digit phone number validation
