@@ -1,7 +1,7 @@
 import { HRMS_CONSTANTS } from "../constants/constants";
 const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 import { convertEpochToDate } from "../utils/utlis";
-import employeeDetailsFetch from "./emp_details";
+import employeeDetailsFetch from "./FetchEmployeeDetails";
 
 /**
  * Checks if a user exists with the given phone number.

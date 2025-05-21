@@ -5,7 +5,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
 
 
 const enabledModules = [

@@ -17,17 +17,6 @@ const Urls = {
   WorkFlow: `/egov-workflow-v2/egov-wf/businessservice/_search`,
   WorkFlowProcessSearch: `/egov-workflow-v2/egov-wf/process/_search`,
   localization: `/localization/messages/v1/_search`,
-  // [TO DO: Location Boundary -v2 need to be changed
-  // location: {
-  //   localities: `/${boundarySearchPath}includeChildren=true&hierarchyType=${hierarchyType}&boundaryType=${BoundaryTypes.LOCALITY}`,
-  //   withoutBoundaryType: `/${boundarySearchPath}includeChildren=true&hierarchyType=${hierarchyType}`,
-  //   wards: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=ADMIN&boundaryType=Ward`,
-  //   revenue_localities: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=REVENUE&boundaryType=Locality`,
-  //   localityByCode: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=ADMIN`
-  // },
-
-  pgr_search: `/pgr-services/v2/request/_search`,
-  pgr_update: `/pgr-services/v2/request/_update`,
   filter_data: `https://run.mocky.io/v3/597a50a0-90e5-4a45-b82e-8a2186b760bd`,
   FileStore: "/filestore/v1/files",
 

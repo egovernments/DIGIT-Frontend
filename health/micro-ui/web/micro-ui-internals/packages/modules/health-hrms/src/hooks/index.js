@@ -1,13 +1,13 @@
 import useBoundriesFetch from "./boundaries/useFetchBoundaries";
 import utils from "../hooks/hook_setup";
-import useHRMSCreate from "./hrms/hrms_create_emp";
-import useHRMSSearch from "./hrms/hrms_search_emp";
+import useHRMSCreate from "./hrms/useHRMSCreate";
+import useHRMSSearch from "./hrms/useHRMSSearch";
 import useHrmsInitialization from "./project/project_search";
-import useHRMSStaffCreate from "./hrms/hrms_create_staff";
-import useHRMSUpdate from "./hrms/hrms_update_emp";
-import useHRMSStaffDelete from "./hrms/hrms_delete_staff";
-import useHRMSStaffSearch from "./hrms/hrms_search_staff";
-import useHrmsEmployeeDetail from "./hrms/hrms_emp_detail_search";
+import useHRMSStaffCreate from "./hrms/useHRMSStaffCreate";
+import useHRMSUpdate from "./hrms/useHRMSUpdate";
+import useHRMSStaffDelete from "./hrms/useHRMSStaffDelete";
+import useHRMSStaffSearch from "./hrms/useHRMSStaffSearch";
+import useHrmsEmployeeDetail from "./hrms/useHRMSEmployeeDetail";
 
 const hrms = {
   useBoundriesFetch,

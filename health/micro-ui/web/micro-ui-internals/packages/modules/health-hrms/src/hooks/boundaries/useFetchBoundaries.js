@@ -1,4 +1,4 @@
-import fetchBoundaries from "../../services/boundary/boundary_search";
+import fetchBoundaries from "../../services/boundary/BoundarySearch";
 import { useQuery } from "react-query";
 
 const useBoundriesFetch = (tenantId) => {

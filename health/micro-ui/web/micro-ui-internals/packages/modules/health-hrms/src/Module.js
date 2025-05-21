@@ -11,9 +11,9 @@ import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundar
 
 import AssignCampaign from "./pages/employee/createAssignments";
 
-import ResponseScreen from "./pages/employee/service_response";
+import ResponseScreen from "./pages/employee/Response";
 import CampaignsAssignment from "./components/pageComponents/CampaignAssignment";
-import InboxSearch from "./pages/employee/search_inbox";
+import InboxSearch from "./pages/employee/Inbox";
 import ActionPopUp from "./components/pageComponents/popup";
 import EmployeeDetailScreen from "./pages/employee/employeeDetails";
 

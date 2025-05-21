@@ -1,4 +1,4 @@
-import { CardSubHeader, CardText, FormComposer, Loader, Modal, OTPInput, Toast } from "@egovernments/digit-ui-react-components";
+import { CardText, FormComposerV2, Loader, Modal, } from "@egovernments/digit-ui-components";
 import set from "lodash/set";
 import React, { useEffect, useRef, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -18,13 +18,9 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
   const [config, setConfig] = useState({});
   const [file, setFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
-  const [error, setError] = useState(null);
-  const [Reasons, setReasons] = useState([]);
-  const [selectedReason, selecteReason] = useState("");
+  const [reasons, setReasons] = useState([]);
+  const [selectedReason, setSelectedReason] = useState("");
   const { isLoading, isError, errors, data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(tenantId, "egov-hrms", "DeactivationReason");
-  const userInfo = Digit.UserService.getUser()?.info;
-  const [resendOtp, setResendOtpToast] = useState(null);
-  const [otp, setOtp] = useState("");
 
   function maskEmail(email) {
     const [localPart, domain] = email?.split("@");
@@ -32,15 +28,6 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
     return `${maskedLocalPart}@${domain}`;
   }
 
-  var sendOtp = async () => {
-    resendOtpFn()
-      .then((response) => {
-        setResendOtpToast({ key: "success", action: t("OTP_REQUEST_SENT") });
-      })
-      .catch((err) => {
-        setResendOtpToast({ key: "error", action: t("OTP_REQUEST_SENT_FAILED") });
-      });
-  };
 
   useEffect(() => {
     switch (action) {
@@ -55,7 +42,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             uploadedFile,
             setUploadedFile,
             selectedReason,
-            Reasons,
+            reasons,
             selectReason,
           })
         );
@@ -68,7 +55,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
             uploadedFile,
             setUploadedFile,
             selectedReason,
-            Reasons,
+            reasons,
             selectReason,
             employees: applicationData?.Employees[0] || {},
           })
@@ -76,14 +63,14 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       default:
         break;
     }
-  }, [action, uploadedFile, Reasons]);
+  }, [action, uploadedFile, reasons]);
 
   const Heading = (props) => {
     return <h1 className="heading-m">{props.label}</h1>;
   };
 
   function selectReason(e) {
-    selecteReason(e);
+    setSelectedReason(e);
   }
   const Close = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFFFFF">
@@ -246,7 +233,7 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
           formId="modal-action"
           isDisabled={!selectedReason}
         >
-          <FormComposer config={config?.form} noBoxShadow inline childrenAtTheBottom onSubmit={submit} formId="modal-action" />
+          <FormComposerV2 config={config?.form} noBoxShadow inline childrenAtTheBottom onSubmit={submit} formId="modal-action" />
         </Modal>
       ) : (
         <Loader />

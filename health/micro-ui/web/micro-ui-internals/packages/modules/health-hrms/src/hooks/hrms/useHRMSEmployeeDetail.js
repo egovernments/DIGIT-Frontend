@@ -1,5 +1,5 @@
-import employeeDetailsFetch from "../../services/emp_details";
-import initializeHrmsModule from "../../services/hrms_initialization";
+import employeeDetailsFetch from "../../services/FetchEmployeeDetails";
+import initializeHrmsModule from "../../services/HRMSInitialization";
 import { useQuery } from "react-query";
 
 const useHrmsEmployeeDetail = (userCode, tenantId ) => {
