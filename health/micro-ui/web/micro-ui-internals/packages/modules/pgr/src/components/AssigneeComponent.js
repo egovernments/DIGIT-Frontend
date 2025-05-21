@@ -97,14 +97,6 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
         label={t(config.label)}
         variant="nesteddropdown"
       />
-
-      
-      {/* {selectedEmployee && (
-        <div className="employee-details">
-          <p>{t("CS_COMMON_MOBILE_NUMBER")}: {selectedEmployee.mobileNumber}</p>
-          <p>{t("CS_COMMON_DEPARTMENT")}: {t(`DEPARTMENT_${selectedEmployee.department}`)}</p>
-        </div>
-      )} */}
     </div>
   );
 };
