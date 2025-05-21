@@ -317,7 +317,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   }, [screenConfig]);
 
   if (isLoadingAppConfigMdmsData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const closeToast = () => {
     setShowToast(null);

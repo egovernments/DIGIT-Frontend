@@ -118,7 +118,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
           ? ""
           : `/${window?.contextPath}/employee/campaign/view-details${campaignNumber ? `?campaignNumber=${campaignNumber}` : ""}`,
       content: t("VIEW_DETAILS"),
-      show: pathVar.match("view-details") || pathVar.match("setup-campaign") ||  pathVar.match("app-modules") ||pathVar === "checklist/search"  ? true : false,
+      show: pathVar.match("view-details") || pathVar.match("setup-campaign") || pathVar.match("app-configuration-redesign") ||   pathVar.match("app-modules") ||  pathVar.match("app-features") ||pathVar === "checklist/search"  ? true : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
@@ -126,9 +126,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar === "setup-campaign" ? true : false,
     },
     {
-      path: pathVar === "app-modules" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
-      content: t("APP_MODULES"),
-      show: pathVar === "app-modules" ? true : false,
+      path: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
+      content: t("APP_CONFIGURATION"),
+      show: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? true : false,
     },
      {
       path: "",
