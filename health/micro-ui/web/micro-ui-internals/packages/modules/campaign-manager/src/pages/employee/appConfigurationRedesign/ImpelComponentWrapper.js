@@ -21,7 +21,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     { schemaCode: "APP_FIELD_TYPE_FETCH_IMPE" } //mdmsv2
   );
 
-  if (isLoadingAppConfigMdmsData) return <Loader page={true} variant={"PageLoader"} />;;
+  if (isLoadingAppConfigMdmsData) return <Loader page={true} variant={"PageLoader"} />;
   // const AppConfigMdmsData = dummyMaster?.[MODULE_CONSTANTS]?.[fieldMasterName];
   function restructure(temp) {
     const xx = temp.map((item, index, arr) => {
