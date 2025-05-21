@@ -185,6 +185,40 @@ const PGRDetails = () => {
 
   // Prepare and submit the update complaint request
   const handleActionSubmit = (_data) => {
+    const actionConfig = ACTION_CONFIGS.find((config) => config.actionType === selectedAction.action);
+
+  if (!actionConfig) return;
+
+  const missingFields = [];
+
+  actionConfig.formConfig.form.forEach((section) => {
+    section.body.forEach((field) => {
+      if (field.isMandatory) {
+        const fieldKey = field.key;
+        const fieldValue = _data?.[fieldKey];
+
+        // For dropdowns or components, also check if selected value is valid object or string
+        const isEmpty =
+          fieldValue === undefined ||
+          fieldValue === null ||
+          (typeof fieldValue === "string" && fieldValue.trim() === "") ||
+          (typeof fieldValue === "object" && Object.keys(fieldValue).length === 0);
+
+        if (isEmpty) {
+          missingFields.push(t(field.label));
+        }
+      }
+    });
+  });
+
+  if (missingFields.length > 0) {
+    setToast({
+      show: true,
+      label: t("CS_COMMON_REQUIRED_FIELDS_MISSING") + ": " + missingFields.join(", "),
+      type: "error",
+    });
+    return;
+  }
     const updateRequest = {
       service: { ...pgrData?.ServiceWrappers[0].service },
       workflow: {
