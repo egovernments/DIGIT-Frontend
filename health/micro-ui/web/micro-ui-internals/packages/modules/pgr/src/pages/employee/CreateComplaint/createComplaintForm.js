@@ -56,47 +56,40 @@ const CreateComplaintForm = ({
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors) => {
     const ComplainantName = formData?.ComplainantName;
     const selectedUser = formData?.complaintUser?.code;
+    const prevSelectedUser = sessionFormData?.complaintUser?.code;
   
-    // Check if formData is same as session, otherwise proceed
-    if (!_.isEqual(sessionFormData, formData)) {
-      // Validate name
-      if (ComplainantName && !ComplainantName.match(Digit.Utils.getPattern("Name"))) {
-        if (!formState.errors.ComplainantName) {
-          setError("ComplainantName", {
-            type: "custom",
-            message: t("CORE_COMMON_APPLICANT_NAME_INVALID")
-          }, { shouldFocus: false });
-        }
-      } else if (formState.errors.ComplainantName) {
-        clearErrors("ComplainantName");
+    // Validate name once
+    if (ComplainantName && !ComplainantName.match(Digit.Utils.getPattern("Name"))) {
+      if (!formState.errors.ComplainantName) {
+        setError("ComplainantName", {
+          type: "custom",
+          message: t("CORE_COMMON_APPLICANT_NAME_INVALID")
+        }, { shouldFocus: false });
       }
-  
-      let updatedData = { ...formData };
-  
-      if (selectedUser === "MYSELF") {
-        if (formData.ComplainantName !== user?.info?.name) {
-          setValue("ComplainantName", user?.info?.name);
-          updatedData.ComplainantName = user?.info?.name;
-        }
-        if (formData.ComplainantContactNumber !== user?.info?.mobileNumber) {
-          setValue("ComplainantContactNumber", user?.info?.mobileNumber);
-          updatedData.ComplainantContactNumber = user?.info?.mobileNumber;
-        }
-      } else if (selectedUser === "ANOTHER_USER") {
-        if (formData.ComplainantName !== "") {
-          setValue("ComplainantName", "");
-          updatedData.ComplainantName = "";
-        }
-        if (formData.ComplainantContactNumber !== "") {
-          setValue("ComplainantContactNumber", "");
-          updatedData.ComplainantContactNumber = "";
-        }
-      }
-  
-      // Now sessionFormData includes what you just set
-      setSessionFormData(updatedData);
+    } else if (formState.errors.ComplainantName) {
+      clearErrors("ComplainantName");
     }
+  
+    // Early return if complaintUser hasn't changed
+    if (selectedUser === prevSelectedUser) return;
+  
+    const updatedData = { ...formData };
+  
+    if (selectedUser === "MYSELF") {
+      updatedData.ComplainantName = user?.info?.name || "";
+      updatedData.ComplainantContactNumber = user?.info?.mobileNumber || "";
+    } else if (selectedUser === "ANOTHER_USER") {
+      updatedData.ComplainantName = "";
+      updatedData.ComplainantContactNumber = "";
+    }
+  
+    // Set form values and update session state
+    setValue("ComplainantName", updatedData.ComplainantName);
+    setValue("ComplainantContactNumber", updatedData.ComplainantContactNumber);
+    setSessionFormData(updatedData);
   };
+  
+  
   
      const updatedConfig = useMemo(
        () =>
@@ -109,6 +102,10 @@ const CreateComplaintForm = ({
                  key: "SelectComplaintType",
                  value: [serviceDefs ? serviceDefs : []],
                },
+               {
+                key : "ComplaintDate",
+                value : [new Date().toISOString().split("T")[0]]
+              },
              ],
            }
          ),
