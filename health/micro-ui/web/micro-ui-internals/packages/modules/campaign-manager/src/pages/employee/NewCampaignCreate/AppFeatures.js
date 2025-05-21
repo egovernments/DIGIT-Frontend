@@ -13,7 +13,7 @@ const AppFeatures = () => {
   const url = getMDMSUrl(true);
   const searchParams = new URLSearchParams(location.search);
   const initialCode = searchParams.get("code");
-  const AppConfigSchema = "SimplifiedAppConfig4";
+  const AppConfigSchema = "SimpleAppConfiguration";
 
   const [code, setCode] = useState(initialCode);
   

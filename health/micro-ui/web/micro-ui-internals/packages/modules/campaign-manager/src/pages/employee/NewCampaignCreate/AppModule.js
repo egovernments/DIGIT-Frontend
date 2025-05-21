@@ -16,19 +16,19 @@ const AppModule = () => {
   const [selectedModuleCodes, setSelectedModuleCodes] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const AppConfigSchema = "SimplifiedAppConfig4";
+  const AppConfigSchema = "SimpleAppConfiguration";
   const url = getMDMSUrl(true);
 
   const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [{ name: "BaseConfigs" }],
+    [{ name: "TemplateBaseConfig" }],
     {
       select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.BaseConfigs;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.TemplateBaseConfig;
       },
     },
-    { schemaCode: `${"CONSOLE_MDMS_MODULENAME"}.BaseConfigs` }
+    { schemaCode: `${"CONSOLE_MDMS_MODULENAME"}.TemplateBaseConfig` }
   );
 
   const handleSelectModule = (moduleCode) => {
