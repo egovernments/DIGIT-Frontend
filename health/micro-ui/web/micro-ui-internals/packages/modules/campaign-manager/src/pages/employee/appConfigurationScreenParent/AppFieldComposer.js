@@ -143,7 +143,6 @@ const Field = ({
         </>
       );
       break;
-    case "dropDown":
     case "dropdown":
       return (
         <>

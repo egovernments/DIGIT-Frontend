@@ -3,7 +3,7 @@ import AppLocalisationWrapper from "./AppLocalisationWrapper";
 import { dummyMaster } from "../../../configs/dummyMaster";
 import { Loader } from "@egovernments/digit-ui-components";
 
-function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, ...props }) {
+function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -21,7 +21,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     { schemaCode: "APP_FIELD_TYPE_FETCH_IMPE" } //mdmsv2
   );
 
-  if (isLoadingAppConfigMdmsData) return <Loader />;
+  if (isLoadingAppConfigMdmsData) return <Loader page={true} variant={"PageLoader"} />;
   // const AppConfigMdmsData = dummyMaster?.[MODULE_CONSTANTS]?.[fieldMasterName];
   function restructure(temp) {
     const xx = temp.map((item, index, arr) => {
@@ -172,7 +172,16 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     submit(restructuredData);
   };
 
-  return <AppLocalisationWrapper onSubmit={onSubmit} back={back} showBack={showBack} screenConfig={screenConfig} parentDispatch={parentDispatch} />;
+  return (
+    <AppLocalisationWrapper
+      onSubmit={onSubmit}
+      back={back}
+      showBack={showBack}
+      screenConfig={screenConfig}
+      parentDispatch={parentDispatch}
+      localeModule={localeModule}
+    />
+  );
 }
 
 export default React.memo(ImpelComponentWrapper);

@@ -122,7 +122,8 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       ...j.fields,
                       {
                         jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${j?.fields?.length + 1}`,
-                        type: action.payload.fieldData?.type?.type,
+                        type: action.payload.fieldData?.type?.fieldType,
+                        appType: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
                         active: true,
                         deleteFlag: true,
@@ -253,7 +254,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig }) {
+function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -264,15 +265,15 @@ function AppConfigurationWrapper({ screenConfig }) {
   const [addFieldData, setAddFieldData] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
-  const localeModule = searchParams.get("localeModule");
-  const module = localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module";
+  // const localeModule = searchParams.get("localeModule");
+  const module = localeModule ? localeModule : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName }, { name: "DrawerPanelConfig" }],
+    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName }, { name: "DrawerPanelConfig" }, { name: "DrawerPanelConfigOne" }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -282,6 +283,7 @@ function AppConfigurationWrapper({ screenConfig }) {
           state: {
             screenConfig: screenConfig,
             ...data?.["HCM-ADMIN-CONSOLE"],
+            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DrawerPanelConfigOne"],
             AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
             // ...dummyMaster,
           },
@@ -317,7 +319,7 @@ function AppConfigurationWrapper({ screenConfig }) {
   }, [screenConfig]);
 
   if (isLoadingAppConfigMdmsData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -333,7 +335,7 @@ function AppConfigurationWrapper({ screenConfig }) {
         .map((item) => ({
           code: item.code,
           message: item[locale] || "",
-          module: localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module",
+          module: localeModule ? localeModule : "hcm-dummy-module",
           locale: locale,
         }))
         .filter((item) => item.message !== "");

@@ -9,10 +9,12 @@
   },
   "workspaces": [
     "micro-ui-internals/packages/modules/campaign-manager",
+    "micro-ui-internals/packages/modules/health-hrms",
     "micro-ui-internals/packages/modules/pgr"
   ],
   "homepage": "/workbench-ui",
   "dependencies": {
+    "@egovernments/digit-ui-module-health-hrms":"0.0.1",
     "@egovernments/digit-ui-libraries": "1.8.11",
     "@egovernments/digit-ui-module-core": "1.8.30",
     "@egovernments/digit-ui-react-components": "1.8.20",

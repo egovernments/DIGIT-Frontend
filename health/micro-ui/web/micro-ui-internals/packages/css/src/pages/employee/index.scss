@@ -4,6 +4,7 @@
 @import "../../typography.scss";
 @import "./villageView.scss";
 @import "./facility.scss";
+@import "./hrmsupdate.scss";
 
 .results-table-wrapper {
   margin-bottom: 2rem;
@@ -1048,4 +1049,7 @@ tbody {
   background-color: #c84c0e33;
   border: 2px solid #c84c0e;
   border-radius: 1rem;
+}
+.app-preview-field-button {
+  width: 100%;
 }

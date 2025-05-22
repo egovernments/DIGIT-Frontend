@@ -1641,7 +1641,7 @@ export const UICustomizations = {
           );
 
           case "WF_INBOX_HEADER_LOCALITY":
-          return value ? <span>{t(`${Digit.Utils.locale.getTransformedLocale(value)}`)}</span> : <span>{t("NA")}</span>;
+          return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
           return <span>{t(`CS_COMMON_${value}`)}</span>;
@@ -1750,6 +1750,62 @@ export const UICustomizations = {
   
           default:
             return null; // Handle any unexpected keys here if needed
+        }
+      },
+    },
+
+    HRMSInboxConfig: {
+      preProcess: (data) => {
+        // filterForm
+        // params
+  
+        if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+          const updatedParams = {}; // Temporary object to store updates
+  
+          if (data.state.filterForm.roles?.code) {
+            updatedParams.roles = data.state.filterForm.roles.code;
+          }
+  
+          if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+            updatedParams.isActive = data.state.filterForm.isActive.code;
+          }
+  
+          // Update `data.params` only if `updatedParams` has values
+          if (Object.keys(updatedParams).length > 0) {
+            data.params = { ...data.params, ...updatedParams };
+          }
+        }
+  
+        return data;
+      },
+  
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        console.log("additional customization");
+        switch (key) {
+          case "HR_EMP_ID_LABEL":
+            return (
+              <span className="link">
+                <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
+              </span>
+            );
+  
+          case "HR_ROLE_NO_LABEL":
+            return value ? `${value.length}` : t("ES_COMMON_NA");
+  
+          case "HR_DESG_LABEL":
+            return value.length > 0 ? t(`${value[0].designation}`) : t("ES_COMMON_NA");
+  
+          case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
+            return value ? t(`${value.department}`) : t("ES_COMMON_NA");
+  
+          case "MASTERS_LOCALITY":
+            return value ? (
+              <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+            ) : (
+              t("ES_COMMON_NA")
+            );
+          default:
+            return t("ES_COMMON_NA");
         }
       },
     },
