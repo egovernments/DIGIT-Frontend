@@ -357,7 +357,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     }
 
     setShowPopUp(false);
-    setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
+    console.info("LOCALISATION_UPSERT_SUCCESS")
+    // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 
   return (
