@@ -1,17 +1,19 @@
 import { Card, HeaderComponent } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, {useEffect} from "react";
+import React, { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { SVG } from "@egovernments/digit-ui-components";
-import { NewWindow }  from "@egovernments/digit-ui-svg-components";
+import { NewWindow } from "@egovernments/digit-ui-svg-components";
 
 const CampaignHome = () => {
   const { t } = useTranslation();
   const history = useHistory();
 
   useEffect(() => {
-      window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
-    }, []);
+    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
+    window.Digit.SessionStorage.del("SelectedFeaturesByModule");
+
+  }, []);
 
   return (
     <Card>
@@ -24,7 +26,7 @@ const CampaignHome = () => {
             // Add functionality for importing existing campaign
           }}
         >
-          <SVG.SystemUpdateAlt width="40" height="40"/>
+          <SVG.SystemUpdateAlt width="40" height="40" />
           <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
 

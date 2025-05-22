@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+import { camelCase, filter } from "lodash";
 const AppModule = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -16,19 +17,30 @@ const AppModule = () => {
   const [selectedModuleCodes, setSelectedModuleCodes] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const AppConfigSchema = "SimplifiedAppConfig4";
+  const AppConfigSchema = "SimpleAppConfiguration";
+  const TemplateBaseConfig = "TemplateBaseConfig";
+  const url = getMDMSUrl(true);
 
-  const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [{ name: "BaseConfigs" }],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.BaseConfigs;
+  const reqCriteriaMDMSBaseTemplateSearch = {
+    url: `${url}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.${TemplateBaseConfig}`,
+         "filters":{
+            "project": campaignType
+        }
       },
     },
-    { schemaCode: `${"CONSOLE_MDMS_MODULENAME"}.BaseConfigs` }
-  );
+    config: {
+      enabled: true,
+      select: (data) => {
+        return  data;
+      },
+    },
+  };
+
+  const { isLoading : productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSBaseTemplateSearch);
 
   const handleSelectModule = (moduleCode) => {
     if (selectedModuleCodes.includes(moduleCode)) {
@@ -38,28 +50,79 @@ const AppModule = () => {
     }
   };
 
+  const reqCriteriaMDMSSearch = {
+    url: `${url}/v2/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+         "filters":{
+            "project": campaignNumber
+        }
+      },
+    },
+    config: {
+      enabled: true,
+      select: (data) => {
+        return data;
+      },
+    },
+  };
+
+  const { isLoading, data: mdmsData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSSearch);
+
+
+  React.useEffect(() => {
+    if (mdmsData?.mdms) {
+      const createdModules = mdmsData?.mdms
+        .filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
+        .map((item) => item?.uniqueIdentifier?.split(".")?.[1]) // extract module code
+        .filter(Boolean);
+
+      setSelectedModuleCodes(createdModules); // preselect those modules
+    }
+  }, [mdmsData, campaignNumber]);
+
+
   const closeToast = () => {
     setShowToast(null);
   };
 
   const handleNext = async () => {
-    // Filter only the selected modules from modulesData
-    const selectedModules = modulesData.filter((module) => selectedModuleCodes.includes(module.name));
-    const baseProjectType = campaignType?.split("-")?.[0]?.toLowerCase();
-    const localisationModules = selectedModuleCodes.map((moduleCode) => `hcm-base-${moduleCode.toLowerCase()}-${baseProjectType}`).join(",");
-    if (selectedModules?.length === 0) {
+    const uniqueModules = [...new Set(selectedModuleCodes)];
+
+    if (uniqueModules.length === 0) {
       setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
       return;
     }
+
+    const alreadyCreatedModules =
+      mdmsData?.mdms
+        ?.filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
+        ?.map((item) => item?.uniqueIdentifier?.split(".")?.[1])
+        ?.filter(Boolean) || [];
+
+    const newModulesToCreate = uniqueModules.filter((code) => !alreadyCreatedModules.includes(code));
+
+    if (newModulesToCreate.length === 0) {
+      history.push(
+        `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
+      );
+      return;
+    }
+
+    const selectedModules = modulesData?.mdms?.filter((module) => newModulesToCreate.includes(module?.data?.name));
+    const baseProjectType = campaignType.toLowerCase();
+    const localisationModules = newModulesToCreate.map((code) => `hcm-base-${code.toLowerCase()}-${baseProjectType}`).join(",");
 
     let localisationData = null;
     try {
       localisationData = await Digit.CustomService.getResponse({
         url: `/localization/messages/v1/_search`,
         params: {
-          locale: locale,
+          locale,
           module: localisationModules,
-          tenantId: tenantId,
+          tenantId,
         },
       });
     } catch (e) {
@@ -69,65 +132,61 @@ const AppModule = () => {
     }
 
     for (const module of selectedModules) {
-      const baseModuleKey = `hcm-base-${module.name.toLowerCase()}-${baseProjectType}`;
-      const updatedModuleName = `hcm-${module.name.toLowerCase()}-${campaignNumber}`;
+      const baseModuleKey = `hcm-base-${module?.data?.name.toLowerCase()}-${baseProjectType}`;
+      const updatedModuleName = `hcm-${module?.data?.name.toLowerCase()}-${campaignNumber}`;
 
       const filteredLocalizations = localisationData?.messages?.filter((entry) => entry.module === baseModuleKey);
+
       const updatedLocalizations =
         filteredLocalizations?.map((entry) => ({
           ...entry,
           module: updatedModuleName,
         })) || [];
-
       if (updatedLocalizations.length > 0) {
         try {
-          const response = await Digit.CustomService.getResponse({
+          await Digit.CustomService.getResponse({
             url: `/localization/messages/v1/_upsert`,
             body: {
               tenantId,
               messages: updatedLocalizations,
             },
           });
-          console.info(`Localization upserted for ${module.name}:`, response);
         } catch (error) {
+          console.error(`Failed to upsert localization for ${module?.data?.name}:`, error);
           setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
-          console.error(`Failed to upsert localization for ${module.name}:`, error);
           return;
         }
       }
 
       const moduleWithProject = {
-        ...module,
-        project: `${module.name}_${campaignNumber}`,
+        ...module?.data,
+        project: `${campaignNumber}`,
       };
 
       try {
-        const url = getMDMSUrl(true);
-        const response = await Digit.CustomService.getResponse({
+        await Digit.CustomService.getResponse({
           url: `${url}/v2/_create/Workbench.UISchema`,
           body: {
             Mdms: {
-              tenantId: tenantId,
+              tenantId,
               schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
               data: moduleWithProject,
             },
           },
         });
-
-        console.info(`Created module for ${module.name}:`, response);
       } catch (error) {
+        console.error(`Failed to create module for ${module?.data?.name}:`, error);
         setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
-        console.error(`Failed to create module for ${module.name}:`, error);
         return;
       }
     }
 
     history.push(
-      `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfig4&fieldType=${campaignNumber}&prefix=APPONE&localeModule=APPONE&tenantId=${tenantId}`
+      `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}&code=${selectedModules?.[0]?.data?.name}`
     );
   };
 
-  if (productTypeLoading) {
+  if (productTypeLoading || isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
@@ -137,41 +196,44 @@ const AppModule = () => {
         <HeaderComponent className="campaign-header-style">{t(`HCM_CHOOSE_MODULE`)}</HeaderComponent>
       </div>
       <div className="modules-container">
-        {modulesData?.map((module, index) => (
-          <Card className={`module-card ${selectedModuleCodes.includes(module?.name) ? "selected-card" : ""}`}>
-            {selectedModuleCodes.includes(module?.name) && (
-              <SVG.CheckCircle
-                fill={"#00703C"}
-                width={"3rem"}
-                height={"3rem"}
-                style={{
-                  position: "absolute",
-                  left: "-10px",
-                  top: "-14px",
-                }}
+        {modulesData?.mdms
+          ?.filter((module) => module?.data?.isDisabled === "false")
+          .map((module, index) => (
+            <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>
+              {selectedModuleCodes.includes(module?.data?.name) && (
+                <SVG.CheckCircle
+                  fill={"#00703C"}
+                  width={"3rem"}
+                  height={"3rem"}
+                  style={{
+                    position: "absolute",
+                    left: "-10px",
+                    top: "-14px",
+                  }}
+                />
+              )}
+              <HeaderComponent className={`detail-header ${selectedModuleCodes.includes(module?.data?.name) ? "selected-header" : ""}`}>
+                {t(module?.data?.name)}
+              </HeaderComponent>
+              <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+              <p style={{ margin: "0rem" }}> {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}</p>
+              <Button
+                className={"campaign-module-button"}
+                type={"button"}
+                size={"large"}
+                variation={selectedModuleCodes.includes(module?.data?.name) ? "secondary" : "primary"}
+                label={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
+                onClick={() => handleSelectModule(module?.data?.name)}
               />
-            )}
-            <HeaderComponent className={`detail-header ${selectedModuleCodes.includes(module?.name) ? "selected-header" : ""}`}>
-              {t(module.name)}
-            </HeaderComponent>
-            <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-            <p style={{ margin: "0rem" }}> {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.name?.toUpperCase()}`)}</p>
-            <Button
-              className={"campaign-module-button"}
-              type={"button"}
-              size={"large"}
-              variation={selectedModuleCodes.includes(module?.name) ? "secondary" : "primary"}
-              label={selectedModuleCodes.includes(module?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
-              onClick={() => handleSelectModule(module?.name)}
-            />
-          </Card>
-        ))}
+            </Card>
+          ))}
       </div>
       <Footer
         actionFields={[
           <Button
             label={t("GO_BACK")}
             title={t("GO_BACK")}
+            icon="ArrowBack"
             variation="secondary"
             style={{
               marginLeft: "2.5rem",
@@ -180,7 +242,7 @@ const AppModule = () => {
               history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
             }}
           />,
-          <Button label={t("NEXT")} title={t("NEXT")} variation="primary" onClick={handleNext} />,
+          <Button label={t("NEXT")} title={t("NEXT")} icon="ArrowForward" isSuffix={true} variation="primary" onClick={handleNext} />,
         ]}
       />
       {showToast && (

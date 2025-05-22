@@ -5,6 +5,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
 
 
 const enabledModules = [
@@ -24,7 +25,7 @@ const moduleReducers = (initData) => ({
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({
   });
-
+  initHRMSComponents();
   initPaymentComponents();
 
   window.Digit.Customizations = {

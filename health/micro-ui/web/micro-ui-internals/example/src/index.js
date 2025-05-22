@@ -13,6 +13,7 @@ import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
 import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
@@ -75,6 +76,7 @@ const initDigitUI = () => {
   initCampaignComponents();
   initMicroplanComponents();
   initPaymentComponents();
+  initHRMSComponents();
   initPGRComponents();
   initDSSComponents();
 

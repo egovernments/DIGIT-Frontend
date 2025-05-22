@@ -100,6 +100,8 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
     }
   }, [localisationData, isLoading]);
 
+  if( isLoading) return <Loader page={true} variant={"PageLoader"} />;
+
   return (
     <AppLocalisationContext.Provider
       value={{

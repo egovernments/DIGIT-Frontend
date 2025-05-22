@@ -319,7 +319,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   }, [screenConfig]);
 
   if (isLoadingAppConfigMdmsData) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const closeToast = () => {
     setShowToast(null);
