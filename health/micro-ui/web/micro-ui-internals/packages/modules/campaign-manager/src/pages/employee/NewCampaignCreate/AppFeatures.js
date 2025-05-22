@@ -52,6 +52,9 @@ const AppFeatures = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+         "filters":{
+            "project": campaignNumber
+        }
       },
     },
     config: {
@@ -63,6 +66,7 @@ const AppFeatures = () => {
   };
 
   const { isLoading, data: mdmsData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSSearch);
+  
 
   const filteredFlows = mdmsData?.mdms?.filter((entry) => entry?.data?.project?.includes(campaignNumber));
 
