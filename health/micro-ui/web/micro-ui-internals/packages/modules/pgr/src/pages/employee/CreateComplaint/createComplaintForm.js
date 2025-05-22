@@ -15,10 +15,8 @@
 import { FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import _ from "lodash";
 import { useHistory } from "react-router-dom";
 import { formPayloadToCreateComplaint } from "../../../utils";
-import debounce from 'lodash/debounce';
 
 const CreateComplaintForm = ({
   createComplaintConfig,      // Form configuration for Create Complaint screen
@@ -37,18 +35,21 @@ const CreateComplaintForm = ({
   const user = Digit.UserService.getUser();
 
   // Hook for creating a complaint
-  const { mutate: CreateWOMutation } = Digit.Hooks.pgr.useCreateComplaint(tenantId);
+  const { mutate: CreateComplaintMutation } = Digit.Hooks.pgr.useCreateComplaint(tenantId);
 
   // Fetch the list of service definitions (e.g., complaint types) for current tenant
   const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
   // Auto-close toast after 3 seconds
   useEffect(() => {
     if (toast?.show) {
-      setTimeout(() => {
+      const timer = setTimeout(() => {
         setToast({ show: false, label: "", type: "" });
       }, 3000);
+      return () => clearTimeout(timer);
     }
   }, [toast?.show]);
+
+  // Validate phone number based on config
   const validatePhoneNumber = (value, config) => {
     const { minLength, maxLength, min, max } = config?.populators?.validation || {};
     const stringValue = String(value || "");
@@ -61,16 +62,65 @@ const CreateComplaintForm = ({
     ) {
       return false;
     }
-  
     return true;
   };
-  
 
-  /**
-   * Handles input changes and validation in form fields
-   */
+  // Determine which fields should be disabled based on complaintUser code
+  const disabledFields = useMemo(() => {
+    const complaintUserCode = sessionFormData?.complaintUser?.code;
+    if (complaintUserCode === "MYSELF") {
+      return {
+        ComplainantName: true,
+        ComplainantContactNumber: true,
+      };
+    }
+    return {
+      ComplainantName: false,
+      ComplainantContactNumber: false,
+    };
+  }, [sessionFormData?.complaintUser?.code]);
+
+  const updatedConfig = useMemo(() => {
+    const baseConfig = Digit.Utils.preProcessMDMSConfig(
+      t,
+      createComplaintConfig,
+      {
+        updateDependent: [
+          {
+            key: "SelectComplaintType",
+            value: [serviceDefs ? serviceDefs : []],
+          },
+          {
+            key: "ComplaintDate",
+            value: [new Date().toISOString().split("T")[0]],
+          },
+        ],
+      }
+    );
+
+    // Update disable flags dynamically
+    const updatedForm = baseConfig?.form?.map(section => {
+      return {
+        ...section,
+        body: section.body.map(field => {
+          if (
+            field.populators?.name === "ComplainantName" ||
+            field.populators?.name === "ComplainantContactNumber"
+          ) {
+            return {
+              ...field,
+              disable: disabledFields[field.populators.name],
+            };
+          }
+          return field;
+        }),
+      };
+    });
+
+    return { ...baseConfig, form: updatedForm };
+  }, [createComplaintConfig, serviceDefs, t, disabledFields]);
+
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors) => {
-  
     const ComplainantName = formData?.ComplainantName;
     const selectedUser = formData?.complaintUser?.code;
     const prevSelectedUser = sessionFormData?.complaintUser?.code;
@@ -90,9 +140,9 @@ const CreateComplaintForm = ({
 
     // Validate mobile number
     const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
-    .find(field => field?.populators?.name === "ComplainantContactNumber");
-  
-  if (ComplainantContactNumber && !validatePhoneNumber(ComplainantContactNumber, contactFieldConfig)) {
+      .find(field => field?.populators?.name === "ComplainantContactNumber");
+
+    if (ComplainantContactNumber && !validatePhoneNumber(ComplainantContactNumber, contactFieldConfig)) {
       if (!formState.errors.ComplainantContactNumber) {
         setError("ComplainantContactNumber", {
           type: "custom",
@@ -121,29 +171,6 @@ const CreateComplaintForm = ({
     setValue("ComplainantContactNumber", updatedData.ComplainantContactNumber);
     setSessionFormData(updatedData);
   };
-  
-  
-  
-     const updatedConfig = useMemo(
-       () =>
-         Digit.Utils.preProcessMDMSConfig(
-           t,
-           createComplaintConfig,
-           {
-             updateDependent: [
-               {
-                 key: "SelectComplaintType",
-                 value: [serviceDefs ? serviceDefs : []],
-               },
-               {
-                key : "ComplaintDate",
-                value : [new Date().toISOString().split("T")[0]]
-              },
-             ],
-           }
-         ),
-       [createComplaintConfig, serviceDefs]
-     );
 
   const handleToastClose = () => {
     setToast({ show: false, label: "", type: "" });
@@ -154,15 +181,15 @@ const CreateComplaintForm = ({
    */
   const onFormSubmit = (_data) => {
     const payload = formPayloadToCreateComplaint(_data, tenantId, user?.info);
-    handleResponseForCreateWO(payload);
+    handleResponseForCreateComplaint(payload);
   };
 
   /**
    * Makes API call to create complaint and handles response
    */
-  const handleResponseForCreateWO = async (payload) => {
+  const handleResponseForCreateComplaint = async (payload) => {
 
-    await CreateWOMutation(payload, {
+    await CreateComplaintMutation(payload, {
       onError: async () => {
         setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
       },
