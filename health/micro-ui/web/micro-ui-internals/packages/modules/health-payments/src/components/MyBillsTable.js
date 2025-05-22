@@ -156,10 +156,10 @@ const MyBillsTable = ({ ...props }) => {
                                     code: "HCM_AM_EXCEL",
                                     name: t(`HCM_AM_EXCEL`),
                                 },
-                                {
-                                    code: "HCM_AM_PDF",
-                                    name: t(`HCM_AM_PDF`),
-                                },
+                                // {
+                                //     code: "HCM_AM_PDF",
+                                //     name: t(`HCM_AM_PDF`),
+                                // },
                             ]}
                             optionsKey="name"
                         
