@@ -233,6 +233,7 @@ const AppModule = () => {
           <Button
             label={t("GO_BACK")}
             title={t("GO_BACK")}
+            icon="ArrowBack"
             variation="secondary"
             style={{
               marginLeft: "2.5rem",
@@ -241,7 +242,7 @@ const AppModule = () => {
               history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
             }}
           />,
-          <Button label={t("NEXT")} title={t("NEXT")} variation="primary" onClick={handleNext} />,
+          <Button label={t("NEXT")} title={t("NEXT")} icon="ArrowForward" isSuffix={true} variation="primary" onClick={handleNext} />,
         ]}
       />
       {showToast && (

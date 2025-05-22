@@ -1,4 +1,4 @@
-import { Card, HeaderComponent, Button, Toggle, Footer ,Loader } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Button, Toggle, Footer, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect } from "react";
 import { useHistory, useLocation } from "react-router-dom";
@@ -16,7 +16,7 @@ const AppFeatures = () => {
   const AppConfigSchema = "SimpleAppConfiguration";
 
   const [code, setCode] = useState(initialCode);
-  
+
   const projectType = searchParams.get("projectType");
   const campaignNumber = searchParams.get("campaignNumber");
   const tenantId = searchParams.get("tenantId");
@@ -103,7 +103,6 @@ const AppFeatures = () => {
     });
   };
 
-
   // Prepare toggle options for selected modules
   const toggleOptions = filteredFlows?.map((flow) => ({
     code: flow?.data?.name,
@@ -165,6 +164,7 @@ const AppFeatures = () => {
           <Button
             label={t("GO_BACK")}
             title={t("GO_BACK")}
+            icon="ArrowBack"
             variation="secondary"
             style={{
               marginLeft: "2.5rem",
@@ -178,6 +178,8 @@ const AppFeatures = () => {
           <Button
             label={t("NEXT")}
             title={t("NEXT")}
+            icon="ArrowForward"
+            isSuffix={true}
             variation="primary"
             onClick={() => {
               history.push(
