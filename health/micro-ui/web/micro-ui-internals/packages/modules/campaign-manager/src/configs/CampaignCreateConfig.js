@@ -1,4 +1,4 @@
-export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
+export const CampaignCreateConfig = (totalFormData, editName ) => {
   return [
     {
       form: [
@@ -15,7 +15,7 @@ export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
               key: "CampaignType",
               type: "dropdown",
               label: "HCM_SELECT_CAMPAIGN_TYPE",
-              disable: editName || editDate,
+              disable: editName,
               populators: {
                 name: "CampaignType",
                 optionsKey: "code", 
@@ -33,11 +33,11 @@ export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
               type: "component",
               component: "CycleSelection",
               label: "",
-              disable: editName || editDate,
+              disable: editName,
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                disabled: editName || editDate,
+                disabled: editName,
               },
               populators: {
                 name: "CycleSelection",
@@ -54,7 +54,7 @@ export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
           name: "HCM_CAMPAIGN_NAME",
           head: "HCM_CAMPAIGN_NAME_QUES",
           subHead: "HCM_CAMPAIGN_NAME_DESC",
-          disable: editDate,
+          disable: false,
           callAPI: "true",
           sectionSubHeadClassName : "SubHeadingClass",
           body: [
@@ -64,7 +64,7 @@ export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
               type: "text",
               label: "HCM_SELECT_CAMPAIGN_NAME",
               placeholder: "HCM_CAMPAIGNNAME_DATE_MONTH_YEAR",
-              disable: editDate,
+              disable: false,
               populators: {
                 name: "CampaignName",
                 error: "ES__REQUIRED",
@@ -79,7 +79,7 @@ export const CampaignCreateConfig = (totalFormData, editName , editDate) => {
           name: "HCM_CAMPAIGN_DATE",
           subHead: "HCM_CAMPAIGN_DATE_DESC",
           sectionSubHeadClassName : "SubHeadingClass",
-          isLast: true,
+          last: true,
           body: [
             {
               isMandatory: false,

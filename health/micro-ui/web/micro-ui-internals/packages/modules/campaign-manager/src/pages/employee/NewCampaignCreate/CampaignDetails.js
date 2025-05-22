@@ -1,9 +1,9 @@
-import { Button, HeaderComponent, Footer, Loader, Tag , Toast } from "@egovernments/digit-ui-components";
+import { Button, HeaderComponent, Footer, Loader, Tag, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { Fragment , useState } from "react";
+import React, { Fragment, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud , Edit } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 const CampaignDetails = () => {
   const { t } = useTranslation();
@@ -81,7 +81,7 @@ const CampaignDetails = () => {
               desc: t("HCM_MOBILE_APP_DESC"),
               buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
-              icon: <AdUnits />
+              icon: <AdUnits />,
             },
           },
         ],
@@ -100,7 +100,7 @@ const CampaignDetails = () => {
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud />,
-              disabled: campaignData?.boundaries?.length <= 0
+              disabled: campaignData?.boundaries?.length <= 0,
             },
           },
         ],
@@ -130,7 +130,7 @@ const CampaignDetails = () => {
     params: {},
     body: {},
     config: {
-      enable: false,
+      enabled: false,
     },
   };
 
@@ -142,17 +142,18 @@ const CampaignDetails = () => {
         url: `/project-factory/v1/project-type/update`,
         body: transformUpdateCreateData({ campaignData }),
         config: {
-          enable: true,
+          enabled: true,
         },
       },
       {
-        onSuccess: async (result) => {
-          setShowToast({ key: "success", label: t("HCM_CAMPAIGN_CREATE_SUCCESS") });
-          // setTimeout(() => {
-          //   history.push(
-          //     `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
-          //   );
-          // }, 2000);
+        onSuccess: async (data) => {
+          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+            message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+            text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+            info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+            actionLabel: "ES_CAMPAIGN_HOME",
+            actionLink: `/${window.contextPath}/employee/campaign/campaign-home`,
+          });
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.description;
@@ -210,7 +211,7 @@ const CampaignDetails = () => {
             alignSelf: "self-end",
           }}
           onClick={() => {
-            history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editDate=${true}&id=${campaignData?.id}`);
+            history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}`);
           }}
         >
           <Edit />
@@ -226,7 +227,7 @@ const CampaignDetails = () => {
             icon="CheckCircleOutline"
             label={t("HCM_CREATE_CAMPAIGN")}
             onClick={onsubmit}
-            isDisabled={campaignData?.boundaries?.length === 0 || campaignData?.deliveryRules?.length === 0 || campaignData?.resources?.length === 0}
+            isDisabled={campaignData?.boundaries?.length === 0 || campaignData?.deliveryRules?.length === 0}
             type="button"
             variation="primary"
             // className={"create-campaign-disable"}
