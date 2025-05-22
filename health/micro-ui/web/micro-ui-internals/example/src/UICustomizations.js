@@ -1641,7 +1641,7 @@ export const UICustomizations = {
           );
 
           case "WF_INBOX_HEADER_LOCALITY":
-          return value ? <span>{t(`${Digit.Utils.locale.getTransformedLocale(value)}`)}</span> : <span>{t("NA")}</span>;
+          return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
           return <span>{t(`CS_COMMON_${value}`)}</span>;
