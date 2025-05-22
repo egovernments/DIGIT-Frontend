@@ -296,90 +296,92 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         reqCreate();
       } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
         return;
-      } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
-        const reqCreate = async () => {
-          let payloadData = { ...draftData };
-          payloadData.hierarchyType = hierarchyType;
-          payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-            ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate, "daystart")
-            : null;
-          payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-            ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
-            : null;
-          payloadData.tenantId = tenantId;
-          payloadData.action = "create";
-          payloadData.parentId = null;
-          payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-          if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
-          }
-          const temp = resourceData(
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          );
-          payloadData.resources = temp;
-          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
-          payloadData.additionalDetails = {
-            beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
-            key: currentKey,
-            targetId: dataParams?.boundaryId,
-            facilityId: dataParams?.facilityId,
-            userId: dataParams?.userId,
-          };
-          if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-            payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-          } else {
-            payloadData.additionalDetails.cycleData = {};
-          }
-          if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-            const temp = restructureData(
-              totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
-              totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
-              DeliveryConfig,
-              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
-              "create"
-            );
-            payloadData.deliveryRules = [temp?.[0]];
-            // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-          }
-          if (compareIdentical(draftData, payloadData) === false) {
-            setIsDataCreating(true);
+      } 
+      // else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
+      //   const reqCreate = async () => {
+      //     let payloadData = { ...draftData };
+      //     payloadData.hierarchyType = hierarchyType;
+      //     payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
+      //       ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate, "daystart")
+      //       : null;
+      //     payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+      //       ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
+      //       : null;
+      //     payloadData.tenantId = tenantId;
+      //     payloadData.action = "create";
+      //     payloadData.parentId = null;
+      //     payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
+      //     if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
+      //       payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
+      //     }
+      //     const temp = resourceData(
+      //       totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+      //       totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+      //       totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+      //     );
+      //     payloadData.resources = temp;
+      //     payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
+      //     payloadData.additionalDetails = {
+      //       beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
+      //       key: currentKey,
+      //       targetId: dataParams?.boundaryId,
+      //       facilityId: dataParams?.facilityId,
+      //       userId: dataParams?.userId,
+      //     };
+      //     if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
+      //       payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+      //     } else {
+      //       payloadData.additionalDetails.cycleData = {};
+      //     }
+      //     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
+      //       const temp = restructureData(
+      //         totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
+      //         totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
+      //         DeliveryConfig,
+      //         totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
+      //         "create"
+      //       );
+      //       payloadData.deliveryRules = [temp?.[0]];
+      //       // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+      //     }
+      //     if (compareIdentical(draftData, payloadData) === false) {
+      //       setIsDataCreating(true);
 
-            await updateCampaign(payloadData, {
-              onError: (error, variables) => {
-                setShowToast({ key: "error", label: error?.message ? error?.message : error });
-              },
-              onSuccess: async (data) => {
-                draftRefetch();
-                history.push(
-                  `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
-                  {
-                    message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                    text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                    info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                    actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${data?.CampaignDetails?.campaignName}&campaignId=${data?.CampaignDetails?.id}&projectType=${data?.CampaignDetails?.projectType}`,
-                    secondaryActionLabel: "MY_CAMPAIGN",
-                    secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
-                    name: data?.CampaignDetails?.campaignName,
-                    projectId: data?.CampaignDetails?.projectId,
-                    data: data,
-                  }
-                );
-                Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-              },
-              onSettled: () => {
-                // This will always run after the mutation completes
-                setIsDataCreating(false);
-                // Final function logic here
-              },
-            });
-          }
-        };
+      //       await updateCampaign(payloadData, {
+      //         onError: (error, variables) => {
+      //           setShowToast({ key: "error", label: error?.message ? error?.message : error });
+      //         },
+      //         onSuccess: async (data) => {
+      //           draftRefetch();
+      //           history.push(
+      //             `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
+      //             {
+      //               message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+      //               text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+      //               info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+      //               actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+      //               actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${data?.CampaignDetails?.campaignName}&campaignId=${data?.CampaignDetails?.id}&projectType=${data?.CampaignDetails?.projectType}`,
+      //               secondaryActionLabel: "MY_CAMPAIGN",
+      //               secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
+      //               name: data?.CampaignDetails?.campaignName,
+      //               projectId: data?.CampaignDetails?.projectId,
+      //               data: data,
+      //             }
+      //           );
+      //           Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+      //         },
+      //         onSettled: () => {
+      //           // This will always run after the mutation completes
+      //           setIsDataCreating(false);
+      //           // Final function logic here
+      //         },
+      //       });
+      //     }
+      //   };
 
-        reqCreate();
-      } else if (!isDraftCreated && !id) {
+      //   reqCreate();
+      // } 
+      else if (!isDraftCreated && !id) {
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.hierarchyType = hierarchyType;
@@ -901,9 +903,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setShouldUpdate(true);
       if(currentKey == 6 || currentKey == 9 || currentKey == 15){
         setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
-        setTimeout(() => {
-          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
-        }, 500);
+        history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
       }
       return;
     }

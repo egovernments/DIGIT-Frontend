@@ -24,7 +24,6 @@ const AppModule = () => {
     [{ name: "BaseConfigs" }],
     {
       select: (data) => {
-        console.log("data", data);
         return data?.[CONSOLE_MDMS_MODULENAME]?.BaseConfigs;
       },
     },
