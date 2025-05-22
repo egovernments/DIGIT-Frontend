@@ -106,6 +106,10 @@ module.exports = function (app) {
     "/health-expense/bill/v1/_search",
     "/health-expense-calculator/v1/_calculate",
     "/filestore/v1/files/id",
+    "/health-project/staff/v1/_search",
+    "/health-project/v1/_search",
+    "/health-individual",
+    "/health-hrms/employees",
     "/inbox/v2/_search",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
