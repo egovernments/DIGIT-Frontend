@@ -103,7 +103,7 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   return result;
 };
 
-const restructure = (data1, fieldTypeMasterData = []) => {
+const restructure = (data1, fieldTypeMasterData = [], parent) => {
   return data1
     ?.sort((a, b) => a.order - b.order)
     .map((page) => {
@@ -166,7 +166,7 @@ const restructure = (data1, fieldTypeMasterData = []) => {
           enableSectionAddition: false,
           allowCommentsAdditionAt: ["body"],
         },
-        parent: "REGISTRATION",
+        parent: parent?.name || "",
       };
     });
 };
@@ -251,7 +251,7 @@ const AppConfigurationParentRedesign = () => {
   const [currentScreen, setCurrentScreen] = useState({});
   const localeModule = useMemo(() => {
     if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
-      return `hcm-${Digit.Utils.locale.getTransformedLocale(`${parentState.actualTemplate.name}-${parentState.actualTemplate.project}`)}`;
+      return `hcm-${parentState.actualTemplate.name.toLowerCase()}-${parentState.actualTemplate.project}`;
     }
     return null;
   }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
@@ -326,7 +326,7 @@ const AppConfigurationParentRedesign = () => {
   useEffect(() => {
     if (!isLoading && formData && formId && AppConfigMdmsData?.[fieldTypeMaster]?.length > 0) {
       const fieldTypeMasterData = AppConfigMdmsData?.[fieldTypeMaster] || [];
-      const temp = restructure(formData?.data?.pages, fieldTypeMasterData);
+      const temp = restructure(formData?.data?.pages, fieldTypeMasterData, formData?.data);
       parentDispatch({
         key: "SET",
         data: [...temp],
@@ -389,9 +389,7 @@ const AppConfigurationParentRedesign = () => {
       const reverseData = reverseRestructure(parentState?.currentTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
       // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
       const reverseFormat = {
-        name: "REGISTRATIONFLOW",
-        version: 1,
-        project: "SMC_2025",
+        ...parentState?.actualTemplate,
         pages: reverseData,
       };
 
