@@ -115,7 +115,7 @@ const AppFeatures = () => {
 
   return (
     <>
-      <div>
+      <div className="hcm-app-features">
         <HeaderComponent className="campaign-header-style">{t(`HCM_CHOOSE_FEATURE_FOR_APP`)}</HeaderComponent>
         <Toggle
           name="toggleOptions"

@@ -15,8 +15,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [isDataCreating, setIsDataCreating] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const editName = searchParams.get("editName");
-  const editDate = searchParams.get("editDate");
-  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName, editDate));
+  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
@@ -59,13 +58,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       .filter((config) => config.form.length > 0);
   };
 
-  const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
+  const [filteredCreateConfig, setfilteredCreateConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
 
   useEffect(() => {
-    setFilteredConfig(filterCampaignConfig(campaignConfig, currentKey, editName));
+    setfilteredCreateConfig(filterCampaignConfig(campaignConfig, currentKey, editName));
   }, [campaignConfig, currentKey]);
 
-  const config = filteredConfig?.[0];
+  const config = filteredCreateConfig?.[0];
 
   const reqCreate = {
     url: `/project-factory/v1/project-type/create`,
@@ -81,7 +80,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     params: {},
     body: {},
     config: {
-      enable: false,
+      enabled: false,
     },
   };
 
@@ -110,13 +109,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setShowToast({ key: "error", label: t(validDates.label) });
       return;
     }
-    const name = filteredConfig?.[0]?.form?.[0]?.name;
+    const name = filteredCreateConfig?.[0]?.form?.[0]?.name;
     setTotalFormData((prevData) => ({
       ...prevData,
       [name]: formData,
     }));
 
-    if (formData?.CampaignName && !editDate) {
+    if (formData?.CampaignName && !editName) {
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
@@ -140,12 +139,12 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setParams({ ...params, ...formData });
     }
 
-    if (!filteredConfig?.[0]?.form?.[0]?.isLast) {
+    if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       setCurrentKey(currentKey + 1);
     }
     else {
       setLoader(true);
-      const isEdit = editDate || editName;
+      const isEdit = editName;
       const mutation = isEdit ? mutationUpdate : mutationCreate;
       const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
       const payload = transformCreateData({
@@ -166,7 +165,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
           onSuccess: async (result) => {
             setShowToast({
               key: "success",
-              label: t(editDate || editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
+              label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
             });
             setTimeout(() => {
               history.replace(
@@ -217,7 +216,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         noCardStyle={currentKey === 3}
         onSecondayActionClick={onSecondayActionClick}
         isDisabled={isDataCreating}
-        label={filteredConfig?.[0]?.form?.[0]?.isLast === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
       />
       {showToast && (
         <Toast
