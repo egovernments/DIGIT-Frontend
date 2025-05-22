@@ -388,7 +388,7 @@ const AppConfigurationParentRedesign = () => {
   }, [parentState?.currentTemplate, currentStep, numberTabs]);
 
   if (isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
-    return <Loader />;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   const submit = async (screenData) => {

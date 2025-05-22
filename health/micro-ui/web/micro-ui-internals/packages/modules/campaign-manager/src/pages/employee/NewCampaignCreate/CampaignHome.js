@@ -11,7 +11,8 @@ const CampaignHome = () => {
 
   useEffect(() => {
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
-    window.Digit.SessionStorage.del("SelectedModules");
+    window.Digit.SessionStorage.del("SelectedFeaturesByModule");
+
   }, []);
 
   return (
