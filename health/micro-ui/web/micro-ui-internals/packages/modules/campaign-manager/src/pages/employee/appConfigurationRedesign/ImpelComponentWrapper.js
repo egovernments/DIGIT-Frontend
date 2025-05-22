@@ -3,7 +3,7 @@ import AppLocalisationWrapper from "./AppLocalisationWrapper";
 import { dummyMaster } from "../../../configs/dummyMaster";
 import { Loader } from "@egovernments/digit-ui-components";
 
-function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, ...props }) {
+function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -172,7 +172,16 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     submit(restructuredData);
   };
 
-  return <AppLocalisationWrapper onSubmit={onSubmit} back={back} showBack={showBack} screenConfig={screenConfig} parentDispatch={parentDispatch} />;
+  return (
+    <AppLocalisationWrapper
+      onSubmit={onSubmit}
+      back={back}
+      showBack={showBack}
+      screenConfig={screenConfig}
+      parentDispatch={parentDispatch}
+      localeModule={localeModule}
+    />
+  );
 }
 
 export default React.memo(ImpelComponentWrapper);
