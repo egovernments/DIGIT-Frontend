@@ -125,7 +125,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -161,7 +161,7 @@ const Field = ({
                   )}
                 </div>
                 {!headerFields ? (
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 ) : (
                   <TextArea type="textarea" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
                 )}
@@ -226,7 +226,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -263,7 +263,7 @@ const Field = ({
                     )}
                   </div>
                   {!headerFields ? (
-                    <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                    <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                   ) : (
                     <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
                   )}
@@ -295,7 +295,6 @@ const Field = ({
         </>
       );
       break;
-    case "dropDown":
     case "dropdown":
       return (
         <>
@@ -329,7 +328,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -365,7 +364,7 @@ const Field = ({
                   )}
                 </div>
                 {!headerFields ? (
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 ) : (
                   <Dropdown
                     className="appConfigLabelField-Input"
@@ -439,7 +438,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -549,7 +548,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -645,7 +644,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -741,7 +740,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -836,7 +835,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -932,7 +931,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -1026,7 +1025,7 @@ const Field = ({
                   <div className="appConfigLabelField-label">
                     <span>{`${t(label)}`}</span>
                   </div>
-                  <Tag icon="" label={t(type)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
                 {isDelete && (
                   <div
@@ -1109,33 +1108,73 @@ const Field = ({
                       ? "selected"
                       : ""
                   }`
-                : ""
+                : "appConfigHeaderLabelField"
             }
           >
-            <div className="appConfigLabelField-label">
-              <span>{`${t(label)}`}</span>
-              {Mandatory && <span className="mandatory-span">*</span>}
-            </div>
-            <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
-            {isDelete && (
-              <div
-                onClick={(e) => {
-                  onDelete();
-                }}
-                style={{
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  marginLeft: "1rem",
-                  fontSize: "1rem",
-                  color: PRIMARY_COLOR,
-                  display: "flex",
-                  gap: "0.5rem",
-                  alignItems: "center",
-                  marginTop: "1rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
+            {!headerFields && isDrawer ? (
+              <>
+                <div className="appConfigLabelField-label-container">
+                  <div className="appConfigLabelField-label">
+                    <span>{`${t(label)}`}</span>
+                  </div>
+                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                </div>
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
+            ) : (
+              <>
+                <div className="appConfigLabelField-label">
+                  <span>{`${t(label)}`}</span>
+                  {Mandatory && <span className="mandatory-span">*</span>}
+                  {helpText && (
+                    <span className="icon-wrapper">
+                      <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                    </span>
+                  )}
+                </div>
+                <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                {isDelete && (
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      onDelete();
+                    }}
+                    style={{
+                      cursor: "pointer",
+                      fontWeight: "600",
+                      marginLeft: "1rem",
+                      fontSize: "1rem",
+                      color: PRIMARY_COLOR,
+                      display: "flex",
+                      gap: "0.5rem",
+                      alignItems: "center",
+                      marginTop: "1rem",
+                    }}
+                  >
+                    <DustbinIcon />
+                  </div>
+                )}
+              </>
             )}
           </LabelFieldPair>
         </>

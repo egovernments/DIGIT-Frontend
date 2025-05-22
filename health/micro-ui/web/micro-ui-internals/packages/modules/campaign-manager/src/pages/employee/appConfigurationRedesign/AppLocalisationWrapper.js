@@ -34,12 +34,16 @@ const locReducer = (state = initialState, action) => {
       return state.filter((item) => item.code !== action.payload.code);
   }
 };
+
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parentDispatch, ...props }) {
+function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, showBack, parentDispatch, ...props }) {
+  if (!localeModule) {
+    return <Loader />;
+  }
   const [locState, locDispatch] = useReducer(locReducer, initialState);
   const searchParams = new URLSearchParams(location.search);
-  const localeModule = searchParams.get("localeModule");
+  // const localeModule = searchParams.get("localeModule");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
@@ -72,7 +76,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: tenantId,
     locale: enabledModules?.length > 1 ? enabledModules?.map((i) => i.value) : enabledModules?.[0]?.value,
-    module: localeModule ? `hcm-dummy-module-${localeModule}` : "hcm-dummy-module",
+    module: localeModule ? localeModule : "hcm-dummy-module",
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
       staleTime: 0,
@@ -113,7 +117,7 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
         parentDispatch,
       }}
     >
-      <AppConfigurationWrapper screenConfig={screenConfig} />
+      <AppConfigurationWrapper screenConfig={screenConfig} localeModule={localeModule} />
     </AppLocalisationContext.Provider>
   );
 }

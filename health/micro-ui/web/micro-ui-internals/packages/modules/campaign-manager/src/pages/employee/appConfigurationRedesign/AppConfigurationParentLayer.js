@@ -1,10 +1,10 @@
 import { Loader, Stepper, Toast, Tooltip } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
-import React, { useEffect, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { useHistory } from "react-router-dom";
-import { dummyMaster } from "../../../configs/dummyMaster";
+// import { dummyMaster } from "../../../configs/dummyMaster";
 
 const Tabs = ({ numberTabs, onTabChange }) => {
   const { t } = useTranslation();
@@ -53,78 +53,63 @@ const dispatcher = (state, action) => {
   }
 };
 
-const getTypeAndMetaData = (field) => {
-  if (field.type === "string" && field.format === "date") {
-    return {
-      type: "datePicker",
-      startDate: field?.startDate,
-      endDate: field?.endDate,
-    };
-  } else if (field.type === "string" && field.format === "MDMS") {
-    return {
-      type: "MdmsDropdown",
-      moduleName: field?.module,
-      masterName: field?.master,
-      moduleMaster: `${field?.moduleMaster?.moduleName}.${field?.moduleMaster?.masterName}`,
-    };
-  } else if (field.type === "string" && field.format === "textArea") {
-    return {
-      type: "textArea",
-    };
-  } else if (field.type === "integer" && field.format === "incrementer") {
-    return {
-      type: "numeric",
-    };
-  } else if (field.type === "string" && (field.format === "select" || field.format === "dropdown")) {
-    return {
-      type: "dropDown",
-      dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
-    };
-  } else if (field.type === "string" && field.format === "mobileNumber") {
-    return {
-      type: "mobileNumber",
-      prefix: field?.prefix,
-    };
-  } else if (field.type === "integer" && field.format === "integer") {
-    return {
-      type: "number",
-      min: field?.min,
-      max: field?.max,
-    };
-  } else {
+// Updated getTypeAndMetaData to use appfieldtype master data from MDMS
+const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
+  if (!Array.isArray(fieldTypeMasterData) || fieldTypeMasterData.length === 0) {
     return { type: "textInput" };
   }
-};
 
-const correctTypeFinder = (input) => {
-  if (input.type === "string" && input.format === "date") {
-    return "datePicker";
-  } else if (input.type === "string" && input.format === "MDMS") {
-    return "MdmsDropdown";
-  } else if (input.type === "string" && input.format === "textArea") {
-    return "textArea";
-  } else if (input.type === "integer" && input.format === "incrementer") {
-    return "numeric";
-  } else if (input.type === "string" && input.format === "select") {
-    return "dropdown";
-  } else if (input.type === "string" && input.format === "mobileNumber") {
-    return "mobileNumber";
-  } else if (input.type === "integer" && input.format === "integer") {
-    return "number";
-  } else {
-    return "textInput";
+  // Try to find a matching field type from master data
+  const matched = fieldTypeMasterData.find((item) => {
+    // Match both type and format from metadata
+    return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
+  });
+
+  if (!matched) {
+    return { type: "textInput" };
   }
+
+  // Start with the fieldType as type
+  let result = { type: matched.fieldType, appType: matched.type };
+
+  // Copy all metadata properties except type/format (already used)
+  Object.entries(matched.metadata || {}).forEach(([key, value]) => {
+    if (key !== "type" && key !== "format") {
+      result[key] = value;
+    }
+  });
+
+  // Map/rename additional attributes as per attributeToRename
+  if (matched.attributeToRename) {
+    Object.entries(matched.attributeToRename).forEach(([to, from]) => {
+      if (field[from] !== undefined) {
+        result[to] = field[from];
+      }
+    });
+  }
+
+  // Special handling for enums to dropdownOptions (for dropdown/select)
+  if (matched.fieldType === "dropdown" && field.enums) {
+    result.dropDownOptions = [...field.enums];
+  }
+
+  // Pass through other common field properties if needed (e.g., min, max, prefix)
+  ["min", "max", "prefix", "startDate", "endDate"].forEach((prop) => {
+    if (field[prop] !== undefined) {
+      result[prop] = field[prop];
+    }
+  });
+
+  return result;
 };
 
-const restructure = (data1) => {
+const restructure = (data1, fieldTypeMasterData = []) => {
   return data1
     ?.sort((a, b) => a.order - b.order)
     .map((page) => {
       const cardFields = page.properties
         ?.sort((a, b) => a.order - b.order)
         ?.map((field, index) => ({
-          // type: correctTypeFinder(field),
-          // dropDownOptions: field?.enums ? field?.enums?.map((i) => ({ code: i, name: i })) : null,
           label: field.label || "",
           value: field.value || "",
           active: true,
@@ -139,7 +124,7 @@ const restructure = (data1) => {
           tooltip: field.tooltip || "",
           infoText: field.infoText || "",
           order: field.order,
-          ...getTypeAndMetaData(field),
+          ...getTypeAndMetaData(field, fieldTypeMasterData),
         }));
 
       return {
@@ -195,45 +180,29 @@ const guessPageName = (label) => {
   return map[label] || label;
 };
 
-const getTypeAndFormat = (field) => {
-  switch (field.type) {
-    case "textInput":
-      return { type: "string", format: "string", maxLength: field?.maxLength };
-    case "textArea":
-      return { type: "string", format: "textArea", charCount: field?.maxLength };
-      break;
-    case "number":
-      return { type: "integer", format: "integer", min: field?.min, max: field?.max };
-      break;
-    case "dropdown":
-    case "dropDown":
-      return { type: "string", format: "dropdown", enums: field?.dropDownOptions?.map((i) => i.name) || [] };
-      break;
-    case "datePicker":
-    case "dobPicker":
-      return { type: "string", format: "date", startDate: field?.startDate, endDate: field?.endDate };
-      break;
-    case "numeric":
-      return { type: "number", format: "increment" };
-      break;
-    case "checkbox":
-      return { type: "boolean", format: "boolean" };
-      break;
-    case "mobileNumber":
-      return { type: "string", format: "mobileNumber", prefix: field?.prefix };
-      break;
-    case "MdmsDropdown":
-      return { type: "string", format: "MDMS", module: field?.moduleMaster?.moduleName, master: field?.moduleMaster?.masterName };
-    default:
-      return {};
-      break;
+// Helper to get type/format and handle attribute renaming from appType using fieldTypeMasterData
+const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
+  if (!field.appType) return {};
+  const matched = fieldTypeMasterData.find((item) => item.type === field.appType);
+  if (!matched) return {};
+  const result = {
+    type: matched.metadata?.type,
+    format: matched.metadata?.format,
+  };
+  // Handle attributeToRename: { targetKey: sourceKey }
+  if (matched.attributeToRename) {
+    Object.entries(matched.attributeToRename).forEach(([targetKey, sourceKey]) => {
+      result[sourceKey] = field[targetKey];
+    });
   }
+  return result;
 };
 
-const reverseRestructure = (updatedData) => {
+// Update reverseRestructure to use getTypeAndFormatFromAppType
+const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
-    const properties = section.cards?.[0]?.fields.map((field, fieldIndex, array) => {
-      const typeAndFormat = getTypeAndFormat(field);
+    const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
+      const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
       return {
         label: field.label || "",
         order: fieldIndex + 1,
@@ -270,6 +239,8 @@ const AppConfigurationParentRedesign = () => {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
+  const fieldTypeMaster = searchParams.get("fieldType");
+  const campaignNumber = searchParams.get("campaignNumber");
   const variant = searchParams.get("variant");
   const formId = searchParams.get("formId");
   const [parentState, parentDispatch] = useReducer(dispatcher, {});
@@ -278,10 +249,22 @@ const AppConfigurationParentRedesign = () => {
   const [stepper, setStepper] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
+  const localeModule = useMemo(() => {
+    if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
+      return `hcm-${Digit.Utils.locale.getTransformedLocale(`${parentState.actualTemplate.name}-${parentState.actualTemplate.project}`)}`;
+    }
+    return null;
+  }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: masterName }],
+    [
+      {
+        name: masterName,
+        // filter: `[?(@.project==${campaignNumber})].name`,
+      },
+      { name: fieldTypeMaster },
+    ],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -299,6 +282,9 @@ const AppConfigurationParentRedesign = () => {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
         schemaCode: `${MODULE_CONSTANTS}.${masterName}`,
+        filters: {
+          project: campaignNumber,
+        },
       },
     },
     config: {
@@ -338,22 +324,24 @@ const AppConfigurationParentRedesign = () => {
   // }, [NewAppConfigMdmsData, NewisLoadingAppConfigMdmsData]);
 
   useEffect(() => {
-    if (!isLoading && formData && formId) {
-      const temp = restructure(formData?.data?.pages);
+    if (!isLoading && formData && formId && AppConfigMdmsData?.[fieldTypeMaster]?.length > 0) {
+      const fieldTypeMasterData = AppConfigMdmsData?.[fieldTypeMaster] || [];
+      const temp = restructure(formData?.data?.pages, fieldTypeMasterData);
       parentDispatch({
         key: "SET",
         data: [...temp],
         template: formData?.data,
         appIdData: formData?.data,
       });
-    } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
-      const temp = restructure(AppConfigMdmsData?.[masterName]?.[0]?.pages);
-      parentDispatch({
-        key: "SET",
-        data: [...temp],
-        template: AppConfigMdmsData?.[masterName],
-      });
     }
+    // } else if (!isLoadingAppConfigMdmsData && AppConfigMdmsData?.[masterName]) {
+    //   const temp = restructure(AppConfigMdmsData?.[masterName]?.[0]?.pages);
+    //   parentDispatch({
+    //     key: "SET",
+    //     data: [...temp],
+    //     template: AppConfigMdmsData?.[masterName],
+    //   });
+    // }
   }, [isLoadingAppConfigMdmsData, AppConfigMdmsData, formData]);
 
   useEffect(() => {
@@ -398,7 +386,7 @@ const AppConfigurationParentRedesign = () => {
       isSubmit: stepper?.find((i) => i.active)?.isLast ? true : false,
     });
     if (stepper?.find((i) => i.active)?.isLast) {
-      const reverseData = reverseRestructure(parentState?.currentTemplate);
+      const reverseData = reverseRestructure(parentState?.currentTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
       // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
       const reverseFormat = {
         name: "REGISTRATIONFLOW",
@@ -495,6 +483,7 @@ const AppConfigurationParentRedesign = () => {
         showBack={true}
         parentDispatch={parentDispatch}
         AppConfigMdmsData={AppConfigMdmsData}
+        localeModule={localeModule}
       />
       {showToast && (
         <Toast
