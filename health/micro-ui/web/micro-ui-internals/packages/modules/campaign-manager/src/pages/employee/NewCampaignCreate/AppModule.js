@@ -21,18 +21,6 @@ const AppModule = () => {
   const TemplateBaseConfig = "TemplateBaseConfig";
   const url = getMDMSUrl(true);
 
-  // const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomMDMS(
-  //   tenantId,
-  //   CONSOLE_MDMS_MODULENAME,
-  //   [{ name: "TemplateBaseConfig",filter:[?(@.active == true)] }],
-  //   {
-  //     select: (data) => {
-  //       return data?.[CONSOLE_MDMS_MODULENAME]?.TemplateBaseConfig;
-  //     },
-  //   },
-  //   { schemaCode: `${"CONSOLE_MDMS_MODULENAME"}.TemplateBaseConfig` }
-  // );
-
   const reqCriteriaMDMSBaseTemplateSearch = {
     url: `${url}/v2/_search`,
     body: {
