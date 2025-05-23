@@ -1,4 +1,4 @@
-import { Button, Dropdown, LabelFieldPair, PopUp, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, LabelFieldPair, PopUp, RadioButtons, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -39,6 +39,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             isCheckedInitially={drawerState?.[panelItem.label] ? true : false}
             shapeOnOff
           />
+          {/* //todo again clean up this logic,  */}
           {shouldShow && shouldShow?.type === "MdmsDropdown" ? (
             <Dropdown
               variant={""}
@@ -59,49 +60,63 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               }}
             />
           ) : shouldShow ? (
-            <TextInput
-              isRequired={true}
-              className=""
-              type={"text"}
-              name="title"
-              value={
-                isLocalisable
-                  ? useCustomT(drawerState?.[panelItem.label])
-                  : drawerState?.[panelItem.label] === true
-                  ? ""
-                  : drawerState?.[panelItem.label]
-              }
-              onChange={(event) => {
-                if (isLocalisable) {
-                  updateLocalization(
-                    drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
-                      ? drawerState?.[panelItem.label]
-                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                          drawerState?.jsonPath || drawerState?.id
-                        }`,
-                    Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
-                    event.target.value
-                  );
+            shouldShow && shouldShow?.type === "radioOptions" ? (
+              <RadioButtons // it should be changed to radio button
+                options={shouldShow?.options}
+                selected={drawerState?.moduleMaster || {}}
+                onSelect={(value) => {
                   setDrawerState((prev) => ({
                     ...prev,
-                    [shouldShow?.value]:
+                    [shouldShow?.bindTo]: value,
+                  }));
+                }}
+                optionsKey="code"
+              />
+            ) : (
+              <TextInput
+                isRequired={true}
+                className=""
+                type={"text"}
+                name="title"
+                value={
+                  isLocalisable
+                    ? useCustomT(drawerState?.[panelItem.label])
+                    : drawerState?.[panelItem.label] === true
+                    ? ""
+                    : drawerState?.[panelItem.label]
+                }
+                onChange={(event) => {
+                  if (isLocalisable) {
+                    updateLocalization(
                       drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
                         ? drawerState?.[panelItem.label]
                         : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
                             drawerState?.jsonPath || drawerState?.id
                           }`,
-                  }));
-                  return;
-                } else {
-                  setDrawerState((prev) => ({
-                    ...prev,
-                    [shouldShow?.value]: event.target.value,
-                  }));
-                  return;
-                }
-              }}
-              placeholder={""}
-            />
+                      Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                      event.target.value
+                    );
+                    setDrawerState((prev) => ({
+                      ...prev,
+                      [shouldShow?.value]:
+                        drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
+                          ? drawerState?.[panelItem.label]
+                          : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                              drawerState?.jsonPath || drawerState?.id
+                            }`,
+                    }));
+                    return;
+                  } else {
+                    setDrawerState((prev) => ({
+                      ...prev,
+                      [shouldShow?.value]: event.target.value,
+                    }));
+                    return;
+                  }
+                }}
+                placeholder={""}
+              />
+            )
           ) : null}
         </>
       );
@@ -385,6 +400,12 @@ function DrawerFieldComposer() {
             );
           }
         })}
+        {/* // todo need to update and cleanup */}
+        {currentDrawerState?.every((panelItem, index) => !isFieldVisible(panelItem)) && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            No {currentDrawerState?.[0]?.tab} configured for this field type
+          </div>
+        )}
         {/* {drawerState?.type === "dropdown" ? (
           <Switch
             label={"API Dropdown"}

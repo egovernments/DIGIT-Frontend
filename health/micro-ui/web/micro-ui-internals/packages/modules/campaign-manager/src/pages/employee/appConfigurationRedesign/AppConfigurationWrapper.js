@@ -276,6 +276,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   // const localeModule = searchParams.get("localeModule");
   const module = localeModule ? localeModule : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
+  const [loading, setLoading] = useState(false);
+
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
@@ -357,20 +359,26 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
+          setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
         } catch (error) {
+          setLoading(false);
+          setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
           console.error(`Error sending ${locale} localisation data:`, error);
         }
       }
     }
 
     setShowPopUp(false);
+    setLoading(false);
+
     console.info("LOCALISATION_UPSERT_SUCCESS");
     // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
+      {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
       <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem" }}>
         <Button
           className="app-configure-action-button"
