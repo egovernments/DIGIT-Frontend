@@ -7,7 +7,7 @@ import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
-const whenToShow = (panelItem, drawerState) => {  
+const whenToShow = (panelItem, drawerState) => {
   if (!panelItem?.showFieldOnToggle || !drawerState?.[panelItem.label]) {
     return false;
   }
@@ -51,7 +51,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 },
               ].map((i) => ({ ...i, code: `${i.moduleName}.${i.masterName}` }))}
               optionKey={"code"}
-              selected={drawerState?.moduleMaster || {}}
+              selected={drawerState?.[shouldShow?.bindTo] || {}}
               select={(value) => {
                 setDrawerState((prev) => ({
                   ...prev,
@@ -60,60 +60,63 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               }}
             />
           ) : shouldShow ? (
-            (shouldShow && shouldShow?.type === "dropDown"? <RadioButtons // it should be changed to radio button
-              options={shouldShow?.options}
-              selected={drawerState?.moduleMaster || {}}
-              onSelect={(value) => {
-                setDrawerState((prev) => ({
-                  ...prev,
-                  [shouldShow?.bindTo]: value,
-                }));
-              }}
-              optionsKey="code"
-            />:
-            <TextInput
-              isRequired={true}
-              className=""
-              type={"text"}
-              name="title"
-              value={
-                isLocalisable
-                  ? useCustomT(drawerState?.[panelItem.label])
-                  : drawerState?.[panelItem.label] === true
-                  ? ""
-                  : drawerState?.[panelItem.label]
-              }
-              onChange={(event) => {
-                if (isLocalisable) {
-                  updateLocalization(
-                    drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
-                      ? drawerState?.[panelItem.label]
-                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
-                          drawerState?.jsonPath || drawerState?.id
-                        }`,
-                    Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
-                    event.target.value
-                  );
+            shouldShow && shouldShow?.type === "radioOptions" ? (
+              <RadioButtons // it should be changed to radio button
+                options={shouldShow?.options}
+                selectedOption={drawerState?.[shouldShow?.bindTo]?.code || null}
+                onSelect={(value) => {
                   setDrawerState((prev) => ({
                     ...prev,
-                    [shouldShow?.value]:
+                    [shouldShow?.bindTo]: value,
+                  }));
+                }}
+                optionsKey="code"
+              />
+            ) : (
+              <TextInput
+                isRequired={true}
+                className=""
+                type={"text"}
+                name="title"
+                value={
+                  isLocalisable
+                    ? useCustomT(drawerState?.[panelItem.label])
+                    : drawerState?.[panelItem.label] === true
+                    ? ""
+                    : drawerState?.[panelItem.label]
+                }
+                onChange={(event) => {
+                  if (isLocalisable) {
+                    updateLocalization(
                       drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
                         ? drawerState?.[panelItem.label]
                         : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
                             drawerState?.jsonPath || drawerState?.id
                           }`,
-                  }));
-                  return;
-                } else {
-                  setDrawerState((prev) => ({
-                    ...prev,
-                    [shouldShow?.value]: event.target.value,
-                  }));
-                  return;
-                }
-              }}
-              placeholder={""}
-            />)
+                      Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                      event.target.value
+                    );
+                    setDrawerState((prev) => ({
+                      ...prev,
+                      [shouldShow?.value]:
+                        drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
+                          ? drawerState?.[panelItem.label]
+                          : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
+                              drawerState?.jsonPath || drawerState?.id
+                            }`,
+                    }));
+                    return;
+                  } else {
+                    setDrawerState((prev) => ({
+                      ...prev,
+                      [shouldShow?.value]: event.target.value,
+                    }));
+                    return;
+                  }
+                }}
+                placeholder={""}
+              />
+            )
           ) : null}
         </>
       );
@@ -206,7 +209,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           />
         </div>
       );
-    case "dropdown":
+    case "fieldTypeDropdown":
       return (
         <Dropdown
           // style={}
@@ -364,6 +367,23 @@ function DrawerFieldComposer() {
         }}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+        {tabs?.find((i) => i.active)?.parent === "content" && (
+          <Dropdown
+            // style={}
+            variant={""}
+            t={t}
+            option={state?.MASTER_DATA?.AppFieldType}
+            optionKey={"type"}
+            selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
+            select={(value) => {
+              setDrawerState((prev) => ({
+                ...prev,
+                type: value?.fieldType,
+                appType: value?.type,
+              }));
+            }}
+          />
+        )}
         {currentDrawerState?.map((panelItem, index) => {
           if (isFieldVisible(panelItem)) {
             return (
@@ -381,10 +401,10 @@ function DrawerFieldComposer() {
           }
         })}
         {/* // todo need to update and cleanup */}
-        {currentDrawerState?.every((panelItem, index) => !isFieldVisible(panelItem)) && (    
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-               No {currentDrawerState?.[0]?.tab} configured for this field type 
-              </div>
+        {currentDrawerState?.every((panelItem, index) => !isFieldVisible(panelItem)) && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            No {currentDrawerState?.[0]?.tab} configured for this field type
+          </div>
         )}
         {/* {drawerState?.type === "dropdown" ? (
           <Switch
