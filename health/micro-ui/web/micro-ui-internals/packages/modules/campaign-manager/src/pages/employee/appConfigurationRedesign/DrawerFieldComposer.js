@@ -6,6 +6,7 @@ import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
+import Tabs from "./Tabs";
 
 const whenToShow = (panelItem, drawerState) => {
   if (!panelItem?.showFieldOnToggle || !drawerState?.[panelItem.label]) {
@@ -238,24 +239,6 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       return null;
       break;
   }
-};
-
-const Tabs = ({ numberTabs, onTabChange }) => {
-  const { t } = useTranslation();
-  return (
-    <div className="configure-app-tabs">
-      {numberTabs.map((_, index) => (
-        <button
-          key={index}
-          type="button"
-          className={`configure-app-tab-head ${_.active === true ? "active" : ""} hover`}
-          onClick={() => onTabChange(_, index)}
-        >
-          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(_.parent)}</p>
-        </button>
-      ))}
-    </div>
-  );
 };
 
 function DrawerFieldComposer() {

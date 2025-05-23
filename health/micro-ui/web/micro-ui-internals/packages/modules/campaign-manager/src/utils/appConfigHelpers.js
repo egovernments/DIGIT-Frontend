@@ -1,0 +1,179 @@
+const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
+  if (!Array.isArray(fieldTypeMasterData) || fieldTypeMasterData.length === 0) {
+    return { type: "textInput" };
+  }
+
+  // Try to find a matching field type from master data
+  const matched = fieldTypeMasterData.find((item) => {
+    // Match both type and format from metadata
+    return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
+  });
+
+  if (!matched) {
+    return { type: "textInput" };
+  }
+
+  // Start with the fieldType as type
+  let result = { type: matched.fieldType, appType: matched.type };
+
+  // Copy all metadata properties except type/format (already used)
+  Object.entries(matched.metadata || {}).forEach(([key, value]) => {
+    if (key !== "type" && key !== "format") {
+      result[key] = value;
+    }
+  });
+
+  // Map/rename additional attributes as per attributeToRename
+  if (matched.attributeToRename) {
+    Object.entries(matched.attributeToRename).forEach(([to, from]) => {
+      if (field[from] !== undefined) {
+        result[to] = field[from];
+      }
+    });
+  }
+
+  // Special handling for enums to dropdownOptions (for dropdown/select)
+  if (matched.fieldType === "dropdown" && field.enums) {
+    result.dropDownOptions = [...field.enums];
+  }
+
+  // Pass through other common field properties if needed (e.g., min, max, prefix)
+  ["min", "max", "prefix", "startDate", "endDate"].forEach((prop) => {
+    if (field[prop] !== undefined) {
+      result[prop] = field[prop];
+    }
+  });
+
+  return result;
+};
+
+const guessPageName = (label) => {
+  const map = {
+    BENE_LOCATION: "beneficiaryLocation",
+    BENE_HOUSE: "HouseDetails",
+    // Add more mappings as needed
+  };
+  return map[label] || label;
+};
+
+// Helper to get type/format and handle attribute renaming from appType using fieldTypeMasterData
+const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
+  if (!field.appType) return {};
+  const matched = fieldTypeMasterData.find((item) => item.type === field.appType);
+  if (!matched) return {};
+  const result = {
+    type: matched.metadata?.type,
+    format: matched.metadata?.format,
+  };
+  // Handle attributeToRename: { targetKey: sourceKey }
+  if (matched.attributeToRename) {
+    Object.entries(matched.attributeToRename).forEach(([targetKey, sourceKey]) => {
+      result[sourceKey] = field[targetKey];
+    });
+  }
+  return result;
+};
+
+export const restructure = (data1, fieldTypeMasterData = [], parent) => {
+  return data1
+    ?.sort((a, b) => a.order - b.order)
+    .map((page) => {
+      const cardFields = page.properties
+        ?.sort((a, b) => a.order - b.order)
+        ?.map((field, index) => ({
+          label: field.label || "",
+          value: field.value || "",
+          active: true,
+          jsonPath: field.fieldName || "",
+          metaData: {},
+          Mandatory: field.required || false,
+          hidden: field.hidden || false,
+          deleteFlag: field.deleteFlag || false,
+          isLocalised: field.isLocalised ? true : false,
+          innerLabel: field.innerLabel || "",
+          helpText: field.helpText || "",
+          errorMessage: field?.errorMessage || "",
+          tooltip: field.tooltip || "",
+          infoText: field.infoText || "",
+          order: field.order,
+          ...getTypeAndMetaData(field, fieldTypeMasterData),
+        }));
+
+      return {
+        name: page.label || page.page || "UNKNOWN",
+        cards: [
+          {
+            header: crypto.randomUUID(),
+            fields: cardFields,
+            headerFields: [
+              {
+                type: "text",
+                label: "SCREEN_HEADING",
+                value: page.label || "",
+                active: true,
+                jsonPath: "ScreenHeading",
+                metaData: {},
+                required: true,
+                isLocalised: page.label ? true : false,
+              },
+              {
+                type: "textarea",
+                label: "SCREEN_DESCRIPTION",
+                value: page.description || "",
+                active: true,
+                jsonPath: "Description",
+                metaData: {},
+                required: true,
+                isLocalised: page.description ? true : false,
+              },
+            ],
+          },
+        ],
+        actionLabel: page?.actionLabel || "",
+        order: page.order,
+        config: {
+          enableComment: false,
+          enableFieldAddition: true,
+          allowFieldsAdditionAt: ["body"],
+          enableSectionAddition: false,
+          allowCommentsAdditionAt: ["body"],
+        },
+        parent: parent?.name || "",
+      };
+    });
+};
+
+// Update reverseRestructure to use getTypeAndFormatFromAppType
+export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
+  return updatedData.map((section, index) => {
+    const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
+      const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
+      return {
+        label: field.label || "",
+        order: fieldIndex + 1,
+        value: field.value || "",
+        hidden: false, // can't be derived from updatedData unless explicitly added
+        required: field.Mandatory || false,
+        hidden: field.hidden || false,
+        fieldName: field.jsonPath || "",
+        helpText: field.helpText || "",
+        tooltip: field.tooltip || "",
+        infoText: field.infoText || "",
+        innerLabel: field.innerLabel || "",
+        errorMessage: field.errorMessage || "",
+        deleteFlag: field.deleteFlag || false,
+        ...typeAndFormat,
+      };
+    });
+
+    return {
+      page: guessPageName(section.name),
+      type: "object",
+      label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
+      description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
+      actionLabel: section?.actionLabel || "",
+      order: index + 1,
+      properties,
+    };
+  });
+};
