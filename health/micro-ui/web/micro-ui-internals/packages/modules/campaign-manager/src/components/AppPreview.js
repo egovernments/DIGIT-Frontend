@@ -313,7 +313,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
             </div>
           ))}
           {card?.fields
-            ?.filter((field) => field.active)
+            ?.filter((field) => field.active&&(field.hidden==false||field.deleteFlag==true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
               return (
                 <FieldV1

@@ -23,6 +23,7 @@ function DraggableField({
   fieldIndex,
   cardIndex,
   moveField,
+  onHide,
   fields,
   indexOfCard,
 }) {
@@ -57,6 +58,7 @@ function DraggableField({
         dropDownOptions={dropDownOptions}
         onDelete={() => onDelete()}
         onSelectField={() => onSelectField()}
+        onHide={()=>onHide()}
         config={config}
         Mandatory={Mandatory}
         helpText={helpText}
