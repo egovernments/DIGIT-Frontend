@@ -31,14 +31,20 @@ const CheckBox = ({
   const diabledIconColor = Colors.lightTheme.text.disabled;
   const iconColor = Colors.lightTheme.primary[1];
 
+  const checkboxId = `checkbox-${index}`;
+
   return (
     <div
-      className={`digit-checkbox-container ${
-        !isLabelFirst ? "checkboxFirst" : "labelFirst"
-      } ${disabled ? "disabled" : " "} ${props?.mainClassName}`}
+      className={`digit-checkbox-container ${!isLabelFirst ? "checkboxFirst" : "labelFirst"
+        } ${disabled ? "disabled" : " "} ${props?.mainClassName}`}
     >
-      {(isLabelFirst && !hideLabel) ? (
-        <p className={`label ${props?.labelClassName} `} style={{ maxWidth: "100%", width: "auto" ,marginRight:"0rem"}} onClick={props?.onLabelClick}>
+      {isLabelFirst && !hideLabel && (
+        <label
+          htmlFor={checkboxId}
+          className={`label ${props?.labelClassName}`}
+          style={{ maxWidth: "100%", width: "auto", marginRight: "0rem" }}
+          onClick={props?.onLabelClick}
+        >
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>
@@ -51,10 +57,12 @@ const CheckBox = ({
           ) : (
             sentenceCaseLabel
           )}
-        </p>
-      ) : null}
+        </label>
+      )}
+
       <div style={{ cursor: "pointer", display: "flex", position: "relative" }} className={props?.inputWrapperClassName}>
         <input
+          id={checkboxId}
           type="checkbox"
           className={`input ${userType === "employee" ? "input-emp" : ""} ${props?.inputClassName} `}
           onChange={onChange}
@@ -63,17 +71,24 @@ const CheckBox = ({
           ref={inputRef}
           disabled={disabled}
           checked={checked}
-          />
-        <p
-          className={`digit-custom-checkbox ${
-            userType === "employee" ? "digit-custom-checkbox-emp" : ""
-          } ${props?.inputIconClassname} `}
+          aria-checked={checked}
+          aria-disabled={disabled}
+        />
+        <span
+          className={`digit-custom-checkbox ${userType === "employee" ? "digit-custom-checkbox-emp" : ""} ${props?.inputIconClassname}`}
+          aria-hidden="true"
         >
           <SVG.Check fill={props?.iconFill || (disabled ? diabledIconColor : iconColor)} />
-        </p>
+        </span>
       </div>
-      {(!isLabelFirst && !hideLabel) ? (
-        <p className={`label ${props?.labelClassName} `} style={{ maxWidth: "100%", width: "100%",marginRight:"0rem" }} onClick={props?.onLabelClick}>
+
+      {!isLabelFirst && !hideLabel && (
+        <label
+          htmlFor={checkboxId}
+          className={`label ${props?.labelClassName}`}
+          style={{ maxWidth: "100%", width: "100%", marginRight: "0rem" }}
+          onClick={props?.onLabelClick}
+        >
           {customLabelMarkup ? (
             <>
               <span>{t("COMMON_CERTIFY_ONE")}</span>
@@ -86,8 +101,8 @@ const CheckBox = ({
           ) : (
             sentenceCaseLabel
           )}
-        </p>
-      ) : null}
+        </label>
+      )}
     </div>
   );
 };
@@ -106,7 +121,7 @@ CheckBox.propTypes = {
    */
   ref: PropTypes.func,
   userType: PropTypes.string,
-  hideLabel:PropTypes.bool
+  hideLabel: PropTypes.bool
 };
 
 CheckBox.defaultProps = {
