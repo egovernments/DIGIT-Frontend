@@ -348,7 +348,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   }}
                   required={field?.required || field?.Mandatory}
                   type={getFieldType(field) === "button" ? "custom" : getFieldType(field) || "text"}
-                  value={field?.defaultValue === true ? "" : field?.defaultValue || ""}
+                  value={field?.value === true ? "" : field?.value || ""}
                 />
               );
             })}

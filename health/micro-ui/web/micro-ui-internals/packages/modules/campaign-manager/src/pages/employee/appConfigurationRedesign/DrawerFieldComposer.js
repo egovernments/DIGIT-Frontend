@@ -80,10 +80,10 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 name="title"
                 value={
                   isLocalisable
-                    ? useCustomT(drawerState?.[panelItem.label])
-                    : drawerState?.[panelItem.label] === true
+                    ? useCustomT(drawerState?.[panelItem?.conditionalField?.bindTo ? panelItem?.conditionalField?.bindTo : panelItem?.label])
+                    : drawerState?.[panelItem?.conditionalField?.bindTo ? panelItem?.conditionalField?.bindTo : panelItem?.label] === true
                     ? ""
-                    : drawerState?.[panelItem.label]
+                    : drawerState?.[panelItem?.conditionalField?.bindTo ? panelItem?.conditionalField?.bindTo : panelItem?.label]
                 }
                 onChange={(event) => {
                   if (isLocalisable) {
@@ -98,7 +98,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                     );
                     setDrawerState((prev) => ({
                       ...prev,
-                      [shouldShow?.value]:
+                      [shouldShow?.bindTo]:
                         drawerState?.[panelItem.label] && drawerState?.[panelItem.label] !== true
                           ? drawerState?.[panelItem.label]
                           : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_${
@@ -109,7 +109,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                   } else {
                     setDrawerState((prev) => ({
                       ...prev,
-                      [shouldShow?.value]: event.target.value,
+                      [shouldShow?.bindTo]: event.target.value,
                     }));
                     return;
                   }
