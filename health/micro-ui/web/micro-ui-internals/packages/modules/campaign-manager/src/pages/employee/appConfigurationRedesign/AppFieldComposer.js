@@ -27,6 +27,80 @@ const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
   );
 };
 
+// Component to toggle visibility of a field if it is not mandatory and not marked for deletion
+const ToggleVisibilityControl = ({ config, onToggle }) => {
+  if (config?.deleteFlag || config?.Mandatory) return null;
+
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        onToggle();
+      }}
+      style={{
+        cursor: "pointer",
+        fontWeight: "600",
+        marginLeft: "1rem",
+        fontSize: "1rem",
+        color: PRIMARY_COLOR,
+        display: "flex",
+        gap: "0.5rem",
+        alignItems: "center",
+        marginTop: "1rem",
+      }}
+    >
+      <Switch label="" isCheckedInitially={config?.hidden === false} />
+    </div>
+  );
+};
+
+// Component to render a delete button (dustbin icon) if deletion is allowed
+const DeleteFieldControl = ({ isDelete, onDelete }) => {
+  if (!isDelete) return null;
+
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+        onDelete();
+      }}
+      style={{
+        cursor: "pointer",
+        fontWeight: "600",
+        marginLeft: "1rem",
+        fontSize: "1rem",
+        color: PRIMARY_COLOR,
+        display: "flex",
+        gap: "0.5rem",
+        alignItems: "center",
+        marginTop: "1rem",
+      }}
+    >
+      <DustbinIcon />
+    </div>
+  );
+};
+
+// Main component to display a panel field with label, tag, visibility toggle, and delete option
+const PanelFieldDisplay = ({ t, label, appType, config, onToggle, isDelete, onDelete }) => {
+  return (
+    <>
+      <div className="appConfigLabelField-label-container">
+        <div className="appConfigLabelField-label">
+          <span>{t(label)}</span>
+        </div>
+        <Tag icon="" label={t(appType)} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
+      </div>
+
+      {/* Control to show/hide the field */}
+      <ToggleVisibilityControl config={config} onToggle={onToggle} />
+
+      {/* Control to delete the field */}
+      <DeleteFieldControl isDelete={isDelete} onDelete={onDelete} />
+    </>
+  );
+};
+
 const MdmsDropdown = ({
   t,
   moduleMaster,
@@ -93,8 +167,6 @@ const Field = ({
   rest,
   ...props
 }) => {
-  console.log(type,props,rest);
-  
   switch (type) {
     case "textarea":
       return (
@@ -125,33 +197,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -226,34 +280,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -296,16 +331,6 @@ const Field = ({
                 )}
               </>
             )}
-         
-            {config?.deleteFlag==false&&config?.Mandatory==false&&    <Switch
-            label={""}
-            onToggle={(e) =>{
-              console.log("toggled" ,config,e);
-              onHide();
-              e.stopPropagation();
-            }}
-            isCheckedInitially={config?.hidden==false}
-          />}
           </LabelFieldPair>
         </>
       );
@@ -339,33 +364,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -449,33 +456,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -559,33 +548,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -751,33 +722,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -846,33 +799,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -942,33 +877,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -1036,33 +953,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -1128,33 +1027,15 @@ const Field = ({
           >
             {!headerFields && isDrawer ? (
               <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                  </div>
-                  <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
+                <PanelFieldDisplay
+                  t={t}
+                  label={label}
+                  appType={t(rest?.appType)}
+                  isDelete={isDelete}
+                  onDelete={onDelete}
+                  onToggle={onHide}
+                  config={config}
+                />
               </>
             ) : (
               <>
@@ -1220,8 +1101,6 @@ function AppFieldComposer({
   const { t } = useTranslation();
   const { state, dispatch } = useAppConfigContext();
   const componentRef = useRef(null);
-console.log(rest,config,'config');
-
   return (
     <div
       ref={componentRef}

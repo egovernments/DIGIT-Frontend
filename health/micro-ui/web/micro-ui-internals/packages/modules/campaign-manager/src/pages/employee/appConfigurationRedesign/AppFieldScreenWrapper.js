@@ -63,9 +63,7 @@ function AppFieldScreenWrapper() {
             <Divider />
             <div className="slider-header">Fields</div> {/* todo update localisation */}
             {fields?.map(
-              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
-                console.log(fields,'fields');
-                
+              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {                
                 return (
                   <DraggableField
                     type={type}
@@ -86,9 +84,8 @@ function AppFieldScreenWrapper() {
                       // return;
                     }}
                     onHide={(e) => {
-                      e.stopPropagation();
                       dispatch({
-                        type: "DELETE_FIELD",
+                        type: "HIDE_FIELD",
                         payload: {
                           currentScreen: currentCard,
                           currentCard: card[index],
