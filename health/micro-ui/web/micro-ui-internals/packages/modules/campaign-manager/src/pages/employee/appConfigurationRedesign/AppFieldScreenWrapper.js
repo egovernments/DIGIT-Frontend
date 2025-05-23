@@ -61,9 +61,11 @@ function AppFieldScreenWrapper() {
               />
             ))}
             <Divider />
-            <div className="slider-header">Fields</div>
+            <div className="slider-header">Fields</div> {/* todo update localisation */}
             {fields?.map(
               ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
+                console.log(fields,'fields');
+                
                 return (
                   <DraggableField
                     type={type}
@@ -73,6 +75,18 @@ function AppFieldScreenWrapper() {
                     isDelete={deleteFlag === false ? false : true}
                     dropDownOptions={dropDownOptions}
                     onDelete={() => {
+                      dispatch({
+                        type: "DELETE_FIELD",
+                        payload: {
+                          currentScreen: currentCard,
+                          currentCard: card[index],
+                          currentField: c[i],
+                        },
+                      });
+                      // return;
+                    }}
+                    onHide={(e) => {
+                      e.stopPropagation();
                       dispatch({
                         type: "DELETE_FIELD",
                         payload: {

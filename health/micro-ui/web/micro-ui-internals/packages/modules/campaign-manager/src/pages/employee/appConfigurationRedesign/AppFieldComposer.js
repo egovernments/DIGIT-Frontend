@@ -7,6 +7,7 @@ import {
   AlertCard as InfoCard,
   TooltipWrapper,
   TextArea,
+  Switch,
 } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -82,6 +83,7 @@ const Field = ({
   dropDownOptions,
   config,
   onChange,
+  onHide,
   state,
   dispatch,
   Mandatory,
@@ -91,6 +93,8 @@ const Field = ({
   rest,
   ...props
 }) => {
+  console.log(type,props,rest);
+  
   switch (type) {
     case "textarea":
       return (
@@ -228,6 +232,7 @@ const Field = ({
                   </div>
                   <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 </div>
+                
                 {isDelete && (
                   <div
                     onClick={(e) => {
@@ -291,6 +296,16 @@ const Field = ({
                 )}
               </>
             )}
+         
+            {config?.deleteFlag==false&&config?.Mandatory==false&&    <Switch
+            label={""}
+            onToggle={(e) =>{
+              console.log("toggled" ,config,e);
+              onHide();
+              e.stopPropagation();
+            }}
+            isCheckedInitially={config?.hidden==false}
+          />}
           </LabelFieldPair>
         </>
       );
@@ -1191,6 +1206,7 @@ function AppFieldComposer({
   required,
   isDelete = false,
   onDelete,
+  onHide,
   onSelectField = () => {},
   dropDownOptions = [],
   config,
@@ -1204,6 +1220,7 @@ function AppFieldComposer({
   const { t } = useTranslation();
   const { state, dispatch } = useAppConfigContext();
   const componentRef = useRef(null);
+console.log(rest,config,'config');
 
   return (
     <div
@@ -1224,6 +1241,7 @@ function AppFieldComposer({
         required={required}
         isDelete={isDelete}
         onDelete={onDelete}
+        onHide={onHide}
         onSelectField={onSelectField}
         dropDownOptions={dropDownOptions}
         config={config}
