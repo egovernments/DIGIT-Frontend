@@ -152,7 +152,7 @@ const CampaignDetails = () => {
             text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
             info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
             actionLabel: "ES_CAMPAIGN_HOME",
-            actionLink: `/${window.contextPath}/employee/campaign/campaign-home`,
+            actionLink: `/${window.contextPath}/employee`,
           });
         },
         onError: (error, result) => {
