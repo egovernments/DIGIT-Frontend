@@ -51,7 +51,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 },
               ].map((i) => ({ ...i, code: `${i.moduleName}.${i.masterName}` }))}
               optionKey={"code"}
-              selected={drawerState?.moduleMaster || {}}
+              selected={drawerState?.[shouldShow?.bindTo] || {}}
               select={(value) => {
                 setDrawerState((prev) => ({
                   ...prev,
@@ -63,7 +63,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             shouldShow && shouldShow?.type === "radioOptions" ? (
               <RadioButtons // it should be changed to radio button
                 options={shouldShow?.options}
-                selected={drawerState?.moduleMaster || {}}
+                selectedOption={drawerState?.[shouldShow?.bindTo]?.code || null}
                 onSelect={(value) => {
                   setDrawerState((prev) => ({
                     ...prev,
