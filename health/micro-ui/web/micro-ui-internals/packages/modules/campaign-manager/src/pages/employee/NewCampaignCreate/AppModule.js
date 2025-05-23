@@ -1,12 +1,11 @@
 import { Card, HeaderComponent, Button, Footer, Loader, Toast } from "@egovernments/digit-ui-components";
-import { ArrowForward } from "@egovernments/digit-ui-svg-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
-import { camelCase, filter } from "lodash";
+
 const AppModule = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -166,6 +165,8 @@ const AppModule = () => {
       try {
         await Digit.CustomService.getResponse({
           url: `${url}/v2/_create/Workbench.UISchema`,
+
+          // url: `${url}/v2/_create/${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
           body: {
             Mdms: {
               tenantId,
@@ -197,9 +198,9 @@ const AppModule = () => {
       </div>
       <div className="modules-container">
         {modulesData?.mdms
-          ?.filter((module) => module?.data?.isDisabled === "false")
+          // ?.filter((module) => module?.data?.isDisabled === "false")
           .map((module, index) => (
-            <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>
+             <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>
               {selectedModuleCodes.includes(module?.data?.name) && (
                 <SVG.CheckCircle
                   fill={"#00703C"}
@@ -221,6 +222,7 @@ const AppModule = () => {
                 className={"campaign-module-button"}
                 type={"button"}
                 size={"large"}
+                isDisabled={module?.data?.isDisabled ==="true"}
                 variation={selectedModuleCodes.includes(module?.data?.name) ? "secondary" : "primary"}
                 label={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
                 onClick={() => handleSelectModule(module?.data?.name)}

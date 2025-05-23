@@ -146,7 +146,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
           return item;
         }),
       };
-    case "DELETE_FIELD":
+    case "HIDE_FIELD":  //added logic to hide fields in display
       return {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
@@ -157,7 +157,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                 if (j.header === action.payload.currentCard?.header) {
                   return {
                     ...j,
-                    fields: j.fields?.filter((k) => k.jsonPath !== action.payload.currentField.jsonPath),
+                    fields: j.fields?.map((k) => (k.jsonPath === action.payload.currentField.jsonPath?{...k,hidden:!k.hidden}:{...k})),
                   };
                 }
                 return j;
@@ -167,6 +167,27 @@ const reducer = (state = initialState, action, updateLocalization) => {
           return item;
         }),
       };
+    case "DELETE_FIELD":
+        return {
+          ...state,
+          screenData: state?.screenData?.map((item, index) => {
+            if (item?.name === action?.payload?.currentScreen?.name) {
+              return {
+                ...item,
+                cards: item?.cards?.map((j, k) => {
+                  if (j.header === action.payload.currentCard?.header) {
+                    return {
+                      ...j,
+                      fields: j.fields?.filter((k) => k.jsonPath !== action.payload.currentField.jsonPath),
+                    };
+                  }
+                  return j;
+                }),
+              };
+            }
+            return item;
+          }),
+        };
     case "UPDATE_HEADER_FIELD":
       updateLocalization(action?.payload?.localisedCode, Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN", action?.payload?.value);
       return {
