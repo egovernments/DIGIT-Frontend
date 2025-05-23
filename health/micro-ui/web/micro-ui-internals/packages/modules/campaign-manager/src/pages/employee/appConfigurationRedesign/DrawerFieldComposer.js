@@ -1,4 +1,4 @@
-import { Button, Dropdown, LabelFieldPair, PopUp, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, LabelFieldPair, PopUp, RadioButtons, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -7,7 +7,7 @@ import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 
-const whenToShow = (panelItem, drawerState) => {
+const whenToShow = (panelItem, drawerState) => {  
   if (!panelItem?.showFieldOnToggle || !drawerState?.[panelItem.label]) {
     return false;
   }
@@ -39,6 +39,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             isCheckedInitially={drawerState?.[panelItem.label] ? true : false}
             shapeOnOff
           />
+          {/* //todo again clean up this logic,  */}
           {shouldShow && shouldShow?.type === "MdmsDropdown" ? (
             <Dropdown
               variant={""}
@@ -59,6 +60,17 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               }}
             />
           ) : shouldShow ? (
+            (shouldShow && shouldShow?.type === "dropDown"? <RadioButtons // it should be changed to radio button
+              options={shouldShow?.options}
+              selected={drawerState?.moduleMaster || {}}
+              onSelect={(value) => {
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [shouldShow?.bindTo]: value,
+                }));
+              }}
+              optionsKey="code"
+            />:
             <TextInput
               isRequired={true}
               className=""
@@ -101,7 +113,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 }
               }}
               placeholder={""}
-            />
+            />)
           ) : null}
         </>
       );
