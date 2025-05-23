@@ -380,6 +380,12 @@ function DrawerFieldComposer() {
             );
           }
         })}
+        {/* // todo need to update and cleanup */}
+        {currentDrawerState?.every((panelItem, index) => !isFieldVisible(panelItem)) && (    
+              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+               No {currentDrawerState?.[0]?.tab} configured for this field type 
+              </div>
+        )}
         {/* {drawerState?.type === "dropdown" ? (
           <Switch
             label={"API Dropdown"}
