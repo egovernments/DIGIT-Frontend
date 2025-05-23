@@ -265,7 +265,7 @@ const AppConfigurationParentRedesign = () => {
         name: masterName,
         filter: `[?(@.project=='${campaignNumber}')]`,
       },
-      { name: fieldTypeMaster },
+      { name: fieldTypeMaster, limit: 100 },
     ],
     {
       cacheTime: Infinity,
@@ -392,6 +392,7 @@ const AppConfigurationParentRedesign = () => {
       // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
       const reverseFormat = {
         ...parentState?.actualTemplate,
+        version: parentState?.actualTemplate?.version + 1,
         pages: reverseData,
       };
 
@@ -416,7 +417,7 @@ const AppConfigurationParentRedesign = () => {
               message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
               preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
               actionLabel: "CS_HOME",
-              actionLink: `/${window.contextPath}/employee`,
+              actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
             });
           },
         }

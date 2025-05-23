@@ -283,7 +283,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName }, { name: "DrawerPanelConfig" }, { name: "DrawerPanelConfigOne" }],
+    [
+      { name: "AppScreenConfigTemplateSchema" },
+      { name: fieldMasterName, limit: 100 },
+      { name: "DrawerPanelConfig" },
+      { name: "DrawerPanelConfigOne", limit: 100 },
+    ],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
