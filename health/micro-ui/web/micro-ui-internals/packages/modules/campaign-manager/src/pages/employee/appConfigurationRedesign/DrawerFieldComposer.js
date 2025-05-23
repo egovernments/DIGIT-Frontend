@@ -76,7 +76,15 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               <TextInput
                 isRequired={true}
                 className=""
-                type={"text"}
+                type={
+                  shouldShow?.type === "number"
+                    ? "number"
+                    : shouldShow?.type === "datePicker"
+                    ? "date"
+                    : shouldShow?.type === "textArea"
+                    ? "textArea"
+                    : "text"
+                }
                 name="title"
                 value={
                   isLocalisable
