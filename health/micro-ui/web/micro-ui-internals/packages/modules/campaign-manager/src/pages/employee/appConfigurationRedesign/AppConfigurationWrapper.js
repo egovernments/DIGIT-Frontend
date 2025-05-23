@@ -116,12 +116,20 @@ const reducer = (state = initialState, action, updateLocalization) => {
               ...item,
               cards: item?.cards?.map((j, k, c) => {
                 if (j.header === action.payload.currentCard?.header) {
+                  const regex = new RegExp(`^${item?.name}_${j?.header}_NEW_FIELD_(\\d+)$`);
+                  const maxCounter = j.fields
+                    .map((f) => {
+                      const match = f.jsonPath && f.jsonPath.match(regex);
+                      return match ? parseInt(match[1], 10) : 0;
+                    })
+                    .reduce((max, curr) => Math.max(max, curr), 0);
+                  const nextCounter = maxCounter + 1;
                   return {
                     ...j,
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${j?.fields?.length + 1}`,
+                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
@@ -357,7 +365,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     }
 
     setShowPopUp(false);
-    console.info("LOCALISATION_UPSERT_SUCCESS")
+    console.info("LOCALISATION_UPSERT_SUCCESS");
     // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 

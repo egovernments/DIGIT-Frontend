@@ -194,7 +194,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           />
         </div>
       );
-    case "dropdown":
+    case "fieldTypeDropdown":
       return (
         <Dropdown
           // style={}
@@ -352,6 +352,23 @@ function DrawerFieldComposer() {
         }}
       />
       <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
+        {tabs?.find((i) => i.active)?.parent === "content" && (
+          <Dropdown
+            // style={}
+            variant={""}
+            t={t}
+            option={state?.MASTER_DATA?.AppFieldType}
+            optionKey={"type"}
+            selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
+            select={(value) => {
+              setDrawerState((prev) => ({
+                ...prev,
+                type: value?.fieldType,
+                appType: value?.type,
+              }));
+            }}
+          />
+        )}
         {currentDrawerState?.map((panelItem, index) => {
           if (isFieldVisible(panelItem)) {
             return (

@@ -261,7 +261,6 @@ const AppConfigurationParentRedesign = () => {
     [
       {
         name: masterName,
-        filter: `[?(@.project=='${campaignNumber}')]`,
       },
       { name: fieldTypeMaster },
     ],
