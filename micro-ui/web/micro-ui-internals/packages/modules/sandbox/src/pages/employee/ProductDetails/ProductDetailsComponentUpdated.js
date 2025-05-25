@@ -1,10 +1,9 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { HeaderComponent, Card, CardText, CardHeader, Button, } from "@egovernments/digit-ui-components";
 import { Row, Col } from "@egovernments/digit-ui-react-components";
 import { SVG } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
-
 
 const ProjectBreadCrumb = ({ location, defaultPath }) => {
     const { t } = useTranslation();
@@ -78,6 +77,12 @@ const renderContentItem = (item, itemIndex, module, t) => {
 
 const ProductDetailsComponentUpdated = ({ config, module }) => {
     const { t } = useTranslation();
+    const [activeTab, setActiveTab] = useState("citizen");
+
+    const iframeSrc =
+        activeTab === "citizen"
+            ? "https://example.com"
+            : "https://www.wikipedia.org";
 
     const moduleConfig = config?.find((item) => item.module === module) || {};
     const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon, "#c84c0e") : null;
@@ -90,8 +95,16 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     return (
         <div>
 
+            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '2rem 3rem' }}>
+                <nav class="nav-breadcrumb">
+                    <a href={`/${window?.contextPath}/employee/sandbox/productPage`} >Products</a>
+                    <span class="separator">/</span>
+                    <span class="current">Local Business License Issuing System</span>
+                </nav>
+            </div>
             <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
                 <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
+
                     {/* Left 60% */}
                     <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                         <h2 style={{ color: '#2c3e50', fontSize: '2rem', marginBottom: '1.5rem' }}>
@@ -157,6 +170,147 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                             </p>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            {/* Third Section */}
+
+            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
+                <div className="about-container-2">
+                    <div className="about-title-wrapper">
+                        <h2 className="about-title">Experience Local Business Issuing System</h2>
+                        <div className="title-underline-2"></div>
+                    </div>
+
+                    <p className="about-description">
+                        On Sandbox, the government employee has been set up as a super-user, with all employee roles being assigned to it.  For each user, a new browser tab will open with the appropriate interface. Please do not share any sensitive or private details as this instance of Local Business License Issuing System is shared across users.
+                    </p>
+
+                    <div className="cs-wrapper">
+                        <div className="cs-left">
+                            <h2 className="cs-title">Citizens</h2>
+
+                            <div className="cs-card">
+                                <img src="/icons/network.svg" alt="" className="cs-icon" />
+                                <span>Fill necessary details and upload relevant documents</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/form.svg" alt="" className="cs-icon" />
+                                <span>Track application(s) until issuance</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/payment.svg" alt="" className="cs-icon" />
+                                <span className="cs-italic">Make dummy online payments</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/download.svg" alt="" className="cs-icon" />
+                                <span className="cs-italic">Download sample license and payment receipts</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/notify.svg" alt="" className="cs-icon" />
+                                <span className="cs-italic">Get notifications through emails and SMS</span>
+                            </div>
+
+                            <button className="cs-button">Explore as a Citizen ➔</button>
+                        </div>
+
+                        <div className="cs-right">
+                            <img
+                                src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png"
+                                alt="UI"
+                                className="cs-image"
+                            />
+                        </div>
+                    </div>
+
+                    <div className="cs-wrapper">
+
+                        <div className="cs-right">
+                            <img
+                                src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png"
+                                alt="UI"
+                                className="cs-image"
+                            />
+                        </div>
+                        <div className="cs-left">
+                            <h2 className="cs-title">Employee</h2>
+
+                            <div className="cs-card">
+                                <img src="/icons/network.svg" alt="" className="cs-icon" />
+                                <span>Track applications based on SLAs</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/form.svg" alt="" className="cs-icon" />
+                                <span>Verify documents and conduct field verification</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/payment.svg" alt="" className="cs-icon" />
+                                <span className="cs-italic">Take action at each step and assign forward</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/download.svg" alt="" className="cs-icon" />
+                                <span className="cs-italic">Leave comments on document verification and field verification</span>
+                            </div>
+
+                            <div className="cs-card">
+                                <img src="/icons/notify.svg" alt="" className="cs-icon" />
+                                <span className="cs-italic">Review performance through the Dashboard</span>
+                            </div>
+
+                            <button className="cs-button">Explore as a Employee ➔</button>
+                        </div>
+
+                    </div>
+
+
+
+
+
+                </div>
+            </div>
+
+            {/* Fourth Section */}
+            <div className="walkthrough-container"
+             style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}
+            >
+                <div className="wt-c1">
+                    <h2 className="wt-title">Walkthrough on Sandbox</h2>
+                    <p className="wt-subtitle">
+                        Learn how to navigate and use the product on Sandbox.
+                    </p>
+                </div>
+                
+                <div className="wt-tabs-center wt-tabs-and-iframe">
+                    <div className="wt-tab-wrapper">
+                        <div
+                            className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`}
+                            onClick={() => setActiveTab("citizen")}
+                        >
+                            Citizen
+                        </div>
+                        <div
+                            className={`wt-tab ${activeTab === "employee" ? "active" : ""}`}
+                            onClick={() => setActiveTab("employee")}
+                        >
+                            Employee
+                        </div>
+                    </div>
+
+                    <div className="wt-iframe-wrapper">
+                        <iframe
+                            src={iframeSrc}
+                            title="Digit Sandbox"
+                            className="wt-iframe"
+                        ></iframe>
+                    </div>
+                
                 </div>
             </div>
         </div>

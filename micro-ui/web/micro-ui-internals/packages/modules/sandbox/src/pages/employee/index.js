@@ -21,6 +21,8 @@ import RoleLanding from "./RoleLanding";
 const bredCrumbStyle = { maxWidth: "min-content" };
 
 const ProjectBreadCrumb = ({ location, defaultPath }) => {
+  console.log(defaultPath,"defaultPath");
+  
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
   const module = location.pathname.split('/').pop();
@@ -62,16 +64,16 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
 const App = ({ path, stateCode, userType, tenants }) => {
   const location = useLocation();
 
-  const hideBreadcrumb =
+  const hideClass =
     location.pathname.includes(`${path}/productDetailsPageUpdated/`);
+    console.log(hideClass,"hideClass");
+    
   return (
     <div className="employee-ui">
       <Switch>
-        <AppContainer className="ground-container">
+        <AppContainer className= {hideClass ? "" : "ground-container" }>
           <React.Fragment>
-            {!hideBreadcrumb == true ? (
-              <ProjectBreadCrumb location={location} defaultPath={path} />) : <div></div>}
-
+            <ProjectBreadCrumb location={location} defaultPath={path} />
           </React.Fragment>
           <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse />} />
           <PrivateRoute path={`${path}/tenant-create`} component={() => <SandboxCreate />} />

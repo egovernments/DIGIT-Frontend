@@ -5,8 +5,9 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { useParams } from "react-router-dom";
 
 
-const ProductDetails = () => {
+const ProductDetails = ({path}) => {
   const { module } = useParams();
+  
 
   const { data: config , isLoading} = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -27,8 +28,8 @@ const ProductDetails = () => {
   if(isLoading) return <Loader variant={"PageLoader"} />;
 
   return (
-    <ProductDetailsComponent config={config} module={module}/>
-    // <ProductDetailsComponentUpdated config={config} module={module}/>
+    // <ProductDetailsComponent config={config} module={module}/>
+    <ProductDetailsComponentUpdated config={config} module={module}/>
   );
     
 };
