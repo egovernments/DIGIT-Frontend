@@ -1,5 +1,6 @@
 import React from "react";
 import ProductDetailsComponent from "./ProductDetailsComponent";
+import ProductDetailsComponentUpdated from "./ProductDetailsComponentUpdated";
 import { Loader } from "@egovernments/digit-ui-components";
 import { useParams } from "react-router-dom";
 
@@ -27,6 +28,7 @@ const ProductDetails = () => {
 
   return (
     <ProductDetailsComponent config={config} module={module}/>
+    // <ProductDetailsComponentUpdated config={config} module={module}/>
   );
     
 };

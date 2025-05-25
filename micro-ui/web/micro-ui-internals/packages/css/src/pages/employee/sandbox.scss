@@ -1269,6 +1269,7 @@ digit-card-text.center {
   width: 100%;
 }
 
+
 .icon-header-container {
   display: flex;
   align-items: center;
@@ -1290,4 +1291,78 @@ digit-card-text.center {
   height: auto;
   border-radius: 8px;
   /* Optional styling */
+}
+
+.explore-button-updated {
+  border: solid 1px #efefef00 !important;
+  border-radius: 5px !important;
+  margin-top: auto;
+  font-weight: bold;
+  width: 100%;
+}
+
+
+.about-container {
+  background-color: white;
+  padding: 3rem 1rem;
+  width: 100% !important;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+
+.about-title {
+  font-size: 1.75rem;
+  font-weight: bold;
+  color: #2c3e50;
+  text-align: center;
+  margin-bottom: 0.5rem;
+}
+
+.about-description {
+  color: #2c3e50;
+  font-size: 1rem;
+  line-height: 1.75;
+  text-align: left;
+  margin-bottom: 1.5rem;
+  width: 100%;
+  max-width: 900px;
+}
+.roles-section {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  align-items: flex-start;
+}
+
+.role-block {
+  display: flex;
+  align-items: center !important; /* Vertical alignment */
+  gap: 1rem;
+  max-width: 800px;
+}
+
+.role-icon-wrapper {
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.role-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.title-underline {
+  border-radius: 10px !important;
+  max-width: 40rem !important;
+  height: 4px;
+  background-color: #e0e0e091;
+  margin: 0 auto 2rem;
 }
