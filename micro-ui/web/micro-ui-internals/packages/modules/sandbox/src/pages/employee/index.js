@@ -109,7 +109,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <React.Fragment>
             <PrivateRoute path={`${path}/productDetailsPageUpdated/:module`}>
               <div>
-                <ProductDetails />
+                <ProductDetails isUpdated={true}/>
               </div>
             </PrivateRoute>
           </React.Fragment>
