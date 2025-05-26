@@ -28,8 +28,8 @@ cd "$BASEDIR/packages/react-components" && rm -rf dist && yarn && npm publish --
 msg "Building and publishing libraries"
 cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --tag workbench-1.1
 
-msg "  digit-ui-module-core"
-cd "$BASEDIR/packages/modules/core" && rm -rf dist && yarn && npm publish --tag workbench-1.1
+msg "Building and publishing Core"
+cd "$BASEDIR/packages/modules/core" && rm -rf dist && yarn && npm publish --access public
 
 
 
