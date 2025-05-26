@@ -44,21 +44,20 @@ const CampaignHome = () => {
         <div
           className={"cardStyle"}
           onClick={() => {
-            // Add functionality for importing existing campaign
-          }}
-        >
-          <SVG.SystemUpdateAlt width="40" height="40" />
-          <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
-        </div>
-
-        <div
-          className={"cardStyle"}
-          onClick={() => {
             setShowPopUp(true);
           }}
         >
           <NewWindow />
           <div className={"descStyle"}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
+        </div>
+        <div
+          className={"cardStyle"}
+          onClick={() => {
+            // Add functionality for importing existing campaign
+          }}
+        >
+          <SVG.SystemUpdateAlt width="40" height="40" />
+          <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
       </div>
       {showPopUp && (
@@ -80,7 +79,7 @@ const CampaignHome = () => {
               type={"button"}
               size={"large"}
               variation={"primary"}
-              label={t("HCM_BOUNDARY_CLOSE")}
+              label={t("HCM_CAMPAIGN_PROCEED")}
               onClick={() => {
                 history.push(`/${window.contextPath}/employee/campaign/create-campaign`);
               }}
