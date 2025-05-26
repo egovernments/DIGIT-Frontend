@@ -165,7 +165,6 @@ const AppConfigurationParentRedesign = () => {
       isSubmit: stepper?.find((i) => i.active)?.isLast ? true : false,
     });
     if (stepper?.find((i) => i.active)?.isLast) {
-      debugger;
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;
