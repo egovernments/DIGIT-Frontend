@@ -10,7 +10,7 @@ const ProductDeliveryComponent = (props) => {
         url: "/product/v1/_search",
         changeQueryName:props.projectId,
         params: {
-            tenantId : "mz",
+            tenantId : window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba",
             offset: 0,
             limit: 10,
         },

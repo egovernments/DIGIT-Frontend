@@ -12,7 +12,7 @@ const ProjectBeneficiaryComponent = (props) => {
     url: `${url}/resource/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba",
       offset: 0,
       limit: 10,
     },
@@ -43,7 +43,7 @@ const ProjectBeneficiaryComponent = (props) => {
   const productVariantRequest = {
     url: "/product/variant/v1/_search",
     params: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba",
       offset: 0,
       limit: 10,
     },
@@ -71,7 +71,7 @@ const ProjectBeneficiaryComponent = (props) => {
     url: "/product/v1/_search",
     changeQueryName: productIds,
     params: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba",
       offset: 0,
       limit: 10,
     },

@@ -181,7 +181,7 @@ export const UICustomizations = {
       const textConfig = paths[id]?.textConfig;
 
       if (paths[id].basePath == "Projects") {
-        data.state.searchForm = { ...data.state.searchForm, tenantId: "mz" };
+        data.state.searchForm = { ...data.state.searchForm, tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba" };
       }
       let Product = Object.keys(requestBody)
         .map((key) => {

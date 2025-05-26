@@ -10,7 +10,7 @@ const FacilityComponent = (props) => {
     url: `${url}/facility/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba",
       offset: 0,
       limit: 10,
     },
@@ -31,7 +31,7 @@ const FacilityComponent = (props) => {
     url: "/facility/v1/_search",
     changeQueryName: projectFacility?.ProjectFacilities?.[0]?.facilityId,
     params: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "ba",
       offset: 0,
       limit: 10,
     },
