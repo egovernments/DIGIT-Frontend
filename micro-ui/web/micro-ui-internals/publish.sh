@@ -24,6 +24,7 @@ cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --access 
 
 
 
+
 # sleep 10
 # msg "Updating dependencies"
 # cd "$BASEDIR" && yarn upgrade -S @egovernments
