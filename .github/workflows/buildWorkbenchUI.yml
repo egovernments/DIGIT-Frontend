@@ -3,7 +3,7 @@ on:
   push:
     branches: [ 'develop','console-arm','master']
     paths:
-      - 'micro-ui/web/micro-ui-internals/**'
+      - 'health/micro-ui/web/micro-ui-internals/**'
   workflow_dispatch:
 
 jobs:
