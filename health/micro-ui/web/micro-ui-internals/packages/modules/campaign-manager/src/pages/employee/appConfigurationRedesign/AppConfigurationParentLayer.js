@@ -169,7 +169,7 @@ const AppConfigurationParentRedesign = () => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;
       });
-      const reverseData = reverseRestructure(parentState?.currentTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
+      const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
       // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
       const reverseFormat = {
         ...parentState?.actualTemplate,
