@@ -5,42 +5,7 @@ import { SVG } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 
-const ProjectBreadCrumb = ({ location, defaultPath }) => {
-    const { t } = useTranslation();
-    const searchParams = new URLSearchParams(location.search);
-    const module = location.pathname.split('/').pop();
-    const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
 
-    const crumbs = [
-        {
-            path: `/${window?.contextPath}/employee/sandbox/landing`,
-            content: t("HOME"),
-            show: true,
-        },
-        {
-            path: `/${window?.contextPath}/employee/sandbox/productPage`,
-            content: t("SANDBOX_PRODUCTS"),
-            show: location.pathname.includes("productDetailsPage") || location.pathname.includes("productPage") ? true : false,
-        },
-        {
-            path: `/${window?.contextPath}/employee/sandbox/productDetailsPage/${module}`,
-            content: t(`${module.toUpperCase()}_PRODUCT_DETAILS_HEADER`),
-            show: location.pathname.includes("productDetailsPage") ? true : false,
-        },
-        {
-            path: pathVar === "application-management/home" ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
-            content: t("APPLICATION_MANAGEMENT_CRUMB"),
-            show: false,
-        },
-        {
-            path: searchParams.get("module") ? "" : `/${window?.contextPath}/employee/sandbox/application-management/home`,
-            content: t(`APPLICATON_MODULE_CRUMB_${searchParams.get("module")}`),
-            show: !!searchParams.get("module"),
-        },
-    ];
-
-    return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
-};
 
 
 const renderContentItem = (item, itemIndex, module, t) => {
@@ -102,15 +67,15 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                     <span class="current">Local Business License Issuing System</span>
                 </nav>
             </div>
-            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
+            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem',minHeight: '35rem' }}>
                 <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
 
                     {/* Left 60% */}
                     <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <h2 style={{ color: '#2c3e50', fontSize: '2rem', marginBottom: '1.5rem' }}>
+                        <h2 style={{ color: '#2c3e50', fontSize: '2.5rem', marginBottom: '1.5rem' }}>
                             Local Business License Issuing System
                         </h2>
-                        <p style={{ fontSize: '2.50rem', fontWeight: 'bold', lineHeight: '1.3' }}>
+                        <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3' }}>
                             <span style={{ color: '#34495e' }}>Get your </span>
                             <span style={{ color: '#b24b2d' }}>business </span>
                             <span style={{ color: '#b24b2d' }}>license issued </span>
@@ -119,11 +84,11 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                     </div>
 
                     {/* Right 40% */}
-                    <div style={{ width: '50%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                    <div style={{ width: '65%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                         <img
                             src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/5e72d0b559dea9fc2f5ff2bd4c66c63c3aff8bcc.png"
                             alt="Business License UI"
-                            style={{ height: '100%', width: 'auto', objectFit: 'contain' }}
+                            style={{ height: '100%', width: 'auto', objectFit: 'contain',minHeight: '35rem' }}
                         />
                     </div>
                 </div>

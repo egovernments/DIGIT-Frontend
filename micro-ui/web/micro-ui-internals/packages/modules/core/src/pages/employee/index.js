@@ -123,7 +123,7 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar ?  `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+          <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
             <div className="employee-app-wrapper digit-home-app-wrapper">
               <ErrorBoundary initData={initData}>
                 <AppModules
@@ -150,6 +150,13 @@ const EmployeeApp = ({
             {
               isSuperUserWithMultipleRootTenant && <Redirect to={`${path}/sandbox/productPage`} />}
           </Route> */}
+          <Route exact path={path}>
+            {({ location }) =>
+              isSuperUserWithMultipleRootTenant && location.pathname === path ? (
+                <Redirect to={`${path}/sandbox/productPage`} />
+              ) : null
+            }
+          </Route>
         </Route>
         <Route>
           <Redirect to={`${path}/user/language-selection`} />
