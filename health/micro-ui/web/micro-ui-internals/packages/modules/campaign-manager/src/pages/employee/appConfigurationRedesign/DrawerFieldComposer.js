@@ -127,6 +127,37 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               />
             )
           ) : null}
+          {shouldShow && shouldShow?.showErrorMessage ? (
+            <TextInput
+              isRequired={true}
+              className=""
+              type={"text"}
+              name="title"
+              value={useCustomT(drawerState?.[shouldShow?.bindTo]?.message)}
+              onChange={(event) => {
+                updateLocalization(
+                  drawerState?.[shouldShow?.bindTo]?.message && drawerState?.[shouldShow?.bindTo]?.message !== true
+                    ? drawerState?.[shouldShow?.bindTo]?.message
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_errorMessage_${
+                        drawerState?.jsonPath || drawerState?.id
+                      }`,
+                  Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                  event.target.value
+                );
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [shouldShow?.bindTo]: {
+                    ...prev[shouldShow?.bindTo],
+                    message: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_errorMessage_${
+                      drawerState?.jsonPath || drawerState?.id
+                    }`,
+                  },
+                }));
+                return;
+              }}
+              placeholder={""}
+            />
+          ) : null}
         </>
       );
     case "options":
