@@ -15,7 +15,7 @@ import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import ImageComponent from "../../components/ImageComponent";
-const userScreensExempted = ["user/landing", "user/profile", "user/error","user/productPage"];
+const userScreensExempted = ["user/landing", "user/profile", "user/error", "user/productPage"];
 
 const EmployeeApp = ({
   stateInfo,
@@ -33,9 +33,9 @@ const EmployeeApp = ({
   sourceUrl,
   pathname,
   initData,
-  noTopBar=false
+  noTopBar = false
 }) => {
-  
+
 
   const history = useHistory();
   const { t } = useTranslation();
@@ -48,7 +48,7 @@ const EmployeeApp = ({
   }, []);
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
-
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
   return (
     <div className="employee">
       <Switch>
@@ -109,9 +109,9 @@ const EmployeeApp = ({
               </Route>
             </Switch>
           </div>
-        </Route> 
-       <Route>
-          {!noTopBar&&<TopBarSideBar
+        </Route>
+        <Route>
+          {!noTopBar && <TopBarSideBar
             t={t}
             stateInfo={stateInfo}
             userDetails={userDetails}
@@ -123,7 +123,7 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar?`main ${DSO ? "m-auto" : ""} digit-home-main`:""}>
+          <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
             <div className="employee-app-wrapper digit-home-app-wrapper">
               <ErrorBoundary initData={initData}>
                 <AppModules
@@ -146,6 +146,17 @@ const EmployeeApp = ({
               />
             </div>
           </div>
+          {/* <Route>
+            {
+              isSuperUserWithMultipleRootTenant && <Redirect to={`${path}/sandbox/productPage`} />}
+          </Route> */}
+          <Route exact path={path}>
+            {({ location }) =>
+              isSuperUserWithMultipleRootTenant && location.pathname === path ? (
+                <Redirect to={`${path}/sandbox/productPage`} />
+              ) : null
+            }
+          </Route>
         </Route>
         <Route>
           <Redirect to={`${path}/user/language-selection`} />

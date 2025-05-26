@@ -35,9 +35,12 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
       </Route>
     );
   });
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+   const hideClass =
+    location.pathname.includes(`${path}/productDetailsPageUpdated/`);
 
   return (
-    <div className="ground-container digit-home-ground">
+    <div className={isSuperUserWithMultipleRootTenant ? "" : "ground-container digit-home-ground"}>
       <Switch>
         {appRoutes}
         <Route path={`${path}/login`}>
