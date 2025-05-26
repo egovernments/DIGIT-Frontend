@@ -43,6 +43,7 @@ const EmployeeApp = ({
   const location = useLocation();
   const showLanguageChange = location?.pathname?.includes("language-selection");
   const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
   useEffect(() => {
     Digit.UserService.setType("employee");
   }, []);
@@ -146,6 +147,13 @@ const EmployeeApp = ({
               />
             </div>
           </div>
+        </Route>
+        <Route exact path={path}>
+          {({ location }) =>
+            isSuperUserWithMultipleRootTenant && location.pathname === path ? (
+              <Redirect to={`${path}/sandbox/productPage`} />
+            ) : null
+          }
         </Route>
         <Route>
           <Redirect to={`${path}/user/language-selection`} />
