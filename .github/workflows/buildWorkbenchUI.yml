@@ -52,8 +52,8 @@ jobs:
       - name: Build and Push Docker image for core-ui
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
         run: |
-          IMAGE_NAME=core-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker build -t $IMAGE_NAME -f web/core/Dockerfile .
+          IMAGE_NAME=workbench-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME -f web/workbench/Dockerfile .
           docker tag $IMAGE_NAME egovio/$IMAGE_NAME
           docker push egovio/$IMAGE_NAME
 
