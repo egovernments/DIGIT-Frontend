@@ -6,6 +6,7 @@ import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
+import Tabs from "./Tabs";
 
 const whenToShow = (panelItem, drawerState) => {
   if (!panelItem?.showFieldOnToggle || !drawerState?.[panelItem.label]) {
@@ -126,6 +127,37 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               />
             )
           ) : null}
+          {shouldShow && shouldShow?.showErrorMessage ? (
+            <TextInput
+              isRequired={true}
+              className=""
+              type={"text"}
+              name="title"
+              value={useCustomT(drawerState?.[shouldShow?.bindTo]?.message)}
+              onChange={(event) => {
+                updateLocalization(
+                  drawerState?.[shouldShow?.bindTo]?.message && drawerState?.[shouldShow?.bindTo]?.message !== true
+                    ? drawerState?.[shouldShow?.bindTo]?.message
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_errorMessage_${
+                        drawerState?.jsonPath || drawerState?.id
+                      }`,
+                  Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                  event.target.value
+                );
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [shouldShow?.bindTo]: {
+                    ...prev[shouldShow?.bindTo],
+                    message: `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem.label}_errorMessage_${
+                      drawerState?.jsonPath || drawerState?.id
+                    }`,
+                  },
+                }));
+                return;
+              }}
+              placeholder={""}
+            />
+          ) : null}
         </>
       );
     case "options":
@@ -238,24 +270,6 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       return null;
       break;
   }
-};
-
-const Tabs = ({ numberTabs, onTabChange }) => {
-  const { t } = useTranslation();
-  return (
-    <div className="configure-app-tabs">
-      {numberTabs.map((_, index) => (
-        <button
-          key={index}
-          type="button"
-          className={`configure-app-tab-head ${_.active === true ? "active" : ""} hover`}
-          onClick={() => onTabChange(_, index)}
-        >
-          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(_.parent)}</p>
-        </button>
-      ))}
-    </div>
-  );
 };
 
 function DrawerFieldComposer() {
