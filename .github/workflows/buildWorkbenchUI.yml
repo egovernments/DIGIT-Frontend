@@ -5,6 +5,7 @@ on:
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
   workflow_dispatch:
+
 jobs:
   docker_image-build:
     outputs:
@@ -15,8 +16,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           fetch-depth: 2
+
       - name: Setup Docker
         uses: docker/setup-buildx-action@v1
+
       - name: check modified files
         id: check_files
         run: |
@@ -34,65 +37,37 @@ jobs:
             fi
           done < files.txt
 
-          # Set the output based on whether the job should run
           echo "::set-output name=run_job_digit_ui::$run_job_digit_ui"
           echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV  # Extract last 8 characters of SHA
+          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Login to egovio docker Container Registry
         env:
-            DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-            DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |      
-          # Authenticate with Docker Hub
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
           echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
 
-      - name: Build and Push Docker images for digit-ui
+      - name: Build and Push Docker image for core-ui
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
         run: |
-          # workbench ui Docker build
-          IMAGE_NAME_1=core-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker build -t $IMAGE_NAME_1 -f web/core/Dockerfile . &
+          IMAGE_NAME=core-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME -f web/core/Dockerfile .
+          docker tag $IMAGE_NAME egovio/$IMAGE_NAME
+          docker push egovio/$IMAGE_NAME
 
-          # microplan ui Docker build
-          IMAGE_NAME_2=core-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker build -t $IMAGE_NAME_2 -f web/core/Dockerfile . &
-          
-          # Wait for both builds to complete
-          wait
-
-          # Tag and push Docker images after both builds complete
-          docker tag $IMAGE_NAME_1 egovio/$IMAGE_NAME_1
-          docker push egovio/$IMAGE_NAME_1
-
-
-          docker tag $IMAGE_NAME_2 egovio/$IMAGE_NAME_2
-          docker push egovio/$IMAGE_NAME_2
-          
-          # Set outputs for the summary
-          echo "IMAGE_NAME_1=egovio/$IMAGE_NAME_1" >> $GITHUB_ENV
-          echo "IMAGE_NAME_2=egovio/$IMAGE_NAME_2" >> $GITHUB_ENV          
+          echo "IMAGE_NAME=egovio/$IMAGE_NAME" >> $GITHUB_ENV
         working-directory: micro-ui
 
-      - name: Display Docker images in Actions tab
-        run: |
-          echo "First Docker image: ${{ env.IMAGE_NAME_1 }}"
-          echo "Second Docker image: ${{ env.IMAGE_NAME_2 }}"
-          echo "::set-output name=first_image::$IMAGE_NAME_1"
-          echo "::set-output name=second_image::$IMAGE_NAME_2"
-        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
-
-      - name: Show Docker images in job summary
+      - name: Display Docker image in Actions tab
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
         run: |
-          echo "## Docker images built and pushed:" >> $GITHUB_STEP_SUMMARY
-          echo "- ${{ env.IMAGE_NAME_1 }}" >> $GITHUB_STEP_SUMMARY
-          echo "- ${{ env.IMAGE_NAME_2 }}" >> $GITHUB_STEP_SUMMARY
+          echo "Built Docker image: ${{ env.IMAGE_NAME }}"
+          echo "::set-output name=image_name::$IMAGE_NAME"
 
-
-
-
-
-
-
+      - name: Show Docker image in job summary
+        if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
+        run: |
+          echo "## Docker image built and pushed:" >> $GITHUB_STEP_SUMMARY
+          echo "- ${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
