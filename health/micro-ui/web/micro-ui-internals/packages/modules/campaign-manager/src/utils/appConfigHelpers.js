@@ -100,6 +100,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         ?.map((field, index) => ({
           label: field.label || "",
           value: field.value || "",
+          defaultValue: field.value ? true : false,
           active: true,
           jsonPath: field.fieldName || "",
           metaData: {},
