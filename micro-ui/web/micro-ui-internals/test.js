@@ -1,3 +1,4 @@
+
 const middleWare_1 = (data, _break, _next) => {
   data.a = "a";
   _next(data);
