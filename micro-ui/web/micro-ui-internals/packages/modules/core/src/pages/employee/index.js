@@ -11,6 +11,7 @@ import EmployeeLogin from "./Login";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-react-components";
+import AutoLogin from "./Login/AutoLogin";
 
 const userScreensExempted = ["user/profile", "user/error"];
 
@@ -71,6 +72,9 @@ const EmployeeApp = ({
             <Switch>
               <Route path={`${path}/user/login`}>
                 <EmployeeLogin />
+              </Route>
+              <Route path={`${path}/user/auto-login`}>
+                <AutoLogin/>
               </Route>
               <Route path={`${path}/user/forgot-password`}>
                 <ForgotPassword />

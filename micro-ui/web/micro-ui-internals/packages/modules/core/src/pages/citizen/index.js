@@ -16,6 +16,8 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
+import AutoLogin from "./Login/AutoLogin";
+
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -192,7 +194,9 @@ const Home = ({
           <Route path={`${path}/login`}>
             <Login stateCode={stateCode} />
           </Route>
-
+          <Route path={`${path}/auto-login`}>
+            <AutoLogin stateCode={stateCode} />
+          </Route>
           <Route path={`${path}/register`}>
             <Login stateCode={stateCode} isUserRegistered={false} />
           </Route>
