@@ -89,9 +89,41 @@ const BillDetailsTable = ({ ...props }) => {
                 ),
                 selector: (row) => {
                     return (
-                        <div className="ellipsis-cell" title={t(row?.name) || t("NA")}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                        <span className="ellipsis-cell" title={t(row?.name) || t("NA")} style={{ marginRight: "8px" }}>
                             {t(row?.name) || t("NA")}
-                        </div>
+                        </span>
+                            {props?.status === "NOT_VERIFIED"?(
+                                <div style={{ display: "flex", alignItems: "center" }}>
+                                {props?.editBill?
+                               ( <Button
+                                style={{ minWidth: "auto" }}
+                                variation="secondary"
+                                size="small"
+                                icon="Edit"
+                                // onClick={() => {
+                                //     history.push(`/digit-ui/employee/health/payments/edit/${row?.id}`);
+                                // }}
+                                />):({})
+}
+                                <div style={{color: "#B91900" }}>
+                                <Button
+                                style={{ minWidth: "auto", color:"#B91900", paddingLeft: "0.5rem", cursor: "arrow" }}
+                                variation="teritiary"
+                                size="medium"
+                                icon="Error"
+                                iconFill="#B91900"
+                                // isDisabled={true}
+                                // onClick={() => {
+                                //     history.push(`/digit-ui/employee/health/payments/edit/${row?.id}`);
+                                // }}
+                                />
+                                </div>
+                                </div>
+                            ):(
+                                    []
+                                )}
+                    </div>
                     );
                 },
             },           

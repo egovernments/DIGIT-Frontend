@@ -110,14 +110,11 @@ const UploadAndFetchBillsCard = () => {
             // heading="BILLS"
             onOverlayClick={closePopUp}
             onClose={closePopUp}
-            style={{
-              // padding: "rem",
-    width: "90vw", // 90% of viewport width
-    maxWidth: "1200px", // optional cap
-    height: "75vh", // or set a specific height if needed
-    maxHeight: "75vh", // optional cap to prevent overflow
-    // overflow: "auto" // ensures scroll if content is still large
-   
+             style={{
+    width: "100vw",
+    maxWidth: "1800px",
+    height: "85vh",
+    maxHeight: "85vh"
   }}
   footerChildren={[
     <Button
@@ -143,16 +140,14 @@ const UploadAndFetchBillsCard = () => {
     />
 ]}
           >
-            <FetchBills 
+            {/* TODO: REPLACE WITH MyBills */}
+            <MyBills 
             onSelectionChange={setSelectedBills}
+            isSelectableRows={true}
             style={{
-              // padding: "rem",
-              // width: "90vw", 
-              // maxWidth: "1200px", 
-              height: "45vh",
-              maxHeight: "45vh", 
-              // overflow: "auto"
-  }}/>
+      height: "60vh",
+      maxHeight: "60vh"
+    }}/>
           </PopUp>
         )}
       </div>
@@ -161,6 +156,7 @@ const UploadAndFetchBillsCard = () => {
           <Button
             icon="ArrowBack"
             label={t("HCM_AM_BACK_LABEL")}
+            onClick={() => history.push(`/${window.contextPath}/employee`)}
             style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
             type="button"
             variation="secondary"

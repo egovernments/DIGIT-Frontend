@@ -7,7 +7,7 @@ import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 
-const MyBills = () => {
+const MyBills = (props) => {
 
     const { t } = useTranslation();
     const location = useLocation();
@@ -102,7 +102,7 @@ const MyBills = () => {
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} totalCount={totalCount} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} totalCount={totalCount} onSelectionChange={props?.onSelectionChange} isSelectableRows={props?.isSelectableRows} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
             </Card>
 

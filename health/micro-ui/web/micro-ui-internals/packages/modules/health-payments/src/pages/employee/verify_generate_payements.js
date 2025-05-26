@@ -7,13 +7,15 @@ import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
 import VerifyAndGeneratePaymentsTable from "../../components/VerifyAndGeneratePaymentsTable";
-
+import { useSelector } from "react-redux";
 const VerifyAndGeneratePayments = () => {
 
     const { t } = useTranslation();
     const location = useLocation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const selectedBills = location.state?.selectedBills || [];
+    // const selectedBills = useSelector((state) => state.payments.selectedBills);
+
     console.log("selectedBills", selectedBills);
     // context path variables
     const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
@@ -104,7 +106,7 @@ const VerifyAndGeneratePayments = () => {
             <VerifyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {<VerifyAndGeneratePaymentsTable data={tableData} totalCount={totalCount} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                {<VerifyAndGeneratePaymentsTable editBill={true} data={selectedBills}  totalCount={selectedBills.length} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
             </Card>
 

@@ -66,7 +66,39 @@ const FetchBills = (props) => {
             "localityCode": "Locality 1",
         },
         {
+            "billNumber": "133456",
+            "billDate": 1698307200000,
+            "additionalDetails": {
+                "noOfRegisters": 5,
+            },
+            "localityCode": "Locality 1",
+        },
+        {
+            "billNumber": "123446",
+            "billDate": 1698307200000,
+            "additionalDetails": {
+                "noOfRegisters": 5,
+            },
+            "localityCode": "Locality 1",
+        },
+        {
+            "billNumber": "122056",
+            "billDate": 1698307200000,
+            "additionalDetails": {
+                "noOfRegisters": 5,
+            },
+            "localityCode": "Locality 1",
+        },
+        {
             "billNumber": "123456",
+            "billDate": 1698307200000,
+            "additionalDetails": {
+                "noOfRegisters": 5,
+            },
+            "localityCode": "Locality 1",
+        },
+        {
+            "billNumber": "173456",
             "billDate": 1698307200000,
             "additionalDetails": {
                 "noOfRegisters": 5,
@@ -88,9 +120,9 @@ const FetchBills = (props) => {
     }
 
     useEffect(() => {
-        if (BillData1) {
-            setTableData(BillData1.bills);
-            setTotalCount(BillData1.bills.length);
+        if (BillData) {
+            setTableData(BillData.bills);
+            setTotalCount(BillData.bills.length);
         }
     }, [BillData])
 
@@ -133,7 +165,7 @@ const FetchBills = (props) => {
             //     marginTop: "1rem"
             // }}
             >
-                {isFetching ? <Loader />: <MyBillsTable data={tableData} onSelectionChange={props?.onSelectionChange} totalCount={totalCount} isSelectableRows={true} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                {isFetching ? <Loader />: <MyBillsTable data={tableData} onSelectionChange={props?.onSelectionChange} totalCount={totalCount} isSelectableRows={props?.isSelectableRows} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
                     
             </Card>

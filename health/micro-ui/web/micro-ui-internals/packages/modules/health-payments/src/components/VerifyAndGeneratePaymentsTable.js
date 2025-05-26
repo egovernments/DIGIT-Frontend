@@ -75,7 +75,8 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                     return (
                         <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}
                         onClick={() => {
-                            history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`                                
+                            //view bill/edit bill
+                            history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`                                
                             );
                         }}
                         style={{ color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}>
@@ -225,7 +226,7 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                     const billId = row?.billNumber;
                     const isLastRow = index === props.totalCount - 1;
 
-                    return (
+                    return (!props?.editBill?(
                         reportDetails?.status === "COMPLETED" ? <Button
                             className="custom-class"
                             iconFill=""
@@ -280,7 +281,17 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                                     style={{}}
                                     {...(reportDetails?.status === "FAILED" && { type: "error" })}
                                 />
-                            </div>
+                            </div>):(
+                                <Button
+                            className="custom-class"
+                            iconFill=""
+                            variation="secondary"
+                            icon="Edit"
+                            size="small"
+                            isSuffix
+                            label={t(`HCM_AM_EDIT_BILL`)}
+                            title={t(`HCM_AM_EDIT_BILL`)}/>
+                            )
                     );
                 },
                 width: "300px",
@@ -303,7 +314,7 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
             <DataTable
             className="search-component-table"
                 columns={columns}
-                data={bills}
+                data={props?.data}
                 pagination
                 paginationServer
                 customStyles={tableCustomStyle(false)}
