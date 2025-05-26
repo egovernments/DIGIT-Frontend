@@ -31,7 +31,7 @@ jobs:
           run_job_digit_ui=false
           while IFS= read -r file
           do
-            if [[ $file == micro-ui/* ]]; then
+            if [[ $file == health/micro-ui/* ]]; then
               echo "This modified file is under the 'digit_ui' folder."
               run_job_digit_ui=true
             fi
@@ -58,7 +58,7 @@ jobs:
           docker push egovio/$IMAGE_NAME
 
           echo "IMAGE_NAME=egovio/$IMAGE_NAME" >> $GITHUB_ENV
-        working-directory: micro-ui
+        working-directory: health/micro-ui
 
       - name: Display Docker image in Actions tab
         if: ${{ steps.check_files.outputs.run_job_digit_ui == 'true' }}
