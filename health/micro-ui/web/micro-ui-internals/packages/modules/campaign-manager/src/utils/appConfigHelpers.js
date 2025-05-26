@@ -68,10 +68,27 @@ const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
   // Handle attributeToRename: { targetKey: sourceKey }
   if (matched.attributeToRename) {
     Object.entries(matched.attributeToRename).forEach(([targetKey, sourceKey]) => {
-      result[sourceKey] = field[targetKey];
+      if (sourceKey === "validations" || targetKey === "validations") {
+        return;
+      } else {
+        result[sourceKey] = field[targetKey];
+      }
     });
   }
   return result;
+};
+
+const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
+  const validationArray = [];
+  if (field && field.pattern) {
+    validationArray.push({
+      type: "pattern",
+      message: field?.pattern?.message,
+      value: field?.pattern?.value,
+      ...field?.pattern,
+    });
+  }
+  return validationArray;
 };
 
 export const restructure = (data1, fieldTypeMasterData = [], parent) => {
@@ -96,6 +113,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
           tooltip: field.tooltip || "",
           infoText: field.infoText || "",
           order: field.order,
+          pattern: field?.validations?.find((i) => i?.type === "pattern"),
+          RegexPattern: field?.validations?.find((i) => i?.type === "pattern") ? true : false,
           ...getTypeAndMetaData(field, fieldTypeMasterData),
         }));
 
@@ -148,6 +167,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
       const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
+      const validations = addValidationArrayToConfig(field, fieldTypeMasterData);
       return {
         label: field.label || "",
         order: fieldIndex + 1,
@@ -163,6 +183,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         errorMessage: field.errorMessage || "",
         deleteFlag: field.deleteFlag || false,
         ...typeAndFormat,
+        validations: [...validations],
       };
     });
 
