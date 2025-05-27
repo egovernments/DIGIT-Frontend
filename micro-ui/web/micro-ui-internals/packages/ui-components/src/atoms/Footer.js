@@ -9,8 +9,15 @@ function Footer(props) {
     <div className={`digit-home-footer ${additionalClassname} ${props?.className ? props?.className : ""}`} style={props?.style ? props?.style : {}}>
       <img
         className="digit-home-footer-img"
+        tabIndex={0}
         alt="Powered by DIGIT"
         src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+          }
+        }}
         onClick={() => {
           window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
         }}
