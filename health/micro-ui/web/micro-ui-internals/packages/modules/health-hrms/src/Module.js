@@ -8,7 +8,6 @@ import EmployeeApp from "./pages/employee";
 import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
 import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
 import ResponseScreen from "./pages/employee/Response";
-import CampaignsAssignment from "./components/pageComponents/CampaignAssignment";
 import InboxSearch from "./pages/employee/Inbox";
 import ActionPopUp from "./components/pageComponents/popup";
 import EmployeeDetailScreen from "./pages/employee/employeeDetails";
@@ -50,7 +49,6 @@ const componentsToRegister = {
   InboxSearch,
 
   ActionPopUp,
-  CampaignsAssignment,
   BoundaryComponent,
   ResponseScreen,
   AssignCampaignInbox,
