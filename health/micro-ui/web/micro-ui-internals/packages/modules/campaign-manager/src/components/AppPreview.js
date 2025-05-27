@@ -302,7 +302,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
   return (
     <div className="app-preview">
       {data.cards.map((card, index) => (
-        <Card key={index}>
+        <Card key={index} className="app-card">
           {card.headerFields.map((headerField, headerIndex) => (
             <div key={headerIndex}>
               {headerField.jsonPath === "ScreenHeading" ? (

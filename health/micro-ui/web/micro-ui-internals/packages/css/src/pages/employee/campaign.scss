@@ -260,6 +260,11 @@
   font-family: Arial, sans-serif;
   .digit-card-component {
     height: max-content;
+    .digit-description{
+      .digit-card-text{
+        margin-bottom: 0rem;
+      } 
+    }
   }
   .digit-card-header {
     color: #0b4b66;
@@ -271,6 +276,9 @@
     font-weight: 400;
     font-size: 0.875rem;
     line-height: 137%;
+  }
+  .app-card{
+    gap: 0.5rem;
   }
 }
 .mobile-top {
