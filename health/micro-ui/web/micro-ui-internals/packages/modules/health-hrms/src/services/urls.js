@@ -41,8 +41,8 @@ const Urls = {
   hcm: {
     searchStaff: `/${projectContextPath}/staff/v1/_search`,
     searchProject: `/${projectContextPath}/v1/_search`,
-    createStaff: `/${projectContextPath}/staff/v1/bulk/_create`,
-    deleteStaff: `/${projectContextPath}/staff/v1/bulk/_delete`,
+    createStaff: `/${projectContextPath}/staff/v1/_create`,
+    deleteStaff: `/${projectContextPath}/staff/v1/_delete`,
   },
 };
 

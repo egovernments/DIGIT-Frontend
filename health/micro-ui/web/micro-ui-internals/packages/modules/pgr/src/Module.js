@@ -19,7 +19,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
-  const moduleCode = ["pgr", `boundary-${hierarchyType}`];
+  const moduleCode = ["pgr", `boundary-${hierarchyType?.toString().toLowerCase()}`];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({

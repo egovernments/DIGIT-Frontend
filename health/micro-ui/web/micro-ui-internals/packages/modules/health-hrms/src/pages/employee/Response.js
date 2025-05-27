@@ -48,7 +48,7 @@ const ResponseScreen = () => {
         message={t(state?.message)}
         multipleResponses={[]}
         props={{}}
-        response={t(state?.fileName?.user?.name)}
+        response={t(state?.fileName?.user?.userName)}
         sortFooterButtons
         style={{}}
         type={state?.state}
@@ -58,7 +58,8 @@ const ResponseScreen = () => {
           style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
           variation="primary"
           label={state.isCampaign == ReposeScreenType.CREAT_EUSER ? t("CORE_COMMON_CONTINUE_CAMPAIGN_ASSIGNMENTS") : t(back)}
-          icon={"ArrowBack"}
+          icon={"ArrowForward"}
+          isSuffix
           onClick={() => {
             const backlink =
               state.isCampaign == ReposeScreenType.CREAT_EUSER

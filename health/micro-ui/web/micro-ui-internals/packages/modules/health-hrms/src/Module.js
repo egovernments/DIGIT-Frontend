@@ -6,22 +6,21 @@ import CreateEmployeePage from "./pages/employee/createEmployee";
 import EmployeeApp from "./pages/employee";
 
 import { overrideHooks, updateCustomConfigs } from "./hooks/hook_setup";
-import RolesAssigned from "./components/pageComponents/SelectRolesAssigned";
 import BoundaryComponent from "./components/pageComponents/SelectEmployeeBoundary";
-
-import AssignCampaign from "./pages/employee/createAssignments";
-
 import ResponseScreen from "./pages/employee/Response";
 import CampaignsAssignment from "./components/pageComponents/CampaignAssignment";
 import InboxSearch from "./pages/employee/Inbox";
 import ActionPopUp from "./components/pageComponents/popup";
 import EmployeeDetailScreen from "./pages/employee/employeeDetails";
+import AssignCampaignInbox from "./pages/employee/CampaignAssignmentInbox";
+import Jurisdictions from "./components/pageComponents/Jurisdictions";
 
 import BreadCrumbs from "./components/pageComponents/BreadCrumb";
+import { Loader } from "@egovernments/digit-ui-components";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "ADMIN";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
   const moduleCode = ["HR", `boundary-${hierarchyType?.toString().toLowerCase()}`];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language, modulePrefix });
@@ -37,9 +36,13 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
     return null;
   }
 
+  if (isLoading || isPaymentsModuleInitializing) {
+      return <Loader />;
+    } else {
   if (userType === "employee") {
     return <EmployeeApp path={path} url={url} />;
-  } else return null;
+  } 
+}
 };
 
 const componentsToRegister = {
@@ -49,15 +52,11 @@ const componentsToRegister = {
   ActionPopUp,
   CampaignsAssignment,
   BoundaryComponent,
-
-  RolesAssigned,
-  AssignCampaign,
   ResponseScreen,
-
+  AssignCampaignInbox,
   HRMSModule,
-
+  Jurisdictions,
   HRCreateEmployee: CreateEmployeePage,
-
   BreadCrumbs,
 };
 

@@ -1,13 +1,14 @@
 import { LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState} from "react";
 import { useTranslation } from "react-i18next";
 
-const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
+const BoundaryComponent = ({ t, config, onSelect, userType, formData, index }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: childrenData, isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch(tenantId);
+  const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch(tenantId);
 
   const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder")?.map((item) => item.code) || [];
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 
   // State to manage selected values and dropdown options
   const [selectedValues, setSelectedValues] = useState({});
@@ -65,7 +66,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   return (
     <LabelFieldPair>
       <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-        {t("HRM_BOUNDARY_LABEL")} *{/*input.isMandatory ? " * " : null*/}
+        {t("HRMS_BOUNDARY_LABEL")} {index || ""}*{/*input.isMandatory ? " * " : null*/}
       </CardLabel>
 
       <div style={{ width: "100%" }}>
@@ -73,11 +74,8 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
           if (value[key]?.length > 0) {
             return (
               <BoundaryDropdown
-                key={key}
-                label={
-                  `${t(key)}`
-                  // `ATTENDANCE_${key}`
-                }
+              key={key}
+              label={`${t(`${hierarchyType}_${key}`)}`}
                 data={value[key]}
                 onChange={(selectedValue) => handleSelection(selectedValue)}
                 selected={selectedValues[key] || null}

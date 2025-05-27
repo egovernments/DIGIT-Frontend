@@ -180,6 +180,7 @@ const inboxSearchConfig = () => {
             {
               label: "HR_EMP_NAME_LABEL",
               jsonPath: "user.name",
+              additionalCustomization: true,
             },
             {
               label: "HR_ROLE_NO_LABEL",
@@ -187,8 +188,13 @@ const inboxSearchConfig = () => {
               additionalCustomization: true,
             },
             {
+              label: "HR_JURIDICTIONS_LABEL",
+              jsonPath: "jurisdictions",
+              additionalCustomization: true,
+            },
+            {
               label: "HR_DESG_LABEL",
-              jsonPath: "assignments",
+              jsonPath: "assignments[0]",
               additionalCustomization: true,
             },
             {

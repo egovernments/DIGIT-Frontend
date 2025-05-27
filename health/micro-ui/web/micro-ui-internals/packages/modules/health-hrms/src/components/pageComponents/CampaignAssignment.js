@@ -1,4 +1,4 @@
-import { CardLabel, Dropdown, LabelFieldPair, Loader, DatePicker, TextInput } from "@egovernments/digit-ui-components";
+import { CardLabel, Dropdown, LabelFieldPair, Loader, CardText, TextInput, Button, PopUp } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { SVG } from "@egovernments/digit-ui-components";
 
@@ -10,11 +10,14 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
     projectTypeId: project?.projectTypeId,
     boundary: project?.address?.boundary,
     boundaryType: project?.address?.boundaryType,
-    i18text: `${project?.name}_${project?.address?.boundary}`,
+    i18text: `${project?.projectType}_${project?.address?.boundary}`.toUpperCase(),
   }));
   const [campaigns, setCampaigns] = useState(
     formData?.CampaignsAssignment?.length > 0 ? formData?.CampaignsAssignment : [{ selectedProject: "", fromDate: "", toDate: "" }]
   );
+  const [showProjectPopup, setShowProjectPopup] = useState(false);
+  const [selectedCampaignIndex, setSelectedCampaignIndex] = useState(null);
+
 
   useEffect(() => {
     if (formData?.CampaignsAssignment?.length > 0) {
@@ -30,27 +33,27 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
   };
 
   const handleRemoveUnit = (index) => {
-    const updatedCampaigns = campaigns.filter((_, i) => i !== index);
+    const updatedCampaigns = campaigns?.filter((_, i) => i !== index);
     setCampaigns(updatedCampaigns);
     onSelect(config.key, updatedCampaigns);
   };
 
   const handleProjectSelect = (index, project) => {
-    const updatedCampaigns = campaigns.map((campaign, i) => (i === index ? { ...campaign, selectedProject: project } : campaign));
+    const updatedCampaigns = campaigns?.map((campaign, i) => (i === index ? { ...campaign, selectedProject: project } : campaign));
     setCampaigns(updatedCampaigns);
     onSelect(config.key, updatedCampaigns);
   };
 
   const handleDateChange = (index, field, value) => {
-    const updatedCampaigns = campaigns.map((campaign, i) => (i === index ? { ...campaign, [field]: value } : campaign));
+    const updatedCampaigns = campaigns?.map((campaign, i) => (i === index ? { ...campaign, [field]: value } : campaign));
     setCampaigns(updatedCampaigns);
     onSelect(config.key, updatedCampaigns);
   };
 
   const getAvailableProjects = (index) => {
-    const selectedProjects = campaigns.filter((_, i) => i !== index).map((campaign) => campaign.selectedProject?.id);
+    const selectedProjects = campaigns?.filter((_, i) => i !== index).map((campaign) => campaign.selectedProject?.id);
 
-    return userProjectDetails.filter((project) => !selectedProjects.includes(project.id));
+    return userProjectDetails?.filter((project) => !selectedProjects.includes(project.id));
   };
 
   return (
@@ -100,14 +103,38 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
               <CardLabel className={"card-label-smaller"}>
                 {t("HR_CAMPAIGN_NAME_LABEL")} {availableProjects.length > 1 ? "*" : ""}
               </CardLabel>
-              <Dropdown
+              <Button
+                variation="secondary"
+                label={campaign.selectedProject?.i18text || t("HR_SELECT_CAMPAIGN")}
+                onClick={() => {
+                  setSelectedCampaignIndex(index);
+                  setShowProjectPopup(true);
+                }}
+              />
+              {showProjectPopup && (
+                <PopUp
+                  className="project-search-popup"
+                  type="default"
+                  heading={t("HR_SELECT_PROJECT")}
+                  onOverlayClick={() => setShowProjectPopup(false)}
+                  children={[
+                    <div>
+                    <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+                  </div>,
+                  ]}
+                  onClose={() => setShowProjectPopup(false)}
+                  footerChildren={null}
+                >
+                </PopUp>
+              )}
+              {/* <Dropdown
                 className="form-field"
                 selected={availableProjects.find((project) => project.id === campaign.selectedProject?.id) || null}
                 optionKey={"i18text"}
                 option={availableProjects}
                 select={(value) => handleProjectSelect(index, value)}
                 t={t}
-              />
+              /> */}
             </LabelFieldPair>
 
             {/* From Date Picker */}
@@ -123,6 +150,7 @@ const CampaignsAssignment = ({ t, config, onSelect, formData }) => {
                   value={campaign?.fromDate}
                   key={"fromDate"}
                   disable={false}
+                  required={true}
                 />
               </div>
             </LabelFieldPair>

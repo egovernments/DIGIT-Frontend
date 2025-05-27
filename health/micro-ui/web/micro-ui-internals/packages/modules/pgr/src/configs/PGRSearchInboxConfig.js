@@ -190,7 +190,6 @@ const PGRSearchInboxConfig = () => {
                       populators: {
                         name: "serviceCode",
                         optionsKey: "i18nKey",
-                        //error: "WORKS_REQUIRED_ERR",
                         defaultText: '',
                         selectedText: "COMMON_SELECTED",
                         allowMultiSelect: false,

@@ -8,6 +8,7 @@ import useHRMSUpdate from "./hrms/useHRMSUpdate";
 import useHRMSStaffDelete from "./hrms/useHRMSStaffDelete";
 import useHRMSStaffSearch from "./hrms/useHRMSStaffSearch";
 import useHrmsEmployeeDetail from "./hrms/useHRMSEmployeeDetail";
+import { usePaginatedProjectSearch } from "./project/usePaginatedProjectSearch";
 
 const hrms = {
   useBoundriesFetch,
@@ -19,6 +20,7 @@ const hrms = {
   useHRMSStaffDelete,
   useHRMSStaffSearch,
   useHrmsEmployeeDetail,
+  usePaginatedProjectSearch,
 };
 
 const Hooks = {
