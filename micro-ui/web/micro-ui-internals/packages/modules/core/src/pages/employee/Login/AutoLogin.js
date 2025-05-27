@@ -8,12 +8,12 @@ const setEmployeeDetail = (userObject, token) => {
     localStorage.setItem("Employee[HPM] Error occurred while trying to proxy request /localization/messages/v1/_search?module=rainmaker-privacy-policy&locale=en_IN&_=1743502018537 from localhost:3000 to https://unified-qa.digit.org (ECONNRESET) (https://nodejs.org/api/errors.html#errors_common_system_errors).tenant-id", userObject?.tenantId);
     localStorage.setItem("tenant-id", userObject?.tenantId);
     localStorage.setItem("Employee.tenant-id", userObject?.tenantId);
-    // localStorage.setItem("citizen.userRequestObject", JSON.stringify(userObject));
+    localStorage.setItem("citizen.userRequestObject", JSON.stringify(userObject));
     localStorage.setItem("locale", locale);
     localStorage.setItem("Employee.locale", locale);
-    // localStorage.setItem("token", token);
+    localStorage.setItem("token", token);
     localStorage.setItem("Employee.token", token);
-    // localStorage.setItem("user-info", JSON.stringify(userObject));
+    localStorage.setItem("user-info", JSON.stringify(userObject));
     localStorage.setItem("Employee.user-info", JSON.stringify(userObject));
   };
   
@@ -25,7 +25,6 @@ const AutoLogin = () => {
 
 
   const queryParams = new URLSearchParams(location.search);
-
   const defaultCredentials = {
     username: queryParams.get("username"),
     password: queryParams.get("password"), 
@@ -35,8 +34,6 @@ const AutoLogin = () => {
     fromSandbox: queryParams.get("fromSandbox") || false
   };
   const redirectUrl = queryParams.get("redirectUrl") || "/digit-ui/employee"; 
-
-  console.log(`*** LOG ***`,redirectUrl);
   useEffect(() => {
     if (!user) {
       return;
