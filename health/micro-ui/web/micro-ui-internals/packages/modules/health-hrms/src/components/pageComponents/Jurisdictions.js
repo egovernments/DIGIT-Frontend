@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import BoundaryComponent from "./SelectEmployeeBoundary"; 
 const Jurisdictions = ({ config, onSelect, formData }) => {
   const { t } = useTranslation();
-  const initialBoundaries = formData?.BoundaryComponent || [];
+  const initialBoundaries = formData?.Jurisdictions || [];
   const [boundaryList, setBoundaryList] = useState(
     initialBoundaries.length > 0
       ? initialBoundaries.map(() => ({ id: Date.now() + Math.random() }))
@@ -48,7 +48,6 @@ const Jurisdictions = ({ config, onSelect, formData }) => {
         <Card key={entry.id} style={{ marginBottom: "16px", position: "relative", backgroundColor: "#EEEEEE", border: "1px solidrgb(0, 0, 0)", // 1px border using grey.border
             padding: "16px",}}>
           <div style={{ display: "flex", justifyContent: "flex-end",  marginBottom: "8px" }}>
-            {/* <Header>{`${t("HRMS_BOUNDARY")} ${index + 1}`}</Header> */}
             {boundaryList.length > 1 && (
               <div
               onClick={() => handleRemove(entry.id)}
@@ -75,7 +74,7 @@ const Jurisdictions = ({ config, onSelect, formData }) => {
         </Card>
       ))}
       <div>
-        <Button label={t("ADD_UNIT")} onButtonClick={handleAdd} disabled={boundaryList.length > 0 && !isLastBoundaryValid()}/>
+        <Button label={t("ADD_JURISDICTION")} onButtonClick={handleAdd} disabled={boundaryList.length > 0 && !isLastBoundaryValid()}/>
       </div>
     </div>
   );

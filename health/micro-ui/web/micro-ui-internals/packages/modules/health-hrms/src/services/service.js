@@ -125,22 +125,6 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   requestdata.dateOfAppointment = new Date(data?.SelectDateofEmployment).getTime();
   requestdata.code = data?.SelectEmployeeId ? data?.SelectEmployeeId : undefined;
   requestdata.jurisdictions = userExisting[0].jurisdictions
-  ? userExisting[0].jurisdictions.map((j) => {
-      let jurisdiction = Object.assign({}, j);
-      jurisdiction.roles = roles;
-      jurisdiction.boundaryType = data?.BoundaryComponent?.boundaryType;
-      jurisdiction.boundary = data?.BoundaryComponent?.code;
-      return jurisdiction;
-    })
-  : [
-      {
-        fromDate: new Date(data?.SelectDateofEmployment).getTime(),
-        toDate: undefined,
-        isCurrentAssignment: true,
-        department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
-        designation: data?.SelectEmployeeDesignation?.code || "undefined",
-      },
-    ];
 
   requestdata.assignments = userExisting[0].assignments.map((j) => {
     let assigment = { ...j };
@@ -153,8 +137,8 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   requestdata.employeeType = data?.SelectEmployeeType?.code;
 
   requestdata.user = requestdata.user || {};
-  requestdata.user.emailId = data?.SelectEmployeeEmailId != null ? data?.SelectEmployeeEmailId : null;
-  requestdata.user.gender = data?.SelectEmployeeGender?.gender.code;
+  requestdata.user.emailId = data?.SelectEmployeeEmailId != null && data?.SelectEmployeeEmailId !== "" ? data?.SelectEmployeeEmailId : userExisting[0]?.user?.emailId;
+  requestdata.user.gender = data?.gender.code;
   requestdata.user.dob = new Date(data?.SelectDateofBirthEmployment || HRMS_CONSTANTS.DEFAULT_DOB).getTime();
 
   requestdata.user.mobileNumber = data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
@@ -185,7 +169,7 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
  */
 
 function formJuridiction(data, tenantId) {
-  const boundaries = data?.BoundaryComponent || [];
+  const boundaries = data?.Jurisdictions || [];
 
   const jurisdictions = boundaries.map((boundary) => ({
     hierarchy: hierarchyType,
@@ -234,13 +218,13 @@ export const editDefaultUserValue = (data, tenantId) => {
 
     gender: {
       active: true,
-      code: data[0]?.user?.gender || "FEMALE",
-      name: `COMMON_GENDER_${data[0]?.user?.gender}` || "",
+      code: data[0]?.user?.gender,
+      name: `COMMON_GENDER_${data[0]?.user?.gender}`,
     },
 
     RolesAssigned: (data?.[0]?.user?.roles || []).map((e) => e),
     SelectDateofBirthEmployment: convertEpochToDate(data[0]?.user?.dob),
-    BoundaryComponent: data[0]?.jurisdictions?.map((ele) => ({
+    Jurisdictions: data[0]?.jurisdictions?.map((ele) => ({
       boundaryType: ele.boundaryType,
       code: ele.boundary,
       hierarchy: ele.hierarchy,

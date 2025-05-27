@@ -1,7 +1,7 @@
 /**
- * config for create/edit user screen: it is used to in the screen to take input about of the new  usern and existing user as well.
- * digit components used:all digit components used except the boundarycomponent and the Roles assigned component.
- *
+ * Config for create/edit user screen: Used to take input about new users and existing users.
+ * Digit components used: All standard digit components plus custom Jurisdictions component.
+ * RolesAssigned field uses dropdown with multi-select capability.
  */
 export const CreateEmployeeConfig = {
   tenantId: Digit.ULBService.getCurrentTenantId(),
@@ -179,9 +179,6 @@ export const CreateEmployeeConfig = {
                 required: false,
                 name: "SelectEmployeeCorrespondenceAddress",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
-                validation: {
-                  pattern: /^(?=^.{1,64}$)((([^<>()\[\]\\.,;:\s$*@'"]+(\.[^<>()\[\]\\.,;:\s@'"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,})))$/i,
-                },
               },
             },
           ],
@@ -294,24 +291,14 @@ export const CreateEmployeeConfig = {
               },
             },
       
-            // {
-            //   type: "component",
-            //   isMandatory: true,
-            //   component: "BoundaryComponent",
-            //   key: "BoundaryComponent",
-            //   withoutLabel: true,
-            //   populators: {
-            //     name: "BoundaryComponent",
-            //   },
-            // },
             {
               type: "component",
               isMandatory: true,
               component: "Jurisdictions",
-              key: "BoundaryComponent",
+              key: "Jurisdictions",
               withoutLabel: true,
               populators: {
-                name: "BoundaryComponent",
+                name: "Jurisdictions",
               },
             },
           ],

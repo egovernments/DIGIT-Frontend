@@ -1,6 +1,5 @@
 import React, { useState, useMemo } from "react";
-import { InboxSearchComposer, HeaderComponent, Toast, Loader, LabelFieldPair, CardLabel,  DatePicker, FormComposerV2 } from "@egovernments/digit-ui-components";
-import { Modal, CloseSvg, Close, } from "@egovernments/digit-ui-react-components";
+import { InboxSearchComposer, HeaderComponent, Loader, } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { AssignCampaignInboxConfig } from "../../components/config/assignCampaignConfig";
@@ -11,7 +10,7 @@ const AssignCampaignInbox = () => {
   const isMobile = window.Digit.Utils.browser.isMobile();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id } = useParams();
-  const { isLoading: isHRMSSearchLoading, isError, error, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
+  const { isLoading: isHRMSSearchLoading, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(tenantId, "egov-hrms", ["AssignCampaignInboxConfig"], {
     select: (data) => {
       return data?.["egov-hrms"]?.AssignCampaignInboxConfig?.[0];

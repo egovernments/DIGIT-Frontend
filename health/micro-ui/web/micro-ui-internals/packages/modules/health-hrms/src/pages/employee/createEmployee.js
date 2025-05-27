@@ -168,13 +168,17 @@ const CreateEmployee = ({ editUser = false }) => {
       formData?.SelectEmployeeDepartment &&
       formData?.SelectEmployeeDesignation &&
       formData?.RolesAssigned &&
-      formData?.BoundaryComponent 
+      (isEdit || formData?.Jurisdictions) 
     ) {
       setSubmitValve(true);
     } else {
       setSubmitValve(false);
     }
   };
+
+  const memoizedDefaultValues = useMemo(() => {
+    return editUser === true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : {};
+  }, [editUser, data?.Employees, tenantId]);
 
   const createEmployeeService = async (payload) => {
     try {
@@ -342,7 +346,7 @@ const CreateEmployee = ({ editUser = false }) => {
     ? updatedConfig?.form?.map((section) => ({
         ...section,
         body: section.body.filter(
-          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "BoundaryComponent"
+          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
         ),
       }))
     : updatedConfig?.form;
@@ -369,7 +373,7 @@ const CreateEmployee = ({ editUser = false }) => {
         </div>
 
         <FormComposerV2
-          defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : {}}
+          defaultValues={memoizedDefaultValues}
           heading={t("")}
           config={config}
           onSubmit={openModal}
