@@ -475,3 +475,10 @@
   }
 
 }
+.module-description {
+  flex-grow: 1;
+  margin: 0 0 1rem 0;
+  font-family: theme(digitv2.fontFamily.sans);
+  font-size: theme(digitv2.fontSize.heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}

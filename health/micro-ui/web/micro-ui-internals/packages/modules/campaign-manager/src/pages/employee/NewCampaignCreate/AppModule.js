@@ -19,6 +19,7 @@ const AppModule = () => {
   const AppConfigSchema = "SimpleAppConfiguration";
   const TemplateBaseConfig = "TemplateBaseConfig";
   const url = getMDMSUrl(true);
+  const [isCreatingModule, setIsCreatingModule] = useState(false);
 
   const reqCriteriaMDMSBaseTemplateSearch = {
     url: `${url}/v2/_search`,
@@ -26,20 +27,20 @@ const AppModule = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${TemplateBaseConfig}`,
-         "filters":{
-            "project": campaignType
-        }
+        filters: {
+          project: campaignType,
+        },
       },
     },
     config: {
       enabled: true,
       select: (data) => {
-        return  data;
+        return data;
       },
     },
   };
 
-  const { isLoading : productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSBaseTemplateSearch);
+  const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSBaseTemplateSearch);
 
   const handleSelectModule = (moduleCode) => {
     if (selectedModuleCodes.includes(moduleCode)) {
@@ -55,9 +56,9 @@ const AppModule = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
-         "filters":{
-            "project": campaignNumber
-        }
+        filters: {
+          project: campaignNumber,
+        },
       },
     },
     config: {
@@ -70,7 +71,6 @@ const AppModule = () => {
 
   const { isLoading, data: mdmsData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSSearch);
 
-
   React.useEffect(() => {
     if (mdmsData?.mdms) {
       const createdModules = mdmsData?.mdms
@@ -81,7 +81,6 @@ const AppModule = () => {
       setSelectedModuleCodes(createdModules); // preselect those modules
     }
   }, [mdmsData, campaignNumber]);
-
 
   const closeToast = () => {
     setShowToast(null);
@@ -143,6 +142,7 @@ const AppModule = () => {
         })) || [];
       if (updatedLocalizations.length > 0) {
         try {
+          setIsCreatingModule(true);
           await Digit.CustomService.getResponse({
             url: `/localization/messages/v1/_upsert`,
             body: {
@@ -154,6 +154,8 @@ const AppModule = () => {
           console.error(`Failed to upsert localization for ${module?.data?.name}:`, error);
           setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
           return;
+        } finally {
+          setIsCreatingModule(false); // Stop loading
         }
       }
 
@@ -163,6 +165,7 @@ const AppModule = () => {
       };
 
       try {
+        setIsCreatingModule(true);
         await Digit.CustomService.getResponse({
           url: `${url}/v2/_create/Workbench.UISchema`,
 
@@ -179,6 +182,8 @@ const AppModule = () => {
         console.error(`Failed to create module for ${module?.data?.name}:`, error);
         setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
         return;
+      } finally {
+        setIsCreatingModule(false); // Stop loading
       }
     }
 
@@ -187,7 +192,7 @@ const AppModule = () => {
     );
   };
 
-  if (productTypeLoading || isLoading) {
+  if (productTypeLoading || isLoading || isCreatingModule) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
@@ -200,7 +205,7 @@ const AppModule = () => {
         {modulesData?.mdms
           // ?.filter((module) => module?.data?.isDisabled === "false")
           .map((module, index) => (
-             <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>
+            <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>
               {selectedModuleCodes.includes(module?.data?.name) && (
                 <SVG.CheckCircle
                   fill={"#00703C"}
@@ -217,12 +222,15 @@ const AppModule = () => {
                 {t(module?.data?.name)}
               </HeaderComponent>
               <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-              <p style={{ margin: "0rem" }}> {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}</p>
+              <p className="module-description">
+                {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}
+              </p>
+              {/* <p style={{ margin: "0rem" }}> {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}</p> */}
               <Button
                 className={"campaign-module-button"}
                 type={"button"}
                 size={"large"}
-                isDisabled={module?.data?.isDisabled ==="true"}
+                isDisabled={module?.data?.isDisabled === "true"}
                 variation={selectedModuleCodes.includes(module?.data?.name) ? "secondary" : "primary"}
                 label={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
                 onClick={() => handleSelectModule(module?.data?.name)}
