@@ -23,7 +23,7 @@ const AutoLogin = () => {
   const location = useLocation();
 
   
-  const DEFAULT_REDIRECT_URL = "/digit-ui/citizen";
+  const DEFAULT_REDIRECT_URL = "/sanitation-ui/citizen";
   
   const queryParams = new URLSearchParams(location.search);
   const fromSandbox= queryParams.get("fromSandbox") || false

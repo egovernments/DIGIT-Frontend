@@ -33,7 +33,8 @@ const AutoLogin = () => {
     },
     fromSandbox: queryParams.get("fromSandbox") || false
   };
-  const redirectUrl = queryParams.get("redirectUrl") || "/digit-ui/employee"; 
+  const redirectUrl = queryParams.get("redirectUrl") || "/sanitation-ui/employee"; 
+  console.log(`*** LOG ***`,queryParams.get("redirectUrl"));
   useEffect(() => {
     if (!user) {
       return;
