@@ -24,6 +24,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
+  const [isValidatingName, setIsValidatingName] = useState(false);
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -116,11 +117,14 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     }));
 
     if (formData?.CampaignName && !editName) {
+      setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
+        setIsValidatingName(false);
         return;
       }
+      setIsValidatingName(false);
     }
 
     if (typeof params?.CampaignName === "object" || !params?.CampaignName) {
@@ -141,8 +145,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       setCurrentKey(currentKey + 1);
-    }
-    else {
+    } else {
       setLoader(true);
       const isEdit = editName;
       const mutation = isEdit ? mutationUpdate : mutationCreate;
@@ -193,7 +196,13 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
   return (
     <React.Fragment>
-      {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
+      {(loader || isValidatingName) && (
+        <Loader
+          page={true}
+          variant={"OverlayLoader"}
+          loaderText={isValidatingName ? t("VALIDATING_CAMPAIGN_NAME") : t("PLEASE_WAIT_WHILE_UPDATING")}
+        />
+      )}
       <Stepper
         customSteps={["HCM_CAMPAIGN_TYPE_DETAILS", "HCM_CAMPAIGN_NAME_DETAILS", "HCM_CAMPAIGN_DATE_DETAILS"]}
         currentStep={currentKey}
