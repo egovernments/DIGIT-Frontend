@@ -17,7 +17,7 @@
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.1-beta.1",
     "@egovernments/digit-ui-module-workbench": "1.0.1-beta.1",
-    "@egovernments/digit-ui-module-core": "1.8.1-beta.3-autologin-4",
+    "@egovernments/digit-ui-module-core": "1.8.1-beta.3-autologin-5",
     "@egovernments/digit-ui-module-hrms": "1.8.0",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.1",
     "@egovernments/digit-ui-react-components": "1.8.1-beta.2",
@@ -46,10 +46,6 @@
     "lint-staged": "12.3.7",
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2"
-  },
-  "resolutions": {
-    "**/@babel/traverse": "7.25.9",
-    "**/styled-components": "5.0.0"
   },
   "scripts": {
     "start": "react-scripts start",

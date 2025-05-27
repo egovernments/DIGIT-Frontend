@@ -60,6 +60,12 @@
     "react-table": "7.7.0",
     "react-joyride": "2.5.5"
   },
+  "resolutions": {
+    "**/@babel/runtime": "7.20.1",
+    "**/babel-preset-react-app": "10.0.0",
+    "fast-uri":"2.1.0",
+     "**/styled-components": "5.3.11"
+  },
   "browserslist": {
     "production": [
       ">0.2%",

@@ -28,8 +28,8 @@ cd "$BASEDIR/packages/react-components" && rm -rf dist && yarn && npm publish --
 msg "Building and publishing libraries"
 cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --tag workbench-1.1
 
-msg "Building and publishing Core"
-cd "$BASEDIR/packages/modules/core" && rm -rf dist && yarn && npm publish --access public
+# msg "Building and publishing Core"
+# cd "$BASEDIR/packages/modules/core" && rm -rf dist && yarn && npm publish --access public
 
 
 
@@ -51,7 +51,7 @@ cd "$BASEDIR/packages/modules/dss" &&  rm -rf dist && yarn&& npm publish --tag w
 cd "$BASEDIR/packages/modules/common" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
 
 # msg "Building and publishing Core module"
-cd "$BASEDIR/packages/modules/core" &&   &&  rm -rf node_modules &&  rm -rf dist   &&  npm publish --access public
+cd "$BASEDIR/packages/modules/core" &&  rm -rf node_modules &&  rm -rf dist   &&  npm publish --access public
 
 # msg "Building and publishing Utilities module"
 cd "$BASEDIR/packages/modules/utilities" &&   rm -rf dist && yarn&& npm publish --tag workbench-1.1
