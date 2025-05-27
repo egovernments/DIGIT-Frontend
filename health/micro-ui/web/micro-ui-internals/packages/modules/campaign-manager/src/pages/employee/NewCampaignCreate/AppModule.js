@@ -27,9 +27,10 @@ const AppModule = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${TemplateBaseConfig}`,
-        filters: {
-          project: campaignType,
-        },
+        isActive: true,
+         "filters":{
+            "project": campaignType
+        }
       },
     },
     config: {
@@ -56,9 +57,10 @@ const AppModule = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
-        filters: {
-          project: campaignNumber,
-        },
+        isActive: true,
+         "filters":{
+            "project": campaignNumber
+        }
       },
     },
     config: {
@@ -203,6 +205,7 @@ const AppModule = () => {
       </div>
       <div className="modules-container">
         {modulesData?.mdms
+        ?.sort((x,y)=>x?.data?.order-y?.data?.order)
           // ?.filter((module) => module?.data?.isDisabled === "false")
           .map((module, index) => (
             <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>
@@ -230,7 +233,7 @@ const AppModule = () => {
                 className={"campaign-module-button"}
                 type={"button"}
                 size={"large"}
-                isDisabled={module?.data?.isDisabled === "true"}
+                isDisabled={module?.data?.disabled}
                 variation={selectedModuleCodes.includes(module?.data?.name) ? "secondary" : "primary"}
                 label={selectedModuleCodes.includes(module?.data?.name) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
                 onClick={() => handleSelectModule(module?.data?.name)}

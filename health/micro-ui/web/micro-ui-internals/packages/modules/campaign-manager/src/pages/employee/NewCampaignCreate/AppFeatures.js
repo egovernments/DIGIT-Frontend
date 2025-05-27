@@ -52,6 +52,7 @@ const AppFeatures = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+        isActive: true,
          "filters":{
             "project": campaignNumber
         }
@@ -157,8 +158,9 @@ const AppFeatures = () => {
               className={"campaign-module-button"}
               type={"button"}
               size={"large"}
+              isDisabled={feature?.disabled}
               variation={selectedModuleCodes?.[code]?.includes(feature?.code) ? "secondary" : "primary"}
-              label={selectedModuleCodes?.[code]?.includes(feature?.code) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
+              label={selectedModuleCodes?.[code]?.includes(feature?.code) ? t("DESELECT") : (feature?.disabled?t("ES_FEATURE_DISABLED"):t("ES_CAMPAIGN_SELECT"))}
               onClick={() => handleSelectModule(feature?.code)}
             />
           </Card>

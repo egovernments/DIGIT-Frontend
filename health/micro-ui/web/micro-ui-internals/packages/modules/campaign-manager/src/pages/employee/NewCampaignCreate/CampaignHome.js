@@ -51,12 +51,12 @@ const CampaignHome = () => {
           <div className={"descStyle"}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
         </div>
         <div
-          className={"cardStyle"}
+          className={"cardStyle disabledCard"}
           onClick={() => {
             // Add functionality for importing existing campaign
           }}
         >
-          <SVG.SystemUpdateAlt width="40" height="40" />
+          <SVG.SystemUpdateAlt width="40" height="40" fill={"#505a5f"} />
           <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
       </div>
