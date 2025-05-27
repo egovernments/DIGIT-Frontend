@@ -408,6 +408,7 @@ function DrawerFieldComposer() {
             t={t}
             option={state?.MASTER_DATA?.AppFieldType}
             optionKey={"type"}
+            disabled={disableFieldForMandatory(drawerState,"Mandatory")}  // todo need to think about it @nabeel & @jagan
             selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
             select={(value) => {
               setDrawerState((prev) => ({
