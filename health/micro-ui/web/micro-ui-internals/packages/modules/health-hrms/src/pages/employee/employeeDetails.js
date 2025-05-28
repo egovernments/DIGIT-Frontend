@@ -4,7 +4,7 @@ import { useHistory, useParams } from "react-router-dom/cjs/react-router-dom.min
 import { convertEpochToDate } from "../../utils/utlis";
 import { searchStaff } from "../../services/service";
 
-import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag } from "@egovernments/digit-ui-components";
+import { HeaderComponent, Button, Card, Footer, ActionBar, SummaryCard, Tag, NoResultsFound } from "@egovernments/digit-ui-components";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import DeactivatePopUp from "../../components/pageComponents/DeactivatePopUp";
 import { ReposeScreenType } from "../../constants/enums";
@@ -373,7 +373,7 @@ const EmployeeDetailScreen = () => {
                     type: "custom",
                     inline: false,
                     renderCustomContent: (value) => {
-                      return (
+                      return campaign && campaign?.length > 0 ? (
                         <SummaryCard
                           sections={
                             campaign
@@ -406,6 +406,8 @@ const EmployeeDetailScreen = () => {
                               : []
                           }
                         />
+                      ) : (
+                        <NoResultsFound/>
                       );
                     },
                   },

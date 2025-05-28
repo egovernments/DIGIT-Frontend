@@ -41,101 +41,12 @@ const initializeHrmsModule = async ({ tenantId }) => {
   // Retrieve configuration values from globalConfigs (fallback values provided)
   const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 
   // Get logged-in user details from session storage
   let user = Digit?.SessionStorage.get("User");
 
   try {
-    // Fetch staff details based on the logged-in user
-    const response = await Digit.CustomService.getResponse({
-      url: `/${projectContextPath}/staff/v1/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        tenantId: tenantId,
-        offset: 0,
-        limit: 100,
-      },
-      body: {
-        ProjectStaff: {
-          staffId: [user?.info?.uuid], // User-specific staff ID
-        },
-      },
-    });
-
-    if (!response) {
-      throw new Error("No Staff found");
-    }
-
-    const staffs = response?.ProjectStaff;
-
-    if (!staffs || staffs.length === 0) {
-      throw new Error("No Staff found");
-    }
-
-    // Fetch projects linked to the staff members
-    const fetchProjectData = await Digit.CustomService.getResponse({
-      url: `/${projectContextPath}/v1/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        tenantId: tenantId,
-        offset: 0,
-        limit: 100,
-      },
-      body: {
-        Projects: staffs.map((staff) => ({
-          id: staff?.projectId,
-          tenantId: tenantId,
-        })),
-      },
-    });
-
-    if (!fetchProjectData) {
-      throw new Error("Projects not found");
-    }
-
-    const projects = fetchProjectData?.Project;
-    if (!projects || projects.length === 0) {
-      throw new Error("No linked projects found");
-    }
-
-    // Extract national project ID from the first project
-    const nationalProjectId = projects[0]?.projectHierarchy ? projects[0]?.projectHierarchy?.split(".")[0] : projects[0]?.id;
-
-    // Fetch national-level project details
-    const fetchNationalProjectData = await Digit.CustomService.getResponse({
-      url: `/${projectContextPath}/v1/_search`,
-      useCache: false,
-      method: "POST",
-      userService: false,
-      params: {
-        tenantId: tenantId,
-        offset: 0,
-        limit: 100,
-      },
-      body: {
-        Projects: [
-          {
-            id: nationalProjectId,
-            tenantId: tenantId,
-          },
-        ],
-      },
-    });
-
-    if (!fetchNationalProjectData) {
-      throw new Error("National level Project not found");
-    }
-
-    const nationalLevelProject = fetchNationalProjectData?.Project?.[0];
-
-    if (!nationalLevelProject) {
-      throw new Error("No linked projects found");
-    }
 
     // Fetch boundary data associated with the national-level project
     const fetchBoundaryData = await Digit.CustomService.getResponse({
@@ -149,8 +60,6 @@ const initializeHrmsModule = async ({ tenantId }) => {
         hierarchyType: hierarchyType,
 
         includeChildren: true,
-        codes: nationalLevelProject?.address?.boundary,
-        boundaryType: nationalLevelProject?.address?.boundaryType,
       },
     });
 
@@ -164,8 +73,6 @@ const initializeHrmsModule = async ({ tenantId }) => {
     // Store boundary hierarchy order in session storage
     Digit.SessionStorage.set("boundaryHierarchyOrder", boundaryHierarchyOrder);
 
-    // Store fetched project details in session storage
-    Digit.SessionStorage.set("staffProjects", projects);
   } catch (error) {
     // Handle API errors gracefully
     if (error?.response?.data?.Errors) {

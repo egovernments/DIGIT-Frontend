@@ -1,8 +1,8 @@
 import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew, Dropdown, Toast, Tag } from "@egovernments/digit-ui-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward, Modal,CloseSvg, Close, } from "@egovernments/digit-ui-react-components";
+import { Button as ButtonNew, Dropdown, Toast, Tag, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
@@ -41,6 +41,14 @@ const businessServiceMap = {
 const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
+
+const convertDateToEpoch= (dateString) => {
+  // Create a Date object from the input date string
+  const date = new Date(dateString);
+
+  // Convert the date to epoch time (seconds)
+  return Math.floor(date.getTime());
+}
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
@@ -1754,7 +1762,7 @@ export const UICustomizations = {
       },
     },
 
-    HRMSInboxConfig: {
+  HRMSInboxConfig: {
       preProcess: (data) => {
         // filterForm
         // params
@@ -1780,7 +1788,6 @@ export const UICustomizations = {
       },
   
       additionalCustomizations: (row, key, column, value, t, searchResult) => {
-        console.log("additional customization");
         switch (key) {
           case "HR_EMP_ID_LABEL":
             return (
@@ -1788,19 +1795,22 @@ export const UICustomizations = {
                 <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
               </span>
             );
+            
+          case "HR_EMP_NAME_LABEL":
+            return value ? `${value}` : t("ES_COMMON_NA");
   
           case "HR_ROLE_NO_LABEL":
-            return value ? `${value.length}` : t("ES_COMMON_NA");
+            return value?.length > 0 ? value?.length : t("ES_COMMON_NA");
   
           case "HR_DESG_LABEL":
-            return value.length > 0 ? t(`${value[0].designation}`) : t("ES_COMMON_NA");
+            return value ? t(`${value.designation}`) : t("ES_COMMON_NA");
   
           case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
             return value ? t(`${value.department}`) : t("ES_COMMON_NA");
   
-          case "MASTERS_LOCALITY":
-            return value ? (
-              <span style={{ whiteSpace: "break-spaces" }}>{String(t(Digit.Utils.locale.getMohallaLocale(value, row?.tenantId)))}</span>
+          case "HR_JURIDICTIONS_LABEL":
+            return value?.length > 0 ? (
+              value?.map((j) => t(j?.boundary)).join(",")
             ) : (
               t("ES_COMMON_NA")
             );
@@ -1808,5 +1818,302 @@ export const UICustomizations = {
             return t("ES_COMMON_NA");
         }
       },
+  },
+  AssignCampaignInboxConfig: {
+    preProcess: (data) => {
+      const formState = data?.state?.searchForm || {};
+    
+      const sharedFields = {};
+      if (formState.projectType?.code) sharedFields.projectType = formState.projectType.code;
+      if (formState.name?.trim()) sharedFields.name = formState.name.trim();
+      if (formState.projectNumber?.trim()) sharedFields.projectNumber = formState.projectNumber.trim();
+      if (formState.startDate) sharedFields.startDate = new Date(formState.startDate).getTime();
+      if (formState.endDate) sharedFields.endDate = new Date(formState.endDate).getTime();
+    
+      // 🟢 Reset to all original Projects from config when filters are cleared
+     // ✅ Convert object to array
+      const allProjects = Object.values(data?.body?.jurisdictionProjects || {});
+
+    
+      let filteredProjects = [...allProjects];
+    
+      if (formState.boundary?.code) {
+        filteredProjects = filteredProjects.filter(
+          (p) => p?.address?.boundary === formState.boundary.code
+        );
+      }
+    
+      // Enrich filtered projects
+      data.body.Projects = filteredProjects.map((p) => ({
+        ...p,
+        ...sharedFields,
+      }));
+    
+      return data;
     },
+    
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const { id } = useParams();
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+      const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
+      const [toast, setToast] = useState(null);
+      const [modalOpen, setModalOpen] = useState(false);
+      const [sessionFormData, setSessionFormData] = useState({});
+      const [refreshKey, setRefreshKey,] = useState(Date.now());
+      const formConfig = {
+          label: {
+            heading: "ASSIGN_CAMPAIGN_MODAL_TITLE",
+            submit: "CORE_COMMON_SUBMIT",
+            cancel: "CORE_COMMON_CANCEL"
+          },
+          form: [
+            {
+              body: [
+                {
+                  inline: true,
+                  label: "HR_CAMPAIGN_FROM_DATE_LABEL",
+                  isMandatory: true,
+                  key: "startDate",
+                  type: "date",
+                  populators: {
+                    name: "startDate",
+                    required: true,
+                    error: "CORE_COMMON_REQUIRED_ERRMSG",
+                    validation: {
+                      max: new Date().toISOString().split("T")[0]
+                    }
+                  }
+                },
+                {
+                  inline: true,
+                  label: "HR_CAMPAIGN_TO_DATE_LABEL",
+                  isMandatory: false,
+                  key: "endDate",
+                  type: "date",
+                  populators: {
+                    name: "endDate",
+                    required: false,
+                    error: "CORE_COMMON_REQUIRED_ERRMSG",
+                    validation: {
+                      max: new Date().toISOString().split("T")[0]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        };
+
+      const { isLoading: isHRMSSearchLoading, isError, error, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);      // API request criteria for fetching project staff details
+      const reqCri = {
+        url: `/${projectContextPath}/staff/v1/_search`,
+        params: {
+          tenantId: tenantId,
+          limit: 100,
+          offset: 0,
+        },
+        body: {
+          ProjectStaff: {
+            staffId: hrmsData.Employees[0]?.user?.userServiceUuid ? [hrmsData.Employees[0]?.user?.userServiceUuid] : [],
+          },
+        },
+        config: {
+          enabled: !!hrmsData.Employees[0]?.user?.userServiceUuid,
+          select: (data) => {
+            return data.ProjectStaff;
+          },
+        },
+      };
+      // Fetch project staff details using custom API hook
+      const { isLoading: isProjectStaffLoading, data: projectStaff, revalidate: revalidateProjectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+      const createStaffMutation = Digit.Hooks.hrms.useHRMSStaffCreate(tenantId);
+      const deleteStaffMutation = Digit.Hooks.hrms.useHRMSStaffDelete(tenantId);
+
+      const validateFormData = (formData, config, t) => {
+        const missingFields = [];
+      
+        config?.form?.forEach((section) => {
+          section.body?.forEach((field) => {
+            const key = field.key;
+            const isRequired = field.isMandatory || field.populators?.required;
+      
+            if (isRequired && !formData[key]) {
+              missingFields.push(t(field.label)); // Push the translated label
+            }
+          });
+        });
+      
+        return missingFields;
+      };
+
+      const CloseBtn = (props) => {
+        return (
+          <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
+            {props?.isMobileView ? (
+              <CloseSvg />
+            ) : (
+              <div className={"icon-bg-secondary"} style={{ backgroundColor: "#FFFFFF" }}>
+                <Close />
+              </div>
+            )}
+          </div>
+        );
+      };
+      const Heading = (props) => {
+        return <h1 className="heading-m">{props.heading}</h1>;
+      };
+
+      const handleToastClose = () => {
+        setToast(null);
+      };
+
+      const handleModalSubmit = async () => {
+        const missingFields = validateFormData(sessionFormData, formConfig, t);
+        if (missingFields.length > 0) return;
+        setModalOpen(false);
+        const payload = {
+          tenantId: tenantId,
+          userId: hrmsData.Employees[0]?.user?.userServiceUuid,
+          projectId: row?.id,
+          startDate: sessionFormData?.startDate
+            ? convertDateToEpoch(sessionFormData?.startDate)
+            : row?.startDate,
+          endDate: sessionFormData?.endDate
+          ? convertDateToEpoch(sessionFormData?.endDate)
+          : row?.endDate,
+        };
+        await createStaffService(payload);
+      };
+      const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+        if (!_.isEqual(sessionFormData, formData)) {
+          setSessionFormData({ ...sessionFormData, ...formData });
+        }
+      }
+      const createStaffService = async (payload) => {
+        try {
+          await createStaffMutation.mutateAsync(
+            {
+              projectStaff: payload,
+            },
+            {
+              onSuccess: async (res) => {
+                setToast({ key: false, label: `${id} ${t("ASSIGNED_SUCCESSFULLY")}`, type: "success" });
+                setRefreshKey(Date.now());
+                await revalidateProjectStaff();
+              },
+              onError: async (error) => {
+                setToast({ key: true, label: `${id} ${t("FAILED_TO_ASSIGN_CAMPAIGN")}`, type: "error" });
+                setRefreshKey(Date.now());
+                await revalidateProjectStaff();
+              },
+            }
+          );
+        } catch (error) {
+          // setTriggerEstimate(true);
+          setToast({ key: true, label: `${id} ${t("FAILED_TO_ASSIGN_CAMPAIGN")}`, type: "error" });
+        }
+      };
+      
+
+      switch (key) {
+        case "CAMPAIGN_START_DATE":
+        case "CAMPAIGN_END_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+        case "PROJECT_BOUNDARY_TYPE":
+          return value ? <span>{t(`${hierarchyType}_${value}`)}</span> : <span>{t("NA")}</span>;
+        case "PROJECT_BOUNDARY":
+        case "PROJECT_TYPE":
+          return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
+        case "ASSIGNMENT":
+
+          if (isHRMSSearchLoading || isProjectStaffLoading) {
+            return <Loader />;
+          }
+
+          return (
+            // <span style={{color: "#F18F5E", cursor: "pointer"}}>{t(`ASSIGN`)}</span>
+            <>
+            <Button
+              key={refreshKey}
+              variation={projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id) ? "secondary" : "primary"}
+              label={projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id) ? t("UNASSIGN") : t("ASSIGN")}
+              style={{ minWidth: "10rem" }}
+              onButtonClick={() => {
+                if (projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id)) {
+                  deleteStaffMutation.mutateAsync(
+                    {
+                      projectStaff: projectStaff?.find(item => item.projectId === row?.id),
+                    },
+                    {
+                      onSuccess: async (res) => {
+                        setToast({ key: false, label: `${id} ${t("UNASSIGNED_SUCCESSFULLY")}`, type: "success" });
+                        setRefreshKey(Date.now());
+                        await revalidateProjectStaff();
+                      },
+                      onError: async (error) => {
+                        setToast({ key: true, label: `${id} ${t("FAILED_TO_UNASSIGN_CAMPAIGN")}`, type: "error" });
+                        setRefreshKey(Date.now());
+                        await revalidateProjectStaff();
+                      },
+                    }
+                  );
+                  return;
+                }
+                else{
+                setModalOpen(true);
+                }
+              }}
+            />
+            {modalOpen && (
+            <Modal
+                popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height: "fit-content" }}
+                headerBarMain={<Heading t={t} heading={t(formConfig.label.heading)} />}
+                headerBarEnd={<CloseBtn onClick={() => setModalOpen(false)} />}
+                actionSaveLabel={t(formConfig.label.submit)}
+                actionCancelLabel={t(formConfig.label.cancel)}
+                actionCancelOnSubmit={() => setModalOpen(false)}
+                actionSaveOnSubmit={handleModalSubmit}
+                formId="modal-action"
+            >
+              <FormComposerV2
+                config={formConfig.form}
+                defaultValues={sessionFormData}
+                noBoxShadow
+                inline
+                childrenAtTheBottom
+                formId="modal-action"
+                onFormValueChange={onFormValueChange}
+                />
+            </Modal>
+            )}
+             {toast && (
+                    <Toast
+                      error={toast.key}
+                      isDleteBtn="true"
+                      label={t(toast.label)}
+                      onClose={handleToastClose}
+                      type={toast.type}
+                    />
+                  )}
+            </>
+          );
+
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+  },
 };

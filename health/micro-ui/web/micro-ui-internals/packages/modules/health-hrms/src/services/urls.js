@@ -3,7 +3,7 @@
 const healthHrms = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "health-hrms";
 const mdmsPath = window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
 const boundarySearchPath = window?.globalConfigs?.getConfig("BOUNDARY_CONTEXT") || "boundary-service/boundary-relationships/_search?";
-const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
 
 const Urls = {
@@ -41,8 +41,8 @@ const Urls = {
   hcm: {
     searchStaff: `/${projectContextPath}/staff/v1/_search`,
     searchProject: `/${projectContextPath}/v1/_search`,
-    createStaff: `/${projectContextPath}/staff/v1/bulk/_create`,
-    deleteStaff: `/${projectContextPath}/staff/v1/bulk/_delete`,
+    createStaff: `/${projectContextPath}/staff/v1/_create`,
+    deleteStaff: `/${projectContextPath}/staff/v1/_delete`,
   },
 };
 

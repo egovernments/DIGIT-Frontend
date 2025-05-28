@@ -52,6 +52,7 @@ const AppFeatures = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+        isActive: true,
          "filters":{
             "project": campaignNumber
         }
@@ -151,13 +152,15 @@ const AppFeatures = () => {
               {t(feature?.code)}
             </HeaderComponent>
             <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-            <p style={{ margin: "0rem" }}>{t(feature.description)}</p>
+             <p className="module-description">
+              {t(feature.description)}</p>
             <Button
               className={"campaign-module-button"}
               type={"button"}
               size={"large"}
+              isDisabled={feature?.disabled}
               variation={selectedModuleCodes?.[code]?.includes(feature?.code) ? "secondary" : "primary"}
-              label={selectedModuleCodes?.[code]?.includes(feature?.code) ? t("DESELECT") : t("ES_CAMPAIGN_SELECT")}
+              label={selectedModuleCodes?.[code]?.includes(feature?.code) ? t("DESELECT") : (feature?.disabled?t("ES_FEATURE_DISABLED"):t("ES_CAMPAIGN_SELECT"))}
               onClick={() => handleSelectModule(feature?.code)}
             />
           </Card>
