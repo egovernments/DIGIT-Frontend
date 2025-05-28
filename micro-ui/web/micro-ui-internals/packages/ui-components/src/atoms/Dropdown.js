@@ -86,24 +86,23 @@ const TextField = (props) => {
             ?.scrollBy?.(0, -45);
       }
       e.preventDefault();
-    } 
+    }
     else if (e.key === "Enter") {
       if (props.addProps.length === 1) {
-          props.addProps.selectOption(0);
+        props.addProps.selectOption(0);
       }
-       else {
-          props.addProps.selectOption(props.addProps.currentIndex);
+      else {
+        props.addProps.selectOption(props.addProps.currentIndex);
       }
       e.preventDefault();
-  }
+    }
   };
 
   return (
     <input
       ref={props.inputRef}
-      className={`digit-dropdown-employee-select-wrap--elipses ${
-        !props.isSearchable ? "notSearchable" : ""
-      } ${props.disable && "disabled"} ${props.variant ? props.variant : ""}`}
+      className={`digit-dropdown-employee-select-wrap--elipses ${!props.isSearchable ? "notSearchable" : ""
+        } ${props.disable && "disabled"} ${props.variant ? props.variant : ""}`}
       type="text"
       value={replaceDotWithColon(value)}
       onChange={inputChange}
@@ -145,7 +144,7 @@ const Dropdown = (props) => {
   const [forceSet, setforceSet] = useState(0);
   const [optionIndex, setOptionIndex] = useState(-1);
   const optionRef = useRef(null);
-  const menuRef = useRef(null); 
+  const menuRef = useRef(null);
   const selectorRef = useRef(null);
   const hasCustomSelector = props.customSelector ? true : false;
   const t = props.t || translateDummy;
@@ -165,8 +164,8 @@ const Dropdown = (props) => {
     }
   }
 
-  function menuSwitch(){
-    if(!props.disabled){
+  function menuSwitch() {
+    if (!props.disabled) {
       var current = menuStatus;
       if (!current) {
         document.addEventListener("mousedown", handleClickOutside, false);
@@ -178,10 +177,10 @@ const Dropdown = (props) => {
 
   function handleClickOutside(e) {
     if (!menuRef.current || !menuRef.current.contains(e.target)) {
-      if(selectorRef?.current && selectorRef?.current.contains(e.target)){
-        return ;
+      if (selectorRef?.current && selectorRef?.current.contains(e.target)) {
+        return;
       }
-      else{
+      else {
         document.removeEventListener("mousedown", handleClickOutside, false);
         setMenuStatus(false);
       }
@@ -298,33 +297,30 @@ const Dropdown = (props) => {
 
     return (
       <div
-        className={`cp digit-dropdown-item ${
-          props.variant ? props?.variant : ""
-        } ${index === optionIndex ? "keyChange" : ""}`}
+        className={`cp digit-dropdown-item ${props.variant ? props?.variant : ""
+          } ${index === optionIndex ? "keyChange" : ""}`}
         key={index}
         onClick={() => onSelect(option)}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
       >
         {props?.variant === "profiledropdown" ||
-        props?.variant === "profilenestedtext" ? (
+          props?.variant === "profilenestedtext" ? (
           <div
             className={"profile-icon-container"}
             style={{
-              width: `${
-                props?.variant === "profiledropdown"
-                  ? "2rem"
-                  : props?.variant === "profilenestedtext"
+              width: `${props?.variant === "profiledropdown"
+                ? "2rem"
+                : props?.variant === "profilenestedtext"
                   ? "2.935rem"
                   : ""
-              }`,
-              height: `${
-                props?.variant === "profiledropdown"
-                  ? "2rem"
-                  : props?.variant === "profilenestedtext"
+                }`,
+              height: `${props?.variant === "profiledropdown"
+                ? "2rem"
+                : props?.variant === "profilenestedtext"
                   ? "2.935rem"
                   : ""
-              }`,
+                }`,
               ...(option.profileIcon && {
                 backgroundImage: `url(${option.profileIcon})`,
               }),
@@ -336,15 +332,15 @@ const Dropdown = (props) => {
                   props?.variant === "profiledropdown"
                     ? "2rem"
                     : props?.variant === "profilenestedtext"
-                    ? "2.935rem"
-                    : ""
+                      ? "2.935rem"
+                      : ""
                 }
                 height={
                   props?.variant === "profiledropdown"
                     ? "2rem"
                     : props?.variant === "profilenestedtext"
-                    ? "2.935rem"
-                    : ""
+                      ? "2.935rem"
+                      : ""
                 }
               ></ProfileIcon>
             )}
@@ -423,11 +419,10 @@ const Dropdown = (props) => {
   };
   return (
     <div
-      className={`${
-        user_type === "employee"
-          ? "digit-dropdown-employee-select-wrap"
-          : "digit-dropdown-select-wrap"
-      } ${props?.className ? props?.className : ""}`}
+      className={`${user_type === "employee"
+        ? "digit-dropdown-employee-select-wrap"
+        : "digit-dropdown-select-wrap"
+        } ${props?.className ? props?.className : ""}`}
       style={props?.style || {}}
     >
       {(hasCustomSelector || props?.profilePic) && (
@@ -435,12 +430,18 @@ const Dropdown = (props) => {
           className={`header-dropdown-label ${props?.theme || ""}`}
           onClick={menuSwitch}
           ref={selectorRef}
+          role="button"
+          aria-expanded={menuStatus}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") menuSwitch();
+          }}
         >
           {props?.profilePic && (
             <span
-              className={`header-dropdown-profile ${props?.theme || ""} ${
-                typeof props?.profilePic === "string" ? "text" : ""
-              }`}
+              className={`header-dropdown-profile ${props?.theme || ""} ${typeof props?.profilePic === "string" ? "text" : ""
+                }`}
+              aria-label="User profile"
             >
               {typeof props?.profilePic === "string"
                 ? props?.profilePic?.[0]?.toUpperCase()
@@ -460,18 +461,16 @@ const Dropdown = (props) => {
 
       {!hasCustomSelector && !props?.profilePic && (
         <div
-          className={`${
-            dropdownStatus
-              ? "digit-dropdown-select-active"
-              : "digit-dropdown-select"
-          } ${props?.variant ? props?.variant : ""} ${
-            !props?.isSearchable ? "notSearchable" : ""
-          } ${props.disabled && "disabled"}`}
+          className={`${dropdownStatus
+            ? "digit-dropdown-select-active"
+            : "digit-dropdown-select"
+            } ${props?.variant ? props?.variant : ""} ${!props?.isSearchable ? "notSearchable" : ""
+            } ${props.disabled && "disabled"}`}
           style={
             props.errorStyle
               ? {
-                  ...(props.noBorder ? { border: "none" } : {}),
-                }
+                ...(props.noBorder ? { border: "none" } : {}),
+              }
               : { ...(props.noBorder ? { border: "none" } : {}) }
           }
           onClick={
@@ -479,6 +478,13 @@ const Dropdown = (props) => {
               ? dropdownSwitch
               : null
           }
+          role="button"
+          tabIndex={0}
+          aria-expanded={dropdownStatus}
+          aria-label="Select an option"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") dropdownSwitch();
+          }}
         >
           <TextField
             variant={props?.variant}
@@ -495,23 +501,23 @@ const Dropdown = (props) => {
                   ? props.isMultiSelectEmp
                     ? `${selectedOption} ${t("BPA_SELECTED_TEXT")}`
                     : props.t(
-                        props.variant === "nesteddropdown" ||
-                          props.variant === "treedropdown"
-                          ? selectedOption.code
-                          : props.optionKey
+                      props.variant === "nesteddropdown" ||
+                        props.variant === "treedropdown"
+                        ? selectedOption.code
+                        : props.optionKey
                           ? selectedOption[props.optionKey]
                           : selectedOption
-                      )
+                    )
                   : props.optionKey
-                  ? selectedOption[props.optionKey]
-                  : selectedOption
+                    ? selectedOption[props.optionKey]
+                    : selectedOption
                 : null
             }
             filterVal={filterVal}
             addProps={{
               length:
                 props.variant === "nesteddropdown" ||
-                props.variant === "treedropdown"
+                  props.variant === "treedropdown"
                   ? flattenedOptions.length
                   : filteredOption.length,
               currentIndex: optionIndex,
@@ -565,6 +571,7 @@ const Dropdown = (props) => {
             className={`digit-dropdown-options-card`}
             style={{ ...props.optionCardStyles }}
             ref={optionRef}
+            role="listbox"
           >
             {props.variant === "treedropdown" ? (
               <TreeSelect
@@ -585,11 +592,12 @@ const Dropdown = (props) => {
                 : filteredOption
               ).length === 0 && (
                 <div
-                  className={`cp digit-dropdown-item unsuccessfulresults ${
-                    props.variant ? props?.variant : ""
-                  }`}
+                  className={`cp digit-dropdown-item unsuccessfulresults ${props.variant ? props?.variant : ""
+                    }`}
                   key={"-1"}
-                  onClick={() => {}}
+                  onClick={() => { }}
+                  role="option"
+                  aria-disabled="true"
                 >
                   {<span> {"NO RESULTS FOUND"}</span>}
                 </div>
@@ -605,6 +613,7 @@ const Dropdown = (props) => {
             }}
             id="jk-dropdown-unique"
             ref={optionRef}
+            role="listbox"
           >
             {props.option
               ?.filter(
@@ -615,16 +624,23 @@ const Dropdown = (props) => {
                 return (
                   <p
                     key={index}
+                    role="option"
+                    aria-selected={index === optionIndex}
+                    onClick={() => onSelect(option)}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        onSelect(option);
+                    }}
                     style={
                       index === optionIndex
                         ? {
-                            opacity: 1,
-                            backgroundColor:
-                              "rgba(238, 238, 238, var(--bg-opacity))",
-                          }
+                          opacity: 1,
+                          backgroundColor:
+                            "rgba(238, 238, 238, var(--bg-opacity))",
+                        }
                         : {}
                     }
-                    onClick={() => onSelect(option)}
                   >
                     {option}
                   </p>
