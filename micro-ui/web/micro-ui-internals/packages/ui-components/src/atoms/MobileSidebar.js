@@ -24,8 +24,8 @@ const MobileSidebar = ({
   };
 
   const handleSearchChange = (index, value) => {
-    setSearchTerms((prev) => ({
-      ...prev,
+    setSearchTerms((prev) => ({ 
+      ...prev, 
       [index]: value,
     }));
   };
@@ -45,6 +45,13 @@ const MobileSidebar = ({
 
   const darkThemeIconColor = Colors.lightTheme.paper.primary;
   const lightThemeIconColor = Colors.lightTheme.primary[2];
+
+  const handleKeyDown = (e, callback) => {
+    if (e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      callback();
+    }
+  };
 
   const renderSearch = (index) => (
     <div className={`mb-search-container ${theme || ""}`}>
@@ -80,15 +87,19 @@ const MobileSidebar = ({
           <div
             className={`msb-item-child-wrapper ${
               isExpanded ? "expanded" : ""
-            } ${theme || ""}`}
+              } ${theme || ""}`}
             key={currentIndex}
           >
             <div
               className={`msb-sidebar-item ${
                 isTopLevel ? "msb-parentLevel" : "msb-child-level"
-              }`}
+                }`}
               onClick={() => handleArrowClick(item, currentIndex, parentIndex)}
               tabIndex={0}
+              role="button"
+              aria-expanded={isExpanded}
+              aria-label={`Toggle ${item.label}`}
+              onKeyDown={(e) => handleKeyDown(e, () => handleArrowClick(item, currentIndex))}
             >
               {(item.selectedIcon || item.icon) && (
                 <span className="msb-icon">
@@ -116,64 +127,74 @@ const MobileSidebar = ({
                       }
                     />
                   )}
-                </span>
+              </span>
               )}
             </div>
           </div>
-          {item.children && isExpanded && (
-            <div className="msb-sidebar-children expanded">
-              {renderSearch(currentIndex)}
-              {renderChildItems(
-                filterItems(item.children, searchTerms[currentIndex] || ""),
-                currentIndex
-              )}
-            </div>
-          )}
+            {item.children && isExpanded && (
+              <div className="msb-sidebar-children expanded">
+                {renderSearch(currentIndex)}
+                {renderChildItems(
+                  filterItems(item.children, searchTerms[currentIndex] || ""), 
+                  currentIndex
+                  )}
+              </div>
+            )}
         </>
-      );
+          );
     });
 
   const renderChildItems = (items, parentIndex = -1) =>
     items.map((item, index) => {
       const currentIndex = parentIndex >= 0 ? `${parentIndex}-${index}` : index;
-      const isExpanded = expandedItems[currentIndex];
+          const isExpanded = expandedItems[currentIndex];
+          const isSelected = selectedItem.item === item;
 
-      return (
+          return (
         <>
           <div className={"item-child-wrapper-msb"} key={currentIndex}>
             <div
-              className={`sidebar-item-msb ${theme || ""} ${
-                selectedItem.item === item ? "selected" : ""
-              }`}
-              onClick={() => handleItemClick(item, currentIndex, parentIndex)}
+              className={`sidebar-item-msb ${theme || ""} ${isSelected ? "selected" : ""}`}
+              role="button"
               tabIndex={0}
+              aria-label={`Select ${item.label}`}
+              onClick={() => handleItemClick(item, currentIndex, parentIndex)}
+              onKeyDown={(e) => handleKeyDown(e, () => handleItemClick(item, currentIndex, parentIndex))}
             >
               {
-                <span className="icon-msb">
+              <span className="icon-msb">
                   {item.selectedIcon ? item.selectedIcon : item.icon}
                 </span>
               }
               {<span className="item-label-msb">{item.label}</span>}
               {item.children && (
                 <span
-                  className={`expand-icon-msb ${"child-level"}`}
+                  className={`expand-icon-msb child-level`}
+                  role="button"
+                  tabIndex={0}
+                  aria-expanded={isExpanded}
+                  aria-label={`Toggle ${item.label} children`}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleArrowClick(item, currentIndex, parentIndex);
                   }}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                    handleKeyDown(e, () => handleArrowClick(item, currentIndex));
+                  }}
                 >
                   {isExpanded ? (
-                    <SVG.ArrowDropDown
-                      fill={
-                        theme === "dark"
-                          ? darkThemeIconColor
-                          : lightThemeIconColor
+                  <SVG.ArrowDropDown
+                    fill={
+                      theme === "dark" 
+                      ? darkThemeIconColor 
+                      : lightThemeIconColor
                       }
                     ></SVG.ArrowDropDown>
-                  ) : (
+                    ) : (
                     <SVG.ArrowDropDown
-                      style={{ transform: "rotate(-90deg)" }}
-                      fill={
+                    style={{ transform: "rotate(-90deg)" }}
+                    fill={
                         theme === "dark"
                           ? darkThemeIconColor
                           : lightThemeIconColor
@@ -226,6 +247,7 @@ MobileSidebar.propTypes = {
       path: PropTypes.string,
       icon: PropTypes.node.isRequired,
       label: PropTypes.string.isRequired,
+      children: PropTypes.array,
     })
   ).isRequired,
   profileName: PropTypes.string,

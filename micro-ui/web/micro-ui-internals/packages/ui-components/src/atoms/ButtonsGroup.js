@@ -51,11 +51,11 @@ const ButtonsGroup = ({ buttonsArray ,sortButtons}) => {
 
   const finalResultArray = sortButtons ? 
   (isMobileView
-  ? sortedButtons.reverse() 
+      ? sortedButtons.reverse()
   : sortedButtons) : resultArray;
 
   return (
-    <div className="digit-buttons-group">  
+    <div className="digit-buttons-group" role="group" aria-label="Buttons group">
       {finalResultArray.map((button, index) => (
         <div key={index}>{button}</div>
       ))}
