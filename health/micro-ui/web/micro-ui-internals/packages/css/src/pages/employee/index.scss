@@ -1000,6 +1000,9 @@ tbody {
   color: #0b4b66 !important;
   font-weight: 700;
   font-size: 2.5rem;
+  display: flex;
+  align-items: baseline;
+  gap: 1rem;
 }
 .appConfigLabelField-label-container {
   width: 100%;
