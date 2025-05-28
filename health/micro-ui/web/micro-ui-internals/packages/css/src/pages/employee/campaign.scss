@@ -417,6 +417,12 @@
   fill:theme(digitv2.lightTheme.text-color-secondary);
  }
 }
+
+.app-config-radio{
+  display: flex;
+  margin-top: 1rem;
+  flex-direction:column;
+}
 .create-campaign-card {
   gap: 0;
   grid-gap: 0;
