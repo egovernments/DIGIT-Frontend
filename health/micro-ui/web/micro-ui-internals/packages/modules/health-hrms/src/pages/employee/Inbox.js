@@ -22,7 +22,8 @@ const InboxSearch = () => {
   }
 
   
-  const config = mdmsData ? mdmsData : inboxSearchConfig();
+  // const config = mdmsData ? mdmsData : inboxSearchConfig(); [TODO: Use this once MDMS is updated with the new config]
+  const config = inboxSearchConfig();
 
   return (
     <div style={{ marginBottom: "80px" }}>

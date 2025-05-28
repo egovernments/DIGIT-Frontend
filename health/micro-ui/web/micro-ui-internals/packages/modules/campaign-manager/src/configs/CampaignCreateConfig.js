@@ -19,7 +19,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               populators: {
                 name: "CampaignType",
                 optionsKey: "code", 
-                error: "Required",
+                error: "ES__REQUIRED_CAMPAIGN_TYPE",
                 mdmsv2: true,
                 mdmsConfig: {
                   masterName: "projectTypes", 
@@ -42,7 +42,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               populators: {
                 name: "CycleSelection",
                 // optionsKey: "code",
-                error: "ES__REQUIRED",
+                error: "ES__REQUIRED_SELECTION",
                 required: true,
               },
             },
@@ -67,7 +67,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               disable: false,
               populators: {
                 name: "CampaignName",
-                error: "ES__REQUIRED",
+                error: "ES__REQUIRED_NAME",
                 required: "true"
               },
             },
@@ -96,7 +96,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               populators: {
                 name: "DateSelection",
                 // optionsKey: "code",
-                error: "ES__REQUIRED",
+                error: "ES__REQUIRED_DATE",
                 required: true,
               },
             },

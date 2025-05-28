@@ -2,18 +2,15 @@ import { PrivateRoute } from "@egovernments/digit-ui-react-components";
 import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Link, Switch, useLocation } from "react-router-dom";
-import { BreadCrumbs } from "@egovernments/digit-ui-components";
 
 const EmployeeApp = ({ path }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const mobileView = innerWidth <= 640;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const EmployeeDetails = Digit?.ComponentRegistryService?.getComponent("EmployeeDetailScreen");
   const Inbox = Digit?.ComponentRegistryService?.getComponent("InboxSearch");
   const CreateEmployee = Digit?.ComponentRegistryService?.getComponent("HRCreateEmployee");
-  const AssignCampaign = Digit?.ComponentRegistryService?.getComponent("AssignCampaign");
+  const AssignCampaignInbox = Digit?.ComponentRegistryService?.getComponent("AssignCampaignInbox");
   const ResponseScreen = Digit?.ComponentRegistryService?.getComponent("ResponseScreen");
 
   const BreadCrumbs = Digit?.ComponentRegistryService?.getComponent("BreadCrumbs");
@@ -59,7 +56,11 @@ const EmployeeApp = ({ path }) => {
                 internalLink: `/${window?.contextPath}/employee/hrms/edit`,
                 show: location.pathname.includes("edit"),
               },
-
+              {
+                content: t("HR_CAMPAIGN_ASSIGNMENT"),
+                internalLink: `/${window?.contextPath}/employee/hrms/assign-campaign`,
+                show: location.pathname.includes("assign-campaign"),
+              },
               {
                 content: t("HR_EDIT_CAMPAIGN_ASSIGNMENT"),
                 internalLink: `/${window?.contextPath}/employee/hrms/update/assign-campaign`,
@@ -70,9 +71,9 @@ const EmployeeApp = ({ path }) => {
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />
           <PrivateRoute path={`${path}/response`} component={() => <ResponseScreen />} />
           <PrivateRoute path={`${path}/edit/:id`} component={() => <CreateEmployee editUser={true} />} />
-          <PrivateRoute path={`${path}/assign-campaign/:id`} component={() => <AssignCampaign />} />
+          <PrivateRoute path={`${path}/assign-campaign/:id`} component={() => <AssignCampaignInbox />} />
 
-          <PrivateRoute path={`${path}/update/assign-campaign/:id`} component={() => <AssignCampaign editCampaign={true} />} />
+          <PrivateRoute path={`${path}/update/assign-campaign/:id`} component={() => <AssignCampaignInbox editCampaign={true} />} />
           <PrivateRoute path={`${path}/inbox`} component={() => <Inbox />} />
           <PrivateRoute path={`${path}/details/:id`} component={() => <EmployeeDetails />} />
         </div>

@@ -582,7 +582,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             <Button
               type={"button"}
               size={"large"}
-              variation={"primary"}
+              variation={"secondary"}
               label={t("CLOSE")}
               onClick={() => {
                 setShowPopUp(false);

@@ -1,5 +1,5 @@
 import { HRMS_CONSTANTS } from "../constants/constants";
-const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 import { convertEpochToDate } from "../utils/utlis";
 import employeeDetailsFetch from "./FetchEmployeeDetails";
 
@@ -125,23 +125,6 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   requestdata.dateOfAppointment = new Date(data?.SelectDateofEmployment).getTime();
   requestdata.code = data?.SelectEmployeeId ? data?.SelectEmployeeId : undefined;
   requestdata.jurisdictions = userExisting[0].jurisdictions
-    ? userExisting[0].jurisdictions.map((j) => {
-        let jurisdiction = Object.assign({}, j);
-        jurisdiction.roles = roles;
-        jurisdiction.boundaryType = data?.BoundaryComponent?.boundaryType;
-        jurisdiction.boundary = data?.BoundaryComponent?.code;
-
-        return jurisdiction;
-      })
-    : [
-        {
-          fromDate: new Date(data?.SelectDateofEmployment).getTime(),
-          toDate: undefined,
-          isCurrentAssignment: true,
-          department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
-          designation: data?.SelectEmployeeDesignation?.code || "undefined",
-        },
-      ];
 
   requestdata.assignments = userExisting[0].assignments.map((j) => {
     let assigment = { ...j };
@@ -154,8 +137,8 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   requestdata.employeeType = data?.SelectEmployeeType?.code;
 
   requestdata.user = requestdata.user || {};
-  requestdata.user.emailId = data?.SelectEmployeeEmailId != null ? data?.SelectEmployeeEmailId : null;
-  requestdata.user.gender = data?.SelectEmployeeGender?.gender.code;
+  requestdata.user.emailId = data?.SelectEmployeeEmailId != null && data?.SelectEmployeeEmailId !== "" ? data?.SelectEmployeeEmailId : userExisting[0]?.user?.emailId;
+  requestdata.user.gender = data?.gender.code;
   requestdata.user.dob = new Date(data?.SelectDateofBirthEmployment || HRMS_CONSTANTS.DEFAULT_DOB).getTime();
 
   requestdata.user.mobileNumber = data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
@@ -186,16 +169,19 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
  */
 
 function formJuridiction(data, tenantId) {
-  let jurisdictions = {
+  const boundaries = data?.Jurisdictions || [];
+
+  const jurisdictions = boundaries.map((boundary) => ({
     hierarchy: hierarchyType,
-    boundaryType: data?.BoundaryComponent?.boundaryType,
-    boundary: data?.BoundaryComponent?.code,
+    boundaryType: boundary?.boundaryType,
+    boundary: boundary?.code,
     tenantId: tenantId,
     roles: [].concat.apply([], data?.RolesAssigned),
-  };
+  }));
 
-  return [jurisdictions];
+  return jurisdictions;
 }
+
 
 /**
  * Edits and formats the default values for an employee/user.
@@ -232,24 +218,17 @@ export const editDefaultUserValue = (data, tenantId) => {
 
     gender: {
       active: true,
-      code: data[0]?.user?.gender || "FEMALE",
-      name: `COMMON_GENDER_${data[0]?.user?.gender}` || "",
+      code: data[0]?.user?.gender,
+      name: `COMMON_GENDER_${data[0]?.user?.gender}`,
     },
 
     RolesAssigned: (data?.[0]?.user?.roles || []).map((e) => e),
     SelectDateofBirthEmployment: convertEpochToDate(data[0]?.user?.dob),
-    BoundaryComponent: data[0]?.jurisdictions.map((ele, index) => {
-      return Object.assign({}, ele, {
-        key: index,
-        hierarchy: {
-          code: ele.hierarchy,
-          name: ele.hierarchy,
-        },
-        boundaryType: ele.boundaryType,
-        boundary: ele.boundary,
-        roles: data[0]?.user?.roles.filter((item) => item.tenantId == tenantId),
-      });
-    }),
+    Jurisdictions: data[0]?.jurisdictions?.map((ele) => ({
+      boundaryType: ele.boundaryType,
+      code: ele.boundary,
+      hierarchy: ele.hierarchy,
+    })),
     Assignments: data[0]?.assignments.map((ele, index) => {
       return Object.assign({}, ele, {
         key: index,

@@ -18,6 +18,14 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
+const disableFieldForMandatory = (drawerState, label) => {
+  // todo need to think about it @nabeel & @jagan
+  if (drawerState?.Mandatory && !drawerState?.deleteFlag) {
+    return label == "Mandatory" ? true : false;
+  }
+  return false;
+};
+
 const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
@@ -26,6 +34,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   const shouldShow = whenToShow(panelItem, drawerState);
+
   switch (panelItem?.fieldType) {
     case "toggle":
       return (
@@ -38,7 +47,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 [panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label]: value,
               }))
             }
-            isCheckedInitially={drawerState?.[panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label] ? true : false}
+            isCheckedInitially={drawerState?.[panelItem.label] ? true : false}
+            disable={disableFieldForMandatory(drawerState, panelItem?.label)}
             shapeOnOff
           />
           {/* //todo again clean up this logic,  */}
@@ -50,6 +60,10 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 {
                   moduleName: "common-masters",
                   masterName: "GenderType",
+                },
+                {
+                  moduleName: "HCM",
+                  masterName: "HOUSE_STRUCTURE_TYPES",
                 },
               ].map((i) => ({ ...i, code: `${i.moduleName}.${i.masterName}` }))}
               optionKey={"code"}
@@ -74,6 +88,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             shouldShow && shouldShow?.type === "radioOptions" ? (
               <RadioButtons // it should be changed to radio button
                 options={shouldShow?.options}
+                additionalWrapperClass="app-config-radio"
                 selectedOption={shouldShow?.options?.find((i) => i.pattern === drawerState?.[shouldShow?.bindTo]?.code)}
                 onSelect={(value) => {
                   setDrawerState((prev) => ({
@@ -348,6 +363,7 @@ function DrawerFieldComposer() {
             t={t}
             option={state?.MASTER_DATA?.AppFieldType}
             optionKey={"type"}
+            disabled={disableFieldForMandatory(drawerState, "Mandatory")} // todo need to think about it @nabeel & @jagan
             selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
             select={(value) => {
               setDrawerState((prev) => ({

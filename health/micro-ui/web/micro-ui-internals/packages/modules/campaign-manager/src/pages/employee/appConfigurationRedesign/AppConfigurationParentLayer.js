@@ -87,6 +87,7 @@ const AppConfigurationParentRedesign = () => {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
         schemaCode: `${MODULE_CONSTANTS}.${masterName}`,
+        isActive: true,
         filters: {
           project: campaignNumber,
         },
