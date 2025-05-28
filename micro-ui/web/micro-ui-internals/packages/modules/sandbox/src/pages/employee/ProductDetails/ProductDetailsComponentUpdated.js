@@ -4,6 +4,11 @@ import { Row, Col } from "@egovernments/digit-ui-react-components";
 import { SVG } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
+import { ReactComponent as Graph } from '../../../../src/components/images/graph.svg'
+import { ReactComponent as FeatureSearch } from '../../../../src/components/images/feature_search.svg'
+import { ReactComponent as Chat } from '../../../../src/components/images/chat.svg'
+import { ReactComponent as Calculate } from '../../../../src/components/images/calculate.svg'
+import { ReactComponent as BarChart } from '../../../../src/components/images/bar_chart.svg'
 
 
 
@@ -67,7 +72,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                     <span class="current">Local Business License Issuing System</span>
                 </nav>
             </div>
-            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem',minHeight: '35rem' }}>
+            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem', minHeight: '35rem' }}>
                 <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
 
                     {/* Left 60% */}
@@ -88,7 +93,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                         <img
                             src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/5e72d0b559dea9fc2f5ff2bd4c66c63c3aff8bcc.png"
                             alt="Business License UI"
-                            style={{ height: '100%', width: 'auto', objectFit: 'contain',minHeight: '35rem' }}
+                            style={{ height: '100%', width: 'auto', objectFit: 'contain', minHeight: '35rem' }}
                         />
                     </div>
                 </div>
@@ -156,27 +161,27 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                             <h2 className="cs-title">Citizens</h2>
 
                             <div className="cs-card">
-                                <img src="/icons/network.svg" alt="" className="cs-icon" />
+                                <Graph className="cs-icon"></Graph>
                                 <span>Fill necessary details and upload relevant documents</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/form.svg" alt="" className="cs-icon" />
+                                <Calculate className="cs-icon"></Calculate>
                                 <span>Track application(s) until issuance</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/payment.svg" alt="" className="cs-icon" />
+                                <FeatureSearch className="cs-icon"></FeatureSearch>
                                 <span className="cs-italic">Make dummy online payments</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/download.svg" alt="" className="cs-icon" />
+                                <Chat className="cs-icon"></Chat>
                                 <span className="cs-italic">Download sample license and payment receipts</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/notify.svg" alt="" className="cs-icon" />
+                                <BarChart className="cs-icon"></BarChart>
                                 <span className="cs-italic">Get notifications through emails and SMS</span>
                             </div>
 
@@ -205,27 +210,30 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                             <h2 className="cs-title">Employee</h2>
 
                             <div className="cs-card">
-                                <img src="/icons/network.svg" alt="" className="cs-icon" />
+                                <Graph className="cs-icon"></Graph>
+
                                 <span>Track applications based on SLAs</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/form.svg" alt="" className="cs-icon" />
+                                <Calculate className="cs-icon"></Calculate>
                                 <span>Verify documents and conduct field verification</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/payment.svg" alt="" className="cs-icon" />
+                                <FeatureSearch className="cs-icon"></FeatureSearch>
                                 <span className="cs-italic">Take action at each step and assign forward</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/download.svg" alt="" className="cs-icon" />
+                                <Chat className="cs-icon"></Chat>
+
                                 <span className="cs-italic">Leave comments on document verification and field verification</span>
                             </div>
 
                             <div className="cs-card">
-                                <img src="/icons/notify.svg" alt="" className="cs-icon" />
+                                <BarChart className="cs-icon"></BarChart>
+
                                 <span className="cs-italic">Review performance through the Dashboard</span>
                             </div>
 
@@ -243,7 +251,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
 
             {/* Fourth Section */}
             <div className="walkthrough-container"
-             style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}
+                style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}
             >
                 <div className="wt-c1">
                     <h2 className="wt-title">Walkthrough on Sandbox</h2>
@@ -251,7 +259,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                         Learn how to navigate and use the product on Sandbox.
                     </p>
                 </div>
-                
+
                 <div className="wt-tabs-center wt-tabs-and-iframe">
                     <div className="wt-tab-wrapper">
                         <div
@@ -275,7 +283,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
                             className="wt-iframe"
                         ></iframe>
                     </div>
-                
+
                 </div>
             </div>
         </div>
