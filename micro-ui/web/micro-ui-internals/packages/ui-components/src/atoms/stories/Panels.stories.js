@@ -1,6 +1,23 @@
 import React from "react";
 import Panels from "../Panels";
 
+const commonArgs = {
+  className: "",
+  message: "Message",
+  type: "success",
+  info: "Ref ID ",
+  response: "949749795479",
+  customIcon:"",
+  iconFill:"",
+  style: {},
+  showAsSvg:false,
+  multipleResponses:[],
+  animationProps:{
+    noAutoplay:false,
+    loop :false
+  }
+};
+
 export default {
   title: "Atoms/Panels",
   component: Panels,
@@ -44,22 +61,6 @@ export default {
 
 const Template = (args) => <Panels {...args} />;
 
-const commonArgs = {
-  className: "",
-  message: "Message",
-  type: "success",
-  info: "Ref ID ",
-  response: "949749795479",
-  customIcon:"",
-  iconFill:"",
-  style: {},
-  showAsSvg:false,
-  multipleResponses:[],
-  animationProps:{
-    noAutoplay:false,
-    loop :false
-  }
-};
 
 export const SuccessPanel = Template.bind({});
 SuccessPanel.args = {

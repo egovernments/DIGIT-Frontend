@@ -4,6 +4,7 @@ import PropTypes from "prop-types";
 const Tooltip = ({ tooltipRef, title, placement, arrow, style, className }) => {
   return (
     <div
+      role="tooltip"
       className={`tooltip-content tooltip-${placement} ${
         arrow ? "with-arrow" : ""
       } ${className || ""}`}
@@ -18,7 +19,7 @@ const Tooltip = ({ tooltipRef, title, placement, arrow, style, className }) => {
 Tooltip.propTypes = {
   title: PropTypes.node.isRequired,
   placement: PropTypes.oneOf([
-    "bottom",
+    "bottom", 
     "bottom-end",
     "bottom-start",
     "left",
