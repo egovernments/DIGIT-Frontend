@@ -1,9 +1,8 @@
 //import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { FormComposerV2, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useParams } from "react-router-dom";
-import { newConfig } from "../../components/config/config";
 
 import { ReposeScreenType } from "../../constants/enums";
 
@@ -16,6 +15,7 @@ import {
 } from "../../services/service";
 import { getPattern } from "../../utils/utlis";
 import ActionPopUp from "../../components/pageComponents/popup";
+import { CreateEmployeeConfig } from "../../components/config/createEmployeeConfig";
 
 const CreateEmployee = ({ editUser = false }) => {
   const isEdit = window.location.pathname.includes("/edit/");
@@ -38,17 +38,39 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const [showModal, setShowModal] = useState(false);
 
+  const eighteenYearsAgo = new Date();
+  eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
+  const formattedDate = eighteenYearsAgo.toISOString().split("T")[0];
+
+
   const mutation = Digit.Hooks.hrms.useHRMSCreate(tenantId);
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
-  const { isLoadings, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
+  const { isLoading: isHRMSSearchLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
+  const { data: mdmsData, isLoading:  isHRMSConfigLoading} = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CreateEmployeeConfig"], {
     select: (data) => {
-      return data?.["egov-hrms"]?.CommonFieldsConfig;
+      return data?.["egov-hrms"]?.CreateEmployeeConfig?.[0];
     },
     retry: false,
     enable: false,
   });
+
+  
+  // Validate phone number based on config
+  const validatePhoneNumber = (value, config) => {
+    const { minLength, maxLength, min, max } = config?.populators?.validation || {};
+    const stringValue = String(value || "");
+  
+    if (
+      (minLength && stringValue.length < minLength) ||
+      (maxLength && stringValue.length > maxLength) ||
+      (min && Number(value) < min) ||
+      (max && Number(value) > max)
+    ) {
+      return false;
+    }
+    return true;
+  };
 
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
     if (isEdit) {
@@ -61,6 +83,7 @@ const CreateEmployee = ({ editUser = false }) => {
     }
 
     const SelectEmployeeName = formData?.SelectEmployeeName;
+    const EmployeeContactNumber = formData?.SelectEmployeePhoneNumber;
 
     if (SelectEmployeeName && !SelectEmployeeName.match(Digit.Utils.getPattern("Name"))) {
       if (!formState.errors.SelectEmployeeName) {
@@ -121,19 +144,41 @@ const CreateEmployee = ({ editUser = false }) => {
       }
     }
 
+     // Validate mobile number
+     const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
+     .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
+
+   if (EmployeeContactNumber && !validatePhoneNumber(EmployeeContactNumber, contactFieldConfig)) {
+     if (!formState.errors.SelectEmployeePhoneNumber) {
+       setError("SelectEmployeePhoneNumber", {
+         type: "custom",
+         message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
+       },);
+     }
+   } else if (formState.errors.SelectEmployeePhoneNumber) {
+     clearErrors("SelectEmployeePhoneNumber");
+   }
+
     if (
       formData?.SelectEmployeeName &&
       formData?.SelectEmployeeType?.code &&
-      formData?.SelectEmployeeId
-      //  &&
-      // validatePassword(formData) &&
-      // checkMailNameNum(formData)
+      formData?.SelectEmployeeId && formData?.SelectEmployeePhoneNumber &&
+      formData?.gender && formData?.SelectDateofBirthEmployment && 
+      formData?.SelectDateofEmployment &&
+      formData?.SelectEmployeeDepartment &&
+      formData?.SelectEmployeeDesignation &&
+      formData?.RolesAssigned &&
+      (isEdit || formData?.Jurisdictions) 
     ) {
       setSubmitValve(true);
     } else {
       setSubmitValve(false);
     }
   };
+
+  const memoizedDefaultValues = useMemo(() => {
+    return editUser === true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : {};
+  }, [editUser, data?.Employees, tenantId]);
 
   const createEmployeeService = async (payload) => {
     try {
@@ -271,22 +316,44 @@ const CreateEmployee = ({ editUser = false }) => {
   const closeModal = () => {
     setShowModal(false);
   };
-  if (isLoading || isLoadings) {
-    return <Loader />;
-  }
 
-  const fConfig = mdmsData ? mdmsData : newConfig;
+  // const fConfig = mdmsData ? mdmsData : newConfig;
+  const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
 
-  //const fConfig =  newConfig;
+  const updatedConfig = useMemo(
+    () =>
+      Digit.Utils.preProcessMDMSConfig(
+        t,
+        fConfig,
+        {
+          updateDependent: [
+            {
+             key : "SelectDateofBirthEmployment",
+             value : [formattedDate]
+           },
+           {
+            key : "SelectDateofEmployment",
+            value : [new Date().toISOString().split("T")[0]]
+          }
+
+          ],
+        }
+      ),
+    [fConfig,]
+  );
 
   const config = isEdit
-    ? fConfig.map((section) => ({
+    ? updatedConfig?.form?.map((section) => ({
         ...section,
         body: section.body.filter(
-          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "BoundaryComponent"
+          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
         ),
       }))
-    : fConfig;
+    : updatedConfig?.form;
+
+  if (isHRMSSearchLoading || isHRMSConfigLoading) {
+    return <Loader />;
+  }
 
   return (
     <React.Fragment>
@@ -306,7 +373,7 @@ const CreateEmployee = ({ editUser = false }) => {
         </div>
 
         <FormComposerV2
-          defaultValues={editUser == true && data?.Employees ? editDefaultUserValue(data?.Employees, tenantId) : {}}
+          defaultValues={memoizedDefaultValues}
           heading={t("")}
           config={config}
           onSubmit={openModal}
