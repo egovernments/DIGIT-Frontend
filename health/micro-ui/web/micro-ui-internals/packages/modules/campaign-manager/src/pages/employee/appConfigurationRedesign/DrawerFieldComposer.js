@@ -89,7 +89,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               <RadioButtons // it should be changed to radio button
                 options={shouldShow?.options}
                 additionalWrapperClass="app-config-radio"
-                selectedOption={shouldShow?.options?.find((i) => i.pattern === drawerState?.[shouldShow?.bindTo]?.code)}
+                selectedOption={shouldShow?.options?.find((i) => i.pattern === drawerState?.[shouldShow?.bindTo])}
                 onSelect={(value) => {
                   setDrawerState((prev) => ({
                     ...prev,
