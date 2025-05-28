@@ -77,7 +77,6 @@ const additionalElements = [
   <img
     key="8"
     src="https://digit.org/wp-content/uploads/2023/06/Digit-Logo-1.png"
-    alt="Additional Element 8"
   />,
   <TextArea
     type="textarea"

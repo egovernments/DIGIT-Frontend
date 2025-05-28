@@ -34,18 +34,8 @@ const Panels = (props) => {
     return deviceType;
   };
 
-  const IconRender = (iconReq, iconFill) => {
-    const fill = iconFill || primaryColor;
-    return iconRender(
-      iconReq,
-      fill,
-      width,
-      height,
-      "digit-panel-customIcon"
-    );
-  };
 
-  const icon = IconRender(props?.customIcon, props?.iconFill);
+
   const deviceType = useDeviceType();
 
   const getAnimationDimensions = () => {
@@ -77,8 +67,20 @@ const Panels = (props) => {
     }
   };
 
-  const { width, height } = getAnimationDimensions();
+    const { width, height } = getAnimationDimensions();
 
+  const IconRender = (iconReq, iconFill) => {
+    const fill = iconFill || primaryColor;
+    return iconRender(
+      iconReq,
+      fill,
+      width,
+      height,
+      "digit-panel-customIcon"
+    );
+  };
+
+  const icon = IconRender(props?.customIcon, props?.iconFill);
 
   return (
     <div

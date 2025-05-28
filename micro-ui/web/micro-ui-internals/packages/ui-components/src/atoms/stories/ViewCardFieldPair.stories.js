@@ -9,12 +9,12 @@ export default {
       control: "text",
     },
     value: {
-      control: "text",
+      control: "text", 
     },
     inline: {
       control: "boolean",
     },
-    className: {
+    className: { 
       control: "boolean",
     },
     style: {
