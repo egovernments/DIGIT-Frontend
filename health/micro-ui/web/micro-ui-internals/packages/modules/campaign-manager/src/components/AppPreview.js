@@ -313,7 +313,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
             </div>
           ))}
           {card?.fields
-            ?.filter((field) => field.active&&(field.hidden==false||field.deleteFlag==true)) //added logic to hide fields in display
+            ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
               return (
                 <FieldV1
@@ -346,7 +346,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                     optionsKey: field?.isMdms ? "code" : "name",
                     component: getFieldType(field) === "button" ? renderField(field, t) : null,
                   }}
-                  required={field?.required || field?.Mandatory}
+                  required={field?.["toArray.required"] || false}
                   type={getFieldType(field) === "button" ? "custom" : getFieldType(field) || "text"}
                   value={field?.value === true ? "" : field?.value || ""}
                 />
