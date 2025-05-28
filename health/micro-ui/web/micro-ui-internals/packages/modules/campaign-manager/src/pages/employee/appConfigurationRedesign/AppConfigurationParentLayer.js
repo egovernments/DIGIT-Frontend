@@ -235,7 +235,10 @@ const AppConfigurationParentRedesign = () => {
 
   return (
     <div>
-      <Header className="app-config-header">{t(`${currentScreen?.[0]?.name}`)}</Header>
+      <Header className="app-config-header">
+        <div>{t(`${currentScreen?.[0]?.name}`)}</div>
+        <div style={{ fontSize: "1rem" }}>{`(${t(`APPCONFIG_VERSION`)} - ${parentState?.actualTemplate?.version})`}</div>
+      </Header>
       {variant === "app" && (
         <Tabs
           numberTabs={numberTabs}
