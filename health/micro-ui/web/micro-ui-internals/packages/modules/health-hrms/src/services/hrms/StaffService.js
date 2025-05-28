@@ -32,13 +32,13 @@ export const StaffService = {
       auth: true,
       userService: false,
     }),
-  delete_staff: (staffDetails) =>
+  delete_staff: ({ projectStaff }) =>
     Request({
       url: `${Urls.hcm.deleteStaff}`,
       useCache: false,
       method: "POST",
       data: {
-        ProjectStaff: staffDetails,
+        ProjectStaff: projectStaff,
       },
       auth: true,
       userService: false,
@@ -108,7 +108,7 @@ export const StaffService = {
       return projectDetails;
     }
   },
-  createStaff: async ({ staffCreateData }) => {
+  createStaff: async ({ projectStaff }) => {
     // await HRMS.update(assignmentUpdateData, tenantId);
 
     return Request({
@@ -116,7 +116,7 @@ export const StaffService = {
       useCache: false,
       method: "POST",
       data: {
-        ProjectStaff: staffCreateData,
+        ProjectStaff: projectStaff,
         apiOperation: "CREATE",
       },
       auth: true,

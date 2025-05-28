@@ -10,9 +10,9 @@ import Urls from "./urls";
  */
 const employeeDetailsFetch = async (userCode, tenantId) => {
   // Retrieve configuration values from globalConfigs (fallback values provided)
-  const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "project";
-  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "individual";
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+  const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
+  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 
   try {
     // Fetch staff details based on userCode
