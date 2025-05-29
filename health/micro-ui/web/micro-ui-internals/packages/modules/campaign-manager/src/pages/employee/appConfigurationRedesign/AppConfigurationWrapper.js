@@ -116,7 +116,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
               ...item,
               cards: item?.cards?.map((j, k, c) => {
                 if (j.header === action.payload.currentCard?.header) {
-                  const regex = new RegExp(`^${item?.name}_${j?.header}_NEW_FIELD_(\\d+)$`);
+                  const regex = new RegExp(`^${item?.name}_${j?.header}_newField(\\d+)$`);
                   const maxCounter = j.fields
                     .map((f) => {
                       const match = f.jsonPath && f.jsonPath.match(regex);
@@ -129,7 +129,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${nextCounter}`,
+                        jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,

@@ -78,6 +78,35 @@ const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
   return result;
 };
 
+// const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
+//   if (!field.appType) return {};
+
+//   const matched = fieldTypeMasterData.find((item) => item.type === field.appType);
+//   if (!matched) return {};
+
+//   const result = {
+//     type: matched.metadata?.type,
+//     format: matched.metadata?.format,
+//   };
+
+//   const renameMap = matched.attributeToRename || {};
+
+//   Object.keys(field).forEach((key) => {
+//     if (key === "validations") return;
+
+//     if (renameMap[key]) {
+//       // If the current key should be renamed, store its value under the mapped key
+//       result[renameMap[key]] = field[key];
+//     } else if (!Object.values(renameMap).includes(key)) {
+//       // If key is not in targetKey list, copy it as-is
+//       result[key] = field[key];
+//     }
+//     // If key is a target of rename (i.e., already renamed from source), skip it
+//   });
+
+//   return result;
+// };
+
 function flattenValidationsToField(validationsArray) {
   const result = {};
 
