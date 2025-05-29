@@ -1,294 +1,312 @@
-import React, { Fragment, useState } from "react";
-import { HeaderComponent, Card, CardText, CardHeader, Button, } from "@egovernments/digit-ui-components";
-import { Row, Col } from "@egovernments/digit-ui-react-components";
+import React, { useState } from "react";
 import { SVG } from "@egovernments/digit-ui-components";
+import { ReactComponent as Graph } from '../../../../src/components/images/graph.svg';
+import { ReactComponent as FeatureSearch } from '../../../../src/components/images/feature_search.svg';
+import { ReactComponent as Chat } from '../../../../src/components/images/chat.svg';
+import { ReactComponent as Calculate } from '../../../../src/components/images/calculate.svg';
+import { ReactComponent as BarChart } from '../../../../src/components/images/bar_chart.svg';
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
-import { ReactComponent as Graph } from '../../../../src/components/images/graph.svg'
-import { ReactComponent as FeatureSearch } from '../../../../src/components/images/feature_search.svg'
-import { ReactComponent as Chat } from '../../../../src/components/images/chat.svg'
-import { ReactComponent as Calculate } from '../../../../src/components/images/calculate.svg'
-import { ReactComponent as BarChart } from '../../../../src/components/images/bar_chart.svg'
 
-
-
-
-const renderContentItem = (item, itemIndex, module, t) => {
-    switch (item.type) {
-        case "paragraph":
-            return (
-                <CardText className="custom-section-paragraph" key={itemIndex}>
-                    <p>{t(item.text)}</p>
-                </CardText>
-            );
-        case "step-heading":
-            return (
-                <CardText key={itemIndex} className="custom-step-header">
-                    {t(item.text)}
-                </CardText>
-            );
-        case "step":
-            return (
-                <li key={itemIndex} className="custom-step-item">
-                    {t(item.text)}
-                </li>
-            );
-        case "image":
-            return (
-                <div key={itemIndex} className="custom-image-container">
-                    <img src={item.text} alt={`${module}Image`} className="custom-image" />
-                </div>
-            );
-        default:
-            return null;
-    }
+const iconMap = {
+    Graph,
+    FeatureSearch,
+    Chat,
+    Calculate,
+    BarChart
 };
 
 
-const ProductDetailsComponentUpdated = ({ config, module }) => {
-    const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState("citizen");
 
-    const iframeSrc =
-        activeTab === "citizen"
-            ? "https://example.com"
-            : "https://www.wikipedia.org";
+const Breadcrumb = ({ path }) => (
+    <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '2rem 3rem' }}>
+        <nav className="nav-breadcrumb">
+            <a href={`/${window?.contextPath}/employee/sandbox/productPage`}>Products</a>
+            <span className="separator">/</span>
+            <span className="current">{path}</span>
+        </nav>
+    </div>
+);
 
-    const moduleConfig = config?.find((item) => item.module === module) || {};
-    const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon, "#c84c0e") : null;
+const HeroSection = ({ title, headline }) => (
+    <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem', minHeight: '35rem' }}>
+        <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
+            <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+                <h2 style={{ color: '#2c3e50', fontSize: '2.5rem', marginBottom: '1.5rem' }}>{title}</h2>
+                <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3' }}>
+                    {headline.map((segment, i) => (
+                        <span key={i} style={{ color: segment.color }}>{segment.text} </span>
+                    ))}
+                </p>
+            </div>
+            <div style={{ width: '65%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
+                <img
+                    src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/5e72d0b559dea9fc2f5ff2bd4c66c63c3aff8bcc.png"
+                    alt="Business License UI"
+                    style={{ height: '100%', width: 'auto', objectFit: 'contain', minHeight: '35rem' }}
+                />
+            </div>
+        </div>
+    </div>
+);
 
-    const handleButtonClick = (action) => {
-        const url = '/' + window.contextPath + action;
-        window.open(url, "_blank");
-    };
+const AboutSection = ({ about }) => (
+    <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
+        <div className="about-container">
+            <div className="about-title-wrapper">
+                <h2 className="about-title">{about.title}</h2>
+                <div className="title-underline"></div>
+            </div>
+            {about.paragraphs.map((para, i) => (
+                <p key={i} className="about-description" dangerouslySetInnerHTML={{ __html: para }}></p>
+            ))}
+            <div className="roles-section">
+                {about.roles.map((r, i) => (
+                    <RoleBlock key={i} description={r.description} />
+                ))}
+            </div>
+        </div>
+    </div>
+);
+
+const RoleBlock = ({ description }) => (
+    <div className="role-block">
+        <div className="role-icon-wrapper">
+            <SVG.Person className="role-icon" />
+        </div>
+        <p>{description}</p>
+    </div>
+);
+
+const ExperienceSection = ({ experience, t = { t } }) => (
+    <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
+        <div className="about-container-2">
+            <div className="about-title-wrapper">
+                <h2 className="about-title">{experience.title}</h2>
+                <div className="title-underline-2"></div>
+            </div>
+            <p className="about-description">{experience.description}</p>
+            {experience.roles.map((r, i) => (
+                <UserRoleBlock key={i} role={r.role} imageUrl={r.imageUrl} reverse={r.reverse} cards={r.cards} config={r.config} t={t} />
+            ))}
+        </div>
+    </div>
+);
+
+const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t }) => (
+    <div className="cs-wrapper">
+        {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+        <div className="cs-right">
+            <img src={imageUrl} alt="UI" className="cs-image" />
+        </div>
+        {reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+    </div>
+);
+
+const RoleContent = ({ role, cards, config, t }) => (
+    <div className="cs-left">
+        <h2 className="cs-title">{role}</h2>
+        {cards.map(({ icon, text }, idx) => {
+            const IconComponent = iconMap[icon];
+            return (
+                <div key={idx} className="cs-card">
+                    <IconComponent className="cs-icon" />
+                    <span>{text}</span>
+                </div>
+            );
+        })}
+        <button
+
+            onClick={() => {
+                try {
+                    if (config.isExternal) {
+                        window.open(config?.action, "_blank");
+                    } else {
+                        handleButtonClick(config?.action);
+                    }
+                } catch (error) {
+                    console.error("Error navigating to URL:", error);
+                }
+            }}
+            className="cs-button"> {t(config.title)} ➔</button>
+    </div>
+);
+
+const WalkthroughSection = ({ activeTab, setActiveTab, t }) => {
+    const iframeSrc = activeTab === "citizen"
+        ? "https://example.com"
+        : "https://www.wikipedia.org";
 
     return (
-        <div>
-
-            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '2rem 3rem' }}>
-                <nav class="nav-breadcrumb">
-                    <a href={`/${window?.contextPath}/employee/sandbox/productPage`} >Products</a>
-                    <span class="separator">/</span>
-                    <span class="current">Local Business License Issuing System</span>
-                </nav>
+        <div className="walkthrough-container" style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
+            <div className="wt-c1">
+                <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
+                <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
             </div>
-            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem', minHeight: '35rem' }}>
-                <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
-
-                    {/* Left 60% */}
-                    <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                        <h2 style={{ color: '#2c3e50', fontSize: '2.5rem', marginBottom: '1.5rem' }}>
-                            Local Business License Issuing System
-                        </h2>
-                        <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3' }}>
-                            <span style={{ color: '#34495e' }}>Get your </span>
-                            <span style={{ color: '#b24b2d' }}>business </span>
-                            <span style={{ color: '#b24b2d' }}>license issued </span>
-                            <span style={{ color: '#34495e' }}>easily</span>
-                        </p>
-                    </div>
-
-                    {/* Right 40% */}
-                    <div style={{ width: '65%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
-                        <img
-                            src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/5e72d0b559dea9fc2f5ff2bd4c66c63c3aff8bcc.png"
-                            alt="Business License UI"
-                            style={{ height: '100%', width: 'auto', objectFit: 'contain', minHeight: '35rem' }}
-                        />
-                    </div>
+            <div className="wt-tabs-center wt-tabs-and-iframe">
+                <div className="wt-tab-wrapper">
+                    <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
+                    <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
                 </div>
-            </div>
-
-            {/* Second Section */}
-            <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
-                <div className="about-container">
-                    <div className="about-title-wrapper">
-                        <h2 className="about-title">About Local Business License Issuing System</h2>
-                        <div className="title-underline"></div>
-                    </div>
-
-                    <p className="about-description">
-                        The Local Business License Issuing system is an end-to-end product that enables
-                        <strong> businesses to apply for licenses </strong> and
-                        <strong> governments to ensure compliance and issue license certificates </strong>
-                        based on local regulations. This solution is <em>fully configurable</em> and can be extended to
-                        support a wide range of licenses, permits and certificates.
-                    </p>
-
-                    <p className="about-description">
-                        Each product on DIGIT allows specific roles to be assigned to each user.
-                        The default workflow has two types of users: Citizen and Government Employee.
-                    </p>
-
-                    <div className="roles-section">
-                        <div className="role-block">
-                            <div className="role-icon-wrapper">
-                                <SVG.Person className="role-icon" />
-                            </div>
-                            <p>
-                                <strong>Citizens</strong> can apply online or with help of counter employee at a service counter and make payment.
-                            </p>
-                        </div>
-
-                        <div className="role-block">
-                            <div className="role-icon-wrapper">
-                                <SVG.Person className="role-icon" />
-                            </div>
-                            <p>
-                                <strong>Government employees</strong> can verify documents, log field inspections and take action—such as approving,
-                                rejecting, or sending applications back—based on predefined rules. These actions can be done by one single user or by multiple users.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {/* Third Section */}
-
-            <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
-                <div className="about-container-2">
-                    <div className="about-title-wrapper">
-                        <h2 className="about-title">Experience Local Business Issuing System</h2>
-                        <div className="title-underline-2"></div>
-                    </div>
-
-                    <p className="about-description">
-                        On Sandbox, the government employee has been set up as a super-user, with all employee roles being assigned to it.  For each user, a new browser tab will open with the appropriate interface. Please do not share any sensitive or private details as this instance of Local Business License Issuing System is shared across users.
-                    </p>
-
-                    <div className="cs-wrapper">
-                        <div className="cs-left">
-                            <h2 className="cs-title">Citizens</h2>
-
-                            <div className="cs-card">
-                                <Graph className="cs-icon"></Graph>
-                                <span>Fill necessary details and upload relevant documents</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <Calculate className="cs-icon"></Calculate>
-                                <span>Track application(s) until issuance</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <FeatureSearch className="cs-icon"></FeatureSearch>
-                                <span className="cs-italic">Make dummy online payments</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <Chat className="cs-icon"></Chat>
-                                <span className="cs-italic">Download sample license and payment receipts</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <BarChart className="cs-icon"></BarChart>
-                                <span className="cs-italic">Get notifications through emails and SMS</span>
-                            </div>
-
-                            <button className="cs-button">Explore as a Citizen ➔</button>
-                        </div>
-
-                        <div className="cs-right">
-                            <img
-                                src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png"
-                                alt="UI"
-                                className="cs-image"
-                            />
-                        </div>
-                    </div>
-
-                    <div className="cs-wrapper">
-
-                        <div className="cs-right">
-                            <img
-                                src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png"
-                                alt="UI"
-                                className="cs-image"
-                            />
-                        </div>
-                        <div className="cs-left">
-                            <h2 className="cs-title">Employee</h2>
-
-                            <div className="cs-card">
-                                <Graph className="cs-icon"></Graph>
-
-                                <span>Track applications based on SLAs</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <Calculate className="cs-icon"></Calculate>
-                                <span>Verify documents and conduct field verification</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <FeatureSearch className="cs-icon"></FeatureSearch>
-                                <span className="cs-italic">Take action at each step and assign forward</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <Chat className="cs-icon"></Chat>
-
-                                <span className="cs-italic">Leave comments on document verification and field verification</span>
-                            </div>
-
-                            <div className="cs-card">
-                                <BarChart className="cs-icon"></BarChart>
-
-                                <span className="cs-italic">Review performance through the Dashboard</span>
-                            </div>
-
-                            <button className="cs-button">Explore as a Employee ➔</button>
-                        </div>
-
-                    </div>
-
-
-
-
-
-                </div>
-            </div>
-
-            {/* Fourth Section */}
-            <div className="walkthrough-container"
-                style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}
-            >
-                <div className="wt-c1">
-                    <h2 className="wt-title">Walkthrough on Sandbox</h2>
-                    <p className="wt-subtitle">
-                        Learn how to navigate and use the product on Sandbox.
-                    </p>
-                </div>
-
-                <div className="wt-tabs-center wt-tabs-and-iframe">
-                    <div className="wt-tab-wrapper">
-                        <div
-                            className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`}
-                            onClick={() => setActiveTab("citizen")}
-                        >
-                            Citizen
-                        </div>
-                        <div
-                            className={`wt-tab ${activeTab === "employee" ? "active" : ""}`}
-                            onClick={() => setActiveTab("employee")}
-                        >
-                            Employee
-                        </div>
-                    </div>
-
-                    <div className="wt-iframe-wrapper">
-                        <iframe
-                            src={iframeSrc}
-                            title="Digit Sandbox"
-                            className="wt-iframe"
-                        ></iframe>
-                    </div>
-
+                <div className="wt-iframe-wrapper">
+                    <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
                 </div>
             </div>
         </div>
     );
 };
 
-export default ProductDetailsComponentUpdated;
+const content = {
+    heroTitle: "Local Business License Issuing System",
+    heroHeadline: [
+        { text: "Get your", color: "#34495e" },
+        { text: "business license issued", color: "#b24b2d" },
+        { text: "easily", color: "#34495e" },
+    ],
+    about: {
+        title: "About Local Business License Issuing System",
+        paragraphs: [
+            "The Local Business License Issuing system is an end-to-end product that enables <strong>businesses to apply for licenses</strong> and <strong>governments to ensure compliance and issue license certificates</strong> based on local regulations.",
+            "Each product on DIGIT allows specific roles to be assigned to each user. The default workflow has two types of users: Citizen and Government Employee."
+        ],
+        roles: [
+            { description: "Citizens can apply online or with help of counter employee at a service counter and make payment." },
+            { description: "Government employees can verify documents, log field inspections and take action—such as approving, rejecting, or sending applications back—based on predefined rules." },
+        ]
+    },
+    experience: {
+        title: "Experience Local Business Issuing System",
+        description: "On Sandbox, the government employee has been set up as a super-user, with all employee roles being assigned to it.  For each user, a new browser tab will open with the appropriate interface. Please do not share any sensitive or private details as this instance of Local Business License Issuing System is shared across users.",
+        roles: [
+            {
+                role: "Citizens",
+                imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
+                reverse: false,
+                cards: [
+                    { icon: "Graph", text: "Fill necessary details and upload relevant documents" },
+                    { icon: "Calculate", text: "Track application(s) until issuance" },
+                    { icon: "FeatureSearch", text: "Make dummy online payments" },
+                    { icon: "Chat", text: "Download sample license and payment receipts" },
+                    { icon: "BarChart", text: "Get notifications through emails and SMS" }
+                ]
+            },
+            {
+                role: "Employee",
+                imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
+                reverse: true,
+                cards: [
+                    { icon: "Graph", text: "Track applications based on SLAs" },
+                    { icon: "Calculate", text: "Verify documents and conduct field verification" },
+                    { icon: "FeatureSearch", text: "Take action at each step and assign forward" },
+                    { icon: "Chat", text: "Leave comments on document verification and field verification" },
+                    { icon: "BarChart", text: "Review performance through the Dashboard" }
+                ]
+            }
+        ]
+    }
+};
 
+const handleButtonClick = (action) => {
+    const url = '/' + window.contextPath + action;
+    window.open(url, "_blank");
+};
+
+const ProductDetailsComponentUpdated = ({ config, module }) => {
+    const { t } = useTranslation();
+    const [activeTab, setActiveTab] = useState("citizen");
+
+
+    content.heroTitle = `${t(config[0].heading)}`
+    content.about.title = `${t(config[0].subsections[0].title)}`
+    content.about.paragraphs = config[0].subsections[0].content
+        .filter(c => c.type === "paragraph")
+        .map(c => `${t(c.text)}`);
+
+    const roleItems = config[0].subsections[0].content.filter(c => c.type === "role");
+
+    content.about.roles = roleItems.length > 0
+        ? roleItems.map(c => ({
+            description: t(c.text || "Data missing")
+        }))
+        : [
+            { description: t(`${module}` + "_SECTION1_ROLE_1") },
+            { description: t(`${module}` + "_SECTION1_ROLE_2") }
+        ];
+
+
+
+    content.experience.title = `${t(config[0].subsections[2].title)}`
+    content.experience.description = config[0].subsections[2].content.map(c => `${t(c.text)}`)
+
+    const heroHeadlineItems = config[0].subsections[1].content.filter(c => c.type === "heroHeadline");
+
+    content.heroHeadline = heroHeadlineItems.length > 0
+        ? content.heroHeadline.map((item, idx) => ({
+            text: t(heroHeadlineItems[idx]?.text || "Data missing"),
+            color: item.color
+        }))
+        : [
+            { text: t(`${module}` + "_SECTION2_HL1"), color: "#34495e" },
+            { text: t(`${module}` + "_SECTION2_HL2"), color: "#b24b2d" },
+            { text: t(`${module}` + "_SECTION2_HL3"), color: "#34495e" },
+        ];
+
+
+    content.experience.roles = config[0].subsections[2].content.map(c => `${t(c.text)}`)
+
+    const section = config[0].subsections[2].content;
+
+    const roleConfigs = [
+        {
+            imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
+            reverse: false,
+            defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
+        },
+        {
+            imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
+            reverse: true,
+            defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
+        }
+    ];
+
+    const roles = [];
+    let currentRoleIndex = -1;
+
+    section.forEach(item => {
+        if (item.type === "step-heading") {
+            currentRoleIndex++;
+            roles[currentRoleIndex] = {
+                role: t(item.text),
+                imageUrl: roleConfigs[currentRoleIndex].imageUrl,
+                reverse: roleConfigs[currentRoleIndex].reverse,
+                cards: [],
+                config: {
+                    action: currentRoleIndex === 0 ? config[0].cards[0].action : config[0].cards[1].action,
+                    isExternal: currentRoleIndex === 0 ? config[0].cards[0].isExternal : config[0].cards[1].isExternal,
+                    title: currentRoleIndex === 0 ? config[0].cards[0].title : config[0].cards[1].title,
+                }
+            };
+        } else if (item.type === "step" && currentRoleIndex > -1) {
+            const icon = roleConfigs[currentRoleIndex].defaultIcons[roles[currentRoleIndex].cards.length] || "Graph";
+            roles[currentRoleIndex].cards.push({ icon, text: t(item.text) });
+        }
+    });
+
+    content.experience.roles = roles;
+
+
+
+
+
+
+    return (
+        <div>
+            <Breadcrumb path={`${t(config[0].heading)}`} />
+            <HeroSection title={content.heroTitle} headline={content.heroHeadline} />
+            <AboutSection about={content.about} />
+            <ExperienceSection experience={content.experience} t={t} />
+            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} />
+        </div>
+    );
+};
+
+export default ProductDetailsComponentUpdated;
