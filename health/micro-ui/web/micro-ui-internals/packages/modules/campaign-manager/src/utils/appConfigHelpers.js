@@ -153,7 +153,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
           active: true,
           jsonPath: field.fieldName || "",
           metaData: {},
-          Mandatory: field.required || false,
+          // Mandatory: field.required || false,
           hidden: field.hidden || false,
           deleteFlag: field.deleteFlag || false,
           isLocalised: field.isLocalised ? true : false,
@@ -251,7 +251,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         order: fieldIndex + 1,
         value: field.value || "",
         hidden: false, // can't be derived from updatedData unless explicitly added
-        required: field.Mandatory || false,
+        // required: field.Mandatory || false,
         hidden: field.hidden || false,
         fieldName: field.jsonPath || "",
         helpText: field.helpText || "",

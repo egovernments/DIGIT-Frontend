@@ -53,8 +53,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 [panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label]: value,
               }))
             }
-            isCheckedInitially={drawerState?.[panelItem.label] ? true : false}
-            disable={disableFieldForMandatory(drawerState, panelItem?.label)}
+            isCheckedInitially={drawerState?.[panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label] ? true : false}
+            disable={disableFieldForMandatory(drawerState, panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label)}
             shapeOnOff
           />
           {/* //Render Conditional Fields */}
