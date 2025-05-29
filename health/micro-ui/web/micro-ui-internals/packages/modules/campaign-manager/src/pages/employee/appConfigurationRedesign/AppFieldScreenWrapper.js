@@ -181,7 +181,7 @@ function AppFieldScreenWrapper() {
               currentCard?.actionLabel && currentCard?.actionLabel !== true
                 ? currentCard?.actionLabel
                 : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
-              Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+              Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
               event.target.value
             );
             dispatch({

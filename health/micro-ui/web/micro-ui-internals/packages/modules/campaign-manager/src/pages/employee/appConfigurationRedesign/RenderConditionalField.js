@@ -36,6 +36,7 @@ export const RenderConditionalField = ({
             isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
           }
           onChange={(event) => {
+            const value = event.target.value;
             if (isLocalisable) {
               updateLocalization(
                 drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
@@ -43,8 +44,8 @@ export const RenderConditionalField = ({
                   : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
                       drawerState?.jsonPath || drawerState?.id
                     }`,
-                Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
-                event.target.value
+                Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                value
               );
               setDrawerState((prev) => ({
                 ...prev,
@@ -59,7 +60,7 @@ export const RenderConditionalField = ({
             } else {
               setDrawerState((prev) => ({
                 ...prev,
-                [cField?.bindTo]: event.target.value,
+                [cField?.bindTo]: value,
               }));
               return;
             }
@@ -87,7 +88,7 @@ export const RenderConditionalField = ({
                       if (i.code && i.code === item.code) {
                         updateLocalization(
                           item?.name ? item?.name : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
-                          Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                          Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                           event.target.value
                         );
                         return {

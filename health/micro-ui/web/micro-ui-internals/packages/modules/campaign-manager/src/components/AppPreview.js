@@ -337,6 +337,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}
                   populators={{
+                    t: t,
                     title: t(field?.label),
                     fieldPairClassName: `app-preview-field-pair ${
                       selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
