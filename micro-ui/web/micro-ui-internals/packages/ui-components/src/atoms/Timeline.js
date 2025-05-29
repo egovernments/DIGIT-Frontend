@@ -58,18 +58,31 @@ const Timeline = ({
 
   isError ? "Failed!" :
     variant === "inprogress"
-      ? "Inprogress"
-      : variant === "upcoming"
-      ? "Upcoming"
-      : variant === "completed"
-      ? "Completed"
-      : "";
+    ? "Inprogress"
+    : variant === "upcoming"
+    ? "Upcoming"
+    : variant === "completed"
+    ? "Completed"
+    : "";
 
   const color = Colors.lightTheme.paper.primary;
 
   return (
-    <div className={`digit-timeline-item ${className || ""} ${variant} ${isError ? "error" : ""}`}>
-      <div className={`timeline-circle ${variant} ${isError ? "error" : ""}`}>
+    <div className={`digit-timeline-item ${className || ""} ${variant} ${isError ? "error" : ""}`}
+      role="group"
+      aria-labelledby={`timeline-label-${label}`}
+    >
+      <div
+        className={`timeline-circle ${variant} ${isError ? "error" : ""}`}
+        role="img"
+        aria-label={
+          isError
+            ? "Step failed"
+            : variant === "completed"
+            ? "Step completed"
+            : `Step ${variant}`
+        }
+      >
         {variant === "completed" && !isError &&  (
           <div className="check-icon">
             <SVG.Check
@@ -79,7 +92,7 @@ const Timeline = ({
             />
           </div>
         )}
-                {isError &&  (
+        {isError &&  (
           <div className="check-icon">
             <SVG.Info
               width={isMobileView ? "18px" : "24px"}
@@ -99,7 +112,9 @@ const Timeline = ({
       )}
       <div className={`timeline-content ${isLastStep ? "lastTimeline" : ""}`}>
         <div className="timeline-info">
-          <div className={`timeline-label ${variant}`}>
+          <div className={`timeline-label ${variant}`}
+            id={`timeline-label-${label}`}
+          >
             {label
               ? StringManipulator("CAPITALIZEFIRSTLETTER", label)
               : defaultLabel}
@@ -125,6 +140,8 @@ const Timeline = ({
                 ? "timeline-additional-elements-inline"
                 : "timeline-additional-elements-column"
             }
+            role="region"
+            aria-label="Additional timeline details"
           >
             {additionalElements.map((element, index) => (
               <div
@@ -144,9 +161,9 @@ const Timeline = ({
                 showDetails
                   ? hideDetailsLabel
                     ? StringManipulator(
-                        "CAPITALIZEFIRSTLETTER",
-                        hideDetailsLabel
-                      )
+                      "CAPITALIZEFIRSTLETTER", 
+                      hideDetailsLabel
+                    )
                     : "Hide Details"
                   : viewDetailsLabel
                   ? StringManipulator("CAPITALIZEFIRSTLETTER", viewDetailsLabel)
