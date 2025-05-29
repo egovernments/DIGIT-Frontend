@@ -7,7 +7,7 @@ import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
 import VerifyAndGeneratePaymentsTable from "../../components/VerifyAndGeneratePaymentsTable";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 const VerifyAndGeneratePayments = () => {
 
     const { t } = useTranslation();
