@@ -23,6 +23,8 @@ const VerifyAndGeneratePayments = () => {
     // State Variables
     const [tableData, setTableData] = useState([]);
     const [billID, setBillID] = useState(null);
+    const [isEditBill, setIsEditBill] = useState(false);
+    //TODO: SET isEditBill based on the ROLE
     const [dateRange, setDateRange] = useState({
         startDate: '',
         endDate: '',
@@ -106,7 +108,7 @@ const VerifyAndGeneratePayments = () => {
             <VerifyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {<VerifyAndGeneratePaymentsTable editBill={true} data={selectedBills}  totalCount={selectedBills.length} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                {<VerifyAndGeneratePaymentsTable editBill={isEditBill} data={selectedBills}  totalCount={selectedBills.length} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
             </Card>
 
