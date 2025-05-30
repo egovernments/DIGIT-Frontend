@@ -46,7 +46,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
   // const localeModule = searchParams.get("localeModule");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
-  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
   const addMissingKey = (code) => {
     locDispatch({ type: "ADD_MISSING_KEY", payload: { code, enabledModules } });
@@ -100,7 +100,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
     }
   }, [localisationData, isLoading]);
 
-  if( isLoading) return <Loader page={true} variant={"PageLoader"} />;
+  if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
 
   return (
     <AppLocalisationContext.Provider

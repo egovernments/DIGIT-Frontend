@@ -116,7 +116,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
               ...item,
               cards: item?.cards?.map((j, k, c) => {
                 if (j.header === action.payload.currentCard?.header) {
-                  const regex = new RegExp(`^${item?.name}_${j?.header}_NEW_FIELD_(\\d+)$`);
+                  const regex = new RegExp(`^${item?.name}_${j?.header}_newField(\\d+)$`);
                   const maxCounter = j.fields
                     .map((f) => {
                       const match = f.jsonPath && f.jsonPath.match(regex);
@@ -129,7 +129,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
-                        jsonPath: `${item?.name}_${j?.header}_NEW_FIELD_${nextCounter}`,
+                        jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
@@ -146,7 +146,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
           return item;
         }),
       };
-    case "HIDE_FIELD":  //added logic to hide fields in display
+    case "HIDE_FIELD": //added logic to hide fields in display
       return {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
@@ -157,7 +157,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                 if (j.header === action.payload.currentCard?.header) {
                   return {
                     ...j,
-                    fields: j.fields?.map((k) => (k.jsonPath === action.payload.currentField.jsonPath?{...k,hidden:!k.hidden}:{...k})),
+                    fields: j.fields?.map((k) => (k.jsonPath === action.payload.currentField.jsonPath ? { ...k, hidden: !k.hidden } : { ...k })),
                   };
                 }
                 return j;
@@ -168,28 +168,32 @@ const reducer = (state = initialState, action, updateLocalization) => {
         }),
       };
     case "DELETE_FIELD":
-        return {
-          ...state,
-          screenData: state?.screenData?.map((item, index) => {
-            if (item?.name === action?.payload?.currentScreen?.name) {
-              return {
-                ...item,
-                cards: item?.cards?.map((j, k) => {
-                  if (j.header === action.payload.currentCard?.header) {
-                    return {
-                      ...j,
-                      fields: j.fields?.filter((k) => k.jsonPath !== action.payload.currentField.jsonPath),
-                    };
-                  }
-                  return j;
-                }),
-              };
-            }
-            return item;
-          }),
-        };
+      return {
+        ...state,
+        screenData: state?.screenData?.map((item, index) => {
+          if (item?.name === action?.payload?.currentScreen?.name) {
+            return {
+              ...item,
+              cards: item?.cards?.map((j, k) => {
+                if (j.header === action.payload.currentCard?.header) {
+                  return {
+                    ...j,
+                    fields: j.fields?.filter((k) => k.jsonPath !== action.payload.currentField.jsonPath),
+                  };
+                }
+                return j;
+              }),
+            };
+          }
+          return item;
+        }),
+      };
     case "UPDATE_HEADER_FIELD":
-      updateLocalization(action?.payload?.localisedCode, Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN", action?.payload?.value);
+      updateLocalization(
+        action?.payload?.localisedCode,
+        Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+        action?.payload?.value
+      );
       return {
         ...state,
         screenData: state?.screenData?.map((item, index) => {
@@ -288,7 +292,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
@@ -614,7 +618,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                     addFieldData?.label && addFieldData?.label !== true
                       ? addFieldData?.label
                       : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
-                    Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+                    Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                     event.target.value
                   );
                   setAddFieldData((prev) => ({

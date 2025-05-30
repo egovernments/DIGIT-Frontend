@@ -248,8 +248,8 @@ const renderField = (field, t) => {
           selected={null}
           select={() => {}}
           props={props}
-          moduleName={rest?.moduleMaster?.moduleName}
-          masterName={rest?.moduleMaster?.masterName}
+          moduleName={rest?.schemaCode ? rest.schemaCode.split(".")[0] : rest?.moduleMaster?.moduleName}
+          masterName={rest?.schemaCode ? rest.schemaCode.split(".")[1] : rest?.moduleMaster?.masterName}
           rest={rest}
         />
       );
@@ -259,7 +259,16 @@ const renderField = (field, t) => {
     case "dob":
       return <TextInput type="date" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
     case "button":
-      return <Button icon={"QrCodeScanner"} className="app-preview-field-button" variation="secondary" label={t(field?.label)} title={t(field?.label)} onClick={() => {}} />; // todo hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
+      return (
+        <Button
+          icon={"QrCodeScanner"}
+          className="app-preview-field-button"
+          variation="secondary"
+          label={t(field?.label)}
+          title={t(field?.label)}
+          onClick={() => {}}
+        />
+      ); // todo hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
     default:
       return <div style={{ color: "red", marginTop: "5px" }}>Unsupported field type: {field.type}</div>;
   }
@@ -313,7 +322,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
             </div>
           ))}
           {card?.fields
-            ?.filter((field) => field.active&&(field.hidden==false||field.deleteFlag==true)) //added logic to hide fields in display
+            ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
               return (
                 <FieldV1
@@ -328,6 +337,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}
                   populators={{
+                    t: t,
                     title: t(field?.label),
                     fieldPairClassName: `app-preview-field-pair ${
                       selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
@@ -338,15 +348,15 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                     }`,
                     mdmsConfig: field?.isMdms
                       ? {
-                          moduleName: field?.schemaCode?.moduleName,
-                          masterName: field?.schemaCode?.masterName,
+                          moduleName: field?.schemaCode?.split(".")[0],
+                          masterName: field?.schemaCode?.split(".")[1],
                         }
                       : null,
                     options: field?.isMdms ? null : field?.dropDownOptions,
                     optionsKey: field?.isMdms ? "code" : "name",
                     component: getFieldType(field) === "button" ? renderField(field, t) : null,
                   }}
-                  required={field?.required || field?.Mandatory}
+                  required={field?.["toArray.required"] || false}
                   type={getFieldType(field) === "button" ? "custom" : getFieldType(field) || "text"}
                   value={field?.value === true ? "" : field?.value || ""}
                 />

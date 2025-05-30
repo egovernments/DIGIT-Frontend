@@ -6,7 +6,7 @@ export const useCustomT = (code) => {
     return "";
   }
   const { locState, addMissingKey } = useAppLocalisationContext();
-  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   if (!Array.isArray(locState)) {
     console.warn("useCustomT: locState is not an array");
     return "";
