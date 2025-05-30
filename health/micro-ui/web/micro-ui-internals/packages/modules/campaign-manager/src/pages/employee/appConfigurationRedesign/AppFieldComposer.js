@@ -93,7 +93,7 @@ const PanelFieldDisplay = ({ t, label, appType, config, onToggle, isDelete, onDe
       </div>
 
       {/* Control to show/hide the field */}
-      <ToggleVisibilityControl config={config} onToggle={onToggle} />
+      {/* <ToggleVisibilityControl config={config} onToggle={onToggle} /> */}
 
       {/* Control to delete the field */}
       <DeleteFieldControl isDelete={isDelete} onDelete={onDelete} />
