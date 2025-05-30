@@ -28,7 +28,7 @@ const fsmCustomizations = {
 
     return {
       config: employeeConfig,
-      defaultConfig: true, // You want to use defaultConfig and you only want to update one field section. The above employeeConfigs is also an order for all the field section. So if defaultConfig is false then on browser you will only see those field section who are inside employeeConfig
+      defaultConfig: true, // You want to use defaultConfig and you only want to update one field section. The above employeeConfig is also an order for all the field section. So if defaultConfig is false then on browser you will only see those field section who are inside employeeConfig
     };
   },
 };
