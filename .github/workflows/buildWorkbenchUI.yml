@@ -25,7 +25,7 @@ jobs:
 
           echo "========== check paths of modified files =========="
           git diff --name-only HEAD^ HEAD > files.txt
-          run_job_digit_ui=false
+          run_job_digit_ui=true
           while IFS= read -r file
           do
             if [[ $file == health/micro-ui/* ]]; then
