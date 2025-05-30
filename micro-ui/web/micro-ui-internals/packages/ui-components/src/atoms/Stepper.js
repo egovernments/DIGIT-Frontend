@@ -54,7 +54,7 @@ const Stepper = ({
       return Object.values(customSteps);
     }
     return Array.from(
-      { length: totalSteps },
+      { length: totalSteps }, 
       (_, index) => `Step ${index + 1}`
     );
   };
@@ -66,55 +66,64 @@ const Stepper = ({
         className ? className : ""
       }`}
       style={style ? style : null}
+      role="list"
     >
-      {actions.map((action, index, arr) => (
-        <div
-          className={`digit-stepper-checkpoint ${direction ? direction : ""}`}
-          style={{ cursor: "pointer" }}
-          key={index}
-          onClick={() => {
-            currentStep = index;
-            onStepClick(index);
-          }}
-        >
+      {actions.map((action, index, arr) => {
+        const isCompleted = index < currentStep - 1 || index < activeSteps;
+        const isCurrent = currentStep - 1 === index;
+        const label = t(StringManipulator("TRUNCATESTRING", action, { maxLength: 64 }));
+
+        return (
           <div
-            className={`digit-stepper-content ${direction ? direction : ""}`}
+            key={index}
+            className={`digit-stepper-checkpoint ${direction || ""}`}
+            style={{ cursor: "pointer" }}
+            onClick={() => onStepClick(index)}
+            role="listitem"
+            tabIndex={0} 
+            aria-label={`Step ${index + 1}: ${label}`}
+            aria-current={isCurrent ? "step" : undefined} 
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onStepClick(index);
+              }
+            }}
           >
-            <span
-              className={`stepper-circle ${
-                ((index <= currentStep - 1) || (index < activeSteps) ) && "active"
-              }`}
+            <div 
+            className={`digit-stepper-content ${direction ? direction : ""}`}
             >
-              {((index < currentStep - 1) || (index < activeSteps) ) ? (
-                <SVG.Check
-                  width={isMobileView ? "18px" : "24px"}
-                  height={isMobileView ? "18px" : "24px"}
-                  fill={Color}
-                />
-              ) : (
-                index + 1
-              )}
-            </span>
-            <span
-              className={`stepper-label ${
-                ((index < currentStep - 1) || (index < activeSteps)) && "completed"
-              } ${currentStep - 1 === index && "current"} ${direction ? direction : ""}`}
-              style={{ ...props?.labelStyles }}
-            >
-              {t(
-                StringManipulator("TRUNCATESTRING", action, { maxLength: 64 })
-              )}
-            </span>
+              <span 
+              className={`stepper-circle ${isCompleted && "active"}`}>
+                {isCompleted ? (
+                  <SVG.Check
+                    width={isMobileView ? "18px" : "24px"}
+                    height={isMobileView ? "18px" : "24px"}
+                    fill={Color}
+                  />
+                ) : (
+                  index + 1
+                )}
+              </span>
+              <span
+                className={`stepper-label ${
+                  isCompleted && "completed"
+                } ${isCurrent && "current"} ${direction || ""}`}
+                style={{ ...props?.labelStyles }}
+              >
+                {label}
+              </span>
+            </div>
+            {index < arr.length - 1 && (
+              <span
+                className={`stepper-connect ${
+                  (index < currentStep - 1 || (index < activeSteps - 1)) && "active"
+                } ${direction ? direction : ""}`}
+              ></span>
+            )}
           </div>
-          {index < arr.length - 1 && (
-            <span
-              className={`stepper-connect ${
-                ((index < currentStep - 1) || (index < activeSteps && index < activeSteps - 1 ) ) && "active"
-              } ${direction ? direction : ""}`}
-            ></span>
-          )}
-        </div>
-      ))}
+        );
+      })}
     </div>
   );
 };

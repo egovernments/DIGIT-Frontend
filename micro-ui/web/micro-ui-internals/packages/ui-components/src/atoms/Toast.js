@@ -13,10 +13,10 @@ const Toast = (props) => {
   useEffect(() => {
     const timeout = setTimeout(
       () => {
-        setIsVisible(false);
-        if (props.onClose) {
-          props.onClose();
-        }
+      setIsVisible(false);
+      if (props.onClose) {
+        props.onClose();
+      }
       },
       props?.transitionTime ? props.transitionTime : 5000
     );
@@ -63,11 +63,17 @@ const Toast = (props) => {
   if (!isVisible) {
     return null;
   }
+  const commonProps = {
+    role: props?.type === "error" || props?.type === "warning" ? "alert" : "status",
+    "aria-live": props?.type === "error" || props?.type === "warning" ? "assertive" : "polite",
+    "aria-label": sentenceCaseLabel,
+  };
 
   if (props?.type === "warning") {
     return (
       <div>
         <div
+          {...commonProps}
           className={`digit-toast-success ${
             isVisible && isAnimating ? "animate" : ""
           } ${variant} ${isWarningButtons}`}
@@ -84,6 +90,9 @@ const Toast = (props) => {
                 className="digit-toast-close-btn"
                 style={{ cursor: "pointer" }}
                 onClick={props.onClose ? props.onClose : handleClose}
+                tabIndex={0}
+                role="button"
+                aria-label="Close notification"
               />
             </>
           ) : (
@@ -98,6 +107,9 @@ const Toast = (props) => {
                   className="digit-toast-close-btn"
                   style={{ cursor: "pointer" }}
                   onClick={props.onClose ? props.onClose : handleClose}
+                  tabIndex={0}
+                  role="button"
+                  aria-label="Close notification"
                 />
               ) : null}
             </div>
@@ -121,9 +133,10 @@ const Toast = (props) => {
     ) : (
       <SVG.CheckCircle fill={color} />
     );
-    
+
   return (
     <div
+      {...commonProps}
       className={`digit-toast-success ${
         isVisible && isAnimating ? "animate" : ""
       } ${variant}`}
@@ -138,6 +151,9 @@ const Toast = (props) => {
         className="digit-toast-close-btn"
         style={{ cursor: "pointer" }}
         onClick={props.onClose ? props.onClose : handleClose}
+        tabIndex={0}
+        role="button"
+        aria-label="Close notification"
       />
     </div>
   );

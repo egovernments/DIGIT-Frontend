@@ -54,6 +54,8 @@ const TopBar = ({
       <div
         className={`digit-topbar ${className || ""} ${theme || ""}`}
         style={style}
+        role="banner"
+        aria-label="Top navigation bar"
       >
         <Hamburger
           className={`digit-topbar-hamburger ${theme || ""} ${
@@ -70,11 +72,13 @@ const TopBar = ({
             onClick={() => onImageClick()}
             width={"80px"}
             height={"19px"}
+            role="button"
+            tabIndex={0}
           />
           <div className={`topbar-divider ${theme || ""}`}></div>
           <div className={`digit-topbar-ulb-mobileview ${theme || ""}`}>
             {ulb}
-          </div>
+            </div>
         </div>
       </div>
     );
@@ -84,18 +88,23 @@ const TopBar = ({
     <div
       className={`digit-topbar ${className || ""} ${theme || ""}`}
       style={style}
+      role="banner"
+      aria-label="Top navigation bar"
     >
       {!setImageToLeft && (
         <div className="digit-logo-ulb-wrapper">
           {logo && (
             <div
               className={`digit-topbar-logo ${onLogoClick ? "clickable" : ""}`}
+              onClick={onLogoClick}
+              role="button"
+              tabIndex={0}
+              aria-label="Logo"
             >
               <img
                 className="digit-header-logo-img"
                 alt="Logo"
                 src={logo}
-                onClick={() => onLogoClick()}
                 width={props?.logoWidth || "32px"}
                 height={props?.logoHeight || "32px"}
               />
@@ -113,6 +122,8 @@ const TopBar = ({
             onClick={() => onImageClick()}
             width={"80px"}
             height={"19px"}
+            role="button"
+            tabIndex={0}
           />
         </div>
       )}
@@ -120,23 +131,25 @@ const TopBar = ({
         {actionFields && (
           <>
             {actionFields.map((field, index) => (
-              <div className="individual-action-field" key={index}>
-                {field}
-              </div>
-            ))}
+            <div className="individual-action-field" key={index}>
+              {field}
+            </div>
+          ))}
           </>
         )}
         {
-          (!setImageToLeft) && (
-            <img
-              className={`digit-header-img ${onImageClick ? "clickable" : ""}`}
+        (!setImageToLeft) && (
+          <img
+            className={`digit-header-img ${onImageClick ? "clickable" : ""}`}
               alt="Powered by DIGIT"
-              src={img || digitImg}
-              onClick={() => onImageClick()}
-              width={"80px"}
-              height={"19px"}
-            />
-          )
+            src={img || digitImg}
+            onClick={() => onImageClick()}
+            width={"80px"}
+            height={"19px"}
+            role="button"
+            tabIndex={0}
+          />
+        )
         }
       </div>
     </div>
