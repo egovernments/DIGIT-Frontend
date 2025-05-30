@@ -330,15 +330,15 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   config={{
                     step: "",
                   }}
-                  description={t(field?.helpText) || null}
-                  error={t(field?.errorMessage) || null}
-                  infoMessage={t(field?.tooltip) || null}
-                  label={getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : t(field?.label)}
+                  description={field?.helpText || null}
+                  error={field?.errorMessage || null}
+                  infoMessage={field?.tooltip || null}
+                  label={getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.label}
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}
                   populators={{
                     t: t,
-                    title: t(field?.label),
+                    title: field?.label,
                     fieldPairClassName: `app-preview-field-pair ${
                       selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
                         ? `app-preview-selected`
