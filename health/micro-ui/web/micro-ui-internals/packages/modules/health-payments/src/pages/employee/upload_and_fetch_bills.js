@@ -143,10 +143,11 @@ const UploadAndFetchBillsCard = () => {
             {/* TODO: REPLACE WITH MyBills */}
             <MyBills 
             onSelectionChange={setSelectedBills}
+            selectedBills={selectedBills}
             isSelectableRows={true}
             style={{
-      height: "60vh",
-      maxHeight: "60vh"
+      // height: "60vh",
+      // maxHeight: "60vh"
     }}/>
           </PopUp>
         )}

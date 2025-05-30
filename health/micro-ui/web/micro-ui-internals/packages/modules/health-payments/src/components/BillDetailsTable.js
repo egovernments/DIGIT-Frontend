@@ -26,6 +26,9 @@ const BillDetailsTable = ({ ...props }) => {
     const project = Digit?.SessionStorage.get("staffProjects");
     const selectedProject = Digit?.SessionStorage.get("selectedProject");
 
+    // const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
+
+
     const billDetails = [
         {
             "id": "123456",
@@ -126,7 +129,24 @@ const BillDetailsTable = ({ ...props }) => {
                     </div>
                     );
                 },
-            },           
+            },    
+            {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_MOBILE_NUMBER`)}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {t(row?.mobileNumber) || t("ES_COMMON_NA")}
+          </span>
+        );
+      },
+      style: {
+        justifyContent: "flex-end",
+      },
+    },    
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>

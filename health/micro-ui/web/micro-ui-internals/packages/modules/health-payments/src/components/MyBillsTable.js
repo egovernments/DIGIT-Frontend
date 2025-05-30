@@ -194,7 +194,8 @@ const MyBillsTable = ({ ...props }) => {
         props?.handlePerRowsChange(currentRowsPerPage, currentPage);
     };
 
-    const handleSelectedRowsChange = ({ selectedRows }) => {
+    const handleSelectedRowsChange = ({ selectedRows,selectedCount }) => {
+        props?.onSelectedCountChange?.(selectedCount);
         props?.onSelectionChange(selectedRows);
       };
 

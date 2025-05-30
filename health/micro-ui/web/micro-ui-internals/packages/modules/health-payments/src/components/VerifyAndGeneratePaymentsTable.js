@@ -76,8 +76,11 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                         <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}
                         onClick={() => {
                             //view bill/edit bill
-                            history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`                                
-                            );
+                           if (props?.editBill) {
+                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`,{ data: row });
+                            } else {
+                                history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`,{ data: row });
+                            }
                         }}
                         style={{ color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}>
                             {t(row?.billNumber) || t("NA")}
@@ -97,24 +100,6 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
             //                 {formatTimestampToDate(row.billDate) || t("NA")}
             //             </div>
             //         );
-            //     },
-            // },
-
-            // {
-            //     name: (
-            //         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-            //             {t("HCM_AM_NO_OF_REGISTERS")}
-            //         </div>
-            //     ),
-            //     selector: (row) => {
-            //         return (
-            //             <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-            //                 {t(row?.additionalDetails?.noOfRegisters || "0")}
-            //             </div>
-            //         );
-            //     },
-            //     style: {
-            //         justifyContent: "flex-end",
             //     },
             // },
             {
@@ -263,7 +248,7 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                                 },
                                 {
                                     code: "HCM_AM_GENERATE_PAYMENT",
-                                    name: t(`HCM_AM_GENERATE_PAYMENT",`),
+                                    name: t(`HCM_AM_GENERATE_PAYMENT`),
                                 },
                             ]}
                             optionsKey="name"

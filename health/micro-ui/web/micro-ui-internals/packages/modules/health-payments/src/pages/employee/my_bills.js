@@ -28,6 +28,9 @@ const MyBills = (props) => {
     const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
     const [totalCount, setTotalCount] = useState(0);
     const [limitAndOffset, setLimitAndOffset] = useState({ limit: rowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+    const [selectedCount, setSelectedCount] = useState(0);
+    // const [totalAmount, setTotalAmount] = useState(0);
+
 
     const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -65,6 +68,10 @@ const MyBills = (props) => {
         setCurrentPage(1);
         setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     }
+    const getTotalAmount = (selectedBills) => {
+        if (!selectedBills || selectedBills.length === 0) return 0;
+        return selectedBills.reduce((total, bill) => total + (bill?.totalAmount || 0), 0);
+    }
 
     useEffect(() => {
         if (BillData) {
@@ -91,7 +98,7 @@ const MyBills = (props) => {
     if (isBillLoading) {
         return <LoaderScreen />
     }
-
+    const totalAmount = getTotalAmount(props?.selectedBills);
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
@@ -102,8 +109,27 @@ const MyBills = (props) => {
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} totalCount={totalCount} onSelectionChange={props?.onSelectionChange} isSelectableRows={props?.isSelectableRows} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
-                    handlePerRowsChange={handlePerRowsChange} />}
+                {isFetching ? (<Loader />) : tableData.length === 0 ? (<NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> )
+                :
+                (
+                <React.Fragment>
+                {selectedCount > 0 && (
+                    <div style={{ margin: '1rem 0', fontWeight: 'bold', color: '#0B4B66' }}>
+                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("$")} {totalAmount}
+                </div>
+                )}
+                <MyBillsTable 
+                    data={tableData} 
+                    totalCount={totalCount} 
+                    onSelectionChange={props?.onSelectionChange} 
+                    onSelectedCountChange={setSelectedCount}
+                    isSelectableRows={props?.isSelectableRows} 
+                    rowsPerPage={rowsPerPage} 
+                    currentPage={currentPage} 
+                    handlePageChange={handlePageChange}
+                    handlePerRowsChange={handlePerRowsChange} />
+            </React.Fragment>
+                   ) }
             </Card>
 
         </React.Fragment>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, use } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -19,6 +19,8 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  */
 const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
+  const billData = location.state?.data;
+  console.log("billData", billData);
   const { t } = useTranslation();
   const history = useHistory();
   const [infoDescription, setInfoDescription] = useState(null);
@@ -78,20 +80,20 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         }
     ]
   const filterDataByStatus = (status) => {
-  setTableData(billDetails.filter(item => item.status === status));
+  setTableData(billData.billDetails.filter(item => item.status === status));
 };
 useEffect(() => { 
-  filterDataByStatus(activeLink?.code);  
+  filterDataByStatus("ACTIVE");  
 },[])
   // context path variables
   // const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
   // const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
-  // const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
+  const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
 
   // // State variables
   // const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   // const { fromCampaignSupervisor } = location.state || false;
-  // const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   // const [attendanceDuration, setAttendanceDuration] = useState(null);
   // const [attendanceSummary, setAttendanceSummary] = useState([]);
   // const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
@@ -105,7 +107,7 @@ useEffect(() => {
   // const [triggerCreate, setTriggerCreate] = useState(false);
   // const [searchCount, setSearchCount] = useState(1);
   // const [data, setData] = useState([]);
-  // const [individualIds, setIndividualIds] = useState([]);
+  const [individualIds, setIndividualIds] = useState([]);
   // const [triggerEstimate, setTriggerEstimate] = useState(false);
   // const [comment, setComment] = useState(null);
   // const [showToast, setShowToast] = useState(null);
@@ -222,21 +224,15 @@ useEffect(() => {
   //   }
 
   // }, [estimateMusterRollData, MusterRollData]);
+useEffect(() => {
+  const billDetails = billData?.billDetails || [];
+  if (Array.isArray(billDetails)) {
+    const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
+    setIndividualIds(ids);
+    console.log("Individual IDs:", ids);
+  }
+}, []);
 
-  // useEffect(() => {
-  //   if (data) {
-  //     if (data?.[0]?.musterRollStatus === "APPROVED") {
-  //       setShowLogs(true);
-  //     } else {
-  //       setShowLogs(false);
-  //     }
-  //     // Extract individual IDs
-  //     const ids = data.flatMap((muster) =>
-  //       muster.individualEntries.map((entry) => entry.individualId)
-  //     );
-  //     setIndividualIds(ids);
-  //   }
-  // }, [data]);
 
   // const mutation = Digit.Hooks.useCustomAPIMutationHook({
   //   url: `/${musterRollContextPath}/v1/_create`,
@@ -367,29 +363,46 @@ useEffect(() => {
 
   // };
 
-  // const allIndividualReqCriteria = {
-  //   url: `/${individualContextPath}/v1/_search`,
-  //   params: {
-  //     tenantId: tenantId,
-  //     limit: data?.[0]?.individualEntries?.length + 1,
-  //     offset: 0,
-  //   },
-  //   body: {
-  //     Individual: {
-  //       id: individualIds
-  //     }
-  //   },
-  //   config: {
-  //     enabled: individualIds.length > 0 ? true : false,
-  //     select: (data) => {
-  //       return data;
-  //     },
-  //   },
-  //   changeQueryName: "allIndividuals"
-  // };
+  const allIndividualReqCriteria = {
+    url: `/${individualContextPath}/v1/_search`,
+    params: {
+      tenantId: tenantId,
+      limit: billData?.billDetails?.length + 1,
+      offset: 0,
+    },
+    body: {
+      Individual: {
+        id: individualIds
+      }
+    },
+    config: {
+      enabled: individualIds.length > 0 ? true : false,
+      select: (data) => {
+        return data;
+      },
+    },
+    changeQueryName: "allIndividuals"
+  };
 
-  // const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
-
+  const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
+  function addMobileNumberTOBillDetails(billDetails, individualsData) {
+    return billDetails.map((billDetail) => {
+      const individual = individualsData?.Individual?.find(
+        (ind) => ind.id === billDetail?.payee?.identifier
+      );
+      return {
+        ...billDetail,
+        mobileNumber: individual?.mobileNumber || t("NA"),
+      };
+    });
+  }
+  useEffect(() => {
+    console.log("AllIndividualsData", AllIndividualsData);
+    if (billData && AllIndividualsData) {
+      const updatedBillDetails = addMobileNumberTOBillDetails(billData?.billDetails, AllIndividualsData);
+      setTableData(updatedBillDetails);
+    }
+  }, [AllIndividualsData]);
   // const individualReqCriteria = {
   //   url: `/${individualContextPath}/v1/_search`,
   //   params: {
@@ -514,6 +527,7 @@ useEffect(() => {
   //   return <LoaderScreen />
   // }
 console.log("Rendering buttons for:", activeLink?.code);
+console.log("mob num:", tableData);
 
   return (
     <React.Fragment>
@@ -522,21 +536,23 @@ console.log("Rendering buttons for:", activeLink?.code);
           {editBillDetails ? t('HCM_AM_EDIT_BILL') : t('HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')}
         </Header>
         <Card type="primary" className="bottom-gap-card-payment">
-          {renderLabelPair('HCM_AM_BILL_NUMBER', t("HCM_AM_BILL_NUMBER"))}
-          {renderLabelPair('HCM_AM_BILL_DATE', t("HCM_AM_BILL_DATE"))}
-          {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', t("HCM_AM_NUMBER_OF_REGISTERS"))}
-          {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', t("HCM_AM_NUMBER_OF_WORKERS"))}
-          {renderLabelPair('HCM_AM_BOUNDARY_CODE', t("HCM_AM_BOUNDARY_CODE"))}
-          {renderLabelPair('HCM_AM_STATUS', t("HCM_AM_STATUS"))}
+          {renderLabelPair('HCM_AM_BILL_NUMBER',billData.billNumber || t("NA") )}
+          {renderLabelPair('HCM_AM_BILL_DATE', billData.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
+          {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', billData.additionalDetails.noOfRegisters || t("NA"))}
+          {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData.billDetails.length || t("NA"))}
+          {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData.localityCode || t("NA"))}
+          {renderLabelPair('HCM_AM_STATUS', billData.status || t("NA"))}
           {
             <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-                <InfoCard
-                  variant="error"
-                  style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
-                  label={t(`HCM_AM_ERROR`)}
-                  text={t("few details are missing lorem ipsum dolor sit amet")}
-              />
-              </div>
+                {editBillDetails && (
+                  <InfoCard
+                    variant="error"
+                    style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
+                    label={t(`HCM_AM_ERROR`)}
+                    text={t("few details are missing lorem ipsum dolor sit amet")}
+                  />
+                )}
+</div>
           }
         </Card>
          
