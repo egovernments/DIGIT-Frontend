@@ -1,25 +1,31 @@
-# FROM egovio/alpine-node-builder-14:yarn AS build
-FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
-RUN apk update && apk upgrade
-RUN apk add --no-cache git>2.30.0
+# ─── BUILD STAGE ──────────────────────────────────────────────────────────────
+FROM node:14-alpine AS build
+
+# install system deps
+RUN apk update && apk add --no-cache git
+
 ARG WORK_DIR
 WORKDIR /app
-ENV NODE_OPTIONS "--max-old-space-size=8168"
+ENV NODE_OPTIONS="--max-old-space-size=4792"
 
 COPY ${WORK_DIR} .
 RUN ls -lah
 
-#RUN node web/envs.js
 RUN cd web/ \
-    && chmod +x install-deps.sh \
+    && node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' \
+    && node -e 'console.log("health-core only")' \
+    && cd core/ \
+       && chmod +x ./install-deps.sh \
+       && ./install-deps.sh \
+    && cd ../ \
     && yarn install \
-    && yarn build:webpack 
+    && yarn build:webpack
 
-FROM nginx:mainline-alpine
-#FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/digit-ui
+# ─── RUNTIME STAGE ───────────────────────────────────────────────────────────
+FROM nginx:stable-alpine
 
+ENV WORK_DIR=/var/web/core-ui
 RUN mkdir -p ${WORK_DIR}
 
 COPY --from=build /app/web/build ${WORK_DIR}/
-COPY --from=build /app/web/docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/web/core/nginx.conf /etc/nginx/conf.d/default.conf
