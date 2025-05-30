@@ -4,7 +4,7 @@ import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import warningOutlineAnimation from "../constants/animations/warningOutline.json";
 import Animation from "./Animation";
-import { Colors} from "../constants/colors/colorconstants";
+import { Colors } from "../constants/colors/colorconstants";
 import { iconRender } from "../utils/iconRender";
 
 const PopUp = (props) => {
@@ -131,17 +131,15 @@ const PopUp = (props) => {
       tabIndex={0}
     >
       <div
-        className={`digit-popup-wrapper ${
-          props?.className ? props?.className : ""
-        } ${props?.type ? props?.type : ""}`}
+        className={`digit-popup-wrapper ${props?.className ? props?.className : ""
+          } ${props?.type ? props?.type : ""}`}
         style={props?.style}
         onClick={(e) => e.stopPropagation()}
       >
         {props?.type === "alert" ? (
           <div
-            className={`digit-popup-alert-content ${
-              isOverflowing ? "with-shadow" : ""
-            }`}
+            className={`digit-popup-alert-content ${isOverflowing ? "with-shadow" : ""
+              }`}
           >
             {!props?.customIcon && props?.showAlertAsSvg && (
               <SVG.Warning
@@ -171,9 +169,8 @@ const PopUp = (props) => {
         ) : (
           <>
             <div
-              className={`digit-popup-header ${
-                props?.headerclassName ? props?.headerclassName : ""
-              }  ${isOverflowing ? "with-shadow" : ""}`}
+              className={`digit-popup-header ${props?.headerclassName ? props?.headerclassName : ""
+                }  ${isOverflowing ? "with-shadow" : ""}`}
               style={{ display: "flex" }}
             >
               <div
@@ -224,11 +221,20 @@ const PopUp = (props) => {
                   </div>
                 </div>
                 <span
+                  tabIndex={0}
+                  role="button"
+                  aria-label="close"
+                  onKeyDown={(e) => {
+                    if (e.key == "Enter" || e.key == " ")
+                      props?.onClose()
+                  }
+                  }
                   className="digit-popup-close"
                   style={{ display: "flex" }}
                   onClick={() => props?.onClose()}
                 >
                   <SVG.Close
+
                     fill={"#363636"}
                     width={"24px"}
                     height={"24px"}
@@ -241,11 +247,9 @@ const PopUp = (props) => {
         )}
         <div
           ref={childrenWrapRef}
-          className={`digit-popup-children-wrap ${
-            props?.showChildrenInline ? "inline" : ""
-          } ${isOverflowing ? "with-shadow" : ""} ${
-            !hasFooterChildren ? "without-footer" : ""
-          }`}
+          className={`digit-popup-children-wrap ${props?.showChildrenInline ? "inline" : ""
+            } ${isOverflowing ? "with-shadow" : ""} ${!hasFooterChildren ? "without-footer" : ""
+            }`}
         >
           {props?.description && (
             <div className="digit-popup-description">{props?.description}</div>
@@ -254,9 +258,8 @@ const PopUp = (props) => {
         </div>
         {hasFooterChildren && (
           <div
-            className={`digit-popup-footer ${
-              props?.footerclassName ? props?.footerclassName : ""
-            } ${isOverflowing ? "with-shadow" : ""}`}
+            className={`digit-popup-footer ${props?.footerclassName ? props?.footerclassName : ""
+              } ${isOverflowing ? "with-shadow" : ""}`}
           >
             <div
               className={`digit-popup-footer-buttons ${props?.equalWidthButtons ? "equal-buttons" : ""}`}
