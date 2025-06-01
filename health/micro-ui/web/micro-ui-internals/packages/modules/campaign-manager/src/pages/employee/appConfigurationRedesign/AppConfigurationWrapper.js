@@ -311,7 +311,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     [
       { name: "AppScreenConfigTemplateSchema" },
       { name: fieldMasterName, limit: 100 },
-      { name: "DrawerPanelConfig" },
+      // { name: "DrawerPanelConfig" },
       { name: "DrawerPanelConfigOne", limit: 100 },
     ],
     {

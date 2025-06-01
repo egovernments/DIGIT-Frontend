@@ -8,6 +8,41 @@ import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
+import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+
+
+/**
+ * Determines whether a specific field in a UI panel should be disabled.
+ * 
+ * This logic currently hardcodes checks based on label values ("Mandatory" and "fieldType").
+ * Future improvement suggested: add a flag to auto-identify such elements for disabling.
+ * 
+ * @param {Object} drawerState - Contains current field state, including `jsonPath`.
+ * @param {Object} panelItem - Represents the current field item being rendered (e.g., label, config).
+ * @param {Array} resourceData - List of fields (identified by jsonPath) that require disabling.
+ * 
+ * @returns {boolean} - Returns true if the field should be disabled; false otherwise.
+ */
+const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
+  // Check if the current field's jsonPath is in the list of fields to be disabled
+  const shouldDisable = resourceData?.TemplateBaseConfig?.some(
+    (ele) => drawerState?.jsonPath === ele
+  );
+
+  // If the field is in the disable list AND its label is either "Mandatory" or "fieldType", disable it
+  if (shouldDisable && (panelItem?.label === "Mandatory" || panelItem?.label === "fieldType")) {
+    return true;
+  }
+
+  // Otherwise, the field should not be disabled
+  return false;
+};
+
+
+
+const getBaseTemplateFilter = (projectType="",flowName="")=>{
+  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`
+}
 
 const whenToShow = (panelItem, drawerState) => {
   const anyCheck =
@@ -24,13 +59,6 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-const disableFieldForMandatory = (drawerState, label) => {
-  // todo need to think about it @nabeel & @jagan
-  if (drawerState?.Mandatory && !drawerState?.deleteFlag) {
-    return label == "Mandatory" ? true : false;
-  }
-  return false;
-};
 
 const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
   const { t } = useTranslation();
@@ -38,8 +66,19 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
     ?.find((i) => i.fieldType === drawerState?.type)
     ?.localisableProperties?.includes(panelItem?.label);
   const searchParams = new URLSearchParams(location.search);
-  const projectType = searchParams.get("prefix");
+  const projectType = searchParams.get("projectType");
+  const tenantId = searchParams.get("tenantId");
   const shouldShow = whenToShow(panelItem, drawerState);
+  const flowName=useMemo(()=> state?.screenConfig?.[0]?.parent,[state?.screenConfig?.[0]]);
+
+  const reqCriteriaResource = useMemo(()=> Digit.Utils.campaign.getMDMSV1Criteria(tenantId,CONSOLE_MDMS_MODULENAME,[
+    {
+      "name": "TemplateBaseConfig",
+      "filter": getBaseTemplateFilter(projectType,flowName)
+    }
+  ],`MDMSDATA-${projectType}-${flowName}`),[projectType,flowName]);
+  
+  const { data: resourceData } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   switch (panelItem?.fieldType) {
     case "toggle":
@@ -54,7 +93,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               }))
             }
             isCheckedInitially={drawerState?.[panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label] ? true : false}
-            disable={disableFieldForMandatory(drawerState, panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label)}
+            disable={disableFieldForMandatory(drawerState, panelItem,resourceData)}
             shapeOnOff
           />
           {/* //Render Conditional Fields */}
@@ -88,7 +127,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           t={t}
           option={state?.MASTER_DATA?.AppFieldType}
           optionKey={"type"}
-          disabled={disableFieldForMandatory(drawerState, "Mandatory")} // todo need to think about it @nabeel & @jagan
+          disabled={disableFieldForMandatory(drawerState, panelItem,resourceData)} // todo need to think about it @nabeel & @jagan
           selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
           select={(value) => {
             setDrawerState((prev) => ({
