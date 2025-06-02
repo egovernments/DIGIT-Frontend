@@ -13,16 +13,17 @@ const VerifyAndGeneratePayments = () => {
     const { t } = useTranslation();
     const location = useLocation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
-    const selectedBills = location.state?.selectedBills || [];
+    const selectedBillIds = location.state?.selectedBillIds || [];
     // const selectedBills = useSelector((state) => state.payments.selectedBills);
 
-    console.log("selectedBills", selectedBills);
+    console.log("selectedBillIds", selectedBillIds);
     // context path variables
     const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
 
     // State Variables
     const [tableData, setTableData] = useState([]);
     const [billID, setBillID] = useState(null);
+    const [billStatus, setBillStatus] = useState(null);
     const [isEditBill, setIsEditBill] = useState(false);
     //TODO: SET isEditBill based on the ROLE
     const [dateRange, setDateRange] = useState({
@@ -43,8 +44,8 @@ const VerifyAndGeneratePayments = () => {
             billCriteria: {
                 tenantId: tenantId,
                 referenceIds: project?.map(p => p?.id) || [], 
-                ...(billID ? { billNumbers: [billID] } : {}),
-                ...(dateRange.startDate && dateRange.endDate ? { fromDate: new Date(dateRange.startDate).getTime(), toDate: new Date(dateRange.endDate).getTime() } : {}),
+                ...(billID ? { billNumbers: [billID] } : {billNumbers: selectedBillIds}),
+                status: billStatus? billStatus : null,
                 pagination: {
                     limit: limitAndOffset.limit,
                     offset: limitAndOffset.offset
@@ -81,16 +82,16 @@ const VerifyAndGeneratePayments = () => {
 
     useEffect(() => {
         refetchBill();
-    }, [billID, dateRange, limitAndOffset])
+    }, [billID, billStatus, limitAndOffset])
 
-    const onSubmit = (billID, dateRange) => {
+    const onSubmit = (billID, billStatus) => {
         setBillID(billID);
-        setDateRange(dateRange);
+        setBillStatus(billStatus);
     };
 
     const onClear = () => {
-        setDateRange({ startDate: '', endDate: '', title: '' });
         setBillID("");
+        setBillStatus("");
     };
 
 
@@ -108,8 +109,22 @@ const VerifyAndGeneratePayments = () => {
             <VerifyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
             <Card>
-                {<VerifyAndGeneratePaymentsTable editBill={isEditBill} data={selectedBills}  totalCount={selectedBills.length} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
-                    handlePerRowsChange={handlePerRowsChange} />}
+                {isFetching ? (
+                    <Loader />
+                ) : tableData.length === 0 ? (
+                    <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
+                ) : (
+                    <VerifyAndGeneratePaymentsTable
+                    editBill={isEditBill}
+                    data={tableData}
+                    totalCount={tableData.length}
+                    selectableRows={false}
+                    rowsPerPage={rowsPerPage}
+                    currentPage={currentPage}
+                    handlePageChange={handlePageChange}
+                    handlePerRowsChange={handlePerRowsChange}
+                    />
+                )}
             </Card>
 
         </React.Fragment>

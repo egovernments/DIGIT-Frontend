@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef, use } from "react";
+import React, { useState, useEffect, useRef, use, Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp,InfoCard, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent,Tab } from "@egovernments/digit-ui-components";
+import { Divider, Button, PopUp,InfoCard, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent,Tab,NoResultsFound } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -19,15 +19,16 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  */
 const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
-  const billData = location.state?.data;
-  console.log("billData", billData);
+  const billID = location.state?.billID;
+  console.log("billID", billID);
   const { t } = useTranslation();
   const history = useHistory();
   const [infoDescription, setInfoDescription] = useState(null);
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [tableData, setTableData] = useState([]);
-  
+  const [billData, setBillData] = useState(null);
+
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
       const [limitAndOffset, setLimitAndOffset] = useState({
           limit: rowsPerPage,
@@ -79,17 +80,13 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             "totalAmount": "150",
         }
     ]
-  const filterDataByStatus = (status) => {
-  setTableData(billData.billDetails.filter(item => item.status === status));
-};
-useEffect(() => { 
-  filterDataByStatus("ACTIVE");  
-},[])
+
+  
   // context path variables
   // const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
   // const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
-
+  const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
   // // State variables
   // const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   // const { fromCampaignSupervisor } = location.state || false;
@@ -115,8 +112,48 @@ useEffect(() => {
   // const [showLogs, setShowLogs] = useState(false);
   // const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
 
-  // const project = Digit?.SessionStorage.get("staffProjects");
-  // const selectedProject = Digit?.SessionStorage.get("selectedProject");
+  const project = Digit?.SessionStorage.get("staffProjects");
+  const selectedProject = Digit?.SessionStorage.get("selectedProject");
+
+
+  const BillSearchCri = {
+        url: `/${expenseContextPath}/bill/v1/_search`,
+        body: {
+            billCriteria: {
+                tenantId: tenantId,
+                referenceIds: project?.map(p => p?.id) || [], 
+                ...(billID ? { billNumbers: [billID] } : {}),
+                pagination: {
+                    limit: limitAndOffset.limit,
+                    offset: limitAndOffset.offset
+                }
+            }
+        },
+        config: {
+            enabled: project ? true : false,
+            select: (data) => {
+                return data;
+            },
+        },
+    };
+
+  const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);  
+  
+  const filterDataByStatus = (billData,status) => {
+    console.log("here DataByStatus", status);
+  setTableData(billData.billDetails.filter(item => item.status === status));
+};
+  const fetchIndividualIds = (billData) => {
+    console.log("here ???0990")
+    const billDetails = billData?.billDetails || [];
+    if (Array.isArray(billDetails)) {
+      const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
+      setIndividualIds(ids);
+      console.log("Individual IDs:", ids);
+    }
+  }
+
+  
 
 
   // const AttendancereqCri = {
@@ -224,14 +261,14 @@ useEffect(() => {
   //   }
 
   // }, [estimateMusterRollData, MusterRollData]);
-useEffect(() => {
-  const billDetails = billData?.billDetails || [];
-  if (Array.isArray(billDetails)) {
-    const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
-    setIndividualIds(ids);
-    console.log("Individual IDs:", ids);
-  }
-}, []);
+// useEffect(() => {
+//   const billDetails = billData?.billDetails || [];
+//   if (Array.isArray(billDetails)) {
+//     const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
+//     setIndividualIds(ids);
+//     console.log("Individual IDs:", ids);
+//   }
+// }, []);
 
 
   // const mutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -367,7 +404,7 @@ useEffect(() => {
     url: `/${individualContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
-      limit: billData?.billDetails?.length + 1,
+      limit: individualIds?.length,
       offset: 0,
     },
     body: {
@@ -385,24 +422,36 @@ useEffect(() => {
   };
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
-  function addMobileNumberTOBillDetails(billDetails, individualsData) {
+  function addIndividualDetailsToBillDetails(billDetails, individualsData) {
     return billDetails.map((billDetail) => {
       const individual = individualsData?.Individual?.find(
         (ind) => ind.id === billDetail?.payee?.identifier
       );
       return {
         ...billDetail,
-        mobileNumber: individual?.mobileNumber || t("NA"),
+        givenName: individual?.name?.givenName,
+        mobileNumber: individual?.mobileNumber,
       };
     });
   }
   useEffect(() => {
     console.log("AllIndividualsData", AllIndividualsData);
     if (billData && AllIndividualsData) {
-      const updatedBillDetails = addMobileNumberTOBillDetails(billData?.billDetails, AllIndividualsData);
+      const updatedBillDetails = addIndividualDetailsToBillDetails(billData?.billDetails, AllIndividualsData);
       setTableData(updatedBillDetails);
     }
-  }, [AllIndividualsData]);
+  }, [AllIndividualsData, billData]);
+
+  useEffect(() => {
+    if (BillData) {
+    console.log("BillData1223", BillData);
+    const bill = BillData.bills?.[0] || null;
+    setBillData(bill); 
+    filterDataByStatus(bill,"ACTIVE");//TODO: change status
+    fetchIndividualIds(bill);
+    }
+  },[BillData])
+
   // const individualReqCriteria = {
   //   url: `/${individualContextPath}/v1/_search`,
   //   params: {
@@ -526,6 +575,13 @@ useEffect(() => {
   // if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
   //   return <LoaderScreen />
   // }
+  
+
+  if ( isBillLoading || isAllIndividualsLoading || isFetching) {
+    console.log("Loading bill data or individual data...");
+    return <LoaderScreen />
+  }
+  
 console.log("Rendering buttons for:", activeLink?.code);
 console.log("mob num:", tableData);
 
@@ -536,12 +592,16 @@ console.log("mob num:", tableData);
           {editBillDetails ? t('HCM_AM_EDIT_BILL') : t('HCM_AM_VERIFY_BILL_AND_GENERATE_PAYMENT')}
         </Header>
         <Card type="primary" className="bottom-gap-card-payment">
-          {renderLabelPair('HCM_AM_BILL_NUMBER',billData.billNumber || t("NA") )}
-          {renderLabelPair('HCM_AM_BILL_DATE', billData.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
-          {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', billData.additionalDetails.noOfRegisters || t("NA"))}
-          {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData.billDetails.length || t("NA"))}
-          {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData.localityCode || t("NA"))}
-          {renderLabelPair('HCM_AM_STATUS', billData.status || t("NA"))}
+          {isBillLoading || isFetching ? (
+    <Loader />
+  ) : (
+    <>
+          {renderLabelPair('HCM_AM_BILL_NUMBER',billData?.billNumber || t("NA") )}
+          {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
+          {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
+          {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
+          {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
+          {renderLabelPair('HCM_AM_STATUS', billData?.status || t("NA"))}
           {
             <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                 {editBillDetails && (
@@ -554,6 +614,8 @@ console.log("mob num:", tableData);
                 )}
 </div>
           }
+          </>
+  )}
         </Card>
          
         {
@@ -596,14 +658,22 @@ console.log("mob num:", tableData);
                                 )
         }
         <Card style={{ width: "100%", }}>
+          {isBillLoading || isFetching ? (
+    <Loader />
+  ) : tableData.length === 0 ? (
+                      <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
+                  ) : (
+    <Fragment>
                     {/* TODO : CREATE NEW TABLE TO VERIFICATION STATUS FOR WORKERS IN BILL*/}
-                {<BillDetailsTable 
+                <BillDetailsTable 
                 style={{ width: "100%", }}
                 data={tableData} totalCount={tableData.length} selectableRows={true} 
                 status={activeLink?.code}
                 // rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 //     handlePerRowsChange={handlePerRowsChange} 
-                    />}
+                    />
+                    </Fragment>
+  )}
             </Card>
         {/* <Card className="bottom-gap-card-payment">
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />

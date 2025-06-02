@@ -77,9 +77,9 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                         onClick={() => {
                             //view bill/edit bill
                            if (props?.editBill) {
-                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`,{ data: row });
+                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`,{ billID: row.billNumber });
                             } else {
-                                history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`,{ data: row });
+                                history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`,{ billID: row.billNumber });
                             }
                         }}
                         style={{ color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}>

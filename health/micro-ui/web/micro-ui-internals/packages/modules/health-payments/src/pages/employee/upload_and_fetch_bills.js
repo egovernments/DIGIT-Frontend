@@ -31,7 +31,8 @@ const UploadAndFetchBillsCard = () => {
   const { t } = useTranslation();
   const [selectedBills, setSelectedBills] = useState([]);
   const handleConfirm = () => {
-    history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`, { selectedBills });
+    const selectedBillIds = selectedBills.map((bill) => bill.billNumber);
+    history.push(`/${window.contextPath}/employee/payments/verify-and-generate-payments`, { selectedBillIds });
   };
   // const userInfo = Digit.UserService.getUser();
   // const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);

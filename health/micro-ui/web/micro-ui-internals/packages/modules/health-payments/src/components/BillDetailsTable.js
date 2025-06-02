@@ -93,9 +93,18 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     return (
                     <div style={{ display: "flex", alignItems: "center" }}>
-                        <span className="ellipsis-cell" title={t(row?.name) || t("NA")} style={{ marginRight: "8px" }}>
-                            {t(row?.name) || t("NA")}
-                        </span>
+                        <span className="ellipsis-cell" style={{ marginRight: "8px" }}
+                            title={
+                                row?.givenName
+                                ? t(`${row?.givenName}`)
+                                : t("NA")
+                            }>
+                            {
+                                row?.givenName
+                                ? t(`${row?.givenName}`)
+                                : t("NA")
+                            }
+                            </span>
                             {props?.status === "NOT_VERIFIED"?(
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                 {props?.editBill?
@@ -144,9 +153,26 @@ const BillDetailsTable = ({ ...props }) => {
         );
       },
       style: {
-        justifyContent: "flex-end",
+        justifyContent: "start",
       },
     },    
+    {
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t(`HCM_AM_MNO`)}
+        </div>
+      ),
+      selector: (row) => {
+        return (
+          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+            {t(row?.operator) || t("ES_COMMON_NA")}
+          </span>
+        );
+      },
+      style: {
+        justifyContent: "start",
+      },
+    },  
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
