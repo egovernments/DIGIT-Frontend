@@ -1,4 +1,4 @@
-import { Button, Dropdown, LabelFieldPair, PopUp, RadioButtons, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, FieldV1, LabelFieldPair, PopUp, RadioButtons, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -10,26 +10,23 @@ import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 
-
 /**
  * Determines whether a specific field in a UI panel should be disabled.
- * 
+ *
  * This logic currently based on disableForRequired flag in drawerpanel config for any field
- * 
+ *
  * @param {Object} drawerState - Contains current field state, including `jsonPath`.
  * @param {Object} panelItem - Represents the current field item being rendered (e.g., label, config).
  * @param {Array} resourceData - List of fields (identified by jsonPath) that require disabling.
- * 
+ *
  * @returns {boolean} - Returns true if the field should be disabled; false otherwise.
  */
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
-  const shouldDisable = resourceData?.TemplateBaseConfig?.some(
-    (ele) => drawerState?.jsonPath === ele
-  );
+  const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
 
   // If the field is in the disable list AND its label is either "Mandatory" or "fieldType", disable it
-  if (shouldDisable && (panelItem?.disableForRequired)) {
+  if (shouldDisable && panelItem?.disableForRequired) {
     return true;
   }
 
@@ -37,11 +34,10 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   return false;
 };
 
-
 //todo @jagan to make this flow dynamic ie multi flow support this flag to be updated
-const getBaseTemplateFilter = (projectType="",flowName="")=>{
-  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`
-}
+const getBaseTemplateFilter = (projectType = "", flowName = "") => {
+  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`;
+};
 
 const whenToShow = (panelItem, drawerState) => {
   const anyCheck =
@@ -58,25 +54,33 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-
 const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
-    ?.find((i) => i.fieldType === drawerState?.type)
+    ?.find((i) => i.fieldType === drawerState?.appType)
     ?.localisableProperties?.includes(panelItem?.label);
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("projectType");
   const tenantId = searchParams.get("tenantId");
   const shouldShow = whenToShow(panelItem, drawerState);
-  const flowName=useMemo(()=> state?.screenConfig?.[0]?.parent,[state?.screenConfig?.[0]]);
+  const flowName = useMemo(() => state?.screenConfig?.[0]?.parent, [state?.screenConfig?.[0]]);
 
-  const reqCriteriaResource = useMemo(()=> Digit.Utils.campaign.getMDMSV1Criteria(tenantId,CONSOLE_MDMS_MODULENAME,[
-    {
-      "name": "TemplateBaseConfig",
-      "filter": getBaseTemplateFilter(projectType,flowName)
-    }
-  ],`MDMSDATA-${projectType}-${flowName}`),[projectType,flowName]);
-  
+  const reqCriteriaResource = useMemo(
+    () =>
+      Digit.Utils.campaign.getMDMSV1Criteria(
+        tenantId,
+        CONSOLE_MDMS_MODULENAME,
+        [
+          {
+            name: "TemplateBaseConfig",
+            filter: getBaseTemplateFilter(projectType, flowName),
+          },
+        ],
+        `MDMSDATA-${projectType}-${flowName}`
+      ),
+    [projectType, flowName]
+  );
+
   const { data: resourceData } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   switch (panelItem?.fieldType) {
@@ -92,7 +96,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               }))
             }
             isCheckedInitially={drawerState?.[panelItem?.bindTo ? panelItem?.bindTo : panelItem?.label] ? true : false}
-            disable={disableFieldForMandatory(drawerState, panelItem,resourceData)}
+            disable={disableFieldForMandatory(drawerState, panelItem, resourceData)}
             shapeOnOff
           />
           {/* //Render Conditional Fields */}
@@ -118,25 +122,100 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             : null}
         </>
       );
+    case "text":
+      return (
+        <FieldV1
+          type={panelItem?.fieldType}
+          label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+          value={
+            isLocalisable
+              ? useCustomT(drawerState?.[panelItem?.bindTo])
+              : drawerState?.[panelItem?.bindTo] === true
+              ? ""
+              : drawerState?.[panelItem?.bindTo]
+          }
+          config={{
+            step: "",
+          }}
+          onChange={(event) => {
+            const value = event.target.value;
+            if (isLocalisable) {
+              updateLocalization(
+                drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
+                  ? drawerState?.[panelItem?.bindTo]
+                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
+                      drawerState?.jsonPath || drawerState?.id
+                    }`,
+                Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                value
+              );
+              setDrawerState((prev) => ({
+                ...prev,
+                [panelItem?.bindTo]:
+                  drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
+                    ? drawerState?.[panelItem?.bindTo]
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
+                        drawerState?.jsonPath || drawerState?.id
+                      }`,
+              }));
+              return;
+            } else {
+              setDrawerState((prev) => ({
+                ...prev,
+                [panelItem?.bindTo]: value,
+              }));
+              return;
+            }
+          }}
+          populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
+          // charCount={field?.charCount}
+        />
+      );
     case "fieldTypeDropdown":
       return (
-        <Dropdown
-          // style={}
-          variant={""}
-          t={t}
-          option={state?.MASTER_DATA?.AppFieldType}
-          optionKey={"type"}
-          disabled={disableFieldForMandatory(drawerState, panelItem,resourceData)} // todo need to think about it @nabeel & @jagan
-          selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-          select={(value) => {
+        <FieldV1
+          config={{
+            step: "",
+          }}
+          label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+          onChange={(value) => {
             setDrawerState((prev) => ({
               ...prev,
               type: value?.fieldType,
               appType: value?.type,
             }));
           }}
+          placeholder={t(panelItem?.innerLabel) || ""}
+          populators={{
+            title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
+            fieldPairClassName: "drawer-toggle-conditional-field",
+            options: state?.MASTER_DATA?.AppFieldType,
+            optionsKey: "type",
+          }}
+          type={"dropdown"}
+          value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
+          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
         />
       );
+    // return (
+    //   <Dropdown
+    //     // style={}
+    //     variant={""}
+    //     t={t}
+    //     option={state?.MASTER_DATA?.AppFieldType}
+    //     optionKey={"type"}
+    //     disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)} // todo need to think about it @nabeel & @jagan
+    //     selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
+    //     select={(value) => {
+    //       setDrawerState((prev) => ({
+    //         ...prev,
+    //         type: value?.fieldType,
+    //         appType: value?.type,
+    //       }));
+    //     }}
+    //   />
+    // );
     default:
       return null;
       break;

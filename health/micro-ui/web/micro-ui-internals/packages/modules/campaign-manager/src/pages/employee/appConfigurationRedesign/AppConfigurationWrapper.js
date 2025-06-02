@@ -45,7 +45,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
         MASTER_DATA: { ...action.state },
         screenConfig: action.state?.screenConfig,
         screenData: action.state?.screenConfig,
-        screenData1: action.state?.AppScreenConfigTemplateSchema,
       };
     case "SET_SCREEN_DATA":
       return {
@@ -308,7 +307,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName, limit: 100 }, { name: "DrawerPanelConfigOne", limit: 100 }],
+    [
+      { name: fieldMasterName, limit: 100 },
+      { name: "DrawerPanelConfigOne", limit: 100 },
+    ],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -408,9 +410,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
         <Button
           className="app-configure-action-button"
           variation="secondary"
-          label={t("BACK")}
-          title={t("BACK")}
+          label={t("PREVIOUS")}
+          title={t("PREVIOUS")}
           icon="ArrowBack"
+          isDisabled={false}
           onClick={() => back()}
         />
         <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
@@ -424,6 +427,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
+          isDisabled={false}
           onClick={async () => {
             await handleSubmit();
             onSubmit(state);

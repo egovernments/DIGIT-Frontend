@@ -228,6 +228,7 @@ const renderField = (field, t) => {
           options={data || field?.dropDownOptions}
           optionsKey={"name"}
           selected={[]}
+          withContainer={true}
           populators={{
             t: field?.isMdms ? null : t,
           }}
@@ -300,7 +301,9 @@ const getFieldType = (field) => {
     case "checkbox":
       return "checkbox";
     case "Selection":
-      return "checkbox";
+    case "selection":
+    case "select":
+      return "select";
     case "numeric":
     case "counter":
       return "numeric";
@@ -315,8 +318,6 @@ const getFieldType = (field) => {
       return "date";
     case "radio":
       return "radio";
-    case "select":
-      return "select";
     default:
       return "button";
   }
