@@ -308,12 +308,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [
-      { name: "AppScreenConfigTemplateSchema" },
-      { name: fieldMasterName, limit: 100 },
-      { name: "DrawerPanelConfig" },
-      { name: "DrawerPanelConfigOne", limit: 100 },
-    ],
+    [{ name: "AppScreenConfigTemplateSchema" }, { name: fieldMasterName, limit: 100 }, { name: "DrawerPanelConfigOne", limit: 100 }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -505,7 +500,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 }
               />
               <DrawerFieldComposer />
-              <Divider />
+              {/* <Divider /> */}
               {/* <Button
                 type={"button"}
                 size={"large"}
@@ -595,7 +590,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={handleSubmit} />,
           ]}
         >
-          <AppLocalisationTable />
+          <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
         </PopUp>
       )}
       {popupData && (

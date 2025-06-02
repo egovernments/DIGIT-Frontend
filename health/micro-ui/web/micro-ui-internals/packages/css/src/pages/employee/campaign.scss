@@ -247,9 +247,10 @@
   display: flex;
   gap: 1rem;
 }
+
 .app-preview {
   display: flex;
-  width: 25rem;
+  width: 29rem;
   height: 40rem;
   overflow-y: auto;
   border: 1px solid theme(digitv2.lightTheme.primary);
@@ -258,29 +259,64 @@
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
   margin: 20px auto;
   font-family: Arial, sans-serif;
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: #d6d5d4 #fafafa; /* Firefox */
+
+  &::-webkit-scrollbar {
+    width: 5px;
+    background: #fafafa;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #d6d5d4;
+    border-radius: 8px;
+    min-height: 40px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #fafafa;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
   .digit-card-component {
     height: max-content;
-    .digit-description{
-      .digit-card-text{
+
+    .digit-description {
+      .digit-card-text {
         margin-bottom: 0rem;
-      } 
+      }
     }
   }
+
   .digit-card-header {
     color: #0b4b66;
     font-size: 2rem;
     font-weight: 700;
   }
+
   .digit-card-text {
     color: #787878;
     font-weight: 400;
     font-size: 0.875rem;
     line-height: 137%;
   }
-  .app-card{
+
+  .app-card {
     gap: 0.5rem;
+    &::-webkit-scrollbar-button {
+      display: none !important;
+      height: 0 !important;
+      width: 0 !important;
+    }
   }
 }
+
 .mobile-top {
   background-color: theme(digitv2.lightTheme.header-sidenav);
   height: 4rem;
@@ -406,22 +442,21 @@
   transition: box-shadow 0.3s ease-in-out;
   background-color: #fff;
 }
-.disabledCard{
+.disabledCard {
   cursor: not-allowed;
   border: 1.5px solid theme(digitv2.lightTheme.text-color-secondary);
- .descStyle{
-  color:theme(digitv2.lightTheme.text-color-secondary);
-
- }
- svg{
-  fill:theme(digitv2.lightTheme.text-color-secondary);
- }
+  .descStyle {
+    color: theme(digitv2.lightTheme.text-color-secondary);
+  }
+  svg {
+    fill: theme(digitv2.lightTheme.text-color-secondary);
+  }
 }
 
-.app-config-radio{
+.app-config-radio {
   display: flex;
   margin-top: 1rem;
-  flex-direction:column;
+  flex-direction: column;
 }
 .create-campaign-card {
   gap: 0;
@@ -457,7 +492,7 @@
 }
 .campaign-details-header {
   display: flex;
-  justify-content: space-between
+  justify-content: space-between;
 }
 .campaign-view-tag {
   margin-left: 1rem;
@@ -481,7 +516,7 @@
 .date-selection {
   width: 100% !important;
 }
-.beneficiary-selection-label{
+.beneficiary-selection-label {
   margin-bottom: 0rem;
 }
 .selected-card {
@@ -493,12 +528,11 @@
   color: theme(digitv2.lightTheme.primary);
 }
 
-.hcm-app-features{
+.hcm-app-features {
   .digit-toggle-toolbar {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
   }
-
 }
 .module-description {
   flex-grow: 1;

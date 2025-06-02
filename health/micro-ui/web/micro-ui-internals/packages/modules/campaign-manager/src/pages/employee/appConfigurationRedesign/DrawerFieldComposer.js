@@ -173,7 +173,7 @@ function DrawerFieldComposer() {
         {currentDrawerState?.map((panelItem, index) => {
           if (isFieldVisible(panelItem)) {
             return (
-              <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+              <div className="drawer-toggle-field-container">
                 <RenderField
                   panelItem={panelItem}
                   drawerState={drawerState}

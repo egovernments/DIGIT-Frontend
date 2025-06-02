@@ -10,6 +10,7 @@ import {
   TooltipWrapper,
   AlertCard,
   FieldV1,
+  Loader,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 
@@ -195,32 +196,41 @@ const renderField = (field, t) => {
           populators={{ prefix: rest?.countryPrefix }}
         />
       );
-    case "Selection":
+    case "selection":
+      const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(
+        Digit?.ULBService?.getStateId(),
+        field?.schemaCode?.split(".")[0],
+        [
+          {
+            name: field?.schemaCode?.split(".")[1],
+          },
+        ],
+        {
+          select: (data) => {
+            const optionsData = _.get(data, `${field?.schemaCode?.split(".")[0]}.${field?.schemaCode?.split(".")[1]}`, []);
+            return optionsData
+              .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
+              .map((opt) => ({ ...opt, name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}` }));
+          },
+          enabled: field?.isMdms && field?.schemaCode ? true : false,
+        },
+        { schemaCode: "SELCTIONTABMDMSLIST" }
+      );
+
+      if (isLoading) {
+        return <Loader />;
+      }
       return (
         <SelectionTag
           errorMessage=""
           onSelectionChanged={() => {}}
-          options={[
-            {
-              code: "option1",
-              name: "Option 1",
-              prefixIcon: "",
-              suffixIcon: "",
-            },
-            {
-              code: "option2",
-              name: "Option 2",
-              prefixIcon: "",
-              suffixIcon: "",
-            },
-            {
-              code: "option3",
-              name: "Option 3",
-              prefixIcon: "",
-              suffixIcon: "",
-            },
-          ]}
+          schemaCode={field?.schemaCode}
+          options={data || field?.dropDownOptions}
+          optionsKey={"name"}
           selected={[]}
+          populators={{
+            t: field?.isMdms ? null : t,
+          }}
         />
       );
     case "numeric":
@@ -303,6 +313,10 @@ const getFieldType = (field) => {
     case "datePicker":
     case "dob":
       return "date";
+    case "radio":
+      return "radio";
+    case "select":
+      return "select";
     default:
       return "button";
   }
@@ -354,11 +368,12 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                       : null,
                     options: field?.isMdms ? null : field?.dropDownOptions,
                     optionsKey: field?.isMdms ? "code" : "name",
-                    component: getFieldType(field) === "button" ? renderField(field, t) : null,
+                    component: getFieldType(field) === "button" || getFieldType(field) === "select" ? renderField(field, t) : null,
                   }}
                   required={field?.["toArray.required"] || false}
-                  type={getFieldType(field) === "button" ? "custom" : getFieldType(field) || "text"}
+                  type={getFieldType(field) === "button" || getFieldType(field) === "select" ? "custom" : getFieldType(field) || "text"}
                   value={field?.value === true ? "" : field?.value || ""}
+                  disabled={field?.readOnly || false}
                 />
               );
             })}
