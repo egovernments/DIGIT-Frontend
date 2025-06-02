@@ -18,7 +18,7 @@ export default {
  * 
  * @returns {Object} - A query object to be used with React Query or a similar data fetching utility.
  */
-getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS") => {
+getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS",config={}) => {
   const MDMSV1Criteria = {
     // API endpoint for MDMS v1 search
     url: `/${mdms_context_path}/v1/_search`,
@@ -48,10 +48,19 @@ getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS") =
         // Select and return the module's data
         return data?.MdmsRes?.[moduleName];
       },
+      ...config
     },
   };
 
   return MDMSV1Criteria;
+},
+ getMDMSV1Selector(moduleName,masterName) {
+  return {
+    select: (data) => {
+      // Select and return the module's data
+      return data?.MdmsRes?.[moduleName]?.[masterName];
+    }
+  };
 }
 
 };
