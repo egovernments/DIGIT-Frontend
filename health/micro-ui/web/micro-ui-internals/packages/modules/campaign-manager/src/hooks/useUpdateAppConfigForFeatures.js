@@ -1,90 +1,97 @@
-import { useQuery } from "react-query";
 import { useMutation } from "react-query";
-
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
-const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
-
-  const searchMDMSV2Data= async ( tenantId,schemaCode,filters) => {
-    try {
-      const response = await Digit.CustomService.getResponse({
-        url: `/${mdms_context_path}/v2/_search`,
-
-        params: {},
-        body:{MdmsCriteria: {
-          tenantId,
-          schemaCode: schemaCode, //`${CONSOLE_MDMS_MODULENAME}.SimpleAppConfiguration`,
-          isActive: true,
-          filters: {
-            ...filters
-            // project:campaignNo
-          }
-        }},
-      });
-      return response?.mdms || [];
-    } catch (error) {
-      console.error("Error fetching MDMS Details:", error);
-      return error;
-    }
-  };
-
-  const updateMDMSV2Data= async ( schemaCode,body) => {
-
-    try {
-      const response = await Digit.CustomService.getResponse({
-        url: `/${mdms_context_path}/v2/_update/${schemaCode}`,
-        params: {},
-        body:{...body},
-      });
-      return response?.mdms || [];
-    } catch (error) {
-      console.error("Error Updating MDMS Details:", error);
-      return error;
-    }
-  };
-
+// Read MDMS context path from global config, with fallback
+const MDMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
 /**
- * Fetches consolidated data by combining campaign search and boundary data.
+ * Fetches MDMS data using the V2 API.
  *
  * @param {string} tenantId - The tenant ID.
- * @param {string} campaignId - The campaign ID.
- * @param {string} planConfigId - The plan configuration ID.
- * @returns {Promise<object>} Merged data including boundary and campaign information.
+ * @param {string} schemaCode - The schema code for MDMS.
+ * @param {object} filters - Filters to apply while searching.
+ * @returns {Promise<Array>} Array of MDMS records or error.
  */
-const updateCurrentAppConfig = async (tenantId, campaignNo, ) => {
+const searchMDMSV2Data = async (tenantId, schemaCode, filters) => {
   try {
-const schemaCode=`${CONSOLE_MDMS_MODULENAME}.SimpleAppConfiguration`;
+    const response = await Digit.CustomService.getResponse({
+      url: `/${MDMS_CONTEXT_PATH}/v2/_search`,
+      params: {},
+      body: {
+        MdmsCriteria: {
+          tenantId,
+          schemaCode,
+          isActive: true,
+          filters,
+        },
+      },
+    });
+    return response?.mdms || [];
+  } catch (error) {
+    console.error("Error fetching MDMS details:", error);
+    return error;
+  }
+};
 
-    const searchedMDMSData = await searchMDMSV2Data(tenantId,schemaCode,  {
-      project:campaignNo
+/**
+ * Updates a single MDMS record via the V2 API.
+ *
+ * @param {string} schemaCode - The schema code.
+ * @param {object} body - The body containing MDMS update payload.
+ * @returns {Promise<object>} Updated MDMS response or error.
+ */
+const updateMDMSV2Data = async (schemaCode, body) => {
+  try {
+    const response = await Digit.CustomService.getResponse({
+      url: `/${MDMS_CONTEXT_PATH}/v2/_update/${schemaCode}`,
+      params: {},
+      body,
+    });
+    return response?.mdms || [];
+  } catch (error) {
+    console.error("Error updating MDMS details:", error);
+    return error;
+  }
+};
+
+/**
+ * Main business logic to search existing MDMS entries and update them.
+ *
+ * @param {string} tenantId - The tenant ID.
+ * @param {string} campaignNo - Campaign identifier (project field in MDMS).
+ * @returns {Promise<object>} Result of batch updates or error.
+ */
+const updateCurrentAppConfig = async (tenantId, campaignNo,changes,allModules) => {
+  try {
+    const schemaCode = `${CONSOLE_MDMS_MODULENAME}.SimpleAppConfiguration`;
+
+    // Fetch all MDMS entries for the given campaign
+    const mdmsRecords = await searchMDMSV2Data(tenantId, schemaCode, {
+      project: campaignNo,
     });
 
-    if (!searchedMDMSData) {
-      throw new Error("No MDMSData found.");
+    if (!mdmsRecords || mdmsRecords.length === 0) {
+      throw new Error("No MDMS data found for the given campaign.");
     }
 
+    // Prepare and trigger parallel update calls
+    const updatePromises = mdmsRecords.map((record) =>
+      updateMDMSV2Data(schemaCode, { Mdms: record })
+    );
 
-const allPromises=searchedMDMSData.map( (data)=>updateMDMSV2Data(schemaCode,{Mdms:data}))
-const results = await Promise.all(allPromises);
+    const updateResults = await Promise.all(updatePromises);
 
-    return { updatedAppConfig:results};
+    return { updatedAppConfig: updateResults };
   } catch (error) {
     console.error("Error updating app config data:", error);
     return { error };
   }
 };
 
-
-
-
-
 /**
- * React Query mutation hook to update app config for features.
+ * React Query mutation hook to update app configuration for a campaign.
  *
- * @param {function} onSuccess - Callback on successful mutation.
- * @param {function} onError - Callback on mutation error.
- * @returns {object} Mutation object with mutate function and states.
+ * @returns {object} Object containing the mutation function and related states.
  */
 const useUpdateAppConfigForFeatures = () => {
   const {
@@ -96,11 +103,12 @@ const useUpdateAppConfigForFeatures = () => {
     isSuccess,
     reset,
   } = useMutation(
-    ({ tenantId, campaignNo }) => updateCurrentAppConfig(tenantId, campaignNo)
+    // Mutation function
+    ({ tenantId, campaignNo ,changes,allModules}) => updateCurrentAppConfig(tenantId, campaignNo,changes,allModules)
   );
 
   return {
-    updateConfig: mutate, // Call this with (params, { onSuccess, onError })
+    updateConfig: mutate, // Usage: updateConfig({ tenantId, campaignNo }, { onSuccess, onError })
     isLoading,
     isError,
     error,
@@ -109,6 +117,5 @@ const useUpdateAppConfigForFeatures = () => {
     reset,
   };
 };
-
 
 export default useUpdateAppConfigForFeatures;

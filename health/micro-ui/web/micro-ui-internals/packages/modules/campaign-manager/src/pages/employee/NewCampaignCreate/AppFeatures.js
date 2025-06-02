@@ -1,42 +1,60 @@
-import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG } from "@egovernments/digit-ui-components";
-import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useMemo,Fragment } from "react";
-import { useHistory, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import {
+  Card,
+  HeaderComponent,
+  Button,
+  Toggle,
+  Footer,
+  Loader,
+  SVG,
+} from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 
-// Constructs a filter string to fetch only relevant formats for a project
+/**
+ * Utility to create a filter string to fetch formats based on project and allowed formats.
+ */
 const getTemplateFormatFilter = (projectNo = "", formats = []) => {
-  const formatFilter = formats
-    ?.map((format) => `@.format=='${format}'`)
-    .join("||");
-
+  const formatFilter = formats?.map(format => `@.format=='${format}'`).join("||");
   return `[?(@.project=='${projectNo}')].pages.*.properties[?((${formatFilter})&& @.hidden==false)].format`;
 };
 
-// Constructs a filter string to fetch flow names for a project
+/**
+ * Utility to create a filter string to fetch flow names for a project.
+ */
 const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}')].name`;
 
-const findIsAnyChangedFeatures = (selectedFeaturesByModule={}, selectedFeatureConfigs=[]) => {
-  if(!selectedFeaturesByModule||Object.keys(selectedFeaturesByModule).length===selectedFeatureConfigs.length) return false;
-  const modules=Object.keys(selectedFeaturesByModule);
-  const keys=(modules.map(key=>{
-    return (selectedFeatureConfigs.every(elemnt=>selectedFeaturesByModule[key].includes(elemnt))&&
-    selectedFeaturesByModule[key].every(elemnt=>selectedFeatureConfigs.includes(elemnt))&&key);
-  }))
-  return {changed:!keys.every(ele=>ele),keys:modules.filter(ele=>!keys.includes(ele))};
+/**
+ * Compares existing selected features vs. current feature config.
+ * Returns whether any module has changed selections.
+ */
+const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeatureConfigs = []) => {
+  if (!selectedFeaturesByModule || Object.keys(selectedFeaturesByModule).length === selectedFeatureConfigs.length) return false;
 
-}
+  const modules = Object.keys(selectedFeaturesByModule);
+  const keys = modules.map((key) => {
+    return (
+      selectedFeatureConfigs.every((elem) => selectedFeaturesByModule[key].includes(elem)) &&
+      selectedFeaturesByModule[key].every((elem) => selectedFeatureConfigs.includes(elem)) &&
+      key
+    );
+  });
 
+  return { changed: !keys.every(Boolean), keys: modules.filter((key) => !keys.includes(key)) };
+};
 
-// Checks if a specific feature is already selected in configuration
-const isFeatureSelected = (feature, module,selectedFeaturesByModule) => selectedFeaturesByModule?.[module]?.some(e=>e==feature?.format);
+/**
+ * Checks if a given feature is selected for the given module.
+ */
+const isFeatureSelected = (feature, module, selectedFeaturesByModule) =>
+  selectedFeaturesByModule?.[module]?.some((e) => e === feature?.format);
 
 const AppFeatures = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const mdmsBaseUrl = getMDMSUrl(true);
-
   const { campaignNumber, projectType, tenantId } = Digit.Hooks.useQueryParams();
   const AppConfigSchema = "SimpleAppConfiguration";
 
@@ -44,7 +62,7 @@ const AppFeatures = () => {
   const [availableFormats, setAvailableFormats] = useState([]);
   const [selectedModuleCode, setSelectedModuleCode] = useState(null);
 
-  // Fetch all modules and their feature formats from MDMS
+  // Fetch all module schemas and their features from MDMS
   const { isLoading: isModuleDataLoading, data: moduleSchemas } = Digit.Hooks.useCustomAPIHook(
     Digit.Utils.campaign.getMDMSV1Criteria(
       tenantId,
@@ -54,13 +72,13 @@ const AppFeatures = () => {
       Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, "AppModuleSchema")
     )
   );
-  const {   updateConfig,         // Call this with { tenantId, campaignNo }
-    isLoading,} = Digit.Hooks.campaign.useUpdateAppConfigForFeatures();
 
-console.log(isLoading,"upd");
+  const {
+    updateConfig,
+    isLoading: isUpdateLoading,
+  } = Digit.Hooks.campaign.useUpdateAppConfigForFeatures();
 
-
-  // Fetch selected feature configurations for the current campaign and selected formats
+  // Fetch selected feature configurations for the campaign
   const selectedFeatureCriteria = useMemo(() => {
     return Digit.Utils.campaign.getMDMSV1Criteria(
       tenantId,
@@ -73,13 +91,14 @@ console.log(isLoading,"upd");
       ],
       `MDMSDATA-${campaignNumber}-${availableFormats}`,
       {
-        enabled: availableFormats?.length !== 0,
+        enabled: availableFormats?.length > 0,
         ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, "SimpleAppConfiguration"),
       }
     );
   }, [availableFormats, campaignNumber]);
 
-  const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } = Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
+  const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } =
+    Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
 
   // Fetch toggle tab names (module codes) for campaign
   const { isLoading: isModuleToggleLoading, data: moduleToggleData } = Digit.Hooks.useCustomAPIHook(
@@ -100,9 +119,9 @@ console.log(isLoading,"upd");
     )
   );
 
-  // Auto-set formats from module data when available
+  // Set all formats found in schemas
   useEffect(() => {
-    if (availableFormats?.length === 0 && moduleSchemas) {
+    if (availableFormats.length === 0 && moduleSchemas) {
       const formats = moduleSchemas
         ?.flatMap((module) => module?.features?.map((feature) => feature?.format))
         .filter(Boolean);
@@ -110,70 +129,56 @@ console.log(isLoading,"upd");
     }
   }, [moduleSchemas]);
 
-
-  
-
+  // Auto-select features when data is loaded
   useEffect(() => {
-    if (!selectedFeaturesByModule && selectedFeatureConfigs&& selectedFeatureConfigs?.length>0) {
-      // moduleToggleData?.reduce(reduce((acc, moduleCode) => {
-      //   const selectedFeatures = selectedFeatureConfigs?.find((feature) => feature?.moduleCode === moduleCode)?.features || [];
-      //   acc[moduleCode] = selectedFeatures;
-      //   return acc;
-      // }, {});
-      // setSelectedFeaturesByModule(selectedFeaturesByModule);selectedFeatureConfigs
-      setSelectedFeaturesByModule( moduleToggleData.reduce((acc, curr) => {
-        if(acc[curr]){
-        acc[curr].push(...selectedFeatureConfigs)    
-        }else{
-              acc[curr] = [ ...selectedFeatureConfigs];
-        }
-      return acc;
-    }, {}))
+    if (!selectedFeaturesByModule && selectedFeatureConfigs?.length > 0 && moduleToggleData?.length) {
+      const defaultSelection = moduleToggleData.reduce((acc, moduleCode) => {
+        acc[moduleCode] = [...selectedFeatureConfigs];
+        return acc;
+      }, {});
+      setSelectedFeaturesByModule(defaultSelection);
     }
-  }, [selectedFeatureConfigs]);
+  }, [selectedFeatureConfigs, moduleToggleData]);
 
-  // Auto-select the first module tab if none is selected
+  // Auto-select the first tab if nothing is selected
   useEffect(() => {
     if (!selectedModuleCode && moduleToggleData?.length > 0) {
       setSelectedModuleCode(moduleToggleData[0]);
     }
   }, [moduleToggleData]);
 
-  const handleToggleChange = (moduleCode) => {
-    setSelectedModuleCode(moduleCode);
-  };
+  const handleToggleChange = (moduleCode) => setSelectedModuleCode(moduleCode);
 
-  // Extract the selected module's features from module data
+  // Get features for the selected module
   const selectedModuleFeatures = useMemo(() => {
     return moduleSchemas?.find((mod) => mod?.code === selectedModuleCode)?.features || [];
   }, [selectedModuleCode, moduleSchemas]);
 
-  const handleSelectFeature = (featureCode,selectedModuleCode,selected=false) => {
-    // Placeholder for feature toggle logic. To be implemented.
+  // Toggle feature selection
+  const handleSelectFeature = (featureCode, moduleCode, isSelected = false) => {
     setSelectedFeaturesByModule((prev) => ({
       ...prev,
-      [selectedModuleCode]:selected?prev?.[selectedModuleCode]?.filter(e=>e!=featureCode):[...prev?.[selectedModuleCode],featureCode],
+      [moduleCode]: isSelected
+        ? prev?.[moduleCode]?.filter((e) => e !== featureCode)
+        : [...(prev?.[moduleCode] || []), featureCode],
     }));
   };
-  
 
-
-  // Prepare options for the toggle control (top module tabs)
   const toggleOptions = moduleToggleData?.map((moduleCode) => ({
     code: moduleCode,
     name: t(moduleCode),
   }));
 
-  // Show loader while MDMS data is being fetched
-  if (isModuleDataLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
-  }
+  if (isModuleDataLoading) return <Loader page={true} variant={"PageLoader"} />;
 
   return (
     <>
       <div className="hcm-app-features">
-        {(isSelectedFeatureLoading || isModuleToggleLoading||isLoading) && <Loader page={true} variant={"PageLoader"} />}
-
+        {(isSelectedFeatureLoading || isModuleToggleLoading ) && (
+          <Loader page={true} variant={"PageLoader"} />
+        )}
+        {isUpdateLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />}
+        
         <HeaderComponent className="campaign-header-style">
           {t("HCM_CHOOSE_FEATURE_FOR_APP")}
         </HeaderComponent>
@@ -192,53 +197,56 @@ console.log(isLoading,"upd");
 
       <div className="modules-container">
         {selectedModuleFeatures?.map((feature) => {
-          const featureSelected=isFeatureSelected(feature, selectedModuleCode,selectedFeaturesByModule);
-          return(
-          <Card
-            key={feature?.code}
-            className={`module-card ${featureSelected ? "selected-card" : ""}`}
-          >
-            {featureSelected && (
-              <SVG.CheckCircle
-                fill="#00703C"
-                width="3rem"
-                height="3rem"
-                style={{ position: "absolute", left: "-10px", top: "-14px" }}
-              />
-            )}
+          const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
 
-            <HeaderComponent
-              className={`detail-header ${featureSelected ? "selected-header" : ""}`}
+          return (
+            <Card
+              key={feature?.code}
+              className={`module-card ${featureSelected ? "selected-card" : ""}`}
             >
-              {t(feature?.code)}
-            </HeaderComponent>
+              {featureSelected && (
+                <SVG.CheckCircle
+                  fill="#00703C"
+                  width="3rem"
+                  height="3rem"
+                  style={{ position: "absolute", left: "-10px", top: "-14px" }}
+                />
+              )}
 
-            <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+              <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>
+                {t(feature?.code)}
+              </HeaderComponent>
 
-            <p className="module-description">{t(feature?.description)}</p>
+              <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
 
-            <Button
-              className="campaign-module-button"
-              type="button"
-              size="large"
-              isDisabled={feature?.disabled}
-              variation={featureSelected ? "secondary" : "primary"}
-              label={
-                featureSelected
-                  ? t("DESELECT")
-                  : feature?.disabled
-                  ? t("ES_FEATURE_DISABLED")
-                  : t("ES_CAMPAIGN_SELECT")
-              }
-              onClick={() => handleSelectFeature(feature?.format,selectedModuleCode,featureSelected)}
-            />
-          </Card>
-        )})}
+              <p className="module-description">{t(feature?.description)}</p>
+
+              <Button
+                className="campaign-module-button"
+                type="button"
+                size="large"
+                isDisabled={feature?.disabled}
+                variation={featureSelected ? "secondary" : "primary"}
+                label={
+                  featureSelected
+                    ? t("DESELECT")
+                    : feature?.disabled
+                    ? t("ES_FEATURE_DISABLED")
+                    : t("ES_CAMPAIGN_SELECT")
+                }
+                onClick={() =>
+                  handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)
+                }
+              />
+            </Card>
+          );
+        })}
       </div>
 
       <Footer
         actionFields={[
           <Button
+            key="back"
             label={t("GO_BACK")}
             title={t("GO_BACK")}
             icon="ArrowBack"
@@ -251,27 +259,39 @@ console.log(isLoading,"upd");
             }}
           />,
           <Button
+            key="next"
             label={t("NEXT")}
             title={t("NEXT")}
             icon="ArrowForward"
             isSuffix
             variation="primary"
             onClick={() => {
-              const changes=findIsAnyChangedFeatures(selectedFeaturesByModule,selectedFeatureConfigs);
-              changes?.changed&&updateConfig({ tenantId: tenantId, campaignNo: campaignNumber,changes:changes?.changes ,allModules:moduleToggleData},
-                {
-                  onSuccess: (res) => {
-                    history.push(
-                      `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`
-                    )
+              const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
+              const redirectURL=`/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
+              if (changes?.changed) {
+                updateConfig(
+                  {
+                    tenantId,
+                    campaignNo: campaignNumber,
+                    changes: changes?.changes,
+                    allModules: moduleToggleData,
                   },
-                  onError: (err) => {
-                    console.error("Update failed:", err);
-                  },
-                })
-              !changes?.changed&&history.push(
-                `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`
-              );
+                  {
+                    onSuccess: () => {
+                      history.push(
+                        redirectURL
+                      );
+                    },
+                    onError: (err) => {
+                      console.error("Update failed:", err);
+                    },
+                  }
+                );
+              } else {
+                history.push(
+                  redirectURL
+                );
+              }
             }}
           />,
         ]}
