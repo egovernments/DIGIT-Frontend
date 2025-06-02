@@ -14,8 +14,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 /**
  * Determines whether a specific field in a UI panel should be disabled.
  * 
- * This logic currently hardcodes checks based on label values ("Mandatory" and "fieldType").
- * Future improvement suggested: add a flag to auto-identify such elements for disabling.
+ * This logic currently based on disableForRequired flag in drawerpanel config for any field
  * 
  * @param {Object} drawerState - Contains current field state, including `jsonPath`.
  * @param {Object} panelItem - Represents the current field item being rendered (e.g., label, config).
@@ -30,7 +29,7 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   );
 
   // If the field is in the disable list AND its label is either "Mandatory" or "fieldType", disable it
-  if (shouldDisable && (panelItem?.label === "Mandatory" || panelItem?.label === "fieldType")) {
+  if (shouldDisable && (panelItem?.disableForRequired)) {
     return true;
   }
 
@@ -39,7 +38,7 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
 };
 
 
-
+//todo @jagan to make this flow dynamic ie multi flow support this flag to be updated
 const getBaseTemplateFilter = (projectType="",flowName="")=>{
   return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`
 }
