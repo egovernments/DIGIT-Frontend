@@ -55,20 +55,80 @@ const updateMDMSV2Data = async (schemaCode, body) => {
 };
 
 /**
+ * Updates the app configuration object by setting the visibility (hidden flag)
+ * of properties based on selected features for a module.
+ *
+ * @param {Object} dataConfig - Existing app configuration object to update.
+ * @param {Object} selectedFeaturesByModule - Mapping of selected features by module.
+ * @param {Array} availableFormats - List of available modules with their respective features.
+ * @returns {Object} Updated configuration with modified visibility settings.
+ */
+const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, availableFormats) => {
+  // Proceed only if dataConfig contains `pages`
+  if (!dataConfig?.data?.pages) return dataConfig;
+
+  const currentModule = dataConfig?.data?.name;
+
+  // Extract enabled feature formats for the current module
+  const currentModuleFeatures = availableFormats
+    ?.filter((module) => module?.code === currentModule)
+    ?.flatMap((module) =>
+      module?.features
+        ?.filter((feature) => !feature?.disabled)
+        ?.map((feature) => feature?.format)
+    );
+
+  // Update each page's properties based on feature selection
+  dataConfig.data.pages = dataConfig.data.pages.map((page) => {
+    const updatedProperties = page?.properties?.map((property) => {
+      let hidden = property?.hidden;
+
+      // Check if field is required (should always be visible)
+      const isFieldRequired = property?.validations?.some(
+        (rule) => rule?.type === "required" && rule?.value
+      );
+
+      // Set hidden based on feature toggle and field requirement
+      if (isFieldRequired) {
+        hidden = false;
+      } else if (currentModuleFeatures?.includes(property?.format)) {
+        hidden = !selectedFeaturesByModule?.[currentModule]?.includes(property?.format);
+      }
+
+      return {
+        ...property,
+        hidden,
+      };
+    });
+
+    return {
+      ...page,
+      properties: updatedProperties,
+    };
+  });
+
+  return dataConfig;
+};
+
+
+/**
  * Main business logic to search existing MDMS entries and update them.
  *
  * @param {string} tenantId - The tenant ID.
  * @param {string} campaignNo - Campaign identifier (project field in MDMS).
  * @returns {Promise<object>} Result of batch updates or error.
  */
-const updateCurrentAppConfig = async (tenantId, campaignNo,changes,allModules) => {
+const updateCurrentAppConfig = async (tenantId, campaignNo,changes,selectedFeaturesByModule,availableFormats) => {
   try {
     const schemaCode = `${CONSOLE_MDMS_MODULENAME}.SimpleAppConfiguration`;
 
     // Fetch all MDMS entries for the given campaign
-    const mdmsRecords = await searchMDMSV2Data(tenantId, schemaCode, {
+    const filters={
       project: campaignNo,
-    });
+      ...(changes?.keys.length==1?{name:changes?.keys?.[0]}:{})
+    }
+    
+    const mdmsRecords = await searchMDMSV2Data(tenantId, schemaCode, filters);
 
     if (!mdmsRecords || mdmsRecords.length === 0) {
       throw new Error("No MDMS data found for the given campaign.");
@@ -76,7 +136,7 @@ const updateCurrentAppConfig = async (tenantId, campaignNo,changes,allModules) =
 
     // Prepare and trigger parallel update calls
     const updatePromises = mdmsRecords.map((record) =>
-      updateMDMSV2Data(schemaCode, { Mdms: record })
+      updateMDMSV2Data(schemaCode, { Mdms: updateAppConfigForFeature(record,selectedFeaturesByModule,availableFormats) })
     );
 
     const updateResults = await Promise.all(updatePromises);
@@ -104,7 +164,7 @@ const useUpdateAppConfigForFeatures = () => {
     reset,
   } = useMutation(
     // Mutation function
-    ({ tenantId, campaignNo ,changes,allModules}) => updateCurrentAppConfig(tenantId, campaignNo,changes,allModules)
+    ({ tenantId, campaignNo ,changes,selectedFeaturesByModule,availableFormats}) => updateCurrentAppConfig(tenantId, campaignNo,changes,selectedFeaturesByModule,availableFormats)
   );
 
   return {

@@ -31,7 +31,6 @@ const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}')].name`;
  * Returns whether any module has changed selections.
  */
 const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeatureConfigs = []) => {
-  if (!selectedFeaturesByModule || Object.keys(selectedFeaturesByModule).length === selectedFeatureConfigs.length) return false;
 
   const modules = Object.keys(selectedFeaturesByModule);
   const keys = modules.map((key) => {
@@ -267,14 +266,15 @@ const AppFeatures = () => {
             variation="primary"
             onClick={() => {
               const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
-              const redirectURL=`/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
+              const redirectURL=`/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;              
               if (changes?.changed) {
                 updateConfig(
                   {
                     tenantId,
                     campaignNo: campaignNumber,
-                    changes: changes?.changes,
-                    allModules: moduleToggleData,
+                    changes: changes,
+                    selectedFeaturesByModule,
+                    availableFormats:moduleSchemas
                   },
                   {
                     onSuccess: () => {
