@@ -163,9 +163,13 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
           tooltip: field.tooltip || "",
           infoText: field.infoText || "",
           order: field.order,
+          readOnly: field.readOnly || false,
+          systemDate: field.systemDate || false,
           pattern: field?.validations?.find((i) => i?.type === "pattern"),
           RegexPattern: field?.validations?.find((i) => i?.type === "pattern") ? true : false,
           MdmsDropdown: field?.schemaCode ? true : false,
+          isMdms: field?.schemaCode ? true : false,
+          isMultiSelect: field?.isMultiSelect ? true : false,
           ...getTypeAndMetaData(field, fieldTypeMasterData),
           ...flattenValidationsToField(field?.validations || []),
         }));
@@ -260,6 +264,9 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         innerLabel: field.innerLabel || "",
         errorMessage: field.errorMessage || "",
         deleteFlag: field.deleteFlag || false,
+        readOnly: field.readOnly || false,
+        systemDate: field.systemDate || false,
+        isMultiSelect: field?.isMultiSelect ? true : false,
         ...typeAndFormat,
         validations: toArrayFields,
       };

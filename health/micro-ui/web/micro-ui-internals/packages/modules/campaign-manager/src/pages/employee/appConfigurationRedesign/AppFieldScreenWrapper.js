@@ -61,9 +61,9 @@ function AppFieldScreenWrapper() {
               />
             ))}
             <Divider />
-            <div className="slider-header">Fields</div> {/* todo update localisation */}
+            <div className="app-config-drawer-subheader">{t("APPCONFIG_SUBHEAD_FIELDS")}</div> {/* todo update localisation */}
             {fields?.map(
-              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {                
+              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
                 return (
                   <DraggableField
                     type={type}
@@ -168,6 +168,7 @@ function AppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
+      <div className="app-config-drawer-subheader">{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
       <LabelFieldPair className="app-preview-app-config-drawer-action-button">
         <div className="">
           <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
