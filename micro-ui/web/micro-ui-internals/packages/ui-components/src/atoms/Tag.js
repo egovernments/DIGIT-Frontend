@@ -51,6 +51,7 @@ const Tag = ({
 
   return (
     <div
+      tabIndex={0}
       className={`digit-tag-wrapper ${className ? className : ""} ${
         type || ""
       } ${stroke ? "stroke" : ""} ${onClick ? "cp" : ""} ${
