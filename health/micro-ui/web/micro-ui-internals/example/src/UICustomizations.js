@@ -974,7 +974,7 @@ export const UICustomizations = {
       const rolesCodes = Digit.Hooks.useSessionStorage("User", {})[0]?.info?.roles;
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
-      const handleFileDownload=()=>{
+      const handleFileDownload = () => {
         const fileId = row?.files.find((item) => item.templateIdentifier === "Population")?.filestoreId;
         if (!fileId) {
           console.error("Population template file not found");
@@ -1270,12 +1270,12 @@ export const UICustomizations = {
     preProcess: (data) => {
       return data;
     },
-    getFacilitySearchRequest: ( prop) => {
+    getFacilitySearchRequest: (prop) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const {campaignId} = Digit.Hooks.useQueryParams();
+      const { campaignId } = Digit.Hooks.useQueryParams();
       return {
         url: `/project-factory/v1/project-type/search`,
-        params: {  },
+        params: {},
         body: {
           CampaignDetails: {
             "tenantId": tenantId,
