@@ -13,9 +13,9 @@ const TextInput = (props) => {
   const [inputType, setInputType] = useState(props?.type || "text");
   const data = props?.watch
     ? {
-        fromDate: props?.watch("fromDate"),
-        toDate: props?.watch("toDate"),
-      }
+      fromDate: props?.watch("fromDate"),
+      toDate: props?.watch("toDate"),
+    }
     : {};
 
   const handleDate = (event) => {
@@ -120,8 +120,8 @@ const TextInput = (props) => {
     const iconFill = props?.iconFill ? props?.iconFill : props?.disabled
       ? disabledColor
       : props?.nonEditable
-      ? "#b1b4b6"
-      : iconColor;
+        ? "#b1b4b6"
+        : iconColor;
     if (reqIcon) {
       if (reqIcon === "geolocation") {
         return (
@@ -134,7 +134,7 @@ const TextInput = (props) => {
             }
             className={` digit-text-input-customIcon ${
               props.disabled ? "disabled" : ""
-            } ${props.nonEditable ? "nonEditable" : ""}`}
+              } ${props.nonEditable ? "nonEditable" : ""}`}
           />
         );
       } else if (reqIcon === "password" && inputType === "text" && visibility) {
@@ -144,7 +144,7 @@ const TextInput = (props) => {
             onClick={handleVisibility}
             className={` digit-text-input-customIcon ${
               props.disabled ? "disabled" : ""
-            } ${props.nonEditable ? "nonEditable" : ""}`}
+              } ${props.nonEditable ? "nonEditable" : ""}`}
           />
         );
       } else if (reqIcon === "password") {
@@ -154,7 +154,7 @@ const TextInput = (props) => {
             onClick={handleVisibility}
             className={` digit-text-input-customIcon ${
               props.disabled ? "disabled" : ""
-            } ${props.nonEditable ? "nonEditable" : ""}`}
+              } ${props.nonEditable ? "nonEditable" : ""}`}
           />
         );
       } else if (reqIcon === "search") {
@@ -164,7 +164,7 @@ const TextInput = (props) => {
             onClick={props?.onIconSelection}
             className={` digit-text-input-customIcon ${
               props.disabled ? "disabled" : ""
-            } ${props.nonEditable ? "nonEditable" : ""}`}
+              } ${props.nonEditable ? "nonEditable" : ""}`}
           />
         );
       } else {
@@ -180,7 +180,7 @@ const TextInput = (props) => {
               fill: iconFill,
               className: `digit-text-input-customIcon ${
                 props.disabled ? "disabled" : ""
-              } ${props.nonEditable ? "nonEditable" : ""}`,
+                } ${props.nonEditable ? "nonEditable" : ""}`,
             });
             return svgElement;
           } else {
@@ -200,17 +200,17 @@ const TextInput = (props) => {
 
   const inputClassNameForMandatory = `${
     user_type ? "digit-employeeCard-inputError" : "digit-card-inputError"
-  } ${props.disabled ? "disabled" : ""} ${props.customClass || ""} ${
-    props.nonEditable ? "noneditable" : ""
-  }  ${props.type === "numeric" ? "numeric" : ""}`;
+    } ${props.disabled ? "disabled" : ""} ${props.customClass || ""} ${
+      props.nonEditable ? "noneditable" : ""
+    }  ${props.type === "numeric" ? "numeric" : ""}`;
 
   const inputClassName = `${
     user_type ? "digit-employeeCard-input" : "digit-citizenCard-input"
-  } ${props.disabled ? "disabled" : ""} focus-visible ${
-    props.errorStyle ? "digit-employeeCard-inputError" : ""
-  } ${props.nonEditable ? "noneditable" : ""} ${
-    props.type === "numeric" ? "numeric" : ""
-  }`;
+    } ${props.disabled ? "disabled" : ""} focus-visible ${
+      props.errorStyle ? "digit-employeeCard-inputError" : ""
+    } ${props.nonEditable ? "noneditable" : ""} ${
+      props.type === "numeric" ? "numeric" : ""
+    }`;
 
   const defaultType =
     props.type === "password" && inputType === "text"
@@ -219,14 +219,14 @@ const TextInput = (props) => {
 
   const inputContainerClass = `input-container ${
     defaultType ? defaultType : ""
-  } ${props.populators?.customIcon ? "withIcon" : ""}`;
+    } ${props.populators?.customIcon ? "withIcon" : ""}`;
 
   return (
     <React.Fragment>
       <div
         className={`digit-text-input-field ${
           user_type === "employee" ? "" : "digit-text-input-field-width"
-        } ${props?.className ? props?.className : ""} ${
+          } ${props?.className ? props?.className : ""} ${
           props.disabled ? "disabled" : ""
         }  ${props.nonEditable ? "noneditable" : ""} ${
           props.error ? "error" : ""
@@ -236,66 +236,66 @@ const TextInput = (props) => {
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
       >
         {props.required ? (
-          <div className={inputContainerClass}>
-            {renderPrefix()}
-            <input
-              type={
-                props?.validation && props.ValidationRequired
-                  ? props?.validation?.type
-                  : defaultType || "text"
+        <div className={inputContainerClass}>
+          {renderPrefix()}
+          <input
+            type={
+              props?.validation && props.ValidationRequired
+                ? props?.validation?.type
+                : defaultType || "text"
+            }
+            name={props.name}
+            id={props.id}
+            className={inputClassNameForMandatory}
+            placeholder={StringManipulator(
+              "TOSENTENCECASE",
+              props.placeholder
+            )}
+            onChange={(event) => {
+              if (props?.type === "number" && props?.maxlength) {
+                if (event.target.value.length > props?.maxlength) {
+                  event.target.value = event.target.value.slice(0, -1);
+                }
               }
-              name={props.name}
-              id={props.id}
-              className={inputClassNameForMandatory}
-              placeholder={StringManipulator(
-                "TOSENTENCECASE",
-                props.placeholder
-              )}
-              onChange={(event) => {
-                if (props?.type === "number" && props?.maxlength) {
-                  if (event.target.value.length > props?.maxlength) {
-                    event.target.value = event.target.value.slice(0, -1);
-                  }
-                }
-                if (props?.type === "numeric") {
-                  event.target.value = event.target.value.replace(
-                    /[^0-9]/g,
-                    ""
-                  );
-                }
+              if (props?.type === "numeric") {
+                event.target.value = event.target.value.replace(
+                  /[^0-9]/g,
+                  ""
+                );
+              }
                 if (props?.onChange) {
                   props?.onChange(event);
-                }
+                }              
                 if (props.type === "date") {
-                  handleDate(event);
-                }
-              }}
-              ref={props.inputRef}
-              value={props?.value}
-              style={{ ...props.style }}
-              defaultValue={props.defaultValue}
-              minLength={props.minlength}
-              maxLength={props.maxlength}
-              max={props.max}
-              pattern={
-                props?.validation && props.ValidationRequired
-                  ? props?.validation?.pattern
-                  : props.pattern
+                handleDate(event);
               }
-              min={props.min}
-              readOnly={props.nonEditable}
-              title={
-                props?.validation && props.ValidationRequired
-                  ? props?.validation?.title
-                  : props.title
-              }
-              step={props.step}
-              autoFocus={props.autoFocus}
-              onBlur={props.onBlur}
-              autoComplete="off"
-              disabled={props.disabled}
-              onFocus={props?.onFocus}
-              nonEditable={props.nonEditable}
+            }}
+            ref={props.inputRef}
+            value={props?.value}
+            style={{ ...props.style }}
+            defaultValue={props.defaultValue}
+            minLength={props.minlength}
+            maxLength={props.maxlength}
+            max={props.max}
+            pattern={
+              props?.validation && props.ValidationRequired
+                ? props?.validation?.pattern
+                : props.pattern
+            }
+            min={props.min}
+            readOnly={props.nonEditable}
+            title={
+              props?.validation && props.ValidationRequired
+                ? props?.validation?.title
+                : props.title
+            }
+            step={props.step}
+            autoFocus={props.autoFocus}
+            onBlur={props.onBlur}
+            autoComplete="off"
+            disabled={props.disabled}
+            onFocus={props?.onFocus}
+            nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
               onClick={(event) => {
@@ -361,14 +361,15 @@ const TextInput = (props) => {
               minLength={props.minlength}
               maxLength={props.maxlength}
               max={props.max}
-              required={
-                props?.validation && props.ValidationRequired
-                  ? props?.validation?.isRequired
-                  : props.isRequired ||
-                    (props.type === "date" &&
-                      (props.name === "fromDate" ? data.toDate : data.fromDate))
-              }
-              pattern={
+            required={
+              props?.validation && props.ValidationRequired
+                ? props?.validation?.isRequired
+                : props.isRequired ||
+                (props.type === "date" &&
+                  (props.name === "fromDate" ? data.toDate : data.fromDate))
+            }
+            aria-label={props?.ariaLabel || props?.placeholder || props?.name}
+            pattern={
                 props?.validation && props.ValidationRequired
                   ? props?.validation?.pattern
                   : props.pattern
@@ -390,29 +391,37 @@ const TextInput = (props) => {
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
-              onClick={(event) => {
+            onClick={(event) => {
                 if (props.type === "date" || (props.type === "time")) {
-                  try {
-                    event.target.showPicker();
-                  } catch (error) {
-                    console.error("Error opening picker:", error);
-                  }
+                try {
+                  event.target.showPicker();
+                } catch (error) {
+                  console.error("Error opening picker:", error);
+                }
+              }
+            }}
+          />
+          {renderSuffix()}
+          {props.signature && props.signatureImg}
+          {icon && (
+            <span
+              className="digit-cursor-pointer"
+              onClick={props?.onIconSelection}
+              role="button"
+              aria-label="Search Icon"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  props?.onIconSelection?.(e);
                 }
               }}
-            />
-            {renderSuffix()}
-            {props.signature && props.signatureImg}
-            {icon && (
-              <span
-                className="digit-cursor-pointer"
-                onClick={props?.onIconSelection}
-              >
-                {icon}
-              </span>
-            )}
-          </div>
-        )}
-      </div>
+            >
+              {icon}
+            </span>
+          )}
+        </div>
+      )}
+    </div>  
     </React.Fragment>
   );
 };

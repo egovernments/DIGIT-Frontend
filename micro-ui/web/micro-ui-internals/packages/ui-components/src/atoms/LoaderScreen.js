@@ -3,7 +3,8 @@ import PropTypes from "prop-types";
 
 export const LoaderScreen = ({ page = false }) => {
   return (
-    <div className="digit-screen-loader">
+    <div className="digit-screen-loader" role="status"
+      aria-live="polite">
       <div className="digit-loadingio-spinner-rolling-frame">
         <div className="digit-ldio-pjg92h09b2o">
           <div></div>
