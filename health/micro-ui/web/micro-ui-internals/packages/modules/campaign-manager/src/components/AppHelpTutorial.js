@@ -35,14 +35,22 @@ const AppHelpContent = () => {
   const { t } = useTranslation();
 
   const tutorialList = [
-    { title: "Start configuring forms", icon: "📱" },
-    { title: "How to customise map view?", icon: "📍" },
-    { title: "How to manage users?", icon: "👤" },
-    { title: "Preview Applications...", icon: "📝" },
-    { title: "Start configuring forms", icon: "📱" },
-    { title: "How to customise map view?", icon: "📍" },
-    { title: "How to manage users?", icon: "👤" },
-    { title: "Preview Applications...", icon: "📝" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "Start configuring forms", icon: "📱" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "How to customise map view?", icon: "📍" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "How to manage users?", icon: "👤" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "Preview Applications...", icon: "📝" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "Start configuring forms", icon: "📱" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "How to customise map view?", icon: "📍" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "How to manage users?", icon: "👤" },
+     { url: "https://example.com/tutorial-start-config" ,title:
+ "Preview Applications...", icon: "📝" },
   ];
 
   return (
@@ -52,6 +60,8 @@ const AppHelpContent = () => {
         <div
           key={index}
           className="tutorial-card"
+          onClick={() => window.open(item.url, "_blank")}
+
         >
           <div className="tutorial-icon">{item.icon}</div>
           <div className="tutorial-title">{t(item.title)}</div>

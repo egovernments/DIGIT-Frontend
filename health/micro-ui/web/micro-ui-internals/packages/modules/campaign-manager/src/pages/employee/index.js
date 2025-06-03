@@ -189,8 +189,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        <AppHelpTutorial  />
-        {/* <CampaignHeader /> */}
+        {/* <AppHelpTutorial  /> */}
       </div>
       <Switch>
         <AppContainer className="campaign">
