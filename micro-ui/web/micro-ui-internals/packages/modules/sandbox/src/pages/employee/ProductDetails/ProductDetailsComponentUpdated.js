@@ -6,7 +6,7 @@ import { ReactComponent as Chat } from '../../../../src/components/images/chat.s
 import { ReactComponent as Calculate } from '../../../../src/components/images/calculate.svg';
 import { ReactComponent as BarChart } from '../../../../src/components/images/bar_chart.svg';
 import { useTranslation } from "react-i18next";
-
+import he from 'he';
 const iconMap = {
     Graph,
     FeatureSearch,
@@ -49,33 +49,48 @@ const HeroSection = ({ title, headline }) => (
     </div>
 );
 
-const AboutSection = ({ about }) => (
-    <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
-        <div className="about-container">
-            <div className="about-title-wrapper">
-                <h2 className="about-title">{about.title}</h2>
-                <div className="title-underline"></div>
-            </div>
-            {about.paragraphs.map((para, i) => (
-                <p key={i} className="about-description" dangerouslySetInnerHTML={{ __html: para }}></p>
-            ))}
-            <div className="roles-section">
-                {about.roles.map((r, i) => (
-                    <RoleBlock key={i} description={r.description} />
-                ))}
-            </div>
-        </div>
-    </div>
-);
+const AboutSection = ({ about }) =>
+    (
+        <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
+            <div className="about-container">
+                <div className="about-title-wrapper">
+                    <h2 className="about-title">{about.title}</h2>
+                    <div className="title-underline"></div>
+                </div>
+                {about.paragraphs.map((para, i) => {
+                    const decodedpara = he.decode(para); // decode &lt;strong&gt;
 
-const RoleBlock = ({ description }) => (
-    <div className="role-block">
-        <div className="role-icon-wrapper">
-            <SVG.Person className="role-icon" />
+                    return (
+                        <p key={i} className="about-description" dangerouslySetInnerHTML={{ __html: decodedpara }}></p>
+                    )
+                })}
+                <div className="roles-section">
+                    {about.roles.map((r, i) => (
+                        <RoleBlock key={i} description={r.description} />
+                    ))}
+                </div>
+            </div>
         </div>
-        <p>{description}</p>
-    </div>
-);
+    );
+
+
+
+const RoleBlock = ({ description }) => {
+    const decodedDescription = he.decode(description); // decode &lt;strong&gt;
+
+    console.log("Decoded:", decodedDescription);
+
+    return (
+        <div className="role-block">
+            <div className="role-icon-wrapper">
+                <SVG.Person className="role-icon" />
+            </div>
+            <p dangerouslySetInnerHTML={{ __html: decodedDescription }} />
+        </div>
+    );
+};
+
+
 
 const ExperienceSection = ({ experience, t = { t } }) => (
     <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
