@@ -159,7 +159,7 @@ const SelectingBoundaryComponent = ({
     const currentPath = parentPath ? `${data?.code}.${parentPath}` : data?.code;
 
     result[data?.boundaryType] = result[data?.boundaryType] || {};
-    result[data?.boundaryType][data?.code] = parentPath || "mz";
+    result[data?.boundaryType][data?.code] = parentPath || window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg";
 
     if (data?.boundaryType === lowestBoundaryType) {
       return result;

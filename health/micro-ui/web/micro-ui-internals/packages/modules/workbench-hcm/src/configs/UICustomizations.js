@@ -181,7 +181,7 @@ export const UICustomizations = {
       const textConfig = paths[id]?.textConfig;
 
       if (paths[id].basePath == "Projects") {
-        data.state.searchForm = { ...data.state.searchForm, tenantId: "mz" };
+        data.state.searchForm = { ...data.state.searchForm, tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg" };
       }
       let Product = Object.keys(requestBody)
         .map((key) => {
@@ -212,13 +212,13 @@ export const UICustomizations = {
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
-      
+
       //here we can add multiple conditions
       //like if a cell is link then we return link
       //first we can identify which column it belongs to then we can return relevant result
       switch (key) {
         case "PROJECT_NUMBER":
-          
+
           return (
             <span className="link">
               <Link
@@ -229,7 +229,7 @@ export const UICustomizations = {
             </span>
           );
 
-          case "PROJECT_ID":
+        case "PROJECT_ID":
           return (
             <span className="link">
               <Link
@@ -248,7 +248,7 @@ export const UICustomizations = {
 
           // Assuming createdDateString is in the format "DD/MM/YYYY"
           const [day, month, year] = createdDateString.split("/").map(Number);
-          const currentTime = new Date(year, month - 1, day); 
+          const currentTime = new Date(year, month - 1, day);
 
           const timeDifference = todayEpochStart.getTime() - currentTime.getTime();
 

@@ -11,7 +11,7 @@ const fileData = {
         global_id: "3c1b3b06-3958-424b-a160-3e25998cd027",
         source: "WFP, INE",
         source_date: "2007-01-01",
-        properties: { ADM0_EN: "Mozambique", OBJECTID: 1, ADM0_PCODE: "MZ", Shape_Area: 67.0418795361, Shape_Leng: 96.6578168932 },
+        properties: { ADM0_EN: "Togo", OBJECTID: 1, ADM0_PCODE: "MZ", Shape_Area: 67.0418795361, Shape_Leng: 96.6578168932 },
         population_1: 26876090.0,
       },
       geometry: {

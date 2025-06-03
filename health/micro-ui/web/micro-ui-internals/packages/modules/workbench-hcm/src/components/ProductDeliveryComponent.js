@@ -5,18 +5,18 @@ import { data } from "../configs/ViewProjectConfig";
 
 const ProductDeliveryComponent = (props) => {
     const { t } = useTranslation();
-    
+
     const requestCriteria = {
         url: "/product/v1/_search",
         changeQueryName:props.projectId,
         params: {
-            tenantId : "mz",
+            tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
             offset: 0,
             limit: 10,
         },
-        
+
         body: {
-            Product: {   
+            Product: {
             },
         },
         config:{
@@ -69,7 +69,7 @@ const ProductDeliveryComponent = (props) => {
             }
 
         </div>
-        
+
     )
 }
 

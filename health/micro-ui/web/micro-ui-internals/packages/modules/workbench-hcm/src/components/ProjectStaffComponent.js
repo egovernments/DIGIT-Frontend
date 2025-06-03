@@ -27,7 +27,7 @@ const ProjectStaffComponent = (props) => {
     url: `${healthProjecturl}/staff/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
       offset: 0,
       limit: 10,
     },
@@ -63,7 +63,7 @@ const ProjectStaffComponent = (props) => {
   const userRequestCriteria = {
     url: "/user/_search",
     body: {
-      tenantId: "mz",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
       uuid: userIds,
     },
     config: {
@@ -307,13 +307,13 @@ const ProjectStaffComponent = (props) => {
                       {column?.render
                         ? column?.render(row)
                         : column?.key === "userInfo.roles"
-                        ? row?.userInfo?.roles
+                          ? row?.userInfo?.roles
                             .slice(0, 2)
                             .map((role) => role.name)
                             .join(", ") // to show 2 roles
-                        : column?.key.includes(".")
-                        ? getNestedPropertyValue(row, column?.key)
-                        : row[column.key] || "NA"}
+                          : column?.key.includes(".")
+                            ? getNestedPropertyValue(row, column?.key)
+                            : row[column.key] || "NA"}
                     </td>
                   ))}
                   <td>

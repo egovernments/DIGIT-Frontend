@@ -4,7 +4,7 @@ configuration with fields like campaign name, type, start date, end date, etc. T
 also include API details for fetching data, UI styles, search result columns, pagination settings,
 and more. The object is exported for use in other parts of the codebase. */
 export const myCampaignConfig = {
-  tenantId: "mz",
+  tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
   moduleName: "commonCampaignUiConfig",
   showTab: true,
   myCampaignConfig: [
