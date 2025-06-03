@@ -26,7 +26,7 @@ const InboxSearchLinks = ({headerText, links, businessService, customClass="", l
     return (
         <div className={`inbox-search-links-container ${customClass}`}>
             {renderHeader()}
-            <div className="contents">
+            <div className="contents" aria-label={t(headerText)}>
                 {linksToShow.map(({ url, text, hyperlink = false}, index) => {
                     return (
                     <span className="link" key={index}>
