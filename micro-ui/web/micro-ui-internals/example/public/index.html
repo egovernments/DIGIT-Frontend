@@ -1,26 +1,106 @@
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="https://egov-dev-assets.s3.ap-south-1.amazonaws.com/browser-icon.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
+      rel="stylesheet"
+      type="text/css"
+    />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#00bcd1" />
+    <title>DIGIT</title>
+    <!-- <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.5.41/dist/index.css" /> -->
 
-<head>
-  <meta charset="utf-8" />
-  <link rel="icon" href="https://egov-dev-assets.s3.ap-south-1.amazonaws.com/browser-icon.png" />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap"
-    rel='stylesheet' type='text/css'>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <meta name="theme-color" content="#00bcd1" />
-  <title>DIGIT</title>
-  <!-- <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css@1.5.41/dist/index.css" /> -->
+    <!-- <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css/dist/index.css"/> -->
+    <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
+    <!-- <script src="%REACT_APP_GLOBAL%"></script> -->
+    <script>
+      var globalConfigs = (function () {
+        var contextPath = "payments-ui";
+        var projectContext = "project";
+        var individualContext = "individual";
+        var attendanceContext = "attendance";
+        var musterRollContext = "health-muster-roll";
+        var expenseContext = "health-expense";
+        var expenseCalculatorContext = "health-expense-calculator";
+        var stateTenantId = "ng";
+        var gmaps_api_key = "AIzaSyAASfCFja6YxwDzEAzhHFc8B-17TNTCV0g";
+        var configModuleName = "commonUiConfig";
+        var centralInstanceEnabled = false;
+        var localeRegion = "NG";
+        var localeDefault = "en";
+        var mdmsContext = "mdms-v2";
+        var hrmsContext = "egov-hrms";
+        var hierarchyType = "ADMIN";
+        var footerBWLogoURL = "https://unified-dev.digit.org/egov-dev-assets/digit-footer-bw.png";
+        var footerLogoURL = "https://unified-dev.digit.org/egov-dev-assets/digit-footer.png";
+        var digitHomeURL = "https://www.digit.org/";
+        var assetS3Bucket = "egov-dev-assets";
+        var calculationPageAssets = "https://egov-health-dev-assets.s3.ap-south-1.amazonaws.com/calculation-page-assets/";
 
-  <!-- <link rel="stylesheet" href="https://unpkg.com/@egovernments/digit-ui-css/dist/index.css"/> -->
-  <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
-  <script src="%REACT_APP_GLOBAL%"></script>
+        var getConfig = function (key) {
+          if (key === "STATE_LEVEL_TENANT_ID") {
+            return stateTenantId;
+          } else if (key === "GMAPS_API_KEY") {
+            return gmaps_api_key;
+          } else if (key === "ENABLE_SINGLEINSTANCE") {
+            return centralInstanceEnabled;
+          } else if (key === "DIGIT_FOOTER_BW") {
+            return footerBWLogoURL;
+          } else if (key === "DIGIT_FOOTER") {
+            return footerLogoURL;
+          } else if (key === "DIGIT_HOME_URL") {
+            return digitHomeURL;
+          } else if (key === "S3BUCKET") {
+            return assetS3Bucket;
+          } else if (key === "CONTEXT_PATH") {
+            return contextPath;
+          } else if (key === "UICONFIG_MODULENAME") {
+            return configModuleName;
+          } else if (key === "LOCALE_REGION") {
+            return localeRegion;
+          } else if (key === "LOCALE_DEFAULT") {
+            return localeDefault;
+          } else if (key === "HRMS_CONTEXT_PATH") {
+            return hrmsContext;
+          } else if (key === "CALCULATION_PAGE_ASSETS") {
+            return calculationPageAssets;
+          } else if (key === "PROJECT_CONTEXT_PATH") {
+            return projectContext;
+          } else if (key === "PROJECT_SERVICE_PATH") {
+            return projectContext;
+          } else if (key === "HIERARCHY_TYPE") {
+            return hierarchyType;
+          } else if (key === "INDIVIDUAL_CONTEXT_PATH") {
+            return individualContext;
+          } else if (key === "ATTENDANCE_CONTEXT_PATH") {
+            return attendanceContext;
+          } else if (key === "MUSTER_ROLL_CONTEXT_PATH") {
+            return musterRollContext;
+          } else if (key === "EXPENSE_CONTEXT_PATH") {
+            return expenseContext;
+          } else if (key === "EXPENSE_CALCULATOR_CONTEXT_PATH") {
+            return expenseCalculatorContext;
+          } else if (key === "MDMS_CONTEXT_PATH") {
+            return mdmsContext;
+          } else if (key === "MDMS_V2_CONTEXT_PATH") {
+            return mdmsContext;
+          } else if (key === "MDMS_V1_CONTEXT_PATH") {
+            return mdmsContext;
+          }
+        };
 
-</head>
+        return {
+          getConfig,
+        };
+      })();
+    </script>
+  </head>
 
-<body>
-  <noscript>You need to enable JavaScript to run this app.</noscript>
-  <div id="root"></div>
-</body>
-
+  <body>
+    <noscript>You need to enable JavaScript to run this app.</noscript>
+    <div id="root"></div>
+  </body>
 </html>
