@@ -541,3 +541,12 @@
   font-size: theme(digitv2.fontSize.heading-s);
   color: theme(digitv2.lightTheme.text-color-secondary);
 }
+.camp-drawer-caption{
+  font-size: 1rem !important;
+  font-weight: 400 !important;
+}
+
+.camp-app-help-tutorial-popup{
+  bottom: 0;
+  top: unset !important;
+}

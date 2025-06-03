@@ -1,4 +1,4 @@
-import { Button, Dropdown, FieldV1, LabelFieldPair, PopUp, RadioButtons, Switch, TextArea, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Divider, Dropdown, FieldV1, LabelFieldPair, PopUp, RadioButtons, Switch, Tag, TextArea, TextBlock, TextInput } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -9,6 +9,7 @@ import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import ConsoleTooltip from "../../../components/ConsoleToolTip";
 
 /**
  * Determines whether a specific field in a UI panel should be disabled.
@@ -24,7 +25,11 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
   const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
-
+  
+  // force disable if field is hidden
+  if(drawerState?.hidden){
+    return true;
+  }
   // If the field is in the disable list AND its label is either "Mandatory" or "fieldType", disable it
   if (shouldDisable && panelItem?.disableForRequired) {
     return true;
@@ -117,6 +122,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                     state={state}
                     drawerState={drawerState}
                     AppScreenLocalisationConfig={AppScreenLocalisationConfig}
+                    disabled={drawerState?.hidden}
                   />
                 ))
             : null}
@@ -267,6 +273,13 @@ function DrawerFieldComposer() {
 
   return (
     <>
+      <div className="app-config-drawer-subheader">
+        {t("APPCONFIG_PROPERTIES")}{" "}
+        <span className="icon-wrapper">
+          <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
+        </span>
+      </div>
+      <Divider />
       <Tabs
         numberTabs={tabs}
         onTabChange={(tab, index) => {
@@ -286,6 +299,18 @@ function DrawerFieldComposer() {
           });
         }}
       />
+      <TextBlock
+        body=""
+        caption={t(Digit.Utils.locale.getTransformedLocale(`CMP_DRAWER_WHAT_IS_${t(currentDrawerState?.[0]?.tab)}`))}
+        header=""
+        captionClassName="camp-drawer-caption"
+        subHeader=""
+      />
+      {drawerState?.hidden && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+          <Tag showIcon={true} label={t("CMP_DRAWER_FIELD_DIABLED_SINCE_HIDDEN")} type="warning" />
+        </div>
+      )}
       <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         {currentDrawerState?.map((panelItem, index) => {
           if (isFieldVisible(panelItem)) {
@@ -306,7 +331,11 @@ function DrawerFieldComposer() {
         {/* // todo need to update and cleanup */}
         {currentDrawerState?.every((panelItem, index) => !isFieldVisible(panelItem)) && (
           <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-            No {currentDrawerState?.[0]?.tab} configured for this field type
+            <Tag
+              showIcon={true}
+              label={t(Digit.Utils.locale.getTransformedLocale(`CMP_DRAWER_NO_CONFIG_ERROR_${t(currentDrawerState?.[0]?.tab)}`))}
+              type="error"
+            />
           </div>
         )}
       </div>

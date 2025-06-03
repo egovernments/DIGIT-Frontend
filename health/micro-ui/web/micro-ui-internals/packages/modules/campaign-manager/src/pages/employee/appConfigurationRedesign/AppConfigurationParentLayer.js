@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { Button, Footer, Loader, Stepper, Toast, Tooltip } from "@egovernments/digit-ui-components";
+import { Button, Footer, Loader, Stepper, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -230,9 +230,12 @@ const AppConfigurationParentRedesign = () => {
   return (
     <div>
       <Header className="app-config-header">
-        <div>{t(`${currentScreen?.[0]?.name}`)}</div>
-        <div style={{ fontSize: "1rem" }}>{`(${t(`APPCONFIG_VERSION`)} - ${parentState?.actualTemplate?.version})`}</div>
+        <div className="app-config-header-group" style={{ display: "flex" }}>
+          {t(`${currentScreen?.[0]?.name}`)}{" "}
+          <Tag stroke={true} showIcon={false} label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`} />
+        </div>
       </Header>
+      <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       {variant === "app" && (
         <Tabs
           numberTabs={numberTabs}

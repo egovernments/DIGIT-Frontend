@@ -23,6 +23,7 @@ import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
 import AppModule from "./NewCampaignCreate/AppModule";
 import AppFeatures from "./NewCampaignCreate/AppFeatures";
+import AppHelpTutorial from "../../components/AppHelpTutorial";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -188,6 +189,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
+        <AppHelpTutorial  />
         {/* <CampaignHeader /> */}
       </div>
       <Switch>
