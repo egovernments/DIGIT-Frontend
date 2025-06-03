@@ -228,6 +228,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           />
           <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
           <PrivateRoute path={`${path}/my-campaign-new`} component={() => <MyCampaignNew />} />
+          <PrivateRoute path={`${path}/my-campaign-new`} component={() => <MyCampaignNew />} />
           <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
           <PrivateRoute path={`${path}/response`} component={() => <Response />} />
