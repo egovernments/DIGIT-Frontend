@@ -6,7 +6,7 @@ import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
 
 /**
- * CustomRowCard Component
+ * HCMMyCampaignRowCard Component
  *
  * This component is used to render a stylized summary card representing a campaign entity in a list view.
  * It displays key information such as campaign name, duration, start and end dates, number of delivery cycles,
@@ -162,7 +162,7 @@ const getActionButtons = (rowData, tabData, history) => {
   return actions;
 };
 
-const CustomRowCard = ({ key, rowData, tabData }) => {
+const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
@@ -253,4 +253,4 @@ const CustomRowCard = ({ key, rowData, tabData }) => {
   );
 };
 
-export default CustomRowCard;
+export default HCMMyCampaignRowCard;

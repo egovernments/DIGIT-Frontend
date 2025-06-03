@@ -85,7 +85,7 @@ export const myCampaignConfigNew = {
           uiConfig: {
             customRow: {
               overRideRowWithCustomRowComponent: true,
-              customRowComponent: "CustomRowCard",
+              customRowComponent: "HCMMyCampaignRowCard",
             },
             totalCountJsonPath: "totalCount",
             enableGlobalSearch: false,
@@ -184,7 +184,7 @@ export const myCampaignConfigNew = {
           uiConfig: {
             customRow: {
               overRideRowWithCustomRowComponent: true,
-              customRowComponent: "CustomRowCard",
+              customRowComponent: "HCMMyCampaignRowCard",
             },
             totalCountJsonPath: "totalCount",
             enableGlobalSearch: false,
@@ -283,7 +283,7 @@ export const myCampaignConfigNew = {
           uiConfig: {
             customRow: {
               overRideRowWithCustomRowComponent: true,
-              customRowComponent: "CustomRowCard",
+              customRowComponent: "HCMMyCampaignRowCard",
             },
             totalCountJsonPath: "totalCount",
             enableGlobalSearch: false,
@@ -382,7 +382,7 @@ export const myCampaignConfigNew = {
           uiConfig: {
             customRow: {
               overRideRowWithCustomRowComponent: true,
-              customRowComponent: "CustomRowCard",
+              customRowComponent: "HCMMyCampaignRowCard",
             },
             totalCountJsonPath: "totalCount",
             enableGlobalSearch: false,
@@ -481,7 +481,7 @@ export const myCampaignConfigNew = {
           uiConfig: {
             customRow: {
               overRideRowWithCustomRowComponent: true,
-              customRowComponent: "CustomRowCard",
+              customRowComponent: "HCMMyCampaignRowCard",
             },
             totalCountJsonPath: "totalCount",
             enableGlobalSearch: false,
