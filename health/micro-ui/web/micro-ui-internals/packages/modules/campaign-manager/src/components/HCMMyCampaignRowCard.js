@@ -17,7 +17,7 @@ import { useHistory } from "react-router-dom";
  * - Dynamically generates tag elements based on `rowData` (e.g., projectType, delivery rules, resources).
  * - Displays action buttons like:
  *    - "Download User Credentials" if applicable.
- *    - "Edit Campaign" depending on the current campaign tab and status.
+ *    - "Edit Campaign" redirects to view campaign screen.
  *    - "Duplicate Campaign" (with a placeholder click handler).
  * - On clicking the buttons, appropriate actions are triggered such as API calls, file downloads, or navigation.
  *
@@ -94,41 +94,6 @@ const handleDownloadUserCreds = async (data) => {
   }
 };
 
-// function to handle edit campaign
-const onEdit = ({ rowData, currentTab, history }) => {
-  const currentDate = new Date().getTime();
-  switch (currentTab) {
-    case "CAMPAIGN_ONGOING":
-      history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${rowData.id}&preview=${true}&action=${false}&actionBar=${true}`);
-      break;
-    case "CAMPAIGN_COMPLETED":
-      history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${rowData.id}&preview=${true}&action=${false}`);
-      break;
-    case "CAMPAIGN_UPCOMING":
-      history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${rowData.id}&preview=${true}&action=${false}&actionBar=${true}`);
-      break;
-    case "CAMPAIGN_DRAFTS":
-      if (rowData?.parentId) {
-        history.push(
-          `/${window.contextPath}/employee/campaign/update-campaign?parentId=${rowData.parentId}&id=${rowData.id}&draft=${true}&campaignName=${
-            rowData.campaignName
-          }`
-        );
-      } else {
-        const baseUrl = `/${window.contextPath}/employee/campaign/setup-campaign?id=${rowData.id}&draft=true&fetchBoundary=true&draftBoundary=true`;
-        const hasPassedDates = rowData.startDate <= currentDate || rowData.endDate <= currentDate;
-        const finalUrl = hasPassedDates ? `${baseUrl}&date=true` : baseUrl;
-        history.push(finalUrl);
-      }
-      break;
-    case "CAMPAIGN_FAILED":
-      history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${rowData.id}&preview=${true}&action=${false}`);
-      break;
-    default:
-      break;
-  }
-};
-
 // function to generate action buttons
 const getActionButtons = (rowData, tabData, history) => {
   const actions = {};
@@ -153,7 +118,12 @@ const getActionButtons = (rowData, tabData, history) => {
   if (!(currentTab === "CAMPAIGN_COMPLETED")) {
     actions.editCampaign = {
       label: "Edit_Campaign",
-      onClick: () => onEdit({ rowData, currentTab, history }),
+      onClick: () =>
+        history.push(
+          `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
+            rowData?.campaignNumber
+          }&tenantId=${Digit.ULBService.getCurrentTenantId()}`
+        ),
       icon: "",
       variation: "primary",
     };
