@@ -24,6 +24,7 @@ import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
 import AppModule from "./NewCampaignCreate/AppModule";
 import AppFeatures from "./NewCampaignCreate/AppFeatures";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
+import MyCampaignNew from "./MyCampaignNew";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -66,6 +67,18 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("MY_CAMPAIGN"),
       show:
         pathVar === "my-campaign" ||
+        pathVar === "checklist/create" ||
+        pathVar === "checklist/view" ||
+        pathVar === "checklist/update" ||
+        pathVar === "update-dates-boundary"
+          ? true
+          : false,
+    },
+    {
+      path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      content: t("MY_CAMPAIGN"),
+      show:
+        pathVar === "my-campaign-new" ||
         pathVar === "checklist/create" ||
         pathVar === "checklist/view" ||
         pathVar === "checklist/update" ||
@@ -201,6 +214,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
             component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
           />
           <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
+          <PrivateRoute path={`${path}/my-campaign-new`} component={() => <MyCampaignNew />} />
           <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
           <PrivateRoute path={`${path}/response`} component={() => <Response />} />
