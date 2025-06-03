@@ -4,7 +4,7 @@ import { InboxSearchComposer } from "@egovernments/digit-ui-components";
 import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
 
 /**
- * The `MyCampaign` function is a React component that displays a header with a campaign search title
+ * The `MyCampaignNew` function is a React component that displays a header with a campaign search title
  * and an inbox search composer with tabs for different configurations.
  * @returns The `MyCampaignNew` component is returning a React fragment containing a Header component with
  * a title fetched using the `useTranslation` hook, and a div with a className of
@@ -18,12 +18,12 @@ const MyCampaignNew = () => {
     myCampaignConfigNew?.myCampaignConfigNew?.map((configItem, index) => ({
       key: index,
       label: configItem.label,
-      active: index === 0 ? true : false,
+      active: index === 0,
     }))
   );
 
   const onTabChange = (n) => {
-    setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n ? true : false })));
+    setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n  })));
     setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
   };
 
@@ -51,7 +51,7 @@ const MyCampaignNew = () => {
   return (
     <React.Fragment>
       <div className="digit-inbox-search-wrapper">
-        <InboxSearchComposer configs={config} showTab={true} tabData={tabData} onTabChange={onTabChange}></InboxSearchComposer>
+        <InboxSearchComposer configs={config} showTab={true} tabData={tabData} onTabChange={onTabChange} />
       </div>
     </React.Fragment>
   );

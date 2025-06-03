@@ -2,7 +2,7 @@
  * Calculates the number of days between two epoch timestamps.
  * @param {number} startEpoch - The start date in epoch milliseconds.
  * @param {number} endEpoch - The end date in epoch milliseconds.
- * @returns {string} Duration in days (e.g., "5 days", "1 day").
+ * @returns {number|string} Duration in days as a number, or "Invalid range" for edge cases.
  */
 export const calculateDurationInDays = (startEpoch, endEpoch) => {
   if (!startEpoch || !endEpoch) return "NA";

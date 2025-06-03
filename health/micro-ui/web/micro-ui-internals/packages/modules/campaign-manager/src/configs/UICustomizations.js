@@ -376,8 +376,7 @@ export const UICustomizations = {
         endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
         pagination: {
           sortBy: "createdTime",
-          // sortOrder: "desc",
-          sortOrder: data?.state?.tableForm?.sortOrder,
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -559,8 +558,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          // sortOrder: "desc",
-          sortOrder: data?.state?.tableForm?.sortOrder,
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -696,8 +694,7 @@ export const UICustomizations = {
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
         pagination: {
           sortBy: "createdTime",
-          // sortOrder: "desc",
-          sortOrder: data?.state?.tableForm?.sortOrder,
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -882,8 +879,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          // sortOrder: "desc",
-          sortOrder: data?.state?.tableForm?.sortOrder,
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -977,8 +973,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          // sortOrder: "desc",
-          sortOrder: data?.state?.tableForm?.sortOrder,
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -1072,8 +1067,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          // sortOrder: "desc",
-          sortOrder: data?.state?.tableForm?.sortOrder,
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },

@@ -67,19 +67,30 @@ const getTagElements = (rowData) => {
 
 // function to handle download user creds
 const handleDownloadUserCreds = async (data) => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const responseTemp = await Digit.CustomService.getResponse({
-    url: `/project-factory/v1/data/_search`,
-    body: {
-      SearchCriteria: {
-        tenantId: tenantId,
-        id: [data?.createResourceId],
+  try {
+    const tenantId = Digit.ULBService.getCurrentTenantId();
+    const responseTemp = await Digit.CustomService.getResponse({
+      url: `/project-factory/v1/data/_search`,
+      body: {
+        SearchCriteria: {
+          tenantId: tenantId,
+          id: [data?.createResourceId],
+        },
       },
-    },
-  });
-  const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
-  if (response?.[0]) {
-    downloadExcelWithCustomName({ fileStoreId: response[0], customName: "userCredential" });
+    });
+
+    const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+
+    if (response?.[0]) {
+      downloadExcelWithCustomName({
+        fileStoreId: response[0],
+        customName: "userCredential",
+      });
+    } else {
+      console.error("No file store ID found for user credentials");
+    }
+  } catch (error) {
+    console.error("Error downloading user credentials:", error);
   }
 };
 
@@ -157,7 +168,7 @@ const CustomRowCard = ({ key, rowData, tabData }) => {
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.length || "NA";
-  const resources = rowData?.deliveryRules.flatMap((rule) => rule.resources.map((res) => t(res.name))).join(", ");
+  const resources = rowData?.deliveryRules.flatMap((rule) => rule.resources.map((res) => t(res.name))).join(", ") || "NA";
   const actionButtons = getActionButtons(rowData, tabData, history);
   const tagElements = getTagElements(rowData);
 
@@ -203,7 +214,7 @@ const CustomRowCard = ({ key, rowData, tabData }) => {
           <Divider />
           <div className="right-column">
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Number of cycles"} value={noOfCycles} />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Resources"} value={resources || "NA"} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Resources"} value={resources} />
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Status"} value={t(rowData?.status) || "NA"} />
           </div>
         </div>
@@ -214,7 +225,7 @@ const CustomRowCard = ({ key, rowData, tabData }) => {
           key={"DuplicateCampaign"}
           icon={"TabInactive"}
           label={t("Duplicate_Campaign")}
-          onClick={() => console.log("Duplicate Campaign")} // Todo : handle duplicate campaign button click
+          onClick={() => console.log("Duplicate Campaign")} // TODO: Implement duplicate campaign functionality
           variation={"teritiary"}
           title={t("Duplicate_Campaign")}
         />
