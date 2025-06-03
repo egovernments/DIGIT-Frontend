@@ -548,5 +548,63 @@
 
 .camp-app-help-tutorial-popup{
   bottom: 0;
-  top: unset !important;
+  top: 62vh !important;
+  width: 100%;
+  max-width:90% !important;
+  overflow: hidden !important;
+  .digit-popup-children-wrap{
+    overflow: hidden!important;
+  }
+  .tutorial-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .tutorial-row {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .tutorial-card {
+    flex: 0 0 auto;
+    width: 16rem;
+    min-height: 10rem;
+    background: #ffffff;
+    border-radius: 0.75rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+  
+    &:hover {
+      transform: translateY(-4px);
+    }
+  }
+  
+  .tutorial-icon {
+    background-color: #f0f0f0;
+    border-radius: 50%;
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.75rem;
+    font-size: 1.5rem;
+  }
+  
+  .tutorial-title {
+    font-size: 0.95rem;
+    font-weight: 500;
+  }
+  
 }
