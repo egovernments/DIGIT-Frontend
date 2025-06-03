@@ -126,18 +126,6 @@
 }
 
 /* Login Form Section (30% width) */
-/* .login-form-container {
-  width: 30%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: white;
-  padding: 3rem;
-  z-index: 2;
-  position: relative;
-  box-shadow: -5px 0 15px rgba(0,0,0,0.05);
-} */
 
 .login-form-container {
   flex: 1 1 30%;
@@ -170,15 +158,6 @@
   width: 100%;
   max-width: 380px;
   animation: fadeIn 0.5s ease-out;
-}
-
-@media (min-aspect-ratio: 3 / 4) {
-    .login-form-container .digit-card-component {
-        padding-left: 0;
-        padding-bottom: 1.5rem;
-        padding-right: 0;
-        padding-top: 1.5rem;
-    }
 }
 
 @keyframes fadeIn {
@@ -426,4 +405,13 @@
   .carousel-content {
     max-width: 700px;
   }
+}
+
+@media (min-aspect-ratio: 3 / 4) {
+    .login-form-container .digit-card-component {
+        padding-left: 0;
+        padding-bottom: 1.5rem;
+        padding-right: 0;
+        padding-top: 1.5rem;
+    }
 }
