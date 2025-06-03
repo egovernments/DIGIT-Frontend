@@ -1,5 +1,5 @@
 import React from "react";
-import { TextInput, Dropdown, RadioButtons, Button } from "@egovernments/digit-ui-components";
+import { TextInput, Dropdown, RadioButtons, Button, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
@@ -27,14 +27,16 @@ export const RenderConditionalField = ({
     case "date":
     case "time":
       return (
-        <TextInput
-          isRequired={true}
-          className=""
+        <FieldV1
           type={cField?.type}
-          name="title"
+          label={cField?.label}
+          withoutLabel={Boolean(!cField?.label)}
           value={
             isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
           }
+          config={{
+            step: "",
+          }}
           onChange={(event) => {
             const value = event.target.value;
             if (isLocalisable) {
@@ -65,9 +67,52 @@ export const RenderConditionalField = ({
               return;
             }
           }}
-          placeholder={""}
+          populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+          // charCount={field?.charCount}
         />
       );
+    // return (
+    //   <TextInput
+    //     isRequired={true}
+    //     className=""
+    //     type={cField?.type}
+    //     name="title"
+    //     value={
+    //       isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
+    //     }
+    //     onChange={(event) => {
+    //       const value = event.target.value;
+    //       if (isLocalisable) {
+    //         updateLocalization(
+    //           drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
+    //             ? drawerState?.[cField.bindTo]
+    //             : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
+    //                 drawerState?.jsonPath || drawerState?.id
+    //               }`,
+    //           Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+    //           value
+    //         );
+    //         setDrawerState((prev) => ({
+    //           ...prev,
+    //           [cField?.bindTo]:
+    //             drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
+    //               ? drawerState?.[cField.bindTo]
+    //               : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
+    //                   drawerState?.jsonPath || drawerState?.id
+    //                 }`,
+    //         }));
+    //         return;
+    //       } else {
+    //         setDrawerState((prev) => ({
+    //           ...prev,
+    //           [cField?.bindTo]: value,
+    //         }));
+    //         return;
+    //       }
+    //     }}
+    //     placeholder={""}
+    //   />
+    // );
     case "options":
       return (
         <div

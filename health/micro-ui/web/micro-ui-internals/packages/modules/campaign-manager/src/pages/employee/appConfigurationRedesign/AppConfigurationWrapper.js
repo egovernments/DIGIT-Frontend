@@ -45,7 +45,6 @@ const reducer = (state = initialState, action, updateLocalization) => {
         MASTER_DATA: { ...action.state },
         screenConfig: action.state?.screenConfig,
         screenData: action.state?.screenConfig,
-        screenData1: action.state?.AppScreenConfigTemplateSchema,
       };
     case "SET_SCREEN_DATA":
       return {
@@ -309,9 +308,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
     [
-      { name: "AppScreenConfigTemplateSchema" },
       { name: fieldMasterName, limit: 100 },
-      // { name: "DrawerPanelConfig" },
       { name: "DrawerPanelConfigOne", limit: 100 },
     ],
     {
@@ -413,9 +410,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
         <Button
           className="app-configure-action-button"
           variation="secondary"
-          label={t("BACK")}
-          title={t("BACK")}
+          label={t("PREVIOUS")}
+          title={t("PREVIOUS")}
           icon="ArrowBack"
+          isDisabled={false}
           onClick={() => back()}
         />
         <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
@@ -429,6 +427,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
+          isDisabled={false}
           onClick={async () => {
             await handleSubmit();
             onSubmit(state);
@@ -505,7 +504,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 }
               />
               <DrawerFieldComposer />
-              <Divider />
+              {/* <Divider /> */}
               {/* <Button
                 type={"button"}
                 size={"large"}
@@ -595,7 +594,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={handleSubmit} />,
           ]}
         >
-          <AppLocalisationTable />
+          <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
         </PopUp>
       )}
       {popupData && (

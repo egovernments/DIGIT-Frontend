@@ -939,7 +939,7 @@ tbody {
   min-width: 12.5rem;
 }
 .app-configuration-side-panel {
-  width: 23rem;
+  width: 24rem;
   background-color: #ffffff;
 }
 .appConfigHeaderLabelField {
@@ -980,10 +980,11 @@ tbody {
   }
 }
 .appConfigLabelField-label {
+  @extend .typography.heading-s;
+  color: theme(digitv2.lightTheme.text-secondary);
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 700;
-  color: #787878;
 }
 .app-preview-action-button {
   margin-top: auto;
@@ -1055,4 +1056,37 @@ tbody {
 }
 .app-preview-field-button {
   width: 100%;
+}
+
+.drawer-toggle-field-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  border: 1px solid #d6d5d4;
+  background: #fafafa;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  .digit-switch-container {
+    .digit-switch-label {
+      @extend .typography.body-s;
+      color: theme(digitv2.lightTheme.text-color-secondary);
+    }
+  }
+  .drawer-toggle-conditional-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    .digit-header-content.label {
+      @extend .typography.body-s;
+      color: theme(digitv2.lightTheme.text-color-secondary);
+      width: 100%;
+    }
+    .digit-field {
+      width: 100%;
+    }
+  }
+}
+.app-config-drawer-subheader{
+  @extend .typography.caption-s;
+  color: theme(digitv2.lightTheme.primary-2)
 }

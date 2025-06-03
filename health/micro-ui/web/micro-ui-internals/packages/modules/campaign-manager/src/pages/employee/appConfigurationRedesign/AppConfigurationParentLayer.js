@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { Loader, Stepper, Toast, Tooltip } from "@egovernments/digit-ui-components";
+import { Button, Footer, Loader, Stepper, Toast, Tooltip } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -64,13 +64,7 @@ const AppConfigurationParentRedesign = () => {
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [
-      {
-        name: masterName,
-        filter: `[?(@.project=='${campaignNumber}')]`,
-      },
-      { name: fieldTypeMaster, limit: 100 },
-    ],
+    [{ name: fieldTypeMaster, limit: 100 }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -279,6 +273,20 @@ const AppConfigurationParentRedesign = () => {
           onClose={closeToast}
         />
       )}
+      {/* <Footer
+        actionFields={[
+          <Button
+            type={"button"}
+            style={{ marginLeft: "2.5rem", width: "14rem" }}
+            label={t("HCM_BACK")}
+            variation={"secondary"}
+            t={t}
+            onClick={() => {}}
+          ></Button>,
+          <Button type={"button"} label={t("PROCEED_TO_PREVIEW")} variation={"primary"} onClick={() => {}} style={{ width: "14rem" }} t={t}></Button>,
+        ]}
+        className={"new-actionbar"}
+      /> */}
     </div>
   );
 };
