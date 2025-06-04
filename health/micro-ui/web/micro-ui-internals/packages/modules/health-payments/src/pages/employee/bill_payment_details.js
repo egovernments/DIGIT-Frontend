@@ -2,10 +2,10 @@ import React, { useState, useEffect, useRef, use, Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp,InfoCard, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent,Tab,NoResultsFound } from "@egovernments/digit-ui-components";
+import { Divider, Button, PopUp,InfoCard, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent,Tab,NoResultsFound, TooltipWrapper } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
-import ApproveCommentPopUp from "../../components/approveCommentPopUp";
+import SendForEditPopUp from "../../components/sendForEditPopUp";
 import _, { set } from "lodash";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
 import { formatTimestampToDate } from "../../utils";
@@ -17,7 +17,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  * @param {boolean} editBillDetails - Whether bill is editable or not.
  * @returns {ReactFragment} A React Fragment containing the attendance details.
  */
-const BillPaymentDetails = ({ editBillDetails = false }) => {
+const BillPaymentDetails = ({ editBillDetails = true }) => {
   const location = useLocation();
   const billID = location.state?.billID;
   console.log("billID", billID);
@@ -28,17 +28,29 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const [tableData, setTableData] = useState([]);
   const [billData, setBillData] = useState(null);
+  const [paginatedData, setPaginatedData] = useState([]);
+  const [openSendForEditPopUp, setOpenSendForEditPopUp] = useState(false);
 
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
-      const [limitAndOffset, setLimitAndOffset] = useState({
+  const [limitAndOffset, setLimitAndOffset] = useState({
           limit: rowsPerPage,
           offset: (currentPage - 1) * rowsPerPage,
       });
+  const handlePageChange = (page, totalRows) => {
+        setCurrentPage(page);
+        setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
+    };
+
+  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+        setRowsPerPage(currentRowsPerPage);
+        setCurrentPage(1);
+        setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
+    }
   const [activeLink, setActiveLink] = useState({
-          code: "VERIFIED",
-          name: "HCM_AM_VERIFIED",
+          code: "NOT_VERIFIED",
+          name: "HCM_AM_NOT_VERIFIED",
       });
-      const billDetails = [
+  const billDetails = [
         {
             "id": "123456",
             "name":"Worker 1",
@@ -452,6 +464,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     }
   },[BillData])
 
+  const getPaginatedData = (data, currentPage, rowsPerPage) => {
+  const startIndex = (currentPage - 1) * rowsPerPage;
+  const endIndex = startIndex + rowsPerPage;
+  return data.slice(startIndex, endIndex);
+};
+  useEffect(() => {
+    const slicedData = getPaginatedData(tableData, currentPage, rowsPerPage);
+    setPaginatedData(slicedData);
+  }, [tableData, currentPage, rowsPerPage]);
   // const individualReqCriteria = {
   //   url: `/${individualContextPath}/v1/_search`,
   //   params: {
@@ -561,10 +582,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   // const onCommentLogClose = () => {
   //   setShowCommentLogPopup(false);
   // };
-  const renderLabelPair = (heading, text) => (
+  const renderLabelPair = (heading, text,style) => (
     <div className="label-pair">
       <span className="view-label-heading">{t(heading)}</span>
-      <span className="view-label-text">{text}</span>
+      <span className="view-label-text" style={style}>{text} </span>
     </div>
   );
 
@@ -596,12 +617,13 @@ console.log("mob num:", tableData);
     <Loader />
   ) : (
     <>
-          {renderLabelPair('HCM_AM_BILL_NUMBER',billData?.billNumber || t("NA") )}
+          {renderLabelPair('HCM_AM_BILL_NUMBER',billData?.billNumber || t("NA"), { color: "#C84C0E" } )}
           {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
           {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
           {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
           {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
-          {renderLabelPair('HCM_AM_STATUS', billData?.status || t("NA"))}
+          {/* TODO : add Tag conditionally for status */}
+          {renderLabelPair('HCM_AM_STATUS', billData?.status || t("NA"))} 
           {
             <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                 {editBillDetails && (
@@ -664,13 +686,12 @@ console.log("mob num:", tableData);
                       <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
                   ) : (
     <Fragment>
-                    {/* TODO : CREATE NEW TABLE TO VERIFICATION STATUS FOR WORKERS IN BILL*/}
                 <BillDetailsTable 
                 style={{ width: "100%", }}
-                data={tableData} totalCount={tableData.length} selectableRows={true} 
-                status={activeLink?.code}
-                // rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
-                //     handlePerRowsChange={handlePerRowsChange} 
+                data={paginatedData} totalCount={tableData.length} selectableRows={true} 
+                status={activeLink?.code} editBill={editBillDetails}
+                rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
+                    handlePerRowsChange={handlePerRowsChange} 
                     />
                     </Fragment>
   )}
@@ -742,13 +763,23 @@ console.log("mob num:", tableData);
           setOpenApproveAlertPopUp(true);
         }}
       />} */}
-
+ {openSendForEditPopUp && <SendForEditPopUp
+        isEditTrue={editBillDetails}
+        onClose={() => {
+          setOpenSendForEditPopUp(false);
+        }}
+        onSubmit={(comment) => {
+          // setComment(comment);
+          setOpenSendForEditPopUp(false);
+          // setOpenApproveAlertPopUp(true);
+        }}
+      />}
       {/* action bar for bill generation*/}
       {/* {showGenerateBillAction && BillData?.bills?.length === 0 && */}
       {activeLink?.code !== "PAYMENT_GENERATED" && (
         <ActionBar
         actionFields={
-          activeLink?.code === 'NOT_VERIFIED' ?
+          !editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
           [          
             <Button
               className="custom-class"
@@ -756,7 +787,10 @@ console.log("mob num:", tableData);
               label={t(`HCM_AM_SEND_FOR_EDIT`)}
               menuStyles={{
                 bottom: "40px",
-              }}             
+              }}
+              onClick={() => {
+                setOpenSendForEditPopUp(true);
+              }}  
               optionsKey="name"
               size=""
               style={{ minWidth: "14rem" }}
@@ -772,6 +806,27 @@ console.log("mob num:", tableData);
               menuStyles={{
                 bottom: "40px",
               }}             
+              optionsKey="name"
+              size=""
+              style={{ minWidth: "14rem" }}
+              title=""
+              type="button"
+              variation="primary"
+
+            />
+            ]:
+             editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
+          [          
+            <Button
+              className="custom-class"
+              icon="Arrow"
+              label={t(`HCM_AM_SAVE_CHANGES_AND_FORWARD`)}
+              menuStyles={{
+                bottom: "40px",
+              }}
+              onClick={() => {
+                setOpenSendForEditPopUp(true);
+              }}  
               optionsKey="name"
               size=""
               style={{ minWidth: "14rem" }}
