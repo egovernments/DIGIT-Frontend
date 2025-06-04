@@ -1,5 +1,11 @@
 # Changelog 
 
+## [1.8.37] - [04-June-2025]
+- Added an additional component `Carousel.js`
+- config updated as per additional carousel component
+- Updated `FormComposer` usage in `login.js` with conditional banner rendering.
+- Leveraged newly added class `.login-form-container` for styling the Login page.
+
 ## [1.8.36]  [27-May-2025]
 - FEATURE/CCSD-216 : Privacy component alignment changes
 
