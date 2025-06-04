@@ -6,7 +6,7 @@ const Carousel = () => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const { t } = useTranslation();
 
-    const carouselItems = loginConfig[0].bannerImages
+    const carouselItems = loginConfig[0]?.bannerImages || [];
 
     const nextSlide = () => {
         setCurrentSlide(prev => (prev === carouselItems.length - 1 ? 0 : prev + 1));
