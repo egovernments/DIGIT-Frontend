@@ -482,7 +482,6 @@
   font-size: theme(digitv2.fontSize.heading-s);
 }
 .detail-header {
-  color: theme(digitv2.lightTheme.primary-2);
   font-size: theme(digitv2.fontSize.heading-m);
 }
 .details-desc {
@@ -540,4 +539,13 @@
   font-family: theme(digitv2.fontFamily.sans);
   font-size: theme(digitv2.fontSize.heading-s);
   color: theme(digitv2.lightTheme.text-color-secondary);
+}
+.boldLabel{
+  .digit-header-content{
+    font-weight: 700;
+  }
+}
+.clickable:hover{
+    border: 0.063rem solid theme(digitv2.lightTheme.primary);
+    box-shadow: 0.063rem theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer0) #00000029;
 }
