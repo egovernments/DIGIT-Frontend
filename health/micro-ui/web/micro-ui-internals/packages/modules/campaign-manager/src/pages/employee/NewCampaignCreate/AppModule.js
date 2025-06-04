@@ -1,4 +1,4 @@
-import { Card, HeaderComponent, Button, Footer, Loader, Toast } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Button, Footer, Loader, Toast, TextBlock } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState } from "react";
 import { useHistory } from "react-router-dom";
@@ -167,15 +167,16 @@ const AppModule = () => {
       };
 
       try {
+        const schemaCode=`${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
         setIsCreatingModule(true);
         await Digit.CustomService.getResponse({
-          url: `${url}/v2/_create/Workbench.UISchema`,
+          url: `${url}/v2/_create/${schemaCode}`,
 
           // url: `${url}/v2/_create/${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
           body: {
             Mdms: {
               tenantId,
-              schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+              schemaCode: schemaCode,
               data: moduleWithProject,
             },
           },
@@ -194,7 +195,7 @@ const AppModule = () => {
     );
   };
 
-  if (productTypeLoading || isLoading || isCreatingModule) {
+  if (productTypeLoading || isLoading ) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
@@ -202,7 +203,9 @@ const AppModule = () => {
     <>
       <div>
         <HeaderComponent className="campaign-header-style">{t(`HCM_CHOOSE_MODULE`)}</HeaderComponent>
+        <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       </div>
+              {isCreatingModule && <Loader page={true} variant={"OverlayLoader"} loaderText={t("COPYING_CONFIG_FOR_SELECTED_MODULES")} />}
       <div className="modules-container">
         {modulesData?.mdms
         ?.sort((x,y)=>x?.data?.order-y?.data?.order)

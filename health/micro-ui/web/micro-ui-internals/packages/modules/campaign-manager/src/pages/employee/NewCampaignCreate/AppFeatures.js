@@ -9,6 +9,7 @@ import {
   Footer,
   Loader,
   SVG,
+  TextBlock,
 } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -181,6 +182,8 @@ const AppFeatures = () => {
         <HeaderComponent className="campaign-header-style">
           {t("HCM_CHOOSE_FEATURE_FOR_APP")}
         </HeaderComponent>
+                <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_FEATURE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
+      
 
         <Toggle
           name="moduleToggle"
