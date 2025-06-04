@@ -108,6 +108,7 @@ const getActionButtons = (rowData, tabData, history) => {
       label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
       icon: "FileDownload",
+      size:"medium",
       variation: "secondary",
     };
   }
@@ -118,6 +119,7 @@ const getActionButtons = (rowData, tabData, history) => {
   if (!(currentTab === "CAMPAIGN_COMPLETED")) {
     actions.editCampaign = {
       label: "EDIT_CAMPAIGN",
+      size:"medium",
       onClick: () =>
         history.push(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
@@ -197,6 +199,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           label={t("DUPLICATE_CAMPAIGN")}
           onClick={() => console.log("Duplicate Campaign")} // TODO: Implement duplicate campaign functionality
           variation={"teritiary"}
+          size={"medium"}
           title={t("DUPLICATE_CAMPAIGN")}
         />
         {actionButtons && Object.keys(actionButtons).length > 0 && (
@@ -213,6 +216,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                 optionsKey={btn.optionsKey || ""}
                 showBottom={btn.showBottom}
                 variation={btn.variation}
+                size={btn.size}
                 title={t(btn.title) || ""}
               />
             ))}
