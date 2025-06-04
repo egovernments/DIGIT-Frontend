@@ -56,6 +56,12 @@ const CampaignCard = () => {
       // count: isLoading?"-":data
     },
     {
+      label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
+      link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    {
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
       roles: ROLES.BOUNDARY_MANAGER,
