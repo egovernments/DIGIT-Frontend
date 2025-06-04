@@ -1,16 +1,7 @@
-import React, { useState, useEffect, useMemo,Fragment } from "react";
+import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import {
-  Card,
-  HeaderComponent,
-  Button,
-  Toggle,
-  Footer,
-  Loader,
-  SVG,
-  TextBlock,
-} from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 
@@ -18,7 +9,7 @@ import getMDMSUrl from "../../../utils/getMDMSUrl";
  * Utility to create a filter string to fetch formats based on project and allowed formats.
  */
 const getTemplateFormatFilter = (projectNo = "", formats = []) => {
-  const formatFilter = formats?.map(format => `@.format=='${format}'`).join("||");
+  const formatFilter = formats?.map((format) => `@.format=='${format}'`).join("||");
   return `[?(@.project=='${projectNo}')].pages.*.properties[?((${formatFilter})&& @.hidden==false)].format`;
 };
 
@@ -32,7 +23,6 @@ const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}')].name`;
  * Returns whether any module has changed selections.
  */
 const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeatureConfigs = []) => {
-
   const modules = Object.keys(selectedFeaturesByModule);
   const keys = modules.map((key) => {
     return (
@@ -48,8 +38,7 @@ const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeature
 /**
  * Checks if a given feature is selected for the given module.
  */
-const isFeatureSelected = (feature, module, selectedFeaturesByModule) =>
-  selectedFeaturesByModule?.[module]?.some((e) => e === feature?.format);
+const isFeatureSelected = (feature, module, selectedFeaturesByModule) => selectedFeaturesByModule?.[module]?.some((e) => e === feature?.format);
 
 const AppFeatures = () => {
   const { t } = useTranslation();
@@ -73,10 +62,7 @@ const AppFeatures = () => {
     )
   );
 
-  const {
-    updateConfig,
-    isLoading: isUpdateLoading,
-  } = Digit.Hooks.campaign.useUpdateAppConfigForFeatures();
+  const { updateConfig, isLoading: isUpdateLoading } = Digit.Hooks.campaign.useUpdateAppConfigForFeatures();
 
   // Fetch selected feature configurations for the campaign
   const selectedFeatureCriteria = useMemo(() => {
@@ -97,8 +83,7 @@ const AppFeatures = () => {
     );
   }, [availableFormats, campaignNumber]);
 
-  const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } =
-    Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
+  const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } = Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
 
   // Fetch toggle tab names (module codes) for campaign
   const { isLoading: isModuleToggleLoading, data: moduleToggleData } = Digit.Hooks.useCustomAPIHook(
@@ -122,9 +107,7 @@ const AppFeatures = () => {
   // Set all formats found in schemas
   useEffect(() => {
     if (availableFormats.length === 0 && moduleSchemas) {
-      const formats = moduleSchemas
-        ?.flatMap((module) => module?.features?.map((feature) => feature?.format))
-        .filter(Boolean);
+      const formats = moduleSchemas?.flatMap((module) => module?.features?.map((feature) => feature?.format)).filter(Boolean);
       setAvailableFormats(formats);
     }
   }, [moduleSchemas]);
@@ -158,9 +141,7 @@ const AppFeatures = () => {
   const handleSelectFeature = (featureCode, moduleCode, isSelected = false) => {
     setSelectedFeaturesByModule((prev) => ({
       ...prev,
-      [moduleCode]: isSelected
-        ? prev?.[moduleCode]?.filter((e) => e !== featureCode)
-        : [...(prev?.[moduleCode] || []), featureCode],
+      [moduleCode]: isSelected ? prev?.[moduleCode]?.filter((e) => e !== featureCode) : [...(prev?.[moduleCode] || []), featureCode],
     }));
   };
 
@@ -174,17 +155,16 @@ const AppFeatures = () => {
   return (
     <>
       <div className="hcm-app-features">
-        {(isSelectedFeatureLoading || isModuleToggleLoading ) && (
-          <Loader page={true} variant={"PageLoader"} />
-        )}
+        {(isSelectedFeatureLoading || isModuleToggleLoading) && <Loader page={true} variant={"PageLoader"} />}
         {isUpdateLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />}
-        
-        <HeaderComponent className="campaign-header-style">
-          {t("HCM_CHOOSE_FEATURE_FOR_APP")}
-        </HeaderComponent>
-                <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_FEATURE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
-      
-
+        <HeaderComponent className="campaign-header-style">{t("HCM_CHOOSE_FEATURE_FOR_APP")}</HeaderComponent>
+        <TextBlock
+          body=""
+          caption={t("CMP_DRAWER_WHAT_IS_FEATURE_APP_CONFIG_SCREEN")}
+          header=""
+          captionClassName="camp-drawer-caption"
+          subHeader=""
+        />
         <Toggle
           name="moduleToggle"
           numberOfToggleItems={toggleOptions?.length}
@@ -196,55 +176,30 @@ const AppFeatures = () => {
           type="toggle"
         />
       </div>
-
       <div className="modules-container">
         {selectedModuleFeatures?.map((feature) => {
           const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
-
           return (
-            <Card
-              key={feature?.code}
-              className={`module-card ${featureSelected ? "selected-card" : ""}`}
-            >
+            <Card key={feature?.code} className={`module-card ${featureSelected ? "selected-card" : ""}`}>
               {featureSelected && (
-                <SVG.CheckCircle
-                  fill="#00703C"
-                  width="3rem"
-                  height="3rem"
-                  style={{ position: "absolute", left: "-10px", top: "-14px" }}
-                />
+                <SVG.CheckCircle fill="#00703C" width="3rem" height="3rem" style={{ position: "absolute", left: "-10px", top: "-14px" }} />
               )}
-
-              <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>
-                {t(feature?.code)}
-              </HeaderComponent>
-
+              <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>{t(feature?.code)}</HeaderComponent>
               <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-
               <p className="module-description">{t(feature?.description)}</p>
-
               <Button
                 className="campaign-module-button"
                 type="button"
                 size="large"
                 isDisabled={feature?.disabled}
                 variation={featureSelected ? "secondary" : "primary"}
-                label={
-                  featureSelected
-                    ? t("DESELECT")
-                    : feature?.disabled
-                    ? t("ES_FEATURE_DISABLED")
-                    : t("ES_CAMPAIGN_SELECT")
-                }
-                onClick={() =>
-                  handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)
-                }
+                label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
+                onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
               />
             </Card>
           );
         })}
       </div>
-
       <Footer
         actionFields={[
           <Button
@@ -269,7 +224,7 @@ const AppFeatures = () => {
             variation="primary"
             onClick={() => {
               const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
-              const redirectURL=`/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;              
+              const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
               if (changes?.changed) {
                 updateConfig(
                   {
@@ -277,13 +232,11 @@ const AppFeatures = () => {
                     campaignNo: campaignNumber,
                     changes: changes,
                     selectedFeaturesByModule,
-                    availableFormats:moduleSchemas
+                    availableFormats: moduleSchemas,
                   },
                   {
                     onSuccess: () => {
-                      history.push(
-                        redirectURL
-                      );
+                      history.push(redirectURL);
                     },
                     onError: (err) => {
                       console.error("Update failed:", err);
@@ -291,9 +244,7 @@ const AppFeatures = () => {
                   }
                 );
               } else {
-                history.push(
-                  redirectURL
-                );
+                history.push(redirectURL);
               }
             }}
           />,
