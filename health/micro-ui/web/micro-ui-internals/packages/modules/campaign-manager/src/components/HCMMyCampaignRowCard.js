@@ -45,7 +45,7 @@ const getTagElements = (rowData) => {
       stroke: true,
     };
   }
-  if (rowData?.deliveryRules?.length > 1) {
+  if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,
@@ -105,7 +105,7 @@ const getActionButtons = (rowData, tabData, history) => {
   // Always show download if userCreds exist
   if (userResource) {
     actions.downloadUserCreds = {
-      label: "Download_User_Credentials",
+      label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
       icon: "FileDownload",
       variation: "secondary",
@@ -117,7 +117,7 @@ const getActionButtons = (rowData, tabData, history) => {
   // Show edit button for editable campaigns
   if (!(currentTab === "CAMPAIGN_COMPLETED")) {
     actions.editCampaign = {
-      label: "Edit_Campaign",
+      label: "EDIT_CAMPAIGN",
       onClick: () =>
         history.push(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
@@ -137,7 +137,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const history = useHistory();
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
-  const noOfCycles = rowData?.deliveryRules?.length || "NA";
+  const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
   const resources = rowData?.deliveryRules.flatMap((rule) => rule.resources.map((res) => t(res.name))).join(", ") || "NA";
   const actionButtons = getActionButtons(rowData, tabData, history);
   const tagElements = getTagElements(rowData);
@@ -194,10 +194,10 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         <Button
           key={"DuplicateCampaign"}
           icon={"TabInactive"}
-          label={t("Duplicate_Campaign")}
+          label={t("DUPLICATE_CAMPAIGN")}
           onClick={() => console.log("Duplicate Campaign")} // TODO: Implement duplicate campaign functionality
           variation={"teritiary"}
-          title={t("Duplicate_Campaign")}
+          title={t("DUPLICATE_CAMPAIGN")}
         />
         {actionButtons && Object.keys(actionButtons).length > 0 && (
           <div className="digit-results-card-buttons-internal">
