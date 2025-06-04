@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
+import React, { useEffect, useMemo, useReducer, useState, Fragment } from "react";
 import { Button, Footer, Loader, Stepper, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
@@ -54,6 +54,7 @@ const AppConfigurationParentRedesign = () => {
   const [stepper, setStepper] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
+
   const localeModule = useMemo(() => {
     if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
       return `hcm-${parentState.actualTemplate.name.toLowerCase()}-${parentState.actualTemplate.project}`;
@@ -237,26 +238,31 @@ const AppConfigurationParentRedesign = () => {
       </Header>
       <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       {variant === "app" && (
-        <Tabs
-          numberTabs={numberTabs}
-          onTabChange={(tab, index) => {
-            setNumberTabs((prev) => {
-              return prev.map((j) => {
-                if (j.parent === tab.parent) {
+        <>
+          <Tabs
+            numberTabs={numberTabs}
+            onTabChange={(tab, index) => {
+              setNumberTabs((prev) => {
+                return prev.map((j) => {
+                  if (j.parent === tab.parent) {
+                    return {
+                      ...j,
+                      active: true,
+                    };
+                  }
                   return {
                     ...j,
-                    active: true,
+                    active: false,
                   };
-                }
-                return {
-                  ...j,
-                  active: false,
-                };
+                });
               });
-            });
-            setCurrentStep(1);
-          }}
-        />
+              setCurrentStep(1);
+            }}
+          />
+          <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem", justifyContent: "center" }}>
+            <Tag stroke={true} showIcon={false} label={`${t("CMN_PAGE")} -  ${currentStep} / ${stepper?.length}`} />
+          </div>
+        </>
       )}
       <ImpelComponentWrapper
         variant={variant}
