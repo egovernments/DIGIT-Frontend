@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import './Carousel.css';
 import { loginConfig } from '../config';
 import { useTranslation } from "react-i18next";
 

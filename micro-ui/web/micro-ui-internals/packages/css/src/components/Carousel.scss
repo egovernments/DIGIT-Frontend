@@ -77,7 +77,6 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  /* background: rgba(0, 0, 0, 0.5); */
   padding: 10px 20px;
   border-radius: 30px;
   z-index: 10;
@@ -96,11 +95,10 @@
   align-items: center;
   justify-content: center;
   transition: all 0.3s;
-  /* font-weight: 700; */
 }
 
 .carousel-nav:hover {
-  background: rgba(255, 255, 255, 0.2);;
+  background: rgba(255, 255, 255, 0.2);
   transform: scale(1.1);
 }
 
@@ -113,7 +111,6 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  /* border: 1px solid white; */
   background: white;
   cursor: pointer;
   padding: 0;

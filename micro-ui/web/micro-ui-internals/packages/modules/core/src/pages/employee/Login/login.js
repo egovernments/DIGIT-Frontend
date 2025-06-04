@@ -1,14 +1,14 @@
 import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import Carousel from "./Carousel/Carousel";
-import './Carousel/Carousel.css';
+import ImageComponent from "../../../components/ImageComponent";
 
 const setEmployeeDetail = (userObject, token) => {
-  if (Digit.Utils.getMultiRootTenant()) {
+  if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") {
     return;
   }
   let locale = JSON.parse(sessionStorage.getItem("Digit.locale"))?.value || Digit.Utils.getDefaultLanguage();
@@ -26,17 +26,13 @@ const setEmployeeDetail = (userObject, token) => {
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
-  // console.log("useStore getInitData", useStore.getInitData)
-  console.log("cities", cities)
-  console.log("data", storeData)
   const { stateInfo } = storeData || {};
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
   // const { t } = useTranslation();
-  console.log(t("CORE_LOGIN_USERNAME"), "translate")
 
-  const navigate = useNavigate();
+  const history = useHistory();
 
   useEffect(() => {
     if (!user) {
@@ -63,14 +59,21 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       redirectPath = `/${window?.contextPath}/employee/dss/landing/home`;
     }
 
-    navigate(redirectPath); // Replaced history.replace with navigate
-  }, [user, navigate]);
+    history.replace(redirectPath); // Replaced history.replace with navigate
+  }, [user]);
 
   const onLogin = async (data) => {
     // if (!data.city) {
     //   alert("Please Select City!");
     //   return;
     // }
+    if(data?.username){
+      data.username=data.username.trim();
+    }
+    if(data?.password){
+      data.password=data.password.trim();
+    }
+
     setDisable(true);
 
     const requestData = {
@@ -128,7 +131,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
-          navigate(`/${window?.contextPath}/employee/user/login/otp`, {
+          history.push(`/${window?.contextPath}/employee/user/login/otp`, {
             state: { email: inputEmail, tenant: Digit?.ULBService?.getStateId() },
           });
         },
@@ -141,7 +144,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   };
 
   const onForgotPassword = () => {
-    navigate(`/${window?.contextPath}/employee/user/forgot-password`);
+    history.push(`/${window?.contextPath}/employee/user/forgot-password`);
   };
 
   const defaultValue = {
@@ -158,11 +161,15 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     config[0].body[2].populators.defaultValue = defaultValue;
   }
 
+  const defaultValues = Object.fromEntries(
+    config[0].body
+      .filter(field => field?.populators?.defaultValue && field?.populators?.name)
+      .map(field => [field.populators.name, field.populators.defaultValue])
+  );
+
   const onFormValueChange = (setValue, formData, formState) => {
 
     // Extract keys from the config
-    console.log("config of form", config)
-    console.log("my formcomposer")
     const keys = config[0].body.map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
@@ -177,11 +184,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
-    <>
-      {/* <div className="employeeBackbuttonAlign">
-        <BackLink onClick={() => window.history.back()} />
-      </div> */}
-      {/* <div style={{ diplay: "flex", flexDirection: "row" }}> */}
+     propsConfig.bannerImages ? ( <>
         <div className="login-container">
           <Carousel />
           <div className="login-form-container">
@@ -201,24 +204,49 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
             cardSubHeaderClassName="loginCardSubHeaderClassName"
             cardClassName=""
             buttonClassName="buttonClassName"
+            defaultValues={defaultValues}
           >
             {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
           </FormComposerV2>
           </div>
         </div>
-      {/* </div> */}
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
-      {/* <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-        <img
+    </>) : <Background>
+      <div className="employeeBackbuttonAlign">
+        <BackLink onClick={() => window.history.back()} />
+      </div>
+      <FormComposerV2
+        onSubmit={loginOTPBased ? onOtpLogin : onLogin}
+        isDisabled={isDisabled || disable}
+        noBoxShadow
+        inline
+        submitInForm
+        config={config}
+        label={propsConfig?.texts?.submitButtonLabel}
+        secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
+        onSecondayActionClick={onForgotPassword}
+        onFormValueChange={onFormValueChange}
+        heading={propsConfig?.texts?.header}
+        className={`loginFormStyleEmployee ${loginOTPBased ? "sandbox-onboarding-wrapper" : ""}`}
+        cardSubHeaderClassName="loginCardSubHeaderClassName"
+        cardClassName="loginCardClassName"
+        buttonClassName="buttonClassName"
+        defaultValues={defaultValues}
+      >
+        {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
+      </FormComposerV2>
+      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+      <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}
           onClick={() => {
             window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
           }}
-        />
-      </div> */}
-    </>
+        />{" "}
+      </div>
+    </Background>
   );
 };
 
