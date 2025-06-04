@@ -51,7 +51,7 @@ const checkCurrentScreenVisible = (config, pathVar) => {
 };
 const AppHelpTutorial = ({ appPath, location }) => {
   const { t } = useTranslation();
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
 
   const module = appPath?.split?.("/")?.[appPath?.split("/")?.length - 1];
