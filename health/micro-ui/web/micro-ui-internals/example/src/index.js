@@ -57,7 +57,7 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "payments-ui";
   window.Digit.Customizations = {
     commonUiConfig: UICustomizations
   };
@@ -76,7 +76,7 @@ const initDigitUI = () => {
   const moduleReducers = (initData) => initData;
 
 
-  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg";
   initTokens(stateCode);
 
   ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
