@@ -89,7 +89,7 @@ const AppHelpTutorial = ({ appPath, location }) => {
     <>
       {checkCurrentScreenVisible(selectedFeatureConfigs, pathVar) && (
         <Button
-          className="custom-class"
+          className={`custom-class camp-help-button-${pathVar}`}
           icon="HelpOutline"
           isSuffix={true}
           label={t("CAMP_HELP_TEXT")}

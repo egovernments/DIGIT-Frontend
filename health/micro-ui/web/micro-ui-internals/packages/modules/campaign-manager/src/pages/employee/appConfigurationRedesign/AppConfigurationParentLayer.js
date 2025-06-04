@@ -233,7 +233,12 @@ const AppConfigurationParentRedesign = () => {
       <Header className="app-config-header">
         <div className="app-config-header-group" style={{ display: "flex" }}>
           {t(`${currentScreen?.[0]?.name}`)}{" "}
-          <Tag stroke={true} showIcon={false} label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`} />
+          <Tag
+            stroke={true}
+            showIcon={false}
+            label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
+            style={{ background: "#EFF8FF" }}
+          />
         </div>
       </Header>
       <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
@@ -260,7 +265,24 @@ const AppConfigurationParentRedesign = () => {
             }}
           />
           <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem", justifyContent: "center" }}>
-            <Tag stroke={true} showIcon={false} label={`${t("CMN_PAGE")} -  ${currentStep} / ${stepper?.length}`} />
+            <span style={{ width: "30%" }} />
+            <span style={{ display: "flex", justifyContent: "space-around", width: "40%" }}>
+              <Tag
+                stroke={false}
+                showIcon={false}
+                label={`${t("CMN_SCREEN")} -  1.03`}
+                labelStyle={{ color: "#787878" }}
+                //  style={{background: "#EFF8FF"}}  labelStyle={{color:"#0B4B66"}}
+              />
+              <Tag
+                stroke={false}
+                showIcon={false}
+                label={`${t("CMN_PAGE")} -  ${currentStep} / ${stepper?.length}`}
+                style={{ background: "#EFF8FF" }}
+                labelStyle={{ color: "#0B4B66" }}
+              />
+            </span>
+            <span style={{ width: "30%" }} />
           </div>
         </>
       )}
