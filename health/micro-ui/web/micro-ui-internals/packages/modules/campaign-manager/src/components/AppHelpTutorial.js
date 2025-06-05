@@ -57,7 +57,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Hel
 
   const module = appPath?.split?.("/")?.[appPath?.split("/")?.length - 1];
 
-  const pathVar = location.pathname.replace(appPath + "/", "").split("?")?.[0];
+  const pathVar = location.pathname.replace(`${appPath}/`, "").split("?")?.[0];
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const selectedFeatureCriteria = useMemo(() => {
     return Digit.Utils.campaign.getMDMSV1Criteria(
