@@ -24,6 +24,7 @@ import { useMDMSV2Search } from "./useMDMSV2Search";
 import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
 import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
 import useUpdateAppConfig from "./useUpdateAppConfig";
+import useCloneCampaign from "./useCloneCampaign";
 
 const UserService = {};
 
@@ -58,6 +59,7 @@ const campaign = {
   useUpdateFormBuilderConfig,
   useUpdateAppConfig,
   useUpsertSchemaConfig,
+  useCloneCampaign,
 };
 
 const Hooks = {
