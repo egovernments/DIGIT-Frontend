@@ -1,6 +1,7 @@
 import React, { useState, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, Loader, PopUp, SVG } from "@egovernments/digit-ui-components";
+import { Button,  Loader, SVG } from "@egovernments/digit-ui-components";
+import { Close } from "@egovernments/digit-ui-svg-components";
 
 const SampleHelpContent = [
   {
@@ -49,7 +50,7 @@ const checkCurrentScreenVisible = (config, pathVar) => {
   const listOfEnabledScreens = config?.flat();
   return listOfEnabledScreens?.includes(pathVar);
 };
-const AppHelpTutorial = ({ appPath, location }) => {
+const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="HelpOutline" }) => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
@@ -90,9 +91,9 @@ const AppHelpTutorial = ({ appPath, location }) => {
       {checkCurrentScreenVisible(selectedFeatureConfigs, pathVar) && (
         <Button
           className={`custom-class camp-help-button-${pathVar}`}
-          icon="HelpOutline"
+          icon={buttonIcon}
           isSuffix={true}
-          label={t("CAMP_HELP_TEXT")}
+          label={t(buttonLabel)}
           onClick={(e) => {
             e.stopPropagation();
             setClosing(false); // reset closing state
@@ -124,11 +125,8 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
             <SVG.Input></SVG.Input>
             {t("EXPLORE_TUTORIALS")}
           </span>
-          <button className="tutorial-close" onClick={handleClose}>
-            ×
-          </button>
+          <Close className="tutorial-close"  height="32" width="32" fill="#0B0C0C" onClick={handleClose}  />
         </div>
-        <Divider />
         <div className="tutorial-row">
           <AppHelpContent module={module} pathVar={pathVar} />
         </div>

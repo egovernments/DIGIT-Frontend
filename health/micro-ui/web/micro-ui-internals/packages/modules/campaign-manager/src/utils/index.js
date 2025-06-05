@@ -54,6 +54,49 @@ getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS",co
 
   return MDMSV1Criteria;
 },
+/**
+ * Generates criteria for fetching data from MDMS v2.
+ * 
+ * @param {string} tenantId - The tenant identifier for the MDMS request.
+ * @param {string} moduleName - The name of the module whose data is to be fetched.
+ * @param {Array} masterDetails - An array specifying the master details to fetch from the module.
+ * @param {string} cacheKey - A unique key used for caching the query results.
+ * 
+ * @returns {Object} - A query object to be used with React Query or a similar data fetching utility.
+ */
+getMDMSV2Criteria: (tenantId, schemaCode,filters={}, cacheKey="CAMP_MDMS",config={}) => {
+  const MDMSV2Criteria = {
+    // API endpoint for MDMS v2 search
+    url: `/${mdms_context_path}/v2/_search`,
+
+    // Request payload with tenant and module/master details
+    body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            schemaCode: schemaCode,
+            isActive: true,
+            filters
+          },
+    },
+
+    // Custom query name for React Query caching and identification
+    changeQueryName: `CMP-${cacheKey}-${schemaCode}`,
+
+    // Query configuration for caching and data selection
+    config: {
+      enabled: true,              // Enables the query
+      cacheTime: Infinity,        // Keeps cached data forever
+      staleTime: Infinity,        // Data never becomes stale
+      select: (data) => {
+        // Select and return the mdms's data
+        return data?.mdms;
+      },
+      ...config
+    },
+  };
+
+  return MDMSV2Criteria;
+},
  getMDMSV1Selector(moduleName,masterName) {
   return {
     select: (data) => {

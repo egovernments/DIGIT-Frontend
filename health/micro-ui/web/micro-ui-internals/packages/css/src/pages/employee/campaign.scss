@@ -653,7 +653,7 @@
 .tutorial-overlay {
   position: fixed;
   inset: 0;
-  z-index: 999;
+  z-index: 2999;
   animation-duration: 0.3s;
   animation-fill-mode: forwards;
   display: flex;
@@ -672,15 +672,15 @@
 .tutorial-drawer {
   position: fixed;
   bottom: 0;
-  left: 0;
-  width: 100%;
+  right: 0;
+  width: calc(100vw - 4rem);
+  border-radius:1rem 1rem 0rem 0rem;
   background: #ffffff;
   box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
   z-index: 1000;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
   animation-duration: 0.3s;
   animation-fill-mode: forwards;
 
@@ -717,7 +717,7 @@
   flex-direction: row;
   overflow-x: auto;
   gap: 1rem;
-  padding-bottom: 0.25rem;
+  padding: 0.25rem;
 
   /* Optional mobile smooth scrolling */
   scroll-behavior: smooth;
@@ -739,6 +739,7 @@
   cursor: pointer;
   transition: transform 0.2s ease-in-out;
   box-shadow: 0px 2px 4px 0px #00000026;
+
 
 
   &:hover {

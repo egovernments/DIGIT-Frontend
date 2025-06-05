@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+import { TEMPLATE_BASE_CONFIG_MASTER } from "./AppModule";
 
 /**
  * Utility to create a filter string to fetch formats based on project and allowed formats.
@@ -85,6 +86,8 @@ const AppFeatures = () => {
 
   const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } = Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
 
+  
+
   // Fetch toggle tab names (module codes) for campaign
   const { isLoading: isModuleToggleLoading, data: moduleToggleData } = Digit.Hooks.useCustomAPIHook(
     Digit.Utils.campaign.getMDMSV1Criteria(
@@ -165,41 +168,9 @@ const AppFeatures = () => {
           captionClassName="camp-drawer-caption"
           subHeader=""
         />
-        <Toggle
-          name="moduleToggle"
-          numberOfToggleItems={toggleOptions?.length}
-          onChange={() => {}}
-          onSelect={handleToggleChange}
-          options={toggleOptions || []}
-          optionsKey="code"
-          selectedOption={selectedModuleCode}
-          type="toggle"
-        />
+        <AppConfigTab toggleOptions={toggleOptions} handleToggleChange={handleToggleChange} selectedModuleCode={selectedModuleCode} />
       </div>
-      <div className="modules-container">
-        {selectedModuleFeatures?.map((feature) => {
-          const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
-          return (
-            <Card key={feature?.code} className={`module-card ${featureSelected ? "selected-card" : ""}`}>
-              {featureSelected && (
-                <SVG.CheckCircle fill="#00703C" width="3rem" height="3rem" style={{ position: "absolute", left: "-10px", top: "-14px" }} />
-              )}
-              <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>{t(feature?.code)}</HeaderComponent>
-              <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-              <p className="module-description">{t(feature?.description)}</p>
-              <Button
-                className="campaign-module-button"
-                type="button"
-                size="large"
-                isDisabled={feature?.disabled}
-                variation={featureSelected ? "secondary" : "primary"}
-                label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
-                onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
-              />
-            </Card>
-          );
-        })}
-      </div>
+     <AppFeaturesList selectedModuleFeatures={selectedModuleFeatures} selectedModuleCode={selectedModuleCode} selectedFeaturesByModule={selectedFeaturesByModule} handleSelectFeature={handleSelectFeature} />
       <Footer
         actionFields={[
           <Button
@@ -255,3 +226,64 @@ const AppFeatures = () => {
 };
 
 export default AppFeatures;
+
+
+
+
+const AppFeaturesList = ({selectedModuleFeatures,selectedModuleCode,selectedFeaturesByModule,handleSelectFeature})=>{
+  const { t } = useTranslation();
+
+  return (<div className="modules-container">
+  {selectedModuleFeatures?.map((feature) => {
+    const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
+    return (
+      <Card key={feature?.code} className={`module-card ${featureSelected ? "selected-card" : ""}`}>
+        {featureSelected && (
+          <SVG.CheckCircle fill="#00703C" width="3rem" height="3rem" style={{ position: "absolute", left: "-10px", top: "-14px" }} />
+        )}
+        <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>{t(feature?.code)}</HeaderComponent>
+        <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+        <p className="module-description">{t(feature?.description)}</p>
+        <Button
+          className="campaign-module-button"
+          type="button"
+          size="large"
+          isDisabled={feature?.disabled}
+          variation={featureSelected ? "secondary" : "primary"}
+          label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
+          onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
+        />
+      </Card>
+    );
+  })}
+</div>)
+}
+
+const AppConfigTab=({toggleOptions,handleToggleChange,selectedModuleCode})=>{
+  const schemaCode=`${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`
+  const {  projectType, tenantId } = Digit.Hooks.useQueryParams();
+
+  const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook( Digit.Utils.campaign.getMDMSV2Criteria(
+    tenantId,
+    schemaCode,
+    {
+      "project": projectType
+  },
+    `MDMSDATA-${schemaCode}-${projectType}`,
+    {
+      enabled: !!projectType    }
+  ));
+
+  const overridedToogleOptions=[...toggleOptions,{code: "dummy",
+    name: "dddd",disabled:true}]
+return  ( <Toggle
+          name="moduleToggle"
+          numberOfToggleItems={overridedToogleOptions?.length}
+          onChange={() => {}}
+          onSelect={handleToggleChange}
+          options={overridedToogleOptions || []}
+          optionsKey="code"
+          selectedOption={selectedModuleCode}
+          type="toggle"
+        />)
+}
