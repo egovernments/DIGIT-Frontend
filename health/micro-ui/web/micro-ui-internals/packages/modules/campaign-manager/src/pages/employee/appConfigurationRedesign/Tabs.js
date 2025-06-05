@@ -19,4 +19,4 @@ const Tabs = ({ numberTabs, onTabChange }) => {
   );
 };
 
-export default Tabs;
+export default React.memo(Tabs);
