@@ -2,7 +2,7 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent ,Loader } from "@egovernments/digit-ui-components";
+import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -42,6 +42,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const [boundaryOptions, setBoundaryOptions] = useState({});
   const [executionCount, setExecutionCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(2);
+  const [isLoading, setIsLoading] = useState(true);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -114,6 +115,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       setSelectedData(sessionData?.selectedData || []);
       setBoundaryOptions(sessionData?.boundaryData || {});
     }
+    setTimeout(() => setIsLoading(false), 0);
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
 
   useEffect(() => {
@@ -149,11 +151,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  console.log("selected", selectedData , draft , selectedData.length == 0 && draft=== true);
-
-  if (selectedData.length == 0 && draft=== true) {
-      return <Loader page={true} variant={"PageLoader"} />;
-    }
+  if (draft && isLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
 
   return (
     <>
