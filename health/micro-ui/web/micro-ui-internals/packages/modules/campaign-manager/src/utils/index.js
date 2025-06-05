@@ -18,7 +18,7 @@ export default {
  * 
  * @returns {Object} - A query object to be used with React Query or a similar data fetching utility.
  */
-getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS") => {
+getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS",config={}) => {
   const MDMSV1Criteria = {
     // API endpoint for MDMS v1 search
     url: `/${mdms_context_path}/v1/_search`,
@@ -48,10 +48,63 @@ getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS") =
         // Select and return the module's data
         return data?.MdmsRes?.[moduleName];
       },
+      ...config
     },
   };
 
   return MDMSV1Criteria;
+},
+/**
+ * Generates criteria for fetching data from MDMS v2.
+ * 
+ * @param {string} tenantId - The tenant identifier for the MDMS request.
+ * @param {string} schemaCode - The schema code for the MDMS v2 request.
+ * @param {Object} filters - Filter criteria for the MDMS v2 search.
+ * @param {string} cacheKey - A unique key used for caching the query results.
+ * @param {Object} config - Additional configuration options for React Query.
+ * 
+ * @returns {Object} - A query object to be used with React Query or a similar data fetching utility.
+ */
+getMDMSV2Criteria: (tenantId, schemaCode,filters={}, cacheKey="CAMP_MDMS",config={}) => {
+  const MDMSV2Criteria = {
+    // API endpoint for MDMS v2 search
+    url: `/${mdms_context_path}/v2/_search`,
+
+    // Request payload with tenant and module/master details
+    body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            schemaCode: schemaCode,
+            isActive: true,
+            filters
+          },
+    },
+
+    // Custom query name for React Query caching and identification
+    changeQueryName: `CMP-${cacheKey}-${schemaCode}`,
+
+    // Query configuration for caching and data selection
+    config: {
+      enabled: true,              // Enables the query
+      cacheTime: Number.POSITIVE_INFINITY,        // Keeps cached data forever
+      staleTime: Number.POSITIVE_INFINITY,        // Data never becomes stale
+      select: (data) => {
+        // Select and return the mdms's data
+        return data?.mdms;
+      },
+      ...config
+    },
+  };
+
+  return MDMSV2Criteria;
+},
+ getMDMSV1Selector(moduleName,masterName) {
+  return {
+    select: (data) => {
+      // Select and return the module's data
+      return data?.MdmsRes?.[moduleName]?.[masterName];
+    }
+  };
 }
 
 };

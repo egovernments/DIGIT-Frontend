@@ -1004,6 +1004,10 @@ tbody {
   display: flex;
   align-items: baseline;
   gap: 1rem;
+  .app-config-header-group{
+    display: flex;
+    column-gap:inherit;
+  }
 }
 .appConfigLabelField-label-container {
   width: 100%;
@@ -1088,5 +1092,7 @@ tbody {
 }
 .app-config-drawer-subheader{
   @extend .typography.caption-s;
-  color: theme(digitv2.lightTheme.primary-2)
+  color: theme(digitv2.lightTheme.primary-2);
+  display: flex;
+  align-items: baseline;
 }
