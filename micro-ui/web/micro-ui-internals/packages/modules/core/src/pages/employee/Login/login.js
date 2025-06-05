@@ -78,9 +78,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
     const requestData = {
       ...data,
+      ...defaultValues,
       userType: "EMPLOYEE",
     };
-    requestData.tenantId = data?.city?.code || Digit?.ULBService?.getStateId();
+    requestData.tenantId = requestData?.city?.code || Digit?.ULBService?.getStateId();
     delete requestData.city;
     try {
       const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
