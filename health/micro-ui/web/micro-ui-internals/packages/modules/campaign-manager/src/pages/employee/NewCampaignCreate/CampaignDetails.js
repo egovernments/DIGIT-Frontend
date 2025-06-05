@@ -1,6 +1,6 @@
 import { Button, HeaderComponent, Footer, Loader, Tag, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
@@ -11,7 +11,15 @@ const CampaignDetails = () => {
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const [showToast, setShowToast] = useState(null);
+  const isDraft = searchParams.get("draft");
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
+
+  useEffect(() => {
+    window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+    window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+    window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
+    // window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
+  }, []);
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
@@ -31,6 +39,8 @@ const CampaignDetails = () => {
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+  console.log("campaign", campaignData);
+
   const data = {
     cards: [
       {
@@ -44,7 +54,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_BOUNDARY_SELECT_HEADING"),
               desc: t("HCM_SELECT_BOUNDARY_DESC"),
               buttonLabel: campaignData?.boundaries?.length > 0 ? t("HCM_EDIT_BOUNDARY_BUTTON") : t("HCM_SELECT_BOUNDARY_BUTTON"),
-              navLink: `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
+              navLink: `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.boundaries?.length > 0 ? "secondary" : "primary",
               icon: <GlobeLocationPin />,
             },
@@ -62,7 +72,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_DELIVERY_HEADING"),
               desc: t("HCM_DELIVERY_DESC"),
               buttonLabel: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? t("HCM_EDIT_DELIVERY_BUTTON") : t("HCM_DELIVERY_BUTTON"),
-              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
+              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
               icon: <OutpatientMed />,
             },
@@ -97,7 +107,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_UPLOAD_DATA_HEADING"),
               desc: t("HCM_UPLOAD_DATA_DESC"),
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
-              navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
+              navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud />,
               disabled: campaignData?.boundaries?.length <= 0,
@@ -184,7 +194,7 @@ const CampaignDetails = () => {
           <div
             className="hover"
             onClick={() => {
-              history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}`);
+              history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
             }}
           >
             <Edit />
@@ -211,7 +221,7 @@ const CampaignDetails = () => {
             alignSelf: "self-end",
           }}
           onClick={() => {
-            history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}`);
+            history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
           }}
         >
           <Edit />
@@ -227,7 +237,7 @@ const CampaignDetails = () => {
             icon="CheckCircleOutline"
             label={t("HCM_CREATE_CAMPAIGN")}
             onClick={onsubmit}
-            isDisabled={campaignData?.boundaries?.length === 0 || campaignData?.deliveryRules?.length === 0}
+            isDisabled={campaignData?.boundaries?.length === 0 || campaignData?.deliveryRules?.length === 0 || campaignData?.resources?.length === 0}
             type="button"
             variation="primary"
             // className={"create-campaign-disable"}

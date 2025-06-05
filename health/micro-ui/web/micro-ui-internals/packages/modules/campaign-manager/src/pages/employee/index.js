@@ -42,7 +42,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
    useEffect(() =>{
     if(pathVar === "view-details" && campaignNumber){
-      history.push(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,)
+      history.push(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=true`,)
     }
 
   },[pathVar])

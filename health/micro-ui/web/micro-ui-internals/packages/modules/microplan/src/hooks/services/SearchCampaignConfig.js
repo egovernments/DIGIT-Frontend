@@ -10,6 +10,7 @@ const SearchCampaignConfig = async (body) => {
     if (response?.CampaignDetails?.length === 0) {
       throw new Error("Campaign not found with the given id");
     }
+    console.log("response" , response);
     return response?.CampaignDetails?.[0];
   } catch (error) {
     if (error?.response?.data?.Errors) {
