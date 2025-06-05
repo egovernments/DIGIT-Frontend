@@ -42,7 +42,7 @@ const CampaignDetails = () => {
     [
       {
         name: AppConfigSchema,
-        filter: `[?(@.project=='${campaignNumber}')]`,
+        filter: `[?(@.project=='${campaignNumber}')].name`,
       },
     ],
     {
