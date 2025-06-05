@@ -5,6 +5,8 @@ import { ReactComponent as FeatureSearch } from '../../../../src/components/imag
 import { ReactComponent as Chat } from '../../../../src/components/images/chat.svg';
 import { ReactComponent as Calculate } from '../../../../src/components/images/calculate.svg';
 import { ReactComponent as BarChart } from '../../../../src/components/images/bar_chart.svg';
+import { ReactComponent as Employeeicon } from '../../../../src/components/images/employee.svg';
+import { ReactComponent as Citizenicon } from '../../../../src/components/images/citizen.svg';
 import { useTranslation } from "react-i18next";
 import he from 'he';
 const iconMap = {
@@ -18,7 +20,7 @@ const iconMap = {
 
 
 const Breadcrumb = ({ path }) => (
-    <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '2rem 3rem' }}>
+    <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '2rem 3rem' }}>
         <nav className="nav-breadcrumb">
             <a href={`/${window?.contextPath}/employee/sandbox/productPage`}>Products</a>
             <span className="separator">/</span>
@@ -28,11 +30,13 @@ const Breadcrumb = ({ path }) => (
 );
 
 const HeroSection = ({ title, headline }) => (
-    <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem', minHeight: '35rem' }}>
+    <div style={{
+        width: '100%', backgroundColor: '#e4edf1', padding: '3rem 6rem', minHeight: '35rem'
+    }}>
         <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
             <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                <h2 style={{ color: '#2c3e50', fontSize: '2.5rem', marginBottom: '1.5rem' }}>{title}</h2>
-                <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3' }}>
+                <h2 style={{ color: '#215B73', fontSize: '2.5rem', margin: '0rem 0rem' }}>{title}</h2>
+                <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3', margin: '1.5rem 0rem'  }}>
                     {headline.map((segment, i) => (
                         <span key={i} style={{ color: segment.color }}>{segment.text} </span>
                     ))}
@@ -50,40 +54,38 @@ const HeroSection = ({ title, headline }) => (
 );
 
 const AboutSection = ({ about }) =>
-    (
-        <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
-            <div className="about-container">
-                <div className="about-title-wrapper">
-                    <h2 className="about-title">{about.title}</h2>
-                    <div className="title-underline"></div>
-                </div>
-                {about.paragraphs.map((para, i) => {
-                    const decodedpara = he.decode(para); // decode &lt;strong&gt;
+(
+    <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '0rem 6rem' }}>
+        <div className="about-container">
+            <div className="about-title-wrapper">
+                <h2 className="about-title">{about.title}</h2>
+                <div className="title-underline"></div>
+            </div>
+            {about.paragraphs.map((para, i) => {
+                const decodedpara = he.decode(para); // decode &lt;strong&gt;
 
-                    return (
-                        <p key={i} className="about-description" dangerouslySetInnerHTML={{ __html: decodedpara }}></p>
-                    )
-                })}
-                <div className="roles-section">
-                    {about.roles.map((r, i) => (
-                        <RoleBlock key={i} description={r.description} />
-                    ))}
-                </div>
+                return (
+                    <p key={i} className="about-description" dangerouslySetInnerHTML={{ __html: decodedpara }}></p>
+                )
+            })}
+            <div className="roles-section">
+                {about.roles.map((r, i) => (
+                    <RoleBlock key={i} description={r.description} />
+                ))}
             </div>
         </div>
-    );
+    </div>
+);
 
 
 
-const RoleBlock = ({ description }) => {
+const RoleBlock = ({ description }) => {    
     const decodedDescription = he.decode(description); // decode &lt;strong&gt;
-
-    console.log("Decoded:", decodedDescription);
-
+    const isCitizen = decodedDescription.toLowerCase().includes('citizen');
     return (
         <div className="role-block">
             <div className="role-icon-wrapper">
-                <SVG.Person className="role-icon" />
+                {isCitizen ? <Citizenicon  /> : <Employeeicon />}
             </div>
             <p dangerouslySetInnerHTML={{ __html: decodedDescription }} />
         </div>
@@ -93,8 +95,8 @@ const RoleBlock = ({ description }) => {
 
 
 const ExperienceSection = ({ experience, t = { t } }) => (
-    <div style={{ width: '100%', backgroundColor: '#f0f4f8', padding: '3rem 6rem' }}>
-        <div className="about-container-2">
+    <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '0rem 6rem' }}>
+        <div className="about-container-2" style={{ backgroundColor: '#e4edf1' }}>
             <div className="about-title-wrapper">
                 <h2 className="about-title">{experience.title}</h2>
                 <div className="title-underline-2"></div>
@@ -173,9 +175,9 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t }) => {
 const content = {
     heroTitle: "Local Business License Issuing System",
     heroHeadline: [
-        { text: "Get your", color: "#34495e" },
-        { text: "business license issued", color: "#b24b2d" },
-        { text: "easily", color: "#34495e" },
+        { text: "Get your", color: "#215B73" },
+        { text: "business license issued", color: "#C84C0E" },
+        { text: "easily", color: "#215B73" },
     ],
     about: {
         title: "About Local Business License Issuing System",
@@ -260,9 +262,9 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             color: item.color
         }))
         : [
-            { text: t(`${module}` + "_SECTION2_HL1"), color: "#34495e" },
-            { text: t(`${module}` + "_SECTION2_HL2"), color: "#b24b2d" },
-            { text: t(`${module}` + "_SECTION2_HL3"), color: "#34495e" },
+            { text: t(`${module}` + "_SECTION2_HL1"), color: "#215B73" },
+            { text: t(`${module}` + "_SECTION2_HL2"), color: "#C84C0E" },
+            { text: t(`${module}` + "_SECTION2_HL3"), color: "#215B73" },
         ];
 
 

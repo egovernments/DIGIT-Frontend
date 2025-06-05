@@ -1319,7 +1319,7 @@ digit-card-text.center {
 
 .about-container {
   background-color: white;
-  padding: 3rem 1rem;
+  padding: 2rem 1rem;
   width: 100% !important;
   margin: 0 auto;
   display: flex;
@@ -1329,7 +1329,7 @@ digit-card-text.center {
 
 .about-container-2 {
   background-color: #f0f4f8;
-  padding: 3rem 1rem;
+  padding: 2rem 1rem;
   width: 100% !important;
   margin: 0 auto;
   display: flex;
@@ -1342,19 +1342,19 @@ digit-card-text.center {
 .about-title {
   font-size: 2rem;
   font-weight: bold;
-  color: #2c3e50;
+  color: #215B73;
   text-align: center;
   margin-bottom: 0.5rem;
 }
 
 .about-description {
-  color: #2c3e50;
+  color: #505A5F;
   font-size: 1.125rem;
   line-height: 1.75;
   text-align: left;
   margin-bottom: 1.5rem;
   width: 100%;
-  padding: 2rem 4rem;
+  padding: 0rem 4rem;
 }
 
 .roles-section {
@@ -1392,8 +1392,8 @@ digit-card-text.center {
   border-radius: 10px !important;
   max-width: 44rem !important;
   height: 4px;
-  background-color: #e0e0e091;
-  margin: 0 auto 2rem;
+  background-color: #e4edf1 !important; 
+  margin: 0 auto 0rem;
 }
 
 .title-underline-2 {
@@ -1401,7 +1401,7 @@ digit-card-text.center {
   max-width: 44rem !important;
   height: 4px;
   background-color: white !important;
-  margin: 0 auto 2rem;
+  margin: 0 auto 0rem;
 }
 
 
@@ -1409,7 +1409,7 @@ digit-card-text.center {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 60px 40px;
+  padding: 0px 40px;
   font-family: "Arial", sans-serif;
   flex-wrap: wrap;
 }
@@ -1422,7 +1422,7 @@ digit-card-text.center {
 .cs-title {
   font-size: 24px;
   font-weight: 700;
-  color: #2c3e50;
+  color: #215B73;
   margin-bottom: 24px;
   position: relative;
   display: inline-block;
@@ -1436,7 +1436,7 @@ digit-card-text.center {
   width: 8rem;
   /* match text width */
   height: 4px;
-  background-color: #2c3e50;
+  background-color: #215B73;
   margin: 6px auto 0 auto;
   /* center under text */
 }
