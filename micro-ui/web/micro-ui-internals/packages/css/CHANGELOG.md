@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.27=8] - [04-June-2025]
+- Added `Carousel.scss` for login screen layout.
+
+
 ## [1.8.27] - [04-June-2025]
 - Added `Carousel.scss` for login screen layout.
 - Introduced `.login-form-container` class to scope styles for FormComposer in login in case of bannerImages.
