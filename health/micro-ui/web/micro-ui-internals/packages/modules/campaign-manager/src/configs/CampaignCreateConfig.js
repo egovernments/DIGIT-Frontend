@@ -18,6 +18,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               disable: editName,
               populators: {
                 name: "CampaignType",
+                fieldPairClassName: "boldLabel",
                 optionsKey: "code", 
                 error: "ES__REQUIRED_CAMPAIGN_TYPE",
                 mdmsv2: true,
@@ -66,6 +67,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               placeholder: "HCM_CAMPAIGNNAME_DATE_MONTH_YEAR",
               disable: false,
               populators: {
+                fieldPairClassName: "boldLabel",
                 name: "CampaignName",
                 error: "ES__REQUIRED_NAME",
                 required: "true"
