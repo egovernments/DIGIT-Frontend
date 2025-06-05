@@ -5,13 +5,18 @@ import { useHistory } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
+import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import getMDMSUrl from "../../../utils/getMDMSUrl";
+
 const CampaignDetails = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
+  const AppConfigSchema = "SimpleAppConfiguration";
   const [showToast, setShowToast] = useState(null);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
+  const url = getMDMSUrl(true);
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
@@ -30,6 +35,23 @@ const CampaignDetails = () => {
   };
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const { data: modulesData } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: AppConfigSchema,
+        filter: `[?(@.project=='${campaignNumber}')].name`,
+      },
+    ],
+    {
+      select: (data) => {
+        return data?.[CONSOLE_MDMS_MODULENAME]?.[AppConfigSchema];
+      },
+    },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigSchema` }
+  );
 
   const data = {
     cards: [
@@ -79,7 +101,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel: t("HCM_MOBILE_APP_BUTTON"),
+              buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              type: modulesData?.length > 0 ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits />,
             },
@@ -99,7 +122,7 @@ const CampaignDetails = () => {
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
-              icon: <UploadCloud />,
+              icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 ? "#c5c5c5" : "#C84C0E"} />,
               disabled: campaignData?.boundaries?.length <= 0,
             },
           },
@@ -147,7 +170,7 @@ const CampaignDetails = () => {
       },
       {
         onSuccess: async (data) => {
-          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.id}`, {
             message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
             text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
             info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),

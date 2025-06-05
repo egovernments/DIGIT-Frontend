@@ -8,11 +8,13 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , 
   const history = useHistory();
 
   return (
-    <Card style={{ marginBottom: "1.5rem" }}>
+    <Card style={{ marginBottom: "1.5rem" }} className={"clickable"}>
       <div className="details-heading">
         <div className="icon-heading">
           {icon}
-          <HeaderComponent className={"detail-header"}>{headingName}</HeaderComponent>
+          <HeaderComponent className={"detail-header"} styles={{
+          color: disabled ? "#C5C5C5" : "#004b5e", // same gray for disabled header
+        }}>{headingName}</HeaderComponent>
         </div>
         <Button
           label={buttonLabel}

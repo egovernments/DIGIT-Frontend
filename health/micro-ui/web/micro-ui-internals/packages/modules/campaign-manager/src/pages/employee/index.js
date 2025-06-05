@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo , useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -38,23 +38,10 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const search = useLocation().search;
   const queryParams = new URLSearchParams(search);
   const history = useHistory();
-  const [campaignNumber, setCampaignNumber] = useState(queryParams.get("campaignNumber"));
+  const url = Digit.Hooks.useQueryParams();
+  const campaignNumber = url?.campaignNumber;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-
-   useEffect(() =>{
-    if(pathVar === "view-details" && campaignNumber){
-      history.push(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,)
-    }
-
-  },[pathVar])
-
-  useEffect(() => {
-    const campaignNumberFromURL = queryParams.get("campaignNumber");
-    if (campaignNumberFromURL !== campaignNumber) {
-      setCampaignNumber(campaignNumberFromURL);  // Update state when campaignNumber changes
-    }
-  }, [queryParams]);
 
   const crumbs = [
     {
@@ -127,12 +114,18 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.match("create-campaign") ? true : false,
     },
     {
-      path:
-        pathVar === "view-details"
-          ? ""
-          : `/${window?.contextPath}/employee/campaign/view-details${campaignNumber ? `?campaignNumber=${campaignNumber}` : ""}`,
+      path: pathVar === "view-details" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
       content: t("VIEW_DETAILS"),
-      show: pathVar.match("view-details") || pathVar.match("setup-campaign") || pathVar.match("app-configuration-redesign") ||   pathVar.match("app-modules") ||  pathVar.match("app-features") ||pathVar === "checklist/search"  ? true : false,
+      query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show:
+        pathVar.match("view-details") ||
+        pathVar.match("setup-campaign") ||
+        pathVar.match("app-configuration-redesign") ||
+        pathVar.match("app-modules") ||
+        pathVar.match("app-features") ||
+        pathVar === "checklist/search"
+          ? true
+          : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
@@ -140,11 +133,14 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar === "setup-campaign" ? true : false,
     },
     {
-      path: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
+      path:
+        pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features"
+          ? ""
+          : `/${window?.contextPath}/employee/campaign/app-modules`,
       content: t("APP_CONFIGURATION"),
       show: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? true : false,
     },
-     {
+    {
       path: "",
       content: t("ACTION_LABEL_CONFIGURE_APP"),
       show: pathVar === "checklist/search" ? true : false,
