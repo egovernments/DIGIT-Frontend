@@ -175,7 +175,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         }));
 
       return {
-        name: page.label || page.page || "UNKNOWN",
+        name: page.page || "default",
         cards: [
           {
             header: crypto.randomUUID(),
