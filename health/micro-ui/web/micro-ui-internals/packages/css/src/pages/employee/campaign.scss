@@ -549,3 +549,28 @@
     border: 0.063rem solid theme(digitv2.lightTheme.primary);
     box-shadow: 0.063rem theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer0) #00000029;
 }
+.name-container-popUp {
+  margin-top: 0.8rem;
+  margin-right: 0rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+.date-container-popUp {
+  margin-top: 0.8rem;
+  margin-right: 1rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+.pop-display{
+  display: flex;
+  margin-top: 1.5rem;
+}
+.popUp-header{
+  margin-bottom: 1.5rem;
+}
+.end-date-container-popUp{
+  margin-top: 0.8rem;
+  margin-right: 1.5rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+}
