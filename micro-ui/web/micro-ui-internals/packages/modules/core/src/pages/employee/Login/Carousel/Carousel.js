@@ -26,7 +26,7 @@ const Carousel = () => {
             nextSlide();
         }, 5000);
         return () => clearInterval(interval);
-    }, []);
+    }, [carouselItems.length]);
 
     return (
         <>
