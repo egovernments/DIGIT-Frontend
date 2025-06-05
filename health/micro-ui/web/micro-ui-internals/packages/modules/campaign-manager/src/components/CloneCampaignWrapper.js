@@ -123,11 +123,11 @@ const CloneCampaignWrapper = (props) => {
     }
     {!showProgress && !campaignDetailsLoading && (<div className="container">
       <div className="card-container2">
-        <Card className="setup-campaign-card">
-          <HeaderComponent>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent>
+        <div>
+          <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent>
           <p className="name-description">{t("HCM_CAMPAIGN_NAME_DESCRIPTION")}</p>
-          <LabelFieldPair>
-            <div className="name-container">
+          <LabelFieldPair className="pop-display">
+            <div className="name-container-popUp">
               <span>{t("HCM_CAMPAIGN_NAME")}</span>
               <span className="mandatory-span">*</span>
             </div>
@@ -141,8 +141,8 @@ const CloneCampaignWrapper = (props) => {
               onChange={(event) => setName(event.target.value)}
             />
           </LabelFieldPair>
-          <LabelFieldPair>
-            <div className="name-container">
+          <LabelFieldPair className="pop-display">
+            <div className="date-container-popUp">
               <span>{t("CAMPAIGN_START_DATE")}</span>
               <span className="mandatory-span">*</span>
             </div>
@@ -155,8 +155,8 @@ const CloneCampaignWrapper = (props) => {
               onChange={(event) => setStartDate(event.target.value)}
             />
           </LabelFieldPair>
-          <LabelFieldPair>
-            <div className="name-container">
+          <LabelFieldPair className="pop-display">
+            <div className="end-date-container-popUp">
               <span>{t("CAMPAIGN_END_DATE")}</span>
               <span className="mandatory-span">*</span>
             </div>
@@ -169,7 +169,7 @@ const CloneCampaignWrapper = (props) => {
               onChange={(event) => setEndDate(event.target.value)}
             />
           </LabelFieldPair>
-        </Card>
+        </div>
       </div>
     </div>)}
     </PopUp>
