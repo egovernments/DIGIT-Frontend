@@ -36,27 +36,22 @@ const CampaignDetails = () => {
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  const reqCriteriaMDMSBaseTemplateSearch = {
-    url: `${url}/v2/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
-        isActive: true,
-        filters: {
-          project: campaignNumber,
-        },
+  const { data: modulesData } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: AppConfigSchema,
+        filter: `[?(@.project=='${campaignNumber}')]`,
       },
-    },
-    config: {
-      enabled: true,
+    ],
+    {
       select: (data) => {
-        return data;
+        return data?.[CONSOLE_MDMS_MODULENAME]?.[AppConfigSchema];
       },
     },
-  };
-
-  const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSBaseTemplateSearch);
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigSchema` }
+  );
 
   const data = {
     cards: [
@@ -106,8 +101,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel:  modulesData?.mdms?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") :  t("HCM_MOBILE_APP_BUTTON"),
-              type: modulesData?.mdms?.length > 0 ?  "secondary" : "primary",
+              buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              type: modulesData?.length > 0 ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits />,
             },
