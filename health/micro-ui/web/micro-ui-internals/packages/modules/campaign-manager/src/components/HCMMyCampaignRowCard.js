@@ -1,9 +1,10 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
+import CloneCampaignWrapper from "./CloneCampaignWrapper";
 
 /**
  * HCMMyCampaignRowCard Component
@@ -143,6 +144,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const resources = rowData?.deliveryRules.flatMap((rule) => rule.resources.map((res) => t(res.name))).join(", ") || "NA";
   const actionButtons = getActionButtons(rowData, tabData, history);
   const tagElements = getTagElements(rowData);
+  const [cloneCampaign, setCloneCampaign] = useState(false);
 
   return (
     <>
@@ -195,13 +197,16 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       <div className="digit-results-card-buttons">
         <Button
           key={"DuplicateCampaign"}
-          icon={"TabInactive"}
+          icon={"TabInactive"} 
           label={t("DUPLICATE_CAMPAIGN")}
-          onClick={() => console.log("Duplicate Campaign")} // TODO: Implement duplicate campaign functionality
+          onClick={() => setCloneCampaign(true)} // TODO: Implement duplicate campaign functionality
           variation={"teritiary"}
           size={"medium"}
           title={t("DUPLICATE_CAMPAIGN")}
         />
+          {cloneCampaign && (
+              <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign}/>
+          )}
         {actionButtons && Object.keys(actionButtons).length > 0 && (
           <div className="digit-results-card-buttons-internal">
             {Object.entries(actionButtons).map(([key, btn]) => (
