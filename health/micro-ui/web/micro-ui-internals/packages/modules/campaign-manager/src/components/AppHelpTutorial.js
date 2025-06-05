@@ -213,10 +213,19 @@ export const AppHelpContent = ({ helpContentList = [], module, pathVar }) => {
   return (
     <div className="tutorial-wrapper">
       <div className="tutorial-row">
-        {isSelectedFeatureLoading && <Loader></Loader>}
-        {helpContents.map((item, index) => (
-          <AppHelpCard helpContent={item} index={index} />
-        ))}
+     <div className="tutorial-wrapper">
+       <div className="tutorial-row">
+-        {isSelectedFeatureLoading && <Loader></Loader>}
+         {helpContents.map((item, index) => (
+-          <AppHelpCard helpContent={item} index={index} />
++          <AppHelpCard
++            key={`help-card-${index}`}
++            helpContent={item}
++            index={index}
++          />
+         ))}
+       </div>
+     </div>
       </div>
     </div>
   );
