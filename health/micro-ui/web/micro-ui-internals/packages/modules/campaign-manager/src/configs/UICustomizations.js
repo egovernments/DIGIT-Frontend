@@ -3,11 +3,12 @@ import _ from "lodash";
 import React, { useState, useEffect, useRef, useCallback} from "react";
 import { useHistory, useLocation } from 'react-router-dom';
 import { Fragment } from "react";
-import { Button, PopUp, Switch, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
+import { Button, PopUp, Switch, Tooltip,Toast, TooltipWrapper, FieldV1 , Stepper , TextBlock ,Card , HeaderComponent, ActionBar  } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useTranslation } from "react-i18next";
-import { Toast } from "@egovernments/digit-ui-components";
+import { LabelFieldPair } from "@egovernments/digit-ui-react-components";
+import CloneCampaignWrapper from "../components/CloneCampaignWrapper";
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
@@ -376,7 +377,7 @@ export const UICustomizations = {
         endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
         pagination: {
           sortBy: "createdTime",
-          sortOrder: "desc",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -427,6 +428,7 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [timeLine, setTimeline] = React.useState(false);
+      const [campainCopying, setCampaignCopying] = React.useState(false);
       const resourceIdArr = [];
       row?.resources?.map((i) => {
         if (i?.createResourceId && i?.type === "user") {
@@ -451,6 +453,9 @@ export const UICustomizations = {
             break;
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
+            break;
+          case "CREATE_COPY":
+            setCampaignCopying(true);
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
             window.history.pushState(
@@ -510,6 +515,7 @@ export const UICustomizations = {
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
                     : []),
@@ -528,6 +534,9 @@ export const UICustomizations = {
                 >
                   <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
+              )}
+                {campainCopying && (
+                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying}/>
               )}
             </>
           );
@@ -558,7 +567,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          sortOrder: "desc",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -609,6 +618,8 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [timeLine, setTimeline] = React.useState(false);
+      const [campainCopying, setCampaignCopying] = React.useState(false);
+      
       const resourceIdArr = [];
       row?.resources?.map((i) => {
         if (i?.createResourceId && i?.type === "user") {
@@ -619,6 +630,9 @@ export const UICustomizations = {
         switch (value?.code) {
           case "ACTION_LABEL_VIEW_TIMELINE":
             setTimeline(true);
+            break;
+          case "CREATE_COPY":
+            setCampaignCopying(true);
             break;
           default:
             console.log(value);
@@ -648,7 +662,7 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") }]}
+                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") }, { key: 1, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") }]}
                 optionsKey="i18nKey"
                 showBottom={true}
                 isSearchable={false}
@@ -663,6 +677,10 @@ export const UICustomizations = {
                 >
                   <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
+              )}
+
+              {campainCopying && (
+                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying}/>
               )}
             </>
           );
@@ -694,7 +712,7 @@ export const UICustomizations = {
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
         pagination: {
           sortBy: "createdTime",
-          sortOrder: "desc",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -745,6 +763,7 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [timeLine, setTimeline] = React.useState(false);
+      const [campainCopying, setCampaignCopying] = React.useState(false);
       // const { t } = useTranslation();
       const resourceIdArr = [];
       row?.resources?.map((i) => {
@@ -799,7 +818,9 @@ export const UICustomizations = {
             const navEvent1 = new PopStateEvent("popstate");
             window.dispatchEvent(navEvent1);
             break;
-
+          case "CREATE_COPY":
+            setCampaignCopying(true);
+            break;
           default:
             console.log(value);
             break;
@@ -832,6 +853,7 @@ export const UICustomizations = {
                   ...(row?.status === "created" ? [{ key: 1, code: "ACTION_LABEL_UPDATE_DATES", i18nKey: t("ACTION_LABEL_UPDATE_DATES") }] : []),
                   { key: 2, code: "ACTION_LABEL_CONFIGURE_APP", i18nKey: t("ACTION_LABEL_CONFIGURE_APP") },
                   { key: 3, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 4, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
                   ...(row?.status === "created"
                     ? [{ key: 1, code: "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS", i18nKey: t("ACTION_LABEL_UPDATE_BOUNDARY_DETAILS") }]
                     : []),
@@ -850,6 +872,9 @@ export const UICustomizations = {
                 >
                   <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
+              )}
+              {campainCopying && (
+                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying}/>
               )}
             </>
           );
@@ -879,7 +904,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          sortOrder: "desc",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -973,7 +998,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          sortOrder: "desc",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },
@@ -1067,7 +1092,7 @@ export const UICustomizations = {
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
-          sortOrder: "desc",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
           limit: limit,
           offset: offset,
         },

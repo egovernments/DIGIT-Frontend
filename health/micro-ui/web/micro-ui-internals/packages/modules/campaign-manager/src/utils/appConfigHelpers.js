@@ -78,6 +78,55 @@ const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
   return result;
 };
 
+// const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
+//   if (!field.appType) return {};
+
+//   const matched = fieldTypeMasterData.find((item) => item.type === field.appType);
+//   if (!matched) return {};
+
+//   const result = {
+//     type: matched.metadata?.type,
+//     format: matched.metadata?.format,
+//   };
+
+//   const renameMap = matched.attributeToRename || {};
+
+//   Object.keys(field).forEach((key) => {
+//     if (key === "validations") return;
+
+//     if (renameMap[key]) {
+//       // If the current key should be renamed, store its value under the mapped key
+//       result[renameMap[key]] = field[key];
+//     } else if (!Object.values(renameMap).includes(key)) {
+//       // If key is not in targetKey list, copy it as-is
+//       result[key] = field[key];
+//     }
+//     // If key is a target of rename (i.e., already renamed from source), skip it
+//   });
+
+//   return result;
+// };
+
+function flattenValidationsToField(validationsArray) {
+  const result = {};
+
+  if (!Array.isArray(validationsArray)) return {};
+
+  for (const rule of validationsArray) {
+    if (!rule || typeof rule !== "object") continue;
+    const { type, value, message } = rule;
+
+    if (!type || value === undefined || value === null) continue;
+
+    result[`toArray.${type}`] = value;
+    if (message !== undefined && message !== null) {
+      result[`toArray.${type}.message`] = message;
+    }
+  }
+
+  return result;
+}
+
 const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
   const validationArray = [];
   if (field && field.pattern) {
@@ -104,7 +153,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
           active: true,
           jsonPath: field.fieldName || "",
           metaData: {},
-          Mandatory: field.required || false,
+          // Mandatory: field.required || false,
           hidden: field.hidden || false,
           deleteFlag: field.deleteFlag || false,
           isLocalised: field.isLocalised ? true : false,
@@ -114,13 +163,19 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
           tooltip: field.tooltip || "",
           infoText: field.infoText || "",
           order: field.order,
+          readOnly: field.readOnly || false,
+          systemDate: field.systemDate || false,
           pattern: field?.validations?.find((i) => i?.type === "pattern"),
           RegexPattern: field?.validations?.find((i) => i?.type === "pattern") ? true : false,
+          MdmsDropdown: field?.schemaCode ? true : false,
+          isMdms: field?.schemaCode ? true : false,
+          isMultiSelect: field?.isMultiSelect ? true : false,
           ...getTypeAndMetaData(field, fieldTypeMasterData),
+          ...flattenValidationsToField(field?.validations || []),
         }));
 
       return {
-        name: page.label || page.page || "UNKNOWN",
+        name: page.page || "default",
         cards: [
           {
             header: crypto.randomUUID(),
@@ -163,18 +218,44 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
     });
 };
 
+function addToArrayFields(field) {
+  const validationMap = {};
+
+  if (!field || typeof field !== "object") return [];
+
+  for (const key in field) {
+    if (!Object.prototype.hasOwnProperty.call(field, key)) continue;
+
+    if (key.startsWith("toArray.")) {
+      const parts = key.split(".");
+      const type = parts[1];
+      if (!type) continue;
+
+      if (!validationMap[type]) validationMap[type] = { type };
+
+      if (parts.length === 2) {
+        validationMap[type].value = field[key];
+      } else if (parts.length === 3 && parts[2] === "message") {
+        validationMap[type].message = field[key];
+      }
+    }
+  }
+
+  return Object.values(validationMap).filter((v) => v.value !== undefined && v.value !== null);
+}
+
 // Update reverseRestructure to use getTypeAndFormatFromAppType
 export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
       const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
-      const validations = addValidationArrayToConfig(field, fieldTypeMasterData);
+      const toArrayFields = addToArrayFields(field, fieldTypeMasterData);
       return {
         label: field.label || "",
         order: fieldIndex + 1,
         value: field.value || "",
         hidden: false, // can't be derived from updatedData unless explicitly added
-        required: field.Mandatory || false,
+        // required: field.Mandatory || false,
         hidden: field.hidden || false,
         fieldName: field.jsonPath || "",
         helpText: field.helpText || "",
@@ -183,8 +264,11 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         innerLabel: field.innerLabel || "",
         errorMessage: field.errorMessage || "",
         deleteFlag: field.deleteFlag || false,
+        readOnly: field.readOnly || false,
+        systemDate: field.systemDate || false,
+        isMultiSelect: field?.isMultiSelect ? true : false,
         ...typeAndFormat,
-        validations: [...validations],
+        validations: toArrayFields,
       };
     });
 
@@ -199,3 +283,20 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
     };
   });
 };
+
+export function incrementVersion(version) {
+  let [major, minor, patch] = version.split(".").map(Number);
+
+  patch += 1;
+  if (patch > 9) {
+    patch = 0;
+    minor += 1;
+  }
+
+  if (minor > 9) {
+    minor = 0;
+    major += 1;
+  }
+
+  return `${major}.${minor}.${patch}`;
+}

@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import DataTable from "react-data-table-component";
 import { TextInput } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { tableCustomStyle } from "./tableCustomStyle";
 
 const Tabs = ({ availableLocales, onTabChange, setActiveLocale, activeLocale }) => {
   const { t } = useTranslation();
@@ -21,40 +22,42 @@ const Tabs = ({ availableLocales, onTabChange, setActiveLocale, activeLocale }) 
     </div>
   );
 };
-export const AppLocalisationTable = ({ data }) => {
+export const AppLocalisationTable = ({ data, currentScreen, state }) => {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
+  const currentLocState = useMemo(() => {
+    return locState?.filter((i) => i.code && i.code.includes(currentScreen));
+  }, [locState, currentScreen]);
   const { t } = useTranslation();
-  const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const availableLocales = (Digit?.SessionStorage.get("initData")?.languages || []).filter((locale) => locale?.value !== currentLocale);
   const [activeLocale, setActiveLocale] = useState(availableLocales[0]);
 
-
   const columns = [
     {
-      name: "Code",
-      selector: (row) => row?.[currentLocale],
+      name: t(`TRANSLATION_${currentLocale || "EN"}`),
+      selector: (row) => (row && currentLocale && row[currentLocale]) || "",
       sortable: true,
     },
-    {
-      name: "Translation",
-      cell: (row) => {
-        return (
-          <TextInput
-            name="translation"
-            value={row?.[activeLocale?.value]}
-            onChange={(event) => {
-              updateLocalization(row?.code, activeLocale?.value, event.target.value);
-            }}
-          />
-        );
-      },
-    },
+    ...((Array.isArray(availableLocales) ? availableLocales : []).map((locale) => ({
+      name: t(locale?.label || locale?.value || ""),
+      cell: (row) => (
+        <TextInput
+          name={`translation_${locale?.value || ""}`}
+          value={(row && locale?.value && row[locale.value]) || ""}
+          onChange={(event) => {
+            if (row && row.code && locale && locale.value && typeof updateLocalization === "function") {
+              updateLocalization(row.code, locale.value, event.target.value);
+            }
+          }}
+        />
+      ),
+    })) || []),
   ];
 
   return (
     <div>
       {/* Tabs */}
-      <div style={{ display: "flex", marginBottom: "16px" }}>
+      {/* <div style={{ display: "flex", marginBottom: "16px" }}>
         <Tabs
           availableLocales={availableLocales}
           setActiveLocale={setActiveLocale}
@@ -63,10 +66,17 @@ export const AppLocalisationTable = ({ data }) => {
             setActiveLocale(tab);
           }}
         />
-      </div>
+      </div> */}
 
       {/* Data Table */}
-      <DataTable title={t(`LABEL_TRANSLATIONS_FOR_${activeLocale.label.toUpperCase()}`)} columns={columns} data={locState} pagination highlightOnHover />
+      <DataTable
+        // title={t(`LABEL_TRANSLATIONS_FOR_${activeLocale.label.toUpperCase()}`)}
+        customStyles={tableCustomStyle}
+        columns={columns}
+        data={currentLocState}
+        pagination
+        highlightOnHover
+      />
     </div>
   );
 };

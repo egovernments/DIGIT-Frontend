@@ -1,12 +1,14 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useTranslation } from "react-i18next";
-import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar, LabelFieldPair, TextInput, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 import { useCustomT } from "./useCustomT";
 import DraggableField from "./DraggableField";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
+import { InfoOutline } from "@egovernments/digit-ui-svg-components";
+import ConsoleTooltip from "../../../components/ConsoleToolTip";
 
 function AppFieldScreenWrapper() {
   const { state, dispatch, openAddFieldPopup } = useAppConfigContext();
@@ -38,6 +40,11 @@ function AppFieldScreenWrapper() {
       {currentCard?.cards?.map(({ fields, description, header, headerFields }, index, card) => {
         return (
           <>
+            <div className="app-config-drawer-subheader">
+              {t("APPCONFIG_HEAD_FIELDS")}
+              <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
+            </div>
+            <Divider />
             {headerFields?.map(({ type, label, active, required, value }, indx, cx) => (
               <AppFieldComposer
                 type={type}
@@ -61,9 +68,13 @@ function AppFieldScreenWrapper() {
               />
             ))}
             <Divider />
-            <div className="slider-header">Fields</div> {/* todo update localisation */}
+            <div className="app-config-drawer-subheader">
+              {t("APPCONFIG_SUBHEAD_FIELDS")}
+              <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+            </div>
+            {/* todo update localisation */}
             {fields?.map(
-              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {                
+              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
                 return (
                   <DraggableField
                     type={type}
@@ -168,6 +179,10 @@ function AppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
+      <div className="app-config-drawer-subheader">
+        {t("APPCONFIG_SUBHEAD_BUTTONS")}
+        <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+      </div>
       <LabelFieldPair className="app-preview-app-config-drawer-action-button">
         <div className="">
           <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
@@ -181,7 +196,7 @@ function AppFieldScreenWrapper() {
               currentCard?.actionLabel && currentCard?.actionLabel !== true
                 ? currentCard?.actionLabel
                 : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
-              Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN",
+              Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
               event.target.value
             );
             dispatch({

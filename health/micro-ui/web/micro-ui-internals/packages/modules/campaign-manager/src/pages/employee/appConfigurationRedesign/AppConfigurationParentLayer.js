@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useReducer, useState } from "react";
-import { Loader, Stepper, Toast, Tooltip } from "@egovernments/digit-ui-components";
+import React, { useEffect, useMemo, useReducer, useState, Fragment } from "react";
+import { Button, Footer, Loader, Stepper, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
-import Tabs from "./Tabs";
+import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 
 const dispatcher = (state, action) => {
   switch (action.key) {
@@ -54,6 +54,7 @@ const AppConfigurationParentRedesign = () => {
   const [stepper, setStepper] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
+
   const localeModule = useMemo(() => {
     if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
       return `hcm-${parentState.actualTemplate.name.toLowerCase()}-${parentState.actualTemplate.project}`;
@@ -64,13 +65,7 @@ const AppConfigurationParentRedesign = () => {
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [
-      {
-        name: masterName,
-        filter: `[?(@.project=='${campaignNumber}')]`,
-      },
-      { name: fieldTypeMaster, limit: 100 },
-    ],
+    [{ name: fieldTypeMaster, limit: 100 }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -195,7 +190,7 @@ const AppConfigurationParentRedesign = () => {
             history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
               message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
               preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
-              actionLabel: "CS_HOME",
+              actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
               actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
             });
           },
@@ -232,31 +227,67 @@ const AppConfigurationParentRedesign = () => {
       setCurrentStep((prev) => prev - 1);
     }
   };
+  console.log(numberTabs, "numberTabs");
 
   return (
     <div>
-      <Header className="app-config-header">{t(`${currentScreen?.[0]?.name}`)}</Header>
+      <Header className="app-config-header">
+        <div className="app-config-header-group" style={{ display: "flex" }}>
+          {t(`${currentScreen?.[0]?.name}`)}{" "}
+          <Tag
+            stroke={true}
+            showIcon={false}
+            label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
+            style={{ background: "#EFF8FF" }}
+          />
+        </div>
+      </Header>
+      <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       {variant === "app" && (
-        <Tabs
-          numberTabs={numberTabs}
-          onTabChange={(tab, index) => {
-            setNumberTabs((prev) => {
-              return prev.map((j) => {
-                if (j.parent === tab.parent) {
+        <>
+          <AppConfigTab
+            wrapperClassName={"app-config-tab"}
+            toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
+            selectedOption={numberTabs?.[0]?.parent}
+            handleToggleChange={(tab, index) => {
+              setNumberTabs((prev) => {
+                return prev.map((j) => {
+                  if (j.parent === tab.parent) {
+                    return {
+                      ...j,
+                      active: true,
+                    };
+                  }
                   return {
                     ...j,
-                    active: true,
+                    active: false,
                   };
-                }
-                return {
-                  ...j,
-                  active: false,
-                };
+                });
               });
-            });
-            setCurrentStep(1);
-          }}
-        />
+              setCurrentStep(1);
+            }}
+          />
+          <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem", justifyContent: "center" }}>
+            <span style={{ width: "30%" }} />
+            <span style={{ display: "flex", justifyContent: "space-around", width: "40%" }}>
+              <Tag
+                stroke={false}
+                showIcon={false}
+                label={`${t("CMN_SCREEN")} -  1.03`}
+                labelStyle={{ color: "#787878" }}
+                //  style={{background: "#EFF8FF"}}  labelStyle={{color:"#0B4B66"}}
+              />
+              <Tag
+                stroke={false}
+                showIcon={false}
+                label={`${t("CMN_PAGE")} -  ${currentStep} / ${stepper?.length}`}
+                style={{ background: "#EFF8FF" }}
+                labelStyle={{ color: "#0B4B66" }}
+              />
+            </span>
+            <span style={{ width: "30%" }} />
+          </div>
+        </>
       )}
       <ImpelComponentWrapper
         variant={variant}
@@ -276,6 +307,20 @@ const AppConfigurationParentRedesign = () => {
           onClose={closeToast}
         />
       )}
+      {/* <Footer
+        actionFields={[
+          <Button
+            type={"button"}
+            style={{ marginLeft: "2.5rem", width: "14rem" }}
+            label={t("HCM_BACK")}
+            variation={"secondary"}
+            t={t}
+            onClick={() => {}}
+          ></Button>,
+          <Button type={"button"} label={t("PROCEED_TO_PREVIEW")} variation={"primary"} onClick={() => {}} style={{ width: "14rem" }} t={t}></Button>,
+        ]}
+        className={"new-actionbar"}
+      /> */}
     </div>
   );
 };

@@ -29,7 +29,7 @@ const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
 const ToggleVisibilityControl = ({ config, onToggle }) => {
-  if (config?.deleteFlag || config?.Mandatory) return null;
+  if (config?.deleteFlag || config?.['toArray.required']) return null;
 
   return (
     <div
@@ -83,6 +83,7 @@ const DeleteFieldControl = ({ isDelete, onDelete }) => {
 
 // Main component to display a panel field with label, tag, visibility toggle, and delete option
 const PanelFieldDisplay = ({ t, label, appType, config, onToggle, isDelete, onDelete }) => {
+  
   return (
     <>
       <div className="appConfigLabelField-label-container">

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo , useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { Switch, useLocation } from "react-router-dom";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -23,6 +23,8 @@ import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
 import AppModule from "./NewCampaignCreate/AppModule";
 import AppFeatures from "./NewCampaignCreate/AppFeatures";
+import AppHelpTutorial from "../../components/AppHelpTutorial";
+import MyCampaignNew from "./MyCampaignNew";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -36,23 +38,10 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const search = useLocation().search;
   const queryParams = new URLSearchParams(search);
   const history = useHistory();
-  const [campaignNumber, setCampaignNumber] = useState(queryParams.get("campaignNumber"));
+  const url = Digit.Hooks.useQueryParams();
+  const campaignNumber = url?.campaignNumber;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
-
-   useEffect(() =>{
-    if(pathVar === "view-details" && campaignNumber){
-      history.push(`/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=true`,)
-    }
-
-  },[pathVar])
-
-  useEffect(() => {
-    const campaignNumberFromURL = queryParams.get("campaignNumber");
-    if (campaignNumberFromURL !== campaignNumber) {
-      setCampaignNumber(campaignNumberFromURL);  // Update state when campaignNumber changes
-    }
-  }, [queryParams]);
 
   const crumbs = [
     {
@@ -65,6 +54,18 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       content: t("MY_CAMPAIGN"),
       show:
         pathVar === "my-campaign" ||
+        pathVar === "checklist/create" ||
+        pathVar === "checklist/view" ||
+        pathVar === "checklist/update" ||
+        pathVar === "update-dates-boundary"
+          ? true
+          : false,
+    },
+    {
+      path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      content: t("MY_CAMPAIGN"),
+      show:
+        pathVar === "my-campaign-new" ||
         pathVar === "checklist/create" ||
         pathVar === "checklist/view" ||
         pathVar === "checklist/update" ||
@@ -113,12 +114,18 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.match("create-campaign") ? true : false,
     },
     {
-      path:
-        pathVar === "view-details"
-          ? ""
-          : `/${window?.contextPath}/employee/campaign/view-details${campaignNumber ? `?campaignNumber=${campaignNumber}` : ""}`,
+      path: pathVar === "view-details" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
       content: t("VIEW_DETAILS"),
-      show: pathVar.match("view-details") || pathVar.match("setup-campaign") || pathVar.match("app-configuration-redesign") ||   pathVar.match("app-modules") ||  pathVar.match("app-features") ||pathVar === "checklist/search"  ? true : false,
+      query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+      show:
+        pathVar.match("view-details") ||
+        pathVar.match("setup-campaign") ||
+        pathVar.match("app-configuration-redesign") ||
+        pathVar.match("app-modules") ||
+        pathVar.match("app-features") ||
+        pathVar === "checklist/search"
+          ? true
+          : false,
     },
     {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
@@ -126,11 +133,14 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar === "setup-campaign" ? true : false,
     },
     {
-      path: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
+      path:
+        pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features"
+          ? ""
+          : `/${window?.contextPath}/employee/campaign/app-modules`,
       content: t("APP_CONFIGURATION"),
       show: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? true : false,
     },
-     {
+    {
       path: "",
       content: t("ACTION_LABEL_CONFIGURE_APP"),
       show: pathVar === "checklist/search" ? true : false,
@@ -188,7 +198,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        {/* <CampaignHeader /> */}
+        <AppHelpTutorial  appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT"/>
       </div>
       <Switch>
         <AppContainer className="campaign">
@@ -200,6 +210,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
             component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
           />
           <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
+          <PrivateRoute path={`${path}/my-campaign-new`} component={() => <MyCampaignNew />} />
           <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
           <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
           <PrivateRoute path={`${path}/response`} component={() => <Response />} />
