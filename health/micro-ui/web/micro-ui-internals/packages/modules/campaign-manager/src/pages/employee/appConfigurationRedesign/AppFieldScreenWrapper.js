@@ -105,7 +105,7 @@ function AppFieldScreenWrapper() {
                       });
                       // return;
                     }}
-                    onSelectField={() => {
+                    onSelectField={currentCard.type !== "template" ? () => {
                       dispatch({
                         type: "SELECT_DRAWER_FIELD",
                         payload: {
@@ -115,7 +115,7 @@ function AppFieldScreenWrapper() {
                         },
                       });
                       // return;
-                    }}
+                    }: null}
                     config={c[i]}
                     Mandatory={Mandatory}
                     helpText={useCustomT(helpText)}

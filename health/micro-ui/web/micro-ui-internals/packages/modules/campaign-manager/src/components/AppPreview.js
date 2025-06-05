@@ -13,6 +13,8 @@ import {
   Loader,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { ProximitySearch } from "../utils/svgs/registrationFlowSVGs";
+import SearchBeneficiaryRegistrationWrapper from "./SearchBeneficiaryRegistrationWrapper";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -323,6 +325,8 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
+  console.log("Config Data: ", data);
+  console.log("Selected Fields: ", selectedField);
   return (
     <div className="app-preview">
       {data.cards.map((card, index) => (
@@ -336,7 +340,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
               )}
             </div>
           ))}
-          {card?.fields
+          {data.type !== "template" && card?.fields
             ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
               return (
@@ -378,12 +382,57 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                 />
               );
             })}
-          <Button
+          {data.type !== "template" && <Button
             className="app-preview-action-button"
             variation="primary"
             label={t(data?.actionLabel)}
             title={t(data?.actionLabel)}
             onClick={() => {}}
+          />}
+          <SearchBeneficiaryRegistrationWrapper
+          components={card.fields}
+          metaMasterConfig={[
+            {
+                "type": "toggle",
+                "metadata": {
+                    "format": "searchByProximity",
+                    "component": "ProximitySearch"
+                }
+            },
+            {
+                "type": "filter",
+                "metadata": {
+                    "format": "filter",
+                    "component": "Filter"
+                }
+            },
+            {
+                "type": "searchBar",
+                "metadata": {
+                    "type": "component",
+                    "format": "searchBar",
+                    "component": "SearchBar"
+                }
+            },
+            {
+                "type": "button",
+                "metadata": {
+                    "type": "component",
+                    "format": "BeneficiaryRegistrationButton",
+                    "component": "PrimaryButton"
+                }
+            },
+            {
+                "type": "button",
+                "metadata": {
+                    "type": "component",
+                    "format": "QRSearch",
+                    "component": "ScanQRButton"
+                }
+            }
+        ]
+      }
+      t={t}
           />
         </Card>
       ))}
