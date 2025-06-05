@@ -151,7 +151,7 @@ const AppFeatures = () => {
   const toggleOptions = moduleToggleData?.map((moduleCode) => ({
     code: moduleCode,
     name: t(moduleCode),
-  }));
+  }))||[];
 
   if (isModuleDataLoading) return <Loader page={true} variant={"PageLoader"} />;
 
@@ -168,7 +168,7 @@ const AppFeatures = () => {
           captionClassName="camp-drawer-caption"
           subHeader=""
         />
-        <AppConfigTab toggleOptions={toggleOptions} handleToggleChange={handleToggleChange} selectedModuleCode={selectedModuleCode} />
+        <AppConfigTab toggleOptions={toggleOptions} handleToggleChange={handleToggleChange} selectedOption={selectedModuleCode} />
       </div>
      <AppFeaturesList selectedModuleFeatures={selectedModuleFeatures} selectedModuleCode={selectedModuleCode} selectedFeaturesByModule={selectedFeaturesByModule} handleSelectFeature={handleSelectFeature} />
       <Footer
@@ -258,32 +258,72 @@ const AppFeaturesList = ({selectedModuleFeatures,selectedModuleCode,selectedFeat
   })}
 </div>)
 }
+export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedOption,wrapperClassName="" }) => {
+  // Construct schema code using constants
+  const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`;
 
-const AppConfigTab=({toggleOptions,handleToggleChange,selectedModuleCode})=>{
-  const schemaCode=`${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`
-  const {  projectType, tenantId } = Digit.Hooks.useQueryParams();
+  // Extract URL query params
+  const { projectType, tenantId } = Digit.Hooks.useQueryParams();
+  const { t } = useTranslation();
 
-  const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook( Digit.Utils.campaign.getMDMSV2Criteria(
-    tenantId,
-    schemaCode,
-    {
-      "project": projectType
-  },
-    `MDMSDATA-${schemaCode}-${projectType}`,
-    {
-      enabled: !!projectType    }
-  ));
+  // Fetch configuration data from MDMS using custom hook
+  const {
+    isLoading: isConfigLoading,
+    data: defaultModuleConfigs
+  } = Digit.Hooks.useCustomAPIHook(
+    Digit.Utils.campaign.getMDMSV2Criteria(
+      tenantId,
+      schemaCode,
+      { project: projectType },
+      `MDMSDATA-${schemaCode}-${projectType}`,
+      {
+        enabled: !!projectType,
+        select: (data) => {
+          // Transform MDMS data to simplified shape
+          return data?.mdms?.map(config => ({
+            name: config?.data?.name,
+            order: config?.data?.order
+          }));
+        }
+      }
+    )
+  );
 
-  const overridedToogleOptions=[...toggleOptions,{code: "dummy",
-    name: "dddd",disabled:true}]
-return  ( <Toggle
-          name="moduleToggle"
-          numberOfToggleItems={overridedToogleOptions?.length}
-          onChange={() => {}}
-          onSelect={handleToggleChange}
-          options={overridedToogleOptions || []}
-          optionsKey="code"
-          selectedOption={selectedModuleCode}
-          type="toggle"
-        />)
-}
+  // Return null until loading is complete or data is missing
+  if (isConfigLoading || !defaultModuleConfigs || !toggleOptions) return null;
+
+  // Create a set of toggle codes provided by the user
+  const userSelectedCodes = new Set(toggleOptions.map(item => item.code));
+
+  // Step 1: Sort default configs based on order
+  const sortedDefaultConfigs = [...defaultModuleConfigs].sort((a, b) => a.order - b.order);
+
+  // Step 2: Start with user-provided toggle options (preserve original order)
+  const finalToggleOptions = [...toggleOptions];
+
+  // Step 3: Append missing defaults that user hasn't explicitly selected
+  sortedDefaultConfigs.forEach((defaultItem) => {
+    if (!userSelectedCodes.has(defaultItem.name)) {
+      finalToggleOptions.push({
+        code: defaultItem.name,
+        name: t(defaultItem.name),
+        disabled: true // Mark as disabled since not selected by user
+      });
+    }
+  });
+
+  // Render the toggle UI component
+  return (
+    <Toggle
+      name="moduleToggle"
+      numberOfToggleItems={finalToggleOptions.length}
+      onChange={() => {}}
+      onSelect={handleToggleChange}
+      options={finalToggleOptions}
+      optionsKey="code"
+      selectedOption={selectedOption}
+      type="toggle"
+      additionalWrapperClass={wrapperClassName}
+    />
+  );
+};

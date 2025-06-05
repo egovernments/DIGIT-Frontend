@@ -531,8 +531,29 @@
   .digit-toggle-toolbar {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+    max-width: 90%;
+    > *:first-child label {
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+    > *:last-child label {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;      
+    }
   }
 }
+
+.digit-toggle-toolbar{&.app-config-tab{
+  max-width: 90%;
+  > *:first-child label {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+  > *:last-child label {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;      
+  }
+}}
 .module-description {
   flex-grow: 1;
   margin: 0 0 1rem 0;

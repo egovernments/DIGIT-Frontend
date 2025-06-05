@@ -237,13 +237,17 @@ export const RenderConditionalField = ({
           masterName: "HOUSE_STRUCTURE_TYPES",
           schemaCode: "HCM.HOUSE_STRUCTURE_TYPES",
         },
+        {
+          moduleName: "HCM",
+          masterName: "ID_TYPE_OPTIONS_POPULATOR",
+          schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR",
+        },
       ];
       return (
         <Dropdown
           variant={""}
           t={t}
           disabled={disabled}
-
           option={mdmsOptions}
           optionKey={"schemaCode"}
           selected={mdmsOptions.find((i) => i.schemaCode === drawerState?.[cField?.bindTo]) || {}}

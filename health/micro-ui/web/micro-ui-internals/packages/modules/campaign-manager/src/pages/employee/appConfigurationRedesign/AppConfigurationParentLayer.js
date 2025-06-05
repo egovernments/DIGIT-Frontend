@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
-import Tabs from "./Tabs";
+import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 
 const dispatcher = (state, action) => {
   switch (action.key) {
@@ -227,6 +227,7 @@ const AppConfigurationParentRedesign = () => {
       setCurrentStep((prev) => prev - 1);
     }
   };
+  console.log(numberTabs, "numberTabs");
 
   return (
     <div>
@@ -244,9 +245,11 @@ const AppConfigurationParentRedesign = () => {
       <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       {variant === "app" && (
         <>
-          <Tabs
-            numberTabs={numberTabs}
-            onTabChange={(tab, index) => {
+          <AppConfigTab
+            wrapperClassName={"app-config-tab"}
+            toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
+            selectedOption={numberTabs?.[0]?.parent}
+            handleToggleChange={(tab, index) => {
               setNumberTabs((prev) => {
                 return prev.map((j) => {
                   if (j.parent === tab.parent) {
