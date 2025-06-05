@@ -36,10 +36,14 @@ const ProductsPageComponent = ({ detailsConfig }) => {
 
       {/* Product Cards Section */}
       <div className="products-list">
-        {detailsConfig?.map((product, index) => (
+        {detailsConfig?.map((product, index) => {
+          console.log(product);
+          
+          return (
           <Card key={index} className="product-card">
-             {/* <Chip text="Configure" /> */}
-             <Chip text="Default" textColor="#A33929" borderColor="#A33929"/>
+            { 
+            ((product.module == "PGR") ? <Chip text="Configure" /> : <Chip text="Default" textColor="#A33929" borderColor="#A33929"/>   )
+            }
             <div className="product-header">
               <div className="icon-wrap">
                 {Digit.Utils.iconRender(product.icon, "#c84c0e")}
@@ -58,7 +62,8 @@ const ProductsPageComponent = ({ detailsConfig }) => {
               onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
             />
           </Card>
-        ))}
+        )}
+        )}
       </div>
     </div>
   );
