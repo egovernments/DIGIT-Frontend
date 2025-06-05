@@ -284,7 +284,6 @@ export const cycleDataRemap=(data)=> {
 
 
   export const transformDraftDataToFormData =(draftData,projectType)=>{
-    console.log("whyyyyyyy" , draftData);
 
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
     const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i?.code === draftData?.projectType);
