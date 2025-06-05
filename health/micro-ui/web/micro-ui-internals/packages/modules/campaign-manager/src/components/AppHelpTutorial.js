@@ -140,19 +140,41 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
 export const AppHelpCard = ({ helpContent = {}, index }) => {
   const { t } = useTranslation();
   return (
-    <div key={index} className="tutorial-card" onClick={() => window.open(helpContent?.url, "_blank")}>
+    <div
+      key={index}
+      className="tutorial-card"
+      onClick={() => window.open(helpContent?.url, "_blank")}
+      onKeyDown={(e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+          e.preventDefault();
+          window.open(helpContent?.url, "_blank");
+        }
+      }}
+      tabIndex={0}
+      role="button"
+      aria-label={`Open tutorial: ${t(helpContent?.title)}`}
+    >
       <div
         className="tutorial-card-image"
-        style={{ display: "flex", ...(helpContent?.iconBackground ? { backgroundColor: helpContent?.iconBackground } : {}) }}
+        style={{
+          display: "flex",
+          ...(helpContent?.iconBackground
+            ? { backgroundColor: helpContent.iconBackground }
+            : {}),
+        }}
       >
-        {helpContent?.icon && <img src={helpContent?.icon} alt="image not found" />}
+        {helpContent?.icon && (
+          <img src={helpContent.icon} alt={t(helpContent.title)} />
+        )}
       </div>
       <div className="tutorial-card-content">
-        <div className="tutorial-card-title">{t(helpContent?.title)}</div>
-        {helpContent?.subtitle && <div className="tutorial-card-subtext">{t(helpContent?.subtitle)}</div>}
+        <div className="tutorial-card-title">{t(helpContent.title)}</div>
+        {helpContent?.subtitle && (
+          <div className="tutorial-card-subtext">{t(helpContent.subtitle)}</div>
+        )}
         {helpContent?.cta && (
           <div className="tutorial-card-link">
-            {t(helpContent?.cta)} <span className="arrow">→</span>
+            {t(helpContent.cta)} <span className="arrow">→</span>
           </div>
         )}
       </div>
