@@ -227,7 +227,6 @@ const AppConfigurationParentRedesign = () => {
       setCurrentStep((prev) => prev - 1);
     }
   };
-  console.log(numberTabs, "numberTabs");
 
   return (
     <div>
@@ -273,7 +272,7 @@ const AppConfigurationParentRedesign = () => {
               <Tag
                 stroke={false}
                 showIcon={false}
-                label={`${t("CMN_SCREEN")} -  1.03`}
+                label={`${t("CMN_SCREEN")} -  1.1`}
                 labelStyle={{ color: "#787878" }}
                 //  style={{background: "#EFF8FF"}}  labelStyle={{color:"#0B4B66"}}
               />
