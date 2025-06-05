@@ -58,9 +58,10 @@ getMDMSV1Criteria: (tenantId, moduleName, masterDetails, cacheKey="CAMP_MDMS",co
  * Generates criteria for fetching data from MDMS v2.
  * 
  * @param {string} tenantId - The tenant identifier for the MDMS request.
- * @param {string} moduleName - The name of the module whose data is to be fetched.
- * @param {Array} masterDetails - An array specifying the master details to fetch from the module.
+ * @param {string} schemaCode - The schema code for the MDMS v2 request.
+ * @param {Object} filters - Filter criteria for the MDMS v2 search.
  * @param {string} cacheKey - A unique key used for caching the query results.
+ * @param {Object} config - Additional configuration options for React Query.
  * 
  * @returns {Object} - A query object to be used with React Query or a similar data fetching utility.
  */
