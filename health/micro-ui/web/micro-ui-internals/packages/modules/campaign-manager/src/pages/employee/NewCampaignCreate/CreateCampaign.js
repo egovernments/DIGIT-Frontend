@@ -60,11 +60,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     },
   });
 
-  console.log("fff" , draftData);
 
   const transformDraftDataToFormData = (draftData) => {
-    console.log("draftData", draftData);
-
     const restructureFormData = {
       ...draftData,
       CampaignType: typeof draftData?.projectType === "string" ? { code: draftData.projectType } : draftData?.projectType,
@@ -78,7 +75,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   useEffect(() => {
-    console.log("pp")
     if (draftLoading) return;
     // if (Object.keys(params).length !== 0) return;
     // if (!draftData) return;

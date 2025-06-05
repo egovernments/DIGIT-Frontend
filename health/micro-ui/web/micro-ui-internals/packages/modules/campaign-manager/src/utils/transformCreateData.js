@@ -1,5 +1,4 @@
 export const transformCreateData = ({totalFormData, hierarchyType , params , formData ,id}) => {
-  console.log("paaaaa" , params , formData);
   const startDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || formData?.DateSelection?.startDate || params?.DateSelection?.startDate);
   const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.endDate || formData?.DateSelection?.endDate || params?.DateSelection?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();

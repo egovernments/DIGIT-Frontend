@@ -190,11 +190,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     // if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
     const restructureFormData = transformDraftDataToFormData(draftData, projectType);
-    console.log("restructureFormData" , restructureFormData);
     setParams({ ...restructureFormData });
   }, [ draftData]);
-
-  console.log("paramsSetupCampaign" , params , totalFormData , draftData)
 
   useEffect(() => {
     if (draftData?.additionalDetails?.facilityId && draftData?.additionalDetails?.targetId && draftData?.additionalDetails?.userId) {
@@ -907,15 +904,12 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setShouldUpdate(true);
       if (currentKey == 6 || currentKey == 9 || currentKey == 15) {
         setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
-        console.log("isDraft" , isDraft , isDraft === "true");
         if (isDraft === "true") {
-          console.log("okk")
           history.push(
             `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
           );
         } 
         else {
-          console.log("notokk")
           history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
         }
       }

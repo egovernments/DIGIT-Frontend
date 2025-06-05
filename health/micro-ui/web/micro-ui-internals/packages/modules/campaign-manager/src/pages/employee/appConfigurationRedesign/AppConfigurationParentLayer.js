@@ -227,7 +227,6 @@ const AppConfigurationParentRedesign = () => {
       setCurrentStep((prev) => prev - 1);
     }
   };
-  console.log(numberTabs, "numberTabs");
 
   return (
     <div>

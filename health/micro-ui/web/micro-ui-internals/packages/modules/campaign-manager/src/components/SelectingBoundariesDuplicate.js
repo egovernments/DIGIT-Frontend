@@ -48,8 +48,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
-
-  console.log("props", props, props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [restrictSelection, setRestrictSelection] = useState(null);
 
@@ -80,7 +78,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   }, [selectedData, boundaryOptions, restrictSelection]);
 
   // useEffect(() => {
-  //   console.log("hiihhghghh" , props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType)
   //   setSelectedData(
   //     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
   //       ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
@@ -92,15 +89,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //       : {}
   //   );
   // }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
-
-  // useEffect(() => {
-  //   console.log("hiihhghghh2" , props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData)
-  //   setSelectedData(
-  //     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-  //       ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-  //       : []
-  //   );
-  // }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData]);
 
   // useEffect(() => {
   //   if (executionCount < 5) {
@@ -117,10 +105,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     }
     setTimeout(() => setIsLoading(false), 0);
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
-
-  useEffect(() => {
-    console.log("selectedData updated:", selectedData);
-  }, [selectedData]);
 
   // useEffect(() => {
   //   if (
