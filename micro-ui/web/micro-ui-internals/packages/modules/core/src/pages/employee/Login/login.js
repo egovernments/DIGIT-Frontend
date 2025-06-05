@@ -146,10 +146,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const onForgotPassword = () => {
     history.push(`/${window?.contextPath}/employee/user/forgot-password`);
   };
+  const defaultTenant = Digit.ULBService.getStateId();
 
   const defaultValue = {
-    code: Digit?.ULBService?.getStateId(),
-    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${Digit?.ULBService?.getStateId()}`),
+    code: defaultTenant,
+    name: Digit.Utils.locale.getTransformedLocale(`TENANT_TENANTS_${defaultTenant}`),
   };
 
   let config = [{ body: propsConfig?.inputs }];
