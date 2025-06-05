@@ -170,7 +170,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const onFormValueChange = (setValue, formData, formState) => {
 
     // Extract keys from the config
-    const keys = config[0].body.map((field) => field.key);
+    const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
