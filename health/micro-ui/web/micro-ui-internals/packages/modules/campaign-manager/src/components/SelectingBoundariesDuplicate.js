@@ -149,9 +149,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  console.log("selected", selectedData);
+  console.log("selected", selectedData , draft , selectedData.length == 0 && draft=== true);
 
-  if (selectedData.length == 0 && draft) {
+  if (selectedData.length == 0 && draft=== true) {
       return <Loader page={true} variant={"PageLoader"} />;
     }
 
