@@ -165,7 +165,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
           schemaCode: mdmsItem.schemaCode,
           body: payload,
         });
-        console.log("MDMS entry created:", res);
       } catch (err) {
         console.error(`Failed to create MDMS entry for ${mdmsItem.data?.name}`, err);
         throw new Error(`MDMS creation failed for ${mdmsItem.data?.name}`);
