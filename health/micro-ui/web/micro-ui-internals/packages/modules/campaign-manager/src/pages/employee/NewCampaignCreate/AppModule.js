@@ -1,10 +1,13 @@
-import { Card, HeaderComponent, Button, Footer, Loader, Toast } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Button, Footer, Loader, Toast, TextBlock } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+
+export const TEMPLATE_BASE_CONFIG_MASTER = "TemplateBaseConfig";
+
 
 const AppModule = () => {
   const { t } = useTranslation();
@@ -17,31 +20,21 @@ const AppModule = () => {
   const [showToast, setShowToast] = useState(null);
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const AppConfigSchema = "SimpleAppConfiguration";
-  const TemplateBaseConfig = "TemplateBaseConfig";
   const url = getMDMSUrl(true);
   const [isCreatingModule, setIsCreatingModule] = useState(false);
 
-  const reqCriteriaMDMSBaseTemplateSearch = {
-    url: `${url}/v2/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        schemaCode: `${CONSOLE_MDMS_MODULENAME}.${TemplateBaseConfig}`,
-        isActive: true,
-         "filters":{
-            "project": campaignType
-        }
-      },
-    },
-    config: {
-      enabled: true,
-      select: (data) => {
-        return data;
-      },
-    },
-  };
 
-  const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSBaseTemplateSearch);
+  const schemaCode=`${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`
+    const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook( Digit.Utils.campaign.getMDMSV2Criteria(
+      tenantId,
+      schemaCode,
+      {
+        "project": campaignType
+    },
+      `MDMSDATA-${schemaCode}-${campaignType}`,
+      {
+        enabled: !!campaignType    }
+    ));
 
   const handleSelectModule = (moduleCode) => {
     if (selectedModuleCodes.includes(moduleCode)) {
@@ -51,32 +44,21 @@ const AppModule = () => {
     }
   };
 
-  const reqCriteriaMDMSSearch = {
-    url: `${url}/v2/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
-        isActive: true,
-         "filters":{
-            "project": campaignNumber
-        }
-      },
-    },
-    config: {
-      enabled: true,
-      select: (data) => {
-        return data;
-      },
-    },
-  };
-
-  const { isLoading, data: mdmsData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaMDMSSearch);
+  const schemaCodeForAppConfig=`${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`
+  const { isLoading, data: mdmsData } = Digit.Hooks.useCustomAPIHook( Digit.Utils.campaign.getMDMSV2Criteria(
+    tenantId,
+    schemaCodeForAppConfig,
+    {
+      "project": campaignNumber
+  },
+    `MDMSDATA-${schemaCodeForAppConfig}-${campaignNumber}`,
+    {
+      enabled: !!campaignNumber    }
+  ));
 
   React.useEffect(() => {
-    if (mdmsData?.mdms) {
-      const createdModules = mdmsData?.mdms
-        .filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
+    if (mdmsData) {
+      const createdModules = mdmsData.filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
         .map((item) => item?.uniqueIdentifier?.split(".")?.[1]) // extract module code
         .filter(Boolean);
 
@@ -97,8 +79,7 @@ const AppModule = () => {
     }
 
     const alreadyCreatedModules =
-      mdmsData?.mdms
-        ?.filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
+      mdmsData?.filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
         ?.map((item) => item?.uniqueIdentifier?.split(".")?.[1])
         ?.filter(Boolean) || [];
 
@@ -111,7 +92,7 @@ const AppModule = () => {
       return;
     }
 
-    const selectedModules = modulesData?.mdms?.filter((module) => newModulesToCreate.includes(module?.data?.name));
+    const selectedModules = modulesData?.filter((module) => newModulesToCreate.includes(module?.data?.name));
     const baseProjectType = campaignType.toLowerCase();
     const localisationModules = newModulesToCreate.map((code) => `hcm-base-${code.toLowerCase()}-${baseProjectType}`).join(",");
 
@@ -167,15 +148,14 @@ const AppModule = () => {
       };
 
       try {
+        const schemaCode=`${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
         setIsCreatingModule(true);
         await Digit.CustomService.getResponse({
-          url: `${url}/v2/_create/Workbench.UISchema`,
-
-          // url: `${url}/v2/_create/${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+          url: `${url}/v2/_create/${schemaCode}`,
           body: {
             Mdms: {
               tenantId,
-              schemaCode: `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`,
+              schemaCode: schemaCode,
               data: moduleWithProject,
             },
           },
@@ -194,7 +174,7 @@ const AppModule = () => {
     );
   };
 
-  if (productTypeLoading || isLoading || isCreatingModule) {
+  if (productTypeLoading || isLoading ) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
@@ -202,10 +182,11 @@ const AppModule = () => {
     <>
       <div>
         <HeaderComponent className="campaign-header-style">{t(`HCM_CHOOSE_MODULE`)}</HeaderComponent>
+        <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       </div>
+              {isCreatingModule && <Loader page={true} variant={"OverlayLoader"} loaderText={t("COPYING_CONFIG_FOR_SELECTED_MODULES")} />}
       <div className="modules-container">
-        {modulesData?.mdms
-        ?.sort((x,y)=>x?.data?.order-y?.data?.order)
+        {modulesData?.sort((x,y)=>x?.data?.order-y?.data?.order)
           // ?.filter((module) => module?.data?.isDisabled === "false")
           .map((module, index) => (
             <Card className={`module-card ${selectedModuleCodes.includes(module?.data?.name) ? "selected-card" : ""}`}>

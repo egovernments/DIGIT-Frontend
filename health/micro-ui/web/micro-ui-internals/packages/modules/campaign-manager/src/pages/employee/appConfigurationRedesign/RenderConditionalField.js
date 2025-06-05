@@ -13,6 +13,7 @@ export const RenderConditionalField = ({
   state,
   drawerState,
   AppScreenLocalisationConfig,
+  disabled
 }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
@@ -69,6 +70,7 @@ export const RenderConditionalField = ({
           }}
           populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           // charCount={field?.charCount}
+          disabled={disabled}
         />
       );
     // return (
@@ -149,6 +151,8 @@ export const RenderConditionalField = ({
                   return;
                 }}
                 placeholder={""}
+                disabled={disabled}
+
               />
               <div
                 onClick={() =>
@@ -179,6 +183,8 @@ export const RenderConditionalField = ({
             size={"small"}
             variation={"teritiary"}
             label={t("ADD_OPTIONS")}
+            disabled={disabled}
+
             onClick={() =>
               setDrawerState((prev) => ({
                 ...prev,
@@ -207,6 +213,8 @@ export const RenderConditionalField = ({
           variant={""}
           t={t}
           option={cField?.options || []}
+          disabled={disabled}
+
           optionKey={cField?.optionKey || "code"}
           selected={cField?.options?.find((i) => i.code === drawerState?.[cField?.bindTo]) || {}}
           select={(value) => {
@@ -229,11 +237,17 @@ export const RenderConditionalField = ({
           masterName: "HOUSE_STRUCTURE_TYPES",
           schemaCode: "HCM.HOUSE_STRUCTURE_TYPES",
         },
+        {
+          moduleName: "HCM",
+          masterName: "ID_TYPE_OPTIONS_POPULATOR",
+          schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR",
+        },
       ];
       return (
         <Dropdown
           variant={""}
           t={t}
+          disabled={disabled}
           option={mdmsOptions}
           optionKey={"schemaCode"}
           selected={mdmsOptions.find((i) => i.schemaCode === drawerState?.[cField?.bindTo]) || {}}
@@ -249,6 +263,8 @@ export const RenderConditionalField = ({
       return (
         <RadioButtons
           options={cField?.options}
+          disabled={disabled}
+
           additionalWrapperClass="app-config-radio"
           selectedOption={cField?.options?.find((i) => i.pattern === drawerState?.[cField?.bindTo])}
           onSelect={(value) => {
