@@ -86,8 +86,8 @@ getMDMSV2Criteria: (tenantId, schemaCode,filters={}, cacheKey="CAMP_MDMS",config
     // Query configuration for caching and data selection
     config: {
       enabled: true,              // Enables the query
-      cacheTime: Infinity,        // Keeps cached data forever
-      staleTime: Infinity,        // Data never becomes stale
+      cacheTime: Number.POSITIVE_INFINITY,        // Keeps cached data forever
+      staleTime: Number.POSITIVE_INFINITY,        // Data never becomes stale
       select: (data) => {
         // Select and return the mdms's data
         return data?.mdms;
