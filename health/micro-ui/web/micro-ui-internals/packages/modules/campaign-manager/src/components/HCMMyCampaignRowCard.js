@@ -199,7 +199,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           key={"DuplicateCampaign"}
           icon={"TabInactive"} 
           label={t("DUPLICATE_CAMPAIGN")}
-          onClick={() => setCloneCampaign(true)} // TODO: Implement duplicate campaign functionality
+          onClick={() => setCloneCampaign(true)}
           variation={"teritiary"}
           size={"medium"}
           title={t("DUPLICATE_CAMPAIGN")}
