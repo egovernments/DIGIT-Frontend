@@ -41,7 +41,7 @@ const UploadPopup = ({
   };
   useEffect(() => {
     window.addEventListener("resize", onResize);
-  
+
     return () => {
       window.removeEventListener("resize", onResize);
     };
@@ -154,9 +154,11 @@ const UploadPopup = ({
         <div
           className={`digit-uploaded-file-container ${
             fileErrors ? "error" : ""
-          }`}
+            }`}
           style={{ display: "flex" }}
           key={index}
+          role="group"
+          aria-label={`Uploaded file ${file?.name}${fileErrors ? ', with error' : ''}`}
         >
           <div
             className="uploaded-file-container-sub"
@@ -164,10 +166,17 @@ const UploadPopup = ({
             onClick={() => {
               handleFileClick(index, file);
             }}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleFileClick(index, file);
+              }}
+            tabIndex={0}
+            role="button"
+            aria-label={`View details for ${file?.name}`}
           >
             {renderFileIcon(file?.type, fileErrors)}
             <div
               className={`uploaded-file-details ${fileErrors ? "error" : ""}`}
+              aria-label={file?.name}
             >
               {file?.name}
               {fileErrors && !showErrorCard && (
@@ -190,8 +199,10 @@ const UploadPopup = ({
             />
           )}
           <div
-            className={`digit-upload-and-download-button ${fileErrors?.error && showErrorCard ? "error-card" : "" }`}
+            className={`digit-upload-and-download-button ${fileErrors?.error && showErrorCard ? "error-card" : ""}`}
             style={{ display: "flex" }}
+            role="group"
+            aria-label={`Actions for ${file?.name}`}
           >
             {showReUploadButton && (
               <Button
@@ -223,6 +234,12 @@ const UploadPopup = ({
             className="digit-uploadpopup-close-icon"
             style={{ display: "flex" }}
             onClick={() => handleFileDelete(file)}
+            onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleFileDelete(file);
+              }}
+            role="button"
+            tabIndex={0}
+            aria-label={`Remove ${file?.name}`}
           >
             <SVG.Close
               fill={fileErrors ? primaryColor : primaryTwo}
@@ -243,14 +260,14 @@ const UploadPopup = ({
           <div>
             Uploader comp
           </div>
-        // <FileUploader
-        //   multiple={multiple}
-        //   handleChange={handleChange}
-        //   name="file"
-        //   types={types}
-        //   children={dragDropJSX}
-        // />
-      )}
+          // <FileUploader
+          //   multiple={multiple}
+          //   handleChange={handleChange}
+          //   name="file"
+          //   types={types}
+          //   children={dragDropJSX}
+          // />
+        )}
       {fileData?.length > 0 && renderFileCards}
     </React.Fragment>
   );

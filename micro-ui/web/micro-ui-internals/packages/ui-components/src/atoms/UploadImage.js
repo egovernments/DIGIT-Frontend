@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, Fragment } from "react";
 import { SVG } from "./SVG";
 import Button from "./Button";
 import ErrorMessage from "./ErrorMessage";
-import { Colors} from "../constants/colors/colorconstants";
+import { Colors } from "../constants/colors/colorconstants";
 import {
   DocUpload,
   DocPdfUpload,
@@ -171,14 +171,20 @@ const UploadImage = ({
     facingMode: "user",
   };
 
-  const drawerClassName = `digit-upload-image-drawer ${
-    isMobileView ? "mobile-view" : ""
-  } ${openUploadSlide && isMobileView ? "open" : "close"}`;
+  const drawerClassName = `digit-upload-image-drawer ${isMobileView ? "mobile-view" : ""
+    } ${openUploadSlide && isMobileView ? "open" : "close"}`;
 
   return (
     <React.Fragment>
       {!(uploadedFilesCount === 1 && !multiple) && (
-        <div className="digit-image-uploader" onClick={toggleOpenUploadSlide}>
+        <div className="digit-image-uploader" onClick={toggleOpenUploadSlide}
+          role="button"
+          aria-label="Click to add photo"
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") toggleOpenUploadSlide();
+          }}
+        >
           {
             <SVG.CameraEnhance
               fill="#C84C0E"
@@ -191,23 +197,31 @@ const UploadImage = ({
         </div>
       )}
       <div
-        className={`digit-img-container ${"uploadImage"} ${
-          !multiple ? "singleUpload" : ""
-        }`}
+        className={`digit-img-container ${"uploadImage"} ${!multiple ? "singleUpload" : ""
+          }`}
+        role="list"
       >
         {previews.map((preview, index) => {
           return (
             <Fragment key={`preview-${index}`}>
               <div
-                className={`preview-container uploadImage ${
-                  !multiple ? "singleUpload" : ""
-                } ${
-                  uploadedFilesCount > 1 ? " multiple" : "single"
-                } ${"imageFile"} ${preview?.error ? "error" : ""}`}
+                className={`preview-container uploadImage ${!multiple ? "singleUpload" : ""
+                  } ${uploadedFilesCount > 1 ? " multiple" : "single"
+                  } ${"imageFile"} ${preview?.error ? "error" : ""
+                  }`}
+                role="listitem"
+                aria-label={`File ${index + 1}`}
               >
                 <div
                   onClick={() => {
                     handleFileClick(index, preview?.file);
+                  }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Preview ${preview?.file?.name || "file"}`}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      handleFileClick(index, preview?.file);
                   }}
                 >
                   {preview?.file?.type.startsWith("image/") ? (
@@ -224,17 +238,22 @@ const UploadImage = ({
                     e.stopPropagation();
                     handleFileDeletion(fileData[index]);
                   }}
-                  className={`digit-uploader-close-icon ${
-                    preview?.error ? "error" : ""
-                  }`}
+                  className={`digit-uploader-close-icon ${preview?.error ? "error" : ""
+                    }`}
+                  role="button"
+                  aria-label={`Remove ${preview?.file?.name || "file"}`}
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ")
+                      handleFileDeletion(fileData[index]);
+                  }}
                 >
                   <SVG.Close
                     fill="#FFFFFF"
                     width={"16px"}
                     height={"16px"}
-                    className={`uploader-close ${
-                      preview?.error ? "error" : ""
-                    }`}
+                    className={`uploader-close ${preview?.error ? "error" : ""
+                      }`}
                   />
                 </span>
                 {preview?.error && (
@@ -262,9 +281,9 @@ const UploadImage = ({
             onClick={
               isMobileView
                 ? (e) => {
-                    e.stopPropagation();
-                    closeDrawer();
-                  }
+                  e.stopPropagation();
+                  closeDrawer();
+                }
                 : null
             }
           ></div>
@@ -272,9 +291,8 @@ const UploadImage = ({
             style={{
               bottom: userType === "citizen" ? "2.5rem" : "0",
             }}
-            className={`digit-upload-image-drawer ${
-              isMobileView ? "mobile-view" : ""
-            }`}
+            className={`digit-upload-image-drawer ${isMobileView ? "mobile-view" : ""
+              }`}
           >
             {!isMobileView && (
               <div className="capture-heading" style={{ display: "flex" }}>
@@ -288,15 +306,31 @@ const UploadImage = ({
                   width={"32px"}
                   height={"32px"}
                   fill={"#0B4B66"}
+                  role="button"
+                  aria-label="Close upload options"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") toggleOpenUploadSlide();
+                  }}
                 ></SVG.Close>
               </div>
             )}
-
-            <div className="image-upload-options" style={{ display: "flex" }}>
+            <div
+              className="image-upload-options"
+              style={{ display: "flex" }}
+              role="group"
+              aria-label="Image upload options"
+            >
               <div className="upload-options" style={{ display: "flex" }}>
                 <label
                   onClick={() => toggleWebcam()}
                   style={{ cursor: "pointer" }}
+                  role="button"
+                  tabIndex={0}
+                  aria-label="Use camera"
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") toggleWebcam();
+                  }}
                 >
                   <SVG.CameraEnhance
                     fill="#C84C0E"
@@ -307,6 +341,11 @@ const UploadImage = ({
                 <label
                   onClick={() => toggleWebcam()}
                   className={"upload-options-label"}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") toggleWebcam();
+                  }}
                 >
                   Camera
                 </label>
@@ -346,6 +385,8 @@ const UploadImage = ({
           <div
             className="webcam-container"
             style={{ display: "flex", height: "100%", width: "100%" }}
+            role="dialog"
+            aria-label="Webcam capture"
           >
             <div className="capture-heading" style={{ display: "flex" }}>
               {"Capture"}
@@ -355,6 +396,12 @@ const UploadImage = ({
                 height={"32px"}
                 fill={"#0B4B66"}
                 className={"cp"}
+                role="button"
+                aria-label="Close webcam"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") toggleWebcam();
+                }}
               ></SVG.Close>
             </div>
             <div className="video-stream" style={{ height: "100%" }}>

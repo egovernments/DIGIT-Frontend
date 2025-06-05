@@ -104,10 +104,23 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
     switch (uiConfig?.type) {
       case "filter": {
         return (
-          <div className="filter-header-wrapper">
+          <div className="filter-header-wrapper" id="search-header">
             <div className="icon-filter"><FilterIcon></FilterIcon></div>
             <div className="label">{t(header)}</div>
-            <div className="icon-refresh" onClick={handleFilterRefresh}><RefreshIcon></RefreshIcon></div>
+            <div
+              className="icon-refresh"
+              onClick={handleFilterRefresh}
+              tabIndex="0"
+              role="button"
+              aria-label="Refresh filters"
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  handleFilterRefresh();
+                }
+              }}
+            >
+              <RefreshIcon></RefreshIcon>
+            </div>
           </div>
         )
       }
@@ -121,9 +134,17 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
     <React.Fragment>
       <div className={'search-wrapper'}>
         {header && renderHeader()}
-        <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          onKeyDown={(e) => checkKeyDown(e)}
+          aria-labelledby="search-header"
+        >
           <div>
-            {uiConfig?.showFormInstruction && <p className="search-instruction-header">{t(uiConfig?.showFormInstruction)}</p>}
+            {uiConfig?.showFormInstruction && (
+              <p className="search-instruction-header" id="search-instruction">
+                {t(uiConfig?.showFormInstruction)}
+              </p>
+            )}
             <div className={`search-field-wrapper ${screenType} ${uiConfig?.type} ${uiConfig?.formClassName ? uiConfig?.formClassName : ""}`}>
               <RenderFormFields
                 fields={uiConfig?.fields}
