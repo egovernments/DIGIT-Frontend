@@ -189,7 +189,7 @@ const AppConfigurationParentRedesign = () => {
             history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
               message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
               preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
-              actionLabel: "CS_HOME",
+              actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
               actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
             });
           },
