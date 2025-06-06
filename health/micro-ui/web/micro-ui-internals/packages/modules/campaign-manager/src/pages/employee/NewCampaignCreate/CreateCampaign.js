@@ -60,7 +60,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     },
   });
 
-
   const transformDraftDataToFormData = (draftData) => {
     const restructureFormData = {
       ...draftData,
@@ -225,7 +224,9 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
                   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
                 );
               } else {
-                history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`);
+                history.push(
+                  `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
+                );
               }
               setLoader(false);
             }, 2000);
@@ -285,6 +286,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       />
       {showToast && (
         <Toast
+          style={{ zIndex: 10001 }}
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
           label={t(showToast?.label)}
           transitionTime={showToast.transitionTime}

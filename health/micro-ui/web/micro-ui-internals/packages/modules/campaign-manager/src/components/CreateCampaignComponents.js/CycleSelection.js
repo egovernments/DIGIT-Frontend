@@ -11,17 +11,15 @@ const CycleSelection = ({ onSelect, formData, ...props }) => {
     { code: "HCM_MULTI_ROUND", name: t("HCM_MULTI_ROUND") },
   ];
 
-  useEffect(() => {
-  if (formData?.CycleSelection) {
-    setSelectedOption(formData.CycleSelection);
-  } else if (formData?.CampaignType?.code === "DEFAULT") {
-    setSelectedOption(null);
-  } else if (formData?.CampaignType?.cycles?.length > 1) {
+useEffect(()=>{
+  if(formData?.CampaignType?.cycles?.length > 1){
     setSelectedOption("HCM_MULTI_ROUND");
-  } else {
-    setSelectedOption("HCM_SINGLE_ROUND");
   }
-}, [formData?.CampaignType?.code, formData?.CycleSelection]);
+  else{
+     setSelectedOption("HCM_SINGLE_ROUND");
+  }
+
+},[formData?.CampaignType?.code])
 
   useEffect(() =>{
     onSelect("CycleSelection", selectedOption);
@@ -36,7 +34,7 @@ const CycleSelection = ({ onSelect, formData, ...props }) => {
           onSelect={(selected) => {
             setSelectedOption(selected.code);
           }}
-          disabled = {props?.config?.customProps?.disabled}
+          disabled = {true}
           options={options}
           optionsKey="name"
           selectedOption={options.find((opt) => opt.code === selectedOption)}
