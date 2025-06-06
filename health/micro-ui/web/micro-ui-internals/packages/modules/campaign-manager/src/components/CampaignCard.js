@@ -31,12 +31,12 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER_ONLY,
+      roles: ROLES.BOUNDARY_MANAGER,
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER,
+      roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },
     {
@@ -48,7 +48,7 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
-      roles: ROLES.MICROPLAN_INTEGRATOR,
+      roles: ROLES.BOUNDARY_MANAGER,
     },
     {
       label: t("NATIONAL_DASHBOARD"),

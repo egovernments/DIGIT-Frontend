@@ -23,12 +23,12 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER_ONLY,
+      roles: ROLES.BOUNDARY_MANAGER,
     },
     {
       label: t("ACTION_TEST_MY_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/my-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER,
+      roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },
     {
@@ -40,7 +40,7 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?userId=${userId}&status=${microplanStatus}`,
-      roles: ROLES.CAMPAIGN_MANAGER,
+      roles: ROLES.BOUNDARY_MANAGER,
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -99,7 +99,7 @@ const CampaignCard = () => {
     {
       label: t("ACTION_TEST_APP_CONFIGURATION_3.0"),
       link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigTwo&fieldType=AppFieldTypeOne&prefix=APPTWO&localeModule=APPTWO&formId=default`,
-      roles: ROLES.CAMPAIGN_MANAGER,
+      roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     },
     {

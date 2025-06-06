@@ -223,13 +223,15 @@ const CampaignDetails = () => {
         </div>
         <div style={{ display: "flex" }}>
           <Tag label={t(campaignData?.projectType)} showIcon={false} className={"campaign-view-tag"} type={"warning"} stroke={true}></Tag>
-          <Tag
-            label={campaignData?.deliveryRules?.[0]?.cycles?.length > 1 ? t("HCM_MULTIROUND") : t("HCM_SINGLE_ROUND")}
-            showIcon={false}
-            className={"campaign-view-tag"}
-            type={"monochrome"}
-            stroke={true}
-          ></Tag>
+          {campaignData?.deliveryRules?.[0]?.cycles?.length >= 1 && (
+            <Tag
+              label={campaignData?.deliveryRules?.[0]?.cycles?.length > 1 ? t("HCM_MULTIROUND") : t("HCM_SINGLE_ROUND")}
+              showIcon={false}
+              className={"campaign-view-tag"}
+              type={"monochrome"}
+              stroke={true}
+            />
+          )}
         </div>
       </div>
       <div style={{ display: "flex", gap: "1rem" }}>

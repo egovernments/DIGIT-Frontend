@@ -64,10 +64,36 @@ const CloneCampaignWrapper = (props) => {
   };
 
   const onNextClick = async () => {
-    if (name.length > 30) {
+    let hasError = false;
+
+    // Name validation
+    if (!name?.trim()) {
+      setNameError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
+      hasError = true;
+    } else if (name.length > 30) {
       setNameError({ message: "CAMPAIGN_NAME_GREATER" });
-      return;
+      hasError = true;
+    } else {
+      setNameError(null);
     }
+
+    // Start date validation
+    if (!startDate) {
+      setStartError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
+      hasError = true;
+    } else {
+      setStartError(null);
+    }
+
+    // End date validation
+    if (!endDate) {
+      setEndError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
+      hasError = true;
+    } else {
+      setEndError(null);
+    }
+
+    if (hasError) return;
     setIsValidatingName(true);
     let temp = await fetchValidCampaignName(tenantId, name);
     if (temp.length != 0) {
@@ -76,20 +102,6 @@ const CloneCampaignWrapper = (props) => {
       return;
     }
     setIsValidatingName(false);
-    if (!name?.trim()) {
-      setNameError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
-      return;
-    }
-
-    if (!startDate) {
-      setStartError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
-      return;
-    }
-
-    if (!endDate) {
-      setEndError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
-      return;
-    }
 
     setShowProgress(true);
     // setError(null);
@@ -199,7 +211,16 @@ const CloneCampaignWrapper = (props) => {
           </div>
         )}
       </PopUp>
-      {toast && <Toast error={toast.key} isDleteBtn="true" label={t(toast.label)} onClose={handleToastClose} type={toast.type} />}
+      {toast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          error={toast.key}
+          isDleteBtn="true"
+          label={t(toast.label)}
+          onClose={handleToastClose}
+          type={toast?.key === "error" ? "error" : toast?.key === "info" ? "info" : toast?.key === "warning" ? "warning" : "success"}
+        />
+      )}
     </>
   );
 };
