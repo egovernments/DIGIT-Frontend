@@ -1057,6 +1057,20 @@ tbody {
   background-color: #c84c0e33;
   border: 2px solid #c84c0e;
   border-radius: 1rem;
+  .digit-field {
+    .digit-radio-options-wrap {
+      flex-direction: column;
+    }
+  }
+}
+.app-config-checkbox-main {
+  margin-bottom: unset;
+  margin-left: 0.5rem;
+}
+.app-config-checkbox-label.required::after {
+  content: "*";
+  margin-left: 0.5rem;
+  color: #d4351c;
 }
 .app-preview-field-button {
   width: 100%;
@@ -1090,7 +1104,7 @@ tbody {
     }
   }
 }
-.app-config-drawer-subheader{
+.app-config-drawer-subheader {
   @extend .typography.caption-s;
   color: theme(digitv2.lightTheme.primary-2);
   display: flex;
