@@ -11,6 +11,7 @@ import {
   AlertCard,
   FieldV1,
   Loader,
+  CheckBox,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { ProximitySearch } from "../utils/svgs/registrationFlowSVGs";
@@ -231,6 +232,7 @@ const renderField = (field, t) => {
           optionsKey={"name"}
           selected={[]}
           withContainer={true}
+          width="Fixed-Equal"
           populators={{
             t: field?.isMdms ? null : t,
           }}
@@ -343,15 +345,27 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
           {data.type !== "template" && card?.fields
             ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
+              if (getFieldType(field) === "checkbox") {
+                return (
+                  <CheckBox
+                    mainClassName={"app-config-checkbox-main"}
+                    labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
+                    onChange={(e) => {}}
+                    value={""}
+                    label={t(field?.label)}
+                    isLabelFirst={false}
+                  />
+                );
+              }
               return (
                 <FieldV1
                   charCount={field?.charCount}
                   config={{
                     step: "",
                   }}
-                  description={field?.helpText || null}
-                  error={field?.errorMessage || null}
-                  infoMessage={field?.tooltip || null}
+                  description={field?.isMdms ? t(field?.helpText) : field?.helpText || null}
+                  error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
+                  infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
                   label={getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.label}
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}

@@ -1,6 +1,6 @@
 export const transformCreateData = ({totalFormData, hierarchyType , params , formData ,id}) => {
-  const startDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || formData?.DateSelection?.startDate);
-  const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.endDate || formData?.DateSelection?.endDate);
+  const startDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || formData?.DateSelection?.startDate || params?.DateSelection?.startDate);
+  const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.endDate || formData?.DateSelection?.endDate || params?.DateSelection?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   return {
     CampaignDetails: {
@@ -10,8 +10,10 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
       parentId: null,
       id: id,
       campaignName: totalFormData?.HCM_CAMPAIGN_NAME?.CampaignName || params?.CampaignName,
-      resources: [],
-      projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.CampaignType?.code || params?.CampaignType?.code,
+      resources: params?.resources,
+      boundaries: params?.boundaries,
+      deliveryRules: params?.deliveryRules,
+      projectType: totalFormData?.HCM_CAMPAIGN_TYPE?.CampaignType?.code || params?.CampaignType?.code || params?.CampaignType,
       endDate: endDate,
       startDate: startDate,
       isActive: true,

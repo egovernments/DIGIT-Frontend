@@ -13,9 +13,10 @@ const DSSCard = () => {
   };
   
   let links = [
-    generateLink("LIVE_CAMPAIGNS","live-campaigns"),
-    generateLink("PAST_CAMPAIGNS","past-campaigns"),
+    // generateLink("LIVE_CAMPAIGNS","live-campaigns"),
+    // generateLink("PAST_CAMPAIGNS","past-campaigns"),
     // generateLink("L1Charts","landing"),
+    generateLink("ACTION_TEST_MY_CAMPAIGN","my-campaigns"),
   ];
 
   const propsForModuleCard = {

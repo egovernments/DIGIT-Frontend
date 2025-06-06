@@ -266,9 +266,9 @@ const AppConfigurationParentRedesign = () => {
               setCurrentStep(1);
             }}
           />
-          <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem", justifyContent: "center" }}>
-            <span style={{ width: "30%" }} />
-            <span style={{ display: "flex", justifyContent: "space-around", width: "40%" }}>
+          <div className="app-config-version-tags">
+            <span className="app-config-placeholder-version-tag" />
+            <span  className="app-config-version-tag" style={{ display: "flex", justifyContent: "space-around" }}>
               <Tag
                 stroke={false}
                 showIcon={false}
@@ -284,7 +284,7 @@ const AppConfigurationParentRedesign = () => {
                 labelStyle={{ color: "#0B4B66" }}
               />
             </span>
-            <span style={{ width: "30%" }} />
+            <span className="app-config-placeholder-version-tag" />
           </div>
         </>
       )}
