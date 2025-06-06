@@ -16,6 +16,7 @@ import {
 import { useTranslation } from "react-i18next";
 import { ProximitySearch } from "../utils/svgs/registrationFlowSVGs";
 import SearchBeneficiaryRegistrationWrapper from "./SearchBeneficiaryRegistrationWrapper";
+import { RegistrationComponentsConfig } from "../configs/RegistrationComponentsConfig";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -327,12 +328,10 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
-  console.log("Config Data: ", data);
-  console.log("Selected Fields: ", selectedField);
-  return (
+  return(
     <div className="app-preview">
       {data.cards.map((card, index) => (
-        <Card key={index} className="app-card">
+        <Card key={index} className="app-card" style={{flexDirection: "column", display: "flex", minHeight: "100%"}}>
           {card.headerFields.map((headerField, headerIndex) => (
             <div key={headerIndex}>
               {headerField.jsonPath === "ScreenHeading" ? (
@@ -345,27 +344,15 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
           {data.type !== "template" && card?.fields
             ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
-              if (getFieldType(field) === "checkbox") {
-                return (
-                  <CheckBox
-                    mainClassName={"app-config-checkbox-main"}
-                    labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
-                    onChange={(e) => {}}
-                    value={""}
-                    label={t(field?.label)}
-                    isLabelFirst={false}
-                  />
-                );
-              }
               return (
                 <FieldV1
                   charCount={field?.charCount}
                   config={{
                     step: "",
                   }}
-                  description={field?.isMdms ? t(field?.helpText) : field?.helpText || null}
-                  error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
-                  infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
+                  description={field?.helpText || null}
+                  error={field?.errorMessage || null}
+                  infoMessage={field?.tooltip || null}
                   label={getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.label}
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}
@@ -403,51 +390,11 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
             title={t(data?.actionLabel)}
             onClick={() => {}}
           />}
-          <SearchBeneficiaryRegistrationWrapper
+          {data.type === "template" && <SearchBeneficiaryRegistrationWrapper
           components={card.fields}
-          metaMasterConfig={[
-            {
-                "type": "toggle",
-                "metadata": {
-                    "format": "searchByProximity",
-                    "component": "ProximitySearch"
-                }
-            },
-            {
-                "type": "filter",
-                "metadata": {
-                    "format": "filter",
-                    "component": "Filter"
-                }
-            },
-            {
-                "type": "searchBar",
-                "metadata": {
-                    "type": "component",
-                    "format": "searchBar",
-                    "component": "SearchBar"
-                }
-            },
-            {
-                "type": "button",
-                "metadata": {
-                    "type": "component",
-                    "format": "BeneficiaryRegistrationButton",
-                    "component": "PrimaryButton"
-                }
-            },
-            {
-                "type": "button",
-                "metadata": {
-                    "type": "component",
-                    "format": "QRSearch",
-                    "component": "ScanQRButton"
-                }
-            }
-        ]
-      }
-      t={t}
-          />
+          metaMasterConfig={RegistrationComponentsConfig}
+          t={t}
+          />}
         </Card>
       ))}
     </div>

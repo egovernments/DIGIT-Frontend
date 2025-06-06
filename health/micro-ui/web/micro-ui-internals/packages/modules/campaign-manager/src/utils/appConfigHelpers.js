@@ -247,10 +247,13 @@ function addToArrayFields(field) {
 }
 
 // Update reverseRestructure to use getTypeAndFormatFromAppType
+//[TO DO: Type object Fix need to be handled here]
 export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
-      const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
+      const typeAndFormat = section.type === "template"
+      ? { type: field.type, format: field.format }
+      : getTypeAndFormatFromAppType(field, fieldTypeMasterData);
       const toArrayFields = addToArrayFields(field, fieldTypeMasterData);
       return {
         label: field.label || "",
@@ -276,7 +279,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
 
     return {
       page: guessPageName(section.name),
-      type: "object",
+      type: section.type || "object",
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
