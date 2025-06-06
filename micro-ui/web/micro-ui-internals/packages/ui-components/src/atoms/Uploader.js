@@ -240,9 +240,9 @@ const Uploader = (props) => {
   const documents = fileUrl
     ? [{ uri: fileUrl, fileName }]
     : uploadedFiles.map((file) => ({
-        uri: changeToBlobAndCreateUrl(file),
-        fileName: file?.name || fileName,
-      }));
+      uri: changeToBlobAndCreateUrl(file),
+      fileName: file?.name || fileName,
+    }));
 
   const handleFileClick = (index, file) => {
     const url = changeToBlobAndCreateUrl(file);
@@ -344,13 +344,13 @@ const Uploader = (props) => {
                   props?.customClass ? props?.customClass : ""
                 } ${user_type === "employee" ? "" : "digit-upload-employee"} ${
                   props.disabled ? " disabled" : ""
-                }`}
+                  }`}
                 style={props?.style}
               >
                 <input
                   className={`digit-uploader-input ${
                     props.disabled ? " disabled" : ""
-                  }`}
+                    }`}
                   ref={inpRef}
                   type="file"
                   id={props.id || `document-${getRandomId()}`}
@@ -364,7 +364,7 @@ const Uploader = (props) => {
                 <input
                   className={`digit-uploader-input ${
                     props?.iserror ? "error" : ""
-                  }`}
+                    }`}
                   type="text"
                   placeholder={"No File Selected"}
                   value={inputLabel}
@@ -379,10 +379,10 @@ const Uploader = (props) => {
                   ...(props?.extraStyles ? props.extraStyles.buttonStyles : {}),
                   ...(props?.disableButton
                     ? {
-                        opacity: 0.5,
-                        cursor: "not-allowed",
-                        pointerEvents: "none",
-                      }
+                      opacity: 0.5,
+                      cursor: "not-allowed",
+                      pointerEvents: "none",
+                    }
                     : {}),
                 }}
                 textStyles={props?.textStyles}
@@ -429,12 +429,18 @@ const Uploader = (props) => {
                       <div
                         className={`preview-container ${
                           uploadedFilesCount > 1 ? " multiple" : "single"
-                        } ${file?.type.startsWith("image/") ? "imageFile" : ""} ${isError ? "error" : ""}`}
+                          } ${file?.type.startsWith("image/") ? "imageFile" : ""} ${isError ? "error" : ""}`}
                       >
                         <div
                           onClick={() => {
                             handleFileClick(index, file);
                           }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") handleFileClick(index, file);
+                          }}
+                          aria-label={`Preview file ${file?.name || index}`}
                         >
                           {file?.type.startsWith("image/") ? (
                             <img
@@ -450,6 +456,12 @@ const Uploader = (props) => {
                           onClick={() => {
                             handleFileClick(index, file);
                           }}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") handleFileClick(index, file);
+                          }}
+                          aria-label={`Overlay to select ${file?.name || "file"}`}
                         ></div>
                         <div className="preview-file-name">
                           {file?.name && !isError ? file?.name : ""}
@@ -458,9 +470,13 @@ const Uploader = (props) => {
                           onClick={(e) => {
                             handleFileRemove(file);
                           }}
-                          className={`digit-uploader-close-icon ${
-                            isError ? "error" : ""
-                          }`}
+                          className={`digit-uploader-close-icon ${isError ? "error" : ""}`}
+                          role="button"
+                          tabIndex={0}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") handleFileRemove(file);
+                          }}
+                          aria-label={`Remove file ${file?.name || index}`}
                         >
                           <SVG.Close
                             fill={primaryColor}

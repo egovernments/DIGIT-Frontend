@@ -24,7 +24,17 @@ const TreeSelectOption = ({ option, onSelect, isSelected, renderOptions, level =
       <div
         className={`digit-tree-select-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} level-${level}`}
         onClick={option.options ? handleToggleDropdown : handleSelect}
+        tabIndex={0}
+        aria-expanded={option.options ? isExpanded : undefined}
+        aria-label={t(option[optionsKey])}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            option.options ? handleToggleDropdown() : handleSelect();
+          }
+        }}
       >
+
         {option.options && (
           <div className="digit-toggle-dropdown">
             {isExpanded ? (
@@ -121,9 +131,19 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
       <div
         className={`digit-tree-multiselect-option ${isExpanded ? "expanded" : ""} ${option.options ? "parent" : "child"} ${
           isSelected(option) ? "checked" : ""
-        } ${allChildrenSelected ? "all-child-selected" : ""} level-${level}`}
+          } ${allChildrenSelected ? "all-child-selected" : ""} level-${level}`}
         style={{ gap: `${level !== 0 ? 12 : 4}px` }}
         onClick={!option.options ? handleSelect : handleToggleDropdown}
+        role="button"
+        tabIndex={0}
+        aria-expanded={option.options ? isExpanded : undefined}
+        aria-label={t(option[optionsKey])}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            !option.options ? handleSelect() : handleToggleDropdown();
+          }
+        }}
       >
         {option.options && (
           <div
@@ -152,10 +172,19 @@ const TreeMultiSelect = ({ option, onSelect, isSelected, renderOptions, level = 
         </div>
         <div
           className={`digit-custom-checkbox ${allChildrenSelected || isSelected(option) ? "checked" : ""} ${isIntermediate() ? "intermediate" : ""}`}
-            onClick={(e) => {
-              e.stopPropagation();
+          onClick={(e) => {
+            e.stopPropagation();
+            handleSelect();
+          }}
+          role="checkbox"
+          aria-checked={allChildrenSelected || isSelected(option)}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
               handleSelect();
-            }}
+            }
+          }}
           style={{ marginRight: `${level == 0 ? 8 : 0}px` }}
         >
           {isIntermediate() ? (
