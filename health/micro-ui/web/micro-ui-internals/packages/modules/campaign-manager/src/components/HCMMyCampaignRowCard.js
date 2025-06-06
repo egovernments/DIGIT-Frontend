@@ -46,7 +46,15 @@ const getTagElements = (rowData) => {
       stroke: true,
     };
   }
-  if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
+  if (rowData?.deliveryRules?.[0]?.cycles?.length == 1) {
+    tags.type = {
+      label: "SINGLEROUND_CAMPAIGN",
+      showIcon: false,
+      type: "warning",
+      stroke: true,
+    };
+  }
+  else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,

@@ -953,6 +953,19 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
     }
+    if (isSubmit) {
+      if (currentKey == 5 || currentKey == 7 || currentKey == 10) {
+        if (isDraft === "true") {
+          history.push(
+            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
+          );
+        } 
+        else {
+          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+        }
+      }
+      return;
+    }
   };
 
   const [filteredConfig, setFilteredConfig] = useState(filterCampaignConfig(campaignConfig, currentKey));
