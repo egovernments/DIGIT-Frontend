@@ -8,7 +8,7 @@ import { defaultRowsPerPage } from "../../utils/constants";
 import VerifyBillsSearch from "../../components/VerifyBillsSearch";
 import VerifyAndGeneratePaymentsTable from "../../components/VerifyAndGeneratePaymentsTable";
 // import { useSelector } from "react-redux";
-const VerifyAndGeneratePayments = () => {
+const VerifyAndGeneratePayments = ({editBills = false}) => {
 
     const { t } = useTranslation();
     const location = useLocation();
@@ -22,9 +22,9 @@ const VerifyAndGeneratePayments = () => {
 
     // State Variables
     const [tableData, setTableData] = useState([]);
-    const [billID, setBillID] = useState(null);
+    const [billID, setBillID] = useState(null);//to search by bill number
     const [billStatus, setBillStatus] = useState(null);
-    const [isEditBill, setIsEditBill] = useState(false);
+    // const [isEditBill, setIsEditBill] = useState(false);
     //TODO: SET isEditBill based on the ROLE
     const [dateRange, setDateRange] = useState({
         startDate: '',
@@ -115,7 +115,7 @@ const VerifyAndGeneratePayments = () => {
                     <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} />
                 ) : (
                     <VerifyAndGeneratePaymentsTable
-                    editBill={isEditBill}
+                    editBill={editBills}
                     data={tableData}
                     totalCount={tableData.length}
                     selectableRows={false}

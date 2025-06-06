@@ -160,7 +160,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}>
-                            {t(row?.id) || t("NA")}
+                            {t(row?.userId) || t("NA")}
                         </div>
                     );
                 },
@@ -173,8 +173,10 @@ const BillDetailsTable = ({ ...props }) => {
                 ),
                 selector: (row) => {
                     return (
-                    <div style={{ display: "flex", alignItems: "center" }}>
-                        <span className="ellipsis-cell" style={{ marginRight: "8px" }}
+                    <div style={{ display: "flex", alignItems: "center",minWidth: 0  }}>
+                        <span className="ellipsis-cell" style={{ marginRight: "8px",        overflow: "hidden",
+        textOverflow: "ellipsis",
+        minWidth: 0,  }}
                             title={
                                 row?.givenName
                                 ? t(`${row?.givenName}`)
@@ -241,8 +243,10 @@ const BillDetailsTable = ({ ...props }) => {
       ),
       selector: (row) => {
         return (
-            <div style={{ display: "flex", alignItems: "center" }}>
-          <span className="ellipsis-cell" style={{ marginRight: "8px" }}>
+            <div style={{ display: "flex", alignItems: "center", minWidth: 0 }}>
+          <span className="ellipsis-cell" style={{ marginRight: "8px",        overflow: "hidden",
+        textOverflow: "ellipsis",
+        minWidth: 0, }}>
             {t(row?.mobileNumber) || t("ES_COMMON_NA")} </span>
             {props?.status === "NOT_VERIFIED"?(
                                 <div style={{ display: "flex", alignItems: "center" }}>
@@ -288,9 +292,7 @@ const BillDetailsTable = ({ ...props }) => {
           </div>
         );
       },
-      style: {
-        justifyContent: "start",
-      },
+        allowOverflow: true,
     },    
     {
       name: (

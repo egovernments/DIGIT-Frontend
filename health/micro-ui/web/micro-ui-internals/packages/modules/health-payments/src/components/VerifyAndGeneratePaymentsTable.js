@@ -274,6 +274,9 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                             icon="Edit"
                             size="small"
                             isSuffix
+                            onClick={() => {//edit bill                           
+                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`,{ billID: row.billNumber });
+                            }}
                             label={t(`HCM_AM_EDIT_BILL`)}
                             title={t(`HCM_AM_EDIT_BILL`)}/>
                             )

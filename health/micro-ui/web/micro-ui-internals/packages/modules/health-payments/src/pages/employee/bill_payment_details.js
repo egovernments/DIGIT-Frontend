@@ -17,7 +17,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  * @param {boolean} editBillDetails - Whether bill is editable or not.
  * @returns {ReactFragment} A React Fragment containing the attendance details.
  */
-const BillPaymentDetails = ({ editBillDetails = true }) => {
+const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
   const billID = location.state?.billID;
   console.log("billID", billID);
@@ -99,6 +99,7 @@ const BillPaymentDetails = ({ editBillDetails = true }) => {
   // const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
   // // State variables
   // const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
   // const { fromCampaignSupervisor } = location.state || false;
@@ -411,6 +412,32 @@ const BillPaymentDetails = ({ editBillDetails = true }) => {
   //   }
 
   // };
+  const reqMdmsCriteria = {
+      url: `/${mdms_context_path}/v1/_search`,
+      body: {
+        MdmsCriteria: {
+          tenantId: tenantId,
+          moduleDetails: [
+            {
+                "moduleName": "HCM",
+                "masterDetails": [
+                    {
+                        "name": "WORKER_RATES"
+                    }
+                ]
+            }
+        ]
+              }
+      },
+      config:{
+        enabled: billData ? true : false,
+        select: (mdmsData) => {
+                return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item)=>item.campaignId === billData?.referenceId)?.[0]
+            },
+      }
+    };
+  const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+  console.log("workerRatesData", workerRatesData);
 
   const allIndividualReqCriteria = {
     url: `/${individualContextPath}/v1/_search`,
@@ -434,25 +461,36 @@ const BillPaymentDetails = ({ editBillDetails = true }) => {
   };
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
-  function addIndividualDetailsToBillDetails(billDetails, individualsData) {
+  function addIndividualDetailsToBillDetails(billDetails, individualsData, workerRatesData) {
     return billDetails.map((billDetail) => {
       const individual = individualsData?.Individual?.find(
         (ind) => ind.id === billDetail?.payee?.identifier
       );
+       const rateObj = workerRatesData?.rates?.find(
+      (rate) => rate?.skillCode === individual?.userDetails?.roles?.[0]?.code
+    );
+
+    const rateBreakup = rateObj?.rateBreakup || {};
+    const wage =
+      (rateBreakup.FOOD || 0) +
+      (rateBreakup.TRAVEL || 0) +
+      (rateBreakup.PER_DAY || 0);
       return {
         ...billDetail,
         givenName: individual?.name?.givenName,
         mobileNumber: individual?.mobileNumber,
+        userId: individual?.userDetails?.username,
+        wage: wage+" "+workerRatesData?.currency,
       };
     });
   }
   useEffect(() => {
     console.log("AllIndividualsData", AllIndividualsData);
     if (billData && AllIndividualsData) {
-      const updatedBillDetails = addIndividualDetailsToBillDetails(billData?.billDetails, AllIndividualsData);
+      const updatedBillDetails = addIndividualDetailsToBillDetails(billData?.billDetails, AllIndividualsData,workerRatesData);
       setTableData(updatedBillDetails);
     }
-  }, [AllIndividualsData, billData]);
+  }, [AllIndividualsData, billData, workerRatesData]);
 
   useEffect(() => {
     if (BillData) {
