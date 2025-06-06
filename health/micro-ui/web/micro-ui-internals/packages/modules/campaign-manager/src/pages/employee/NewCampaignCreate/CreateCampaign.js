@@ -159,6 +159,10 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     }));
 
     if (formData?.CampaignName && !editName) {
+      if (formData?.CampaignName?.length > 30) {
+        setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
+        return;
+      }
       setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
