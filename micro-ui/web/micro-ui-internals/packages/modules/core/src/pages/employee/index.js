@@ -89,9 +89,9 @@ const EmployeeApp = ({
               <Route path={`${path}/user/change-password`}>
                 <ChangePassword />
               </Route>
-              <PrivateRoute path={`${path}/user/profile`}>
+              <Route path={`${path}/user/profile`}>
                 <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
-              </PrivateRoute>
+              </Route>
 
               <Route path={`${path}/user/error`}>
                 <ErrorComponent

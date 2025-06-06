@@ -186,7 +186,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
-     propsConfig.bannerImages ? ( <>
+     propsConfig.bannerImages ? ( <React.Fragment>
         <div className="login-container">
           <Carousel />
           <div className="login-form-container">
@@ -213,7 +213,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           </div>
         </div>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
-    </>) : <Background>
+    </React.Fragment>) : <Background>
       <div className="employeeBackbuttonAlign">
         <BackLink onClick={() => window.history.back()} />
       </div>

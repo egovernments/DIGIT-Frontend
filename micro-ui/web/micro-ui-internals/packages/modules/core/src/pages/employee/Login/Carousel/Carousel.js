@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { loginConfig } from '../config';
 import { useTranslation } from "react-i18next";
 
@@ -29,7 +29,7 @@ const Carousel = () => {
     }, [carouselItems.length]);
 
     return (
-        <>
+        <Fragment>
 
             {/* Carousel Background (70% width) */}
 
@@ -68,7 +68,7 @@ const Carousel = () => {
                     </button>
                 </div>
             </div>
-        </>
+        </Fragment>
     );
 };
 
