@@ -1073,6 +1073,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         noCardStyle={true}
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
+        secondaryActionIcon={"ArrowBack"}
+        primaryActionIconAsSuffix={true}
+        primaryActionIcon={"ArrowDirection"}
         label={
           isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
