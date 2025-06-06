@@ -252,7 +252,8 @@
 .app-preview {
   display: flex;
   width: 29rem;
-  height: 40rem;
+  height: calc(100vh - 22rem);
+
   overflow-y: auto;
   border: 1px solid theme(digitv2.lightTheme.primary);
   border-radius: 1rem;
@@ -587,4 +588,21 @@
   margin-right: 1.5rem;
   font-weight: bold;
   text-wrap: nowrap;
+}
+
+
+.app-config-version-tags{
+  display: flex;
+   align-items: flex-end;
+    margin-right: 24rem;
+     justify-content: center;
+      margin-top: 0.75rem;
+    margin-bottom: 0.5rem; 
+
+    .app-config-placeholder-version-tag{
+      width: 30%;
+    }
+    .app-config-version-tag{
+      width: 40%;
+    }
 }
