@@ -1,5 +1,9 @@
 # Changelog 
 
+## [1.8.38] - [06-June-2025]
+- Added `Fragment` wherever required as older version of react doesn't support <></>
+- PrivateRoute is using `component   as a prop in index.js file
+
 ## [1.8.37] - [04-June-2025]
 - Added an additional component `Carousel.js`
 - config updated as per additional carousel component
