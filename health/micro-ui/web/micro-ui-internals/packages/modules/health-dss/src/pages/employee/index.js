@@ -31,6 +31,11 @@ const ProjectBreadCrumb = ({ location }) => {
       internalLink: `/${window?.contextPath}/employee/dss/live-campaigns`,
       content: t("HCM_BREADCRUMBS_LIVE_CAMPAIGNS"),
       show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LIVE_CAMPAIGNS"
+    },
+    {
+      internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
+      content: t("ACTION_TEST_MY_CAMPAIGN"),
+      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS"
     }
   ];
   return <BreadCrumb crumbs={crumbs} />;
@@ -38,6 +43,7 @@ const ProjectBreadCrumb = ({ location }) => {
 
 const App = ({ path, stateCode, userType, tenants }) => {
   const location = useLocation();
+  const MyCampaignNew = Digit.ComponentRegistryService.getComponent("MyCampaignNew");
   return (
     <Switch>
       <AppContainer className="ground-container">
@@ -46,6 +52,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </React.Fragment>
         <PrivateRoute path={`${path}/live-campaigns`} component={() => <CampaignsInbox />} />
         <PrivateRoute path={`${path}/past-campaigns`} component={() => <CampaignsInbox />} />
+        <PrivateRoute path={`${path}/my-campaigns`} component={() => <MyCampaignNew />} />
         {/* <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <L1Main stateCode={stateCode} />} /> */}
       </AppContainer>
     </Switch>

@@ -58,7 +58,7 @@ const getTagElements = (rowData) => {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,
-      type: "warning",
+      type: "error",
       stroke: true,
     };
   }
