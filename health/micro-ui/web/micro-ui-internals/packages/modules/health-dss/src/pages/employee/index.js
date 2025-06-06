@@ -34,7 +34,7 @@ const ProjectBreadCrumb = ({ location }) => {
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
-      content: t("HCM_BREADCRUMBS_MY_CAMPAIGNS"),
+      content: t("ACTION_TEST_MY_CAMPAIGN"),
       show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS"
     }
   ];
