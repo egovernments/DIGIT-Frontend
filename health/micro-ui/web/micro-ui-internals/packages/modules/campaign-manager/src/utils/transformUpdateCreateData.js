@@ -29,12 +29,6 @@ export const transformUpdateCreateData = ({ campaignData }) => {
         condition = condition.replace(regex, format);
       }
 
-      // Step 2: Lowercase all variable-like tokens except numbers and keywords
-      condition = condition.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match) => {
-        const keywords = ["and", "or", "not", "true", "false"];
-        return keywords.includes(match.toLowerCase()) ? match.toLowerCase() : match.toLowerCase();
-      });
-
       return condition;
     };
 
