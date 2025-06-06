@@ -1,5 +1,6 @@
 @import url("../../index.scss");
 @import "../../typography.scss";
+@import "./campaignCommon.scss";
 
 .summary-header {
   @extend .typography.text-heading-l;
@@ -251,13 +252,14 @@
 .app-preview {
   display: flex;
   width: 29rem;
-  height: 40rem;
+  height: calc(100vh - 22rem);
+
   overflow-y: auto;
   border: 1px solid theme(digitv2.lightTheme.primary);
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-  margin: 20px auto;
+  margin: 5px auto;  /* updated margin since we added page no */
   font-family: Arial, sans-serif;
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: #d6d5d4 #fafafa; /* Firefox */
@@ -483,6 +485,7 @@
 }
 .detail-header {
   font-size: theme(digitv2.fontSize.heading-m);
+  color: theme(digitv2.lightTheme.primary-2);
 }
 .details-desc {
   color: theme(digitv2.lightTheme.text-color-secondary);
@@ -531,8 +534,29 @@
   .digit-toggle-toolbar {
     margin-top: 1rem;
     margin-bottom: 0.5rem;
+    max-width: 90%;
+    > *:first-child label {
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+    > *:last-child label {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;      
+    }
   }
 }
+
+.digit-toggle-toolbar{&.app-config-tab{
+  max-width: 90%;
+  > *:first-child label {
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+  }
+  > *:last-child label {
+    border-top-right-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;      
+  }
+}}
 .module-description {
   flex-grow: 1;
   margin: 0 0 1rem 0;
@@ -540,12 +564,45 @@
   font-size: theme(digitv2.fontSize.heading-s);
   color: theme(digitv2.lightTheme.text-color-secondary);
 }
-.boldLabel{
-  .digit-header-content{
-    font-weight: 700;
-  }
+.name-container-popUp {
+  margin-top: 0.8rem;
+  margin-right: 0rem;
+  font-weight: bold;
+  text-wrap: nowrap;
 }
-.clickable:hover{
-    border: 0.063rem solid theme(digitv2.lightTheme.primary);
-    box-shadow: 0.063rem theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer0) #00000029;
+.date-container-popUp {
+  margin-top: 0.8rem;
+  margin-right: 1rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+.pop-display{
+  display: flex;
+  margin-top: 1.5rem;
+}
+.popUp-header{
+  margin-bottom: 1.5rem;
+}
+.end-date-container-popUp{
+  margin-top: 0.8rem;
+  margin-right: 1.5rem;
+  font-weight: bold;
+  text-wrap: nowrap;
+}
+
+
+.app-config-version-tags{
+  display: flex;
+   align-items: flex-end;
+    margin-right: 24rem;
+     justify-content: center;
+      margin-top: 0.75rem;
+    margin-bottom: 0.5rem; 
+
+    .app-config-placeholder-version-tag{
+      width: 30%;
+    }
+    .app-config-version-tag{
+      width: 40%;
+    }
 }

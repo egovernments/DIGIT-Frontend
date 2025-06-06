@@ -23,7 +23,9 @@ import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
 import AppModule from "./NewCampaignCreate/AppModule";
 import AppFeatures from "./NewCampaignCreate/AppFeatures";
+import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
+import HelpInfoCard from "../../components/HelpInfoCard";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -197,7 +199,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        {/* <CampaignHeader /> */}
+        <AppHelpTutorial  appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT"/>
       </div>
       <Switch>
         <AppContainer className="campaign">
@@ -239,6 +241,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
           <PrivateRoute path={`${path}/app-modules`} component={() => <AppModule />} />
           <PrivateRoute path={`${path}/app-features`} component={() => <AppFeatures />} />
+          <HelpInfoCard appPath={path} location={location} />
         </AppContainer>
       </Switch>
     </React.Fragment>

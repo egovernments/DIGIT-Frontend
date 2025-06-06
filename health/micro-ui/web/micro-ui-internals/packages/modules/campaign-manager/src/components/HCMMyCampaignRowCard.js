@@ -50,7 +50,7 @@ const getTagElements = (rowData) => {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,
-      type: "warning",
+      type: "error",
       stroke: true,
     };
   }
@@ -174,22 +174,22 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={"Start Date"}
+              label={t("START_DATE")}
               value={Digit.DateUtils.ConvertEpochToDate(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
-              label={"End Date"}
+              label={t("END_DATE")}
               value={Digit.DateUtils.ConvertEpochToDate(rowData?.endDate) || "NA"}
             />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Duration"} value={duration} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("DURATION")} value={duration} />
           </div>
           <Divider />
           <div className="right-column">
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Number of cycles"} value={noOfCycles} />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Resources"} value={resources} />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={"Status"} value={t(rowData?.status) || "NA"} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("NO_OF_CYCLES")} value={noOfCycles} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("RESOURCES")} value={resources} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("STATUS")} value={t(rowData?.status) || "NA"} />
           </div>
         </div>
       </Card>

@@ -142,9 +142,10 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       } else {
         if (draftData?.additionalDetails?.key === 7 || draftData?.additionalDetails?.key === 8) {
           setCurrentKey(6);
-        } else {
-          setCurrentKey(draftData?.additionalDetails?.key);
         }
+        //  else {
+        //   setCurrentKey(draftData?.additionalDetails?.key);
+        // }
       }
     }
   }, [isPreview, isDraft, draftData]);
@@ -185,12 +186,12 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   //DATA STRUCTURE
   useEffect(() => {
-    if (isLoading) return;
-    if (Object.keys(params).length !== 0) return;
+    // if (isLoading) return;
+    // if (Object.keys(params).length !== 0) return;
     if (!draftData) return;
     const restructureFormData = transformDraftDataToFormData(draftData, projectType);
     setParams({ ...restructureFormData });
-  }, [params, draftData, isLoading, projectType]);
+  }, [ draftData]);
 
   useEffect(() => {
     if (draftData?.additionalDetails?.facilityId && draftData?.additionalDetails?.targetId && draftData?.additionalDetails?.userId) {
@@ -296,7 +297,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         reqCreate();
       } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
         return;
-      } 
+      }
       // else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
       //   const reqCreate = async () => {
       //     let payloadData = { ...draftData };
@@ -380,7 +381,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       //   };
 
       //   reqCreate();
-      // } 
+      // }
       else if (!isDraftCreated && !id) {
         const reqCreate = async () => {
           let payloadData = {};
@@ -901,9 +902,16 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
     if (isSubmit) {
       setShouldUpdate(true);
-      if(currentKey == 6 || currentKey == 9 || currentKey == 15){
+      if (currentKey == 6 || currentKey == 9 || currentKey == 15) {
         setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
-        history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+        if (isDraft === "true") {
+          history.push(
+            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
+          );
+        } 
+        else {
+          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+        }
       }
       return;
     }

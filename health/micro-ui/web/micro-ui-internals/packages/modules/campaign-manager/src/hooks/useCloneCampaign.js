@@ -165,7 +165,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
           schemaCode: mdmsItem.schemaCode,
           body: payload,
         });
-        console.log("MDMS entry created:", res);
       } catch (err) {
         console.error(`Failed to create MDMS entry for ${mdmsItem.data?.name}`, err);
         throw new Error(`MDMS creation failed for ${mdmsItem.data?.name}`);
@@ -232,7 +231,10 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
       // Step 3: Fetch localization messages for the new campaign
       setStep(3);
       const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-      const moduleParam = LOCALIZATION_MODULES.map(mod => `${mod}-${newCampaignNumber}`).join(",");
+      const moduleParam = LOCALIZATION_MODULES.map(mod => `${mod}-${campaignData?.campaignNumber}`).join(",");
+      const neModuleParam = LOCALIZATION_MODULES.map(mod => `${mod}-${newCampaignNumber}`).join(",");
+
+      
       const localisationData = await Digit.CustomService.getResponse({
         url: `/localization/messages/v1/_search`,
         params: {
@@ -254,7 +256,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
             body: {
               tenantId,
               messages: updatedMessages,
-              module: moduleParam,
+              module: neModuleParam,
             },
           });
         } catch (error) {

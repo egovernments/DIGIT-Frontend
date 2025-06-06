@@ -20,6 +20,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
   const id = searchParams.get("id");
+  const isDraft = searchParams.get("draft");
+  const campaignNumber = searchParams.get("campaignNumber");
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -43,6 +45,46 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setCurrentKey(currentKey - 1);
     }
   };
+
+  const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
+    tenantId: tenantId,
+    filter: {
+      ids: [id],
+      // campaignNumber: campaignNumber
+    },
+    config: {
+      enabled: id || campaignNumber ? true : false,
+      select: (data) => {
+        return data?.[0];
+      },
+    },
+  });
+
+
+  const transformDraftDataToFormData = (draftData) => {
+    const restructureFormData = {
+      ...draftData,
+      CampaignType: typeof draftData?.projectType === "string" ? { code: draftData.projectType } : draftData?.projectType,
+      CampaignName: draftData?.campaignName,
+      DateSelection: {
+        startDate: draftData?.startDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.startDate)?.split("/")?.reverse()?.join("-") : "",
+        endDate: draftData?.endDate ? Digit.DateUtils.ConvertEpochToDate(draftData?.endDate)?.split("/")?.reverse()?.join("-") : "",
+      },
+    };
+    return restructureFormData;
+  };
+
+  useEffect(() => {
+    if (draftLoading) return;
+    // if (Object.keys(params).length !== 0) return;
+    // if (!draftData) return;
+    const restructureFormData = transformDraftDataToFormData(draftData);
+    setParams({ ...restructureFormData });
+  }, [draftData]);
+
+  useEffect(() => {
+    setTotalFormData(params);
+  }, [params]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -117,6 +159,10 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     }));
 
     if (formData?.CampaignName && !editName) {
+      if (formData?.CampaignName?.length > 30) {
+        setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
+        return;
+      }
       setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
@@ -171,9 +217,16 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
             });
             setTimeout(() => {
-              history.replace(
-                `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
-              );
+              // history.replace(
+              //   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
+              // );
+              if (isDraft === "true") {
+                history.push(
+                  `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
+                );
+              } else {
+                history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`);
+              }
               setLoader(false);
             }, 2000);
           },
@@ -227,7 +280,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         isDisabled={isDataCreating}
         label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
         secondaryActionIcon={"ArrowBack"}
-        secondaryActionIconAsSuffix={true}
         primaryActionIconAsSuffix={true}
         primaryActionIcon={"ArrowDirection"}
       />

@@ -62,6 +62,7 @@ import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuild
 import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
 import CycleSelection from "./components/CreateCampaignComponents.js/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
+import MyCampaignNew from "./pages/employee/MyCampaignNew";
 /**
  * MDMS Module name
  */
@@ -184,7 +185,8 @@ const componentsToRegister = {
   DateSelection,
   ViewDetailComponent,
   CycleSelection,
-  HCMMyCampaignRowCard
+  HCMMyCampaignRowCard,
+  MyCampaignNew
 };
 
 const overrideHooks = () => {
