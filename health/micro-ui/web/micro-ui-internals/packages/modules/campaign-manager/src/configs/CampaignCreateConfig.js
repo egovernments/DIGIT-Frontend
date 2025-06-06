@@ -1,4 +1,4 @@
-export const CampaignCreateConfig = (totalFormData, editName ) => {
+export const CampaignCreateConfig = (totalFormData, editName) => {
   return [
     {
       form: [
@@ -8,7 +8,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
           name: "HCM_CAMPAIGN_TYPE",
           head: "HCM_SELECT_CAMPAIGN_TYPE_QUES",
           subHead: "HCM_CAMPAIGN_TYPE_DESC",
-          sectionSubHeadClassName : "SubHeadingClass",
+          sectionSubHeadClassName: "SubHeadingClass",
           body: [
             {
               isMandatory: true,
@@ -19,11 +19,11 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               populators: {
                 name: "CampaignType",
                 fieldPairClassName: "boldLabel",
-                optionsKey: "code", 
+                optionsKey: "code",
                 error: "ES__REQUIRED_CAMPAIGN_TYPE",
                 mdmsv2: true,
                 mdmsConfig: {
-                  masterName: "projectTypes", 
+                  masterName: "projectTypes",
                   moduleName: "HCM-PROJECT-TYPES",
                 },
               },
@@ -57,7 +57,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
           subHead: "HCM_CAMPAIGN_NAME_DESC",
           disable: false,
           callAPI: "true",
-          sectionSubHeadClassName : "SubHeadingClass",
+          sectionSubHeadClassName: "SubHeadingClass",
           body: [
             {
               isMandatory: true,
@@ -66,21 +66,28 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               label: "HCM_SELECT_CAMPAIGN_NAME",
               placeholder: "HCM_CAMPAIGNNAME_DATE_MONTH_YEAR",
               disable: false,
+              // populators: { name: "salutation", error: "Required", validation: { pattern: /^[A-Za-z]+$/i , maxlength:5} },
               populators: {
                 fieldPairClassName: "boldLabel",
                 name: "CampaignName",
-                error: "ES__REQUIRED_NAME",
-                required: "true"
+                error: "ES__REQUIRED_NAME_AND_LENGTH",
+                // required: "true",
+                validation: {
+                  // required: true,
+                  error: "ES__REQUIRED_LENGTH",
+                  pattern: /^(?=.*[A-Za-z]).{1,30}$/,
+                  // maxlength: 30,
+                },
               },
             },
-          ], 
+          ],
         },
         {
           stepCount: "3",
           key: "3",
           name: "HCM_CAMPAIGN_DATE",
           subHead: "HCM_CAMPAIGN_DATE_DESC",
-          sectionSubHeadClassName : "SubHeadingClass",
+          sectionSubHeadClassName: "SubHeadingClass",
           last: true,
           body: [
             {
@@ -93,7 +100,7 @@ export const CampaignCreateConfig = (totalFormData, editName ) => {
               disable: false,
               customProps: {
                 module: "HCM",
-                sessionData: totalFormData
+                sessionData: totalFormData,
               },
               populators: {
                 name: "DateSelection",

@@ -2,6 +2,64 @@ export const transformUpdateCreateData = ({ campaignData }) => {
   const startDate = Digit.Utils.date.convertDateToEpoch(campaignData?.startDate);
   const endDate = Digit.Utils.date.convertDateToEpoch(campaignData?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  function normalizeRangeConditions(cycleData) {
+    const normalizeCondition = (condition) => {
+      // Step 1: Normalize range expressions
+      const patterns = [
+        {
+          regex: /(\d+)\s*<\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*<=\s*(\d+)/g,
+          format: (_, low, varName, high) => `${low}<=${varName.toLowerCase()}and${varName.toLowerCase()}<=${high}`,
+        },
+        {
+          regex: /(\d+)\s*<=\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*<\s*(\d+)/g,
+          format: (_, low, varName, high) => `${low}<=${varName.toLowerCase()}and${varName.toLowerCase()}<${high}`,
+        },
+        {
+          regex: /(\d+)\s*<\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*<\s*(\d+)/g,
+          format: (_, low, varName, high) => `${low}<${varName.toLowerCase()}and${varName.toLowerCase()}<${high}`,
+        },
+        {
+          regex: /(\d+)\s*<=\s*([a-zA-Z_][a-zA-Z0-9_]*)\s*<=\s*(\d+)/g,
+          format: (_, low, varName, high) => `${low}<=${varName.toLowerCase()}and${varName.toLowerCase()}<=${high}`,
+        },
+      ];
+
+      for (const { regex, format } of patterns) {
+        condition = condition.replace(regex, format);
+      }
+
+      // Step 2: Lowercase all variable-like tokens except numbers and keywords
+      condition = condition.replace(/\b([a-zA-Z_][a-zA-Z0-9_]*)\b/g, (match) => {
+        const keywords = ["and", "or", "not", "true", "false"];
+        return keywords.includes(match.toLowerCase()) ? match.toLowerCase() : match.toLowerCase();
+      });
+
+      return condition;
+    };
+
+    return cycleData.map((cycle) => ({
+      ...cycle,
+      deliveries: cycle?.deliveries.map((delivery) => ({
+        ...delivery,
+        doseCriteria: delivery.doseCriteria.map((criteria) => ({
+          ...criteria,
+          condition: normalizeCondition(criteria.condition),
+        })),
+      })),
+    }));
+  }
+
+  const updatedDeliveryRules = campaignData?.deliveryRules?.map((rule, index) => {
+    if (index === 0) {
+      return {
+        ...rule,
+        cycles: normalizeRangeConditions(rule.cycles),
+      };
+    }
+    return rule;
+  });
+
   return {
     CampaignDetails: {
       hierarchyType: campaignData?.hierarchyType,
@@ -10,7 +68,7 @@ export const transformUpdateCreateData = ({ campaignData }) => {
       parentId: null,
       campaignName: campaignData?.campaignName,
       campaignNumber: campaignData?.campaignNumber,
-      deliveryRules: campaignData?.deliveryRules,
+      deliveryRules: updatedDeliveryRules,
       boundaries: campaignData?.boundaries,
       id: campaignData?.id,
       resources: campaignData?.resources,
