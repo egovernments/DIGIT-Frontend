@@ -310,6 +310,7 @@
   }
 
   .app-card {
+    height: 100%;
     gap: 0.5rem;
     &::-webkit-scrollbar-button {
       display: none !important;
