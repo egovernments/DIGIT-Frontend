@@ -14,9 +14,6 @@ import {
   CheckBox,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import SearchBeneficiaryRegistrationWrapper from "./SearchBeneficiaryRegistrationWrapper";
-import { RegistrationComponentsConfig } from "../configs/RegistrationComponentsConfig";
-import { RegistrationComponentRegistry } from "../utils/template_components/RegistrationComponents";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 
 const dummydata = {
