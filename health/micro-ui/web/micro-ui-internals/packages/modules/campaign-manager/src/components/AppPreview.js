@@ -15,6 +15,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
+import "../utils/template_components/RegistrationComponents";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -416,6 +417,7 @@ else{
           return TemplateComponent ? (
             <TemplateComponent
               components={card.fields}
+              selectedField={selectedField}
               metaMasterConfig={ComponentConfigMdmsData}
               t={t}
             />

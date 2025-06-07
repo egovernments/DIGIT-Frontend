@@ -1,105 +1,92 @@
-import React, { Fragment } from "react";
-import {
-  Card,
-  CardText,
-  TextInput,
-  SelectionTag,
-  Dropdown,
-  CardHeader,
-  Button,
-  TooltipWrapper,
-  AlertCard,
-  FieldV1,
-  Loader,
-} from "@egovernments/digit-ui-components";
-import { useTranslation } from "react-i18next";
+import React from "react";
+import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 
+const SearchBeneficiaryRegistrationWrapper = ({ components = [], metaMasterConfig, t, selectedField }) => {
+  // Build config map for quick lookup
+  const configMap = metaMasterConfig?.reduce((acc, cfg) => {
+    if (cfg?.metadata?.format) acc[cfg.metadata.format] = cfg;
+    return acc;
+  }, {}) || {};
 
-const SearchBeneficiaryRegistrationWrapper = ({ components = [], metaMasterConfig, t }) => {
-
-  const getMetaDataForComponent = (field, componentMetaConfig) => {
-    const match = componentMetaConfig?.find(
-      (cfg) => cfg?.metadata?.format === field?.jsonPath
-    );
-  
+  // Get enriched metadata for a field
+  const getMetaDataForField = (field) => {
+    const match = configMap[field?.jsonPath];
     if (!match) return null;
-  
     return {
       variation: match?.metadata?.variation || "primary",
       icon: match?.metadata?.icon || "",
       component: match?.metadata?.component || "",
-      format: match?.metadata?.format,
       type: match?.type,
-      ...match?.metadata, // return all metadata keys 
+      ...match.metadata,
     };
   };
-  
-    // Build config map for quick lookup
-    const configMap = {};
-    metaMasterConfig?.forEach((cfg) => {
-      configMap[cfg.metadata.format] = cfg.metadata;
-    });
 
-    // Separate fields and buttons
-        const contentFields = components.filter(
-          (field) => !field.hidden && getMetaDataForComponent(field, metaMasterConfig)?.type !== "button"
-        );
+  // Split fields
+  const contentFields = [];
+  const buttonFields = [];
 
-        const buttonFields = components.filter(
-              (field) =>
-                !field.hidden &&
-              getMetaDataForComponent(field, metaMasterConfig)?.type === "button" &&
-                configMap[field.jsonPath]?.component
-            );
+  for (const field of components) {
+    if (field.hidden) continue;
+    const meta = getMetaDataForField(field);
+    if (!meta) continue;
 
-  
+    if (meta.type === "button") {
+      buttonFields.push({ field, meta });
+    } else {
+      contentFields.push({ field, meta });
+    }
+  }
 
-    return (
-      <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, height: "100%" }}>
-        {/* Field Components */}
-        <div style={{ flexGrow: 1 }}>
-          {contentFields.map((field, index) => {
-            const meta = configMap[field.jsonPath];
-            const ComponentToRender = getRegisteredComponent(meta?.component);
-            if (!ComponentToRender) return null;
-  
-            return (
-              <div key={index} style={{ marginBottom: "16px", width: "100%" }}>
-                <ComponentToRender props={field} t={t} />
-              </div>
-            );
-          })}
-        </div>
-  
-        {/* Buttons */}
-        {buttonFields.length > 0 && (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "0.5rem",
-              marginTop: "auto",
-              paddingTop: "1rem",
-            }}
-          >
-            {buttonFields
-              .sort((a, b) => a.order - b.order)
-              .map((field, index) => (
-                <Button
-                  key={index}
-                  className="app-preview-action-button"
-                  variation={getMetaDataForComponent(field, metaMasterConfig).variation}
-                  label={t(field.label) || "LABEL"}
-                  title={t(field.label) || "LABEL"}
-                  icon={getMetaDataForComponent(field, metaMasterConfig).icon}
-                  onClick={() => {}}
-                />
-              ))}
-          </div>
-        )}
+  return (
+    <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, height: "100%" }}>
+      {/* Render content fields */}
+      <div style={{ flexGrow: 1 }}>
+        {contentFields.map(({ field, meta }, index) => {
+          const isSelected = selectedField?.type === meta.format;
+          const ComponentToRender = getRegisteredComponent(meta.component);
+          if (!ComponentToRender) return null;
+
+          return (
+            <div className={isSelected ? "app-preview-field-pair app-preview-selected" : ""} key={index} style={{ marginBottom: "16px", width: "100%" }}>
+              <ComponentToRender props={field} t={t} />
+            </div>
+          );
+        })}
       </div>
-    );
-  };
+
+      {/* Render buttons */}
+      {buttonFields.length > 0 && (
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            gap: "0.5rem",
+            marginTop: "auto",
+            paddingTop: "1rem",
+          }}
+        >
+          {buttonFields
+            .sort((a, b) => a.field.order - b.field.order)
+            .map(({ field, meta }, index) => {
+              const isSelected = selectedField?.type === meta.format;
+              return (
+              <Button
+                key={index}
+                className={`app-preview-action-button ${isSelected ? `app-preview-field-pair app-preview-selected` : ""}`}
+                variation={meta.variation}
+                label={t(field.label) || "LABEL"}
+                title={t(field.label) || "LABEL"}
+                icon={meta.icon}
+                onClick={() => {}}
+              />
+            );
+            }
+            )}
+        </div>
+      )}
+    </div>
+  );
+};
 
 export default SearchBeneficiaryRegistrationWrapper;
