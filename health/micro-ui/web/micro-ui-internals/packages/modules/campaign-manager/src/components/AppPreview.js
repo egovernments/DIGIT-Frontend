@@ -230,7 +230,6 @@ const renderField = (field, t) => {
           optionsKey={"name"}
           selected={[]}
           withContainer={true}
-          width="Fixed-Equal"
           populators={{
             t: field?.isMdms ? null : t,
           }}
@@ -362,7 +361,9 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   description={field?.isMdms ? t(field?.helpText) : field?.helpText || null}
                   error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
                   infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
-                  label={getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.label}
+                  label={
+                    getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.isMdms ? t(field?.label) : field?.label
+                  }
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}
                   populators={{
