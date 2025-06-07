@@ -33,7 +33,7 @@ export const RegistrationComponentsConfig = [
       "metadata": {
           "format": "qrscanner",
           "component": "ScanQRButton",
-          "variation": "qrsecondary",
+          "variation": "secondary",
           "icon": "QrCodeScanner"
       }
   }

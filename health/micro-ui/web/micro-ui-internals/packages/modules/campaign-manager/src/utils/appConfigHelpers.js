@@ -14,7 +14,7 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   }
 
   // Start with the fieldType as type
-  let result = { type: matched.fieldType, appType: matched.type };
+  let result = { type: matched.fieldType, appType: matched.type, };
 
   // Copy all metadata properties except type/format (already used)
   Object.entries(matched.metadata || {}).forEach(([key, value]) => {
@@ -247,13 +247,10 @@ function addToArrayFields(field) {
 }
 
 // Update reverseRestructure to use getTypeAndFormatFromAppType
-//[TO DO: Type object Fix need to be handled here]
 export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
-      const typeAndFormat = section.type === "template"
-      ? { type: field.type, format: field.format }
-      : getTypeAndFormatFromAppType(field, fieldTypeMasterData);
+      const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
       const toArrayFields = addToArrayFields(field, fieldTypeMasterData);
       return {
         label: field.label || "",

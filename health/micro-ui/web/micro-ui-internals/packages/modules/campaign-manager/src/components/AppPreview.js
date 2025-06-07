@@ -14,9 +14,10 @@ import {
   CheckBox,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { ProximitySearch } from "../utils/svgs/registrationFlowSVGs";
 import SearchBeneficiaryRegistrationWrapper from "./SearchBeneficiaryRegistrationWrapper";
 import { RegistrationComponentsConfig } from "../configs/RegistrationComponentsConfig";
+import { RegistrationComponentRegistry } from "../utils/template_components/RegistrationComponents";
+import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -328,6 +329,29 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
+  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
+  const componentMasterName = "RegistrationComponentsConfig";
+
+  const { isLoading: isLoadingComponentMaster, data: ComponentConfigMdmsData } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    MODULE_CONSTANTS,
+    [
+      { name: componentMasterName, limit: 100 },
+    ],
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      select: (data) => {
+       return data?.[MODULE_CONSTANTS]?.RegistrationComponentsConfig
+      },
+    },
+    { schemaCode: "APP_COMPONENT_MASTER_DATA" } //mdmsv2
+  );
+
+  if(isLoadingComponentMaster ){
+    return <Loader/>
+  }
+else{
   return(
     <div className="app-preview">
       {data.cards.map((card, index) => (
@@ -350,9 +374,9 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                   config={{
                     step: "",
                   }}
-                  description={field?.helpText || null}
-                  error={field?.errorMessage || null}
-                  infoMessage={field?.tooltip || null}
+                  description={field?.isMdms ? t(field?.helpText) : field?.helpText || null}
+                  error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
+                  infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
                   label={getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.label}
                   onChange={function noRefCheck() {}}
                   placeholder={t(field?.innerLabel) || ""}
@@ -390,15 +414,21 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
             title={t(data?.actionLabel)}
             onClick={() => {}}
           />}
-          {data.type === "template" && <SearchBeneficiaryRegistrationWrapper
-          components={card.fields}
-          metaMasterConfig={RegistrationComponentsConfig}
-          t={t}
-          />}
+          {data.type === "template" && ComponentConfigMdmsData?.length > 0 && (() => {
+          const TemplateComponent = getRegisteredComponent(data.name);
+          return TemplateComponent ? (
+            <TemplateComponent
+              components={card.fields}
+              metaMasterConfig={ComponentConfigMdmsData}
+              t={t}
+            />
+          ) : null;
+        })()}
         </Card>
       ))}
     </div>
   );
+}
 };
 
 export default AppPreview;

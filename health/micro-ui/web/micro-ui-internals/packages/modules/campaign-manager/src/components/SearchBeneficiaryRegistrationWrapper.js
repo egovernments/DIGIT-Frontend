@@ -13,43 +13,46 @@ import {
   Loader,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { ProximitySearch, RegistrationComponentRegistry } from "../utils/template_components/RegistrationComponents";
+import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 
 
 const SearchBeneficiaryRegistrationWrapper = ({ components = dummydata, metaMasterConfig, t }) => {
 
   const getMetaDataForComponent = (field, componentMetaConfig) => {
-    const match = componentMetaConfig.find(
-      (cfg) => cfg.metadata.format === field.jsonPath && cfg.type === "button"
+    const match = componentMetaConfig?.find(
+      (cfg) => cfg?.metadata?.format === field?.jsonPath
     );
   
     if (!match) return null;
   
     return {
-      variation: match.metadata.variation || "primary",
-      icon: match.metadata.icon || "",
-      component: match.metadata.component || "",
-      format: match.metadata.format,
-      ...match.metadata, // return all metadata keys 
+      variation: match?.metadata?.variation || "primary",
+      icon: match?.metadata?.icon || "",
+      component: match?.metadata?.component || "",
+      format: match?.metadata?.format,
+      type: match?.type,
+      ...match?.metadata, // return all metadata keys 
     };
   };
   
     // Build config map for quick lookup
     const configMap = {};
-    metaMasterConfig.forEach((cfg) => {
+    metaMasterConfig?.forEach((cfg) => {
       configMap[cfg.metadata.format] = cfg.metadata;
     });
 
     // Separate fields and buttons
         const contentFields = components.filter(
-          (field) => !field.hidden && field.type !== "button"
+          (field) => !field.hidden && getMetaDataForComponent(field, metaMasterConfig)?.type !== "button"
         );
+
         const buttonFields = components.filter(
               (field) =>
                 !field.hidden &&
-                field.type === "button" &&
+              getMetaDataForComponent(field, metaMasterConfig)?.type === "button" &&
                 configMap[field.jsonPath]?.component
             );
+
   
 
     return (
@@ -58,7 +61,7 @@ const SearchBeneficiaryRegistrationWrapper = ({ components = dummydata, metaMast
         <div style={{ flexGrow: 1 }}>
           {contentFields.map((field, index) => {
             const meta = configMap[field.jsonPath];
-            const ComponentToRender = RegistrationComponentRegistry[meta?.component];
+            const ComponentToRender = getRegisteredComponent(meta?.component);
             if (!ComponentToRender) return null;
   
             return (

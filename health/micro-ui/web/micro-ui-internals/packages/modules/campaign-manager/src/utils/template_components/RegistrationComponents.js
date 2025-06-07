@@ -1,10 +1,12 @@
 import { Switch, FieldV1, RoundedLabel, CustomSVG } from "@egovernments/digit-ui-components";
 import React from "react";
+import SearchBeneficiaryRegistrationWrapper from "../../components/SearchBeneficiaryRegistrationWrapper";
+import { registerComponent } from "./RegistrationRegistry";
 
 
 
 
-  export const SearchBar = ({props, t}) => (
+   const SearchBar = ({props, t}) => (
     <div style={{width: "100%"}}>
         <FieldV1
         style={{width: "100%"}}
@@ -26,7 +28,7 @@ import React from "react";
 </svg>
 
   );
-  export const Filter = ({props, t}) => (
+  const Filter = ({props, t}) => (
     <div className="digit-search-action">
     {/* <RoundedLabel count={props.filterCount}></RoundedLabel> */}
     <FilterIcon /> <span className="digit-search-text">{t(props.label) || "LABEL"}</span>
@@ -43,8 +45,8 @@ const ProximitySearch = ({props, t}) => (
     />
 );
 
-export const RegistrationComponentRegistry = {
-  ProximitySearch,
-  SearchBar,
-  Filter,
-};
+// Register all components
+registerComponent("SearchBar", SearchBar);
+registerComponent("Filter", Filter);
+registerComponent("ProximitySearch", ProximitySearch);
+registerComponent("SearchBeneficiary", SearchBeneficiaryRegistrationWrapper);
