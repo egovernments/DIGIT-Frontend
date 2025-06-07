@@ -16,7 +16,7 @@ import { useTranslation } from "react-i18next";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 
 
-const SearchBeneficiaryRegistrationWrapper = ({ components = dummydata, metaMasterConfig, t }) => {
+const SearchBeneficiaryRegistrationWrapper = ({ components = [], metaMasterConfig, t }) => {
 
   const getMetaDataForComponent = (field, componentMetaConfig) => {
     const match = componentMetaConfig?.find(
