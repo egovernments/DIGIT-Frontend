@@ -1047,7 +1047,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   return (
     <React.Fragment>
       {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
-      {noAction !== "false" && (
+      {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
@@ -1055,7 +1055,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           activeSteps={active}
           // className={"campaign-flow-stepper"}
         />
-      )}
+      )} */}
       <FormComposerV2
         config={config?.form.map((config) => {
           return {
@@ -1073,6 +1073,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         noCardStyle={true}
         // noCardStyle={currentStep === 7 ? false : true}
         onSecondayActionClick={onSecondayActionClick}
+        secondaryActionIcon={"ArrowBack"}
+        primaryActionIconAsSuffix={true}
+        primaryActionIcon={"ArrowDirection"}
         label={
           isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
