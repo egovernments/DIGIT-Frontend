@@ -6,7 +6,7 @@ import { ReactComponent as Chat } from '../../../../src/components/images/chat.s
 import { ReactComponent as Calculate } from '../../../../src/components/images/calculate.svg';
 import { ReactComponent as BarChart } from '../../../../src/components/images/bar_chart.svg';
 import { ReactComponent as Employeeicon } from '../../../../src/components/images/employee.svg';
-import { ReactComponent as Citizenicon } from '../../../../src/components/images/citizen.svg';
+import { ReactComponent as Citizenicon } from '../../../../src/components/images/Citizen.svg';
 import { useTranslation } from "react-i18next";
 import he from 'he';
 const iconMap = {
