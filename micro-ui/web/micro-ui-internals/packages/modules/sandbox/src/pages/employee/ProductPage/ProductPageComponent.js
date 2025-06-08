@@ -42,7 +42,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
           return (
           <Card key={index} className="product-card">
             { 
-            ((product.module == "PGR") ? <Chip text="Configure" /> : <Chip text="Default" textColor="#A33929" borderColor="#A33929"/>   )
+            ((product.module == "PGR") ? <Chip text="Configure" /> : <div></div>   )
             }
             <div className="product-header">
               <div className="icon-wrap">

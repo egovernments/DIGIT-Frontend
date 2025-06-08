@@ -29,7 +29,7 @@ const Breadcrumb = ({ path }) => (
     </div>
 );
 
-const HeroSection = ({ title, headline }) => (
+const HeroSection = ({ title, headline,img }) => (
     <div style={{
         width: '100%', backgroundColor: '#e4edf1', padding: '3rem 6rem', minHeight: '35rem'
     }}>
@@ -44,7 +44,7 @@ const HeroSection = ({ title, headline }) => (
             </div>
             <div style={{ width: '65%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                 <img
-                    src="https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/5e72d0b559dea9fc2f5ff2bd4c66c63c3aff8bcc.png"
+                    src={img || "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/5e72d0b559dea9fc2f5ff2bd4c66c63c3aff8bcc.png"}
                     alt="Business License UI"
                     style={{ height: '100%', width: 'auto', objectFit: 'contain', minHeight: '35rem' }}
                 />
@@ -196,7 +196,7 @@ const content = {
         roles: [
             {
                 role: "Citizens",
-                imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
+                // imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
                 reverse: false,
                 cards: [
                     { icon: "Graph", text: "Fill necessary details and upload relevant documents" },
@@ -208,7 +208,7 @@ const content = {
             },
             {
                 role: "Employee",
-                imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
+                // imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
                 reverse: true,
                 cards: [
                     { icon: "Graph", text: "Track applications based on SLAs" },
@@ -226,6 +226,20 @@ const handleButtonClick = (action) => {
     const url = '/' + window.contextPath + action;
     window.open(url, "_blank");
 };
+
+
+function getImageByType(config, type) {
+    const contentArray = config[0]?.subsections?.[1]?.content;
+
+    if (!Array.isArray(contentArray)) {
+        return null;
+    }
+
+    const imageObject = contentArray.find(item => item.type === type);
+
+    return imageObject?.text || null;
+}
+
 
 const ProductDetailsComponentUpdated = ({ config, module }) => {
     const { t } = useTranslation();
@@ -267,19 +281,18 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             { text: t(`${module}` + "_SECTION2_HL3"), color: "#215B73" },
         ];
 
-
     content.experience.roles = config[0].subsections[2].content.map(c => `${t(c.text)}`)
 
     const section = config[0].subsections[2].content;
 
     const roleConfigs = [
         {
-            imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
+            imageUrl: getImageByType(config, 'citizen-image') || "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
             reverse: false,
             defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
         },
         {
-            imageUrl: "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
+            imageUrl: getImageByType(config, 'employee-image') || "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
             reverse: true,
             defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
         }
@@ -310,15 +323,10 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
 
     content.experience.roles = roles;
 
-
-
-
-
-
     return (
         <div>
             <Breadcrumb path={`${t(config[0].heading)}`} />
-            <HeroSection title={content.heroTitle} headline={content.heroHeadline} />
+            <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
             <ExperienceSection experience={content.experience} t={t} />
             <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} />
