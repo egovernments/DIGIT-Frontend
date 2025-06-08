@@ -93,6 +93,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
                       e.preventDefault();
                       handleScrollToElement(content?.header);
                     }}
+                    style={{justifyContent: "flex-start"}}
                   ></Button>
                 </li>
               ))}

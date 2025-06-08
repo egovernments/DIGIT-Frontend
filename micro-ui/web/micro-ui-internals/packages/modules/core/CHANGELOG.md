@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.36]  [27-May-2025]
+- FEATURE/CCSD-216 : Privacy component alignment changes
+
 ## [1.8.33]  [9-April-2025]
 - FEATURE/CCSD-57 :Sandbox Changes
 
