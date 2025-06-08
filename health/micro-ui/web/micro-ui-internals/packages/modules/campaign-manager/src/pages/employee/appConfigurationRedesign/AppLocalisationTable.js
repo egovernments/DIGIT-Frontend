@@ -25,7 +25,9 @@ const Tabs = ({ availableLocales, onTabChange, setActiveLocale, activeLocale }) 
 export const AppLocalisationTable = ({ data, currentScreen, state }) => {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
   const currentLocState = useMemo(() => {
-    return locState?.filter((i) => i.code && i.code.includes(currentScreen));
+    return locState?.filter(
+      (i) => i.code && (i.code.includes(Digit.Utils.locale.getTransformedLocale(currentScreen)) || i.code.includes(currentScreen))
+    );
   }, [locState, currentScreen]);
   const { t } = useTranslation();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
