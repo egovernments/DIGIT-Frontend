@@ -267,15 +267,15 @@ const AppConfigurationParentRedesign = () => {
             }}
           />
           <div className="app-config-version-tags">
-            <span className="app-config-placeholder-version-tag" />
-            <span  className="app-config-version-tag" style={{ display: "flex", justifyContent: "space-around" }}>
-              <Tag
+            {/* <span className="app-config-placeholder-version-tag" /> */}
+            <span  className="app-config-version-tag" style={{ display: "flex", justifyContent: "center" }}>
+              {/* <Tag
                 stroke={false}
                 showIcon={false}
                 label={`${t("CMN_SCREEN")} -  1.1`}
                 labelStyle={{ color: "#787878" }}
                 //  style={{background: "#EFF8FF"}}  labelStyle={{color:"#0B4B66"}}
-              />
+              /> */}
               <Tag
                 stroke={false}
                 showIcon={false}
@@ -284,7 +284,7 @@ const AppConfigurationParentRedesign = () => {
                 labelStyle={{ color: "#0B4B66" }}
               />
             </span>
-            <span className="app-config-placeholder-version-tag" />
+            {/* <span className="app-config-placeholder-version-tag" /> */}
           </div>
         </>
       )}

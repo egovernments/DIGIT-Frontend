@@ -1048,6 +1048,12 @@ tbody {
     .digit-description {
       display: flex !important;
     }
+    .selection-card-container {
+      .selection-card {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   }
   .infotext {
     width: 12rem !important;
