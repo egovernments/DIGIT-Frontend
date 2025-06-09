@@ -32,6 +32,12 @@ const CampaignCard = () => {
       // count: isLoading?"-":data
     },
     {
+      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      link: `/workbench-ui/employee/campaign/campaign-home`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    {
       label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       roles: ROLES.CAMPAIGN_MANAGER,
@@ -101,13 +107,7 @@ const CampaignCard = () => {
       link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigTwo&fieldType=AppFieldTypeOne&prefix=APPTWO&localeModule=APPTWO&formId=default`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
-    },
-    {
-      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
-      link: `/workbench-ui/employee/campaign/campaign-home`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-    },
+    }
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

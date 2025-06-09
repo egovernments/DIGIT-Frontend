@@ -137,48 +137,162 @@ const StyledText = ({ text, style = [], href }) => {
 /**
  * Renders content blocks (text, image, list) from the section config
  */
-const RenderContent = ({ content }) => {
-  const { t } = useTranslation();
+// const RenderContent = ({ content }) => {
+//   const { t } = useTranslation();
 
-  return content.map((block, index) => {
+//   return content.map((block, index) => {
+//     switch (block.type) {
+//       case "text":
+//         return (
+//           <p key={index}>
+//             {t(block.text)}
+//             {block.children && block.children.map((child, idx) => <StyledText key={idx} {...child} />)}
+//           </p>
+//         );
+
+//       case "image":
+//         return (
+//           <div key={index} style={{ margin: "10px 0" }}>
+//             <img src={block.src} alt={block.alt || "Image"} style={{ maxWidth: block.width || "100%", height: "auto" }} />
+//           </div>
+//         );
+
+//       case "list":
+//         const ListTag = block.style === "number" ? "ol" : "ul";
+//         return (
+//           <ListTag key={index} style={{ paddingLeft: "20px" }}>
+//             {block.items.map((item, idx) =>
+//               typeof item === "string" ? (
+//                 <li key={idx}>{t(item)}</li>
+//               ) : (
+//                 <li key={idx}>
+//                   {t(item?.text)}
+//                   {item.children && item.children.map((child, childIdx) => <StyledText key={childIdx} {...child} />)}
+//                 </li>
+//               )
+//             )}
+//           </ListTag>
+//         );
+
+//       default:
+//         return null;
+//     }
+//   });
+// };
+
+const RenderContent = ({ content, groupTextBlocks = false }) => {
+  const { t } = useTranslation();
+  const result = [];
+
+  for (let i = 0; i < content.length; i++) {
+    const block = content[i];
+
+    const isImageGroup =
+      groupTextBlocks &&
+      block.type === "image" &&
+      content[i + 1]?.type === "text" &&
+      content[i + 1]?.style?.includes("bold") &&
+      content[i + 2]?.type === "text" &&
+      !content[i + 2]?.style?.includes("bold");
+
+    if (isImageGroup) {
+      const image = block;
+      const boldText = content[i + 1];
+      const normalText = content[i + 2];
+      const isLastGroup = i + 3 >= content.length;
+
+      result.push(
+        <div
+          key={`grouped-${i}`}
+          className={`content-group ${isLastGroup ? "no-border" : ""}`}
+        >
+          <img
+            src={image.src}
+            alt={image.alt || "icon"}
+            className="content-icon"
+          />
+          <div className="content-text-block">
+            <div className="content-bold-text">{t(boldText.text)}</div>
+            <div className="content-regular-text">{t(normalText.text)}</div>
+          </div>
+        </div>
+      );
+
+      i += 2;
+      continue;
+    }
+
     switch (block.type) {
-      case "text":
-        return (
-          <p key={index}>
-            {t(block.text)}
-            {block.children && block.children.map((child, idx) => <StyledText key={idx} {...child} />)}
-          </p>
-        );
+      case "text": {
+        const isBold = block.style?.includes("bold");
+        const nextBlock = content[i + 1];
+        const nextIsText = nextBlock?.type === "text" && !nextBlock.style?.includes("bold");
+
+        if (groupTextBlocks && isBold && nextIsText) {
+          result.push(
+            <div key={`group-${i}`} className="text-group">
+              <p className="bold-text">{t(block.text)}</p>
+              <p className="regular-text">{t(nextBlock.text)}</p>
+            </div>
+          );
+          i++;
+        } else {
+          result.push(
+            <p key={i} className="paragraph-text">
+              {t(block.text)}
+              {block.children?.map((child, idx) => (
+                <StyledText key={idx} {...child} />
+              ))}
+            </p>
+          );
+        }
+        break;
+      }
 
       case "image":
-        return (
-          <div key={index} style={{ margin: "10px 0" }}>
-            <img src={block.src} alt={block.alt || "Image"} style={{ maxWidth: block.width || "100%", height: "auto" }} />
+        result.push(
+          <div key={i} className="image-block">
+            <img
+              src={block.src}
+              alt={block.alt || "Image"}
+              className="responsive-image"
+            />
           </div>
         );
+        break;
 
-      case "list":
+      case "list": {
         const ListTag = block.style === "number" ? "ol" : "ul";
-        return (
-          <ListTag key={index} style={{ paddingLeft: "20px" }}>
+        result.push(
+          <ListTag key={i} className="list-block">
             {block.items.map((item, idx) =>
               typeof item === "string" ? (
                 <li key={idx}>{t(item)}</li>
               ) : (
                 <li key={idx}>
                   {t(item?.text)}
-                  {item.children && item.children.map((child, childIdx) => <StyledText key={childIdx} {...child} />)}
+                  {item.children?.map((child, childIdx) => (
+                    <StyledText key={childIdx} {...child} />
+                  ))}
                 </li>
               )
             )}
           </ListTag>
         );
+        break;
+      }
 
       default:
-        return null;
+        break;
     }
-  });
+  }
+
+  return result;
 };
+
+
+
+
 
 /**
  * Main wrapper component to show Help Card conditionally based on MDMS config
@@ -252,12 +366,35 @@ const HelpCard = ({ module, pathVar }) => {
   const config = data?.[0] || {};
 
   return (
-    <AlertCard
-      populators={{ name: "infocard" }}
-      variant="default"
-      className="cmn-help-info-card"
-      label={config?.title && t(config.title)}
-      additionalElements={config.sections.map((section, index) => (
+    // <AlertCard
+    //   populators={{ name: "infocard" }}
+    //   variant="default"
+    //   className="cmn-help-info-card"
+    //   label={config?.title && t(config.title)}
+    //   additionalElements={config.sections.map((section, index) => (
+    //     <div key={index} className="cmn-help-info-card-elements-wrapper" style={{ flexDirection: "column" }}>
+    //       {section.heading && (
+    //         <TextBlock
+    //           caption={section?.heading?.caption && t(section.heading.caption)}
+    //           header={section?.heading?.header && t(section.heading.header)}
+    //           body={section?.heading?.body && t(section.heading.body)}
+    //           subHeader={section?.heading?.subHeader && t(section.heading.subHeader)}
+    //         />
+    //       )}
+    //       <RenderContent content={section.content} />
+    //     </div>
+    //   ))}
+    // />
+    <AppHelpContent config={config}></AppHelpContent>
+  );
+};
+
+export const AppHelpContent = ({ config = {} ,groupTextBlocks }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div>
+      {config.sections.map((section, index) => (
         <div key={index} className="cmn-help-info-card-elements-wrapper" style={{ flexDirection: "column" }}>
           {section.heading && (
             <TextBlock
@@ -267,10 +404,10 @@ const HelpCard = ({ module, pathVar }) => {
               subHeader={section?.heading?.subHeader && t(section.heading.subHeader)}
             />
           )}
-          <RenderContent content={section.content} />
+          <RenderContent content={section.content}  groupTextBlocks={groupTextBlocks}/>
         </div>
       ))}
-    />
+    </div>
   );
 };
 
