@@ -326,29 +326,8 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
-  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-  const componentMasterName = "RegistrationComponentsConfig";
 
-  const { isLoading: isLoadingComponentMaster, data: ComponentConfigMdmsData } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCurrentTenantId(),
-    MODULE_CONSTANTS,
-    [
-      { name: componentMasterName, limit: 100 },
-    ],
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      select: (data) => {
-       return data?.[MODULE_CONSTANTS]?.RegistrationComponentsConfig
-      },
-    },
-    { schemaCode: "APP_COMPONENT_MASTER_DATA" } //mdmsv2
-  );
 
-  if(isLoadingComponentMaster ){
-    return <Loader/>
-  }
-else{
   return(
     <div className="app-preview">
       {data.cards.map((card, index) => (
@@ -413,7 +392,7 @@ else{
             title={t(data?.actionLabel)}
             onClick={() => {}}
           />}
-          {data.type === "template" && ComponentConfigMdmsData?.length > 0 && (() => {
+          {/* {data.type === "template" && ComponentConfigMdmsData?.length > 0 && (() => {
           const TemplateComponent = getRegisteredComponent(data.name);
           return TemplateComponent ? (
             <TemplateComponent
@@ -423,12 +402,54 @@ else{
               t={t}
             />
           ) : null;
-        })()}
+        })()} */}
+         {data.type === "template" && <TemplateScreen card={card}  name={data.name}        t={t}     selectedField={selectedField}
+ />}
         </Card>
       ))}
     </div>
   );
-}
+
 };
+
+
+const TemplateScreen =({selectedField,card,name,t})=>{
+  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
+  const componentMasterName = "RegistrationComponentsConfig";
+
+  const { isLoading: isLoadingComponentMaster, data: ComponentConfigMdmsData } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    MODULE_CONSTANTS,
+    [
+      { name: componentMasterName, limit: 100 },
+    ],
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      select: (data) => {
+       return data?.[MODULE_CONSTANTS]?.[componentMasterName]
+      },
+    },
+    { schemaCode: "APP_COMPONENT_MASTER_DATA" } //mdmsv2
+  );
+
+  if(isLoadingComponentMaster ){
+    return <Loader/>
+  }
+  const TemplateComponent = getRegisteredComponent(name);
+
+
+  return   ComponentConfigMdmsData?.length > 0 && (() => {
+    return TemplateComponent ? (
+      <TemplateComponent
+        components={card.fields}
+        selectedField={selectedField}
+        metaMasterConfig={ComponentConfigMdmsData}
+        t={t}
+      />
+    ) : <div>No Component to preview</div>;
+  })()
+
+}
 
 export default AppPreview;
