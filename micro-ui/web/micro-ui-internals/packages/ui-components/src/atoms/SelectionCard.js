@@ -58,7 +58,16 @@ const SelectionCard = ({
         key={option.code}
         className={`option ${isSelected ? "selected" : ""}`}
         style={{ width }}
+        role="option"
+        aria-selected={isSelecpted}
+        tabIndex={0}
         onClick={() => handleOptionClick(option)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter" || e.key === " ") {
+            e.preventDefault();
+            handleOptionClick(option);
+          }
+        }}
       >
         {option?.prefixIcon && (
           <span className="selectioncardicon">
@@ -77,7 +86,7 @@ const SelectionCard = ({
 
   return (
     <div className="selection-card-container">
-      <div className={`selection-card ${errorMessage ? "error" : ""}`}>
+      <div className={`selection-card ${errorMessage ? "error" : ""}`} role="listbox" aria-multiselectable={allowMultipleSelection}>
         {options?.map(renderOption)}
       </div>
       {errorMessage && (

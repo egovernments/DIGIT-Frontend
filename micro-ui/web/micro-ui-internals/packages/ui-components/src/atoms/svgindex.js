@@ -88,6 +88,12 @@ const ArrowDown = ({ className, onClick, styles, disable }) => (
     fill={disable ? "#9E9E9E" : "black"}
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Arrow Down"
+    role="button"
     width="18px"
     height="18px"
   >
@@ -103,6 +109,12 @@ const ArrowBack = ({ className, onClick }) => (
     fill="black"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Arrow Back"
+    role="button"
     width="18px"
     height="18px"
   >
@@ -118,6 +130,12 @@ const ArrowForward = ({ className, onClick }) => (
     fill="black"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Arrow Forward"
+    role="button"
     width="18px"
     height="18px"
   >
@@ -135,6 +153,12 @@ const ArrowToFirst = ({ className, onClick }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Arrow To First"
+    role="button"
   >
     <path
       d="M12.41 10.59L7.82 6L12.41 1.41L11 0L5 6L11 12L12.41 10.59ZM0 0H2V12H0V0Z"
@@ -152,6 +176,13 @@ const ArrowToLast = ({ className, onClick }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+
+    aria-label="Arrow To Last"
+    role="button"
   >
     <path
       d="M0.589844 1.41L5.17984 6L0.589844 10.59L1.99984 12L7.99984 6L1.99984 0L0.589844 1.41ZM10.9998 0H12.9998V12H10.9998V0Z"
@@ -194,6 +225,12 @@ const DeleteBtn = ({ className, onClick, fill }) => (
     fill="white"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Delete Button"
+    role="button"
     width="18px"
     height="18px"
   >
@@ -234,6 +271,12 @@ const StarFilled = ({ className, id, onClick, styles, percentage = 100 }) => (
     className={className}
     style={styles}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Star Filled"
+    role="button"
     viewBox="0 0 24 24"
     fill="#F47738"
     width="48px"
@@ -273,6 +316,12 @@ const StarEmpty = ({ className, onClick, styles }) => (
     width="48px"
     height="48px"
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Star Empty"
+    role="button"
   >
     <path d="M0 0h24v24H0V0z" fill="none" />
     <path
@@ -497,6 +546,12 @@ const SearchIconSvg = ({ className, onClick }) => (
     width="24px"
     height="24px"
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Search Icon Svg"
+    role="button"
   >
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z" />
@@ -535,6 +590,12 @@ const Calender = ({ className, onClick }) => (
     fill="black"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Calender"
+    role="button"
   >
     <path d="M0 0h24v24H0z" fill="none" />
     <path d="M20 3h-1V1h-2v2H7V1H5v2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 18H4V8h16v13z" />
@@ -733,6 +794,12 @@ function CloseSvg({ onClick }) {
       viewBox="0 0 24 24"
       width="24"
       onClick={onClick}
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key == "Enter" || e.key == " ") onClick();
+      }}
+      aria-label="Close Svg"
+    role="button"
     >
       <path d="M0 0h24v24H0z" fill="none" />
       <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
@@ -775,6 +842,12 @@ const DownloadIcon = ({ styles, className, onClick, fill = "#505A5F" }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Download Icon"
+    role="button"
   >
     <path
       d="M18.8337 8.5H13.5003V0.5H5.50033V8.5H0.166992L9.50033 17.8333L18.8337 8.5ZM0.166992 20.5V23.1667H18.8337V20.5H0.166992Z"
@@ -834,6 +907,12 @@ const Ellipsis = ({ className, onClick }) => (
     xmlns="http://www.w3.org/2000/svg"
     className={className}
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Ellipsis"
+    role="button"
   >
     <path
       d="M2 4C3.1 4 4 3.1 4 2C4 0.9 3.1 0 2 0C0.9 0 0 0.9 0 2C0 3.1 0.9 4 2 4ZM2 6C0.9 6 0 6.9 0 8C0 9.1 0.9 10 2 10C3.1 10 4 9.1 4 8C4 6.9 3.1 6 2 6ZM2 12C0.9 12 0 12.9 0 14C0 15.1 0.9 16 2 16C3.1 16 4 15.1 4 14C4 12.9 3.1 12 2 12Z"
@@ -884,6 +963,12 @@ const FilterIcon = ({ onClick }) => (
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     onClick={onClick}
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key == "Enter" || e.key == " ") onClick();
+    }}
+    aria-label="Filter Icon"
+    role="button"
   >
     <path
       d="M0.666904 2.48016C3.36024 5.9335 8.33357 12.3335 8.33357 12.3335V20.3335C8.33357 21.0668 8.93357 21.6668 9.6669 21.6668H12.3336C13.0669 21.6668 13.6669 21.0668 13.6669 20.3335V12.3335C13.6669 12.3335 18.6269 5.9335 21.3202 2.48016C22.0002 1.60016 21.3736 0.333496 20.2669 0.333496H1.72024C0.613571 0.333496 -0.0130959 1.60016 0.666904 2.48016Z"
@@ -3325,7 +3410,7 @@ const DocPdfUpload = ({ className = "", fill = "none", styles }) => (
   </svg>
 );
 
-const ProfileIcon = ({ className, styles,width,height }) => (
+const ProfileIcon = ({ className, styles, width, height }) => (
   <svg
     className={className}
     style={{ ...styles }}

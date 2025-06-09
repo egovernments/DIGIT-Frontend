@@ -314,6 +314,11 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                onKeyDown={(e)=>{
+                  if(( e.key=="Enter") ||( e.key=="Space")){
+                    props?.onIconSelection
+                  }
+                }}
               >
                 {icon}
               </span>
@@ -368,7 +373,6 @@ const TextInput = (props) => {
                 (props.type === "date" &&
                   (props.name === "fromDate" ? data.toDate : data.fromDate))
             }
-            aria-label={props?.ariaLabel || props?.placeholder || props?.name}
             pattern={
                 props?.validation && props.ValidationRequired
                   ? props?.validation?.pattern
