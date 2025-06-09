@@ -1,4 +1,4 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useRef } from "react";
 import {
   Card,
   CardText,
@@ -326,12 +326,19 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
+  const containerRef = useRef(null);
+  const divRef = useRef(null);
 
-
-  return(
-    <div className="app-preview">
+  useEffect(() => {
+    if (containerRef.current || divRef.current) {
+      containerRef.current.scrollTop = 0; // Scroll to top
+      divRef.current.scrollTop = 0; // Scroll to top
+    }
+  }, []);
+  return (
+    <div ref={divRef} className="app-preview">
       {data.cards.map((card, index) => (
-        <Card key={index} className="app-card" style={{flexDirection: "column", display: "flex", minHeight: "100%"}}>
+        <Card ReactRef={containerRef} key={index} className="app-card" style={{ flexDirection: "column", display: "flex", minHeight: "100%" }}>
           {card.headerFields.map((headerField, headerIndex) => (
             <div key={headerIndex}>
               {headerField.jsonPath === "ScreenHeading" ? (
