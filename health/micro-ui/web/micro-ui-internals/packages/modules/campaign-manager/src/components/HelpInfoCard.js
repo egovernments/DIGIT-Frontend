@@ -202,15 +202,8 @@ const RenderContent = ({ content, groupTextBlocks = false }) => {
       const isLastGroup = i + 3 >= content.length;
 
       result.push(
-        <div
-          key={`grouped-${i}`}
-          className={`content-group ${isLastGroup ? "no-border" : ""}`}
-        >
-          <img
-            src={image.src}
-            alt={image.alt || "icon"}
-            className="content-icon"
-          />
+        <div key={`grouped-${i}`} className={`content-group ${isLastGroup ? "no-border" : ""}`}>
+          <img src={image.src} alt={image.alt || "icon"} className="content-icon" />
           <div className="content-text-block">
             <div className="content-bold-text">{t(boldText.text)}</div>
             <div className="content-regular-text">{t(normalText.text)}</div>
@@ -252,11 +245,7 @@ const RenderContent = ({ content, groupTextBlocks = false }) => {
       case "image":
         result.push(
           <div key={i} className="image-block">
-            <img
-              src={block.src}
-              alt={block.alt || "Image"}
-              className="responsive-image"
-            />
+            <img src={block.src} alt={block.alt || "Image"} className="responsive-image" />
           </div>
         );
         break;
@@ -290,10 +279,6 @@ const RenderContent = ({ content, groupTextBlocks = false }) => {
   return result;
 };
 
-
-
-
-
 /**
  * Main wrapper component to show Help Card conditionally based on MDMS config
  */
@@ -323,8 +308,7 @@ const HelpInfoCard = ({ config = helpCardConfig, appPath, location }) => {
     );
   }, [module]);
 
-  const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } =
-    Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
+  const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } = Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
 
   const showHelpCard = selectedFeatureConfigs?.some((ele) => ele === pathVar);
 
@@ -357,7 +341,7 @@ const HelpCard = ({ module, pathVar }) => {
         ...Digit.Utils.campaign.getMDMSV1Selector("commonUiConfig", "HelpInfo"),
       }
     );
-  }, [module,pathVar]);
+  }, [module, pathVar]);
 
   const { isLoading: isSelectedFeatureLoading, data } = Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
 
@@ -366,30 +350,17 @@ const HelpCard = ({ module, pathVar }) => {
   const config = data?.[0] || {};
 
   return (
-    // <AlertCard
-    //   populators={{ name: "infocard" }}
-    //   variant="default"
-    //   className="cmn-help-info-card"
-    //   label={config?.title && t(config.title)}
-    //   additionalElements={config.sections.map((section, index) => (
-    //     <div key={index} className="cmn-help-info-card-elements-wrapper" style={{ flexDirection: "column" }}>
-    //       {section.heading && (
-    //         <TextBlock
-    //           caption={section?.heading?.caption && t(section.heading.caption)}
-    //           header={section?.heading?.header && t(section.heading.header)}
-    //           body={section?.heading?.body && t(section.heading.body)}
-    //           subHeader={section?.heading?.subHeader && t(section.heading.subHeader)}
-    //         />
-    //       )}
-    //       <RenderContent content={section.content} />
-    //     </div>
-    //   ))}
-    // />
-    <AppHelpContent config={config}></AppHelpContent>
+    <AlertCard
+      populators={{ name: "infocard" }}
+      variant="default"
+      className="cmn-help-info-card"
+      label={config?.title && t(config.title)}
+      additionalElements={[<AppHelpContent config={config}></AppHelpContent>]}
+    />
   );
 };
 
-export const AppHelpContent = ({ config = {} ,groupTextBlocks }) => {
+export const AppHelpContent = ({ config = {}, groupTextBlocks }) => {
   const { t } = useTranslation();
 
   return (
@@ -404,7 +375,7 @@ export const AppHelpContent = ({ config = {} ,groupTextBlocks }) => {
               subHeader={section?.heading?.subHeader && t(section.heading.subHeader)}
             />
           )}
-          <RenderContent content={section.content}  groupTextBlocks={groupTextBlocks}/>
+          <RenderContent content={section.content} groupTextBlocks={groupTextBlocks} />
         </div>
       ))}
     </div>

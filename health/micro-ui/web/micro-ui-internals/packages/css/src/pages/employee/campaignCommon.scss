@@ -293,6 +293,7 @@
 .cmn-help-info-card{
     margin: 1.5rem 1rem;
     max-width: 100%;
+    display: column;
     .cmn-help-info-card-elements-wrapper{
         margin-bottom: 0.5rem;
         flex-direction: column;
@@ -320,3 +321,4 @@
 .digit-text-block-header-content {
     flex-direction: column  !important;
 }
+
