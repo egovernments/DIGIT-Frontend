@@ -14,7 +14,7 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   }
 
   // Start with the fieldType as type
-  let result = { type: matched.fieldType, appType: matched.type };
+  let result = { type: matched.fieldType, appType: matched.type, };
 
   // Copy all metadata properties except type/format (already used)
   Object.entries(matched.metadata || {}).forEach(([key, value]) => {
@@ -141,9 +141,10 @@ const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
 };
 
 export const restructure = (data1, fieldTypeMasterData = [], parent) => {
-  return data1
-    ?.sort((a, b) => a.order - b.order)
-    .map((page) => {
+  return[
+    ...data1?.filter(item => item.type === "template").sort((a, b) => a.order - b.order),
+    ...data1?.filter(item => item.type !== "template").sort((a, b) => a.order - b.order)
+  ].map((page) => {
       const cardFields = page.properties
         ?.sort((a, b) => a.order - b.order)
         ?.map((field, index) => ({
@@ -206,6 +207,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         ],
         actionLabel: page?.actionLabel || "",
         order: page.order,
+        type: page.type,
         config: {
           enableComment: false,
           enableFieldAddition: true,
@@ -274,7 +276,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
 
     return {
       page: guessPageName(section.name),
-      type: "object",
+      type: section.type || "object",
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
