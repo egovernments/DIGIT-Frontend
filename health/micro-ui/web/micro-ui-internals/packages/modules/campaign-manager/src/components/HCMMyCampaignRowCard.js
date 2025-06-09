@@ -149,7 +149,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
-  const resources = rowData?.deliveryRules.flatMap((rule) => rule.resources.map((res) => t(res.name))).join(", ") || "NA";
+  const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
   const actionButtons = getActionButtons(rowData, tabData, history);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
@@ -162,7 +162,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           <div className="digit-results-card-heading">{rowData?.campaignName}</div>
           <div className="digit-results-card-tags">
             {tagElements &&
-              Object.entries(tagElements).map(([key, tag]) => (
+              Object.entries(tagElements)?.map(([key, tag]) => (
                 <Tag
                   key={key}
                   icon={tag.icon || ""}
@@ -217,7 +217,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           )}
         {actionButtons && Object.keys(actionButtons).length > 0 && (
           <div className="digit-results-card-buttons-internal">
-            {Object.entries(actionButtons).map(([key, btn]) => (
+            {Object.entries(actionButtons)?.map(([key, btn]) => (
               <Button
                 key={key}
                 className={btn.className || "custom-class"}

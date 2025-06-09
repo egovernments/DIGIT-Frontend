@@ -144,7 +144,7 @@ function AppFieldScreenWrapper() {
                 );
               }
             )}
-            {currentCard?.config?.enableFieldAddition && (
+            {currentCard.type !== "template" && currentCard?.config?.enableFieldAddition && (
               <Button
                 className={"app-config-drawer-button"}
                 type={"button"}
@@ -172,7 +172,7 @@ function AppFieldScreenWrapper() {
           </>
         );
       })}
-      {currentCard?.config?.enableSectionAddition && (
+      {currentCard.type !== "template" && currentCard?.config?.enableSectionAddition && (
         <Button
           className={"app-config-add-section"}
           type={"button"}
@@ -191,40 +191,44 @@ function AppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-      <div className="app-config-drawer-subheader">
-        <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
-        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
-      </div>
-      <LabelFieldPair className="app-preview-app-config-drawer-action-button">
-        <div className="">
-          <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
-        </div>
-        <TextInput
-          // style={{ maxWidth: "40rem" }}
-          name="name"
-          value={useCustomT(currentCard?.actionLabel)}
-          onChange={(event) => {
-            updateLocalization(
-              currentCard?.actionLabel && currentCard?.actionLabel !== true
-                ? currentCard?.actionLabel
-                : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
-              Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-              event.target.value
-            );
-            dispatch({
-              type: "ADD_ACTION_LABEL",
-              payload: {
-                currentScreen: currentCard,
-                actionLabel:
+      {currentCard.type !== "template" && (
+        <>
+          <div className="app-config-drawer-subheader">
+            <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
+            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+          </div>
+          <LabelFieldPair className="app-preview-app-config-drawer-action-button">
+            <div className="">
+              <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+            </div>
+            <TextInput
+              // style={{ maxWidth: "40rem" }}
+              name="name"
+              value={useCustomT(currentCard?.actionLabel)}
+              onChange={(event) => {
+                updateLocalization(
                   currentCard?.actionLabel && currentCard?.actionLabel !== true
                     ? currentCard?.actionLabel
                     : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
-              },
-            });
-            return;
-          }}
-        />
-      </LabelFieldPair>
+                  Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                  event.target.value
+                );
+                dispatch({
+                  type: "ADD_ACTION_LABEL",
+                  payload: {
+                    currentScreen: currentCard,
+                    actionLabel:
+                      currentCard?.actionLabel && currentCard?.actionLabel !== true
+                        ? currentCard?.actionLabel
+                        : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
+                  },
+                });
+                return;
+              }}
+            />
+          </LabelFieldPair>
+        </>
+      )}
     </React.Fragment>
   );
 }
