@@ -12,18 +12,21 @@ WORKDIR /app
 ARG WORK_DIR
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 
+# --- THE FIX: Add node_modules/.bin to the PATH ---
+# This makes binaries from dependencies (like run-p) available to all RUN commands.
+ENV PATH /app/node_modules/.bin:$PATH
+
 # --- Monorepo Caching Optimization ---
 
-# 1. CORRECTED: Copy ONLY the root yarn.lock. There is no root package.json.
+# 1. Copy the root yarn.lock
 COPY yarn.lock ./
 
-# 2. Copy the package.json files for the relevant workspaces from their actual locations.
+# 2. Copy the package.json files for the relevant workspaces.
 COPY ${WORK_DIR}package.json ./${WORK_DIR}
 COPY ${WORK_DIR}web/package.json ./${WORK_DIR}web/
 COPY ${WORK_DIR}web/core/package.json ./${WORK_DIR}web/core/
 
-# 3. Install ALL dependencies from the root, using the root yarn.lock.
-#    This layer will be cached as long as the lockfile or any package.json changes.
+# 3. Install ALL dependencies from the root.
 RUN yarn install --ignore-engines --network-timeout 600000
 
 # 4. Now that dependencies are installed, copy the entire project source code.
@@ -34,7 +37,7 @@ WORKDIR /app/${WORK_DIR}web
 
 # --- End Optimization ---
 
-# Run your build scripts from the /app/micro-ui/web directory
+# Run your build scripts. Because of the ENV PATH, 'run-p' will now be found.
 RUN node -e "const v8 = require('v8'); console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024));" && \
     node -e "console.log('core only');" && \
     cd core && \
