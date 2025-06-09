@@ -61,8 +61,9 @@ on:
         default: "audit-service"
 
 env:
-  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+  # Credentials for Docker Hub
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 jobs:
   build:
@@ -98,13 +99,20 @@ jobs:
           yq eval '.config[].build[] | "✱ image-name: \(.["image-name"]) → dockerfile: \(.dockerfile // "N/A")"' build/build-config.yml || true
 
           # Try matching with the SERVICE variable directly (no strenv)
-          DF=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile // \"\"" build/build-config.yml)
+          DF=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile // \"\"" build/build-config.yml | head -n 1)
+
+          # Warn if multiple dockerfiles were found and we picked the first one
+          MATCH_COUNT=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile" build/build-config.yml | wc -l)
 
           if [ -z "$DF" ] || [ "$DF" = "null" ]; then
             echo "No dockerfile entry found for \"$SERVICE\" in build-config.yml; using default"
             DF="$DEFAULT_DOCKERFILE"
           else
-            echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
+            if [ "$MATCH_COUNT" -gt 1 ]; then
+              echo "Multiple dockerfiles found for $SERVICE; using first match: $DF"
+            else
+              echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
+            fi
           fi
 
           echo "dockerfile_path=$DF" >> "$GITHUB_OUTPUT"
