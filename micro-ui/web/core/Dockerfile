@@ -1,9 +1,8 @@
-# ─── BUILD STAGE ──────────────────────────────────────────────────────────────
 FROM node:14-alpine AS build
 
-# update & install git
+# update & install git and essential build tools in a single layer
 RUN apk update && apk upgrade && \
-    apk add --no-cache git
+    apk add --no-cache git python3 make g++
 
 ARG WORK_DIR
 WORKDIR /app
