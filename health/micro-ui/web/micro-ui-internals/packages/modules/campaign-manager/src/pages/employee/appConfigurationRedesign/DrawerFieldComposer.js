@@ -1,4 +1,17 @@
-import { Button, Divider, Dropdown, FieldV1, LabelFieldPair, PopUp, RadioButtons, Switch, Tag, TextArea, TextBlock, TextInput } from "@egovernments/digit-ui-components";
+import {
+  Button,
+  Divider,
+  Dropdown,
+  FieldV1,
+  LabelFieldPair,
+  PopUp,
+  RadioButtons,
+  Switch,
+  Tag,
+  TextArea,
+  TextBlock,
+  TextInput,
+} from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -25,9 +38,9 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
   const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
-  
+
   // force disable if field is hidden
-  if(drawerState?.hidden){
+  if (drawerState?.hidden) {
     return true;
   }
   // If the field is in the disable list AND its label is either "Mandatory" or "fieldType", disable it
@@ -274,9 +287,9 @@ function DrawerFieldComposer() {
   return (
     <>
       <div className="app-config-drawer-subheader">
-        {t("APPCONFIG_PROPERTIES")}{" "}
+        <div>{t("APPCONFIG_PROPERTIES")}</div>
         <span className="icon-wrapper">
-          <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
+          <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_PROPERTIES")} />
         </span>
       </div>
       <Divider />

@@ -1120,3 +1120,11 @@ tbody {
   display: flex;
   align-items: baseline;
 }
+
+.icon-wrapper.app-config-tooltip {
+  .tooltip-wrapper {
+    .tooltip-content {
+      width: auto !important;
+    }
+  }
+}

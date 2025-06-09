@@ -1,7 +1,19 @@
 import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useTranslation } from "react-i18next";
-import { Button, Card, CardHeader, Divider, Stepper, Tab, ActionBar, LabelFieldPair, TextInput, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
+import {
+  Button,
+  Card,
+  CardHeader,
+  Divider,
+  Stepper,
+  Tab,
+  ActionBar,
+  LabelFieldPair,
+  TextInput,
+  Tooltip,
+  TooltipWrapper,
+} from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 import { useCustomT } from "./useCustomT";
@@ -41,8 +53,8 @@ function AppFieldScreenWrapper() {
         return (
           <>
             <div className="app-config-drawer-subheader">
-              {t("APPCONFIG_HEAD_FIELDS")}
-              <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
+              <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
+              <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
             </div>
             <Divider />
             {headerFields?.map(({ type, label, active, required, value }, indx, cx) => (
@@ -69,8 +81,8 @@ function AppFieldScreenWrapper() {
             ))}
             <Divider />
             <div className="app-config-drawer-subheader">
-              {t("APPCONFIG_SUBHEAD_FIELDS")}
-              <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+              <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
+              <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
             </div>
             {/* todo update localisation */}
             {fields?.map(
@@ -181,43 +193,42 @@ function AppFieldScreenWrapper() {
       <Divider className="app-config-drawer-action-divider" />
       {currentCard.type !== "template" && (
         <>
-        <div className="app-config-drawer-subheader">
-        {t("APPCONFIG_SUBHEAD_BUTTONS")}
-        <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
-      </div>
-      <LabelFieldPair className="app-preview-app-config-drawer-action-button">
-        <div className="">
-          <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
-        </div>
-        <TextInput
-          // style={{ maxWidth: "40rem" }}
-          name="name"
-          value={useCustomT(currentCard?.actionLabel)}
-          onChange={(event) => {
-            updateLocalization(
-              currentCard?.actionLabel && currentCard?.actionLabel !== true
-                ? currentCard?.actionLabel
-                : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
-              Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-              event.target.value
-            );
-            dispatch({
-              type: "ADD_ACTION_LABEL",
-              payload: {
-                currentScreen: currentCard,
-                actionLabel:
+          <div className="app-config-drawer-subheader">
+            <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
+            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+          </div>
+          <LabelFieldPair className="app-preview-app-config-drawer-action-button">
+            <div className="">
+              <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+            </div>
+            <TextInput
+              // style={{ maxWidth: "40rem" }}
+              name="name"
+              value={useCustomT(currentCard?.actionLabel)}
+              onChange={(event) => {
+                updateLocalization(
                   currentCard?.actionLabel && currentCard?.actionLabel !== true
                     ? currentCard?.actionLabel
                     : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
-              },
-            });
-            return;
-          }}
-        />
-      </LabelFieldPair>
-      </>
-      )
-      }
+                  Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                  event.target.value
+                );
+                dispatch({
+                  type: "ADD_ACTION_LABEL",
+                  payload: {
+                    currentScreen: currentCard,
+                    actionLabel:
+                      currentCard?.actionLabel && currentCard?.actionLabel !== true
+                        ? currentCard?.actionLabel
+                        : `${currentCard?.parent}_${currentCard?.name}_ACTION_BUTTON_LABEL`,
+                  },
+                });
+                return;
+              }}
+            />
+          </LabelFieldPair>
+        </>
+      )}
     </React.Fragment>
   );
 }
