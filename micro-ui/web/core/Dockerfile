@@ -23,7 +23,7 @@ RUN cd web && \
     chmod +x ./install-deps.sh && \
     ./install-deps.sh && \
     cd ../ && \
-    yarn install && \
+    yarn install --ignore-engines && \
     yarn build:webpack
 
 # ─── RUNTIME STAGE ───────────────────────────────────────────────────────────
