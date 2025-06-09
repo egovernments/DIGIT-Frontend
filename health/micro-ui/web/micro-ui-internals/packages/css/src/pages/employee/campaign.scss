@@ -259,7 +259,7 @@
   border-radius: 1rem;
   background-color: white;
   box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
-  margin: 5px auto;  /* updated margin since we added page no */
+  margin: 5px auto; /* updated margin since we added page no */
   font-family: Arial, sans-serif;
   scrollbar-width: thin; /* Firefox */
   scrollbar-color: #d6d5d4 #fafafa; /* Firefox */
@@ -310,7 +310,7 @@
   }
 
   .app-card {
-    height: 100%;
+    min-height: 100%;
     gap: 0.5rem;
     &::-webkit-scrollbar-button {
       display: none !important;
@@ -545,22 +545,24 @@
     }
     > *:last-child label {
       border-top-right-radius: 0.5rem;
-      border-bottom-right-radius: 0.5rem;      
+      border-bottom-right-radius: 0.5rem;
     }
   }
 }
 
-.digit-toggle-toolbar{&.app-config-tab{
-  max-width: 90%;
-  > *:first-child label {
-    border-top-left-radius: 0.5rem;
-    border-bottom-left-radius: 0.5rem;
+.digit-toggle-toolbar {
+  &.app-config-tab {
+    max-width: 90%;
+    > *:first-child label {
+      border-top-left-radius: 0.5rem;
+      border-bottom-left-radius: 0.5rem;
+    }
+    > *:last-child label {
+      border-top-right-radius: 0.5rem;
+      border-bottom-right-radius: 0.5rem;
+    }
   }
-  > *:last-child label {
-    border-top-right-radius: 0.5rem;
-    border-bottom-right-radius: 0.5rem;      
-  }
-}}
+}
 .module-description {
   flex-grow: 1;
   margin: 0 0 1rem 0;
@@ -580,36 +582,36 @@
   font-weight: bold;
   text-wrap: nowrap;
 }
-.pop-display{
+.pop-display {
   display: flex;
   margin-top: 1.5rem;
 }
-.popUp-header{
+.popUp-header {
   margin-bottom: 1.5rem;
 }
-.end-date-container-popUp{
+.end-date-container-popUp {
   margin-top: 0.8rem;
   margin-right: 1.5rem;
   font-weight: bold;
   text-wrap: nowrap;
 }
 
-
-.app-config-version-tags{
+.app-config-version-tags {
   display: flex;
-   align-items: flex-end;
-    margin-right: 24rem;
-     justify-content: center;
-      margin-top: 0.75rem;
-    margin-bottom: 0.5rem; 
+  align-items: flex-end;
+  margin-right: 24rem;
+  justify-content: center;
+  margin-top: 0.75rem;
+  margin-bottom: 0.5rem;
 
-    .app-config-placeholder-version-tag{
-      width: 30%;
-    }
-    .app-config-version-tag{
-      width: 40%;
-    }
+  .app-config-placeholder-version-tag {
+    width: 30%;
+  }
+  .app-config-version-tag {
+    width: 40%;
+  }
 }
+
 .content-group {
   display: flex;
   align-items: center;
@@ -692,3 +694,4 @@
   }
 }
 }
+
