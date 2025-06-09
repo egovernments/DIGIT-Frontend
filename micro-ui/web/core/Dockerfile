@@ -12,8 +12,7 @@ WORKDIR /app
 ARG WORK_DIR
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 
-# --- THE FIX: Correct ENV syntax for PATH ---
-# The key=value format is required for variable expansion like $PATH to work.
+# This is CRITICAL: Add node_modules/.bin to the PATH for all subsequent RUN commands
 ENV PATH="/app/node_modules/.bin:$PATH"
 
 # --- Monorepo Caching Optimization ---
@@ -32,19 +31,20 @@ RUN yarn install --ignore-engines --network-timeout 600000
 # 4. Now that dependencies are installed, copy the entire project source code.
 COPY . .
 
-# 5. Change the working directory to the specific app we want to build.
+# --- THE FIX: Isolate the build steps into separate RUN commands ---
+
+# Step 1: Run the dependency installation script for the 'core' sub-project first.
+# Any environment changes it makes will be contained within this RUN command only.
+WORKDIR /app/${WORK_DIR}web/core
+RUN chmod +x ./install-deps.sh && \
+    ./install-deps.sh
+
+# Step 2: Change back to the parent directory for the main build.
 WORKDIR /app/${WORK_DIR}web
 
-# --- End Optimization ---
-
-# Run your build scripts. Because of the corrected ENV PATH, 'run-p' will now be found.
-RUN node -e "const v8 = require('v8'); console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024));" && \
-    node -e "console.log('core only');" && \
-    cd core && \
-    chmod +x ./install-deps.sh && \
-    ./install-deps.sh && \
-    cd ../ && \
-    yarn build:webpack
+# Step 3: Now, in a clean shell environment, run the main webpack build.
+# The `ENV PATH` we set earlier is reapplied here, so 'run-p' will be found.
+RUN yarn build:webpack
 
 # ─── RUNTIME STAGE ───────────────────────────────────────────────────────────
 FROM nginx:mainline-alpine
