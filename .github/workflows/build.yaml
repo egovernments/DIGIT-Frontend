@@ -61,8 +61,9 @@ on:
         default: "audit-service"
 
 env:
-  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+  # Credentials for Docker Hub
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 jobs:
   build:
@@ -87,28 +88,42 @@ jobs:
           sudo curl -sSL "$URL" -o /usr/local/bin/yq
           sudo chmod +x /usr/local/bin/yq
 
-      - name: Determine Dockerfile path from build-config.yml
+      - name: Determine build paths from build-config.yml
         id: pick_dockerfile
         run: |
           SERVICE="${{ matrix.service }}"
           DEFAULT_DOCKERFILE="build/maven/Dockerfile"
+          DEFAULT_WORKDIR="${{ github.event.inputs.service_folder }}/${{ matrix.service }}"
 
           # Debug: list all image-name / dockerfile pairs
           echo "All build entries from build-config.yml:"
-          yq eval '.config[].build[] | "✱ image-name: \(.["image-name"]) → dockerfile: \(.dockerfile // "N/A")"' build/build-config.yml || true
+          yq eval '.config[].build[] | "✱ image-name: \(.["image-name"]) → dockerfile: \(.dockerfile // "N/A") work-dir: \(."work-dir" // "N/A")"' build/build-config.yml || true
 
-          # Try matching with the SERVICE variable directly (no strenv)
-          DF=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile // \"\"" build/build-config.yml)
+          DF=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile // \"\"" build/build-config.yml | head -n 1)
+          WD=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .\"work-dir\" // \"\"" build/build-config.yml | head -n 1)
+
+          MATCH_COUNT=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile" build/build-config.yml | wc -l)
 
           if [ -z "$DF" ] || [ "$DF" = "null" ]; then
             echo "No dockerfile entry found for \"$SERVICE\" in build-config.yml; using default"
             DF="$DEFAULT_DOCKERFILE"
           else
-            echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
+            if [ "$MATCH_COUNT" -gt 1 ]; then
+              echo "Multiple dockerfiles found for $SERVICE; using first match: $DF"
+            else
+              echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
+            fi
+          fi
+
+          if [ -z "$WD" ] || [ "$WD" = "null" ]; then
+            echo "No work-dir entry found for \"$SERVICE\"; using default"
+            WD="$DEFAULT_WORKDIR"
           fi
 
           echo "dockerfile_path=$DF" >> "$GITHUB_OUTPUT"
+          echo "work_dir=$WD" >> "$GITHUB_OUTPUT"
           echo "DOCKERFILE_PATH=$DF" >> "$GITHUB_ENV"
+          echo "WORK_DIR=$WD" >> "$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -174,7 +189,7 @@ jobs:
           tags: |
             egovio/${{ matrix.service }}:${{ steps.tag.outputs.tag }}
           build-args: |
-            WORK_DIR=${{ github.event.inputs.service_folder }}/${{ matrix.service }}
+            WORK_DIR=${{ env.WORK_DIR }}
 
       - name: Check if DB folder exists
         id: check-db-folder
