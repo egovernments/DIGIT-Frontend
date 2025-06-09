@@ -18,6 +18,19 @@
   line-height: 1.6;
 }
 
+/* overrides of predefined classes */
+
+.login-container .digit-label-field-pair{
+  all: unset !important;
+}
+
+.login-container .digit-label-field-pair .digit-field{
+  width: 100%;
+}
+.login-container .digit-submit-bar{
+  margin-top: 1rem;
+
+}
 /* Carousel Section (70% width) */
 .carousel-container {
   position: relative;
