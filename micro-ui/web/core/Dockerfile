@@ -14,17 +14,16 @@ ENV NODE_OPTIONS="--max-old-space-size=4792"
 
 # --- Monorepo Caching Optimization ---
 
-# 1. Copy the ROOT package.json and yarn.lock. This is the most important step.
-COPY package.json yarn.lock ./
+# 1. CORRECTED: Copy ONLY the root yarn.lock. There is no root package.json.
+COPY yarn.lock ./
 
-# 2. Copy the package.json files for the relevant workspaces.
-#    This allows Yarn to build the dependency tree without all the source code.
+# 2. Copy the package.json files for the relevant workspaces from their actual locations.
 COPY ${WORK_DIR}package.json ./${WORK_DIR}
 COPY ${WORK_DIR}web/package.json ./${WORK_DIR}web/
 COPY ${WORK_DIR}web/core/package.json ./${WORK_DIR}web/core/
 
-# 3. Install ALL dependencies from the root, using the root yarn.lock
-#    This layer will be cached as long as no package.json or yarn.lock file changes.
+# 3. Install ALL dependencies from the root, using the root yarn.lock.
+#    This layer will be cached as long as the lockfile or any package.json changes.
 RUN yarn install --ignore-engines --network-timeout 600000
 
 # 4. Now that dependencies are installed, copy the entire project source code.
@@ -35,7 +34,7 @@ WORKDIR /app/${WORK_DIR}web
 
 # --- End Optimization ---
 
-# Run your build scripts. We are already in the correct directory (/app/micro-ui/web).
+# Run your build scripts from the /app/micro-ui/web directory
 RUN node -e "const v8 = require('v8'); console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024));" && \
     node -e "console.log('core only');" && \
     cd core && \
@@ -50,7 +49,6 @@ FROM nginx:mainline-alpine
 ENV WORK_DIR=/var/web/core-ui
 RUN mkdir -p ${WORK_DIR}
 
-# The build artifacts are in /app/micro-ui/web/build inside the 'build' stage
+# Copy build artifacts from the correct location inside the build stage
 COPY --from=build /app/micro-ui/web/build ${WORK_DIR}/
-# The nginx config is in /app/micro-ui/web/core inside the 'build' stage
 COPY --from=build /app/micro-ui/web/core/nginx.conf /etc/nginx/conf.d/default.conf
