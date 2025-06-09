@@ -61,8 +61,9 @@ on:
         default: "audit-service"
 
 env:
-  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
+  # Credentials for Docker Hub
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
 
 jobs:
   build:
