@@ -132,7 +132,7 @@ function AppFieldScreenWrapper() {
                 );
               }
             )}
-            {currentCard?.config?.enableFieldAddition && (
+            {currentCard.type !== "template" && currentCard?.config?.enableFieldAddition && (
               <Button
                 className={"app-config-drawer-button"}
                 type={"button"}
@@ -160,7 +160,7 @@ function AppFieldScreenWrapper() {
           </>
         );
       })}
-      {currentCard?.config?.enableSectionAddition && (
+      {currentCard.type !== "template" && currentCard?.config?.enableSectionAddition && (
         <Button
           className={"app-config-add-section"}
           type={"button"}
@@ -179,7 +179,9 @@ function AppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-      <div className="app-config-drawer-subheader">
+      {currentCard.type !== "template" && (
+        <>
+        <div className="app-config-drawer-subheader">
         {t("APPCONFIG_SUBHEAD_BUTTONS")}
         <ConsoleTooltip toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
       </div>
@@ -213,6 +215,9 @@ function AppFieldScreenWrapper() {
           }}
         />
       </LabelFieldPair>
+      </>
+      )
+      }
     </React.Fragment>
   );
 }
