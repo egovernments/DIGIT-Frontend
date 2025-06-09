@@ -1,33 +1,33 @@
 # ─── BUILD STAGE ────────────────────────────────────────────────────────────
 FROM node:14-alpine AS build
 
-# Install git and essential build tools for native modules
-# This helps prevent errors if a package needs to be compiled from source
+# Install git and essential build tools
 RUN apk update && apk upgrade && \
     apk add --no-cache git python3 make g++
 
+# This ARG will be set by the --build-arg flag in your docker build command
 ARG WORK_DIR
-# Set the working directory for the entire web app
+# Set the working directory for the web app inside the container
 WORKDIR /app/web
 
-# Use modern ENV syntax
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 
 # --- Docker Caching Optimization ---
-# 1. Copy only the dependency definition files
+# 1. Copy only the dependency definition files from your host machine
+#    (e.g., from ./micro-ui/package.json) into the container's WORKDIR (/app/web).
 COPY ${WORK_DIR}/package.json ${WORK_DIR}/yarn.lock ./
 
-# 2. Install dependencies. This layer will be cached unless package.json/yarn.lock changes.
-#    Use a long network timeout to handle slow emulation.
+# 2. Install dependencies. This layer is now cached.
 RUN yarn install --ignore-engines --network-timeout 600000
 
 # 3. Now copy the rest of the application source code
-COPY ${WORK__DIR} .
+#    FIXED: Changed WORK__DIR to WORK_DIR
+COPY ${WORK_DIR} .
 # ------------------------------------
 
 RUN ls -lah
 
-# Now, run your scripts. Note that `yarn install` is already done.
+# Run your build scripts
 RUN node -e "const v8 = require('v8'); console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024));" && \
     node -e "console.log('core only');" && \
     cd core && \
