@@ -12,39 +12,45 @@ WORKDIR /app
 ARG WORK_DIR
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 
-# This is CRITICAL: Add node_modules/.bin to the PATH for all subsequent RUN commands
-ENV PATH="/app/node_modules/.bin:$PATH"
+# --- Monorepo Caching Optimization & Setup ---
 
-# --- Monorepo Caching Optimization ---
-
-# 1. Copy the root yarn.lock
+# 1. Copy only the files needed to install dependencies.
 COPY yarn.lock ./
-
-# 2. Copy the package.json files for the relevant workspaces.
 COPY ${WORK_DIR}package.json ./${WORK_DIR}
 COPY ${WORK_DIR}web/package.json ./${WORK_DIR}web/
-COPY ${WORK_DIR}web/core/package.json ./${WORK_DIR}web/core/
+# Add copies for any other package.json files within your workspaces if needed
+COPY ${WORK_DIR}micro-ui-internals/packages/libraries/package.json ./${WORK_DIR}micro-ui-internals/packages/libraries/
+COPY ${WORK_DIR}micro-ui-internals/packages/react-components/package.json ./${WORK_DIR}micro-ui-internals/packages/react-components/
+COPY ${WORK_DIR}micro-ui-internals/packages/modules/workbench/package.json ./${WORK_DIR}micro-ui-internals/packages/modules/workbench/
 
-# 3. Install ALL dependencies from the root.
+# 2. Change to the monorepo root directory. The package.json with the "workspaces"
+#    key defines this root.
+WORKDIR /app/${WORK_DIR}
+
+# 3. CRITICAL: Set the PATH to include the node_modules binaries for this monorepo.
+ENV PATH="/app/micro-ui/node_modules/.bin:$PATH"
+
+# 4. Install ALL dependencies from the monorepo root.
 RUN yarn install --ignore-engines --network-timeout 600000
 
-# 4. Now that dependencies are installed, copy the entire project source code.
+# 5. Now, copy the rest of your project's source code.
+WORKDIR /app
 COPY . .
 
-# --- THE FIX: Isolate the build steps into separate RUN commands ---
+# --- THE FINAL BUILD STRATEGY: Deconstruct the 'build:webpack' script ---
 
-# Step 1: Run the dependency installation script for the 'core' sub-project first.
-# Any environment changes it makes will be contained within this RUN command only.
-WORKDIR /app/${WORK_DIR}web/core
-RUN chmod +x ./install-deps.sh && \
-    ./install-deps.sh
+# Change back to the monorepo root to run workspace commands.
+WORKDIR /app/${WORK_DIR}
 
-# Step 2: Change back to the parent directory for the main build.
+# Step 1: Build the dependent libraries first, as intended by `build:libraries`.
+RUN yarn build:libraries
+
+# Step 2: Move to the web application's directory.
 WORKDIR /app/${WORK_DIR}web
 
-# Step 3: Now, in a clean shell environment, run the main webpack build.
-# The `ENV PATH` we set earlier is reapplied here, so 'run-p' will be found.
-RUN yarn build:webpack
+# Step 3: Run the final application build, as intended by `build:prod`.
+# Because of the ENV PATH, webpack and its dependencies will be found.
+RUN yarn build:prod
 
 # ─── RUNTIME STAGE ───────────────────────────────────────────────────────────
 FROM nginx:mainline-alpine
