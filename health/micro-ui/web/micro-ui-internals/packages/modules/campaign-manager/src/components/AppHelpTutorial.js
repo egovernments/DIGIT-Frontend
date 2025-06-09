@@ -50,7 +50,7 @@ const checkCurrentScreenVisible = (config, pathVar) => {
   const listOfEnabledScreens = config?.flat();
   return listOfEnabledScreens?.includes(pathVar);
 };
-const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="TutorialGuide" }) => {
+const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tutorial" }) => {
   const { t } = useTranslation();
   const [visible, setVisible] = useState(false);
   const [closing, setClosing] = useState(false);
