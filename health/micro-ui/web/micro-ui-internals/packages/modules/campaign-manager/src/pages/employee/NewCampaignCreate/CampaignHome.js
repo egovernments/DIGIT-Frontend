@@ -1,10 +1,11 @@
-import { Card, HeaderComponent, PopUp, Button , Loader } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, PopUp, Button, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { SVG } from "@egovernments/digit-ui-components";
 import { NewWindow } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+import { AppHelpContent } from "../../../components/HelpInfoCard";
 const CampaignHome = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -15,6 +16,96 @@ const CampaignHome = () => {
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
     window.Digit.SessionStorage.del("SelectedFeaturesByModule");
   }, []);
+
+  const AppHelpConfig = {
+    title: "CAMPAIGN_REQUIREMENTS_HEADING",
+    sections: [
+      {
+        heading: {
+          body: "CAMPAIGN_REQUIREMENTS_DESC",
+        },
+        content: [
+          {
+            type: "image",
+            src: "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/location.png",
+            alt: "icon",
+            width: "100%",
+          },
+          {
+            type: "text",
+            text: "HCM_WHERE",
+            style: ["bold"],
+          },
+          {
+            type: "text",
+            text: "HCM_WHERE_DESC",
+          },
+          {
+            type: "image",
+            src: "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/twopeople.png",
+            alt: "icon",
+            width: "100%",
+          },
+          {
+            type: "text",
+            text: "HCM_WHO",
+            style: ["bold"],
+          },
+          {
+            type: "text",
+            text: "HCM_WHO_DESC",
+          },
+          {
+            type: "image",
+            src: "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/groupofpeople.png",
+            alt: "icon",
+            width: "100%",
+          },
+          {
+            type: "text",
+            text: "HCM_TEAM",
+            style: ["bold"],
+          },
+          {
+            type: "text",
+            text: "HCM_TEAM_DESC",
+          },
+          {
+            type: "image",
+            src: "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/facility.png",
+            alt: "icon",
+            width: "100%",
+          },
+          {
+            type: "text",
+            text: "HCM_FACILITIES",
+            style: ["bold"],
+          },
+          {
+            type: "text",
+            text: "HCM_FACILITIES_DESC",
+          },
+          {
+            type: "image",
+            src: "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/helpimages/bargraph.png",
+            alt: "icon",
+            width: "100%",
+          },
+          {
+            type: "text",
+            text: "HCM_TARGET",
+            style: ["bold"],
+          },
+          {
+            type: "text",
+            text: "HCM_TARGET_DESC",
+          }
+        ],
+      }
+    ],
+    pages: "apply-page",
+    module: "application-module",
+  };
 
   const { data: CampaignRequirementsData, isLoading: CampaignRequirementsLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -33,8 +124,8 @@ const CampaignHome = () => {
   );
 
   if (CampaignRequirementsLoading) {
-      return <Loader page={true} variant={"PageLoader"} />;
-    }
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
 
   return (
     <Card>
@@ -48,7 +139,7 @@ const CampaignHome = () => {
           }}
         >
           <NewWindow />
-          <div className={"descStyle"}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
+          <div className={"descStyle "}>{t("HCM_CREATE_NEW_CAMPAIGN")}</div>
         </div>
         <div
           className={"cardStyle disabledCard"}
@@ -56,13 +147,13 @@ const CampaignHome = () => {
             // Add functionality for importing existing campaign
           }}
         >
-          <SVG.SystemUpdateAlt width="40" height="40" fill={"#505a5f"} />
-          <div className={"descStyle"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
+          <SVG.SystemUpdateAlt width="40" height="40" fill={"#c5c5c5"} />
+          <div className={"descStyle disabledText"}>{t("HCM_IMPORT_EXISTING_CAMPAIGN")}</div>
         </div>
       </div>
       {showPopUp && (
         <PopUp
-          // className={"boundaries-pop-module"}
+          className={"campaign-requirements-heading"}
           type={"default"}
           heading={t("CAMPAIGN_REQUIREMENTS_HEADING")}
           children={[]}
@@ -86,24 +177,7 @@ const CampaignHome = () => {
             />,
           ]}
         >
-          {
-            <div>
-              {/* Header */}
-              <h2 style={{ marginBottom: "1rem" }}>{t(CampaignRequirementsData?.[0]?.header)}</h2>
-
-              {/* Descriptions */}
-              <ul style={{ paddingLeft: "1.2rem" }}>
-                {CampaignRequirementsData?.[0]?.descriptions?.map((item, index) => (
-                  <li key={index} style={{ marginBottom: "0.75rem" }}>
-                    <strong>{t(item.head)}</strong> {t(item.text)}
-                  </li>
-                ))}
-              </ul>
-
-              {/* Footer */}
-              <div style={{ marginTop: "1.5rem" }}>{t(CampaignRequirementsData?.[0]?.footer)}</div>
-            </div>
-          }
+          <AppHelpContent config={AppHelpConfig} groupTextBlocks={true}></AppHelpContent>
         </PopUp>
       )}
     </Card>

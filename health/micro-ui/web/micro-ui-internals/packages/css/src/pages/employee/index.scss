@@ -621,6 +621,9 @@ tbody {
   h2 {
     color: theme(digitv2.lightTheme.text-primary);
   }
+  div{
+    flex-direction: column;
+  }
 }
 
 .link {

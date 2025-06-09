@@ -40,6 +40,12 @@ const CampaignCard = () => {
       // count: isLoading?"-":data
     },
     {
+      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      link: `/workbench-ui/employee/campaign/campaign-home`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
+    {
       label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       roles: ROLES.CAMPAIGN_MANAGER,
@@ -80,12 +86,6 @@ const CampaignCard = () => {
     //   roles: ROLES.CAMPAIGN_MANAGER,
     //   // count: isLoading?"-":data
     // },
-    {
-      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
-      link: `/workbench-ui/employee/campaign/campaign-home`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-    },
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION"),
     //   link: `/workbench-ui/employee/campaign/app-configuration`,

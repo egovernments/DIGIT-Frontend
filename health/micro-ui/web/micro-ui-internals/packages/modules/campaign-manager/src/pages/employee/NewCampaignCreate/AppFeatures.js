@@ -177,7 +177,6 @@ const AppFeatures = () => {
             key="back"
             label={t("GO_BACK")}
             title={t("GO_BACK")}
-            icon="ArrowBack"
             variation="secondary"
             style={{ marginLeft: "2.5rem" }}
             onClick={() => {
@@ -190,8 +189,6 @@ const AppFeatures = () => {
             key="next"
             label={t("NEXT")}
             title={t("NEXT")}
-            icon="ArrowForward"
-            isSuffix
             variation="primary"
             onClick={() => {
               const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
