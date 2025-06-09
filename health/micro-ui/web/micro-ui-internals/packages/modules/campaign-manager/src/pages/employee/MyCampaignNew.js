@@ -23,7 +23,7 @@ const MyCampaignNew = () => {
   );
 
   const onTabChange = (n) => {
-    setTabData((prev) => prev.map((i, c) => ({ ...i, active: c === n  })));
+    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n  })));
     setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
   };
 
