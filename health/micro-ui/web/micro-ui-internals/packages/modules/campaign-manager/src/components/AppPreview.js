@@ -326,12 +326,10 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
-
-
-  return(
+  return (
     <div className="app-preview">
       {data.cards.map((card, index) => (
-        <Card key={index} className="app-card" style={{flexDirection: "column", display: "flex", minHeight: "100%"}}>
+        <Card key={index} className="app-card" style={{ flexDirection: "column", display: "flex", minHeight: "100%" }}>
           {card.headerFields.map((headerField, headerIndex) => (
             <div key={headerIndex}>
               {headerField.jsonPath === "ScreenHeading" ? (
@@ -344,6 +342,18 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
           {data.type !== "template" && card?.fields
             ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
+              if (getFieldType(field) === "checkbox") {
+                return (
+                  <CheckBox
+                    mainClassName={"app-config-checkbox-main"}
+                    labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
+                    onChange={(e) => {}}
+                    value={""}
+                    label={t(field?.label)}
+                    isLabelFirst={false}
+                  />
+                );
+              }
               return (
                 <FieldV1
                   charCount={field?.charCount}
