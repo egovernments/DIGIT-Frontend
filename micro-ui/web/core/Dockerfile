@@ -12,9 +12,9 @@ WORKDIR /app
 ARG WORK_DIR
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 
-# --- THE FIX: Add node_modules/.bin to the PATH ---
-# This makes binaries from dependencies (like run-p) available to all RUN commands.
-ENV PATH /app/node_modules/.bin:$PATH
+# --- THE FIX: Correct ENV syntax for PATH ---
+# The key=value format is required for variable expansion like $PATH to work.
+ENV PATH="/app/node_modules/.bin:$PATH"
 
 # --- Monorepo Caching Optimization ---
 
@@ -37,7 +37,7 @@ WORKDIR /app/${WORK_DIR}web
 
 # --- End Optimization ---
 
-# Run your build scripts. Because of the ENV PATH, 'run-p' will now be found.
+# Run your build scripts. Because of the corrected ENV PATH, 'run-p' will now be found.
 RUN node -e "const v8 = require('v8'); console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024));" && \
     node -e "console.log('core only');" && \
     cd core && \
