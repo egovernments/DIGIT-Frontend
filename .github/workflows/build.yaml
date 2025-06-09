@@ -95,31 +95,36 @@ jobs:
           DEFAULT_DOCKERFILE="build/maven/Dockerfile"
           DEFAULT_WORKDIR="${{ github.event.inputs.service_folder }}/${{ matrix.service }}"
 
-          # Debug: list all image-name / dockerfile pairs
+          # Debug: list all image-name / dockerfile / work-dir pairs
           echo "All build entries from build-config.yml:"
           yq eval '.config[].build[] | "✱ image-name: \(.["image-name"]) → dockerfile: \(.dockerfile // "N/A") work-dir: \(."work-dir" // "N/A")"' build/build-config.yml || true
 
+          # Extract dockerfile and work-dir
           DF=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile // \"\"" build/build-config.yml | head -n 1)
           WD=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .\"work-dir\" // \"\"" build/build-config.yml | head -n 1)
 
+          # Warn if multiple entries
           MATCH_COUNT=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile" build/build-config.yml | wc -l)
+          if [ "$MATCH_COUNT" -gt 1 ]; then
+            echo "Multiple build entries found for \"$SERVICE\"; using first dockerfile: $DF and first work-dir: $WD"
+          fi
 
+          # Fallbacks
           if [ -z "$DF" ] || [ "$DF" = "null" ]; then
             echo "No dockerfile entry found for \"$SERVICE\" in build-config.yml; using default"
             DF="$DEFAULT_DOCKERFILE"
           else
-            if [ "$MATCH_COUNT" -gt 1 ]; then
-              echo "Multiple dockerfiles found for $SERVICE; using first match: $DF"
-            else
-              echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
-            fi
+            echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
           fi
 
           if [ -z "$WD" ] || [ "$WD" = "null" ]; then
             echo "No work-dir entry found for \"$SERVICE\"; using default"
             WD="$DEFAULT_WORKDIR"
+          else
+            echo "Found work-dir \"$WD\" for service \"$SERVICE\"."
           fi
 
+          # Export outputs
           echo "dockerfile_path=$DF" >> "$GITHUB_OUTPUT"
           echo "work_dir=$WD" >> "$GITHUB_OUTPUT"
           echo "DOCKERFILE_PATH=$DF" >> "$GITHUB_ENV"
@@ -219,8 +224,6 @@ jobs:
           IMG="egovio/${{ matrix.service }}:${{ steps.tag.outputs.tag }}"
           echo "$IMG"
           echo "docker_image=$IMG" >> "$GITHUB_OUTPUT"
-
-          # Append to GitHub Actions summary
           echo "### Application Docker Image" >> "$GITHUB_STEP_SUMMARY"
           echo "$IMG" >> "$GITHUB_STEP_SUMMARY"
 
@@ -231,7 +234,5 @@ jobs:
           IMG="egovio/${{ matrix.service }}-db:${{ steps.tag.outputs.tag }}"
           echo "$IMG"
           echo "db_image=$IMG" >> "$GITHUB_OUTPUT"
-
-          # Append to GitHub Actions summary
           echo "### Database Docker Image" >> "$GITHUB_STEP_SUMMARY"
           echo "$IMG" >> "$GITHUB_STEP_SUMMARY"
