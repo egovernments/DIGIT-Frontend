@@ -1,4 +1,6 @@
 # Changelog 
+## [1.8.38]  [10-Jun-2025]
+- integrated with updated version
 
 ## [1.8.37] - [04-June-2025]
 - Added an additional component `Carousel.js`

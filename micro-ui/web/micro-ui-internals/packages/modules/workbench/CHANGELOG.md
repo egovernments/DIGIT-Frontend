@@ -1,3 +1,6 @@
+## [1.8.23]  [10-Jun-2025]
+- integrated with updated version
+
 ## [1.0.22]  [28-Apr-2025]
 - Localization Bulk Upload - Updated SheetName and Column Widths
 
