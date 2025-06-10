@@ -621,6 +621,9 @@ tbody {
   h2 {
     color: theme(digitv2.lightTheme.text-primary);
   }
+  div{
+    flex-direction: column;
+  }
 }
 
 .link {
@@ -1116,4 +1119,12 @@ tbody {
   color: theme(digitv2.lightTheme.primary-2);
   display: flex;
   align-items: baseline;
+}
+
+.icon-wrapper.app-config-tooltip {
+  .tooltip-wrapper {
+    .tooltip-content {
+      width: auto !important;
+    }
+  }
 }

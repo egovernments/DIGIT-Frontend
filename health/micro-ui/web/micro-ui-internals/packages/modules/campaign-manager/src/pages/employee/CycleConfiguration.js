@@ -5,6 +5,7 @@ import { TextInput, InfoCard , Stepper , TextBlock , Loader } from "@egovernment
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
+import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -76,21 +77,27 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const [isLoading , setIsLoading] = useState(false);
   const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
   const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
-  const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
+  const [filteredDeliveryConfig, setFilterDeliveryConfig] = useState(null);
+  const { isLoading: deliveryConfigLoading, data } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "HCM-PROJECT-TYPES",
-    [{ name: "projectTypes" }],
+    [{ name: "projectTypes",
+     }],
     {
       staleTime: 0,
       cacheTime: 0,
       enabled: selectedProjectType ? true : false,
-      select: (data) => {
-        const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
-        return temp;
-      },
     },
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
+
+  useEffect(()=>{
+
+    if(data && selectedProjectType){
+       setFilterDeliveryConfig(getDeliveryConfig({data: data?.MdmsRes?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType}));
+    }
+
+  }, [data, selectedProjectType])
 
   useEffect(()=>{
     if(!filteredDeliveryConfig ||  !filteredDeliveryConfig?.code){
@@ -194,7 +201,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     else if(currentStep === 2) setKey(9);
     else setKey(8);
   };
-
   if(isLoading){
     return <Loader page={true} variant={"PageLoader"}/>;
   }
@@ -274,14 +280,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           )}
         </CardText>
         <LabelFieldPair  style={{ marginBottom:"1.5rem" }}>
-          <CardLabel>
+          <CardLabel className="cycleBold">
             {t(`CAMPAIGN_NO_OF_CYCLE`)}
             <span className="mandatory-span">*</span>
           </CardLabel>
           <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
         </LabelFieldPair>
         <LabelFieldPair>
-          <CardLabel>
+          <CardLabel className="cycleBold">
             {t(`CAMPAIGN_NO_OF_DELIVERY`)}
             <span className="mandatory-span">*</span>
           </CardLabel>

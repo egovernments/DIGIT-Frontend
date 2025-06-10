@@ -398,8 +398,9 @@
   width: 100% !important;
 }
 .campaign-header-style {
-  color: theme(digitv2.lightTheme.header-sidenav);
+  color: theme(digitv2.lightTheme.primary-2);
   font-size: 2.5rem;
+  padding-bottom: 1rem;
 }
 .SubHeadingClass {
   color: theme(digitv2.lightTheme.text-color-secondary);
@@ -413,6 +414,7 @@
   color: theme(digitv2.lightTheme.primary-2);
   font-weight: 700;
   font-size: 40px;
+  padding-bottom: 0.5rem;
 }
 .descStyle {
   font-family: "Roboto";
@@ -421,6 +423,9 @@
   color: theme(digitv2.lightTheme.primary);
   text-align: center;
   margin-top: 1.5rem;
+.disabledText {
+  color: #c5c5c5;
+}
 }
 .containerStyle {
   display: flex;
@@ -446,9 +451,9 @@
 }
 .disabledCard {
   cursor: not-allowed;
-  border: 1.5px solid theme(digitv2.lightTheme.text-color-secondary);
+  border: 1.5px solid #c5c5c5;
   .descStyle {
-    color: theme(digitv2.lightTheme.text-color-secondary);
+    color: #c5c5c5
   }
   svg {
     fill: theme(digitv2.lightTheme.text-color-secondary);
@@ -607,3 +612,91 @@
     width: 40%;
   }
 }
+
+.content-group {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  border-bottom: 1px solid #ddd;
+}
+
+.content-group.no-border {
+  border-bottom: none;
+  padding-bottom: 0rem;
+  margin-bottom: 0rem;
+}
+
+.content-icon {
+  width: 6.5rem;
+  height: 6.5rem;
+  object-fit: contain;
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.content-text-block {
+  display: flex;
+  flex-direction: column;
+}
+
+.content-bold-text {
+  font-weight: bold;
+  font-size: 1.5rem;
+  margin-bottom: 4px;
+  color: theme(digitv2.lightTheme.primary-2);
+}
+
+.content-regular-text {
+  font-size: theme(digitv2.fontSize.heading-s);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+}
+
+/* Fallback text group */
+.text-group {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  margin-bottom: 12px;
+}
+
+.bold-text {
+  font-weight: bold;
+  margin: 0;
+}
+
+.regular-text {
+  margin: 0;
+}
+
+.paragraph-text {
+  margin-bottom: 12px;
+}
+
+.image-block {
+  margin: 10px 0;
+}
+
+.responsive-image {
+  max-width: 100%;
+  height: auto;
+}
+
+.list-block {
+  padding-left: 20px;
+  margin-bottom: 12px;
+}
+.campaign-requirements-heading{
+  .digit-popup-icon-header-container{
+  .digit-popup-heading-subheading-wrap{
+    .digit-popup-heading{
+    color: theme(digitv2.lightTheme.primary-2);
+    }
+  }
+}
+}
+
+.cycleBold{
+  font-weight: 700;
+}
+

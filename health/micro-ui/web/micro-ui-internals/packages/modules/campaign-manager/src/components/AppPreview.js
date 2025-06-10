@@ -14,6 +14,8 @@ import {
   CheckBox,
 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
+import "../utils/template_components/RegistrationComponents";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -327,7 +329,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
   return (
     <div className="app-preview">
       {data.cards.map((card, index) => (
-        <Card key={index} className="app-card">
+        <Card key={index} className="app-card" style={{ flexDirection: "column", display: "flex", minHeight: "100%" }}>
           {card.headerFields.map((headerField, headerIndex) => (
             <div key={headerIndex}>
               {headerField.jsonPath === "ScreenHeading" ? (
@@ -337,7 +339,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
               )}
             </div>
           ))}
-          {card?.fields
+          {data.type !== "template" && card?.fields
             ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
             ?.map((field, fieldIndex) => {
               if (getFieldType(field) === "checkbox") {
@@ -393,17 +395,71 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                 />
               );
             })}
-          <Button
+          {data.type !== "template" && <Button
             className="app-preview-action-button"
             variation="primary"
             label={t(data?.actionLabel)}
             title={t(data?.actionLabel)}
             onClick={() => {}}
-          />
+          />}
+          {/* {data.type === "template" && ComponentConfigMdmsData?.length > 0 && (() => {
+          const TemplateComponent = getRegisteredComponent(data.name);
+          return TemplateComponent ? (
+            <TemplateComponent
+              components={card.fields}
+              selectedField={selectedField}
+              metaMasterConfig={ComponentConfigMdmsData}
+              t={t}
+            />
+          ) : null;
+        })()} */}
+         {data.type === "template" && <TemplateScreen card={card}  name={data.name}        t={t}     selectedField={selectedField}
+ />}
         </Card>
       ))}
     </div>
   );
+
 };
+
+
+const TemplateScreen =({selectedField,card,name,t})=>{
+  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
+  const componentMasterName = "RegistrationComponentsConfig";
+
+  const { isLoading: isLoadingComponentMaster, data: ComponentConfigMdmsData } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getCurrentTenantId(),
+    MODULE_CONSTANTS,
+    [
+      { name: componentMasterName, limit: 100 },
+    ],
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      select: (data) => {
+       return data?.[MODULE_CONSTANTS]?.[componentMasterName]
+      },
+    },
+    { schemaCode: "APP_COMPONENT_MASTER_DATA" } //mdmsv2
+  );
+
+  if(isLoadingComponentMaster ){
+    return <Loader/>
+  }
+  const TemplateComponent = getRegisteredComponent(name);
+
+
+  return   ComponentConfigMdmsData?.length > 0 && (() => {
+    return TemplateComponent ? (
+      <TemplateComponent
+        components={card.fields}
+        selectedField={selectedField}
+        metaMasterConfig={ComponentConfigMdmsData}
+        t={t}
+      />
+    ) : <div>No Component to preview</div>;
+  })()
+
+}
 
 export default AppPreview;
