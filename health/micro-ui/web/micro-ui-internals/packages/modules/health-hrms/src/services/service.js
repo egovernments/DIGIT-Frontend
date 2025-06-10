@@ -2,6 +2,7 @@ import { HRMS_CONSTANTS } from "../constants/constants";
 const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 import { convertEpochToDate } from "../utils/utlis";
 import employeeDetailsFetch from "./FetchEmployeeDetails";
+import HrmsService from "./hrms/HRMSService";
 
 /**
  * Checks if a user exists with the given phone number.
@@ -12,8 +13,9 @@ import employeeDetailsFetch from "./FetchEmployeeDetails";
  */
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
+    debugger
     //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
-    const result = await Digit.HRMSService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
+    const result = await HrmsService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
 
     if (result?.Employees?.length > 0) {
       return true; // User exists, return false
@@ -38,7 +40,7 @@ export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
 export const checkIfUserExist = async (data, tenantId) => {
   try {
     if (data?.SelectEmployeeId && data?.SelectEmployeeId?.trim().length > 0) {
-      const result = await Digit.HRMSService.search(tenantId, null, { codes: data?.SelectEmployeeId });
+      const result = await HrmsService.search(tenantId, null, { codes: data?.SelectEmployeeId })
 
       if (result?.Employees?.length > 0) {
         return true; // User exists, return false
@@ -249,7 +251,7 @@ export const editDefaultUserValue = (data, tenantId) => {
     fromDate: null,
     toDate: null,
   };
-
+debugger
   return defaultValues;
 };
 
