@@ -13,7 +13,7 @@ import HrmsService from "./hrms/HRMSService";
  */
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
-    debugger
+    
     //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
     const result = await HrmsService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
 
@@ -251,7 +251,7 @@ export const editDefaultUserValue = (data, tenantId) => {
     fromDate: null,
     toDate: null,
   };
-debugger
+
   return defaultValues;
 };
 
