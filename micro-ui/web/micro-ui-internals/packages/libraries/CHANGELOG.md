@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.14]  [10-Jun-2025]
+- integrated with updated version
+
 ## [1.8.13]  [25-Apr-2025]
 - Updated Custom mutation hook and usecutsomAPI hook to handle header and method in request.
 
