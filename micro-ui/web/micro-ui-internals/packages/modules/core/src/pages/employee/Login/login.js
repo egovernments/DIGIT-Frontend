@@ -67,11 +67,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     //   alert("Please Select City!");
     //   return;
     // }
-    if(data?.username){
-      data.username=data.username.trim();
+    if (data?.username) {
+      data.username = data.username.trim();
     }
-    if(data?.password){
-      data.password=data.password.trim();
+    if (data?.password) {
+      data.password = data.password.trim();
     }
 
     setDisable(true);
@@ -172,7 +172,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const onFormValueChange = (setValue, formData, formState) => {
 
     // Extract keys from the config
-    const keys = config[0].body.filter(field=>field?.isMandatory).map((field) => field.key);
+    const keys = config[0].body.filter(field => field?.isMandatory).map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
@@ -186,10 +186,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
-     propsConfig.bannerImages ? ( <React.Fragment>
-        <div className="login-container">
-          <Carousel />
-          <div className="login-form-container">
+    propsConfig.bannerImages ? (<React.Fragment>
+      <div className="login-container">
+        <Carousel />
+        <div className="login-form-container">
           <FormComposerV2
             onSubmit={loginOTPBased ? onOtpLogin : onLogin}
             isDisabled={isDisabled || disable}
@@ -210,9 +210,19 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           >
             {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
           </FormComposerV2>
+          {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+          <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
+            <ImageComponent
+              alt="Powered by DIGIT"
+              src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+              }}
+            />{" "}
           </div>
         </div>
-      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+      </div>
     </React.Fragment>) : <Background>
       <div className="employeeBackbuttonAlign">
         <BackLink onClick={() => window.history.back()} />
