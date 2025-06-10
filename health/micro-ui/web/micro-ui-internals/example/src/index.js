@@ -8,14 +8,14 @@ import "@egovernments/digit-ui-health-css/example/index.css";
 
 import { UICustomizations } from "./UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
-import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
-import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
-import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
-import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
+// import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+// import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+// import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
+// import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
+// import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+// import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
+// import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
 var Digit = window.Digit || {};
 
@@ -70,15 +70,15 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initWorkbenchHCMComponents();
+  // initUtilitiesComponents();
+  // initWorkbenchComponents();
+  // initWorkbenchHCMComponents();
   initCampaignComponents();
-  initMicroplanComponents();
-  initPaymentComponents();
-  initHRMSComponents();
-  initPGRComponents();
-  initDSSComponents();
+  // initMicroplanComponents();
+  // initPaymentComponents();
+  // initHRMSComponents();
+  // initPGRComponents();
+  // initDSSComponents();
 
   const moduleReducers = (initData) => initData;
 
