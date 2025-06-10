@@ -3,6 +3,8 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
+## [1.8.19]  [4-Mar-2025]
+- HCMPRE-1766 :  Enhance API Dropdown with req criteria props, Introduce MDMSDropdown component 
 
 ## [1.8.19]  [4-Mar-2025]
 - DUCE-254 :  introduced a new formcomposercitizen for citizen variant
