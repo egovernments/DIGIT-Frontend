@@ -3,6 +3,7 @@ import React from "react";
 import SearchBeneficiaryRegistrationWrapper from "../../components/SearchBeneficiaryRegistrationWrapper";
 import { registerComponent } from "./RegistrationRegistry";
 import AppPreviewResponse from "../../components/AppPreviewResponse";
+import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper";
 
 
 
@@ -109,8 +110,8 @@ const ContentDetails = (props) => {
             key={index} // Provide a unique key for each item
             className=""
             inline
-            label={t(pair.label)} // Dynamically set the label
-            value={t(pair.value)} // Dynamically set the value
+            label={props.t(pair.label)} // Dynamically set the label
+            value={props.t(pair.value)} // Dynamically set the value
             // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
           />
         </div>
@@ -119,51 +120,28 @@ const ContentDetails = (props) => {
   );
 };
 
-const HousedoldOverViewMemberCard = (props) => {
-  // return (
-  //   <div style={styles.card}>
-  //     <div style={styles.header}>
-  //       <div style={styles.name}>
-  //         <strong>{props.name}</strong> <span style={styles.relation}>({props.relation})</span>
-  //       </div>
-
-  //       <div style={styles.editButton}>
-  //         <EditButton label={props.label} t={props.t} onClick={props.onClick} hidden={props.hidden} />
-  //       </div>
-  //     </div>
-  //     <div style={styles.details}>
-  //       <span>{props.gender}</span>
-  //       <div style={styles.separator} />
-  //       <span>{props.age} years</span>
-  //     </div>
-
-  //     <div>
-  //       <EditButton alignment="center" label={props.smcDeliverLabel} t={t} onClick={() => {}} hidden={props.hidden} />
-  //       <EditButton alignment="center" label={props.unableToDeliverLabel} t={props.t} onClick={props.onClick} hidden={props.hidden} />
-  //     </div>
-  //   </div>
-  // );
+const HouseholdOverViewMemberCard = (props) => {
 
   return (
     <div style={styles.card}>
       <div style={styles.header}>
         <div style={styles.name}>
-          <strong>{name}</strong> <span style={styles.relation}>({relation})</span>
+          <strong>{props.name}</strong> 
         </div>
-        <EditButton label={editIndividual?.label} hidden={editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
+        <EditButton label={props.editIndividual?.label} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
       </div>
       <div style={styles.details}>
-        <span>{gender}</span>
+        <span>{props.gender}</span>
         <div style={styles.separator} />
-        <span>{age} years</span>
+        <span>{props.age} years</span>
       </div>
 
       {/* Two Center Buttons */}
-      <EditButton alignment="center" label={smcPrimaryBtn?.label} hidden={smcPrimaryBtn?.hidden} onClick={() => console.log("SMC Delivery")} />
+      <EditButton alignment="center" label={props.smcPrimaryBtn?.label} hidden={props.smcPrimaryBtn?.hidden} onClick={() => console.log("SMC Delivery")} />
       <EditButton
         alignment="center"
-        label={smcSecondaryBtn?.label}
-        hidden={smcSecondaryBtn?.hidden}
+        label={props.smcSecondaryBtn?.label}
+        hidden={props.smcSecondaryBtn?.hidden}
         onClick={() => console.log("Unable to Deliver")}
       />
     </div>
@@ -235,4 +213,4 @@ registerComponent("HouseholdAcknowledgement", AppPreviewResponse);
 registerComponent("HouseholdOverview", HouseHoldOverViewWrapper);
 registerComponent("EditButton", EditButton);
 registerComponent("ContentDetails", ContentDetails);
-registerComponent("HousedoldOverViewMemberCard", HousedoldOverViewMemberCard);
+registerComponent("HouseholdOverViewMemberCard", HouseholdOverViewMemberCard);

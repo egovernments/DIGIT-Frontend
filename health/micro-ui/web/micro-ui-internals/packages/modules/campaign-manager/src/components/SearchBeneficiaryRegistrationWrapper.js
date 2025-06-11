@@ -8,7 +8,7 @@ const SearchBeneficiaryRegistrationWrapper = ({ components = [], t, selectedFiel
     (field) => !field.hidden && field.jsonPath !== "BeneficiaryRegistrationButton" && field.jsonPath !== "scanner"
   );
   const buttonFields = components.filter(
-    (field) => !field.hidden && (field.jsonPath === "BeneficiaryRegistrationButton" || field.jsonPath === "scanner")
+    (field) => !field.hidden && (field.jsonPath === "BeneficiaryRegistrationButton" || field.jsonPath === "qrscanner")
   );
 
   return (
@@ -49,10 +49,10 @@ const SearchBeneficiaryRegistrationWrapper = ({ components = [], t, selectedFiel
               <Button
                 key={index}
                 className={`app-preview-action-button ${isSelected ? `app-preview-field-pair app-preview-selected` : ""}`}
-                variation={field.jsonPath === "scanner" ? "secondary" : "primary"}
+                variation={field.jsonPath === "qrscanner" ? "secondary" : "primary"}
                 label={t(field.label) || "LABEL"}
                 title={t(field.label) || "LABEL"}
-                icon={field.jsonPath === "scanner" ? "QrCodeScanner" : null}
+                icon={field.jsonPath === "qrscanner" ? "QrCodeScanner" : null}
                 onClick={() => {}}
               />
             );
