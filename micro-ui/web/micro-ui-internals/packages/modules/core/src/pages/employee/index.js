@@ -49,6 +49,9 @@ const EmployeeApp = ({
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+  
+  console.log("Current Path:", location.pathname);
+  console.log(" Path:", path);
   return (
     <div className="employee">
       <Switch>
@@ -123,7 +126,7 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+          <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && (location.pathname !== path)) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
             <div className="employee-app-wrapper digit-home-app-wrapper">
               <ErrorBoundary initData={initData}>
                 <AppModules
@@ -150,13 +153,13 @@ const EmployeeApp = ({
             {
               isSuperUserWithMultipleRootTenant && <Redirect to={`${path}/sandbox/productPage`} />}
           </Route> */}
-          <Route exact path={path}>
+          {/* <Route exact path={path}>
             {({ location }) =>
               isSuperUserWithMultipleRootTenant && location.pathname === path ? (
                 <Redirect to={`${path}/sandbox/productPage`} />
               ) : null
             }
-          </Route>
+          </Route> */}
         </Route>
         <Route>
           <Redirect to={`${path}/user/language-selection`} />
