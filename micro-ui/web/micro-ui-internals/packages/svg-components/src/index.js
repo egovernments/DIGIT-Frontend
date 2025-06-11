@@ -732,6 +732,7 @@ import { TrendingUp } from "./svg/TrendingUp";
 import { TripOrigin } from "./svg/TripOrigin";
 import { TurnedIn } from "./svg/TurnedIn";
 import { TurnedInNot } from "./svg/TurnedInNot";
+import { TutorialGuide } from "./svg/TutorialGuide";
 import { TwoWheeler } from "./svg/TwoWheeler";
 import { UnfoldLess } from "./svg/UnfoldLess";
 import { UnfoldMore } from "./svg/UnfoldMore";
@@ -1641,5 +1642,6 @@ export {
   OutpatientMed,
   AdUnits,
   ListAltCheck,
-  UploadCloud
+  UploadCloud,
+  TutorialGuide
 };

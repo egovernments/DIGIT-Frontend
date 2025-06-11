@@ -1,4 +1,6 @@
 # Changelog 
+## [1.8.38]  [10-Jun-2025]
+- integrated with updated version
 
 ## [1.8.38] - [06-June-2025]
 - Added `Fragment` wherever required as older version of react doesn't support <></>
