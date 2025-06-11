@@ -51,6 +51,20 @@ export const loginConfig = [
           },
         },
       },
+      {
+        key: "check",
+        type: "component",
+        disable: false,
+        component: "PrivacyComponent",
+        populators: {
+          name: "check"
+        },
+        customProps: {
+          module: "HCM"
+        },
+        isMandatory: false,
+        withoutLabel: true
+      },
     ],
     bannerImages: [{
       id: 1,
@@ -88,7 +102,7 @@ export const loginConfig = [
       title: 'Feature 6 Title',
       description: "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Exercitationem esse doloribus molestiae fugiat eos adipisci sequi cumque sit, laboriosam dolores blanditiis nobis assumenda quasi nemo consectetur. Officia nesciunt quibusdam molestiae."
     },
-  ],
+    ],
   },
 ];
 

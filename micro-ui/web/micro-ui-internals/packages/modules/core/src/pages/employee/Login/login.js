@@ -211,7 +211,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
             {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
           </FormComposerV2>
           {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
-          <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
+          <div className="EmployeeLoginFooter" style={{ backgroundColor: "unset" }}>
             <ImageComponent
               alt="Powered by DIGIT"
               src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
