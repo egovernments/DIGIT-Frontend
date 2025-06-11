@@ -1,6 +1,6 @@
 import { BackLink, Loader, FormComposerV2, Toast } from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
@@ -163,103 +163,92 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     config[0].body[2].populators.defaultValue = defaultValue;
   }
 
-  const defaultValues = Object.fromEntries(
+  const defaultValues = useMemo(()=>Object.fromEntries(
     config[0].body
       .filter(field => field?.populators?.defaultValue && field?.populators?.name)
       .map(field => [field.populators.name, field.populators.defaultValue])
-  );
+  ),[])
 
   const onFormValueChange = (setValue, formData, formState) => {
 
-    // Extract keys from the config
-    const keys = config[0].body.filter(field => field?.isMandatory).map((field) => field.key);
+    // Extract keys from the config    
+    const keys = config[0].body.filter(field => field?.isMandatory).map((field) => field?.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
-      return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
+      return value == null || value === "" || value === false;
     });
 
-    // Set disable based on the check
     setDisable(hasEmptyFields);
   };
 
-  return isLoading || isStoreLoading ? (
-    <Loader />
-  ) : (
-    propsConfig?.bannerImages ? (<React.Fragment>
-      <div className="login-container">
-        <Carousel bannerImages={propsConfig?.bannerImages} />
-        <div className="login-form-container">
-          <FormComposerV2
-            onSubmit={loginOTPBased ? onOtpLogin : onLogin}
-            isDisabled={isDisabled || disable}
-            noBoxShadow
-            inline
-            submitInForm
-            config={config}
-            label={propsConfig?.texts?.submitButtonLabel}
-            secondaryActionLabel={`${propsConfig?.texts?.secondaryButtonLabel}?`}
-            onSecondayActionClick={onForgotPassword}
-            onFormValueChange={onFormValueChange}
-            heading={propsConfig?.texts?.header}
-            className={` ${loginOTPBased ? "sandbox-onboarding-wrapper" : ""} `}
-            cardSubHeaderClassName="loginCardSubHeaderClassName"
-            cardClassName=""
-            buttonClassName="buttonClassName"
-            defaultValues={defaultValues}
-          >
-            {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
-          </FormComposerV2>
-          {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
-          <div className="EmployeeLoginFooter" style={{ backgroundColor: "unset" }}>
-            <ImageComponent
-              alt="Powered by DIGIT"
-              src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-              style={{ cursor: "pointer" }}
-              onClick={() => {
-                window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-              }}
-            />{" "}
-          </div>
-        </div>
+  const renderLoginForm = (extraClasses = "", cardClassName = "", wrapperClass = "") => (
+    <FormComposerV2
+      onSubmit={loginOTPBased ? onOtpLogin : onLogin}
+      isDisabled={isDisabled || disable}
+      noBoxShadow
+      inline
+      submitInForm
+      config={config}
+      label={propsConfig?.texts?.submitButtonLabel}
+      secondaryActionLabel={
+        propsConfig?.texts?.secondaryButtonLabel +
+        (extraClasses.includes("login-form-container") ? "?" : "")
+      }
+      onSecondayActionClick={onForgotPassword}
+      onFormValueChange={onFormValueChange}
+      heading={propsConfig?.texts?.header}
+      className={`${wrapperClass}`}
+      cardSubHeaderClassName="loginCardSubHeaderClassName"
+      cardClassName={cardClassName}
+      buttonClassName="buttonClassName"
+      defaultValues={defaultValues}
+    >
+      {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
+    </FormComposerV2>
+  );
+  
+  const renderFooter = (footerClassName) => (
+    <div className={footerClassName} style={{ backgroundColor: "unset" }}>
+      <ImageComponent
+        alt="Powered by DIGIT"
+        src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+        style={{ cursor: "pointer" }}
+        onClick={() => {
+          window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+        }}
+      />
+    </div>
+  );
+  
+
+  if(isLoading || isStoreLoading ){
+   return  <Loader page={true} variant="PageLoader" />
+  }
+  return propsConfig?.bannerImages ? (
+    <div className="login-container">
+      <Carousel bannerImages={propsConfig?.bannerImages} />
+      <div className="login-form-container">
+        {renderLoginForm("login-form-container", "", loginOTPBased ? "sandbox-onboarding-wrapper" : "")}
+        {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
+        {renderFooter("EmployeeLoginFooter")}
       </div>
-    </React.Fragment>) : <Background>
+    </div>
+  ) : (
+    <Background>
       <div className="employeeBackbuttonAlign">
         <BackLink onClick={() => window.history.back()} />
       </div>
-      <FormComposerV2
-        onSubmit={loginOTPBased ? onOtpLogin : onLogin}
-        isDisabled={isDisabled || disable}
-        noBoxShadow
-        inline
-        submitInForm
-        config={config}
-        label={propsConfig?.texts?.submitButtonLabel}
-        secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
-        onSecondayActionClick={onForgotPassword}
-        onFormValueChange={onFormValueChange}
-        heading={propsConfig?.texts?.header}
-        className={`loginFormStyleEmployee ${loginOTPBased ? "sandbox-onboarding-wrapper" : ""}`}
-        cardSubHeaderClassName="loginCardSubHeaderClassName"
-        cardClassName="loginCardClassName"
-        buttonClassName="buttonClassName"
-        defaultValues={defaultValues}
-      >
-        {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
-      </FormComposerV2>
-      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
-      <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-        <ImageComponent
-          alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />{" "}
-      </div>
+      {renderLoginForm(
+        "loginFormStyleEmployee",
+        "loginCardClassName",
+        loginOTPBased ? "sandbox-onboarding-wrapper" : ""
+      )}
+      {showToast && <Toast type="error" label={t(showToast)} onClose={closeToast} />}
+      {renderFooter("employee-login-home-footer")}
     </Background>
   );
+  
 };
 
 Login.propTypes = {

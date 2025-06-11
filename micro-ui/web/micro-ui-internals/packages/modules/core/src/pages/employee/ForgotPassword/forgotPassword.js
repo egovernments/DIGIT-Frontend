@@ -87,10 +87,10 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   }
 
   return (
-    propsConfig.bannerImages ? (
+    propsConfig?.bannerImages ? (
       <React.Fragment>
         <div className="login-container">
-          <Carousel />
+          <Carousel  bannerImages={propsConfig?.bannerImages} />
           <div className="login-form-container">
             <FormComposerV2
               onSubmit={onForgotPassword}
