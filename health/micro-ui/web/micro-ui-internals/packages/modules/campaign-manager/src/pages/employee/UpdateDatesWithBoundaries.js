@@ -18,6 +18,7 @@ function UpdateDatesWithBoundaries() {
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
   const campaignName = searchParams.get("campaignName");
+  const campaignNumber = searchParams.get("campaignNumber");
   const { isLoading: DateWithBoundaryLoading, data: DateWithBoundary } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
@@ -131,8 +132,8 @@ function UpdateDatesWithBoundaries() {
           message: t("ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS"),
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
-          actionLabel: t("HCM_DATE_CHANGE_SUCCESS_RESPONSE_ACTION"),
-          actionLink: `/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=16&summary=true`,
+          actionLabel: t("HCM_DATE_CHANGE_VIEW_SUCCESS_RESPONSE_ACTION"),
+          actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
         });
       } else {
         const url = getProjectServiceUrl();
