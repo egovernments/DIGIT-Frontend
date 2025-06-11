@@ -51,4 +51,4 @@ registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
 registerComponent("SearchBeneficiary", SearchBeneficiaryRegistrationWrapper);
-registerComponent("Response", AppPreviewResponse);
+registerComponent("HouseholdAcknowledgement", AppPreviewResponse);
