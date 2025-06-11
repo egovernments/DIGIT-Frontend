@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.30] - [11-June-2025]
+-Override `digit-label-field-pair` class in `login-container`
+
 ## [1.8.29] - [09-June-2025]
 -Override `digit-label-field-pair` class in `login-container`
 
