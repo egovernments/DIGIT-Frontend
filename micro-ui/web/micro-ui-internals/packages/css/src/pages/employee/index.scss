@@ -612,40 +612,40 @@
   margin-top: 1rem;
 }
 
-
-.digit-toast-success {
+.profile-update-toast .digit-toast-success {
   max-width: 100%;
   left: 0;
+  z-index: 9999;
+  position: absolute; 
 }
 
 @media (max-width: 767px) {
-  .digit-toast-success {
-    position: relative;
+  .profile-update-toast .digit-toast-success {
+    position: relative; 
     bottom: 20%;  
-    left: 16px;  
-    right: 16px;  
-    transform: none; 
-    width: auto;
-    min-width: 0;
-    max-width: none;
+    z-index: 9999;
   }
 }
 
 @media (min-width: 768px) and (max-width: 1023px) {
-  .digit-toast-success {
+  .profile-update-toast .digit-toast-success {
     width: 90%;
     max-width: 480px;
     left: 50%;
     transform: translateX(-50%);
     margin: 0 auto;
+    z-index: 9999;
+    position: fixed;
   }
 }
 
 @media (min-width: 1024px) {
-  .digit-toast-success {
+  .profile-update-toast .digit-toast-success {
     width: 480px;
     left: 50%;
     transform: translateX(-50%);
     margin: 0 auto;
+    z-index: 9999;
+    position: fixed;
   }
 }
