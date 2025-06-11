@@ -6,6 +6,7 @@ import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import ImageComponent from "../../../components/ImageComponent";
+import Carousel from "../Login/Carousel/Carousel";
 
 const ForgotPassword = ({ config: propsConfig, t }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
@@ -86,40 +87,78 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   }
 
   return (
-    <Background>
-      <div className="employeeBackbuttonAlign">
-        <BackLink onClick={() => window.history.back()} />
-      </div>
-      <FormComposerV2
-        onSubmit={onForgotPassword}
-        noBoxShadow
-        inline
-        submitInForm
-        config={config}
-        label={propsConfig.texts.submitButtonLabel}
-        secondaryActionLabel={propsConfig.texts.secondaryButtonLabel}
-        onSecondayActionClick={navigateToLogin}
-        heading={propsConfig.texts.header}
-        description={propsConfig.texts.description}
-        headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
-        descriptionStyles={{ color: "#787878", textAlign: "center" }}
-        cardStyle={{ maxWidth: "408px", margin: "auto" }}
-        className="employeeForgotPassword"
-      >
-        <Header />
-      </FormComposerV2>
-      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
-      <div className="EmployeeLoginFooter">
-        <ImageComponent
-          alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />{" "}
-      </div>
-    </Background>
+    propsConfig?.bannerImages ? (
+      <React.Fragment>
+        <div className="login-container">
+          <Carousel  bannerImages={propsConfig?.bannerImages} />
+          <div className="login-form-container">
+            <FormComposerV2
+              onSubmit={onForgotPassword}
+              noBoxShadow
+              inline
+              submitInForm
+              config={config}
+              label={propsConfig.texts.submitButtonLabel}
+              secondaryActionLabel={propsConfig.texts.secondaryButtonLabel}
+              onSecondayActionClick={navigateToLogin}
+              heading={propsConfig.texts.header}
+              description={propsConfig.texts.description}
+              headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
+              descriptionStyles={{ color: "#787878", textAlign: "center" }}
+              cardStyle={{ maxWidth: "408px", margin: "auto" }}
+              className="employeeForgotPassword"
+            >
+              <Header />
+            </FormComposerV2>
+            {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+            <div className="EmployeeLoginFooter">
+              <ImageComponent
+                alt="Powered by DIGIT"
+                src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+                style={{ cursor: "pointer" }}
+                onClick={() => {
+                  window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+                }}
+              />{" "}
+            </div>
+          </div>
+        </div>
+      </React.Fragment>
+    ) :
+      <Background>
+        <div className="employeeBackbuttonAlign">
+          <BackLink onClick={() => window.history.back()} />
+        </div>
+        <FormComposerV2
+          onSubmit={onForgotPassword}
+          noBoxShadow
+          inline
+          submitInForm
+          config={config}
+          label={propsConfig.texts.submitButtonLabel}
+          secondaryActionLabel={propsConfig.texts.secondaryButtonLabel}
+          onSecondayActionClick={navigateToLogin}
+          heading={propsConfig.texts.header}
+          description={propsConfig.texts.description}
+          headingStyle={{ textAlign: "center", fontWeight: "bold", color: "#363636" }}
+          descriptionStyles={{ color: "#787878", textAlign: "center" }}
+          cardStyle={{ maxWidth: "408px", margin: "auto" }}
+          className="employeeForgotPassword"
+        >
+          <Header />
+        </FormComposerV2>
+        {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+        <div className="EmployeeLoginFooter">
+          <ImageComponent
+            alt="Powered by DIGIT"
+            src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+            style={{ cursor: "pointer" }}
+            onClick={() => {
+              window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+            }}
+          />{" "}
+        </div>
+      </Background>
   );
 };
 
