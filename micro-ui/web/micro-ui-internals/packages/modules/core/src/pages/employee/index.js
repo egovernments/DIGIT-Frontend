@@ -50,8 +50,14 @@ const EmployeeApp = ({
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
   
-  console.log("Current Path:", location.pathname);
-  console.log(" Path:", path);
+  useEffect(() => {
+    const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
+    const queryParams = new URLSearchParams(location.search);
+    const cameFromButton = queryParams.get("from") === "sandbox"; 
+    if (isSuperUserWithMultipleRootTenant && isDirectAccess && !cameFromButton) {
+      history.replace(`${path}/sandbox/productPage`);
+    }
+  }, [location.pathname, location.search, path, history, isSuperUserWithMultipleRootTenant]);
   return (
     <div className="employee">
       <Switch>
