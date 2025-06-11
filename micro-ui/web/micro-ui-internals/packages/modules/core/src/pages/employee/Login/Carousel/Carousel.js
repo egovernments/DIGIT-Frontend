@@ -1,12 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Fragment } from 'react';
 import { loginConfig } from '../config';
 import { useTranslation } from "react-i18next";
 
-const Carousel = () => {
+const Carousel = ({bannerImages=[]}) => {
     const [currentSlide, setCurrentSlide] = useState(0);
     const { t } = useTranslation();
 
-    const carouselItems = loginConfig[0]?.bannerImages || [];
+    const carouselItems = bannerImages|| loginConfig[0]?.bannerImages || [];
 
     const nextSlide = () => {
         setCurrentSlide(prev => (prev === carouselItems.length - 1 ? 0 : prev + 1));
@@ -29,12 +29,12 @@ const Carousel = () => {
     }, [carouselItems.length]);
 
     return (
-        <>
+        <Fragment>
 
             {/* Carousel Background (70% width) */}
 
             <div className="carousel-container">
-                {carouselItems.map((item, index) => (
+                {carouselItems.sort((x,y)=>x?.id-y?.id).map((item, index) => (
                     <div
                         key={item.id}
                         className={`carousel-slide ${index === currentSlide ? 'active' : ''}`}
@@ -68,7 +68,7 @@ const Carousel = () => {
                     </button>
                 </div>
             </div>
-        </>
+        </Fragment>
     );
 };
 

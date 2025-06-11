@@ -1,8 +1,10 @@
 # Changelog
 
-## [1.8.27=8] - [04-June-2025]
-- Added `Carousel.scss` for login screen layout.
+## [1.8.29] - [09-June-2025]
+-Override `digit-label-field-pair` class in `login-container`
 
+## [1.8.28] - [04-June-2025]
+- Added `Carousel.scss` for login screen layout.
 
 ## [1.8.27] - [04-June-2025]
 - Added `Carousel.scss` for login screen layout.

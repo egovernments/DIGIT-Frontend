@@ -8,6 +8,7 @@ const EmployeeForgotPassword = () => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
 
+
   const params = useMemo(() =>
     loginConfig.map(
       (step) => {
@@ -24,7 +25,7 @@ const EmployeeForgotPassword = () => {
   return (
     <Switch>
       <Route path={`${path}`} exact>
-        <ForgotPasswordComponent config={params[0]} t={t} />
+        <ForgotPasswordComponent config={params[0]}  t={t} />
       </Route>
     </Switch>
   );
