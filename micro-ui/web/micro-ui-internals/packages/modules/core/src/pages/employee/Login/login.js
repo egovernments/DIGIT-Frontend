@@ -186,9 +186,9 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   return isLoading || isStoreLoading ? (
     <Loader />
   ) : (
-    propsConfig.bannerImages ? (<React.Fragment>
+    propsConfig?.bannerImages ? (<React.Fragment>
       <div className="login-container">
-        <Carousel />
+        <Carousel bannerImages={propsConfig?.bannerImages} />
         <div className="login-form-container">
           <FormComposerV2
             onSubmit={loginOTPBased ? onOtpLogin : onLogin}
