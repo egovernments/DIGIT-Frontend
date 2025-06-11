@@ -1,5 +1,5 @@
 # Changelog 
-## [1.8.38]  [10-Jun-2025]
+## [1.8.39]  [11-Jun-2025]
 - integrated with updated version
 
 ## [1.8.38] - [06-June-2025]

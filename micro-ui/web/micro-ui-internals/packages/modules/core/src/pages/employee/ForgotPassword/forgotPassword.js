@@ -83,7 +83,7 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   ];
 
   if (isLoading) {
-    return <Loader />;
+    return  <Loader page={true} variant="PageLoader" />
   }
 
   return (
