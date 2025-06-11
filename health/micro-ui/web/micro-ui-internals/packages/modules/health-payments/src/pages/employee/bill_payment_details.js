@@ -17,7 +17,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  * @param {boolean} editBillDetails - Whether bill is editable or not.
  * @returns {ReactFragment} A React Fragment containing the attendance details.
  */
-const BillPaymentDetails = ({ editBillDetails = false }) => {
+const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editBillDetails true or false to toggle actions
   const location = useLocation();
   const billID = location.state?.billID;
   console.log("billID", billID);
@@ -709,7 +709,8 @@ console.log("mob num:", tableData);
                                             });
                                             setCurrentPage(1);
                                             setActiveLink(e);
-                                            filterDataByStatus(e?.code);
+                                            // filterDataByStatus(e?.code);
+                                            //TODO: uncomment this line later
                                         }}
                                         setActiveLink={setActiveLink}
                                         showNav={true}
@@ -876,8 +877,8 @@ console.log("mob num:", tableData);
             ]
           : 'VERIFIED' ? [
             <Button
-              label={t(`HCM_AM_SUBMIT_LABEL`)}
-              title={t(`HCM_AM_SUBMIT_LABEL`)}
+              label={t(`HCM_AM_GENERATE_PAYMENT`)}
+              title={t(`HCM_AM_GENERATE_PAYMENT`)}
               // onClick={() => {
               //   setUpdateDisabled(true);
               //   triggerMusterRollUpdate();
