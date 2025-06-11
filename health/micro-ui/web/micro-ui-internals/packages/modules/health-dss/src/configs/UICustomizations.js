@@ -7,6 +7,15 @@ import { Button as ButtonNew, Toast } from "@egovernments/digit-ui-components";
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
+const getMDMSUrl = (v2=false) => {
+  if(v2){
+    let url = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || window.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
+    return `/${url}`;
+  }
+    let url = window.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") ||  "egov-mdms-service";
+    return `/${url}`;
+};
+
 function cleanObject(obj) {
   for (const key in obj) {
     if (Object.hasOwn(obj, key)) {
@@ -147,6 +156,446 @@ export const UICustomizations = {
         default:
           return null; // Handle any unexpected keys here if needed
       }
+    },
+  },
+  MyCampaignConfigOngoing: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        campaignsIncludeDates: true,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
+        endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigCompleted: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        endDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigUpcoming: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        campaignsIncludeDates: false,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigDrafts: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["drafted"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigDraftsNew: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["drafted"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigFailed: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["failed"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      // return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      // return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
     },
   },
 };

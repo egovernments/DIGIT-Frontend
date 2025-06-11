@@ -33,6 +33,7 @@ const CreateChecklist = () => {
   const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
+  const campaignNumber = searchParams.get("campaignNumber");
   let module = searchParams.get("module");
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
@@ -556,8 +557,8 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
           actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
           actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
-          secondaryActionLabel: "MY_CAMPAIGN",
-          secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
+          secondaryActionLabel: "VIEW_DETAILS",
+          secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
         });
       } else {
         setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
@@ -579,7 +580,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
   }, [showToast])
 
   const onSecondayActionClick = () => {
-    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`);
+    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`);
   };
 
   const fieldPairs = [
