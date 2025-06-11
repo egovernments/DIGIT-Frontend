@@ -293,7 +293,7 @@ const HouseHoldOverViewWrapper = ({ components = config, metaMasterConfig, t, se
   const renderComponents = (inputData) => {
     const formatMap = {};
     inputData.forEach((item) => {
-      formatMap[item.format] = item;
+      formatMap[item.jsonPath] = item;
     });
     const ComponentToRender = getRegisteredComponent("EditButton");
     const ContentDetails = getRegisteredComponent("ContentDetails");
