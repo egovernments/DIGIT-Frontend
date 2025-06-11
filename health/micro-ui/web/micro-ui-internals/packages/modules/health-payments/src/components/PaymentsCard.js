@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
   BILLS: ["CAMPAIGN_SUPERVISOR"],
+  EDIT_BILLS: ["BILL_EDITOR"],//TODO: add the actual role code for bill editor
 };
 
 const PaymentsCard = () => {
@@ -38,6 +39,7 @@ const PaymentsCard = () => {
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),
     generateLink("VERIFY-AND-GENERATE-BILLS", "verify-bills", ROLES.BILLS),
+    generateLink("EDIT-BILLS", "edit-bills", ROLES.EDIT_BILLS),
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;
