@@ -8,6 +8,13 @@ import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
 
+/**
+ * Renders a form for updating campaign project dates, supporting optional date boundary constraints and multi-cycle validation.
+ *
+ * Displays campaign information, handles form submission and validation, and manages confirmation and success/error notifications. On successful update, redirects to a campaign details or setup page depending on boundary configuration.
+ *
+ * @returns {JSX.Element} The rendered component for updating campaign project dates.
+ */
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
   const history = useHistory();
