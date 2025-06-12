@@ -6,9 +6,10 @@ import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
 import { Loader } from "@egovernments/digit-ui-components";
 import DownloadMaster from "../../components/DownloadMaster";
+
 const enableBulkDownload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_DOWNLOAD")
 ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_DOWNLOAD")
-: true;
+: false;
 
 const toDropdownObj = (master = "", mod = "") => {
   return {

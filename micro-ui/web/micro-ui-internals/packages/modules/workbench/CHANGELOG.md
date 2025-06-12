@@ -1,7 +1,11 @@
 
+## [1.0.25]  [16-Jun-2025]
+- Set default download capability disabled 'ENABLE_MDMS_BULK_DOWNLOAD'
+
 ## [1.0.24]  [16-Jun-2025]
-- provided download of alll data per schema & enable based on flag
-- provided download of alll data per schema 'ENABLE_MDMS_BULK_DOWNLOAD'
+- provided download of all data per schema & enable based on flag
+- flag name 'ENABLE_MDMS_BULK_DOWNLOAD'
+
 
 ## [1.8.23]  [10-Jun-2025]
 - integrated with updated version
