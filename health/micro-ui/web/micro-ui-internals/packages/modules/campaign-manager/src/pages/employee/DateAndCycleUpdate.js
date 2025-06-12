@@ -79,9 +79,12 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
   const ONE_DAY_IN_MS = 24 * 60 * 60 * 1000;
   const today = Digit.Utils.date.getDate(Date.now());
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const searchParams = new URLSearchParams(location.search);
   const { state } = useLocation();
   const historyState = window.history.state;
   const url = getProjectServiceUrl();
+  const projectId =
+  state?.projectId || historyState?.projectId || searchParams.get("projectId");
   const reqCriteria = {
     url: `${url}/v1/_search`,
     params: {
@@ -93,7 +96,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
       Projects: [
         {
           tenantId: tenantId,
-          id: state?.projectId ? state.projectId : historyState?.projectId,
+          id: projectId,
         },
       ],
     },
