@@ -4,6 +4,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
+import { useLoginConfig } from "../../../hooks/useLoginConfig";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -21,20 +22,11 @@ const EmployeeLogin = ({ stateCode }) => {
     modulePrefix,
   });
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
-    select: (data) => {
-      return {
-        config: data?.commonUiConfig?.LoginConfig,
-      };
-    },
-    retry: false,
-  });
-
+  const { data : mdmsData, isLoading } = useLoginConfig(stateCode);
   //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
     if (isLoading == false && mdmsData?.config) {
       setloginConfig(mdmsData?.config);
-      window.Digit.bannerImages = mdmsData?.config[0]?.bannerImages;
     } else {
       setloginConfig(defaultLoginConfig);
     }

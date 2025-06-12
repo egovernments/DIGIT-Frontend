@@ -84,7 +84,7 @@ const EmployeeApp = ({
                 <Otp isLogin={true} />
               </Route>
               <Route path={`${path}/user/forgot-password`}>
-                <ForgotPassword />
+                <ForgotPassword stateCode={stateCode}/>
               </Route>
               <Route path={`${path}/user/change-password`}>
                 <ChangePassword />
