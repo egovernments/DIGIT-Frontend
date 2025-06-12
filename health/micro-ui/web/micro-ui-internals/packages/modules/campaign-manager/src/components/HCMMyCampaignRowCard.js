@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Tag, Button, Card, SummaryCardFieldPair, Divider } from "@egovernments/digit-ui-components";
+import { Tag, Button, Card, SummaryCardFieldPair, Divider , PopUp , CardText } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
@@ -62,7 +62,7 @@ const getTagElements = (rowData) => {
       stroke: true,
     };
   }
-  if (Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")) {
+  if (Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user" && rowData?.status == "created")) {
     tags.userCreds = {
       label: "USER_CREDS_GENERATED",
       showIcon: true,
@@ -104,7 +104,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history) => {
+const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -112,7 +112,7 @@ const getActionButtons = (rowData, tabData, history) => {
       : null;
 
   // Always show download if userCreds exist
-  if (userResource) {
+  if (userResource && rowData?.status == "created") {
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
@@ -122,10 +122,31 @@ const getActionButtons = (rowData, tabData, history) => {
     };
   }
 
+  if (rowData?.status == "creating") {
+    actions.downloadUserCreds = {
+      label: "EDIT_CREATING_CAMPAIGN",
+      onClick: () => setShowCreatingPopUp(true),
+      size:"medium",
+      variation: "secondary",
+    };
+  }
+
+
   const currentTab = tabData?.find((i) => i?.active === true)?.label;
 
+  if(currentTab === "CAMPAIGN_FAILED"){
+    actions.editCampaign = {
+      label: "SHOW_ERROR",
+      size:"medium",
+      onClick: () =>
+        setShowErrorPopUp(true),
+      icon: "",
+      variation: "primary",
+    };
+  }
+
   // Show edit button for editable campaigns
-  if (!(currentTab === "CAMPAIGN_COMPLETED")) {
+  if (!(currentTab === "CAMPAIGN_COMPLETED" || currentTab === "CAMPAIGN_FAILED" || rowData?.status == "creating")) {
     actions.editCampaign = {
       label: "EDIT_CAMPAIGN",
       size:"medium",
@@ -150,7 +171,9 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
-  const actionButtons = getActionButtons(rowData, tabData, history);
+  const [showErrorPopUp , setShowErrorPopUp] = useState(false);
+  const [showCreatingPopUp , setShowCreatingPopUp] = useState(false);
+  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 
@@ -236,6 +259,42 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           </div>
         )}
       </div>
+      {showErrorPopUp && (
+          <PopUp
+            type={"default"}
+            heading={t("ES_CAMPAIGN_FAILED_ERROR")}
+            children={[
+              <div>
+                <CardText style={{ margin: 0 }}>{rowData?.additionalDetails?.error}</CardText>
+              </div>,
+            ]}
+            onOverlayClick={() => {
+              setShowErrorPopUp(false);
+            }}
+            onClose={() => {
+              setShowErrorPopUp(false);
+            }}
+            footerChildren={[]}
+          ></PopUp>
+        )}
+        {showCreatingPopUp && (
+          <PopUp
+            type={"default"}
+            heading={t("ES_CAMPAIGN_CREATING")}
+            children={[
+              <div>
+                <CardText style={{ margin: 0 }}>{t("HCM_CAMPAIGN_CREATION_PROGRESS")}</CardText>
+              </div>,
+            ]}
+            onOverlayClick={() => {
+              setShowCreatingPopUp(false);
+            }}
+            onClose={() => {
+              setShowCreatingPopUp(false);
+            }}
+            footerChildren={[]}
+          ></PopUp>
+        )}
     </>
   );
 };
