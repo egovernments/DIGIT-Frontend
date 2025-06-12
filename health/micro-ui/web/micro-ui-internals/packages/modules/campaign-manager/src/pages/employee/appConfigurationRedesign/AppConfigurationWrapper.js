@@ -298,11 +298,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   // const localeModule = searchParams.get("localeModule");
-  const module = localeModule ? localeModule : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -466,7 +465,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       };
     }
 
-    return { type: "success" };
+    return false;
   };
 
   const handleSubmit = async (finalSubmit) => {
