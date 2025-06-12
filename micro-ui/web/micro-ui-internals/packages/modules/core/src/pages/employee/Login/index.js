@@ -21,9 +21,9 @@ const EmployeeLogin = ({ stateCode }) => {
     language,
     modulePrefix,
   });
-  const moduleName=Digit.Utils.getConfigModuleName();
 
-  const { data : mdmsData, isLoading } = useLoginConfig(stateCode);
+  const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
+  
   //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
     if (isLoading == false && mdmsData?.config) {

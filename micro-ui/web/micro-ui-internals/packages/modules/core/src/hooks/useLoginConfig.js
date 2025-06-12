@@ -1,13 +1,15 @@
 export const useLoginConfig = (stateCode) => {
-  return Digit.Hooks.useCommonMDMS(
-    stateCode,
-    "commonUiConfig",
-    ["LoginConfig"],
-    {
-      select: (data) => ({
-        config: data?.commonUiConfig?.LoginConfig,
-      }),
-      retry: false,
-    }
-  );
+    const moduleName = Digit.Utils.getConfigModuleName();
+
+    return Digit.Hooks.useCommonMDMS(
+        stateCode,
+        moduleName,
+        ["LoginConfig"],
+        {
+            select: (data) => ({
+                config: data?.[moduleName]?.LoginConfig,
+            }),
+            retry: false,
+        }
+    );
 };

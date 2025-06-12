@@ -15,10 +15,13 @@ const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
   const history = useHistory();
   const [showToast, setShowToast] = useState(null);
   const getUserType = () => Digit.UserService.getType();
+  
   const { data : mdmsData } = useLoginConfig(stateCode);
-
-  const bannerImages = mdmsData?.config[0]?.bannerImages;
-  propsConfig?.bannerImages = bannerImages;
+  
+  if(mdmsData?.config){
+    const bannerImages = mdmsData?.config[0]?.bannerImages;
+    propsConfig.bannerImages = bannerImages;
+  }
 
   useEffect(() => {
     if (!user) {
