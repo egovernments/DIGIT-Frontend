@@ -7,13 +7,21 @@ import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../Login/Carousel/Carousel";
+import { useLoginConfig } from "../../../hooks/useLoginConfig";
 
-const ForgotPassword = ({ config: propsConfig, t }) => {
+const ForgotPassword = ({ config: propsConfig, t, stateCode }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const [user, setUser] = useState(null);
   const history = useHistory();
   const [showToast, setShowToast] = useState(null);
   const getUserType = () => Digit.UserService.getType();
+  
+  const { data : mdmsData } = useLoginConfig(stateCode);
+  
+  if(mdmsData?.config){
+    const bannerImages = mdmsData?.config[0]?.bannerImages;
+    propsConfig.bannerImages = bannerImages;
+  }
 
   useEffect(() => {
     if (!user) {

@@ -1,5 +1,14 @@
 # Changelog 
 
+## [1.8.41]  [12-Jun-2025]
+-Introduced new hook `useLoginConfig` for mdms call
+
+## [1.8.40]  [11-Jun-2025]
+- Added module name config for login and privacy screen
+
+## [1.8.39]  [11-Jun-2025]
+- integrated with updated version
+
 ## [1.8.38] - [06-June-2025]
 - Added `Fragment` wherever required as older version of react doesn't support <></>
 - PrivateRoute is using `component   as a prop in index.js file
