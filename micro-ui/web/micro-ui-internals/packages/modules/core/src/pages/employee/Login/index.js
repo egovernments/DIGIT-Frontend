@@ -34,6 +34,7 @@ const EmployeeLogin = ({ stateCode }) => {
   useEffect(() => {
     if (isLoading == false && mdmsData?.config) {
       setloginConfig(mdmsData?.config);
+      window.Digit.bannerImages = mdmsData?.config[0]?.bannerImages;
     } else {
       setloginConfig(defaultLoginConfig);
     }

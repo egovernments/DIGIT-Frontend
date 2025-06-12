@@ -1,4 +1,8 @@
 # Changelog 
+
+## [1.8.40]  [12-Jun-2025]
+- Persistent banner images logic for forgot password from login config itself.
+
 ## [1.8.39]  [11-Jun-2025]
 - integrated with updated version
 

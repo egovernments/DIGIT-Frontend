@@ -14,6 +14,8 @@ const ForgotPassword = ({ config: propsConfig, t }) => {
   const history = useHistory();
   const [showToast, setShowToast] = useState(null);
   const getUserType = () => Digit.UserService.getType();
+  const bannerImages = window.Digit.bannerImages;
+  propsConfig.bannerImages = bannerImages;
 
   useEffect(() => {
     if (!user) {
