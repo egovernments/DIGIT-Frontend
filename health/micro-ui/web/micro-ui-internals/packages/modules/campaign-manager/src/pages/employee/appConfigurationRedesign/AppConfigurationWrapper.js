@@ -469,11 +469,13 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     return { type: "success" };
   };
 
-  const handleSubmit = async ({ finalSubmit }) => {
-    const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
-    if (errorCheck) {
-      setShowToast({ key: "error", label: errorCheck });
-      return;
+  const handleSubmit = async (finalSubmit) => {
+    if (state?.screenData?.[0]?.type === "object") { //skipping template screen validation
+      const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
+      if (errorCheck) {
+        setShowToast({ key: "error", label: errorCheck });
+        return;
+      }
     }
     const localeArrays = createLocaleArrays();
     for (const locale of Object.keys(localeArrays)) {
@@ -802,7 +804,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             type={"button"}
             label={t("PROCEED_TO_PREVIEW")}
             variation={"primary"}
-            onClick={() => handleSubmit({ finalSubmit: true })}
+            onClick={() => handleSubmit(true)}
             style={{ width: "14rem" }}
             t={t}
           ></Button>,
