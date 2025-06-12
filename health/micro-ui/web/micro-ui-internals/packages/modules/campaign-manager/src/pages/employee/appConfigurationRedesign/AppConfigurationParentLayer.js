@@ -37,7 +37,7 @@ const dispatcher = (state, action) => {
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
-const AppConfigurationParentRedesign = () => {
+const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, isPreviousTabAvailable, tabStateDispatch, tabState }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -54,12 +54,20 @@ const AppConfigurationParentRedesign = () => {
   const [stepper, setStepper] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
+  const [localeModule, setLocaleModule] = useState(null);
 
-  const localeModule = useMemo(() => {
-    if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
-      return `hcm-${parentState.actualTemplate.name.toLowerCase()}-${parentState.actualTemplate.project}`;
+  // const localeModule = useMemo(() => {
+  //   if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
+  //     return `hcm-${parentState.actualTemplate.name.toLowerCase()}-${parentState.actualTemplate.project}`;
+  //   }
+  //   return null;
+  // }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
+
+  useEffect(() => {
+    const template = parentState?.actualTemplate;
+    if (template?.name && template?.project) {
+      setLocaleModule(`hcm-${template.name.toLowerCase()}-${template.project}`);
     }
-    return null;
   }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
 
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
@@ -76,27 +84,27 @@ const AppConfigurationParentRedesign = () => {
     { schemaCode: "BASE_APP_MASTER_DATA3" } //mdmsv2
   );
 
-  const reqCriteriaForm = {
-    url: `/${mdms_context_path}/v2/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-        schemaCode: `${MODULE_CONSTANTS}.${masterName}`,
-        isActive: true,
-        filters: {
-          project: campaignNumber,
-        },
-      },
-    },
-    config: {
-      enabled: formId ? true : false,
-      select: (data) => {
-        return data?.mdms?.[0];
-      },
-    },
-  };
+  // const reqCriteriaForm = {
+  //   url: `/${mdms_context_path}/v2/_search`,
+  //   body: {
+  //     MdmsCriteria: {
+  //       tenantId: Digit.ULBService.getCurrentTenantId(),
+  //       schemaCode: `${MODULE_CONSTANTS}.${masterName}`,
+  //       isActive: true,
+  //       filters: {
+  //         project: campaignNumber,
+  //       },
+  //     },
+  //   },
+  //   config: {
+  //     enabled: formId ? true : false,
+  //     select: (data) => {
+  //       return data?.mdms?.[0];
+  //     },
+  //   },
+  // };
 
-  const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
+  // const { isLoading, data: formData } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
 
@@ -107,7 +115,7 @@ const AppConfigurationParentRedesign = () => {
   }, [showToast]);
 
   useEffect(() => {
-    if (!isLoading && formData && formId && AppConfigMdmsData?.[fieldTypeMaster]?.length > 0) {
+    if (formData?.data && formId && AppConfigMdmsData?.[fieldTypeMaster]?.length > 0) {
       const fieldTypeMasterData = AppConfigMdmsData?.[fieldTypeMaster] || [];
       const temp = restructure(formData?.data?.pages, fieldTypeMasterData, formData?.data);
       parentDispatch({
@@ -116,6 +124,7 @@ const AppConfigurationParentRedesign = () => {
         template: formData?.data,
         appIdData: formData?.data,
       });
+      setCurrentStep(1);
     }
   }, [isLoadingAppConfigMdmsData, AppConfigMdmsData, formData]);
 
@@ -160,6 +169,10 @@ const AppConfigurationParentRedesign = () => {
       data: screenData,
       isSubmit: stepper?.find((i) => i.active)?.isLast || finalSubmit ? true : false,
     });
+    if (stepper?.find((i) => i.active)?.isLast && isNextTabAvailable && !finalSubmit) {
+      tabStateDispatch({ key: "NEXT_TAB" });
+      return;
+    }
     if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
@@ -221,7 +234,10 @@ const AppConfigurationParentRedesign = () => {
   };
 
   const back = () => {
-    if (stepper?.find((i) => i.active)?.isFirst) {
+    if (stepper?.find((i) => i.active)?.isFirst && isPreviousTabAvailable) {
+      tabStateDispatch({ key: "PREVIOUS_TAB" });
+      return;
+    } else if (stepper?.find((i) => i.active)?.isFirst && !isPreviousTabAvailable) {
       setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
     } else {
       setCurrentStep((prev) => prev - 1);
@@ -244,7 +260,7 @@ const AppConfigurationParentRedesign = () => {
       <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       {variant === "app" && (
         <>
-          <AppConfigTab
+          {/* <AppConfigTab
             wrapperClassName={"app-config-tab"}
             toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
             selectedOption={numberTabs?.[0]?.parent}
@@ -265,7 +281,7 @@ const AppConfigurationParentRedesign = () => {
               });
               setCurrentStep(1);
             }}
-          />
+          /> */}
           <div className="app-config-version-tags">
             {/* <span className="app-config-placeholder-version-tag" /> */}
             <span className="app-config-version-tag" style={{ display: "flex", justifyContent: "center" }}>
