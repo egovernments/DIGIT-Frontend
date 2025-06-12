@@ -56,7 +56,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   return (
     <>
       <div className="container-full">
-        {!parentId && (
+        {/* {!parentId && (
           <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
@@ -65,7 +65,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
               <Stepper customSteps={categories} currentStep={currentStep} onStepClick={() => {}} direction={"vertical"} />
             </Card>
           </div>
-        )}
+        )} */}
         {mappingCategories?.includes(currentCategories) ? (
           <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
         ) : (

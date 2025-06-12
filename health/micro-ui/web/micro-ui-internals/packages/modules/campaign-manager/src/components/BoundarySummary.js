@@ -135,15 +135,7 @@ const BoundarySummary = (props) => {
   return (
     <>
     {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
-     <div className="container-full">
-        <div className="card-container">
-          <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
-          </Card>
-          <Card className="stepper-card">
-            <Stepper customSteps={["HCM_BOUNDARY_DETAILS_VERTICAL", "HCM_SUMMARY"]} currentStep={2} onStepClick={onStepClick} direction={"vertical"} />
-          </Card>
-        </div>
+     <div className="container-full"> 
 
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />
