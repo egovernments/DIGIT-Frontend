@@ -92,7 +92,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_DELIVERY_HEADING"),
               desc: t("HCM_DELIVERY_DESC"),
               buttonLabel: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? t("HCM_EDIT_DELIVERY_BUTTON") : t("HCM_DELIVERY_BUTTON"),
-              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
+              navLink: `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
               icon: <OutpatientMed />,
             },
