@@ -154,13 +154,13 @@ const AppConfigurationParentRedesign = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  const submit = async (screenData) => {
+  const submit = async (screenData, finalSubmit) => {
     parentDispatch({
       key: "SETBACK",
       data: screenData,
-      isSubmit: stepper?.find((i) => i.active)?.isLast ? true : false,
+      isSubmit: stepper?.find((i) => i.active)?.isLast || finalSubmit ? true : false,
     });
-    if (stepper?.find((i) => i.active)?.isLast) {
+    if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;
@@ -268,7 +268,7 @@ const AppConfigurationParentRedesign = () => {
           />
           <div className="app-config-version-tags">
             {/* <span className="app-config-placeholder-version-tag" /> */}
-            <span  className="app-config-version-tag" style={{ display: "flex", justifyContent: "center" }}>
+            <span className="app-config-version-tag" style={{ display: "flex", justifyContent: "center" }}>
               {/* <Tag
                 stroke={false}
                 showIcon={false}

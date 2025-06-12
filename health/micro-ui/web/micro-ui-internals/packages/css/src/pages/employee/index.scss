@@ -943,7 +943,13 @@ tbody {
 }
 .app-configuration-side-panel {
   width: 24rem;
+  z-index: 99;
   background-color: #ffffff;
+  .slider-content{
+    .slider-footer{
+      margin-bottom: 5rem;
+    }
+  }
 }
 .appConfigHeaderLabelField {
   flex-direction: column;

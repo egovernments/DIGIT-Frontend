@@ -162,14 +162,14 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     return JSON.stringify(schema, null, 2);
   }
 
-  const onSubmit = (state) => {
+  const onSubmit = (state, finalSubmit) => {
     const restructuredData =
       variant === "web"
         ? formBuilderRestructure(state?.screenData)
         : variant === "schema"
         ? convertToJSONSchema(state?.screenData?.[0])
         : state?.screenData;
-    submit(restructuredData);
+    submit(restructuredData, finalSubmit);
   };
 
   return (
