@@ -299,7 +299,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                     text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
                     info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
                     actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
-                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
                   }
                 );
                 Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
@@ -834,14 +834,14 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {noAction !== "false" && (
+      {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_BOUNDARY_DETAILS", "HCM_UPLOAD_FACILITY_DATA", "HCM_UPLOAD_USER_DATA", "HCM_UPLOAD_TARGET_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
         />
-      )}
+      )} */}
       <FormComposerV2
         config={config?.form.map((config) => {
           return {

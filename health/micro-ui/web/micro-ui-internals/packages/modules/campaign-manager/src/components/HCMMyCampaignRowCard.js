@@ -177,6 +177,8 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 
+  const currentTab = tabData?.find((i) => i?.active === true)?.label;
+
   return (
     <>
       <Card className={"digit-results-card-component"}>
@@ -226,6 +228,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       </Card>
       {/* Action Buttons */}
       <div className="digit-results-card-buttons">
+        { currentTab != "CAMPAIGN_FAILED" && 
         <Button
           key={"DuplicateCampaign"}
           icon={"TabInactive"} 
@@ -235,6 +238,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           size={"medium"}
           title={t("DUPLICATE_CAMPAIGN")}
         />
+      }
           {cloneCampaign && (
               <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign}/>
           )}

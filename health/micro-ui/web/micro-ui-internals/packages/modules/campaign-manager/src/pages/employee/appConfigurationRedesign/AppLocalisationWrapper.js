@@ -76,7 +76,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: tenantId,
     locale: enabledModules?.length > 1 ? enabledModules?.map((i) => i.value) : enabledModules?.[0]?.value,
-    module: localeModule ? localeModule : "hcm-dummy-module",
+    module: localeModule,
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
       staleTime: 0,
@@ -95,10 +95,11 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
           localisationData: localisationData,
           currentLocale: currentLocale,
           enabledModules: enabledModules,
+          localeModule: localeModule,
         },
       });
     }
-  }, [localisationData, isLoading]);
+  }, [localisationData, isLoading, localeModule]);
 
   if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
 
@@ -117,7 +118,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
         parentDispatch,
       }}
     >
-      <AppConfigurationWrapper screenConfig={screenConfig} localeModule={localeModule} />
+      <AppConfigurationWrapper screenConfig={screenConfig} />
     </AppLocalisationContext.Provider>
   );
 }
