@@ -5,7 +5,10 @@ import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
 import { Loader } from "@egovernments/digit-ui-components";
-
+import DownloadMaster from "../../components/DownloadMaster";
+const enableBulkDownload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_DOWNLOAD")
+? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_DOWNLOAD")
+: true;
 
 const toDropdownObj = (master = "", mod = "") => {
   return {
@@ -191,13 +194,17 @@ const MDMSSearchv2 = () => {
   if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
   return (
     <React.Fragment>
+      <div style={{display:"flex", justifyContent:"space-between"}}>
       <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
+      {enableBulkDownload&&<DownloadMaster />}
+      </div>
       {
         updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) && Digit.Utils.didEmployeeisAllowed(master,modulee) &&
         <ActionBar >
           <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>
       }
+
       {updatedConfig && <div className="inbox-search-wrapper">
         <InboxSearchComposer configs={updatedConfig} additionalConfig = {{
           resultsTable:{
