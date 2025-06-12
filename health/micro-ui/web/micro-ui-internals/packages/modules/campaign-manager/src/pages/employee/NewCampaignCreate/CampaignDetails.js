@@ -1,4 +1,4 @@
-import { Button, HeaderComponent, Footer, Loader, Tag, Toast } from "@egovernments/digit-ui-components";
+import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect } from "react";
 import { useHistory } from "react-router-dom";
@@ -8,7 +8,7 @@ import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateD
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { downloadExcelWithCustomName } from "../../../utils";
-
+import QRCode from "react-qr-code";
 const CampaignDetails = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -17,6 +17,7 @@ const CampaignDetails = () => {
   const AppConfigSchema = "SimpleAppConfiguration";
   const [showToast, setShowToast] = useState(null);
   const isDraft = searchParams.get("draft");
+  const [showQRPopUp, setShowQRPopUp] = useState(false);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
 
@@ -62,6 +63,22 @@ const CampaignDetails = () => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigSchema` }
   );
 
+  const { data: appData } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "AppLink",
+      },
+    ],
+    {
+      select: (data) => {
+        return data?.[CONSOLE_MDMS_MODULENAME]?.AppLink?.[0];
+      },
+    },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppLink` }
+  );
+
   const data = {
     cards: [
       {
@@ -74,11 +91,18 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_BOUNDARY_SELECT_HEADING"),
               desc: t("HCM_SELECT_BOUNDARY_DESC"),
-              buttonLabel: campaignData?.boundaries?.length > 0 ? t("HCM_EDIT_BOUNDARY_BUTTON") : t("HCM_SELECT_BOUNDARY_BUTTON"),
-              navLink: `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
-              type: campaignData?.boundaries?.length > 0 ? "secondary" : "primary",
-              icon: <GlobeLocationPin fill={campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
-              disabled: campaignData?.status === "created",
+              buttonLabel:
+                campaignData?.status === "created" || campaignData?.parentId
+                  ? t("HCM_UPDATE_BOUNDARIES")
+                  : campaignData?.boundaries?.length > 0
+                  ? t("HCM_EDIT_BOUNDARY_BUTTON")
+                  : t("HCM_SELECT_BOUNDARY_BUTTON"),
+              navLink:
+                campaignData?.status === "created" || campaignData?.parentId
+                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
+                  : `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
+              type: campaignData?.boundaries?.length > 0 ||  campaignData?.parentId ? "secondary" : "primary",
+              icon: <GlobeLocationPin />,
             },
           },
         ],
@@ -94,13 +118,13 @@ const CampaignDetails = () => {
               headingName: t("HCM_DELIVERY_HEADING"),
               desc: t("HCM_DELIVERY_DESC"),
               buttonLabel:
-                campaignData?.status === "created"
+                campaignData?.status === "created" || campaignData?.parentId
                   ? t("HCM_EDIT_DELIVERY_DATES")
                   : campaignData?.deliveryRules?.[0]?.cycles?.length > 0
                   ? t("HCM_EDIT_DELIVERY_BUTTON")
                   : t("HCM_DELIVERY_BUTTON"),
               navLink:
-                campaignData?.status === "created"
+                campaignData?.status === "created" || campaignData?.parentId
                   ? `update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&projectId=${campaignData?.projectId}&campaignNumber=${campaignData?.campaignNumber}`
                   : `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
@@ -123,7 +147,7 @@ const CampaignDetails = () => {
               type: modulesData?.length > 0 ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
-              disabled: campaignData?.status === "created" && campaignData?.startDate < Date.now(),
+              disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now() ,
             },
           },
         ],
@@ -142,7 +166,7 @@ const CampaignDetails = () => {
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
-              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created",
+              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ||  campaignData?.parentId,
             },
           },
         ],
@@ -189,7 +213,7 @@ const CampaignDetails = () => {
       },
       {
         onSuccess: async (data) => {
-          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.id}`, {
+          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`, {
             message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
             text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
             info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
@@ -239,6 +263,7 @@ const CampaignDetails = () => {
   };
 
   const onDownloadApp = () => {
+    setShowQRPopUp(true);
   };
 
   if (isLoading) {
@@ -313,7 +338,7 @@ const CampaignDetails = () => {
       </div>
       <Footer
         actionFields={
-          campaignData?.status !== "created"
+          campaignData?.status !== "created" &&  !campaignData?.parentId
             ? [
                 <Button
                   icon="CheckCircleOutline"
@@ -343,6 +368,31 @@ const CampaignDetails = () => {
         maxActionFieldsAllowed={5}
         setactionFieldsToRight={true}
       />
+      {showQRPopUp && (
+        <PopUp
+          type={"default"}
+          heading={t("ES_APP_QR")}
+          description = {t("ES_APP_QR_DESC")}
+          className={"QR-pop-up"}
+          onOverlayClick={() => setShowQRPopUp(false)}
+          onClose={() => setShowQRPopUp(false)}
+          style={{width: "auto"}}
+          footerChildren={[
+            <Button
+              // className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ES_CAMPAIGN_CLOSE")}
+              onClick={() => {
+                setShowQRPopUp(false);
+              }}
+            />,
+          ]}
+        >
+          <QRCode value={appData?.appLink} size={256} level="H" />
+        </PopUp>
+      )}
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
