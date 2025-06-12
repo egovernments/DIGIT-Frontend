@@ -20,11 +20,12 @@ const EmployeeLogin = ({ stateCode }) => {
     language,
     modulePrefix,
   });
+  const moduleName=Digit.Utils.getConfigModuleName();
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, moduleName, ["LoginConfig"], {
     select: (data) => {
       return {
-        config: data?.commonUiConfig?.LoginConfig,
+        config: data?.[moduleName]?.LoginConfig,
       };
     },
     retry: false,

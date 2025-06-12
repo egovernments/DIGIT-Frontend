@@ -1,4 +1,8 @@
 # Changelog 
+
+## [1.8.40]  [11-Jun-2025]
+- Added module name config for login and privacy screen
+
 ## [1.8.39]  [11-Jun-2025]
 - integrated with updated version
 
