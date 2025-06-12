@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.31] - [12-June-2025]
+-CSS changes for Forgot Password form
+-Font size changed to make it aligned with carousel
+
 ## [1.8.30] - [11-June-2025]
 -Override `digit-label-field-pair` class in `login-container`
 
