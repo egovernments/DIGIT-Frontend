@@ -16,7 +16,7 @@
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.15",
     "@egovernments/digit-ui-module-workbench": "1.0.25",
-    "@egovernments/digit-ui-module-core": "1.8.40",
+    "@egovernments/digit-ui-module-core": "1.8.41",
     "@egovernments/digit-ui-module-hcmworkbench":"0.1.2",
     "@egovernments/digit-ui-module-utilities": "1.0.12",
     "@egovernments/digit-ui-module-campaign-manager": "0.3.1",

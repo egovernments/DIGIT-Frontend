@@ -289,6 +289,7 @@ const renderField = (field, t) => {
 };
 
 const getFieldType = (field) => {
+  //TODO Why do we still need this swtich case this should be set as a default supported fields and app field master should help to map this
   switch (field.type) {
     case "text":
     case "textInput":
@@ -326,6 +327,7 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
+  
   return (
     <div className="app-preview">
       {data.cards.map((card, index) => (
@@ -402,24 +404,12 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
             title={t(data?.actionLabel)}
             onClick={() => {}}
           />}
-          {/* {data.type === "template" && ComponentConfigMdmsData?.length > 0 && (() => {
-          const TemplateComponent = getRegisteredComponent(data.name);
-          return TemplateComponent ? (
-            <TemplateComponent
-              components={card.fields}
-              selectedField={selectedField}
-              metaMasterConfig={ComponentConfigMdmsData}
-              t={t}
-            />
-          ) : null;
-        })()} */}
          {data.type === "template" && <TemplateScreen card={card}  name={data.name}        t={t}     selectedField={selectedField}
  />}
         </Card>
       ))}
     </div>
   );
-
 };
 
 
