@@ -4,7 +4,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig } from "./config";
 import ForgotPasswordComponent from "./forgotPassword";
 
-const EmployeeForgotPassword = () => {
+const EmployeeForgotPassword = ({stateCode}) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
 
@@ -25,7 +25,7 @@ const EmployeeForgotPassword = () => {
   return (
     <Switch>
       <Route path={`${path}`} exact>
-        <ForgotPasswordComponent config={params[0]}  t={t} />
+        <ForgotPasswordComponent config={params[0]}  t={t} stateCode={stateCode}/>
       </Route>
     </Switch>
   );
