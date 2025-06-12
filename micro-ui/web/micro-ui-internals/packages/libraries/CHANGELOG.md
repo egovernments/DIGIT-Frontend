@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.15]  [16-Jun-2025]
+- provided download of alll data per schema & enable based on flag
+- provided download of alll data per schema 'ENABLE_MDMS_BULK_DOWNLOAD'
+
 ## [1.8.14]  [10-Jun-2025]
 - integrated with updated version
 

@@ -3,8 +3,8 @@
 ## [1.8.41]  [12-Jun-2025]
 -Introduced new hook `useLoginConfig` for mdms call
 
-## [1.8.40]  [12-Jun-2025]
-- Persistent banner images logic for forgot password from login config itself.
+## [1.8.40]  [11-Jun-2025]
+- Added module name config for login and privacy screen
 
 ## [1.8.39]  [11-Jun-2025]
 - integrated with updated version
