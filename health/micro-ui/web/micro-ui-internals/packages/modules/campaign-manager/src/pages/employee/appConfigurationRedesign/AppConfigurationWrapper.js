@@ -345,7 +345,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const openAddFieldPopup = (data) => {
     setPopupData({ ...data, id: crypto.randomUUID() });
   };
-
+  const fetchLoc = (key) => {
+    return locState?.find((i) => i.code === key)?.[currentLocale];
+  };
   useEffect(() => {
     dispatch({
       type: "SET_SCREEN_DATA",
@@ -380,14 +382,106 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
 
     return result;
   }
+  const findConfig = (bindTo, config) => {
+    return config.reduce(
+      (res, item) => res || (item.bindTo === bindTo ? item : Array.isArray(item.conditionalField) ? findConfig(bindTo, item.conditionalField) : null),
+      null
+    );
+  };
+  const validateFromState = (state, drawerPanelConfig, locS, cL) => {
+    const errors = {};
+    const fields = state?.fields;
+    const headerFields = state?.headerFields;
+    // const findConfig = (bindTo) => drawerPanelConfig.find((item) => item.bindTo === bindTo);
 
-  const handleSubmit = async () => {
+    for (let i = 0; i < headerFields.length; i++) {
+      const fieldItem = headerFields[i];
+      const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
+      if (!value || value.trim() === "") {
+        return { type: "error", value: `HEADER_FIELD_EMPTY_ERROR_${fieldItem?.label}` };
+      }
+    }
+    const validateValue = (value, validation, label, a, b) => {
+      if (!validation) return null;
+
+      // required check
+      if (validation.required) {
+        if (
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "") ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
+          return validation.message || `${label || "Field"} is required for ${a?.label}`;
+        }
+      }
+
+      // pattern check
+      if (validation.pattern && value) {
+        const regex = new RegExp(validation.pattern);
+        if (!regex.test(value)) {
+          return validation.message || `${label || "Field"} is invalid`;
+        }
+      }
+
+      return null; // no error
+    };
+    for (let i = 0; i < fields.length; i++) {
+      const fieldObj = fields[i];
+
+      // For each key in field object
+      for (const key in fieldObj) {
+        // Find config matching this key
+        const config = findConfig(key, drawerPanelConfig);
+        if (!config) continue; // no config, skip validation for this key
+
+        // get validation object (could be an array, object, or nested)
+        let validation = config.validation;
+
+        // If validation is an array, find validation matching key or default
+        if (Array.isArray(validation)) {
+          // example: validation array might have { key: "toArray", required: true, message: "..." }
+          // You can adapt this as per your validation array structure
+          const valFromArray = validation.find((v) => v.key === key || !v.key);
+          if (valFromArray) validation = valFromArray;
+          else validation = null;
+        }
+
+        // Validate the field value
+        const value = fieldObj[key];
+
+        const errorMsg = validateValue(fetchLoc(value), validation, config.label, fieldObj, config);
+
+        if (errorMsg) {
+          // Use a unique key to identify error (field index + key)
+          return errorMsg;
+        }
+      }
+    }
+
+    if (Object.keys(errors).length > 0) {
+      return {
+        type: "error",
+        errors,
+      };
+    }
+
+    return { type: "success" };
+  };
+
+  const handleSubmit = async ({ finalSubmit }) => {
+    const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
+    if (errorCheck) {
+      setShowToast({ key: "error", label: errorCheck });
+      return;
+    }
     const localeArrays = createLocaleArrays();
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
           setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
+          onSubmit(state, finalSubmit);
         } catch (error) {
           setLoading(false);
           setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
@@ -430,7 +524,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           isDisabled={false}
           onClick={async () => {
             await handleSubmit();
-            onSubmit(state);
           }}
         />
       </div>
@@ -693,6 +786,29 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           onClose={closeToast}
         />
       )}
+      <Footer
+        actionFields={[
+          <Button
+            type={"button"}
+            style={{ marginLeft: "2.5rem", width: "14rem" }}
+            label={t("HCM_BACK")}
+            variation={"secondary"}
+            t={t}
+            onClick={() => {
+              window.history.back();
+            }}
+          ></Button>,
+          <Button
+            type={"button"}
+            label={t("PROCEED_TO_PREVIEW")}
+            variation={"primary"}
+            onClick={() => handleSubmit({ finalSubmit: true })}
+            style={{ width: "14rem" }}
+            t={t}
+          ></Button>,
+        ]}
+        className={"new-actionbar"}
+      />
       {/* <ActionBar className="app-config-actionBar">
         {showBack && <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />}
         <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />
