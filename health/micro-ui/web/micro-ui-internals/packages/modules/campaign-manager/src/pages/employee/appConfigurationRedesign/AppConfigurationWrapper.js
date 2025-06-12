@@ -469,8 +469,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   };
 
   const handleSubmit = async (finalSubmit) => {
-    if (state?.screenData?.[0]?.type === "object") {
-      //skipping template screen validation
+    if (state?.screenData?.[0]?.type === "object") { //skipping template screen validation
       const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
       if (errorCheck) {
         setShowToast({ key: "error", label: errorCheck?.value ? errorCheck?.value : errorCheck });
