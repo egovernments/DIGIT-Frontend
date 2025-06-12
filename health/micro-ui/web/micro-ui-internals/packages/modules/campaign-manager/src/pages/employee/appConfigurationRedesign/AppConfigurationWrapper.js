@@ -469,7 +469,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   };
 
   const handleSubmit = async (finalSubmit) => {
-    if (state?.screenData?.[0]?.type === "object") { //skipping template screen validation
+    if (state?.screenData?.[0]?.type === "object") {
+      //skipping template screen validation
       const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
       if (errorCheck) {
         setShowToast({ key: "error", label: errorCheck?.value ? errorCheck?.value : errorCheck });
@@ -477,11 +478,13 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       }
     }
     const localeArrays = createLocaleArrays();
+    let updateCount = 0;
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
           setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
+          updateCount = updateCount + 1;
           onSubmit(state, finalSubmit);
         } catch (error) {
           setLoading(false);
@@ -490,7 +493,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
         }
       }
     }
-
+    if (!updateCount) {
+      onSubmit(state, finalSubmit);
+    }
     setShowPopUp(false);
     setLoading(false);
 
@@ -501,7 +506,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem" }}>
+      <div className="app-config-flex-container">
         <Button
           className="app-configure-action-button"
           variation="secondary"
