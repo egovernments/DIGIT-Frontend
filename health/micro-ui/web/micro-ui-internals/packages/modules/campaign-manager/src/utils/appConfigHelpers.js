@@ -178,7 +178,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         name: page.page || "default",
         cards: [
           {
-            header: crypto.randomUUID(),
+            header: crypto.randomUUID(), // remove this crypto dependency 
             fields: cardFields,
             headerFields: [
               {
@@ -227,7 +227,7 @@ function addToArrayFields(field) {
   for (const key in field) {
     if (!Object.prototype.hasOwnProperty.call(field, key)) continue;
 
-    if (key.startsWith("toArray.")) {
+    if (key.startsWith("toArray.")) {  //TODO @nabeel @jagan right now key is toArray. but we should have a object called toArray :{ all attributes to be set inside this}
       const parts = key.split(".");
       const type = parts[1];
       if (!type) continue;
@@ -250,7 +250,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
       const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
-      const toArrayFields = addToArrayFields(field, fieldTypeMasterData);
+      const toArrayFields = addToArrayFields(field, fieldTypeMasterData); // TODO @nabeel @jagan right now this works for only validation array, we should think to expose to change the main config dynamically 
       return {
         label: field.label || "",
         order: fieldIndex + 1,
