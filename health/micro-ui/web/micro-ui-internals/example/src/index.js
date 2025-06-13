@@ -1,13 +1,12 @@
-import React from "react";
-import ReactDOM from "react-dom";
+import React, { useEffect, useState, lazy, Suspense } from "react";
+import ReactDOM from "react-dom/client";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
-import "@egovernments/digit-ui-health-css/example/index.css";
+// import "@egovernments/digit-ui-health-css/example/index.css";
 
 import { UICustomizations } from "./UICustomizations";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+// import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
 // import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 // import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 // import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
@@ -18,6 +17,9 @@ import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-m
 // import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
 var Digit = window.Digit || {};
+const DigitUILazy = lazy(() =>
+  import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
+);
 
 const enabledModules = [
   "DSS",
@@ -73,7 +75,7 @@ const initDigitUI = () => {
   // initUtilitiesComponents();
   // initWorkbenchComponents();
   // initWorkbenchHCMComponents();
-  initCampaignComponents();
+  // initCampaignComponents();
   // initMicroplanComponents();
   // initPaymentComponents();
   // initHRMSComponents();
@@ -86,7 +88,19 @@ const initDigitUI = () => {
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
 
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(
+   <Suspense fallback={<div>Loading...</div>}>
+      {window.Digit && (
+        <DigitUILazy
+          stateCode={stateCode}
+          enabledModules={enabledModules}
+          defaultLanding="employee"
+          moduleReducers={moduleReducers}
+        />
+      )}
+    </Suspense>
+  )
 };
 
 initLibraries().then(() => {
