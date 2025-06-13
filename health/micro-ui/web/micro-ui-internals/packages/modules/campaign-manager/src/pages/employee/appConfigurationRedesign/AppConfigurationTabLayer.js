@@ -118,7 +118,7 @@ const AppConfigurationTabLayer = () => {
     <div>
       {variant === "app" && (
         <>
-          <AppConfigTab
+          {/* <AppConfigTab
             wrapperClassName={"app-config-tab"}
             toggleOptions={numberTabs}
             selectedOption={numberTabs?.find((i) => i.active)?.code}
@@ -129,7 +129,7 @@ const AppConfigurationTabLayer = () => {
               //   tab: tab,
               // });
             }}
-          />
+          /> */}
           <AppConfigurationParentRedesign
             tabState={tabState}
             formData={tabState?.activeTabConfig}
