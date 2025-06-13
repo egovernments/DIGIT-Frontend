@@ -283,7 +283,7 @@ const renderField = (field, t) => {
           title={t(field?.label)}
           onClick={() => {}}
         />
-      ); // todo hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
+      ); // TODO hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
     default:
       return <div style={{ color: "red", marginTop: "5px" }}>Unsupported field type: {field.type}</div>;
   }
