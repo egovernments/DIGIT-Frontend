@@ -506,7 +506,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <div className="app-config-flex-container" style={{ display: "flex", alignItems: "flex-end" , gap: "5rem" }}>
+      <div className="app-config-flex-container">
         <Button
           className="app-configure-action-button"
           variation="secondary"
