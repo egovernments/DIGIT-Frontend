@@ -264,7 +264,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         {variant === "app" && (
           <>
             <div>
-              <AppConfigTab
+              {/* <AppConfigTab
                 wrapperClassName={"app-config-tab"}
                 toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
                 selectedOption={numberTabs?.[0]?.parent}
@@ -285,7 +285,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
                   });
                   setCurrentStep(1);
                 }}
-              />
+              /> */}
             </div>
           </>
         )}

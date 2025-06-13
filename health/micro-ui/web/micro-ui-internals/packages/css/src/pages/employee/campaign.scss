@@ -573,6 +573,8 @@
 
 .digit-toggle-toolbar {
   &.app-config-tab {
+    top: 15rem;
+    position: fixed;
     > *:first-child label {
       border-top-left-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;
