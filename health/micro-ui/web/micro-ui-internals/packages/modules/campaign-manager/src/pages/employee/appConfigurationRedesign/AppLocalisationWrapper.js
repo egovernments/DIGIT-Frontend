@@ -118,7 +118,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
         parentDispatch,
       }}
     >
-      <AppConfigurationWrapper screenConfig={screenConfig} />
+      <AppConfigurationWrapper screenConfig={screenConfig} localeModule={localeModule} />
     </AppLocalisationContext.Provider>
   );
 }
