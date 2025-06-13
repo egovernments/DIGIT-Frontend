@@ -1319,7 +1319,7 @@ digit-card-text.center {
 
 .about-container {
   background-color: white;
-  padding: 2rem 1rem;
+  padding: 2rem 0rem 3rem 0rem;
   width: 100% !important;
   margin: 0 auto;
   display: flex;
@@ -1329,7 +1329,7 @@ digit-card-text.center {
 
 .about-container-2 {
   background-color: #f0f4f8;
-  padding: 2rem 1rem;
+  padding: 2rem 0rem 3rem 0rem;
   width: 100% !important;
   margin: 0 auto;
   display: flex;
@@ -1404,19 +1404,32 @@ digit-card-text.center {
   margin: 0 auto 0rem;
 }
 
+.cs-wrapper-align{
+  margin-left: 2rem;
+}
+
 
 .cs-wrapper {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0px 40px;
-  font-family: "Arial", sans-serif;
   flex-wrap: wrap;
 }
 
 .cs-left,
 .cs-right {
   width: 50%;
+  padding-top: 1rem;
+}
+
+
+.cs-justify-start {
+  justify-content: flex-start;
+}
+
+.cs-justify-end {
+  justify-content: flex-end;
 }
 
 .cs-title {
@@ -1428,6 +1441,7 @@ digit-card-text.center {
   display: inline-block;
   /* allow ::after to size with text */
   text-align: center;
+  line-height: 2.65rem;
 }
 
 .cs-title::after {
@@ -1487,12 +1501,13 @@ digit-card-text.center {
 
 .cs-left {
   padding-left: 40px;
+
 }
+
 
 .cs-right {
   padding-right: 40px;
   display: flex;
-  justify-content: center;
 }
 
 .cs-image {

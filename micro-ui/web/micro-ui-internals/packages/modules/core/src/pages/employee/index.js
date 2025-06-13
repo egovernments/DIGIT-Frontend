@@ -49,7 +49,7 @@ const EmployeeApp = ({
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
-  
+  const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPageUpdated/`);
   useEffect(() => {
     const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
     const queryParams = new URLSearchParams(location.search);
@@ -132,8 +132,10 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && (location.pathname !== path)) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
-            <div className="employee-app-wrapper digit-home-app-wrapper">
+          <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+            
+            <div className={ !noTopBar ?   `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : "" }>
+            {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
               <ErrorBoundary initData={initData}>
                 <AppModules
                   stateCode={stateCode}

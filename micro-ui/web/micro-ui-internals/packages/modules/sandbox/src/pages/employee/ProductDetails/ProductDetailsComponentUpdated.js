@@ -110,12 +110,14 @@ const ExperienceSection = ({ experience, t = { t } }) => (
 );
 
 const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t }) => (
-    <div className="cs-wrapper">
-        {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
-        <div className="cs-right">
-            <img src={imageUrl} alt="UI" className="cs-image" />
+    <div className="cs-wrapper-align">
+        <div className="cs-wrapper">
+            {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+            <div className={`cs-right ${reverse ? `cs-justify-start` : `cs-justify-end` }`}>
+                <img src={imageUrl} alt="UI" className="cs-image" />
+            </div>
+            {reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
         </div>
-        {reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
     </div>
 );
 
