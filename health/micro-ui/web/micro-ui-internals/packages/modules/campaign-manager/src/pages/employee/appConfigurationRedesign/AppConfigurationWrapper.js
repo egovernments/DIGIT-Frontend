@@ -397,7 +397,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       const fieldItem = headerFields[i];
       const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
       if (!value || value.trim() === "") {
-        return { type: "error", value: `${t(HEADER_FIELD_EMPTY_ERROR)} ${useCustomT(fieldItem?.label)}` };
+        return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")} ${useCustomT(fieldItem?.label)}` };
       }
     }
     const validateValue = (value, validation, label, a, b) => {
