@@ -17,6 +17,8 @@ const CampaignHome = () => {
     window.Digit.SessionStorage.del("SelectedFeaturesByModule");
   }, []);
 
+  //TODO @bhavya @jagan integrate with a master similar to   "commonUiConfig", "HelpInfo",
+
   const AppHelpConfig = {
     title: "CAMPAIGN_REQUIREMENTS_HEADING",
     sections: [
