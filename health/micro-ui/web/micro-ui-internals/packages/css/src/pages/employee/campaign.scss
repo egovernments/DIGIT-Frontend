@@ -506,15 +506,15 @@
 }
 
 .module-card {
-  width: auto;
-  height: auto;
+  width: 20rem;
+  height: 20rem;
   border: 1px;
   border-radius: 0.75rem;
 }
 .modules-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  grid-gap: 1.5rem;
+  display: flex;
+  gap: 1.5rem; 
+  align-items: flex-start; 
   padding: 1rem;
 }
 .campaign-module-button {
@@ -553,7 +553,6 @@
 
 .digit-toggle-toolbar {
   &.app-config-tab {
-    max-width: 90%;
     > *:first-child label {
       border-top-left-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;
@@ -600,10 +599,16 @@
 .app-config-version-tags {
   display: flex;
   align-items: flex-end;
-  margin-right: 24rem;
   justify-content: center;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
+  width: fit-content;
+  padding: 0;
+  margin: 0;
+  margin-left: 54rem;
+  margin-bottom: -3.5rem;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
+  font-size: theme(digitv2.fontSize.heading-s);
+  font-weight: 700;
 
   .app-config-placeholder-version-tag {
     width: 30%;
@@ -698,5 +703,11 @@
 
 .cycleBold{
   font-weight: 700;
+}
+.feature-container{
+  display: flex;
+}
+.app-config{
+  width: auto;
 }
 

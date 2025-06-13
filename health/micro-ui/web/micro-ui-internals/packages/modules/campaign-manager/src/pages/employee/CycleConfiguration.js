@@ -223,7 +223,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   return (
     <>
       <div className="container">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -235,7 +235,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
         <div className="card-container2">
           <TagComponent campaignName={campaignName} />
           <Card>

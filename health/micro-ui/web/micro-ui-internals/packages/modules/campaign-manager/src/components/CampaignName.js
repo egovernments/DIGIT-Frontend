@@ -94,7 +94,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   return (
     <>
       <div className="container">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -106,7 +106,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
       
       <div className="card-container2">
         <Card className = "setup-campaign-card">
