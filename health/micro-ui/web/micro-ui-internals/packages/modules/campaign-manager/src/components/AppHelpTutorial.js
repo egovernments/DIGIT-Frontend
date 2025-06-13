@@ -92,7 +92,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tut
         <Button
           className={`custom-class camp-help-button-${pathVar}`}
           icon={buttonIcon}
-          isSuffix={true}
+          isSuffix={false}
           label={t(buttonLabel)}
           onClick={(e) => {
             e.stopPropagation();
