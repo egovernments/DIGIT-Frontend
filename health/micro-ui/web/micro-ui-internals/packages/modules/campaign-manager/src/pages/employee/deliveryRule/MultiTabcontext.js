@@ -145,7 +145,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
   return (
     <>
     <div className="container-full">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -157,7 +157,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
         <div className="card-container-delivery">
         <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
       <HeaderComponent>

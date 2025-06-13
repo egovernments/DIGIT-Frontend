@@ -260,30 +260,36 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         </div>
       </Header>
       <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
-      {variant === "app" && (
-        <>
-          {/* <AppConfigTab
-            wrapperClassName={"app-config-tab"}
-            toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
-            selectedOption={numberTabs?.[0]?.parent}
-            handleToggleChange={(tab, index) => {
-              setNumberTabs((prev) => {
-                return prev.map((j) => {
-                  if (j.parent === tab.parent) {
-                    return {
-                      ...j,
-                      active: true,
-                    };
-                  }
-                  return {
-                    ...j,
-                    active: false,
-                  };
-                });
-              });
-              setCurrentStep(1);
-            }}
-          /> */}
+      <div style={{ display: "flex" }}>
+        {variant === "app" && (
+          <>
+            <div>
+              {/* <AppConfigTab
+                wrapperClassName={"app-config-tab"}
+                toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
+                selectedOption={numberTabs?.[0]?.parent}
+                handleToggleChange={(tab, index) => {
+                  setNumberTabs((prev) => {
+                    return prev.map((j) => {
+                      if (j.parent === tab.parent) {
+                        return {
+                          ...j,
+                          active: true,
+                        };
+                      }
+                      return {
+                        ...j,
+                        active: false,
+                      };
+                    });
+                  });
+                  setCurrentStep(1);
+                }}
+              /> */}
+            </div>
+          </>
+        )}
+        <div>
           <div className="app-config-version-tags">
             {/* <span className="app-config-placeholder-version-tag" /> */}
             <span className="app-config-version-tag" style={{ display: "flex", justifyContent: "center" }}>
@@ -294,28 +300,38 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
                 labelStyle={{ color: "#787878" }}
                 //  style={{background: "#EFF8FF"}}  labelStyle={{color:"#0B4B66"}}
               /> */}
-              <Tag
+              {/* <Tag
                 stroke={false}
                 showIcon={false}
-                label={`${t("CMN_PAGE")} -  ${currentStep} / ${stepper?.length}`}
+                label={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
                 style={{ background: "#EFF8FF" }}
                 labelStyle={{ color: "#0B4B66" }}
-              />
+              /> */}
+              {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             </span>
             {/* <span className="app-config-placeholder-version-tag" /> */}
           </div>
-        </>
-      )}
-      <ImpelComponentWrapper
-        variant={variant}
-        screenConfig={currentScreen}
-        submit={submit}
-        back={back}
-        showBack={true}
-        parentDispatch={parentDispatch}
-        AppConfigMdmsData={AppConfigMdmsData}
-        localeModule={localeModule}
-      />
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-end",
+              marginLeft: "5rem",
+              gap: "5rem",
+            }}
+          >
+            <ImpelComponentWrapper
+              variant={variant}
+              screenConfig={currentScreen}
+              submit={submit}
+              back={back}
+              showBack={true}
+              parentDispatch={parentDispatch}
+              AppConfigMdmsData={AppConfigMdmsData}
+              localeModule={localeModule}
+            />
+          </div>
+        </div>
+      </div>
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
