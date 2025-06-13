@@ -311,6 +311,9 @@
   .app-card {
     min-height: 100%;
     gap: 0.5rem;
+    box-shadow: none;
+    border-style: none;
+    padding: 1rem;
     &::-webkit-scrollbar-button {
       display: none !important;
       height: 0 !important;
@@ -318,7 +321,23 @@
     }
   }
 }
-
+.app-card {
+  flex-direction: column;
+  display: flex;
+  min-height: 100%;
+  gap: 0.5rem;
+  box-shadow: none;
+  border-style: none;
+  padding: 1rem;
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+}
+.mobile-bezel-outerWrapper {
+  transform: scale(0.8);
+}
 .mobile-top {
   background-color: theme(digitv2.lightTheme.header-sidenav);
   height: 4rem;
@@ -423,9 +442,9 @@
   color: theme(digitv2.lightTheme.primary);
   text-align: center;
   margin-top: 1.5rem;
-.disabledText {
-  color: #c5c5c5;
-}
+  .disabledText {
+    color: #c5c5c5;
+  }
 }
 .containerStyle {
   display: flex;
@@ -453,7 +472,7 @@
   cursor: not-allowed;
   border: 1.5px solid #c5c5c5;
   .descStyle {
-    color: #c5c5c5
+    color: #c5c5c5;
   }
   svg {
     fill: theme(digitv2.lightTheme.text-color-secondary);
@@ -691,23 +710,35 @@
   padding-left: 20px;
   margin-bottom: 12px;
 }
-.campaign-requirements-heading{
-  .digit-popup-icon-header-container{
-  .digit-popup-heading-subheading-wrap{
-    .digit-popup-heading{
-    color: theme(digitv2.lightTheme.primary-2);
+.campaign-requirements-heading {
+  .digit-popup-icon-header-container {
+    .digit-popup-heading-subheading-wrap {
+      .digit-popup-heading {
+        color: theme(digitv2.lightTheme.primary-2);
+      }
     }
   }
 }
-}
 
-.cycleBold{
+.cycleBold {
   font-weight: 700;
 }
+
 .feature-container{
   display: flex;
 }
 .app-config{
   width: auto;
+}
+
+.QR-pop-up {
+  width: fit-content;
+}
+.app-config-flex-container {
+  display: flex;
+  align-items: center;
+  margin-right: "24rem";
+  gap: 2rem;
+  width: fit-content;
 }
 

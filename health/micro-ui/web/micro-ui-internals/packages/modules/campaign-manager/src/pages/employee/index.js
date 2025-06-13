@@ -70,7 +70,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       content: t("MY_CAMPAIGN"),
       show:
-        pathVar === "my-campaign-new" ||  pathVar === "checklist/update" || pathVar === "update-dates-boundary"
+        pathVar === "my-campaign-new" ||  pathVar === "checklist/update" 
           ? true
           : false,
     },
@@ -85,11 +85,6 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.match("create-campaign") || pathVar === "view-details" ? true : false,
     },
     {
-      path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
-      content: t("UPDATE_DATE_CHANGE"),
-      show: pathVar === "update-dates-boundary" ? true : false,
-    },
-    {
       path: pathVar === "view-details" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
       content: t("VIEW_DETAILS"),
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
@@ -99,9 +94,16 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.match("app-configuration-redesign") ||
         pathVar.match("app-modules") ||
         pathVar.match("app-features") ||
+        pathVar === "update-dates-boundary" ||
+        pathVar === "update-campaign" || 
         pathVar === "checklist/search"
           ? true
           : false,
+    },
+    {
+      path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
+      content: t("UPDATE_DATE_CHANGE"),
+      show: pathVar === "update-dates-boundary" ? true : false,
     },
     {
       path: pathVar === "checklist/search" ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
