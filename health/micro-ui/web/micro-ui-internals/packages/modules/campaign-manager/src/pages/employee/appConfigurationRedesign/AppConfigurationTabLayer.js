@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useMemo, useReducer, useState } from "react";
-import { Loader, Stepper, Tag, TextBlock, Toast, Tooltip } from "@egovernments/digit-ui-components";
+import { Button, CardText, Loader, PopUp, Stepper, Tag, TextBlock, Toast, Tooltip } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -81,7 +81,7 @@ const AppConfigurationTabLayer = () => {
   const [numberTabs, setNumberTabs] = useState([]);
   const [currentScreen, setCurrentScreen] = useState({});
   const [tabState, tabStateDispatch] = useReducer(tabDispatcher, {});
-
+  const [showPopUp, setShowPopUp] = useState(null);
   useEffect(() => {
     if (tabState?.actualData?.length > 0) {
       setNumberTabs(tabState?.numberTabs);
@@ -123,10 +123,11 @@ const AppConfigurationTabLayer = () => {
             toggleOptions={numberTabs}
             selectedOption={numberTabs?.find((i) => i.active)?.code}
             handleToggleChange={(tab, index) => {
-              tabStateDispatch({
-                key: "CHANGE_ACTIVE_TAB",
-                tab: tab,
-              });
+              setShowPopUp(tab);
+              // tabStateDispatch({
+              //   key: "CHANGE_ACTIVE_TAB",
+              //   tab: tab,
+              // });
             }}
           />
           <AppConfigurationParentRedesign
@@ -137,6 +138,49 @@ const AppConfigurationTabLayer = () => {
             isPreviousTabAvailable={numberTabs.findIndex((tab) => tab.active) > 0}
           />
         </>
+      )}
+      {showPopUp && (
+        <PopUp
+          className={"boundaries-pop-module"}
+          type={"default"}
+          heading={t("APP_CONFIG_NOT_SAVED_WARNING_HEADER")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("APP_CONFIG_NOT_SAVED_WARNING")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("APP_CONFIG_NOT_SAVED_WARNING_MODAL_BACK")}
+              onClick={() => {
+                showPopUp(null);
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("APP_CONFIG_NOT_SAVED_WARNING_MODAL_SUBMIT")}
+              onClick={() => {
+                tabStateDispatch({
+                  key: "CHANGE_ACTIVE_TAB",
+                  tab: showPopUp,
+                });
+                setShowPopUp(null);
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
       )}
     </div>
   );

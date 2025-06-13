@@ -169,10 +169,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       data: screenData,
       isSubmit: stepper?.find((i) => i.active)?.isLast || finalSubmit ? true : false,
     });
-    if (stepper?.find((i) => i.active)?.isLast && isNextTabAvailable && !finalSubmit) {
-      tabStateDispatch({ key: "NEXT_TAB" });
-      return;
-    }
     if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
@@ -200,12 +196,18 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-            history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
-              message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
-              preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
-              actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
-              actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-            });
+            if (isNextTabAvailable && !finalSubmit) {
+              tabStateDispatch({ key: "NEXT_TAB" });
+              return;
+            } else {
+              history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
+                message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
+                preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
+                actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
+                actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+              });
+              return;
+            }
           },
         }
       );
