@@ -574,6 +574,7 @@
 
 .digit-toggle-toolbar {
   &.app-config-tab {
+    width: fit-content;
     top: 15rem;
     position: fixed;
     > *:first-child label {
