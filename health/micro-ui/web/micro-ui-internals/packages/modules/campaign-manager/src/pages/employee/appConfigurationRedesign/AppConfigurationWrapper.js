@@ -397,7 +397,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       const fieldItem = headerFields[i];
       const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
       if (!value || value.trim() === "") {
-        return { type: "error", value: `HEADER_FIELD_EMPTY_ERROR_${fieldItem?.label}` };
+        return { type: "error", value: `${t(HEADER_FIELD_EMPTY_ERROR)} ${useCustomT(fieldItem?.label)}` };
       }
     }
     const validateValue = (value, validation, label, a, b) => {
@@ -411,7 +411,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           (typeof value === "string" && value.trim() === "") ||
           (Array.isArray(value) && value.length === 0)
         ) {
-          return validation.message || `${label || "Field"} is required for ${a?.label}`;
+          return validation.message || `${t(`${label || "FIELD"}_REQUIRED_FOR`)} ${useCustomT(a?.label)}`;
         }
       }
 
@@ -419,7 +419,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       if (validation.pattern && value) {
         const regex = new RegExp(validation.pattern);
         if (!regex.test(value)) {
-          return validation.message || `${label || "Field"} is invalid`;
+          return validation.message || `${t(`${label || "Field"}_IS_INVALID`)}`;
         }
       }
 

@@ -1,4 +1,5 @@
 import React from "react";
+import { Notifications } from "@egovernments/digit-ui-svg-components";
 
 const MobileBezelFrame = ({ children }) => {
   return (
@@ -6,6 +7,18 @@ const MobileBezelFrame = ({ children }) => {
       <div className="mobile-bezel-deviceWrapper" style={styles.deviceWrapper}>
         <div className="mobile-bezel-camera" style={styles.camera}></div>
         <div className="mobile-bezel-screen" style={styles.screen}>
+          <div className="mobile-top-bar" style={{ flexDirection: "row", gap: "1rem" }}>
+            <div className="mobile-menu-icon">&#9776;</div>
+            <img
+              src="https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/mseva-white-logo.png"
+              alt="MSEVA Logo"
+              className="mseva-logo"
+              style={{ width: "8rem", filter: "brightness(0) invert(1)" }}
+            />
+            <div className="mobile-notifications-icon" style={{ marginLeft: "auto" }}>
+              <Notifications width="24" height="24" fill="white" />
+            </div>
+          </div>
           {children}
         </div>
       </div>
