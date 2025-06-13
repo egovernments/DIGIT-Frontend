@@ -226,55 +226,56 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         createAllMDMSRecords(newCampaignNumber),
         createAllChecklists(campaignName),
       ]);
-
-      // Step 3: Fetch localization messages for the new campaign
       setStep(3);
       const languages = Digit?.SessionStorage.get("initData")?.languages || [];
-      const mdmsModules = mdmsData.map((item) => {
-        const moduleBase = item?.data?.name?.toString()?.toLowerCase();
-        return moduleBase ? `hcm-${moduleBase}` : null;
-      }).filter(Boolean);
+      const mdmsModules = mdmsData
+        .map((item) => {
+          const moduleBase = item?.data?.name?.toString()?.toLowerCase();
+          return moduleBase ? `hcm-${moduleBase}` : null;
+        })
+        .filter(Boolean);
 
-      // Step 3: Loop through each locale and clone localization messages
       for (const lang of languages) {
         const locale = lang?.value;
         if (!locale) continue;
 
-        const moduleParam = mdmsModules.map(mod => `${mod}-${campaignData?.campaignNumber}`).join(",");
-        const neModuleParam = mdmsModules.map(mod => `${mod}-${newCampaignNumber}`).join(",");
+        for (const mod of mdmsModules) {
+          const oldModule = `${mod}-${campaignData?.campaignNumber}`;
+          const newModule = `${mod}-${newCampaignNumber}`;
 
-        try {
-          const localisationData = await Digit.CustomService.getResponse({
-            url: `/localization/messages/v1/_search`,
-            params: {
-              locale,
-              module: moduleParam,
-              tenantId,
-            },
-          });
-
-          if (localisationData?.messages?.length) {
-            const updatedMessages = localisationData.messages.map((msg) => ({
-              ...msg,
-              locale,
-              module: msg.module.replace(`${campaignData?.campaignNumber}`, `${newCampaignNumber}`),
-            }));
-
-            await Digit.CustomService.getResponse({
-              url: "/localization/messages/v1/_upsert",
-              body: {
+          try {
+            // SEARCH localization entries for old module
+            const localisationData = await Digit.CustomService.getResponse({
+              url: `/localization/messages/v1/_search`,
+              params: {
+                locale,
+                module: oldModule,
                 tenantId,
-                messages: updatedMessages,
-                module: neModuleParam,
               },
             });
+
+            if (localisationData?.messages?.length) {
+              const updatedMessages = localisationData.messages.map((msg) => ({
+                ...msg,
+                locale,
+                module: newModule, // Replace module with new module name
+              }));
+
+              // UPSERT updated messages under new module
+              await Digit.CustomService.getResponse({
+                url: "/localization/messages/v1/_upsert",
+                body: {
+                  tenantId,
+                  messages: updatedMessages,
+                },
+              });
+            }
+          } catch (error) {
+            console.error(`Localization upsert failed for locale ${locale}, module ${mod}:`, error);
+            throw new Error(`Localization upsert failed for locale ${locale}, module ${mod}`);
           }
-        } catch (error) {
-          console.error(`Localization upsert failed for locale ${locale}:`, error);
-          throw new Error(`Localization upsert failed for locale ${locale}`);
         }
       }
-
       setStep(4);
       return {
         success: true,
