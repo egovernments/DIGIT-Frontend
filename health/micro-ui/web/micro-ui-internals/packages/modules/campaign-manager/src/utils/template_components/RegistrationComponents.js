@@ -1,34 +1,34 @@
 import { Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard } from "@egovernments/digit-ui-components";
 import React from "react";
 import { registerComponent } from "./RegistrationRegistry";
-import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper";
+
 
 
 const responsePanelComponent = ({ components, t }) => {
-    const titleField = components.find(f => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
-    const descField = components.find(f => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
+  const titleField = components.find(f => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
+  const descField = components.find(f => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
 
-    const message = titleField ? t(titleField.label) : "";
-    const description = descField ? t(descField.label) : "";
+  const message = titleField ? t(titleField.label) : "";
+  const description = descField ? t(descField.label) : "";
 
-    return (
-      <PanelCard
-        message={message}
-        description={description}
-        type="success"
-        cardClassName={"app-preview-selected"}
-        style={{ marginBottom: "1rem" }}
-      />
-    );
-  };
-   const SearchBar = (props) => (
-    <div style={{width: "100%"}}>
-      <FieldV1
-        style={{width: "100vh"}}
-        onChange={function noRefCheck(){}}
-        placeholder={props.t(props.field.label) || "LABEL"}
-        type="search"
-        populators={{
+  return (
+    <PanelCard
+      message={message}
+      description={description}
+      type="success"
+      cardClassName={"app-preview-selected"}
+      style={{ marginBottom: "1rem" }}
+    />
+  );
+};
+const SearchBar = (props) => (
+  <div style={{ width: "100%" }}>
+    <FieldV1
+      style={{ width: "100vh" }}
+      onChange={function noRefCheck() { }}
+      placeholder={props.t(props.field.label) || "LABEL"}
+      type="search"
+      populators={{
         fieldPairClassName: `app-preview-field-pair`
       }
       }
@@ -128,7 +128,7 @@ const TextButton = (props) => {
         {props.addMember ? <CustomSVG.AddFilled width={"16px"} height={"16px"} fill={"#F47738"} /> : <EditIcon />
 
         }
-        <span className="digit-search-text">{ (props.label || "EDIT_LABEL")}</span>
+        <span className="digit-search-text">{(props.label || "EDIT_LABEL")}</span>
       </div>
     </div>
   );
@@ -179,9 +179,9 @@ const HouseholdOverViewMemberCard = (props) => {
         <div style={styles.name}>
           <strong>{props.name}</strong>
         </div>
-        <TextButton alignment={"flex-end"} label={props.t( props.editIndividual?.label ||"")} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
+        <TextButton alignment={"flex-end"} label={props.t(props.editIndividual?.label || "")} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
       </div>
-      
+
       {/* Dynamically Render Attributes */}
       <div style={styles.details}>
         {attributes.map((attr, index) => (
@@ -197,24 +197,24 @@ const HouseholdOverViewMemberCard = (props) => {
 
 
       <div style={styles.buttonGroup}>
-        {!(props.smcPrimaryBtn?.hidden) && (
+        {!(props.primaryBtn?.hidden) && (
           <Button
             className={`app-preview-action-button `}
             key={0}
             variation="primary"
-            label={props.t(props.smcPrimaryBtn?.label || "LABEL")}
-            title={props.t(props.smcPrimaryBtn?.label || "LABEL")}
+            label={props.t(props.primaryBtn?.label || "LABEL")}
+            title={props.t(props.primaryBtn?.label || "LABEL")}
             onClick={() => { }}
           />
         )}
 
-        {!(props.smcSecondaryBtn?.hidden) && (
+        {!(props.secondaryBtn?.hidden) && (
           <Button
             className={`app-preview-action-button `}
             key={1}
             variation="secondary"
-            label={props.t(props.smcSecondaryBtn?.label) || "LABEL"}
-            title={props.t(props.smcSecondaryBtn?.label) || "LABEL"}
+            label={props.t(props.secondaryBtn?.label) || "LABEL"}
+            title={props.t(props.secondaryBtn?.label) || "LABEL"}
             onClick={() => { }}
           />
         )}
@@ -289,14 +289,14 @@ const styles = {
 };
 
 export const getTemplateRenderer = (templateName) => {
-  
+
   switch (templateName) {
     case "BeneficiaryAcknowledgement":
     case "HouseholdAcknowledgement":
       return responsePanelComponent;
-    
+
     case "HouseholdOverview":
-      return HouseHoldOverViewWrapper;
+      return HouseHoldOverviewSection;
 
     // case "AnotherTemplate": return anotherRenderer;
 
@@ -307,19 +307,24 @@ export const getTemplateRenderer = (templateName) => {
 
 
 
-export const HouseHoldOverviewSection = ({
-  editHousehold,
-  editIndividual,
-  smcPrimaryBtn,
-  smcSecondaryBtn,
-  addMember,
-  t,
-}) => {
+export const HouseHoldOverviewSection = ({ components = [], t }) => {
+
+
+  const formatMap = {};
+  components.forEach((item) => {
+    formatMap[item.jsonPath] = item;
+  });
+
+  const editHousehold = formatMap["editHousehold"] || { label: "", hidden: true };
+  const editIndividual = formatMap["editIndividual"] || {};
+  const primaryBtn = formatMap["IndividualDeliveryPrimaryButton"] || {};
+  const secondaryBtn = formatMap["IndividualDeliverySecondaryButton"] || {};
+  const addMember = formatMap["addMember"] || { label: "", hidden: true };
   return (
     <div>
       <TextButton
         label={t(editHousehold.label || "")}
-        onClick={() => {}}
+        onClick={() => { }}
         hidden={editHousehold.hidden}
         alignment="flex-end"
       />
@@ -329,8 +334,8 @@ export const HouseHoldOverviewSection = ({
       <HouseholdOverViewMemberCard
         name="Joseph Sergio"
         editIndividual={editIndividual}
-        smcPrimaryBtn={smcPrimaryBtn}
-        smcSecondaryBtn={smcSecondaryBtn}
+        primaryBtn={primaryBtn}
+        secondaryBtn={secondaryBtn}
         t={t}
       />
 
@@ -341,7 +346,7 @@ export const HouseHoldOverviewSection = ({
             alignment="center"
             hidden={addMember.hidden}
             label={t(addMember.label || "")}
-            onClick={() => {}}
+            onClick={() => { }}
           />
         </div>
       )}
