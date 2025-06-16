@@ -1,4 +1,4 @@
-import { Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair } from "@egovernments/digit-ui-components";
+import { Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard } from "@egovernments/digit-ui-components";
 import React from "react";
 import SearchBeneficiaryRegistrationWrapper from "../../components/SearchBeneficiaryRegistrationWrapper";
 import { registerComponent } from "./RegistrationRegistry";
@@ -6,13 +6,27 @@ import AppPreviewResponse from "../../components/AppPreviewResponse";
 import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper";
 
 
+const responsePanelComponent = ({ components, t }) => {
+    const titleField = components.find(f => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
+    const descField = components.find(f => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
 
+    const message = titleField ? t(titleField.label) : "";
+    const description = descField ? t(descField.label) : "";
 
-
+    return (
+      <PanelCard
+        message={message}
+        description={description}
+        type="success"
+        cardClassName={"app-preview-selected"}
+        style={{ marginBottom: "1rem" }}
+      />
+    );
+  };
    const SearchBar = (props) => (
     <div style={{width: "100%"}}>
-        <FieldV1
-        style={{width: "100%"}}
+      <FieldV1
+        style={{width: "100vh"}}
         onChange={function noRefCheck(){}}
         placeholder={props.t(props.field.label) || "LABEL"}
         type="search"
@@ -204,13 +218,23 @@ const styles = {
   },
 };
 
+export const getTemplateRenderer = (templateName) => {
+  switch (templateName) {
+    case "BeneficiaryAcknowledgement":
+    case "HouseholdAcknowledgement":
+      return responsePanelComponent;
+
+    // case "AnotherTemplate": return anotherRenderer;
+
+    default:
+      return null;
+  }
+};
+
 // Register all components
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
-registerComponent("SearchBeneficiary", SearchBeneficiaryRegistrationWrapper);
-registerComponent("HouseholdAcknowledgement", AppPreviewResponse);
-registerComponent("HouseholdOverview", HouseHoldOverViewWrapper);
 registerComponent("EditButton", EditButton);
 registerComponent("ContentDetails", ContentDetails);
 registerComponent("HouseholdOverViewMemberCard", HouseholdOverViewMemberCard);

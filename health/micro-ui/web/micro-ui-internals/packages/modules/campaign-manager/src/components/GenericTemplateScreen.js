@@ -1,8 +1,11 @@
 import React from "react";
 import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
+import { getTemplateRenderer } from "../utils/template_components/RegistrationComponents";
 
-const GenericTemplateScreen = ({ components = [], t, selectedField }) => {
+const GenericTemplateScreen = ({ components = [], t, selectedField , templateName}) => {
+
+  const TemplateRenderer = templateName ? getTemplateRenderer(templateName) : null;
   const contentFields = components
     .filter(
       (field) =>
@@ -38,7 +41,10 @@ const GenericTemplateScreen = ({ components = [], t, selectedField }) => {
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
         }}
       >
-        {contentFields.map((field, index) => {
+    {TemplateRenderer ? (
+    <TemplateRenderer components={components} t={t} />
+  ) :
+        contentFields.map((field, index) => {
           const ComponentToRender = getRegisteredComponent(field.jsonPath);
           if (!ComponentToRender) return null;
 

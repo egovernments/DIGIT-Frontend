@@ -421,9 +421,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
               />
             )}
             {data.type === "template" &&
-            <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t}/>
-            // <TemplateScreen card={card} name={data.name} t={t} selectedField={selectedField} />
-            
+            <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t} templateName={data.name}/>            
             }
           </Card>
         ))}
@@ -432,15 +430,5 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
   );
 };
 
-const TemplateScreen = ({ selectedField, card, name, t }) => {
-
-  const TemplateComponent = getRegisteredComponent(name);
-
-  return TemplateComponent ? (
-        <TemplateComponent components={card.fields} selectedField={selectedField} t={t} />
-      ) : (
-        <div>No Component to preview</div>
-      );
-};
 
 export default AppPreview;
