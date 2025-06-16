@@ -4,6 +4,7 @@ import GenericChart from "./GenericChart";
 import { getTitleHeading } from "../utils/locale";
 import FilterContext from "./FilterContext";
 import { Button } from "@egovernments/digit-ui-components";
+import { useHistory } from "react-router-dom";
 
 export default function StackedTable({ chartId, visualizer, initialRange, isNational, routeTo, redirectUrl }) {
   const { t } = useTranslation();
@@ -13,6 +14,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  const history = useHistory();
 
   const getInitialRange = () => {
     if (initialRange) {
@@ -94,7 +96,12 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
           title={t("DSS_VIEW_DASHBOARD")}
           t={t}
           onClick={() => {
-            routeTo(`/${window.contextPath}/employee/dss/dashboard/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`);
+            console.log("button clicked");
+            //Update the level here, make it dynamic(maybe)
+            history.push(`/${window.contextPath}/employee/dss/level2/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`, {
+
+            })
+            // routeTo(`/${window.contextPath}/employee/dss/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`);
           }}
         ></Button>
       </div>

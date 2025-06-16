@@ -73,21 +73,12 @@ const ViewDashbaord = ({ stateCode }) => {
   useEffect(() => {
     if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
-      if (dashboardId === "level-one-dashboard") {
-        history.push(`/${window?.contextPath}/employee/dss/l1-main?projectTypeId=${projectResult?.projectTypeId}`, {
+      history.push(`/${window?.contextPath}/employee/dss/${dashboardLinks?.[0]?.level}/${dashboardLinks?.[0]?.dashboardId}?projectTypeId=${projectResult?.projectTypeId}`, {
           dashboardData: dashboardDataResponse?.responseData,
           projectTypeId: projectResult?.projectTypeId,
           dashboardLink: dashboardLinks?.[0],
           stateCode: stateCode,
         });
-      } else {
-        history.push(`/${window?.contextPath}/employee/dss/l2-main?projectTypeId=${projectResult?.projectTypeId}`, {
-          dashboardData: dashboardDataResponse?.responseData,
-          projectTypeId: projectResult?.projectTypeId,
-          dashboardLink: dashboardLinks?.[0],
-          stateCode: stateCode,
-        });
-      }
     }
   }, [dashboardDataResponse?.responseData, redirected, history]);
 

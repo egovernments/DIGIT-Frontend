@@ -58,7 +58,9 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
           />
         );
       case "heatmap":
-        return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
+        //TODO: Add HeatMap chart back
+        return <div>HeatMap has to rendered here</div>
+        // return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
       case "bar":
       case "sideBySideBar":
         console.log("CHART: ", chart);
@@ -143,7 +145,9 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
       case "kibanaScreen": 
         return <KibanaCard moduleName={visualizer?.moduleName} pageName={visualizer?.pageName} />
       case "latlong":
-        return <LatLongMapChart data={visualizer} chartId={visualizer?.id} chartName={visualizer?.name} pageZoom={pageZoom}/>;
+        //TODO: Add LatLongMapChart chart back
+        return <div>LatLongMapChart has to rendered here</div>
+        // return <LatLongMapChart data={visualizer} chartId={visualizer?.id} chartName={visualizer?.name} pageZoom={pageZoom}/>;
       default:
         return null;
     }
