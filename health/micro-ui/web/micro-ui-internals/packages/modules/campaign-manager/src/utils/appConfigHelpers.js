@@ -58,7 +58,7 @@ const guessPageName = (label) => {
 };
 
 // Helper to get type/format and handle attribute renaming from appType using fieldTypeMasterData
-const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
+export const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
   if (!field.appType) return {};
   const matched = fieldTypeMasterData.find((item) => item.type === field.appType);
   if (!matched) return {};
