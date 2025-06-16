@@ -8,8 +8,8 @@ const responsePanelComponent = ({ components, t }) => {
   const titleField = components.find(f => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
   const descField = components.find(f => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
 
-  const message = titleField ? t(titleField.label) : "";
-  const description = descField ? t(descField.label) : "";
+  const message = titleField ? t(titleField?.label) : "TITLE";
+  const description = descField ? t(descField?.label) : "DESCRIPTION";
 
   return (
     <PanelCard
@@ -26,7 +26,7 @@ const SearchBar = (props) => (
     <FieldV1
       style={{ width: "100vh" }}
       onChange={function noRefCheck() { }}
-      placeholder={props.t(props.field.label) || "LABEL"}
+      placeholder={props.t(props.field?.label) || "LABEL"}
       type="search"
       populators={{
         fieldPairClassName: `app-preview-field-pair`
@@ -53,7 +53,7 @@ const Filter = (props) => (
 
 const ProximitySearch = (props) => (
   <Switch
-    label={props.t(props.field.label) || "LABEL"}
+    label={props.t(props.field?.label) || "LABEL"}
     onToggle={null}
     isCheckedInitially={true}
     shapeOnOff
@@ -77,8 +77,6 @@ const TextButton = (props) => {
 
 
   if (props.hidden) return null;
-
-  const labelText = typeof t === "function" ? props.t(label) : props.label;
 
   const outerStyle = {
     display: "flex",
@@ -128,7 +126,7 @@ const TextButton = (props) => {
         {props.addMember ? <CustomSVG.AddFilled width={"16px"} height={"16px"} fill={"#F47738"} /> : <EditIcon />
 
         }
-        <span className="digit-search-text">{(props.label || "EDIT_LABEL")}</span>
+        <span className="digit-search-text">{(props?.label || "EDIT_LABEL")}</span>
       </div>
     </div>
   );
@@ -158,8 +156,8 @@ const HouseHoldDetailsCard = (props) => {
 
             key={index}
             inline={true}
-            label={(pair.label || "LABEL")}
-            value={(pair.value) || ""}
+            label={(pair?.label || "LABEL")}
+            value={(pair?.value) || "VALUE"}
 
           />
         </div>
@@ -323,7 +321,7 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
   return (
     <div>
       <TextButton
-        label={t(editHousehold.label || "")}
+        label={t(editHousehold?.label || "LABEL")}
         onClick={() => { }}
         hidden={editHousehold.hidden}
         alignment="flex-end"
@@ -344,8 +342,8 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           <TextButton
             addMember={true}
             alignment="center"
-            hidden={addMember.hidden}
-            label={t(addMember.label || "")}
+            hidden={addMember?.hidden}
+            label={t(addMember?.label || "")}
             onClick={() => { }}
           />
         </div>
