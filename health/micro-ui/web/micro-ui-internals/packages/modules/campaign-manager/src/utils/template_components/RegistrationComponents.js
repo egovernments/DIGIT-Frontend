@@ -1,9 +1,6 @@
 import { Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard } from "@egovernments/digit-ui-components";
 import React from "react";
-import SearchBeneficiaryRegistrationWrapper from "../../components/SearchBeneficiaryRegistrationWrapper";
 import { registerComponent } from "./RegistrationRegistry";
-import AppPreviewResponse from "../../components/AppPreviewResponse";
-import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper";
 
 
 const responsePanelComponent = ({ components, t }) => {
@@ -223,6 +220,7 @@ export const getTemplateRenderer = (templateName) => {
     case "BeneficiaryAcknowledgement":
     case "HouseholdAcknowledgement":
       return responsePanelComponent;
+    case "HouseholdOverview":
 
     // case "AnotherTemplate": return anotherRenderer;
 
