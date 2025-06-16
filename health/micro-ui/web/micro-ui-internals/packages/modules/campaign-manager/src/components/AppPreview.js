@@ -418,38 +418,14 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
 };
 
 const TemplateScreen = ({ selectedField, card, name, t }) => {
-  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-  const componentMasterName = "RegistrationComponentsConfig";
 
-  const { isLoading: isLoadingComponentMaster, data: ComponentConfigMdmsData } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCurrentTenantId(),
-    MODULE_CONSTANTS,
-    [{ name: componentMasterName, limit: 100 }],
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      select: (data) => {
-        return data?.[MODULE_CONSTANTS]?.[componentMasterName];
-      },
-    },
-    { schemaCode: "APP_COMPONENT_MASTER_DATA" } //mdmsv2
-  );
-
-  if (isLoadingComponentMaster) {
-    return <Loader />;
-  }
   const TemplateComponent = getRegisteredComponent(name);
 
-  return (
-    ComponentConfigMdmsData?.length > 0 &&
-    (() => {
-      return TemplateComponent ? (
-        <TemplateComponent components={card.fields} selectedField={selectedField} metaMasterConfig={ComponentConfigMdmsData} t={t} />
+  return TemplateComponent ? (
+        <TemplateComponent components={card.fields} selectedField={selectedField} t={t} />
       ) : (
         <div>No Component to preview</div>
       );
-    })()
-  );
 };
 
 export default AppPreview;
