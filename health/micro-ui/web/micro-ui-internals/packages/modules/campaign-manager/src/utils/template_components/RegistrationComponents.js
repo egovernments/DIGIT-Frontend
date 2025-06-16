@@ -1,6 +1,7 @@
 import { Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard } from "@egovernments/digit-ui-components";
 import React from "react";
 import { registerComponent } from "./RegistrationRegistry";
+import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper";
 
 
 const responsePanelComponent = ({ components, t }) => {
@@ -355,6 +356,5 @@ export const HouseHoldOverviewSection = ({
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
-registerComponent("SearchBeneficiary", SearchBeneficiaryRegistrationWrapper);
-registerComponent("HouseholdAcknowledgement", AppPreviewResponse);
+
 
