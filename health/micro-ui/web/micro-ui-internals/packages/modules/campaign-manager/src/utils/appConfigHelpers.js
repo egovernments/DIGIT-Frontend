@@ -7,7 +7,7 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   const matched = fieldTypeMasterData.find((item) => {
     // Match both type and format from metadata
     return item?.metadata?.type === field.type && item?.metadata?.format === field.format 
-    && item.type === field.fieldName;
+    // && item?.metadata?.format === field.fieldName;
   });
 
   if (!matched) {
