@@ -37,7 +37,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField , templateNam
         style={{
           height: "100%",
           overflowY: "auto",
-        //   padding: "1rem",
+          //   padding: "1rem",
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
         }}
       >
@@ -48,18 +48,18 @@ const GenericTemplateScreen = ({ components = [], t, selectedField , templateNam
           const ComponentToRender = getRegisteredComponent(field.jsonPath);
           if (!ComponentToRender) return null;
 
-          const isSelected = selectedField?.jsonPath === field.jsonPath;
+              const isSelected = selectedField?.jsonPath === field.jsonPath;
 
-          return (
-            <div
-              key={index}
-              className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
-              style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
-            >
-              <ComponentToRender field={field} t={t} />
-            </div>
-          );
-        })}
+              return (
+                <div
+                  key={index}
+                  className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
+                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
+                >
+                  <ComponentToRender field={field} t={t} />
+                </div>
+              );
+            })}
       </div>
 
       {/* Fixed Buttons at Card Bottom */}
@@ -82,12 +82,11 @@ const GenericTemplateScreen = ({ components = [], t, selectedField , templateNam
             <Button
               key={index}
               variation={field.jsonPath === "SecondaryButton" ? "secondary" : "primary"}
-              label={t(field.label)}
-              onClick={() => {}}
+              label={t(field?.label)}
+              onClick={() => { }}
               style={{ minWidth: "100%" }}
-              className={`app-preview-action-button ${
-                selectedField?.jsonPath === field.jsonPath ? "app-preview-selected" : ""
-              }`}
+              className={`app-preview-action-button ${selectedField?.jsonPath === field.jsonPath ? "app-preview-selected" : ""
+                }`}
               icon={field.icon || null}
             />
           ))}
