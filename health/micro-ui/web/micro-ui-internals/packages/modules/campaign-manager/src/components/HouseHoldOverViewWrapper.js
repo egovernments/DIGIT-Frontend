@@ -120,34 +120,43 @@ const my = [
 ];
 const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
 
-  components = components && components.length > 0 ? components : my;
+
+
   const renderComponents = (inputData) => {
     const formatMap = {};
     inputData.forEach((item) => {
       formatMap[item.jsonPath] = item;
     });
-    const ComponentToRender = getRegisteredComponent("EditButton");
-    const ContentDetails = getRegisteredComponent("ContentDetails");
+    const TextButton = getRegisteredComponent("TextButton");
+    const HouseHoldDetailsCard = getRegisteredComponent("HouseHoldDetailsCard");
     const HouseholdOverViewMemberCard = getRegisteredComponent("HouseholdOverViewMemberCard");
-    const editHousehold = formatMap["editHousehold"];
-    const editIndividual = formatMap["editIndividual"];
-    const smcSecondaryBtn = formatMap["SMCDeliverySecondaryButton"];
-    const smcPrimaryBtn = formatMap["SMCDeliveryPrimaryButton"];
-    const addMember = formatMap["addMember"];
+    // const editHousehold = formatMap["editHousehold"];
+    // const editIndividual = formatMap["editIndividual"];
+    // const smcSecondaryBtn = formatMap["IndividualDeliverySecondaryButton"];
+    // const smcPrimaryBtn = formatMap["IndividualDeliveryPrimaryButton"];
+    // const addMember = formatMap["addMember"];
+    // console.log(formatMap);
+    // debugger
+    const editHousehold = formatMap["editHousehold"] || { label: "", hidden: true };
+    const editIndividual = formatMap["editIndividual"] || {};
+    const smcSecondaryBtn = formatMap["IndividualDeliverySecondaryButton"] || {};
+    const smcPrimaryBtn = formatMap["IndividualDeliveryPrimaryButton"] || {};
+    const addMember = formatMap["addMember"] || { label: "", hidden: true };
 
     return (
       <div>
-        {/* 1. Household Edit Button - outside ProfileCard */}
+        {/* 1. Household Edit Button*/}
 
 
-        <ComponentToRender label={editHousehold.label} t={t} onClick={() => { }} hidden={editHousehold.hidden}
+        <TextButton label={t(editHousehold.label || "")} onClick={() => { }} hidden={editHousehold.hidden}
+          alignment="flex-end"
+          t={t}
 
-          text="HouseHold"
         />
 
-        <ContentDetails t={t} />
+        <HouseHoldDetailsCard t={t} />
 
-        {/* 2. ProfileCard always rendered */}
+        {/* 2. Individual ProfileCard always rendered */}
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
           gender="Male"
@@ -159,10 +168,10 @@ const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
         />
 
         {addMember &&
-          <div style={{ marginTop: "16px" }}><ComponentToRender alignment="center" hidden={addMember.hidden} label={addMember.label} t={t} onClick={() => { }} /></div>}
-        {/*<div style={{ marginTop: "16px" }}>
-          <ComponentToRender alignment="center" label={"Add Member"} t={t} onClick={() => { }} />
-        </div>*/}
+          <div style={{ marginTop: "16px" }}><TextButton
+            addMember={true}
+            alignment="center" hidden={addMember.hidden} label={t(addMember.label || "")} onClick={() => { }} t={t} /></div>}
+
       </div>
     );
   };
@@ -176,22 +185,7 @@ const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
           renderComponents(components)
         }
       </div>
-      {components.some(c => c.jsonPath?.includes("IRS") && !c.hidden) &&
-        (<div
-          style={{
-            marginTop: "auto",
-          }}
-        >
-          <Button
-            label={"Deliver Intervention"}
-            onClick={() => { }}
-            variation="primary"
-            style={{
-              minWidth: "100%",
-            }}
-          />
-        </div>)
-      }
+
     </div>
   );
 };

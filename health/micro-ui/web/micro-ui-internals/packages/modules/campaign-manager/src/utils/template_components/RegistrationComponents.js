@@ -7,7 +7,7 @@ import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper"
 
 
 
-
+//AddIcon
 
 const SearchBar = (props) => (
   <div style={{ width: "100%" }}>
@@ -61,7 +61,7 @@ const EditIcon = () => (
   </svg>
 );
 
-const EditButton = (props) => {
+const TextButton = (props) => {
 
 
   if (props.hidden) return null;
@@ -113,8 +113,10 @@ const EditButton = (props) => {
         className="digit-search-action"
         onClick={props.onClick}
       >
-        <EditIcon />
-        <span className="digit-search-text">{props.label}</span>
+        {props.addMember ? <CustomSVG.AddFilled width={"16px"} height={"16px"} fill={"#F47738"} /> : <EditIcon />
+
+        }
+        <span className="digit-search-text">{ (props.label || "EDIT_LABEL")}</span>
       </div>
     </div>
   );
@@ -124,23 +126,29 @@ const EditButton = (props) => {
 
 // household member card
 
-const ContentDetails = (props) => {
+const HouseHoldDetailsCard = (props) => {
   const householdDetails = [
-    { label: "HOUSEHOLD_HEAD", value: "Value" },
-    { label: "ADMINSTRATIVE_AREA", value: "value" },
-    { label: "MEMBER_COUNT", value: 5 },
+    //TODO: Need this to be moved to config @Pitabsh, @ram
+    // { label: "HOUSEHOLD_HEAD", value: "Value" },
+    // { label: "ADMINSTRATIVE_AREA", value: "value" },
+    // { label: "MEMBER_COUNT", value: 5 },
+
+    { label: "HouseHold Head", value: "Rohit" },
+    { label: "Adminstrative Area", value: "Boundary A" },
+    { label: "Member Count", value: 5 },
   ];
   return (
     <div>
       {householdDetails.map((pair, index) => (
-        <div>
+        <div key={index}
+        >
           <SummaryCardFieldPair
-            key={index} // Provide a unique key for each item
-            className=""
-            inline
-            label={props.t(pair.label || "LABEL")} // Dynamically set the label
-            value={props.t(pair.value)} // Dynamically set the value
-          // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+
+            key={index}
+            inline={true}
+            label={(pair.label || "LABEL")}
+            value={(pair.value) || ""}
+
           />
         </div>
       ))}
@@ -151,7 +159,7 @@ const ContentDetails = (props) => {
 const HouseholdOverViewMemberCard = (props) => {
   const attributes = props.attributes || [{ label: "Gender", value: "Female" },
   { label: "Age", value: "30 years" },
-  { label: "Relationship", value: "Mother" },
+  { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
   return (
     <div style={styles.card}>
@@ -159,13 +167,9 @@ const HouseholdOverViewMemberCard = (props) => {
         <div style={styles.name}>
           <strong>{props.name}</strong>
         </div>
-        <EditButton alignment={"flex-end"} label={props.editIndividual?.label} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
+        <TextButton alignment={"flex-end"} label={props.t( props.editIndividual?.label ||"")} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
       </div>
-      {/*<div style={styles.details}>
-        <span>{props.gender}</span>
-        <div style={styles.separator} />
-        <span>{props.age} years</span>
-      </div>*/}
+      
       {/* Dynamically Render Attributes */}
       <div style={styles.details}>
         {attributes.map((attr, index) => (
@@ -197,8 +201,8 @@ const HouseholdOverViewMemberCard = (props) => {
             className={`app-preview-action-button `}
             key={1}
             variation="secondary"
-            label={props.smcSecondaryBtn?.label || "LABEL"}
-            title={props.smcSecondaryBtn?.label || "LABEL"}
+            label={props.t(props.smcSecondaryBtn?.label) || "LABEL"}
+            title={props.t(props.smcSecondaryBtn?.label) || "LABEL"}
             onClick={() => { }}
           />
         )}
@@ -279,6 +283,6 @@ registerComponent("searchByProximity", ProximitySearch);
 registerComponent("SearchBeneficiary", SearchBeneficiaryRegistrationWrapper);
 registerComponent("HouseholdAcknowledgement", AppPreviewResponse);
 registerComponent("HouseholdOverview", HouseHoldOverViewWrapper);
-registerComponent("EditButton", EditButton);
-registerComponent("ContentDetails", ContentDetails);
+registerComponent("TextButton", TextButton);
+registerComponent("HouseHoldDetailsCard", HouseHoldDetailsCard);
 registerComponent("HouseholdOverViewMemberCard", HouseholdOverViewMemberCard);
