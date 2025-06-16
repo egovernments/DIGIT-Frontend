@@ -62,10 +62,36 @@ const EditIcon = () => (
 );
 
 const EditButton = (props) => {
-  const { label = "LABEL", onClick, alignment = "flex-end", hidden = false } = props;
-  if (hidden) return null;
+
+
+  if (props.hidden) return null;
+
+  const labelText = typeof t === "function" ? props.t(label) : props.label;
+
+  const outerStyle = {
+    display: "flex",
+    alignItems: "center",
+    width: "100%",
+    justifyContent: props.text ? "space-between" : props.alignment, // ⬅️ smart layout
+  };
+
   return (
-    <div style={{ display: "flex", justifyContent: alignment, width: "100%" }}>
+    <div style={outerStyle}>
+      {/* Show left text only if available */}
+      {props.text && (
+        <div
+          style={{
+            fontSize: "16px",
+            fontFamily: "Roboto, sans-serif",
+            fontWeight: 400,
+            color: "#000000",
+          }}
+        >
+          {props.text}
+        </div>
+      )}
+
+      {/* Button */}
       <div
         style={{
           display: "inline-flex",
@@ -85,14 +111,16 @@ const EditButton = (props) => {
           border: "none",
         }}
         className="digit-search-action"
-        onClick={onClick}
+        onClick={props.onClick}
       >
         <EditIcon />
-        <span className="digit-search-text">{label}</span>
+        <span className="digit-search-text">{props.label}</span>
       </div>
     </div>
   );
 };
+
+
 
 // household member card
 
@@ -110,7 +138,7 @@ const ContentDetails = (props) => {
             key={index} // Provide a unique key for each item
             className=""
             inline
-            label={props.t(pair.label)} // Dynamically set the label
+            label={props.t(pair.label || "LABEL")} // Dynamically set the label
             value={props.t(pair.value)} // Dynamically set the value
           // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
           />
@@ -131,7 +159,7 @@ const HouseholdOverViewMemberCard = (props) => {
         <div style={styles.name}>
           <strong>{props.name}</strong>
         </div>
-        <EditButton label={props.editIndividual?.label} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
+        <EditButton alignment={"flex-end"} label={props.editIndividual?.label} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
       </div>
       {/*<div style={styles.details}>
         <span>{props.gender}</span>
@@ -155,16 +183,18 @@ const HouseholdOverViewMemberCard = (props) => {
       <div style={styles.buttonGroup}>
         {!(props.smcPrimaryBtn?.hidden) && (
           <Button
+            className={`app-preview-action-button `}
             key={0}
             variation="primary"
-            label={props.smcPrimaryBtn?.label || "LABEL"}
-            title={props.smcPrimaryBtn?.label || "LABEL"}
+            label={props.t(props.smcPrimaryBtn?.label || "LABEL")}
+            title={props.t(props.smcPrimaryBtn?.label || "LABEL")}
             onClick={() => { }}
           />
         )}
 
         {!(props.smcSecondaryBtn?.hidden) && (
           <Button
+            className={`app-preview-action-button `}
             key={1}
             variation="secondary"
             label={props.smcSecondaryBtn?.label || "LABEL"}

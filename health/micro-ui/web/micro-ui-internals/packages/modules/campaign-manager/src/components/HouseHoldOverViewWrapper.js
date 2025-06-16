@@ -16,6 +16,7 @@ import {
   FieldV1,
   Loader,
   CheckBox,
+  Header,
 } from "@egovernments/digit-ui-components";
 
 const my = [
@@ -117,12 +118,13 @@ const my = [
     "isMultiSelect": false
   }
 ];
-const HouseHoldOverViewWrapper = ({ components = my, t, selectedField }) => {
+const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
 
+  components = components && components.length > 0 ? components : my;
   const renderComponents = (inputData) => {
     const formatMap = {};
     inputData.forEach((item) => {
-      formatMap[item.fieldName] = item;
+      formatMap[item.jsonPath] = item;
     });
     const ComponentToRender = getRegisteredComponent("EditButton");
     const ContentDetails = getRegisteredComponent("ContentDetails");
@@ -136,7 +138,13 @@ const HouseHoldOverViewWrapper = ({ components = my, t, selectedField }) => {
     return (
       <div>
         {/* 1. Household Edit Button - outside ProfileCard */}
-        <ComponentToRender label={editHousehold.label} t={t} onClick={() => { }} hidden={editHousehold.hidden} />
+
+
+        <ComponentToRender label={editHousehold.label} t={t} onClick={() => { }} hidden={editHousehold.hidden}
+
+          text="HouseHold"
+        />
+
         <ContentDetails t={t} />
 
         {/* 2. ProfileCard always rendered */}
@@ -168,7 +176,7 @@ const HouseHoldOverViewWrapper = ({ components = my, t, selectedField }) => {
           renderComponents(components)
         }
       </div>
-      {components.some(c => c.format?.includes("IRS") && !c.hidden) &&
+      {components.some(c => c.jsonPath?.includes("IRS") && !c.hidden) &&
         (<div
           style={{
             marginTop: "auto",
