@@ -329,7 +329,7 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
-  debugger
+  
   return (
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
