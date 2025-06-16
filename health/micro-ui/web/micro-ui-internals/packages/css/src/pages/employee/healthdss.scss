@@ -1,7 +1,7 @@
-.health-dss-inbox-table{
-    .rdt_TableBody{
-        border: none !important;
-    }
+.health-dss-inbox-table {
+  .rdt_TableBody {
+    border: none !important;
+  }
 }
 
 .custom-daterange-wrapper {
@@ -20,7 +20,7 @@
   user-select: none;
   box-shadow: 0 0.063rem 0.188rem rgba(0, 0, 0, 0.1);
 
-  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4)  {
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
     /* Media query for tablets */
     max-width: 27.5rem;
   }
@@ -36,9 +36,11 @@
     max-width: 37.5rem;
   }
 }
+
 .custom-daterange-input:hover {
   border-color: #999;
 }
+
 .custom-daterange-popup {
   position: absolute;
   top: 110%;
@@ -49,21 +51,401 @@
   border-radius: 0.5rem;
   box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
 }
+
 .rdrSelected,
 .rdrInRange,
 .rdrStartEdge,
 .rdrEndEdge {
-  background: theme(digitv2.lightTheme.primary) !important; 
+  background: theme(digitv2.lightTheme.primary) !important;
   color: theme(digitv2.lightTheme.paper);
 }
+
 .rdrDayNumber span {
   color: theme(digitv2.lightTheme.text-primary);
 }
+
 .rdrDayNumber span:focus,
 .rdrDayNumber span:active {
   color: theme(digitv2.lightTheme.paper);
 }
+
 .rdrDay:hover {
   background: theme(digitv2.lightTheme.primary-bg);
   border-radius: 1rem;
+}
+
+.stackedCard {
+  box-shadow: 0 4px 4px rgb(0 0 0 / 25%);
+  flex: 1;
+  margin-top: 30px;
+}
+
+.digit-stacked-table-container {
+  height: 500px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+  align-items: flex-start;
+}
+
+.digit-stacked-table-container::-webkit-scrollbar {
+  width: 0.5rem;
+  background-color: theme(digitv2.lightTheme.background);
+}
+
+.digit-stacked-table-container::-webkit-scrollbar-track {
+  background-color: theme(digitv2.lightTheme.background);
+  border-radius: 0.563rem;
+}
+
+.digit-stacked-table-container::-webkit-scrollbar-thumb {
+  background-color: theme(digitv2.lightTheme.divider);
+  border-radius: 0.563rem;
+}
+
+.digit-stacked-table-container::-webkit-scrollbar:horizontal {
+  height: 0.5rem;
+  background-color: theme(digitv2.lightTheme.divider);
+}
+
+.digit-stacked-row {
+  display: flex;
+  width: 99%;
+  justify-content: space-evenly;
+  align-items: center;
+  background-color: theme(digitv2.lightTheme.paper-secondary);
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  border-radius: 4px;
+  border: 1px solid theme(digitv2.lightTheme.divider);
+  text-align: center;
+  padding: 24px;
+}
+
+.digit-stacked-row-index {
+  width: 20%;
+  word-break: break-word;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.14rem;
+  text-align: left;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.heading-m.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.heading-m.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.heading-m.desktop);
+  }
+}
+
+.digit-stacked-abs-cell {
+  width: 20%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.digit-stacked-abs-value {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.14rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.heading-m.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.heading-m.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.heading-m.desktop);
+  }
+}
+
+.digit-stacked-cell-sub-text {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.regular);
+
+  line-height: 1.37rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.body-s.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.body-s.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.body-s.desktop);
+  }
+}
+
+.digit-stacked-percentage-cell {
+  width: 20%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.digit-stacked-progress-cell {
+  display: flex;
+  width: 60%;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.digit-stacked-percentage-value {
+  width: fit-content;
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.14rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.heading-m.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.heading-m.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.heading-m.desktop);
+  }
+}
+
+.digit-stacked-percentage-bar-grey {
+  background-color: #D9D9D9;
+  width: 75%;
+  border-radius: 28px;
+  height: 6px;
+}
+
+.digit-stacked-percentage-bar-progress {
+  margin: 0px;
+  border-radius: 28px;
+  height: 100%;
+  position: relative;
+}
+
+.digit-stacked-progress-end-circle {
+  width: 6.47px;
+  height: 6.47px;
+  background-color: theme(digitv2.lightTheme.paper);
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  transform: translate(50%, -50%);
+  box-shadow: 0px 2px 4px 0px #00000033;
+  z-index: 2;
+}
+
+
+.digit-chart-header {
+  display: flex;
+  gap: 24px;
+  justify-content: space-between;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    flex-direction: column;
+  }
+
+
+}
+
+.digit-side-content {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  justify-content: flex-end;
+
+  .digit-table-search-wrapper {
+    display: flex !important;
+    width: fit-content;
+    align-items: center;
+    gap: 0.5rem;
+
+    .digit-field {
+      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+        /* Media query for tablets */
+        max-width: 27.5rem;
+      }
+
+      @media (max-aspect-ratio: 9/16) {
+        /* Media query for mobile */
+        max-width: 100%;
+        width: 100%;
+      }
+
+      @media (min-aspect-ratio: 3/4) {
+        /* Media query for desktop */
+        width: 37.5rem;
+      }
+    }
+
+    /*.digit-text-input-field {
+      height: 2rem !important;
+
+      .input-container {
+        height: 2rem !important;
+
+        .digit-employeeCard-input {
+          height: 2rem !important;
+        }
+
+        .digit-text-input-customIcon {
+          top: 0.25rem;
+          right: 0.5rem;
+        }
+      }
+    }*/
+  }
+}
+
+
+
+.digit-ellipsis-button-wrapper {
+  width: 24px;
+
+  .digit-ellipsis-button {
+    width: 24px;
+    min-width: 24px;
+    padding: 0px;
+    background-color: transparent !important;
+    border: none;
+    box-shadow: none;
+
+    .digit-button-label {
+      display: none;
+    }
+  }
+
+  .header-dropdown-container {
+    .header-dropdown-menu {
+      left: unset;
+    }
+  }
+}
+
+.digit-generic-chart-header {
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.14rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.heading-m.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.heading-m.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.heading-m.desktop);
+  }
+}
+
+.digit-chart-header {
+  .tooltip-content {
+    max-width: 100% !important;
+  }
+}
+
+.digit-generic-chart-subheader {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.14rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.heading-s.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.heading-s.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.heading-s.desktop);
+  }
+}
+
+.digit-generic-chart-caption {
+  color: theme(digitv2.lightTheme.text-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.regular);
+  line-height: theme(digitv2.lineHeight.lineheight2);
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.body-s.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.body-s.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.body-s.desktop);
+  }
+}
+
+.digit-dss-card {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.digit-dss-card-parent {
+  display: flex;
+  flex-direction: column;
+  width: 31%;
+  border-radius: 6px;
+  padding: 25px;
+  margin: 15px 11.5px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  cursor: pointer;
 }

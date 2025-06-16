@@ -5,7 +5,10 @@ import { Switch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
 import CampaignsInbox from "./CampaignsInbox";
-// import L1Main from "./L1Main";
+import L1Main from "./L1Main";
+import L2Main from "./L2Main";
+import ViewDashbaord from "./ViewDashboard";
+import L1Dashboard from "./L1Dashboard";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -36,7 +39,27 @@ const ProjectBreadCrumb = ({ location }) => {
       internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
       content: t("ACTION_TEST_MY_CAMPAIGN"),
       show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS"
-    }
+    },
+    {
+      internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
+      content: t("VIEW_DASHBOARD"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_DASHBOARD",
+    },
+    {
+      internalLink: `/${window?.contextPath}/employee/dss/l1-dashboard`,
+      content: t("L1_DASHBOARD"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_DASHBOARD",
+    },
+    {
+      internalLink: `/${window?.contextPath}/employee/dss/l1-main`,
+      content: t("LEVEL_ONE_DASHBOARD"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_MAIN",
+    },
+    {
+      internalLink: `/${window?.contextPath}/employee/dss/l2-main`,
+      content: t("LEVEL_TWO_DASHBOARD"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L2_MAIN",
+    },
   ];
   return <BreadCrumb crumbs={crumbs} />;
 };
@@ -52,8 +75,11 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </React.Fragment>
         <PrivateRoute path={`${path}/live-campaigns`} component={() => <CampaignsInbox />} />
         <PrivateRoute path={`${path}/past-campaigns`} component={() => <CampaignsInbox />} />
-        <PrivateRoute path={`${path}/my-campaigns`} component={() => <MyCampaignNew />} />
-        {/* <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <L1Main stateCode={stateCode} />} /> */}
+        <PrivateRoute path={`${path}/my-campaigns`} component={() => <MyCampaignNew showDashboardLink={true}/>} />
+        <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashbaord stateCode={stateCode} />} />
+        <PrivateRoute path={`${path}/l1-dashboard`} component={() => <L1Dashboard />} />
+        <PrivateRoute path={`${path}/l1-main`} component={() => <L1Main />} />
+        <PrivateRoute path={`${path}/l2-main`} component={() => <L2Main />} />
       </AppContainer>
     </Switch>
   );

@@ -11,9 +11,32 @@ import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
  * "digit-inbox-search-wrapper" that contains an `InboxSearchComposer` component. The `InboxSearchComposer`
  * component is being passed props such as `configs`, `showTab`, `tabData`, and `onTabChange
  */
-const MyCampaignNew = () => {
+
+const MyCampaignNew = ({showDashboardLink}) => {
+  console.log(showDashboardLink,"showDashboardLink")
   const { t } = useTranslation();
-  const [config, setConfig] = useState(myCampaignConfigNew?.myCampaignConfigNew?.[0]);
+  const getConfigWithDashboardLink = (baseConfig) => {
+    if (showDashboardLink && baseConfig?.sections?.searchResult?.uiConfig?.customRow) {
+      return {
+        ...baseConfig,
+        sections: {
+          ...baseConfig.sections,
+          searchResult: {
+            ...baseConfig.sections.searchResult,
+            uiConfig: {
+              ...baseConfig.sections.searchResult.uiConfig,
+              customRow: {
+                ...baseConfig.sections.searchResult.uiConfig.customRow,
+                customRowProps: { showDashboardLink: true },
+              },
+            },
+          },
+        },
+      };
+    }
+    return baseConfig;
+ };
+  const [config, setConfig] = useState(getConfigWithDashboardLink(myCampaignConfigNew?.myCampaignConfigNew?.[0]));
   const [tabData, setTabData] = useState(
     myCampaignConfigNew?.myCampaignConfigNew?.map((configItem, index) => ({
       key: index,
@@ -24,7 +47,7 @@ const MyCampaignNew = () => {
 
   const onTabChange = (n) => {
     setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n  })));
-    setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
+    setConfig(getConfigWithDashboardLink(myCampaignConfigNew?.myCampaignConfigNew?.[n]));
   };
 
   useEffect(() => {
