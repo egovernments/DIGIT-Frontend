@@ -18,12 +18,111 @@ import {
   CheckBox,
 } from "@egovernments/digit-ui-components";
 
-const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
+const my = [
+  {
+    "type": "template",
+    "label": "EDIT_HOUSEHOLD",
+    "order": 1,
+    "value": true,
+    "format": "editHousehold",
+    "hidden": false,
+    "tooltip": "",
+    "helpText": "",
+    "infoText": "",
+    "readOnly": false,
+    "fieldName": "editHousehold",
+    "deleteFlag": false,
+    "innerLabel": "",
+    "systemDate": false,
+    "validations": [],
+    "errorMessage": "",
+    "isMultiSelect": false
+  },
+  {
+    "type": "template",
+    "label": "EDIT_INDIVIDUAL",
+    "order": 2,
+    "value": "",
+    "format": "editIndividual",
+    "hidden": false,
+    "tooltip": "",
+    "helpText": "",
+    "infoText": "",
+    "readOnly": false,
+    "fieldName": "editIndividual",
+    "deleteFlag": false,
+    "innerLabel": "",
+    "systemDate": false,
+    "validations": [
+    ],
+    "errorMessage": "",
+    "isMultiSelect": false
+  },
+  {
+    "type": "template",
+    "label": "ADD_MEMBER",
+    "order": 3,
+    "value": [],
+    "format": "addMember",
+    "hidden": false,
+    "tooltip": "",
+    "helpText": "",
+    "infoText": "",
+    "readOnly": false,
+    "fieldName": "addMember",
+    "deleteFlag": false,
+    "innerLabel": "",
+    "systemDate": false,
+    "validations": [],
+    "errorMessage": "",
+    "isMultiSelect": false
+  },
+  {
+    "type": "template",
+    "label": "UNABLE_TO_DELIVER",
+    "order": 4,
+    "value": true,
+    "format": "SMCDeliverySecondaryButton",
+    "hidden": false,
+    "tooltip": "",
+    "helpText": "",
+    "infoText": "",
+    "readOnly": false,
+    "fieldName": "SMCDeliverySecondaryButton",
+    "deleteFlag": false,
+    "innerLabel": "",
+    "systemDate": false,
+    "validations": [],
+    "errorMessage": "",
+    "isMultiSelect": false
+  },
+  {
+    "type": "template",
+    "label": "DELIVERY_DETAILS_LABEL",
+    "order": 5,
+    "value": "",
+    "format": "SMCDeliveryPrimaryButton",
+    "hidden": false,
+    "tooltip": "",
+    "helpText": "",
+    "infoText": "",
+    "readOnly": false,
+    "fieldName": "SMCDeliveryPrimaryButton",
+    "deleteFlag": false,
+    "innerLabel": "",
+    "systemDate": false,
+    "validations": [
+    ],
+    "errorMessage": "",
+    "isMultiSelect": false
+  }
+];
+const HouseHoldOverViewWrapper = ({ components = my, t, selectedField }) => {
 
   const renderComponents = (inputData) => {
     const formatMap = {};
     inputData.forEach((item) => {
-      formatMap[item.jsonPath] = item;
+      formatMap[item.fieldName] = item;
     });
     const ComponentToRender = getRegisteredComponent("EditButton");
     const ContentDetails = getRegisteredComponent("ContentDetails");
@@ -37,8 +136,9 @@ const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
     return (
       <div>
         {/* 1. Household Edit Button - outside ProfileCard */}
-        <ComponentToRender label={editHousehold.label} t={t} onClick={() => {}} hidden={editHousehold.hidden} />
-        <ContentDetails t={t}/>
+        <ComponentToRender label={editHousehold.label} t={t} onClick={() => { }} hidden={editHousehold.hidden} />
+        <ContentDetails t={t} />
+
         {/* 2. ProfileCard always rendered */}
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
@@ -50,10 +150,11 @@ const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
           t={t}
         />
 
-        {addMember && <ComponentToRender hidden={addMember.hidden} label={addMember.label} t={t} onClick={() => {}} />}
-        <div style={{ marginTop: "16px" }}>
-          <ComponentToRender alignment="center" label={"Add Member"} t={t} onClick={() => {}} />
-        </div>
+        {addMember &&
+          <div style={{ marginTop: "16px" }}><ComponentToRender alignment="center" hidden={addMember.hidden} label={addMember.label} t={t} onClick={() => { }} /></div>}
+        {/*<div style={{ marginTop: "16px" }}>
+          <ComponentToRender alignment="center" label={"Add Member"} t={t} onClick={() => { }} />
+        </div>*/}
       </div>
     );
   };
@@ -67,20 +168,22 @@ const HouseHoldOverViewWrapper = ({ components = [], t, selectedField }) => {
           renderComponents(components)
         }
       </div>
-      <div
-        style={{
-          marginTop: "auto",
-        }}
-      >
-        <Button
-          label={"Deliver Intervention"}
-          onClick={() => {}}
-          variation="primary"
+      {components.some(c => c.format?.includes("IRS") && !c.hidden) &&
+        (<div
           style={{
-            minWidth: "100%",
+            marginTop: "auto",
           }}
-        />
-      </div>
+        >
+          <Button
+            label={"Deliver Intervention"}
+            onClick={() => { }}
+            variation="primary"
+            style={{
+              minWidth: "100%",
+            }}
+          />
+        </div>)
+      }
     </div>
   );
 };

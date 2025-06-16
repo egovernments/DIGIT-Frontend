@@ -1,4 +1,4 @@
-import { Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair } from "@egovernments/digit-ui-components";
+import { Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair } from "@egovernments/digit-ui-components";
 import React from "react";
 import SearchBeneficiaryRegistrationWrapper from "../../components/SearchBeneficiaryRegistrationWrapper";
 import { registerComponent } from "./RegistrationRegistry";
@@ -9,43 +9,43 @@ import HouseHoldOverViewWrapper from "../../components/HouseHoldOverViewWrapper"
 
 
 
-   const SearchBar = (props) => (
-    <div style={{width: "100%"}}>
-        <FieldV1
-        style={{width: "100%"}}
-        onChange={function noRefCheck(){}}
-        placeholder={props.t(props.field.label) || "LABEL"}
-        type="search"
-        populators={{
+const SearchBar = (props) => (
+  <div style={{ width: "100%" }}>
+    <FieldV1
+      style={{ width: "100%" }}
+      onChange={function noRefCheck() { }}
+      placeholder={props.t(props.field.label) || "LABEL"}
+      type="search"
+      populators={{
         fieldPairClassName: `app-preview-field-pair`
-        }
-        }
-        />
-    </div>    
-  );
+      }
+      }
+    />
+  </div>
+);
 
 
-  const FilterIcon = () => (
-    <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M0.250666 1.61C2.27067 4.2 6.00067 9 6.00067 9V15C6.00067 15.55 6.45067 16 7.00067 16H9.00067C9.55067 16 10.0007 15.55 10.0007 15V9C10.0007 9 13.7207 4.2 15.7407 1.61C16.2507 0.95 15.7807 0 14.9507 0H1.04067C0.210666 0 -0.259334 0.95 0.250666 1.61Z" fill="#C84C0E"/>
-</svg>
+const FilterIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <path d="M0.250666 1.61C2.27067 4.2 6.00067 9 6.00067 9V15C6.00067 15.55 6.45067 16 7.00067 16H9.00067C9.55067 16 10.0007 15.55 10.0007 15V9C10.0007 9 13.7207 4.2 15.7407 1.61C16.2507 0.95 15.7807 0 14.9507 0H1.04067C0.210666 0 -0.259334 0.95 0.250666 1.61Z" fill="#C84C0E" />
+  </svg>
 
-  );
-  const Filter = (props) => (
-    <div className="digit-search-action">
+);
+const Filter = (props) => (
+  <div className="digit-search-action">
     {/* <RoundedLabel count={props.filterCount}></RoundedLabel> */}
     <FilterIcon /> <span className="digit-search-text">{props.t(props.field.label) || "LABEL"}</span>
   </div>
-  );
+);
 
-  
+
 const ProximitySearch = (props) => (
-    <Switch
+  <Switch
     label={props.t(props.field.label) || "LABEL"}
     onToggle={null}
     isCheckedInitially={true}
     shapeOnOff
-    />
+  />
 );
 
 
@@ -112,7 +112,7 @@ const ContentDetails = (props) => {
             inline
             label={props.t(pair.label)} // Dynamically set the label
             value={props.t(pair.value)} // Dynamically set the value
-            // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+          // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
           />
         </div>
       ))}
@@ -121,34 +121,72 @@ const ContentDetails = (props) => {
 };
 
 const HouseholdOverViewMemberCard = (props) => {
-
+  const attributes = props.attributes || [{ label: "Gender", value: "Female" },
+  { label: "Age", value: "30 years" },
+  { label: "Relationship", value: "Mother" },
+  { label: "Status", value: "Verified" }];
   return (
     <div style={styles.card}>
       <div style={styles.header}>
         <div style={styles.name}>
-          <strong>{props.name}</strong> 
+          <strong>{props.name}</strong>
         </div>
         <EditButton label={props.editIndividual?.label} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
       </div>
-      <div style={styles.details}>
+      {/*<div style={styles.details}>
         <span>{props.gender}</span>
         <div style={styles.separator} />
         <span>{props.age} years</span>
+      </div>*/}
+      {/* Dynamically Render Attributes */}
+      <div style={styles.details}>
+        {attributes.map((attr, index) => (
+          <React.Fragment>
+            <span>{attr.value}</span>
+            {index < attributes.length - 1 && <div style={styles.separator} />}
+          </React.Fragment>
+        ))}
       </div>
 
+
       {/* Two Center Buttons */}
-      <EditButton alignment="center" label={props.smcPrimaryBtn?.label} hidden={props.smcPrimaryBtn?.hidden} onClick={() => console.log("SMC Delivery")} />
-      <EditButton
-        alignment="center"
-        label={props.smcSecondaryBtn?.label}
-        hidden={props.smcSecondaryBtn?.hidden}
-        onClick={() => console.log("Unable to Deliver")}
-      />
+
+
+      <div style={styles.buttonGroup}>
+        {!(props.smcPrimaryBtn?.hidden) && (
+          <Button
+            key={0}
+            variation="primary"
+            label={props.smcPrimaryBtn?.label || "LABEL"}
+            title={props.smcPrimaryBtn?.label || "LABEL"}
+            onClick={() => { }}
+          />
+        )}
+
+        {!(props.smcSecondaryBtn?.hidden) && (
+          <Button
+            key={1}
+            variation="secondary"
+            label={props.smcSecondaryBtn?.label || "LABEL"}
+            title={props.smcSecondaryBtn?.label || "LABEL"}
+            onClick={() => { }}
+          />
+        )}
+      </div>
+
     </div>
   );
 };
 
 const styles = {
+  buttonGroup: {
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center", // horizontally center the buttons
+    gap: "8px",
+    marginTop: "10px",          // space between the buttons
+
+  },
   card: {
     width: "100%",
     boxSizing: "border-box",
