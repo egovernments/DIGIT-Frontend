@@ -7,7 +7,7 @@ import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 
 export const TEMPLATE_BASE_CONFIG_MASTER = "TemplateBaseConfig";
-
+//TODO @bhavya @jagan Cleanup and handle negative scenarios for unselect etc
 const AppModule = () => {
   const { t } = useTranslation();
   const history = useHistory();

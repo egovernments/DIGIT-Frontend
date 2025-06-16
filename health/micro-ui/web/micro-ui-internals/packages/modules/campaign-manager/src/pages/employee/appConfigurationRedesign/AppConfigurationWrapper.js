@@ -298,11 +298,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   // const localeModule = searchParams.get("localeModule");
-  const module = localeModule ? localeModule : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -398,7 +397,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       const fieldItem = headerFields[i];
       const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
       if (!value || value.trim() === "") {
-        return { type: "error", value: `HEADER_FIELD_EMPTY_ERROR_${fieldItem?.label}` };
+        return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")} ${fieldItem?.label}` };
       }
     }
     const validateValue = (value, validation, label, a, b) => {
@@ -412,7 +411,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           (typeof value === "string" && value.trim() === "") ||
           (Array.isArray(value) && value.length === 0)
         ) {
-          return validation.message || `${label || "Field"} is required for ${a?.label}`;
+          return validation.message || `${t(`${label || "FIELD"}_REQUIRED_FOR`)} ${a?.label}`;
         }
       }
 
@@ -420,7 +419,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       if (validation.pattern && value) {
         const regex = new RegExp(validation.pattern);
         if (!regex.test(value)) {
-          return validation.message || `${label || "Field"} is invalid`;
+          return validation.message || `${t(`${label || "Field"}_IS_INVALID`)}`;
         }
       }
 
@@ -466,21 +465,26 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
       };
     }
 
-    return { type: "success" };
+    return false;
   };
 
-  const handleSubmit = async ({ finalSubmit }) => {
-    const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
-    if (errorCheck) {
-      setShowToast({ key: "error", label: errorCheck });
-      return;
+  const handleSubmit = async (finalSubmit) => {
+    if (state?.screenData?.[0]?.type === "object") {
+      //skipping template screen validation
+      const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
+      if (errorCheck) {
+        setShowToast({ key: "error", label: errorCheck?.value ? errorCheck?.value : errorCheck });
+        return;
+      }
     }
     const localeArrays = createLocaleArrays();
+    let updateCount = 0;
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
           setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
+          updateCount = updateCount + 1;
           onSubmit(state, finalSubmit);
         } catch (error) {
           setLoading(false);
@@ -489,7 +493,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
         }
       }
     }
-
+    if (!updateCount) {
+      onSubmit(state, finalSubmit);
+    }
     setShowPopUp(false);
     setLoading(false);
 
@@ -500,7 +506,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem" }}>
+      <div className="app-config-flex-container">
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -802,7 +808,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             type={"button"}
             label={t("PROCEED_TO_PREVIEW")}
             variation={"primary"}
-            onClick={() => handleSubmit({ finalSubmit: true })}
+            onClick={() => handleSubmit(true)}
             style={{ width: "14rem" }}
             t={t}
           ></Button>,

@@ -6,6 +6,7 @@
   @extend .typography.text-heading-l;
   font-size: 2.25rem;
   margin-bottom: 1.5rem !important;
+  color: theme(digitv2.lightTheme.primary-2);
 }
 .date-field-container {
   display: grid;
@@ -311,6 +312,9 @@
   .app-card {
     min-height: 100%;
     gap: 0.5rem;
+    box-shadow: none;
+    border-style: none;
+    padding: 1rem;
     &::-webkit-scrollbar-button {
       display: none !important;
       height: 0 !important;
@@ -318,7 +322,24 @@
     }
   }
 }
-
+.app-card {
+  flex-direction: column;
+  display: flex;
+  min-height: 100%;
+  gap: 0.5rem;
+  box-shadow: none;
+  border-style: none;
+  padding: 1rem;
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+}
+.mobile-bezel-outerWrapper {
+  transform: scale(0.8);
+  margin-top: 2rem;
+}
 .mobile-top {
   background-color: theme(digitv2.lightTheme.header-sidenav);
   height: 4rem;
@@ -423,9 +444,9 @@
   color: theme(digitv2.lightTheme.primary);
   text-align: center;
   margin-top: 1.5rem;
-.disabledText {
-  color: #c5c5c5;
-}
+  .disabledText {
+    color: #c5c5c5;
+  }
 }
 .containerStyle {
   display: flex;
@@ -453,7 +474,7 @@
   cursor: not-allowed;
   border: 1.5px solid #c5c5c5;
   .descStyle {
-    color: #c5c5c5
+    color: #c5c5c5;
   }
   svg {
     fill: theme(digitv2.lightTheme.text-color-secondary);
@@ -506,15 +527,15 @@
 }
 
 .module-card {
-  width: auto;
-  height: auto;
+  width: 20rem;
+  height: 20rem;
   border: 1px;
   border-radius: 0.75rem;
 }
 .modules-container {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(20rem, 1fr));
-  grid-gap: 1.5rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
   padding: 1rem;
 }
 .campaign-module-button {
@@ -553,7 +574,9 @@
 
 .digit-toggle-toolbar {
   &.app-config-tab {
-    max-width: 90%;
+    width: fit-content;
+    top: 15rem;
+    position: fixed;
     > *:first-child label {
       border-top-left-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;
@@ -600,10 +623,16 @@
 .app-config-version-tags {
   display: flex;
   align-items: flex-end;
-  margin-right: 24rem;
   justify-content: center;
-  margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
+  width: fit-content;
+  padding: 0;
+  margin: 0;
+  margin-left: 54rem;
+  margin-bottom: -3.5rem;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
+  font-size: theme(digitv2.fontSize.heading-s);
+  font-weight: 700;
 
   .app-config-placeholder-version-tag {
     width: 30%;
@@ -686,17 +715,41 @@
   padding-left: 20px;
   margin-bottom: 12px;
 }
-.campaign-requirements-heading{
-  .digit-popup-icon-header-container{
-  .digit-popup-heading-subheading-wrap{
-    .digit-popup-heading{
-    color: theme(digitv2.lightTheme.primary-2);
+.campaign-requirements-heading {
+  .digit-popup-icon-header-container {
+    .digit-popup-heading-subheading-wrap {
+      .digit-popup-heading {
+        color: theme(digitv2.lightTheme.primary-2);
+      }
     }
   }
 }
-}
 
-.cycleBold{
+.cycleBold {
   font-weight: 700;
 }
 
+.feature-container {
+  display: flex;
+}
+.app-config {
+  width: auto;
+}
+
+.QR-pop-up {
+  width: fit-content;
+}
+.app-config-flex-container {
+  display: flex;
+  align-items: center;
+  margin-right: 24rem;
+  margin-left: 15rem;
+  gap: 2rem;
+  width: fit-content;
+}
+.feature-container {
+  display: flex;
+}
+.app-config {
+  width: auto;
+}

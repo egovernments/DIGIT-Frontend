@@ -1,7 +1,7 @@
 import React, { useState, Fragment, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Button,  Loader, SVG } from "@egovernments/digit-ui-components";
-import { Close } from "@egovernments/digit-ui-svg-components";
+import { Button,  Loader } from "@egovernments/digit-ui-components";
+import { Close,TutorialGuide } from "@egovernments/digit-ui-svg-components";
 
 const SampleHelpContent = [
   {
@@ -92,7 +92,6 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tut
         <Button
           className={`custom-class camp-help-button-${pathVar}`}
           icon={buttonIcon}
-          isSuffix={true}
           label={t(buttonLabel)}
           onClick={(e) => {
             e.stopPropagation();
@@ -110,7 +109,7 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tut
     </>
   );
 };
-
+//TODO @bhavya @jagan move this component to ui-component repo 
 const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
   const { t } = useTranslation();
 
@@ -122,7 +121,7 @@ const AppHelpDrawer = ({ closing, handleClose, module, pathVar }) => {
       >
         <div className="tutorial-header">
           <span style={{ display: "flex", justifyContent: "center", gap: "0.5rem" }}>
-            <SVG.Input></SVG.Input>
+            <TutorialGuide />
             {t("EXPLORE_TUTORIALS")}
           </span>
           <Close className="tutorial-close"  height="32" width="32" fill="#0B0C0C" onClick={handleClose}  />
