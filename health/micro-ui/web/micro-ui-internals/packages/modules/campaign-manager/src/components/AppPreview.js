@@ -335,8 +335,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
       {/* <div className="app-preview"> */}
       <div className="mobile-bezel-child-container">
         {data.cards.map((card, index) => (
-          <Card key={index} className="app-card" style={{}}
-          >
+          <Card key={index} className="app-card" style={{}}>
             {card.headerFields.map((headerField, headerIndex) => (
               <div key={headerIndex}>
                 {headerField.jsonPath === "ScreenHeading" ? (
@@ -380,10 +379,10 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                         t: field?.isMdms ? null : t,
                         title: field?.label,
                         fieldPairClassName: `app-preview-field-pair ${selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                          ? `app-preview-selected`
+                          : selectedField?.id && selectedField?.id === field?.id
                             ? `app-preview-selected`
-                            : selectedField?.id && selectedField?.id === field?.id
-                              ? `app-preview-selected`
-                              : ``
+                            : ``
                           }`,
                         mdmsConfig: field?.isMdms
                           ? {
