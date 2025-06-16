@@ -239,8 +239,9 @@ const AppModule = () => {
             onClick={() => {
               history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
             }}
+            icon={"ArrowBack"}
           />,
-          <Button label={t("NEXT")} title={t("NEXT")} variation="primary" onClick={handleNext} />,
+          <Button label={t("NEXT")} title={t("NEXT")} variation="primary" icon={"ArrowDirection"} isSuffix onClick={handleNext} />,
         ]}
       />
       {showToast && (

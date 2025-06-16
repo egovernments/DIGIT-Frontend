@@ -213,13 +213,11 @@
   width: 100%;
 }
 .campaign-tag {
-  border: 0.5px solid #0b4b66;
-  margin-bottom: 1rem;
-  height: 3.3rem;
-  .digit-tag-text {
-    font-size: 1.5rem;
-    font-weight: 700;
+  .digit-tag-text{
+    color: theme(digitv2.alert.info) !important;
   }
+  background-color: #EFF8FF !important;
+  border-color: theme(digitv2.alert.info) !important;
 }
 .digit-popup-wrapper.dataMapping {
   .digit-popup-children-wrap {
@@ -228,13 +226,14 @@
 }
 .dataMappingCard {
   overflow-y: scroll;
+  margin-top: 1.5rem;
 }
 .dataMappingDropdown {
   min-width: 13rem !important;
 }
 .data-mapping-filter-switch {
   float: right;
-  margin-right: 5rem;
+  margin-right: 0rem;
   margin-bottom: 0rem;
 }
 .digit-label-field-pair.multiselect-label-field {
@@ -467,8 +466,12 @@
   cursor: pointer;
   flex-direction: column;
   text-align: center;
-  transition: box-shadow 0.3s ease-in-out;
+  transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
   background-color: #fff;
+}
+.cardStyle:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
 }
 .disabledCard {
   cursor: not-allowed;
@@ -512,6 +515,7 @@
 .detail-header {
   font-size: theme(digitv2.fontSize.heading-m);
   color: theme(digitv2.lightTheme.primary-2);
+  font-family: "roboto"
 }
 .details-desc {
   color: theme(digitv2.lightTheme.text-color-secondary);
@@ -524,11 +528,12 @@
 }
 .campaign-view-tag {
   margin-left: 1rem;
+  height: fit-content;
 }
 
 .module-card {
   width: 20rem;
-  height: 20rem;
+  height: 23rem;
   border: 1px;
   border-radius: 0.75rem;
 }
@@ -545,6 +550,7 @@
   width: 100% !important;
 }
 .beneficiary-selection-label {
+  margin-top: 1.5rem;
   margin-bottom: 0rem;
 }
 .selected-card {
@@ -752,4 +758,16 @@
 }
 .app-config {
   width: auto;
+}
+.progress-popup{
+  .digit-popup-icon-header-container{
+    display: none;
+  }
+}
+.update-boundary-header{
+  color: theme(digitv2.lightTheme.primary-2);
+  font-size: theme(fontSize.heading-xl);
+}
+.select-boundary{
+  color: theme(digitv2.lightTheme.primary-2) !important;
 }

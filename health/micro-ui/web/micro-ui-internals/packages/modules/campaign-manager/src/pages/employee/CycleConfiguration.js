@@ -237,9 +237,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
         </div> */}
         <div className="card-container2">
-          <TagComponent campaignName={campaignName} />
           <Card>
-            <Header>
+             <TagComponent campaignName={campaignName} />
+            <Header styles ={{marginTop: "1.5rem" , color: "#0b4b66"}} className = "select-boundary">
               {t(
                 `CAMPAIGN_PROJECT_${
                   tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code

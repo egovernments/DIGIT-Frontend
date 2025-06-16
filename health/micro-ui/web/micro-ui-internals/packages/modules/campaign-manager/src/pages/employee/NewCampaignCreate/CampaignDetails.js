@@ -101,8 +101,8 @@ const CampaignDetails = () => {
                 campaignData?.status === "created" || campaignData?.parentId
                   ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
                   : `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
-              type: campaignData?.boundaries?.length > 0 ||  campaignData?.parentId ? "secondary" : "primary",
-              icon: <GlobeLocationPin />,
+              type: campaignData?.boundaries?.length > 0 || campaignData?.parentId ? "secondary" : "primary",
+              icon: <GlobeLocationPin fill={"#c84c0e"} />,
             },
           },
         ],
@@ -147,7 +147,7 @@ const CampaignDetails = () => {
               type: modulesData?.length > 0 ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
-              disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now() ,
+              disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),
             },
           },
         ],
@@ -166,7 +166,7 @@ const CampaignDetails = () => {
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
-              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ||  campaignData?.parentId,
+              disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
             },
           },
         ],
@@ -219,6 +219,8 @@ const CampaignDetails = () => {
             info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
             actionLabel: "ES_CAMPAIGN_HOME",
             actionLink: `/${window.contextPath}/employee`,
+            secondaryActionLabel: "MY_CAMPAIGNS",
+            secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
           });
         },
         onError: (error, result) => {
@@ -329,7 +331,7 @@ const CampaignDetails = () => {
             }
           }}
         >
-          <Edit />
+          <Edit width={"18"} height={"18"}/>
         </div>
       </div>
       <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
@@ -338,7 +340,7 @@ const CampaignDetails = () => {
       </div>
       <Footer
         actionFields={
-          campaignData?.status !== "created" &&  !campaignData?.parentId
+          campaignData?.status !== "created" && !campaignData?.parentId
             ? [
                 <Button
                   icon="CheckCircleOutline"
@@ -372,11 +374,12 @@ const CampaignDetails = () => {
         <PopUp
           type={"default"}
           heading={t("ES_APP_QR")}
-          description = {t("ES_APP_QR_DESC")}
+          description={t("ES_APP_QR_DESC")}
           className={"QR-pop-up"}
           onOverlayClick={() => setShowQRPopUp(false)}
           onClose={() => setShowQRPopUp(false)}
-          style={{width: "auto"}}
+          style={{ width: "35rem" }}
+          equalWidthButtons={"false"}
           footerChildren={[
             <Button
               // className={"campaign-type-alert-button"}
@@ -390,7 +393,17 @@ const CampaignDetails = () => {
             />,
           ]}
         >
-          <QRCode value={appData?.appLink} size={256} level="H" />
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "1.5rem 0",
+            }}
+          >
+            <QRCode value={appData?.appLink} size={256} level="H" />
+          </div>
+          {/* <QRCode value={appData?.appLink} size={256} level="H" /> */}
         </PopUp>
       )}
       {showToast && (

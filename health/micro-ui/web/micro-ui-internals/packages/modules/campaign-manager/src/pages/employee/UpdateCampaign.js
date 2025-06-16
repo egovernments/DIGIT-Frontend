@@ -40,6 +40,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const isPreview = searchParams.get("preview");
   const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
+  const campaignNumber = searchParams.get("campaignNumber");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
   const isChangeDates = searchParams.get("changeDates");
@@ -788,6 +789,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
     }
+    else{
+      history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+    }
   };
 
   const filterCampaignConfig = (campaignConfig, currentKey) => {
@@ -851,7 +855,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
         })}
         onSubmit={onSubmit}
         isDisabled={isDataCreating}
-        showSecondaryLabel={currentKey > 1 ? true : false}
+        showSecondaryLabel={true}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"

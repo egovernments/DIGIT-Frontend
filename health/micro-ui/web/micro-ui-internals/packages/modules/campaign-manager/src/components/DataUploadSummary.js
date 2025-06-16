@@ -306,7 +306,7 @@ const DataUploadSummary = (props) => {
 
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" , marginTop:"1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
             {/* {userCredential && (
           <Button

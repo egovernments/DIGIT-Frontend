@@ -141,9 +141,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       <div className="container-full">
 
         <div className="card-container-delivery">
-          <TagComponent campaignName={campaignName} />
           <Card>
-            <HeaderComponent>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
+             <TagComponent campaignName={campaignName} />
+            <HeaderComponent className = "select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper
               hierarchyType={hierarchyType}

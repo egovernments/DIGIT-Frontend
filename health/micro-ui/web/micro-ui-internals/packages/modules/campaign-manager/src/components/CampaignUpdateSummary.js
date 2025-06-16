@@ -421,7 +421,7 @@ const CampaignUpdateSummary = (props) => {
   return (
     <>
       <TagComponent campaignName={campaignName} />        
-      <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" , marginTop: "1.5rem" }}>
         <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">

@@ -125,9 +125,11 @@ const CloneCampaignWrapper = (props) => {
 
   return (
     <>
+    {!showProgress && (
       <PopUp
         type={"default"}
-        heading={t("Create Copy of Campaign")}
+        heading={t("HCM_CREATE_COPY_OF_CAMPAIGN")}
+        className = {"copy-campaign-popup"}
         onOverlayClick={() => props.setCampaignCopying(false)}
         onClose={() => props.setCampaignCopying(false)}
         footerChildren={[
@@ -142,12 +144,12 @@ const CloneCampaignWrapper = (props) => {
         ]}
       >
         {campaignDetailsLoading && <Loader />}
-        {showProgress && <ProgressBar steps={steps} currentStep={currentStep} />}
+        {/* {showProgress && <ProgressBar steps={steps} currentStep={currentStep} />} */}
         {!showProgress && !campaignDetailsLoading && (
           <div className="container">
             <div className="card-container2">
               <div>
-                <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent>
+                {/* <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent> */}
                 <p className="name-description">{t("HCM_CAMPAIGN_NAME_DESCRIPTION")}</p>
                 <LabelFieldPair className="pop-display">
                   <div className="name-container-popUp">
@@ -211,6 +213,18 @@ const CloneCampaignWrapper = (props) => {
           </div>
         )}
       </PopUp>
+    )}
+    {showProgress && (
+      <PopUp
+        type="default"
+        heading={t("CLONING_CAMPAIGN_PROGRESS")}
+        className="progress-popup"
+        onOverlayClick={() => {}}
+        onClose={() => {}}
+      >
+        <ProgressBar steps={steps} currentStep={currentStep} />
+      </PopUp>
+    )}
       {toast && (
         <Toast
           style={{ zIndex: 10001 }}
