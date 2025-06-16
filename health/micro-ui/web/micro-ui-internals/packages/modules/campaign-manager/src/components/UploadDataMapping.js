@@ -1053,7 +1053,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   return (
     <Fragment>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
-        <CardHeader>{t(`UPLOAD_DATA_MAPPING`)}</CardHeader>
+        <CardHeader className = "select-boundary">{t(`UPLOAD_DATA_MAPPING`)}</CardHeader>
         <Switch
           className={"data-mapping-filter-switch"}
           isLabelFirst
