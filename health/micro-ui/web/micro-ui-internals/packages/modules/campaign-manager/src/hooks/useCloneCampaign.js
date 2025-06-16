@@ -8,7 +8,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
   // Constants for MDMS schema and localization modules
   const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
   const SCHEMA_CODES = ["SimpleAppConfiguration"];
-  const LOCALIZATION_MODULES = ["hcm-registrationflow"];
 
   const url = getMDMSUrl(true);
   const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
@@ -173,14 +172,14 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
   };
 
   // Clone all checklists by resetting their IDs and updating their codes
-  const createAllChecklists = async (newCampaignNumber) => {
+  const createAllChecklists = async (campaignName) => {
     if (!serviceDefinitionsData?.ServiceDefinitions?.length) return;
     await Promise.all(
       serviceDefinitionsData.ServiceDefinitions.map(async (def) => {
         const modifiedDefinition = {
           ...def,
           id: null,
-          code: def.code.replace(`${campaignData?.campaignName}`, newCampaignNumber),
+          code: def.code.replace(`${campaignData?.campaignName}`, campaignName),
         };
         try {
           await useCreateChecklist.mutateAsync(modifiedDefinition);
@@ -225,10 +224,8 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
       setStep(2);
       await Promise.all([
         createAllMDMSRecords(newCampaignNumber),
-        createAllChecklists(newCampaignNumber),
+        createAllChecklists(campaignName),
       ]);
-
-      // Step 3: Fetch localization messages for the new campaign
       setStep(3);
       const languages = Digit?.SessionStorage.get("initData")?.languages || [];
       const mdmsModules = mdmsData
@@ -279,8 +276,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
           }
         }
       }
-
-
       setStep(4);
       return {
         success: true,

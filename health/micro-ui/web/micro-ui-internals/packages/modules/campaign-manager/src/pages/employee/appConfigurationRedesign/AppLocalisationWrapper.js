@@ -36,7 +36,7 @@ const locReducer = (state = initialState, action) => {
 };
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-
+//TODO @nabeel @jagan move this component to ui-component repo & clean up
 function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, showBack, parentDispatch, ...props }) {
   if (!localeModule) {
     return <Loader />;
@@ -118,7 +118,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
         parentDispatch,
       }}
     >
-      <AppConfigurationWrapper screenConfig={screenConfig} />
+      <AppConfigurationWrapper screenConfig={screenConfig} localeModule={localeModule} />
     </AppLocalisationContext.Provider>
   );
 }

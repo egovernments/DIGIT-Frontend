@@ -52,7 +52,7 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   return false;
 };
 
-//todo @jagan to make this flow dynamic ie multi flow support this flag to be updated
+//TODO @jagan to make this flow dynamic ie multi flow support this flag to be updated
 const getBaseTemplateFilter = (projectType = "", flowName = "") => {
   return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`;
 };

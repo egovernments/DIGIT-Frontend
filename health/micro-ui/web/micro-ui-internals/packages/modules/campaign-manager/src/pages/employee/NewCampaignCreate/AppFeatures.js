@@ -168,9 +168,16 @@ const AppFeatures = () => {
           captionClassName="camp-drawer-caption"
           subHeader=""
         />
-        <AppConfigTab toggleOptions={toggleOptions} handleToggleChange={handleToggleChange} selectedOption={selectedModuleCode} />
       </div>
-     <AppFeaturesList selectedModuleFeatures={selectedModuleFeatures} selectedModuleCode={selectedModuleCode} selectedFeaturesByModule={selectedFeaturesByModule} handleSelectFeature={handleSelectFeature} />
+      <div className="feature-container">
+        <AppConfigTab toggleOptions={toggleOptions} handleToggleChange={handleToggleChange} selectedOption={selectedModuleCode} />
+        <AppFeaturesList
+          selectedModuleFeatures={selectedModuleFeatures}
+          selectedModuleCode={selectedModuleCode}
+          selectedFeaturesByModule={selectedFeaturesByModule}
+          handleSelectFeature={handleSelectFeature}
+        />
+      </div>
       <Footer
         actionFields={[
           <Button
@@ -224,38 +231,37 @@ const AppFeatures = () => {
 
 export default AppFeatures;
 
-
-
-
-const AppFeaturesList = ({selectedModuleFeatures,selectedModuleCode,selectedFeaturesByModule,handleSelectFeature})=>{
+const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedFeaturesByModule, handleSelectFeature }) => {
   const { t } = useTranslation();
 
-  return (<div className="modules-container">
-  {selectedModuleFeatures?.map((feature) => {
-    const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
-    return (
-      <Card key={feature?.code} className={`module-card ${featureSelected ? "selected-card" : ""}`}>
-        {featureSelected && (
-          <SVG.CheckCircle fill="#00703C" width="3rem" height="3rem" style={{ position: "absolute", left: "-10px", top: "-14px" }} />
-        )}
-        <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>{t(feature?.code)}</HeaderComponent>
-        <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-        <p className="module-description">{t(feature?.description)}</p>
-        <Button
-          className="campaign-module-button"
-          type="button"
-          size="large"
-          isDisabled={feature?.disabled}
-          variation={featureSelected ? "secondary" : "primary"}
-          label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
-          onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
-        />
-      </Card>
-    );
-  })}
-</div>)
-}
-export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedOption,wrapperClassName="" }) => {
+  return (
+    <div className="modules-container">
+      {selectedModuleFeatures?.map((feature) => {
+        const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
+        return (
+          <Card key={feature?.code} className={`module-card ${featureSelected ? "selected-card" : ""}`}>
+            {featureSelected && (
+              <SVG.CheckCircle fill="#00703C" width="3rem" height="3rem" style={{ position: "absolute", left: "-10px", top: "-14px" }} />
+            )}
+            <HeaderComponent className={`detail-header ${featureSelected ? "selected-header" : ""}`}>{t(feature?.code)}</HeaderComponent>
+            <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
+            <p className="module-description">{t(feature?.description)}</p>
+            <Button
+              className="campaign-module-button"
+              type="button"
+              size="large"
+              isDisabled={feature?.disabled}
+              variation={featureSelected ? "secondary" : "primary"}
+              label={featureSelected ? t("DESELECT") : feature?.disabled ? t("ES_FEATURE_DISABLED") : t("ES_CAMPAIGN_SELECT")}
+              onClick={() => handleSelectFeature(feature?.format, selectedModuleCode, featureSelected)}
+            />
+          </Card>
+        );
+      })}
+    </div>
+  );
+};
+export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedOption, wrapperClassName = "app-config" }) => {
   // Construct schema code using constants
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`;
 
@@ -264,33 +270,24 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
   const { t } = useTranslation();
 
   // Fetch configuration data from MDMS using custom hook
-  const {
-    isLoading: isConfigLoading,
-    data: defaultModuleConfigs
-  } = Digit.Hooks.useCustomAPIHook(
-    Digit.Utils.campaign.getMDMSV2Criteria(
-      tenantId,
-      schemaCode,
-      { project: projectType },
-      `MDMSDATA-${schemaCode}-${projectType}`,
-      {
-        enabled: !!projectType,
-        select: (data) => {
-          // Transform MDMS data to simplified shape
-          return data?.mdms?.map(config => ({
-            name: config?.data?.name,
-            order: config?.data?.order
-          }));
-        }
-      }
-    )
+  const { isLoading: isConfigLoading, data: defaultModuleConfigs } = Digit.Hooks.useCustomAPIHook(
+    Digit.Utils.campaign.getMDMSV2Criteria(tenantId, schemaCode, { project: projectType }, `MDMSDATA-${schemaCode}-${projectType}`, {
+      enabled: !!projectType,
+      select: (data) => {
+        // Transform MDMS data to simplified shape
+        return data?.mdms?.map((config) => ({
+          name: config?.data?.name,
+          order: config?.data?.order,
+        }));
+      },
+    })
   );
 
   // Return null until loading is complete or data is missing
   if (isConfigLoading || !defaultModuleConfigs || !toggleOptions) return null;
 
   // Create a set of toggle codes provided by the user
-  const userSelectedCodes = new Set(toggleOptions.map(item => item.code));
+  const userSelectedCodes = new Set(toggleOptions.map((item) => item.code));
 
   // Step 1: Sort default configs based on order
   const sortedDefaultConfigs = [...defaultModuleConfigs].sort((a, b) => a.order - b.order);
@@ -304,7 +301,7 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
       finalToggleOptions.push({
         code: defaultItem.name,
         name: t(defaultItem.name),
-        disabled: true // Mark as disabled since not selected by user
+        disabled: true, // Mark as disabled since not selected by user
       });
     }
   });
@@ -321,6 +318,8 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
       selectedOption={selectedOption}
       type="toggle"
       additionalWrapperClass={wrapperClassName}
+      variant="vertical"
+      
     />
   );
 };
