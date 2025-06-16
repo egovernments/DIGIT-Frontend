@@ -3,27 +3,52 @@ import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 
 const GenericTemplateScreen = ({ components = [], t, selectedField }) => {
-  const contentFields = components.filter(
-    (field) => !field.hidden && !["PrimaryButton", "SecondaryButton"].includes(field.jsonPath)
-  );
+  const contentFields = components
+    .filter(
+      (field) =>
+        !field.hidden &&
+        field.jsonPath !== "PrimaryButton" &&
+        field.jsonPath !== "SecondaryButton"
+    )
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const primaryButton = components.find((field) => field.jsonPath === "PrimaryButton" && !field.hidden);
-  const secondaryButton = components.find((field) => field.jsonPath === "SecondaryButton" && !field.hidden);
+  const buttonFields = components
+    .filter(
+      (field) =>
+        !field.hidden &&
+        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton")
+    )
+    .sort((a, b) => (a.order || 0) - (b.order || 0));
 
   return (
-    <div style={{ display: "flex", flexDirection: "column", flexGrow: 1, height: "100%" }}>
-      {/* Render Dynamic Components */}
-      <div style={{ flexGrow: 1 }}>
+    <div
+      style={{
+        position: "relative",     // required for absolute button placement
+        minHeight: "500px",          // or whatever height your card should have
+        overflow: "hidden",       // prevent scroll bleed
+        background: "#fff",
+      }}
+    >
+      {/* Scrollable Content Area */}
+      <div
+        style={{
+          height: "100%",
+          overflowY: "auto",
+        //   padding: "1rem",
+          paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
+        }}
+      >
         {contentFields.map((field, index) => {
           const ComponentToRender = getRegisteredComponent(field.jsonPath);
-          const isSelected = selectedField?.jsonPath === field.jsonPath;
           if (!ComponentToRender) return null;
+
+          const isSelected = selectedField?.jsonPath === field.jsonPath;
 
           return (
             <div
-              className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
               key={index}
-              style={{ marginBottom: "16px", width: "100%" }}
+              className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
+              style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
             >
               <ComponentToRender field={field} t={t} />
             </div>
@@ -31,41 +56,35 @@ const GenericTemplateScreen = ({ components = [], t, selectedField }) => {
         })}
       </div>
 
-      {/* Render Footer Buttons */}
-      {(primaryButton || secondaryButton) && (
+      {/* Fixed Buttons at Card Bottom */}
+      {buttonFields.length > 0 && (
         <div
           style={{
+            position: "absolute",
+            bottom: 0,
+            left: 0,
+            right: 0,
+            background: "#fff",
+            padding: "1rem",
+            boxShadow: "0 -2px 4px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",
-            marginTop: "auto",
-            paddingTop: "1rem",
           }}
         >
-          {secondaryButton && (
+          {buttonFields.map((field, index) => (
             <Button
-              variation="secondary"
-              label={t(secondaryButton.label)}
+              key={index}
+              variation={field.jsonPath === "SecondaryButton" ? "secondary" : "primary"}
+              label={t(field.label)}
               onClick={() => {}}
               style={{ minWidth: "100%" }}
               className={`app-preview-action-button ${
-                selectedField?.jsonPath === secondaryButton.jsonPath ? "app-preview-selected" : ""
+                selectedField?.jsonPath === field.jsonPath ? "app-preview-selected" : ""
               }`}
-              icon={secondaryButton.icon || null}
+              icon={field.icon || null}
             />
-          )}
-          {primaryButton && (
-            <Button
-              variation="primary"
-              label={t(primaryButton.label)}
-              onClick={() => {}}
-              style={{ minWidth: "100%" }}
-              className={`app-preview-action-button ${
-                selectedField?.jsonPath === primaryButton.jsonPath ? "app-preview-selected" : ""
-              }`}
-              icon={primaryButton.icon || null}
-            />
-          )}
+          ))}
         </div>
       )}
     </div>

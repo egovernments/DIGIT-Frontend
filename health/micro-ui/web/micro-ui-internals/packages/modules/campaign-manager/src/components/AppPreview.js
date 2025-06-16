@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
+import GenericTemplateScreen from "./GenericTemplateScreen";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -331,9 +332,19 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
   return (
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
-      <div className="mobile-bezel-child-container">
+      <div className="mobile-bezel-child-container" style={{}}>
         {data.cards.map((card, index) => (
-          <Card key={index} className="app-card" style={{ }}>
+          <Card key={index} className="app-card"   style={data.type !== "template" ? {} : {
+              border: "none",
+              borderWidth: "0px",
+              borderStyle: "none",
+              boxShadow: "none",
+              outline: "none",
+              position: "relative",     // 🔑 Required for absolute footer
+              height: "100%",          // 🔑 Set a fixed height
+              overflow: "hidden",       // 🔑 Prevent button scroll
+            }}
+            >
             {card.headerFields.map((headerField, headerIndex) => (
               <div key={headerIndex}>
                 {headerField.jsonPath === "ScreenHeading" ? (
@@ -409,7 +420,11 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                 onClick={() => {}}
               />
             )}
-            {data.type === "template" && <TemplateScreen card={card} name={data.name} t={t} selectedField={selectedField} />}
+            {data.type === "template" &&
+            <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t}/>
+            // <TemplateScreen card={card} name={data.name} t={t} selectedField={selectedField} />
+            
+            }
           </Card>
         ))}
       </div>
