@@ -3,11 +3,12 @@ import { useMutation } from "react-query";
 import useCreateCampaign from "./useCreateCampaign";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useMemo, useEffect, useState } from "react";
+import { HCMCONSOLE_APPCONFIG_MODULENAME } from "../pages/employee/NewCampaignCreate/CampaignDetails";
 
 const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDate, setStep }) => {
   // Constants for MDMS schema and localization modules
   const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
-  const SCHEMA_CODES = ["SimpleAppConfiguration"];
+  const SCHEMA_CODES = [HCMCONSOLE_APPCONFIG_MODULENAME];
 
   const url = getMDMSUrl(true);
   const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
