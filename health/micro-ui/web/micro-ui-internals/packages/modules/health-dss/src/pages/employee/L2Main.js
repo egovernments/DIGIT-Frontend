@@ -93,7 +93,7 @@ const getInitialRange = () => {
         startDate = new Date(descendantDateRange[province]?.startDate)
         endDate = new Date(descendantDateRange[province]?.endDate)
       }
-      if (filteredInfo !== null && filteredInfo.length !== 0) {
+      if (filteredInfo !== null && filteredInfo?.length !== 0) {
         startDate = new Date(filteredInfo[0]["startDate"]);
         endDate = new Date(filteredInfo[0]["endDate"]);
       };
@@ -141,7 +141,6 @@ function getProjectTypeFromURL() {
   return projectTypeCode;
 }
 const L2Main = ({}) => {
-  console.log("11111111111111111111")
   const location = useLocation();
   const stateCode = location.state?.stateCode;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -181,9 +180,9 @@ const L2Main = ({}) => {
     select: (data) => {
       let screenConfig = data?.["dss-dashboard"]["dashboard-config"][0].MODULE_LEVEL;
       let reduced_array = [];
-      for (let i = 0; i < screenConfig.length; i++) {
-        if (screenConfig[i].dashboard !== null) {
-          reduced_array.push(screenConfig[i]);
+      for (let i = 0; i < screenConfig?.length; i++) {
+        if (screenConfig?.[i]?.dashboard !== null) {
+          reduced_array.push(screenConfig?.[i]);
         }
       }
 
@@ -218,7 +217,27 @@ const L2Main = ({}) => {
     enabled: isNational,
   });
 
-  const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
+  const reqCriteria = {
+    url: `/dashboard-analytics/dashboard/getDashboardConfig/${moduleCode}`,
+    changeQueryName: moduleCode,
+    body: {},
+    params: {
+      tenantId,
+    },
+    headers: {
+      "auth-token": Digit.UserService.getUser()?.access_token || null,
+    },
+    method: "GET",
+    config: {
+      enabled: !!moduleCode,
+      select: (data) => {
+        return data;
+      },
+    },
+  };
+  const { data: response, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  // const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("DSS");
   // const { isLoading: isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateCode, "FSM", "FSTPPlantInfo");
   const [showShareOptions, setShowShareOptions] = useState(false);
