@@ -1,7 +1,7 @@
 import { Card, HeaderComponent, Button, Footer, Loader, Toast, TextBlock } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -10,7 +10,7 @@ export const TEMPLATE_BASE_CONFIG_MASTER = "TemplateBaseConfig";
 
 const AppModule = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignType = searchParams.get("projectType");
@@ -92,7 +92,7 @@ const AppModule = () => {
     const newModulesToCreate = uniqueModules.filter((code) => !alreadyCreatedModules.includes(code));
 
     if (newModulesToCreate.length === 0) {
-      history.push(
+      navigate(
         `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
       );
       return;
@@ -175,7 +175,7 @@ const AppModule = () => {
       }
     }
 
-    history.push(
+    navigate(
       `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}&code=${selectedModules?.[0]?.data?.name}`
     );
   };
@@ -237,7 +237,7 @@ const AppModule = () => {
               marginLeft: "2.5rem",
             }}
             onClick={() => {
-              history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+              navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
             }}
           />,
           <Button label={t("NEXT")} title={t("NEXT")} variation="primary" onClick={handleNext} />,

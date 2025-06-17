@@ -2,7 +2,7 @@ import { Loader, Stepper, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Tabs = ({ numberTabs, onTabChange }) => {
   const { t } = useTranslation();
@@ -47,7 +47,7 @@ const dispatcher = (state, action) => {
 const AppConfigurationParentLayer = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
@@ -260,7 +260,7 @@ const AppConfigurationParentLayer = () => {
             },
             onSuccess: async (data) => {
               setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-              history.push(
+              navigate(
                 `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=FormBuilderFormComposerConfig&formId=${data?.mdms?.[0]?.id}`
               );
             },
@@ -279,7 +279,7 @@ const AppConfigurationParentLayer = () => {
             },
             onSuccess: async (data) => {
               setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-              history.push(
+              navigate(
                 `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=FormBuilderFormComposerConfig&formId=${data?.mdms?.[0]?.id}`
               );
             },
@@ -299,7 +299,7 @@ const AppConfigurationParentLayer = () => {
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "SCHEMA_CONFIGURATION_SUCCESS" });
-            history.push(
+            navigate(
               `/${window.contextPath}/employee/campaign/schema-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=SchemaConfigSubmit&formId=${data?.mdms?.[0]?.id}`
             );
           },
@@ -324,7 +324,7 @@ const AppConfigurationParentLayer = () => {
             },
             onSuccess: async (data) => {
               setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-              history.push(
+              navigate(
                 `/${window.contextPath}/employee/campaign/form-builder-configuration?moduleName=HCM-ADMIN-CONSOLE&masterName=DummyAppConfig&formId=${data?.mdms?.[0]?.id}`
               );
             },

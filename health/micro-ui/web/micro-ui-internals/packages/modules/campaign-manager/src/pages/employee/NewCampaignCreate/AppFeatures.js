@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -43,7 +43,7 @@ const isFeatureSelected = (feature, module, selectedFeaturesByModule) => selecte
 
 const AppFeatures = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const mdmsBaseUrl = getMDMSUrl(true);
   const { campaignNumber, projectType, tenantId } = Digit.Hooks.useQueryParams();
   const AppConfigSchema = "SimpleAppConfiguration";
@@ -180,7 +180,7 @@ const AppFeatures = () => {
             variation="secondary"
             style={{ marginLeft: "2.5rem" }}
             onClick={() => {
-              history.push(
+              navigate(
                 `/${window.contextPath}/employee/campaign/app-modules?projectType=${projectType}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
               );
             }}
@@ -204,7 +204,7 @@ const AppFeatures = () => {
                   },
                   {
                     onSuccess: () => {
-                      history.push(redirectURL);
+                      navigate(redirectURL);
                     },
                     onError: (err) => {
                       console.error("Update failed:", err);
@@ -212,7 +212,7 @@ const AppFeatures = () => {
                   }
                 );
               } else {
-                history.push(redirectURL);
+                navigate(redirectURL);
               }
             }}
           />,

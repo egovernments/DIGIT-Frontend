@@ -3,7 +3,7 @@ import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import { SummaryCardFieldPair, Card, Button, PopUp,  TextInput,  Loader} from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
 
@@ -20,7 +20,7 @@ const ViewChecklist = () => {
     const checklistType = searchParams.get("checklistType");
     let clt = searchParams.get("checklistType");
     const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
-    const history = useHistory(); // Get history object for navigation
+    const navigate = useNavigate(); // Get history object for navigation
     const serviceCode = `${campaignName}.${checklistType}.${role}`
     const [config, setConfig] = useState(null);
     const [showPopUp, setShowPopUp] = useState(false);
@@ -276,7 +276,7 @@ const ViewChecklist = () => {
                 label={t("UPDATE")}
                 config={config}
                 onSubmit={() => {
-                    history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}&projectType=${projectType}&campaignId=${campaignId}`)
+                    navigate(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}&projectType=${projectType}&campaignId=${campaignId}`)
                 }}
                 fieldStyle={{ marginRight: 0 }}
                 noBreakLine={true}

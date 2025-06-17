@@ -3,7 +3,7 @@ import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
 import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
@@ -22,7 +22,7 @@ const UpdateChecklist = () => {
     const checklistType = searchParams.get("checklistType");
     let clt = searchParams.get("checklistType");
     const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
-    const history = useHistory(); // Get history object for navigation
+    const navigate = useNavigate(); // Get history object for navigation
     const [config, setConfig] = useState(null);
     const [checklistTypeCode, setChecklistTypeCode] = useState(null);
     const [roleCode, setRoleCode] = useState(null);
@@ -542,7 +542,7 @@ const UpdateChecklist = () => {
 
             if (data.success) { // Replace with your actual condition
                 refetch();
-                history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+                navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
                     message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
                     preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
                     actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
