@@ -1,9 +1,10 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import updateCampaignService from "./services/updateCampaignService";
 
-const useUpdateCampaign = (tenantId) => {
-  return useMutation((reqData) => {
-    return updateCampaignService(reqData, tenantId);
+const useUpdateCampaign = (tenantId, config = {}) => {
+  return useMutation({
+    mutationFn: (reqData) => updateCampaignService(reqData, tenantId),
+    ...config,
   });
 };
 

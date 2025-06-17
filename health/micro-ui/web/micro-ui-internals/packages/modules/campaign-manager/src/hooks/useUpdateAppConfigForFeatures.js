@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 // Read MDMS context path from global config, with fallback
@@ -153,7 +153,8 @@ const updateCurrentAppConfig = async (tenantId, campaignNo,changes,selectedFeatu
  *
  * @returns {object} Object containing the mutation function and related states.
  */
-const useUpdateAppConfigForFeatures = () => {
+
+const useUpdateAppConfigForFeatures = (config = {}) => {
   const {
     mutate,
     isLoading,
@@ -162,13 +163,14 @@ const useUpdateAppConfigForFeatures = () => {
     data,
     isSuccess,
     reset,
-  } = useMutation(
-    // Mutation function
-    ({ tenantId, campaignNo ,changes,selectedFeaturesByModule,availableFormats}) => updateCurrentAppConfig(tenantId, campaignNo,changes,selectedFeaturesByModule,availableFormats)
-  );
+  } = useMutation({
+    mutationFn: ({ tenantId, campaignNo, changes, selectedFeaturesByModule, availableFormats }) =>
+      updateCurrentAppConfig(tenantId, campaignNo, changes, selectedFeaturesByModule, availableFormats),
+    ...config,
+  });
 
   return {
-    updateConfig: mutate, // Usage: updateConfig({ tenantId, campaignNo }, { onSuccess, onError })
+    updateConfig: mutate, // Usage: updateConfig(payload, { onSuccess, onError })
     isLoading,
     isError,
     error,

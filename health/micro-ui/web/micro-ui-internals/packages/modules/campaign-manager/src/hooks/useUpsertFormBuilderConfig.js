@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const upsertFormBuilderConfig = async (req, tenantId) => {
   try {
@@ -14,15 +14,17 @@ const upsertFormBuilderConfig = async (req, tenantId) => {
         },
       },
     });
+
     return response;
   } catch (error) {
     throw new Error(error?.response?.data?.Errors?.[0].description);
   }
 };
 
-const useUpsertFormBuilderConfig = (tenantId) => {
-  return useMutation((reqData) => {
-    return upsertFormBuilderConfig(reqData, tenantId);
+const useUpsertFormBuilderConfig = (tenantId, config = {}) => {
+  return useMutation({
+    mutationFn: (reqData) => upsertFormBuilderConfig(reqData, tenantId),
+    ...config,
   });
 };
 

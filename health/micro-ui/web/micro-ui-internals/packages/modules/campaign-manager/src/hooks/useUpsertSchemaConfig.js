@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const upsertSchemaConfig = async (req, tenantId) => {
   try {
@@ -14,15 +14,17 @@ const upsertSchemaConfig = async (req, tenantId) => {
         },
       },
     });
+
     return response;
   } catch (error) {
     throw new Error(error?.response?.data?.Errors?.[0].description);
   }
 };
 
-const useUpsertSchemaConfig = (tenantId) => {
-  return useMutation((reqData) => {
-    return upsertSchemaConfig(reqData, tenantId);
+const useUpsertSchemaConfig = (tenantId, config = {}) => {
+  return useMutation({
+    mutationFn: (reqData) => upsertSchemaConfig(reqData, tenantId),
+    ...config,
   });
 };
 

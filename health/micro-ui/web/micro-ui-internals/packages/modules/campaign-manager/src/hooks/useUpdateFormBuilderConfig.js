@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const updateFormBuilderConfig = async (req, tenantId) => {
   try {
@@ -8,25 +8,27 @@ const updateFormBuilderConfig = async (req, tenantId) => {
       url: `/${mdms_context_path}/v2/_update/${req.moduleName}.${req.masterName}`,
       body: {
         Mdms: {
-          tenantId: tenantId,
+          tenantId,
           schemaCode: `${req.moduleName}.${req.masterName}`,
           id: req?.data?.id,
           uniqueIdentifier: req?.data?.uniqueIdentifier,
           isActive: req?.data?.isActive,
           data: { ...req.data.data },
-          auditDetails: req?.data?.auditDetails
+          auditDetails: req?.data?.auditDetails,
         },
       },
     });
+
     return response;
   } catch (error) {
     throw new Error(error?.response?.data?.Errors?.[0].description);
   }
 };
 
-const useUpdateFormBuilderConfig = (tenantId) => {
-  return useMutation((reqData) => {
-    return updateFormBuilderConfig(reqData, tenantId);
+const useUpdateFormBuilderConfig = (tenantId, config = {}) => {
+  return useMutation({
+    mutationFn: (reqData) => updateFormBuilderConfig(reqData, tenantId),
+    ...config,
   });
 };
 
