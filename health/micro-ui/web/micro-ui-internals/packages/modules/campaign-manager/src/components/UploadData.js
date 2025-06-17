@@ -1033,6 +1033,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           type: type,
           hierarchyType: params?.hierarchyType,
           campaignId: id,
+          status: "completed"
         },
       },
       {

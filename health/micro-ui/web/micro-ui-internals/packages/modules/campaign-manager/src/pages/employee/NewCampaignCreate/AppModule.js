@@ -1,6 +1,6 @@
 import { Card, HeaderComponent, Button, Footer, Loader, Toast, TextBlock } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { Fragment, useState } from "react";
+import React, { Fragment, useState , useEffect} from "react";
 import { useHistory } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
@@ -57,14 +57,16 @@ const AppModule = () => {
       `MDMSDATA-${schemaCodeForAppConfig}-${campaignNumber}`,
       {
         enabled: !!campaignNumber,
+        cacheTime: 0,
+        staleTime: 0
       }
     )
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (mdmsData) {
       const createdModules = mdmsData
-        .filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
+        .filter((item) => item?.uniqueIdentifier?.includes(campaignNumber) && item?.data?.isSelected === true)
         .map((item) => item?.uniqueIdentifier?.split(".")?.[1]) // extract module code
         .filter(Boolean);
 
@@ -92,11 +94,41 @@ const AppModule = () => {
 
     const newModulesToCreate = uniqueModules.filter((code) => !alreadyCreatedModules.includes(code));
 
-    if (newModulesToCreate.length === 0) {
-      history.push(
-        `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
-      );
-      return;
+    for (const item of mdmsData || []) {
+      const moduleCode = item?.uniqueIdentifier?.split(".")?.[1];
+      const shouldBeSelected = uniqueModules.includes(moduleCode);
+
+      // Skip if no change needed
+      if (item?.data?.isSelected === shouldBeSelected) continue;
+
+      const updatedData = {
+        ...item,
+        data: {
+          ...item.data,
+          isSelected: shouldBeSelected,
+        },
+      };
+
+      try {
+        const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
+        setIsCreatingModule(true);
+        await Digit.CustomService.getResponse({
+          url: `${url}/v2/_update/${schemaCode}`,
+          body: {
+            Mdms: {
+              tenantId,
+              schemaCode,
+              ...updatedData,
+            },
+          },
+        });
+      } catch (error) {
+        console.error(`Failed to update module ${moduleCode}:`, error);
+        setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPDATE_ERROR") });
+        return;
+      } finally {
+        setIsCreatingModule(false);
+      }
     }
 
     const selectedModules = modulesData?.filter((module) => newModulesToCreate.includes(module?.data?.name));
@@ -152,6 +184,7 @@ const AppModule = () => {
       const moduleWithProject = {
         ...module?.data,
         project: `${campaignNumber}`,
+        isSelected: true,
       };
 
       try {
@@ -215,7 +248,6 @@ const AppModule = () => {
               </HeaderComponent>
               <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
               <p className="module-description">{t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}</p>
-              {/* <p style={{ margin: "0rem" }}> {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}</p> */}
               <Button
                 className={"campaign-module-button"}
                 type={"button"}

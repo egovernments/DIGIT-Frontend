@@ -18,7 +18,8 @@ const tabDispatcher = (state, action) => {
             code: i?.data?.name,
             data: i?.data,
             version: i?.data?.version,
-          })) || [],
+            disabled : !i?.data?.isSelected
+          }))?.filter(i => !i?.disabled) || [],
         activeTabConfig: action?.data?.[0],
       };
     case "CHANGE_ACTIVE_TAB":
@@ -110,6 +111,7 @@ const AppConfigurationTabLayer = () => {
       },
     },
   };
+
 
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
 
