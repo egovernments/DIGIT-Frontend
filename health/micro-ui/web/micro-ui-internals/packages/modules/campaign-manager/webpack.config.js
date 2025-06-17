@@ -8,13 +8,16 @@ module.exports = {
     filename: "main.js",
     path: path.resolve(__dirname, "dist"),
     library: {
-      name: "@egovernments/digit-ui-module-workbench",
+      name: "@egovernments/digit-ui-module-campaign-manager",
       type: "umd",
     },
-    globalObject: 'this', // Add this line to ensure compatibility in different environments
+    globalObject: 'this', // Ensures compatibility in Node and browser environments
   },
   resolve: {
     extensions: [".js"],
+    fallback: {
+      process: require.resolve("process/browser.js"), // Polyfill for 'process'
+    },
   },
   externals: {
     react: {
@@ -37,7 +40,6 @@ module.exports = {
     rules: [
       {
         test: /\.js$/,
-        //exclude: /node_modules/,
         use: {
           loader: "babel-loader",
           options: {
@@ -49,15 +51,7 @@ module.exports = {
   },
   plugins: [
     new webpack.ProvidePlugin({
-      process: "process/browser",
+      process: "process/browser.js",
     }),
-    // new CleanWebpackPlugin(),
-    // new BundleAnalyzerPlugin(),
-    // new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
   ],
-  resolve: {
-    fallback: {
-      process: require.resolve("process/browser"),
-    },
-  },
 };
