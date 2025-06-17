@@ -3,7 +3,8 @@
   "version": "0.2.0",
   "main": "index.js",
   "workspaces": [
-    "example"
+    "example",
+    "packages/modules"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",

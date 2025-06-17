@@ -6,7 +6,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import "@egovernments/digit-ui-health-css/example/index.css";
 
 import { UICustomizations } from "./UICustomizations";
-// import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
 // import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 // import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 // import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
@@ -75,7 +75,7 @@ const initDigitUI = () => {
   // initUtilitiesComponents();
   // initWorkbenchComponents();
   // initWorkbenchHCMComponents();
-  // initCampaignComponents();
+  initCampaignComponents();
   // initMicroplanComponents();
   // initPaymentComponents();
   // initHRMSComponents();

@@ -17,6 +17,7 @@
     "@egovernments/digit-ui-module-core": "1.8.1-test.100",
     "@egovernments/digit-ui-components": "0.0.2-webpack-23",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.14",
+   "@egovernments/digit-ui-module-campaign-manager": "0.3.1-webpack.1.0",
     "http-proxy-middleware": "^1.0.5",
     "react-i18next": "15.0.0",
     "react-router-dom": "6.25.1",
