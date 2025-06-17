@@ -50,7 +50,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair className={"boldLabel"}>
         <div className="digit-header-content label   ">
-          <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+          <div style={{marginTop: "1rem"}}>{t(`HCM_CAMPAIGN_DATES`)}</div>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">

@@ -172,7 +172,7 @@
 
       p {
         margin: 0;
-        margin-bottom: 0.25rem;
+        margin-bottom: 1rem;
       }
 
       .mandatory-date {
@@ -760,8 +760,8 @@
   width: auto;
 }
 .progress-popup{
-  .digit-popup-icon-header-container{
-    display: none;
+  .digit-popup-close{
+    display: none !important;
   }
 }
 .update-boundary-header{
