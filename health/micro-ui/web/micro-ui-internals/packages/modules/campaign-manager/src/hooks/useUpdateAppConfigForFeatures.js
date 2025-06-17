@@ -1,5 +1,6 @@
 import { useMutation } from "react-query";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
+import { HCMCONSOLE_APPCONFIG_MODULENAME } from "../pages/employee/NewCampaignCreate/CampaignDetails";
 
 // Read MDMS context path from global config, with fallback
 const MDMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -120,7 +121,7 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
  */
 const updateCurrentAppConfig = async (tenantId, campaignNo,changes,selectedFeaturesByModule,availableFormats) => {
   try {
-    const schemaCode = `${CONSOLE_MDMS_MODULENAME}.SimpleAppConfiguration`;
+    const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${HCMCONSOLE_APPCONFIG_MODULENAME}`;
 
     // Fetch all MDMS entries for the given campaign
     const filters={

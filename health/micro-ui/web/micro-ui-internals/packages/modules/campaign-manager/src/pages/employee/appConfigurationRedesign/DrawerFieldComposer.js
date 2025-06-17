@@ -23,6 +23,8 @@ import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { getTypeAndFormatFromAppType } from "../../../utils/appConfigHelpers";
+import { TEMPLATE_BASE_CONFIG_MASTER } from "../NewCampaignCreate/AppModule";
 
 /**
  * Determines whether a specific field in a UI panel should be disabled.
@@ -37,7 +39,7 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
  */
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
-  const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
+  const shouldDisable = resourceData?.[TEMPLATE_BASE_CONFIG_MASTER]?.some((ele) => drawerState?.jsonPath === ele);
 
   // force disable if field is hidden
   if (drawerState?.hidden) {
@@ -90,7 +92,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         CONSOLE_MDMS_MODULENAME,
         [
           {
-            name: "TemplateBaseConfig",
+            name: TEMPLATE_BASE_CONFIG_MASTER,
             filter: getBaseTemplateFilter(projectType, flowName),
           },
         ],
@@ -192,6 +194,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         />
       );
     case "fieldTypeDropdown":
+      const type  = getTypeAndFormatFromAppType(drawerState, state?.MASTER_DATA?.AppFieldType)?.type;
       return (
         <FieldV1
           config={{
@@ -209,12 +212,14 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           populators={{
             title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
             fieldPairClassName: "drawer-toggle-conditional-field",
-            options: state?.MASTER_DATA?.AppFieldType,
+            options:  (state?.MASTER_DATA?.AppFieldType || []).filter(
+              (item) => item?.metadata?.type !== "template"
+            ),
             optionsKey: "type",
           }}
           type={"dropdown"}
           value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
+          disabled={type === "template" ? true : disableFieldForMandatory(drawerState, panelItem, resourceData)}
         />
       );
     // return (

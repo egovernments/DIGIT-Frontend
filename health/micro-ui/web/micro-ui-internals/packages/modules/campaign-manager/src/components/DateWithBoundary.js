@@ -272,10 +272,10 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   };
   return (
     <>
-      <Card className={"campaign-update-container"}>
+      <Card className={"campaign-update-container"} style = {{marginTop: "1rem"}}>
         <Header className="header" styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
         <div className={"search-field-container"}>
-          <p className="field-description" style={{ marginTop: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+          <p className="field-description" style={{ marginTop: "0rem" , marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">

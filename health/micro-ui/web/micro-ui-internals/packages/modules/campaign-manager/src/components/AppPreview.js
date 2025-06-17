@@ -17,6 +17,7 @@ import { useTranslation } from "react-i18next";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
+import GenericTemplateScreen from "./GenericTemplateScreen";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -124,12 +125,12 @@ const DobPicker = ({ t }) => {
     <div className="dob-picker">
       <Card type="secondary">
         <div>{t("HCM_DATE_OF_BIRTH")}</div>
-        <TextInput name="numeric" onChange={() => {}} type={"date"} />
+        <TextInput name="numeric" onChange={() => { }} type={"date"} />
         <div>({t("HCM_OR")})</div>
         <div>{t("HCM_AGE")}</div>
         <div className="date-style">
-          <TextInput name="numeric" onChange={() => {}} placeholder={t("HCM_YEARS")} disabled={true} />
-          <TextInput name="numeric" onChange={() => {}} placeholder={t("HCM_MONTHS")} disabled={true} />
+          <TextInput name="numeric" onChange={() => { }} placeholder={t("HCM_YEARS")} disabled={true} />
+          <TextInput name="numeric" onChange={() => { }} placeholder={t("HCM_MONTHS")} disabled={true} />
         </div>
       </Card>
     </div>
@@ -146,7 +147,7 @@ const MdmsDropdown = ({
   style = {},
   variant = "",
   selected,
-  select = () => {},
+  select = () => { },
   rest,
 }) => {
   if (!moduleName || !masterName) return null;
@@ -182,13 +183,13 @@ const renderField = (field, t) => {
   switch (field.type) {
     case "text":
     case "textInput":
-      return <TextInput name="name" value={field?.name || ""} onChange={() => {}} disabled={true} />;
+      return <TextInput name="name" value={field?.name || ""} onChange={() => { }} disabled={true} />;
     case "number":
-      return <TextInput type="number" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
+      return <TextInput type="number" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
     case "textarea":
-      return <TextInput type="textarea" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
+      return <TextInput type="textarea" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
     case "time":
-      return <TextInput type="time" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
+      return <TextInput type="time" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
     case "mobileNumber":
       return (
         <TextInput
@@ -227,7 +228,7 @@ const renderField = (field, t) => {
       return (
         <SelectionTag
           errorMessage=""
-          onSelectionChanged={() => {}}
+          onSelectionChanged={() => { }}
           schemaCode={field?.schemaCode}
           options={data || field?.dropDownOptions}
           optionsKey={"name"}
@@ -240,14 +241,14 @@ const renderField = (field, t) => {
       );
     case "numeric":
     case "counter":
-      return <TextInput name="numeric" onChange={() => {}} type={"numeric"} />;
+      return <TextInput name="numeric" onChange={() => { }} type={"numeric"} />;
     case "dropdown":
       return (
         <Dropdown
           option={field?.dropDownOptions || []}
           optionKey={"name"}
           selected={[]}
-          select={() => {}}
+          select={() => { }}
           t={t} //   disabled={source === "microplan"}
         />
       );
@@ -261,7 +262,7 @@ const renderField = (field, t) => {
           option={dropDownOptions}
           optionKey={"code"}
           selected={null}
-          select={() => {}}
+          select={() => { }}
           props={props}
           moduleName={rest?.schemaCode ? rest.schemaCode.split(".")[0] : rest?.moduleMaster?.moduleName}
           masterName={rest?.schemaCode ? rest.schemaCode.split(".")[1] : rest?.moduleMaster?.masterName}
@@ -272,7 +273,7 @@ const renderField = (field, t) => {
     case "dobPicker":
     case "datePicker":
     case "dob":
-      return <TextInput type="date" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
+      return <TextInput type="date" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
     case "button":
       return (
         <Button
@@ -281,7 +282,7 @@ const renderField = (field, t) => {
           variation="secondary"
           label={t(field?.label)}
           title={t(field?.label)}
-          onClick={() => {}}
+          onClick={() => { }}
         />
       ); // TODO hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
     default:
@@ -328,12 +329,13 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
+
   return (
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
       <div className="mobile-bezel-child-container">
         {data.cards.map((card, index) => (
-          <Card key={index} className="app-card" style={{ }}>
+          <Card key={index} className="app-card" style={{}}>
             {card.headerFields.map((headerField, headerIndex) => (
               <div key={headerIndex}>
                 {headerField.jsonPath === "ScreenHeading" ? (
@@ -352,7 +354,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                       <CheckBox
                         mainClassName={"app-config-checkbox-main"}
                         labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
-                        onChange={(e) => {}}
+                        onChange={(e) => { }}
                         value={""}
                         label={t(field?.label)}
                         isLabelFirst={false}
@@ -371,23 +373,22 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                       label={
                         getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.isMdms ? t(field?.label) : field?.label
                       }
-                      onChange={function noRefCheck() {}}
+                      onChange={function noRefCheck() { }}
                       placeholder={t(field?.innerLabel) || ""}
                       populators={{
                         t: field?.isMdms ? null : t,
                         title: field?.label,
-                        fieldPairClassName: `app-preview-field-pair ${
-                          selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
-                            ? `app-preview-selected`
-                            : selectedField?.id && selectedField?.id === field?.id
+                        fieldPairClassName: `app-preview-field-pair ${selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                          ? `app-preview-selected`
+                          : selectedField?.id && selectedField?.id === field?.id
                             ? `app-preview-selected`
                             : ``
-                        }`,
+                          }`,
                         mdmsConfig: field?.isMdms
                           ? {
-                              moduleName: field?.schemaCode?.split(".")[0],
-                              masterName: field?.schemaCode?.split(".")[1],
-                            }
+                            moduleName: field?.schemaCode?.split(".")[0],
+                            masterName: field?.schemaCode?.split(".")[1],
+                          }
                           : null,
                         options: field?.isMdms ? null : field?.dropDownOptions,
                         optionsKey: field?.isMdms ? "code" : "name",
@@ -406,10 +407,12 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                 variation="primary"
                 label={t(data?.actionLabel)}
                 title={t(data?.actionLabel)}
-                onClick={() => {}}
+                onClick={() => { }}
               />
             )}
-            {data.type === "template" && <TemplateScreen card={card} name={data.name} t={t} selectedField={selectedField} />}
+            {data.type === "template" &&
+              <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t} templateName={data.name} />
+            }
           </Card>
         ))}
       </div>
@@ -417,39 +420,5 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
   );
 };
 
-const TemplateScreen = ({ selectedField, card, name, t }) => {
-  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-  const componentMasterName = "RegistrationComponentsConfig";
-
-  const { isLoading: isLoadingComponentMaster, data: ComponentConfigMdmsData } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCurrentTenantId(),
-    MODULE_CONSTANTS,
-    [{ name: componentMasterName, limit: 100 }],
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      select: (data) => {
-        return data?.[MODULE_CONSTANTS]?.[componentMasterName];
-      },
-    },
-    { schemaCode: "APP_COMPONENT_MASTER_DATA" } //mdmsv2
-  );
-
-  if (isLoadingComponentMaster) {
-    return <Loader />;
-  }
-  const TemplateComponent = getRegisteredComponent(name);
-
-  return (
-    ComponentConfigMdmsData?.length > 0 &&
-    (() => {
-      return TemplateComponent ? (
-        <TemplateComponent components={card.fields} selectedField={selectedField} metaMasterConfig={ComponentConfigMdmsData} t={t} />
-      ) : (
-        <div>No Component to preview</div>
-      );
-    })()
-  );
-};
 
 export default AppPreview;

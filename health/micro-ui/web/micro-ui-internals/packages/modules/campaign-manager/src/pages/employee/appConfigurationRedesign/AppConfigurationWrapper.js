@@ -308,7 +308,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     MODULE_CONSTANTS,
     [
       { name: fieldMasterName, limit: 100 },
-      { name: "DrawerPanelConfigOne", limit: 100 },
+      { name: "FieldPropertiesPanelConfig", limit: 100 },
     ],
     {
       cacheTime: Infinity,
@@ -319,7 +319,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           state: {
             screenConfig: screenConfig,
             ...data?.["HCM-ADMIN-CONSOLE"],
-            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DrawerPanelConfigOne"],
+            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["FieldPropertiesPanelConfig"],
             AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
             // ...dummyMaster,
           },
@@ -471,7 +471,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const handleSubmit = async (finalSubmit) => {
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
-      const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.DrawerPanelConfigOne, locState, currentLocale);
+      const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.FieldPropertiesPanelConfig, locState, currentLocale);
       if (errorCheck) {
         setShowToast({ key: "error", label: errorCheck?.value ? errorCheck?.value : errorCheck });
         return;

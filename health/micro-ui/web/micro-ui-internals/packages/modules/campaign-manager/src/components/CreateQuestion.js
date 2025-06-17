@@ -424,7 +424,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                 <Card type={"primary"} variant={"form"} className={`question-card-container ${className}`} style={{ backgroundColor: level % 2 === 0 ? "#FAFAFA" : "#FFFFFF" }}>
                   <LabelFieldPair className="question-label-field" style={{ display: "block" }}>
                     <div className="question-label" style={{ height: "3.5rem", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                      <div style={{ display: "flex", gap: "1rem" }}>
+                      <div style={{ display: "flex", gap: "1rem" , alignItems: "center"}}>
                         {/* <span style={{ fontWeight: "700", marginTop: "1rem" }}>{`${t("QUESTION")} ${index + 1}`}</span> */}
                         <span style={{ fontWeight: "700", fontSize: "1.5rem", display: "flex", justifyContent: "center", alignItems: "center" }}>{`${t("HCM_CHECKLIST_QUESTION")} ${questionNumber}`}</span>
                         <div style={{ alignItems: "center" }}>
