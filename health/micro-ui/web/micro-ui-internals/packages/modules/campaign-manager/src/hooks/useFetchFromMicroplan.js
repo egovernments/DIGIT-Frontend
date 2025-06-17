@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 /**
  * fetchFromMicroplan details for a given campaign.
@@ -158,11 +158,11 @@ const fetchConsolidatedData = async (tenantId, campaignId, planConfigId) => {
  * @returns {object} React Query object with data and fetch states.
  */
 const useFetchFromMicroplan = (tenantId, campaignId, planConfigId) => {
-  const { data, isFetching, refetch, isLoading, error } = useQuery(
-    ["microplanData", tenantId, campaignId, planConfigId],
-    () => fetchConsolidatedData(tenantId, campaignId, planConfigId),
-    { cacheTime: 0 }
-  );
+  const { data, isFetching, refetch, isLoading, error } = useQuery({
+    queryKey:["microplanData", tenantId, campaignId, planConfigId],
+    queryFn:() => fetchConsolidatedData(tenantId, campaignId, planConfigId),
+    gcTime: 0 
+  });
 
   return {
     data,

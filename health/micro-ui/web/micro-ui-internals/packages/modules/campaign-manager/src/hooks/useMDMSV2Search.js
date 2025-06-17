@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 
 const mdmsV2Search = async ({ tenantId, moduleName, masterName, formId }) => {
   const response = await Digit.CustomService.getResponse({
@@ -15,9 +15,9 @@ const mdmsV2Search = async ({ tenantId, moduleName, masterName, formId }) => {
 };
 
 export const useMDMSV2Search = ({ tenantId, moduleName, masterName, formId, config = {} }) => {
-  return useQuery(
-    ["MDMS_V2_SEARCH", tenantId, moduleName, masterName, formId, config],
-    () => mdmsV2Search({ tenantId, moduleName, masterName, formId }),
-    { ...config }
-  );
+  return useQuery({
+    queryKey: ["MDMS_V2_SEARCH", tenantId, moduleName, masterName, formId],
+    queryFn: () => mdmsV2Search({ tenantId, moduleName, masterName, formId }),
+    ...config, 
+  });
 };

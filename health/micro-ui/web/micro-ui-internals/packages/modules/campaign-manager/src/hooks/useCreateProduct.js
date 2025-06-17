@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const createProductService = async (req, tenantId) => {
   try {
@@ -16,8 +16,10 @@ const createProductService = async (req, tenantId) => {
 };
 
 const useCreateProduct = (tenantId) => {
-  return useMutation((reqData) => {
+  return useMutation({
+    mutationFn:(reqData) => {
     return createProductService(reqData, tenantId);
+  }
   });
 };
 
