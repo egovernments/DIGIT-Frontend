@@ -115,6 +115,8 @@ const AppConfigurationTabLayer = () => {
 
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
 
+  console.log("tabs" , numberTabs , tabData );
+
   if (isTabLoading) return <Loader />;
   return (
     <div>
