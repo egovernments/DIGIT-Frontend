@@ -37,7 +37,9 @@ export const AppLocalisationTable = ({ data, currentScreen, state }) => {
   const columns = [
     {
       name: t(`TRANSLATION_${currentLocale || "EN"}`),
-      selector: (row) => (row && currentLocale && row[currentLocale]) || "",
+      selector: (row) => {
+        return <div title={(row && currentLocale && row[currentLocale]) || ""}>{(row && currentLocale && row[currentLocale]) || ""}</div>;
+      },
       sortable: true,
     },
     ...((Array.isArray(availableLocales) ? availableLocales : []).map((locale) => ({
