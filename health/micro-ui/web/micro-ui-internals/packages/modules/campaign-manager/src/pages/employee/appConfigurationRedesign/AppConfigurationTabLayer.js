@@ -19,7 +19,7 @@ const tabDispatcher = (state, action) => {
             data: i?.data,
             version: i?.data?.version,
             disabled : !i?.data?.isSelected
-          })) || [],
+          }))?.filter(i => !i?.disabled) || [],
         activeTabConfig: action?.data?.[0],
       };
     case "CHANGE_ACTIVE_TAB":
