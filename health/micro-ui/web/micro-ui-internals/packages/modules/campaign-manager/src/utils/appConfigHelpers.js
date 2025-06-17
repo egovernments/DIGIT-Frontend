@@ -6,7 +6,8 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   // Try to find a matching field type from master data
   const matched = fieldTypeMasterData.find((item) => {
     // Match both type and format from metadata
-    return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
+    return item?.metadata?.type === field.type && item?.metadata?.format === field.format 
+    // && item?.metadata?.format === field.fieldName;
   });
 
   if (!matched) {
@@ -57,7 +58,7 @@ const guessPageName = (label) => {
 };
 
 // Helper to get type/format and handle attribute renaming from appType using fieldTypeMasterData
-const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
+export const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => {
   if (!field.appType) return {};
   const matched = fieldTypeMasterData.find((item) => item.type === field.appType);
   if (!matched) return {};
@@ -152,6 +153,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
           defaultValue: field.value ? true : false,
           active: true,
           jsonPath: field.fieldName || "",
+          format: field.format || "",
           metaData: {},
           // Mandatory: field.required || false,
           hidden: field.hidden || false,
