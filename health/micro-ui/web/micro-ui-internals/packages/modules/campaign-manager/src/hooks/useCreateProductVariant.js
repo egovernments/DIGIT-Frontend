@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 
 const createProductVariantService = async (req, tenantId) => {
   try {
@@ -16,9 +16,10 @@ const createProductVariantService = async (req, tenantId) => {
 };
 
 const useCreateProductVariant = (tenantId) => {
-  return useMutation((reqData) => {
+  return useMutation({
+    mutationFn:(reqData) => {
     return createProductVariantService(reqData, tenantId);
-  });
+  }});
 };
 
 export default useCreateProductVariant;

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const MDMS_V2_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
@@ -120,13 +120,11 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
     }
   };
 
-  const { data, isFetching, refetch, isLoading, error } = useQuery(
-    ["mdmsData", screenType, defaultHierarchyType, hierarchyType, userName, tenantId],
-    fetchConsolidatedData,
-    {
-      cacheTime: 0,
-    }
-  );
+  const { data, isFetching, refetch, isLoading, error } = useQuery({
+    queryKey: ["mdmsData", screenType, defaultHierarchyType, hierarchyType, userName, tenantId],
+    queryFn: fetchConsolidatedData,
+    gcTime: 0,
+  });
 
   return {
     data,

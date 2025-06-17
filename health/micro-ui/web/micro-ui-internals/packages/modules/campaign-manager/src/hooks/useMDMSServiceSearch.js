@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const fetchServiceDefinition = async (serviceCodes, tenantId) => {
@@ -74,13 +74,11 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
     }
   };
 
-  const { data: mdmsData, isFetching, refetch, isLoading: isMDMSLoading, error: mdmsError } = useQuery(
-    ["mdmsData", tenantId, updatedMdmsCriteria],
-    fetchMDMSData,
-    {
-      cacheTime: 0,
-    }
-  );
+  const { data: mdmsData, isFetching, refetch, isLoading: isMDMSLoading, error: mdmsError } = useQuery({
+    queryKey:["mdmsData", tenantId, updatedMdmsCriteria],
+    queryFn:fetchMDMSData,
+    gcTime:0
+  });
 
   return {
     data: { mdmsData },

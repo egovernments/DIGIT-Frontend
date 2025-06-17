@@ -1,5 +1,5 @@
 import { useSearchCampaign } from "./services/useSearchCampaign";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import useCreateCampaign from "./useCreateCampaign";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useMemo, useEffect, useState } from "react";
@@ -129,8 +129,8 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
   const createCampaign = useCreateCampaign(tenantId);
 
     // Mutation to create new MDMS entries using a dynamic URL with schemaCode
-  const mdmsCreateMutation = useMutation(
-    async ({ schemaCode, body }) => {
+  const mdmsCreateMutation = useMutation({
+    mutationFn: async ({ schemaCode, body }) => {
       const dynamicUrl = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${schemaCode}`;
       const res = await Digit.CustomService.getResponse({
         url: dynamicUrl,
@@ -138,10 +138,8 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
       });
       return res;
     },
-    {
-      select: (data) => data?.SchemaDefinitions?.[0] || {},
-    }
-  );
+    select: (data) => data?.SchemaDefinitions?.[0] || {},
+  });
   
   // Hook to create service definitions (checklists)
   const useCreateChecklist = Digit.Hooks.campaign.useCreateChecklist(tenantId);
@@ -193,9 +191,10 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
   };
 
     // Main mutation to orchestrate the entire cloning flow
-  const { mutateAsync, isLoading: mutationLoading, error: mutationError } = useMutation(async () => {
+  const { mutateAsync, isLoading: mutationLoading, error: mutationError } = useMutation({
+    mutationFn: async () => {
     try {
-     // Step 0: Set initial progress step after fetching campaign details
+    // Step 0: Set initial progress step after fetching campaign details
       setStep(0);
       if (!campaignData) throw new Error("Campaign not found");
 
@@ -272,6 +271,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     } catch (error) {
       console.error("Error during campaign copy:", error);
       throw error;
+      }
     }
   });
 

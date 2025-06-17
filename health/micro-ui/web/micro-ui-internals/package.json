@@ -56,7 +56,6 @@
     "*.{js,css,md}": "prettier --write"
   },
   "devDependencies": {
-    "@tanstack/react-query": "^5.62.16",
     "clean-webpack-plugin": "^4.0.0",
     "dotenv-webpack": "^8.0.0",
     "eslint-config-react-app": "^7.0.1",

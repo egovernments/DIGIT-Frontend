@@ -1,9 +1,11 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import createCampaignService from "./services/createCampaignService";
 
 const useCreateCampaign = (tenantId) => {
-  return useMutation((reqData) => {
+  return useMutation({
+   mutaionFn: (reqData) => {
     return createCampaignService(reqData, tenantId);
+  }
   });
 };
 
