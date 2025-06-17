@@ -2,7 +2,8 @@ import React, { Fragment, useContext, useState , useEffect } from "react";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { Stepper ,TextBlock , Tag , Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
+import TagComponent from "../../../components/TagComponent";
 
 const Tabs = ({ onTabChange }) => {
   const { campaignData, dispatchCampaignData } = useContext(CycleContext);
@@ -159,8 +160,8 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
           </Card>
         </div> */}
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
-      <HeaderComponent>
+           <TagComponent campaignName={campaignName} />
+      <HeaderComponent styles = {{marginTop: "1.5rem"}} className = "select-boundary">
         {t(
           `CAMPAIGN_PROJECT_${
             tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code

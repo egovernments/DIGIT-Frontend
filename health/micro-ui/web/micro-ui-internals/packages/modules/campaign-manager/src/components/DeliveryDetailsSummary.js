@@ -353,7 +353,7 @@ const DeliveryDetailsSummary = (props) => {
         </div> */}
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" , marginTop: "1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
           </div>
           <div className="campaign-summary-container">

@@ -139,7 +139,7 @@ const BoundarySummary = (props) => {
 
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", justifyContent: "space-between" , marginTop: "1.5rem" }}>
         <HeaderComponent className="summary-header">{t("ES_BOUNDARY_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">
