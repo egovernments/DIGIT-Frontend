@@ -23,6 +23,7 @@ import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { getTypeAndFormatFromAppType } from "../../../utils/appConfigHelpers";
 
 /**
  * Determines whether a specific field in a UI panel should be disabled.
@@ -192,6 +193,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         />
       );
     case "fieldTypeDropdown":
+      const type  = getTypeAndFormatFromAppType(drawerState, state?.MASTER_DATA?.AppFieldType)?.type;
       return (
         <FieldV1
           config={{
@@ -209,12 +211,14 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           populators={{
             title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
             fieldPairClassName: "drawer-toggle-conditional-field",
-            options: state?.MASTER_DATA?.AppFieldType,
+            options:  (state?.MASTER_DATA?.AppFieldType || []).filter(
+              (item) => item?.metadata?.type !== "template"
+            ),
             optionsKey: "type",
           }}
           type={"dropdown"}
           value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
+          disabled={type === "template" ? true : disableFieldForMandatory(drawerState, panelItem, resourceData)}
         />
       );
     // return (
