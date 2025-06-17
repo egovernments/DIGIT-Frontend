@@ -3,7 +3,7 @@ import React, { useEffect, useState, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import XlsPreviewNew from "../../components/XlsPreviewNew";
 import { Svgicon } from "../../utils/Svgicon";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { DustbinIcon } from "../../components/icons/DustbinIcon";
 import * as XLSX from "xlsx";
@@ -13,7 +13,7 @@ import validateBoundaryExcelContent from "../../utils/validateBoundaryExcel";
 const ViewHierarchy = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const defaultHierarchyType = searchParams.get("defaultHierarchyType");
@@ -215,7 +215,7 @@ const ViewHierarchy = () => {
         try {
           await pollForStatusCompletion(id, typeOfData);
           setDataCreateToast(false);
-          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+          navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
             message: "ES_BOUNDARY_DATA_CREATED_SUCCESS_RESPONSE",
             preText: "ES_BOUNDARY_DATA__CREATED_SUCCESS_RESPONSE_PRE_TEXT",
             actionLabel: "CS_BOUNDARY_dATA_NEW_RESPONSE_ACTION",
@@ -550,7 +550,7 @@ const ViewHierarchy = () => {
                   label={t("COMMON_BACK")}
                   // isDisabled={true}
                   onClick={() => {
-                    history.push(`/${window.contextPath}/employee/campaign/boundary/home`);
+                    navigate(`/${window.contextPath}/employee/campaign/boundary/home`);
                   }}
                   type="button"
                   variation="secondary"

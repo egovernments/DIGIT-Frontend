@@ -1,7 +1,7 @@
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { dateChangeBoundaryConfig, dateChangeConfig } from "../../configs/dateChangeBoundaryConfig";
 import { Button, AlertCard, PopUp, Toast, Tag } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
@@ -10,7 +10,7 @@ import TagComponent from "../../components/TagComponent";
 
 function UpdateDatesWithBoundaries() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
@@ -127,7 +127,7 @@ function UpdateDatesWithBoundaries() {
         // const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: payload });
         const temp = await Digit.Hooks.campaign.useProjectUpdateWithBoundary({ formData: formData?.dateWithBoundary });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
-        history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+        navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: t("ES_CAMPAIGN_DATE_CHANGE_WITH_BOUNDARY_SUCCESS"),
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
@@ -144,7 +144,7 @@ function UpdateDatesWithBoundaries() {
           },
         });
         // setShowToast({ isError: false, label: "DATE_UPDATED_SUCCESSFULLY" });
-        history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+        navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: t("ES_CAMPAIGN_DATE_CHANGE_SUCCESS"),
           // text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXTKK"),
           // info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXTKK"),
