@@ -366,8 +366,47 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         id: plot?.name?.replaceAll(".", " "),
         symbol: plot?.symbol,
         sortType: sortRows,
-        Cell: (args) => {
-          const { value: cellValue, column, row } = args;
+        // Cell: (args) => {
+        //   const { value: cellValue, column, row } = args;
+        //   if (typeof cellValue === "object") {
+        //     return (
+        //       <InsightView insight={cellValue?.insight} rowValue={cellValue?.value} t={t} shouldHideInsights={response?.responseData?.hideInsights} />
+        //     );
+        //   }
+        //   const filter = response?.responseData?.filter?.find((elem) => elem?.column === column?.id);
+        //   if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
+        //     return (
+        //       <span
+        //         style={{ color: "#F47738", cursor: "pointer" }}
+        //         onClick={() =>
+        //           getDrilldownCharts(
+        //             cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
+        //             filter?.key,
+        //             t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
+        //             response?.responseData?.filter
+        //           )
+        //         }
+        //       >
+        //         {getTitleHeading(cellValue)}
+        //       </span>
+        //     );
+        //   }
+        //   if (column?.id === "CitizenAverageRating") {
+        //     return (
+        //       <Rating
+        //         id={row?.id}
+        //         currentRating={Math.round(cellValue * 10) / 10}
+        //         styles={{ width: "unset", marginBottom: 0 }}
+        //         starStyles={{ width: "25px" }}
+        //       />
+        //     );
+        //   }
+        //   return String(t(cellValue));
+        // },
+        name:t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
+        cell: (row, index, column, id) => {
+          const headerName = t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`);
+          const cellValue = row?.[headerName];
           if (typeof cellValue === "object") {
             return (
               <InsightView insight={cellValue?.insight} rowValue={cellValue?.value} t={t} shouldHideInsights={response?.responseData?.hideInsights} />
@@ -389,16 +428,6 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
               >
                 {getTitleHeading(cellValue)}
               </span>
-            );
-          }
-          if (column?.id === "CitizenAverageRating") {
-            return (
-              <Rating
-                id={row?.id}
-                currentRating={Math.round(cellValue * 10) / 10}
-                styles={{ width: "unset", marginBottom: 0 }}
-                starStyles={{ width: "25px" }}
-              />
             );
           }
           return String(t(cellValue));
@@ -447,12 +476,12 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         //   className="customTable "
         //   t={t}
         //   customTableWrapperClassName={"dss-table-wrapper"}
-        //   disableSort={false}
+        //   disableSort={true}
         //   autoSort={true}
         //   manualPagination={false}
         //   showFooter={response?.responseData?.showFooter}
         //   globalSearch={filterValue}
-        //   initSortId={tableColumns[0]?.id}
+        //   // initSortId={tableColumns[0]?.id}
         //   onSearch={onSearch}
         //   data={tableData?.filter((tRow) => tRow) || []}
         //   totalRecords={tableData?.length}
@@ -467,7 +496,7 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
         // />
         <DataTable
           columns={tableColumns}
-          data={tableData?.filter((tRow) => tRow) || []}
+          data={tableData}
           pagination
           persistTableHead
           highlightOnHover

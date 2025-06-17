@@ -78,6 +78,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/my-campaigns`} component={() => <MyCampaignNew showDashboardLink={true}/>} />
         <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashbaord stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/l1-dashboard`} component={() => <L1Dashboard />} />
+        {/* TODO: update the dashboard path */}
         <PrivateRoute path={`${path}/level1/:moduleCode`} component={() => <L1Main />} />
         <PrivateRoute path={`${path}/level2/:moduleCode`} component={() => <L2Main />} />
       </AppContainer>
