@@ -4,7 +4,7 @@
   "main": "index.js",
   "workspaces": [
     "example",
-    "packages/modules"
+    "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -13,7 +13,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s  start:dev",
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build  start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
