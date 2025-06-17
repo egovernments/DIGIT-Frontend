@@ -5,6 +5,7 @@ import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock }
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { TEMPLATE_BASE_CONFIG_MASTER } from "./AppModule";
+import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
 
 /**
  * Utility to create a filter string to fetch formats based on project and allowed formats.
@@ -47,7 +48,7 @@ const AppFeatures = () => {
   const history = useHistory();
   const mdmsBaseUrl = getMDMSUrl(true);
   const { campaignNumber, projectType, tenantId } = Digit.Hooks.useQueryParams();
-  const AppConfigSchema = "SimpleAppConfiguration";
+  const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
 
   const [selectedFeaturesByModule, setSelectedFeaturesByModule] = useState(null);
   const [availableFormats, setAvailableFormats] = useState([]);
@@ -73,14 +74,14 @@ const AppFeatures = () => {
       CONSOLE_MDMS_MODULENAME,
       [
         {
-          name: "SimpleAppConfiguration",
+          name: HCMCONSOLE_APPCONFIG_MODULENAME,
           filter: getTemplateFormatFilter(campaignNumber, availableFormats),
         },
       ],
       `MDMSDATA-${campaignNumber}-${availableFormats}`,
       {
         enabled: availableFormats?.length > 0,
-        ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, "SimpleAppConfiguration"),
+        ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME,HCMCONSOLE_APPCONFIG_MODULENAME),
       }
     );
   }, [availableFormats, campaignNumber]);
@@ -96,7 +97,7 @@ const AppFeatures = () => {
       CONSOLE_MDMS_MODULENAME,
       [
         {
-          name: "SimpleAppConfiguration",
+          name: HCMCONSOLE_APPCONFIG_MODULENAME,
           filter: getFlowFilter(campaignNumber),
         },
       ],
@@ -202,7 +203,7 @@ const AppFeatures = () => {
             variation="primary"
             onClick={() => {
               const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
-              const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=AppFieldTypeOne&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
+              const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=FieldTypeMappingConfig&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
               if (changes?.changed) {
                 updateConfig(
                   {

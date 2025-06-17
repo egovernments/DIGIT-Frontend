@@ -5,8 +5,9 @@ import { useHistory } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
 
-export const TEMPLATE_BASE_CONFIG_MASTER = "TemplateBaseConfig";
+export const TEMPLATE_BASE_CONFIG_MASTER = "FormConfigTemplate";
 //TODO @bhavya @jagan Cleanup and handle negative scenarios for unselect etc
 const AppModule = () => {
   const { t } = useTranslation();
@@ -18,7 +19,7 @@ const AppModule = () => {
   const [selectedModuleCodes, setSelectedModuleCodes] = useState([]);
   const [showToast, setShowToast] = useState(null);
   const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-  const AppConfigSchema = "SimpleAppConfiguration";
+  const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
   const url = getMDMSUrl(true);
   const [isCreatingModule, setIsCreatingModule] = useState(false);
 

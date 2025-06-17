@@ -9,12 +9,15 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { downloadExcelWithCustomName } from "../../../utils";
 import QRCode from "react-qr-code";
+
+export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
+
 const CampaignDetails = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
-  const AppConfigSchema = "SimpleAppConfiguration";
+  const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
   const [showToast, setShowToast] = useState(null);
   const isDraft = searchParams.get("draft");
   const [showQRPopUp, setShowQRPopUp] = useState(false);
