@@ -1,7 +1,7 @@
 import { TourProvider } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+// import { useRouteMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
@@ -101,7 +101,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
     ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
     : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
 
-  const { path, url } = useRouteMatch();
+  // const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -119,9 +119,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
       <TourProvider>
         <EmployeeApp
           BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
-          path={path}
           stateCode={stateCode}
-          url={url}
           userType={userType}
           hierarchyData={hierarchyData}
         />
