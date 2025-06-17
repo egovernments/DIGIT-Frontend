@@ -18,6 +18,7 @@ const tabDispatcher = (state, action) => {
             code: i?.data?.name,
             data: i?.data,
             version: i?.data?.version,
+            disabled : !i?.data?.isSelected
           })) || [],
         activeTabConfig: action?.data?.[0],
       };
@@ -111,7 +112,10 @@ const AppConfigurationTabLayer = () => {
     },
   };
 
+
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
+
+  console.log("tabs" , numberTabs , tabData );
 
   if (isTabLoading) return <Loader />;
   return (
