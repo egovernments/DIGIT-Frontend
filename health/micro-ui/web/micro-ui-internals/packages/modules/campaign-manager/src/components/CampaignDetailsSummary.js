@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import {  EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast , Stepper , TextBlock ,Card , Loader ,HeaderComponent} from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 const CampaignDetailsSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -29,7 +29,7 @@ const CampaignDetailsSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
+navigate(newUrl);
   };
 
   function updateUrlParams(params) {

@@ -1,11 +1,11 @@
 import React from "react";
 import { PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const BoundaryPopup = ({ showPopUp, setShowPopUp, data })=> {
     const { t } = useTranslation();
-    const history = useHistory();
+    const navigate = useNavigate();
     return (
         showPopUp &&  (
             <PopUp 
@@ -33,7 +33,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data })=> {
                     variation={"secondary"}
                     label={t("GET_BOUNDARY_DATA_FROM_GEOPODE")}
                     onClick={() => {
-                        history.push(`/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${false}`,
+                        navigate(`/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${false}`,
                             { data: data?.defaultBoundaryData }
                         );
                     }}
@@ -45,7 +45,7 @@ const BoundaryPopup = ({ showPopUp, setShowPopUp, data })=> {
                     variation={"secondary"}
                     label={t("CREATE_MY_OWN_BOUNDARY_DATA")}
                     onClick={() => {
-                        history.push(`/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${true}`);
+                        navigate(`/${window.contextPath}/employee/campaign/boundary/create?defaultHierarchyType=${data?.defaultHierarchyName}&hierarchyType=${data?.hierarchyName}&newHierarchy=${true}`);
                     }}
                     style={{height:"4rem"}}
                 />

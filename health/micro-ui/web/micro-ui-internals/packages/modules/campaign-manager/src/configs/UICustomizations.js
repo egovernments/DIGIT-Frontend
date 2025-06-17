@@ -1,9 +1,22 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
-import React, { useState, useEffect, useRef, useCallback} from "react";
-import { useHistory, useLocation } from 'react-router-dom';
+import React, { useState, useEffect, useRef, useCallback } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Fragment } from "react";
-import { Button, PopUp, Switch, Tooltip,Toast, TooltipWrapper, FieldV1 , Stepper , TextBlock ,Card , HeaderComponent, ActionBar  } from "@egovernments/digit-ui-components";
+import {
+  Button,
+  PopUp,
+  Switch,
+  Tooltip,
+  Toast,
+  TooltipWrapper,
+  FieldV1,
+  Stepper,
+  TextBlock,
+  Card,
+  HeaderComponent,
+  ActionBar,
+} from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useTranslation } from "react-i18next";
@@ -26,9 +39,9 @@ const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
       url: `/${SERVICE_REQUEST_CONTEXT_PATH}/service/definition/v1/_update`,
       body: {
         ServiceDefinition: {
-          "tenantId": tenantId,
-          "code": sdcode,
-          "isActive": newStatus
+          tenantId: tenantId,
+          code: sdcode,
+          isActive: newStatus,
         },
       },
     });
@@ -40,31 +53,30 @@ const updateServiceDefinition = async (tenantId, newStatus, sdcode) => {
     return null;
   }
 };
-const retryCampaign = async (row,searchResult) => {
-  const filteredCampaign=searchResult.filter(item => item?.id === row?.id)
-  if(filteredCampaign?.length>0){
-    const newCampaignObject=filteredCampaign?.[0]||{}
-  try {
-    const res = await Digit.CustomService.getResponse({
-      url: "/project-factory/v1/project-type/retry",
-      body: {
-        CampaignDetails: {
-          ...newCampaignObject,
-          action:"retry"
+const retryCampaign = async (row, searchResult) => {
+  const filteredCampaign = searchResult.filter((item) => item?.id === row?.id);
+  if (filteredCampaign?.length > 0) {
+    const newCampaignObject = filteredCampaign?.[0] || {};
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: "/project-factory/v1/project-type/retry",
+        body: {
+          CampaignDetails: {
+            ...newCampaignObject,
+            action: "retry",
+          },
         },
-      },
-    });
-    return res;
-  } catch (error) {
-    // console.error("Error updating service definition:", error);
-    return null;
+      });
+      return res;
+    } catch (error) {
+      // console.error("Error updating service definition:", error);
+      return null;
+    }
   }
-}
 };
 export const UICustomizations = {
   HCM_MODULE_NAME,
   MyChecklistSearchConfig: {
-
     preProcess: (data, additionalDetails) => {
       if (data?.state?.searchForm?.Role?.code) {
         let ro = data.state.searchForm.Role.code;
@@ -86,74 +98,70 @@ export const UICustomizations = {
       return data;
     },
 
-
     additionalCustomizations: (row, key, column, value, searchResult) => {
       const { t } = useTranslation();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const history = useHistory();
+      const navigate = useNavigate();
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
       const campaignName = searchParams.get("name");
       const projectType = searchParams.get("projectType");
       const campaignId = searchParams.get("campaignId");
-      switch (key) {       
-          case "HCM_CHECKLIST_STATUS":
-            
-            const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
-            const toggle = async () => {
-              const prev = row?.ServiceRequest?.[0]?.isActive;
-              const sdcode = row?.ServiceRequest?.[0]?.code;
-              const res = await updateServiceDefinition(tenantId, !prev, sdcode);
-              setLocalIsActive(!localIsActive);
-              if(res)
-              {
+      switch (key) {
+        case "HCM_CHECKLIST_STATUS":
+          const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
+          const toggle = async () => {
+            const prev = row?.ServiceRequest?.[0]?.isActive;
+            const sdcode = row?.ServiceRequest?.[0]?.code;
+            const res = await updateServiceDefinition(tenantId, !prev, sdcode);
+            setLocalIsActive(!localIsActive);
+            if (res) {
+            }
+          };
 
-              }
-            };
-
-
-            const switchText = localIsActive ? "Active" : "Inactive";
-            return (
-              row?.ServiceRequest?.[0]?(<Switch
-                isCheckedInitially={row?.ServiceRequest?.[0]?.isActive}
-                label={switchText}
-                onToggle={toggle}
-              />):(<>{t("CHECKLIST_TOBE_CONFIGURED")}</>)
-            );
+          const switchText = localIsActive ? "Active" : "Inactive";
+          return row?.ServiceRequest?.[0] ? (
+            <Switch isCheckedInitially={row?.ServiceRequest?.[0]?.isActive} label={switchText} onToggle={toggle} />
+          ) : (
+            <>{t("CHECKLIST_TOBE_CONFIGURED")}</>
+          );
         case "CHECKLIST_LAST_UPDATE":
-          const lastModDate = row?.ServiceRequest?.length !== 0 ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime : row?.auditDetails?.lastModifiedTime;
+          const lastModDate =
+            row?.ServiceRequest?.length !== 0 ? row?.ServiceRequest?.[0]?.auditDetails?.lastModifiedTime : row?.auditDetails?.lastModifiedTime;
           return Digit.DateUtils.ConvertEpochToDate(lastModDate);
         case "HCM_CHECKLIST_ACTION":
           const role_code = row?.data?.role;
           const cl_code = row?.data?.checklistType;
-             const sd = row?.ServiceRequest?.[0];
-             if(sd)
-             {
-              return (
+          const sd = row?.ServiceRequest?.[0];
+          if (sd) {
+            return (
               <Button
                 type="button"
                 size="medium"
-                style={{width: "8rem"}}
+                style={{ width: "8rem" }}
                 // icon="View"
                 variation="secondary"
                 label={t("HCM_CHECKLIST_VIEW")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
+                  navigate(
+                    `/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`
+                  );
                 }}
               />
-              )
-             }
-             else{
-              return (
-                <Button
+            );
+          } else {
+            return (
+              <Button
                 type="button"
                 size="medium"
-                style={{width: "8rem"}}
+                style={{ width: "8rem" }}
                 // icon="View"
                 variation="secondary"
                 label={t("HCM_CHECKLIST_CREATE")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
+                  navigate(
+                    `/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`
+                  );
                 }}
               />
             );
@@ -180,16 +188,15 @@ export const UICustomizations = {
               tenantId: tenantId,
               limit: 2,
               offset: 0,
-              hierarchyType: row?.hierarchyType
-            }
-          }
+              hierarchyType: row?.hierarchyType,
+            },
+          },
         });
         return res;
-
-      }
+      };
       const fun = async () => {
         res = await callSearch();
-      }
+      };
       // fun();
       const [showToast, setShowToast] = useState(null);
       switch (key) {
@@ -197,33 +204,24 @@ export const UICustomizations = {
           return row?.hierarchyType;
           break;
         case "LEVELS":
-          return row?.boundaryHierarchy?.length
+          return row?.boundaryHierarchy?.length;
 
           return (
-            (
-              <>
-                {/* <span data-tip data-for="dynamicTooltip">{row?.boundaryHierarchy?.length}</span>
+            <>
+              {/* <span data-tip data-for="dynamicTooltip">{row?.boundaryHierarchy?.length}</span>
                 <ReactTooltip id="dynamicTooltip" getContent={() => tooltipContent} /> */}
-                <TooltipWrapper
-                  arrow={false}
-                  content={res}
-                  enterDelay={100}
-                  leaveDelay={0}
-                  placement="bottom"
-                  style={{}}
-                >
-                  {row?.boundaryHierarchy?.length}
-                </TooltipWrapper>
-                {/* <Tooltip
+              <TooltipWrapper arrow={false} content={res} enterDelay={100} leaveDelay={0} placement="bottom" style={{}}>
+                {row?.boundaryHierarchy?.length}
+              </TooltipWrapper>
+              {/* <Tooltip
                   className=""
                   content="Tooltipkbjkjnjknk"
                   description=""
                   header=""
                   style={{}}
                 /> */}
-              </>
-            )
-          )
+            </>
+          );
           break;
         case "CREATION_DATE":
           let epoch = row?.auditDetails?.createdTime;
@@ -235,66 +233,59 @@ export const UICustomizations = {
           const generateFile = async () => {
             const res = await Digit.CustomService.getResponse({
               url: `/project-factory/v1/data/_generate`,
-              body: {
-              },
+              body: {},
               params: {
                 tenantId: tenantId,
                 type: "boundaryManagement",
                 forceUpdate: true,
                 hierarchyType: row?.hierarchyType,
-                campaignId: "default"
-              }
+                campaignId: "default",
+              },
             });
             return res;
-          }
-          const delay = (ms) => new Promise(resolve => setTimeout(resolve, ms));
+          };
+          const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
           const closeToast = () => {
             setShowToast(null);
           };
           const generateTemplate = async () => {
-            try{
+            try {
               const res = await Digit.CustomService.getResponse({
                 url: `/project-factory/v1/data/_download`,
-                body: {
-                },
+                body: {},
                 params: {
                   tenantId: tenantId,
                   type: "boundaryManagement",
                   hierarchyType: row?.hierarchyType,
-                  campaignId: "default"
-                }
+                  campaignId: "default",
+                },
               });
               return res;
-            }
-            catch(error){
-              setShowToast({label: error?.response?.data?.Errors?.[0]?.code, type: "error"})
+            } catch (error) {
+              setShowToast({ label: error?.response?.data?.Errors?.[0]?.code, type: "error" });
               return error;
             }
-          }
+          };
           const downloadExcelTemplate = async () => {
             // const res = await generateFile();
             // await delay(2000);
             const resFile = await generateTemplate();
-            
+
             if (resFile && resFile?.GeneratedResource?.[0]?.fileStoreid) {
               // Splitting filename before .xlsx or .xls
-              setShowToast({label: "BOUNDARY_DOWNLOADING", type: "info"});
+              setShowToast({ label: "BOUNDARY_DOWNLOADING", type: "info" });
               const fileNameWithoutExtension = row?.hierarchyType;
 
-              Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid, customName: fileNameWithoutExtension });
-              setShowToast({label: "BOUNDARY_DOWNLOADED", type: "success"});
+              Digit.Utils.campaign.downloadExcelWithCustomName({
+                fileStoreId: resFile?.GeneratedResource?.[0]?.fileStoreid,
+                customName: fileNameWithoutExtension,
+              });
+              setShowToast({ label: "BOUNDARY_DOWNLOADED", type: "success" });
             }
-          }
+          };
           return (
             <>
-              {showToast && (
-                <Toast
-                  type={String(showToast?.type)}
-                  label={t(showToast?.label)}
-                  isDleteBtn={"true"}
-                  onClose={()=>closeToast()}
-                />
-              )}
+              {showToast && <Toast type={String(showToast?.type)} label={t(showToast?.label)} isDleteBtn={"true"} onClose={() => closeToast()} />}
               <Button
                 type={"button"}
                 size={"medium"}
@@ -315,8 +306,8 @@ export const UICustomizations = {
       const searchParams = new URLSearchParams(window.location.search);
       const userId = searchParams.get("userId");
       const status = searchParams.get("status");
-      userId&&(data.body.PlanConfigurationSearchCriteria.userUuid = userId);
-      status&&(data.body.PlanConfigurationSearchCriteria.status = [status]);
+      userId && (data.body.PlanConfigurationSearchCriteria.userUuid = userId);
+      status && (data.body.PlanConfigurationSearchCriteria.status = [status]);
       data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
       // data.body.PlanConfigurationSearchCriteria.campaignType = data?.state?.searchForm?.campaignType?.[0]?.code;
       return data;
@@ -439,7 +430,7 @@ export const UICustomizations = {
       const onActionSelect = (value, row) => {
         switch (value?.code) {
           case "ACTION_LABEL_UPDATE_DATES":
-            window.history.pushState(
+            window.navigateState(
               {
                 name: row?.campaignName,
                 data: row,
@@ -458,7 +449,7 @@ export const UICustomizations = {
             setCampaignCopying(true);
             break;
           case "ACTION_LABEL_CONFIGURE_APP":
-            window.history.pushState(
+            window.navigateState(
               {
                 name: row?.campaignName,
                 data: row,
@@ -472,7 +463,7 @@ export const UICustomizations = {
             break;
 
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
-            window.history.pushState(
+            window.navigateState(
               {
                 name: row?.campaignName,
                 data: row,
@@ -535,8 +526,8 @@ export const UICustomizations = {
                   <TimelineComponent campaignId={row?.id} resourceId={resourceIdArr} />
                 </PopUp>
               )}
-                {campainCopying && (
-                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying}/>
+              {campainCopying && (
+                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying} />
               )}
             </>
           );
@@ -619,7 +610,7 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [timeLine, setTimeline] = React.useState(false);
       const [campainCopying, setCampaignCopying] = React.useState(false);
-      
+
       const resourceIdArr = [];
       row?.resources?.map((i) => {
         if (i?.createResourceId && i?.type === "user") {
@@ -662,7 +653,10 @@ export const UICustomizations = {
                 type="actionButton"
                 variation="secondary"
                 label={"Action"}
-                options={[{ key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") }, { key: 1, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") }]}
+                options={[
+                  { key: 1, code: "ACTION_LABEL_VIEW_TIMELINE", i18nKey: t("ACTION_LABEL_VIEW_TIMELINE") },
+                  { key: 1, code: "CREATE_COPY", i18nKey: t("CREATE_COPY") },
+                ]}
                 optionsKey="i18nKey"
                 showBottom={true}
                 isSearchable={false}
@@ -680,7 +674,7 @@ export const UICustomizations = {
               )}
 
               {campainCopying && (
-                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying}/>
+                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying} />
               )}
             </>
           );
@@ -774,7 +768,7 @@ export const UICustomizations = {
       const onActionSelect = (value, row) => {
         switch (value?.code) {
           case "ACTION_LABEL_UPDATE_DATES":
-            window.history.pushState(
+            window.navigateState(
               {
                 name: row?.campaignName,
                 data: row,
@@ -792,7 +786,7 @@ export const UICustomizations = {
             break;
 
           case "ACTION_LABEL_UPDATE_BOUNDARY_DETAILS":
-            window.history.pushState(
+            window.navigateState(
               {
                 name: row?.campaignName,
                 data: row,
@@ -805,7 +799,7 @@ export const UICustomizations = {
             break;
 
           case "ACTION_LABEL_CONFIGURE_APP":
-            window.history.pushState(
+            window.navigateState(
               {
                 name: row?.campaignName,
                 data: row,
@@ -874,7 +868,7 @@ export const UICustomizations = {
                 </PopUp>
               )}
               {campainCopying && (
-                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying}/>
+                <CloneCampaignWrapper campaignId={row?.id} campaignName={row?.campaignName} setCampaignCopying={setCampaignCopying} />
               )}
             </>
           );
@@ -1053,7 +1047,11 @@ export const UICustomizations = {
         case "CAMPAIGN_NAME":
           return (
             <span className="link">
-              <Link to={`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${row.campaignNumber}&tenantId=${row.tenantId}&draft=${true}`}>
+              <Link
+                to={`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${row.campaignNumber}&tenantId=${
+                  row.tenantId
+                }&draft=${true}`}
+              >
                 {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
               </Link>
             </span>

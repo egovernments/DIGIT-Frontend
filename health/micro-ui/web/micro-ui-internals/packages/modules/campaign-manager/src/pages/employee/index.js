@@ -1,6 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { Routes, useLocation } from "react-router-dom";
-import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Route, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
@@ -38,7 +37,6 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
   const search = useLocation().search;
   const queryParams = new URLSearchParams(search);
-  const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
   const campaignNumber = url?.campaignNumber;
   const tenantId = Digit.ULBService.getCurrentTenantId();

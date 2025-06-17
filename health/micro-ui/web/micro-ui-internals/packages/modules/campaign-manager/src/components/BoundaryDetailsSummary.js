@@ -1,12 +1,10 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { Button, Chip, PopUp } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 
 const BoundaryDetailsSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
 

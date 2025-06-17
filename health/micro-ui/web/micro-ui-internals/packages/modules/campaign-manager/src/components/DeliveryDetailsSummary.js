@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import {  EditIcon,  LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Toast, Card, Stepper, TextBlock , Loader ,HeaderComponent } from "@egovernments/digit-ui-components";
+import { useNavigate } from "react-router-dom";
+import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Card, Stepper, TextBlock, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
@@ -105,10 +105,10 @@ function reverseDeliveryRemap(data, t) {
   const parseConditionAndCreateRules = (condition, ruleKey, products) => {
     const conditionParts = condition.split("and").map((part) => part.trim());
     let attributes = [];
-  
+
     conditionParts.forEach((part) => {
       const parts = part.split(" ").filter(Boolean);
-  
+
       // Handle "IN_BETWEEN" operator
       if (parts.length === 5 && (parts[1] === "<=" || parts[1] === "<") && (parts[3] === "<" || parts[3] === "<=")) {
         const toValue = parts[0];
@@ -135,14 +135,16 @@ function reverseDeliveryRemap(data, t) {
         }
       }
     });
-    return [{
-      ruleKey: ruleKey + 1,
-      delivery: {},
-      products,
-      attributes,
-    }];
+    return [
+      {
+        ruleKey: ruleKey + 1,
+        delivery: {},
+        products,
+        attributes,
+      },
+    ];
   };
-  
+
   const mapDoseCriteriaToDeliveryRules = (doseCriteria) => {
     return doseCriteria?.flatMap((criteria, ruleKey) => {
       const products = mapProductVariants(criteria.ProductVariants);
@@ -168,7 +170,7 @@ function reverseDeliveryRemap(data, t) {
 }
 const DeliveryDetailsSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -192,7 +194,7 @@ const DeliveryDetailsSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
+    navigate(newUrl);
   };
 
   function updateUrlParams(params) {
@@ -224,7 +226,7 @@ const DeliveryDetailsSummary = (props) => {
     }
   }, [props?.props?.summaryErrors]);
 
-  const { isLoading, data, error, refetch,isFetching } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading, data, error, refetch, isFetching } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       ids: [id],
@@ -250,17 +252,15 @@ const DeliveryDetailsSummary = (props) => {
                   values: [
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
-                      value:
-                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle ? 
-                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                          : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
-                      value:
-                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries ? 
-                        data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                          : t("CAMPAIGN_SUMMARY_NA"),
+                      value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
                 },
@@ -301,7 +301,6 @@ const DeliveryDetailsSummary = (props) => {
     },
   });
 
-
   const closeToast = () => {
     setShowToast(null);
   };
@@ -331,12 +330,12 @@ const DeliveryDetailsSummary = (props) => {
     else setKey(8);
   };
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
@@ -352,7 +351,7 @@ const DeliveryDetailsSummary = (props) => {
           </Card>
         </div>
         <div className="card-container-delivery">
-        <TagComponent campaignName={campaignName} />  
+          <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
           </div>

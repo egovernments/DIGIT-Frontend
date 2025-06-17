@@ -1,9 +1,9 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
-import {  EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Stepper, TextBlock, Card , Loader , HeaderComponent} from "@egovernments/digit-ui-components";
-import {  downloadExcelWithCustomName } from "../utils";
+import { useNavigate } from "react-router-dom";
+import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Stepper, TextBlock, Card, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
+import { downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TagComponent from "./TagComponent";
 
@@ -77,7 +77,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const DataUploadSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -107,7 +107,7 @@ const DataUploadSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
+    navigate(newUrl);
   };
   const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
 
@@ -283,12 +283,12 @@ const DataUploadSummary = (props) => {
     } else setKey(13);
   };
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
     <>
-      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
+      {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
       <div className="container-full">
         <div className="card-container">
           <Card className="card-header-timeline">
@@ -305,7 +305,7 @@ const DataUploadSummary = (props) => {
         </div>
 
         <div className="card-container-delivery">
-        <TagComponent campaignName={campaignName} />  
+          <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between" }}>
             <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
             {/* {userCredential && (

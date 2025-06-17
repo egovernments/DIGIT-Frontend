@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CloneCampaignWrapper from "./CloneCampaignWrapper";
 
 /**
@@ -53,8 +53,7 @@ const getTagElements = (rowData) => {
       type: "warning",
       stroke: true,
     };
-  }
-  else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
+  } else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,
@@ -104,7 +103,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history) => {
+const getActionButtons = (rowData, tabData, navigate) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -117,7 +116,7 @@ const getActionButtons = (rowData, tabData, history) => {
       label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
       icon: "FileDownload",
-      size:"medium",
+      size: "medium",
       variation: "secondary",
     };
   }
@@ -128,9 +127,9 @@ const getActionButtons = (rowData, tabData, history) => {
   if (!(currentTab === "CAMPAIGN_COMPLETED")) {
     actions.editCampaign = {
       label: "EDIT_CAMPAIGN",
-      size:"medium",
+      size: "medium",
       onClick: () =>
-        history.push(
+        navigate(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
             rowData?.campaignNumber
           }&tenantId=${Digit.ULBService.getCurrentTenantId()}`
@@ -145,12 +144,12 @@ const getActionButtons = (rowData, tabData, history) => {
 
 const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
-  const actionButtons = getActionButtons(rowData, tabData, history);
+  const actionButtons = getActionButtons(rowData, tabData, navigate);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 
@@ -205,16 +204,16 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       <div className="digit-results-card-buttons">
         <Button
           key={"DuplicateCampaign"}
-          icon={"TabInactive"} 
+          icon={"TabInactive"}
           label={t("DUPLICATE_CAMPAIGN")}
           onClick={() => setCloneCampaign(true)}
           variation={"teritiary"}
           size={"medium"}
           title={t("DUPLICATE_CAMPAIGN")}
         />
-          {cloneCampaign && (
-              <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign}/>
-          )}
+        {cloneCampaign && (
+          <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign} />
+        )}
         {actionButtons && Object.keys(actionButtons).length > 0 && (
           <div className="digit-results-card-buttons-internal">
             {Object.entries(actionButtons)?.map(([key, btn]) => (
