@@ -1,11 +1,9 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader, Card, CustomSVG } from "@egovernments/digit-ui-components";
 import { useLocation } from "react-router-dom";
-import {
-  HeaderComponent,
-} from "@egovernments/digit-ui-components";
+import { HeaderComponent } from "@egovernments/digit-ui-components";
 import {
   DownloadIcon,
   EmailIcon,
@@ -54,7 +52,7 @@ const getInitialRange = () => {
       startDate = today;
       endDate = Digit.Utils.dss.getDefaultFinacialYear().endDate;
       boundaries = provinceData?.boundaries;
-      return { startDate, endDate, title, interval, denomination,tenantId, boundaries};
+      return { startDate, endDate, title, interval, denomination, tenantId, boundaries };
     }
   }
   return { startDate, endDate, title, interval, denomination, tenantId, boundaries };
@@ -67,7 +65,7 @@ const getProjectType = (currentUrl, campaignData) => {
   const campaignCode = Object.keys(campaignData)?.[0];
   let currentProjectType = projectTypes?.find((projectType) => projectType.code == campaignCode);
   return currentProjectType.code;
-}
+};
 
 const colors = [
   { dark: "rgba(12, 157, 149, 0.85)", light: "rgba(11, 222, 133, 0.14)" },
@@ -88,7 +86,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { id, chartType } = data;
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const requestDate = {
     startDate: startDate.getTime(),
@@ -102,7 +100,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     type: chartType,
     tenantId,
     requestDate,
-    filters: {projectTypeId: selectedProjectTypeId},
+    filters: { projectTypeId: selectedProjectTypeId },
     moduleLevel: moduleLevel,
   });
 
@@ -111,7 +109,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     const insight = data?.insight?.value?.replace(/[+-]/g, "")?.split("%");
 
     if (data.insight?.indicator === "insight_no_diff") {
-      return <div style={{ whiteSpace: "pre", fontSize: "16px", paddingBottom: "25px",color: "#797979" }}>{data?.insight?.value}</div>;
+      return <div style={{ whiteSpace: "pre", fontSize: "16px", paddingBottom: "25px", color: "#797979" }}>{data?.insight?.value}</div>;
     }
 
     return (
@@ -123,16 +121,16 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
   const subTextName = t(`SUB_TEXT_${data?.name}`);
-  const subText = subTextName !== `SUB_TEXT_${data?.name}` ? subTextName : ""
+  const subText = subTextName !== `SUB_TEXT_${data?.name}` ? subTextName : "";
 
   return (
-    <div className={"dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
-      <p className="p2">
+    <div className={"digit-dss-insight-card"} style={overview ? {} : { margin: "0px" }}>
+      <div className="digit-dss-insight-card-value">
         {Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, "Lac", true, t)}
-      </p>
+      </div>
       <div className={`tooltip`}>
         <p className="p1">{t(data?.name)}</p>
         <span
@@ -146,7 +144,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
           <span style={{ fontSize: "16px", fontWeight: "400px", color: "white" }}>{t(`TIP_${data.name}`)}</span>
         </span>
       </div>
-      {subText && <p style={{ color: "#505A5F", fontWeight: 400, fontSize:"16px" }}>{subText}</p>}
+      {subText && <p style={{ color: "#505A5F", fontWeight: 400, fontSize: "16px" }}>{subText}</p>}
       {response?.responseData?.data?.[0]?.insight?.value ? <Insight /> : null}
     </div>
   );
@@ -164,7 +162,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
 
   filters = { ...filters };
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const { projectTypeId } = Digit.Hooks.useQueryParams();
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -178,7 +176,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
     type: chartType,
     tenantId,
     requestDate,
-    filters: {...filters, projectTypeId: selectedProjectTypeId},
+    filters: { ...filters, projectTypeId: selectedProjectTypeId },
   });
 
   const constructChartData = (data) => {
@@ -285,7 +283,7 @@ const L1Main = () => {
   const [pageZoom, setPageZoom] = useState(false);
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, dashboardId, language });
 
-  console.log(location.state.projectTypeId,"projectTypeId")
+  console.log(location.state.projectTypeId, "projectTypeId");
 
   function getProjectTypeIDFromURL() {
     const url = window.location.pathname;
@@ -301,24 +299,23 @@ const L1Main = () => {
   }
 
   useEffect(() => {
-    if(projectTypeId){
+    if (projectTypeId) {
       Digit.SessionStorage.set("selectedProjectTypeId", projectTypeId);
-    }
-    else {
+    } else {
       Digit.SessionStorage.set("selectedProjectTypeId", getProjectTypeIDFromURL());
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
-    if (showDownloadOptions===false) {
+    if (showDownloadOptions === false) {
       setPageZoom(true);
-    const timeoutId = setTimeout(() => {
+      const timeoutId = setTimeout(() => {
         setPageZoom(false);
       }, 2000);
 
       return () => clearTimeout(timeoutId);
     }
-  }, [showDownloadOptions])
+  }, [showDownloadOptions]);
 
   const handleFilters = (data) => {
     Digit.SessionStorage.set(key, data);
@@ -330,7 +327,7 @@ const L1Main = () => {
   }
 
   const fullPageRef = useRef();
-  
+
   const provided = useMemo(
     () => ({
       value: filters,
@@ -440,7 +437,7 @@ const L1Main = () => {
     paddingLeft: "5px",
     paddingRight: "5px",
   };
-  console.log(dashboardConfig?.[0]?.visualizations,"dashboardConfig?.[0]?.visualizations")
+  console.log(dashboardConfig?.[0]?.visualizations, "dashboardConfig?.[0]?.visualizations");
 
   return (
     <FilterContext.Provider value={provided}>
@@ -496,9 +493,9 @@ const L1Main = () => {
         ) : null}
         {dashboardConfig?.[0]?.visualizations.map((row, key) => {
           return (
-            <div className="digit-dss-card" key={key}>
+            <div className={`digit-dss-card add-margin`} key={key}>
               {row.vizArray.map((item, index) => {
-                console.log(item?.charts?.[0]?.chartType,item?.vizType,"chartTypeqqqqqqqqqqqqqqqqqqqqqqq");
+                console.log(item?.charts?.[0]?.chartType, item?.vizType, "chartTypeqqqqqqqqqqqqqqqqqqqqqqq");
                 if (item?.charts?.[0]?.chartType == "bar") {
                   return null;
                 } else if (item?.charts?.[0]?.chartType === "heatmap") {
@@ -594,22 +591,38 @@ const L1Main = () => {
                   );
                 } else if (item?.vizType === "stacked-collection") {
                   return (
-                    <div className="employeeCard chart-item stackedCard" style={{ backgroundColor: "#fff" }} key={index}>
-                      <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row" }}>
-                        <div className="dss-card-header" style={{ marginBottom: "10px" }}>
-                          {/* {Icon(item.name, colors[index].dark)} */}
-                          <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
-                        </div>
-                      </div>
+                    // <div className="employeeCard chart-item stackedCard" style={{ backgroundColor: "#fff" }} key={index}>
+                    //   <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row" }}>
+                    //     <div className="dss-card-header" style={{ marginBottom: "10px" }}>
+                    //       {/* {Icon(item.name, colors[index].dark)} */}
+                    //       <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
+                    //     </div>
+                    //   </div>
 
-                      <div className="dss-card-body-stacked">
+                    //   <div className="dss-card-body-stacked">
+                    //     {item.charts.map((chart, key) => (
+                    //       <div className={`dss-card-item ${key !== item.charts.length - 1 ? "dss-card-item-border" : ""}`}>
+                    //         <Chart data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
+                    //       </div>
+                    //     ))}
+                    //   </div>
+                    // </div>
+
+                    // TO DO : UPDATE THE ICONS
+                    <Card key={index} className={"digit-stacked-collection-card"}>
+                      <div className={"digit-stacked-collection-card-header-wrapper"}>
+                        {/* {Icon(item.name, colors[index].dark)} */}
+                        <CustomSVG.AddFileFilled />
+                        <div className={"digit-stacked-collection-card-header-text"}>{t(item.name)}</div>
+                      </div>
+                      <div className="digit-dss-card-body-stacked">
                         {item.charts.map((chart, key) => (
-                          <div className={`dss-card-item ${key !== item.charts.length - 1 ? "dss-card-item-border" : ""}`}>
+                          <div className={`digit-dss-card-item ${key !== item.charts.length - 1 ? "digit-dss-card-item-border" : ""}`}>
                             <Chart data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
                           </div>
                         ))}
                       </div>
-                    </div>
+                    </Card>
                   );
                 } else if (item?.charts?.[0]?.chartType == "donut") {
                   const pieChart = item?.charts?.[0];
@@ -620,7 +633,7 @@ const L1Main = () => {
                   );
                 } else if (item?.charts?.[0]?.chartType == "v-bar") {
                   const barChart = item?.charts?.[0];
-                  console.log(barChart,"barChart")
+                  console.log(barChart, "barChart");
                   return (
                     <GenericChart header={item.name} className={"digit-dss-card-parent heatMap"} subHeader={`SUB_${item.name}`}>
                       <CustomHorizontalBarChart data={barChart} title={item?.name} isNational={true} />

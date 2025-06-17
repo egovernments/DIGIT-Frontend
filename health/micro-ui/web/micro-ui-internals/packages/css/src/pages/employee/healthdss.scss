@@ -120,6 +120,18 @@
   border: 1px solid theme(digitv2.lightTheme.divider);
   text-align: center;
   padding: 24px;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    flex-direction: column;
+    gap: 24px;
+  }
 }
 
 .digit-stacked-row-index {
@@ -135,11 +147,19 @@
   @media (max-aspect-ratio: 9/16) {
     /* Media query for mobile */
     font-size: theme(digitv2.fontSize.heading-m.mobile);
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
   }
 
   @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
     /* Media query for tablets */
     font-size: theme(digitv2.fontSize.heading-m.tablet);
+    width: 100%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
   }
 
   @media (min-aspect-ratio: 3/4) {
@@ -154,6 +174,16 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    width: 100%;
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    width: 100%;
+  }
 }
 
 .digit-stacked-abs-value {
@@ -179,7 +209,8 @@
   }
 }
 
-.digit-stacked-cell-sub-text {
+.digit-stacked-cell-sub-text,
+.digit-pie-chart-legend-text {
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-family: theme(digitv2.fontFamily.sans);
   font-style: theme(digitv2.fontStyle.normal);
@@ -210,6 +241,16 @@
   justify-content: center;
   align-items: center;
   gap: 8px;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    width: 100%;
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    width: 100%;
+  }
 }
 
 .digit-stacked-progress-cell {
@@ -245,7 +286,7 @@
 }
 
 .digit-stacked-percentage-bar-grey {
-  background-color: #D9D9D9;
+  background-color: #d9d9d9;
   width: 75%;
   border-radius: 28px;
   height: 6px;
@@ -271,7 +312,6 @@
   z-index: 2;
 }
 
-
 .digit-chart-header {
   display: flex;
   gap: 24px;
@@ -282,7 +322,9 @@
     flex-direction: column;
   }
 
-
+  .tooltip-content {
+    max-width: 100% !important;
+  }
 }
 
 .digit-side-content {
@@ -335,8 +377,6 @@
   }
 }
 
-
-
 .digit-ellipsis-button-wrapper {
   width: 24px;
 
@@ -379,12 +419,6 @@
   @media (min-aspect-ratio: 3/4) {
     /* Media query for desktop */
     font-size: theme(digitv2.fontSize.heading-m.desktop);
-  }
-}
-
-.digit-chart-header {
-  .tooltip-content {
-    max-width: 100% !important;
   }
 }
 
@@ -436,16 +470,150 @@
 
 .digit-dss-card {
   display: flex;
+  align-items: stretch;
+  justify-content: flex-start;
   flex-wrap: wrap;
+  gap: 24px;
+
+  .digit-dss-card-parent {
+    flex: 1;
+  }
 }
 
-.digit-dss-card-parent {
+.digit-dss-card {
+  &.add-margin {
+    margin-bottom: 24px;
+  }
+}
+
+.digit-donut-chart-container {
+  height: 500px;
+}
+
+.digit-loader-new {
+  &.digit-center-loader {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+.digit-pie-chart-inner-label-text {
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.regular);
+  line-height: 1.37rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.body-s.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.body-s.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.body-s.desktop);
+  }
+}
+
+.digit-pie-chart-inner-label-value,
+.digit-dss-insight-card-value{
+  color: theme(digitv2.lightTheme.text-color-secondary);
+  font-family: theme(digitv2.fontFamily.sans);
+  font-style: theme(digitv2.fontStyle.normal);
+  font-weight: theme(digitv2.fontWeight.bold);
+  line-height: 1.14rem;
+
+  @media (max-aspect-ratio: 9/16) {
+    /* Media query for mobile */
+    font-size: theme(digitv2.fontSize.heading-l.mobile);
+  }
+
+  @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+    /* Media query for tablets */
+    font-size: theme(digitv2.fontSize.heading-l.tablet);
+  }
+
+  @media (min-aspect-ratio: 3/4) {
+    /* Media query for desktop */
+    font-size: theme(digitv2.fontSize.heading-l.desktop);
+  }
+}
+
+.recharts-legend-item {
+  margin-right: 0px !important;
+  margin-bottom: 24px !important;
+}
+
+.recharts-layer {
+  &.recharts-pie-sector {
+    outline: none;
+  }
+}
+
+.digit-pie-chart-tags {
+  margin: 0px;
+}
+
+.digit-stacked-collection-card-header-wrapper {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+
+
+  svg {
+    width: 40px;
+    height: 40px;
+  }
+
+  .digit-stacked-collection-card-header-text {
+    color: theme(digitv2.lightTheme.text-color-primary);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-style: theme(digitv2.fontStyle.normal);
+    font-weight: theme(digitv2.fontWeight.bold);
+    line-height: 1.14rem;
+
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-m.mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: theme(digitv2.fontSize.heading-m.tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-m.desktop);
+    }
+  }
+}
+
+.digit-dss-card-body-stacked{
   display: flex;
   flex-direction: column;
-  width: 31%;
-  border-radius: 6px;
-  padding: 25px;
-  margin: 15px 11.5px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  cursor: pointer;
+  align-items: center;
+}
+
+.digit-digit-card-item{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+
+  &.digit-dss-card-item-border{
+    border-bottom: 1px solid theme(digitv2.lightTheme.divider);
+  }
+}
+
+.digit-dss-insight-card{
+  text-align: center;
+  display: flex;
+  flex-direction: column;
 }

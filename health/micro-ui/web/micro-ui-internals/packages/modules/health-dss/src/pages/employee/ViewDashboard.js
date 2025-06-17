@@ -91,7 +91,7 @@ const ViewDashbaord = ({ stateCode }) => {
     }
   }, [dashboardDataResponse?.responseData, redirected, history]);
 
-  return <>{!dashboardDataResponse?.responseData || isLoadingMdmsData || !projectResult?.projectTypeId ? <div>{t("IN_PROGRESS")}</div> : null}</>;
+  return <>{!dashboardDataResponse?.responseData || isLoadingMdmsData || !projectResult?.projectTypeId || projectResult?.projectTypeId === undefined ? <div>{t("IN_PROGRESS")}</div> : null}</>;
 };
 
 export default ViewDashbaord;

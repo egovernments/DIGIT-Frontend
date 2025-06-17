@@ -1,4 +1,5 @@
-import { Loader, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { Loader, Chip } from "@egovernments/digit-ui-components";
 import React, { Fragment, useContext, useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -11,8 +12,8 @@ const barColors = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E84
 
 const renderPlot = (plot, key, denomination, headerName, rowHeaderName) => {
   let plotValue = key ? plot?.[key] : plot?.value || 0;
-  if(rowHeaderName.toLowerCase().includes("days")) {
-    plotValue = Math.floor(plotValue)
+  if (rowHeaderName.toLowerCase().includes("days")) {
+    plotValue = Math.floor(plotValue);
   }
   if (plot?.symbol?.toLowerCase() === "amount") {
     switch (denomination) {
@@ -53,10 +54,10 @@ const CustomHorizontalBarChart = ({
   showDrillDown = false,
   setChartDenomination,
   pageZoom,
-  downloadChartsId=null,
+  downloadChartsId = null,
   isNational = false,
 }) => {
-  console.log(data,"dataaaaaaaaaaaaaaaaaaa")
+  console.log(data, "dataaaaaaaaaaaaaaaaaaa");
   const { id, chartType } = data;
   const { t } = useTranslation();
   const history = useHistory();
@@ -70,19 +71,19 @@ const CustomHorizontalBarChart = ({
   const [drillDownFilters, setDrillDownFilters] = useState({});
   const [symbolKeyMap, setSymbolKeyMap] = useState({});
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   useEffect(() => {
-    if(filterStack.length >1) {
-      let filterKeyValue = {}
+    if (filterStack.length > 1) {
+      let filterKeyValue = {};
       filterStack.forEach((elem, index) => {
         if (index === 0) {
           return;
         }
         filterKeyValue[elem["filterKey"]] = elem["filterValue"];
-      })
-      setDrillDownFilters(filterKeyValue)
+      });
+      setDrillDownFilters(filterKeyValue);
     }
   }, [filterStack]);
   const { startDate, endDate, interval } = getInitialRange();
@@ -90,31 +91,41 @@ const CustomHorizontalBarChart = ({
   today.setHours(0, 0, 0, 0);
   let todayDate = today;
   const requestDate = {
-    startDate: startDate.getTime() ,
+    startDate: startDate.getTime(),
     endDate: endDate.getTime(),
     interval: interval,
     title: "home",
   };
- 
+
+  console.log(chartKey,"chartKey")
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
+    requestDate:
+      value?.requestDate != null
+        ? {
+            ...value?.requestDate,
+            startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+            endDate: value?.range?.endDate?.getTime(),
+          }
+        : requestDate,
     filters:
       id === chartKey && value?.filters != null
-        ? {...value.filters, projectTypeId: selectedProjectTypeId}
-        : value?.filters != null || drillDownFilters  || selectedStack ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack , projectTypeId: selectedProjectTypeId} : {},
-    moduleLevel: value?.moduleLevel
+        ? { ...value.filters, projectTypeId: selectedProjectTypeId }
+        : value?.filters != null || drillDownFilters || selectedStack
+        ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, projectTypeId: selectedProjectTypeId }
+        : {},
+    moduleLevel: value?.moduleLevel,
   });
 
-  
+  console.log(response,"response")
+
   let target = 0;
   let targetMessage = "";
-  let targetLineChart = response?.responseData?.targetLineChart
+  let targetLineChart = response?.responseData?.targetLineChart;
   const shouldDisplayTargetline = response && targetLineChart !== null && targetLineChart !== "none";
-  if(targetLineChart){
-
+  if (targetLineChart) {
     const { data: targetResponse } = Digit.Hooks.dss.useGetChart(
       {
         key: targetLineChart,
@@ -123,8 +134,12 @@ const CustomHorizontalBarChart = ({
         requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
         filters:
           id === targetLineChart
-            ? {...value.filters, projectTypeId: projectTypeId}
-            : { ...value?.filters, [filterStack[filterStack.length - 1]["filterKey"]]: filterStack[filterStack.length - 1]?.filterValue, projectTypeId: projectTypeId },
+            ? { ...value.filters, projectTypeId: projectTypeId }
+            : {
+                ...value?.filters,
+                [filterStack[filterStack.length - 1]["filterKey"]]: filterStack[filterStack.length - 1]?.filterValue,
+                projectTypeId: projectTypeId,
+              },
         moduleLevel: value?.moduleLevel,
       },
       shouldDisplayTargetline
@@ -132,21 +147,26 @@ const CustomHorizontalBarChart = ({
     target = Math.ceil(targetResponse?.responseData?.data[0].headerValue) > 0 ? Math.ceil(targetResponse?.responseData?.data[0].headerValue) : 0;
     targetMessage = "TARGET_DSS_" + targetResponse?.responseData?.data[0].headerName?.replaceAll(" ", "_").toUpperCase();
   }
-  if(targetMessage == ""){
+  if (targetMessage == "") {
     targetMessage = "TARGET_DSS_undefined";
   }
 
   const constructChartData = (data, denomination) => {
     let result = {};
     let symbolKeyObject = {};
+    console.log(data,"pppppppppppppp")
 
     for (let i = 0; i < data?.length; i++) {
       const row = data[i];
       for (let j = 0; j < row.plots.length; j++) {
         const plot = row.plots[j];
-        const plotName = getTitleHeading(plot.name)
+        const plotName = getTitleHeading(plot.name);
         symbolKeyObject[t(plot.name)] = plot.symbol;
-        result[plot.name] = { ...result[plot.name], [(row.headerName)]: renderPlot(plot, "value", denomination, plotName, row.headerName), name: t(plot.name) };
+        result[plot.name] = {
+          ...result[plot.name],
+          [row.headerName]: renderPlot(plot, "value", denomination, plotName, row.headerName),
+          name: t(plot.name),
+        };
       }
     }
 
@@ -160,7 +180,9 @@ const CustomHorizontalBarChart = ({
   };
 
   const goToDrillDownCharts = () => {
-    history.push(`/${window.contextPath}/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`);
+    history.push(
+      `/${window.contextPath}/employee/dss/drilldown?chart=${response?.responseData?.drillDownChartId}&ulb=${value?.filters?.tenantId}&title=${title}`
+    );
   };
 
   const CustomizedLabel = (props) => {
@@ -183,8 +205,7 @@ const CustomHorizontalBarChart = ({
       var value = payload[0].payload[Object.keys(payload[0].payload)[hoverBarId + 1]];
       let hoverItem;
       if (payload.length > 1) {
-        hoverItem =renderLegend( payload[hoverBarId]?.dataKey);
-
+        hoverItem = renderLegend(payload[hoverBarId]?.dataKey);
       }
       if (id === "fsmMonthlyWasteCal") {
         value = `${Digit.Utils.dss.formatter(Math.round((value + Number.EPSILON) * 100) / 100, "number", value?.denomination, true, t)} ${t(
@@ -195,10 +216,10 @@ const CustomHorizontalBarChart = ({
       } else {
         value = Digit.Utils.dss.formatter(Math.round((value + Number.EPSILON) * 100) / 100, "number", value?.denomination, true, t);
       }
-      label = label.split(".").length === 3 ? t(label.split(".")[1]) : label
+      label = label.split(".").length === 3 ? t(label.split(".")[1]) : label;
       return (
         <div className="custom-tooltip">
-          <p className="horizontalBarChartLabel" style={{fontSize:"16px", color:"#505A5F", whiteSpace:"nowrap"}}>
+          <p className="horizontalBarChartLabel" style={{ fontSize: "16px", color: "#505A5F", whiteSpace: "nowrap" }}>
             <b>{`${label}`}</b> &nbsp; {hoverItem} {`${value}`}
           </p>
         </div>
@@ -232,12 +253,15 @@ const CustomHorizontalBarChart = ({
 
   const chartData = useMemo(() => constructChartData(response?.responseData?.data, value?.denomination), [response, value?.denomination]);
 
-  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_LEGEND_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>;
+  console.log(chartData,"chartData ppppppp")
+  const renderLegend = (value) => (
+    <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_LEGEND_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
+  );
 
   const tickFormatter = (value) => {
     if (typeof value === "string") {
       if (value.split(".").length === 3) {
-        return t(value.split(".")[1])
+        return t(value.split(".")[1]);
       }
       return getTitleHeading(value.replace("-", ", "));
     } else if (typeof value === "number") return Digit.Utils.dss.formatter(value, "number", value?.denomination, true, t);
@@ -269,41 +293,41 @@ const CustomHorizontalBarChart = ({
     setActiveIndex(null);
     setActiveBarId(null);
   };
-  const CustomizedDownloadLabels =(props) =>{
+  const CustomizedDownloadLabels = (props) => {
     const { x, y, value, width, height, data } = props;
-    if (value===0) {
-      return null ;
+    if (value === 0) {
+      return null;
     }
 
     let symbol = data?.[0]?.headerSymbol;
-    let newY = y-5;
+    let newY = y - 5;
     let newX = x;
     let rotateAngle = 0;
     let formattedValue = `${value}`;
-    if (symbol==="percentage") {
-      formattedValue = `${value.toFixed(1)}%`
-    } else if (formattedValue.length > 4 || data.length>1) {
+    if (symbol === "percentage") {
+      formattedValue = `${value.toFixed(1)}%`;
+    } else if (formattedValue.length > 4 || data.length > 1) {
       rotateAngle = -60;
     }
-    if (y<20) {
+    if (y < 20) {
       rotateAngle = 0;
     }
     if (data.length > 2) {
-      newX = x + width
+      newX = x + width;
       rotateAngle = 0;
-      newY = y + 5 + height/2
+      newY = y + 5 + height / 2;
     }
     return (
-    <text x={newX} y={newY} fill="#000"
-      transform={`rotate(${rotateAngle} ${newX} ${y})`}
-    >{formattedValue}</text>
-    )
-  }
-  let showOnDownload = downloadChartsId===response?.responseData?.visualizationCode ? true : false;
+      <text x={newX} y={newY} fill="#000" transform={`rotate(${rotateAngle} ${newX} ${y})`}>
+        {formattedValue}
+      </text>
+    );
+  };
+  let showOnDownload = downloadChartsId === response?.responseData?.visualizationCode ? true : false;
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
   return (
     <Fragment>
-      {filterStack?.length > 1 && (
+      {/* {filterStack?.length > 1 && (
         <div className="tag-container">
           <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
           {filterStack.map((filter, id) =>
@@ -311,16 +335,31 @@ const CustomHorizontalBarChart = ({
               <RemoveableTag
                 key={id}
                 text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter?.filterKey)}`)}: ${getTitleHeading(filter?.name)}`}
-                onClick={() => removeFilter(id,filter?.filterKey)}
+                onClick={() => removeFilter(id, filter?.filterKey)}
+              />
+            ) : null
+          )}
+        </div>
+      )} */}
+      {filterStack?.length > 1 && (
+        <div className="digit-tag-container digit-pie-chart-tags">
+          <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+          {filterStack.map((filter, id) =>
+            id > 0 ? (
+              <Chip
+                key={id}
+                text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter?.filterKey)}`)}: ${getTitleHeading(filter?.name)}`}
+                onClick={() => removeFilter(id, filter?.filterKey)}
+                hideClose={false}
               />
             ) : null
           )}
         </div>
       )}
-      <div style={{zoom:pageZoom ? 1 : (showOnDownload ? 0.75 : 1.25)}}>
+      <div style={{ zoom: pageZoom ? 1 : showOnDownload ? 0.75 : 1.25 }}>
         <ResponsiveContainer
           width="94%"
-          height={450}
+          height={500}
           margin={{
             top: 5,
             right: 5,
@@ -361,7 +400,7 @@ const CustomHorizontalBarChart = ({
                 allowDecimals={false}
                 tickCount={5}
                 tickFormatter={tickFormatter}
-                unit={id === "fsmCapacityUtilization" || response?.responseData?.data?.[0]?.headerSymbol==="percentage" ? "%" : ""}
+                unit={id === "fsmCapacityUtilization" || response?.responseData?.data?.[0]?.headerSymbol === "percentage" ? "%" : ""}
                 width={layout === "vertical" ? 120 : 60}
                 domain={shouldDisplayTargetline ? ["auto", target + 10] : [0, (dataMax) => Math.ceil(dataMax / 10) * 10]}
               />
@@ -388,11 +427,11 @@ const CustomHorizontalBarChart = ({
                   strokeWidth={"2px"}
                   label={<CustomizedLabel value={t(targetMessage)} target={target} />}
                 />
-              ) : null} 
+              ) : null}
               {bars?.map((bar, id) => (
                 <Bar
                   key={id}
-                  dataKey={(bar)}
+                  dataKey={bar}
                   fill={barColors[id]}
                   stackId={bars?.length > 2 && chartType !== "sideBySideBar" ? 1 : id}
                   onClick={response?.responseData?.drillDownChartId !== "none" ? onBarClick : null}
@@ -408,11 +447,9 @@ const CustomHorizontalBarChart = ({
                   }}
                   onMouseLeave={onMouseLeave}
                 >
-                  {showOnDownload && <LabelList
-                    dataKey={bar}
-                    fill="black"
-                    content={<CustomizedDownloadLabels data={response?.responseData?.data}/>}
-                  />}
+                  {showOnDownload && (
+                    <LabelList dataKey={bar} fill="black" content={<CustomizedDownloadLabels data={response?.responseData?.data} />} />
+                  )}
                   {chartData.map((_, index) => {
                     var topIndex = 0;
                     var i = 0;
@@ -426,7 +463,7 @@ const CustomHorizontalBarChart = ({
                     }
                     return (
                       <Cell
-                        radius={(id === topIndex ) || bars.length===2 || chartType == "sideBySideBar"? [5, 5, 0, 0] : undefined}
+                        radius={id === topIndex || bars.length === 2 || chartType == "sideBySideBar" ? [5, 5, 0, 0] : undefined}
                         stroke={(activeIndex === index) & (activeBarId === id) ? "#ccc" : null}
                         strokeWidth={3}
                       />
@@ -434,15 +471,9 @@ const CustomHorizontalBarChart = ({
                   })}
                 </Bar>
               ))}
-              <Legend formatter={renderLegend} iconType="circle" wrapperStyle={{ paddingTop: showOnDownload ? "50px": "10px" }} />
+              <Legend formatter={renderLegend} iconType="circle" wrapperStyle={{ paddingTop: showOnDownload ? "50px" : "10px" }} />
               {!showOnDownload && chartData.length > 1 ? (
-                <Brush
-                  dataKey="name"
-                  endIndex={chartData.length > 14 ? 14 : chartData.length - 1}
-                  height={24}
-                  travellerWidth={5}
-                  stroke="#F47738"
-                />
+                <Brush dataKey="name" endIndex={chartData.length > 14 ? 14 : chartData.length - 1} height={24} travellerWidth={5} stroke="#F47738" />
               ) : null}
             </BarChart>
           )}

@@ -1,11 +1,11 @@
-import { Loader, RemoveableTag } from "@egovernments/digit-ui-react-components";
 import React, { useContext, useMemo, useState, Fragment, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, Label, Sector } from "recharts";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
-// ["#048BD0", "#FBC02D", "#8E29BF","#EA8A3B","#0BABDE","#6E8459"]
+import { Loader, Chip } from "@egovernments/digit-ui-components";
+import { Tooltip as TooltipComponent } from "@egovernments/digit-ui-components";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
@@ -16,7 +16,8 @@ const getInitialRange = () => {
   const interval = Digit.Utils.dss.getDuration(startDate, endDate);
   return { startDate, endDate, interval };
 };
-const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNational=false }) => {
+
+const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNational = false }) => {
   const { id } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -27,14 +28,14 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const [drillDownId, setdrillDownId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   let todayDate = today;
   const requestDate = {
-    startDate:  startDate.getTime(),
+    startDate: startDate.getTime(),
     endDate: endDate.getTime(),
     interval: interval,
     title: "home",
@@ -43,8 +44,17 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     key: isPieClicked ? drillDownId : id,
     type: "metric",
     tenantId,
-    requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
-    filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected , projectTypeId: selectedProjectTypeId} : {...value?.filters, projectTypeId: selectedProjectTypeId},
+    requestDate:
+      value?.requestDate != null
+        ? {
+            ...value?.requestDate,
+            startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+            endDate: value?.range?.endDate?.getTime(),
+          }
+        : requestDate,
+    filters: isPieClicked
+      ? { ...value?.filters, selectedType: pieSelected, projectTypeId: selectedProjectTypeId }
+      : { ...value?.filters, projectTypeId: selectedProjectTypeId },
     moduleLevel: value?.moduleLevel,
   });
 
@@ -55,7 +65,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
       } else {
         setActiveIndex(null);
       }
-      setShowTooltip(true)
+      setShowTooltip(true);
     },
     [setActiveIndex, response]
   );
@@ -67,7 +77,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const numberOfSlices = 10;
   const chartData = useMemo(() => {
     if (!response) return null;
-    if(setChartDenomination != null){
+    if (setChartDenomination != null) {
       setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     }
     const compareFn = (a, b) => b.value - a.value;
@@ -89,9 +99,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
         }, []);
   }, [response]);
 
-  const renderLegend = (value) => (
-    <span style={{ fontSize: "14px", color: "#505A5F" }}>{getTitleHeading(t(`${value}`))}</span>
-  );
+  const renderLegend = (value) => <span className="digit-pie-chart-legend-text">{getTitleHeading(t(`${value}`))}</span>;
 
   const renderCustomLabel = (args) => {
     const { value, endAngle, startAngle, x, cx, y, cy, percent, name } = args;
@@ -140,20 +148,19 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     const labelValue = Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1);
     const formattedValue = labelValue;
     return (
-      <div
-        style={{
-          margin: "0px",
-          whiteSpace: "nowrap",
-          fontSize:"16px",
-          color:"#505A5F"
-        }}
-        
-      >
-        <p className="recharts-tooltip-label"><b>{`${t(
-          `${payload?.[0]?.name}`
-        )}`}</b> &nbsp; {`${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`}</p>
-        <p>{`(${formattedValue}%)`}</p>
-      </div>
+      <TooltipComponent
+        arrow={false}
+        content={
+          <div>
+            <div>
+              <b>{`${t(`${payload?.[0]?.name}`)}`}</b> &nbsp;{" "}
+              {`${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`}
+            </div>
+            <p>{`(${formattedValue}%)`}</p>
+          </div>
+        }
+        theme="dark"
+      />
     );
   };
 
@@ -182,7 +189,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     response?.responseData?.data?.[0]?.plots.forEach((entry) => {
       accumulatedValue = accumulatedValue + entry?.value;
     });
-    accumulatedValue = Digit.Utils.dss.formatter(accumulatedValue, "number", value?.denomination, true, t)
+    accumulatedValue = Digit.Utils.dss.formatter(accumulatedValue, "number", value?.denomination, true, t);
     return accumulatedValue;
   }, [response]);
 
@@ -207,7 +214,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   }, [id]);
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
 
   const renderActiveShape = (props) => {
@@ -227,89 +234,76 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
         </span>
       )}
       {isPieClicked && (
-        <div>
-          <div className="tag-container" style={{ marginBottom: "unset" }}>
-            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-            <RemoveableTag key={id} text={`${t(pieSelected)}`} onClick={removeFilter} />
-          </div>
-          {/* <div className="tag-container" style={{marginBottom:"unset"}}>
-            <span >{t("DSS_FILTERS_APPLIED")}: </span>
-            <RemoveableTag extraStyles={{tagStyles:{ marginTop: "unset" }}} key={id} text={`${t("COMMON_MASTERS_" + Digit.Utils.locale.getTransformedLocale(pieSelected))}`} onClick={removeFilter} />
-          </div> */}
+        <div className="digit-tag-container digit-pie-chart-tags">
+          <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
+          <Chip key={id} text={`${t(pieSelected)}`} onClick={(e) => removeFilter(e)} hideClose={false} />
         </div>
       )}
 
-      <ResponsiveContainer width="99%" height={400}>
-        {chartData?.length === 0 || !chartData ? (
-          <NoData t={t} />
-        ) : (
-          <PieChart cy={150}>
-            <Pie
-              activeIndex={activeIndex}
-              activeShape={activeIndex !== numberOfSlices ? renderActiveShape : null}
-              data={chartData}
-              dataKey={dataKey}
-              cy={200}
-              style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default", outline: "none" }}
-              innerRadius={checkChartID(id) && !mobileView ? 80 : 100} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
-              outerRadius={checkChartID(id) && !mobileView ? 100 : 130}
-              margin={{ top: isPieClicked ? 0 : 5 }}
-              fill="#8884d8"
-              label={response?.responseData?.showLabel ? renderCustomLabel : ""}
-              labelLine={false}
-              isAnimationActive={false}
-              onClick={response?.responseData?.drillDownChartId !== "none" ? onPieClick : null}
-              onMouseEnter={onPieEnter}
-              onMouseLeave={onPieLeave}
-            >
-              {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
-                <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
-              ))}
-              {response?.responseData?.showLabel && (
-                <>
-                  <Label position="centerBottom" value={t("DSS_TOTAL")} style={{ fontSize: "16px", transform: "translateY(-10px)", fill: "#383838" }} />
-                  <Label position="centerTop" value={totalValue()} style={{ fontSize: "36px", fontWeight: "bold", fill: "#383838" }} />
-                </>
-              )}
-            </Pie>
-           {showTooltip && <Tooltip 
-            wrapperStyle={{ outline: "none", border: "1px solid #B1B4B6", borderRadius: "5px", padding: "8px", backgroundColor: "#FFFFFF" }}
-            content={renderTooltip} />}
-            <Legend
-              layout="vertical"
-              verticalAlign="middle"
-              align="right"
-              iconType="circle"
-              formatter={renderLegend}
-              iconSize={10}
-              wrapperStyle={
-                chartData?.length > 6
-                  ? {
-                      paddingRight: checkChartID(id) && !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
-                      overflowY: "scroll",
-                      height: 250,
-                      width: "35%",
-                      overflowX: "auto",
-                      paddingTop: -20,
-                    }
-                  : { paddingRight: checkChartID(id) && !mobileView ? 60 : 0, width: "27%", overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
-              }
-            />
-          </PieChart>
-        )}
-      </ResponsiveContainer>
-      {/* {isPieClicked && (
-        <div
-          style={{
-            marginTop: "-2.5%",
-            position: "absolute",
-            width: "30%",
-            textAlign: "center",
-          }}
-        >
-          {t(Digit.Utils.locale.getTransformedLocale(`${response?.responseData?.data?.[0]?.headerName}_${pieSelected}`))}
-        </div>
-      )} */}
+      <div className={"digit-donut-chart-container"}>
+        <ResponsiveContainer width="99%">
+          {chartData?.length === 0 || !chartData ? (
+            <NoData t={t} />
+          ) : (
+            <PieChart cy={150}>
+              <Pie
+                activeIndex={activeIndex}
+                activeShape={activeIndex !== numberOfSlices ? renderActiveShape : null}
+                data={chartData}
+                dataKey={dataKey}
+                cy={200}
+                style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default", outline: "none" }}
+                innerRadius={checkChartID(id) && !mobileView ? 80 : 100} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
+                outerRadius={checkChartID(id) && !mobileView ? 100 : 130}
+                margin={{ top: isPieClicked ? 0 : 5 }}
+                fill="#8884d8"
+                label={response?.responseData?.showLabel ? renderCustomLabel : ""}
+                labelLine={false}
+                isAnimationActive={false}
+                onClick={response?.responseData?.drillDownChartId !== "none" ? onPieClick : null}
+                onMouseEnter={onPieEnter}
+                onMouseLeave={onPieLeave}
+              >
+                {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
+                  <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
+                ))}
+                {response?.responseData?.showLabel && (
+                  <>
+                    <Label
+                      position="centerBottom"
+                      className="digit-pie-chart-inner-label-text"
+                      value={t("DSS_TOTAL")}
+                      style={{ transform: "translateY(-10px)" }}
+                    />
+                    <Label position="centerTop" value={totalValue()} className="digit-pie-chart-inner-label-value" />
+                  </>
+                )}
+              </Pie>
+              {showTooltip && <Tooltip content={renderTooltip} />}
+              <Legend
+                layout="vertical"
+                verticalAlign="middle"
+                align="right"
+                iconType="circle"
+                formatter={renderLegend}
+                iconSize={13}
+                wrapperStyle={
+                  chartData?.length > 6
+                    ? {
+                        paddingRight: checkChartID(id) && !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
+                        overflowY: "scroll",
+                        height: 250,
+                        width: "35%",
+                        overflowX: "auto",
+                        paddingTop: -20,
+                      }
+                    : { paddingRight: checkChartID(id) && !mobileView ? 60 : 0, overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
+                }
+              />
+            </PieChart>
+          )}
+        </ResponsiveContainer>
+      </div>
     </Fragment>
   );
 };
