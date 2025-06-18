@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { FieldV1, Card, LabelFieldPair, HeaderComponent } from "@egovernments/digit-ui-components";
+import { FieldV1, Card, LabelFieldPair } from "@egovernments/digit-ui-components";
 import { handleCreateValidate } from "../../utils/handleCreateValidate";
 
 const DateSelection = ({ onSelect, formData, ...props }) => {
@@ -46,7 +46,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
 
   return (
     <Card>
-      <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
+      {/* <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent> */}
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair className={"boldLabel"}>
         <div className="digit-header-content label   ">
