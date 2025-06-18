@@ -1,4 +1,4 @@
-import { Card, AlertCard, Loader, Button } from "@egovernments/digit-ui-components";
+import { Card, Loader, Button } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -83,7 +83,7 @@ const BoundaryHome = () => {
           })}
         </div>
       </Card>
-      <AlertCard
+      {/* <AlertCard
         label="Info"
         variant="default"
         style={{ maxWidth: "200rem", marginTop: "1rem" }}
@@ -98,7 +98,7 @@ const BoundaryHome = () => {
             {t(`HIERARCHY_LAST_MODIFIED_ON`)} {": "} {new Date(data?.boundaryData?.auditDetails?.lastModifiedTime).toLocaleDateString()}
           </span>,
         ]}
-      />
+      /> */}
     </React.Fragment>
   );
 };
