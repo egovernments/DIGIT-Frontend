@@ -19,7 +19,10 @@ import { useHistory } from "react-router-dom";
  * @returns {React.ReactElement} Returns the component
  */
 
-const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
+const VerifyAndGeneratePaymentsTable = ({ 
+    setTaskStatus,
+    onTaskDone,
+    ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
     const [showToast, setShowToast] = useState(null);
@@ -63,6 +66,83 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
             "localityCode": "Locality 1",
         }
     ]
+     const getTaskStatusMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/health-expense/v1/task/_status`,
+    });
+ const verifyBillMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/health-expense/v1/bill/_verify`,
+    });
+
+    const triggerVerifyBill = async (bill) => {
+        console.log("triggerVerifyBill", bill);
+    try {
+        await verifyBillMutation.mutateAsync(
+            {
+                body: { bill },
+            },
+            {
+                onSuccess: async (verifyResponse) => {
+                    const taskId = verifyResponse?.taskId;
+                    if (!taskId) {
+                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 3000 });
+                        return;
+                    }
+
+                    let attempts = 0;
+                    const POLLING_INTERVAL = 3000;
+                    const MAX_ATTEMPTS = 20;
+
+                    const pollStatus = async () => {
+                        try {
+                            const statusResponse = await getTaskStatusMutation.mutateAsync({
+                                body: { taskId: taskId },
+                            });
+
+                            const status = statusResponse?.status;
+                            setTaskStatus?.(status);
+                             if (status === "DONE") {
+                setShowToast({
+                  key: "success",
+                  label: t("HCM_AM_BILL_VERIFICATION_DONE"),
+                  transitionTime: 3000,
+                });
+
+                onTaskDone?.(); //  trigger bill search in parent
+              }  else if (status === "IN_PROGRESS") {
+                                if (attempts < MAX_ATTEMPTS) {
+                                    attempts++;
+                                    setTimeout(pollStatus, POLLING_INTERVAL);
+                                } else {
+                                    setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
+                                }
+                            } else {
+                                setShowToast({ key: "error", label: t(`HCM_AM_UNEXPECTED_STATUS_${status}`), transitionTime: 3000 });
+                            }
+                        } catch (err) {
+                            setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });
+                        }
+                    };
+
+                    pollStatus();
+                },
+                onError: (error) => {
+                    setShowToast({
+                        key: "error",
+                        label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),
+                        transitionTime: 3000,
+                    });
+                },
+            }
+        );
+    } catch (error) {
+        setShowToast({
+            key: "error",
+            label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),
+            transitionTime: 3000,
+        });
+    }
+};
+
     const columns = useMemo(() => {
         const baseColumns = [
             {
@@ -126,10 +206,10 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
+                    const pendingCount = row?.billDetails?.filter((detail) => detail?.status === "PENDING_VERIFICATION" || detail?.status ==="VERIFICATION_FAILED")?.length || 0;
                     return (
                         <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>
-                            {/* {t(row.localityCode) || t("NA")} */}
-                            {"0"}
+                             {t(pendingCount)}
                         </div>
                     );
                 },
@@ -143,11 +223,12 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                         {t("HCM_AM_VERIFIED_COUNT")}
                     </div>
                 ),
-                selector: (row) => {
+                 selector: (row) => {
+                    const verifiedCount = row?.billDetails?.filter((detail) => detail?.status === "VERIFIED" || detail?.status ==="PAYMENT_FAILED")?.length || 0;
+     
                     return (
                         <div className="ellipsis-cell" style={{ color: "#9E5F00", paddingRight: "1rem" }}>
-                            {/* {t(row.localityCode) || t("NA")} */}
-                            {"0"}
+                             {(verifiedCount)}
                         </div>
                     );
                 },
@@ -161,11 +242,11 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                         {t("HCM_AM_PAID_COUNT")}
                     </div>
                 ),
-                selector: (row) => {
+               selector: (row) => {
+                    const paidCount = row?.billDetails?.filter((detail) => detail?.status === "PAID")?.length || 0;
                     return (
                         <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>
-                            {/* {t(row.localityCode) || t("NA")} */}
-                            {"0"}
+                             {t(paidCount)}
                         </div>
                     );
                 },
@@ -180,30 +261,31 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
-                    return (
-                        <div className="ellipsis-cell" >
-                            {/* {t(row.localityCode) || t("NA")} */}
-                            {"STATUS"}
-                        </div>
-                    );
-                }
+    const status = row?.status || "NA";
+    let backgroundColor = "#B91900"; // Default: red
+
+    if (status === "FULLY_VERIFIED") backgroundColor = "#00703C"; // Green
+    else if (status === "PARTIALLY_VERIFIED") backgroundColor = "#9E5F00"; // Yellow
+
+    return (
+      <span
+        className="ellipsis-cell"
+        style={{
+          backgroundColor,
+          color: "#fff",
+          padding: "0.25rem 0.5rem",
+          borderRadius: "4px",
+          fontWeight: "bold",
+          display: "inline-block",
+          minWidth: "100px",
+          textAlign: "center",
+        }}
+      >
+        {t(status)}
+      </span>
+    );
+  }
             },
-
-
-            // {
-            //     name: (
-            //         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-            //             {t("HCM_AM_PROJECT_NAME")}
-            //         </div>
-            //     ),
-            //     selector: (row) => {
-            //         return (
-            //             <div className="ellipsis-cell" title={t(row?.additionalDetails?.reportDetails?.eventName || "0")}>
-            //                 {t(row?.additionalDetails?.reportDetails?.eventName || `NA`)}
-            //             </div>
-            //         );
-            //     },
-            // },
             {
                 name: t("HCM_AM_BILL_ACTIONS"),
                 selector: (row, index) => {
@@ -212,7 +294,8 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                     const isLastRow = index === props.totalCount - 1;
 
                     return (!props?.editBill?(
-                        reportDetails?.status === "COMPLETED" ? <Button
+                        // reportDetails?.status === "COMPLETED" ? 
+                        <Button
                             className="custom-class"
                             iconFill=""
                             icon="ArrowDropDown"
@@ -222,13 +305,37 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                             title={t(`HCM_AM_TAKE_ACTION`)}
                             showBottom={isLastRow && props.data.length !== 1? false : true}
                             onOptionSelect={(value) => {
-                                if (value.code === "HCM_AM_PDF") {
+                                // if (value.code === "HCM_AM_PDF") {
+                                //     if (reportDetails?.pdfReportId) {
+                                //         downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" })
+                                //     } else {
+                                //         setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
+                                //     }
+                                // } else if (value.code === "HCM_AM_EXCEL") {
+                                //     if (reportDetails?.excelReportId) {
+                                //         downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
+                                //     } else {
+                                //         setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
+                                //     }
+
+                                // }
+                                if (value.code === "HCM_AM_VERIFY") {
+                                    triggerVerifyBill(row);
+                                    
                                     if (reportDetails?.pdfReportId) {
                                         downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" })
                                     } else {
                                         setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
                                     }
-                                } else if (value.code === "HCM_AM_EXCEL") {
+                                } else if (value.code === "HCM_AM_EDIT") {
+                                    if (reportDetails?.excelReportId) {
+                                        downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
+                                    } else {
+                                        setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
+                                    }
+
+                                }
+                                else if (value.code === "HCM_AM_GENERATE_PAYMENT") {
                                     if (reportDetails?.excelReportId) {
                                         downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
                                     } else {
@@ -256,17 +363,20 @@ const VerifyAndGeneratePaymentsTable = ({ ...props }) => {
                             style={{ minWidth: "14rem" }}
                             type="actionButton"
                             variation="secondary"
-                        /> :
-                            <div>
-                                <Tag
-                                    {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                                    label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
-                                    labelStyle={{}}
-                                    showIcon={true}
-                                    style={{}}
-                                    {...(reportDetails?.status === "FAILED" && { type: "error" })}
-                                />
-                            </div>):(
+                        /> 
+                        // :
+                            // <div>
+                            //     <Tag
+                            //         {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
+                            //         label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
+                            //         labelStyle={{}}
+                            //         showIcon={true}
+                            //         style={{}}
+                            //         {...(reportDetails?.status === "FAILED" && { type: "error" })}
+                            //     />
+                            // </div>
+                            )
+                            :(
                                 <Button
                             className="custom-class"
                             iconFill=""

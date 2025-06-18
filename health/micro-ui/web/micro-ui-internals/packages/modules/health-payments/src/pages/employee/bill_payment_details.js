@@ -48,7 +48,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
     }
   const [activeLink, setActiveLink] = useState({
           code: "NOT_VERIFIED",
-          name: "HCM_AM_NOT_VERIFIED",
+          name: `${`${t(`HCM_AM_NOT_VERIFIED`)} `}`,
       });
   const billDetails = [
         {
@@ -93,37 +93,14 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
         }
     ]
 
-  
-  // context path variables
-  // const attendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
-  // const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-  // // State variables
-  // const { registerNumber, boundaryCode } = Digit.Hooks.useQueryParams();
-  // const { fromCampaignSupervisor } = location.state || false;
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  // const [attendanceDuration, setAttendanceDuration] = useState(null);
-  // const [attendanceSummary, setAttendanceSummary] = useState([]);
-  // const [initialAttendanceSummary, setInitialAttendanceSummary] = useState([]);
-  // const [isSubmitEnabled, setIsSubmitEnabled] = useState(false);
-  // const paymentConfig = Digit?.SessionStorage.get("paymentsConfig");
-  // const [disabledAction, setDisabledAction] = useState(fromCampaignSupervisor);
-  // const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
-  // const [openApproveCommentPopUp, setOpenApproveCommentPopUp] = useState(false);
-  // const [openApproveAlertPopUp, setOpenApproveAlertPopUp] = useState(false);
-  // const [updateDisabled, setUpdateDisabled] = useState(false);
-  // const [triggerCreate, setTriggerCreate] = useState(false);
-  // const [searchCount, setSearchCount] = useState(1);
-  // const [data, setData] = useState([]);
+
   const [individualIds, setIndividualIds] = useState([]);
-  // const [triggerEstimate, setTriggerEstimate] = useState(false);
-  // const [comment, setComment] = useState(null);
-  // const [showToast, setShowToast] = useState(null);
-  // const [loading, setLoading] = useState(false);
-  // const [showLogs, setShowLogs] = useState(false);
-  // const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+
 
   const project = Digit?.SessionStorage.get("staffProjects");
   const selectedProject = Digit?.SessionStorage.get("selectedProject");
@@ -152,10 +129,23 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
 
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);  
   
-  const filterDataByStatus = (billData,status) => {
-    console.log("here DataByStatus", status);
-  setTableData(billData.billDetails.filter(item => item.status === status));
-};
+//   const filterDataByStatus = (billData,code) => {
+//     console.log("here DataByStatus", code);
+//    const statusMap = {
+//         VERIFIED: ["VERIFIED","PAYMENT_FAILED"],
+//         PAYMENT_GENERATED: ["PAID"],
+//         NOT_VERIFIED: ["VERIFICATION_FAILED", "PENDING_VERIFICATION"]
+//     };
+
+//     const filterStatuses = statusMap[code] || [];
+
+//     const filteredData = billData.billDetails?.filter(item =>
+//         filterStatuses.includes(item.status)
+//     );
+//     console.log("filteredData", filteredData);
+
+//     setTableData(filteredData || []);
+// };
   const fetchIndividualIds = (billData) => {
     console.log("here ???0990")
     const billDetails = billData?.billDetails || [];
@@ -166,252 +156,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
     }
   }
 
-  
-
-
-  // const AttendancereqCri = {
-  //   url: `/${attendanceContextPath}/v1/_search`,
-  //   params: {
-  //     tenantId: tenantId,
-  //     registerNumber: registerNumber
-  //   },
-  //   config: {
-  //     enabled: registerNumber ? true : false,
-  //     select: (data) => {
-  //       return data;
-  //     },
-  //   },
-  // };
-
-  // const { isLoading: isAttendanceLoading, data: AttendanceData } = Digit.Hooks.useCustomAPIHook(AttendancereqCri);
-
-  // /// ADDED CONDITION THAT IF CAMPAIGN HAS NOT ENDED THEN WE WILL SHOW ESTIMATE DATA ONLY AND DISABLED ALL THE ACTIONS
-
-  // useEffect(() => {
-  //   if (AttendanceData) {
-  //     setAttendanceDuration(
-  //       Math.ceil((AttendanceData?.attendanceRegister[0]?.endDate - AttendanceData?.attendanceRegister[0]?.startDate) / (24 * 60 * 60 * 1000))
-  //     );
-  //     if (AttendanceData?.attendanceRegister?.[0]?.reviewStatus === "APPROVED") {
-  //       setDisabledAction(true);
-  //     }
-  //     if (!paymentConfig.enableApprovalAnyTime && AttendanceData?.attendanceRegister[0]?.endDate > new Date()) {
-  //       setDisabledAction(true);
-  //     }
-  //   }
-  // }, [AttendanceData])
-
-  // const reqCri = {
-  //   url: `/${musterRollContextPath}/v1/_estimate`,
-  //   body: {
-  //     musterRoll: {
-  //       tenantId: tenantId,
-  //       registerId: AttendanceData?.attendanceRegister[0]?.id,
-  //       startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-  //       endDate: AttendanceData?.attendanceRegister[0]?.endDate
-  //     }
-  //   },
-  //   config: {
-  //     enabled: triggerEstimate,
-  //     select: (data) => {
-  //       return data;
-  //     },
-  //   },
-  //   changeQueryName: registerNumber,
-  // };
-
-  // const { isLoading: isEstimateMusterRollLoading, data: estimateMusterRollData } = Digit.Hooks.useCustomAPIHook(reqCri);
-
-  // /// SEARCH MUSTERROLL TO CHECK IF WE NEED TO SHOW ESTIMATE OR MUSTERROLL SEARCH DATA
-
-  // const searchReqCri = {
-  //   url: `/${musterRollContextPath}/v1/_search`,
-  //   params: {
-  //     tenantId: tenantId,
-  //     registerId: AttendanceData?.attendanceRegister?.[0]?.id
-  //   },
-  //   config: {
-  //     enabled: (AttendanceData?.attendanceRegister.length === 1 ? true : false),
-  //     select: (data) => {
-  //       return data;
-  //     },
-  //   }
-  // };
-
-  // const { isLoading: isMusterRollLoading, isrefetching, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(searchReqCri);
-
-  // useEffect(() => {
-  //   if (MusterRollData?.count === 0) {
-  //     if (disabledAction) {
-  //       setTriggerEstimate(true);
-  //     } else {
-  //       if (triggerCreate) {
-  //         if (searchCount > 3) {
-  //           setShowToast({ key: "info", label: t(`HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE`), transitionTime: 3000 });
-  //           setTriggerEstimate(true);
-  //           setDisabledAction(true);
-  //         } else {
-  //           setSearchCount((prevKey) => prevKey + 1);
-  //           setLoading(true);
-  //           setTimeout(() => {
-  //             setLoading(false);
-  //             refetchMusterRoll();
-  //           }, 2000);
-  //         }
-  //       } else {
-  //         setTriggerCreate(true);
-  //         triggerMusterRollCreate();
-  //       }
-  //     }
-  //   } else if (triggerEstimate === true) {
-  //     setTriggerEstimate(false);
-  //   }
-
-  //   if (MusterRollData?.count > 0) {
-  //     setData(MusterRollData?.musterRolls);
-  //   } else if (estimateMusterRollData) {
-  //     setData(estimateMusterRollData?.musterRolls);
-  //   }
-
-  // }, [estimateMusterRollData, MusterRollData]);
-// useEffect(() => {
-//   const billDetails = billData?.billDetails || [];
-//   if (Array.isArray(billDetails)) {
-//     const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
-//     setIndividualIds(ids);
-//     console.log("Individual IDs:", ids);
-//   }
-// }, []);
-
-
-  // const mutation = Digit.Hooks.useCustomAPIMutationHook({
-  //   url: `/${musterRollContextPath}/v1/_create`,
-  // });
-
-  // const updateMutation = Digit.Hooks.useCustomAPIMutationHook({
-  //   url: `/${musterRollContextPath}/v1/_update`,
-  // });
-
-  // const approveMutation = Digit.Hooks.useCustomAPIMutationHook({
-  //   url: `/${musterRollContextPath}/v1/_update`,
-  // });
-
-  // const triggerMusterRollApprove = async () => {
-  //   try {
-  //     await approveMutation.mutateAsync(
-  //       {
-  //         body: {
-  //           musterRoll: data?.[0],
-  //           workflow: {
-  //             action: "APPROVE",
-  //             comments: comment,
-  //           }
-  //         },
-  //       },
-  //       {
-  //         onSuccess: (data) => {
-  //           history.push(`/${window.contextPath}/employee/payments/attendance-approve-success`, {
-  //             state: "success",
-  //             info: t("HCM_AM_MUSTER_ROLL_ID"),
-  //             fileName: data?.musterRolls?.[0]?.musterRollNumber,
-  //             description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
-  //             message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
-  //             back: t(`GO_BACK_TO_HOME`),
-  //             backlink: `/${window.contextPath}/employee`
-  //           });
-  //         },
-  //         onError: (error) => {
-  //           history.push(`/${window.contextPath}/employee/payments/attendance-approve-failed`, {
-  //             state: "error",
-  //             message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
-  //             back: t(`GO_BACK_TO_HOME`),
-  //             backlink: `/${window.contextPath}/employee`
-  //           });
-  //         }
-  //       }
-  //     );
-  //   } catch (error) {
-  //     /// will show estimate data only
-  //   }
-  // };
-
-  // const triggerMusterRollUpdate = async () => {
-  //   try {
-  //     await updateMutation.mutateAsync(
-  //       {
-  //         body: {
-  //           musterRoll: {
-  //             ...data[0], // Spread the existing data
-  //             individualEntries: data[0].individualEntries.map((entry) => {
-  //               const updatedAttendance = attendanceSummary.find(
-  //                 ([id,]) => id === entry.individualId
-  //               )?.[4]; // Extract the updated actualTotalAttendance
-  //               return {
-  //                 ...entry,
-  //                 modifiedTotalAttendance: updatedAttendance || entry.actualTotalAttendance,
-  //               };
-  //             }),
-  //           },
-  //           workflow: {
-  //             action: "EDIT",
-  //           },
-  //         },
-  //       },
-  //       {
-  //         onSuccess: (data) => {
-  //           setShowToast({ key: "success", label: t("HCM_AM_ATTENDANCE_UPDATED_SUCCESSFULLY"), transitionTime: 3000 });
-  //           // Delay the navigation for 3 seconds
-  //           setTimeout(() => {
-  //             setUpdateDisabled(false);
-  //             history.push(`/${window.contextPath}/employee/payments/view-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
-  //           }, 2000);
-  //         },
-  //         onError: (error) => {
-  //           setUpdateDisabled(false);
-  //           setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
-  //         }
-  //       }
-  //     );
-  //   } catch (error) {
-  //     /// will show estimate data only
-  //   }
-  // };
-
-  // const triggerMusterRollCreate = async () => {
-
-  //   try {
-  //     await mutation.mutateAsync(
-  //       {
-  //         body: {
-  //           musterRoll: {
-  //             tenantId: tenantId,
-  //             registerId: AttendanceData?.attendanceRegister[0]?.id,
-  //             startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-  //             endDate: AttendanceData?.attendanceRegister[0]?.endDate
-  //           },
-  //           workflow: {
-  //             action: "SUBMIT",
-  //           }
-  //         },
-  //       },
-  //       {
-  //         onSuccess: (data) => {
-  //           setLoading(true);
-  //           setTimeout(() => {
-  //             setLoading(false);
-  //             refetchMusterRoll();
-  //           }, 2000);
-  //         },
-  //         onError: (error) => {
-  //           setTriggerEstimate(true);
-  //         }
-  //       }
-  //     );
-  //   } catch (error) {
-  //     setTriggerEstimate(true);
-  //   }
-
-  // };
+ 
   const reqMdmsCriteria = {
       url: `/${mdms_context_path}/v1/_search`,
       body: {
@@ -484,24 +229,36 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
       };
     });
   }
-  useEffect(() => {
-    console.log("AllIndividualsData", AllIndividualsData);
-    if (billData && AllIndividualsData) {
-      const updatedBillDetails = addIndividualDetailsToBillDetails(billData?.billDetails, AllIndividualsData,workerRatesData);
-      setTableData(updatedBillDetails);
-    }
-  }, [AllIndividualsData, billData, workerRatesData]);
+  // useEffect(() => {
+  //   console.log("AllIndividualsData", AllIndividualsData);
+  //   if (billData && AllIndividualsData) {
+  //     const updatedBillDetails = addIndividualDetailsToBillDetails(billData?.billDetails, AllIndividualsData,workerRatesData);
+  //     setTableData(updatedBillDetails);
+  //   }
+  // }, [AllIndividualsData, billData, workerRatesData]);
 
-  useEffect(() => {
-    if (BillData) {
-    console.log("BillData1223", BillData);
+  // useEffect(() => {
+  //   if (BillData) {
+  //   console.log("BillData1223", BillData);
+  //   const bill = BillData.bills?.[0] || null;
+  //   setBillData(bill); 
+  //   filterDataByStatus(bill,activeLink.code);//TODO: change status
+  //   fetchIndividualIds(bill);
+  //   }
+  // },[BillData])
+useEffect(() => {
+  if (BillData) {
     const bill = BillData.bills?.[0] || null;
-    setBillData(bill); 
-    filterDataByStatus(bill,"ACTIVE");//TODO: change status
-    fetchIndividualIds(bill);
-    }
-  },[BillData])
+    setBillData(bill);
+    fetchIndividualIds(bill); // this will trigger the individual fetch later
+  }
+}, [BillData]);
 
+// useEffect(() => {
+//   if (billData && activeLink?.code) {
+//     filterDataByStatus(billData, activeLink.code); // now this runs with correct tab code
+//   }
+// }, [billData, activeLink]);
   const getPaginatedData = (data, currentPage, rowsPerPage) => {
   const startIndex = (currentPage - 1) * rowsPerPage;
   const endIndex = startIndex + rowsPerPage;
@@ -511,115 +268,27 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
     const slicedData = getPaginatedData(tableData, currentPage, rowsPerPage);
     setPaginatedData(slicedData);
   }, [tableData, currentPage, rowsPerPage]);
-  // const individualReqCriteria = {
-  //   url: `/${individualContextPath}/v1/_search`,
-  //   params: {
-  //     tenantId: tenantId,
-  //     limit: 100,
-  //     offset: 0,
-  //   },
-  //   body: {
-  //     Individual: {
-  //       id: [AttendanceData?.attendanceRegister[0]?.staff?.find(
-  //         (staff) => staff?.staffType?.includes("OWNER")
-  //       )?.userId]
-  //     }
-  //   },
-  //   config: {
-  //     enabled: AttendanceData?.attendanceRegister.length === 1 && AttendanceData?.attendanceRegister[0]?.staff?.find(
-  //       (staff) => staff?.staffType?.includes("OWNER")
-  //     )?.userId ? true : false,
-  //     select: (data) => {
-  //       return data;
-  //     },
-  //   },
-  // };
-
-  // const { isLoading: isIndividualsLoading, data: individualsData } = Digit.Hooks.useCustomAPIHook(individualReqCriteria);
-
-  // function getUserAttendanceSummary(data, individualsData, t) {
-  //   const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
-  //     const individualId = individualEntry.individualId;
-  //     const matchingIndividual = individualsData?.Individual?.find(
-  //       (individual) => individual.id === individualId
-  //     );
-
-  //     if (matchingIndividual) {
-  //       const userName = matchingIndividual.name?.givenName || t("NA");
-  //       const uniqueId = matchingIndividual?.name?.familyName || t("NA");
-  //       const userId = matchingIndividual?.userDetails?.username || t("NA");
-  //       const userRole =
-  //         t(matchingIndividual.skills?.[0]?.type) || t("NA");
-  //       const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
-  //       const id = individualEntry.individualId || 0;
-  //       const gender = matchingIndividual?.gender;
-  //       const dob = matchingIndividual?.dateOfBirth;
-  //       const mobileNumber = matchingIndividual?.mobileNumber;
-  //       const userType = matchingIndividual?.additionalFields?.fields?.find(
-  //         (detail) => detail.key === "userType"
-  //     )?.value || "N/A";
-  //       return [id, userName, userId, userRole, noOfDaysWorked, gender, dob, mobileNumber, uniqueId, userType];
-  //     } else {
-  //       // Handle cases where no match is found in individualsData
-  //       return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
-  //     }
-  //   });
-
-  //   const sortedData = [...attendanceLogData].sort((a, b) => {
-  //     const nameA = a[1].toLowerCase(); // Convert to lowercase for case-insensitive sorting
-  //     const nameB = b[1].toLowerCase();
-  //     return nameA.localeCompare(nameB);
-  //   });
-
-  //   return sortedData;
-  // }
-
-  // // Populate attendanceSummary when AttendanceData changes
-  // useEffect(() => {
-
-  //   if (data.length > 0 && AllIndividualsData) {
-  //     setAttendanceSummary(getUserAttendanceSummary(data, AllIndividualsData, t));
-  //   }
-
-  // }, [AllIndividualsData, data]); /// need to update dependency
-
-
-  // useEffect(() => {
-  //   if (attendanceSummary.length > 0 && initialAttendanceSummary.length === 0) {
-  //     // Store the initial state of attendanceSummary when data is loaded for the first time
-  //     setInitialAttendanceSummary(attendanceSummary);
-  //   }
-  // }, [attendanceSummary]);
-
-  // useEffect(() => {
-  //   if (attendanceSummary.length > 0 && initialAttendanceSummary.length > 0) {
-
-  //     // Compare the current attendanceSummary with the initialAttendanceSummary using Lodash
-  //     const hasChanged = !_.isEqual(attendanceSummary, initialAttendanceSummary);
-
-  //     if (hasChanged) {
-  //       if (!isSubmitEnabled) {
-  //         setIsSubmitEnabled(true);
-  //       }
-  //     } else {
-  //       if (isSubmitEnabled) {
-  //         setIsSubmitEnabled(false);
-  //       }
-  //     }
-  //   }
-
-  // }, [attendanceSummary]);
-
-  // const closeActionBarPopUp = () => {
-  //   setOpenEditAlertPopUp(false);
-  // };
-  // const handleCommentLogClick = () => {
-  //   setShowCommentLogPopup(true);
-  // };
-
-  // const onCommentLogClose = () => {
-  //   setShowCommentLogPopup(false);
-  // };
+   
+useEffect(() => {
+  if (billData && AllIndividualsData && workerRatesData) {
+    const enriched = addIndividualDetailsToBillDetails(
+      billData?.billDetails,
+      AllIndividualsData,
+      workerRatesData
+    );
+   const statusMap = {
+        VERIFIED: ["VERIFIED","PAYMENT_FAILED"],
+        PAYMENT_GENERATED: ["PAID"],
+        NOT_VERIFIED: ["VERIFICATION_FAILED", "PENDING_VERIFICATION"]
+    };
+    const filtered = enriched.filter((item) =>
+      statusMap[activeLink.code]?.includes(item.status)
+    );
+    console.log("Filtered Data:", filtered);
+    setTableData(filtered || []);
+  }
+}, [AllIndividualsData, billData, workerRatesData, activeLink]);
+ 
   const renderLabelPair = (heading, text,style) => (
     <div className="label-pair">
       <span className="view-label-heading">{t(heading)}</span>
@@ -627,13 +296,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
     </div>
   );
 
-  // if (updateMutation.isLoading) {
-  //   return <LoaderComponent variant={"OverlayLoader"} />
-  // }
 
-  // if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
-  //   return <LoaderScreen />
-  // }
   
 
   if ( isBillLoading || isAllIndividualsLoading || isFetching) {
@@ -661,10 +324,32 @@ console.log("mob num:", tableData);
           {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
           {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
           {/* TODO : add Tag conditionally for status */}
-          {renderLabelPair('HCM_AM_STATUS', billData?.status || t("NA"))} 
+          {/* {renderLabelPair('HCM_AM_STATUS', billData?.status || t("NA"))}  */}
+          {renderLabelPair(
+  'HCM_AM_STATUS',
+  <span
+    style={{
+      backgroundColor:
+        billData?.status === "FULLY_VERIFIED"
+          ? "#00703C" // Green
+          : billData?.status === "PARTIALLY_VERIFIED"
+          ? "#9E5F00" // Yellow
+          : "#B91900", // Red fallback
+      color: "#fff",
+      padding: "0.25rem 0.5rem",
+      borderRadius: "4px",
+      fontWeight: "bold",
+      display: "inline-block",
+      minWidth: "100px",
+      textAlign: "center",
+    }}
+  >
+    {t(billData?.status || "NA")}
+  </span>
+)}
           {
             <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-                {editBillDetails && (
+                {billData?.status === "PARTIALLY_VERIFIED" && (
                   <InfoCard
                     variant="error"
                     style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
@@ -709,7 +394,7 @@ console.log("mob num:", tableData);
                                             });
                                             setCurrentPage(1);
                                             setActiveLink(e);
-                                            // filterDataByStatus(e?.code);
+                                            // filterDataByStatus(billData,e?.code);
                                             //TODO: uncomment this line later
                                         }}
                                         setActiveLink={setActiveLink}

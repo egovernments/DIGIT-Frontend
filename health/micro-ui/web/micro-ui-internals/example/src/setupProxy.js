@@ -104,7 +104,11 @@ module.exports = function (app) {
     "/health-expense/bill/v1/_search",
     "/health-expense-calculator/v1/_calculate",
     "/filestore/v1/files/id",
-    "/attendance/v1/_search"
+    "/attendance/v1/_search",
+    "/health-expense/bill/v1/_update",
+    "/health-expense/v1/bill/details/status/_update",
+    "/health-expense/v1/task/_status",
+    "/health-expense/v1/bill/_verify"
     // "/health-muster-roll/v1/_create",
     // "/health-muster-roll/v1/_estimate"
   ].forEach((location) => app.use(location, createProxy));

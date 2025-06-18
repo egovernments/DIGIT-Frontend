@@ -100,7 +100,7 @@ const MyBills = (props) => {
     }
     const totalAmount = getTotalAmount(props?.selectedBills);
     return (
-        <React.Fragment>
+                <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
                 {t("HCM_AM_MY_BILLS")}
             </Header>

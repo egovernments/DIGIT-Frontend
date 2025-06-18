@@ -24,6 +24,7 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
     const [tableData, setTableData] = useState([]);
     const [billID, setBillID] = useState(null);//to search by bill number
     const [billStatus, setBillStatus] = useState(null);
+    const [taskStatus, setTaskStatus] = useState(null);
     // const [isEditBill, setIsEditBill] = useState(false);
     //TODO: SET isEditBill based on the ROLE
     const [dateRange, setDateRange] = useState({
@@ -72,6 +73,10 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
         setCurrentPage(1);
         setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     }
+    const handleTaskDone = () => {
+    refetchBill(); // trigger bill search once DONE
+    };
+
 
     useEffect(() => {
         if (BillData) {
@@ -121,6 +126,9 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
                     selectableRows={false}
                     rowsPerPage={rowsPerPage}
                     currentPage={currentPage}
+                    taskStatus = {taskStatus}
+                    setTaskStatus={setTaskStatus}
+                    onTaskDone={handleTaskDone}
                     handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange}
                     />

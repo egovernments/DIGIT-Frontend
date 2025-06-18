@@ -188,7 +188,8 @@ const BillDetailsTable = ({ ...props }) => {
                                 : t("NA")
                             }
                             </span>
-                            {props?.status === "NOT_VERIFIED"?(
+                            {row?.status === "VERIFICATION_FAILED" && row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?
+                            (
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                 {props?.editBill?
                                ( <Button
@@ -209,7 +210,7 @@ const BillDetailsTable = ({ ...props }) => {
                                 arrow={true}
     content={<>
     <div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</div></>}
+        {t(row?.additionalDetails?.reasonForFailure)}</div></>}
                                 enterDelay={100}
                                 header="Data Error"
                                 leaveDelay={0}
@@ -248,7 +249,7 @@ const BillDetailsTable = ({ ...props }) => {
         textOverflow: "ellipsis",
         minWidth: 0, }}>
             {t(row?.mobileNumber) || t("ES_COMMON_NA")} </span>
-            {props?.status === "NOT_VERIFIED"?(
+            {row?.status === "VERIFICATION_FAILED" && row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?(
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                 {props?.editBill?
                                ( <Button
@@ -268,7 +269,7 @@ const BillDetailsTable = ({ ...props }) => {
                                 arrow={true}
     content={<>
     <div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt</div></>}
+        {t(row?.additionalDetails?.reasonForFailure)}</div></>}
                                 enterDelay={100}
                                 header="Data Error"
                                 leaveDelay={0}
@@ -354,7 +355,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {t(row?.totalAmount) || t("NA")}
+                           {row?.totalAmount ? `${row.totalAmount} USD` : t("NA")}
                         </div>
                     );
                 },

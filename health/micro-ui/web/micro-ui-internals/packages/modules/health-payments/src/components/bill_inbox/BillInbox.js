@@ -149,8 +149,14 @@ const BillInboxComponent = () => {
         if (selectedBoundaryCode) {
             refetchAttendance();
         }
-    }, [activeLink, limitAndOffset]);
-
+    }, [activeLink, limitAndOffset]); 
+//TODO : CHECK UPDATE
+const updateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
+       url: `/${expenseContextPath}/bill/v1/_update`,
+    });
+    const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
+       url: `/${expenseContextPath}/v1/bill/details/status/_update`,
+    });
     // Refetch data and bill when boundary code changes
     useEffect(() => {
         if (selectedBoundaryCode) {
@@ -170,12 +176,75 @@ const BillInboxComponent = () => {
 
     // update bill generation info message when bill data is loaded
     useEffect(() => {
-        if (BillData) {
-            if (BillData?.bills?.length > 0) {
-                setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
-            }
+        if (BillData?.bills?.length > 0) {
+            setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
         }
-    }, [BillData]);
+    const updateBillData = async () => {
+        
+            const bill = BillData?.bills?.[0];
+
+            if (bill?.id) {
+                console.log("Bill ID:", bill.id);
+                try {
+    // Step 1: Update the main bill
+   
+
+    // Step 3: Extract updated billDetails from the response
+    // const updatedBillDetails = updatedBillResponse?.bills?.[0]?.billDetails || [];
+
+    // Step 4: Update each billDetail
+    const updatedBillDetailsList = [];
+    const billDetailPromises = bill?.billDetails.map((detail) =>{
+         const updatedDetail = {
+        ...detail,
+        status: "PENDING_VERIFICATION",
+    };
+        updateBillDetailMutation.mutateAsync({
+            body: {
+                billDetail: updatedDetail,
+                workflow: {
+                    action: "CREATE",
+                },
+                businessService: "PAYMENTS.BILLDETAILS",
+            },
+        })
+            updatedBillDetailsList.push(updatedDetail);
+
+                 } );
+
+    if (billDetailPromises.length > 0) {
+        await Promise.all(billDetailPromises);
+    }
+// Step 2: Wait for 10 seconds
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    await sleep(10000);
+     const updatedBillResponse = await updateBillMutation.mutateAsync({
+        body: {
+            bill: {
+                ...bill,
+                status: "PENDING_VERIFICATION",
+                businessService: "PAYMENTS.BILL",
+                billDetails: updatedBillDetailsList,
+            },
+            workflow: {
+                action: "CREATE",
+            },
+        },
+    });
+
+    updatedBillResponse();
+} catch (error) {
+    console.error("Error in bill or billDetails update:", error);
+    setShowToast({ key: "error", label: t(`HCM_AM_BILL_UPDATE_ERROR`), transitionTime: 3000 });
+}
+            
+        }
+    };
+
+    updateBillData();
+}, [BillData]);
+
 
     const handleFilterUpdate = (boundaryCode) => {
 
@@ -214,7 +283,7 @@ const BillInboxComponent = () => {
     const generateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: `/${expenseCalculatorContextPath}/v1/_calculate`,
     });
-
+    
     /// Triggers the bill generation process.
     /// Utilizes the custom API mutation hook for generating a bill based on specified criteria.
     /// Handles success and error responses to update UI accordingly.
@@ -235,11 +304,44 @@ const BillInboxComponent = () => {
                 {
                     // Callback for successful mutation response
                     onSuccess: (data) => {
+                        console.log("Bill generation response:", data);
                         setBillGenerationStatus(data?.statusCode);
-                        if (data?.statusCode === "SUCCESSFUL") {
+                if (data?.statusCode === "INITIATED") {
+                            console.log("Bill generation successful:", data);
                             // Show success toast and refetch bill data
                             setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
+                            console.log("here refetch:");
                             refetchBill();
+                            console.log("Bill refetched successfully",BillData);
+        //                     const bill = BillData?.bills?.[0];
+        //     if (bill?.id) {
+        //         console.log("Bill ID:", bill.id);
+        //       try {
+        //         console.log("Updating bill details with status PENDING_VERIFICATION");
+        //          const updatedBillDetails = bill.billDetails?.map((detail) => ({
+        //             ...detail,
+        //             status: "PENDING_VERIFICATION",
+        //             })) || [];
+
+        //          updateBillMutation.mutateAsync({
+        //           body: {
+        //             bill: 
+        //               {
+        //                 ...bill,
+        //                 businessService: "PAYMENTS.BILL",
+        //                 status: "PENDING_VERIFICATION",
+        //                 billDetails: updatedBillDetails,
+        //               },
+                   
+        //           },
+        //         });
+                
+        //       } catch (error) {
+        //     setShowToast({ key: "error", label: t(`HCM_AM_BILL_UPDATE_ERROR`), transitionTime: 3000 });
+        //     // Handle any unexpected errors that occur during the mutation process
+        // }
+        //     }
+            
                         } else {
                             // Update info description and show status-specific toast message
                             setInfoDescription(`HCM_AM_${data?.statusCode}_INFO_MESSAGE`);

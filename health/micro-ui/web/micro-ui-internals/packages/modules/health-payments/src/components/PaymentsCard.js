@@ -5,7 +5,7 @@ import { useTranslation } from "react-i18next";
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
   BILLS: ["CAMPAIGN_SUPERVISOR"],
-  EDIT_BILLS: ["BILL_EDITOR"],//TODO: add the actual role code for bill editor
+  EDIT_BILLS: ["PAYMENT_EDITOR"],//TODO: add the actual role code for bill editor
 };
 
 const PaymentsCard = () => {
