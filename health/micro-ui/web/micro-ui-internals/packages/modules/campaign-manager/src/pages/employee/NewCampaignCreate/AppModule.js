@@ -98,7 +98,7 @@ const AppModule = () => {
   const newModulesToCreate = uniqueModules.filter((code) => !alreadyCreatedModules.includes(code));
 
   const needsUpdate = (mdmsData || []).some((item) => {
-    const moduleCode = item?.uniqueIdentifier?.split(".")?.[0];
+    const moduleCode = item?.data?.name;
     const shouldBeSelected = uniqueModules.includes(moduleCode);
     return item?.data?.isSelected !== shouldBeSelected;
   });
@@ -112,7 +112,7 @@ const AppModule = () => {
 
   // Step 1: Update selection flags in MDMS
   for (const item of mdmsData || []) {
-    const moduleCode = item?.uniqueIdentifier?.split(".")?.[1];
+    const moduleCode = item?.data?.name;
     const shouldBeSelected = uniqueModules.includes(moduleCode);
     if (item?.data?.isSelected === shouldBeSelected) continue;
 
