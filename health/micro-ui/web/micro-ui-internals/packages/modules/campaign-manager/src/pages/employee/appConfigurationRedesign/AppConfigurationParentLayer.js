@@ -45,6 +45,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
   const fieldTypeMaster = searchParams.get("fieldType");
+  const projectType = searchParams.get("projectType");
   const campaignNumber = searchParams.get("campaignNumber");
   const variant = searchParams.get("variant");
   const formId = searchParams.get("formId");
@@ -65,10 +66,12 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
 
   useEffect(() => {
     const template = parentState?.actualTemplate;
-    if (template?.name && template?.project) {
+    if (parentState?.actualTemplate?.localeModule) {
+      setLocaleModule(parentState?.actualTemplate?.localeModule);
+    } else if (template?.name && template?.project) {
       setLocaleModule(`hcm-${template.name.toLowerCase()}-${template.project}`);
     }
-  }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
+  }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project, parentState?.actualTemplate?.localeModule]);
 
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -124,10 +127,10 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       parentDispatch({
         key: "SET",
         data: [...cacheData?.data?.data],
-        template: cacheData?.data?.data,
+        template: cacheData?.data,
         appIdData: cacheData?.data?.data,
       });
-      setCurrentStep(1);
+      setCurrentStep((prev) => (prev ? prev : 1));
       return;
     } else if (
       !isCacheLoading &&
@@ -202,8 +205,11 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           data: {
             projectType: projectType,
             campaignNumber: campaignNumber,
-            flow: parentState?.actualTemplate?.name,
+            flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
             data: mergedTemplate,
+            version: cacheData?.data?.version ? cacheData?.data?.version : parentState?.actualTemplate?.version,
+            localeModule: localeModule,
+            actualTemplate: cacheData?.data?.actualTemplate ? cacheData?.data?.actualTemplate : parentState?.actualTemplate,
           },
         },
       },
@@ -225,11 +231,17 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       });
       const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
       // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
-      const reverseFormat = {
-        ...parentState?.actualTemplate,
-        version: parentState?.actualTemplate?.version + 1,
-        pages: reverseData,
-      };
+      const reverseFormat = cacheData
+        ? {
+            ...parentState?.actualTemplate?.actualTemplate,
+            version: parentState?.actualTemplate?.version + 1,
+            pages: reverseData,
+          }
+        : {
+            ...parentState?.actualTemplate,
+            version: parentState?.actualTemplate?.version + 1,
+            pages: reverseData,
+          };
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
@@ -265,7 +277,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
             if (isNextTabAvailable && !finalSubmit) {
-              tabStateDispatch({ key: "NEXT_TAB" });
+              tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
               return;
             } else {
               history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
