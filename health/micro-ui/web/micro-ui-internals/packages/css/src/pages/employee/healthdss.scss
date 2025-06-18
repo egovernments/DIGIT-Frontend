@@ -340,7 +340,7 @@
   display: flex;
   align-items: center;
   gap: 1rem;
-  width: 100%;
+  width: auto;
   justify-content: flex-end;
 
   .digit-table-search-wrapper {
@@ -384,6 +384,10 @@
       }
     }*/
   }
+}
+
+.custom-table.digit-side-content{
+  width: auto;
 }
 
 .digit-ellipsis-button-wrapper {
@@ -701,4 +705,10 @@
   h2{
     color: theme(digitv2.lightTheme.text-color-secondary) !important;
   }
+}
+
+.table-column-header {
+  max-width: 5rem;
+  white-space: normal;              
+  overflow-wrap: break-word; 
 }

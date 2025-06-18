@@ -23,7 +23,6 @@ const L1Dashboard = ({}) => {
   const [searchQuery, onSearch] = useState("");
   const [pageZoom, setPageZoom] = useState(false);
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, dashboardId, language });
-
   return (
     <div>
       <h1>Dashboard Details</h1>
