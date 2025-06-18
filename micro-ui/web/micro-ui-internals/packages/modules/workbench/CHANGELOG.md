@@ -1,4 +1,7 @@
 
+## [1.0.26]  [18-Jun-2025]
+- Provided schema download & upload
+
 ## [1.0.25]  [16-Jun-2025]
 - Set default download capability disabled 'ENABLE_MDMS_BULK_DOWNLOAD'
 

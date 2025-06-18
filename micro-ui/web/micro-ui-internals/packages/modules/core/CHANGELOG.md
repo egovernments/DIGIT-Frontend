@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.42]  [18-Jun-2025]
+-Updated the loader logic in login page
+
 ## [1.8.41]  [12-Jun-2025]
 -Introduced new hook `useLoginConfig` for mdms call
 

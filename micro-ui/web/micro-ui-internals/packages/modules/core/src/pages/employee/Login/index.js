@@ -5,6 +5,7 @@ import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
 import { useLoginConfig } from "../../../hooks/useLoginConfig";
+import { Loader } from "@egovernments/digit-ui-components";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -15,6 +16,7 @@ const EmployeeLogin = ({ stateCode }) => {
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
   const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
+  const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
   const { data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
@@ -22,7 +24,6 @@ const EmployeeLogin = ({ stateCode }) => {
     modulePrefix,
   });
 
-  const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
   
   //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
@@ -59,6 +60,9 @@ const EmployeeLogin = ({ stateCode }) => {
     )
   );
 
+  if(isLoading){
+      return <Loader page={false} variant={"PageLoader"} />;
+  }
   return (
     <Switch>
       <Route path={`${path}`} exact>
