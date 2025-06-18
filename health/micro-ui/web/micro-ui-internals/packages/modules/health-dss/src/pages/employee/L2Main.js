@@ -175,7 +175,7 @@ const L2Main = ({}) => {
 
   const language = Digit.StoreData.getCurrentLanguage();
 
-  const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
+  // const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
   const { data: screenConfig, isLoading: isServicesLoading } = Digit.Hooks.dss.useMDMS(stateCode, "dss-dashboard", "DssDashboard", {
     select: (data) => {
       let screenConfig = data?.["dss-dashboard"]["dashboard-config"][0].MODULE_LEVEL;
@@ -485,7 +485,7 @@ const L2Main = ({}) => {
     },
   ];
 
-  if (isLoading || isUlbLoading || localizationLoading || isLoadingNAT || isServicesLoading) {
+  if (isLoading || isUlbLoading || isLoadingNAT || isServicesLoading) {
     return <Loader />;
   }
 
