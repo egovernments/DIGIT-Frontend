@@ -1,5 +1,5 @@
 import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header } from "@egovernments/digit-ui-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 
 
@@ -137,7 +137,7 @@ const TextButton = (props) => {
 // household member card
 
 const HouseHoldDetailsCard = (props) => {
-  const householdDetails = [
+  const householdDetails = props.beneficiaryDetails ? props.beneficiaryDetails : [
     //TODO: Need this to be moved to config @Pitabsh, @ram
     // { label: "HOUSEHOLD_HEAD", value: "Value" },
     // { label: "ADMINSTRATIVE_AREA", value: "value" },
@@ -363,76 +363,6 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
 
 const TableComponent = (props) => {
 
-
-  const tableStylesMap = {
-    digitTableContainerWithBorder: {
-      border: "1px solid #ccc",
-      borderRadius: "4px",
-      overflow: "hidden",
-    },
-    stickyHeader: {
-      position: "sticky",
-      top: 0,
-      backgroundColor: "#f9f9f9",
-      zIndex: 10,
-    },
-    hasDesColumnDescription: {
-      fontSize: "12px",
-      color: "#666",
-      marginTop: "4px",
-    },
-    withHeaderDivider: {
-      borderBottom: "2px solid #ccc",
-    },
-    withColumnDivider: {
-      borderRight: "1px solid #e0e0e0",
-    },
-    fixedColumns: {
-      position: "sticky",
-      left: 0,
-      backgroundColor: "#fff",
-      zIndex: 5,
-    },
-    scrollableColumns: {
-      backgroundColor: "#fafafa",
-    },
-    withBorder: {
-      border: "1px solid #ddd",
-    },
-    tableCell: {
-      padding: "12px",
-      fontSize: "14px",
-    },
-  };
-
-
-  // const columns = [
-  //   {
-  //     name: "Dose No.",
-  //     selector: (row) => row.dose,
-  //     cell: (row) => <strong>{row.dose}</strong>,
-  //   },
-  //   {
-  //     name: "Status",
-  //     minWidth: "200px",
-  //     selector: (row) => row.status,
-  //     cell: (row) => (
-  //       <span style={{ color: "green", fontWeight: "bold" }}>
-  //         {row.status}
-  //       </span>
-  //     ),
-  //   },
-  //   {
-  //     name: "Completed On",
-  //     minWidth: "200px",
-  //     selector: (row) => row.completedOn,
-  //   },
-  //   {
-  //     name: "Marked By",
-  //     selector: (row) => row.mark,
-  //   },
-  // ];
-
   const columns = props.field.dropDownOptions || [];
   // const data = [
   //   {
@@ -445,26 +375,27 @@ const TableComponent = (props) => {
 
   const data = [
     {
-      PERMANENT: "Yes",
-      CORRESPONDENCE: "No",
-      OTHER: "N/A"
+      PERMANENT: "Dose 1",
+      CORRESPONDENCE: "Administered",
+      OTHER: "14 June 2024"
     }
   ];
 
-  const styles = [
-    {
-      when: (row) => row.dose === "Dose 1",
-      style: {
-        backgroundColor: "#fde0d5",
-      },
-    },
+  const beneficiaryDetails = [
+    //TODO: Need this to be moved to config @Pitabsh, @ram
+
+
+    { label: "Name", value: "Rohit" },
+    { label: "Age", value: "0 year 3 months" },
+    { label: "Gender Count", value: "Male" },
+    { label: "Date of Registartion", value: "1 August 2022" },
   ];
 
 
   return (
     <div>
-      <div>Beneficiary Details</div>
-      <HouseHoldDetailsCard t={props.t} />
+      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "30px" }} >Beneficiary Details</h1>
+      <HouseHoldDetailsCard t={props.t} beneficiaryDetails={beneficiaryDetails} />
 
 
       <DoseTableWrapper columns={columns} data={data} />
@@ -473,59 +404,7 @@ const TableComponent = (props) => {
     ["Dose 2", "Administered", "15 June 2024"]
     ]} />*/}
 
-      {/*<TableMolecule
-      footerProps={{
-        addStickyFooter: false,
-        footerContent: 'Footer Content',
-        hideFooter: true,
-        isStickyFooter: false,
-        scrollableStickyFooterContent: true,
-        stickyFooterContent: 'Sticky Footer Content'
-      }}
-      frozenColumns={0}
-      headerData={[
-        {
-          label: 'S.No',
-          type: 'serialno'
-        },
-        {
-          label: 'Text',
-          type: 'text'
-        },
-        {
-          label: 'Numeric',
-          type: 'numeric'
-        },
-        {
-          label: 'Text',
-          type: 'text'
-        },
 
-      ]}
-
-      rows={[
-        [
-          1,
-
-          'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
-          ,
-          10000,
-
-          'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quisppp',
-
-
-        ],
-
-      ]}
-      styles={{
-        extraStyles: { tableStylesMap },
-        withAlternateBg: false,
-        withBorder: true,
-        withColumnDivider: false,
-        withHeaderDivider: true,
-        withRowDivider: true
-      }}
-    />*/}
     </div>
   );
 };
@@ -601,18 +480,86 @@ const TableComponent = (props) => {
 
 
 
+
+const injectTableStyles = () => {
+  const styleId = "dose-table-override-style";
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.innerHTML = `
+      .digit-data-table {
+        width: 100% !important;
+        display: block;
+      }
+
+      .digit-data-table table {
+        width: 100% !important;
+        table-layout: auto !important;
+      }
+
+      .digit-card-component.override-padding {
+        padding: 0 !important;
+      }
+
+      .digit-card-component.override-padding .digit-table-card {
+        padding: 0 !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+};
+
+// Define dataTableCustomStyles inline
+const dataTableCustomStyles = {
+  headCells: {
+    style: {
+      fontWeight: "bold",
+      fontSize: "14px",
+      backgroundColor: "#f2f2f2",
+      color: "#0b4b66",
+      padding: "10px",
+    },
+  },
+  rows: {
+    style: {
+      fontSize: "14px",
+      padding: "10px",
+      minHeight: "48px",
+    },
+  },
+  cells: {
+    style: {
+      padding: "10px",
+      whiteSpace: "nowrap",
+    },
+  },
+};
+
 const DoseTableWrapper = ({ columns = [], data = [] }) => {
+  useEffect(() => {
+    injectTableStyles();
+  }, []);
+
   const formattedColumns = columns.map((item) => ({
     name: item.name,
     selector: (row) => row[item.code],
     sortable: false,
-    minWidth: "200px"
+    minWidth: "200px",
   }));
 
   return (
-    <div style={{ padding: 0, margin: 0 }}>
-      <h3 style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>Current Dose</h3>
-      <div style={{ margin: 0, padding: 0, overflowX: "auto", width: "100%" }}>
+    <div style={{ width: "100%" }}>
+      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "30px" }}>
+        Current Dose
+      </h1>
+
+      <div
+        className="digit-card-component override-padding"
+        style={{
+          width: "100%",
+          overflowX: "auto",
+        }}
+      >
         <ResultsDataTable
           data={data}
           columns={formattedColumns}
@@ -624,19 +571,22 @@ const DoseTableWrapper = ({ columns = [], data = [] }) => {
           showTableDescription={false}
           enableGlobalSearch={false}
           selectableRowsNoSelectAll={true}
+          customStyles={dataTableCustomStyles}
           conditionalRowStyles={[
             {
               when: (row) => row.PERMANENT === "Yes",
               style: {
-                backgroundColor: "#fde0d5"
-              }
-            }
+                backgroundColor: "#fde0d5",
+              },
+            },
           ]}
         />
       </div>
     </div>
   );
 };
+
+export default DoseTableWrapper;
 
 
 
