@@ -3,56 +3,13 @@ import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import { getTemplateRenderer } from "../utils/template_components/RegistrationComponents";
 
-const my = [
-  {
 
-    "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
-    "value": "",
-    "defaultValue": false,
-    "active": true,
-    "jsonPath": "beneficiaryDetails",
-    "format": "dropdown",
-    "metaData": {},
-    "hidden": false,
-    "deleteFlag": false,
-    "isLocalised": false,
-    "innerLabel": "",
-    "helpText": "help text for dropdown",
-    "errorMessage": "",
-    "tooltip": "tooltip text",
-    "infoText": "",
-    "order": 7,
-    "readOnly": false,
-    "systemDate": false,
-    "RegexPattern": false,
-    "MdmsDropdown": false,
-    "isMdms": false,
-    "isMultiSelect": false,
-    "type": "dropdown",
-    "appType": "dropdown",
-    "dropDownOptions": [
-      {
-        "code": "PERMANENT",
-        "name": "PERMANENT"
-      },
-      {
-        "code": "CORRESPONDENCE",
-        "name": "CORRESPONDENCE"
-      },
-      {
-        "code": "OTHER",
-        "name": "OTHER"
-      }
-    ]
-  }
-
-]
 
 const GenericTemplateScreen = ({ components = [], t, selectedField, templateName }) => {
 
 
   const TemplateRenderer = templateName ? getTemplateRenderer(templateName) : null;
-  const contentFields = my
+  const contentFields = components
     .filter(
       (field) =>
         !field.hidden &&
@@ -61,7 +18,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
     )
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const buttonFields = my
+  const buttonFields = components
     .filter(
       (field) =>
         !field.hidden &&
