@@ -1,9 +1,9 @@
 import React, { useMemo, useRef, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useParams } from "react-router-dom";
-import { Loader, Card, CustomSVG } from "@egovernments/digit-ui-components";
 import { useLocation } from "react-router-dom";
+import { Loader, Card, TooltipWrapper, Button } from "@egovernments/digit-ui-components";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
+import Icon from "../../components/Icon";
 import {
   DownloadIcon,
   EmailIcon,
@@ -13,13 +13,9 @@ import {
   // DownloadImageIcon,
   // DownloadPDFIcon,
 } from "@egovernments/digit-ui-react-components";
-// import { ReactComponent as Arrow_Right } from "../images/Arrow_Right.svg";
 import { format } from "date-fns";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "../../components/FilterContext";
-// import { ArrowUpwardElement } from "../components/ArrowUpward";
-// import { ArrowDownwardElement } from "../components/ArrowDownward";
-// import { Icon } from "../components/common/Icon";
 import MapChart from "../../components/MapChart";
 import MapDrillChart from "../../components/MapDrillChart";
 import CustomTable from "../../components/CustomTable";
@@ -94,7 +90,6 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     interval: interval,
     title: "home",
   };
-
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: id,
     type: chartType,
@@ -109,14 +104,20 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     const insight = data?.insight?.value?.replace(/[+-]/g, "")?.split("%");
 
     if (data.insight?.indicator === "insight_no_diff") {
-      return <div style={{ whiteSpace: "pre", fontSize: "16px", paddingBottom: "25px", color: "#797979" }}>{data?.insight?.value}</div>;
+      return <div className={"digit-dss-insight-card-difference"}>{data?.insight?.value}</div>;
     }
 
     return (
-      <p className={`p3 ${data?.insight?.indicator === "upper_green" ? "color-green" : "color-red"}`}>
-        {/* {data?.insight?.indicator === "upper_green" ? ArrowUpwardElement("10px") : ArrowDownwardElement("10px")} */}
+      <div className={`digit-dss-insight-card-difference ${data?.insight?.indicator === "upper_green" ? "increase" : "decrease"}`}>
+        <Icon
+          type={data?.insight?.indicator === "upper_green" ? "arrow-upward" : "arrow-downward"}
+          iconColor={data?.insight?.indicator === "upper_green" ? "#00703C" : "#D4351C"}
+          width="1.5rem"
+          height="1.5rem"
+          className="digit-dss-insight-icon"
+        />
         {insight?.[0] && `${insight[0]}% ${t(Digit.Utils.locale.getTransformedLocale("DSS" + insight?.[1] || ""))}`}
-      </p>
+      </div>
     );
   };
 
@@ -131,20 +132,10 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
       <div className="digit-dss-insight-card-value">
         {Digit.Utils.dss.formatter(response?.responseData?.data?.[0]?.headerValue, response?.responseData?.data?.[0]?.headerSymbol, "Lac", true, t)}
       </div>
-      <div className={`tooltip`}>
-        <p className="p1">{t(data?.name)}</p>
-        <span
-          className="tooltiptext"
-          style={{
-            width: t(`TIP_${data.name}`).length < 40 ? "max-content" : "fit-content",
-            height: t(`TIP_${data.name}`).length < 40 ? "fit-content" : "max-content",
-            whiteSpace: "normal",
-          }}
-        >
-          <span style={{ fontSize: "16px", fontWeight: "400px", color: "white" }}>{t(`TIP_${data.name}`)}</span>
-        </span>
-      </div>
-      {subText && <p style={{ color: "#505A5F", fontWeight: 400, fontSize: "16px" }}>{subText}</p>}
+      <TooltipWrapper header={t(`TIP_${data.name}`)} placement={"top"}>
+        <div className="digit-dss-insight-card-text">{t(data?.name)}</div>
+      </TooltipWrapper>
+      {subText && <div className="digit-dss-insight-card-sub-text">{subText}</div>}
       {response?.responseData?.data?.[0]?.insight?.value ? <Insight /> : null}
     </div>
   );
@@ -345,129 +336,127 @@ const L1Main = () => {
   const shareOptions = navigator.share
     ? [
         {
+          code: "ES_DSS_SHARE_PDF",
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: () => {
-            setShowShareOptions(!showShareOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
-            }, 500);
-          },
         },
         {
+          code: "ES_DSS_SHARE_IMAGE",
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: () => {
-            setShowShareOptions(!showShareOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
-            }, 500);
-          },
         },
       ]
     : [
         {
-          icon: <EmailIcon />,
+          icon: "EmailIcon",
+          code: "ES_DSS_SHARE_PDF_EMAIL",
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: () => {
-            setShowShareOptions(!showShareOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
-            }, 500);
-          },
         },
         {
-          icon: <WhatsappIcon />,
+          icon: "WhatsappIcon",
+          code: "ES_DSS_SHARE_PDF_WHATSAPP",
           label: t("ES_DSS_SHARE_PDF"),
-          onClick: () => {
-            setShowShareOptions(!showShareOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
-            }, 500);
-          },
         },
         {
-          icon: <EmailIcon />,
+          icon: "EmailIcon",
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: () => {
-            setShowShareOptions(!showShareOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
-            }, 500);
-          },
+          code: "ES_DSS_SHARE_IMAGE_EMAIL",
         },
         {
-          icon: <WhatsappIcon />,
+          icon: "WhatsappIcon",
           label: t("ES_DSS_SHARE_IMAGE"),
-          onClick: () => {
-            setShowShareOptions(!showShareOptions);
-            setTimeout(() => {
-              return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
-            }, 500);
-          },
+          code: "ES_DSS_SHARE_IMAGE_WHATSAPP",
         },
       ];
 
   const downloadOptions = [
     {
-      // icon: <DownloadImageIcon />,
+      icon: "ImageIcon",
+      code: "ES_DSS_DOWNLOAD_IMAGE",
       label: t("ES_DSS_DOWNLOAD_IMAGE"),
-      onClick: () => {
-        setShowDownloadOptions(!showDownloadOptions);
+    },
+    {
+      icon: "PDFSvg",
+      label: t("ES_DSS_DOWNLOAD_PDF"),
+      code: "ES_DSS_DOWNLOAD_PDF",
+    },
+  ];
+
+  const onActionSelect = (item) => {
+    switch (item?.code) {
+      case "ES_DSS_DOWNLOAD_IMAGE":
         setTimeout(() => {
           return Digit.Download.Image(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
-      },
-    },
-    {
-      // icon: <DownloadPDFIcon />,
-      label: t("ES_DSS_DOWNLOAD_PDF"),
-      onClick: () => {
-        setShowDownloadOptions(!showDownloadOptions);
+      case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
           return Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
-      },
-    },
-  ];
+      case "ES_DSS_SHARE_PDF_EMAIL":
+        setTimeout(() => {
+          return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+        }, 500);
+      case "ES_DSS_SHARE_PDF_WHATSAPP":
+        setTimeout(() => {
+          return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+        }, 500);
+      case "ES_DSS_SHARE_IMAGE_EMAIL":
+        setTimeout(() => {
+          return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
+        }, 500);
+      case "ES_DSS_SHARE_IMAGE_WHATSAPP":
+        setTimeout(() => {
+          return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
+        }, 500);
+      case "ES_DSS_SHARE_PDF":
+        setTimeout(() => {
+          return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+        }, 500);
+      case "ES_DSS_SHARE_IMAGE":
+        setTimeout(() => {
+          return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
+        }, 500);
+    }
+  };
 
   if (localizationLoading) {
     return <Loader />;
   }
-
-  const optionStyle = {
-    paddingLeft: "5px",
-    paddingRight: "5px",
-  };
   console.log(dashboardConfig?.[0]?.visualizations, "dashboardConfig?.[0]?.visualizations");
 
   return (
     <FilterContext.Provider value={provided}>
       <div ref={fullPageRef}>
-        <div className="options" style={{ margin: "10px" }}>
-          <HeaderComponent styles={{ marginBottom: "0px" }}>{t(dashboardConfig?.[0]?.name)}</HeaderComponent>
+        <div className="digit-dss-options-header-wrapper">
+          <HeaderComponent className={"digit-dss-options-header-text"}>{t(dashboardConfig?.[0]?.name)}</HeaderComponent>
           {mobileView ? null : (
-            <div>
-              <div className="mrlg" style={optionStyle}>
-                <MultiLink
-                  className="multilink-block-wrapper"
-                  label={t(`ES_DSS_SHARE`)}
-                  icon={<ShareIcon className="mrsm" />}
-                  showOptions={(e) => setShowShareOptions(e)}
-                  onHeadClick={(e) => setShowShareOptions(e !== undefined ? e : !showShareOptions)}
-                  displayOptions={showShareOptions}
-                  options={shareOptions}
-                />
-              </div>
-              <div className="mrsm" style={optionStyle}>
-                <MultiLink
-                  className="multilink-block-wrapper"
-                  label={t(`ES_DSS_DOWNLOAD`)}
-                  icon={<DownloadIcon className="mrsm" />}
-                  showOptions={(e) => setShowDownloadOptions(e)}
-                  onHeadClick={(e) => setShowDownloadOptions(e !== undefined ? e : !showDownloadOptions)}
-                  displayOptions={showDownloadOptions}
-                  options={downloadOptions}
-                />
-              </div>
+            <div className="digit-dss-options-header-options">
+              <Button
+                type="actionButton"
+                variation="teritiary"
+                label={t(`ES_DSS_SHARE`)}
+                options={shareOptions}
+                optionsKey="label"
+                showBottom={true}
+                size={"medium"}
+                className={"digit-dss-options-header-option-button"}
+                isSearchable={false}
+                onOptionSelect={onActionSelect}
+                icon={"Share"}
+                iconFill={"#505a5f"}
+              />
+              <Button
+                type="actionButton"
+                className={"digit-dss-options-header-option-button"}
+                variation="teritiary"
+                label={t(`ES_DSS_DOWNLOAD`)}
+                options={downloadOptions}
+                optionsKey="label"
+                size={"medium"}
+                showBottom={true}
+                isSearchable={false}
+                icon={"FileDownload"}
+                onOptionSelect={onActionSelect}
+                iconFill={"#505a5f"}
+              />
             </div>
           )}
         </div>
@@ -591,28 +580,11 @@ const L1Main = () => {
                   );
                 } else if (item?.vizType === "stacked-collection") {
                   return (
-                    // <div className="employeeCard chart-item stackedCard" style={{ backgroundColor: "#fff" }} key={index}>
-                    //   <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row" }}>
-                    //     <div className="dss-card-header" style={{ marginBottom: "10px" }}>
-                    //       {/* {Icon(item.name, colors[index].dark)} */}
-                    //       <p style={{ marginLeft: "20px" }}>{t(item.name)}</p>
-                    //     </div>
-                    //   </div>
-
-                    //   <div className="dss-card-body-stacked">
-                    //     {item.charts.map((chart, key) => (
-                    //       <div className={`dss-card-item ${key !== item.charts.length - 1 ? "dss-card-item-border" : ""}`}>
-                    //         <Chart data={chart} key={key} moduleLevel={item.moduleLevel} overview={item.vizType === "collection"} />
-                    //       </div>
-                    //     ))}
-                    //   </div>
-                    // </div>
-
                     // TO DO : UPDATE THE ICONS
                     <Card key={index} className={"digit-stacked-collection-card"}>
                       <div className={"digit-stacked-collection-card-header-wrapper"}>
                         {/* {Icon(item.name, colors[index].dark)} */}
-                        <CustomSVG.AddFileFilled />
+                        <Icon type={item.name} iconColor={"#C84C0E"} width="1.5rem" height="1.5rem" className="digit-dss-stacked-card-icon" />
                         <div className={"digit-stacked-collection-card-header-text"}>{t(item.name)}</div>
                       </div>
                       <div className="digit-dss-card-body-stacked">

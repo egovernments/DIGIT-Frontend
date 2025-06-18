@@ -21,11 +21,6 @@ const ProjectBreadCrumb = ({ location }) => {
       show: true,
     },
     {
-      internalLink: `/${window?.contextPath}/employee/dss/landing`,
-      content: t("HCM_BREADCRUMBS_LANDING"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LANDING"
-    },
-    {
       internalLink: `/${window?.contextPath}/employee/dss/past-campaigns`,
       content: t("HCM_BREADCRUMBS_PAST_CAMPAIGNS"),
       show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PAST_CAMPAIGNS"
@@ -51,14 +46,14 @@ const ProjectBreadCrumb = ({ location }) => {
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_DASHBOARD",
     },
     {
-      internalLink: `/${window?.contextPath}/employee/dss/l1-main`,
+      internalLink: `/${window?.contextPath}/employee/dss/level1`,
       content: t("LEVEL_ONE_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_MAIN",
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_ONE_DASHBOARD",
     },
     {
-      internalLink: `/${window?.contextPath}/employee/dss/l2-main`,
+      internalLink: `/${window?.contextPath}/employee/dss/level2`,
       content: t("LEVEL_TWO_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L2_MAIN",
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_TWO_DASHBOARD",
     },
   ];
   return <BreadCrumb crumbs={crumbs} />;
