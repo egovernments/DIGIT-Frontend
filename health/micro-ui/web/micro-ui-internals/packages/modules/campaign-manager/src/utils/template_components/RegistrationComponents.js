@@ -195,7 +195,7 @@ const HouseholdOverViewMemberCard = (props) => {
 
 
       <div style={styles.buttonGroup}>
-        {!(props.primaryBtn?.hidden) && (
+        {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && (!(props.primaryBtn?.hidden)) && (
           <Button
             className={`app-preview-action-button `}
             key={0}
@@ -206,7 +206,7 @@ const HouseholdOverViewMemberCard = (props) => {
           />
         )}
 
-        {!(props.secondaryBtn?.hidden) && (
+        {props.secondaryBtn && Object.keys(props.secondaryBtn).length > 0 && (!(props.secondaryBtn?.hidden)) && (
           <Button
             className={`app-preview-action-button `}
             key={1}
@@ -217,6 +217,30 @@ const HouseholdOverViewMemberCard = (props) => {
           />
         )}
       </div>
+
+      {/* <div style={styles.buttonGroup}>
+  {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && !props.primaryBtn.hidden && (
+    <Button
+      className="app-preview-action-button"
+      key={0}
+      variation="primary"
+      label={props.t(props.primaryBtn.label) || props.primaryBtn.label || "LABEL"}
+      title={props.t(props.primaryBtn.label) || props.primaryBtn.label || "LABEL"}
+      onClick={() => {}}
+    />
+  )}
+
+  {props.secondaryBtn && Object.keys(props.secondaryBtn).length > 0 && !props.secondaryBtn.hidden && (
+    <Button
+      className="app-preview-action-button"
+      key={1}
+      variation="secondary"
+      label={props.t(props.secondaryBtn.label) || props.secondaryBtn.label || "LABEL"}
+      title={props.t(props.secondaryBtn.label) || props.secondaryBtn.label || "LABEL"}
+      onClick={() => {}}
+    />
+  )}
+</div>*/}
 
     </div>
   );
@@ -298,6 +322,10 @@ export const getTemplateRenderer = (templateName) => {
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
 
+    case "BeneficiaryDetails":
+
+      return BeneficiaryDetailsSection;
+
 
 
 
@@ -358,126 +386,70 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
 };
 
 
+const BeneficiaryDetailsSection = (props) => {
+
+  const fields = props.components || [];
+
+  // Extract DetailsCard and Table configurations
+  const detailsCardField = fields.find((f) => f.type === "DetailsCard");
+  const tableField = fields.find((f) => f.type === "Table");
+
+  const heading = props.t
+    ? props.t(detailsCardField?.label || "BENEFICIARY_DETAILS_TITLE")
+    : detailsCardField?.label || "Beneficiary Details";
+
+  const tableLabelRaw = tableField?.label || "BENEFICIARY_DETAILS_TABLE_HEADER";
+  const tableHeading = props.t ? props.t(tableLabelRaw) : tableLabelRaw;
+  const finalTableHeading = tableHeading && tableHeading.trim() !== "" ? tableHeading : "Current Dose";
 
 
+  // Transform dropDownOptions for DetailsCard
+  const beneficiaryDetails =
+    detailsCardField?.dropDownOptions?.map((item) => ({
+      label: item.name,
+      value: item.name || ""
+    })) || [];
 
-const TableComponent = (props) => {
-
-  const columns = props.field.dropDownOptions || [];
-  // const data = [
-  //   {
-  //     dose: "Dose 1",
-  //     status: "Administered",
-  //     completedOn: "14 June 2024",
-  //     mark: "hark",
-  //   },
-  // ];
-
+  // Sample static data for BeneficiaryTableWrapper (actual data can be dynamic)
   const data = [
     {
-      PERMANENT: "Dose 1",
-      CORRESPONDENCE: "Administered",
-      OTHER: "14 June 2024"
+      DOSENO: "Dose 1",
+      STATUS: "Administered",
+      COMPLETED_ON: "14 June 2024"
     }
   ];
 
-  const beneficiaryDetails = [
-    //TODO: Need this to be moved to config @Pitabsh, @ram
+  // Transform dropDownOptions for Table columns
 
 
-    { label: "Name", value: "Rohit" },
-    { label: "Age", value: "0 year 3 months" },
-    { label: "Gender Count", value: "Male" },
-    { label: "Date of Registartion", value: "1 August 2022" },
-  ];
+  // const columns = tableField?.dropDownOptions || []
+  const columns =
+    tableField?.dropDownOptions?.map((item) => {
+      const translated = props.t ? props.t(item.name) : item.name;
+      const fallbackName = translated && translated.trim() !== "" ? translated : item.name;
+
+      return {
+        name: fallbackName,
+        code: item.code
+      };
+    }) || [];
+
 
 
   return (
     <div>
-      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "30px" }} >Beneficiary Details</h1>
-      <HouseHoldDetailsCard t={props.t} beneficiaryDetails={beneficiaryDetails} />
+      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
+        {heading}
+      </h1>
 
+      {beneficiaryDetails.length > 0 && (
+        <HouseHoldDetailsCard t={props.t} beneficiaryDetails={beneficiaryDetails} />
+      )}
 
-      <DoseTableWrapper columns={columns} data={data} />
-
-      {/*<DynamicTable title="Current Dose" headers={["Dose No.", "Status", "Completed On"]} rows={[["Dose 1", "Administered", "14 June 2024"],
-    ["Dose 2", "Administered", "15 June 2024"]
-    ]} />*/}
-
-
+      {columns.length > 0 && <BeneficiaryTableWrapper finalTableHeading={finalTableHeading} columns={columns} data={data} t={props.t} />}
     </div>
   );
 };
-
-
-
-
-
-
-// Manually created [pitabsh]
-
-// const DynamicTable = ({ title, headers, rows }) => {
-//   return (
-//     <div style={{ margin: 0, padding: 0 }}>
-//       <h3 style={{ fontWeight: "bold", margin: "0 0 8px 0" }}>{title}</h3>
-//       <table style={{ borderCollapse: "collapse", width: "100%" }}>
-//         <thead>
-//           <tr>
-//             {headers.map((header, idx) => (
-//               <th
-//                 key={idx}
-//                 style={{
-//                   border: "1px solid #ddd",
-//                   padding: "8px",
-//                   textAlign: "left",
-//                   backgroundColor: "#f9f9f9",
-//                   fontWeight: "bold",
-//                 }}
-//               >
-//                 {header}
-//               </th>
-//             ))}
-//           </tr>
-//         </thead>
-//         <tbody>
-//           {rows.map((row, rowIdx) => (
-//             <tr
-//               key={rowIdx}
-//               style={{
-//                 backgroundColor: rowIdx === 0 ? "#fde0d5" : "transparent",
-//               }}
-//             >
-//               {row.map((cell, cellIdx) => (
-//                 <td
-//                   key={cellIdx}
-//                   style={{
-//                     border: "1px solid #ddd",
-//                     padding: "8px",
-//                     color:
-//                       typeof cell === "string" &&
-//                         cell.toLowerCase() === "administered"
-//                         ? "green"
-//                         : "#000",
-//                     fontWeight:
-//                       typeof cell === "string" &&
-//                         cell.toLowerCase() === "administered"
-//                         ? "bold"
-//                         : "normal",
-//                   }}
-//                 >
-//                   {cell}
-//                 </td>
-//               ))}
-//             </tr>
-//           ))}
-//         </tbody>
-//       </table>
-//     </div>
-//   );
-// };
-
-
-
 
 
 
@@ -535,7 +507,7 @@ const dataTableCustomStyles = {
   },
 };
 
-const DoseTableWrapper = ({ columns = [], data = [] }) => {
+const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = "" }) => {
   useEffect(() => {
     injectTableStyles();
   }, []);
@@ -549,8 +521,8 @@ const DoseTableWrapper = ({ columns = [], data = [] }) => {
 
   return (
     <div style={{ width: "100%" }}>
-      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "30px" }}>
-        Current Dose
+      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
+        {finalTableHeading}
       </h1>
 
       <div
@@ -586,7 +558,7 @@ const DoseTableWrapper = ({ columns = [], data = [] }) => {
   );
 };
 
-export default DoseTableWrapper;
+export default BeneficiaryTableWrapper;
 
 
 
@@ -594,6 +566,6 @@ export default DoseTableWrapper;
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
-registerComponent("beneficiaryDetails", TableComponent);
+
 
 
