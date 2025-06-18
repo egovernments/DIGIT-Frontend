@@ -3,10 +3,56 @@ import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import { getTemplateRenderer } from "../utils/template_components/RegistrationComponents";
 
-const GenericTemplateScreen = ({ components = [], t, selectedField , templateName}) => {
+const my = [
+  {
+
+    "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
+    "value": "",
+    "defaultValue": false,
+    "active": true,
+    "jsonPath": "beneficiaryDetails",
+    "format": "dropdown",
+    "metaData": {},
+    "hidden": false,
+    "deleteFlag": false,
+    "isLocalised": false,
+    "innerLabel": "",
+    "helpText": "help text for dropdown",
+    "errorMessage": "",
+    "tooltip": "tooltip text",
+    "infoText": "",
+    "order": 7,
+    "readOnly": false,
+    "systemDate": false,
+    "RegexPattern": false,
+    "MdmsDropdown": false,
+    "isMdms": false,
+    "isMultiSelect": false,
+    "type": "dropdown",
+    "appType": "dropdown",
+    "dropDownOptions": [
+      {
+        "code": "PERMANENT",
+        "name": "PERMANENT"
+      },
+      {
+        "code": "CORRESPONDENCE",
+        "name": "CORRESPONDENCE"
+      },
+      {
+        "code": "OTHER",
+        "name": "OTHER"
+      }
+    ]
+  }
+
+]
+
+const GenericTemplateScreen = ({ components = [], t, selectedField, templateName }) => {
+
 
   const TemplateRenderer = templateName ? getTemplateRenderer(templateName) : null;
-  const contentFields = components
+  const contentFields = my
     .filter(
       (field) =>
         !field.hidden &&
@@ -15,7 +61,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField , templateNam
     )
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
-  const buttonFields = components
+  const buttonFields = my
     .filter(
       (field) =>
         !field.hidden &&
@@ -41,25 +87,25 @@ const GenericTemplateScreen = ({ components = [], t, selectedField , templateNam
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
         }}
       >
-    {TemplateRenderer ? (
-    <TemplateRenderer components={components} t={t} />
-  ) :
-        contentFields.map((field, index) => {
-          const ComponentToRender = getRegisteredComponent(field.jsonPath);
-          if (!ComponentToRender) return null;
+        {TemplateRenderer ? (
+          <TemplateRenderer components={components} t={t} />
+        ) :
+          contentFields.map((field, index) => {
+            const ComponentToRender = getRegisteredComponent(field.jsonPath);
+            if (!ComponentToRender) return null;
 
-              const isSelected = selectedField?.jsonPath === field.jsonPath;
+            const isSelected = selectedField?.jsonPath === field.jsonPath;
 
-              return (
-                <div
-                  key={index}
-                  className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
-                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
-                >
-                  <ComponentToRender field={field} t={t} />
-                </div>
-              );
-            })}
+            return (
+              <div
+                key={index}
+                className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
+                style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
+              >
+                <ComponentToRender field={field} t={t} />
+              </div>
+            );
+          })}
       </div>
 
       {/* Fixed Buttons at Card Bottom */}

@@ -1,4 +1,4 @@
-import { Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard } from "@egovernments/digit-ui-components";
+import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header } from "@egovernments/digit-ui-components";
 import React from "react";
 import { registerComponent } from "./RegistrationRegistry";
 
@@ -286,6 +286,8 @@ const styles = {
   },
 };
 
+
+
 export const getTemplateRenderer = (templateName) => {
 
   switch (templateName) {
@@ -295,6 +297,9 @@ export const getTemplateRenderer = (templateName) => {
 
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
+
+
+
 
     // case "AnotherTemplate": return anotherRenderer;
 
@@ -355,9 +360,290 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
 
 
 
+
+const TableComponent = (props) => {
+
+
+  const tableStylesMap = {
+    digitTableContainerWithBorder: {
+      border: "1px solid #ccc",
+      borderRadius: "4px",
+      overflow: "hidden",
+    },
+    stickyHeader: {
+      position: "sticky",
+      top: 0,
+      backgroundColor: "#f9f9f9",
+      zIndex: 10,
+    },
+    hasDesColumnDescription: {
+      fontSize: "12px",
+      color: "#666",
+      marginTop: "4px",
+    },
+    withHeaderDivider: {
+      borderBottom: "2px solid #ccc",
+    },
+    withColumnDivider: {
+      borderRight: "1px solid #e0e0e0",
+    },
+    fixedColumns: {
+      position: "sticky",
+      left: 0,
+      backgroundColor: "#fff",
+      zIndex: 5,
+    },
+    scrollableColumns: {
+      backgroundColor: "#fafafa",
+    },
+    withBorder: {
+      border: "1px solid #ddd",
+    },
+    tableCell: {
+      padding: "12px",
+      fontSize: "14px",
+    },
+  };
+
+
+  // const columns = [
+  //   {
+  //     name: "Dose No.",
+  //     selector: (row) => row.dose,
+  //     cell: (row) => <strong>{row.dose}</strong>,
+  //   },
+  //   {
+  //     name: "Status",
+  //     minWidth: "200px",
+  //     selector: (row) => row.status,
+  //     cell: (row) => (
+  //       <span style={{ color: "green", fontWeight: "bold" }}>
+  //         {row.status}
+  //       </span>
+  //     ),
+  //   },
+  //   {
+  //     name: "Completed On",
+  //     minWidth: "200px",
+  //     selector: (row) => row.completedOn,
+  //   },
+  //   {
+  //     name: "Marked By",
+  //     selector: (row) => row.mark,
+  //   },
+  // ];
+
+  const columns = props.field.dropDownOptions || [];
+  // const data = [
+  //   {
+  //     dose: "Dose 1",
+  //     status: "Administered",
+  //     completedOn: "14 June 2024",
+  //     mark: "hark",
+  //   },
+  // ];
+
+  const data = [
+    {
+      PERMANENT: "Yes",
+      CORRESPONDENCE: "No",
+      OTHER: "N/A"
+    }
+  ];
+
+  const styles = [
+    {
+      when: (row) => row.dose === "Dose 1",
+      style: {
+        backgroundColor: "#fde0d5",
+      },
+    },
+  ];
+
+
+  return (
+    <div>
+      <div>Beneficiary Details</div>
+      <HouseHoldDetailsCard t={props.t} />
+
+
+      <DoseTableWrapper columns={columns} data={data} />
+
+      {/*<DynamicTable title="Current Dose" headers={["Dose No.", "Status", "Completed On"]} rows={[["Dose 1", "Administered", "14 June 2024"],
+    ["Dose 2", "Administered", "15 June 2024"]
+    ]} />*/}
+
+      {/*<TableMolecule
+      footerProps={{
+        addStickyFooter: false,
+        footerContent: 'Footer Content',
+        hideFooter: true,
+        isStickyFooter: false,
+        scrollableStickyFooterContent: true,
+        stickyFooterContent: 'Sticky Footer Content'
+      }}
+      frozenColumns={0}
+      headerData={[
+        {
+          label: 'S.No',
+          type: 'serialno'
+        },
+        {
+          label: 'Text',
+          type: 'text'
+        },
+        {
+          label: 'Numeric',
+          type: 'numeric'
+        },
+        {
+          label: 'Text',
+          type: 'text'
+        },
+
+      ]}
+
+      rows={[
+        [
+          1,
+
+          'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aeneanp',
+          ,
+          10000,
+
+          'ALorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quisppp',
+
+
+        ],
+
+      ]}
+      styles={{
+        extraStyles: { tableStylesMap },
+        withAlternateBg: false,
+        withBorder: true,
+        withColumnDivider: false,
+        withHeaderDivider: true,
+        withRowDivider: true
+      }}
+    />*/}
+    </div>
+  );
+};
+
+
+
+
+
+
+// Manually created [pitabsh]
+
+// const DynamicTable = ({ title, headers, rows }) => {
+//   return (
+//     <div style={{ margin: 0, padding: 0 }}>
+//       <h3 style={{ fontWeight: "bold", margin: "0 0 8px 0" }}>{title}</h3>
+//       <table style={{ borderCollapse: "collapse", width: "100%" }}>
+//         <thead>
+//           <tr>
+//             {headers.map((header, idx) => (
+//               <th
+//                 key={idx}
+//                 style={{
+//                   border: "1px solid #ddd",
+//                   padding: "8px",
+//                   textAlign: "left",
+//                   backgroundColor: "#f9f9f9",
+//                   fontWeight: "bold",
+//                 }}
+//               >
+//                 {header}
+//               </th>
+//             ))}
+//           </tr>
+//         </thead>
+//         <tbody>
+//           {rows.map((row, rowIdx) => (
+//             <tr
+//               key={rowIdx}
+//               style={{
+//                 backgroundColor: rowIdx === 0 ? "#fde0d5" : "transparent",
+//               }}
+//             >
+//               {row.map((cell, cellIdx) => (
+//                 <td
+//                   key={cellIdx}
+//                   style={{
+//                     border: "1px solid #ddd",
+//                     padding: "8px",
+//                     color:
+//                       typeof cell === "string" &&
+//                         cell.toLowerCase() === "administered"
+//                         ? "green"
+//                         : "#000",
+//                     fontWeight:
+//                       typeof cell === "string" &&
+//                         cell.toLowerCase() === "administered"
+//                         ? "bold"
+//                         : "normal",
+//                   }}
+//                 >
+//                   {cell}
+//                 </td>
+//               ))}
+//             </tr>
+//           ))}
+//         </tbody>
+//       </table>
+//     </div>
+//   );
+// };
+
+
+
+
+
+const DoseTableWrapper = ({ columns = [], data = [] }) => {
+  const formattedColumns = columns.map((item) => ({
+    name: item.name,
+    selector: (row) => row[item.code],
+    sortable: false,
+    minWidth: "200px"
+  }));
+
+  return (
+    <div style={{ padding: 0, margin: 0 }}>
+      <h3 style={{ fontWeight: "bold", marginBottom: "0.5rem" }}>Current Dose</h3>
+      <div style={{ margin: 0, padding: 0, overflowX: "auto", width: "100%" }}>
+        <ResultsDataTable
+          data={data}
+          columns={formattedColumns}
+          showCheckBox={false}
+          onSelectedRowsChange={() => { }}
+          progressPending={false}
+          isPaginationRequired={false}
+          showTableTitle={false}
+          showTableDescription={false}
+          enableGlobalSearch={false}
+          selectableRowsNoSelectAll={true}
+          conditionalRowStyles={[
+            {
+              when: (row) => row.PERMANENT === "Yes",
+              style: {
+                backgroundColor: "#fde0d5"
+              }
+            }
+          ]}
+        />
+      </div>
+    </div>
+  );
+};
+
+
+
 // Register all components
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
+registerComponent("beneficiaryDetails", TableComponent);
 
 
