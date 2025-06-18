@@ -24,6 +24,7 @@ import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { getTypeAndFormatFromAppType } from "../../../utils/appConfigHelpers";
+import { TEMPLATE_BASE_CONFIG_MASTER } from "../NewCampaignCreate/AppModule";
 
 /**
  * Determines whether a specific field in a UI panel should be disabled.
@@ -38,7 +39,7 @@ import { getTypeAndFormatFromAppType } from "../../../utils/appConfigHelpers";
  */
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
-  const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
+  const shouldDisable = resourceData?.[TEMPLATE_BASE_CONFIG_MASTER]?.some((ele) => drawerState?.jsonPath === ele);
 
   // force disable if field is hidden
   if (drawerState?.hidden) {
@@ -91,7 +92,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         CONSOLE_MDMS_MODULENAME,
         [
           {
-            name: "TemplateBaseConfig",
+            name: TEMPLATE_BASE_CONFIG_MASTER,
             filter: getBaseTemplateFilter(projectType, flowName),
           },
         ],
