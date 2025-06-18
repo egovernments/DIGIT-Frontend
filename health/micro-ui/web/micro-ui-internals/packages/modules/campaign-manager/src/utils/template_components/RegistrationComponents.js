@@ -391,8 +391,8 @@ const BeneficiaryDetailsSection = (props) => {
   const fields = props.components || [];
 
   // Extract DetailsCard and Table configurations
-  const detailsCardField = fields.find((f) => f.type === "DetailsCard");
-  const tableField = fields.find((f) => f.type === "Table");
+  const detailsCardField = fields.find((f) => f.jsonPath === "DetailsCard");
+  const tableField = fields.find((f) => f.jsonPath === "Table");
 
   const heading = props.t
     ? props.t(detailsCardField?.label || "BENEFICIARY_DETAILS_TITLE")
@@ -438,15 +438,16 @@ const BeneficiaryDetailsSection = (props) => {
 
   return (
     <div>
-      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
+      {(!detailsCardField.hidden) && beneficiaryDetails.length > 0 && (<h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
         {heading}
-      </h1>
+      </h1>)
+      }
 
-      {beneficiaryDetails.length > 0 && (
+      {(!detailsCardField.hidden) && beneficiaryDetails.length > 0 && (
         <HouseHoldDetailsCard t={props.t} beneficiaryDetails={beneficiaryDetails} />
       )}
 
-      {columns.length > 0 && <BeneficiaryTableWrapper finalTableHeading={finalTableHeading} columns={columns} data={data} t={props.t} />}
+      {(!tableField.hidden && columns.length > 0) && <BeneficiaryTableWrapper finalTableHeading={finalTableHeading} columns={columns} data={data} t={props.t} />}
     </div>
   );
 };
