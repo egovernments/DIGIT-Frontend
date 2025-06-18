@@ -3,7 +3,7 @@ name: Node.js Publish Health UI CSS Packages
 
 on:
   push:
-    branches: [ 'develop','console', 'master']
+    branches: [ 'HCM','console', 'master']
     paths:
       - 'health/micro-ui/web/micro-ui-internals/packages/css/**'
       # - 'health/micro-ui/web/micro-ui-internals/**' disabling main since we target only for css
