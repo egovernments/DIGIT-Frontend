@@ -155,7 +155,7 @@ const HouseHoldDetailsCard = (props) => {
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex",  alignItems: "center", minWidth:"100vh"
+              display: "flex", alignItems: "center", minWidth: "100vh"
             }}
             key={index}
             inline={true}
@@ -175,7 +175,7 @@ const HouseholdOverViewMemberCard = (props) => {
   { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
   return (
-    <div  style={{ ...styles.card, overflowX: "hidden" }}>
+    <div style={{ ...styles.card, overflowX: "hidden" }}>
       <div style={styles.header}>
         <div style={styles.name}>
           <strong>{props.name}</strong>
@@ -221,29 +221,7 @@ const HouseholdOverViewMemberCard = (props) => {
         )}
       </div>
 
-      {/* <div style={styles.buttonGroup}>
-  {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && !props.primaryBtn.hidden && (
-    <Button
-      className="app-preview-action-button"
-      key={0}
-      variation="primary"
-      label={props.t(props.primaryBtn.label) || props.primaryBtn.label || "LABEL"}
-      title={props.t(props.primaryBtn.label) || props.primaryBtn.label || "LABEL"}
-      onClick={() => {}}
-    />
-  )}
 
-  {props.secondaryBtn && Object.keys(props.secondaryBtn).length > 0 && !props.secondaryBtn.hidden && (
-    <Button
-      className="app-preview-action-button"
-      key={1}
-      variation="secondary"
-      label={props.t(props.secondaryBtn.label) || props.secondaryBtn.label || "LABEL"}
-      title={props.t(props.secondaryBtn.label) || props.secondaryBtn.label || "LABEL"}
-      onClick={() => {}}
-    />
-  )}
-</div>*/}
 
     </div>
   );
