@@ -21,7 +21,9 @@ const iconMap = {
   "arrow-downward": "ArrowDownward",
   "dss_health_national_households_registered": "Home", 
   "dss_health_population_administered": "PeopleAlt", 
-  "dss_health_drugs_administered": "Vector", 
+  "dss_health_drugs_administered": "Vector",  // TODO : NEED TO GET THE SVG 
+  "dss_health_households":"Home",
+  "dss_health_overview_drug_used":"Vector" // TODO : NEED TO GET THE SVG 
 };
 
 const Icon = ({ type = "", iconColor = "#C84C0E", width = 16, height = 16, className = "" }) => {

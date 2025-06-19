@@ -1,17 +1,15 @@
-import { Card, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Loader } from "@egovernments/digit-ui-components";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-// import { ArrowDownwardElement } from "./ArrowDownward";
-// import { ArrowUpwardElement } from "./ArrowUpward";
 import FilterContext from "./FilterContext";
-// import Icon from "./common/Icon";
 import { Cell, Legend, Pie, PieChart, ResponsiveContainer, Tooltip, Label } from "recharts";
 const COLORS = ["#0BABDE", "#D6D5D4"];
+import Icon from "./Icon";
 
 const CircularProgressBar = ({ t, data }) => {
   const displayData = [{ name: "COVERAGE", value: data.headerValue ? data.headerValue : 100 }];
   const endAngle = 90 * (1 - (4 * data.headerValue) / 100);
-  const percentageValue  = Digit.Utils.dss.formatter(data?.headerValue, "percentage", "", true, t).replace(" ", "");
+  const percentageValue = Digit.Utils.dss.formatter(data?.headerValue, "percentage", "", true, t).replace(" ", "");
   return (
     <ResponsiveContainer width="100%" height={90}>
       <PieChart>
@@ -43,21 +41,10 @@ const CircularProgressBar = ({ t, data }) => {
           cornerRadius={20}
         >
           <Cell key={`cel-0`} fill={COLORS[0]} />
-          <Label position="center" value={percentageValue} style={{ fontSize: "20px", fontWeight: 700, fill: "#383838" }} />
+          <Label position="center" className={"digit-small-pie-label"} value={percentageValue} />
         </Pie>
       </PieChart>
     </ResponsiveContainer>
-  );
-};
-
-const MetricData = ({ t, data }) => {
-  const { value } = useContext(FilterContext);
-  return (
-    <div>
-      <p className="heading-m" style={{ paddingTop: "0px", whiteSpace: "nowrap", marginLeft: "0px", fontSize: "24px", color: "#505A5F" }}>
-        {`${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true, t)}`}
-      </p>
-    </div>
   );
 };
 
@@ -66,29 +53,22 @@ const Insight = ({ data, t }) => {
   const insight = data?.insight?.value?.replace(/[+-]/g, "")?.split("%");
 
   if (data?.insight?.indicator === "insight_no_diff") {
-    return <div style={{ fontSize: "14px", padding: "5px", color: "#797979" }}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(data?.insight?.value)}`)}</div>;
+    return <div className={"digit-dss-insight-card-difference"}>{t(`DSS_${Digit.Utils.locale.getTransformedLocale(data?.insight?.value)}`)}</div>;
   }
 
   return (
-    <div
-      style={{
-        width: "100%",
-        display: "flex",
-        justifyContent: "center",
-      }}
-    >
-      <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
-        {/* {data?.insight?.indicator === "upper_green" ? ArrowUpwardElement("10px") : ArrowDownwardElement("10px")} */}
-        <div
-          className={`${data?.insight.colorCode}`}
-          style={{ whiteSpace: "pre", fontSize: "14px", padding: "5px", color: data?.insight?.indicator === "upper_green" ? "#259B24" : "#D4351C" }}
-        >
-          {insight?.[0] &&
-            `${Digit.Utils.dss.formatter(insight[0], "number", value?.denomination, true, t)}% ${t(
-              Digit.Utils.locale.getTransformedLocale("DSS" + insight?.[1] || "")
-            )}`}
-        </div>
-      </div>
+    <div className={`digit-dss-insight-card-difference ${data?.insight?.indicator === "upper_green" ? "increase" : "decrease"} metric-card`}>
+      <Icon
+        type={data?.insight?.indicator === "upper_green" ? "arrow-upward" : "arrow-downward"}
+        iconColor={data?.insight?.indicator === "upper_green" ? "#00703C" : "#D4351C"}
+        width="1.5rem"
+        height="1.5rem"
+        className="digit-dss-insight-icon"
+      />
+      {insight?.[0] &&
+        `${Digit.Utils.dss.formatter(insight[0], "number", value?.denomination, true, t)}% ${t(
+          Digit.Utils.locale.getTransformedLocale("DSS" + insight?.[1] || "")
+        )}`}
     </div>
   );
 };
@@ -97,7 +77,7 @@ const Chart = ({ data, showDivider }) => {
   const { id, chartType } = data;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
@@ -107,14 +87,14 @@ const Chart = ({ data, showDivider }) => {
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: {...value?.filters, projectTypeId: selectedProjectTypeId},
+    filters: { ...value?.filters, projectTypeId: selectedProjectTypeId },
   });
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
   let name = t(data?.name) || "";
   const subTextName = t(`SUB_TEXT_${data?.name}`);
-  const subText = subTextName !== `SUB_TEXT_${data?.name}` ? subTextName : ""
+  const subText = subTextName !== `SUB_TEXT_${data?.name}` ? subTextName : "";
 
   const getWidth = (data) => {
     if (isMobile) return "auto";
@@ -122,30 +102,20 @@ const Chart = ({ data, showDivider }) => {
   };
 
   const chartData = response?.responseData?.data?.[0];
-  const chartStyle = {
-    flexDirection: "column",
-    display: "flex",
-    textAlign: "center",
-    justifyContent: "center",
-    width: "50%",
-    padding: "20px",
-  };
-
-  if (showDivider) {
-    chartStyle["borderRight"] = "1px solid #D6D5D4";
-  }
 
   return (
-    <div className="cursorPointer" style={chartStyle}>
+    <div className={`digit-metric-details-chart ${showDivider ? "add-divider" : ""}`}>
       {chartData?.headerSymbol !== "percentage" ? (
-        <MetricData t={t} data={chartData}></MetricData>
+        <div className="digit-metric-data-header">
+          {`${Digit.Utils.dss.formatter(chartData?.headerValue, chartData?.headerSymbol, value?.denomination, true, t)}`}
+        </div>
       ) : (
         <div style={{ width: "80%", margin: "auto" }}>
           <CircularProgressBar data={chartData} />
         </div>
       )}
       <div className={`tooltip`}>
-        <div style={{ fontSize: "14px", marginTop: chartData?.headerSymbol === "percentage" ? "" : "15px" }}>{typeof name == "string" && name}</div>
+        <div className="digit-dss-metric-card-text">{typeof name == "string" && name}</div>
         {Array.isArray(name) && name?.filter((ele) => ele)?.map((ele) => <div style={{ whiteSpace: "pre" }}>{ele}</div>)}
         <span className="dss-white-pre" style={{ display: "block" }}>
           {showDate?.[id]?.todaysDate}
@@ -157,14 +127,14 @@ const Chart = ({ data, showDivider }) => {
             width: getWidth(data),
             height: "auto",
             whiteSpace: "normal",
-            marginLeft: -150
+            marginLeft: -150,
           }}
         >
           <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_${data.name}`)}</span>
           <span style={{ color: "white" }}> {showDate?.[id]?.lastUpdatedTime}</span>
         </span>
       </div>
-      {subText && <p style={{ color: "#505A5F", fontWeight: 400, fontSize:"14px" }}>{subText}</p>}
+      {subText && <div className="digit-dss-insight-card-sub-text">{subText}</div>}
       {chartData?.insight ? <Insight data={response?.responseData?.data?.[0]} t={t} /> : null}
     </div>
   );
@@ -174,21 +144,15 @@ const RichSummary = ({ data }) => {
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   return (
-    <Card className="chart-item" style={{ width: "30%", justifyContent: "center", minWidth: "400px", marginLeft: "0px !important" }}>
-      <div className="summary-wrapper">
-        <div className="wrapper-child fullWidth">
-          <div style={{ justifyContent: "space-between", display: "flex", flexDirection: "row" }}>
-            <div className="dss-card-header" style={{ marginBottom: "10px" }}>
-              {/* {Icon(data?.name)} */}
-              <p style={{ marginLeft: "20px" }}>{t(data?.name)}</p>
-            </div>
-          </div>
-          <div style={{ display: "flex", justifyContent: "space-around", padding: "20px", textAlign: "center", flexWrap: "wrap" }}>
-            {data.charts.map((chart, key) => (
-              <Chart data={chart} showDivider={key % 2 === 0} key={key} url={data?.ref?.url} />
-            ))}
-          </div>
-        </div>
+    <Card className="digit-chart-item">
+      <div className="digit-dss-card-header-wrapper">
+        <Icon type={data?.name} iconColor={"#C84C0E"} width="2.5rem" height="2.5rem" className="digit-dss-stacked-card-icon" />
+        <div className="digit-dss-card-header-text">{t(data?.name)}</div>
+      </div>
+      <div className={"digit-dss-summary-card"}>
+        {data.charts.map((chart, key) => (
+          <Chart data={chart} showDivider={key % 2 === 0} key={key} url={data?.ref?.url} />
+        ))}
       </div>
     </Card>
   );

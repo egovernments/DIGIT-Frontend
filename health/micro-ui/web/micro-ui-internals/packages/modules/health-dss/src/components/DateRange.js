@@ -191,8 +191,8 @@ const DateRange = ({ values, onFilterChange, t }) => {
 
   const dssFiltersValue = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value;
   return (
-    <>
-      <div className="mbsm">{t(`ES_DSS_DATE_RANGE`)}</div>
+    <div className="digit-date-range-label-field">
+      <div className="digit-date-range-label">{t(`ES_DSS_DATE_RANGE`)}</div>
       <div className="employee-select-wrap" ref={wrapperRef}>
         <div className={`select ${dateFilterSelected!=="DSS_CUSTOM_DATE_RANGE" ? "disabled" : ""} ${isModalOpen ? "dss-input-active-border" : ""}`} style={{position: "sticky"}}>
           <input
@@ -205,7 +205,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
           <Calender className="cursorPointer" fill={`${dateFilterSelected==="DSS_CUSTOM_DATE_RANGE" ? "black" : "grey"}`} onClick={() => setIsModalOpen((prevState) => !prevState)} />
         </div>
         {isModalOpen && dateFilterSelected==="DSS_CUSTOM_DATE_RANGE" &&(
-          <div className="options-card" style={{ overflow: "visible", width: "unset", maxWidth: "unset" }}>
+          <div className="digit-options-card">
             <DateRangePicker
               className="pickerShadow"
               focusedRange={focusedRange}
@@ -224,7 +224,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 

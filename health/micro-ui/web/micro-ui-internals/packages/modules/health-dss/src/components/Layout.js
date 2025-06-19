@@ -28,7 +28,7 @@ const showCustomLabel = (title, t) => {
 };
 
 const Layout = ({ rowData, forHome = false, pageZoom }) => {
-  console.log("11111111111111111111 layout")
+  console.log(rowData,"11111111111111111111 layout")
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [searchQuery, onSearch] = useState("");
@@ -77,6 +77,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
   const renderVisualizer = (visualizer, key, chip, onChipChange) => {
     const subHeader = t(`SUB_${visualizer.name}`);
 
+    console.log(visualizer.vizType,"vizType")
     switch (visualizer.vizType) {
       case "metric-collection":
         return (
@@ -162,7 +163,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
     updateChip({ ...chipData });
   }, [rowData.vizArray]);
   return (
-    <div className="chart-row">
+    <div className="digit-chart-row">
       {rowData.vizArray.map(
         useCallback(
           (chart, key) => {

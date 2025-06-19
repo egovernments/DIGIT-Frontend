@@ -4,15 +4,7 @@ import { useLocation } from "react-router-dom";
 import { Loader, Card, TooltipWrapper, Button } from "@egovernments/digit-ui-components";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
 import Icon from "../../components/Icon";
-import {
-  DownloadIcon,
-  EmailIcon,
-  MultiLink,
-  ShareIcon,
-  WhatsappIcon,
-  // DownloadImageIcon,
-  // DownloadPDFIcon,
-} from "@egovernments/digit-ui-react-components";
+import { DownloadIcon, MultiLink, ShareIcon } from "@egovernments/digit-ui-react-components";
 import { format } from "date-fns";
 import { Bar, BarChart, CartesianGrid, Legend, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import FilterContext from "../../components/FilterContext";
@@ -192,7 +184,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
   const chartData = useMemo(() => constructChartData(response?.responseData?.data));
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
 
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
@@ -418,7 +410,7 @@ const L1Main = () => {
   };
 
   if (localizationLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
 
   return (
