@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import CitizenApp from "./pages/citizen";
 import EmployeeApp from "./pages/employee";
+import Login from "./pages/employee/Login";
 import SignUp from "./pages/employee/SignUp";
 import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
@@ -70,6 +71,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
     pathname,
     initData,
   };
+  
   return (
     <Switch>
      {allowedUserTypes?.some(userType=>userType=="employee")&& <Route path={`/${window?.contextPath}/employee`}>
@@ -99,6 +101,8 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
   const innerWidth = window.innerWidth;
   const mobileView = innerWidth <= 640;
 
+  
+
   return (
     <div
       className={isUserProfile ? "grounded-container" : "loginContainer"}
@@ -113,6 +117,9 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
         <Route exact path={`/${window?.globalPath}/user/sign-up`}>
           <SignUp stateCode={stateCode} />
         </Route>
+        {/* <Route exact path={`/${window?.globalPath}/user/login`}>
+          <Login stateCode={stateCode} />
+        </Route> */}
         <Route exact path={`/${window?.globalPath}/user/otp`}>
           <Otp />
         </Route>

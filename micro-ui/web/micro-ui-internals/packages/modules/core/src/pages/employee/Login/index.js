@@ -5,6 +5,7 @@ import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
 import { useLoginConfig } from "../../../hooks/useLoginConfig";
+import { useHistory,useLocation } from "react-router-dom";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -19,16 +20,16 @@ const EmployeeLogin = ({ stateCode }) => {
   const location = useLocation();
 
 
-  useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    if (!query.get("ts")) {
-      const ts = Date.now();
-      history.replace({
-        pathname: location.pathname,
-        search: `?ts=${ts}`
-      });
-    }
-  }, [location, history]);
+  // useEffect(() => {
+  //   const query = new URLSearchParams(location.search);
+  //   if (!query.get("ts")) {
+  //     const ts = Date.now();
+  //     history.replace({
+  //       pathname: location.pathname,
+  //       search: `?ts=${ts}`
+  //     });
+  //   }
+  // }, [location, history]);
 
 
   const { data: store } = Digit.Services.useStore({
@@ -38,17 +39,20 @@ const EmployeeLogin = ({ stateCode }) => {
     modulePrefix,
   });
 
-  const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
+  // const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
+
   
   //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
-    if (isLoading == false && mdmsData?.config) {
-      setloginConfig(mdmsData?.config);
-    } else {
-      setloginConfig(defaultLoginConfig);
-    }
-  }, [mdmsData, isLoading]);
-
+    setloginConfig(defaultLoginConfig);
+    // if (isLoading == false && mdmsData?.config) {
+      //   setloginConfig(mdmsData?.config);
+      // } else {
+        //   setloginConfig(defaultLoginConfig);
+        // }
+      } ,[]); 
+      // [mdmsData, isLoading]);
+      
   const loginParams = useMemo(() =>
     loginConfig.map(
       (step) => {

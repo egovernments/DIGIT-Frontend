@@ -32,6 +32,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [disable, setDisable] = useState(false);
   // const { t } = useTranslation();
 
+
   const history = useHistory();
 
   useEffect(() => {
@@ -43,6 +44,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
+
     let redirectPath = `/${window?.contextPath}/employee`;
 
     /* logic to redirect back to same screen where we left off */
@@ -60,6 +62,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     }
 
     history.replace(redirectPath); // Replaced history.replace with navigate
+
   }, [user]);
 
   const onLogin = async (data) => {
@@ -110,13 +113,17 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
   const onOtpLogin = async (data) => {
     const inputEmail = data.email;
+    const tenantId = data.name;
     await mutation.mutate(
       {
+        params: {
+          tenantId: tenantId,
+        },
         body: {
           otp: {
             userName: data.email,
             type: "login",
-            tenantId: Digit?.ULBService?.getStateId(),
+            tenantId: tenantId,
             userType: "EMPLOYEE",
           },
         },
@@ -132,6 +139,12 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
+          console.log(`*** LOG DATA***`, data);
+          console.log(`*** LOG DATA***`, window?.contextPath);
+          let redirectPath = `/${window?.contextPath}/${tenantId}/employee/user/login/otp`;
+
+          // history.replace(redirectPath);
+
           history.push(`/${window?.contextPath}/employee/user/login/otp`, {
             state: { email: inputEmail, tenant: Digit?.ULBService?.getStateId() },
           });
@@ -163,11 +176,11 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     config[0].body[2].populators.defaultValue = defaultValue;
   }
 
-  const defaultValues = useMemo(()=>Object.fromEntries(
+  const defaultValues = useMemo(() => Object.fromEntries(
     config[0].body
       .filter(field => field?.populators?.defaultValue && field?.populators?.name)
       .map(field => [field.populators.name, field.populators.defaultValue])
-  ),[])
+  ), [])
 
   const onFormValueChange = (setValue, formData, formState) => {
 
@@ -207,7 +220,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
     </FormComposerV2>
   );
-  
+
   const renderFooter = (footerClassName) => (
     <div className={footerClassName} style={{ backgroundColor: "unset" }}>
       <ImageComponent
@@ -220,10 +233,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       />
     </div>
   );
-  
 
-  if(isLoading || isStoreLoading ){
-   return  <Loader page={true} variant="PageLoader" />
+
+  if (isLoading || isStoreLoading) {
+    return <Loader page={true} variant="PageLoader" />
   }
   return propsConfig?.bannerImages ? (
     <div className="login-container">
@@ -235,10 +248,10 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       </div>
     </div>
   ) : (
-     propsConfig.bannerImages ? ( <>
-        <div className="login-container">
-          <Carousel />
-          <div className="login-form-container">
+    propsConfig.bannerImages ? (<>
+      <div className="login-container">
+        <Carousel />
+        <div className="login-form-container">
           <FormComposerV2
             onSubmit={loginOTPBased ? onOtpLogin : onLogin}
             isDisabled={isDisabled || disable}
@@ -259,8 +272,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
           >
             {stateInfo?.code ? <Header /> : <Header showTenant={false} />}
           </FormComposerV2>
-          </div>
         </div>
+      </div>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
     </>) : <Background>
       <div className="employeeBackbuttonAlign">
@@ -275,7 +288,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
       {renderFooter("employee-login-home-footer")}
     </Background>
   );
-  
+
 };
 
 Login.propTypes = {

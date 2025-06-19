@@ -34,7 +34,7 @@ const Otp = ({ isLogin = false }) => {
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
   const [ifSuperUserExists, setIfSuperUserExist] = useState(false);
-  const { email, tenant } = location.state || {};
+  const { email, tenant } = location.state.state || {};
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenant,
     "SandBoxLanding",
