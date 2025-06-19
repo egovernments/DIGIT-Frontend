@@ -153,7 +153,10 @@ const HouseHoldDetailsCard = (props) => {
         <div key={index}
         >
           <SummaryCardFieldPair
-
+            style={{
+              overflowX: "hidden",
+              display: "flex",  alignItems: "center", minWidth:"100vh"
+            }}
             key={index}
             inline={true}
             label={(pair?.label || "LABEL")}
@@ -172,7 +175,7 @@ const HouseholdOverViewMemberCard = (props) => {
   { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
   return (
-    <div style={styles.card}>
+    <div  style={{ ...styles.card, overflowX: "hidden" }}>
       <div style={styles.header}>
         <div style={styles.name}>
           <strong>{props.name}</strong>
@@ -256,6 +259,8 @@ const styles = {
 
   },
   card: {
+    overflowX: "hidden",
+    marginTop: "10px",
     width: "100%",
     boxSizing: "border-box",
     border: "1px solid #ddd",
