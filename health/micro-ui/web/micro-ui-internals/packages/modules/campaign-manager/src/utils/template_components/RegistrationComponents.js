@@ -305,9 +305,9 @@ export const getTemplateRenderer = (templateName) => {
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
 
-    case "BeneficiaryDetails":
+    // case "BeneficiaryDetails":
 
-      return BeneficiaryDetailsSection;
+    //   return BeneficiaryDetailsSection;
 
 
 
@@ -336,34 +336,54 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
   const addMember = formatMap["addMember"] || { label: "", hidden: true };
   return (
     <div>
-      <TextButton
-        label={t(editHousehold?.label || "LABEL")}
-        onClick={() => { }}
-        hidden={editHousehold.hidden}
-        alignment="flex-end"
-      />
+      <style>
+        {`
+          .no-x-scroll::-webkit-scrollbar:horizontal {
+            display: none;
+          }
+        `}
+      </style>
+      <div
 
-      <HouseHoldDetailsCard t={t} />
+        className="no-x-scroll"
+        style={{
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          scrollbarWidth: 'thin',
+          msOverflowStyle: 'auto',
+          whiteSpace: 'nowrap'
+        }}
 
-      <HouseholdOverViewMemberCard
-        name="Joseph Sergio"
-        editIndividual={editIndividual}
-        primaryBtn={primaryBtn}
-        secondaryBtn={secondaryBtn}
-        t={t}
-      />
+      >
+        <TextButton
+          label={t(editHousehold?.label || "LABEL")}
+          onClick={() => { }}
+          hidden={editHousehold.hidden}
+          alignment="flex-end"
+        />
 
-      {addMember && (
-        <div style={{ marginTop: "16px" }}>
-          <TextButton
-            addMember={true}
-            alignment="center"
-            hidden={addMember?.hidden}
-            label={t(addMember?.label || "")}
-            onClick={() => { }}
-          />
-        </div>
-      )}
+        <HouseHoldDetailsCard t={t} />
+
+        <HouseholdOverViewMemberCard
+          name="Joseph Sergio"
+          editIndividual={editIndividual}
+          primaryBtn={primaryBtn}
+          secondaryBtn={secondaryBtn}
+          t={t}
+        />
+
+        {addMember && (
+          <div style={{ marginTop: "16px" }}>
+            <TextButton
+              addMember={true}
+              alignment="center"
+              hidden={addMember?.hidden}
+              label={t(addMember?.label || "")}
+              onClick={() => { }}
+            />
+          </div>
+        )}
+      </div>
     </div>
   );
 };
@@ -546,10 +566,94 @@ export default BeneficiaryTableWrapper;
 
 
 
+// Independent wrapper for DetailsCard
+const DetailsCardSection = ({ field, t }) => {
+
+  const heading = t
+    ? t(field?.label || "BENEFICIARY_DETAILS_TITLE")
+    : field?.label || "";
+
+  const beneficiaryDetails =
+    field?.dropDownOptions?.map((item) => ({
+      label: item.name,
+      value: item.name || ""
+    })) || [];
+
+  if (!beneficiaryDetails.length) return null;
+
+  return (
+    <div >
+      <style>
+        {`
+          .no-x-scroll::-webkit-scrollbar:horizontal {
+            display: none;
+          }
+        `}
+      </style>
+
+      <div
+        className="no-x-scroll"
+        style={{
+          overflowY: 'auto',
+          overflowX: 'hidden',
+          scrollbarWidth: 'thin',       // Firefox
+          msOverflowStyle: 'auto',      // Edge/IE
+          maxHeight: '300px',
+          whiteSpace: 'nowrap'
+        }}
+      >
+        <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
+          {heading}
+        </h1>
+        <HouseHoldDetailsCard t={t} beneficiaryDetails={beneficiaryDetails} />
+      </div>
+    </div>
+  );
+};
+
+// Independent wrapper for Table
+const Table = ({ field, t }) => {
+  const tableLabelRaw = field?.label || "BENEFICIARY_DETAILS_TABLE_HEADER";
+  const tableHeading = t ? t(tableLabelRaw) : tableLabelRaw;
+  const finalTableHeading = tableHeading && tableHeading.trim() !== "" ? tableHeading : "";
+
+  const columns =
+    field?.dropDownOptions?.map((item) => {
+      const translated = t ? t(item.name) : item.name;
+      const fallbackName = translated && translated.trim() !== "" ? translated : item.name;
+
+      return {
+        name: fallbackName,
+        code: item.code
+      };
+    }) || [];
+
+  if (!columns.length) return null;
+
+  // Static data stub (replace with real data source)
+  const data = [
+    {
+      DOSENO: "Dose 1",
+      STATUS: "Administered",
+      COMPLETED_ON: "14 June 2024"
+    }
+  ];
+
+  return (
+    <BeneficiaryTableWrapper
+      finalTableHeading={finalTableHeading}
+      columns={columns}
+      data={data}
+      t={t}
+    />
+  );
+};
+
 // Register all components
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
-
+registerComponent("DetailsCard", DetailsCardSection);
+registerComponent("Table", Table);
 
 
