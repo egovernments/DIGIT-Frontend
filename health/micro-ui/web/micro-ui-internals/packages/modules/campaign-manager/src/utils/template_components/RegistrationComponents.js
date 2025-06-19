@@ -200,7 +200,7 @@ const HouseholdOverViewMemberCard = (props) => {
       <div style={styles.buttonGroup}>
         {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && (!(props.primaryBtn?.hidden)) && (
           <Button
-            className={`app-preview-action-button `}
+            className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}
             key={0}
             variation="primary"
             label={props.t(props.primaryBtn?.label || "LABEL")}
@@ -305,12 +305,6 @@ export const getTemplateRenderer = (templateName) => {
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
 
-    // case "BeneficiaryDetails":
-
-    //   return BeneficiaryDetailsSection;
-
-
-
 
     // case "AnotherTemplate": return anotherRenderer;
 
@@ -384,73 +378,6 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           </div>
         )}
       </div>
-    </div>
-  );
-};
-
-
-const BeneficiaryDetailsSection = (props) => {
-
-  const fields = props.components || [];
-
-  // Extract DetailsCard and Table configurations
-  const detailsCardField = fields.find((f) => f.jsonPath === "DetailsCard");
-  const tableField = fields.find((f) => f.jsonPath === "Table");
-
-  const heading = props.t
-    ? props.t(detailsCardField?.label || "BENEFICIARY_DETAILS_TITLE")
-    : detailsCardField?.label || "Beneficiary Details";
-
-  const tableLabelRaw = tableField?.label || "BENEFICIARY_DETAILS_TABLE_HEADER";
-  const tableHeading = props.t ? props.t(tableLabelRaw) : tableLabelRaw;
-  const finalTableHeading = tableHeading && tableHeading.trim() !== "" ? tableHeading : "Current Dose";
-
-
-  // Transform dropDownOptions for DetailsCard
-  const beneficiaryDetails =
-    detailsCardField?.dropDownOptions?.map((item) => ({
-      label: item.name,
-      value: item.name || ""
-    })) || [];
-
-  // Sample static data for BeneficiaryTableWrapper (actual data can be dynamic)
-  const data = [
-    {
-      DOSENO: "Dose 1",
-      STATUS: "Administered",
-      COMPLETED_ON: "14 June 2024"
-    }
-  ];
-
-  // Transform dropDownOptions for Table columns
-
-
-  // const columns = tableField?.dropDownOptions || []
-  const columns =
-    tableField?.dropDownOptions?.map((item) => {
-      const translated = props.t ? props.t(item.name) : item.name;
-      const fallbackName = translated && translated.trim() !== "" ? translated : item.name;
-
-      return {
-        name: fallbackName,
-        code: item.code
-      };
-    }) || [];
-
-
-
-  return (
-    <div>
-      {(!detailsCardField.hidden) && beneficiaryDetails.length > 0 && (<h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
-        {heading}
-      </h1>)
-      }
-
-      {(!detailsCardField.hidden) && beneficiaryDetails.length > 0 && (
-        <HouseHoldDetailsCard t={props.t} beneficiaryDetails={beneficiaryDetails} />
-      )}
-
-      {(!tableField.hidden && columns.length > 0) && <BeneficiaryTableWrapper finalTableHeading={finalTableHeading} columns={columns} data={data} t={props.t} />}
     </div>
   );
 };

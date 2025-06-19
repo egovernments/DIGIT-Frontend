@@ -30,7 +30,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
     <div
       style={{
         position: "relative",     // required for absolute button placement
-        minHeight: "500px",          // or whatever height your card should have
+        minHeight: "200%",          // or whatever height your card should have
         overflow: "hidden",       // prevent scroll bleed
         background: "#fff",
       }}
@@ -38,7 +38,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
       {/* Scrollable Content Area */}
       <div
         style={{
-          height: "100%",
+          height: "60vh",
           overflowY: "auto",
           //   padding: "1rem",
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
@@ -81,16 +81,16 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
           }}
         >
           {buttonFields.map((field, index) => (
+            <div className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}>
             <Button
               key={index}
               variation={field.jsonPath === "SecondaryButton" ? "secondary" : "primary"}
               label={t(field?.label)}
               onClick={() => { }}
               style={{ minWidth: "100%" }}
-              className={`app-preview-action-button ${selectedField?.jsonPath === field.jsonPath ? "app-preview-selected" : ""
-                }`}
               icon={field.icon || null}
             />
+            </div>
           ))}
         </div>
       )}

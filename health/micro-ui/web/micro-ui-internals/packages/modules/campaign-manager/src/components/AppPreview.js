@@ -202,6 +202,7 @@ const renderField = (field, t) => {
         />
       );
     case "selection":
+      //[TODO: Need to allow support for static options or any API or hook support to fetch options] @nabeel @ram
       const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(
         Digit?.ULBService?.getStateId(),
         field?.schemaCode?.split(".")[0],
