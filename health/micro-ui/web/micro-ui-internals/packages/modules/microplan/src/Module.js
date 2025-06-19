@@ -39,8 +39,6 @@ import CampaignCard from "./components/OldCampaignCard"; // @nipunarora-eGov rem
 import AddColumns from "./components/AddColumns";
 import AddColumnsWrapper from "./components/AddColumnsWrapper";
 import MapViewPopup from "./components/MapViewPopup";
-  import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-
 
 export const MicroplanModule = React.memo(({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -145,5 +143,4 @@ export const initMicroplanComponents = () => {
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
   });
-initCampaignComponents();
 };

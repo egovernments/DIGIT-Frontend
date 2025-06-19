@@ -223,8 +223,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  console.log("yyy", tempSession);
-
   return (
     <>
       <div className="container">
