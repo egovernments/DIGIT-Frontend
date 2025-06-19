@@ -97,7 +97,7 @@ const GenericChart = ({
   return (
     <Card className={`digit-chart-item ${className}`} ReactRef={chart}>
       <div className={`digit-chart-header ${showSearch && "digit-chart-column-direction"}`}>
-        <div>
+        <div className="digit-chart-header-wrapper">
           {showHeader && (
             <TooltipWrapper header={t(`TIP_${Digit.Utils.locale.getTransformedLocale(header)}`)} placement={"top"}>
               <HeaderComponent>

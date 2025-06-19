@@ -3,9 +3,9 @@ import React, { useContext, useEffect, useMemo, useState } from "react";
 import DateRange from "./DateRange";
 import FilterContext from "./FilterContext";
 import Switch from "./Switch";
-import {format} from "date-fns";
+import { format } from "date-fns";
 import FilterByCycleDropdown from "./FilterByCycle";
-
+import { Toggle, Chip } from "@egovernments/digit-ui-components";
 
 const Filters = ({
   t,
@@ -40,9 +40,7 @@ const Filters = ({
     setSelected(ulbTenants?.ulb?.filter((tenant) => value?.filters?.tenantId?.find((selectedTenant) => selectedTenant === tenant?.code)));
   }, [value?.filters?.tenantId]);
 
-  const [selectService, setSelectedService] = useState(() =>
-    services?.filter((module) => value?.moduleLevel === module?.code)
-  )
+  const [selectService, setSelectedService] = useState(() => services?.filter((module) => value?.moduleLevel === module?.code));
 
   useEffect(() => {
     setSelectedService(services?.filter((module) => value?.moduleLevel === module?.code));
@@ -53,14 +51,14 @@ const Filters = ({
   };
 
   const handleCycleFilter = (data) => {
-    setValue({ ...value, filters: {...value?.filters, cycle: data.cycle}});
+    setValue({ ...value, filters: { ...value?.filters, cycle: data.cycle } });
   };
 
   const clearCycleFilter = () => {
     const prevFilters = value?.filters;
     delete prevFilters.cycle;
-    
-    setValue({ ...value, filters: {...prevFilters}});
+
+    setValue({ ...value, filters: { ...prevFilters } });
   };
 
   const selectFilters = (e, data) => {
@@ -88,7 +86,6 @@ const Filters = ({
     [selected, ulbTenants]
   );
 
-
   const getDuration = (startDate, endDate) => {
     let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
     if (noOfDays > 91) {
@@ -100,48 +97,49 @@ const Filters = ({
     if (noOfDays <= 14) {
       return "day";
     }
-  }
+  };
 
   const setDateAndInterval = (startDate, endDate, label) => {
     const interval = getDuration(startDate, endDate);
     const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
-    return ({
-      range: {startDate, endDate, interval, title},
-      requestDate: {startDate, endDate, interval, title},
-      dateFilterSelected: label
-    });
-  }
+    return {
+      range: { startDate, endDate, interval, title },
+      requestDate: { startDate, endDate, interval, title },
+      dateFilterSelected: label,
+    };
+  };
 
   const handleDenominationFilterSelection = (label) => {
-    return ({
-      denomination: label
-    })
-  }
+    return {
+      denomination: label,
+    };
+  };
 
-// method will handle the range to be set for startDate and endDate
+  // method will handle the range to be set for startDate and endDate
   const handleDateRangeFilterSelection = (label) => {
-    let campaignStartDate = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignStartDate
+    let campaignStartDate = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignStartDate;
     switch (label) {
       case "DSS_TODAY": {
         const date = new Date();
         const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
         let startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate());
         let endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 0);
-        return (setDateAndInterval(startDate, endDate, label));
+        return setDateAndInterval(startDate, endDate, label);
       }
-      case "DSS_CUMULATIVE": { // set entire duration of campaign startDate of campaign
+      case "DSS_CUMULATIVE": {
+        // set entire duration of campaign startDate of campaign
         let startDate = new Date(new Date(Number(campaignStartDate)));
         let endDate = new Date();
-        return (setDateAndInterval(startDate, endDate, label));
+        return setDateAndInterval(startDate, endDate, label);
       }
       case "DSS_CUSTOM_DATE_RANGE": {
         let startDate = new Date(new Date(Number(campaignStartDate)));
         let endDate = new Date();
-        return (setDateAndInterval(startDate, endDate, label));
+        return setDateAndInterval(startDate, endDate, label);
       }
     }
-  }
-  
+  };
+
   const handleClear = () => {
     setValue({
       denomination: "Unit",
@@ -149,13 +147,9 @@ const Filters = ({
       range: Digit.Utils.dss.getInitialRange(),
     });
   };
+  console.log(showDateRange, showFilterByCycle, showDDR, showUlb, showModuleFilter, showDenomination, "testing");
   return (
-    <div className={`filters-wrapper ${isOpen ? "filters-modal" : ""}`} style={{
-      justifyContent: window.location.href.includes("dss/dashboard/finance") && !isOpen ? "space-between" : "unset",
-      paddingRight: window.location.href.includes("dss/dashboard/finance") && !isOpen ? "24px" : "0px",
-      paddingBottom: window.location.href.includes("dss/dashboard/finance") && !isOpen ? "20px" : "unset",
-      alignItems:"center"
-    }}>
+    <div className={`digit-filters-wrapper ${isOpen ? "filters-modal" : ""}`}>
       <span className="filter-close" onClick={() => closeFilters()}>
         <CloseSvg />
       </span>
@@ -169,41 +163,54 @@ const Filters = ({
         </div>
       )}
       {showDateRange && (
-        <div className="filters-input">
+        <div className="digit-filters-input">
           <DateRange onFilterChange={handleFilterChange} values={value?.range} t={t} />
         </div>
       )}
-      {
-        showDateRange && (
-          <div className="filters-input" style={{ flexBasis: "16%", marginLeft:"16px"}}>
-            <Switch onSelect={handleFilterChange} t={t} filterOptions={dateRangesAvailable}
-                    nameOfFilter={``} selectedFilterOption={value?.dateFilterSelected} changeFilterHandler={handleDateRangeFilterSelection}/>
-          </div>
-        )
-      }
-      {
-        showFilterByCycle && (
-          <div style={{ display: "inline-flex",position: "absolute", right: "24px", marginInlineEnd: "24px", alignContent: "flex-end"}}>
-            {value?.filters?.cycle && (
-              <div className="tag-container" style={{marginRight: "20px"}}>
-              <RemoveableTag
-                text={`${t(`CYCLE`)} ${value?.filters?.cycle}`}
-                extraStyles={{
-                  tagStyles: { backgroundColor: "#D6D5D4" },
-                  closeIconStyles: { cursor: "pointer" },
-                }}
-                onClick={() => clearCycleFilter()}
-              />
-              </div>
-              )}
-            <FilterByCycleDropdown
-             handleItemClick={(cycle) => handleCycleFilter({
-              "cycle": cycle.code
-             })}
-             />
-          </div>
-        )
-      }
+      {showDateRange && (
+        <div className="digit-filters-input tabs">
+          <Toggle
+            name="toggleOptions"
+            numberOfToggleItems={3}
+            onSelect={(code) => handleFilterChange(handleDateRangeFilterSelection(code))}
+            options={[
+              {
+                code: "DSS_CUSTOM_DATE_RANGE",
+                name: "DSS_CUSTOM_DATE_RANGE",
+              },
+              {
+                code: "DSS_TODAY",
+                name: "DSS_TODAY",
+              },
+              {
+                code: "DSS_CUMULATIVE",
+                name: "DSS_CUMULATIVE",
+              },
+            ]}
+            optionsKey="name"
+            value={value?.dateFilterSelected}
+            selectedOption={value?.dateFilterSelected}
+            type="toggle"
+            t={t}
+          />
+        </div>
+      )}
+      {showFilterByCycle && (
+        <div className={"digit-filter-by-cycle-wrapper"}>
+          {value?.filters?.cycle && (
+            <div className="digit-tag-container">
+              <Chip text={`${t(`CYCLE`)} ${value?.filters?.cycle}`} onClick={(e) => clearCycleFilter(e)} hideClose={false} />
+            </div>
+          )}
+          <FilterByCycleDropdown
+            handleItemClick={(cycle) =>
+              handleCycleFilter({
+                cycle: cycle.code,
+              })
+            }
+          />
+        </div>
+      )}
       {showDDR && (
         <div className="filters-input">
           <div className="mbsm">{t(isNational ? "ES_DSS_STATE" : "ES_DSS_DDR")}</div>
@@ -249,9 +256,14 @@ const Filters = ({
       )}
       {showDenomination && (
         <div className="filters-input" style={{ flexBasis: "16%" }}>
-          <Switch filterOptions={denominations} nameOfFilter={`ES_DSS_DENOMINATION`}
-                  onSelect={handleFilterChange} t={t} selectedFilterOption={value?.denomination}
-                  changeFilterHandler={handleDenominationFilterSelection}/>
+          <Switch
+            filterOptions={denominations}
+            nameOfFilter={`ES_DSS_DENOMINATION`}
+            onSelect={handleFilterChange}
+            t={t}
+            selectedFilterOption={value?.denomination}
+            changeFilterHandler={handleDenominationFilterSelection}
+          />
         </div>
       )}
     </div>

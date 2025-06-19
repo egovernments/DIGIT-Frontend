@@ -97,7 +97,7 @@ const CustomHorizontalBarChart = ({
     title: "home",
   };
 
-  console.log(chartKey,"chartKey")
+  console.log(chartKey,"chartKey111111111111")
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
