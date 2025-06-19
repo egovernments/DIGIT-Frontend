@@ -15,6 +15,7 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const selectedBillIds = location.state?.selectedBillIds || [];
     // const selectedBills = useSelector((state) => state.payments.selectedBills);
+const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 
     console.log("selectedBillIds", selectedBillIds);
     // context path variables
@@ -103,7 +104,9 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
     if (isBillLoading) {
         return <LoaderScreen />
     }
-
+    if (isTableActionLoading ) {
+        return <LoaderScreen />
+    }
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
@@ -131,6 +134,8 @@ const VerifyAndGeneratePayments = ({editBills = false}) => {
                     onTaskDone={handleTaskDone}
                     handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange}
+                    isLoading={isTableActionLoading}
+                    setIsLoading={setIsTableActionLoading}
                     />
                 )}
             </Card>

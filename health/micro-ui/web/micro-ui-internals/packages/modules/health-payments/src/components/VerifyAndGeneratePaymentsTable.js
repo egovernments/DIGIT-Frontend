@@ -22,6 +22,8 @@ import { useHistory } from "react-router-dom";
 const VerifyAndGeneratePaymentsTable = ({ 
     setTaskStatus,
     onTaskDone,
+    isLoading,
+    setIsLoading,
     ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
@@ -84,7 +86,8 @@ const VerifyAndGeneratePaymentsTable = ({
                 onSuccess: async (verifyResponse) => {
                     const taskId = verifyResponse?.taskId;
                     if (!taskId) {
-                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 3000 });
+                         setIsLoading(false);
+                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 });
                         return;
                     }
 
@@ -101,24 +104,32 @@ const VerifyAndGeneratePaymentsTable = ({
                             const status = statusResponse?.status;
                             setTaskStatus?.(status);
                              if (status === "DONE") {
+                                setIsLoading(false);
                 setShowToast({
                   key: "success",
                   label: t("HCM_AM_BILL_VERIFICATION_DONE"),
-                  transitionTime: 3000,
+                  transitionTime: 5000,
                 });
 
                 onTaskDone?.(); //  trigger bill search in parent
               }  else if (status === "IN_PROGRESS") {
+                         setIsLoading(true); // start loader
+
+                        setShowToast({ key: "info", label: t("HCM_AM_BILL_VERIFICATION_IN_PROGRESS"), transitionTime: 2000 });
+
                                 if (attempts < MAX_ATTEMPTS) {
                                     attempts++;
                                     setTimeout(pollStatus, POLLING_INTERVAL);
                                 } else {
+                                     setIsLoading(false);
                                     setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
                                 }
                             } else {
+                                 setIsLoading(false);
                                 setShowToast({ key: "error", label: t(`HCM_AM_UNEXPECTED_STATUS_${status}`), transitionTime: 3000 });
                             }
                         } catch (err) {
+                             setIsLoading(false);
                             setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });
                         }
                     };
@@ -126,6 +137,7 @@ const VerifyAndGeneratePaymentsTable = ({
                     pollStatus();
                 },
                 onError: (error) => {
+                     setIsLoading(false);
                     setShowToast({
                         key: "error",
                         label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),
@@ -135,6 +147,7 @@ const VerifyAndGeneratePaymentsTable = ({
             }
         );
     } catch (error) {
+         setIsLoading(false);
         setShowToast({
             key: "error",
             label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),
@@ -142,7 +155,22 @@ const VerifyAndGeneratePaymentsTable = ({
         });
     }
 };
-
+const getAvailableActions = (status) => {
+  switch (status) {
+    case "PARTIALLY_VERIFIED":
+      return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT","HCM_AM_DOWNLOAD_REPORT"];
+case "PENDING_VERIFICATION":
+      return ["HCM_AM_VERIFY", "HCM_AM_EDIT","HCM_AM_DOWNLOAD_REPORT"];
+    case "FULLY_VERIFIED":
+      return ["HCM_AM_GENERATE_PAYMENT","HCM_AM_DOWNLOAD_REPORT"];
+    case "PARTIALLY_PAID":
+        return ["HCM_AM_GENERATE_PAYMENT","HCM_AM_DOWNLOAD_REPORT"];
+    case "FULLY_PAID":
+    case "SENT_BACK":
+    default:
+      return ["HCM_AM_DOWNLOAD_REPORT"]; // No actions allowed except download
+  }
+};
     const columns = useMemo(() => {
         const baseColumns = [
             {
@@ -292,6 +320,13 @@ const VerifyAndGeneratePaymentsTable = ({
                     const reportDetails = row?.additionalDetails?.reportDetails;
                     const billId = row?.billNumber;
                     const isLastRow = index === props.totalCount - 1;
+                    const status = row?.status || "UNKNOWN";
+                    const actions = getAvailableActions(status);
+
+                    const options = actions.map((code) => ({
+                        code,
+                        name: t(code),
+                    }));
 
                     return (!props?.editBill?(
                         // reportDetails?.status === "COMPLETED" ? 
@@ -304,6 +339,7 @@ const VerifyAndGeneratePaymentsTable = ({
                             label={t(`HCM_AM_TAKE_ACTION`)}
                             title={t(`HCM_AM_TAKE_ACTION`)}
                             showBottom={isLastRow && props.data.length !== 1? false : true}
+                            // showBottom={!(props?.data?.length === 1 || isLastRow)}
                             onOptionSelect={(value) => {
                                 // if (value.code === "HCM_AM_PDF") {
                                 //     if (reportDetails?.pdfReportId) {
@@ -320,44 +356,21 @@ const VerifyAndGeneratePaymentsTable = ({
 
                                 // }
                                 if (value.code === "HCM_AM_VERIFY") {
-                                    triggerVerifyBill(row);
-                                    
-                                    if (reportDetails?.pdfReportId) {
-                                        downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" })
-                                    } else {
-                                        setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
-                                    }
-                                } else if (value.code === "HCM_AM_EDIT") {
+                                    triggerVerifyBill(row);                                   
+                                } else if (value.code === "HCM_AM_EDIT") {                                    
+                                setShowToast({ key: "error", label: t(`HCM_AM_EDIT_FAILED`), transitionTime: 3000 });
+                                }
+                                else if (value.code === "HCM_AM_GENERATE_PAYMENT") {                                   
+                                    setShowToast({ key: "error", label: t(`HCM_AM_PAYMENT_GENERATION_FAILED`), transitionTime: 3000 });
+                                }
+                                else if (value.code === "HCM_AM_DOWNLOAD_REPORT") {
                                     if (reportDetails?.excelReportId) {
                                         downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
                                     } else {
                                         setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
                                     }
-
-                                }
-                                else if (value.code === "HCM_AM_GENERATE_PAYMENT") {
-                                    if (reportDetails?.excelReportId) {
-                                        downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
-                                    } else {
-                                        setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
-                                    }
-
-                                }
-                            }}
-                            options={[
-                                {
-                                    code: "HCM_AM_VERIFY",
-                                    name: t(`HCM_AM_VERIFY`),
-                                },
-                                {
-                                    code: "HCM_AM_EDIT",
-                                    name: t(`HCM_AM_EDIT`),
-                                },
-                                {
-                                    code: "HCM_AM_GENERATE_PAYMENT",
-                                    name: t(`HCM_AM_GENERATE_PAYMENT`),
-                                },
-                            ]}
+                            }}}
+                            options={options}
                             optionsKey="name"
                         
                             style={{ minWidth: "14rem" }}
