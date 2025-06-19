@@ -5,6 +5,7 @@ import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
 import CloneCampaignWrapper from "./CloneCampaignWrapper";
+import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
 
 /**
  * HCMMyCampaignRowCard Component
@@ -208,13 +209,13 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               className={"digit-results-card-field-pair"}
               inline={true}
               label={t("START_DATE")}
-              value={Digit.DateUtils.ConvertEpochToDate(rowData?.startDate) || "NA"}
+              value = {convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
               label={t("END_DATE")}
-              value={Digit.DateUtils.ConvertEpochToDate(rowData?.endDate) || "NA"}
+              value={convertEpochToNewDateFormat(rowData?.endDate) || "NA"}
             />
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("DURATION")} value={duration} />
           </div>
