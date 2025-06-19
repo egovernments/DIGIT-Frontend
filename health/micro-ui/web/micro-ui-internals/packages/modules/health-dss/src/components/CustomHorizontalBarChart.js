@@ -96,30 +96,79 @@ const CustomHorizontalBarChart = ({
     interval: interval,
     title: "home",
   };
+  const defaultSelect = (data) => {
+  if (data?.responseData) {
+    if (data?.responseData?.data) {
+      data.responseData.data = data?.responseData?.data?.filter((col) => col) || [];
+      data.responseData.data?.forEach((row) => {
+        if (row?.plots) {
+          row.plots = row?.plots.filter((col) => col) || [];
+        }
+      });
+    }
+  }
+  return data;
+};
+  const reqCriteria = {
+    url: `/dashboard-analytics/dashboard/getChartV2`,
+    body: {
+      "aggregationRequestDto" : {
+        visualizationCode: chartKey,
+        visualizationType: "METRIC",
+        queryType: "",
+        requestDate:
+          value?.requestDate != null
+            ? {
+                ...value?.requestDate,
+                startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+                endDate: value?.range?.endDate?.getTime(),
+              }
+            : requestDate,
+        filters:
+          id === chartKey && value?.filters != null
+            ? { ...value.filters, projectTypeId: selectedProjectTypeId }
+            : value?.filters != null || drillDownFilters || selectedStack
+            ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, projectTypeId: selectedProjectTypeId }
+            : {},
+        moduleLevel: value?.moduleLevel,
+        aggregationFactors: null,
+      },
+      headers: {
+        tenantId: tenantId
+      }
+    },
+    params: {},
+    headers: {
+      "auth-token": Digit.UserService.getUser()?.access_token || null,
+    },
+    config: {
+      // enabled: !!moduleCode,
+      select: defaultSelect,
+    },
+  };
+  const { data: response, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  console.log(chartKey,"chartKey111111111111")
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: chartKey,
-    type: "metric",
-    tenantId,
-    requestDate:
-      value?.requestDate != null
-        ? {
-            ...value?.requestDate,
-            startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
-            endDate: value?.range?.endDate?.getTime(),
-          }
-        : requestDate,
-    filters:
-      id === chartKey && value?.filters != null
-        ? { ...value.filters, projectTypeId: selectedProjectTypeId }
-        : value?.filters != null || drillDownFilters || selectedStack
-        ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, projectTypeId: selectedProjectTypeId }
-        : {},
-    moduleLevel: value?.moduleLevel,
-  });
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: chartKey,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate:
+  //     value?.requestDate != null
+  //       ? {
+  //           ...value?.requestDate,
+  //           startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+  //           endDate: value?.range?.endDate?.getTime(),
+  //         }
+  //       : requestDate,
+  //   filters:
+  //     id === chartKey && value?.filters != null
+  //       ? { ...value.filters, projectTypeId: selectedProjectTypeId }
+  //       : value?.filters != null || drillDownFilters || selectedStack
+  //       ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, projectTypeId: selectedProjectTypeId }
+  //       : {},
+  //   moduleLevel: value?.moduleLevel,
+  // });
 
-  console.log(response,"response")
 
   let target = 0;
   let targetMessage = "";
@@ -269,7 +318,7 @@ const CustomHorizontalBarChart = ({
   };
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
   const formatXAxis = (tickFormat) => {
     // if (tickFormat && typeof tickFormat == "string") {
