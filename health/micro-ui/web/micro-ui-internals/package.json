@@ -4,6 +4,7 @@
   "main": "index.js",
   "workspaces": [
     "example",
+    "packages/ui-components",
     "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
@@ -28,6 +29,7 @@
     "devDD:pgr": "cd packages/modules/pgr && yarn start",
     "devD:health-dss": "cd packages/modules/health-dss && yarn start",
     "build": "run-p build:**",
+    "build:ui-components": "cd packages/ui-components && yarn build",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn build",
     "buildD:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
@@ -74,7 +76,7 @@
     "@babel/plugin-proposal-private-property-in-object": "7.21.0",
     "@babel/preset-env": "^7.26.9",
     "@babel/preset-react": "^7.26.3",
-    "@egovernments/digit-ui-components": "0.0.2-webpack-23",
+    "@egovernments/digit-ui-components": "0.0.2-webpack-test-23",
     "@egovernments/digit-ui-libraries": "1.8.1-webpack-25",
     "@egovernments/digit-ui-module-core": "1.8.1-test.100",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.14",
