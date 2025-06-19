@@ -621,7 +621,7 @@ tbody {
   h2 {
     color: theme(digitv2.lightTheme.text-primary);
   }
-  div{
+  div {
     flex-direction: column;
   }
 }
@@ -946,8 +946,8 @@ tbody {
   width: 24rem;
   z-index: 99;
   background-color: #ffffff;
-  .slider-content{
-    .slider-footer{
+  .slider-content {
+    .slider-footer {
       margin-bottom: 5rem;
     }
   }
@@ -957,6 +957,7 @@ tbody {
   gap: 0.5rem;
 }
 .appConfigLabelField {
+  position: relative;
   padding: 1rem;
   background-color: #fafafa;
   border: 1px solid #d6d5d4;
@@ -1129,6 +1130,7 @@ tbody {
 }
 
 .icon-wrapper.app-config-tooltip {
+  margin-bottom: 0.5rem;
   .tooltip-wrapper {
     .tooltip-content {
       width: auto !important;
