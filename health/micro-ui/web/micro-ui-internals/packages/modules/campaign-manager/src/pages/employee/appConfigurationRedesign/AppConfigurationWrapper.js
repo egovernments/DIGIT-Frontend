@@ -471,7 +471,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const handleSubmit = async (finalSubmit) => {
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
-      const errorCheck = validateFromState(state?.screenData?.[0]?.cards?.[0], state?.MASTER_DATA?.FieldPropertiesPanelConfig, locState, currentLocale);
+      const errorCheck = validateFromState(
+        state?.screenData?.[0]?.cards?.[0],
+        state?.MASTER_DATA?.FieldPropertiesPanelConfig,
+        locState,
+        currentLocale
+      );
       if (errorCheck) {
         setShowToast({ key: "error", label: errorCheck?.value ? errorCheck?.value : errorCheck });
         return;
@@ -493,11 +498,11 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
         }
       }
     }
+    setShowPopUp(false);
+    setLoading(false);
     if (!updateCount) {
       onSubmit(state, finalSubmit);
     }
-    setShowPopUp(false);
-    setLoading(false);
 
     console.info("LOCALISATION_UPSERT_SUCCESS");
     // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
