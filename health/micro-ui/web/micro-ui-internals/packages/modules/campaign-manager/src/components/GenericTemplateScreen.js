@@ -75,7 +75,6 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
             right: 0,
             background: "#fff",
             padding: "1rem",
-            boxShadow: "0 -2px 4px rgba(0,0,0,0.1)",
             display: "flex",
             flexDirection: "column",
             gap: "0.5rem",

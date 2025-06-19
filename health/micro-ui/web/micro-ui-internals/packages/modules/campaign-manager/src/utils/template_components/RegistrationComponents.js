@@ -8,8 +8,8 @@ const responsePanelComponent = ({ components, t }) => {
   const titleField = components.find(f => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
   const descField = components.find(f => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
 
-  const message = titleField ? t(titleField?.label) : "TITLE";
-  const description = descField ? t(descField?.label) : "DESCRIPTION";
+  const message = titleField ? t(titleField?.label) : "";
+  const description = descField ? t(descField?.label) : "";
 
   return (
     <PanelCard
