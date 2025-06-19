@@ -304,7 +304,7 @@ const BillDetailsTable = ({ ...props }) => {
       selector: (row) => {
         return (
           <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
-            {t(row?.operator) || t("ES_COMMON_NA")}
+            {t(row?.operator) || t("MTN")}
           </span>
         );
       },
@@ -319,9 +319,14 @@ const BillDetailsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
+                   const totalAmount = parseInt(row?.totalAmount) || 0;
+                   const wage = parseInt(row?.wage) || 0;
+                   const days = wage > 0 ? (totalAmount / wage) : 0; //TODO : ADD LOGIC TO CALCULATE DAYS FROM MUSTERROLL
+                    
+                    console.log("days", days);
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {t(row?.noOfDays) || t("0")}
+                            {(days)}
                         </div>
                     );
                 },
