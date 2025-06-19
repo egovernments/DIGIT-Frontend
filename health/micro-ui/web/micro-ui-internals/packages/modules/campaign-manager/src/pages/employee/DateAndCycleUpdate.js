@@ -202,9 +202,11 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             nonEditable={startDate && startDate?.length > 0 && today >= startDate ? true : false}
             placeholder={t("HCM_START_DATE")}
             populators={
+              
               today >= startDate
-                ? {}
+                ? {newDateFormat: true}
                 : {
+                  newDateFormat: true,
                     validation: {
                       min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
                     },
@@ -224,6 +226,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
             nonEditable={endDate && endDate?.length > 0 && today >= endDate ? true : false}
             placeholder={t("HCM_END_DATE")}
             populators={{
+              newDateFormat: true,
               validation: {
                 min:
                   startDate && startDate > today
@@ -258,6 +261,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                   placeholder={t("HCM_START_DATE")}
                   populators={{
                     validation: {
+                      newDateFormat: true,
                       min:
                         index > 0 && !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime())
                           ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index)?.endDate)?.getTime() + ONE_DAY_IN_MS)
@@ -293,6 +297,7 @@ const DateAndCycleUpdate = ({ onSelect, formData, ...props }) => {
                   placeholder={t("HCM_END_DATE")}
                   populators={{
                     validation: {
+                      newDateFormat: true,
                       min: !isNaN(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime())
                         ? new Date(new Date(cycleDates?.find((j) => j.cycleIndex == index + 1)?.startDate)?.getTime() + ONE_DAY_IN_MS)
                             ?.toISOString()

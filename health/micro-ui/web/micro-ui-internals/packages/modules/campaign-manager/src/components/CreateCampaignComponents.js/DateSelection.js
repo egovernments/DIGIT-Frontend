@@ -62,6 +62,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             // disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             placeholder={t("HCM_START_DATE")}
             populators={{
+               newDateFormat : true,
               validation: {
                 min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
               },
@@ -79,6 +80,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             value={endDate}
             placeholder={t("HCM_END_DATE")}
             populators={{
+              newDateFormat : true,
               validation: {
                 min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
               },
