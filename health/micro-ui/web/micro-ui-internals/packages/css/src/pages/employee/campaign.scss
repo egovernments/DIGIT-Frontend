@@ -213,10 +213,10 @@
   width: 100%;
 }
 .campaign-tag {
-  .digit-tag-text{
+  .digit-tag-text {
     color: theme(digitv2.alert.info) !important;
   }
-  background-color: #EFF8FF !important;
+  background-color: #eff8ff !important;
   border-color: theme(digitv2.alert.info) !important;
 }
 .digit-popup-wrapper.dataMapping {
@@ -340,10 +340,10 @@
   margin-top: -4rem;
 }
 
-.app-config-tag-page-fixed{
-  position:fixed;
-  top:15rem;
-  left:  62rem;
+.app-config-tag-page-fixed {
+  position: fixed;
+  top: 15rem;
+  left: 69rem;
   color: theme(digitv2.lightTheme.primary-2);
   font-family: theme(digitv2.fontFamily.rc);
   font-weight: 700;
@@ -365,6 +365,7 @@
 }
 
 .appConfiglabelField {
+  position: relative;
   padding: 1rem;
   background-color: #eee;
   border: 1px solid #d6d5d4;
@@ -524,7 +525,7 @@
 .detail-header {
   font-size: theme(digitv2.fontSize.heading-m);
   color: theme(digitv2.lightTheme.primary-2);
-  font-family: "roboto"
+  font-family: "roboto";
 }
 .details-desc {
   color: theme(digitv2.lightTheme.text-color-secondary);
@@ -592,6 +593,11 @@
     width: 10rem;
     top: 15rem;
     position: fixed;
+    .toggle-option-container {
+      .digit-toggle-btn-wrap {
+        height: 7.5rem;
+      }
+    }
     > *:first-child label {
       border-top-left-radius: 0.5rem;
       border-bottom-left-radius: 0.5rem;
@@ -758,7 +764,7 @@
   display: flex;
   align-items: center;
   margin-right: 24rem;
-  margin-left:  unquote("min(10%, 12rem)");
+  margin-left: unquote("min(10%, 12rem)");
   gap: 2rem;
   width: fit-content;
 }
@@ -768,15 +774,21 @@
 .app-config {
   width: auto;
 }
-.progress-popup{
-  .digit-popup-close{
+.progress-popup {
+  .digit-popup-close {
     display: none !important;
   }
 }
-.update-boundary-header{
+.update-boundary-header {
   color: theme(digitv2.lightTheme.primary-2);
   font-size: theme(fontSize.heading-xl);
 }
-.select-boundary{
+.select-boundary {
   color: theme(digitv2.lightTheme.primary-2) !important;
+}
+.appConfigLabelField-toggleVisibility {
+  position: absolute;
+  cursor: pointer;
+  top: 1rem;
+  right: 1rem;
 }
