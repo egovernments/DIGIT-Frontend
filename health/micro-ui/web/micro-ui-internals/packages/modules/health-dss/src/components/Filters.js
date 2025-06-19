@@ -22,6 +22,7 @@ const Filters = ({
   showFilterByCycle = false,
 }) => {
   const { value, setValue } = useContext(FilterContext);
+  console.log("999 value ",value);
 
   const denominations = ["Cr", "Lac", "Unit"];
   const dateRangesAvailable = ["DSS_CUSTOM_DATE_RANGE", "DSS_TODAY", "DSS_CUMULATIVE"];
@@ -47,6 +48,7 @@ const Filters = ({
   }, [value?.moduleLevel]);
 
   const handleFilterChange = (data) => {
+    console.log("999 date range picker",data);
     setValue({ ...value, ...data });
   };
 
@@ -117,6 +119,7 @@ const Filters = ({
 
   // method will handle the range to be set for startDate and endDate
   const handleDateRangeFilterSelection = (label) => {
+    console.log("999 handleee filter date selecteion",label);
     let campaignStartDate = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignStartDate;
     switch (label) {
       case "DSS_TODAY": {
@@ -126,6 +129,18 @@ const Filters = ({
         let endDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 0);
         return setDateAndInterval(startDate, endDate, label);
       }
+      // case "DSS_CUMULATIVE": {
+      //   // set entire duration of campaign startDate of campaign
+      //   let startDate = value?.range?.startDate
+      //                   ? new Date(value.range.startDate)
+      //                   : new Date(new Date(Number(campaignStartDate)));
+      //   let endDate = value?.range?.endDate 
+      //                 ? new Date(data.range.endDate)
+      //                 :new Date(new Date(Number(campaignEndDate)));
+      //   console.log("999 startdate",startDate);
+      //   console.log("999 endDate ",endDate);
+      //   return setDateAndInterval(startDate, endDate, label);
+      // }
       case "DSS_CUMULATIVE": {
         // set entire duration of campaign startDate of campaign
         let startDate = new Date(new Date(Number(campaignStartDate)));

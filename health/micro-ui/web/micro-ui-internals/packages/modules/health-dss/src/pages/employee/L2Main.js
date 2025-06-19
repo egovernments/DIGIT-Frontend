@@ -284,6 +284,7 @@ const L2Main = ({}) => {
   const campaignCode = Object.keys(campaignData[projectType])?.[0];
 
   const handleFilters = (data) => {
+    console.log("999 filterssss",data);
     const userInfo = Digit.UserService.getUser()?.info;
     const province = new URLSearchParams(search).get("province");
     const eligibleRolesForFilter = {
@@ -311,10 +312,27 @@ const L2Main = ({}) => {
       };
     }
     let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
+    // if (descendantDateRange?.[province]) {
+    //   console.log("999 starttt up");
+    //   console.log("999 starttt", data.range.startDate, new Date(data.range.startDate).getTime());
+    
+    //   updatedData.filters.campaignStartDate = data?.range?.startDate
+    //     ? new Date(data.range.startDate)
+    //     : new Date(descendantDateRange[province]?.startDate);
+    
+    //   console.log("999 starttt 11", data.range.endDate, new Date(data.range.endDate).getTime());
+    
+    //   updatedData.filters.campaignEndDate = data?.range?.endDate
+    //     ? new Date(data.range.endDate)
+    //     : new Date(descendantDateRange[province]?.endDate);
+    // }
     if (updatedData?.filters && descendantDateRange?.[province]) {
       updatedData["filters"]["campaignStartDate"] = descendantDateRange?.[province]?.startDate?.toString();
       updatedData["filters"]["campaignEndDate"] = descendantDateRange?.[province]?.endDate?.toString();
     }
+    
+    
+    
     Digit.SessionStorage.set(key, updatedData);
     setFilters(updatedData);
     if (campaignInfo) {
@@ -403,6 +421,7 @@ const L2Main = ({}) => {
   }, [tabArray]);
 
   const getValuesForProgressBar = () => {
+
     const campaignStartDate = new Date(Number(JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignStartDate));
     const campaignEndDate = new Date(Number(JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignEndDate));
     const campaignDuration = differenceInDays(campaignEndDate, campaignStartDate);
@@ -736,7 +755,7 @@ const L2Main = ({}) => {
               {showProgressBar && (
                 <ProgressBar
                   className="digit-dss-switch-tab-wrapper"
-                  bgcolor="#00703C"
+                  bgcolor="#ff0000"
                   total={progressDuration?.campaignDuration}
                   completed={progressDuration?.daysElapsed}
                 />
