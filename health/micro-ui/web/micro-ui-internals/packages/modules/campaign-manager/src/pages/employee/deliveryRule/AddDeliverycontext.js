@@ -344,7 +344,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       select: (data) => {
         const attributeConfig = data?.[CONSOLE_MDMS_MODULENAME]?.allAttributes;
         const projectType = filteredDeliveryConfig?.projectType;
-        return attributeConfig.filter((attribute) => attribute.projectTypes?.includes(projectType));
+        return attributeConfig?.filter((attribute) => attribute?.projectTypes?.includes(projectType));
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.allAttributes` }

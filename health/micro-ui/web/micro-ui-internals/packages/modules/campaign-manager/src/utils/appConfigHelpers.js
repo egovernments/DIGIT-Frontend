@@ -34,7 +34,7 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   }
 
   // Special handling for enums to dropdownOptions (for dropdown/select)
-  if (matched.fieldType === "dropdown" && field.enums) {
+  if ( field.enums) {
     result.dropDownOptions = [...field.enums];
   }
 
