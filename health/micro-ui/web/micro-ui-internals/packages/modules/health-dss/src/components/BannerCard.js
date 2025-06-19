@@ -1,15 +1,11 @@
-import { Card } from "@egovernments/digit-ui-react-components";
 import React, { useContext, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader, Card } from "@egovernments/digit-ui-components";
 import format from "date-fns/format";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
-// import { Icon } from "../components/common/Icon";
-import {
-  endOfToday,
-  startOfToday
-} from "date-fns";
+import { endOfToday, startOfToday } from "date-fns";
+import Icon from "./Icon";
 
 const BannerCard = ({ data }) => {
   const { t } = useTranslation();
@@ -18,10 +14,8 @@ const BannerCard = ({ data }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
-
 
   const getWidth = (name) => {
     if (isMobile) return "auto";
@@ -45,7 +39,7 @@ const BannerCard = ({ data }) => {
     requestDate: { ...value?.requestDate, startDate: requestDate?.startDate?.getTime(), endDate: requestDate?.endDate?.getTime() },
     filters: {
       ...value?.filters,
-      projectTypeId: selectedProjectTypeId
+      projectTypeId: selectedProjectTypeId,
     },
   });
 
@@ -79,16 +73,16 @@ const BannerCard = ({ data }) => {
   const Cell = ({ name, value, symbol }) => {
     let formattedValue = value;
     if (symbol === "number") {
-      formattedValue =  Digit.Utils.dss.formatter(formattedValue, "number", value?.denomination, true, t);
+      formattedValue = Digit.Utils.dss.formatter(formattedValue, "number", value?.denomination, true, t);
     }
     if (symbol === "percentage") {
-      formattedValue =  Digit.Utils.dss.formatter(formattedValue, "percentage", value?.denomination, true, t).replace(" ", "");
+      formattedValue = Digit.Utils.dss.formatter(formattedValue, "percentage", value?.denomination, true, t).replace(" ", "");
     }
 
     return (
-      <div className="banner-cell">
-        <div className="banner-cell-sub-text">{t("DSS_" + name?.replaceAll(" ", "_").toUpperCase())}</div>
-        <div className="banner-value">{formattedValue}</div>
+      <div className="digit-banner-cell">
+        <div className="digit-banner-cell-sub-text">{t("DSS_" + name?.replaceAll(" ", "_").toUpperCase())}</div>
+        <div className="digit-banner-value">{formattedValue}</div>
       </div>
     );
   };
@@ -104,19 +98,15 @@ const BannerCard = ({ data }) => {
 
     return chartData.map((data) => {
       return (
-        <div className="banner-table cursorPointer tooltip">
+        <div className="digit-banner-table tooltip">
           <Cell name={data.name} value={data.value} symbol={data.symbol} />
           <span
-            className="tooltiptext"
             style={{
-              fontSize: "14px",
               width: getWidth(data?.name),
-              padding: "5px",
-              whiteSpace: "normal",
-              bottom: "95%",
             }}
+            className={"tooltiptext digit-banner-tooltip"}
           >
-            <span style={{ fontWeight: "500", color: "white" }}>{t(`TIP_DSS_${data.name.toUpperCase()}`)}</span>
+            <span className={"digit-banner-tooltip-text"}>{t(`TIP_DSS_${data.name.toUpperCase()}`)}</span>
           </span>
         </div>
       );
@@ -124,12 +114,12 @@ const BannerCard = ({ data }) => {
   };
 
   return (
-    <Card className="banner-card chart-item">
-      <div className="banner-card-header">
-        {/* {Icon(chartName)} */}
-        <div className="banner-heading">
-          <div className="banner-main-heading">{t(chartName)}</div>
-          <div className="banner-sub-heading">{getSubHeading()}</div>
+    <Card className="digit-banner-card digit-chart-item">
+      <div className="digit-banner-card-header">
+        <Icon type={chartName} width="3rem" height="3rem" className="digit-dss-banner-card-icon" />
+        <div className="digit-banner-heading">
+          <div className="digit-banner-main-heading">{t(chartName)}</div>
+          <div className="digit-banner-sub-heading">{getSubHeading()}</div>
         </div>
       </div>
       {isFetchingChart ? (

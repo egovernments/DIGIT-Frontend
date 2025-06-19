@@ -5,7 +5,6 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
 import { Loader, Chip } from "@egovernments/digit-ui-components";
-import { Tooltip as TooltipComponent } from "@egovernments/digit-ui-components";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 const mobileView = innerWidth <= 640;
 
@@ -148,19 +147,20 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     const labelValue = Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1);
     const formattedValue = labelValue;
     return (
-      <TooltipComponent
-        arrow={false}
-        content={
-          <div>
-            <div>
-              <b>{`${t(`${payload?.[0]?.name}`)}`}</b> &nbsp;{" "}
-              {`${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`}
-            </div>
-            <p>{`(${formattedValue}%)`}</p>
-          </div>
-        }
-        theme="dark"
-      />
+      <div
+        style={{
+          margin: "0px",
+          whiteSpace: "nowrap",
+          fontSize: "16px",
+          color: "#505A5F",
+        }}
+      >
+        <p className="recharts-tooltip-label">
+          <b>{`${t(`${payload?.[0]?.name}`)}`}</b> &nbsp;{" "}
+          {`${Digit.Utils.dss.formatter(payload?.[0]?.value, payload?.[0]?.payload?.payload?.symbol, value?.denomination, true, t)}`}
+        </p>
+        <p>{`(${formattedValue}%)`}</p>
+      </div>
     );
   };
 
@@ -279,7 +279,11 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                   </>
                 )}
               </Pie>
-              {showTooltip && <Tooltip content={renderTooltip} />}
+              {showTooltip && (
+                <Tooltip
+                  content={renderTooltip}
+                />
+              )}
               <Legend
                 layout="vertical"
                 verticalAlign="middle"

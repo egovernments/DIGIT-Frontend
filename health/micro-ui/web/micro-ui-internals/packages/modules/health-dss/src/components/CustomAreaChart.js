@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import { getDaysInMonth } from "date-fns";
 import React, { useContext, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
@@ -271,7 +271,7 @@ const strokeDash = (key) => {
   return 0
 }
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
   return (
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", zoom:pageZoom ? 1 : 1.25 }}>
@@ -295,19 +295,6 @@ const strokeDash = (key) => {
             <Tooltip content={renderTooltip} />
             <XAxis dataKey={xDataKey} tick={{ fontSize: "14px", fill: "#505A5F" }} tickFormatter={tickFormatter} />
             <YAxis
-              /*
-              label={{
-                value: `${t(`DSS_Y_${response?.responseData?.data?.[0]?.headerName.replaceAll(" ", "_").toUpperCase()}`)} ${
-                  renderUnits(t, value.denomination,response?.responseData?.data?.[0]?.headerSymbol) 
-                }`,
-                angle: -90,
-                position: "insideLeft",
-                dy: 40,
-                offset: -10,
-                fontSize: "14px",
-                fill: "#505A5F",
-              }}
-              */
               tick={{ fontSize: "14px", fill: "#505A5F" }}
               tickFormatter={yAxistickFormatter}
             />
@@ -330,23 +317,8 @@ const strokeDash = (key) => {
             <XAxis dataKey="name" />
             <YAxis
             tickFormatter={yAxistickFormatter}
-            /*
-            Removed this custom yaxis label for all line charts 
-            label={{
-                value: `${t(`DSS_Y_${response?.responseData?.data?.[0]?.headerName.replaceAll(" ", "_").toUpperCase()}`)} ${
-                  renderUnits(t, value.denomination,response?.responseData?.data?.[0]?.headerSymbol) 
-                }`,
-                angle: -90,
-                position: "insideLeft",
-                dy: 40,
-                offset: -10,
-                fontSize: "14px",
-                fill: "#505A5F",
-              }}
-              */
             />
             <Tooltip 
-            wrapperStyle={{ outline: "none", border: "1px solid #B1B4B6", borderRadius: "5px", padding: "8px", backgroundColor: "#FFFFFF" }}
             content={renderTooltipForLine} />
             <Legend
               layout="horizontal"

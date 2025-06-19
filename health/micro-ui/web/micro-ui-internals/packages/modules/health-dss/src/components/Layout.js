@@ -63,7 +63,6 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         // return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
       case "bar":
       case "sideBySideBar":
-        console.log("CHART: ", chart);
         return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} pageZoom={pageZoom} downloadChartsId={downloadChartsId} />;
       case "venn":
         return <VennDiagram data={chart}/>;
@@ -109,7 +108,6 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
             onChange={(e) => onSearch(e.target.value)}
             setDownloadChartsId={setDownloadChartsId}
           >
-            {/* {visualizer.charts.map((chart, key) => renderChart(chart, key))} */}
             {renderChart(visualizer?.charts?.[chip ? chip.filter((ele) => ele.active)?.[0]?.index : 0], visualizer.name)}
           </GenericChart>
         );

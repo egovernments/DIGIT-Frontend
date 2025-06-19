@@ -415,7 +415,6 @@ const CustomHorizontalBarChart = ({
                 textAnchor={showOnDownload ? "end" : "middle"}
               />
               <Tooltip
-                wrapperStyle={{ outline: "none", border: "1px solid #B1B4B6", borderRadius: "5px", padding: "8px", backgroundColor: "#FFFFFF" }}
                 content={<CustomTooltip />}
                 cursor={false}
               />
