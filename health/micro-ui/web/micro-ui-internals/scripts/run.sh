@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MODULES=( "components" "core" "libraries" "example" )
+MODULES=( "css" "campaign" "example" )
 
 RUNARGS=()
 BUILDARGS=()
