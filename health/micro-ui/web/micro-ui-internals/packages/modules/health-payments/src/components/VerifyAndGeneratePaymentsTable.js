@@ -158,17 +158,17 @@ const VerifyAndGeneratePaymentsTable = ({
 const getAvailableActions = (status) => {
   switch (status) {
     case "PARTIALLY_VERIFIED":
-      return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT","HCM_AM_DOWNLOAD_REPORT"];
+      return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
 case "PENDING_VERIFICATION":
-      return ["HCM_AM_VERIFY", "HCM_AM_EDIT","HCM_AM_DOWNLOAD_REPORT"];
+      return ["HCM_AM_VERIFY", "HCM_AM_EDIT"];
     case "FULLY_VERIFIED":
-      return ["HCM_AM_GENERATE_PAYMENT","HCM_AM_DOWNLOAD_REPORT"];
+      return ["HCM_AM_GENERATE_PAYMENT"];
     case "PARTIALLY_PAID":
-        return ["HCM_AM_GENERATE_PAYMENT","HCM_AM_DOWNLOAD_REPORT"];
+        return ["HCM_AM_GENERATE_PAYMENT"];
     case "FULLY_PAID":
     case "SENT_BACK":
     default:
-      return ["HCM_AM_DOWNLOAD_REPORT"]; // No actions allowed except download
+      return []; // No actions allowed except download
   }
 };
     const columns = useMemo(() => {
