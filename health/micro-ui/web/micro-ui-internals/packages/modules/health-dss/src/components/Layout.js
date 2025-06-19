@@ -38,7 +38,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
   const renderChart = (chart, title) => {
     switch (chart.chartType) {
       case "table":
-        return <CustomTable data={chart} searchQuery={searchQuery} chip={chip} title={title} />;
+        return <CustomTable data={chart} onSearch={searchQuery} chip={chip} title={title} />;
       case "donut":
         return <CustomPieChart data={chart} title={title} />;
       case "line":

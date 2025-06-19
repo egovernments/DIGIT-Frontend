@@ -35,7 +35,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
   return Math.round((value / (totalCapacity * numberOfDays)) * 100);
 };
 
-const CustomTable = ({ data = {}, searchQuery, setChartData, setChartDenomination }) => {
+const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChartDenomination }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
@@ -94,11 +94,11 @@ const CustomTable = ({ data = {}, searchQuery, setChartData, setChartDenominatio
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     return response?.responseData?.data
       ?.filter((rows) => {
-        // Only apply search filtering if searchQuery is a string longer than 1 char
-        if (typeof searchQuery === "string" && searchQuery.length > 1) {
-          return rows?.headerName?.toLowerCase().startsWith(searchQuery.toLowerCase());
+        // Only apply search filtering if onSearch is a string longer than 1 char
+        if (typeof onSearch === "string" && onSearch.length > 1) {
+          return rows?.headerName?.toLowerCase().startsWith(onSearch.toLowerCase());
         }
-        return true; // If searchQuery not valid, include all
+        return true; // If onSearch not valid, include all
       })
       ?.map((rows, id) => {
         const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
@@ -157,7 +157,7 @@ const CustomTable = ({ data = {}, searchQuery, setChartData, setChartDenominatio
           return acc;
         }, {});
       });
-  }, [response, lastYearResponse, searchQuery]);
+  }, [response, lastYearResponse, onSearch]);
 
   useEffect(() => {
     if (tableData) {
