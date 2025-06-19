@@ -28,7 +28,7 @@
     "devD:healthpayments": "cd packages/modules/health-payments && yarn start",
     "devDD:pgr": "cd packages/modules/pgr && yarn start",
     "devD:health-dss": "cd packages/modules/health-dss && yarn start",
-    "build": "run-p build:**",
+    "build": "run-s build:**",
     "build:ui-components": "cd packages/ui-components && yarn build",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn build",
@@ -44,7 +44,8 @@
     "clean:micro-internals": "rm -rf node_modules && rm -rf yarn.lock ",
     "clean:campaign": "cd packages/modules/campaign-manager && rm -rf node_modules &&  rm -rf dist",
     "clean:css": "cd packages/css && rm -rf node_modules && rm -rf dist",
-    "cleanD:cache": "yarn cache clean && cd example && yarn cache clean"
+    "cleanD:cache": "yarn cache clean && cd example && yarn cache clean",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",

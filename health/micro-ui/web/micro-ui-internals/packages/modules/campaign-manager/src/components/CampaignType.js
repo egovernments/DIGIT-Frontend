@@ -1,7 +1,7 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { UploadIcon, FileIcon, DeleteIconv2, Toast, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair, Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock, Card } from "@egovernments/digit-ui-components";
+import { LabelFieldPair, Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock, Card ,HeaderComponent,AlertCard} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
@@ -108,7 +108,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
         <div className="card-container2">
           <Card className = "setup-campaign-card">
-            {/* <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</HeaderComponent> */}
+            <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</HeaderComponent>
             <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
             <LabelFieldPair style={{ display: "flex", marginBottom:"-0.8rem" }}>
               <div className="campaign-type">
@@ -156,14 +156,14 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               </LabelFieldPair>
             )}
           </Card>
-           {/* <AlertCard
+           <AlertCard
                         populators={{
                           name: "infocard",
                         }}
                         variant="info"
                         text={t("HCM_UPDATE_CAMPAIGN_TYPE_INFO")}
                         style={{ marginTop: "1rem", maxWidth: "100%" }}
-                      /> */}
+                      />
         </div>
         {showPopUp && (
           <PopUp

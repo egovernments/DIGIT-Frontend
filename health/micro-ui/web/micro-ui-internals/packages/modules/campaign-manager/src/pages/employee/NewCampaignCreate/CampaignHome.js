@@ -2,7 +2,7 @@ import { Card, PopUp, Button, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SVG } from "@egovernments/digit-ui-components";
+import { SVG ,HeaderComponent} from "@egovernments/digit-ui-components";
 import { NewWindow } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { AppHelpContent } from "../../../components/HelpInfoCard";
@@ -129,7 +129,7 @@ const CampaignHome = () => {
 
   return (
     <Card>
-      {/* <HeaderComponent className="campaign-header-style">{t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}</HeaderComponent> */}
+      <HeaderComponent className="campaign-header-style">{t(`HCM_HOW_DO_YOU_WANT_TO_CREATE`)}</HeaderComponent>
       <p className="name-description">{t(`HCM_CREATE_CAMPAIGN_DESCRIPTION`)}</p>
       <div className={"containerStyle"}>
         <div
