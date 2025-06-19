@@ -113,7 +113,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   useEffect(() => {
 
     if (data && selectedProjectType) {
-      setFilterDeliveryConfig(getDeliveryConfig({ data: data?.MdmsRes?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType }));
+      const deliveryData = getDeliveryConfig({ data: data?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType })
+      setFilterDeliveryConfig(deliveryData);
     }
   }, [data, selectedProjectType]);
 
@@ -216,9 +217,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     } else if (currentStep === 2) setKey(9);
     else setKey(8);
   };
-  if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
-  }
+  // if (isLoading) {
+  //   return <Loader page={true} variant={"PageLoader"} />;
+  // }
 
   return (
     <>
