@@ -152,16 +152,15 @@ export default GenericChart;
 const Chip = (props) => {
   const [state, setState] = useState(1);
   return (
-    <div className="table-switch-card-chip">
+    <div className="digit-table-switch-card-chip">
       {props.items.map((item, index) => {
         return (
           <div
-            className={item.active && state ? "table-switch-card-active" : "table-switch-card-inactive"}
+          className={`digit-table-switch-card ${item.active && state ? "active" : "inactive"}`}
             onClick={() => {
               props.onClick && props.onClick(item.index);
               setState((prev) => prev + 1);
             }}
-            style={{ color: item.active && state && "rgb(244, 119, 56)", whiteSpace: "nowrap" }}
           >
             {props.t(`DSS_TAB_${item?.tabName?.toUpperCase()}`)}
           </div>

@@ -1,16 +1,14 @@
-import { Loader, Rating, RemoveableTag, Table } from "@egovernments/digit-ui-react-components";
 import { differenceInCalendarDays, subYears } from "date-fns";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { Loader, CustomSVG, Chip } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
-// import { ArrowDownwardElement } from "./ArrowDownward";
-// import { ArrowUpwardElement } from "./ArrowUpward";
 import ReactTooltip from "react-tooltip";
 import { getTitleHeading } from "../utils/locale";
 import DataTable from "react-data-table-component";
-import { tableCustomStyle} from "./TableCustomStyles";
-import { ArrowUpward} from "@egovernments/digit-ui-svg-components";
+import { tableCustomStyle } from "./TableCustomStyles";
+import Icon from "./Icon";
 
 const rowNamesToBeLocalised = ["Department", "", "Usage Type", "Ward", "Wards", "City Name", "Complaint Type", "Event Type"];
 
@@ -21,7 +19,13 @@ const InsightView = ({ rowValue, insight, t, shouldHideInsights }) => {
       {!shouldHideInsights ? (
         <React.Fragment>
           {` `}
-          {/* {insight >= 0 ? ArrowUpwardElement() : ArrowDownwardElement()} */}
+          <Icon
+            type={insight >= 0 ? "arrow-upward" : "arrow-downward"}
+            iconColor={insight >= 0 ? "#00703C" : "#D4351C"}
+            width="1.5rem"
+            height="1.5rem"
+            className="digit-dss-insight-icon"
+          />
           {` `}
           {isNaN(insight) ? `0%` : `${Digit.Utils.dss.formatter(Math.abs(insight), "number", "Lac", true, t)}%`}
         </React.Fragment>
@@ -35,7 +39,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
   return Math.round((value / (totalCapacity * numberOfDays)) * 100);
 };
 
-const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChartDenomination }) => {
+const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setChartDenomination }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
@@ -61,10 +65,10 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
       id === chartKey
         ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
         : {
-          ...value?.filters,
-          [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-          projectTypeId: projectTypeId,
-        },
+            ...value?.filters,
+            [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+            projectTypeId: projectTypeId,
+          },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
   });
@@ -77,10 +81,10 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
       id === chartKey
         ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
         : {
-          ...value?.filters,
-          [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-          projectTypeId: selectedProjectTypeId,
-        },
+            ...value?.filters,
+            [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+            projectTypeId: selectedProjectTypeId,
+          },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
   });
@@ -149,10 +153,10 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
             insight !== null
               ? { value: cellValue, insight }
               : row?.name === "S.N."
-                ? id + 1
-                : typeof cellValue === "number"
-                  ? { value: cellValue }
-                  : cellValue;
+              ? id + 1
+              : typeof cellValue === "number"
+              ? { value: cellValue }
+              : cellValue;
           acc["key"] = rows?.headerName;
           return acc;
         }, {});
@@ -208,8 +212,6 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
     });
   }, []);
 
-
-
   const renderUnits = (denomination) => {
     switch (denomination) {
       case "Unit":
@@ -230,10 +232,7 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
     if (plot?.symbol === "amount" && !shouldHideDenomination) {
       return `${t(code)} ${renderUnits(value?.denomination)}`;
     }
-    return (
-      <div className="table-column-header">
-        {t(code)}
-      </div>);
+    return <div className="table-column-header">{t(code)}</div>;
   };
 
   const getDrilldownCharts = (value, filterKey, label, filters = []) => {
@@ -345,14 +344,7 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
           name: (
             <span className="tooltip" data-tip="React-tooltip" data-for={`jk-table-${chartId}-${index}`} color="#OBOCOC">
               {renderHeader(plot)}
-              <ReactTooltip
-                textColor="#fff"
-                backgroundColor="#555"
-                place="bottom"
-                type="info"
-                effect="solid"
-                id={`jk-table-${chartId}-${index}`}
-              >
+              <ReactTooltip textColor="#fff" backgroundColor="#555" place="bottom" type="info" effect="solid" id={`jk-table-${chartId}-${index}`}>
                 {t(tooltipLocaleKey)}
               </ReactTooltip>
             </span>
@@ -381,7 +373,7 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
             if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
               return (
                 <span
-                  style={{ color: "#F47738", cursor: "pointer" }}
+                  className="digit-custom-table-drilldown-text"
                   onClick={() =>
                     getDrilldownCharts(
                       cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
@@ -418,7 +410,6 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
             return valueA - valueB;
           },
 
-
           id: columnId,
           symbol: plot?.symbol,
 
@@ -427,7 +418,6 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
         };
       });
   }, [response, value?.denomination, value?.range]);
-
 
   const convertDenomination = (val) => {
     const { denomination } = value;
@@ -450,43 +440,40 @@ const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChart
   };
 
   if (isLoading || isRequestLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"} />;
   }
   return (
     <div style={{ width: "100%" }}>
       {/* Filters stack */}
       {filterStack?.length > 1 && (
-        <div className="tag-container">
-          <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+        <div className="digit-tag-container">
+          <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
           {filterStack.map((filter, id) =>
-            id > 0 ? (
-              <RemoveableTag key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeULB(id)} />
-            ) : null
+            id > 0 ? <Chip key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeFilter(id)} hideClose={false} /> : null
           )}
         </div>
       )}
-
       {/* Data Table or NoData */}
       {!tableColumns || !tableData ? (
         <NoData t={t} />
       ) : (
         <DataTable
           columns={tableColumns}
+          className={`data-table`}
           data={tableData?.filter((tRow) => tRow) || []}
-          sortIcon={<ArrowUpward fill={"#0c0b0b"} />}
-          pagination // enables pagination
-          highlightOnHover // row hover effect
-          persistTableHead // keeps header even when filtered
-          dense // compact rows
-          noHeader={false} // show table header
+          sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+          pagination
+          highlightOnHover
+          persistTableHead
+          noHeader={false}
           customStyles={tableCustomStyle}
-          defaultSortFieldId={tableColumns[0]?.id} // initial sort
-  
+          defaultSortFieldId={tableColumns[0]?.id}
+          fixedHeader={true}
+          paginationComponentOptions={{ rowsPerPageText: t("ROWS_PER_PAGE") }}
         />
       )}
     </div>
   );
-
 };
 
 export default CustomTable;
