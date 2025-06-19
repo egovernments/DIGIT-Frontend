@@ -371,27 +371,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           </>
         )}
         <div>
-          <div className="app-config-version-tags">
-            {/* <span className="app-config-placeholder-version-tag" /> */}
-            <span className="app-config-version-tag" style={{ display: "flex", justifyContent: "center" }}>
-              {/* <Tag
-                stroke={false}
-                showIcon={false}
-                label={`${t("CMN_SCREEN")} -  1.1`}
-                labelStyle={{ color: "#787878" }}
-                //  style={{background: "#EFF8FF"}}  labelStyle={{color:"#0B4B66"}}
-              /> */}
-              {/* <Tag
-                stroke={false}
-                showIcon={false}
-                label={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
-                style={{ background: "#EFF8FF" }}
-                labelStyle={{ color: "#0B4B66" }}
-              /> */}
-              {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
-            </span>
-            {/* <span className="app-config-placeholder-version-tag" /> */}
-          </div>
           <div
             style={{
               display: "flex",
@@ -411,6 +390,8 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               localeModule={localeModule}
             />
           </div>
+          <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span>
+
         </div>
       </div>
       {showToast && (
