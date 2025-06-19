@@ -89,6 +89,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
 
   const reqCriteriaForm = {
     url: `/${mdms_context_path}/v2/_search`,
+    changeQueryName: `APP_CONFIG_CACHE`,
     body: {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
@@ -188,6 +189,9 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   }
 
   const submit = async (screenData, finalSubmit) => {
+    if (!finalSubmit && stepper?.find((i) => i.active)?.isLast && !isNextTabAvailable) {
+      setShowToast({ key: "error", label: "LAST_PAGE_ERROR" });
+    }
     parentDispatch({
       key: "SETBACK",
       data: screenData,
@@ -292,21 +296,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           },
         }
       );
-      // if (nextTabAvailable) {
-      //   setNumberTabs((prev) => {
-      //     return prev.map((tab) => {
-      //       // Activate only the next tab (currentStep.code + 1)
-      //       if (tab.code === prev.find((j) => j.active).code + 1) {
-      //         return { ...tab, active: true }; // Activate the next tab
-      //       }
-      //       return { ...tab, active: false }; // Deactivate all others
-      //     });
-      //   });
-      //   return;
-      // } else {
-      //   setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-      //   return;
-      // }
     } else {
       setCurrentStep((prev) => prev + 1);
     }
@@ -342,34 +331,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       </Header>
       <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       <div style={{ display: "flex" }}>
-        {variant === "app" && (
-          <>
-            <div>
-              {/* <AppConfigTab
-                wrapperClassName={"app-config-tab"}
-                toggleOptions={numberTabs?.map((ele) => ({ code: ele?.parent, name: t(ele?.parent) }))}
-                selectedOption={numberTabs?.[0]?.parent}
-                handleToggleChange={(tab, index) => {
-                  setNumberTabs((prev) => {
-                    return prev.map((j) => {
-                      if (j.parent === tab.parent) {
-                        return {
-                          ...j,
-                          active: true,
-                        };
-                      }
-                      return {
-                        ...j,
-                        active: false,
-                      };
-                    });
-                  });
-                  setCurrentStep(1);
-                }}
-              /> */}
-            </div>
-          </>
-        )}
         <div>
           <div
             style={{
@@ -391,7 +352,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             />
           </div>
           <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span>
-
         </div>
       </div>
       {showToast && (

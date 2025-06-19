@@ -143,7 +143,7 @@ const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
 
 export const restructure = (data1, fieldTypeMasterData = [], parent) => {
   return[
-    ...data1.sort((a, b) => a.order - b.order)
+    ...data1?.sort((a, b) => a.order - b.order)
   ].map((page) => {
       const cardFields = page.properties
         ?.sort((a, b) => a.order - b.order)
