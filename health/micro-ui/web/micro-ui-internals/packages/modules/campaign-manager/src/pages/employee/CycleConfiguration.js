@@ -1,7 +1,7 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
 import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header, Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard, Stepper, TextBlock, Loader  , FieldV1} from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard, Stepper, TextBlock, Loader, FieldV1 } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
@@ -314,9 +314,11 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     max={dateRange?.endDate}
                     populators={{
                       newDateFormat: true,
-                      validation: {
-                        // min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
-                      },
+                      max:dateRange?.endDate,
+                      min:
+                        index > 0 && cycleData?.find((j) => j.key === index)?.toDate
+                          ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
+                          : dateRange?.startDate,
                     }}
                     onChange={(d) => selectFromDate(index + 1, d)}
                   />
@@ -334,9 +336,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     populators={{
                       newDateFormat: true,
-                      validation: {
-                        // min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
-                      },
+                      max:dateRange?.endDate,
+                      min:
+                      cycleData?.find((j) => j.key === index + 1)?.fromDate
+                        ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
+                            ?.toISOString()
+                            ?.split("T")?.[0]
+                        : null
+                    
                     }}
                     max={dateRange?.endDate}
                     onChange={(d) => selectToDate(index + 1, d)}
