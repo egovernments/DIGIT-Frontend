@@ -337,7 +337,16 @@
 }
 .mobile-bezel-outerWrapper {
   transform: scale(0.8);
-  margin-top: 2rem;
+  margin-top: -4rem;
+}
+
+.app-config-tag-page-fixed{
+  position:fixed;
+  top:15rem;
+  left:  62rem;
+  color: theme(digitv2.lightTheme.primary-2);
+  font-family: theme(digitv2.fontFamily.rc);
+  font-weight: 700;
 }
 .mobile-top {
   background-color: theme(digitv2.lightTheme.header-sidenav);
@@ -580,7 +589,7 @@
 
 .digit-toggle-toolbar {
   &.app-config-tab {
-    width: fit-content;
+    width: 10rem;
     top: 15rem;
     position: fixed;
     > *:first-child label {
@@ -749,7 +758,7 @@
   display: flex;
   align-items: center;
   margin-right: 24rem;
-  margin-left: 15rem;
+  margin-left:  unquote("min(10%, 12rem)");
   gap: 2rem;
   width: fit-content;
 }

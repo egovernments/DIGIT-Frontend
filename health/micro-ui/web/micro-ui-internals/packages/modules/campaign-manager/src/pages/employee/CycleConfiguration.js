@@ -1,11 +1,12 @@
 import React, { useReducer, Fragment, useEffect, useState } from "react";
 import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header, Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { TextInput, InfoCard, Stepper, TextBlock, Loader } from "@egovernments/digit-ui-components";
+import { TextInput, InfoCard, Stepper, TextBlock, Loader, FieldV1 } from "@egovernments/digit-ui-components";
 import { deliveryConfig } from "../../configs/deliveryConfig";
 import getDeliveryConfig from "../../utils/getDeliveryConfig";
 import TagComponent from "../../components/TagComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
+import { convertEpochToNewDateFormat } from "../../utils/convertEpochToNewDateFormat";
 
 const initialState = (saved, filteredDeliveryConfig, refetch) => {
   const data = {
@@ -77,7 +78,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   const [isLoading, setIsLoading] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
-  const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
+  const selectedProjectType =
+    window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
   const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
   const [filteredDeliveryConfig, setFilterDeliveryConfig] = useState(null);
   const { isLoading: deliveryConfigLoading, data } = Digit.Hooks.useCustomMDMS(
@@ -108,10 +110,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     },
   };
 
-  const {  data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
-
     if (data && selectedProjectType) {
       setFilterDeliveryConfig(getDeliveryConfig({ data: data?.MdmsRes?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType }));
     }
@@ -122,7 +123,9 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
       setIsLoading(true);
     } else setIsLoading(false);
   }, [filteredDeliveryConfig]);
-  const saved = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure || campaignData?.additionalDetails?.cycleData;
+  const saved =
+    Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
+    campaignData?.additionalDetails?.cycleData;
   const refetch = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate
     ?.refetch;
   const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -238,8 +241,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
         </div> */}
         <div className="card-container2">
           <Card>
-             <TagComponent campaignName={campaignName} />
-            <Header styles ={{marginTop: "1.5rem" , color: "#0b4b66"}} className = "select-boundary">
+            <TagComponent campaignName={campaignName} />
+            <Header styles={{ marginTop: "1.5rem", color: "#0b4b66" }} className="select-boundary">
               {t(
                 `CAMPAIGN_PROJECT_${
                   tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
@@ -250,40 +253,15 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             </Header>
             <Paragraph
               customClassName="cycle-paragraph"
-              value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-                ?.split("-")
-                ?.reverse()
-                ?.join("/")} - ${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate?.split("-")?.reverse()?.join("/")})`}
+              // value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
+              //   ?.split("-")
+              //   ?.reverse()
+              //   ?.join("/")} - ${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate?.split("-")?.reverse()?.join("/")})`}
+
+              value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
+                tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+              )}`}
             />
-            {/* <InfoCard
-        className={"infoClass"}
-        populators={{
-          name: "infocard",
-        }}
-        variant="default"
-        style={{ marginBottom: "1.5rem", marginLeft: "0rem", maxWidth: "100%" }}
-        additionalElements={[
-          <img
-            className="whoLogo"
-            // style="display: block;-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;"
-            src="https://cdn.worldvectorlogo.com/logos/world-health-organization-logo-1.svg"
-            alt="WHO Logo"
-            width="164"
-            height="90"
-          ></img>,
-          <span style={{ color: "#505A5F" }}>
-            {t(
-              `CAMPAIGN_CYCLE_INFO_${
-                tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-                  ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-                  : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
-              }`
-            )}
-          </span>,
-        ]}
-        label={"Info"}
-        headerClassName={"headerClassName"}
-      /> */}
             {/* <Card className="campaign-counter-container"> */}
             <CardText>
               {t(
@@ -323,22 +301,32 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   {t(`CAMPAIGN_CYCLE`)} {index + 1}
                 </CardLabel>
                 <div className="date-field-container">
-                  <TextInput
+                  <FieldV1
                     type="date"
                     placeholder={t("FROM_DATE")}
                     value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                    withoutLabel={true}
                     min={
                       index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index)?.toDate)?.getTime() + 86400000)?.toISOString()?.split("T")?.[0]
                         : dateRange?.startDate
                     }
                     max={dateRange?.endDate}
+                    populators={{
+                      newDateFormat: true,
+                      max:dateRange?.endDate,
+                      min:
+                        index > 0 && cycleData?.find((j) => j.key === index)?.toDate
+                          ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
+                          : dateRange?.startDate,
+                    }}
                     onChange={(d) => selectFromDate(index + 1, d)}
                   />
-                  <TextInput
+                  <FieldV1
                     type="date"
                     placeholder={t("TO_DATE")}
                     value={cycleData?.find((j) => j.key === index + 1)?.toDate}
+                    withoutLabel={true}
                     min={
                       cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
@@ -346,6 +334,17 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                             ?.split("T")?.[0]
                         : null
                     }
+                    populators={{
+                      newDateFormat: true,
+                      max:dateRange?.endDate,
+                      min:
+                      cycleData?.find((j) => j.key === index + 1)?.fromDate
+                        ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
+                            ?.toISOString()
+                            ?.split("T")?.[0]
+                        : null
+                    
+                    }}
                     max={dateRange?.endDate}
                     onChange={(d) => selectToDate(index + 1, d)}
                   />
