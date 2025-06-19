@@ -358,6 +358,7 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                         value={""}
                         label={t(field?.label)}
                         isLabelFirst={false}
+                        disabled={field?.readOnly || false}
                       />
                     );
                   }
