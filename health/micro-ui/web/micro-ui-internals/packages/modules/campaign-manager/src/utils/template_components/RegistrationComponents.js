@@ -200,7 +200,7 @@ const HouseholdOverViewMemberCard = (props) => {
       <div style={styles.buttonGroup}>
         {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && (!(props.primaryBtn?.hidden)) && (
           <Button
-            className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}
+            // className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}
             key={0}
             variation="primary"
             label={props.t(props.primaryBtn?.label || "LABEL")}
