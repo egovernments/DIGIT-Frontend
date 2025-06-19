@@ -9,6 +9,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { downloadExcelWithCustomName } from "../../../utils";
 import QRCode from "react-qr-code";
+import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 
 export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
@@ -275,10 +276,7 @@ const CampaignDetails = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  const week = `${Digit.DateUtils.ConvertTimestampToDate(campaignData?.startDate, "dd/MM/yyyy")}-${Digit.DateUtils.ConvertTimestampToDate(
-    campaignData?.endDate,
-    "dd/MM/yyyy"
-  )}`;
+  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate )}`;
 
   const closeToast = () => {
     setShowToast(null);
