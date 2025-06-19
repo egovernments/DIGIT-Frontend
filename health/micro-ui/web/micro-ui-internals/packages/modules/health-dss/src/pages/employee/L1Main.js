@@ -412,7 +412,6 @@ const L1Main = () => {
   if (localizationLoading) {
     return <Loader className={"digit-center-loader"} />;
   }
-  console.log(dashboardConfig?.[0]?.visualizations, "dashboardConfig?.[0]?.visualizations");
 
   return (
     <FilterContext.Provider value={provided}>

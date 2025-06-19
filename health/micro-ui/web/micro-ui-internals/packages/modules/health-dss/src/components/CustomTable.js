@@ -9,6 +9,8 @@ import NoData from "./NoData";
 import ReactTooltip from "react-tooltip";
 import { getTitleHeading } from "../utils/locale";
 import DataTable from "react-data-table-component";
+import { tableCustomStyle} from "./TableCustomStyles";
+import { ArrowUpward} from "@egovernments/digit-ui-svg-components";
 
 const rowNamesToBeLocalised = ["Department", "", "Usage Type", "Ward", "Wards", "City Name", "Complaint Type", "Event Type"];
 
@@ -33,8 +35,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
   return Math.round((value / (totalCapacity * numberOfDays)) * 100);
 };
 
-const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }) => {
-  console.log("customTableeeeeeeeeeeeee")
+const CustomTable = ({ data = {}, onSearch={searchQuery}, setChartData, setChartDenomination }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
@@ -60,10 +61,10 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
       id === chartKey
         ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
         : {
-            ...value?.filters,
-            [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            projectTypeId: projectTypeId,
-          },
+          ...value?.filters,
+          [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+          projectTypeId: projectTypeId,
+        },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
   });
@@ -76,10 +77,10 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
       id === chartKey
         ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
         : {
-            ...value?.filters,
-            [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            projectTypeId: selectedProjectTypeId,
-          },
+          ...value?.filters,
+          [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+          projectTypeId: selectedProjectTypeId,
+        },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
   });
@@ -91,64 +92,72 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
   const tableData = useMemo(() => {
     if (!response || !lastYearResponse) return;
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
-    return response?.responseData?.data?.map((rows, id) => {
-      const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
-      return rows?.plots?.reduce((acc, row, currentIndex) => {
-        let cellValue = row?.value !== null ? row?.value : row?.label || "";
-        if (row?.strValue && row?.symbol === "string" && !row?.label) {
-          cellValue = row?.strValue;
+    return response?.responseData?.data
+      ?.filter((rows) => {
+        // Only apply search filtering if onSearch is a string longer than 1 char
+        if (typeof onSearch === "string" && onSearch.length > 1) {
+          return rows?.headerName?.toLowerCase().startsWith(onSearch.toLowerCase());
         }
-        let prevData = lyData?.plots?.[currentIndex]?.value;
-        let insight = null;
-        if (row?.name === "CapacityUtilization" && chartKey !== "fsmVehicleLogReportByVehicleNo") {
-          const { range } = value;
-          const { startDate, endDate } = range;
-          const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
-          const ulbs = dssTenants
-            .filter((tenant) => tenant?.city?.ddrName === rows?.headerName || tenant?.code === rows?.headerName)
-            .map((tenant) => tenant?.code);
-          const totalCapacity = fstpMdmsData
-            ?.filter((plant) => ulbs.find((ulb) => plant?.ULBS?.includes(ulb)))
-            .reduce((acc, plant) => acc + Number(plant?.PlantOperationalCapacityKLD), 0);
-          cellValue = calculateFSTPCapacityUtilization(cellValue, totalCapacity, numberOfDays);
-          prevData = calculateFSTPCapacityUtilization(prevData, totalCapacity, numberOfDays);
-        }
-        if (row?.name === "CapacityUtilization" && chartKey === "fsmVehicleLogReportByVehicleNo") {
-          const tankCapcity = rows?.plots.find((plot) => plot?.name === "TankCapacity");
-          cellValue = calculateFSTPCapacityUtilization(cellValue, tankCapcity?.value);
-          prevData = calculateFSTPCapacityUtilization(prevData, tankCapcity?.value);
-        }
-        if (
-          (row?.symbol === "number" || row?.symbol === "percentage" || row?.symbol === "amount") &&
-          row?.name !== "CitizenAverageRating" &&
-          row?.name !== "TankCapacity" &&
-          lyData !== undefined
-        ) {
-          if (prevData === cellValue) insight = 0;
-          else insight = prevData === 0 ? 100 : Math.round(((cellValue - prevData) / prevData) * 100);
-        }
-        if (typeof cellValue === "number" && !Number.isInteger(cellValue)) {
-          cellValue = Math.round((cellValue + Number.EPSILON) * 100) / 100;
-        }
-        if (typeof cellValue === "string" && rowNamesToBeLocalised?.includes(row.name)) {
-          cellValue = t(`DSS_TB_` + Digit.Utils.locale.getTransformedLocale(cellValue));
-        }
-        if (row?.name?.toLowerCase().includes("days")) {
-          cellValue = Math.floor(cellValue);
-        }
-        acc[t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(row?.name)}`)] =
-          insight !== null
-            ? { value: cellValue, insight }
-            : row?.name === "S.N."
-            ? id + 1
-            : typeof cellValue === "number"
-            ? { value: cellValue }
-            : cellValue;
-        acc["key"] = rows?.headerName;
-        return acc;
-      }, {});
-    });
-  }, [response, lastYearResponse]);
+        return true; // If onSearch not valid, include all
+      })
+      ?.map((rows, id) => {
+        const lyData = lastYearResponse?.responseData?.data?.find((lyRow) => lyRow?.headerName === rows?.headerName);
+        return rows?.plots?.reduce((acc, row, currentIndex) => {
+          let cellValue = row?.value !== null ? row?.value : row?.label || "";
+          if (row?.strValue && row?.symbol === "string" && !row?.label) {
+            cellValue = row?.strValue;
+          }
+          let prevData = lyData?.plots?.[currentIndex]?.value;
+          let insight = null;
+          if (row?.name === "CapacityUtilization" && chartKey !== "fsmVehicleLogReportByVehicleNo") {
+            const { range } = value;
+            const { startDate, endDate } = range;
+            const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
+            const ulbs = dssTenants
+              .filter((tenant) => tenant?.city?.ddrName === rows?.headerName || tenant?.code === rows?.headerName)
+              .map((tenant) => tenant?.code);
+            const totalCapacity = fstpMdmsData
+              ?.filter((plant) => ulbs.find((ulb) => plant?.ULBS?.includes(ulb)))
+              .reduce((acc, plant) => acc + Number(plant?.PlantOperationalCapacityKLD), 0);
+            cellValue = calculateFSTPCapacityUtilization(cellValue, totalCapacity, numberOfDays);
+            prevData = calculateFSTPCapacityUtilization(prevData, totalCapacity, numberOfDays);
+          }
+          if (row?.name === "CapacityUtilization" && chartKey === "fsmVehicleLogReportByVehicleNo") {
+            const tankCapcity = rows?.plots.find((plot) => plot?.name === "TankCapacity");
+            cellValue = calculateFSTPCapacityUtilization(cellValue, tankCapcity?.value);
+            prevData = calculateFSTPCapacityUtilization(prevData, tankCapcity?.value);
+          }
+          if (
+            (row?.symbol === "number" || row?.symbol === "percentage" || row?.symbol === "amount") &&
+            row?.name !== "CitizenAverageRating" &&
+            row?.name !== "TankCapacity" &&
+            lyData !== undefined
+          ) {
+            if (prevData === cellValue) insight = 0;
+            else insight = prevData === 0 ? 100 : Math.round(((cellValue - prevData) / prevData) * 100);
+          }
+          if (typeof cellValue === "number" && !Number.isInteger(cellValue)) {
+            cellValue = Math.round((cellValue + Number.EPSILON) * 100) / 100;
+          }
+          if (typeof cellValue === "string" && rowNamesToBeLocalised?.includes(row.name)) {
+            cellValue = t(`DSS_TB_` + Digit.Utils.locale.getTransformedLocale(cellValue));
+          }
+          if (row?.name?.toLowerCase().includes("days")) {
+            cellValue = Math.floor(cellValue);
+          }
+          acc[t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(row?.name)}`)] =
+            insight !== null
+              ? { value: cellValue, insight }
+              : row?.name === "S.N."
+                ? id + 1
+                : typeof cellValue === "number"
+                  ? { value: cellValue }
+                  : cellValue;
+          acc["key"] = rows?.headerName;
+          return acc;
+        }, {});
+      });
+  }, [response, lastYearResponse, onSearch]);
 
   useEffect(() => {
     if (tableData) {
@@ -199,6 +208,8 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     });
   }, []);
 
+
+
   const renderUnits = (denomination) => {
     switch (denomination) {
       case "Unit":
@@ -219,7 +230,10 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     if (plot?.symbol === "amount" && !shouldHideDenomination) {
       return `${t(code)} ${renderUnits(value?.denomination)}`;
     }
-    return t(code);
+    return (
+      <div className="table-column-header">
+        {t(code)}
+      </div>);
   };
 
   const getDrilldownCharts = (value, filterKey, label, filters = []) => {
@@ -321,119 +335,99 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
     const firstPlotName = columns?.plots[0]?.name;
     return columns?.plots
       ?.filter((plot) => plot?.name !== "TankCapacity")
-      .map((plot, index) => ({
-        Header: (
-          <span className="tooltip" data-tip="React-tooltip" data-for={`jk-table-${chartId}-${index}`}>
-            {renderHeader(plot)}
+      .map((plot, index) => {
+        const columnId = plot?.name?.replaceAll(".", " ");
+        const headerLocaleKey = `DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`;
+        const tooltipLocaleKey = `TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`;
+        const localizedHeader = t(headerLocaleKey);
 
-            <ReactTooltip textColor="#fff" backgroundColor="#555" place="bottom" type="info" effect="solid" id={`jk-table-${chartId}-${index}`}>
-              {t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`)}
-            </ReactTooltip>
-            {/* <span
-              className="tooltiptext"
-              style={{
-                fontSize: "14px",
-                marginLeft:
-                  t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`).length < 10 ? -40 : tableData?.length > 2 ? -100 : -160,
-                height: "35px",
-                bottom: "0%",
-                top: "100%",
-                background: "none",
-                width:
-                  tableData?.length > 2 || t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`).length < 42 ? "150px" : "250px",
-              }}
-            >
-              <div style={getTooltipStyles(t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`))}>
-                {t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`)}
-              </div>
-            </span> **/}
-          </span>
-        ),
-        accessor: accessData(plot),
-        Footer: (info) => {
-          if (plot.name == firstPlotName) {
-            return <span>{t(`DSS_${Digit.Utils.locale.getTransformedLocale("Total")}`)}</span>;
-          }
-          if (plot.symbol == "number" || plot.symbol == "amount") {
-            const total = React.useMemo(() => info.rows.reduce((sum, row) => parseInt(row.values?.[plot.name]?.value.replace(/,/g, "")) + sum, 0), [
-              info.rows,
-            ]);
-
-            return <span>{total.toLocaleString()}</span>;
-          }
-          return "";
-        },
-        id: plot?.name?.replaceAll(".", " "),
-        symbol: plot?.symbol,
-        sortType: sortRows,
-        // Cell: (args) => {
-        //   const { value: cellValue, column, row } = args;
-        //   if (typeof cellValue === "object") {
-        //     return (
-        //       <InsightView insight={cellValue?.insight} rowValue={cellValue?.value} t={t} shouldHideInsights={response?.responseData?.hideInsights} />
-        //     );
-        //   }
-        //   const filter = response?.responseData?.filter?.find((elem) => elem?.column === column?.id);
-        //   if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
-        //     return (
-        //       <span
-        //         style={{ color: "#F47738", cursor: "pointer" }}
-        //         onClick={() =>
-        //           getDrilldownCharts(
-        //             cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
-        //             filter?.key,
-        //             t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
-        //             response?.responseData?.filter
-        //           )
-        //         }
-        //       >
-        //         {getTitleHeading(cellValue)}
-        //       </span>
-        //     );
-        //   }
-        //   if (column?.id === "CitizenAverageRating") {
-        //     return (
-        //       <Rating
-        //         id={row?.id}
-        //         currentRating={Math.round(cellValue * 10) / 10}
-        //         styles={{ width: "unset", marginBottom: 0 }}
-        //         starStyles={{ width: "25px" }}
-        //       />
-        //     );
-        //   }
-        //   return String(t(cellValue));
-        // },
-        name:t(`TIP_DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
-        cell: (row, index, column, id) => {
-          const headerName = t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`);
-          const cellValue = row?.[headerName];
-          if (typeof cellValue === "object") {
-            return (
-              <InsightView insight={cellValue?.insight} rowValue={cellValue?.value} t={t} shouldHideInsights={response?.responseData?.hideInsights} />
-            );
-          }
-          const filter = response?.responseData?.filter?.find((elem) => elem?.column === column?.id);
-          if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
-            return (
-              <span
-                style={{ color: "#F47738", cursor: "pointer" }}
-                onClick={() =>
-                  getDrilldownCharts(
-                    cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
-                    filter?.key,
-                    t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(plot?.name)}`),
-                    response?.responseData?.filter
-                  )
-                }
+        return {
+          name: (
+            <span className="tooltip" data-tip="React-tooltip" data-for={`jk-table-${chartId}-${index}`} color="#OBOCOC">
+              {renderHeader(plot)}
+              <ReactTooltip
+                textColor="#fff"
+                backgroundColor="#555"
+                place="bottom"
+                type="info"
+                effect="solid"
+                id={`jk-table-${chartId}-${index}`}
               >
-                {getTitleHeading(cellValue)}
-              </span>
-            );
-          }
-          return String(t(cellValue));
-        },
-      }));
+                {t(tooltipLocaleKey)}
+              </ReactTooltip>
+            </span>
+          ),
+
+          selector: (row) => {
+            const cellValue = row?.[localizedHeader];
+            return typeof cellValue === "object" ? cellValue?.value : cellValue;
+          },
+
+          cell: (row, index, column, id) => {
+            const cellValue = row?.[localizedHeader];
+
+            if (typeof cellValue === "object") {
+              return (
+                <InsightView
+                  insight={cellValue?.insight}
+                  rowValue={cellValue?.value}
+                  t={t}
+                  shouldHideInsights={response?.responseData?.hideInsights}
+                />
+              );
+            }
+
+            const filter = response?.responseData?.filter?.find((elem) => elem?.column === columnId);
+            if (response?.responseData?.drillDownChartId !== "none" && filter !== undefined) {
+              return (
+                <span
+                  style={{ color: "#F47738", cursor: "pointer" }}
+                  onClick={() =>
+                    getDrilldownCharts(
+                      cellValue?.includes("DSS_TB_") ? row?.original?.key : cellValue,
+                      filter?.key,
+                      t(headerLocaleKey),
+                      response?.responseData?.filter
+                    )
+                  }
+                >
+                  {getTitleHeading(cellValue)}
+                </span>
+              );
+            }
+
+            return String(t(cellValue));
+          },
+
+          sortable: true,
+
+          sortFunction: (rowA, rowB) => {
+            const a = rowA?.[localizedHeader];
+            const b = rowB?.[localizedHeader];
+
+            const normalize = (val) => {
+              if (typeof val === "object") return parseFloat(val?.value?.toString().replace(/,/g, "") || "0");
+              if (typeof val === "string") return parseFloat(val.replace(/,/g, "") || "0");
+              if (typeof val === "number") return val;
+              return 0;
+            };
+
+            const valueA = normalize(a);
+            const valueB = normalize(b);
+
+            return valueA - valueB;
+          },
+
+
+          id: columnId,
+          symbol: plot?.symbol,
+
+          // keeping as-is for any other consumers of this object
+          nameText: t(tooltipLocaleKey),
+        };
+      });
   }, [response, value?.denomination, value?.range]);
+
 
   const convertDenomination = (val) => {
     const { denomination } = value;
@@ -460,58 +454,39 @@ const CustomTable = ({ data = {}, onSearch, setChartData, setChartDenomination }
   }
   return (
     <div style={{ width: "100%" }}>
+      {/* Filters stack */}
       {filterStack?.length > 1 && (
         <div className="tag-container">
           <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
           {filterStack.map((filter, id) =>
-            id > 0 ? <RemoveableTag key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeULB(id)} /> : null
+            id > 0 ? (
+              <RemoveableTag key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeULB(id)} />
+            ) : null
           )}
         </div>
       )}
 
+      {/* Data Table or NoData */}
       {!tableColumns || !tableData ? (
         <NoData t={t} />
       ) : (
-        // <Table
-        //   className="customTable "
-        //   t={t}
-        //   customTableWrapperClassName={"dss-table-wrapper"}
-        //   disableSort={true}
-        //   autoSort={true}
-        //   manualPagination={false}
-        //   showFooter={response?.responseData?.showFooter}
-        //   globalSearch={filterValue}
-        //   // initSortId={tableColumns[0]?.id}
-        //   onSearch={onSearch}
-        //   data={tableData?.filter((tRow) => tRow) || []}
-        //   totalRecords={tableData?.length}
-        //   columns={tableColumns}
-        //   showAutoSerialNo={false}
-        //   styles={{ overflow: "hidden" }}
-        //   getCellProps={(cellInfo) => {
-        //     return {
-        //       style: {},
-        //     };
-        //   }}
-        // />
         <DataTable
           columns={tableColumns}
-          data={tableData}
-          pagination
-          persistTableHead
-          highlightOnHover
-          defaultSortFieldId={tableColumns[0]?.id}
-          customStyles={{
-            tableWrapper: {
-              style: { overflow: "hidden" },
-            },
-          }}
-          dense
-          noHeader={false}
+          data={tableData?.filter((tRow) => tRow) || []}
+          sortIcon={<ArrowUpward fill={"#0c0b0b"} />}
+          pagination // enables pagination
+          highlightOnHover // row hover effect
+          persistTableHead // keeps header even when filtered
+          dense // compact rows
+          noHeader={false} // show table header
+          customStyles={tableCustomStyle}
+          defaultSortFieldId={tableColumns[0]?.id} // initial sort
+  
         />
       )}
     </div>
   );
+
 };
 
 export default CustomTable;
