@@ -1,5 +1,5 @@
-import { Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard } from "@egovernments/digit-ui-components";
-import React from "react";
+import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header } from "@egovernments/digit-ui-components";
+import React, { useEffect } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 
 
@@ -137,7 +137,7 @@ const TextButton = (props) => {
 // household member card
 
 const HouseHoldDetailsCard = (props) => {
-  const householdDetails = [
+  const householdDetails = props.beneficiaryDetails ? props.beneficiaryDetails : [
     //TODO: Need this to be moved to config @Pitabsh, @ram
     // { label: "HOUSEHOLD_HEAD", value: "Value" },
     // { label: "ADMINSTRATIVE_AREA", value: "value" },
@@ -153,7 +153,10 @@ const HouseHoldDetailsCard = (props) => {
         <div key={index}
         >
           <SummaryCardFieldPair
-
+            style={{
+              overflowX: "hidden",
+              display: "flex", alignItems: "center", minWidth: "100vh"
+            }}
             key={index}
             inline={true}
             label={(pair?.label || "LABEL")}
@@ -172,7 +175,7 @@ const HouseholdOverViewMemberCard = (props) => {
   { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
   return (
-    <div style={styles.card}>
+    <div style={{ ...styles.card, overflowX: "hidden" }}>
       <div style={styles.header}>
         <div style={styles.name}>
           <strong>{props.name}</strong>
@@ -195,7 +198,7 @@ const HouseholdOverViewMemberCard = (props) => {
 
 
       <div style={styles.buttonGroup}>
-        {!(props.primaryBtn?.hidden) && (
+        {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && (!(props.primaryBtn?.hidden)) && (
           <Button
             className={`app-preview-action-button `}
             key={0}
@@ -206,7 +209,7 @@ const HouseholdOverViewMemberCard = (props) => {
           />
         )}
 
-        {!(props.secondaryBtn?.hidden) && (
+        {props.secondaryBtn && Object.keys(props.secondaryBtn).length > 0 && (!(props.secondaryBtn?.hidden)) && (
           <Button
             className={`app-preview-action-button `}
             key={1}
@@ -217,6 +220,8 @@ const HouseholdOverViewMemberCard = (props) => {
           />
         )}
       </div>
+
+
 
     </div>
   );
@@ -232,6 +237,8 @@ const styles = {
 
   },
   card: {
+    overflowX: "hidden",
+    marginTop: "10px",
     width: "100%",
     boxSizing: "border-box",
     border: "1px solid #ddd",
@@ -286,6 +293,8 @@ const styles = {
   },
 };
 
+
+
 export const getTemplateRenderer = (templateName) => {
 
   switch (templateName) {
@@ -295,6 +304,13 @@ export const getTemplateRenderer = (templateName) => {
 
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
+
+    case "BeneficiaryDetails":
+
+      return BeneficiaryDetailsSection;
+
+
+
 
     // case "AnotherTemplate": return anotherRenderer;
 
@@ -353,11 +369,187 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
 };
 
 
+const BeneficiaryDetailsSection = (props) => {
+
+  const fields = props.components || [];
+
+  // Extract DetailsCard and Table configurations
+  const detailsCardField = fields.find((f) => f.jsonPath === "DetailsCard");
+  const tableField = fields.find((f) => f.jsonPath === "Table");
+
+  const heading = props.t
+    ? props.t(detailsCardField?.label || "BENEFICIARY_DETAILS_TITLE")
+    : detailsCardField?.label || "Beneficiary Details";
+
+  const tableLabelRaw = tableField?.label || "BENEFICIARY_DETAILS_TABLE_HEADER";
+  const tableHeading = props.t ? props.t(tableLabelRaw) : tableLabelRaw;
+  const finalTableHeading = tableHeading && tableHeading.trim() !== "" ? tableHeading : "Current Dose";
+
+
+  // Transform dropDownOptions for DetailsCard
+  const beneficiaryDetails =
+    detailsCardField?.dropDownOptions?.map((item) => ({
+      label: item.name,
+      value: item.name || ""
+    })) || [];
+
+  // Sample static data for BeneficiaryTableWrapper (actual data can be dynamic)
+  const data = [
+    {
+      DOSENO: "Dose 1",
+      STATUS: "Administered",
+      COMPLETED_ON: "14 June 2024"
+    }
+  ];
+
+  // Transform dropDownOptions for Table columns
+
+
+  // const columns = tableField?.dropDownOptions || []
+  const columns =
+    tableField?.dropDownOptions?.map((item) => {
+      const translated = props.t ? props.t(item.name) : item.name;
+      const fallbackName = translated && translated.trim() !== "" ? translated : item.name;
+
+      return {
+        name: fallbackName,
+        code: item.code
+      };
+    }) || [];
+
+
+
+  return (
+    <div>
+      {(!detailsCardField.hidden) && beneficiaryDetails.length > 0 && (<h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
+        {heading}
+      </h1>)
+      }
+
+      {(!detailsCardField.hidden) && beneficiaryDetails.length > 0 && (
+        <HouseHoldDetailsCard t={props.t} beneficiaryDetails={beneficiaryDetails} />
+      )}
+
+      {(!tableField.hidden && columns.length > 0) && <BeneficiaryTableWrapper finalTableHeading={finalTableHeading} columns={columns} data={data} t={props.t} />}
+    </div>
+  );
+};
+
+
+
+const injectTableStyles = () => {
+  const styleId = "dose-table-override-style";
+  if (!document.getElementById(styleId)) {
+    const style = document.createElement("style");
+    style.id = styleId;
+    style.innerHTML = `
+      .digit-data-table {
+        width: 100% !important;
+        display: block;
+      }
+
+      .digit-data-table table {
+        width: 100% !important;
+        table-layout: auto !important;
+      }
+
+      .digit-card-component.override-padding {
+        padding: 0 !important;
+      }
+
+      .digit-card-component.override-padding .digit-table-card {
+        padding: 0 !important;
+      }
+    `;
+    document.head.appendChild(style);
+  }
+};
+
+// Define dataTableCustomStyles inline
+const dataTableCustomStyles = {
+  headCells: {
+    style: {
+      fontWeight: "bold",
+      fontSize: "14px",
+      backgroundColor: "#f2f2f2",
+      color: "#0b4b66",
+      padding: "10px",
+    },
+  },
+  rows: {
+    style: {
+      fontSize: "14px",
+      padding: "10px",
+      minHeight: "48px",
+    },
+  },
+  cells: {
+    style: {
+      padding: "10px",
+      whiteSpace: "nowrap",
+    },
+  },
+};
+
+const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = "" }) => {
+  useEffect(() => {
+    injectTableStyles();
+  }, []);
+
+  const formattedColumns = columns.map((item) => ({
+    name: item.name,
+    selector: (row) => row[item.code],
+    sortable: false,
+    minWidth: "200px",
+  }));
+
+  return (
+    <div style={{ width: "100%" }}>
+      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
+        {finalTableHeading}
+      </h1>
+
+      <div
+        className="digit-card-component override-padding"
+        style={{
+          width: "100%",
+          overflowX: "auto",
+        }}
+      >
+        <ResultsDataTable
+          data={data}
+          columns={formattedColumns}
+          showCheckBox={false}
+          onSelectedRowsChange={() => { }}
+          progressPending={false}
+          isPaginationRequired={false}
+          showTableTitle={false}
+          showTableDescription={false}
+          enableGlobalSearch={false}
+          selectableRowsNoSelectAll={true}
+          customStyles={dataTableCustomStyles}
+          conditionalRowStyles={[
+            {
+              when: (row) => row.PERMANENT === "Yes",
+              style: {
+                backgroundColor: "#fde0d5",
+              },
+            },
+          ]}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default BeneficiaryTableWrapper;
+
 
 
 // Register all components
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
 registerComponent("searchByProximity", ProximitySearch);
+
 
 

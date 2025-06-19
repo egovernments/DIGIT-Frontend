@@ -3,7 +3,10 @@ import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import { getTemplateRenderer } from "../utils/template_components/RegistrationComponents";
 
-const GenericTemplateScreen = ({ components = [], t, selectedField , templateName}) => {
+
+
+const GenericTemplateScreen = ({ components = [], t, selectedField, templateName }) => {
+
 
   const TemplateRenderer = templateName ? getTemplateRenderer(templateName) : null;
   const contentFields = components
@@ -41,25 +44,25 @@ const GenericTemplateScreen = ({ components = [], t, selectedField , templateNam
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
         }}
       >
-    {TemplateRenderer ? (
-    <TemplateRenderer components={components} t={t} />
-  ) :
-        contentFields.map((field, index) => {
-          const ComponentToRender = getRegisteredComponent(field.jsonPath);
-          if (!ComponentToRender) return null;
+        {TemplateRenderer ? (
+          <TemplateRenderer components={components} t={t} />
+        ) :
+          contentFields.map((field, index) => {
+            const ComponentToRender = getRegisteredComponent(field.jsonPath);
+            if (!ComponentToRender) return null;
 
-              const isSelected = selectedField?.jsonPath === field.jsonPath;
+            const isSelected = selectedField?.jsonPath === field.jsonPath;
 
-              return (
-                <div
-                  key={index}
-                  className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
-                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
-                >
-                  <ComponentToRender field={field} t={t} />
-                </div>
-              );
-            })}
+            return (
+              <div
+                key={index}
+                className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
+                style={{ marginBottom: "16px", width: "100%", marginTop: "4px" }}
+              >
+                <ComponentToRender field={field} t={t} />
+              </div>
+            );
+          })}
       </div>
 
       {/* Fixed Buttons at Card Bottom */}
