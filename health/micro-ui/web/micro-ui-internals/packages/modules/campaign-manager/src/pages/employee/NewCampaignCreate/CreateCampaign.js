@@ -262,6 +262,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         currentStep={currentKey}
         onStepClick={onStepperClick}
         activeSteps={currentKey}
+        className={"campaign-stepper"}
       />
       <FormComposerV2
         config={config?.form.map((config) => {
