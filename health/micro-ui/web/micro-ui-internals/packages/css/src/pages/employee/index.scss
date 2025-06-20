@@ -1103,7 +1103,7 @@ tbody {
   margin-left: 0.5rem;
 }
 .app-config-checkbox-label {
-  display: inline-block !important;
+  display: inline-block;
 
   &.required::after {
     content: " *";
@@ -1177,15 +1177,4 @@ tbody {
   background-color: #d9d9d9;
   border-radius: 50%;
   display: block;
-}
-.tooltip-content.with-arrow::before {
-  content: "";
-  position: absolute;
-  top: -6px; /* position above tooltip */
-  right: 2rem; /* adjust to align with right padding */
-  width: 0;
-  height: 0;
-  border-left: 6px solid transparent;
-  border-right: 6px solid transparent;
-  border-bottom: 6px solid #333; /* same as tooltip background */
 }

@@ -8,9 +8,8 @@ import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateD
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { downloadExcelWithCustomName } from "../../../utils";
-import QRCode from "react-qr-code";
 import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
-
+import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 const CampaignDetails = () => {
@@ -65,22 +64,6 @@ const CampaignDetails = () => {
       },
     },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigSchema` }
-  );
-
-  const { data: appData } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [
-      {
-        name: "AppLink",
-      },
-    ],
-    {
-      select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.AppLink?.[0];
-      },
-    },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppLink` }
   );
 
   const data = {
@@ -372,40 +355,7 @@ const CampaignDetails = () => {
         setactionFieldsToRight={true}
       />
       {showQRPopUp && (
-        <PopUp
-          type={"default"}
-          heading={t("ES_APP_QR")}
-          description={t("ES_APP_QR_DESC")}
-          className={"QR-pop-up"}
-          onOverlayClick={() => setShowQRPopUp(false)}
-          onClose={() => setShowQRPopUp(false)}
-          style={{ width: "35rem" }}
-          equalWidthButtons={"false"}
-          footerChildren={[
-            <Button
-              // className={"campaign-type-alert-button"}
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("ES_CAMPAIGN_CLOSE")}
-              onClick={() => {
-                setShowQRPopUp(false);
-              }}
-            />,
-          ]}
-        >
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              padding: "1.5rem 0",
-            }}
-          >
-            <QRCode value={appData?.appLink} size={256} level="H" />
-          </div>
-          {/* <QRCode value={appData?.appLink} size={256} level="H" /> */}
-        </PopUp>
+        <QRButton setShowQRPopUp={setShowQRPopUp}/>
       )}
       {showToast && (
         <Toast
