@@ -47,7 +47,7 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
-                      type: "facilityWithBoundary",
+                      type: "facility",
                       projectType: projectType
                     },
                     populators: {
@@ -73,7 +73,7 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
-                      type: "userWithBoundary",
+                      type: "user",
                       projectType: projectType
                     },
                     populators: {

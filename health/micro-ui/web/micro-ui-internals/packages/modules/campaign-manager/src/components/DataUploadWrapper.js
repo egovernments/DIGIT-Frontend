@@ -2,7 +2,6 @@ import { Card, Stepper, TextBlock } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useState } from "react";
 import UploadData from "./UploadData";
 import { useTranslation } from "react-i18next";
-import UploadDataMappingWrapper from "./UploadDataMappingWrapper";
 
 function DataUploadWrapper({ formData, props, onSelect }) {
   const { t } = useTranslation();
@@ -66,11 +65,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
             </Card>
           </div>
         )} */}
-        {mappingCategories?.includes(currentCategories) ? (
-          <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
-        ) : (
-          <UploadData formData={formData} props={props} onSelect={onSelect} />
-        )}
+        <UploadData formData={formData} props={props} onSelect={onSelect} />
       </div>
     </>
   );

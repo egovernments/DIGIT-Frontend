@@ -51,7 +51,6 @@ import ViewBoundary from "./pages/employee/ViewBoundary";
 import ViewHierarchy from "./pages/employee/ViewHierarchy";
 import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
-import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
 import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
 import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
@@ -178,7 +177,6 @@ const componentsToRegister = {
   ViewHierarchy,
   BoundarySummary,
   NoResultsFound,
-  UploadDataMappingWrapper,
   DataUploadWrapper,
   AppPreview,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
