@@ -89,7 +89,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
 
   const reqCriteriaForm = {
     url: `/${mdms_context_path}/v2/_search`,
-    changeQueryName: `APP_CONFIG_CACHE`,
+    changeQueryName: `APP_CONFIG_CACHE_${formData?.id}`,
     body: {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
