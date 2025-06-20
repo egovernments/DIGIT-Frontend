@@ -992,6 +992,8 @@ tbody {
 }
 .appConfigLabelField-label {
   @extend .typography.heading-s;
+  width: 12rem !important;
+  word-break: break-word;
   color: theme(digitv2.lightTheme.text-secondary);
   margin-bottom: 0.5rem;
   font-size: 1rem;
@@ -1136,4 +1138,7 @@ tbody {
       width: auto !important;
     }
   }
+}
+.mobile-bezel-child-container {
+  height: 90%;
 }
