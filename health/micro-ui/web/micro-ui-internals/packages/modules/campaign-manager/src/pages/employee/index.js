@@ -26,6 +26,7 @@ import AppFeatures from "./NewCampaignCreate/AppFeatures";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
+import { Test } from "./test";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -252,6 +253,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
           <PrivateRoute path={`${path}/app-modules`} component={() => <AppModule />} />
           <PrivateRoute path={`${path}/app-features`} component={() => <AppFeatures />} />
+          <PrivateRoute path={`${path}/test`} component={() => <Test />} />
           <HelpInfoCard appPath={path} location={location} />
         </AppContainer>
       </Switch>
