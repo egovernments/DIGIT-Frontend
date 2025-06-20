@@ -13,49 +13,57 @@ import L1Dashboard from "./L1Dashboard";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
+  console.log("999 location  ",location.state);
   // TODO : NEED TO UPDATE THESE CRUMBS
-  const crumbs = [
-    {
-      internalLink: `/${window?.contextPath}/employee`,
-      content: t("HOME"),
-      show: true,
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/past-campaigns`,
-      content: t("HCM_BREADCRUMBS_PAST_CAMPAIGNS"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PAST_CAMPAIGNS"
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/live-campaigns`,
-      content: t("HCM_BREADCRUMBS_LIVE_CAMPAIGNS"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LIVE_CAMPAIGNS"
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
-      content: t("ACTION_TEST_MY_CAMPAIGN"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS"
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
-      content: t("VIEW_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_DASHBOARD",
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/l1-dashboard`,
-      content: t("L1_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_DASHBOARD",
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/level1`,
-      content: t("LEVEL_ONE_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_ONE_DASHBOARD",
-    },
-    {
-      internalLink: `/${window?.contextPath}/employee/dss/level2`,
-      content: t("LEVEL_TWO_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_TWO_DASHBOARD",
-    },
-  ];
+  const queryParams = new URLSearchParams(location.search);
+const projectTypeId = location.state?.projectTypeId || queryParams.get("projectTypeId");
+
+const moduleCode = location.pathname.split("/").pop(); // gets last part like "level-two-dashboard"
+
+const crumbs = [
+  {
+    internalLink: `/${window?.contextPath}/employee`,
+    content: t("HOME"),
+    show: true,
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/past-campaigns`,
+    content: t("HCM_BREADCRUMBS_PAST_CAMPAIGNS"),
+    show: moduleCode === "PAST_CAMPAIGNS",
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/live-campaigns`,
+    content: t("HCM_BREADCRUMBS_LIVE_CAMPAIGNS"),
+    show: moduleCode === "LIVE_CAMPAIGNS",
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
+    content: t("ACTION_TEST_MY_CAMPAIGN"),
+    show: moduleCode === "MY_CAMPAIGNS",
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
+    content: t("VIEW_DASHBOARD"),
+    show: moduleCode === "VIEW_DASHBOARD",
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/l1-dashboard`,
+    content: t("L1_DASHBOARD"),
+    show: moduleCode === "L1_DASHBOARD",
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/level1/level-one-dashboard`,
+    content: t("LEVEL_ONE_DASHBOARD"),
+    query: `projectTypeId=${projectTypeId}`,
+    show: ["LEVEL_ONE_DASHBOARD", "LEVEL_TWO_DASHBOARD"].includes(Digit.Utils.locale.getTransformedLocale(moduleCode)),
+  },
+  {
+    internalLink: `/${window?.contextPath}/employee/dss/level2/level-two-dashboard${projectTypeId ? `?projectTypeId=${projectTypeId}` : ""}`,
+    content: t("LEVEL_TWO_DASHBOARD"),
+    show: Digit.Utils.locale.getTransformedLocale(moduleCode) === "LEVEL_TWO_DASHBOARD",
+  },
+];
+
   return <BreadCrumb crumbs={crumbs} />;
 };
 

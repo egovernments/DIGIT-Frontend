@@ -246,8 +246,10 @@ const HorBarChart = ({ data, setselectState = "" }) => {
 };
 
 const L1Main = () => {
+  
   const { t } = useTranslation();
   const location = useLocation();
+  console.log(location.state, "999 projectTypeId");
   const dashboardData = location.state?.dashboardData;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -266,7 +268,7 @@ const L1Main = () => {
   const [pageZoom, setPageZoom] = useState(false);
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, dashboardId, language });
 
-  console.log(location.state.projectTypeId, "projectTypeId");
+
 
   function getProjectTypeIDFromURL() {
     const url = window.location.pathname;
