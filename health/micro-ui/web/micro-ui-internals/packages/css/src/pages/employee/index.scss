@@ -109,7 +109,7 @@
 }
 
 .previous-button {
-  margin-left: 3rem;
+  margin-left: 4rem;
   min-width: 12.5rem;
 }
 
@@ -959,13 +959,18 @@ tbody {
 .appConfigLabelField {
   position: relative;
   padding: 1rem;
-  background-color: #fafafa;
-  border: 1px solid #d6d5d4;
-  border-radius: 0.5rem;
   width: 18rem;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: unset;
+}
+.draggableField-cont {
+  margin-bottom: 1rem;
+  width: fit-content;
+  border-radius: 0.5rem;
+  border: 1px solid #d6d5d4;
+  background-color: #fafafa;
 }
 .appConfigLabelField.selected {
   background-color: #f477381a;
@@ -1034,6 +1039,9 @@ tbody {
 }
 .app-config-add-field-popup {
   width: 35rem !important;
+  .digit-popup-heading {
+    color: theme(digitv2.lightTheme.primary-2);
+  }
   .digit-popup-children-wrap {
     overflow: visible !important;
   }
@@ -1086,11 +1094,15 @@ tbody {
   margin-bottom: unset;
   margin-left: 0.5rem;
 }
-.app-config-checkbox-label.required::after {
-  content: "*";
-  margin-left: 0.5rem;
-  color: #d4351c;
+.app-config-checkbox-label {
+  display: inline-block;
+
+  &.required::after {
+    content: " *";
+    color: #d4351c;
+  }
 }
+
 .app-preview-field-button {
   width: 100%;
 }
@@ -1135,10 +1147,26 @@ tbody {
   margin-bottom: 0.5rem;
   .tooltip-wrapper {
     .tooltip-content {
-      width: auto !important;
+      width: max-content !important;
     }
   }
 }
 .mobile-bezel-child-container {
   height: 90%;
+}
+.drag-handle {
+  display: grid;
+  grid-template-columns: repeat(2, 4px); /* 2 columns */
+  gap: 4px; /* spacing between dots */
+  width: fit-content;
+  margin: 0 0.5rem;
+  cursor: grab;
+}
+
+.drag-handle span {
+  width: 4px;
+  height: 4px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  display: block;
 }
