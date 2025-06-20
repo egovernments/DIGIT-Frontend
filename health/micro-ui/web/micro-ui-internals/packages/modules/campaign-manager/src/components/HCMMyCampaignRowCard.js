@@ -6,6 +6,9 @@ import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
 import CloneCampaignWrapper from "./CloneCampaignWrapper";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
+import QRCode from "react-qr-code";
+import { CONSOLE_MDMS_MODULENAME } from "../Module";
+
 
 /**
  * HCMMyCampaignRowCard Component
@@ -105,7 +108,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp) => {
+const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -114,6 +117,12 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
 
   // Always show download if userCreds exist
   if (userResource && rowData?.status == "created") {
+    actions.downloadApp = {
+      label: "DOWNLOAD_APP",
+      onClick: () => setShowQRPopUp(true),
+      size:"medium",
+      variation: "secondary",
+    };
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
@@ -174,11 +183,32 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
   const [showErrorPopUp , setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp , setShowCreatingPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp);
+  const [showQRPopUp , setShowQRPopUp] = useState(false);
+  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const currentTab = tabData?.find((i) => i?.active === true)?.label;
+
+   const { data: appData } = Digit.Hooks.useCustomMDMS(
+      tenantId,
+      CONSOLE_MDMS_MODULENAME,
+      [
+        {
+          name: "AppLink",
+        },
+      ],
+      {
+        select: (data) => {
+          return data?.[CONSOLE_MDMS_MODULENAME]?.AppLink?.[0];
+        },
+      },
+      { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppLink` }
+    );
+
+    console.log("app" , appData);
+  
 
   return (
     <>
@@ -300,6 +330,41 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             footerChildren={[]}
           ></PopUp>
         )}
+        {showQRPopUp && (
+        <PopUp
+          type={"default"}
+          heading={t("ES_APP_QR")}
+          description={t("ES_APP_QR_DESC")}
+          className={"QR-pop-up"}
+          onOverlayClick={() => setShowQRPopUp(false)}
+          onClose={() => setShowQRPopUp(false)}
+          style={{ width: "35rem" }}
+          equalWidthButtons={"false"}
+          footerChildren={[
+            <Button
+              // className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ES_CAMPAIGN_CLOSE")}
+              onClick={() => {
+                setShowQRPopUp(false);
+              }}
+            />,
+          ]}
+        >
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              padding: "1.5rem 0",
+            }}
+          >
+            <QRCode value={appData?.appLink} size={256} level="H" />
+          </div>
+        </PopUp>
+      )}
     </>
   );
 };
