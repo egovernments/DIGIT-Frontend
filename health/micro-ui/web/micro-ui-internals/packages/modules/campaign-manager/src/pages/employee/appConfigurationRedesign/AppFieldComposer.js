@@ -182,7 +182,7 @@ const Field = ({
                       ? "selected"
                       : ""
                   }`
-                : "appConfigHeaderLabelField"
+                : "appConfigHeaderLabelField desc"
             }
           >
             {!headerFields && isDrawer ? (
@@ -199,7 +199,7 @@ const Field = ({
               </>
             ) : (
               <>
-                <div className="appConfigLabelField-label">
+                <div className="appConfigLabelField-label desc">
                   <span>{`${t(label)}`}</span>
                   {Mandatory && <span className="mandatory-span">*</span>}
                   {helpText && (
