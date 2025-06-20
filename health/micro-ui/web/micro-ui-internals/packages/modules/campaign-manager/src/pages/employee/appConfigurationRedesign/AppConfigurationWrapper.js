@@ -394,10 +394,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     // const findConfig = (bindTo) => drawerPanelConfig.find((item) => item.bindTo === bindTo);
 
     for (let i = 0; i < headerFields.length; i++) {
-      const fieldItem = headerFields[i];
-      const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
-      if (!value || value.trim() === "") {
-        return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")} ${fieldItem?.label}` };
+      if (headerFields[i]?.jsonPath === "ScreenHeading") {
+        const fieldItem = headerFields[i];
+        const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
+        if (!value || value.trim() === "") {
+          return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")} ${fieldItem?.label}` };
+        }
       }
     }
     const validateValue = (value, validation, label, a, b) => {
