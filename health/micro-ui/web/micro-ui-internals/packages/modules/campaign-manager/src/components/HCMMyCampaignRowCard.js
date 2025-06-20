@@ -6,6 +6,8 @@ import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
 import CloneCampaignWrapper from "./CloneCampaignWrapper";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
+import QRButton from "./CreateCampaignComponents/QRButton";
+
 
 /**
  * HCMMyCampaignRowCard Component
@@ -105,7 +107,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp) => {
+const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -114,6 +116,12 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
 
   // Always show download if userCreds exist
   if (userResource && rowData?.status == "created") {
+    actions.downloadApp = {
+      label: "DOWNLOAD_APP",
+      onClick: () => setShowQRPopUp(true),
+      size:"medium",
+      variation: "secondary",
+    };
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
@@ -174,7 +182,8 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
   const [showErrorPopUp , setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp , setShowCreatingPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp);
+  const [showQRPopUp , setShowQRPopUp] = useState(false);
+  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 
@@ -300,6 +309,9 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             footerChildren={[]}
           ></PopUp>
         )}
+        {showQRPopUp && (
+          <QRButton setShowQRPopUp={setShowQRPopUp} />
+      )}
     </>
   );
 };
