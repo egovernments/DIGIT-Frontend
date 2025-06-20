@@ -268,7 +268,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
 
 
     content.experience.title = `${t(config[0].subsections[2].title)}`
-    content.experience.description = config[0].subsections[2].content.map(c => `${t(c.text)}`)
+    content.experience.description = config[0].subsections[2].content.filter(c => c.type === "paragraph").map(c => `${t(c.text)}`)
 
     const heroHeadlineItems = config[0].subsections[1].content.filter(c => c.type === "heroHeadline");
 
@@ -287,38 +287,44 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
 
     const section = config[0].subsections[2].content;
 
-    const roleConfigs = [
-        {
+    const roleConfigs = {
+        citizen: {
             imageUrl: getImageByType(config, 'citizen-image') || "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
             reverse: false,
             defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
         },
-        {
+        employee: {
             imageUrl: getImageByType(config, 'employee-image') || "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/8ae2d85d61e5ca4df1c3e12602f2027e7e3b56bd.png",
             reverse: true,
             defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
+        },
+        stakeholder: {
+            imageUrl: getImageByType(config, 'stakeholder-image') || "https://digit-sandbox-prod-s3.s3.ap-south-1.amazonaws.com/assets/b49b43c60c88ed87c0a54cf6dc06b26ce83c1bcf.png",
+            reverse: false,
+            defaultIcons: ["Graph", "Calculate", "FeatureSearch", "Chat", "BarChart"]
         }
-    ];
+    };
 
     const roles = [];
     let currentRoleIndex = -1;
 
     section.forEach(item => {
+        const roleType = item.text?.split("_")[1].toLowerCase();
         if (item.type === "step-heading") {
             currentRoleIndex++;
             roles[currentRoleIndex] = {
                 role: t(item.text),
-                imageUrl: roleConfigs[currentRoleIndex].imageUrl,
-                reverse: roleConfigs[currentRoleIndex].reverse,
+                imageUrl: roleConfigs[roleType].imageUrl,
+                reverse: currentRoleIndex%2 === 1,
                 cards: [],
                 config: {
-                    action: currentRoleIndex === 0 ? config[0].cards[0].action : config[0].cards[1].action,
-                    isExternal: currentRoleIndex === 0 ? config[0].cards[0].isExternal : config[0].cards[1].isExternal,
-                    title: currentRoleIndex === 0 ? config[0].cards[0].title : config[0].cards[1].title,
+                    action: config[0].cards[currentRoleIndex].action,
+                    isExternal: config[0].cards[currentRoleIndex].isExternal,
+                    title: config[0].cards[currentRoleIndex].title,
                 }
             };
         } else if (item.type === "step" && currentRoleIndex > -1) {
-            const icon = roleConfigs[currentRoleIndex].defaultIcons[roles[currentRoleIndex].cards.length] || "Graph";
+            const icon = roleConfigs[roleType].defaultIcons[roles[currentRoleIndex].cards.length] || "Graph";
             roles[currentRoleIndex].cards.push({ icon, text: t(item.text) });
         }
     });
