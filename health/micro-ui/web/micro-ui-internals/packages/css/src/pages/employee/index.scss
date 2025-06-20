@@ -956,6 +956,9 @@ tbody {
 .appConfigHeaderLabelField {
   flex-direction: column;
   gap: 0.5rem;
+  .appConfigLabelField-label-container {
+    width: 100%;
+  }
 }
 .appConfigLabelField {
   position: relative;
@@ -979,6 +982,7 @@ tbody {
 }
 .app-config-field-tag {
   background-color: #0057bd0d !important;
+  word-break: break-word;
   border: 0.0031rem solid #0b4b66;
   color: #0b4b66;
   font-size: 0.75rem;
@@ -1004,6 +1008,9 @@ tbody {
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 700;
+  &.desc {
+    margin-bottom: 0 !important;
+  }
 }
 .app-preview-action-button {
   margin-top: auto;
@@ -1029,7 +1036,7 @@ tbody {
   }
 }
 .appConfigLabelField-label-container {
-  width: 100%;
+  width: 12rem;
 }
 .app-config-drawer-button {
   width: 100%;
