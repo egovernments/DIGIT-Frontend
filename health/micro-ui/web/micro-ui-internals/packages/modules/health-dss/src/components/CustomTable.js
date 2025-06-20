@@ -88,6 +88,8 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
   });
+
+  console.log("999 filters response data", response, chartKey,  "value module",value?.moduleLevel)
   useEffect(() => {
     const { id } = data;
     setChartKey(id);
@@ -95,6 +97,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   }, [data, value]);
   const tableData = useMemo(() => {
     if (!response || !lastYearResponse) return;
+    console.log("999 filter hiii useMemo response",response);
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     return response?.responseData?.data
       ?.filter((rows) => {
@@ -161,7 +164,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           return acc;
         }, {});
       });
-  }, [response, lastYearResponse, onSearch]);
+  }, [filterStack, response, lastYearResponse, onSearch]);
 
   useEffect(() => {
     if (tableData) {
@@ -349,6 +352,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
               </ReactTooltip>
             </span>
           ),
+          
 
           selector: (row) => {
             const cellValue = row?.[localizedHeader];
@@ -419,6 +423,14 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       });
   }, [response, value?.denomination, value?.range]);
 
+  const removeFilter = (id) => {
+    console.log("999 filter removefilter before",id, filterStack);
+    setFilterStack((prevStack) => prevStack.filter((item) => item?.id !== id ));
+    console.log("999 filter removefilter after",filterStack.filter((item) => item?.id !== id));
+  };
+
+  console.log("999 filterStack", filterStack);
+
   const convertDenomination = (val) => {
     const { denomination } = value;
     switch (denomination) {
@@ -449,7 +461,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
         <div className="digit-tag-container">
           <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
           {filterStack.map((filter, id) =>
-            id > 0 ? <Chip key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeFilter(id)} hideClose={false} /> : null
+            id > 0 ? <Chip key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeFilter(filter.id)} hideClose={false} /> : null 
           )}
         </div>
       )}
@@ -461,7 +473,6 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           columns={tableColumns}
           className={`data-table`}
           data={tableData?.filter((tRow) => tRow) || []}
-          sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
           pagination
           highlightOnHover
           persistTableHead
