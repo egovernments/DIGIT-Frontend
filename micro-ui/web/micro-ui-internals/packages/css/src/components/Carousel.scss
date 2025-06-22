@@ -1,0 +1,188 @@
+/* Updated carousel styles to match the design */
+
+.carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Dark gradient overlay at bottom for text readability */
+.carousel-container::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+  height: 60%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.8),
+    rgba(0, 0, 0, 0) 100%
+  );
+  z-index: 1;
+}
+
+.carousel-overlay {
+  position: absolute;
+  bottom: 5rem;
+  left: 2rem;
+  right: 2rem;
+  max-width: 500px;
+  color: #fff;
+  z-index: 2;
+}
+
+.carousel-overlay h2 {
+  margin: 0 0 1rem;
+  font-size: 2.5rem;
+  font-weight: bold;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+  line-height: 1.2;
+}
+
+.carousel-overlay p {
+  margin: 0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.8);
+  opacity: 0.95;
+}
+
+/* Navigation arrows */
+.carousel-prev,
+.carousel-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(0, 0, 0, 0.5);
+  border: none;
+  color: white;
+  padding: 0.5rem 1rem;
+  font-size: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 3;
+  transition: background 0.2s;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-prev:hover,
+.carousel-next:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-prev {
+  left: 1rem;
+}
+
+.carousel-next {
+  right: 1rem;
+}
+
+/* Dot indicators - positioned to not overlap with text */
+.carousel-dots {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.75rem;
+  z-index: 3;
+}
+
+.carousel-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.carousel-dot:hover {
+  background: rgba(255, 255, 255, 0.7);
+  transform: scale(1.2);
+}
+
+.carousel-dot.active {
+  background: white;
+  transform: scale(1.3);
+}
+
+/* Keep your existing signup styles unchanged */
+.signup-container {
+  display: flex;
+  height: 100vh;
+  width: 100vw;
+  overflow: hidden;
+  font-family: Arial, sans-serif;
+}
+
+.signup-left {
+  width: 65%;
+  background: url('/images/your-carousel-image.png') center center / cover no-repeat;
+  position: relative;
+}
+
+.signup-right {
+  width: 35%;
+  padding: 2rem;
+  background-color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-shadow: -2px 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-right h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+.signup-footer {
+  text-align: center;
+  margin-top: 1rem;
+}
+
+.signup-footer a {
+  color: #0066cc;
+  text-decoration: underline;
+}
+
+.carousel-wrapper {
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  padding: 2rem;
+  box-sizing: border-box;
+  display: flex;
+  align-items: flex-end;
+}
+
+.carousel-content {
+  max-width: 450px;
+}
+
+.carousel-content h2 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.carousel-content p {
+  font-size: 1rem;
+  line-height: 1.5;
+}

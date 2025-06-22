@@ -86,6 +86,12 @@
   text-align: center !important;
 }
 
+.SandboxLogoAlignCenter {
+  align-items: center;
+  justify-content: center;
+  display: flex;
+}
+
 .field-sandbox {
   width: 100%;
   padding: 0.625rem;
@@ -106,8 +112,8 @@
 }
 
 .sandbox-onboarding-wrapper {
-  height: 500px !important;
-  width: 408px !important;
+  height: 650px !important;
+  width: 500px !important;
   display: flex;
   justify-content: space-between;
 
@@ -250,11 +256,19 @@
 
   header.digit-header-content {
     &:not(.label) {
+      color: #0B4B66;
       text-align: center;
-      font-size: 1.5rem;
+      font-size: 2rem;
       font-weight: 700;
     }
   }
+}
+
+.loginSignUpSelector{
+  display: flex;
+  align-items: center;
+  justify-content: end;
+
 }
 
 .digit-card-component.signupCardClassName.sandbox-onboarding-wrapper {
@@ -1303,14 +1317,22 @@ digit-card-text.center {
 
 .no-hover:hover {
   /* Prevent any changes on hover */
-  background-color: inherit !important; /* Revert background color */
-  color: inherit !important; /* Revert text color */
-  opacity: 1 !important; /* Ensure full opacity */
-  transform: none !important; /* Reset any transformations */
-  box-shadow: none !important; /* Remove any shadows */
-  text-decoration: none !important; /* Ensure no underline */
-  font-size: inherit !important; /* Revert font size */
-  font-weight: inherit !important; /* Revert font weight */
+  background-color: inherit !important;
+  /* Revert background color */
+  color: inherit !important;
+  /* Revert text color */
+  opacity: 1 !important;
+  /* Ensure full opacity */
+  transform: none !important;
+  /* Reset any transformations */
+  box-shadow: none !important;
+  /* Remove any shadows */
+  text-decoration: none !important;
+  /* Ensure no underline */
+  font-size: inherit !important;
+  /* Revert font size */
+  font-weight: inherit !important;
+  /* Revert font weight */
   /* Add any other properties that might be changing on hover */
 }
 
@@ -1357,13 +1379,16 @@ digit-card-text.center {
   padding: 0rem 4rem;
 }
 
-.roles-column-align{
+.roles-column-align {
   width: 100%;
   display: flex;
-  justify-content: flex-start; /* aligns items to the start */
-  align-items: flex-start;     /* optional: aligns items to the top */
-  margin: 0;                   /* remove any auto-margins */
-  padding: 0;     
+  justify-content: flex-start;
+  /* aligns items to the start */
+  align-items: flex-start;
+  /* optional: aligns items to the top */
+  margin: 0;
+  /* remove any auto-margins */
+  padding: 0;
 }
 
 .roles-section {
@@ -1402,7 +1427,7 @@ digit-card-text.center {
   border-radius: 10px !important;
   max-width: 44rem !important;
   height: 4px;
-  background-color: #e4edf1 !important; 
+  background-color: #e4edf1 !important;
   margin: 0 auto 0rem;
 }
 
@@ -1414,7 +1439,7 @@ digit-card-text.center {
   margin: 0 auto 0rem;
 }
 
-.cs-wrapper-align{
+.cs-wrapper-align {
   margin-left: 2rem;
 }
 
@@ -1527,11 +1552,11 @@ digit-card-text.center {
 
 
 .walkthrough-container {
-    display: flex;
-    flex-direction: column;
-    background-color: rgb(255, 255, 255);
-    padding: 3rem 6rem;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  background-color: rgb(255, 255, 255);
+  padding: 3rem 6rem;
+  align-items: center;
 }
 
 .wt-title {
@@ -1558,9 +1583,9 @@ digit-card-text.center {
 }
 
 .wt-tabs-and-iframe {
-    width: 70rem;
-    align-items: flex-start;
-    max-width: 100%;
+  width: 70rem;
+  align-items: flex-start;
+  max-width: 100%;
 }
 
 .wt-tab-wrapper {
