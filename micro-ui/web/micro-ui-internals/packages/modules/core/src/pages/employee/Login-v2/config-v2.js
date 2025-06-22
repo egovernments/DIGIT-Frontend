@@ -1,11 +1,10 @@
 export const SignUpConfig = [
   {
     texts: {
-      header: "CORE_COMMON_SIGN_UP",
-      submitButtonLabel: "CORE_COMMON_SIGN_UP_BUTTON",
+      header: "CORE_COMMON_LOGIN",
+      submitButtonLabel: "CORE_COMMON_CONTINUE",
     },
     inputs: [
-
       {
         label: "CORE_SIGNUP_ACCOUNT_NAME",
         type: "text",
@@ -37,7 +36,7 @@ export const SignUpConfig = [
           error: "ERR_EMAIL_REQUIRED",
         },
       },
-      {isMandatory: false,
+    {isMandatory: false,
         key: "PrivacyComponent",
          key: "check",
         type: "component",
@@ -59,13 +58,11 @@ export const SignUpConfig = [
         component: "PrivacyComponent",
         withoutLabel: true,
         disable: false,
-        required:false,
         customProps: {
           module: "SandboxSignUp",
         },
         populators: {
           name: "check",
-          required:false,
         },
       },
     ],
