@@ -68,10 +68,12 @@ const AboutSection = ({ about }) =>
                     <p key={i} className="about-description" dangerouslySetInnerHTML={{ __html: decodedpara }}></p>
                 )
             })}
+            <div className="roles-column-align">
             <div className="roles-section">
                 {about.roles.map((r, i) => (
                     <RoleBlock key={i} description={r.description} />
                 ))}
+            </div>
             </div>
         </div>
     </div>
@@ -244,6 +246,7 @@ function getImageByType(config, type) {
 
 
 const ProductDetailsComponentUpdated = ({ config, module }) => {
+
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState("citizen");
 
@@ -330,7 +333,6 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     });
 
     content.experience.roles = roles;
-
     return (
         <div>
             <Breadcrumb path={`${t(config[0].heading)}`} />

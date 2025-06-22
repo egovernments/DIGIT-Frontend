@@ -1357,6 +1357,15 @@ digit-card-text.center {
   padding: 0rem 4rem;
 }
 
+.roles-column-align{
+  width: 100%;
+  display: flex;
+  justify-content: flex-start; /* aligns items to the start */
+  align-items: flex-start;     /* optional: aligns items to the top */
+  margin: 0;                   /* remove any auto-margins */
+  padding: 0;     
+}
+
 .roles-section {
   display: flex;
   flex-direction: column;
@@ -1368,6 +1377,7 @@ digit-card-text.center {
 .role-block {
   display: flex;
   align-items: center !important;
+  justify-content: flex-start !important;
   /* Vertical alignment */
   gap: 1rem;
   width: 100%;

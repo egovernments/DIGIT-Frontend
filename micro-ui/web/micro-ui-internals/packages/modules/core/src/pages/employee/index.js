@@ -49,7 +49,7 @@ const EmployeeApp = ({
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
-  const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPageUpdated/`);
+  const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPage/`);
   useEffect(() => {
     const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
     const queryParams = new URLSearchParams(location.search);

@@ -65,7 +65,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
   const location = useLocation();
 
   const hideClass =
-    location.pathname.includes(`${path}/productDetailsPageUpdated/`);
+    location.pathname.includes(`${path}/productDetailsPage/`);
     console.log(hideClass,"hideClass");
     
   return (
@@ -96,18 +96,18 @@ const App = ({ path, stateCode, userType, tenants }) => {
               <ProductPage />
             </div>
           </PrivateRoute>
-          <PrivateRoute path={`${path}/productDetailsPage/:module`}>
+          {/* <PrivateRoute path={`${path}/productDetailsPage/:module`}>
             <div className="employee-app-wrapper sandbox-landing-wrapper">
               <ProductDetails />
             </div>
-          </PrivateRoute>
+          </PrivateRoute> */}
           <PrivateRoute path={`${path}/landing/select-role`}>
             <div className="employee-app-wrapper sandbox-landing-wrapper">
               <RoleLanding />
             </div>
           </PrivateRoute>
           <React.Fragment>
-            <PrivateRoute path={`${path}/productDetailsPageUpdated/:module`}>
+            <PrivateRoute path={`${path}/productDetailsPage/:module`}>
               <div>
                 <ProductDetails isUpdated={true}/>
               </div>
