@@ -127,44 +127,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       </div>
     </div>
   </div>
-);
-
-
-    // <div>
-    //   <div className="employeeBackbuttonAlign">
-    //     <BackLink onClick={() => window.history.back()} /> 
-    //   </div>
-    //   <FormComposerV2
-    //     onSubmit={onLogin}
-    //     isDisabled={isDisabled || disable}
-    //     noBoxShadow
-    //     inline
-    //     submitInForm
-    //     config={config}
-    //     label={propsConfig?.texts?.submitButtonLabel}
-    //     secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
-    //     onFormValueChange={onFormValueChange}
-    //     heading={propsConfig?.texts?.header}
-    //     className="sandbox-signup-form"
-    //     cardSubHeaderClassName="signupCardSubHeaderClassName"
-    //     cardClassName="signupCardClassName sandbox-onboarding-wrapper"
-    //     buttonClassName="buttonClassName"
-    //   >
-    //     <Header showTenant={false} />
-    //   </FormComposerV2>
-    //   {showToast && <Toast type={"error"} label={t(showToast?.label)} onClose={closeToast} />}
-    //   <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-    //     <ImageComponent
-    //       alt="Powered by DIGIT"
-    //       src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-    //       style={{ cursor: "pointer" }}
-    //       onClick={() => {
-    //         window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-    //       }}
-    //     />
-    //   </div>
-    // </div>
-  
+);  
 };
 
 Login.propTypes = {
