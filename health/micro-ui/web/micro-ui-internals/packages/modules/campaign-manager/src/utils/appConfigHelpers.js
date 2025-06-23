@@ -270,6 +270,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         readOnly: field.readOnly || false,
         systemDate: field.systemDate || false,
         isMultiSelect: field?.isMultiSelect ? true : false,
+        enums: field.dropDownOptions,
         ...typeAndFormat,
         validations: toArrayFields,
       };

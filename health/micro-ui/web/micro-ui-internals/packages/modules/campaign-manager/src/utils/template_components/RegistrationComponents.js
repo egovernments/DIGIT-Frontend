@@ -1,5 +1,5 @@
 import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header } from "@egovernments/digit-ui-components";
-import React, { useEffect } from "react";
+import React, { useEffect, useMemo } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 
 
@@ -113,11 +113,9 @@ const TextButton = (props) => {
           color: "rgba(244, 119, 56, 1)",
           borderRadius: "4px",
           cursor: "pointer",
-          fontFamily: "Roboto, sans-serif",
           fontWeight: 400,
           fontSize: "16px",
           lineHeight: "100%",
-          textTransform: "capitalize",
           border: "none",
         }}
         className="digit-search-action"
@@ -159,7 +157,7 @@ const HouseHoldDetailsCard = (props) => {
             }}
             key={index}
             inline={true}
-            label={(pair?.label || "LABEL")}
+            label={props.t(pair?.label || "LABEL")}
             value={(pair?.value) || "VALUE"}
 
           />
@@ -205,6 +203,7 @@ const HouseholdOverViewMemberCard = (props) => {
             variation="primary"
             label={props.t(props.primaryBtn?.label || "LABEL")}
             title={props.t(props.primaryBtn?.label || "LABEL")}
+            style={{ minWidth: "100%" }}
             onClick={() => { }}
           />
         )}
@@ -216,6 +215,7 @@ const HouseholdOverViewMemberCard = (props) => {
             variation="secondary"
             label={props.t(props.secondaryBtn?.label) || "LABEL"}
             title={props.t(props.secondaryBtn?.label) || "LABEL"}
+            style={{ minWidth: "100%" }}
             onClick={() => { }}
           />
         )}
@@ -233,8 +233,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center", // horizontally center the buttons
     gap: "8px",
-    marginTop: "10px",          // space between the buttons
-
+    marginTop: "10px",  
   },
   card: {
     overflowX: "hidden",
@@ -328,6 +327,8 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
   const primaryBtn = formatMap["IndividualDeliveryPrimaryButton"] || {};
   const secondaryBtn = formatMap["IndividualDeliverySecondaryButton"] || {};
   const addMember = formatMap["addMember"] || { label: "", hidden: true };
+  const detailsCard = formatMap["DetailsCard"] || {};
+
   return (
     <div>
       <style>
@@ -356,7 +357,7 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           alignment="flex-end"
         />
 
-        <HouseHoldDetailsCard t={t} />
+        <DetailsCardSection t={t} field={detailsCard}/>
 
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
@@ -438,17 +439,19 @@ const dataTableCustomStyles = {
   },
 };
 
-const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = "" }) => {
+const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = "", t }) => {
   useEffect(() => {
     injectTableStyles();
   }, []);
 
-  const formattedColumns = columns.map((item) => ({
-    name: item.name,
-    selector: (row) => row[item.code],
-    sortable: false,
-    minWidth: "200px",
-  }));
+  const formattedColumns = useMemo(() => {
+    return columns.map((item) => ({
+      name: t(item.code), // Translated label
+      selector: (row) => row[item.code],
+      sortable: false,
+      minWidth: "200px",
+    }));
+  }, [columns, t]); // 
 
   return (
     <div style={{ width: "100%" }}>
@@ -502,8 +505,8 @@ const DetailsCardSection = ({ field, t }) => {
 
   const beneficiaryDetails =
     field?.dropDownOptions?.map((item) => ({
-      label: item.name,
-      value: item.name || ""
+      label: item.code,
+      value: "****"
     })) || [];
 
   if (!beneficiaryDetails.length) return null;
@@ -546,11 +549,10 @@ const Table = ({ field, t }) => {
 
   const columns =
     field?.dropDownOptions?.map((item) => {
-      const translated = t ? t(item.name) : item.name;
-      const fallbackName = translated && translated.trim() !== "" ? translated : item.name;
 
       return {
-        name: fallbackName,
+        ...item,
+        name: item.name,
         code: item.code
       };
     }) || [];

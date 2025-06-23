@@ -4,6 +4,7 @@ import {
   Dropdown,
   FieldV1,
   LabelFieldPair,
+  MultiSelectDropdown,
   PopUp,
   RadioButtons,
   Switch,
@@ -84,8 +85,8 @@ const whenToShow = (panelItem, drawerState) => {
     panelItem?.label === "isMdms"
       ? true
       : drawerState?.[panelItem?.bindTo] !== undefined
-      ? drawerState?.[panelItem?.bindTo]
-      : drawerState?.[panelItem?.label];
+        ? drawerState?.[panelItem?.bindTo]
+        : drawerState?.[panelItem?.label];
   if (!panelItem?.showFieldOnToggle || !anyCheck) {
     return false;
   }
@@ -156,24 +157,24 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           {/* //Render Conditional Fields */}
           {Array.isArray(shouldShow) && shouldShow.length > 0
             ? shouldShow
-                .filter(
-                  (cField) =>
-                    cField.condition === undefined || cField.condition === Boolean(drawerState[panelItem.bindTo ? panelItem.bindTo : panelItem.label])
-                )
-                .map((cField, cIndex) => (
-                  <RenderConditionalField
-                    key={cIndex}
-                    cField={cField}
-                    cIndex={cIndex}
-                    cArray={shouldShow}
-                    setDrawerState={setDrawerState}
-                    updateLocalization={updateLocalization}
-                    state={state}
-                    drawerState={drawerState}
-                    AppScreenLocalisationConfig={AppScreenLocalisationConfig}
-                    disabled={drawerState?.hidden}
-                  />
-                ))
+              .filter(
+                (cField) =>
+                  cField.condition === undefined || cField.condition === Boolean(drawerState[panelItem.bindTo ? panelItem.bindTo : panelItem.label])
+              )
+              .map((cField, cIndex) => (
+                <RenderConditionalField
+                  key={cIndex}
+                  cField={cField}
+                  cIndex={cIndex}
+                  cArray={shouldShow}
+                  setDrawerState={setDrawerState}
+                  updateLocalization={updateLocalization}
+                  state={state}
+                  drawerState={drawerState}
+                  AppScreenLocalisationConfig={AppScreenLocalisationConfig}
+                  disabled={drawerState?.hidden}
+                />
+              ))
             : null}
         </>
       );
@@ -186,8 +187,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             isLocalisable
               ? useCustomT(drawerState?.[panelItem?.bindTo])
               : drawerState?.[panelItem?.bindTo] === true
-              ? ""
-              : drawerState?.[panelItem?.bindTo]
+                ? ""
+                : drawerState?.[panelItem?.bindTo]
           }
           config={{
             step: "",
@@ -198,9 +199,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               updateLocalization(
                 drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
                   ? drawerState?.[panelItem?.bindTo]
-                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
+                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${drawerState?.jsonPath || drawerState?.id
+                  }`,
                 Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                 value
               );
@@ -209,9 +209,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 [panelItem?.bindTo]:
                   drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
                     ? drawerState?.[panelItem?.bindTo]
-                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
-                        drawerState?.jsonPath || drawerState?.id
-                      }`,
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${drawerState?.jsonPath || drawerState?.id
+                    }`,
               }));
               return;
             } else {
@@ -224,7 +223,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           }}
           populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
-          // charCount={field?.charCount}
+        // charCount={field?.charCount}
         />
       );
     case "fieldTypeDropdown":
@@ -272,6 +271,90 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
     //     }}
     //   />
     // );
+    case "DetailsCard": 
+    case "Table":
+    {
+      const selectedOptions = drawerState?.[panelItem?.bindTo] || [];
+
+      const nestedOptions =
+        (state?.MASTER_DATA?.DetailsConfig || []).map((category) => ({
+          code: category.entity,
+          name: category.entity,
+          options: (category.displayFields || []).map((field) => ({
+            ...field,
+            code: `${category.entity}.${field.fieldKey}`,
+            name: field.fieldKey,
+          })),
+        })) || [];
+
+      return (
+        <>
+          <div style={{ display: "flex" }}>
+              <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
+              <span className="mandatory-span">*</span>
+          </div>
+          <MultiSelectDropdown
+            name={panelItem?.label}
+            options={nestedOptions}
+            optionsKey="name"
+            chipsKey="code"
+            type="multiselectdropdown"
+            variant="nestedmultiselect"
+            selectAllLabel={t("SELECT_ALL")}
+            clearLabel={t("CLEAR_ALL")}
+            config={{ isDropdownWithChip: true }}
+            selected={drawerState?.[panelItem?.bindTo] || []}
+            onChange={(selectedArray) => {
+              const selected = selectedArray?.map((arr) => arr?.[1]) || [];
+              setDrawerState((prev) => ({
+                ...prev,
+                [panelItem?.bindTo]: selected,
+              }));
+            }}
+            onSelect={(selectedArray) => {
+              const selected = selectedArray?.map((arr) => arr?.[1]) || [];
+              setDrawerState((prev) => ({
+                ...prev,
+                [panelItem?.bindTo]: selected,
+              }));
+            }}
+            t={t}
+          />
+
+          {Array.isArray(selectedOptions) &&
+            selectedOptions
+              .filter((opt) => opt && typeof opt.code === "string" && opt.code.includes("."))
+              .map((option) => {
+                const [entity, fieldKey] = option.code.split(".");
+
+                return (
+                  <div key={option.code} style={{ marginTop: "16px" }}>
+                    <FieldV1
+                      label={`${t(entity)} - ${t(fieldKey)}`}
+                      value={useCustomT(option.code)} // ✅ Auto populated from localization
+                      type="text"
+                      placeholder={t("ADD_LABEL_LOCALIZATION")}
+                      onChange={(e) => {
+                        const val = e.target.value;
+
+                        // ✅ Directly update localization only
+                        updateLocalization(
+                          option.code,
+                          Digit?.SessionStorage.get("locale") ||
+                          Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                          val
+                        );
+                      }}
+                      populators={{
+                        fieldPairClassName: "drawer-toggle-conditional-field",
+                      }}
+                    />
+                  </div>
+                );
+              })}
+        </>
+      );
+    }
     default:
       return null;
       break;
