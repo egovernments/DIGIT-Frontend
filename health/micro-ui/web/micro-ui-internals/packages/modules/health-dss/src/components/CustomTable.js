@@ -56,7 +56,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     interval: "month",
     title: "",
   };
-  const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
+  const { isLoading: isRequestLoading, data: lastYearResponse, refetch:refetchLast } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
@@ -72,7 +72,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
   });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  const { isLoading, data: response, refetch } = Digit.Hooks.dss.useGetChart({
     key: chartKey,
     type: "metric",
     tenantId,
@@ -89,15 +89,35 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     moduleLevel: value?.moduleLevel,
   });
 
-  console.log("999 filters response data", response, chartKey,  "value module",value?.moduleLevel)
+  console.log("999 filters params =>", {
+    key: chartKey,
+    type: "metric",
+    tenantId,
+    requestDate: {
+      ...value?.requestDate,
+      startDate: value?.range?.startDate?.getTime(),
+      endDate: value?.range?.endDate?.getTime()
+    },
+    filters: id === chartKey
+      ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
+      : {
+          ...value?.filters,
+          [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+          projectTypeId: selectedProjectTypeId
+        },
+    addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
+    moduleLevel: value?.moduleLevel
+  });
+  
   useEffect(() => {
     const { id } = data;
     setChartKey(id);
     setFilterStack([{ id: id }]);
   }, [data, value]);
+  
   const tableData = useMemo(() => {
+    console.log("999 filter hiii useMemo response",response,lastYearResponse);
     if (!response || !lastYearResponse) return;
-    console.log("999 filter hiii useMemo response",response);
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);
     return response?.responseData?.data
       ?.filter((rows) => {
@@ -181,6 +201,13 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       setChartData(result);
     }
   }, [tableData]);
+
+  useEffect(() => {
+    console.log("999 filters useEffect",filterStack);
+    refetch(); 
+    refetchLast();
+  }, [filterStack]); 
+  
 
   const filterValue = useCallback((rows, id, filterValue = "") => {
     return rows.filter((row) => {
@@ -427,6 +454,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     console.log("999 filter removefilter before",id, filterStack);
     setFilterStack((prevStack) => prevStack.filter((item) => item?.id !== id ));
     console.log("999 filter removefilter after",filterStack.filter((item) => item?.id !== id));
+    refetch();
   };
 
   console.log("999 filterStack", filterStack);
@@ -454,6 +482,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   if (isLoading || isRequestLoading) {
     return <Loader className={"digit-center-loader"} />;
   }
+
   return (
     <div style={{ width: "100%" }}>
       {/* Filters stack */}

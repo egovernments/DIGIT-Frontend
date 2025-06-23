@@ -161,9 +161,17 @@ const DateRange = ({ values, onFilterChange, t }) => {
   };
 
   const handleSelect = (ranges, e) => {
+    console.log("999 dates",ranges);
     let { range1: selection } = ranges;
+    
     selection = { ...selection, endDate: endOfDay(selection?.endDate) };
+    console.log("999 dates",selection);
     const { startDate, endDate, title, interval } = selection;
+    console.log("999 dates",
+      `Start Date: ${startDate}, End Date: ${endDate}, Title: ${title}, Interval: ${interval}`
+    );
+    
+
     if (
       staticRanges.some((range) => {
         let newRange = range.range();
@@ -182,12 +190,18 @@ const DateRange = ({ values, onFilterChange, t }) => {
 
   const handleFocusChange = (focusedRange) => {
     const [rangeIndex, rangeStep] = focusedRange;
+    console.log(`999 dates rangeIndex: ${rangeIndex}, rangeStep: ${rangeStep}`);
+    
+
     setFocusedRange(focusedRange);
   };
 
   const handleClose = () => {
     setIsModalOpen(false);
   };
+
+  console.log("999 dates selctionRange",selectionRange);
+  console.log("999 dates focusedRange",focusedRange);
 
   const dssFiltersValue = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value;
   return (
@@ -198,7 +212,12 @@ const DateRange = ({ values, onFilterChange, t }) => {
           <input
             className={`employee-select-wrap--elipses ${dateFilterSelected!=="DSS_CUSTOM_DATE_RANGE" ? "disabled" : ""}`}
             type="text"
-            value={values?.title ? `${values?.title}` : ""}
+            value={
+              selectionRange?.startDate && selectionRange?.endDate
+                ? `${format(new Date(selectionRange.startDate), "MMM d, yyyy")} - ${format(new Date(selectionRange.endDate), "MMM d, yyyy")}`
+                : ""
+            }
+            
             readOnly
             onClick={() => setIsModalOpen((prevState) => !prevState)}
           />
@@ -215,7 +234,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
               maxDate={new Date()}
               rangeColors={["#9E9E9E"]}
               onChange={handleSelect}
-              onRangeFocusChange={setFocusedRange}
+              onRangeFocusChange={handleFocusChange}
               retainEndDateOnFirstSelection={true}
               showSelectionPreview={true}
               staticRanges={isHealthCampaignDashboard ? [] : staticRanges}
