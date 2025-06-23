@@ -203,6 +203,7 @@ const HouseholdOverViewMemberCard = (props) => {
             variation="primary"
             label={props.t(props.primaryBtn?.label || "LABEL")}
             title={props.t(props.primaryBtn?.label || "LABEL")}
+            style={{ minWidth: "100%" }}
             onClick={() => { }}
           />
         )}
@@ -214,6 +215,7 @@ const HouseholdOverViewMemberCard = (props) => {
             variation="secondary"
             label={props.t(props.secondaryBtn?.label) || "LABEL"}
             title={props.t(props.secondaryBtn?.label) || "LABEL"}
+            style={{ minWidth: "100%" }}
             onClick={() => { }}
           />
         )}
@@ -231,8 +233,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center", // horizontally center the buttons
     gap: "8px",
-    marginTop: "10px",          // space between the buttons
-
+    marginTop: "10px",  
   },
   card: {
     overflowX: "hidden",

@@ -747,7 +747,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 // style={}
                 variant={""}
                 t={t}
-                option={state?.MASTER_DATA?.AppFieldType}
+                option={(state?.MASTER_DATA?.AppFieldType || []).filter((item) => item?.metadata?.type !== "template")}
                 optionKey={"type"}
                 selected={addFieldData?.type}
                 select={(value) => {
