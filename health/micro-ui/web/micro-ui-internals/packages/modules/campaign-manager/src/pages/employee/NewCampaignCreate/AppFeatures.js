@@ -18,7 +18,7 @@ const getTemplateFormatFilter = (projectNo = "", formats = []) => {
 /**
  * Utility to create a filter string to fetch flow names for a project.
  */
-const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}' && @.isSelected==true )].name`;
+const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}' && @.isSelected==true )]`;
 
 /**
  * Compares existing selected features vs. current feature config.
@@ -105,7 +105,11 @@ const AppFeatures = () => {
         enabled: !!campaignNumber,
         cacheTime: 0,
         staleTime: 0,
-        ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, HCMCONSOLE_APPCONFIG_MODULENAME),
+        select: (data) => {
+          const temp = data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.[HCMCONSOLE_APPCONFIG_MODULENAME];
+          return temp?.sort((a, b) => a?.order - b?.order)?.map((i) => i?.name) || [];
+        },
+        // ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, HCMCONSOLE_APPCONFIG_MODULENAME),
       }
     )
   );
