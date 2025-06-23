@@ -25,7 +25,7 @@ const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}' && @.isS
  * Returns whether any module has changed selections.
  */
 const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeatureConfigs = []) => {
-  const modules = Object.keys(selectedFeaturesByModule);
+  const modules = Object?.keys(selectedFeaturesByModule);
   const keys = modules.map((key) => {
     return (
       selectedFeatureConfigs.every((elem) => selectedFeaturesByModule[key].includes(elem)) &&
@@ -190,6 +190,7 @@ const AppFeatures = () => {
             title={t("GO_BACK")}
             variation="secondary"
             style={{ marginLeft: "2.5rem" }}
+            icon={"ArrowBack"}
             onClick={() => {
               history.push(
                 `/${window.contextPath}/employee/campaign/app-modules?projectType=${projectType}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
@@ -201,6 +202,8 @@ const AppFeatures = () => {
             label={t("NEXT")}
             title={t("NEXT")}
             variation="primary"
+            icon={"ArrowDirection"}
+            isSuffix
             onClick={() => {
               const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
               const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=FieldTypeMappingConfig&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
@@ -308,6 +311,13 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
         disabled: true, // Mark as disabled since not selected by user
       });
     }
+  });
+
+  const orderMap = new Map(defaultModuleConfigs.map((item) => [item.name, item.order]));
+
+  // Sort finalToggleOptions by order
+  finalToggleOptions.sort((a, b) => {
+    return (orderMap.get(a.code)) - (orderMap.get(b.code));
   });
 
   // Render the toggle UI component

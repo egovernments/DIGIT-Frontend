@@ -46,11 +46,13 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
 
   return (
     <Card>
-      <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">{t(`HCM_CAMPAIGN_DATES_HEADER`)}</HeaderComponent>
+      <HeaderComponent className="digit-header-content digit-card-section-header titleStyle date-selection ">
+        {t(`HCM_CAMPAIGN_DATES_HEADER`)}
+      </HeaderComponent>
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair className={"boldLabel"}>
         <div className="digit-header-content label   ">
-          <div style={{marginTop: "1rem"}}>{t(`HCM_CAMPAIGN_DATES`)}</div>
+          <div style={{ marginTop: "1rem" }}>{t(`HCM_CAMPAIGN_DATES`)}</div>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">
@@ -62,13 +64,17 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             // disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             placeholder={t("HCM_START_DATE")}
             populators={{
-               newDateFormat : true,
-               min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
+              newDateFormat: true,
+              min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
             }}
             min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
             onChange={(d) => {
-              // setStartValidation(true);
-              setStartDate(d);
+              const localDate = new Date(d);
+              localDate.setHours(0, 0, 0, 0); // Local midnight
+              // Add 5.5 hours so UTC becomes local midnight
+              const adjustedDate = new Date(localDate.getTime() + 19800000);
+              const isoString = adjustedDate.toISOString(); 
+              setStartDate(isoString); 
             }}
           />
           <FieldV1
@@ -78,7 +84,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             value={endDate}
             placeholder={t("HCM_END_DATE")}
             populators={{
-              newDateFormat : true,
+              newDateFormat: true,
               min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
             }}
             // disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
