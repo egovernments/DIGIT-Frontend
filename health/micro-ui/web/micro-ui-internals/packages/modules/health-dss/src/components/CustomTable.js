@@ -1,6 +1,6 @@
 import { differenceInCalendarDays, subYears } from "date-fns";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Loader, CustomSVG, Chip } from "@egovernments/digit-ui-components";
+import { Loader, CustomSVG, Chip , SVG} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
@@ -396,19 +396,31 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           sortFunction: (rowA, rowB) => {
             const a = rowA?.[localizedHeader];
             const b = rowB?.[localizedHeader];
-
+          
             const normalize = (val) => {
-              if (typeof val === "object") return parseFloat(val?.value?.toString().replace(/,/g, "") || "0");
-              if (typeof val === "string") return parseFloat(val.replace(/,/g, "") || "0");
+              if (typeof val === "object") {
+                const num = parseFloat(val?.value?.toString().replace(/,/g, ""));
+                return isNaN(num) ? val?.value?.toString() : num;
+              }
+              if (typeof val === "string") {
+                const num = parseFloat(val.replace(/,/g, ""));
+                return isNaN(num) ? val.toLowerCase() : num;
+              }
               if (typeof val === "number") return val;
-              return 0;
+              return "";
             };
-
+          
             const valueA = normalize(a);
             const valueB = normalize(b);
-
-            return valueA - valueB;
+          
+            if (typeof valueA === "number" && typeof valueB === "number") {
+              return valueA - valueB;
+            }
+          
+            // Fallback to string comparison
+            return valueA.toString().localeCompare(valueB.toString());
           },
+          
 
           id: columnId,
           symbol: plot?.symbol,
@@ -470,6 +482,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           defaultSortFieldId={tableColumns[0]?.id}
           fixedHeader={true}
           paginationComponentOptions={{ rowsPerPageText: t("ROWS_PER_PAGE") }}
+          sortIcon={<SVG.ArrowUpward fill={"#0B4B66"}/>}
         />
       )}
     </div>
