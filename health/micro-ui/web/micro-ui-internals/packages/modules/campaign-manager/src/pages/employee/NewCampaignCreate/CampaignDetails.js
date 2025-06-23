@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
-import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
+import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, Edit } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -130,7 +130,7 @@ const CampaignDetails = () => {
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
               navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
-              icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 ? "#c5c5c5" : "#C84C0E"} />,
+              // icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 ? "#c5c5c5" : "#C84C0E"} />,
               disabled: campaignData?.boundaries?.length <= 0,
             },
           },
@@ -148,7 +148,7 @@ const CampaignDetails = () => {
               desc: t("HCM_CHECKLIST_DESC"),
               buttonLabel: t("HCM_CHECKLIST_BUTTON"),
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
-              icon: <ListAltCheck />,
+              // icon: <ListAltCheck />,
             },
           },
         ],

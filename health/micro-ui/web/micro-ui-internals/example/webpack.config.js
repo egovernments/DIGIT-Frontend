@@ -86,6 +86,7 @@ module.exports = {
         context: [
           "/egov-mdms-service",
           "/access/v1/actions/mdms",
+          "/health-service-request",
           "/tenant-management",
           "/user-otp",
           "/plan-service",
