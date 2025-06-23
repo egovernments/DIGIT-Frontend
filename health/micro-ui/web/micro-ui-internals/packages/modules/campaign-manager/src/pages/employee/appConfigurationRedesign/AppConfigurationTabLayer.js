@@ -9,18 +9,41 @@ import AppConfigurationParentRedesign from "./AppConfigurationParentLayer";
 const tabDispatcher = (state, action) => {
   switch (action.key) {
     case "SET_TAB":
+      let firstSelectedFound = false;
+      const temp =
+        action?.data
+          ?.map((i, c) => {
+            const isSelected = i?.data?.isSelected;
+
+            let active = false;
+            if (isSelected && !firstSelectedFound) {
+              active = true;
+              firstSelectedFound = true;
+            }
+            return {
+              id: i?.id,
+              active: active,
+              code: i?.data?.name,
+              data: i?.data,
+              version: i?.data?.version,
+              disabled: !i?.data?.isSelected,
+            };
+          })
+          ?.filter((i) => !i?.disabled) || [];
       return {
         actualData: action.data,
         numberTabs:
-          action?.data?.map((i, c) => ({
-            id: i?.id,
-            active: c === 0 ? true : false,
-            code: i?.data?.name,
-            data: i?.data,
-            version: i?.data?.version,
-            disabled : !i?.data?.isSelected
-          }))?.filter(i => !i?.disabled) || [],
-        activeTabConfig: action?.data?.[0],
+          action?.data
+            ?.map((i, c) => ({
+              id: i?.id,
+              active: c === 0 ? true : false,
+              code: i?.data?.name,
+              data: i?.data,
+              version: i?.data?.version,
+              disabled: !i?.data?.isSelected,
+            }))
+            ?.filter((i) => !i?.disabled) || [],
+        activeTabConfig: action?.data?.find((i) => i.id === temp?.find((i) => i.active)?.id),
       };
     case "CHANGE_ACTIVE_TAB":
       return {
@@ -111,7 +134,6 @@ const AppConfigurationTabLayer = () => {
       },
     },
   };
-
 
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
 
