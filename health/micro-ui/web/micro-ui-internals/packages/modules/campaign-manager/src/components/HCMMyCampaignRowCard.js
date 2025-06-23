@@ -107,7 +107,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
+const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp,showDashboardLink) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -170,10 +170,21 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
     };
   }
 
+  if(showDashboardLink){
+    actions.dashboardLink = {
+      label: "VIEW_DASHBOARD",
+      size:"medium",
+      onClick: () => history.push(`/${window?.contextPath}/employee/dss/view-dashboard?projectId=${rowData?.projectId}&hierarchyType=${rowData?.hierarchyType}&tenantId=${Digit.ULBService.getCurrentTenantId()}`),
+      icon: "",
+      variation: "link",
+      style:{height:"32px"}
+    };
+  }
+
   return actions;
 };
 
-const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
+const HCMMyCampaignRowCard = ({ key, rowData, tabData,showDashboardLink }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
@@ -183,7 +194,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp , setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp , setShowCreatingPopUp] = useState(false);
   const [showQRPopUp , setShowQRPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp);
+  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp, showDashboardLink);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 
@@ -268,6 +279,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                 variation={btn.variation}
                 size={btn.size}
                 title={t(btn.title) || ""}
+                style={btn.style}
               />
             ))}
           </div>

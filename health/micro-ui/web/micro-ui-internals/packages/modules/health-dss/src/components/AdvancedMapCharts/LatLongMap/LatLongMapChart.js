@@ -1,0 +1,288 @@
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { LatLngBounds } from "leaflet";
+import { Loader } from "@egovernments/digit-ui-react-components";
+import LatLongMap from "./LatLongMap";
+import { RemoveableTag } from "@egovernments/digit-ui-react-components";
+import NoData from "../../NoData";
+import GenericChart from "../../GenericChart";
+import FilterContext from "../../FilterContext";
+import { getTitleHeading } from "../../../utils/locale";
+import BoundaryTypes from "../../../utils/enums";
+
+const LatLongMapChart = ({ data, chartName, pageZoom }) => {
+  const { t } = useTranslation();
+  const toFilterCase = (str) => {
+    if (str) {
+      return str.charAt(0).toLowerCase() + str.slice(1);
+    }
+  };
+  const { value } = useContext(FilterContext);
+  const copyOfValue = Object.assign({}, value);
+  const chartId = data.charts.filter((c) => c.chartType === "points")?.[0].id;
+  const subHeader = t(`SUB_${chartName}`);
+  const mapData = useRef({});
+  const pointProps = useRef({});
+  const tableData = useRef({});
+  const [locationKeyState, setLocationKeyState] = useState("");
+
+  const [filterStack, setFilterStack] = useState({value: copyOfValue});
+  const [boundaryLevel, setBoundaryLevel] = useState(
+    filterStack?.value?.filters?.district ? toFilterCase(BoundaryTypes.DISTRICT) : 
+    filterStack?.value?.filters?.province ? toFilterCase(BoundaryTypes.PROVINCE) : 
+    toFilterCase(BoundaryTypes.NATIONAL));
+  const [filterFeature, setFilterFeature] = useState(null);
+  const [mapSelector, setMapSelector] = useState(filterStack?.value?.filters?.district ? filterStack?.value?.filters?.district.toLowerCase() : filterStack?.value?.filters?.province ? filterStack?.value?.filters?.province.toLowerCase() : "national-map");
+  const [drillDownChart, setDrillDownChart] = useState("none");
+  const [chartKey, setChartKey] = useState(chartId);
+  const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
+
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { projectTypeId} = Digit.Hooks.useQueryParams();
+  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+
+
+  useEffect(() => {
+    setChartKey(chartId);
+    return () => {
+      setChartKey("");
+    };
+  }, [filterStack, chartId]);
+
+  useEffect(() => {
+    const province = filterStack?.value?.filters?.province;
+    const district = filterStack?.value?.filters?.district;
+    if (district) {
+      setMapSelector(district.toLowerCase().replaceAll(" ", "_"));
+      // setMapSelector("namacurra");
+      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT))
+    } else if (province) {
+      setMapSelector(province.toLowerCase().replaceAll(" ", "_"));
+      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE))
+    }
+  }, [filterStack]);
+
+  useEffect(() => {
+    if (drillDownStack?.length > 0) {
+      setChartKey(drillDownStack[drillDownStack.length-1].id);
+      setDrillDownChart("none");
+    }
+  }, [drillDownStack]);
+
+  // useEffect(() => {
+  //   const province = value?.filters?.province;
+  //   const district = value?.filters?.district;
+
+  //   if (province) {
+  //     if (district) {
+  //       setFilterFeature(district.toLowerCase());
+  //     }
+  //     setLocationKeyState(province.toLowerCase());
+  //   }
+  // }, [value, chartId]);
+
+  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit.ULBService.getStateId(), "map-config", "GeoJson");
+   const { isLoading, data: mapConfigData } = Digit.Hooks.dss.useDSSGeoJson(Digit.ULBService.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
+    // Ensure the second query only runs if the first query is successful
+    enabled: !isGeoJsonLoading
+  });
+
+  mapData.current = mapConfigData || {};
+
+  const addlFilter = locationKeyState?.length ? { locationKey: locationKeyState.toUpperCase() } : {};
+
+  const generateTable = (chart, value) => {
+    const { id, chartType } = chart;
+    const tenantId = Digit.ULBService.getCurrentTenantId();
+    const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+      key: id,
+      type: chartType,
+      tenantId,
+      requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+      filters: {...value?.filters , projectTypeId: selectedProjectTypeId},
+    });
+    if (isLoading) {
+      return <Loader />;
+    }
+    response?.responseData?.data?.forEach((d) => {
+      let plotLabel = response?.responseData?.plotLabel;
+      d?.plots?.forEach((p) => {
+        let obj = {};
+        let plotName = p.name;
+        obj[plotLabel] = p.name;
+        obj[d.headerName] = p.value;
+        if (tableData.current.hasOwnProperty(plotName)) {
+          tableData.current[plotName] = { ...tableData.current[plotName], ...obj };
+        } else {
+          tableData.current[plotName] = obj;
+        }
+      });
+    });
+  };
+
+  const generateMarkers = (chart, value, addlFilter, tenantId) => {
+    const chartId = chart?.id;
+
+    const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
+      key: chartKey,
+      type: "table",
+      tenantId,
+      requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+      filters: {...filterStack?.value?.filters, ...filterFeature, projectTypeId: selectedProjectTypeId},
+    });
+
+    useEffect(() => {
+      setDrillDownChart(response?.responseData?.drillDownChartId || "none");
+    }, [response]);
+
+    const chartData = () => {
+      let locationObject = {};
+      response?.responseData?.data?.forEach((item) => {
+        const value = item.plots?.filter((p) => p.symbol === "number" && p.name !== "latitude" && p.name !== "longitude")?.[0]?.value;
+        locationObject[item.headerName?.toLowerCase()] = value;
+      });
+      return locationObject;
+    };
+
+    const markers = () => {
+      let markersArray = [];
+      let markersName = [];
+      let showPoints = [];
+      let boundaryNames = [];
+      let tooltipString;
+      mapData.current?.geoJSON?.features?.forEach((feature) => {
+        const name = feature.properties?.name;
+        const bounds = new LatLngBounds(feature.geometry?.coordinates);
+        const origin = bounds.getCenter();
+        [origin.lng, origin.lat] = [origin.lat, origin.lng];
+        markersArray.push({ name, origin });
+        markersName.push(name);
+        boundaryNames.push(name);
+      });
+
+      response?.responseData?.data?.forEach((d) => {
+        let obj = {
+          name: d.plots.filter((p) => p.name !== "latitude" && p.name !== "longitude" && p.label !== null)?.[0]?.label,
+          origin: {
+            lat: d.plots.filter((p) => p.name === "latitude")?.[0]?.value,
+            lng: d.plots.filter((p) => p.name === "longitude")?.[0]?.value,
+          },
+        };
+        showPoints.push(obj.name);
+        if (!markersName.includes(obj.name)) markersArray.push(obj);
+        tooltipString =  d.plots.filter((p) => p.name !== "latitude" && p.name !== "longitude" && p.label !== null)?.[0].name
+      });
+      return { markersArray, showPoints, boundaryNames , tooltipString};
+    };
+
+    pointProps.current = { isFetchingChart, chartData: chartData(), markers: markers() };
+  };
+
+  const removeDrillStack = (id) => {
+    if(filterFeature) {setFilterFeature(null)};
+    const removedDrillStack = drillDownStack.filter((filter, index) => index>=id);
+    const newDrillStack  = drillDownStack.filter((filter, index) => index<id);
+    setDrillDownStack(newDrillStack);
+    const lastChart = newDrillStack[newDrillStack.length-1].id;
+    setChartKey(lastChart);
+    setMapSelector(newDrillStack[newDrillStack.length-1].label);
+    
+    let finalFilterStack  = {...filterStack};
+    removedDrillStack.map((filter, index) => {
+      delete finalFilterStack?.value.filters[filter.boundary];
+    })
+    if (Object.keys(finalFilterStack.value.filters).length === 0) {
+      finalFilterStack.value = undefined;
+    }
+    setFilterStack(finalFilterStack);
+  }
+  
+  const RemovableFilters = () => {
+    return (
+      <React.Fragment>
+        {drillDownStack?.length > 1 && (
+          <div className="tag-container">
+            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+            {drillDownStack.map((filter, id) =>
+              id > 0 ? (
+                <RemoveableTag
+                  key={id}
+                  text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter.boundary)}`)}: ${filter.label && getTitleHeading(filter.label)}`}
+                  onClick={() => {
+                    removeDrillStack(id)
+                    // const filtered = drillDownStack.filter((d) => d.id !== filter.id);
+                    // setDrillDownStack(filtered);
+
+                    // if (filtered.length === 0) return;
+
+                    // const currentChart = filtered[filtered.length - 1];
+                    // if (filtered?.length === 1) {
+                    //   setLocationKeyState(currentChart.label);
+                    //   setChartKey(currentChart.id);
+                    //   setDrillDownChart("none");
+                    //   return;
+                    // }
+
+                    // setLocationKeyState(currentChart.label);
+                    // setChartKey(currentChart.id);
+                  }}
+                />
+              ) : null
+            )}
+          </div>
+        )}
+      </React.Fragment>
+    );
+  };
+
+  data?.charts?.forEach((chart) => {
+    chart?.chartType === "points" ? generateMarkers(chart, value, addlFilter, tenantId) : generateTable(chart, value);
+  });
+  const renderMap = () => {
+    if (pointProps.current.isFetchingChart || isLoading) {
+      return <Loader />;
+    }
+
+    const data = pointProps.current.chartData;
+    if (Object.keys(mapData.current).length === 0 ) {
+      return <NoData t={t} />;
+    }
+
+    return (
+      <React.Fragment>
+        <RemovableFilters />
+        <LatLongMap
+          chartId={chartId}
+          isFetchingChart={pointProps.current.isFetchingChart}
+          isLoading={isLoading}
+          mapData={mapData.current}
+          chartData={pointProps.current.chartData}
+          markers={pointProps.current.markers}
+          // setLocationKeyState={setLocationKeyState}
+          filterFeature={filterFeature}
+          setFilterFeature={setFilterFeature}
+          tableData={tableData.current}
+          pageZoom={pageZoom}
+          drillDownChart={drillDownChart}
+          setDrillDownStack={setDrillDownStack}
+          setChartKey={setChartKey}
+          filterStack={filterStack}
+          setFilterStack={setFilterStack}
+          setBoundaryLevel={setBoundaryLevel}
+        />
+      </React.Fragment>
+    );
+  };
+
+  const Wrapper = () => {
+    return (
+      <GenericChart key={chartId} header={chartName} subHeader={subHeader}>
+        <div>{renderMap()}</div>
+      </GenericChart>
+    );
+  };
+
+  return <Wrapper />;
+};
+
+export default LatLongMapChart;

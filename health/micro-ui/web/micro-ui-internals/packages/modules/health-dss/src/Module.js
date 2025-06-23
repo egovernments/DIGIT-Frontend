@@ -11,8 +11,8 @@ import DateRangePicker from "./components/DateRangePicker";
 export const DSSModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
-  const moduleCode = ["campaignmanager","dss", `boundary-${hierarchyType}`];
-  const modulePrefix = "hcm";
+  const moduleCode = ["hcm-campaignmanager","hcm-dss", `hcm-boundary-${hierarchyType}`,"rainmaker-hcm-dss"];
+  const modulePrefix = "";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
