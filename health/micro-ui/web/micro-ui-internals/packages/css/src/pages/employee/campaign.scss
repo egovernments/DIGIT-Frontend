@@ -621,7 +621,7 @@
 }
 .date-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 1rem;
+  margin-right: 0rem;
   font-weight: bold;
   text-wrap: nowrap;
 }
@@ -634,7 +634,7 @@
 }
 .end-date-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 1.5rem;
+  margin-right: 1rem;
   font-weight: bold;
   text-wrap: nowrap;
 }
@@ -771,6 +771,10 @@
 }
 .app-config {
   width: auto;
+  margin-top: 1rem;
+  .toggle-option-container{
+    height: 7.5rem;
+  } 
 }
 .progress-popup {
   .digit-popup-close {
