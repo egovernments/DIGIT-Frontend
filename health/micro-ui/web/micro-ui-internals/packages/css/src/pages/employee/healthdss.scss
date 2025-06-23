@@ -735,6 +735,17 @@
   overflow-wrap: break-word;
 }
 
+/* Ensure sortable column headers don't overflow */
+.data-table .rdt_TableCol_Sortable {
+  max-width: 100%;
+}
+
+/* Tooltips inside those headers should have reduced width */
+.data-table .rdt_TableCol_Sortable .tooltip {
+  max-width: 80%;
+}
+
+
 .digit-chart-header-wrapper {
   width: 100%;
 }
