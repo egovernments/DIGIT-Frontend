@@ -5,7 +5,7 @@ import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import SandBoxHeader from "../../../components/SandBoxHeader";
 import ImageComponent from "../../../components/ImageComponent";
-import Carousel  from "../SignUp-v2/CarouselComponent/CarouselComponent";
+import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
@@ -15,31 +15,42 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
   const history = useHistory();
 
+  function buildOtpUrl(contextPath, tenantId) {
+    const ctx = (contextPath || "").split("/").filter(Boolean).join("/");
+    if (ctx.includes("/")) {
+      // already has at least one '/', so just use contextPath
+      return `/${ctx}/employee/user/login/otp`;
+    } else {
+      // no '/', so append tenantId 
+      return `/${ctx}/${tenantId}/employee/user/login/otp`;
+    }
+  }
+
+
   const reqCreate = {
     url: `/user-otp/v1/_send`,
-    params: { tenantId: "IRAH" },
+    params: { tenantId: Digit?.ULBService?.getStateId() },
     body: {},
     config: {
       enable: false,
     },
   };
-
-  
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onLogin = async (data) => {
-     const inputEmail = data.email;
-    const tenantId = data.name;
+    console.log(`*** LOG ***`, data);
+    const inputEmail = data.email;
+    const tenantId = data.accountName;
     await mutation.mutate(
       {
         params: {
-          tenantId: "IRAH",
+          tenantId: tenantId,
         },
         body: {
           otp: {
             userName: data.email,
             type: "login",
-            tenantId: "IRAH",
+            tenantId: tenantId,
             userType: "EMPLOYEE",
           },
         },
@@ -55,48 +66,19 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
           setTimeout(closeToast, 5000);
         },
         onSuccess: async (data) => {
-          console.log(`*** LOG DATA***`, data);
-          console.log(`*** LOG DATA***`, window?.contextPath);
-          let redirectPath = `/${window?.contextPath}/${tenantId}/employee/user/login/otp`;
 
-          // history.replace(redirectPath);
+          sessionStorage.setItem('otpEmail', inputEmail);
+          sessionStorage.setItem('otpTenant', tenantId);
+          // window.location.replace(`/${window?.contextPath}/${tenantId}/employee/user/login/otp`);
+          const url = buildOtpUrl(window?.contextPath, tenantId);
+          window.location.replace(url);
 
-          history.push(`/${window?.contextPath}/employee/user/login/otp`, {
-            state: { email: inputEmail, tenant: "IRAH" },
-          });
         },
       }
     );
-    // await mutation.mutate(
-    //   {
-    //     body: {
-    //       tenant: {
-    //         name: data.accountName,
-    //         email: data.email,
-    //       },
-    //     },
-    //     config: {
-    //       enable: true,
-    //     },
-    //   },
-    //   {
-    //     onError: (error, variables) => {
-    //       setShowToast({
-    //         key: "error",
-    //         label: error?.response?.data?.Errors?.[0]?.code ? `SANDBOX_SIGNUP_${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_SIGNUP_ERROR`,
-    //       });
-    //     },
-    //     onSuccess: async (data) => {
-    //       history.push({
-    //         pathname: `/${window?.globalPath}/user/otp`,
-    //         state: { email: data?.Tenants[0]?.email, tenant: data?.Tenants[0]?.code },
-    //       });
-    //     },
-    //   }
-    // );
   };
 
-  
+
 
   const closeToast = () => {
     setShowToast(null);
@@ -126,51 +108,52 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
   return isLoading || isStoreLoading ? (
     <Loader />
-  ) : 
-(
-  <div style={{ display: "flex", height: "100vh" }}>
-    {/* Left Carousel Section */}
-    <div style={{ width: "70%", position: "relative" }}>
-      <Carousel bannerImages={propsConfig.bannerImages} />
-    </div>
+  ) :
+    (
+      <div style={{ display: "flex", height: "100vh" }}>
+        {/* Left Carousel Section */}
+        <div style={{ width: "70%", position: "relative" }}>
+          <Carousel bannerImages={propsConfig.bannerImages} />
+        </div>
 
-    {/* Right Form Section */}
-    <div style={{ width: "30%", backgroundColor: "#fff", padding: "2rem", overflowY: "auto",
-      justifyContent:"center", display:"flex",alignItems:"center"
-     }}>
-      <div className="employeeBackbuttonAlign">
-        <BackLink onClick={() => window.history.back()} />
+        {/* Right Form Section */}
+        <div style={{
+          width: "30%", backgroundColor: "#fff", padding: "2rem", overflowY: "auto",
+          justifyContent: "center", display: "flex", alignItems: "center"
+        }}>
+          <div className="employeeBackbuttonAlign">
+            <BackLink onClick={() => window.history.back()} />
+          </div>
+          <FormComposerV2
+            onSubmit={onLogin}
+            isDisabled={isDisabled || disable}
+            noBoxShadow
+            inline
+            submitInForm
+            config={config}
+            label={propsConfig?.texts?.submitButtonLabel}
+            secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
+            onFormValueChange={onFormValueChange}
+            heading={propsConfig?.texts?.header}
+            className="sandbox-signup-form"
+            cardClassName="sandbox-onboarding-wrapper"
+          >
+            <SandBoxHeader showTenant={false} />
+          </FormComposerV2>
+          {showToast && <Toast type="error" label={t(showToast?.label)} onClose={closeToast} />}
+          <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
+            <ImageComponent
+              alt="Powered by DIGIT"
+              src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+              style={{ cursor: "pointer" }}
+              onClick={() => {
+                window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+              }}
+            />
+          </div>
+        </div>
       </div>
-      <FormComposerV2
-        onSubmit={onLogin}
-        isDisabled={isDisabled || disable}
-        noBoxShadow
-        inline
-        submitInForm
-        config={config}
-        label={propsConfig?.texts?.submitButtonLabel}
-        secondaryActionLabel={propsConfig?.texts?.secondaryButtonLabel}
-        onFormValueChange={onFormValueChange}
-        heading={propsConfig?.texts?.header}
-        className="sandbox-signup-form"
-        cardClassName="sandbox-onboarding-wrapper"
-      >
-        <SandBoxHeader showTenant={false} />
-      </FormComposerV2>
-      {showToast && <Toast type="error" label={t(showToast?.label)} onClose={closeToast} />}
-      <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
-        <ImageComponent
-          alt="Powered by DIGIT"
-          src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
-          style={{ cursor: "pointer" }}
-          onClick={() => {
-            window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
-          }}
-        />
-      </div>
-    </div>
-  </div>
-);  
+    );
 };
 
 Login.propTypes = {

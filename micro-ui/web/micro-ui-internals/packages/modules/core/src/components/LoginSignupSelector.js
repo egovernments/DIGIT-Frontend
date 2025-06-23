@@ -21,8 +21,6 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
          window.location.replace(`/${window?.contextPath}/user/sign-up`);
     };
 
-
-
     const isSignupPage = window.location.href.includes("sandbox-ui/user/sign-up");
 
     return (

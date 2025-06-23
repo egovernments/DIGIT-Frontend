@@ -23,7 +23,8 @@ const LanguageSelection = () => {
   };
 
   const handleSubmit = (event) => {
-    history.push(`/${window?.contextPath}/employee/user/login?ts=${Date.now()}`);
+    
+    history.push(`/sandbox-ui/user/login?ts=${Date.now()}`);
   };
 
   if (isLoading) return <Loader />;

@@ -6,6 +6,9 @@ import { Route, Switch, useRouteMatch, useHistory, useLocation } from "react-rou
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import ImageComponent from "../../../components/ImageComponent";
+import Carousel  from "../SignUp-v2/CarouselComponent/CarouselComponent";
+import SandBoxHeader from "../../../components/SandBoxHeader";
+
 
 /* set employee details to enable backward compatiable */
 const setEmployeeDetail = (userObject, token) => {
@@ -34,7 +37,9 @@ const Otp = ({ isLogin = false }) => {
   const [user, setUser] = useState(null);
   const [params, setParams] = useState(location?.state?.data || {});
   const [ifSuperUserExists, setIfSuperUserExist] = useState(false);
-  const { email, tenant } = location.state || {};
+  const { state } = location;
+  const email = state?.email || sessionStorage.getItem('otpEmail') || '';
+  const tenant = state?.tenant || sessionStorage.getItem('otpTenant') || '';
   const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
     tenant,
     "SandBoxLanding",
@@ -73,6 +78,44 @@ const Otp = ({ isLogin = false }) => {
           },
         },
       ],
+      bannerImages: [{
+        id: 1,
+        image: 'https://images.unsplash.com/photo-1746277121508-f44615ff09bb',
+        title: 'Digital Headquarters for National Health Agencies',
+        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+      },
+      {
+        id: 2,
+        image: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9',
+        title: 'Digital Headquarters for National Health Agencies',
+        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+      },
+      {
+        id: 3,
+        image: 'https://images.unsplash.com/photo-1624555130581-1d9cca783bc0',
+        title: 'Digital Headquarters for National Health Agencies',
+        description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate aut autem aperiam et modi saepe obcaecati doloremque voluptatem iusto quidem!"
+      },
+      {
+        id: 4,
+        image: 'https://images.unsplash.com/photo-1547481887-a26e2cacb5b2',
+        title: 'Digital Headquarters for National Health Agencies',
+        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+      },
+      {
+        id: 5,
+        image: 'https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0',
+        title: 'Digital Headquarters for National Health Agencies',
+        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+      },
+      {
+        id: 6,
+        image: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94',
+        title: 'Digital Headquarters for National Health Agencies',
+        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+      },
+      ],
+
     },
   ];
 
@@ -80,8 +123,9 @@ const Otp = ({ isLogin = false }) => {
     {
       texts: {
         // header: t("CORE_COMMON_OTP_LABEL"),
-        header: t("SANDBOX_OTP_VERIFICATION"),
         submitButtonLabel: "CORE_COMMON_SUBMIT",
+        // header: t("SANDBOX_OTP_VERIFICATION"),
+
       },
     },
   ];
@@ -154,9 +198,21 @@ const Otp = ({ isLogin = false }) => {
     }
   };
 
+  console.log(`*** LOG ***`,config);
+
   return (
-    <Background>
-      <div className="employeeBackbuttonAlign">
+
+    <div style={{ display: "flex", height: "100vh" }}>
+    {/* Left Carousel Section */}
+    <div style={{ width: "70%", position: "relative" }}>
+      <Carousel bannerImages={config[0].bannerImages} />
+    </div>
+
+    {/* Right Form Section */}
+    <div style={{ width: "30%", backgroundColor: "#fff", padding: "2rem", overflowY: "auto",
+      justifyContent:"center", display:"flex",alignItems:"center"
+     }}>
+         <div className="employeeBackbuttonAlign">
         <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
@@ -180,7 +236,7 @@ const Otp = ({ isLogin = false }) => {
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="sandbox-onboarding-wrapper"
       >
-        <Header showTenant={false} />
+        <SandBoxHeader showTenant={false} />
       </FormComposerV2>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
@@ -193,7 +249,53 @@ const Otp = ({ isLogin = false }) => {
           }}
         />{" "}
       </div>
-    </Background>
+    </div>
+  </div>
+
+
+
+
+
+    
+    // <Background>
+    //   <div className="employeeBackbuttonAlign">
+    //     <BackLink onClick={() => window.history.back()} />
+    //   </div>
+    //   <FormComposerV2
+    //     onSubmit={onSubmit}
+    //     noBoxShadow
+    //     inline
+    //     submitInForm
+    //     onFormValueChange={(setValue, formValue) => {
+    //       const otpValue = formValue["OtpComponent"];
+    //       if (otpValue?.otp?.length === 6) {
+    //         setIsOtpValid(true);
+    //       } else {
+    //         setIsOtpValid(false);
+    //       }
+    //     }}
+    //     isDisabled={!isOtpValid}
+    //     config={config}
+    //     label={OtpConfig[0].texts.submitButtonLabel}
+    //     heading={OtpConfig[0].texts.header}
+    //     headingStyle={{ textAlign: "center" }}
+    //     cardStyle={{ maxWidth: "408px", margin: "auto" }}
+    //     className="sandbox-onboarding-wrapper"
+    //   >
+    //     <Header showTenant={false} />
+    //   </FormComposerV2>
+    //   {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
+    //   <div className="EmployeeLoginFooter">
+    //     <ImageComponent
+    //       alt="Powered by DIGIT"
+    //       src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
+    //       style={{ cursor: "pointer" }}
+    //       onClick={() => {
+    //         window.open(window?.globalConfigs?.getConfig?.("DIGIT_HOME_URL"), "_blank").focus();
+    //       }}
+    //     />{" "}
+    //   </div>
+    // </Background>
   );
 };
 
