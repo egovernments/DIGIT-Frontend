@@ -309,6 +309,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     [
       { name: fieldMasterName, limit: 100 },
       { name: "FieldPropertiesPanelConfig", limit: 100 },
+      { name: "DETAILS_RENDERER_CONFIG", limit: 100 },
     ],
     {
       cacheTime: Infinity,
@@ -321,6 +322,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             ...data?.["HCM-ADMIN-CONSOLE"],
             DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["FieldPropertiesPanelConfig"],
             AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
+            DetailsConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DETAILS_RENDERER_CONFIG"]
             // ...dummyMaster,
           },
         });
