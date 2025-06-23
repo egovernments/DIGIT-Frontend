@@ -45,7 +45,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
   const projectType = url?.projectType;
   const name = url?.campaignName;
   const role = url?.role;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
 
   const crumbs = [
