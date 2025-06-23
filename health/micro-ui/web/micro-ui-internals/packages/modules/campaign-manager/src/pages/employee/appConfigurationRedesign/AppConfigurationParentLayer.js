@@ -320,13 +320,13 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   return (
     <div>
       <Header className="app-config-header">
-        <div className="app-config-header-group" style={{ display: "flex" }}>
+        <div className="app-config-header-group" style={{ display: "flex" , alignItems: "center"}}>
           {t(`${currentScreen?.[0]?.name}`)}{" "}
           <Tag
             stroke={true}
             showIcon={false}
             label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
-            style={{ background: "#EFF8FF" }}
+            style={{ background: "#EFF8FF" , height: "fit-content" }}
           />
         </div>
       </Header>

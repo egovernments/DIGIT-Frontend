@@ -120,6 +120,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
       label: "DOWNLOAD_APP",
       onClick: () => setShowQRPopUp(true),
       size:"medium",
+      icon: "FileDownload",
       variation: "secondary",
     };
     actions.downloadUserCreds = {
@@ -137,6 +138,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
       onClick: () => setShowCreatingPopUp(true),
       size:"medium",
       variation: "secondary",
+      icon: "Edit",
     };
   }
 
@@ -165,7 +167,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
             rowData?.campaignNumber
           }&tenantId=${Digit.ULBService.getCurrentTenantId()}`
         ),
-      icon: "",
+      icon: "Edit",
       variation: "primary",
     };
   }

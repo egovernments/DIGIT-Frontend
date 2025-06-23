@@ -232,7 +232,6 @@
 .card-header-delivery{
   display: flex;
   justify-content: space-between;
-  margin-top: 1.5rem !important;
 }
 
 .deliveryType-labelfield{
@@ -241,6 +240,7 @@
 
 .delivery-rule-container {
   margin-top: 1.5rem;
+  margin-bottom: 1.5rem;
   .digit-card-header {
     .title {
       margin: 0 !important;
