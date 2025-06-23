@@ -294,6 +294,7 @@
   font-size: 24px;
   color: #505a5f;
   margin-top: 0.5rem;
+  padding-bottom: 1rem;
 }
 
 .header-end {
@@ -621,7 +622,7 @@ tbody {
   h2 {
     color: theme(digitv2.lightTheme.text-primary);
   }
-  div{
+  div {
     flex-direction: column;
   }
 }
@@ -679,7 +680,8 @@ tbody {
 
 .digit-employee-card.campaign-update-container {
   padding: 1.5rem;
-  margin: 0 !important;
+  margin: 0rem;
+  margin-top: 1rem;
 
   .header {
     margin-bottom: 1.5rem;
@@ -714,7 +716,7 @@ tbody {
 
           p {
             margin: 0;
-            margin-bottom: 0.25rem;
+            margin-bottom: 1rem;
           }
 
           .mandatory-date {
@@ -936,28 +938,43 @@ tbody {
 
 .app-configure-action-button {
   border-radius: 0.75rem;
-  padding: 1.25rem 3.8rem;
-  height: 4rem;
-  width: 15rem;
-  min-width: 12.5rem;
+  padding: 0.25rem 0.25rem;
+  height: 3rem;
+  width: 10rem;
+  min-width: 10rem;
 }
 .app-configuration-side-panel {
   width: 24rem;
+  z-index: 99;
   background-color: #ffffff;
+  .slider-content {
+    .slider-footer {
+      margin-bottom: 5rem;
+    }
+  }
 }
 .appConfigHeaderLabelField {
   flex-direction: column;
   gap: 0.5rem;
+  .appConfigLabelField-label-container {
+    width: 100%;
+  }
 }
 .appConfigLabelField {
+  position: relative;
   padding: 1rem;
-  background-color: #fafafa;
-  border: 1px solid #d6d5d4;
-  border-radius: 0.5rem;
   width: 18rem;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
+  margin-bottom: unset;
+}
+.draggableField-cont {
+  margin-bottom: 1rem;
+  width: fit-content;
+  border-radius: 0.5rem;
+  border: 1px solid #d6d5d4;
+  background-color: #fafafa;
 }
 .appConfigLabelField.selected {
   background-color: #f477381a;
@@ -965,6 +982,7 @@ tbody {
 }
 .app-config-field-tag {
   background-color: #0057bd0d !important;
+  word-break: break-word;
   border: 0.0031rem solid #0b4b66;
   color: #0b4b66;
   font-size: 0.75rem;
@@ -984,10 +1002,15 @@ tbody {
 }
 .appConfigLabelField-label {
   @extend .typography.heading-s;
+  width: 12rem !important;
+  word-break: break-word;
   color: theme(digitv2.lightTheme.text-secondary);
   margin-bottom: 0.5rem;
   font-size: 1rem;
   font-weight: 700;
+  &.desc {
+    margin-bottom: 0 !important;
+  }
 }
 .app-preview-action-button {
   margin-top: auto;
@@ -1013,7 +1036,7 @@ tbody {
   }
 }
 .appConfigLabelField-label-container {
-  width: 100%;
+  width: 12rem;
 }
 .app-config-drawer-button {
   width: 100%;
@@ -1024,6 +1047,9 @@ tbody {
 }
 .app-config-add-field-popup {
   width: 35rem !important;
+  .digit-popup-heading {
+    color: theme(digitv2.lightTheme.primary-2);
+  }
   .digit-popup-children-wrap {
     overflow: visible !important;
   }
@@ -1076,11 +1102,15 @@ tbody {
   margin-bottom: unset;
   margin-left: 0.5rem;
 }
-.app-config-checkbox-label.required::after {
-  content: "*";
-  margin-left: 0.5rem;
-  color: #d4351c;
+.app-config-checkbox-label {
+  display: inline-block;
+
+  &.required::after {
+    content: " *";
+    color: #d4351c;
+  }
 }
+
 .app-preview-field-button {
   width: 100%;
 }
@@ -1122,9 +1152,29 @@ tbody {
 }
 
 .icon-wrapper.app-config-tooltip {
+  margin-bottom: 0.5rem;
   .tooltip-wrapper {
     .tooltip-content {
-      width: auto !important;
+      width: max-content !important;
     }
   }
+}
+.mobile-bezel-child-container {
+  height: 90%;
+}
+.drag-handle {
+  display: grid;
+  grid-template-columns: repeat(2, 4px); /* 2 columns */
+  gap: 4px; /* spacing between dots */
+  width: fit-content;
+  margin: 0 0.5rem;
+  cursor: grab;
+}
+
+.drag-handle span {
+  width: 4px;
+  height: 4px;
+  background-color: #d9d9d9;
+  border-radius: 50%;
+  display: block;
 }

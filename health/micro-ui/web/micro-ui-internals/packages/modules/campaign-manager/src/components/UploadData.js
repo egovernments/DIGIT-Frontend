@@ -1033,6 +1033,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           type: type,
           hierarchyType: params?.hierarchyType,
           campaignId: id,
+          status: "completed"
         },
       },
       {
@@ -1139,10 +1140,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         {loader && 
         <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
         <div className={parentId ? "card-container2" : "card-container1"}>
-        <TagComponent campaignName={campaignName} />  
           <Card>
+            <TagComponent campaignName={campaignName} />  
             <div className="campaign-bulk-upload">
-              <HeaderComponent className="digit-form-composer-sub-header">
+              <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
                 {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
               <Button

@@ -290,7 +290,7 @@ const DataUploadSummary = (props) => {
     <>
       {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
       <div className="container-full">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -302,11 +302,11 @@ const DataUploadSummary = (props) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
 
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" , marginTop:"1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
             {/* {userCredential && (
           <Button

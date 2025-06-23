@@ -96,6 +96,7 @@ export const UICustomizations = {
       const campaignName = searchParams.get("name");
       const projectType = searchParams.get("projectType");
       const campaignId = searchParams.get("campaignId");
+      const campaignNumber = searchParams.get("campaignNumber");
       switch (key) {       
           case "HCM_CHECKLIST_STATUS":
             
@@ -138,7 +139,7 @@ export const UICustomizations = {
                 variation="secondary"
                 label={t("HCM_CHECKLIST_VIEW")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`)
                 }}
               />
               )
@@ -153,7 +154,7 @@ export const UICustomizations = {
                 variation="secondary"
                 label={t("HCM_CHECKLIST_CREATE")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`)
+                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`)
                 }}
               />
             );

@@ -1,24 +1,22 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
 import "@egovernments/digit-ui-health-css/example/index.css";
+import { Loader } from "@egovernments/digit-ui-components";
 
 import { UICustomizations } from "./UICustomizations";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
-import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
-import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
-import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
-import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
+
 
 var Digit = window.Digit || {};
 
+// Lazy load DigitUI
+const DigitUI = React.lazy(() =>
+  import("@egovernments/digit-ui-module-core").then((mod) => ({
+    default: mod.DigitUI,
+  }))
+);
 const enabledModules = [
   "DSS",
   "HRMS",
@@ -60,7 +58,7 @@ const initTokens = (stateCode) => {
   if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
 };
 
-const initDigitUI = () => {
+const initDigitUI = async() => {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   window.Digit.Customizations = {
     commonUiConfig: UICustomizations
@@ -70,23 +68,64 @@ const initDigitUI = () => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initWorkbenchHCMComponents();
-  initCampaignComponents();
-  initMicroplanComponents();
-  initPaymentComponents();
-  initHRMSComponents();
-  initPGRComponents();
-  initDSSComponents();
+  // initUtilitiesComponents();
+  // initWorkbenchComponents();
+  // initWorkbenchHCMComponents();
+  // initCampaignComponents();
+  // initMicroplanComponents();
+  // initPaymentComponents();
+  // initHRMSComponents();
+  // initPGRComponents();
+  // initDSSComponents();
+  
+
+
+// Dynamically import and register modules after initLibraries
+const [
+  { initCampaignComponents },
+  { initWorkbenchComponents },
+  { initUtilitiesComponents },
+  { initWorkbenchHCMComponents },
+  { initMicroplanComponents },
+  { initPaymentComponents },
+  { initHRMSComponents },
+  { initPGRComponents },
+  { initDSSComponents },
+] = await Promise.all([
+  import("@egovernments/digit-ui-module-campaign-manager"),
+  import("@egovernments/digit-ui-module-workbench"),
+  import("@egovernments/digit-ui-module-utilities"),
+  import("@egovernments/digit-ui-module-hcmworkbench"),
+  import("@egovernments/digit-ui-module-microplan"),
+  import("@egovernments/digit-ui-module-health-payments"),
+  import("@egovernments/digit-ui-module-health-hrms"),
+  import("@egovernments/digit-ui-module-health-pgr"),
+  import("@egovernments/digit-ui-module-health-dss"),
+]);
+
+// Initialize them in safe order
+initUtilitiesComponents();
+initWorkbenchComponents();
+initWorkbenchHCMComponents();
+initCampaignComponents();
+initMicroplanComponents();
+initPaymentComponents();
+initHRMSComponents();
+initPGRComponents();
+initDSSComponents();
+
+
+
 
   const moduleReducers = (initData) => initData;
 
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
-
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  
+  ReactDOM.render(<Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
+    <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />
+  </Suspense>, document.getElementById("root"));
 };
 
 initLibraries().then(() => {

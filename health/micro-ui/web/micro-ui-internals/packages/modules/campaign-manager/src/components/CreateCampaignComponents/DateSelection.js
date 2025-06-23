@@ -50,7 +50,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair className={"boldLabel"}>
         <div className="digit-header-content label   ">
-          <p>{t(`HCM_CAMPAIGN_DATES`)}</p>
+          <div style={{marginTop: "1rem"}}>{t(`HCM_CAMPAIGN_DATES`)}</div>
           <span className="mandatory-date">*</span>
         </div>
         <div className="date-field-container">
@@ -62,9 +62,8 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             // disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             placeholder={t("HCM_START_DATE")}
             populators={{
-              validation: {
-                min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
-              },
+               newDateFormat : true,
+               min: Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS),
             }}
             min={Digit.Utils.date.getDate(Date.now() + ONE_DAY_IN_MS)}
             onChange={(d) => {
@@ -79,9 +78,8 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             value={endDate}
             placeholder={t("HCM_END_DATE")}
             populators={{
-              validation: {
-                min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
-              },
+              newDateFormat : true,
+              min: Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS),
             }}
             // disabled={new Date(startDate) <= new Date(Digit.Utils.date.getDate(Date.now()))}
             min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}

@@ -242,6 +242,11 @@ export const RenderConditionalField = ({
           masterName: "ID_TYPE_OPTIONS_POPULATOR",
           schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR",
         },
+        {
+          moduleName: "HCM",
+          masterName: "DELIVERY_COMMENT_OPTIONS_POPULATOR",
+          schemaCode: "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+        },
       ];
       return (
         <Dropdown

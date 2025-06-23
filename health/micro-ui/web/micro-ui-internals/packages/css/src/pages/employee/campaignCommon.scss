@@ -3,6 +3,7 @@
 .camp-drawer-caption{
     font-size: 1rem !important;
     font-weight: 400 !important;
+    padding-bottom: 1.5rem;
   }
   
   .camp-app-help-tutorial-popup{
@@ -281,6 +282,7 @@
     margin-right: 24rem;
   }
   .boldLabel{
+    margin-bottom: 0rem;
     .digit-header-content{
       font-weight: 700;
     }
@@ -320,5 +322,10 @@
 
 .digit-text-block-header-content {
     flex-direction: column  !important;
+}
+.copy-campaign-popup{
+  .digit-popup-heading{
+    color: theme(digitv2.lightTheme.primary-2);
+  }
 }
 

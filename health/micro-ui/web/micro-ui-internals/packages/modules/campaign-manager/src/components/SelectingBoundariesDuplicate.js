@@ -11,6 +11,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
+  const campaignNumber = searchParams.get("campaignNumber");
   const draft = searchParams.get("draft");
   const { data: HierarchySchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -51,24 +52,35 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName;
   const [restrictSelection, setRestrictSelection] = useState(null);
 
-  useEffect(() => {
-    setKey(currentKey);
-    setCurrentStep(currentKey);
-  }, [currentKey]);
+  // useEffect(() => {
+  //   setKey(currentKey);
+  //   setCurrentStep(currentKey);
+  // }, [currentKey]);
 
-  const onStepClick = (currentStep) => {
-    if (!props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA) return;
-    if (currentStep === 0) {
-      setKey(5);
-    } else setKey(6);
+  const reqCriteria = {
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        campaignNumber: campaignNumber,
+      },
+    },
+    config: {
+      enabled: !!campaignNumber,
+      select: (data) => {
+        return data?.CampaignDetails?.[0];
+      },
+    },
   };
+
+  const {  data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   // useEffect(() => {
   //   onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection});
   // }, [selectedData, boundaryOptions , restrictSelection]);
 
   useEffect(() => {
-    if (selectedData?.length || Object.keys(boundaryOptions || {}).length) {
+    if (selectedData?.length>0 || Object.keys(boundaryOptions || {}).length) {
       onSelect("boundaryType", {
         selectedData,
         boundaryData: boundaryOptions,
@@ -76,37 +88,23 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       });
     }
   }, [selectedData, boundaryOptions, restrictSelection]);
-
-  // useEffect(() => {
-  //   setSelectedData(
-  //     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-  //       ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData
-  //       : []
-  //   );
-  //   setBoundaryOptions(
-  //     props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
-  //       ? props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData
-  //       : {}
-  //   );
-  // }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
-
+  
   // useEffect(() => {
   //   if (executionCount < 5) {
   //     onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: !restrictSelection});
   //     setExecutionCount((prevCount) => prevCount + 1);
   //   }
   // });
-
   useEffect(() => {
     const sessionData = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType;
-    if (sessionData) {
-      setSelectedData(sessionData?.selectedData || []);
+    if (sessionData || campaignData?.boundaries) {
+      setSelectedData(sessionData?.selectedData || campaignData?.boundaries);
       setBoundaryOptions(sessionData?.boundaryData || {});
     }
-    setTimeout(() => setIsLoading(false), 0);
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
+    setTimeout(() => setIsLoading(false), 10);
+  }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType , campaignData]);
 
-  // useEffect(() => {
+ // useEffect(() => {
   //   if (
   //     props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
   //     props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
@@ -115,25 +113,24 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //     setRestrictSelection(true);
   //   }
   // }, [props?.props?.sessionData]);
-
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
     setRestrictSelection(value?.restrictSelection);
   };
 
-  function updateUrlParams(params) {
-    const url = new URL(window.location.href);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    window.history.replaceState({}, "", url);
-  }
+  // function updateUrlParams(params) {
+  //   const url = new URL(window.location.href);
+  //   Object.entries(params).forEach(([key, value]) => {
+  //     url.searchParams.set(key, value);
+  //   });
+  //   window.history.replaceState({}, "", url);
+  // }
 
-  useEffect(() => {
-    updateUrlParams({ key: key });
-    window.dispatchEvent(new Event("checking"));
-  }, [key]);
+  // useEffect(() => {
+  //   updateUrlParams({ key: key });
+  //   window.dispatchEvent(new Event("checking"));
+  // }, [key]);
 
   if (draft && isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -142,24 +139,11 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   return (
     <>
       <div className="container-full">
-        <div className="card-container">
-          <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_BOUNDARY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
-          </Card>
-          <Card className="stepper-card">
-            <Stepper
-              customSteps={["HCM_BOUNDARY_DETAILS_VERTICAL", "HCM_SUMMARY"]}
-              currentStep={1}
-              onStepClick={onStepClick}
-              direction={"vertical"}
-            />
-          </Card>
-        </div>
 
         <div className="card-container-delivery">
-          <TagComponent campaignName={campaignName} />
           <Card>
-            <HeaderComponent>{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
+             <TagComponent campaignName={campaignName} />
+            <HeaderComponent className = "select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="description-type">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper
               hierarchyType={hierarchyType}

@@ -20,6 +20,9 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
                 name: "CampaignType",
                 fieldPairClassName: "boldLabel",
                 optionsKey: "code",
+                customStyle: {
+                  marginBottom: 0,
+                },
                 error: "ES__REQUIRED_CAMPAIGN_TYPE",
                 mdmsv2: true,
                 mdmsConfig: {

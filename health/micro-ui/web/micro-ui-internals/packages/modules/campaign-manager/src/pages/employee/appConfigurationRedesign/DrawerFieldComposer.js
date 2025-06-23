@@ -23,6 +23,8 @@ import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { getTypeAndFormatFromAppType } from "../../../utils/appConfigHelpers";
+import { TEMPLATE_BASE_CONFIG_MASTER } from "../NewCampaignCreate/AppModule";
 
 /**
  * Determines whether a specific field in a UI panel should be disabled.
@@ -37,7 +39,7 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
  */
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
-  const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
+  const shouldDisable = resourceData?.[TEMPLATE_BASE_CONFIG_MASTER]?.some((ele) => drawerState?.jsonPath === ele);
 
   // force disable if field is hidden
   if (drawerState?.hidden) {
@@ -52,11 +54,31 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   return false;
 };
 
-//todo @jagan to make this flow dynamic ie multi flow support this flag to be updated
-const getBaseTemplateFilter = (projectType = "", flowName = "") => {
-  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`;
+//TODO @jagan to make this flow dynamic ie multi flow support this flag to be updated
+const getBaseTemplateFilter = (projectType = "", flowName = "", screenName = "") => {
+  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[?(@.page=='${screenName}')].properties[?(@.validations && @.validations.length > 0 && @.validations[?(@.type=='required' && @.value==true)])].fieldName`;
 };
 
+function getRequiredFieldNames(data, projectType, flowName, screenName) {
+  const result = [];
+
+  for (const flow of data) {
+    if (flow.project !== projectType || flow.name !== flowName) continue;
+    const page = flow.pages.find((p) => p.page === screenName);
+    if (!page) continue;
+
+    for (const prop of page.properties) {
+      if (Array.isArray(prop.validations)) {
+        const hasRequired = prop.validations.some((v) => v.type === "required" && v.value === true);
+        if (hasRequired) {
+          result.push(prop.fieldName);
+        }
+      }
+    }
+  }
+
+  return result;
+}
 const whenToShow = (panelItem, drawerState) => {
   const anyCheck =
     panelItem?.label === "isMdms"
@@ -90,11 +112,25 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         CONSOLE_MDMS_MODULENAME,
         [
           {
-            name: "TemplateBaseConfig",
-            filter: getBaseTemplateFilter(projectType, flowName),
+            name: TEMPLATE_BASE_CONFIG_MASTER,
+            // filter: getBaseTemplateFilter(projectType, flowName, state?.currentScreen?.name),
           },
         ],
-        `MDMSDATA-${projectType}-${flowName}`
+        `MDMSDATA-${projectType}-${flowName}-${state?.currentScreen?.name}`,
+        {
+          select: (data) => {
+            // Select and return the module's data
+            const temp = getRequiredFieldNames(
+              data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.[TEMPLATE_BASE_CONFIG_MASTER],
+              projectType,
+              flowName,
+              state?.currentScreen?.name
+            );
+
+            return { [TEMPLATE_BASE_CONFIG_MASTER]: temp };
+            // return data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME];
+          },
+        }
       ),
     [projectType, flowName]
   );
@@ -192,6 +228,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         />
       );
     case "fieldTypeDropdown":
+      const type = getTypeAndFormatFromAppType(drawerState, state?.MASTER_DATA?.AppFieldType)?.type;
       return (
         <FieldV1
           config={{
@@ -209,12 +246,12 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           populators={{
             title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
             fieldPairClassName: "drawer-toggle-conditional-field",
-            options: state?.MASTER_DATA?.AppFieldType,
+            options: (state?.MASTER_DATA?.AppFieldType || []).filter((item) => item?.metadata?.type !== "template"),
             optionsKey: "type",
           }}
           type={"dropdown"}
           value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
+          disabled={type === "template" ? true : disableFieldForMandatory(drawerState, panelItem, resourceData)}
         />
       );
     // return (

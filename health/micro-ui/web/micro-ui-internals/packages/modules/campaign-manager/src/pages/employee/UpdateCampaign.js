@@ -40,6 +40,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const isPreview = searchParams.get("preview");
   const isSummary = searchParams.get("summary");
   const noAction = searchParams.get("action");
+  const campaignNumber = searchParams.get("campaignNumber");
   const isDraft = searchParams.get("draft");
   const isSkip = searchParams.get("skip");
   const isChangeDates = searchParams.get("changeDates");
@@ -299,7 +300,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
                     text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
                     info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
                     actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
-                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign`,
+                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
                   }
                 );
                 Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
@@ -788,6 +789,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
     }
+    else{
+      history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+    }
   };
 
   const filterCampaignConfig = (campaignConfig, currentKey) => {
@@ -834,14 +838,14 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {noAction !== "false" && (
+      {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_BOUNDARY_DETAILS", "HCM_UPLOAD_FACILITY_DATA", "HCM_UPLOAD_USER_DATA", "HCM_UPLOAD_TARGET_DATA", "HCM_REVIEW_DETAILS"]}
           currentStep={currentStep + 1}
           onStepClick={onStepClick}
           activeSteps={active}
         />
-      )}
+      )} */}
       <FormComposerV2
         config={config?.form.map((config) => {
           return {
@@ -851,7 +855,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
         })}
         onSubmit={onSubmit}
         isDisabled={isDataCreating}
-        showSecondaryLabel={currentKey > 1 ? true : false}
+        showSecondaryLabel={true}
         secondaryLabel={isChangeDates === "true" && currentKey == 6 ? t("HCM_BACK") : noAction === "false" ? null : t("HCM_BACK")}
         actionClassName={"actionBarClass"}
         className="setup-campaign"

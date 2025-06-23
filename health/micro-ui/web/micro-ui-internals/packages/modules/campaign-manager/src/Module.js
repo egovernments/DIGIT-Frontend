@@ -53,16 +53,18 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
-import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
+import DateSelection from "./components/CreateCampaignComponents/DateSelection";
+import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
 //App config import
 import AppPreview from "./components/AppPreview";
 import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
 import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
 import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
-import CycleSelection from "./components/CreateCampaignComponents.js/CycleSelection";
+import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
+import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
+import QRButton from "./components/CreateCampaignComponents/QRButton";
 /**
  * MDMS Module name
  */
@@ -181,12 +183,14 @@ const componentsToRegister = {
   AppPreview,
   AppConfigurationParentLayer: AppConfigurationParentLayer,
   FormBuilder,
-  AppConfigurationParentRedesign,
+  // AppConfigurationParentRedesign,
+  AppConfigurationParentRedesign: AppConfigurationTabLayer,
   DateSelection,
   ViewDetailComponent,
   CycleSelection,
   HCMMyCampaignRowCard,
-  MyCampaignNew
+  MyCampaignNew,
+  QRButton
 };
 
 const overrideHooks = () => {
