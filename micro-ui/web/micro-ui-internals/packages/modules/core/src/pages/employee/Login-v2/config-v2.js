@@ -21,6 +21,21 @@ export const SignUpConfig = [
         },
         infoMessage: "SANDBOX_SIGNUP_ACCOUNT_NAME_TOOLTIP"
       },
+      {isMandatory: false,
+        key: "PrivacyComponent",
+         key: "check",
+        type: "component",
+        component: "ForgotOrganizationTooltip",
+        withoutLabel: true,
+        disable: false,
+        customProps: {
+          module: "SandboxSignUp",
+        },
+        populators: {
+          required: false,
+          name: "check",
+        },
+      },
       {
         label: "CORE_SIGNUP_EMAILID",
         type: "text",
