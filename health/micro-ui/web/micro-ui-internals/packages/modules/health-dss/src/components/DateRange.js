@@ -198,7 +198,11 @@ const DateRange = ({ values, onFilterChange, t }) => {
           <input
             className={`employee-select-wrap--elipses ${dateFilterSelected!=="DSS_CUSTOM_DATE_RANGE" ? "disabled" : ""}`}
             type="text"
-            value={values?.title ? `${values?.title}` : ""}
+            value={
+              selectionRange?.startDate && selectionRange?.endDate
+                ? `${format(new Date(selectionRange.startDate), "MMM d, yyyy")} - ${format(new Date(selectionRange.endDate), "MMM d, yyyy")}`
+                : ""
+            }
             readOnly
             onClick={() => setIsModalOpen((prevState) => !prevState)}
           />
