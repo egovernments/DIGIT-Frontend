@@ -42,8 +42,7 @@
   font-weight: bold;
 }
 .mandatory-date {
-  margin-top: 0.8rem;
-  color: red !important;
+  color: theme(digitv2.lightTheme.error-v2) !important;
   font-size: 1rem;
   font-weight: 700;
 }
