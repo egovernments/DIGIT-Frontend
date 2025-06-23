@@ -61,7 +61,10 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       {
         onError: (error, variables) => {
           setShowToast(
-            error?.response?.data?.Errors?.[0].code ? `SANDBOX_RESEND_OTP${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_RESEND_OTP_ERROR`
+            {
+              key: "error",
+              label: error?.response?.data?.error?.message
+            }
           );
           setTimeout(closeToast, 5000);
         },
@@ -69,7 +72,6 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
           sessionStorage.setItem('otpEmail', inputEmail);
           sessionStorage.setItem('otpTenant', tenantId);
-          // window.location.replace(`/${window?.contextPath}/${tenantId}/employee/user/login/otp`);
           const url = buildOtpUrl(window?.contextPath, tenantId);
           window.location.replace(url);
 
