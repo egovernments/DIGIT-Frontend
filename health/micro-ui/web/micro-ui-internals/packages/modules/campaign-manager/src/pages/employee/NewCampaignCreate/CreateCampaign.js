@@ -162,12 +162,18 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return;
       }
+      else{
+        setShowToast(null);
+      }
       setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
       if (temp.length != 0) {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
         setIsValidatingName(false);
         return;
+      }
+      else {
+        setShowToast(null);
       }
       setIsValidatingName(false);
     }
@@ -189,6 +195,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     }
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
+      setShowToast(null);
       setCurrentKey(currentKey + 1);
     } else {
       setLoader(true);

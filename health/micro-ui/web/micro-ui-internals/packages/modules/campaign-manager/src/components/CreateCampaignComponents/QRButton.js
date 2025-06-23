@@ -13,15 +13,15 @@ const QRButton = ({setShowQRPopUp}) => {
     CONSOLE_MDMS_MODULENAME,
     [
       {
-        name: "AppLink",
+        name: "MobileAppLink",
       },
     ],
     {
       select: (data) => {
-        return data?.[CONSOLE_MDMS_MODULENAME]?.AppLink?.[0];
+        return data?.[CONSOLE_MDMS_MODULENAME]?.MobileAppLink?.[0];
       },
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppLink` }
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.MobileAppLink` }
   );
 
   if(linkLoading){
