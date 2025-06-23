@@ -1,4 +1,4 @@
-const tenantId = Digit.ULBService.getCurrentTenantId();
+const tenantId = Digit?.ULBService?.getCurrentTenantId();
 export const boundarySearchConfig = [
     {
       // label: "Search",
@@ -70,7 +70,7 @@ export const boundarySearchConfig = [
           show: true
         },
         searchResult: {
-          // tenantId: Digit.ULBService.getCurrentTenantId(),
+          // tenantId: Digit?.ULBService?.getCurrentTenantId(),
           uiConfig: {
             columns: [
               {

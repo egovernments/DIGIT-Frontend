@@ -89,7 +89,7 @@ export const UICustomizations = {
 
     additionalCustomizations: (row, key, column, value, searchResult) => {
       const { t } = useTranslation();
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const history = useHistory();
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
@@ -171,7 +171,7 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [isActive, setIsActive] = useState(row?.isActive);
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       let res;
       const callSearch = async () => {
         const res = await Digit.CustomService.getResponse({
@@ -232,7 +232,7 @@ export const UICustomizations = {
           // return row?.auditDetails?.createdTime;
           break;
         case "ACTION":
-          const tenantId = Digit.ULBService.getCurrentTenantId();
+          const tenantId = Digit?.ULBService?.getCurrentTenantId();
           const generateFile = async () => {
             const res = await Digit.CustomService.getResponse({
               url: `/project-factory/v1/data/_generate`,
@@ -365,7 +365,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -395,7 +395,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -557,7 +557,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigCompleted: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -585,7 +585,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -701,7 +701,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigUpcoming: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -730,7 +730,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -895,7 +895,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigDrafts: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -923,7 +923,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -989,7 +989,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigDraftsNew: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -1017,7 +1017,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -1083,7 +1083,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigFailed: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -1110,7 +1110,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
