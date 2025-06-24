@@ -320,13 +320,13 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   return (
     <div>
       <Header className="app-config-header">
-        <div className="app-config-header-group" style={{ display: "flex" , alignItems: "center"}}>
+        <div className="app-config-header-group" style={{ display: "flex", alignItems: "center" }}>
           {t(`${currentScreen?.[0]?.name}`)}{" "}
           <Tag
             stroke={true}
             showIcon={false}
             label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
-            style={{ background: "#EFF8FF" , height: "fit-content" }}
+            style={{ background: "#EFF8FF", height: "fit-content" }}
           />
         </div>
       </Header>
@@ -337,7 +337,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             style={{
               display: "flex",
               alignItems: "flex-end",
-              marginLeft: "16rem",
+              marginLeft: "32rem",
               gap: "5rem",
             }}
           >
@@ -350,9 +350,10 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               parentDispatch={parentDispatch}
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
+              pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             />
           </div>
-          <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span>
+          {/* <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span> */}
         </div>
       </div>
       {showToast && (

@@ -286,7 +286,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -516,7 +516,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <div className="app-config-flex-container">
+      {/* <div className="app-config-flex-container"> */}
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+      {/* <DndProvider backend={HTML5Backend}>
+          <AppFieldScreenWrapper onSubmit={onSubmit} />
+        </DndProvider> */}
+      {/* </div> */}
+
+      <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -526,10 +533,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           isDisabled={false}
           onClick={() => back()}
         />
-        <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
-        {/* <DndProvider backend={HTML5Backend}>
-          <AppFieldScreenWrapper onSubmit={onSubmit} />
-        </DndProvider> */}
+        <span className="app-config-tag-page"> {pageTag} </span>
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -543,7 +547,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           }}
         />
       </div>
-
       {true && (
         <SidePanel
           bgActive
