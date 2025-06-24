@@ -11,23 +11,21 @@ import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-component
  * @param {function} onSubmit - Function to call when the comment is valid and should be submitted.
  * @returns {JSX.Element} - The pop-up component.
  */
-const EditWorkerDetailsPopUp = ({ ...props }) => {
+const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, initialValue }) => {
 
     const { t } = useTranslation();
 
     // state variables
     const [comment, setComment] = useState(null);
     const [showToast, setShowToast] = useState(null);
+    const [inputValue, setInputValue] = useState(initialValue || "");
 
 
-    const handleTextAreaChange = (e) => {
-        const inputValue = e.target.value;
-        setComment(inputValue);
-    };
 
-    const handleSave = () => {
-        if (!comment || comment.trim() === "") {
-            // Show toast if comment is empty
+
+  const handleSave = () => {
+    console.log("handleSave called with inputValue:", inputValue);
+        if (!inputValue || inputValue.trim() === "") {
             setShowToast({
                 key: "error",
                 label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
@@ -35,10 +33,8 @@ const EditWorkerDetailsPopUp = ({ ...props }) => {
             });
             return;
         }
-        // remove the toast if comment is valid
         setShowToast(null);
-        // Call the onSubmit function with the valid comment
-        props?.onSubmit(comment);
+        onSubmit(fieldKey, inputValue); // send back key and value
     };
 
     const handleKeyPress = (e) => {
@@ -52,22 +48,22 @@ const EditWorkerDetailsPopUp = ({ ...props }) => {
         {/*TODO: ADD LOGIC TO CLEAR SAVED FIELDS NAMES */}
             <PopUp
                 style={{ width: "700px" }}
-                onClose={props?.onClose}
-                heading={t(`HCM_AM_EDIT_${props?.editFieldName}_LABEL`)}
+                onClose={onClose}
+                heading={t(`HCM_AM_EDIT_${editFieldName}_LABEL`)}
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">
-                            {props?.editFieldName}<span className="required"> *</span>
+                            {editFieldName}<span className="required"> *</span>
                         </div>
                         <TextArea
                             style={{ maxWidth: "100%" }}
-                            value={comment}
-                            onChange={handleTextAreaChange}
-                            onKeyPress={handleKeyPress}
+                            value={inputValue}
+                            onChange={(e) => setInputValue(e.target.value)}
+                            
                         />
                     </div>
                 ]}
-                onOverlayClick={props?.onClose}
+                onOverlayClick={onClose}
                 equalWidthButtons={true}
                 footerChildren={[
                     <Button
@@ -79,7 +75,7 @@ const EditWorkerDetailsPopUp = ({ ...props }) => {
                         variation="secondary"
                         label={t(`HCM_AM_CLOSE`)}
                         title={t(`HCM_AM_CLOSE`)}
-                        onClick={props?.onClose}
+                        onClick={onClose}
                     />,
                     <Button
                         key="submit-button"

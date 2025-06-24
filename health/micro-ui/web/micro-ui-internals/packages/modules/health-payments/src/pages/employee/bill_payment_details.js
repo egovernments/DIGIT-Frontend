@@ -17,7 +17,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  * @param {boolean} editBillDetails - Whether bill is editable or not.
  * @returns {ReactFragment} A React Fragment containing the attendance details.
  */
-const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editBillDetails true or false to toggle actions
+const BillPaymentDetails = ({ editBillDetails = true }) => { //TODO : set editBillDetails true or false to toggle actions
   const location = useLocation();
   const billID = location.state?.billID;
   console.log("billID", billID);
@@ -30,6 +30,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
   const [billData, setBillData] = useState(null);
   const [paginatedData, setPaginatedData] = useState([]);
   const [openSendForEditPopUp, setOpenSendForEditPopUp] = useState(false);
+  const [selectedRows, setSelectedRows] = useState([]);
 
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [limitAndOffset, setLimitAndOffset] = useState({
@@ -128,24 +129,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
     };
 
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);  
-  
-//   const filterDataByStatus = (billData,code) => {
-//     console.log("here DataByStatus", code);
-//    const statusMap = {
-//         VERIFIED: ["VERIFIED","PAYMENT_FAILED"],
-//         PAYMENT_GENERATED: ["PAID"],
-//         NOT_VERIFIED: ["VERIFICATION_FAILED", "PENDING_VERIFICATION"]
-//     };
-
-//     const filterStatuses = statusMap[code] || [];
-
-//     const filteredData = billData.billDetails?.filter(item =>
-//         filterStatuses.includes(item.status)
-//     );
-//     console.log("filteredData", filteredData);
-
-//     setTableData(filteredData || []);
-// };
+ 
   const fetchIndividualIds = (billData) => {
     console.log("here ???0990")
     const billDetails = billData?.billDetails || [];
@@ -155,7 +139,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
       console.log("Individual IDs:", ids);
     }
   }
-
+ 
  
   const reqMdmsCriteria = {
       url: `/${mdms_context_path}/v1/_search`,
@@ -205,7 +189,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
     changeQueryName: "allIndividuals"
   };
 
-  const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
+  const { isLoading: isAllIndividualsLoading, data: AllIndividualsData,refetch: refetchAllIndividuals } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
   function addIndividualDetailsToBillDetails(billDetails, individualsData, workerRatesData) {
     return billDetails.map((billDetail) => {
       const individual = individualsData?.Individual?.find(
@@ -229,23 +213,72 @@ const BillPaymentDetails = ({ editBillDetails = false }) => { //TODO : set editB
       };
     });
   }
-  // useEffect(() => {
-  //   console.log("AllIndividualsData", AllIndividualsData);
-  //   if (billData && AllIndividualsData) {
-  //     const updatedBillDetails = addIndividualDetailsToBillDetails(billData?.billDetails, AllIndividualsData,workerRatesData);
-  //     setTableData(updatedBillDetails);
-  //   }
-  // }, [AllIndividualsData, billData, workerRatesData]);
 
-  // useEffect(() => {
-  //   if (BillData) {
-  //   console.log("BillData1223", BillData);
-  //   const bill = BillData.bills?.[0] || null;
-  //   setBillData(bill); 
-  //   filterDataByStatus(bill,activeLink.code);//TODO: change status
-  //   fetchIndividualIds(bill);
-  //   }
-  // },[BillData])
+   const updateIndividualMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/individual/v1/bulk/_update`
+    });
+
+const triggerIndividualBulkUpdate = async(individualsData, selectedRows) => {
+  console.log("triggerIndividualBulkUpdate called with:", individualsData, selectedRows);
+  const selectedIds = selectedRows.map(row => row?.payee?.identifier);
+  const updatedIndividualsList = individualsData?.Individual?.filter(individual =>
+      selectedIds.includes(individual.id)
+    ).map(individual => {
+      const matchingRow = selectedRows.find(row => row?.payee?.identifier === individual.id);
+
+      return {
+        ...individual,
+        name: {
+          ...individual.name,
+          givenName: matchingRow?.givenName || individual.name?.givenName,
+        },
+        mobileNumber: matchingRow?.mobileNumber || individual.mobileNumber,
+      };
+});
+
+  try {
+        await updateIndividualMutation.mutateAsync(
+            {
+                body: { 
+                  Individuals: updatedIndividualsList
+                 },
+            },
+            {
+                onSuccess: async (individualUpdateResponse) => {
+                  selectedRows.forEach((row) => {
+                  updateBillDetailWorkflow(row, "EDIT");
+                });
+              }
+            })
+            refetchAllIndividuals();
+          }
+          catch (error) {
+            console.error("Error updating individuals:", error);
+            // setShowToast({
+            //             key: "error",
+            //             label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),//TODO UPDATE TOAST MSG
+            //             transitionTime: 3000,
+            //         });
+
+            }
+          
+  
+}
+    const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
+       url: `/${expenseContextPath}/v1/bill/details/status/_update`,
+    });
+    const updateBillDetailWorkflow = (billDetail, wfState) => {
+        updateBillDetailMutation.mutateAsync({
+            body: {
+                billDetail,
+                workflow: {
+                    action: wfState,
+                },
+                businessService: "PAYMENTS.BILLDETAILS",
+            },
+        })
+            }
+
 useEffect(() => {
   if (BillData) {
     const bill = BillData.bills?.[0] || null;
@@ -279,7 +312,7 @@ useEffect(() => {
    const statusMap = {
         VERIFIED: ["VERIFIED","PAYMENT_FAILED"],
         PAYMENT_GENERATED: ["PAID"],
-        NOT_VERIFIED: ["VERIFICATION_FAILED", "PENDING_VERIFICATION"]
+        NOT_VERIFIED: ["VERIFICATION_FAILED", "PENDING_VERIFICATION","PENDING_EDIT","EDITED"]
     };
     const filtered = enriched.filter((item) =>
       statusMap[activeLink.code]?.includes(item.status)
@@ -330,9 +363,9 @@ console.log("mob num:", tableData);
   <span
     style={{
       backgroundColor:
-        billData?.status === "FULLY_VERIFIED"
+        billData?.status === "FULLY_VERIFIED" || billData?.status === "FULLY_PAID"
           ? "#00703C" // Green
-          : billData?.status === "PARTIALLY_VERIFIED"
+          : billData?.status === "PARTIALLY_VERIFIED" || billData?.status === "PARTIALLY_PAID" 
           ? "#9E5F00" // Yellow
           : "#B91900", // Red fallback
       color: "#fff",
@@ -414,79 +447,18 @@ console.log("mob num:", tableData);
                 style={{ width: "100%", }}
                 data={paginatedData} totalCount={tableData.length} selectableRows={true} 
                 status={activeLink?.code} editBill={editBillDetails}
+                onSelectionChange={setSelectedRows}
+                selectedBills={selectedRows}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} 
                     />
                     </Fragment>
   )}
             </Card>
-        {/* <Card className="bottom-gap-card-payment">
-          <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
-        </Card> */}
-        {/* {showLogs && <Card >
-          <div className="card-heading">
-            <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
-            <Button
-              className="custom-class"
-              icon="Visibility"
-              iconFill=""
-              label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
-              onClick={handleCommentLogClick}
-              options={[]}
-              optionsKey=""
-              size=""
-              style={{}}
-              title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
-              variation="secondary"
-            />
-          </div>
-        </Card>} */}
-        {/* {showCommentLogPopup && (
-          <CommentPopUp
-            onClose={onCommentLogClose}
-            businessId={data?.[0]?.musterRollNumber}
-            heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
-          />
-        )} */}
+        
       </div>
 
-      {/* Alert Pop-Up for edit */}
-      {/* {openEditAlertPopUp && <AlertPopUp
-        onClose={closeActionBarPopUp}
-        alertHeading={t(`HCM_AM_ALERT_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_PROCEED`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
-        onPrimaryAction={() => {
-          history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
-        }} */}
-      {/* />} */}
-
-      {/* Alert Pop-Up for approve */}
-      {/* {openApproveAlertPopUp && <AlertPopUp
-        onClose={() => {
-          setOpenApproveAlertPopUp(false);
-        }}
-        alertHeading={t(`HCM_AM_ALERT_APPROVE_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
-        onPrimaryAction={() => {
-          triggerMusterRollApprove();
-        }}
-      />} */}
-
-      {/* approve comment pop-up*/}
-      {/* {openApproveCommentPopUp && <ApproveCommentPopUp
-        onClose={() => {
-          setOpenApproveCommentPopUp(false);
-        }}
-        onSubmit={(comment) => {
-          setComment(comment);
-          setOpenApproveCommentPopUp(false);
-          setOpenApproveAlertPopUp(true);
-        }}
-      />} */}
+     
  {openSendForEditPopUp && <SendForEditPopUp
         isEditTrue={editBillDetails}
         onClose={() => {
@@ -513,7 +485,11 @@ console.log("mob num:", tableData);
                 bottom: "40px",
               }}
               onClick={() => {
-                setOpenSendForEditPopUp(true);
+                // setOpenSendForEditPopUp(true);
+                //todo: workflow update
+                selectedRows.forEach((row) => {
+                  updateBillDetailWorkflow(row, "SEND_BACK_FOR_EDIT");
+                });
               }}  
               optionsKey="name"
               size=""
@@ -521,7 +497,7 @@ console.log("mob num:", tableData);
               title=""
               type="button"
               variation="secondary"
-
+              isDisabled={selectedRows.length === 0}
             />,
                 <Button
               className="custom-class"
@@ -549,7 +525,8 @@ console.log("mob num:", tableData);
                 bottom: "40px",
               }}
               onClick={() => {
-                setOpenSendForEditPopUp(true);
+                triggerIndividualBulkUpdate(AllIndividualsData,selectedRows);
+                // setOpenSendForEditPopUp(true);
               }}  
               optionsKey="name"
               size=""
@@ -557,6 +534,7 @@ console.log("mob num:", tableData);
               title=""
               type="button"
               variation="primary"
+              isDisabled={selectedRows.length === 0}
 
             />
             ]
@@ -601,70 +579,9 @@ console.log("mob num:", tableData);
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>                    
                     <div style={{ width: "100%", display: "flex", flexDirection: "row", height: "74vh", minHeight: "60vh" }}>
                         
-                        {/* {
-                        tableData && 
-                        <Card style={{ width: "100%", }}> */}
-                            {/* {tableData != null && <div className="summary-sub-heading">{t(selectedProject?.name)}</div>}
-                            {tableData != null && <div style={{ color: "#0b4b66" }}>{t(selectedLevel?.name)}</div>} */}
+                        
                             <div>
-                                {/* {
-                                // (approvalCount !== null && pendingApprovalCount !== null) && 
-                                (
-                                    <Tab
-                                        // activeLink={activeLink?.code}
-                                        configItemKey="code"
-                                        configDisplayKey="name"
-                                        itemStyle={{ width: "400px" }}
-                                        configNavItems={[
-                                            {
-                                                code: "NOT_VERIFIED",
-                                                name: `${`${t(`HCM_AM_NOT_VERIFIED`)} `}`,
-                                            },
-                                            {
-                                              code: "VERIFIED",
-                                              name: `${`${t(`HCM_AM_VERIFIED`)} `}`,
-                                            },
-                                            {
-                                                code: "PAYMENT_GENERATED",
-                                                name: `${`${t(`HCM_AM_PAYMENT_GENERATED`)} `}`,
-                                            },
-                                        ]}
-                                        navStyles={{}}
-                                        // onTabClick={(e) => {
-                                        //     setLimitAndOffset((prev) => {
-                                        //         return {
-                                        //             limit: prev.limit,
-                                        //             offset: 0,
-                                        //         };
-                                        //     });
-                                        //     setCurrentPage(1);
-                                        //     setActiveLink(e);
-                                        // }}
-                                        // setActiveLink={setActiveLink}
-                                        showNav={true}
-                                        style={{}}
-                                    />
-                                )} */}
-                                {/* <Card style={{ width: "100%", }}>
-                {<VerifyAndGeneratePaymentsTable 
-                style={{ width: "100%", }}
-                data={tableData} totalCount={totalCount} selectableRows={false} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
-                    handlePerRowsChange={handlePerRowsChange} 
-                    />}
-            </Card> */}
-                                {/* {tableData && <div style={{ maxHeight: approvalCount !== null && pendingApprovalCount !== null ? infoDescription ? "60vh" : "74vh" : "30vh" }}> <Card>
-                                    <BillInboxTable
-                                        isFetching={isFetching}
-                                        tableData={tableData}
-                                        currentPage={currentPage}
-                                        rowsPerPage={rowsPerPage}
-                                        handlePageChange={handlePageChange}
-                                        handlePerRowsChange={handlePerRowsChange}
-                                        totalCount={totalCount}
-                                        status={activeLink.code}
-                                        infoDescription={infoDescription}
-                                    ></BillInboxTable>
-                                </Card></div>} */}
+                               
                             </div>
                         {/* </Card>} */}
                     </div>
