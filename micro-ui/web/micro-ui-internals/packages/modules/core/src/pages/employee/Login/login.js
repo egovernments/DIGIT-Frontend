@@ -29,10 +29,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   const [user, setUser] = useState(null);
   const [showToast, setShowToast] = useState(null);
   const [disable, setDisable] = useState(false);
-  // const { t } = useTranslation();
-
-
   const history = useHistory();
+  // const { t } = useTranslation();
 
   useEffect(() => {
     if (!user) {
