@@ -33,12 +33,12 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
 
   return (
     <React.Fragment>
-      <div className="digit-privacy-checkbox">
+      <div className="digit-privacy-checkbox" style={{ position: "relative", marginTop: "-1.5rem" }}>
         <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange} id={"privacy-component-check"}></CheckBox>
         <Button
           label={t(`ES_PRIVACY_POLICY`)}
           variation={"link"}
-          size={"medium"}
+          size={"small"}
           onClick={onButtonClick}
           // isSuffix={true}
           style={{ marginBottom: "1.18rem", paddingLeft: "0.2rem" }}
