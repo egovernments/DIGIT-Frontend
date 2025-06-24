@@ -112,10 +112,16 @@
 }
 
 .sandbox-onboarding-wrapper {
-  height: 650px !important;
-  width: 500px !important;
+
+  height: 80vh !important;
+  width: 30vw !important;
+  max-width: 500px !important;
+  max-height: 650px !important;
   display: flex;
+  -ms-flex-pack: justify;
   justify-content: space-between;
+
+
 
   .employee-card-sub-header {
     font-size: 1.5rem;
@@ -168,6 +174,19 @@
 
   .digit-description {
     margin-bottom: -1rem;
+  }
+}
+
+
+@media (max-width: 768px) {
+  .sandbox-onboarding-wrapper {
+    height: 80vh !important;
+    width: 80vw !important;
+    max-width: 500px !important;
+    max-height: 650px !important;
+    display: flex;
+    -ms-flex-pack: justify;
+    justify-content: space-between;
   }
 }
 
@@ -246,9 +265,30 @@
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .sandbox-signup-form {
+    height: 100vh !important;
+    align-items: center !important;
+    display: flex !important;
+  }
+
+  }
+
 .sandbox-signup-form .digit-field .digit-error-message {
   font-size: 0.8rem;
 }
+
+.sandbox-signup-form .digit-field .label-field-wrapper {
+  all: unset !important;
+  grid-gap: .25rem !important;
+  .digit-field{
+    margin-bottom: unset !important;
+  }
+  .digit-header-content .label-container .label-styles{
+    margin-bottom: 5px !important;
+  }
+}
+
 
 .sandbox-signup-form {
   .digit-employee-card.signupCardClassName {

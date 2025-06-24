@@ -20,7 +20,7 @@ export const SignUpConfig = [
           },
           error: "ERR_ACCOUNT_NAME_REQUIRED",
         },
-        // infoMessage: "SANDBOX_SIGNUP_ACCOUNT_NAME_TOOLTIP"
+        infoMessage: "SANDBOX_SIGNUP_ACCOUNT_NAME_TOOLTIP"
       },
       {
         label: "CORE_SIGNUP_EMAILID",
