@@ -352,15 +352,25 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                 ?.map((field, fieldIndex) => {
                   if (getFieldType(field) === "checkbox") {
                     return (
-                      <CheckBox
-                        mainClassName={"app-config-checkbox-main"}
-                        labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
-                        onChange={(e) => { }}
-                        value={""}
-                        label={t(field?.label)}
-                        isLabelFirst={false}
-                        disabled={field?.readOnly || false}
-                      />
+                      <div
+                        className={`app-preview-field-pair ${
+                          selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                            ? `app-preview-selected`
+                            : selectedField?.id && selectedField?.id === field?.id
+                            ? `app-preview-selected`
+                            : ``
+                        }`}
+                      >
+                        <CheckBox
+                          mainClassName={"app-config-checkbox-main"}
+                          labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
+                          onChange={(e) => {}}
+                          value={""}
+                          label={t(field?.label)}
+                          isLabelFirst={false}
+                          disabled={field?.readOnly || false}
+                        />
+                      </div>
                     );
                   }
                   return (
