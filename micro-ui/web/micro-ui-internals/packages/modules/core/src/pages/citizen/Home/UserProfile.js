@@ -925,12 +925,14 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
         <Footer actionFields={[<SubmitBar t={t} label={t("CORE_COMMON_SAVE")} onSubmit={updateProfile} />]} className="" setactionFieldsToRight />
       ) : null}
       {toast && (
-        <Toast
+        <div className="profile-update-toast">
+          <Toast
           type={toast.key}
           label={t(toast.key === "success" ? `CORE_COMMON_PROFILE_UPDATE_SUCCESS` : toast.action)}
           onClose={() => setToast(null)}
           style={{ maxWidth: "670px" }}
         />
+        </div>
       )}
 
       {openUploadSlide == true ? (
