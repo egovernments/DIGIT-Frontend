@@ -25,10 +25,17 @@ const MyCampaignNew = () => {
   const [isConfigReady, setIsConfigReady] = useState(false);
 
    useEffect(() => {
-    const savedIndex = parseInt(sessionStorage.getItem("HCM_SELECTED_TAB_INDEX")) || 0;
+    let savedIndex = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX");
+
+    // If not set, default to 0 and save it in sessionStorage
+    if (savedIndex === null || isNaN(parseInt(savedIndex))) {
+      savedIndex = 0;
+      Digit.SessionStorage.set("HCM_SELECTED_TAB_INDEX", savedIndex);
+    } else {
+      savedIndex = parseInt(savedIndex);
+    }
 
     const configList = myCampaignConfigNew?.myCampaignConfigNew || [];
-
     setSelectedTabIndex(savedIndex);
     setConfig(configList[savedIndex]);
     setTabData(
@@ -42,9 +49,9 @@ const MyCampaignNew = () => {
   }, []);
 
   const onTabChange = (n) => {
-    sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", n); // Save to sessionStorage
+    Digit.SessionStorage.set("HCM_SELECTED_TAB_INDEX", n);
     setSelectedTabIndex(n);
-    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n ? true : false })));
+    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n })));
     setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
   };
   useEffect(() => {

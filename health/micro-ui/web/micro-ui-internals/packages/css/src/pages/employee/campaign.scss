@@ -610,15 +610,15 @@
 }
 .name-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 0rem;
   font-weight: bold;
   text-wrap: nowrap;
+  width: 3.125rem;
 }
 .date-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 0rem;
   font-weight: bold;
   text-wrap: nowrap;
+  width: 3.125rem;
 }
 .pop-display {
   display: flex;
@@ -629,9 +629,9 @@
 }
 .end-date-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 1rem;
   font-weight: bold;
   text-wrap: nowrap;
+  width: 3.125rem;
 }
 
 .app-config-version-tags {
