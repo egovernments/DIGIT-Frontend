@@ -276,7 +276,7 @@ const BillInboxComponent = () => {
                             links={[
                                 {
                                     url: "/employee/payments/my-bills",
-                                    text: "HCM_AM_MY_BILLS",
+                                    text: t("HCM_AM_MY_BILLS"),
                                 },
                             ]}
                         ></InboxSearchLinkHeader>
