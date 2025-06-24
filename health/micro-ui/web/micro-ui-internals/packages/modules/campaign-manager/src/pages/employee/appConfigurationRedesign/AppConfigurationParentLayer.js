@@ -224,7 +224,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
         },
         onSuccess: async (data) => {
-          setShowToast({ key: "success", label: "CACHE_DONE" });
+          // setShowToast({ key: "success", label: "CACHE_DONE" });
           refetchCache();
         },
       }
@@ -266,7 +266,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
           onSuccess: async (data) => {
-            setShowToast({ key: "success", label: "CACHE_CLEAR" });
+            // setShowToast({ key: "success", label: "CACHE_CLEAR" });
           },
         }
       );
