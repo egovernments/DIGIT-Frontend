@@ -26,6 +26,8 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     const [billID, setBillID] = useState(null);//to search by bill number
     const [billStatus, setBillStatus] = useState(null);
     const [taskStatus, setTaskStatus] = useState(null);
+    const [inProgressBills, setInProgressBills] = useState({});
+    const [transferPollTimers, setTransferPollTimers] = useState({});
     // const [isEditBill, setIsEditBill] = useState(false);
     //TODO: SET isEditBill based on the ROLE
     const [dateRange, setDateRange] = useState({
@@ -64,6 +66,48 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
+    const taskStatusAPI = Digit.Hooks.useCustomAPIMutationHook({
+    url: `/health-expense/v1/task/_status`,
+});
+
+const pollTaskUntilDone = async (billId) => {
+    console.log("Polling...", billId);
+
+    const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+
+    try {
+        const statusResponse = await taskStatusAPI.mutateAsync({
+            body: {
+                task: { billId: billId, type: "Transfer" },
+            },
+        });
+
+        const status = statusResponse?.task?.status;
+        const type = statusResponse?.task?.type;
+
+         if (status === "IN_PROGRESS" && type === "Transfer") {
+            setTransferPollTimers(prev => {
+                if (prev[billId]) clearTimeout(prev[billId]);
+                const timer = setTimeout(() => pollTaskUntilDone(billId), POLLING_INTERVAL);
+                return { ...prev, [billId]: timer };
+            });
+        }else  {
+            setInProgressBills(prev => ({ ...prev, [billId]: false }));
+            setTransferPollTimers(prev => {
+                if (prev[billId]) clearTimeout(prev[billId]);
+                const newTimers = { ...prev };
+                delete newTimers[billId];
+                return newTimers;
+            });
+            refetchBill();
+        } 
+    } catch (err) {
+        console.error("Polling failed for billId", billId, err);
+    }
+};
+    
+    
+    
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);
         setLimitAndOffset({ ...limitAndOffset, offset: (page - 1) * rowsPerPage });
@@ -83,8 +127,44 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
         if (BillData) {
             setTableData(BillData.bills);
             setTotalCount(BillData?.pagination?.totalCount);
+             BillData.bills.forEach(async (bill) => {
+                const billId = bill?.id;
+
+            try {
+                const res = await taskStatusAPI.mutateAsync({
+                    body: {
+                        task:{
+                        billId: billId,
+                        type:"Transfer", // Assuming the type is Transfer, adjust as necessary
+                    }
+                },
+                });
+                console.log("Task status response for billId:", billId, res);
+
+                if (res?.task?.status === "IN_PROGRESS") {
+                    setInProgressBills(prev => ({ ...prev, [billId]: true }));
+                    if (res?.task?.type === "Transfer") {
+                        console.log("Polling started for billId:", billId);
+                        pollTaskUntilDone(billId);
+                    }
+                } else {
+                    console.log("inside else 2")
+                    setInProgressBills(prev => ({ ...prev, [billId]: false }));
+                }
+            } catch (e) {
+                console.warn("Task status check failed for", billId, e);
+            }
+        });
+    
+            
         }
     }, [BillData])
+
+    useEffect(() => {
+    return () => {
+        Object.values(transferPollTimers).forEach(clearTimeout);
+    };
+}, []);
 
     useEffect(() => {
         refetchBill();
@@ -136,6 +216,8 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
                     handlePerRowsChange={handlePerRowsChange}
                     isLoading={isTableActionLoading}
                     setIsLoading={setIsTableActionLoading}
+                    inProgressBills={inProgressBills}
+                    setInProgressBills={setInProgressBills}
                     />
                 )}
             </Card>

@@ -24,6 +24,8 @@ const VerifyAndGeneratePaymentsTable = ({
     onTaskDone,
     isLoading,
     setIsLoading,
+    inProgressBills = {},
+    setInProgressBills,
     ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();
@@ -87,7 +89,7 @@ const VerifyAndGeneratePaymentsTable = ({
                     const taskId = verifyResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
-                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 });
+                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 }); //TODO UPDATE TOAST MSG 
                         return;
                     }
 
@@ -98,10 +100,14 @@ const VerifyAndGeneratePaymentsTable = ({
                     const pollStatus = async () => {
                         try {
                             const statusResponse = await getTaskStatusMutation.mutateAsync({
-                                body: { taskId: taskId },
+                                body: {
+                                     task: {
+                                        id: taskId
+                                    } 
+                                    },
                             });
 
-                            const status = statusResponse?.status;
+                            const status = statusResponse?.task?.status;
                             setTaskStatus?.(status);
                              if (status === "DONE") {
                                 setIsLoading(false);
@@ -130,6 +136,96 @@ const VerifyAndGeneratePaymentsTable = ({
                             }
                         } catch (err) {
                              setIsLoading(false);
+                            setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });//TODO UPDATE TOAST MSG
+                        }
+                    };
+
+                    pollStatus();
+                },
+                onError: (error) => {
+                     setIsLoading(false);
+                    setShowToast({
+                        key: "error",
+                        label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),//TODO UPDATE TOAST MSG
+                        transitionTime: 3000,
+                    });
+                },
+            }
+        );
+    } catch (error) {
+         setIsLoading(false);
+        setShowToast({
+            key: "error",
+            label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),//TODO UPDATE TOAST MSG
+            transitionTime: 3000,
+        });
+    }
+};
+
+const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/health-expense/v1/payment/_transfer`,
+    });
+
+    const triggerGeneratePayment = async (bill) => {
+        console.log("triggerGeneratePayment", bill);
+    try {
+        await generatePaymentMutation.mutateAsync(
+            {
+                body: { bill },
+            },
+            {
+                onSuccess: async (paymentResponse) => {
+                    const taskId = paymentResponse?.taskId;
+                    if (!taskId) {
+                         setIsLoading(false);
+                        setShowToast({ key: "error", label: t("HCM_AM_TASK_ID_NOT_FOUND"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
+                        return;
+                    }
+
+                    let attempts = 0;
+                    const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+                    const MAX_ATTEMPTS = 20;
+
+                    const pollStatus = async () => {
+                        try {
+                            const statusResponse = await getTaskStatusMutation.mutateAsync({
+                               body: {
+                                     task: {
+                                        id: taskId
+                                    } 
+                                    },
+                            });
+
+                            const status = statusResponse?.status;
+                            setTaskStatus?.(status);
+                             if (status === "DONE") {
+                                setIsLoading(false);
+                setShowToast({
+                  key: "success",
+                  label: t("HCM_AM_PAYMENT_GENERATION_DONE"),
+                  transitionTime: 5000,
+                });
+                setInProgressBills(prev => ({ ...prev, [bill?.id]: false }));
+                onTaskDone?.(); //  trigger bill search in parent
+              }  else if (status === "IN_PROGRESS") {
+                setInProgressBills(prev => ({ ...prev, [bill?.id]: true }));
+                         setIsLoading(true); // start loader
+                        //TODO UPDATE TOAST MSG
+                        setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
+
+                                if (attempts < MAX_ATTEMPTS) {
+                                    attempts++;
+                                    setTimeout(pollStatus, POLLING_INTERVAL);
+                                } else {
+                                     setIsLoading(false);
+                                    setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
+                                }
+                            } else {
+                                 setIsLoading(false);
+                                // setShowToast({ key: "error", label: t(`HCM_AM_UNEXPECTED_STATUS_${status}`), transitionTime: 3000 });
+                            }
+                        } catch (err) {
+                             setIsLoading(false);
                             setShowToast({ key: "error", label: t("HCM_AM_TASK_STATUS_ERROR"), transitionTime: 3000 });
                         }
                     };
@@ -140,7 +236,7 @@ const VerifyAndGeneratePaymentsTable = ({
                      setIsLoading(false);
                     setShowToast({
                         key: "error",
-                        label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),
+                        label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_PAYMENT_GENERATION_ERROR"),
                         transitionTime: 3000,
                     });
                 },
@@ -150,11 +246,12 @@ const VerifyAndGeneratePaymentsTable = ({
          setIsLoading(false);
         setShowToast({
             key: "error",
-            label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),
+            label: t("HCM_AM_PAYMENT_GENERATION_EXCEPTION"),//TODO UPDATE TOAST MSG
             transitionTime: 3000,
         });
     }
 };
+
 const getAvailableActions = (status) => {
   switch (status) {
     case "PARTIALLY_VERIFIED":
@@ -293,7 +390,9 @@ case "PENDING_VERIFICATION":
     let backgroundColor = "#B91900"; // Default: red
 
     if (status === "FULLY_VERIFIED") backgroundColor = "#00703C"; // Green
+    else if (status === "FULLY_PAID") backgroundColor = "#00703C"; // Green
     else if (status === "PARTIALLY_VERIFIED") backgroundColor = "#9E5F00"; // Yellow
+    else if (status === "PARTIALLY_PAID") backgroundColor = "#9E5F00"; // Yellow
 
     return (
       <span
@@ -319,17 +418,20 @@ case "PENDING_VERIFICATION":
                 selector: (row, index) => {
                     const reportDetails = row?.additionalDetails?.reportDetails;
                     const billId = row?.billNumber;
+                    const id = row?.id;
                     const isLastRow = index === props.totalCount - 1;
                     const status = row?.status || "UNKNOWN";
                     const actions = getAvailableActions(status);
-
+                    const isInProgress = inProgressBills?.[id] === true;
+                    console.log("isInProgress", isInProgress, id, inProgressBills);
                     const options = actions.map((code) => ({
                         code,
                         name: t(code),
                     }));
 
                     return (!props?.editBill?(
-                        // reportDetails?.status === "COMPLETED" ? 
+                        // reportDetails?.status === "COMPLETED" ?
+                        !isInProgress ? 
                         <Button
                             className="custom-class"
                             iconFill=""
@@ -338,6 +440,7 @@ case "PENDING_VERIFICATION":
                             isSuffix
                             label={t(`HCM_AM_TAKE_ACTION`)}
                             title={t(`HCM_AM_TAKE_ACTION`)}
+                            // isDisabled={isInProgress}
                             showBottom={isLastRow && props.data.length !== 1? false : true}
                             // showBottom={!(props?.data?.length === 1 || isLastRow)}
                             onOptionSelect={(value) => {
@@ -360,8 +463,9 @@ case "PENDING_VERIFICATION":
                                 } else if (value.code === "HCM_AM_EDIT") {                                    
                                 setShowToast({ key: "error", label: t(`HCM_AM_EDIT_FAILED`), transitionTime: 3000 });
                                 }
-                                else if (value.code === "HCM_AM_GENERATE_PAYMENT") {                                   
-                                    setShowToast({ key: "error", label: t(`HCM_AM_PAYMENT_GENERATION_FAILED`), transitionTime: 3000 });
+                                else if (value.code === "HCM_AM_GENERATE_PAYMENT") {      
+                                    triggerGeneratePayment(row);                             
+                                    // setShowToast({ key: "error", label: t(`HCM_AM_PAYMENT_GENERATION_FAILED`), transitionTime: 3000 });
                                 }
                                 else if (value.code === "HCM_AM_DOWNLOAD_REPORT") {
                                     if (reportDetails?.excelReportId) {
@@ -377,17 +481,14 @@ case "PENDING_VERIFICATION":
                             type="actionButton"
                             variation="secondary"
                         /> 
-                        // :
-                            // <div>
-                            //     <Tag
-                            //         {...(reportDetails?.status !== "FAILED" && { icon: "Info" })}
-                            //         label={reportDetails?.status === "FAILED" ? t("HCM_AM_FAILED_REPORT_GENERATION") : t("HCM_AM_PROGRESS_REPORT_GENERATION")}
-                            //         labelStyle={{}}
-                            //         showIcon={true}
-                            //         style={{}}
-                            //         {...(reportDetails?.status === "FAILED" && { type: "error" })}
-                            //     />
-                            // </div>
+                        :
+                          <div>
+                            <Tag
+                                icon="Info"
+                                label={t("HCM_AM_ACTION_IN_PROGRESS")}
+                                showIcon={true}
+                            />
+                            </div>
                             )
                             :(
                                 <Button
