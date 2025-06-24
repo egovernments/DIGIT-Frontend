@@ -16,10 +16,13 @@
   "peerDependencies": {
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router-dom": "6.25.1",
     "@tanstack/react-query": "^5.62.16"
   },
+  "resolutions": {
+    "react":"^19.0.0"
+  },
   "dependencies": {
+    "react-router-dom": "6.25.1",
     "@cyntler/react-doc-viewer": "1.10.3",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.14",
     "@egovernments/digit-ui-svg-components": "1.0.0-webpack-23",
@@ -52,8 +55,8 @@
     "cross-env": "7.0.3",
     "lint-staged": "12.3.7",
     "webpack": "^5.97.1",
-    "webpack-cli": "^4.10.0",
-    "webpack-dev-server": "^4.6.0"
+    "webpack-cli": "^6.0.1",
+    "webpack-dev-server": "^5.2.0"
   },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",

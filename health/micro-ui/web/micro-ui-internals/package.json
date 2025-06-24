@@ -5,7 +5,9 @@
   "workspaces": [
     "example",
     "packages/ui-components",
-    "packages/modules/*"
+    "packages/modules/*",
+    "packages/libraries",
+    "packages/react-components"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -30,6 +32,9 @@
     "devD:health-dss": "cd packages/modules/health-dss && yarn start",
     "build": "run-s build:**",
     "build:ui-components": "cd packages/ui-components && yarn build",
+    "build:react-components": "cd packages/react-components && yarn build",
+    "build:libraries": "cd packages/libraries && yarn build",
+        "build:core": "cd packages/modules/core && yarn build",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn build",
     "buildD:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
@@ -48,6 +53,8 @@
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "resolutions": {
+    "**/react": "19.0.0",
+  "**/react-dom": "19.0.0", 
     "**/@babel/runtime": "7.20.1",
     "**/styled-components": "5.0.0",
     "**/@babel/traverse": "7.25.9",
@@ -82,7 +89,7 @@
     "@egovernments/digit-ui-module-core": "1.8.1-test.100",
     "@egovernments/digit-ui-react-components": "1.8.16-upgrade.14",
     "@tanstack/react-query": "^5.62.16",
-    "babel-loader": "^9",
+    "babel-loader": "8.0.0",
     "cross-env": "^7.0.3",
     "css-loader": "5.2.6",
     "http-proxy-middleware": "1.3.1",
