@@ -51,7 +51,7 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
       </HeaderComponent>
       <p className="dates-description digit-header-content SubHeadingClass">{t(`HCM_CAMPAIGN_DATES_DESC`)}</p>
       <LabelFieldPair className={"boldLabel"}>
-        <div className="digit-header-content label   ">
+        <div className="digit-header-content label " style={{ display: "flex" ,alignItems:"center" }} >
           <div style={{ marginTop: "1rem" }}>{t(`HCM_CAMPAIGN_DATES`)}</div>
           <span className="mandatory-date">*</span>
         </div>
@@ -91,7 +91,12 @@ const DateSelection = ({ onSelect, formData, ...props }) => {
             min={Digit.Utils.date.getDate(Date.now() + 2 * ONE_DAY_IN_MS)}
             onChange={(d) => {
               setStartValidation(true);
-              setEndDate(d);
+               const localDate = new Date(d);
+              localDate.setHours(0, 0, 0, 0); // Local midnight
+              // Add 5.5 hours so UTC becomes local midnight
+              const adjustedDate = new Date(localDate.getTime() + 19800000);
+              const isoString = adjustedDate.toISOString(); 
+              setEndDate(isoString);
             }}
           />
         </div>
