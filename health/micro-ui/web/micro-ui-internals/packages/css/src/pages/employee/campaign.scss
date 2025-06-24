@@ -331,7 +331,7 @@
 }
 .mobile-bezel-outerWrapper {
   transform: scale(0.8);
-  margin-top: -4rem;
+  margin-top: -5rem;
 }
 
 .app-config-tag-page-fixed {
@@ -755,6 +755,7 @@
 }
 .app-config-flex-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin-right: 24rem;
   margin-left: unquote("min(10%, 12rem)");
