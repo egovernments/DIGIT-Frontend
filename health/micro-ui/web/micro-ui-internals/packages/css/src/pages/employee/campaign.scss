@@ -328,11 +328,6 @@
   box-shadow: none;
   border-style: none;
   padding: 1rem;
-  &::-webkit-scrollbar-button {
-    display: none !important;
-    height: 0 !important;
-    width: 0 !important;
-  }
 }
 .mobile-bezel-outerWrapper {
   transform: scale(0.8);
@@ -342,7 +337,7 @@
 .app-config-tag-page-fixed {
   position: fixed;
   top: 15rem;
-  left: 69rem;
+  left: 67rem;
   color: theme(digitv2.lightTheme.primary-2);
   font-family: theme(digitv2.fontFamily.rc);
   font-weight: 700;
@@ -765,6 +760,7 @@
   margin-left: unquote("min(10%, 12rem)");
   gap: 2rem;
   width: fit-content;
+  align-items: flex-end;
 }
 .feature-container {
   display: flex;
@@ -772,9 +768,9 @@
 .app-config {
   width: auto;
   margin-top: 1rem;
-  .toggle-option-container{
+  .toggle-option-container {
     height: 7.5rem;
-  } 
+  }
 }
 .progress-popup {
   .digit-popup-close {
