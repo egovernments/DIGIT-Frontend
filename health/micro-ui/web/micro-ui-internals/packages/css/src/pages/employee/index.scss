@@ -917,7 +917,7 @@ tbody {
 .configure-app-tabs {
   .configure-app-tab-head {
     border: 1px solid #d6d5d4;
-    border-radius: 0.25rem;
+    border-radius: 0px;
     padding: 0.5rem 1rem;
     min-width: 2.5rem;
     height: 2rem;
@@ -942,6 +942,7 @@ tbody {
   height: 3rem;
   width: 10rem;
   min-width: 10rem;
+  margin-bottom: 5rem;
 }
 .app-configuration-side-panel {
   width: 24rem;
@@ -987,7 +988,12 @@ tbody {
   color: #0b4b66;
   font-size: 0.75rem;
   font-weight: 400;
-  .digit-tag-wrapper{
+  height: 1.5rem;
+  .digit-tag-text {
+    font-size: 0.75rem;
+    font-weight: 400;
+  }
+  .digit-tag-wrapper {
     border-radius: 0.5rem;
   }
 }
@@ -1092,7 +1098,7 @@ tbody {
   }
 }
 .app-preview-field-pair.app-preview-selected {
-  background-color: #c84c0e33;
+  background-color: #c84c0e1a;
   border: 2px solid #c84c0e;
   border-radius: 1rem;
   .digit-field {
@@ -1151,11 +1157,12 @@ tbody {
   font-style: normal;
   color: theme(digitv2.lightTheme.primary-2);
   display: flex;
-  align-items: baseline;
+  align-items: center;
 }
 
 .icon-wrapper.app-config-tooltip {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0;
+  height: 2rem;
   display: contents;
   .tooltip-wrapper {
     .tooltip-content {
@@ -1181,4 +1188,39 @@ tbody {
   background-color: #d9d9d9;
   border-radius: 50%;
   display: block;
+}
+.mobile-bezel-screen {
+  scrollbar-width: none;
+  scrollbar-color: #d6d5d4 transparent;
+
+  overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 0px;
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-button {
+    display: none !important;
+    height: 0 !important;
+    width: 0 !important;
+  }
+
+  &.scrolling {
+    scrollbar-width: thin;
+    scrollbar-color: #d6d5d4 transparent;
+    transition: scrollbar-color 0.3s ease;
+    &::-webkit-scrollbar-thumb {
+      background-color: #d6d5d4;
+    }
+  }
 }

@@ -1,12 +1,34 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { Notifications } from "@egovernments/digit-ui-svg-components";
 
 const MobileBezelFrame = ({ children }) => {
+  const scrollRef = useRef(null);
+  let scrollTimeout = null;
+  useEffect(() => {
+    const scrollElement = scrollRef.current;
+
+    const handleScroll = () => {
+      scrollElement.classList.add("scrolling");
+
+      clearTimeout(scrollTimeout);
+      scrollTimeout = setTimeout(() => {
+        scrollElement.classList.remove("scrolling");
+      }, 1000);
+    };
+
+    scrollElement.addEventListener("scroll", handleScroll);
+
+    return () => {
+      scrollElement.removeEventListener("scroll", handleScroll);
+      clearTimeout(scrollTimeout);
+    };
+  }, []);
+
   return (
     <div className="mobile-bezel-outerWrapper" style={styles.outerWrapper}>
       <div className="mobile-bezel-deviceWrapper" style={styles.deviceWrapper}>
         <div className="mobile-bezel-camera" style={styles.camera}></div>
-        <div className="mobile-bezel-screen" style={styles.screen}>
+        <div className="mobile-bezel-screen" ref={scrollRef} style={styles.screen}>
           <div className="mobile-top-bar" style={{ flexDirection: "row", gap: "1rem" }}>
             <div className="mobile-menu-icon">&#9776;</div>
             <img
