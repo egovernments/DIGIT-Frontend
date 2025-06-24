@@ -114,31 +114,35 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
 
   useEffect(() => {
     if (data && selectedProjectType) {
-      const deliveryData = getDeliveryConfig({ data: data?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType })
+      const deliveryData = getDeliveryConfig({ data: data?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
       setFilterDeliveryConfig(deliveryData);
     }
   }, [data, selectedProjectType]);
 
   function convertEpochToDate(epoch) {
-  if (!epoch) return "";
+    if (!epoch) return "";
 
-  const date = new Date(Number(epoch));
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0'); // Month is 0-indexed
-  const day = String(date.getDate()).padStart(2, '0');
+    const date = new Date(Number(epoch));
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0"); // Month is 0-indexed
+    const day = String(date.getDate()).padStart(2, "0");
 
-  return `${year}-${month}-${day}`;
-}
-
+    return `${year}-${month}-${day}`;
+  }
 
   useEffect(() => {
-    if (!filteredDeliveryConfig || !filteredDeliveryConfig?.code) {
+    if (!filteredDeliveryConfig) {
       setIsLoading(true);
     } else setIsLoading(false);
   }, [filteredDeliveryConfig]);
-  const saved =
-    Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
-    campaignData?.additionalDetails?.cycleData;
+  // const saved =
+  //   Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
+  //   campaignData?.additionalDetails?.cycleData || filteredDeliveryConfig?.cycleConfig;
+  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+  const campaignCycleData = campaignData?.additionalDetails?.cycleData;
+  const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
+
+  const saved = sessionData?.cycleData?.length > 0 ? sessionData : campaignCycleData?.cycleData?.length > 0 ? campaignCycleData : filteredCycleConfig;
   const refetch = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate
     ?.refetch;
   const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -165,16 +169,37 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     window.history.replaceState({}, "", url);
   }
 
+  // useEffect(() => {
+  //   if (!deliveryConfigLoading) {
+  //     dispatch({
+  //       type: "RELOAD",
+  //       saved: saved,
+  //       filteredDeliveryConfig: filteredDeliveryConfig,
+  //       refetch: refetch,
+  //     });
+  //   }
+  // }, [filteredDeliveryConfig, deliveryConfigLoading]);
+
   useEffect(() => {
+    const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+    const campaignCycleData = campaignData?.additionalDetails?.cycleData;
+    const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
+
+    const finalSaved =
+      sessionData?.cycleData?.length > 0 ? sessionData : campaignCycleData?.cycleData?.length > 0 ? campaignCycleData : filteredCycleConfig;
+
+    const currentRefetch = sessionData?.cycleConfgureDate?.refetch;
+
     if (!deliveryConfigLoading) {
       dispatch({
         type: "RELOAD",
-        saved: saved,
+        saved: finalSaved,
         filteredDeliveryConfig: filteredDeliveryConfig,
-        refetch: refetch,
+        refetch: currentRefetch,
       });
     }
-  }, [filteredDeliveryConfig, deliveryConfigLoading]);
+  }, [filteredDeliveryConfig, campaignData, deliveryConfigLoading]);
+
   useEffect(() => {
     const updatedState = {
       ...state,
@@ -232,26 +257,13 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     } else if (currentStep === 2) setKey(9);
     else setKey(8);
   };
-  // if (isLoading) {
-  //   return <Loader page={true} variant={"PageLoader"} />;
-  // }
+  if (isLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
 
   return (
     <>
       <div className="container">
-        {/* <div className="card-container">
-          <Card className="card-header-timeline">
-            <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
-          </Card>
-          <Card className="stepper-card">
-            <Stepper
-              customSteps={["HCM_CYCLES", "HCM_DELIVERY_RULES", "HCM_SUMMARY"]}
-              currentStep={1}
-              onStepClick={onStepClick}
-              direction={"vertical"}
-            />
-          </Card>
-        </div> */}
         <div className="card-container2">
           <Card>
             <TagComponent campaignName={campaignName} />
@@ -266,11 +278,6 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
             </Header>
             <Paragraph
               customClassName="cycle-paragraph"
-              // value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-              //   ?.split("-")
-              //   ?.reverse()
-              //   ?.join("/")} - ${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate?.split("-")?.reverse()?.join("/")})`}
-
               value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
                 tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
               )}`}
@@ -327,7 +334,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     max={dateRange?.endDate}
                     populators={{
                       newDateFormat: true,
-                      max:dateRange?.endDate,
+                      max: dateRange?.endDate,
                       min:
                         index > 0 && cycleData?.find((j) => j.key === index)?.toDate
                           ? new Date(new Date(cycleData.find((j) => j.key === index)?.toDate).getTime() + 86400000).toISOString().split("T")[0]
@@ -349,14 +356,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                     }
                     populators={{
                       newDateFormat: true,
-                      max:dateRange?.endDate,
-                      min:
-                      cycleData?.find((j) => j.key === index + 1)?.fromDate
+                      max: dateRange?.endDate,
+                      min: cycleData?.find((j) => j.key === index + 1)?.fromDate
                         ? new Date(new Date(cycleData?.find((j) => j.key === index + 1)?.fromDate)?.getTime() + 86400000)
                             ?.toISOString()
                             ?.split("T")?.[0]
-                        : null
-                    
+                        : null,
                     }}
                     max={dateRange?.endDate}
                     onChange={(d) => selectToDate(index + 1, d)}
