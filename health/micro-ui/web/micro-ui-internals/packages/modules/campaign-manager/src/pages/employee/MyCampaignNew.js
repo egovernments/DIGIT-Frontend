@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { InboxSearchComposer } from "@egovernments/digit-ui-components";
+import { InboxSearchComposer , Loader} from "@egovernments/digit-ui-components";
 import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
 
 /**
@@ -13,20 +13,40 @@ import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
  */
 const MyCampaignNew = () => {
   const { t } = useTranslation();
-  const [config, setConfig] = useState(myCampaignConfigNew?.myCampaignConfigNew?.[0]);
+  const [config, setConfig] = useState(null);
+  const [selectedTabIndex, setSelectedTabIndex] = useState(null);
   const [tabData, setTabData] = useState(
     myCampaignConfigNew?.myCampaignConfigNew?.map((configItem, index) => ({
       key: index,
       label: configItem.label,
-      active: index === 0,
+      active: index === 0 ? true : false,
     }))
   );
+  const [isConfigReady, setIsConfigReady] = useState(false);
+
+   useEffect(() => {
+    const savedIndex = parseInt(sessionStorage.getItem("HCM_SELECTED_TAB_INDEX")) || 0;
+
+    const configList = myCampaignConfigNew?.myCampaignConfigNew || [];
+
+    setSelectedTabIndex(savedIndex);
+    setConfig(configList[savedIndex]);
+    setTabData(
+      configList.map((item, idx) => ({
+        key: idx,
+        label: item.label,
+        active: idx === savedIndex,
+      }))
+    );
+     setIsConfigReady(true);
+  }, []);
 
   const onTabChange = (n) => {
-    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n  })));
+    sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", n); // Save to sessionStorage
+    setSelectedTabIndex(n);
+    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n ? true : false })));
     setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
   };
-
   useEffect(() => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
@@ -34,19 +54,23 @@ const MyCampaignNew = () => {
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
   }, []);
 
-  useEffect(() => {
-    const handleStorageChange = () => {
-      const newSession = Digit.SessionStorage.get("HCM_TIMELINE_POPUP");
-      setSession(newSession);
-      setTimeLine(newSession);
-    };
+  // useEffect(() => {
+  //   const handleStorageChange = () => {
+  //     const newSession = Digit.SessionStorage.get("HCM_TIMELINE_POPUP");
+  //     setSession(newSession);
+  //     setTimeLine(newSession);
+  //   };
 
-    window.addEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
+  //   window.addEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
 
-    return () => {
-      window.removeEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
-    };
-  }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
+  //   return () => {
+  //     window.removeEventListener("HCM_TIMELINE_POPUP_CHANGE", handleStorageChange);
+  //   };
+  // }, [Digit.SessionStorage.get("HCM_TIMELINE_POPUP")]);
+
+   if (!isConfigReady || !config) {
+      return <Loader page={true} variant={"PageLoader"} />;
+  }
 
   return (
     <React.Fragment>
