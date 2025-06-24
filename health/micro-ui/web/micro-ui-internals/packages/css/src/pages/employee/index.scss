@@ -1224,3 +1224,49 @@ tbody {
     }
   }
 }
+.mobile-bezel-flexContainer {
+  display: flex;
+  flex-direction: row-reverse;
+  .mobile-bezel-zoom-container {
+    display: flex;
+    height: fit-content;
+    gap: 0.5rem;
+    flex-direction: column-reverse;
+    background-color: #ffffff;
+    border-radius: 0.5rem;
+    border: 1px solid #d6d5d4;
+    .item {
+      padding: 0.5rem;
+      border: none;
+      background-color: unset;
+    }
+    .zoom-button {
+    }
+    .zoom-span {
+      border-top: 1px solid #d6d5d4;
+      border-bottom: 1px solid #d6d5d4;
+      color: #787878;
+      font-size: 14px;
+    }
+  }
+}
+
+.appConfig-flex-action {
+  display: flex;
+  align-items: center;
+  position: absolute;
+  bottom: 5rem;
+  left: 37rem;
+  gap: 1rem;
+  .app-configure-action-button {
+    margin-bottom: unset;
+    width: 9rem;
+    min-width: fit-content;
+    height: 2.5rem;
+    padding: 0.2rem;
+  }
+}
+.app-config-tag-page {
+  color: #0b4b66;
+  font-weight: 700;
+}
