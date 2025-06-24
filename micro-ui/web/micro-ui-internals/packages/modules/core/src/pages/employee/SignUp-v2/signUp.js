@@ -150,8 +150,8 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
 
   // Desktop layout: Carousel + Form side by side
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
-      <div style={{ width: "70%", position: "relative" }}>
+    <div style={{  height: "100vh",display: "flex", }}>
+      <div style={{  position: "relative",width: "70%", }}>
         <Carousel bannerImages={propsConfig.bannerImages} />
       </div>
       {renderFormSection()}

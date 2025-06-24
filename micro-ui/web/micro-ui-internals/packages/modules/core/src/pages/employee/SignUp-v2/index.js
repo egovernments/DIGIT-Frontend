@@ -13,6 +13,8 @@ const SignUpV2 = ({stateCode}) => {
   const moduleCode = ["privacy-policy"];
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
+
+  
   const { data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
@@ -45,17 +47,6 @@ const SignUpV2 = ({stateCode}) => {
     retry: false,
   });
 
-  // let SignUpConfig = mdmsData?.config ? mdmsData?.config : defaultSignUpConfig;
-  useEffect(() => {
-    if(isLoading == false && mdmsData?.config)
-    {  
-      setSignUpConfig(mdmsData?.config)
-    }else{
-      setSignUpConfig(defaultSignUpConfig)
-    }
-  },[mdmsData, isLoading])
-
-
   const SignUpParams = useMemo(() =>
     SignUpConfig.map(
       (step) => {
@@ -68,6 +59,19 @@ const SignUpV2 = ({stateCode}) => {
       [SignUpConfig]
     )
   );
+
+  // let SignUpConfig = mdmsData?.config ? mdmsData?.config : defaultSignUpConfig;
+  useEffect(() => {
+    if(isLoading == false && mdmsData?.config)
+    {  
+      setSignUpConfig(mdmsData?.config)
+    }else{
+      setSignUpConfig(defaultSignUpConfig)
+    }
+  },[mdmsData, isLoading])
+
+
+
 
   return (
     <Switch>
