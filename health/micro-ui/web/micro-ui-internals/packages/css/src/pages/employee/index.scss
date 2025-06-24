@@ -987,6 +987,9 @@ tbody {
   color: #0b4b66;
   font-size: 0.75rem;
   font-weight: 400;
+  .digit-tag-wrapper{
+    border-radius: 0.5rem;
+  }
 }
 .app-configure-drawer-footer-button {
   margin: auto;
@@ -1153,6 +1156,7 @@ tbody {
 
 .icon-wrapper.app-config-tooltip {
   margin-bottom: 0.5rem;
+  display: contents;
   .tooltip-wrapper {
     .tooltip-content {
       width: max-content !important;

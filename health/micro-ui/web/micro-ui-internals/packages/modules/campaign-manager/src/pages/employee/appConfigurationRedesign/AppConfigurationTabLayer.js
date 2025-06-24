@@ -8,13 +8,13 @@ import AppConfigurationParentRedesign from "./AppConfigurationParentLayer";
 
 const tabDispatcher = (state, action) => {
   switch (action.key) {
-    case "SET_TAB":
+    case "SET_TAB": {
       let firstSelectedFound = false;
+      const sortedData = action?.data?.sort((a, b) => a?.data?.order - b?.data?.order);
       const temp =
-        action?.data
+        sortedData
           ?.map((i, c) => {
             const isSelected = i?.data?.isSelected;
-
             let active = false;
             if (isSelected && !firstSelectedFound) {
               active = true;
@@ -33,7 +33,7 @@ const tabDispatcher = (state, action) => {
       return {
         actualData: action.data,
         numberTabs:
-          action?.data
+          sortedData
             ?.map((i, c) => ({
               id: i?.id,
               active: c === 0 ? true : false,
@@ -43,8 +43,9 @@ const tabDispatcher = (state, action) => {
               disabled: !i?.data?.isSelected,
             }))
             ?.filter((i) => !i?.disabled) || [],
-        activeTabConfig: action?.data?.find((i) => i.id === temp?.find((i) => i.active)?.id),
+        activeTabConfig: sortedData?.find((i) => i.id === temp?.find((i) => i.active)?.id),
       };
+    }
     case "CHANGE_ACTIVE_TAB":
       return {
         ...state,
