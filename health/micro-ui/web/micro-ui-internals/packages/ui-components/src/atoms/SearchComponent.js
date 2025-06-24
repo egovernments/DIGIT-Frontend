@@ -277,15 +277,6 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
                   style={uiConfig?.searchWrapperStyles}
                   ref={buttonWrapperRef}
                 >
-                  {uiConfig?.secondaryLabel && (
-                    <Button
-                      variation="teritiary"
-                      label={t(uiConfig?.secondaryLabel)}
-                      type="button"
-                      size={"medium"}
-                      onClick={clearSearch}
-                    />
-                  )}
                   {uiConfig?.isPopUp && uiConfig?.primaryLabel && (
                     <Button
                       variation={uiConfig?.primaryLabelVariation || "primary"}
@@ -304,6 +295,15 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
                       icon={uiConfig?.primaryLabelIcon || ""}
                       size={"medium"}
                       onClick={(e) => handleSubmit(e)}
+                    />
+                  )}
+                  {uiConfig?.secondaryLabel && (
+                    <Button
+                      variation="teritiary"
+                      label={t(uiConfig?.secondaryLabel)}
+                      type="button"
+                      size={"medium"}
+                      onClick={clearSearch}
                     />
                   )}
                   {uiConfig?.sortConfig && (

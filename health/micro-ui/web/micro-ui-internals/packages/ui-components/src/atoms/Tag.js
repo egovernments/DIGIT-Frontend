@@ -51,7 +51,6 @@ const Tag = ({
 
   return (
     <div
-      tabIndex={0}
       className={`digit-tag-wrapper ${className ? className : ""} ${
         type || ""
       } ${stroke ? "stroke" : ""} ${onClick ? "cp" : ""} ${
@@ -59,12 +58,6 @@ const Tag = ({
       }`}
       style={style}
       onClick={onClick}
-      role="button"
-      onKeyDown={(e)=>{
-        if (e.key=="Enter" || e.key==" "){
-          onClick(e)
-        }
-      }}
     >
       {showIcon && iconToShow}
       <span className="digit-tag-text" style={labelStyle}>

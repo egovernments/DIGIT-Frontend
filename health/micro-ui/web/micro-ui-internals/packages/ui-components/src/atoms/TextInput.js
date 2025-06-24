@@ -196,11 +196,11 @@ const TextInput = (props) => {
             });
             return svgElement;
           } else {
-            console.warn("Icon not found");
+            console.warn(`Icon not found, ${props?.populators?.customIcon}`);
             return null;
           }
         } catch (error) {
-          console.warn("Icon not found");
+          console.warn(`Icon not found, ${props?.populators?.customIcon}`);
           return null;
         }
       }
@@ -273,8 +273,16 @@ const TextInput = (props) => {
                 popperPlacement="bottom-start"
                 calendarStartDay={1}
                 onClickOutside={() => datePickerRef.current?.setOpen(false)}
-                minDate={props.min}
-                maxDate={props.max}
+                minDate={
+                  props?.populators?.min
+                    ? new Date(props?.populators?.min)
+                    : undefined
+                }
+                maxDate={
+                  props?.populators?.max
+                    ? new Date(props?.populators?.max)
+                    : undefined
+                }
               />
               <div
                 className={`digit-new-date-format ${
@@ -282,7 +290,7 @@ const TextInput = (props) => {
                 }`}
                 onClick={() => datePickerRef.current?.setOpen(true)}
               >
-                <SVG.CalendarToday />
+                <SVG.CalendarToday fill={"#c84c0e"}/>
               </div>
             </div>
 

@@ -44,9 +44,6 @@ const Accordion = ({
     }
   }, [isClosed]);
 
-    const contentId = `accordion-panel-${title.replace(/\s+/g, "-").toLowerCase()}`;
-    const headerId = `accordion-header-${title.replace(/\s+/g, "-").toLowerCase()}`;
-
   return (
     <div
       className={`digit-accordion ${customClassName} ${
@@ -60,21 +57,7 @@ const Accordion = ({
       }`}
       style={customStyles}
     >
-      <div
-        id={headerId}
-        className="digit-accordion-title"
-        tabIndex={0}
-        role="button"
-        aria-expanded={isOpen}
-        aria-controls={contentId}
-        onClick={toggleAccordion}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" || e.key === " ") {
-            e.preventDefault();
-            toggleAccordion();
-          }
-        }}
-      >
+      <div className="digit-accordion-title" onClick={toggleAccordion}>
         {icon && (
           <div className="digit-accordion-icon">
             {iconRender(
@@ -105,13 +88,7 @@ const Accordion = ({
           ></SVG.ArrowBackIos>
         </div>
       </div>
-      <div
-        id={contentId}
-        className={`digit-accordion-content ${isOpen ? "open" : ""}`}
-        role="region"
-        aria-labelledby={headerId}
-        hidden={!isOpen}
-      >
+      <div className={`digit-accordion-content ${isOpen ? "open" : ""}`}>
         {children}
       </div>
     </div>

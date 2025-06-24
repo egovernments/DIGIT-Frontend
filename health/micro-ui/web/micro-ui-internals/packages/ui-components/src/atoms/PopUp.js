@@ -151,13 +151,6 @@ const PopUp = (props) => {
         } ${props?.type ? props?.type : ""}`}
         style={props?.style}
         onClick={(e) => e.stopPropagation()}
-        tabIndex={0}
-        role="button"
-        onKeyDown={(e)=>{
-          if (e.key=="Enter" || e.key==" "){
-            e.stopPropagation()
-          }
-        }}
       >
         {props?.type === "alert" ? (
           <div
@@ -246,14 +239,6 @@ const PopUp = (props) => {
                   </div>
                 </div>
                 <span
-                  tabIndex={0}
-                  role="button"
-                  aria-label="close"
-                  onKeyDown={(e) => {
-                    if (e.key == "Enter" || e.key == " ")
-                      handleClose()
-                  }
-                  }
                   className="digit-popup-close"
                   style={{ display: "flex" }}
                   onClick={() => handleClose()}

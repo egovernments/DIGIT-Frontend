@@ -104,7 +104,6 @@ const EditablePopup = ({
       //     label={t('YES')}
       //     title={t('YES')}
       //     onClick={() => {
-      //       console.log('action clicked');
       //     }}
       //   />,
       //   <Button
@@ -114,7 +113,6 @@ const EditablePopup = ({
       //     label={t('NO')}
       //     title={t('NO')}
       //     onClick={() => {
-      //       console.log('action clicked');
       //     }}
       //   />,
       // ]}

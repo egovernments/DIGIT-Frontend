@@ -174,14 +174,7 @@ const UploadImage = ({
   return (
     <React.Fragment>
       {!(uploadedFilesCount === 1 && !multiple) && (
-        <div className="digit-image-uploader" onClick={toggleOpenUploadSlide}
-          role="button"
-          aria-label="Click to add photo"
-          tabIndex={0}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") toggleOpenUploadSlide(e);
-          }}
-        >
+        <div className="digit-image-uploader" onClick={toggleOpenUploadSlide}>
           {
             <SVG.CameraEnhance
               fill="#C84C0E"
@@ -202,23 +195,15 @@ const UploadImage = ({
           return (
             <Fragment key={`preview-${index}`}>
               <div
-                className={`preview-container uploadImage ${!multiple ? "singleUpload" : ""
-                  } ${uploadedFilesCount > 1 ? " multiple" : "single"
-                  } ${"imageFile"} ${preview?.error ? "error" : ""
-                  }`}
-                role="listitem"
-                aria-label={`File ${index + 1}`}
+                className={`preview-container uploadImage ${
+                  !multiple ? "singleUpload" : ""
+                } ${
+                  uploadedFilesCount > 1 ? " multiple" : "single"
+                } ${"imageFile"} ${preview?.error ? "error" : ""}`}
               >
                 <div
                   onClick={() => {
                     handleFileClick(index, preview?.file);
-                  }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label={`Preview ${preview?.file?.name || "file"}`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ")
-                      handleFileClick(index, preview?.file);
                   }}
                 >
                   {preview?.file?.type.startsWith("image/") ? (
@@ -231,12 +216,6 @@ const UploadImage = ({
                   )}
                 </div>
                 <span
-                onKeyDown={(e)=>{
-                  if (e.key=="Enter" || e.key==" "){
-                    e.stopPropagation();
-                    handleFileDeletion(fileData[index]);
-                  }
-                }}
                   onClick={(e) => {
                     e.stopPropagation();
                     handleFileDeletion(fileData[index]);
@@ -308,22 +287,13 @@ const UploadImage = ({
                 ></SVG.Close>
               </div>
             )}
-            <div
-              className="image-upload-options"
-              style={{ display: "flex" }}
-              role="group"
-              aria-label="Image upload options"
-            >
+
+            <div className="image-upload-options" style={{ display: "flex" }}>
               <div className="upload-options" style={{ display: "flex" }}>
                 <label
                   onClick={() => toggleWebcam()}
                   // style={{ cursor: "pointer" }}
-                  role="button"
-                  tabIndex={0}
-                  aria-label="Use camera"
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") toggleWebcam();
-                  }}
+                  className="upload-options-svg-wrap"
                 >
                   <SVG.CameraEnhance
                     fill="#C84C0E"
@@ -334,11 +304,6 @@ const UploadImage = ({
                 <label
                   onClick={() => toggleWebcam()}
                   className={"upload-options-label"}
-                  role="button"
-                  tabIndex={0}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") toggleWebcam();
-                  }}
                 >
                   Camera
                 </label>
@@ -378,8 +343,6 @@ const UploadImage = ({
           <div
             className="webcam-container"
             style={{ display: "flex", height: "100%", width: "100%" }}
-            role="dialog"
-            aria-label="Webcam capture"
           >
             <div className="capture-heading" style={{ display: "flex" }}>
               {"Capture"}

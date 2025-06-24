@@ -35,8 +35,6 @@ const Loader = ({
     <div
       className={`digit-loader-new ${variant || ""} ${className || ""}`}
       style={style || {}}
-      role="status"
-      aria-live="polite"
     >
       {renderLoader()}
       {loaderText && (

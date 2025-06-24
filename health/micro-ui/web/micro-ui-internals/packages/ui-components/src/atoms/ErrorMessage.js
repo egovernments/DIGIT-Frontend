@@ -24,8 +24,6 @@ const ErrorMessage = ({
         wrapperClassName ? wrapperClassName : ""
       }`}
       style={wrapperStyles}
-      role="alert"
-      aria-live="polite"
     >
       {showIcon && (
         <div className="digit-error-icon" style={iconStyles}>

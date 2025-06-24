@@ -43,14 +43,6 @@ const CheckBox = ({
           className={`label ${props?.labelClassName} `}
           style={{ maxWidth: "100%", width: "auto", marginRight: "0rem" }}
           onClick={props?.onLabelClick}
-          tabIndex={0}
-          role={"button"}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              props?.onLabelClick?.();
-            }
-          }}
         >
           {sentenceCaseLabel}
         </label>
@@ -71,8 +63,6 @@ const CheckBox = ({
           disabled={disabled}
           checked={checked}
           id={props?.id}
-          aria-checked={checked}
-          aria-disabled={disabled}
         />
         <p
           className={`digit-custom-checkbox ${
@@ -102,14 +92,6 @@ const CheckBox = ({
           className={`label ${props?.labelClassName} `}
           style={{ maxWidth: "100%", width: "100%", marginRight: "0rem" }}
           onClick={props?.onLabelClick}
-          tabIndex={0}
-          role={"button"}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              props?.onLabelClick?.();
-            }
-          }}
         >
           {sentenceCaseLabel}
         </label>

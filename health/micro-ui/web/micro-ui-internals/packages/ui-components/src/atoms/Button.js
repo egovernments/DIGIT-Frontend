@@ -124,9 +124,6 @@ const Button = (props) => {
       disabled={props?.isDisabled || null}
       title={props?.title || ""}
       style={props.style ? props.style : null}
-      aria-label={props?.ariaLabel || formattedLabel}
-      aria-haspopup={props?.type === "actionButton" ? "menu" : undefined}
-      aria-expanded={props?.type === "actionButton" ? dropdownStatus : undefined}
     >
       <div
         className={`icon-label-container ${

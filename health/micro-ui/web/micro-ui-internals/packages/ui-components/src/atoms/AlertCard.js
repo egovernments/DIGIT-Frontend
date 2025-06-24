@@ -2,13 +2,15 @@ import React from "react";
 import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import PropTypes from "prop-types";
-import { Colors } from "../constants/colors/colorconstants";
+import { Colors} from "../constants/colors/colorconstants";
 
-const AlertCard = ({ label, text, variant, style, textStyle, additionalElements, inline, className, headerWrapperClassName, headerClassName }) => {
+const AlertCard = ({ label, text, variant, style, textStyle, additionalElements, inline, className, headerWrapperClassName,headerClassName}) => {
+
   const warningIconColor = Colors.lightTheme.alert.warning;
   const errorIconColor = Colors.lightTheme.alert.error;
   const successIconColor = Colors.lightTheme.alert.success;
   const infoIconColor = Colors.lightTheme.alert.info;
+
 
   const getIconAndLabelByVariant = (variant) => {
     switch (variant) {
@@ -29,11 +31,7 @@ const AlertCard = ({ label, text, variant, style, textStyle, additionalElements,
   const displayedLabel = StringManipulator("TOTITLECASE", label) || defaultLabel;
 
   return (
-    <div
-      className={`digit-infobanner-wrap ${variant || "default"} ${className || ""}`} style={style}
-      role="alert"
-      aria-live={variant === "error" ? "assertive" : "polite"}
-    >
+    <div className={`digit-infobanner-wrap ${variant || "default"} ${className || ""}`} style={style}>
       <div className={`digit-infobanner-header-wrap ${variant || "default"} ${headerWrapperClassName || ""}`} height="24px">
         {icon}
         <h2 className={`digit-infobanner-header ${headerClassName || ""}`}>{displayedLabel}</h2>

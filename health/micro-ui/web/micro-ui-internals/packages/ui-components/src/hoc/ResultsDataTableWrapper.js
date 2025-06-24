@@ -140,9 +140,7 @@ const ResultsDataTableWrapper = ({
     );
     setEditRow(null);
     setRowData(null);
-    
-  }
-  
+  };
 
   const handleLinkColumn = (event) => {
     const linkColumnHandler = configModule?.linkColumnHandler || {};
@@ -176,7 +174,7 @@ const ResultsDataTableWrapper = ({
           typeof column?.sortFunction === "function"
             ? (rowA, rowB) => column.sortFunction(rowA, rowB)
             : (rowA, rowB) => 0,
-        selector: (row, index) => `${_.get(row, column?.jsonPath)}`, 
+        selector: (row, index) => `${_.get(row, column?.jsonPath)}`,
       };
       if (column?.svg) {
         // const icon = Digit.ComponentRegistryService.getComponent(column.svg);
@@ -214,13 +212,6 @@ const ResultsDataTableWrapper = ({
         return {
           ...commonProps,
           cell: (row, index, col, id) => {
-            console.log(
-              row,
-              column,
-              column?.jsonPath,
-              _.get(row, column?.jsonPath),
-              "testing"
-            );
             return (
               <Button
                 variation="link"
@@ -620,7 +611,12 @@ const ResultsDataTableWrapper = ({
                         ? () => onNextPage()
                         : () => handlePageChange(currentPage + 1)
                     }
-                    disabled={currentPage === totalPages}
+                    disabled={
+                      currentPage === totalPages ||
+                      indexOfLastRow >=
+                        (data?.[TotalCount] || filteredData?.length)
+                    }
+                    // disabled={currentPage === totalPages}
                   >
                     <SVG.ChevronRight
                       fill={currentPage === totalPages ? "#C5C5C5" : "#363636"}
@@ -683,8 +679,24 @@ const ResultsDataTableWrapper = ({
       paginationComponentOptions={config?.paginationComponentOptions}
     ></ResultsDataTable>
 
-    {showToast && <Toast type={showToast?.type} label={t(showToast.label)} onClose={()=> setShowToast(null)} />}
-          {editablePopup && <EditablePopup setShowEditablePopup={setShowEditablePopup} config={config} editRow={editRow} setEditRow={setEditRow} setRowData={setRowData} rowData={rowData} handleRowSubmit={handleRowSubmit}/>}
+      {showToast && (
+        <Toast
+          type={showToast?.type}
+          label={t(showToast.label)}
+          onClose={() => setShowToast(null)}
+        />
+      )}
+      {editablePopup && (
+        <EditablePopup
+          setShowEditablePopup={setShowEditablePopup}
+          config={config}
+          editRow={editRow}
+          setEditRow={setEditRow}
+          setRowData={setRowData}
+          rowData={rowData}
+          handleRowSubmit={handleRowSubmit}
+        />
+      )}
     </>
   );
 };

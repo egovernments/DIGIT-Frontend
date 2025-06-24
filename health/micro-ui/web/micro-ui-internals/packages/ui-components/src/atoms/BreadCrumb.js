@@ -56,67 +56,47 @@ const BreadCrumb = (props) => {
   const validCrumbsMain = crumbsToDisplay?.filter((crumb) => crumb?.show === true);
 
   return (
-    <nav aria-label="Breadcrumb">
-      <ol
-      className={`digit-bread-crumb ${
-        props?.className ? props?.className : ""
-      }`}
-        style={props?.style}
-      >
-        {validCrumbsMain?.map((crumb, ci) => {
-          if (!crumb?.show) return null;
-        if (crumb?.isBack){
-            return (
-              <li
-                key={ci}
-                style={props?.itemStyle}
-                className="digit-bread-crumb--item back-crumb-item"
-              >
+    <ol
+      className={`digit-bread-crumb ${props?.className ? props?.className : ""}`}
+      style={props?.style}
+    >
+      {validCrumbsMain?.map((crumb, ci) => {
+        if (!crumb?.show) return null;
+        if (crumb?.isBack)
+          return (
+            <li
+              key={ci}
+              style={props?.itemStyle}
+              className="digit-bread-crumb--item back-crumb-item"
+            >
+              <span onClick={() => window.history.back()}>{crumb.content}</span>
+            </li>
+          );
+
+        return (
+          <Fragment>
+            <li
+            key={ci}
+              style={props?.itemStyle}
+              className="digit-bread-crumb--item"
+            >
+              {isLast(ci) || (!crumb?.internalLink && !crumb?.externalLink) ? (
                 <span
-                  type="button"
-                  role="button"
-                  onClick={() => window.history.back()}
-                  onKeyDown={(key)=>{
-                    if (key.key=="Enter" || key.key==" "){
-                      window.history.back()
-                    }
-                  }}
+                  className={`digit-bread-crumb-content ${isLast(ci) ? "current" : "default"}`}
+                  style={props?.spanStyle}
+                  onClick={(crumb.content === "..." || crumb.content === props?.expandText) ? handleCrumbClick : null}
                 >
+                  {crumb?.icon && crumb.icon}
                   {crumb.content}
                 </span>
-              </li>
-            );
-          }
-
-          return (
-            <Fragment key={ci}>
-              <li
-                style={props?.itemStyle}
-                className="digit-bread-crumb--item"
-              >
-                {isLast(ci) || !crumb?.path ? (
-                  crumb.content === "..." || crumb.content === props?.expandText ? (
-                    <button
-                      type="button"
-                      className={`digit-bread-crumb-content default`}
-                      onClick={handleCrumbClick}
-                      style={props?.spanStyle}
-                      aria-label="Expand breadcrumb"
-                    >
-                      {crumb?.icon && crumb.icon}
-                      {crumb.content}
-                    </button>
-                  ) : (
-                    <span
-                      className={`digit-bread-crumb-content ${isLast(ci) ? "current" : "default"}`}
-                      style={props?.spanStyle}
-                      aria-current={isLast(ci) ? "page" : undefined}
-                    >
-                      {crumb?.icon && crumb.icon}
-                      {crumb.content}
-                     
-                    </span>
-                  )
+              ) : crumb?.externalLink ? (
+                <Link
+                  className="digit-bread-crumb-content"
+                  onClick={() => handleRedirect(crumb?.externalLink)}
+                >
+                  {crumb?.icon && crumb.icon}
+                  {crumb.content}
+                </Link>
               ) : (
                 <Link
                   to={{ pathname: crumb.internalLink, state: { count: crumb?.count }, search: crumb?.query  }}
@@ -127,16 +107,15 @@ const BreadCrumb = (props) => {
                 </Link>
               )}
               {!isLast(ci) && (
-                  <div className="digit-bread-crumb-seperator" aria-hidden="true">
+                <div className="digit-bread-crumb-seperator">
                   {props?.customSeparator ? props?.customSeparator : "/"}
-                  </div>
-                )}
-              </li>
-            </Fragment>
-          );
-        })}
-      </ol>
-    </nav>
+                </div>
+              )}
+            </li>
+          </Fragment>
+        );
+      })}
+    </ol>
   );
 };
 
