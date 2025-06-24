@@ -7,6 +7,7 @@ import { ProviderContext } from "./utils/context";
 import DSSCard from "./components/DSSCard";
 import InboxFilter from "./components/InboxFilter";
 import DateRangePicker from "./components/DateRangePicker";
+import DSSCampaignRowCard from "./components/DSSCampaignRowCard";
 
 export const DSSModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -35,7 +36,8 @@ const componentsToRegister = {
   DSSModule,
   DSSCard,
   InboxFilter,
-  DateRangePicker
+  DateRangePicker,
+  DSSCampaignRowCard
 };
 
 export const initDSSComponents = () => {

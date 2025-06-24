@@ -9,7 +9,7 @@ import L1Main from "./L1Main";
 import L2Main from "./L2Main";
 import ViewDashbaord from "./ViewDashboard";
 import L1Dashboard from "./L1Dashboard";
-
+import Inbox from "./Inbox";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
@@ -23,17 +23,17 @@ const ProjectBreadCrumb = ({ location }) => {
     {
       internalLink: `/${window?.contextPath}/employee/dss/past-campaigns`,
       content: t("HCM_BREADCRUMBS_PAST_CAMPAIGNS"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PAST_CAMPAIGNS"
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "PAST_CAMPAIGNS",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/live-campaigns`,
       content: t("HCM_BREADCRUMBS_LIVE_CAMPAIGNS"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LIVE_CAMPAIGNS"
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LIVE_CAMPAIGNS",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
-      content: t("ACTION_TEST_MY_CAMPAIGN"),
-      show:Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS"
+      content: t("ACTION_TEST_MY_CAMPAIGNS"),
+      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
@@ -61,7 +61,11 @@ const ProjectBreadCrumb = ({ location }) => {
 
 const App = ({ path, stateCode, userType, tenants }) => {
   const location = useLocation();
-  const MyCampaignNew = Digit.ComponentRegistryService.getComponent("MyCampaignNew");
+
+  useEffect(() => {
+    Digit.SessionStorage.del("HCM_SELECTED_TAB_INDEX");
+  }, []);
+
   return (
     <Switch>
       <AppContainer className="ground-container">
@@ -70,7 +74,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         </React.Fragment>
         <PrivateRoute path={`${path}/live-campaigns`} component={() => <CampaignsInbox />} />
         <PrivateRoute path={`${path}/past-campaigns`} component={() => <CampaignsInbox />} />
-        <PrivateRoute path={`${path}/my-campaigns`} component={() => <MyCampaignNew showDashboardLink={true}/>} />
+        <PrivateRoute path={`${path}/my-campaigns`} component={() => <Inbox />} />
         <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashbaord stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/l1-dashboard`} component={() => <L1Dashboard />} />
         {/* TODO: update the dashboard path */}
