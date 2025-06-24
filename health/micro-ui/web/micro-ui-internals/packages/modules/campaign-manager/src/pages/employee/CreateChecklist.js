@@ -595,7 +595,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
       {!submitting && !loading_new &&
         <div>
           <TagComponent campaignName={campaignName} />
-          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "-1.2rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                 {t("CREATE_NEW_CHECKLIST")}

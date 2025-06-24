@@ -309,6 +309,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     [
       { name: fieldMasterName, limit: 100 },
       { name: "FieldPropertiesPanelConfig", limit: 100 },
+      { name: "DETAILS_RENDERER_CONFIG", limit: 100 },
     ],
     {
       cacheTime: Infinity,
@@ -321,6 +322,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
             ...data?.["HCM-ADMIN-CONSOLE"],
             DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["FieldPropertiesPanelConfig"],
             AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
+            DetailsConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DETAILS_RENDERER_CONFIG"],
             // ...dummyMaster,
           },
         });
@@ -486,13 +488,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     }
     const localeArrays = createLocaleArrays();
     let updateCount = 0;
+    let updateSuccess = false;
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
           setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
           updateCount = updateCount + 1;
-          onSubmit(state, finalSubmit);
+          updateSuccess = true;
         } catch (error) {
           setLoading(false);
           setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
@@ -502,7 +505,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     }
     setShowPopUp(false);
     setLoading(false);
-    if (!updateCount) {
+    if (updateSuccess || !updateCount) {
       onSubmit(state, finalSubmit);
     }
 
@@ -745,7 +748,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 // style={}
                 variant={""}
                 t={t}
-                option={state?.MASTER_DATA?.AppFieldType}
+                option={(state?.MASTER_DATA?.AppFieldType || []).filter((item) => item?.metadata?.type !== "template")}
                 optionKey={"type"}
                 selected={addFieldData?.type}
                 select={(value) => {

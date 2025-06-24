@@ -18,14 +18,14 @@ const getTemplateFormatFilter = (projectNo = "", formats = []) => {
 /**
  * Utility to create a filter string to fetch flow names for a project.
  */
-const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}' && @.isSelected==true )].name`;
+const getFlowFilter = (projectNo = "") => `[?(@.project=='${projectNo}' && @.isSelected==true )]`;
 
 /**
  * Compares existing selected features vs. current feature config.
  * Returns whether any module has changed selections.
  */
 const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeatureConfigs = []) => {
-  const modules = Object.keys(selectedFeaturesByModule);
+  const modules = Object?.keys(selectedFeaturesByModule);
   const keys = modules.map((key) => {
     return (
       selectedFeatureConfigs.every((elem) => selectedFeaturesByModule[key].includes(elem)) &&
@@ -105,7 +105,11 @@ const AppFeatures = () => {
         enabled: !!campaignNumber,
         cacheTime: 0,
         staleTime: 0,
-        ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, HCMCONSOLE_APPCONFIG_MODULENAME),
+        select: (data) => {
+          const temp = data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.[HCMCONSOLE_APPCONFIG_MODULENAME];
+          return temp?.sort((a, b) => a?.order - b?.order)?.map((i) => i?.name) || [];
+        },
+        // ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, HCMCONSOLE_APPCONFIG_MODULENAME),
       }
     )
   );
@@ -190,6 +194,7 @@ const AppFeatures = () => {
             title={t("GO_BACK")}
             variation="secondary"
             style={{ marginLeft: "2.5rem" }}
+            icon={"ArrowBack"}
             onClick={() => {
               history.push(
                 `/${window.contextPath}/employee/campaign/app-modules?projectType=${projectType}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
@@ -201,6 +206,8 @@ const AppFeatures = () => {
             label={t("NEXT")}
             title={t("NEXT")}
             variation="primary"
+            icon={"ArrowDirection"}
+            isSuffix
             onClick={() => {
               const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
               const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=FieldTypeMappingConfig&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
@@ -308,6 +315,13 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
         disabled: true, // Mark as disabled since not selected by user
       });
     }
+  });
+
+  const orderMap = new Map(defaultModuleConfigs.map((item) => [item.name, item.order]));
+
+  // Sort finalToggleOptions by order
+  finalToggleOptions.sort((a, b) => {
+    return (orderMap.get(a.code)) - (orderMap.get(b.code));
   });
 
   // Render the toggle UI component
