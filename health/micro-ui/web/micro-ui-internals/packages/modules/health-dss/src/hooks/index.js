@@ -1,10 +1,12 @@
 import utils from "../utils";
 import useCampaignsInboxSearch from "./useCampaignsInboxSearch";
 import useProjectSearch from "./useProjectSearch";
+import useInboxSearch from "./useInboxSearch";
 
 const DSS = {
   useCampaignsInboxSearch,
-  useProjectSearch
+  useProjectSearch,
+  useInboxSearch
 };
 
 const Hooks = {

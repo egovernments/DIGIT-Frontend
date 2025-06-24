@@ -1223,3 +1223,9 @@
   height: 0.5rem;
   background-color: theme(digitv2.lightTheme.divider);
 }
+
+.digit-results-card-buttons{
+  &.dsscampaigncard{
+    justify-content: flex-end;
+  }
+}

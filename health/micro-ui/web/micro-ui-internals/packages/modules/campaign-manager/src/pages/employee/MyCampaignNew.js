@@ -13,7 +13,7 @@ import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
  */
 
 const MyCampaignNew = ({showDashboardLink}) => {
-  console.log(showDashboardLink,"showDashboardLink")
+  
   const { t } = useTranslation();
   const [config, setConfig] = useState(null);
   const [selectedTabIndex, setSelectedTabIndex] = useState(null);
