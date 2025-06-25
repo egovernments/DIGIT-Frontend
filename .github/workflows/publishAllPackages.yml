@@ -2,7 +2,7 @@ name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'sandbox-login-page' ]
+    branches: [ 'sandbox-publish' ]
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
 
