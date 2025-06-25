@@ -1115,7 +1115,7 @@ tbody {
   margin-left: 0.5rem;
 }
 .app-config-checkbox-label {
-  display: inline-block;
+  display: inline-block !important;
 
   &.required::after {
     content: " *";

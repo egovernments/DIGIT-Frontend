@@ -337,7 +337,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             style={{
               display: "flex",
               alignItems: "flex-end",
-              marginLeft: "32rem",
+              marginLeft: "30.5rem",
               gap: "5rem",
             }}
           >
