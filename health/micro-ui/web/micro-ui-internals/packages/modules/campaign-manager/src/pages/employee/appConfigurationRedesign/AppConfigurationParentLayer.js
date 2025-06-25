@@ -202,33 +202,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       const updated = screenData.find((d) => d.name === item.name);
       return updated ? updated : item;
     });
-    await updateMutate(
-      {
-        moduleName: "HCM-ADMIN-CONSOLE",
-        masterName: "AppConfigCache",
-        data: {
-          ...cacheData,
-          data: {
-            projectType: projectType,
-            campaignNumber: campaignNumber,
-            flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
-            data: mergedTemplate,
-            version: cacheData?.data?.version ? cacheData?.data?.version : parentState?.actualTemplate?.version,
-            localeModule: localeModule,
-            actualTemplate: cacheData?.data?.actualTemplate ? cacheData?.data?.actualTemplate : parentState?.actualTemplate,
-          },
-        },
-      },
-      {
-        onError: (error, variables) => {
-          setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
-        },
-        onSuccess: async (data) => {
-          // setShowToast({ key: "success", label: "CACHE_DONE" });
-          refetchCache();
-        },
-      }
-    );
     if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
       //TODO LAST UPDATE WE WILL CLEAR SAVE MDMS AND SAVE TO FINAL MDMS
       const mergedTemplate = parentState.currentTemplate.map((item) => {
@@ -302,6 +275,33 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         }
       );
     } else {
+      await updateMutate(
+        {
+          moduleName: "HCM-ADMIN-CONSOLE",
+          masterName: "AppConfigCache",
+          data: {
+            ...cacheData,
+            data: {
+              projectType: projectType,
+              campaignNumber: campaignNumber,
+              flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
+              data: mergedTemplate,
+              version: cacheData?.data?.version ? cacheData?.data?.version : parentState?.actualTemplate?.version,
+              localeModule: localeModule,
+              actualTemplate: cacheData?.data?.actualTemplate ? cacheData?.data?.actualTemplate : parentState?.actualTemplate,
+            },
+          },
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
+          },
+          onSuccess: async (data) => {
+            // setShowToast({ key: "success", label: "CACHE_DONE" });
+            refetchCache();
+          },
+        }
+      );
       setCurrentStep((prev) => prev + 1);
     }
   };
