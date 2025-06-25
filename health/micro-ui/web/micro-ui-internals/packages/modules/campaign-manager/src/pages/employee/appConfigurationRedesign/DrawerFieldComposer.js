@@ -247,7 +247,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           populators={{
             title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
             fieldPairClassName: "drawer-toggle-conditional-field",
-            options: (state?.MASTER_DATA?.AppFieldType || []).filter((item) => item?.metadata?.type !== "template"),
+            options: (state?.MASTER_DATA?.AppFieldType || []).filter((item) => item?.metadata?.type !== "template")?.sort((a, b) => a?.order - b?.order),
             optionsKey: "type",
           }}
           type={"dropdown"}
