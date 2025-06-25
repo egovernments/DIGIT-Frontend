@@ -304,7 +304,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             variant="nestedmultiselect"
             selectAllLabel={t("SELECT_ALL")}
             clearLabel={t("CLEAR_ALL")}
-            config={{ isDropdownWithChip: true }}
+            config={{ isDropdownWithChip: panelItem?.fieldType === "Table" ? false : true }}
             selected={drawerState?.[panelItem?.bindTo] || []}
             onChange={(selectedArray) => {
               const selected = selectedArray?.map((arr) => arr?.[1]) || [];
@@ -320,6 +320,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 [panelItem?.bindTo]: selected,
               }));
             }}
+            disabled={panelItem?.fieldType === "Table"}
             t={t}
           />
 
