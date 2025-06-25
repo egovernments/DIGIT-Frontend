@@ -68,6 +68,7 @@ export const Request = async ({
   multipartData = {},
   reqTimestamp = false,
 }) => {
+  console.log("999 Reuest file method initially",method);
   const ts = new Date().getTime();
   if (method.toUpperCase() === "POST") {
    
@@ -155,7 +156,7 @@ export const Request = async ({
   if (!params["tenantId"] && window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
     params["tenantId"] = tenantInfo;
   }
-
+  console.log("999 Reqeust File method before axios call ",method);
   const res = userDownload
     ? await Axios({ method, url: _url, data, params, headers, responseType: "arraybuffer" })
     : await Axios({ method, url: _url, data, params, headers });
