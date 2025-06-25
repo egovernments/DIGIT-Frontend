@@ -203,10 +203,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
       }
     };
   }, []);
-
-  useEffect(() => {
-    Digit.SessionStorage.del("HCM_SELECTED_TAB_INDEX");
-  }, []);
   
   return (
     <React.Fragment>
