@@ -1111,6 +1111,8 @@ tbody {
   }
 }
 .app-config-checkbox-main {
+  display: flex;
+  align-items: center;
   margin-bottom: unset;
   margin-left: 0.5rem;
 }
