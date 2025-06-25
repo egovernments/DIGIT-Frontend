@@ -25,16 +25,8 @@ const MyCampaignNew = () => {
   const [isConfigReady, setIsConfigReady] = useState(false);
 
    useEffect(() => {
-    let savedIndex = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX");
-
-    // If not set, default to 0 and save it in sessionStorage
-    if (savedIndex === null || isNaN(parseInt(savedIndex))) {
-      savedIndex = 0;
-      Digit.SessionStorage.set("HCM_SELECTED_TAB_INDEX", savedIndex);
-    } else {
-      savedIndex = parseInt(savedIndex);
-    }
-
+   const savedIndex = parseInt(sessionStorage.getItem("HCM_SELECTED_TAB_INDEX")) || 0;
+    
     const configList = myCampaignConfigNew?.myCampaignConfigNew || [];
     setSelectedTabIndex(savedIndex);
     setConfig(configList[savedIndex]);
@@ -49,9 +41,9 @@ const MyCampaignNew = () => {
   }, []);
 
   const onTabChange = (n) => {
-    Digit.SessionStorage.set("HCM_SELECTED_TAB_INDEX", n);
+    sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", n); // Save to sessionStorage
     setSelectedTabIndex(n);
-    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n })));
+    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n ? true:false})));
     setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
   };
   useEffect(() => {
@@ -78,7 +70,6 @@ const MyCampaignNew = () => {
    if (!isConfigReady || !config) {
       return <Loader page={true} variant={"PageLoader"} />;
   }
-
   return (
     <React.Fragment>
       <div className="digit-inbox-search-wrapper">
