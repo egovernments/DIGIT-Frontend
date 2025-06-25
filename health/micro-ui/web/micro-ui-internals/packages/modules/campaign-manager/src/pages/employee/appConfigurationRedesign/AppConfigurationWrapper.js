@@ -128,6 +128,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
+                        ...action?.payload?.fieldData,
                         jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
@@ -775,7 +776,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 optionKey={"type"}
                 selected={addFieldData?.type}
                 select={(value) => {
-                  setAddFieldData((prev) => ({ ...prev, type: value }));
+                  const isIdPopulator = value?.type === "idPopulator";
+                  setAddFieldData((prev) => ({
+                    ...prev,
+                    type: value,
+                    ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
+                  }));
                 }}
               />
             </LabelFieldPair>,

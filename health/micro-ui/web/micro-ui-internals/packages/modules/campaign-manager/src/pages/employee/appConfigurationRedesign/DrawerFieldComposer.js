@@ -235,10 +235,12 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           }}
           label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
           onChange={(value) => {
+            const isIdPopulator = value?.type === "idPopulator";
             setDrawerState((prev) => ({
               ...prev,
               type: value?.fieldType,
               appType: value?.type,
+              ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
             }));
           }}
           placeholder={t(panelItem?.innerLabel) || ""}
