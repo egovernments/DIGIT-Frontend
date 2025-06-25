@@ -97,7 +97,7 @@ jobs:
 
       - name: Trigger Jenkins Deployment
         run: |
-          curl -X POST "https://builds.digit.org/job/deployments/job/deploy-to-unified-dev/buildWithParameters" \
+          curl -X POST "${{ vars.JENKINS_BASE_URL }}/${{ vars.JENKINS_DEPLOY_TO_DEV }}/buildWithParameters" \
             --user ${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }} \
             --data-urlencode "Images=${{ env.IMAGE_NAME_1 }}"
 
