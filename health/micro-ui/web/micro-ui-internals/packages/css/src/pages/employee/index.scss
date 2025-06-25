@@ -1283,3 +1283,28 @@ tbody {
 .zoom-content {
   height: 100%;
 }
+.drawer-container-tooltip {
+  position: relative;
+  display: inline-block; /* or block if needed */
+}
+
+.onhover-tooltip-text {
+  visibility: hidden;
+  opacity: 0;
+  position: absolute;
+  top: 100%; /* shows tooltip below the element */
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: #333;
+  color: #fff;
+  padding: 6px 10px;
+  border-radius: 4px;
+  white-space: nowrap;
+  transition: opacity 0.2s ease;
+  z-index: 100;
+}
+
+.drawer-container-tooltip:hover .onhover-tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
