@@ -257,8 +257,12 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           masterName: "AppConfigCache",
           data: {
             ...cacheData,
-            data: null,
-            isActive: false,
+            data: {
+              projectType: projectType,
+              campaignNumber: campaignNumber,
+              flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
+              data: null,
+            },
           },
         },
         {
