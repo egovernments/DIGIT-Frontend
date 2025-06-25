@@ -90,7 +90,11 @@ jobs:
           echo "- ${{ env.IMAGE_NAME_1 }}" >> $GITHUB_STEP_SUMMARY
           echo "- ${{ env.IMAGE_NAME_2 }}" >> $GITHUB_STEP_SUMMARY
 
-
+      - name: Trigger Jenkins Deployment
+        run: |
+          curl -X POST "https://builds.digit.org/job/deployments/job/deploy-to-unified-dev/buildWithParameters" \
+            --user ${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }} \
+            --data-urlencode "Images=${{ env.IMAGE_NAME_1 }}"
 
 
 
