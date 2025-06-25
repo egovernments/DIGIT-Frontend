@@ -1,5 +1,6 @@
 # Changelog 
 
+
 ## [1.8.36]  [27-May-2025]
 - FEATURE/CCSD-216 : Privacy component alignment changes
 

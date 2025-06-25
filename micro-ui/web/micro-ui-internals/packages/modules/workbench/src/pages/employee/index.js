@@ -20,6 +20,7 @@ import UploadBoundaryPure from "./BoundaryUploadPure";
 import SidebarConfig from "./SidebarConfig";
 import SidebarItems from "./SidebarItems";
 import SidebarAddEditItems from "./SidebarAddEditItems";
+import MDMSManager from "../../components/MDMSData";
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -140,6 +141,7 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/sidebar-search`} component={() => <SidebarConfig />} />
           <PrivateRoute path={`${path}/sidebar-items`} component={() => <SidebarItems />} />
           <PrivateRoute path={`${path}/sidebar-manage`} component={() => <SidebarAddEditItems />} />
+          <PrivateRoute path={`${path}/manage-schema`} component={() => <MDMSManager />} />
         </AppContainer>
       </Switch>
     </React.Fragment>
