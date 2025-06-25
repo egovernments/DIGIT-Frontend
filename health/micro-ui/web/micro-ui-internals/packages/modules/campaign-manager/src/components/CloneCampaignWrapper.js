@@ -187,8 +187,8 @@ const CloneCampaignWrapper = (props) => {
                     value={startDate}
                     onChange={(event) => {
                       const value = event.target.value;
-                      setStartDate(value);
-                      if (value) setStartError(false);
+                      setStartDate(event);
+                      if (event) setStartError(false);
                     }}
                   />
                 </LabelFieldPair>
@@ -207,8 +207,8 @@ const CloneCampaignWrapper = (props) => {
                     value={endDate}
                     onChange={(event) => {
                       const value = event.target.value;
-                      setEndDate(value);
-                      if (value) setEndError(false);
+                      setEndDate(event);
+                      if (event) setEndError(false);
                     }}
                   />
                 </LabelFieldPair>

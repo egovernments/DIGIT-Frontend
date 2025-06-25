@@ -1098,6 +1098,9 @@ tbody {
   }
 }
 .app-preview-field-pair.app-preview-selected {
+  .digit-header-content .label{
+    width: 100%;
+  }
   background-color: #c84c0e1a;
   border: 2px solid #c84c0e;
   border-radius: 1rem;
@@ -1172,6 +1175,11 @@ tbody {
 }
 .mobile-bezel-child-container {
   height: 90%;
+  .app-preview-selected{
+    .digit-header-content{
+      width: 100%;
+    }
+  }
 }
 .drag-handle {
   display: grid;

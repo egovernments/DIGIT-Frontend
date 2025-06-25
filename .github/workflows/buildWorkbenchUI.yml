@@ -17,27 +17,32 @@ jobs:
           fetch-depth: 2
       - name: Setup Docker
         uses: docker/setup-buildx-action@v1
-      - name: check modified files
+        
+      - name: check modified files or manual trigger
         id: check_files
         run: |
-          echo "=============== list modified files ==============="
-          git diff --name-only HEAD^ HEAD
-
-          echo "========== check paths of modified files =========="
-          git diff --name-only HEAD^ HEAD > files.txt
-          run_job_digit_ui=false
-          while IFS= read -r file
-          do
-            if [[ $file == health/micro-ui/* ]]; then
-              echo "This modified file is under the 'digit_ui' folder."
-              run_job_digit_ui=true
-            fi
-          done < files.txt
-
-          # Set the output based on whether the job should run
+          echo "=============== Detecting trigger type ==============="
+          echo "GITHUB_EVENT_NAME=${GITHUB_EVENT_NAME}"
+      
+          if [[ "${GITHUB_EVENT_NAME}" == "workflow_dispatch" ]]; then
+            echo "Manual trigger detected. Skipping diff check."
+            run_job_digit_ui=true
+          else
+            echo "Manual trigger not detected. Performing file diff check..."
+            git diff --name-only HEAD^ HEAD > files.txt
+            run_job_digit_ui=false
+            while IFS= read -r file
+            do
+              if [[ $file == health/micro-ui/* ]]; then
+                echo "This modified file is under the 'digit_ui' folder."
+                run_job_digit_ui=true
+              fi
+            done < files.txt
+          fi
+      
           echo "::set-output name=run_job_digit_ui::$run_job_digit_ui"
           echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
-          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV  # Extract last 8 characters of SHA
+          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV
           echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
 
       - name: Login to egovio docker Container Registry
@@ -90,7 +95,11 @@ jobs:
           echo "- ${{ env.IMAGE_NAME_1 }}" >> $GITHUB_STEP_SUMMARY
           echo "- ${{ env.IMAGE_NAME_2 }}" >> $GITHUB_STEP_SUMMARY
 
-
+      - name: Trigger Jenkins Deployment
+        run: |
+          curl -X POST "${{ vars.JENKINS_BASE_URL }}/${{ vars.JENKINS_DEPLOY_TO_DEV }}/buildWithParameters" \
+            --user ${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }} \
+            --data-urlencode "Images=${{ env.IMAGE_NAME_1 }}"
 
 
 
