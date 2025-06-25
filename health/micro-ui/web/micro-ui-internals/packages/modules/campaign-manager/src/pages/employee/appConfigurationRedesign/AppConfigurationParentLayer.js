@@ -325,7 +325,8 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
     <div>
       <Header className="app-config-header">
         <div className="app-config-header-group" style={{ display: "flex", alignItems: "center" }}>
-          {t(`${currentScreen?.[0]?.name}`)}{" "}
+          {t(`APP_CONFIG_HEADING_LABEL`)}
+          {/* {t(`${currentScreen?.[0]?.name}`)} */}
           <Tag
             stroke={true}
             showIcon={false}

@@ -472,6 +472,26 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     return false;
   };
 
+  const locUpdate = async () => {
+    const localeArrays = createLocaleArrays();
+    let updateCount = 0;
+    let updateSuccess = false;
+    for (const locale of Object.keys(localeArrays)) {
+      if (localeArrays[locale].length > 0) {
+        try {
+          setLoading(true);
+          const result = await localisationMutate(localeArrays[locale]);
+          updateCount = updateCount + 1;
+          updateSuccess = true;
+        } catch (error) {
+          setLoading(false);
+          setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+          console.error(`Error sending ${locale} localisation data:`, error);
+        }
+      }
+    }
+    return;
+  };
   const handleSubmit = async (finalSubmit) => {
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
@@ -703,7 +723,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={handleSubmit} />,
+            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={locUpdate} />,
           ]}
         >
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
