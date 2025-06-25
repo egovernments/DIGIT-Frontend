@@ -2,8 +2,7 @@ name: Trigger Jenkins Build
 
 on:
   push:
-    branches:
-      - '**'  # triggers on every branch push
+    branches: [ 'develop','console','master']
 
 jobs:
   trigger-jenkins:
