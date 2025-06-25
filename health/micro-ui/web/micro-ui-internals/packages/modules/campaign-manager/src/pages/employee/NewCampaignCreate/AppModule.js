@@ -232,13 +232,17 @@ const AppModule = () => {
     }
   }
 
-  history.push(
-    `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}&code=${selectedModules?.[0]?.data?.name}`
-  );
-};
+    if (isCreatingModule) {
+      return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />;
+    } else {
+      history.push(
+        `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}&code=${selectedModules?.[0]?.data?.name}`
+      );
+    }
+  };
 
-  if (productTypeLoading || isLoading || isCreatingModule) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")}/>
+  if (productTypeLoading || isLoading) {
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("LOADING")}/>
   }
 
   return (
