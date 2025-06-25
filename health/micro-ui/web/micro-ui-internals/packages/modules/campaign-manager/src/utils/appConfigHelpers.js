@@ -146,6 +146,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
     const cardFields = page.properties
       ?.sort((a, b) => a.order - b.order)
       ?.map((field, index) => ({
+        ...getTypeAndMetaData(field, fieldTypeMasterData),
+        ...flattenValidationsToField(field?.validations || []),
         label: field?.label || "",
         value: field?.value || "",
         defaultValue: field?.value ? true : false,
@@ -158,7 +160,6 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         deleteFlag: field?.deleteFlag || false,
         isLocalised: field?.isLocalised ? true : false,
         innerLabel: field?.innerLabel || "",
-        helpText: field?.helpText || "",
         errorMessage: field?.errorMessage || "",
         tooltip: field?.tooltip || "",
         infoText: field?.infoText || "",
@@ -170,10 +171,9 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         MdmsDropdown: field?.schemaCode ? true : false,
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
-        includeInForm: field?.includeInForm || true,
-        includeInSummary: field?.includeInSummary || true,
-        ...getTypeAndMetaData(field, fieldTypeMasterData),
-        ...flattenValidationsToField(field?.validations || []),
+        includeInForm: field?.includeInForm || false,
+        includeInSummary: field?.includeInSummary || false,
+        helpText: field?.helpText || "",
       }));
 
     return {
@@ -256,6 +256,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
       const toArrayFields = addToArrayFields(field, fieldTypeMasterData); // TODO @nabeel @jagan right now this works for only validation array, we should think to expose to change the main config dynamically
       return {
+        ...typeAndFormat,
         label: field?.label || "",
         order: fieldIndex + 1,
         value: field?.value || "",
@@ -263,7 +264,6 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         // required: field.Mandatory || false,
         hidden: field?.hidden || false,
         fieldName: field?.jsonPath || "",
-        helpText: field?.helpText || "",
         tooltip: field?.tooltip || "",
         infoText: field?.infoText || "",
         innerLabel: field?.innerLabel || "",
@@ -275,8 +275,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         includeInForm: field?.includeInForm || true,
         includeInSummary: field?.includeInSummary || true,
         enums: field?.dropDownOptions,
-        ...typeAndFormat,
         validations: toArrayFields,
+        helpText: field?.helpText || "",
       };
     });
 
