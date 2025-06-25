@@ -53,7 +53,7 @@ const EmployeeApp = ({
   useEffect(() => {
     const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
     const queryParams = new URLSearchParams(location.search);
-    const cameFromButton = queryParams.get("from") === "sandbox"; 
+    const cameFromButton = queryParams.get("from") === "sandbox";
     if (isSuperUserWithMultipleRootTenant && isDirectAccess && !cameFromButton) {
       history.replace(`${path}/sandbox/productPage`);
     }
@@ -86,9 +86,11 @@ const EmployeeApp = ({
             }
           >
             <Switch>
-              {/* <Route exact path={`${path}/user/login`}>
-                <EmployeeLogin stateCode={stateCode} />
-              </Route> */}
+              {!Digit.Utils.getMultiRootTenant() && (
+                <Route exact path={`${path}/user/login`}>
+                  <EmployeeLogin stateCode={stateCode} />
+                </Route>
+              )}
               <Route exact path={`${path}/user/login/otp`}>
                 <Otp isLogin={true} />
               </Route>
@@ -133,9 +135,9 @@ const EmployeeApp = ({
             modules={modules}
           />}
           <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
-            
-            <div className={ !noTopBar ?   `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : "" }>
-            {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
+
+            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
+              {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
               <ErrorBoundary initData={initData}>
                 <AppModules
                   stateCode={stateCode}

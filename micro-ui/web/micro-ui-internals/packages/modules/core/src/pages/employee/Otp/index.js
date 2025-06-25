@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { BackLink, Toast, Loader } from "@egovernments/digit-ui-components";
+import { BackLink, Loader, Toast } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
 import ImageComponent from "../../../components/ImageComponent";
-import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 import SandBoxHeader from "../../../components/SandBoxHeader";
+import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 
 const setEmployeeDetail = (userObject, token) => {
   if (Digit.Utils.getMultiRootTenant()) return;
@@ -23,6 +23,7 @@ const setEmployeeDetail = (userObject, token) => {
 
 const Otp = ({ isLogin = false }) => {
   const { t } = useTranslation();
+  const { path } = useRouteMatch();
   const history = useHistory();
   const location = useLocation();
 
@@ -30,10 +31,18 @@ const Otp = ({ isLogin = false }) => {
   const [isOtpValid, setIsOtpValid] = useState(false);
   const [user, setUser] = useState(null);
 
-  const email = location?.state?.email || sessionStorage.getItem("otpEmail") || "";
-  const tenant = location?.state?.tenant || sessionStorage.getItem("otpTenant") || "";
+  const email = location?.state?.email || sessionStorage.getItem('otpEmail') || '';
+  const tenant = location?.state?.tenant || sessionStorage.getItem('otpTenant') || '';
 
-  // Carousel + Form config
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenant,
+    "SandBoxLanding",
+    [{ name: "LandingPageRoles" }],
+    { enabled: true, staleTime: 0, cacheTime: 0, select: (data) => data?.SandBoxLanding?.LandingPageRoles }
+  );
+
+  const RoleLandingUrl = MdmsRes?.[0]?.url;
+
   const config = [
     {
       body: [
@@ -47,87 +56,85 @@ const Otp = ({ isLogin = false }) => {
           populators: { required: true }
         }
       ],
-      bannerImages: [
-        {
-          id: 1,
-          image: "https://images.unsplash.com/photo-1746277121508-f44615ff09bb",
-          title: "Digital Headquarters for National Health Agencies",
-          description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
-        },
-        {
-          id: 2,
-          image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9",
-          title: "Digital Headquarters for National Health Agencies",
-          description: "Access real-time data dashboards and manage complaints."
-        }
-        // ... other images
-      ]
+      bannerImages: [   {
+        id: 1,
+        image: "https://images.unsplash.com/photo-1746277121508-f44615ff09bb",
+        title: "Digital Headquarters for National Health Agencies",
+        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+      },
+      {
+        id: 2,
+        image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9",
+        title: "Digital Headquarters for National Health Agencies",
+        description: "Access real-time data dashboards and manage complaints."
+      }],
     }
   ];
 
-  const OtpConfig = [
-    {
-      texts: {
-        submitButtonLabel: "CORE_COMMON_SUBMIT",
-        // header: "SANDBOX_OTP_VERIFICATION"
-      }
-    }
-  ];
+  const OtpConfig = [{ texts: { submitButtonLabel: "CORE_COMMON_SUBMIT" } }];
 
   const closeToast = () => setShowToast(null);
 
+  useEffect(() => {
+    if (!user) return;
+    Digit.SessionStorage.set("citizen.userRequestObject", user);
+    const filteredRoles = user?.info?.roles?.filter((role) => role.tenantId === Digit.SessionStorage.get("Employee.tenantId"));
+    if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
+    Digit.UserService.setUser(user);
+    setEmployeeDetail(user?.info, user?.access_token);
+
+    const getRedirectPathOtpLogin = (locationPathname, user, MdmsRes, RoleLandingUrl) => {
+      const userRole = user?.info?.roles?.[0]?.code;
+      const isSuperUser = userRole === "SUPERUSER";
+      const contextPath = window?.contextPath;
+
+      switch (true) {
+        case locationPathname === "/sandbox-ui/user/otp" && isSuperUser:
+          return `/${contextPath}/employee/sandbox/landing`;
+        case isSuperUser && MdmsRes?.[0]?.rolesForLandingPage?.includes("SUPERUSER"):
+          return `/${contextPath}${RoleLandingUrl}`;
+        default:
+          return `/${contextPath}/employee`;
+      }
+    };
+    const redirectPathOtpLogin = getRedirectPathOtpLogin(location.pathname, user, MdmsRes, RoleLandingUrl);
+
+    if (isLogin) history.push(redirectPathOtpLogin);
+    else history.push({ pathname: `/${window?.globalPath}/user/setup`, state: { tenant } });
+
+  }, [user]);
+
   const onSubmit = async (formData) => {
+    const requestData = { username: email, password: formData?.OtpComponent?.otp, tenantId: tenant, userType: "EMPLOYEE" };
     try {
-      const requestData = {
-        username: email,
-        password: formData?.OtpComponent?.otp,
-        tenantId: tenant,
-        userType: "EMPLOYEE"
-      };
       const { UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
       Digit.SessionStorage.set("Employee.tenantId", info?.tenantId);
       setUser({ info, ...tokens });
     } catch (err) {
       setShowToast(
         err?.response?.data?.error_description ||
-          (err?.message === "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
-          t("INVALID_LOGIN_CREDENTIALS")
+        (err?.message === "ES_ERROR_USER_NOT_PERMITTED" && t("ES_ERROR_USER_NOT_PERMITTED")) ||
+        t("INVALID_LOGIN_CREDENTIALS")
       );
       setTimeout(closeToast, 5000);
     }
   };
 
-  useEffect(() => {
-    const handleResize = () => setMobileView(window.innerWidth <= 768);
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  useEffect(() => {
-    if (user) {
-      setEmployeeDetail(user?.info, user?.access_token);
-      history.push(`/${window?.globalPath}/user/setup`);
-    }
-  }, [user]);
-
-  // Responsive check
+  // Responsive logic
   const isMobile = window.innerWidth <= 768;
 
-  // Form section helper
-  const renderOtpFormSection = () => (
-    <div
-      style={{
-        padding: isMobile ? "1rem" : "2rem",
-        width: isMobile ? "100%" : "30%",
-        backgroundColor: "#fff",
-        overflowY: "auto",
-        justifyContent: "center",
-        display: "flex",
-        alignItems: "center",
-        flexDirection: "column",
-        height : isMobile ? "100vh" : "auto"
-      }}
-    >
+  const renderFormSection = () => (
+    <div   style={{
+      padding: isMobile ? "1rem" : "2rem",
+      width: isMobile ? "100%" : "30%",
+      backgroundColor: "#fff",
+      overflowY: "auto",
+      justifyContent: "center",
+      display: "flex",
+      alignItems: "center",
+      flexDirection: "column",
+      height : isMobile ? "100vh" : "auto"
+    }}>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
         <BackLink onClick={() => window.history.back()} />
       </div>
@@ -136,15 +143,13 @@ const Otp = ({ isLogin = false }) => {
         noBoxShadow
         inline
         submitInForm
-        isDisabled={!isOtpValid}
         config={config}
         label={OtpConfig[0].texts.submitButtonLabel}
-        heading={OtpConfig[0].texts.header}
+        headingStyle={{ textAlign: "center" }}
+        cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="sandbox-onboarding-wrapper"
-        onFormValueChange={(setValue, formValue) => {
-          const otpValue = formValue["OtpComponent"]?.otp;
-          setIsOtpValid(otpValue?.length === 6);
-        }}
+        onFormValueChange={(_, formValue) => setIsOtpValid(formValue?.OtpComponent?.otp?.length === 6)}
+        isDisabled={!isOtpValid}
       >
         <SandBoxHeader showTenant={false} />
       </FormComposerV2>
@@ -160,16 +165,15 @@ const Otp = ({ isLogin = false }) => {
     </div>
   );
 
-  if (isMobile) {
-    return renderOtpFormSection();
-  }
-
-  return (
+  // Return
+  return isMobile ? (
+    renderFormSection()
+  ) : (
     <div style={{ display: "flex", height: "100vh" }}>
       <div style={{ width: "70%", position: "relative" }}>
         <Carousel bannerImages={config[0].bannerImages} />
       </div>
-      {renderOtpFormSection()}
+      {renderFormSection()}
     </div>
   );
 };
