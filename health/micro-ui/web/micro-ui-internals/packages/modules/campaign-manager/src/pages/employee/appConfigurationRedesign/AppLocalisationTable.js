@@ -26,7 +26,7 @@ export const AppLocalisationTable = ({ data, currentScreen, state }) => {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
   const currentLocState = useMemo(() => {
     return locState?.filter(
-      (i) => i.code && (i.code.includes(Digit.Utils.locale.getTransformedLocale(currentScreen)) || i.code.includes(currentScreen))
+      (i) => i?.code && (i?.code?.includes(Digit.Utils.locale.getTransformedLocale(currentScreen)) || i?.code?.includes(currentScreen))
     );
   }, [locState, currentScreen]);
   const { t } = useTranslation();
