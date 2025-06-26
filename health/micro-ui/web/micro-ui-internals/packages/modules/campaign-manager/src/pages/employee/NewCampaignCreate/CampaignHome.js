@@ -15,6 +15,8 @@ const CampaignHome = () => {
   useEffect(() => {
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
     window.Digit.SessionStorage.del("SelectedFeaturesByModule");
+    sessionStorage.removeItem("HCM_CAMPAIGN_NUMBER");
+
   }, []);
 
   //TODO @bhavya @jagan integrate with a master similar to   "commonUiConfig", "HelpInfo",
