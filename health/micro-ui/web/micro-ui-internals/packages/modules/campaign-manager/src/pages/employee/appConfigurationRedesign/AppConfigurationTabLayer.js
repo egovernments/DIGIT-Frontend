@@ -149,6 +149,8 @@ const AppConfigurationTabLayer = () => {
             selectedOption={numberTabs?.find((i) => i.active)?.code}
             handleToggleChange={(tab, index) => {
               // setShowPopUp(tab);
+              window.dispatchEvent(new Event("resetStep"));
+
               tabStateDispatch({
                 key: "CHANGE_ACTIVE_TAB",
                 tab: tab,
