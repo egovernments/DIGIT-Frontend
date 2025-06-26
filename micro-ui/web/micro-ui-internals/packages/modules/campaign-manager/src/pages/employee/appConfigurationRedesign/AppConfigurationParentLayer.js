@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useReducer, useState, Fragment } from "react
 import { Button, Footer, Loader, Stepper, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
 import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
@@ -40,7 +40,7 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, isPreviousTabAvailable, tabStateDispatch, tabState }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
@@ -263,7 +263,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
               return;
             } else {
-              history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
+              navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
                 message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
                 preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
                 actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",

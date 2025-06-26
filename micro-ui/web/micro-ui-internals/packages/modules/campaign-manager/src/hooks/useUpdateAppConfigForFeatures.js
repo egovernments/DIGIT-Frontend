@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import { HCMCONSOLE_APPCONFIG_MODULENAME } from "../pages/employee/NewCampaignCreate/CampaignDetails";
 

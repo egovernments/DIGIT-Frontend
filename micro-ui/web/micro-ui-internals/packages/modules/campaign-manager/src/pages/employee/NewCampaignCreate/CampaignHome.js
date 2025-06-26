@@ -1,14 +1,14 @@
 import { Card, HeaderComponent, PopUp, Button, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { SVG } from "@egovernments/digit-ui-components";
 import { NewWindow } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { AppHelpContent } from "../../../components/HelpInfoCard";
 const CampaignHome = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showPopUp, setShowPopUp] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -101,9 +101,9 @@ const CampaignHome = () => {
           {
             type: "text",
             text: "HCM_TARGET_DESC",
-          }
+          },
         ],
-      }
+      },
     ],
     pages: "apply-page",
     module: "application-module",
@@ -174,7 +174,7 @@ const CampaignHome = () => {
               variation={"primary"}
               label={t("HCM_CAMPAIGN_PROCEED")}
               onClick={() => {
-                history.push(`/${window.contextPath}/employee/campaign/create-campaign`);
+                navigate(`/${window.contextPath}/employee/campaign/create-campaign`);
               }}
             />,
           ]}

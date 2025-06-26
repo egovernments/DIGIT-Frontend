@@ -19,9 +19,10 @@
     "build-storybook": "build-storybook -s public -o dist-storybook",
     "deploy-storybook": "npm run build-storybook && surge --project dist-storybook --domain react-components-$npm_package_version.surge.sh"
   },
-  "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0",
+ "peerDependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
     "@tanstack/react-query": "^5.62.16"
   },
   "devDependencies": {

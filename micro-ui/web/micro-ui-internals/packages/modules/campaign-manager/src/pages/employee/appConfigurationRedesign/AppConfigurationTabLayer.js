@@ -2,7 +2,6 @@ import React, { Fragment, useEffect, useMemo, useReducer, useState } from "react
 import { Button, CardText, Loader, PopUp, Stepper, Tag, TextBlock, Toast, Tooltip } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 import AppConfigurationParentRedesign from "./AppConfigurationParentLayer";
 
@@ -96,7 +95,6 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationTabLayer = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");

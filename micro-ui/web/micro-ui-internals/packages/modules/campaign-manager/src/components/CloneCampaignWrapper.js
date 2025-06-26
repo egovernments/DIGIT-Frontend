@@ -2,13 +2,13 @@ import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair, ActionBar, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { FieldV1, Stepper, Card, HeaderComponent, Button, PopUp, Toast, Loader } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProgressBar } from "./ProgressBar";
 import { min } from "lodash";
 
 const CloneCampaignWrapper = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [name, setName] = useState(`${props?.campaignName}-copy`);
   const [startDate, setStartDate] = useState(null);
@@ -110,7 +110,7 @@ const CloneCampaignWrapper = (props) => {
       const res = await executeFlow();
       if (res?.success && res?.CampaignDetails?.campaignNumber) {
         setToast({ key: false, label: `${res?.CampaignDetails?.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`, type: "success" });
-        history.push(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
+        navigate(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
       } else {
         setToast({ key: true, label: `${t("FAILED_TO_CREATE_COPY_CAMPAIGN")}`, type: "error" });
         props.setCampaignCopying(false);
@@ -125,113 +125,110 @@ const CloneCampaignWrapper = (props) => {
 
   return (
     <>
-    {!showProgress && (
-      <PopUp
-        type={"default"}
-        heading={t("HCM_CREATE_COPY_OF_CAMPAIGN")}
-        className = {"copy-campaign-popup"}
-        onOverlayClick={() => props.setCampaignCopying(false)}
-        onClose={() => props.setCampaignCopying(false)}
-        footerChildren={[
-          <Button
-            className={"campaign-type-alert-button"}
-            type={"button"}
-            size={"large"}
-            variation={"primary"}
-            label={t("SUBMIT")}
-            onClick={onNextClick}
-          />,
-        ]}
-      >
-        {campaignDetailsLoading && <Loader />}
-        {/* {showProgress && <ProgressBar steps={steps} currentStep={currentStep} />} */}
-        {!showProgress && !campaignDetailsLoading && (
-          <div className="container">
-            <div className="card-container2">
-              <div>
-                {/* <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent> */}
-                <p className="name-description">{t("HCM_CAMPAIGN_NAME_DESCRIPTION")}</p>
-                <LabelFieldPair className="pop-display">
-                  <div className="name-container-popUp">
-                    <span>{t("HCM_CAMPAIGN_NAME")}</span>
-                    <span className="mandatory-span">*</span>
-                  </div>
-                  <FieldV1
-                    type="text"
-                    style={{ width: "-webkit-fill-available", marginBottom: "0" }}
-                    error={nameError?.message ? t(nameError.message) : ""}
-                    populators={{
-                      name: "campaignName",
-                      error: "ES__REQUIRED_NAME_AND_LENGTH",
-                      validation: {
-                        pattern: /^(?=.*[A-Za-z]).{1,40}$/,
-                      },
-                    }}
-                    placeholder={t("HCM_CAMPAIGN_NAME_EXAMPLE")}
-                    value={name}
-                    onChange={(event) => setName(event.target.value)}
-                  />
-                </LabelFieldPair>
-                <LabelFieldPair className="pop-display">
-                  <div className="date-container-popUp">
-                    <span>{t("CAMPAIGN_START_DATE")}</span>
-                    <span className="mandatory-span">*</span>
-                  </div>
-                  <FieldV1
-                    type="date"
-                    error={startError?.message ? t(startError.message) : ""}
-                    style={{ width: "-webkit-fill-available", marginBottom: "0" }}
-                    populators={{ 
-                      newDateFormat: true,
-                      name: "campaignStartDate", 
-                      min: new Date(Date.now() + 86400000).toISOString().split("T")[0],
-                      validation: { min: new Date(Date.now() + 86400000).toISOString().split("T")[0] } }}
-                    value={startDate}
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      setStartDate(event);
-                      if (event) setStartError(false);
-                    }}
-                  />
-                </LabelFieldPair>
-                <LabelFieldPair className="pop-display">
-                  <div className="end-date-container-popUp">
-                    <span>{t("CAMPAIGN_END_DATE")}</span>
-                    <span className="mandatory-span">*</span>
-                  </div>
-                  <FieldV1
-                    type="date"
-                    error={endError?.message ? t(endError.message) : ""}
-                    style={{ width: "-webkit-fill-available", marginBottom: "0" }}
-                    populators={{ 
-                      newDateFormat: true,
-                      min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0],
-                      name: "campaignEndDate", validation: { min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0] } }}
-                    value={endDate}
-                    onChange={(event) => {
-                      const value = event.target.value;
-                      setEndDate(event);
-                      if (event) setEndError(false);
-                    }}
-                  />
-                </LabelFieldPair>
+      {!showProgress && (
+        <PopUp
+          type={"default"}
+          heading={t("HCM_CREATE_COPY_OF_CAMPAIGN")}
+          className={"copy-campaign-popup"}
+          onOverlayClick={() => props.setCampaignCopying(false)}
+          onClose={() => props.setCampaignCopying(false)}
+          footerChildren={[
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={onNextClick}
+            />,
+          ]}
+        >
+          {campaignDetailsLoading && <Loader />}
+          {/* {showProgress && <ProgressBar steps={steps} currentStep={currentStep} />} */}
+          {!showProgress && !campaignDetailsLoading && (
+            <div className="container">
+              <div className="card-container2">
+                <div>
+                  {/* <HeaderComponent className={"popUp-header"}>{t("HCM_CAMPAIGN_NAME_HEADER")}</HeaderComponent> */}
+                  <p className="name-description">{t("HCM_CAMPAIGN_NAME_DESCRIPTION")}</p>
+                  <LabelFieldPair className="pop-display">
+                    <div className="name-container-popUp">
+                      <span>{t("HCM_CAMPAIGN_NAME")}</span>
+                      <span className="mandatory-span">*</span>
+                    </div>
+                    <FieldV1
+                      type="text"
+                      style={{ width: "-webkit-fill-available", marginBottom: "0" }}
+                      error={nameError?.message ? t(nameError.message) : ""}
+                      populators={{
+                        name: "campaignName",
+                        error: "ES__REQUIRED_NAME_AND_LENGTH",
+                        validation: {
+                          pattern: /^(?=.*[A-Za-z]).{1,40}$/,
+                        },
+                      }}
+                      placeholder={t("HCM_CAMPAIGN_NAME_EXAMPLE")}
+                      value={name}
+                      onChange={(event) => setName(event.target.value)}
+                    />
+                  </LabelFieldPair>
+                  <LabelFieldPair className="pop-display">
+                    <div className="date-container-popUp">
+                      <span>{t("CAMPAIGN_START_DATE")}</span>
+                      <span className="mandatory-span">*</span>
+                    </div>
+                    <FieldV1
+                      type="date"
+                      error={startError?.message ? t(startError.message) : ""}
+                      style={{ width: "-webkit-fill-available", marginBottom: "0" }}
+                      populators={{
+                        newDateFormat: true,
+                        name: "campaignStartDate",
+                        min: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+                        validation: { min: new Date(Date.now() + 86400000).toISOString().split("T")[0] },
+                      }}
+                      value={startDate}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        setStartDate(event);
+                        if (event) setStartError(false);
+                      }}
+                    />
+                  </LabelFieldPair>
+                  <LabelFieldPair className="pop-display">
+                    <div className="end-date-container-popUp">
+                      <span>{t("CAMPAIGN_END_DATE")}</span>
+                      <span className="mandatory-span">*</span>
+                    </div>
+                    <FieldV1
+                      type="date"
+                      error={endError?.message ? t(endError.message) : ""}
+                      style={{ width: "-webkit-fill-available", marginBottom: "0" }}
+                      populators={{
+                        newDateFormat: true,
+                        min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0],
+                        name: "campaignEndDate",
+                        validation: { min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0] },
+                      }}
+                      value={endDate}
+                      onChange={(event) => {
+                        const value = event.target.value;
+                        setEndDate(event);
+                        if (event) setEndError(false);
+                      }}
+                    />
+                  </LabelFieldPair>
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </PopUp>
-    )}
-    {showProgress && (
-      <PopUp
-        type="default"
-        heading={t("CLONING_CAMPAIGN_PROGRESS")}
-        className="progress-popup"
-        onOverlayClick={() => {}}
-        onClose={() => {}}
-      >
-        <ProgressBar steps={steps} currentStep={currentStep} />
-      </PopUp>
-    )}
+          )}
+        </PopUp>
+      )}
+      {showProgress && (
+        <PopUp type="default" heading={t("CLONING_CAMPAIGN_PROGRESS")} className="progress-popup" onOverlayClick={() => {}} onClose={() => {}}>
+          <ProgressBar steps={steps} currentStep={currentStep} />
+        </PopUp>
+      )}
       {toast && (
         <Toast
           style={{ zIndex: 10001 }}

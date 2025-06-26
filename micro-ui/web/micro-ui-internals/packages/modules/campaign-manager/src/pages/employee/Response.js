@@ -1,11 +1,11 @@
 import React, { useState, Fragment, useEffect } from "react";
-import { Link, useHistory, useLocation } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PanelCard, Footer, Button } from "@egovernments/digit-ui-components";
 
 const Response = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const queryStrings = Digit.Hooks.useQueryParams();
   const [campaignId, setCampaignId] = useState(queryStrings?.campaignId);
   const [isResponseSuccess, setIsResponseSuccess] = useState(
@@ -14,14 +14,14 @@ const Response = () => {
   const { state } = useLocation();
   const isMobile = window.Digit.Utils.browser.isMobile();
 
-  const navigate = (link) => {
-    history.push(link ? link : `/${window.contextPath}/employee/`);
+  const navigation = (link) => {
+    navigate(link ? link : `/${window.contextPath}/employee/`);
   };
 
   useEffect(() => {
     if (state?.actionLabel === "HCM_CONFIGURE_APP_RESPONSE_ACTION" && queryStrings?.isSuccess === "true") {
       const timer = setTimeout(() => {
-        navigate(state?.actionLink || `/${window.contextPath}/employee/`);
+        navigation(state?.actionLink || `/${window.contextPath}/employee/`);
       }, 5000);
 
       return () => clearTimeout(timer);
@@ -57,7 +57,7 @@ const Response = () => {
           state?.secondaryActionLabel && (
             <Button
               label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
-              onClick={() => navigate(state?.secondaryActionLink)}
+              onClick={() => navigation(state?.secondaryActionLink)}
               type="button"
               variation="secondary"
             />
@@ -66,7 +66,7 @@ const Response = () => {
             icon="ArrowForward"
             isSuffix
             label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
-            onClick={() => navigate(state?.actionLink)}
+            onClick={() => navigation(state?.actionLink)}
             type="button"
           />,
         ]}

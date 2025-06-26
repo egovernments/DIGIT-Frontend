@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import _ from "lodash";
 import React, { useState, useEffect, useRef, useCallback} from "react";
-import { useHistory, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Fragment } from "react";
 import { Button, PopUp, Switch, Tooltip,Toast, TooltipWrapper, FieldV1 , Stepper , TextBlock ,Card , HeaderComponent, ActionBar  } from "@egovernments/digit-ui-components";
 import TimelineComponent from "../components/TimelineComponent";
@@ -90,7 +90,7 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, searchResult) => {
       const { t } = useTranslation();
       const tenantId = Digit?.ULBService?.getCurrentTenantId();
-      const history = useHistory();
+      const navigate = useNavigate();
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
       const campaignName = searchParams.get("name");
@@ -139,7 +139,7 @@ export const UICustomizations = {
                 variation="secondary"
                 label={t("HCM_CHECKLIST_VIEW")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`)
+                  navigate(`/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`)
                 }}
               />
               )
@@ -154,7 +154,7 @@ export const UICustomizations = {
                 variation="secondary"
                 label={t("HCM_CHECKLIST_CREATE")}
                 onClick={() => {
-                  history.push(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`)
+                  navigate(`/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`)
                 }}
               />
             );

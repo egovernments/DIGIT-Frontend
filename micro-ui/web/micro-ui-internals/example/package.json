@@ -9,8 +9,10 @@
     "start:old": "react-scripts start"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "@tanstack/react-query": "^5.62.16"
   },
   "devDependencies": {
     "@egovernments/digit-ui-libraries": "1.8.1-webpack-25",
@@ -21,7 +23,6 @@
     "http-proxy-middleware": "^1.0.5",
     "react-i18next": "15.0.0",
     "react-router-dom": "6.25.1",
-    "react-scripts": "4.0.1",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",

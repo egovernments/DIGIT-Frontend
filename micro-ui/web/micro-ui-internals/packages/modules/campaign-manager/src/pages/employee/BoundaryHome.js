@@ -1,7 +1,7 @@
 import { Card, AlertCard, Loader , Button } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import BoundaryPopup from "../../components/BoundaryPopup";
 
 const config = {
@@ -15,7 +15,7 @@ const boundaryHomeConfig={
   VIEW_EXISTING_BOUNDARY_DATA:null,
 }
 
-const navigate=(history,key,data,setShowPopUp)=>{
+const navigation=(navigate,key,data,setShowPopUp)=>{
 
 let url="";
 switch (key){
@@ -35,7 +35,7 @@ switch (key){
 if(key=="CREATE_NEW_BOUNDARY_DATA" && Object.keys(data?.boundaryData||{})?.length==0){
   setShowPopUp(true);
 }else{
-history.push(url);
+navigate(url);
 
 }
 }
@@ -46,7 +46,7 @@ const BoundaryHome = () => {
   const [showPopUp, setShowPopUp] = useState(false);
   const [authorized, setAuthorized] = useState(false);
   const [geoPodeData, setGeoPodeData] = useState(false);
-  const history = useHistory();
+  const navigate = useNavigate();
   
   const type=searchParams.get("type")|| config?.type;
 
@@ -71,7 +71,7 @@ const BoundaryHome = () => {
             variation={"secondary"}
             label={t(key)}
             isDisabled={isEditDisabled || isCreateDisabled}
-            onClick={()=>navigate(history,key,data,setShowPopUp)}
+            onClick={()=>navigation(navigate,key,data,setShowPopUp)}
             style={{ width: "35rem", height: "5rem" }}
             textStyles={{ fontSize: "1.5rem" }}
           />)

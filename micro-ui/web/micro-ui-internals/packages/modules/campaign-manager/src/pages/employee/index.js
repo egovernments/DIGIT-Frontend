@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Switch, useLocation } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { Routes, Route,useLocation } from "react-router-dom";
+// import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
@@ -38,7 +38,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
   const search = useLocation().search;
   const queryParams = new URLSearchParams(search);
-  const history = useHistory();
+  // const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
   const campaignNumber = url?.campaignNumber;
   const campaignId = url?.campaignId;
@@ -213,49 +213,44 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         )}
         <AppHelpTutorial  appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT"/>
       </div>
-      <Switch>
-        <AppContainer className="campaign">
-          <PrivateRoute path={`${path}/create-campaign/upload-boundary-data`} component={() => <UploadBoundaryData />} />
-          <PrivateRoute path={`${path}/create-campaign/cycle-configure`} component={() => <CycleConfiguration />} />
-          <PrivateRoute path={`${path}/create-campaign/delivery-details`} component={() => <DeliveryRule />} />
-          <PrivateRoute
-            path={`${path}/setup-campaign`}
-            component={() => <SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
-          />
-          <PrivateRoute path={`${path}/my-campaign`} component={() => <MyCampaign />} />
-          <PrivateRoute path={`${path}/my-campaign-new`} component={() => <MyCampaignNew />} />
-          <PrivateRoute path={`${path}/fetch-from-microplan`} component={() => <FetchFromMicroplan />} />
-          <PrivateRoute path={`${path}/preview`} component={() => <CampaignSummary />} />
-          <PrivateRoute path={`${path}/response`} component={() => <Response />} />
-          <PrivateRoute path={`${path}/add-product`} component={() => <AddProduct />} />
-          <PrivateRoute path={`${path}/configure-app`} component={() => <ConfigureApp />} />
-          <PrivateRoute path={`${path}/update-dates-boundary`} component={() => <UpdateDatesWithBoundaries />} />
-          <PrivateRoute path={`${path}/checklist/create`} component={() => <CreateChecklist />} />
-          <PrivateRoute path={`${path}/checklist/search`} component={() => <SearchChecklist />} />
-          <PrivateRoute path={`${path}/checklist/view`} component={() => <ViewChecklist />} />
-          <PrivateRoute path={`${path}/checklist/update`} component={() => <UpdateChecklist />} />
-          <PrivateRoute path={`${path}/boundary/home`} component={() => <BoundaryHome />} />
-          <PrivateRoute path={`${path}/boundary/create`} component={() => <BoundaryRelationCreate />} />
-          <PrivateRoute path={`${path}/boundary/view-all-hierarchy`} component={() => <ViewBoundary />} />
-          <PrivateRoute path={`${path}/boundary/data`} component={() => <ViewHierarchy />} />
-          <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
-          <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
-          <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
-          <PrivateRoute path={`${path}/app-configuration-redesign`} component={() => <AppConfigurationParentRedesign />} />
-          <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
-          <PrivateRoute path={`${path}/schema-builder-configuration`} component={() => <SchemaBuilder />} />
-          <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
-          <PrivateRoute
-            path={`${path}/create-campaign`}
-            component={() => <CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
-          />
-          <PrivateRoute path={`${path}/campaign-home`} component={() => <CampaignHome />} />
-          <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
-          <PrivateRoute path={`${path}/app-modules`} component={() => <AppModule />} />
-          <PrivateRoute path={`${path}/app-features`} component={() => <AppFeatures />} />
-          <HelpInfoCard appPath={path} location={location} />
-        </AppContainer>
-      </Switch>
+      <AppContainer className="campaign">
+        <Routes>
+          <Route path="create-campaign/upload-boundary-data" element={<PrivateRoute element={<UploadBoundaryData />} />} />
+          <Route path="create-campaign/cycle-configure" element={<PrivateRoute element={<CycleConfiguration />} />} />
+          <Route path="create-campaign/delivery-details" element={<PrivateRoute element={<DeliveryRule />} />} />
+          <Route path="setup-campaign" element={<PrivateRoute element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />} />
+          <Route path="my-campaign" element={<PrivateRoute element={<MyCampaign />} />} />
+          <Route path="my-campaign-new" element={<PrivateRoute element={<MyCampaignNew />} />} />
+          <Route path="fetch-from-microplan" element={<PrivateRoute element={<FetchFromMicroplan />} />} />
+          <Route path="preview" element={<PrivateRoute element={<CampaignSummary />} />} />
+          <Route path="response" element={<PrivateRoute element={<Response />} />} />
+          <Route path="add-product" element={<PrivateRoute element={<AddProduct />} />} />
+          <Route path="configure-app" element={<PrivateRoute element={<ConfigureApp />} />} />
+          <Route path="update-dates-boundary" element={<PrivateRoute element={<UpdateDatesWithBoundaries />} />} />
+          <Route path="checklist/create" element={<PrivateRoute element={<CreateChecklist />} />} />
+          <Route path="checklist/search" element={<PrivateRoute element={<SearchChecklist />} />} />
+          <Route path="checklist/view" element={<PrivateRoute element={<ViewChecklist />} />} />
+          <Route path="checklist/update" element={<PrivateRoute element={<UpdateChecklist />} />} />
+          <Route path="boundary/home" element={<PrivateRoute element={<BoundaryHome />} />} />
+          <Route path="boundary/create" element={<PrivateRoute element={<BoundaryRelationCreate />} />} />
+          <Route path="boundary/view-all-hierarchy" element={<PrivateRoute element={<ViewBoundary />} />} />
+          <Route path="boundary/data" element={<PrivateRoute element={<ViewHierarchy />} />} />
+          <Route path="update-campaign" element={<PrivateRoute element={<UpdateCampaign hierarchyData={hierarchyData} />} />} />
+          <Route path="setup-from-microplan" element={<PrivateRoute element={<ApprovedMicroplans />} />} />
+          <Route path="app-configuration-parent" element={<PrivateRoute element={<AppConfigurationParentLayer />} />} />
+          <Route path="app-configuration-redesign" element={<PrivateRoute element={<AppConfigurationParentRedesign />} />} />
+          <Route path="form-builder-configuration" element={<PrivateRoute element={<FormBuilder />} />} />
+          <Route path="schema-builder-configuration" element={<PrivateRoute element={<SchemaBuilder />} />} />
+          {/* <Route path="app-configuration" element={<PrivateRoute element={<AppConfigurationWrapper />} />} /> */}
+          <Route path="create-campaign" element={<PrivateRoute element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />} />
+          <Route path="campaign-home" element={<PrivateRoute element={<CampaignHome />} />} />
+          <Route path="view-details" element={<PrivateRoute element={<CampaignDetails />} />} />
+          <Route path="app-modules" element={<PrivateRoute element={<AppModule />} />} />
+          <Route path="app-features" element={<PrivateRoute element={<AppFeatures />} />} />
+        </Routes>
+
+        <HelpInfoCard appPath={path} location={location} />
+      </AppContainer>
     </React.Fragment>
   );
 };

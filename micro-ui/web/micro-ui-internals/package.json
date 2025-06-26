@@ -5,7 +5,8 @@
   "workspaces": [
     "example",
     "packages/*",
-    "packages/modules/*"
+    "packages/modules/core",
+    "packages/modules/campaign-manager"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -13,19 +14,18 @@
   "engines": {
     "node": ">=14"
   },
-    "scripts": {
+  "scripts": {
     "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
-    "buildD:svg-components": "cd packages/svg-components && yarn build",
-    "buildD:ui-components": "cd packages/ui-components && yarn build",
-    "buildD:react-components": "cd packages/react-components && yarn build",
-    "buildD:libraries": "cd packages/libraries && yarn build",
-    "buildD:sample": "cd packages/modules/sample && yarn build",
+    "build:svg-components": "cd packages/svg-components && yarn build",
+    "build:libraries": "cd packages/libraries && yarn build",
+    "build:ui-components": "cd packages/ui-components && yarn build",
+    "build:react-components": "cd packages/react-components && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
-    "build:workbench": "cd packages/modules/workbench && yarn build",
+    "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",
     "clean": "run-s clean:**",
@@ -51,7 +51,8 @@
     "clean:yarnLock": "rm -rf yarn.lock",
     "clean:WebyarnLock": "cd ../ && rm -rf yarn.lock",
     "clean:Web": "cd ../ && rm -rf node_modules",
-    "clean:mui": "rm -rf node_modules"
+    "clean:mui": "rm -rf node_modules",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
@@ -67,7 +68,9 @@
     "*.{js,css,md}": "prettier --write"
   },
   "eslintConfig": {
-    "extends": ["react-app"]
+    "extends": [
+      "react-app"
+    ]
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",

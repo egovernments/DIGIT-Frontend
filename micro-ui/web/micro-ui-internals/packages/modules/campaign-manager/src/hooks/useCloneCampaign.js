@@ -1,5 +1,5 @@
 import { useSearchCampaign } from "./services/useSearchCampaign";
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import useCreateCampaign from "./useCreateCampaign";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useMemo, useEffect, useState } from "react";

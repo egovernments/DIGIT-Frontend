@@ -1,7 +1,7 @@
 import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
@@ -14,7 +14,7 @@ export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 const CampaignDetails = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
@@ -200,7 +200,7 @@ const CampaignDetails = () => {
       },
       {
         onSuccess: async (data) => {
-          history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`, {
+          navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}&campaignId=${data?.CampaignDetails?.campaignNumber}`, {
             message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
             text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
             info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
@@ -259,7 +259,7 @@ const CampaignDetails = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate )}`;
+  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate)}`;
 
   const closeToast = () => {
     setShowToast(null);
@@ -274,9 +274,7 @@ const CampaignDetails = () => {
             <div
               className="hover"
               onClick={() => {
-                history.push(
-                  `/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`
-                );
+                navigate(`/${window.contextPath}/employee/campaign/create-campaign?key=2&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
               }}
             >
               <Edit />
@@ -307,15 +305,15 @@ const CampaignDetails = () => {
           }}
           onClick={() => {
             if (campaignData?.status === "created") {
-              history.push(
+              navigate(
                 `/${window.contextPath}/employee/campaign/update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
               );
             } else {
-              history.push(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
+              navigate(`/${window.contextPath}/employee/campaign/create-campaign?key=3&editName=${true}&id=${campaignData?.id}&draft=${isDraft}`);
             }
           }}
         >
-          <Edit width={"18"} height={"18"}/>
+          <Edit width={"18"} height={"18"} />
         </div>
       </div>
       <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
@@ -354,9 +352,7 @@ const CampaignDetails = () => {
         maxActionFieldsAllowed={5}
         setactionFieldsToRight={true}
       />
-      {showQRPopUp && (
-        <QRButton setShowQRPopUp={setShowQRPopUp}/>
-      )}
+      {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}

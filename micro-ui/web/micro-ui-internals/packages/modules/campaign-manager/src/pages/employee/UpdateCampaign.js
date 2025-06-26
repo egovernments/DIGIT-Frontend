@@ -1,7 +1,7 @@
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Toast, Stepper, Loader } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
@@ -21,7 +21,7 @@ import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } fro
 const UpdateCampaign = ({ hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -293,16 +293,13 @@ const UpdateCampaign = ({ hierarchyData }) => {
               },
               onSuccess: async (data) => {
                 draftRefetch();
-                history.push(
-                  `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
-                  {
-                    message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                    text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                    info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                    actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
-                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
-                  }
-                );
+                navigate(`/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`, {
+                  message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+                  text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+                  info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                  actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
+                  actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
+                });
                 Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
               },
               onSettled: () => {
@@ -788,9 +785,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
     if (currentKey > 1) {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
-    }
-    else{
-      history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+    } else {
+      navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     }
   };
 

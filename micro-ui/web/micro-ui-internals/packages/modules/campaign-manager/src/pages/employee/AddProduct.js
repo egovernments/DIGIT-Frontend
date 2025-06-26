@@ -1,13 +1,13 @@
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { addProductConfig } from "../../configs/addProductConfig";
 import { Toast } from "@egovernments/digit-ui-components";
 
 function AddProduct() {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const { state } = useLocation();
@@ -89,7 +89,7 @@ function AddProduct() {
           const target = formData?.["addProduct"]?.find((f) => {
             const combination = `${f.name}-${f.variant}`;
             if (f.name === i.name && !usedCombinations.has(combination)) {
-              usedCombinations.add(combination); 
+              usedCombinations.add(combination);
               return true;
             }
             return false;
@@ -101,15 +101,15 @@ function AddProduct() {
               variation: target?.variant,
               sku: `${target?.name} - ${target?.variant}`,
               additionalFields: {
-                "schema": "ProductVariant",
-                "version": 1,
+                schema: "ProductVariant",
+                version: 1,
                 fields: [
-                    {
-                        value: state?.projectType,
-                        key: "projectType"
-                    }
-                ]
-            }
+                  {
+                    value: state?.projectType,
+                    key: "projectType",
+                  },
+                ],
+              },
             };
           }
           return;
@@ -120,7 +120,7 @@ function AddProduct() {
             setShowToast({ key: "error", label: error, isError: true });
           },
           onSuccess: async (data) => {
-            history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+            navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
               message: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
               preText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
               boldText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_BOLD_TEXT",
@@ -139,7 +139,7 @@ function AddProduct() {
   };
 
   const onSecondayActionClick = () => {
-    history.push(`/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`);
+    navigate(`/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`);
   };
 
   return (

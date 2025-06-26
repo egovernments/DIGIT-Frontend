@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
 import { Stepper, Toast, Button, Footer, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -8,7 +8,7 @@ import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [totalFormData, setTotalFormData] = useState({});
@@ -161,8 +161,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       if (formData?.CampaignName?.length > 30) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return;
-      }
-      else{
+      } else {
         setShowToast(null);
       }
       setIsValidatingName(true);
@@ -171,8 +170,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
         setIsValidatingName(false);
         return;
-      }
-      else {
+      } else {
         setShowToast(null);
       }
       setIsValidatingName(false);
@@ -227,11 +225,11 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
               //   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
               // );
               if (isDraft === "true") {
-                history.push(
+                navigate(
                   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
                 );
               } else {
-                history.push(
+                navigate(
                   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
                 );
               }

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -44,7 +44,7 @@ const isFeatureSelected = (feature, module, selectedFeaturesByModule) => selecte
 
 const AppFeatures = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const mdmsBaseUrl = getMDMSUrl(true);
   const { campaignNumber, projectType, tenantId } = Digit.Hooks.useQueryParams();
   const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
@@ -86,8 +86,6 @@ const AppFeatures = () => {
   }, [availableFormats, campaignNumber]);
 
   const { isLoading: isSelectedFeatureLoading, data: selectedFeatureConfigs } = Digit.Hooks.useCustomAPIHook(selectedFeatureCriteria);
-
-  
 
   // Fetch toggle tab names (module codes) for campaign
   const { isLoading: isModuleToggleLoading, data: moduleToggleData } = Digit.Hooks.useCustomAPIHook(
@@ -196,7 +194,7 @@ const AppFeatures = () => {
             style={{ marginLeft: "2.5rem" }}
             icon={"ArrowBack"}
             onClick={() => {
-              history.push(
+              navigate(
                 `/${window.contextPath}/employee/campaign/app-modules?projectType=${projectType}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`
               );
             }}
@@ -222,7 +220,7 @@ const AppFeatures = () => {
                   },
                   {
                     onSuccess: () => {
-                      history.push(redirectURL);
+                      navigate(redirectURL);
                     },
                     onError: (err) => {
                       console.error("Update failed:", err);
@@ -230,7 +228,7 @@ const AppFeatures = () => {
                   }
                 );
               } else {
-                history.push(redirectURL);
+                navigate(redirectURL);
               }
             }}
           />,
@@ -321,7 +319,7 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
 
   // Sort finalToggleOptions by order
   finalToggleOptions.sort((a, b) => {
-    return (orderMap.get(a.code)) - (orderMap.get(b.code));
+    return orderMap.get(a.code) - orderMap.get(b.code);
   });
 
   // Render the toggle UI component

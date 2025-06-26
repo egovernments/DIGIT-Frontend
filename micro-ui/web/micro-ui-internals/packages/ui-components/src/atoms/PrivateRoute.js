@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import { Navigate, useLocation } from "react-router-dom";
 
-export const PrivateRoute = ({ element: Component, roles }) => {
+export const PrivateRoute = ({ element, roles }) => {
   const location = useLocation();
   const user = window?.Digit?.UserService.getUser();
   const userType = window?.Digit?.UserService.getType();
@@ -23,7 +23,7 @@ export const PrivateRoute = ({ element: Component, roles }) => {
     );
   }
 
-  return Component;
+  return element; 
 };
 
 PrivateRoute.propTypes = {

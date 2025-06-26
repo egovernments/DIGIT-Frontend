@@ -1,6 +1,6 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
@@ -149,7 +149,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -180,7 +180,7 @@ const CampaignSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
+    navigate(newUrl);
   };
 
   function updateUrlParams(params) {

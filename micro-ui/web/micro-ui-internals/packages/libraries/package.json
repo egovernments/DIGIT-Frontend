@@ -18,8 +18,10 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
-    "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "@tanstack/react-query": "^5.62.16"
   },
   "devDependencies": {
     "react": "^19.0.0",
@@ -52,7 +54,6 @@
     "react-redux": "9.2.0",
     "redux": "5.0.0",
     "xlsx": "0.17.5",
-    "@tanstack/react-query": "^5.62.16"
   },
   "browserslist": {
     "production": [

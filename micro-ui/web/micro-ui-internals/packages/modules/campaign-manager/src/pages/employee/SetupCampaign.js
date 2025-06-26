@@ -1,7 +1,7 @@
 import { FormComposerV2, LoaderWithGap } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CampaignConfig } from "../../configs/CampaignConfig";
 import { Stepper, Toast, Button, Footer, Loader } from "@egovernments/digit-ui-components";
 import {
@@ -29,7 +29,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(0);
   const [totalFormData, setTotalFormData] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -191,7 +191,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (!draftData) return;
     const restructureFormData = transformDraftDataToFormData(draftData, projectType);
     setParams({ ...restructureFormData });
-  }, [ draftData]);
+  }, [draftData]);
 
   useEffect(() => {
     if (draftData?.additionalDetails?.facilityId && draftData?.additionalDetails?.targetId && draftData?.additionalDetails?.userId) {
@@ -354,7 +354,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       //         },
       //         onSuccess: async (data) => {
       //           draftRefetch();
-      //           history.push(
+      //           navigate(
       //             `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
       //             {
       //               message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
@@ -905,12 +905,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       if (currentKey == 6 || currentKey == 9 || currentKey == 15) {
         setShowToast({ key: "success", label: t("HCM_DRAFT_SUCCESS") });
         if (isDraft === "true") {
-          history.push(
-            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
-          );
-        } 
-        else {
-          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+          navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`);
+        } else {
+          navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
         }
       }
       return;
@@ -956,12 +953,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (isSubmit) {
       if (currentKey == 5 || currentKey == 7 || currentKey == 10) {
         if (isDraft === "true") {
-          history.push(
-            `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
-          );
-        } 
-        else {
-          history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+          navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`);
+        } else {
+          navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
         }
       }
       return;
@@ -1003,14 +997,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     setDisplayMenu(false);
     switch (action) {
       case "HCM_UPDATE_DATES":
-        history.push(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}&campaignName=${draftData?.campaignName}`, {
+        navigate(`/${window.contextPath}/employee/campaign/update-dates-boundary?id=${id}&campaignName=${draftData?.campaignName}`, {
           name: draftData?.campaignName,
           projectId: draftData?.projectId,
           data: draftData,
         });
         break;
       case "HCM_CONFIGURE_APP":
-        history.push(
+        navigate(
           `/${window.contextPath}/employee/campaign/checklist/search?name=${draftData?.campaignName}&campaignId=${draftData?.id}&projectType=${draftData?.projectType}`,
           {
             name: draftData?.campaignName,
@@ -1020,14 +1014,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         );
         break;
       case "HCM_UPDATE_CAMPAIGN":
-        history.push(
-          `/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`,
-          {
-            name: draftData?.campaignName,
-            projectId: draftData?.projectId,
-            data: draftData,
-          }
-        );
+        navigate(`/${window.contextPath}/employee/campaign/update-campaign?key=1&parentId=${draftData?.id}&campaignName=${draftData?.campaignName}`, {
+          name: draftData?.campaignName,
+          projectId: draftData?.projectId,
+          data: draftData,
+        });
         break;
       default:
         break;
@@ -1041,7 +1032,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   ];
 
   const onActionClick = () => {
-    history.push(`/${window?.contextPath}/employee/campaign/my-campaign`);
+    navigate(`/${window?.contextPath}/employee/campaign/my-campaign`);
   };
 
   return (
