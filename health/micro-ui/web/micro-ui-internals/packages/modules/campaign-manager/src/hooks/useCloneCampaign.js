@@ -204,7 +204,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         ...campaignData,
         campaignName,
         deliveryRules: [],
-        resources: [],
+        // resources: [],
         parentId: null,
         isActive: true,
         campaignNumber: null,
