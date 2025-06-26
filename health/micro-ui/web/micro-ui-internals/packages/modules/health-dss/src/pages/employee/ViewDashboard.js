@@ -133,7 +133,7 @@ const ViewDashbaord = ({ stateCode }) => {
       },
     },
   };
-  const { data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
+  const { data: dashboardDataResponse } = Digit.Hooks.DSS.useAPIHook(dashboardReqCriteria);
 
   if (campaignSearchLoading || hierarchyLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
