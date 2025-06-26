@@ -14,9 +14,7 @@ import {
   Loader,
   CheckBox,
 } from "@egovernments/digit-ui-components";
-import { ResourceCard } from "./svgComponents/resourceCards";
-import { useTranslation } from "react-i18next";
-import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
+import { DynamicImageComponent } from "./DynamicImageComponent";
 import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
 import GenericTemplateScreen from "./GenericTemplateScreen";
@@ -185,13 +183,13 @@ const renderField = (field, t) => {
   switch (field.type) {
     case "text":
     case "textInput":
-      return <TextInput name="name" value={field?.name || ""} onChange={() => { }} disabled={true} />;
+      return <TextInput name="name" value={field?.name || ""} onChange={() => {}} disabled={true} />;
     case "number":
-      return <TextInput type="number" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
+      return <TextInput type="number" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
     case "textarea":
-      return <TextInput type="textarea" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
+      return <TextInput type="textarea" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
     case "time":
-      return <TextInput type="time" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
+      return <TextInput type="time" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
     case "mobileNumber":
       return (
         <TextInput
@@ -231,7 +229,7 @@ const renderField = (field, t) => {
       return (
         <SelectionTag
           errorMessage=""
-          onSelectionChanged={() => { }}
+          onSelectionChanged={() => {}}
           schemaCode={field?.schemaCode}
           options={data || field?.dropDownOptions}
           optionsKey={"name"}
@@ -244,14 +242,14 @@ const renderField = (field, t) => {
       );
     case "numeric":
     case "counter":
-      return <TextInput name="numeric" onChange={() => { }} type={"numeric"} />;
+      return <TextInput name="numeric" onChange={() => {}} type={"numeric"} />;
     case "dropdown":
       return (
         <Dropdown
           option={field?.dropDownOptions || []}
           optionKey={"name"}
           selected={[]}
-          select={() => { }}
+          select={() => {}}
           t={t} //   disabled={source === "microplan"}
         />
       );
@@ -265,7 +263,7 @@ const renderField = (field, t) => {
           option={dropDownOptions}
           optionKey={"code"}
           selected={null}
-          select={() => { }}
+          select={() => {}}
           props={props}
           moduleName={rest?.schemaCode ? rest.schemaCode.split(".")[0] : rest?.moduleMaster?.moduleName}
           masterName={rest?.schemaCode ? rest.schemaCode.split(".")[1] : rest?.moduleMaster?.masterName}
@@ -276,7 +274,7 @@ const renderField = (field, t) => {
     case "dobPicker":
     case "datePicker":
     case "dob":
-      return <TextInput type="date" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => { }} />;
+      return <TextInput type="date" className="appConfigLabelField-Input" name={""} value={field?.value} onChange={() => {}} />;
     case "button":
       return (
         <Button
@@ -285,13 +283,15 @@ const renderField = (field, t) => {
           variation="secondary"
           label={t(field?.label)}
           title={t(field?.label)}
-          onClick={() => { }}
+          onClick={() => {}}
         />
       );
-      case "custom":
-        return <div style={{width: "100%"}}> <ResourceCard style={{width: "100%", height: "auto"}}></ResourceCard></div> // TODO hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
+    case "custom":
+      return (
+        <DynamicImageComponent type={field?.type} appType={field?.appType} />
+      );
     default:
-      return <div style={{ color: "red", marginTop: "5px" }}>Unsupported field type: {field.type}</div>;
+      return<DynamicImageComponent type={field?.type} appType={field?.appType} />
   }
 };
 
