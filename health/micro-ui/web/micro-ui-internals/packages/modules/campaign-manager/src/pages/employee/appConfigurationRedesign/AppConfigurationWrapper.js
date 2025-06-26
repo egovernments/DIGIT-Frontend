@@ -34,8 +34,10 @@ const reorderConfig = (config, fromIndex, toIndex) => {
   const updatedConfig = [...config]; // Copy array to avoid mutation
   const [movedItem] = updatedConfig.splice(fromIndex, 1); // Remove item
   updatedConfig.splice(toIndex, 0, movedItem); // Insert item at new index
-
-  return updatedConfig;
+  return updatedConfig?.map((item, index) => ({
+    ...item,
+    order: index + 1,
+  }));
 };
 const reducer = (state = initialState, action, updateLocalization) => {
   switch (action.type) {
