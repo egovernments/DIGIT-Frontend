@@ -6,10 +6,10 @@
 - Sandbox Product Details Page Updated 
 
 ## [1.8.42] [18-Jun-2025]
-- -Updated the loader logic in login page
+- Updated the loader logic in login page
 
 ## [1.8.41] [12-Jun-2025]
-- -Introduced new hook useLoginConfig for mdms call
+- Introduced new hook useLoginConfig for mdms call
 
 ## [1.8.40] [11-Jun-2025]
 - Added module name config for login and privacy screen
