@@ -261,6 +261,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
             if (isNextTabAvailable && !finalSubmit) {
               tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
+              setCurrentStep(1);
               return;
             } else {
               history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
@@ -313,6 +314,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const back = () => {
     if (stepper?.find((i) => i.active)?.isFirst && isPreviousTabAvailable) {
       tabStateDispatch({ key: "PREVIOUS_TAB" });
+      setCurrentStep(1);
       return;
     } else if (stepper?.find((i) => i.active)?.isFirst && !isPreviousTabAvailable) {
       setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
