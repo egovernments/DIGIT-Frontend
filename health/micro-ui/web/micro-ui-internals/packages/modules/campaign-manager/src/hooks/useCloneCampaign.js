@@ -216,8 +216,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         status: "drafted",
       };
 
-      console.log("data" , modifiedCampaign);
-
       setStep(1);
       const createRes = await createCampaign.mutateAsync(modifiedCampaign);
       const newCampaignNumber = createRes?.CampaignDetails?.campaignNumber;
