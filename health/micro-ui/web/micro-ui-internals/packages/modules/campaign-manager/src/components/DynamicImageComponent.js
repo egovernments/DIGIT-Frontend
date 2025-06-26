@@ -1,0 +1,19 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+export const DynamicImageComponent = ({ type, appType }) => {
+  return (
+    <img
+      src={`https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/${type}/${appType}.svg`} // TODO @Nabeel @jagan @bhavya scan through the app we should have s3 urls added in app directly 
+      className="dynamic-image-component"
+      alt={`Unsupported field type: ${type}`}
+    />
+  );
+};
+
+DynamicImageComponent.propTypes = {
+  /** custom width of the svg icon */
+  type: PropTypes.string,
+  /** custom height of the svg icon */
+  appType: PropTypes.string,
+};
