@@ -203,6 +203,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
       }
     };
   }, []);
+  
   return (
     <React.Fragment>
       <div className="wbh-header-container">

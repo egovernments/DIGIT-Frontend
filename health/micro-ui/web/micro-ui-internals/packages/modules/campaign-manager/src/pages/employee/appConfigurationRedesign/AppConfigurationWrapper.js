@@ -128,6 +128,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
+                        ...action?.payload?.fieldData,
                         jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
@@ -286,7 +287,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -400,7 +401,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
         const fieldItem = headerFields[i];
         const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
         if (!value || value.trim() === "") {
-          return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")} ${fieldItem?.label}` };
+          return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")}` };
         }
       }
     }
@@ -472,6 +473,26 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     return false;
   };
 
+  const locUpdate = async () => {
+    const localeArrays = createLocaleArrays();
+    let updateCount = 0;
+    let updateSuccess = false;
+    for (const locale of Object.keys(localeArrays)) {
+      if (localeArrays[locale].length > 0) {
+        try {
+          setLoading(true);
+          const result = await localisationMutate(localeArrays[locale]);
+          updateCount = updateCount + 1;
+          updateSuccess = true;
+        } catch (error) {
+          setLoading(false);
+          setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+          console.error(`Error sending ${locale} localisation data:`, error);
+        }
+      }
+    }
+    return;
+  };
   const handleSubmit = async (finalSubmit) => {
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
@@ -516,7 +537,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <div className="app-config-flex-container">
+      {/* <div className="app-config-flex-container"> */}
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+      {/* <DndProvider backend={HTML5Backend}>
+          <AppFieldScreenWrapper onSubmit={onSubmit} />
+        </DndProvider> */}
+      {/* </div> */}
+
+      <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -526,10 +554,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           isDisabled={false}
           onClick={() => back()}
         />
-        <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
-        {/* <DndProvider backend={HTML5Backend}>
-          <AppFieldScreenWrapper onSubmit={onSubmit} />
-        </DndProvider> */}
+        <span className="app-config-tag-page"> {pageTag} </span>
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -543,7 +568,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           }}
         />
       </div>
-
       {true && (
         <SidePanel
           bgActive
@@ -700,7 +724,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={handleSubmit} />,
+            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={locUpdate} />,
           ]}
         >
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
@@ -748,11 +772,18 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 // style={}
                 variant={""}
                 t={t}
-                option={(state?.MASTER_DATA?.AppFieldType || []).filter((item) => item?.metadata?.type !== "template")}
+                option={(state?.MASTER_DATA?.AppFieldType || [])
+                  .filter((item) => item?.metadata?.type !== "template")
+                  ?.sort((a, b) => a?.order - b?.order)}
                 optionKey={"type"}
                 selected={addFieldData?.type}
                 select={(value) => {
-                  setAddFieldData((prev) => ({ ...prev, type: value }));
+                  const isIdPopulator = value?.type === "idPopulator";
+                  setAddFieldData((prev) => ({
+                    ...prev,
+                    type: value,
+                    ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
+                  }));
                 }}
               />
             </LabelFieldPair>,

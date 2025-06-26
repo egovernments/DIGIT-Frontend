@@ -202,33 +202,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       const updated = screenData.find((d) => d.name === item.name);
       return updated ? updated : item;
     });
-    await updateMutate(
-      {
-        moduleName: "HCM-ADMIN-CONSOLE",
-        masterName: "AppConfigCache",
-        data: {
-          ...cacheData,
-          data: {
-            projectType: projectType,
-            campaignNumber: campaignNumber,
-            flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
-            data: mergedTemplate,
-            version: cacheData?.data?.version ? cacheData?.data?.version : parentState?.actualTemplate?.version,
-            localeModule: localeModule,
-            actualTemplate: cacheData?.data?.actualTemplate ? cacheData?.data?.actualTemplate : parentState?.actualTemplate,
-          },
-        },
-      },
-      {
-        onError: (error, variables) => {
-          setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
-        },
-        onSuccess: async (data) => {
-          setShowToast({ key: "success", label: "CACHE_DONE" });
-          refetchCache();
-        },
-      }
-    );
     if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
       //TODO LAST UPDATE WE WILL CLEAR SAVE MDMS AND SAVE TO FINAL MDMS
       const mergedTemplate = parentState.currentTemplate.map((item) => {
@@ -257,8 +230,12 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           masterName: "AppConfigCache",
           data: {
             ...cacheData,
-            data: null,
-            isActive: false,
+            data: {
+              projectType: projectType,
+              campaignNumber: campaignNumber,
+              flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
+              data: null,
+            },
           },
         },
         {
@@ -266,7 +243,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
           onSuccess: async (data) => {
-            setShowToast({ key: "success", label: "CACHE_CLEAR" });
+            // setShowToast({ key: "success", label: "CACHE_CLEAR" });
           },
         }
       );
@@ -298,6 +275,33 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         }
       );
     } else {
+      await updateMutate(
+        {
+          moduleName: "HCM-ADMIN-CONSOLE",
+          masterName: "AppConfigCache",
+          data: {
+            ...cacheData,
+            data: {
+              projectType: projectType,
+              campaignNumber: campaignNumber,
+              flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
+              data: mergedTemplate,
+              version: cacheData?.data?.version ? cacheData?.data?.version : parentState?.actualTemplate?.version,
+              localeModule: localeModule,
+              actualTemplate: cacheData?.data?.actualTemplate ? cacheData?.data?.actualTemplate : parentState?.actualTemplate,
+            },
+          },
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
+          },
+          onSuccess: async (data) => {
+            // setShowToast({ key: "success", label: "CACHE_DONE" });
+            refetchCache();
+          },
+        }
+      );
       setCurrentStep((prev) => prev + 1);
     }
   };
@@ -320,13 +324,14 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   return (
     <div>
       <Header className="app-config-header">
-        <div className="app-config-header-group" style={{ display: "flex" , alignItems: "center"}}>
-          {t(`${currentScreen?.[0]?.name}`)}{" "}
+        <div className="app-config-header-group" style={{ display: "flex", alignItems: "center" }}>
+          {t(`APP_CONFIG_HEADING_LABEL`)}
+          {/* {t(`${currentScreen?.[0]?.name}`)} */}
           <Tag
             stroke={true}
             showIcon={false}
             label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
-            style={{ background: "#EFF8FF" , height: "fit-content" }}
+            style={{ background: "#EFF8FF", height: "fit-content" }}
           />
         </div>
       </Header>
@@ -337,7 +342,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             style={{
               display: "flex",
               alignItems: "flex-end",
-              marginLeft: "16rem",
+              marginLeft: "30.5rem",
               gap: "5rem",
             }}
           >
@@ -350,9 +355,10 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               parentDispatch={parentDispatch}
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
+              pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             />
           </div>
-          <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span>
+          {/* <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span> */}
         </div>
       </div>
       {showToast && (

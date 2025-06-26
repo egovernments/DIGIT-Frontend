@@ -1,7 +1,18 @@
-import React, { useEffect, useRef } from "react";
-import { Notifications } from "@egovernments/digit-ui-svg-components";
+import React, { useEffect, useRef, useState } from "react";
+import { Notifications, ZoomIn, ZoomOut } from "@egovernments/digit-ui-svg-components";
 
 const MobileBezelFrame = ({ children }) => {
+  const [zoomLevel, setZoomLevel] = useState(1); // default 1 (100%)
+
+  const zoomIn = () => {
+    setZoomLevel((prev) => Math.min(2, prev + 0.1)); // limit to 200%
+  };
+
+  const zoomOut = () => {
+    setZoomLevel((prev) => Math.max(0.3, prev - 0.1)); // limit to 30%
+  };
+  const zoomPercentage = Math.round(zoomLevel * 100);
+
   const scrollRef = useRef(null);
   let scrollTimeout = null;
   useEffect(() => {
@@ -25,23 +36,43 @@ const MobileBezelFrame = ({ children }) => {
   }, []);
 
   return (
-    <div className="mobile-bezel-outerWrapper" style={styles.outerWrapper}>
-      <div className="mobile-bezel-deviceWrapper" style={styles.deviceWrapper}>
-        <div className="mobile-bezel-camera" style={styles.camera}></div>
-        <div className="mobile-bezel-screen" ref={scrollRef} style={styles.screen}>
-          <div className="mobile-top-bar" style={{ flexDirection: "row", gap: "1rem" }}>
-            <div className="mobile-menu-icon">&#9776;</div>
-            <img
-              src="https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/mseva-white-logo.png"
-              alt="MSEVA Logo"
-              className="mseva-logo"
-              style={{ width: "8rem", filter: "brightness(0) invert(1)" }}
-            />
-            <div className="mobile-notifications-icon" style={{ marginLeft: "auto" }}>
-              <Notifications width="24" height="24" fill="white" />
+    <div className="mobile-bezel-flexContainer">
+      <div className="mobile-bezel-zoom-container">
+        <button className="item zoom-button" onClick={zoomOut}>
+          <ZoomOut />
+        </button>
+        <span className="item zoom-span">{zoomPercentage}%</span>
+        <button className="item zoom-button" onClick={zoomIn}>
+          <ZoomIn />
+        </button>
+      </div>
+      <div className="mobile-bezel-outerWrapper" style={styles.outerWrapper}>
+        <div className="mobile-bezel-deviceWrapper" style={styles.deviceWrapper}>
+          <div className="mobile-bezel-camera" style={styles.camera}></div>
+          <div className="mobile-bezel-screen" ref={scrollRef} style={styles.screen}>
+            <div
+              className="zoom-content"
+              style={{
+                transform: `scaleY(${zoomLevel})`,
+                transformOrigin: "top",
+                transition: "transform 0.3s ease",
+              }}
+            >
+              <div className="mobile-top-bar" style={{ flexDirection: "row", gap: "1rem" }}>
+                <div className="mobile-menu-icon">&#9776;</div>
+                <img
+                  src="https://egov-uat-assets.s3.ap-south-1.amazonaws.com/hcm/mseva-white-logo.png"
+                  alt="MSEVA Logo"
+                  className="mseva-logo"
+                  style={{ width: "8rem", filter: "brightness(0) invert(1)" }}
+                />
+                <div className="mobile-notifications-icon" style={{ marginLeft: "auto" }}>
+                  <Notifications width="24" height="24" fill="white" />
+                </div>
+              </div>
+              {children}
             </div>
           </div>
-          {children}
         </div>
       </div>
     </div>

@@ -148,11 +148,11 @@ const AppConfigurationTabLayer = () => {
             toggleOptions={numberTabs}
             selectedOption={numberTabs?.find((i) => i.active)?.code}
             handleToggleChange={(tab, index) => {
-              setShowPopUp(tab);
-              // tabStateDispatch({
-              //   key: "CHANGE_ACTIVE_TAB",
-              //   tab: tab,
-              // });
+              // setShowPopUp(tab);
+              tabStateDispatch({
+                key: "CHANGE_ACTIVE_TAB",
+                tab: tab,
+              });
             }}
           />
           <AppConfigurationParentRedesign
@@ -164,7 +164,7 @@ const AppConfigurationTabLayer = () => {
           />
         </>
       )}
-      {showPopUp && (
+      {/* {showPopUp && (
         <PopUp
           className={"boundaries-pop-module"}
           type={"default"}
@@ -206,7 +206,7 @@ const AppConfigurationTabLayer = () => {
           ]}
           sortFooterChildren={true}
         ></PopUp>
-      )}
+      )} */}
     </div>
   );
 };

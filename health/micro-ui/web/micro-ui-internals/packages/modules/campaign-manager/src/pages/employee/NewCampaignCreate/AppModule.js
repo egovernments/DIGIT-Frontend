@@ -237,8 +237,8 @@ const AppModule = () => {
   );
 };
 
-  if (productTypeLoading || isLoading || isCreatingModule) {
-    return <Loader page={true} variant={"PageLoader"} />;
+  if (productTypeLoading || isLoading ) {
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")}/>
   }
 
   return (

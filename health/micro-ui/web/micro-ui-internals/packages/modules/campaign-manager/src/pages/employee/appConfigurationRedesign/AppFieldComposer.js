@@ -158,7 +158,12 @@ const Field = ({
   ...props
 }) => {
   switch (type) {
-    case "textarea":
+    case "textarea": {
+      const [textVal, setTextVal] = useState(null);
+
+      useEffect(() => {
+        setTextVal(value);
+      }, [value]);
       return (
         <>
           {infoText && (
@@ -211,7 +216,16 @@ const Field = ({
                 {!headerFields ? (
                   <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
                 ) : (
-                  <TextArea type="textarea" className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+                  <TextArea
+                    type="textarea"
+                    className="appConfigLabelField-Input"
+                    name={""}
+                    value={textVal}
+                    onChange={(event) => {
+                      setTextVal(event.target.value);
+                      return onChange(event);
+                    }}
+                  />
                 )}
                 {isDelete && (
                   <div
@@ -239,91 +253,107 @@ const Field = ({
           </LabelFieldPair>
         </>
       );
-
+    }
     case "text":
     case "textInput":
-      return (
-        <>
-          {infoText && (
-            <InfoCard
-              populators={{
-                name: "infocard",
-              }}
-              variant="default"
-              text={t(infoText)}
-            />
-          )}
-          <LabelFieldPair
-            className={
-              !headerFields
-                ? `appConfigLabelField ${
-                    config?.id
-                      ? config?.id === state?.drawerField?.id
+      {
+        const [textVal, setTextVal] = useState(null);
+
+        useEffect(() => {
+          setTextVal(value);
+        }, [value]);
+
+        return (
+          <>
+            {infoText && (
+              <InfoCard
+                populators={{
+                  name: "infocard",
+                }}
+                variant="default"
+                text={t(infoText)}
+              />
+            )}
+            <LabelFieldPair
+              className={
+                !headerFields
+                  ? `appConfigLabelField ${
+                      config?.id
+                        ? config?.id === state?.drawerField?.id
+                          ? "selected"
+                          : ""
+                        : config?.jsonPath === state?.drawerField?.jsonPath
                         ? "selected"
                         : ""
-                      : config?.jsonPath === state?.drawerField?.jsonPath
-                      ? "selected"
-                      : ""
-                  }`
-                : "appConfigHeaderLabelField"
-            }
-          >
-            {!headerFields && isDrawer ? (
-              <>
-                <PanelFieldDisplay
-                  t={t}
-                  label={label}
-                  appType={t(rest?.appType)}
-                  isDelete={isDelete}
-                  onDelete={onDelete}
-                  onToggle={onHide}
-                  config={config}
-                />
-              </>
-            ) : (
-              <>
-                <div className="appConfigLabelField-label-container">
-                  <div className="appConfigLabelField-label">
-                    <span>{`${t(label)}`}</span>
-                    {Mandatory && <span className="mandatory-span">*</span>}
-                    {helpText && (
-                      <span className="icon-wrapper">
-                        <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
-                      </span>
+                    }`
+                  : "appConfigHeaderLabelField"
+              }
+            >
+              {!headerFields && isDrawer ? (
+                <>
+                  <PanelFieldDisplay
+                    t={t}
+                    label={label}
+                    appType={t(rest?.appType)}
+                    isDelete={isDelete}
+                    onDelete={onDelete}
+                    onToggle={onHide}
+                    config={config}
+                  />
+                </>
+              ) : (
+                <>
+                  <div className="appConfigLabelField-label-container">
+                    <div className="appConfigLabelField-label">
+                      <span>{`${t(label)}`}</span>
+                      {Mandatory && <span className="mandatory-span">*</span>}
+                      {helpText && (
+                        <span className="icon-wrapper">
+                          <TooltipWrapper content={t(helpText)} children={<InfoOutline fill={"#C84C0E"} width={"20px"} height={"20px"} />} />
+                        </span>
+                      )}
+                    </div>
+                    {!headerFields ? (
+                      <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
+                    ) : (
+                      <TextInput
+                        className="appConfigLabelField-Input"
+                        name={""}
+                        value={textVal}
+                        onChange={(event) => {
+                          setTextVal(event.target.value);
+                          return onChange(event);
+                        }}
+                      />
                     )}
                   </div>
-                  {!headerFields ? (
-                    <Tag icon="" label={t(rest?.appType)} className={"app-config-field-tag"} labelStyle={{}} showIcon={false} style={{}} />
-                  ) : (
-                    <TextInput className="appConfigLabelField-Input" name={""} value={value} onChange={(event) => onChange(event)} />
+                  {isDelete && (
+                    <div
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onDelete();
+                      }}
+                      style={{
+                        cursor: "pointer",
+                        fontWeight: "600",
+                        marginLeft: "1rem",
+                        fontSize: "1rem",
+                        color: PRIMARY_COLOR,
+                        display: "flex",
+                        gap: "0.5rem",
+                        alignItems: "center",
+                        marginTop: "1rem",
+                      }}
+                    >
+                      <DustbinIcon />
+                    </div>
                   )}
-                </div>
-                {isDelete && (
-                  <div
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      onDelete();
-                    }}
-                    style={{
-                      cursor: "pointer",
-                      fontWeight: "600",
-                      marginLeft: "1rem",
-                      fontSize: "1rem",
-                      color: PRIMARY_COLOR,
-                      display: "flex",
-                      gap: "0.5rem",
-                      alignItems: "center",
-                      marginTop: "1rem",
-                    }}
-                  >
-                    <DustbinIcon />
-                  </div>
-                )}
-              </>
-            )}
-          </LabelFieldPair>
-        </>
-      );
+                </>
+              )}
+            </LabelFieldPair>
+          </>
+        );
+      }
       break;
     case "dropdown":
       return (

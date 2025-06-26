@@ -27,10 +27,9 @@ const MyCampaignNew = ({showDashboardLink}) => {
   const [isConfigReady, setIsConfigReady] = useState(false);
 
    useEffect(() => {
-    const savedIndex = parseInt(sessionStorage.getItem("HCM_SELECTED_TAB_INDEX")) || 0;
-
+   const savedIndex = parseInt(sessionStorage.getItem("HCM_SELECTED_TAB_INDEX")) || 0;
+    
     const configList = myCampaignConfigNew?.myCampaignConfigNew || [];
-
     setSelectedTabIndex(savedIndex);
     setConfig(configList[savedIndex]);
     setTabData(
@@ -46,7 +45,7 @@ const MyCampaignNew = ({showDashboardLink}) => {
   const onTabChange = (n) => {
     sessionStorage.setItem("HCM_SELECTED_TAB_INDEX", n); // Save to sessionStorage
     setSelectedTabIndex(n);
-    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n ? true : false })));
+    setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n ? true:false})));
     setConfig(myCampaignConfigNew?.myCampaignConfigNew?.[n]);
   };
   useEffect(() => {
@@ -73,7 +72,6 @@ const MyCampaignNew = ({showDashboardLink}) => {
    if (!isConfigReady || !config) {
       return <Loader page={true} variant={"PageLoader"} />;
   }
-
   return (
     <React.Fragment>
       <div className="digit-inbox-search-wrapper">

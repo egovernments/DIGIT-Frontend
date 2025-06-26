@@ -18,6 +18,7 @@ const responsePanelComponent = ({ components, t }) => {
       type="success"
       cardClassName={"app-preview-selected"}
       style={{ marginBottom: "1rem" }}
+      showAsSvg={true}
     />
   );
 };

@@ -331,7 +331,7 @@
 }
 .mobile-bezel-outerWrapper {
   transform: scale(0.8);
-  margin-top: -4rem;
+  margin-top: -5rem;
 }
 
 .app-config-tag-page-fixed {
@@ -536,8 +536,8 @@
 }
 
 .module-card {
-  width: 20rem;
-  height: 23rem;
+  width: 21rem;
+  height: 20rem;
   border: 1px;
   border-radius: 0.75rem;
 }
@@ -610,15 +610,15 @@
 }
 .name-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 0rem;
   font-weight: bold;
   text-wrap: nowrap;
+  width: 3.125rem;
 }
 .date-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 0rem;
   font-weight: bold;
   text-wrap: nowrap;
+  width: 3.125rem;
 }
 .pop-display {
   display: flex;
@@ -629,9 +629,9 @@
 }
 .end-date-container-popUp {
   margin-top: 0.8rem;
-  margin-right: 1rem;
   font-weight: bold;
   text-wrap: nowrap;
+  width: 3.125rem;
 }
 
 .app-config-version-tags {
@@ -755,6 +755,7 @@
 }
 .app-config-flex-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
   margin-right: 24rem;
   margin-left: unquote("min(10%, 12rem)");

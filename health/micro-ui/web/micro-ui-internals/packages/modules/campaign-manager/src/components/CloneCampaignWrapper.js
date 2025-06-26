@@ -183,12 +183,14 @@ const CloneCampaignWrapper = (props) => {
                     style={{ width: "-webkit-fill-available", marginBottom: "0" }}
                     populators={{ 
                       newDateFormat: true,
-                      name: "campaignStartDate", validation: { min: new Date(Date.now() + 86400000).toISOString().split("T")[0] } }}
+                      name: "campaignStartDate", 
+                      min: new Date(Date.now() + 86400000).toISOString().split("T")[0],
+                      validation: { min: new Date(Date.now() + 86400000).toISOString().split("T")[0] } }}
                     value={startDate}
                     onChange={(event) => {
                       const value = event.target.value;
-                      setStartDate(value);
-                      if (value) setStartError(false);
+                      setStartDate(event);
+                      if (event) setStartError(false);
                     }}
                   />
                 </LabelFieldPair>
@@ -203,12 +205,13 @@ const CloneCampaignWrapper = (props) => {
                     style={{ width: "-webkit-fill-available", marginBottom: "0" }}
                     populators={{ 
                       newDateFormat: true,
+                      min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0],
                       name: "campaignEndDate", validation: { min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0] } }}
                     value={endDate}
                     onChange={(event) => {
                       const value = event.target.value;
-                      setEndDate(value);
-                      if (value) setEndError(false);
+                      setEndDate(event);
+                      if (event) setEndError(false);
                     }}
                   />
                 </LabelFieldPair>
