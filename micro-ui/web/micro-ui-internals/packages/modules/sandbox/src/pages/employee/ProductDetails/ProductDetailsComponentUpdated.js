@@ -29,14 +29,14 @@ const Breadcrumb = ({ path }) => (
     </div>
 );
 
-const HeroSection = ({ title, headline,img }) => (
+const HeroSection = ({ title, headline, img }) => (
     <div style={{
         width: '100%', backgroundColor: '#e4edf1', padding: '3rem 6rem', minHeight: '35rem'
     }}>
         <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
             <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <h2 style={{ color: '#215B73', fontSize: '2.5rem', margin: '0rem 0rem' }}>{title}</h2>
-                <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3', margin: '1.5rem 0rem'  }}>
+                <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3', margin: '1.5rem 0rem' }}>
                     {headline.map((segment, i) => (
                         <span key={i} style={{ color: segment.color }}>{segment.text} </span>
                     ))}
@@ -69,11 +69,11 @@ const AboutSection = ({ about }) =>
                 )
             })}
             <div className="roles-column-align">
-            <div className="roles-section">
-                {about.roles.map((r, i) => (
-                    <RoleBlock key={i} description={r.description} />
-                ))}
-            </div>
+                <div className="roles-section">
+                    {about.roles.map((r, i) => (
+                        <RoleBlock key={i} description={r.description} />
+                    ))}
+                </div>
             </div>
         </div>
     </div>
@@ -81,13 +81,13 @@ const AboutSection = ({ about }) =>
 
 
 
-const RoleBlock = ({ description }) => {    
+const RoleBlock = ({ description }) => {
     const decodedDescription = he.decode(description); // decode &lt;strong&gt;
     const isCitizen = decodedDescription.toLowerCase().includes('citizen');
     return (
         <div className="role-block">
             <div className="role-icon-wrapper">
-                {isCitizen ? <Citizenicon  /> : <Employeeicon />}
+                {isCitizen ? <Citizenicon /> : <Employeeicon />}
             </div>
             <p dangerouslySetInnerHTML={{ __html: decodedDescription }} />
         </div>
@@ -115,7 +115,7 @@ const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t }) => (
     <div className="cs-wrapper-align">
         <div className="cs-wrapper">
             {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
-            <div className={`cs-right ${reverse ? `cs-justify-start` : `cs-justify-end` }`}>
+            <div className={`cs-right ${reverse ? `cs-justify-start` : `cs-justify-end`}`}>
                 <img src={imageUrl} alt="UI" className="cs-image" />
             </div>
             {reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
@@ -137,7 +137,9 @@ const RoleContent = ({ role, cards, config, t }) => (
         })}
         <button
 
-            onClick={() => {
+            onClick=
+
+            {() => {
                 try {
                     if (config.isExternal) {
                         window.open(config?.action, "_blank");
@@ -227,7 +229,7 @@ const content = {
 };
 
 const handleButtonClick = (action) => {
-    const url = '/' + window.contextPath + action;
+    const url = '/' + window.contextPath + action + "?from=sandbox";
     window.open(url, "_blank");
 };
 
@@ -318,7 +320,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             roles[currentRoleIndex] = {
                 role: t(item.text),
                 imageUrl: roleConfigs[roleType].imageUrl,
-                reverse: currentRoleIndex%2 === 1,
+                reverse: currentRoleIndex % 2 === 1,
                 cards: [],
                 config: {
                     action: config[0].cards[currentRoleIndex].action,
