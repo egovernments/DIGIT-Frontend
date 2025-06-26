@@ -1098,7 +1098,7 @@ tbody {
   }
 }
 .app-preview-field-pair.app-preview-selected {
-  .digit-header-content .label{
+  .digit-header-content .label {
     width: 100%;
   }
   background-color: #c84c0e1a;
@@ -1130,30 +1130,33 @@ tbody {
 }
 
 .drawer-toggle-field-container {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
   border: 1px solid #d6d5d4;
   background: #fafafa;
   border-radius: 0.5rem;
   padding: 1rem;
-  .digit-switch-container {
-    .digit-switch-label {
-      @extend .typography.body-s;
-      color: theme(digitv2.lightTheme.text-color-secondary);
-    }
-  }
-  .drawer-toggle-conditional-field {
+  .drawer-container-tooltip {
+    position: relative;
     display: flex;
     flex-direction: column;
-    gap: 0.1rem;
-    .digit-header-content.label {
-      @extend .typography.body-s;
-      color: theme(digitv2.lightTheme.text-color-secondary);
-      width: 100%;
+    gap: 1rem;
+    .digit-switch-container {
+      .digit-switch-label {
+        @extend .typography.body-s;
+        color: theme(digitv2.lightTheme.text-color-secondary);
+      }
     }
-    .digit-field {
-      width: 100%;
+    .drawer-toggle-conditional-field {
+      display: flex;
+      flex-direction: column;
+      gap: 0.1rem;
+      .digit-header-content.label {
+        @extend .typography.body-s;
+        color: theme(digitv2.lightTheme.text-color-secondary);
+        width: 100%;
+      }
+      .digit-field {
+        width: 100%;
+      }
     }
   }
 }
@@ -1177,8 +1180,8 @@ tbody {
 }
 .mobile-bezel-child-container {
   height: 90%;
-  .app-preview-selected{
-    .digit-header-content{
+  .app-preview-selected {
+    .digit-header-content {
       width: 100%;
     }
   }
@@ -1282,10 +1285,6 @@ tbody {
 }
 .zoom-content {
   height: 100%;
-}
-.drawer-container-tooltip {
-  position: relative;
-  display: inline-block; /* or block if needed */
 }
 
 .onhover-tooltip-text {
