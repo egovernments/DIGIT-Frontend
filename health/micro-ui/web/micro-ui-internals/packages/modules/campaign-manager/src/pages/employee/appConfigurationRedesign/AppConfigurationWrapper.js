@@ -372,14 +372,13 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
-      result[locale] = locState
-        .map((item) => ({
-          code: item.code,
-          message: item[locale] || "",
-          module: localeModule ? localeModule : "hcm-dummy-module",
-          locale: locale,
-        }))
-        .filter((item) => item.message !== "");
+      result[locale] = locState.map((item) => ({
+        code: item.code,
+        message: item[locale] || " ",
+        module: localeModule ? localeModule : "hcm-dummy-module",
+        locale: locale,
+      }));
+      // .filter((item) => item.message !== "");
     });
 
     return result;
@@ -491,6 +490,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
         }
       }
     }
+    setLoading(false);
     return;
   };
   const handleSubmit = async (finalSubmit) => {
@@ -724,7 +724,16 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={locUpdate} />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                locUpdate();
+                setShowPopUp(false);
+              }}
+            />,
           ]}
         >
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
