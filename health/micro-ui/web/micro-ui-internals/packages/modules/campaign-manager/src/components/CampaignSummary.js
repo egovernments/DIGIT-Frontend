@@ -3,8 +3,6 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
-import { DownloadIcon } from "@egovernments/digit-ui-react-components";
-import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import TimelineComponent from "./TimelineComponent";
 
@@ -107,18 +105,6 @@ function boundaryDataGrp(boundaryData) {
   return result;
 }
 
-const fetchResourceFile = async (tenantId, resourceIdArr) => {
-  const res = await Digit.CustomService.getResponse({
-    url: `/project-factory/v1/data/_search`,
-    body: {
-      SearchCriteria: {
-        tenantId: tenantId,
-        id: resourceIdArr,
-      },
-    },
-  });
-  return res?.ResourceDetails;
-};
 const fetchcd = async (tenantId, projectId) => {
   const url = getProjectServiceUrl();
   const reqCriteriaResource = {
@@ -163,7 +149,6 @@ const CampaignSummary = (props) => {
   const [cycles, setCycles] = useState([]);
   const [cards, setCards] = useState([]);
   const [timeLine, setTimeline] = useState(false);
-  const [resource, setResource] = useState(null);
   const [campaignId, setCampaignId] = useState(null);
   const isPreview = searchParams.get("preview");
   const parentId = searchParams.get("parentId");
@@ -373,15 +358,8 @@ const CampaignSummary = (props) => {
     },
     config: {
       select: (data) => {
-        const resourceIdArr = [];
-        data?.[0]?.resources?.map((i) => {
-          if (i?.createResourceId && i?.type === "user") {
-            resourceIdArr.push(i?.createResourceId);
-          }
-        });
         setStartDate(data?.[0]?.startDate);
         setEndDate(data?.[0]?.endDate);
-        let processid;
         setprojectId(data?.[0]?.projectId);
         setCards(data?.cards);
 
@@ -429,7 +407,6 @@ const CampaignSummary = (props) => {
                         label={t("ES_CAMPAIGN_DOWNLOAD_USER_DETAILS")}
                         onClick={() => {
                           setTimeline(true);
-                          setResource(resourceIdArr);
                           setCampaignId(data?.[0]?.id);
                         }}
                       />
@@ -602,23 +579,6 @@ const CampaignSummary = (props) => {
                 },
               ],
             },
-            resourceIdArr?.length > 0
-              ? {
-                  navigationKey: "card4",
-                  sections: [
-                    {
-                      type: "COMPONENT",
-                      component: "CampaignResourceDocuments",
-                      props: {
-                        isUserGenerate: true,
-                        // resources: processid,
-                        resources: resourceIdArr,
-                      },
-                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    },
-                  ],
-                }
-              : {},
           ],
           apiResponse: {},
           additionalDetails: {},
@@ -661,7 +621,6 @@ const CampaignSummary = (props) => {
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
           status: data?.[0]?.status,
-          userGenerationSuccess: resourceIdArr,
         };
       },
       enabled: id ? true : false,
@@ -690,33 +649,6 @@ const CampaignSummary = (props) => {
     }
     if (data?.status === "created" && data?.userGenerationSuccess?.length > 0) {
       setShowToast({ label: "CAMPAIGN_USER_GENERATION_SUCCESS", key: "success" });
-    }
-  }, [data]);
-
-  const downloadUserCred = async () => {
-    downloadExcelWithCustomName(userCredential);
-  };
-
-  useEffect(() => {
-    if (data?.userGenerationSuccess?.length > 0) {
-      const fetchUser = async () => {
-        const responseTemp = await Digit.CustomService.getResponse({
-          url: `/project-factory/v1/data/_search`,
-          body: {
-            SearchCriteria: {
-              tenantId: tenantId,
-              id: data?.userGenerationSuccess,
-            },
-          },
-        });
-
-        const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
-
-        if (response?.[0]) {
-          setUserCredential({ fileStoreId: response?.[0], customName: "userCredential" });
-        }
-      };
-      fetchUser();
     }
   }, [data]);
 

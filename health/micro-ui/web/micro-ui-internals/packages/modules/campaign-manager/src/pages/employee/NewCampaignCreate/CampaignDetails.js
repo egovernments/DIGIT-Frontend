@@ -225,24 +225,20 @@ const CampaignDetails = () => {
   };
 
   const onDownloadCredentails = async (data) => {
-    const userResource =
-      Array.isArray(data?.resources) && data.resources.length > 0 && data.resources.some((resource) => resource.type === "user")
-        ? data.resources.find((resource) => resource.type === "user")
-        : null;
 
     try {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       const responseTemp = await Digit.CustomService.getResponse({
-        url: `/project-factory/v1/data/_search`,
-        body: {
-          SearchCriteria: {
-            tenantId: tenantId,
-            id: [userResource?.createResourceId],
-          },
+        url: `/project-factory/v1/data/_download`,
+        params: {
+          tenantId: tenantId,
+          campaignId: campaignData?.id,
+          type: "userCredential",
+          hierarchyType : campaignData?.hierarchyType
         },
       });
 
-      const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+      const response = responseTemp?.GeneratedResource?.map((i) => i?.fileStoreid);
 
       if (response?.[0]) {
         downloadExcelWithCustomName({

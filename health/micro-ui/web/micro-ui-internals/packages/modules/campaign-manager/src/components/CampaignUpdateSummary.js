@@ -3,9 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
 import { Toast , Loader,HeaderComponent ,Button} from "@egovernments/digit-ui-components";
-import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import NoResultsFound from "./NoResultsFound";
 import TagComponent from "./TagComponent";
 
 
@@ -44,19 +42,6 @@ function boundaryDataGrp(boundaryData, hierarchyDefinition) {
   return result;
 }
 
-
-const fetchResourceFile = async (tenantId, resourceIdArr) => {
-  const res = await Digit.CustomService.getResponse({
-    url: `/project-factory/v1/data/_search`,
-    body: {
-      SearchCriteria: {
-        tenantId: tenantId,
-        id: resourceIdArr,
-      },
-    },
-  });
-  return res?.ResourceDetails;
-};
 const fetchcd = async (tenantId, projectId) => {
   const url = getProjectServiceUrl();
   const reqCriteriaResource = {
@@ -91,7 +76,6 @@ const CampaignUpdateSummary = (props) => {
   const campaignName = searchParams.get("campaignName");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
-  const [userCredential, setUserCredential] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState(null);
   const [projectId, setprojectId] = useState(null);
   const [cards, setCards] = useState([]);
@@ -189,21 +173,8 @@ const CampaignUpdateSummary = (props) => {
     },
     config: {
       select: (data) => {
-        const resourceIdArr = [];
-        data?.[0]?.resources?.map((i) => {
-          if (i?.createResourceId && i?.type === "user") {
-            resourceIdArr.push(i?.createResourceId);
-          }
-        });
         setprojectId(data?.[0]?.projectId);
         setCards(data?.cards);
-        let processid;
-        const ss = async () => {
-          let temp = await fetchResourceFile(tenantId, resourceIdArr);
-          processid = temp;
-          return;
-        };
-        ss();
         const target = data?.[0]?.deliveryRules;
         const boundaryData = boundaryDataGrp(data?.[0]?.boundaries ,hierarchyDefinition );
         const hierarchyType = data?.[0]?.hierarchyType;
@@ -316,23 +287,6 @@ const CampaignUpdateSummary = (props) => {
                 },
               ],
             },
-            resourceIdArr?.length > 0
-              ? {
-                  navigationKey: "card2",
-                  sections: [
-                    {
-                      type: "COMPONENT",
-                      component: "CampaignResourceDocuments",
-                      props: {
-                        isUserGenerate: true,
-                        resources: processid,
-                        resources: resourceIdArr,
-                      },
-                      cardHeader: { value: t("USER_GENERATE_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    },
-                  ],
-                }
-              : {},
           ],
           apiResponse: {},
           additionalDetails: {},
@@ -356,7 +310,6 @@ const CampaignUpdateSummary = (props) => {
           error: data?.[0]?.additionalDetails?.error,
           data: data?.[0],
           status: data?.[0]?.status,
-          userGenerationSuccess: resourceIdArr,
         };
       },
       enabled: id ? true : false,
@@ -388,32 +341,28 @@ const CampaignUpdateSummary = (props) => {
     }
   }, [data]);
 
-  const downloadUserCred = async () => {
-    downloadExcelWithCustomName(userCredential);
-  };
+  // useEffect(() => {
+  //   if (data?.userGenerationSuccess?.length > 0) {
+  //     const fetchUser = async () => {
+  //       const responseTemp = await Digit.CustomService.getResponse({
+  //         url: `/project-factory/v1/data/_search`,
+  //         body: {
+  //           SearchCriteria: {
+  //             tenantId: tenantId,
+  //             id: data?.userGenerationSuccess,
+  //           },
+  //         },
+  //       });
 
-  useEffect(() => {
-    if (data?.userGenerationSuccess?.length > 0) {
-      const fetchUser = async () => {
-        const responseTemp = await Digit.CustomService.getResponse({
-          url: `/project-factory/v1/data/_search`,
-          body: {
-            SearchCriteria: {
-              tenantId: tenantId,
-              id: data?.userGenerationSuccess,
-            },
-          },
-        });
+  //       const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
 
-        const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
-
-        if (response?.[0]) {
-          setUserCredential({ fileStoreId: response?.[0], customName: "userCredential" });
-        }
-      };
-      fetchUser();
-    }
-  }, [data]);
+  //       if (response?.[0]) {
+  //         setUserCredential({ fileStoreId: response?.[0], customName: "userCredential" });
+  //       }
+  //     };
+  //     fetchUser();
+  //   }
+  // }, [data]);
 
   const updatedObject = { ...data };
 

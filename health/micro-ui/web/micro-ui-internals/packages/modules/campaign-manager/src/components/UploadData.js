@@ -1010,102 +1010,74 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     user: false,
   });
 
-  const generateFile = async (type, tenantId, campaignId, hierarchyType) => {
-      const res = await Digit.CustomService.getResponse({
-        url: `/project-factory/v2/data/_generate`,
-        body: {
-        },
+  const downloadTemplate = async () => {
+    await mutation.mutate(
+      {
         params: {
           tenantId: tenantId,
-          type,
-          hierarchyType,
-          campaignId
-        }
-      });
-      return res;
-    }
-  const downloadTemplate = async () => {
-    if(!downloadId?.[type]){
-      const resp = await generateFile(type, tenantId, id, params?.hierarchyType);
-      if (resp?.GeneratedResource?.id){
-        setDownloadId({
-          ...downloadId,
-          [type]: resp?.GeneratedResource?.id
-        });
-      }
-      setDownloadError(true);
-      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-      return;
-    }
-    else{
-      await mutation.mutate(
-        {
-          params: {
-            tenantId: tenantId,
-            type: type,
-            hierarchyType: params?.hierarchyType,
-            campaignId: id,
-            status: "completed",
-            id : downloadId?.[type]
-          },
+          type: type,
+          hierarchyType: params?.hierarchyType,
+          campaignId: id,
+          status: "completed",
+          id: downloadId?.[type]
         },
-        {
-          onSuccess: async (result) => {
-            if (result?.GeneratedResource?.[0]?.status === "failed") {
-              setDownloadError(true);
-              setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-              return;
-            }
-            if (result?.GeneratedResource?.[0]?.status === "inprogress") {
-              setDownloadError(true);
-              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-              return;
-            }
-            if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
-              setDownloadError(true);
-              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-              return;
-            }
-            const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
-            const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-            const fileData = fileUrl?.map((i) => {
-              const urlParts = i?.url?.split("/");
-              // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-              const fileName = type === "boundary" ? "Target Template" : type === "facility" ? "Facility Template" : "User Template";
-              return {
-                ...i,
-                filename: fileName,
-              };
-            });
+      },
+      {
+        onSuccess: async (result) => {
+          if (result?.GeneratedResource?.[0]?.status === "failed") {
+            setDownloadError(true);
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            return;
+          }
+          if (result?.GeneratedResource?.[0]?.status === "inprogress") {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            return;
+          }
+          if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            return;
+          }
+          const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
+          const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
+          const fileData = fileUrl?.map((i) => {
+            const urlParts = i?.url?.split("/");
+            // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
+            const fileName = type === "boundary" ? "Target Template" : type === "facility" ? "Facility Template" : "User Template";
+            return {
+              ...i,
+              filename: fileName,
+            };
+          });
 
-            if (fileData && fileData?.[0]?.url) {
-              setDownloadError(false);
-              if (fileData?.[0]?.id) {
-                const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}` : `${campaignName}_${fileData[0].filename}`;
-                downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
-                setDownloadedTemplates((prev) => ({
-                  ...prev,
-                  [type]: true,
-                }));
-              }
-            } else {
-              setDownloadError(true);
-              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+          if (fileData && fileData?.[0]?.url) {
+            setDownloadError(false);
+            if (fileData?.[0]?.id) {
+              const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}` : `${campaignName}_${fileData[0].filename}`;
+              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
+              setDownloadedTemplates((prev) => ({
+                ...prev,
+                [type]: true,
+              }));
             }
-          },
-          onError: (error, result) => {
-            const errorCode = error?.response?.data?.Errors?.[0]?.code;
-            if (errorCode == "NativeIoException") {
-              setDownloadError(true);
-              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-            } else {
-              setDownloadError(true);
-              setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-            }
-          },
-        }
-      );
-    }
+          } else {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+          }
+        },
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          if (errorCode == "NativeIoException") {
+            setDownloadError(true);
+            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+          } else {
+            setDownloadError(true);
+            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+          }
+        },
+      }
+    );
   };
   // Modify the condition for showing the popup
   useEffect(() => {

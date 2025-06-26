@@ -128,6 +128,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
       size: "medium",
       variation: "secondary",
     };
+  }
 
   if (rowData?.status == "creating") {
     actions.downloadUserCreds = {
