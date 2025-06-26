@@ -28,7 +28,6 @@ const CampaignDetails = () => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
-    // window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
   }, []);
 
   const reqCriteria = {
@@ -48,6 +47,13 @@ const CampaignDetails = () => {
   };
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  useEffect(() => {
+    if (campaignData) {
+      sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
+    }
+  }, [campaignData]);
+
 
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
