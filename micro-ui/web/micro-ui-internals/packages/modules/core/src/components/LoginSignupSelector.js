@@ -13,11 +13,11 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
     useEffect(() => {
         onSelect("check", isChecked);
     }, [isChecked]);
-    const onButtonClickSignUP = () => {
+    const onButtonClickLogin = () => {
        window.location.replace(`/${window?.contextPath}/user/login`);
     };
 
-    const onButtonClickLogin = () => {
+    const onButtonClickSignUP = () => {
          window.location.replace(`/${window?.contextPath}/user/sign-up`);
     };
 
@@ -31,7 +31,7 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
                             label={t(`SB_ALREADY_HAVE_ACCOUNT`)}
                             variation={"link"}
                             size={"small"}
-                            onClick={onButtonClickSignUP}
+                            onClick={onButtonClickLogin}
                             // isSuffix={true}
                             style={{ marginBottom: "0.5rem", paddingLeft: "0.2rem" }}
                         ></Button> :
@@ -39,7 +39,7 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
                             label={t(`SB_DONT_HAVE_ACCOUNT`)}
                             variation={"link"}
                             size={"small"}
-                            onClick={onButtonClickLogin}
+                            onClick={onButtonClickSignUP }
                             // isSuffix={true}
                             style={{ marginBottom: "0.5rem", paddingLeft: "0.2rem" }}
                         ></Button>
