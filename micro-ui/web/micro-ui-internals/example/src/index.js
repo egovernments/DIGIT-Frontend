@@ -8,7 +8,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities"];
+const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities","Campaign"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";

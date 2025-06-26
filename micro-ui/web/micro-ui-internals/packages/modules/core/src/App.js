@@ -75,10 +75,10 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   return (
     <Routes>
       {allowedUserTypes?.includes("employee") && (
-        <Route path={`/${window?.contextPath}/employee`} element={<EmployeeApp {...commonProps} />} />
+        <Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />
       )}
       {allowedUserTypes?.includes("citizen") && (
-        <Route path={`/${window?.contextPath}/citizen`} element={<CitizenApp {...commonProps} />} />
+        <Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />
       )}
       {allowedUserTypes?.includes("employee") && (
         <Route path={`/${window?.contextPath}/no-top-bar/employee`} element={<EmployeeApp {...commonProps} noTopBar />} />

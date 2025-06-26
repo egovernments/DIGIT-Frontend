@@ -121,7 +121,6 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
           BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
           path={""}
           stateCode={stateCode}
-          url={url}
           userType={userType}
           hierarchyData={hierarchyData}
         />
@@ -188,7 +187,7 @@ const componentsToRegister = {
   CycleSelection,
   HCMMyCampaignRowCard,
   MyCampaignNew,
-  QRButton
+  QRButton,
 };
 
 const overrideHooks = () => {
