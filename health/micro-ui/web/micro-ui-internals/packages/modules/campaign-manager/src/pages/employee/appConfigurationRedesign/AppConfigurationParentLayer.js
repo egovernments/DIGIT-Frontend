@@ -65,6 +65,18 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   // }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
 
   useEffect(() => {
+    const handleResetStep = () => {
+      setCurrentStep(1);
+    };
+
+    window.addEventListener("resetStep", handleResetStep);
+
+    // Clean up the event listener when the component unmounts
+    return () => {
+      window.removeEventListener("resetStep", handleResetStep);
+    };
+  }, []);
+  useEffect(() => {
     const template = parentState?.actualTemplate;
     if (parentState?.actualTemplate?.localeModule) {
       setLocaleModule(parentState?.actualTemplate?.localeModule);
