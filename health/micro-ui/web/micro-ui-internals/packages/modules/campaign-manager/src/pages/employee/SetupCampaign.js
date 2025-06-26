@@ -298,91 +298,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       } else if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
         return;
       }
-      // else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
-      //   const reqCreate = async () => {
-      //     let payloadData = { ...draftData };
-      //     payloadData.hierarchyType = hierarchyType;
-      //     payloadData.startDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-      //       ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate, "daystart")
-      //       : null;
-      //     payloadData.endDate = totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-      //       ? Digit.Utils.pt.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate)
-      //       : null;
-      //     payloadData.tenantId = tenantId;
-      //     payloadData.action = "create";
-      //     payloadData.parentId = null;
-      //     payloadData.campaignName = totalFormData?.HCM_CAMPAIGN_NAME?.campaignName;
-      //     if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-      //       payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
-      //     }
-      //     const temp = resourceData(
-      //       totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-      //       totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-      //       totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-      //     );
-      //     payloadData.resources = temp;
-      //     payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
-      //     payloadData.additionalDetails = {
-      //       beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
-      //       key: currentKey,
-      //       targetId: dataParams?.boundaryId,
-      //       facilityId: dataParams?.facilityId,
-      //       userId: dataParams?.userId,
-      //     };
-      //     if (totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure) {
-      //       payloadData.additionalDetails.cycleData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
-      //     } else {
-      //       payloadData.additionalDetails.cycleData = {};
-      //     }
-      //     if (totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule) {
-      //       const temp = restructureData(
-      //         totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
-      //         totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
-      //         DeliveryConfig,
-      //         totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
-      //         "create"
-      //       );
-      //       payloadData.deliveryRules = [temp?.[0]];
-      //       // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-      //     }
-      //     if (compareIdentical(draftData, payloadData) === false) {
-      //       setIsDataCreating(true);
-
-      //       await updateCampaign(payloadData, {
-      //         onError: (error, variables) => {
-      //           setShowToast({ key: "error", label: error?.message ? error?.message : error });
-      //         },
-      //         onSuccess: async (data) => {
-      //           draftRefetch();
-      //           history.push(
-      //             `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
-      //             {
-      //               message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-      //               text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-      //               info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-      //               actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-      //               actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${data?.CampaignDetails?.campaignName}&campaignId=${data?.CampaignDetails?.id}&projectType=${data?.CampaignDetails?.projectType}`,
-      //               secondaryActionLabel: "MY_CAMPAIGN",
-      //               secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
-      //               name: data?.CampaignDetails?.campaignName,
-      //               projectId: data?.CampaignDetails?.projectId,
-      //               data: data,
-      //             }
-      //           );
-      //           Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      //         },
-      //         onSettled: () => {
-      //           // This will always run after the mutation completes
-      //           setIsDataCreating(false);
-      //           // Final function logic here
-      //         },
-      //       });
-      //     }
-      //   };
-
-      //   reqCreate();
-      // }
       else if (!isDraftCreated && !id) {
+        setLoader(true);
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.hierarchyType = hierarchyType;
@@ -439,6 +356,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                 setShowToast({ key: "error", label: error?.message ? error?.message : error });
               }
+              setLoader(false);
             },
             onSuccess: async (data) => {
               updateUrlParams({ id: data?.CampaignDetails?.id });
@@ -447,17 +365,20 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                 setCurrentKey(currentKey + 1);
               }
+              setLoader(false);
             },
             onSettled: () => {
               // This will always run after the mutation completes
               setIsDataCreating(false);
               // Final function logic here
+              setLoader(false);
             },
           });
         };
 
         reqCreate();
       } else {
+        setLoader(true);
         const reqCreate = async () => {
           let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
@@ -520,6 +441,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                   setShowToast({ key: "error", label: error?.message ? error?.message : error });
                 }
+                setLoader(false);
               },
               onSuccess: async (data) => {
                 updateUrlParams({ id: data?.CampaignDetails?.id });
@@ -527,6 +449,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                   setCurrentKey(currentKey + 1);
                 }
+                setLoader(false);
               },
             });
           } else {
@@ -605,131 +528,112 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY" });
         return;
       }
-      await updateMapping(
-        {
-          arrayBuffer: formData?.uploadFacilityMapping?.arrayBuffer,
-          updatedData: formData?.uploadFacilityMapping?.data,
-          tenantId: tenantId,
-          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_FACILITIES",
-          schemas: schemas,
-          t: t,
-        },
-        {
-          onError: (error, variables) => {
-            setLoader(false);
-            setShowToast({ key: "error", label: error });
+      try {
+        const responseTemp = await Digit.CustomService.getResponse({
+          url: "/project-factory/v1/data/_create",
+          body: {
+            ResourceDetails: {
+              type: "facility",
+              hierarchyType: hierarchyType,
+              tenantId: Digit.ULBService.getCurrentTenantId(),
+              fileStoreId: data,
+              action: "validate",
+              campaignId: id,
+              additionalDetails: {},
+            },
           },
-          onSuccess: async (data) => {
-            try {
-              const responseTemp = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_create",
-                body: {
-                  ResourceDetails: {
-                    type: "facility",
-                    hierarchyType: hierarchyType,
-                    tenantId: Digit.ULBService.getCurrentTenantId(),
-                    fileStoreId: data,
-                    action: "validate",
-                    campaignId: id,
-                    additionalDetails: {},
-                  },
-                },
-              });
+        });
 
-              const callSecondApiUntilComplete = async () => {
-                let secondApiResponse;
-                let isCompleted = false;
-                let isError = false;
-                while (!isCompleted && !isError) {
-                  secondApiResponse = await Digit.CustomService.getResponse({
-                    url: `/project-factory/v1/data/_search`,
-                    body: {
-                      SearchCriteria: {
-                        tenantId: tenantId,
-                        id: [responseTemp?.ResourceDetails?.id],
-                      },
-                    },
-                  });
-
-                  // Check if the response has the expected data to continue
-                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
-                    // Replace `someCondition` with your own condition to determine if it's complete
-                    isCompleted = true;
-                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
-                    // Replace `someCondition` with your own condition to determine if it's complete
-                    isError = true;
-                  } else {
-                    // Optionally, add a delay before retrying
-                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
-                  }
-                }
-
-                return secondApiResponse;
-              };
-              const reqCriteriaResource = await callSecondApiUntilComplete();
-              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
-                setLoader(false);
-                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
-                return;
-              }
-              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
-              const restructureTemp = {
-                ...temp,
-                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
-                filestoreId: data,
-              };
-              setTotalFormData((prevData) => ({
-                ...prevData,
-                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
-                  uploadFacility: {
-                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
-                    uploadedFile: [restructureTemp],
-                  },
+        const callSecondApiUntilComplete = async () => {
+          let secondApiResponse;
+          let isCompleted = false;
+          let isError = false;
+          while (!isCompleted && !isError) {
+            secondApiResponse = await Digit.CustomService.getResponse({
+              url: `/project-factory/v1/data/_search`,
+              body: {
+                SearchCriteria: {
+                  tenantId: tenantId,
+                  id: [responseTemp?.ResourceDetails?.id],
                 },
-              }));
-              //to set the data in the local storage
-              setParams({
-                ...params,
-                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
-                  uploadFacility: {
-                    ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
-                    uploadedFile: [restructureTemp],
-                  },
-                },
-              });
-              setLoader(false);
-              if (
-                filteredConfig?.[0]?.form?.[0]?.isLast ||
-                !filteredConfig[0].form[0].body[0].skipAPICall ||
-                (filteredConfig[0].form[0].body[0].skipAPICall && id)
-              ) {
-                setShouldUpdate(true);
-              }
-              if (isChangeDates === "true" && currentKey == 6) {
-                setCurrentKey(16);
-              }
-              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
-                setCurrentKey(currentKey + 1);
-              }
-              if (isDraft === "true" && isSkip !== "false") {
-                updateUrlParams({ skip: "false" });
-              }
-              return;
-            } catch (error) {
-              if (error?.response?.data?.Errors?.[0]?.description) {
-                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
-                setLoader(false);
-                return;
-              } else {
-                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
-                setLoader(false);
-                return;
-              }
+              },
+            });
+
+            // Check if the response has the expected data to continue
+            if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+              // Replace `someCondition` with your own condition to determine if it's complete
+              isCompleted = true;
+            } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+              // Replace `someCondition` with your own condition to determine if it's complete
+              isError = true;
+            } else {
+              // Optionally, add a delay before retrying
+              await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
             }
-          },
+          }
+
+          return secondApiResponse;
+        };
+        const reqCriteriaResource = await callSecondApiUntilComplete();
+        if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+          setLoader(false);
+          setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+          return;
         }
-      );
-      return;
+        const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
+        const restructureTemp = {
+          ...temp,
+          resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+          filestoreId: data,
+        };
+        setTotalFormData((prevData) => ({
+          ...prevData,
+          ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+            uploadFacility: {
+              ...prevData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+              uploadedFile: [restructureTemp],
+            },
+          },
+        }));
+        //to set the data in the local storage
+        setParams({
+          ...params,
+          ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+            uploadFacility: {
+              ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+              uploadedFile: [restructureTemp],
+            },
+          },
+        });
+        setLoader(false);
+        if (
+          filteredConfig?.[0]?.form?.[0]?.isLast ||
+          !filteredConfig[0].form[0].body[0].skipAPICall ||
+          (filteredConfig[0].form[0].body[0].skipAPICall && id)
+        ) {
+          // setShouldUpdate(true);
+        }
+        if (isChangeDates === "true" && currentKey == 6) {
+          setCurrentKey(16);
+        }
+        if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+          setCurrentKey(currentKey + 1);
+        }
+        if (isDraft === "true" && isSkip !== "false") {
+          updateUrlParams({ skip: "false" });
+        }
+        return;
+      } catch (error) {
+        if (error?.response?.data?.Errors?.[0]?.description) {
+          setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+          setLoader(false);
+          return;
+        } else {
+          setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+          setLoader(false);
+          return;
+        }
+      }
     } else if (name === "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING" && formData?.uploadUserMapping?.data?.length > 0) {
       setLoader(true);
       const schemas = formData?.uploadUserMapping?.schemas;
@@ -745,132 +649,113 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
         return;
       }
-      await updateMapping(
-        {
-          arrayBuffer: formData?.uploadUserMapping?.arrayBuffer,
-          updatedData: formData?.uploadUserMapping?.data,
-          tenantId: tenantId,
-          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
-          schemas,
-          t: t,
-        },
-        {
-          onError: (error, variables) => {
-            setLoader(false);
-            setShowToast({ key: "error", label: error });
+      try {
+        const responseTemp = await Digit.CustomService.getResponse({
+          url: "/project-factory/v1/data/_create",
+          body: {
+            ResourceDetails: {
+              type: "user",
+              hierarchyType: hierarchyType,
+              tenantId: Digit.ULBService.getCurrentTenantId(),
+              fileStoreId: data,
+              action: "validate",
+              campaignId: id,
+              additionalDetails: {},
+            },
           },
-          onSuccess: async (data) => {
-            try {
-              const responseTemp = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_create",
-                body: {
-                  ResourceDetails: {
-                    type: "user",
-                    hierarchyType: hierarchyType,
-                    tenantId: Digit.ULBService.getCurrentTenantId(),
-                    fileStoreId: data,
-                    action: "validate",
-                    campaignId: id,
-                    additionalDetails: {},
-                  },
+        });
+
+        const callSecondApiUntilComplete = async () => {
+          let secondApiResponse;
+          let isCompleted = false;
+          let isError = false;
+          while (!isCompleted && !isError) {
+            secondApiResponse = await Digit.CustomService.getResponse({
+              url: `/project-factory/v1/data/_search`,
+              body: {
+                SearchCriteria: {
+                  tenantId: tenantId,
+                  id: [responseTemp?.ResourceDetails?.id],
                 },
-              });
+              },
+            });
 
-              const callSecondApiUntilComplete = async () => {
-                let secondApiResponse;
-                let isCompleted = false;
-                let isError = false;
-                while (!isCompleted && !isError) {
-                  secondApiResponse = await Digit.CustomService.getResponse({
-                    url: `/project-factory/v1/data/_search`,
-                    body: {
-                      SearchCriteria: {
-                        tenantId: tenantId,
-                        id: [responseTemp?.ResourceDetails?.id],
-                      },
-                    },
-                  });
-
-                  // Check if the response has the expected data to continue
-                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
-                    // Replace `someCondition` with your own condition to determine if it's complete
-                    isCompleted = true;
-                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
-                    // Replace `someCondition` with your own condition to determine if it's complete
-                    isError = true;
-                  } else {
-                    // Optionally, add a delay before retrying
-                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
-                  }
-                }
-
-                return secondApiResponse;
-              };
-              const reqCriteriaResource = await callSecondApiUntilComplete();
-              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
-                setLoader(false);
-                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
-                return;
-              }
-              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
-              const restructureTemp = {
-                ...temp,
-                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
-                filestoreId: data,
-              };
-              setTotalFormData((prevData) => ({
-                ...prevData,
-                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
-                  uploadUser: {
-                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
-                    uploadedFile: [restructureTemp],
-                  },
-                },
-              }));
-              //to set the data in the local storage
-              setParams({
-                ...params,
-                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
-                  uploadUser: {
-                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
-                    uploadedFile: [restructureTemp],
-                  },
-                },
-              });
-              setLoader(false);
-              if (
-                filteredConfig?.[0]?.form?.[0]?.isLast ||
-                !filteredConfig[0].form[0].body[0].skipAPICall ||
-                (filteredConfig[0].form[0].body[0].skipAPICall && id)
-              ) {
-                setShouldUpdate(true);
-              }
-              if (isChangeDates === "true" && currentKey == 6) {
-                setCurrentKey(16);
-              }
-
-              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
-                setCurrentKey(currentKey + 1);
-              }
-              if (isDraft === "true" && isSkip !== "false") {
-                updateUrlParams({ skip: "false" });
-              }
-              return;
-            } catch (error) {
-              if (error?.response?.data?.Errors?.[0]?.description) {
-                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
-                setLoader(false);
-                return;
-              } else {
-                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
-                setLoader(false);
-                return;
-              }
+            // Check if the response has the expected data to continue
+            if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+              // Replace `someCondition` with your own condition to determine if it's complete
+              isCompleted = true;
+            } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+              // Replace `someCondition` with your own condition to determine if it's complete
+              isError = true;
+            } else {
+              // Optionally, add a delay before retrying
+              await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
             }
-          },
+          }
+
+          return secondApiResponse;
+        };
+        const reqCriteriaResource = await callSecondApiUntilComplete();
+        if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+          setLoader(false);
+          setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+          return;
         }
-      );
-      return;
+        const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
+        const restructureTemp = {
+          ...temp,
+          resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+          filestoreId: data,
+        };
+        setTotalFormData((prevData) => ({
+          ...prevData,
+          ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+            uploadUser: {
+              ...prevData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+              uploadedFile: [restructureTemp],
+            },
+          },
+        }));
+        //to set the data in the local storage
+        setParams({
+          ...params,
+          ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+            uploadUser: {
+              ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+              uploadedFile: [restructureTemp],
+            },
+          },
+        });
+        setLoader(false);
+        if (
+          filteredConfig?.[0]?.form?.[0]?.isLast ||
+          !filteredConfig[0].form[0].body[0].skipAPICall ||
+          (filteredConfig[0].form[0].body[0].skipAPICall && id)
+        ) {
+          // setShouldUpdate(true);
+        }
+        if (isChangeDates === "true" && currentKey == 6) {
+          setCurrentKey(16);
+        }
+
+        if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+          setCurrentKey(currentKey + 1);
+        }
+        if (isDraft === "true" && isSkip !== "false") {
+          updateUrlParams({ skip: "false" });
+        }
+        return;
+      } catch (error) {
+        if (error?.response?.data?.Errors?.[0]?.description) {
+          setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+          setLoader(false);
+          return;
+        } else {
+          setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+          setLoader(false);
+          return;
+        }
+      }
     } else {
       setTotalFormData((prevData) => ({
         ...prevData,
@@ -888,7 +773,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       !filteredConfig[0].form[0].body[0].skipAPICall ||
       (filteredConfig[0].form[0].body[0].skipAPICall && id)
     ) {
-      setShouldUpdate(true);
+      // setShouldUpdate(true);
     }
     if (isChangeDates === "true" && currentKey == 6) {
       setCurrentKey(16);
@@ -1100,6 +985,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               variation={"secondary"}
               t={t}
               onClick={() => {
+                if(loader) return;
                 onActionClick();
               }}
             ></Button>,
@@ -1113,6 +999,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               isSearchable={false}
               t={t}
               onOptionSelect={(option) => {
+                if(loader) return;
                 onActionSelect(option?.code);
               }}
             ></Button>,

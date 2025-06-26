@@ -254,7 +254,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                type: "facilityWithBoundary",
+                type: "facility",
               },
               populators: {
                 name: "uploadFacility",
@@ -266,34 +266,6 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         {
           stepCount: "4",
           key: "11",
-          name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING",
-          body: [
-            {
-              isMandatory: false,
-              key: "uploadFacilityMapping",
-              type: "component",
-              component: "DataUploadWrapper",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                dataParams: dataParams,
-                sessionData: totalFormData,
-                hierarchyData: hierarchyData,
-                type: "facilityWithBoundaryMapping",
-                validationType: "facilityWithBoundary"
-              },
-              populators: {
-                name: "uploadFacilityMapping",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "4",
-          key: "12",
           name: "HCM_CAMPAIGN_UPLOAD_USER_DATA",
           body: [
             {
@@ -307,7 +279,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
               customProps: {
                 module: "HCM",
                 sessionData: totalFormData,
-                type: "userWithBoundary",
+                type: "user",
               },
               populators: {
                 name: "uploadUser",
@@ -318,35 +290,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "13",
-          name: "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING",
-          body: [
-            {
-              isMandatory: false,
-              key: "uploadUserMapping",
-              type: "component",
-              component: "DataUploadWrapper",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                dataParams: dataParams,
-                sessionData: totalFormData,
-                hierarchyData: hierarchyData,
-                type: "userMapping",
-                validationType: "userWithBoundary"
-              },
-              populators: {
-                name: "uploadUserMapping",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "4",
-          key: "14",
+          key: "12",
           name: "HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA",
           body: [
             {
@@ -373,7 +317,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "4",
-          key: "15",
+          key: "13",
           body: [
             {
               isMandatory: false,
@@ -399,7 +343,7 @@ export const CampaignConfig = (totalFormData, dataParams, isSubmitting, summaryE
         },
         {
           stepCount: "5",
-          key: "16",
+          key: "14",
           isLast: true,
           body: [
             {

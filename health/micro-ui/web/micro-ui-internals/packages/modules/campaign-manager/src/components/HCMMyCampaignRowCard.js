@@ -78,20 +78,20 @@ const getTagElements = (rowData) => {
 };
 
 // function to handle download user creds
-const handleDownloadUserCreds = async (data) => {
+const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
   try {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const responseTemp = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/data/_search`,
-      body: {
-        SearchCriteria: {
-          tenantId: tenantId,
-          id: [data?.createResourceId],
-        },
+      url: `/project-factory/v1/data/_download`,
+      params: {
+        tenantId: tenantId,
+        campaignId: campaignId,
+        type : "userCredential",
+        hierarchyType
       },
     });
 
-    const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+    const response = responseTemp?.GeneratedResource?.map((i) => i?.fileStoreid);
 
     if (response?.[0]) {
       downloadExcelWithCustomName({
@@ -109,13 +109,11 @@ const handleDownloadUserCreds = async (data) => {
 // function to generate action buttons
 const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
   const actions = {};
-  const userResource =
-    Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
-      ? rowData.resources.find((resource) => resource.type === "user")
-      : null;
+  const campaignId = rowData?.id;
+  const hierarchyType = rowData?.hierarchyType;
 
   // Always show download if userCreds exist
-  if (userResource && rowData?.status == "created") {
+  if (rowData?.status == "created") {
     actions.downloadApp = {
       label: "DOWNLOAD_APP",
       onClick: () => setShowQRPopUp(true),
@@ -125,12 +123,11 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
     };
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
-      onClick: () => handleDownloadUserCreds(userResource),
+      onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
       icon: "FileDownload",
-      size:"medium",
+      size: "medium",
       variation: "secondary",
     };
-  }
 
   if (rowData?.status == "creating") {
     actions.downloadUserCreds = {

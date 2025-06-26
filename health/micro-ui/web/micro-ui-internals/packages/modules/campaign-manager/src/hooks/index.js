@@ -5,6 +5,7 @@ import { useProductList } from "./useProductList";
 import useUpdateCampaign from "./useUpdateCampaign";
 import { useGenerateIdCampaign } from "./useGenerateIdCampaign";
 import { useResourceData } from "./useResourceData";
+import { useProcessData } from "./useProcessData";
 import useCreateProductVariant from "./useCreateProductVariant";
 import useCreateProduct from "./useCreateProduct";
 import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
@@ -41,6 +42,7 @@ const campaign = {
   useUpdateCampaign,
   useGenerateIdCampaign,
   useResourceData,
+  useProcessData,
   useCreateProduct,
   useCreateProductVariant,
   useProjectSearchWithBoundary,

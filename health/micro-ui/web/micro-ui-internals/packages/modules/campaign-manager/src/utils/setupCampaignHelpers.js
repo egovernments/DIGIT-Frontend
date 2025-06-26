@@ -328,8 +328,8 @@ export const cycleDataRemap=(data)=> {
       },
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
         uploadBoundary: {
-          uploadedFile: draftData?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
-          isSuccess: draftData?.resources?.filter((i) => i?.type === "boundaryWithTarget").length > 0,
+          uploadedFile: draftData?.resources?.filter((i) => i?.type === "boundary"),
+          isSuccess: draftData?.resources?.filter((i) => i?.type === "boundary").length > 0,
         },
       },
       HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {

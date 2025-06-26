@@ -23,6 +23,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const [uploadedFile, setUploadedFile] = useState([]);
   const params = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const [showInfoCard, setShowInfoCard] = useState(false);
+  const [downloadId, setDownloadId] = useState({});
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
   const type = props?.props?.type;
@@ -40,13 +41,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
-  const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    CONSOLE_MDMS_MODULENAME,
-    [{ name: "adminSchema" }],
-    {},
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
-  );
+  // const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
+  //   tenantId,
+  //   CONSOLE_MDMS_MODULENAME,
+  //   [{ name: "adminSchema" }],
+  //   {},
+  //   { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
+  // );
 
   const { data: readMe } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -62,8 +63,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     { select: (MdmsRes) => MdmsRes },
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
   );
-  const [sheetHeaders, setSheetHeaders] = useState({});
-  const [translatedSchema, setTranslatedSchema] = useState({});
   const [readMeInfo, setReadMeInfo] = useState({});
   const [showPopUp, setShowPopUp] = useState(true);
   const currentKey = searchParams.get("key");
@@ -96,10 +95,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     };
   }, [showExitWarning]);
 
-  const handleUserAction = () => {
-    // User performs an action that completes their workflow
-    setShowExitWarning(false);
-  };
+  // const handleUserAction = () => {
+  //   // User performs an action that completes their workflow
+  //   setShowExitWarning(false);
+  // };
 
   function updateUrlParams(params) {
     const url = new URL(window.location.href);
@@ -118,7 +117,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   }, [props?.props?.projectType]);
 
   useEffect(() => {
-    if (type === "facilityWithBoundary") {
+    if (type === "facility") {
       onSelect("uploadFacility", { uploadedFile, isError, isValidation, apiError, isSuccess });
     } else if (type === "boundary") {
       onSelect("uploadBoundary", { uploadedFile, isError, isValidation, apiError, isSuccess });
@@ -137,29 +136,29 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       );
     }
   }, [resourceId]);
-  var translateSchema = (schema) => {
-    var newSchema = { ...schema };
-    var newProp = {};
+  // var translateSchema = (schema) => {
+  //   var newSchema = { ...schema };
+  //   var newProp = {};
 
-    // Object.keys(schema?.properties)
-    //   .map((e) => ({ key: e, value: t(e) }))
-    //   .map((e) => {
-    //     newProp[e.value] = schema?.properties[e.key];
-    //   });
+  //   // Object.keys(schema?.properties)
+  //   //   .map((e) => ({ key: e, value: t(e) }))
+  //   //   .map((e) => {
+  //   //     newProp[e.value] = schema?.properties[e.key];
+  //   //   });
 
-    // Translate properties keys and their 'name' fields
-    Object.keys(schema?.properties).forEach((key) => {
-      const translatedKey = t(key);
-      const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
-      newProp[translatedKey] = translatedProperty;
-    });
-    const newRequired = schema?.required.map((e) => t(e));
+  //   // Translate properties keys and their 'name' fields
+  //   Object.keys(schema?.properties).forEach((key) => {
+  //     const translatedKey = t(key);
+  //     const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
+  //     newProp[translatedKey] = translatedProperty;
+  //   });
+  //   const newRequired = schema?.required.map((e) => t(e));
 
-    newSchema.properties = newProp;
-    newSchema.required = newRequired;
-    delete newSchema.unique;
-    return { ...newSchema };
-  };
+  //   newSchema.properties = newProp;
+  //   newSchema.required = newRequired;
+  //   delete newSchema.unique;
+  //   return { ...newSchema };
+  // };
 
   var translateReadMeInfo = (schema) => {
     const translatedSchema =
@@ -181,52 +180,52 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     return translatedSchema;
   };
 
-  function enrichSchema(data, properties, required, columns) {
-    // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
-    columns.sort((a, b) => {
-      if (a?.orderNumber === b?.orderNumber) {
-        return a.name.localeCompare(b.name);
-      }
-      return a.orderNumber - b.orderNumber;
-    });
+  // function enrichSchema(data, properties, required, columns) {
+  //   // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
+  //   columns.sort((a, b) => {
+  //     if (a?.orderNumber === b?.orderNumber) {
+  //       return a.name.localeCompare(b.name);
+  //     }
+  //     return a.orderNumber - b.orderNumber;
+  //   });
 
-    // Extract sorted property names
-    const sortedPropertyNames = columns.map((column) => column.name);
+  //   // Extract sorted property names
+  //   const sortedPropertyNames = columns.map((column) => column.name);
 
-    // Update data with new properties and required fields
-    data.properties = properties;
-    data.required = required;
-    // delete data.campaignType;
-    // data.columns = sortedPropertyNames;
-  }
+  //   // Update data with new properties and required fields
+  //   data.properties = properties;
+  //   data.required = required;
+  //   // delete data.campaignType;
+  //   // data.columns = sortedPropertyNames;
+  // }
 
-  function convertIntoSchema(data) {
-    var convertData = { ...data };
-    var properties = {};
-    var required = [];
-    var columns = [];
-    for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
-      if (convertData?.properties?.[propType] && Array.isArray(convertData?.properties?.[propType]) && convertData?.properties?.[propType]?.length > 0) {
-        for (const property of convertData?.properties[propType]) {
-          properties[property?.name] = {
-            ...property,
-            type: propType === "stringProperties" ? "string" : propType === "numberProperties" ? "number" : undefined,
-          };
+  // function convertIntoSchema(data) {
+  //   var convertData = { ...data };
+  //   var properties = {};
+  //   var required = [];
+  //   var columns = [];
+  //   for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
+  //     if (convertData?.properties?.[propType] && Array.isArray(convertData?.properties?.[propType]) && convertData?.properties?.[propType]?.length > 0) {
+  //       for (const property of convertData?.properties[propType]) {
+  //         properties[property?.name] = {
+  //           ...property,
+  //           type: propType === "stringProperties" ? "string" : propType === "numberProperties" ? "number" : undefined,
+  //         };
 
-          if (property?.isRequired && required.indexOf(property?.name) === -1) {
-            required.push(property?.name);
-          }
+  //         if (property?.isRequired && required.indexOf(property?.name) === -1) {
+  //           required.push(property?.name);
+  //         }
 
-          // If orderNumber is missing, default to a very high number
-          columns.push({ name: property?.name, orderNumber: property?.orderNumber || 9999999999 });
-        }
-      }
-    }
-    enrichSchema(convertData, properties, required, columns);
-    const newData = JSON.parse(JSON.stringify(convertData));
-    delete newData.campaignType;
-    return newData;
-  }
+  //         // If orderNumber is missing, default to a very high number
+  //         columns.push({ name: property?.name, orderNumber: property?.orderNumber || 9999999999 });
+  //       }
+  //     }
+  //   }
+  //   enrichSchema(convertData, properties, required, columns);
+  //   const newData = JSON.parse(JSON.stringify(convertData));
+  //   delete newData.campaignType;
+  //   return newData;
+  // }
 
   useEffect(() => {
     if (uploadedFile.length == 0) {
@@ -234,61 +233,61 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [uploadedFile]);
 
-  useEffect(async () => {
-    if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
-      const facility = await convertIntoSchema(
-        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
-      );
-      const boundary = await convertIntoSchema(
-        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
-        )?.[0]
-      );
-      const user = await convertIntoSchema(
-        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
-      );
-      const schema = {
-        boundary: boundary,
-        facilityWithBoundary: facility,
-        userWithBoundary: user,
-      };
+  // useEffect(async () => {
+  //   if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
+  //     const facility = await convertIntoSchema(
+  //       Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+  //     );
+  //     const boundary = await convertIntoSchema(
+  //       Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+  //         (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+  //       )?.[0]
+  //     );
+  //     const user = await convertIntoSchema(
+  //       Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+  //     );
+  //     const schema = {
+  //       boundary: boundary,
+  //       facilityWithBoundary: facility,
+  //       userWithBoundary: user,
+  //     };
 
-      setConvertedSchema(schema);
-    }
-  }, [Schemas, type ,uploadedFile]);
+  //     setConvertedSchema(schema);
+  //   }
+  // }, [Schemas, type ,uploadedFile]);
 
 
-  useEffect(async () => {
-    if (convertedSchema && Object.keys(convertedSchema).length > 0) {
-      const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
-      const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
-      const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+  // useEffect(async () => {
+  //   if (convertedSchema && Object.keys(convertedSchema).length > 0) {
+  //     const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
+  //     const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
+  //     const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
 
-      const filterByUpdateFlag = (schemaProperties) => {
-        return Object.keys(schemaProperties).filter((key) => {
-          // if (parentId) {
-          //   return schemaProperties[key].isUpdate === true;
-          // }
-          return schemaProperties[key].isUpdate !== true;
-        });
-      };
+  //     const filterByUpdateFlag = (schemaProperties) => {
+  //       return Object.keys(schemaProperties).filter((key) => {
+  //         // if (parentId) {
+  //         //   return schemaProperties[key].isUpdate === true;
+  //         // }
+  //         return schemaProperties[key].isUpdate !== true;
+  //       });
+  //     };
 
-      const headers = {
-        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
-        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
-        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
-      };
+  //     const headers = {
+  //       boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+  //       facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+  //       userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
+  //     };
 
-      const schema = {
-        boundary: newBoundarySchema,
-        facilityWithBoundary: newFacilitySchema,
-        userWithBoundary: newUserSchema,
-      };
+  //     const schema = {
+  //       boundary: newBoundarySchema,
+  //       facilityWithBoundary: newFacilitySchema,
+  //       userWithBoundary: newUserSchema,
+  //     };
 
-      setSheetHeaders(headers);
-      setTranslatedSchema(schema);
-    }
-  }, [convertedSchema]);
+  //     setSheetHeaders(headers);
+  //     setTranslatedSchema(schema);
+  //   }
+  // }, [convertedSchema]);
 
   useEffect(async () => {
     if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
@@ -304,8 +303,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       const readMeText = {
         boundary: newReadMeboundary,
-        facilityWithBoundary: newReadMeFacility,
-        userWithBoundary: newReadMeUser,
+        facility: newReadMeFacility,
+        user: newReadMeUser,
       };
 
       setReadMeInfo(readMeText);
@@ -317,7 +316,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       let uploadType = "uploadUser";
       if (type === "boundary") {
         uploadType = "uploadBoundary";
-      } else if (type === "facilityWithBoundary") {
+      } else if (type === "facility") {
         uploadType = "uploadFacility";
       }
       onSelect(uploadType, { uploadedFile, isError, isValidation: false, apiError: false, isSuccess: uploadedFile?.length > 0 });
@@ -338,7 +337,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           !downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile.length
         );
         break;
-      case "facilityWithBoundary":
+      case "facility":
         setUploadedFile(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile || []);
         setApiError(null);
         setIsValidation(false);
@@ -369,459 +368,459 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [type, errorsType]);
 
-  const validateData = (data) => {
-    const ajv = new Ajv({ strict: false }); // Initialize Ajv
-    let validate = ajv.compile(translatedSchema[type]);
-    const errors = []; // Array to hold validation errors
+  // const validateData = (data) => {
+  //   const ajv = new Ajv({ strict: false }); // Initialize Ajv
+  //   let validate = ajv.compile(translatedSchema[type]);
+  //   const errors = []; // Array to hold validation errors
 
-    data.forEach((item, index) => {
-      if (!validate(item)) {
-        errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
-      }
-    });
+  //   data.forEach((item, index) => {
+  //     if (!validate(item)) {
+  //       errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
+  //     }
+  //   });
 
-    if (errors.length > 0) {
-      const errorMessage = errors
-        .map(({ index, errors }) => {
-          const formattedErrors = errors
-            .map((error) => {
-              let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
-              if (error.instancePath === "/Phone Number (Mandatory)") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
-              }
-              if (instancePath.startsWith("/")) {
-                instancePath = instancePath.slice(1);
-              }
-              if (error.keyword === "required") {
-                const missingProperty = error.params?.missingProperty || "";
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
-              }
-              if (error.keyword === "type" && error.message === "must be string") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
-              }
-              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
-              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
-              }
-              return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError}`;
-            })
-            .join(", ");
-          return formattedErrors;
-        })
-        .join(", ");
+  //   if (errors.length > 0) {
+  //     const errorMessage = errors
+  //       .map(({ index, errors }) => {
+  //         const formattedErrors = errors
+  //           .map((error) => {
+  //             let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
+  //             if (error.instancePath === "/Phone Number (Mandatory)") {
+  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
+  //             }
+  //             if (instancePath.startsWith("/")) {
+  //               instancePath = instancePath.slice(1);
+  //             }
+  //             if (error.keyword === "required") {
+  //               const missingProperty = error.params?.missingProperty || "";
+  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+  //             }
+  //             if (error.keyword === "type" && error.message === "must be string") {
+  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
+  //             }
+  //             let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+  //             if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+  //               formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+  //             }
+  //             return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError}`;
+  //           })
+  //           .join(", ");
+  //         return formattedErrors;
+  //       })
+  //       .join(", ");
 
-      setErrorsType((prevErrors) => ({
-        ...prevErrors,
-        [type]: errorMessage,
-      }));
-      setIsError(true);
-      return false;
-    } else {
-      setErrorsType((prevErrors) => ({
-        ...prevErrors,
-        [type]: "", // Clear the error message
-      }));
-      setShowInfoCard(false);
-      return true;
-    }
-  };
+  //     setErrorsType((prevErrors) => ({
+  //       ...prevErrors,
+  //       [type]: errorMessage,
+  //     }));
+  //     setIsError(true);
+  //     return false;
+  //   } else {
+  //     setErrorsType((prevErrors) => ({
+  //       ...prevErrors,
+  //       [type]: "", // Clear the error message
+  //     }));
+  //     setShowInfoCard(false);
+  //     return true;
+  //   }
+  // };
 
-  const validateTarget = (jsonData, headersToValidate) => {
-    const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
-    const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
+  // const validateTarget = (jsonData, headersToValidate) => {
+  //   const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+  //   const headersBeforeBoundaryCode = headersToValidate.slice(0, boundaryCodeIndex);
 
-    const filteredData = jsonData
-      .filter((e) => {
-        if (e[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]) {
-          return true;
-        }
-      })
-      .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
+  //   const filteredData = jsonData
+  //     .filter((e) => {
+  //       if (e[headersBeforeBoundaryCode[headersBeforeBoundaryCode.length - 1]]) {
+  //         return true;
+  //       }
+  //     })
+  //     .filter((e) => e[t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")]);
 
-    if (filteredData.length == 0) {
-      const errorMessage = t("HCM_MISSING_TARGET");
-      setErrorsType((prevErrors) => ({
-        ...prevErrors,
-        [type]: errorMessage,
-      }));
-      setIsError(true);
-      return false;
-    }
+  //   if (filteredData.length == 0) {
+  //     const errorMessage = t("HCM_MISSING_TARGET");
+  //     setErrorsType((prevErrors) => ({
+  //       ...prevErrors,
+  //       [type]: errorMessage,
+  //     }));
+  //     setIsError(true);
+  //     return false;
+  //   }
 
-    const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
+  //   const targetValue = filteredData?.[0][t("HCM_ADMIN_CONSOLE_TARGET_AT_THE_SELECTED_BOUNDARY_LEVEL")];
 
-    if (targetValue <= 0 || targetValue >= 100000000) {
-      const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
-      setErrorsType((prevErrors) => ({
-        ...prevErrors,
-        [type]: errorMessage,
-      }));
-      setIsError(true);
-      return false;
-    }
-    return true;
-  };
+  //   if (targetValue <= 0 || targetValue >= 100000000) {
+  //     const errorMessage = t("HCM_TARGET_VALIDATION_ERROR");
+  //     setErrorsType((prevErrors) => ({
+  //       ...prevErrors,
+  //       [type]: errorMessage,
+  //     }));
+  //     setIsError(true);
+  //     return false;
+  //   }
+  //   return true;
+  // };
 
-  const validateTargetData = (data, sheetName, targetError) => {
-    const ajv = new Ajv({ strict: false }); // Initialize Ajv
-    let validate = ajv.compile(translatedSchema[type]);
-    const errors = []; // Array to hold validation errors
+  // const validateTargetData = (data, sheetName, targetError) => {
+  //   const ajv = new Ajv({ strict: false }); // Initialize Ajv
+  //   let validate = ajv.compile(translatedSchema[type]);
+  //   const errors = []; // Array to hold validation errors
 
-    data.forEach((item, index) => {
-      if (!validate(item)) {
-        errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
-      }
-    });
-    if (errors.length > 0) {
-      const errorMessage = errors
-        .map(({ index, errors }) => {
-          const formattedErrors = errors
-            .map((error) => {
-              let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
-              if (instancePath.startsWith("/")) {
-                instancePath = instancePath.slice(1);
-              }
-              if (error.keyword === "required") {
-                const missingProperty = error.params?.missingProperty || "";
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t(
-                  "HCM_DATA_SHOULD_NOT_BE_EMPTY"
-                )} at ${sheetName}`;
-              }
-              if (error.keyword === "type" && error.message === "must be string") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}`;
-              }
-              if (error.keyword === "maximum") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_MAXIMUM_VALUE")} at ${sheetName}`;
-              }
-              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
-              if (error.keyword === "enum" && error.params && error.params.allowedValues) {
-                formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
-              }
-              return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError} at ${sheetName}`;
-            })
-            .join(", ");
-          return formattedErrors;
-        })
-        .join(", ");
+  //   data.forEach((item, index) => {
+  //     if (!validate(item)) {
+  //       errors.push({ index: (item?.["!row#number!"] || item?.["__rowNum__"]) + 1, errors: validate.errors });
+  //     }
+  //   });
+  //   if (errors.length > 0) {
+  //     const errorMessage = errors
+  //       .map(({ index, errors }) => {
+  //         const formattedErrors = errors
+  //           .map((error) => {
+  //             let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
+  //             if (instancePath.startsWith("/")) {
+  //               instancePath = instancePath.slice(1);
+  //             }
+  //             if (error.keyword === "required") {
+  //               const missingProperty = error.params?.missingProperty || "";
+  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t(
+  //                 "HCM_DATA_SHOULD_NOT_BE_EMPTY"
+  //               )} at ${sheetName}`;
+  //             }
+  //             if (error.keyword === "type" && error.message === "must be string") {
+  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}`;
+  //             }
+  //             if (error.keyword === "maximum") {
+  //               return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_MAXIMUM_VALUE")} at ${sheetName}`;
+  //             }
+  //             let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+  //             if (error.keyword === "enum" && error.params && error.params.allowedValues) {
+  //               formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
+  //             }
+  //             return `${t("HCM_DATA_AT_ROW")} ${index} ${formattedError} at ${sheetName}`;
+  //           })
+  //           .join(", ");
+  //         return formattedErrors;
+  //       })
+  //       .join(", ");
 
-      setIsError(true);
-      targetError.push(errorMessage);
-      return false;
-    } else {
-      return true;
-    }
-  };
+  //     setIsError(true);
+  //     targetError.push(errorMessage);
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // };
   // Function to compare arrays for equality
-  const arraysEqual = (arr1, arr2) => {
-    if (arr1.length !== arr2.length) return false;
-    for (let i = 0; i < arr1.length; i++) {
-      if (arr1[i] !== arr2[i]) return false;
-    }
-    return true;
-  };
+  // const arraysEqual = (arr1, arr2) => {
+  //   if (arr1.length !== arr2.length) return false;
+  //   for (let i = 0; i < arr1.length; i++) {
+  //     if (arr1[i] !== arr2[i]) return false;
+  //   }
+  //   return true;
+  // };
 
-  const validateMultipleTargets = (workbook) => {
-    let isValid = true;
-    // const sheet = workbook.Sheets[workbook.SheetNames[2]];
-    const mdmsHeaders = sheetHeaders[type];
-    // const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
-    //   header: 1,
-    // })[0];
-    const excludedSheetNames = [t("HCM_README_SHEETNAME"), t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")];
-    let nextSheetName = null;
-    let expectedHeaders = [];
+  // const validateMultipleTargets = (workbook) => {
+  //   let isValid = true;
+  //   // const sheet = workbook.Sheets[workbook.SheetNames[2]];
+  //   const mdmsHeaders = sheetHeaders[type];
+  //   // const expectedHeaders = XLSX.utils.sheet_to_json(sheet, {
+  //   //   header: 1,
+  //   // })[0];
+  //   const excludedSheetNames = [t("HCM_README_SHEETNAME"), t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")];
+  //   let nextSheetName = null;
+  //   let expectedHeaders = [];
 
-    for (let i = 0; i < workbook.SheetNames.length; i++) {
-      const sheetName = workbook.SheetNames[i];
-      if (!excludedSheetNames.includes(sheetName)) {
-        nextSheetName = workbook.SheetNames[i];
-        break;
-      }
-    }
+  //   for (let i = 0; i < workbook.SheetNames.length; i++) {
+  //     const sheetName = workbook.SheetNames[i];
+  //     if (!excludedSheetNames.includes(sheetName)) {
+  //       nextSheetName = workbook.SheetNames[i];
+  //       break;
+  //     }
+  //   }
 
-    if (nextSheetName) {
-      const sheet = workbook.Sheets[nextSheetName];
-      expectedHeaders = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
-    }
+  //   if (nextSheetName) {
+  //     const sheet = workbook.Sheets[nextSheetName];
+  //     expectedHeaders = XLSX.utils.sheet_to_json(sheet, { header: 1 })[0];
+  //   }
 
-    // for (const header of mdmsHeaders) {
-    //   if (!expectedHeaders.includes(t(header))) {
-    //     const errorMessage = t("HCM_BOUNDARY_INVALID_SHEET");
-    //     setErrorsType((prevErrors) => ({
-    //       ...prevErrors,
-    //       [type]: errorMessage,
-    //     }));
-    //     setIsError(true);
-    //     isValid = false;
-    //     break;
-    //   }
-    // }
+  //   // for (const header of mdmsHeaders) {
+  //   //   if (!expectedHeaders.includes(t(header))) {
+  //   //     const errorMessage = t("HCM_BOUNDARY_INVALID_SHEET");
+  //   //     setErrorsType((prevErrors) => ({
+  //   //       ...prevErrors,
+  //   //       [type]: errorMessage,
+  //   //     }));
+  //   //     setIsError(true);
+  //   //     isValid = false;
+  //   //     break;
+  //   //   }
+  //   // }
 
-    if (!isValid) return isValid;
+  //   if (!isValid) return isValid;
 
-    for (let i = 0; i < workbook.SheetNames.length; i++) {
-      const sheetName = workbook?.SheetNames[i];
+  //   for (let i = 0; i < workbook.SheetNames.length; i++) {
+  //     const sheetName = workbook?.SheetNames[i];
 
-      if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
-        continue;
-      }
+  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+  //       continue;
+  //     }
 
-      const sheet = workbook?.Sheets[sheetName];
+  //     const sheet = workbook?.Sheets[sheetName];
 
-      // Convert the sheet to JSON to extract headers
-      const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-      })[0];
+  //     // Convert the sheet to JSON to extract headers
+  //     const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+  //       header: 1,
+  //     })[0];
 
-      // Check if headers match the expected headers
-      // if (!arraysEqual(headersToValidate, expectedHeaders)) {
-      //   const errorMessage = t("HCM_MISSING_HEADERS");
-      //   setErrorsType((prevErrors) => ({
-      //     ...prevErrors,
-      //     [type]: errorMessage,
-      //   }));
-      //   setIsError(true);
-      //   isValid = false;
-      //   break;
-      // }
-    }
+  //     // Check if headers match the expected headers
+  //     // if (!arraysEqual(headersToValidate, expectedHeaders)) {
+  //     //   const errorMessage = t("HCM_MISSING_HEADERS");
+  //     //   setErrorsType((prevErrors) => ({
+  //     //     ...prevErrors,
+  //     //     [type]: errorMessage,
+  //     //   }));
+  //     //   setIsError(true);
+  //     //   isValid = false;
+  //     //   break;
+  //     // }
+  //   }
 
-    if (!isValid) return isValid;
-    const targetError = [];
+  //   if (!isValid) return isValid;
+  //   const targetError = [];
 
-    // Iterate over each sheet in the workbook, starting from the second sheet
-    for (let i = 0; i < workbook.SheetNames.length; i++) {
-      const sheetName = workbook?.SheetNames[i];
+  //   // Iterate over each sheet in the workbook, starting from the second sheet
+  //   for (let i = 0; i < workbook.SheetNames.length; i++) {
+  //     const sheetName = workbook?.SheetNames[i];
 
-      if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
-        continue;
-      }
+  //     if (sheetName === t("HCM_README_SHEETNAME") || sheetName === t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")) {
+  //       continue;
+  //     }
 
-      const sheet = workbook?.Sheets[sheetName];
+  //     const sheet = workbook?.Sheets[sheetName];
 
-      // Convert the sheet to JSON to extract headers
-      const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
-        header: 1,
-      })[0];
-      const requiredProperties = translatedSchema?.boundary?.required || [];
+  //     // Convert the sheet to JSON to extract headers
+  //     const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+  //       header: 1,
+  //     })[0];
+  //     const requiredProperties = translatedSchema?.boundary?.required || [];
 
-      const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
+  //     const jsonData = XLSX.utils.sheet_to_json(sheet, { blankrows: true });
 
-      if (jsonData.length == 0) continue;
+  //     if (jsonData.length == 0) continue;
 
-      const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
+  //     const boundaryCodeIndex = headersToValidate.indexOf(t("HCM_ADMIN_CONSOLE_BOUNDARY_CODE"));
 
-      for (const row of jsonData) {
-        for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
-          const value = row[headersToValidate[j]];
-          if (!requiredProperties.includes(headersToValidate[j])) continue;
+  //     for (const row of jsonData) {
+  //       for (let j = boundaryCodeIndex + 1; j < headersToValidate.length; j++) {
+  //         const value = row[headersToValidate[j]];
+  //         if (!requiredProperties.includes(headersToValidate[j])) continue;
 
-          if (value === undefined || value === null) {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_NOT_BE_EMPTY"
-              )} at ${sheetName}`
-            );
-          } else if (value >= 100000000) {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_LESS_THAN_MAXIMUM"
-              )} at ${sheetName}`
-            );
-          } else if (value < 0) {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_GREATER_THAN_ZERO"
-              )} at ${sheetName}`
-            );
-          } else if (typeof value !== "number") {
-            targetError.push(
-              `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
-                "HCM_DATA_SHOULD_BE_NUMBER"
-              )} at ${sheetName}`
-            );
-          }
-        }
-      }
+  //         if (value === undefined || value === null) {
+  //           targetError.push(
+  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //               "HCM_DATA_SHOULD_NOT_BE_EMPTY"
+  //             )} at ${sheetName}`
+  //           );
+  //         } else if (value >= 100000000) {
+  //           targetError.push(
+  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //               "HCM_DATA_SHOULD_BE_LESS_THAN_MAXIMUM"
+  //             )} at ${sheetName}`
+  //           );
+  //         } else if (value < 0) {
+  //           targetError.push(
+  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //               "HCM_DATA_SHOULD_BE_GREATER_THAN_ZERO"
+  //             )} at ${sheetName}`
+  //           );
+  //         } else if (typeof value !== "number") {
+  //           targetError.push(
+  //             `${t("HCM_DATA_AT_ROW")} ${jsonData.indexOf(row) + 2} ${t("HCM_IN_COLUMN")} "${headersToValidate[j]}" ${t(
+  //               "HCM_DATA_SHOULD_BE_NUMBER"
+  //             )} at ${sheetName}`
+  //           );
+  //         }
+  //       }
+  //     }
 
-      // if (!validateTargetData(jsonData, sheetName, targetError)) {
-      // }
-    }
-    if (targetError.length > 0) {
-      const errorMessage = targetError.join(", ");
-      setErrorsType((prevErrors) => ({
-        ...prevErrors,
-        [type]: errorMessage,
-      }));
-      setShowInfoCard(true);
-      isValid = false;
-    } else {
-      setErrorsType((prevErrors) => ({
-        ...prevErrors,
-        [type]: "", // Clear the error message
-      }));
-      setShowInfoCard(false);
-      isValid = true;
-    }
-    return isValid;
-  };
+  //     // if (!validateTargetData(jsonData, sheetName, targetError)) {
+  //     // }
+  //   }
+  //   if (targetError.length > 0) {
+  //     const errorMessage = targetError.join(", ");
+  //     setErrorsType((prevErrors) => ({
+  //       ...prevErrors,
+  //       [type]: errorMessage,
+  //     }));
+  //     setShowInfoCard(true);
+  //     isValid = false;
+  //   } else {
+  //     setErrorsType((prevErrors) => ({
+  //       ...prevErrors,
+  //       [type]: "", // Clear the error message
+  //     }));
+  //     setShowInfoCard(false);
+  //     isValid = true;
+  //   }
+  //   return isValid;
+  // };
 
   const sheetTypeMap = {
-    facilityWithBoundary: t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES"),
+    facility: t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES"),
     boundary: t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA"),
-    userWithBoundary: t("HCM_ADMIN_CONSOLE_USER_LIST"),
+    user: t("HCM_ADMIN_CONSOLE_USER_LIST"),
   };
 
-  const validateExcel = (selectedFile) => {
-    return new Promise((resolve, reject) => {
-      // Check if a file is selected
-      if (!selectedFile) {
-        reject(t("HCM_FILE_UPLOAD_ERROR"));
-        return;
-      }
+  // const validateExcel = (selectedFile) => {
+  //   return new Promise((resolve, reject) => {
+  //     // Check if a file is selected
+  //     if (!selectedFile) {
+  //       reject(t("HCM_FILE_UPLOAD_ERROR"));
+  //       return;
+  //     }
 
-      // Read the Excel file
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        try {
-          const data = new Uint8Array(e.target.result);
-          const workbook = XLSX.read(data, { type: "array" });
-          const sheet = workbook.Sheets[sheetTypeMap[type]];
-          const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
-            header: 1,
-          })[0];
+  //     // Read the Excel file
+  //     const reader = new FileReader();
+  //     reader.onload = (e) => {
+  //       try {
+  //         const data = new Uint8Array(e.target.result);
+  //         const workbook = XLSX.read(data, { type: "array" });
+  //         const sheet = workbook.Sheets[sheetTypeMap[type]];
+  //         const headersToValidate = XLSX.utils.sheet_to_json(sheet, {
+  //           header: 1,
+  //         })[0];
 
-          const expectedHeaders = sheetHeaders[type];
+  //         const expectedHeaders = sheetHeaders[type];
 
-          const SheetNames = sheetTypeMap[type];
+  //         const SheetNames = sheetTypeMap[type];
 
-          const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
-          var jsonData = sheetData.map((row, index) => {
-            let rowData = {};
-            if (Object.keys(row).length > 0) {
-              let allNull = true;
+  //         const sheetData = XLSX.utils.sheet_to_json(workbook.Sheets[SheetNames], { blankrows: true });
+  //         var jsonData = sheetData.map((row, index) => {
+  //           let rowData = {};
+  //           if (Object.keys(row).length > 0) {
+  //             let allNull = true;
           
-              Object.keys(row).forEach((key) => {
-                if (row[key] !== undefined && row[key] !== "") {
-                  allNull = false;
-                }            
-                rowData[key] = row[key] === undefined || row[key] === "" ? null : row[key];
-              });
+  //             Object.keys(row).forEach((key) => {
+  //               if (row[key] !== undefined && row[key] !== "") {
+  //                 allNull = false;
+  //               }            
+  //               rowData[key] = row[key] === undefined || row[key] === "" ? null : row[key];
+  //             });
           
-              if (!allNull) {
-                rowData["!row#number!"] = index + 1;
+  //             if (!allNull) {
+  //               rowData["!row#number!"] = index + 1;
           
-                // Remove keys with null values
-                rowData = Object.fromEntries(
-                  Object.entries(rowData).filter(([_, value]) => value !== null)
-                );
+  //               // Remove keys with null values
+  //               rowData = Object.fromEntries(
+  //                 Object.entries(rowData).filter(([_, value]) => value !== null)
+  //               );
                 
-              } else {
-                rowData = null;
-              }
+  //             } else {
+  //               rowData = null;
+  //             }
           
-              return rowData;
-            }
-          });
+  //             return rowData;
+  //           }
+  //         });
           
-          jsonData = jsonData.filter((element) => element);
-          if (type === "boundary") {
-            if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
-              const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
-              setErrorsType((prevErrors) => ({
-                ...prevErrors,
-                [type]: errorMessage,
-              }));
-              setIsError(true);
-              return;
-            }
-          } else
-          if (type === "facilityWithBoundary") {
-            if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
-              const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
-              setErrorsType((prevErrors) => ({
-                ...prevErrors,
-                [type]: errorMessage,
-              }));
-              setIsError(true);
-              return;
-            }
-            if (type === "facilityWithBoundary") {
-              const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
-              const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
-              if (activeColumnName && uniqueIdentifierColumnName) {
-                jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
-              }
-              // if (jsonData.length == 0) {
-              //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
-              //   setErrorsType((prevErrors) => ({
-              //     ...prevErrors,
-              //     [type]: errorMessage,
-              //   }));
-              //   setIsError(true);
-              //   return;
-              // }
-            }
-          } else if (type === "userWithBoundary") {
-            if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
-              const errorMessage = t("HCM_INVALID_USER_SHEET");
-              setErrorsType((prevErrors) => ({
-                ...prevErrors,
-                [type]: errorMessage,
-              }));
-              setIsError(true);
-              return;
-            }
-          }
-          if (type === "boundary" && workbook?.SheetNames?.length >= 3) {
-            if (!validateMultipleTargets(workbook)) {
-              return;
-            }
-          } else if (type !== "boundary") {
-            for (const header of expectedHeaders) {
-              if (!headersToValidate.includes(header)) {
-                const errorMessage = t("HCM_MISSING_HEADERS");
-                setErrorsType((prevErrors) => ({
-                  ...prevErrors,
-                  [type]: errorMessage,
-                }));
-                setIsError(true);
-                return;
-              }
-            }
-          }
+  //         jsonData = jsonData.filter((element) => element);
+  //         if (type === "boundary") {
+  //           if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+  //             const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
+  //             setErrorsType((prevErrors) => ({
+  //               ...prevErrors,
+  //               [type]: errorMessage,
+  //             }));
+  //             setIsError(true);
+  //             return;
+  //           }
+  //         } else
+  //         if (type === "facility") {
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
+  //             const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
+  //             setErrorsType((prevErrors) => ({
+  //               ...prevErrors,
+  //               [type]: errorMessage,
+  //             }));
+  //             setIsError(true);
+  //             return;
+  //           }
+  //           if (type === "facility") {
+  //             const activeColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_USAGE");
+  //             const uniqueIdentifierColumnName = t("HCM_ADMIN_CONSOLE_FACILITY_CODE");
+  //             if (activeColumnName && uniqueIdentifierColumnName) {
+  //               jsonData = jsonData.filter((item) => item[activeColumnName] !== "Inactive" || !item[uniqueIdentifierColumnName]);
+  //             }
+  //             // if (jsonData.length == 0) {
+  //             //   const errorMessage = t("HCM_FACILITY_USAGE_VALIDATION");
+  //             //   setErrorsType((prevErrors) => ({
+  //             //     ...prevErrors,
+  //             //     [type]: errorMessage,
+  //             //   }));
+  //             //   setIsError(true);
+  //             //   return;
+  //             // }
+  //           }
+  //         } else if (type === "userWithBoundary") {
+  //           if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_USER_LIST")).length == 0) {
+  //             const errorMessage = t("HCM_INVALID_USER_SHEET");
+  //             setErrorsType((prevErrors) => ({
+  //               ...prevErrors,
+  //               [type]: errorMessage,
+  //             }));
+  //             setIsError(true);
+  //             return;
+  //           }
+  //         }
+  //         if (type === "boundary" && workbook?.SheetNames?.length >= 3) {
+  //           if (!validateMultipleTargets(workbook)) {
+  //             return;
+  //           }
+  //         } else if (type !== "boundary") {
+  //           for (const header of expectedHeaders) {
+  //             if (!headersToValidate.includes(header)) {
+  //               const errorMessage = t("HCM_MISSING_HEADERS");
+  //               setErrorsType((prevErrors) => ({
+  //                 ...prevErrors,
+  //                 [type]: errorMessage,
+  //               }));
+  //               setIsError(true);
+  //               return;
+  //             }
+  //           }
+  //         }
 
-          if (type === "boundary" && workbook?.SheetNames.length == 1) {
-            if (!validateTarget(jsonData, headersToValidate)) {
-              return;
-            }
-          }
+  //         if (type === "boundary" && workbook?.SheetNames.length == 1) {
+  //           if (!validateTarget(jsonData, headersToValidate)) {
+  //             return;
+  //           }
+  //         }
 
-          // if (jsonData.length == 0) {
-          //   const errorMessage = t("HCM_EMPTY_SHEET");
-          //   setErrorsType((prevErrors) => ({
-          //     ...prevErrors,
-          //     [type]: errorMessage,
-          //   }));
-          //   setIsError(true);
-          //   return;
-          // }
-          if (type !== "boundary") {
-            if (validateData(jsonData, SheetNames)) {
-              resolve(true);
-            } else {
-              setShowInfoCard(true);
-            }
-          }
-        } catch (error) {
-          console.log("error" , error);
-          reject("HCM_FILE_UNAVAILABLE");
-        }
-      };
+  //         // if (jsonData.length == 0) {
+  //         //   const errorMessage = t("HCM_EMPTY_SHEET");
+  //         //   setErrorsType((prevErrors) => ({
+  //         //     ...prevErrors,
+  //         //     [type]: errorMessage,
+  //         //   }));
+  //         //   setIsError(true);
+  //         //   return;
+  //         // }
+  //         if (type !== "boundary") {
+  //           if (validateData(jsonData, SheetNames)) {
+  //             resolve(true);
+  //           } else {
+  //             setShowInfoCard(true);
+  //           }
+  //         }
+  //       } catch (error) {
+  //         console.log("error" , error);
+  //         reject("HCM_FILE_UNAVAILABLE");
+  //       }
+  //     };
 
-      reader.readAsArrayBuffer(selectedFile);
-    });
-  };
+  //     reader.readAsArrayBuffer(selectedFile);
+  //   });
+  // };
   
 
   const onBulkUploadSubmit = async (file) => {
@@ -839,9 +838,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         const urlParts = i?.url?.split("/");
         const fileName = file?.[0]?.name;
         const id = fileUrl?.[0]?.id;
-        // const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
-        const fileType =
-          type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
+        // const fileType = type === "facility" ? "facility" : type === "userWithBoundary" ? "user" : type;
+        const fileType = type
         return {
           // ...i,
           filestoreId: id,
@@ -852,7 +850,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       })
       .map(({ id, ...rest }) => rest);
     setUploadedFile(fileData);
-    const validate = await validateExcel(file[0]);
+    setErrorsType(0);
+    // const validate = await validateExcel(file[0]);
   };
 
   const onFileDelete = (file, index) => {
@@ -892,10 +891,10 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setLoader(true);
 
         try {
-          const temp = await Digit.Hooks.campaign.useResourceData(
+          const temp = await Digit.Hooks.campaign.useProcessData(
             uploadedFile,
             params?.hierarchyType,
-            type,
+            `${type}Validation`,
             tenantId,
             id,
             baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
@@ -913,7 +912,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (temp?.status === "completed") {
             setLoader(false);
             setIsValidation(false);
-            if (temp?.additionalDetails?.sheetErrors.length === 0) {
+            if (!temp?.additionalDetails?.sheetErrors?.length) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
               if (temp?.id) {
                 setResourceId(temp?.id);
@@ -939,14 +938,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                     const urlParts = i?.url?.split("/");
                     const id = fileUrl?.[0]?.id;
                     // const fileName = fileName;
-                    const fileType =
-                      type === "facilityWithBoundary"
-                        ? "facility"
-                        : type === "userWithBoundary"
-                        ? "user"
-                        : type === "boundary"
-                        ? "boundaryWithTarget"
-                        : type;
+                    const fileType = type
                     return {
                       ...i,
                       filestoreId: id,
@@ -978,14 +970,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                   const urlParts = i?.url?.split("/");
                   const id = fileUrl?.[0]?.id;
                   // const fileName = file?.[0]?.name;
-                  const fileType =
-                    type === "facilityWithBoundary"
-                      ? "facility"
-                      : type === "userWithBoundary"
-                      ? "user"
-                      : type === "boundary"
-                      ? "boundaryWithTarget"
-                      : type;
+                  const fileType = type
                   return {
                     ...i,
                     filestoreId: id,
@@ -1013,7 +998,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       tenantId: tenantId,
       type: type,
       hierarchyType: params?.hierarchyType,
-      id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
+      id: type === "boundary" ? params?.boundaryId : type === "facility" ? params?.facilityId : params?.userId,
     },
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
@@ -1021,77 +1006,106 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   // Add a new state to track downloaded templates
   const [downloadedTemplates, setDownloadedTemplates] = useState({
     boundary: false,
-    facilityWithBoundary: false,
+    facility: false,
     user: false,
   });
 
-  const downloadTemplate = async () => {
-    await mutation.mutate(
-      {
+  const generateFile = async (type, tenantId, campaignId, hierarchyType) => {
+      const res = await Digit.CustomService.getResponse({
+        url: `/project-factory/v2/data/_generate`,
+        body: {
+        },
         params: {
           tenantId: tenantId,
-          type: type,
-          hierarchyType: params?.hierarchyType,
-          campaignId: id,
-          status: "completed"
-        },
-      },
-      {
-        onSuccess: async (result) => {
-          if (result?.GeneratedResource?.[0]?.status === "failed") {
-            setDownloadError(true);
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-            return;
-          }
-          if (result?.GeneratedResource?.[0]?.status === "inprogress") {
-            setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-            return;
-          }
-          if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
-            setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-            return;
-          }
-          const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
-          const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-          const fileData = fileUrl?.map((i) => {
-            const urlParts = i?.url?.split("/");
-            // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-            const fileName = type === "boundary" ? "Target Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
-            return {
-              ...i,
-              filename: fileName,
-            };
-          });
-
-          if (fileData && fileData?.[0]?.url) {
-            setDownloadError(false);
-            if (fileData?.[0]?.id) {
-              const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}` : `${campaignName}_${fileData[0].filename}`;
-              downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
-              setDownloadedTemplates((prev) => ({
-                ...prev,
-                [type]: true,
-              }));
-            }
-          } else {
-            setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
-          }
-        },
-        onError: (error, result) => {
-          const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          if (errorCode == "NativeIoException") {
-            setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-          } else {
-            setDownloadError(true);
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-          }
-        },
+          type,
+          hierarchyType,
+          campaignId
+        }
+      });
+      return res;
+    }
+  const downloadTemplate = async () => {
+    if(!downloadId?.[type]){
+      const resp = await generateFile(type, tenantId, id, params?.hierarchyType);
+      if (resp?.GeneratedResource?.id){
+        setDownloadId({
+          ...downloadId,
+          [type]: resp?.GeneratedResource?.id
+        });
       }
-    );
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+      return;
+    }
+    else{
+      await mutation.mutate(
+        {
+          params: {
+            tenantId: tenantId,
+            type: type,
+            hierarchyType: params?.hierarchyType,
+            campaignId: id,
+            status: "completed",
+            id : downloadId?.[type]
+          },
+        },
+        {
+          onSuccess: async (result) => {
+            if (result?.GeneratedResource?.[0]?.status === "failed") {
+              setDownloadError(true);
+              setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+              return;
+            }
+            if (result?.GeneratedResource?.[0]?.status === "inprogress") {
+              setDownloadError(true);
+              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+              return;
+            }
+            if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
+              setDownloadError(true);
+              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+              return;
+            }
+            const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
+            const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
+            const fileData = fileUrl?.map((i) => {
+              const urlParts = i?.url?.split("/");
+              // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
+              const fileName = type === "boundary" ? "Target Template" : type === "facility" ? "Facility Template" : "User Template";
+              return {
+                ...i,
+                filename: fileName,
+              };
+            });
+
+            if (fileData && fileData?.[0]?.url) {
+              setDownloadError(false);
+              if (fileData?.[0]?.id) {
+                const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}` : `${campaignName}_${fileData[0].filename}`;
+                downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
+                setDownloadedTemplates((prev) => ({
+                  ...prev,
+                  [type]: true,
+                }));
+              }
+            } else {
+              setDownloadError(true);
+              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT") });
+            }
+          },
+          onError: (error, result) => {
+            const errorCode = error?.response?.data?.Errors?.[0]?.code;
+            if (errorCode == "NativeIoException") {
+              setDownloadError(true);
+              setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
+            } else {
+              setDownloadError(true);
+              setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            }
+          },
+        }
+      );
+    }
   };
   // Modify the condition for showing the popup
   useEffect(() => {
@@ -1124,7 +1138,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     if (parentId) {
       if (type === "boundary") {
         return t("WBH_DOWNLOAD_CURRENT_TARGET");
-      } else if (type === "facilityWithBoundary") {
+      } else if (type === "facility") {
         return t("WBH_DOWNLOAD_CURRENT_FACILITY");
       } else {
         return t("WBH_DOWNLOAD_CURRENT_USER");
@@ -1144,7 +1158,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             <TagComponent campaignName={campaignName} />  
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facility" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
               <Button
                 label={getDownloadLabel()}
@@ -1159,7 +1173,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <div className="info-text">
                 {type === "boundary"
                   ? t("HCM_BOUNDARY_MESSAGE")
-                  : type === "facilityWithBoundary"
+                  : type === "facility"
                   ? t("HCM_FACILITY_MESSAGE")
                   : t("HCM_USER_MESSAGE")}
               </div>
@@ -1222,7 +1236,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             heading={
               type === "boundary"
                 ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_HEADER")
-                : type === "facilityWithBoundary"
+                : type === "facility"
                 ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_HEADER")
                 : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_HEADER")
             }
@@ -1230,7 +1244,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               <div>
                 {type === "boundary"
                   ? t("ES_CAMPAIGN_UPLOAD_BOUNDARY_DATA_MODAL_TEXT")
-                  : type === "facilityWithBoundary"
+                  : type === "facility"
                   ? t("ES_CAMPAIGN_UPLOAD_FACILITY_DATA_MODAL_TEXT")
                   : t("ES_CAMPAIGN_UPLOAD_USER_DATA_MODAL_TEXT")}
               </div>,
