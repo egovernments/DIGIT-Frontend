@@ -372,14 +372,13 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
-      result[locale] = locState
-        .map((item) => ({
-          code: item.code,
-          message: item[locale] || "",
-          module: localeModule ? localeModule : "hcm-dummy-module",
-          locale: locale,
-        }))
-        .filter((item) => item.message !== "");
+      result[locale] = locState.map((item) => ({
+        code: item.code,
+        message: item[locale] || " ",
+        module: localeModule ? localeModule : "hcm-dummy-module",
+        locale: locale,
+      }));
+      // .filter((item) => item.message !== "");
     });
 
     return result;
@@ -480,12 +479,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
-          setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
           updateCount = updateCount + 1;
           updateSuccess = true;
         } catch (error) {
-          setLoading(false);
           setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
           console.error(`Error sending ${locale} localisation data:`, error);
         }
@@ -724,7 +721,16 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={locUpdate} />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                locUpdate();
+                setShowPopUp(false);
+              }}
+            />,
           ]}
         >
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
