@@ -15,13 +15,14 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [isDataCreating, setIsDataCreating] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const editName = searchParams.get("editName");
-  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
+  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName));
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
-  const id = searchParams.get("id");
+  const storedInfo = JSON.parse(sessionStorage.getItem("HCM_CAMPAIGN_NUMBER") || "{}");
+  const id = searchParams.get("id") || storedInfo?.id;
   const isDraft = searchParams.get("draft");
-  const campaignNumber = searchParams.get("campaignNumber");
+  const campaignNumber = searchParams.get("campaignNumber") || storedInfo?.campaignNumber;
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
@@ -59,7 +60,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       },
     },
   });
-
   const transformDraftDataToFormData = (draftData) => {
     const restructureFormData = {
       ...draftData,
@@ -157,7 +157,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       [name]: formData,
     }));
 
-    if (formData?.CampaignName && !editName) {
+    if (formData?.CampaignName && !editName && !campaignNumber) {
       if (formData?.CampaignName?.length > 30) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return;
@@ -199,7 +199,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setCurrentKey(currentKey + 1);
     } else {
       setLoader(true);
-      const isEdit = editName;
+      const isEdit = editName || campaignNumber;
       const mutation = isEdit ? mutationUpdate : mutationCreate;
       const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
       const payload = transformCreateData({

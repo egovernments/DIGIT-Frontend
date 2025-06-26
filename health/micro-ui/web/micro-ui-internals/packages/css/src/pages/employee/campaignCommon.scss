@@ -328,5 +328,8 @@
   .digit-popup-heading{
     color: theme(digitv2.lightTheme.primary-2);
   }
+  .digit-popup-children-wrap{
+    overflow: unset !important;
+  }
 }
 
