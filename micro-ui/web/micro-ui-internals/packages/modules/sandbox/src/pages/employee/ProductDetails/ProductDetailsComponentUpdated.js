@@ -16,18 +16,28 @@ const iconMap = {
     Calculate,
     BarChart
 };
+import { useHistory } from "react-router-dom";
 
 
-
-const Breadcrumb = ({ path }) => (
-    <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '2rem 3rem' }}>
+const Breadcrumb = ({ path }) => {
+    const history = useHistory();
+    const redirectPath = `/${window?.contextPath}/employee/sandbox/productPage`;
+  
+    const handleContinue = (e) => {
+      e.preventDefault();
+      history.push(redirectPath); // client-side navigate
+    };
+  
+    return (
+      <div style={{ width: "100%", backgroundColor: "#e4edf1", padding: "2rem 3rem" }}>
         <nav className="nav-breadcrumb">
-            <a href={`/${window?.contextPath}/employee/sandbox/productPage`}>Products</a>
-            <span className="separator">/</span>
-            <span className="current">{path}</span>
+          <a href={redirectPath} onClick={handleContinue}>Products</a>
+          <span className="separator">/</span>
+          <span className="current">{path}</span>
         </nav>
-    </div>
-);
+      </div>
+    );
+  };
 
 const HeroSection = ({ title, headline, img }) => (
     <div style={{
