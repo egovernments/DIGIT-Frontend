@@ -10,9 +10,11 @@ import {
   TooltipWrapper,
   AlertCard,
   FieldV1,
+  SVG,
   Loader,
   CheckBox,
 } from "@egovernments/digit-ui-components";
+import { ResourceCard } from "./svgComponents/resourceCards";
 import { useTranslation } from "react-i18next";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import "../utils/template_components/RegistrationComponents";
@@ -285,7 +287,9 @@ const renderField = (field, t) => {
           title={t(field?.label)}
           onClick={() => { }}
         />
-      ); // TODO hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
+      );
+      case "custom":
+        return <div style={{width: "100%"}}> <ResourceCard style={{width: "100%", height: "auto"}}></ResourceCard></div> // TODO hardcoded with qrscanner we need to think about it and set accordingly @jagan @nabeel
     default:
       return <div style={{ color: "red", marginTop: "5px" }}>Unsupported field type: {field.type}</div>;
   }
