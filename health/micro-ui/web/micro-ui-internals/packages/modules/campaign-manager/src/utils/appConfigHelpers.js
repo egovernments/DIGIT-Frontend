@@ -171,8 +171,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         MdmsDropdown: field?.schemaCode ? true : false,
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
-        includeInForm: field?.includeInForm || false,
-        includeInSummary: field?.includeInSummary || false,
+        includeInForm: field?.includeInForm === false ? false : true,
+        includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
       }));
 
@@ -272,8 +272,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         readOnly: field?.readOnly || false,
         systemDate: field?.systemDate || false,
         isMultiSelect: field?.isMultiSelect ? true : false,
-        includeInForm: field?.includeInForm || true,
-        includeInSummary: field?.includeInSummary || true,
+        includeInForm: field?.includeInForm === false ? false : true,
+        includeInSummary: field?.includeInSummary === false ? false : true,
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
