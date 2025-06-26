@@ -476,7 +476,7 @@ const DigitJSONForm = ({
                     textStyles={{ margin: "0px" }}
                   />
                 ) : null}
-                <SubmitBar label={t("WORKS_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+                <SubmitBar label={t("WORKBENCH_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
               </ActionBar>
             )}
           </Form>
