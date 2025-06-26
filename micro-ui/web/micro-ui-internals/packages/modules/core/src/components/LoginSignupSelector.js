@@ -1,24 +1,19 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
-import { CheckBox, PopUp, Button, HeaderComponent } from "@egovernments/digit-ui-components";
-import { LinkButton } from "@egovernments/digit-ui-react-components";
-import { useHistory } from "react-router-dom";
 const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props }) => {
     const { t } = useTranslation();
-    const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [isChecked, setIsChecked] = useState(true);
-     const history = useHistory();
+    const [isChecked, setIsChecked] = useState(true);
 
 
     useEffect(() => {
         onSelect("check", isChecked);
     }, [isChecked]);
     const onButtonClickLogin = () => {
-       window.location.replace(`/${window?.contextPath}/user/login`);
+        window.location.replace(`/${window?.contextPath}/user/login`);
     };
 
     const onButtonClickSignUP = () => {
-         window.location.replace(`/${window?.contextPath}/user/sign-up`);
+        window.location.replace(`/${window?.contextPath}/user/sign-up`);
     };
 
     const isSignupPage = window.location.href.includes("sandbox-ui/user/sign-up");
@@ -39,7 +34,7 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
                             label={t(`SB_DONT_HAVE_ACCOUNT`)}
                             variation={"link"}
                             size={"small"}
-                            onClick={onButtonClickSignUP }
+                            onClick={onButtonClickSignUP}
                             // isSuffix={true}
                             style={{ marginBottom: "0.5rem", paddingLeft: "0.2rem" }}
                         ></Button>
