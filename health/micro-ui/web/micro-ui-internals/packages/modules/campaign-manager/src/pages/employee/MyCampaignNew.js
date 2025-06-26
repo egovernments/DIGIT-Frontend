@@ -11,7 +11,9 @@ import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
  * "digit-inbox-search-wrapper" that contains an `InboxSearchComposer` component. The `InboxSearchComposer`
  * component is being passed props such as `configs`, `showTab`, `tabData`, and `onTabChange
  */
-const MyCampaignNew = () => {
+
+const MyCampaignNew = ({showDashboardLink}) => {
+  
   const { t } = useTranslation();
   const [config, setConfig] = useState(null);
   const [selectedTabIndex, setSelectedTabIndex] = useState(null);

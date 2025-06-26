@@ -50,6 +50,11 @@ const useCampaignsInboxSearch = ({ state, body, params, config = {} }) => {
       //   filter.startDate = nowEpoch;
       //   filter.endDate = nowEpoch + (365 * 24 * 60 * 60 * 1000) + 1000;
       // }
+
+      // for past campaigns : startdate earlier and end date one day less than todays date
+      // for live campaigns how can I do ? as stardate and end date accepts only epoch values...
+       // if i include earlier start date and end date more than todays date.. then it also shows past campaigns right ? if I keep startdate as todays date .. what if it started earlier and may end later ?
+
       return {
         queryKey: ["PROJECT_SEARCH_BY_ID", staff.projectId],
         queryFn: () =>

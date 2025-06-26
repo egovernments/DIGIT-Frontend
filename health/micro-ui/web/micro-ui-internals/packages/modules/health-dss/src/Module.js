@@ -7,12 +7,13 @@ import { ProviderContext } from "./utils/context";
 import DSSCard from "./components/DSSCard";
 import InboxFilter from "./components/InboxFilter";
 import DateRangePicker from "./components/DateRangePicker";
+import DSSCampaignRowCard from "./components/DSSCampaignRowCard";
 
 export const DSSModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
-  const moduleCode = ["campaignmanager","dss", `boundary-${hierarchyType}`];
-  const modulePrefix = "hcm";
+  const moduleCode = ["hcm-campaignmanager","hcm-dss", `hcm-boundary-${hierarchyType}`,"rainmaker-hcm-dss"];
+  const modulePrefix = "";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
@@ -35,7 +36,8 @@ const componentsToRegister = {
   DSSModule,
   DSSCard,
   InboxFilter,
-  DateRangePicker
+  DateRangePicker,
+  DSSCampaignRowCard
 };
 
 export const initDSSComponents = () => {

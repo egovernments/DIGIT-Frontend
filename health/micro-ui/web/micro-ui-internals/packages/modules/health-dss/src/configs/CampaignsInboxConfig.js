@@ -1,4 +1,4 @@
-const tenantId = Digit.ULBService.getCurrentTenantId();
+const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
 export const CampaignsInboxConfig = ({ headerLabel }) => {
   return {

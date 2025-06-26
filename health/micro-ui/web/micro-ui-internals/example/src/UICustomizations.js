@@ -1673,23 +1673,55 @@ export const UICustomizations = {
       }
     },
   },
-    CampaignsInboxConfig: {
-      preProcess: (data, additionalDetails) => {
-        data.body.ProjectStaff = {};
-        data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
-        data.params.tenantId = Digit.ULBService.getCurrentTenantId();
-        data.params.limit = data.state.tableForm.limit;
-        data.params.offset = data.state.tableForm.offset;
-        cleanObject(data.body.ProjectStaff);
-        return data;
-      },
-      additionalCustomizations: (row, key, column, value, t, searchResult) => {
-        switch (key) {
-          case "ACTIONS":
-            let options = [
-              { code: "1", name: "VIEW_DASHBOARD" },
-              { code: "2", name: "VIEW_CUSTOM_REPORT" },
-            ];
+  CampaignsInboxConfig: {
+    preProcess: (data, additionalDetails) => {
+      data.body.ProjectStaff = {};
+      data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
+      data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.params.limit = data.state.tableForm.limit;
+      data.params.offset = data.state.tableForm.offset;
+      delete data.body.ProjectStaff.campaignName;
+      delete data.body.ProjectStaff.campaignType;
+      cleanObject(data.body.ProjectStaff);
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "ACTIONS":
+          let options = [
+            { code: "1", name: "VIEW_DASHBOARD" },
+            { code: "2", name: "VIEW_CUSTOM_REPORT" },
+          ];
           const onActionSelect = async (e, row) => {
             if (e.name == "VIEW_DASHBOARD") {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
@@ -1698,77 +1730,77 @@ export const UICustomizations = {
               window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
             } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
           };
-            return (
-                  <ButtonNew
-                    type="actionButton"
-                    variation="secondary"
-                    label={t("TAKE_ACTION")}
-                    title={t("TAKE_ACTION")}
-                    options={options}
-                    style={{ width: "20rem" }}
-                    optionsKey="name"
-                    showBottom={true}
-                    isSearchable={false}
-                    onOptionSelect={(item) => onActionSelect(item, row)}
-                  />
-            );
-  
-          case "CAMPAIGN_NAME":
-            return renderText(value,t);
-  
-          case "BOUNDARY_NAME":
-            return renderText(value,t);
-  
-          case "START_DATE":
-            return (
-              <div
-                style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
-                }}
-              >
-                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
-              </div>
-            );
-  
-          case "YEAR":
-            return renderText(value,t);
-  
-          case "END_DATE":
-            return (
-              <div
-                style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
-                }}
-              >
-                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
-              </div>
-            );
-  
-          case "PLANNED_END_DATE":
-            return (
-              <div
-                style={{
-                  maxWidth: "15rem", // Set the desired maximum width
-                  wordWrap: "break-word", // Allows breaking within words
-                  whiteSpace: "normal", // Ensures text wraps normally
-                  overflowWrap: "break-word", // Break long words at the edge
-                }}
-              >
-                <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
-              </div>
-            );
-  
-          default:
-            return null; // Handle any unexpected keys here if needed
-        }
-      },
+          return (
+            <ButtonNew
+              type="actionButton"
+              variation="secondary"
+              label={t("TAKE_ACTION")}
+              title={t("TAKE_ACTION")}
+              options={options}
+              style={{ width: "20rem" }}
+              optionsKey="name"
+              showBottom={true}
+              isSearchable={false}
+              onOptionSelect={(item) => onActionSelect(item, row)}
+            />
+          );
+
+        case "CAMPAIGN_NAME":
+          return renderText(value, t);
+
+        case "BOUNDARY_NAME":
+          return renderText(value, t);
+
+        case "START_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+
+        case "YEAR":
+          return renderText(value, t);
+
+        case "END_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+
+        case "PLANNED_END_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+
+        default:
+          return null; // Handle any unexpected keys here if needed
+      }
     },
+  },
 
   HRMSInboxConfig: {
       preProcess: (data) => {
