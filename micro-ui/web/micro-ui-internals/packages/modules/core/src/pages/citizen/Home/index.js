@@ -13,15 +13,13 @@ import {
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import ImageComponent from "../../../components/ImageComponent";
 
 const Home = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const tenantId = Digit.Utils.getMultiRootTenant()? Digit?.ULBService?.getStateId() : Digit?.ULBService?.getCitizenCurrentTenant(true);
-  const {
-    data: { stateInfo, uiHomePage } = {},
-    isLoading,
-  } = Digit.Hooks.useStore.getInitData();
+  const tenantId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCitizenCurrentTenant(true);
+  const { data: { stateInfo, uiHomePage } = {}, isLoading } = Digit.Hooks.useStore.getInitData();
   let isMobile = window.Digit.Utils.browser.isMobile();
 
   const conditionsToDisableNotificationCountTrigger = () => {
@@ -30,10 +28,7 @@ const Home = () => {
     return true;
   };
 
-  const {
-    data: EventsData,
-    isLoading: EventsDataLoading,
-  } = Digit.Hooks.useEvents({
+  const { data: EventsData, isLoading: EventsDataLoading } = Digit.Hooks.useEvents({
     tenantId,
     variant: "whats-new",
     config: {
@@ -92,7 +87,11 @@ const Home = () => {
         onClick: () =>
           navigate(citizenServicesObj?.props?.[2]?.navigationUrl),
       },
-    
+      // {
+      //     name: t("ACTION_TEST_WATER_AND_SEWERAGE"),
+      //     Icon: <DropIcon/>,
+      //     onClick: () => history.push(`/${window?.contextPath}/citizen`)
+      // },
       {
         name: t(citizenServicesObj?.props?.[3]?.label),
         Icon: <OBPSIcon />,
@@ -138,7 +137,10 @@ const Home = () => {
         onClick: () =>
           navigate(infoAndUpdatesObj?.props?.[3]?.navigationUrl),
       },
-    
+      // {
+      //     name: t("CS_COMMON_HELP"),
+      //     Icon: <HelpIcon/>
+      // }
     ],
     styles: {
       display: "flex",
@@ -152,25 +154,23 @@ const Home = () => {
     <Loader />
   ) : (
     <div className="HomePageContainer">
-   
+      {/* <div className="SideBarStatic">
+        <StaticCitizenSideBar />
+      </div> */}
       <div className="HomePageWrapper">
         {
           <div className="BannerWithSearch">
             {isMobile ? (
-              <img src={appBannerMobObj?.bannerUrl} />
+              <ImageComponent src={appBannerMobObj?.bannerUrl} alt="Banner Image" />
             ) : (
-              <img src={appBannerWebObj?.bannerUrl} />
+              <ImageComponent src={appBannerWebObj?.bannerUrl} alt="Banner Image" />
             )}
-     
+            {/* <div className="Search">
+            <StandaloneSearchBar placeholder={t("CS_COMMON_SEARCH_PLACEHOLDER")} />
+          </div> */}
             <div className="ServicesSection">
-              <CardBasedOptions
-                style={{ marginTop: "-30px" }}
-                {...allCitizenServicesProps}
-              />
-              <CardBasedOptions
-                style={isMobile ? {} : { marginTop: "-30px" }}
-                {...allInfoAndUpdatesProps}
-              />
+              <CardBasedOptions style={{ marginTop: "-30px" }} {...allCitizenServicesProps} />
+              <CardBasedOptions style={isMobile ? {} : { marginTop: "-30px" }} {...allInfoAndUpdatesProps} />
             </div>
           </div>
         }
@@ -178,18 +178,16 @@ const Home = () => {
         {(whatsAppBannerMobObj || whatsAppBannerWebObj) && (
           <div className="WhatsAppBanner">
             {isMobile ? (
-              <img
+              <ImageComponent
                 src={whatsAppBannerMobObj?.bannerUrl}
-                onClick={() =>
-                  handleClickOnWhatsAppBanner(whatsAppBannerMobObj)
-                }
+                onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerMobObj)}
+                alt="Whatsapp Banner"
               />
             ) : (
-              <img
+              <ImageComponent
                 src={whatsAppBannerWebObj?.bannerUrl}
-                onClick={() =>
-                  handleClickOnWhatsAppBanner(whatsAppBannerWebObj)
-                }
+                onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerWebObj)}
+                alt="Whatsapp Banner"
               />
             )}
           </div>
@@ -202,13 +200,7 @@ const Home = () => {
             <div className="WhatsNewSection">
               <div className="headSection">
                 <h2>{t(whatsNewSectionObj?.headerLabel)}</h2>
-                <p
-                  onClick={() =>
-                    navigate(whatsNewSectionObj?.sideOption?.navigationUrl)
-                  }
-                >
-                  {t(whatsNewSectionObj?.sideOption?.name)}
-                </p>
+                <p onClick={() => navigate(whatsNewSectionObj?.sideOption?.navigationUrl)}>{t(whatsNewSectionObj?.sideOption?.name)}</p>
               </div>
               <WhatsNewCard {...EventsData?.[0]} />
             </div>

@@ -1,7 +1,7 @@
 import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Routes, Route, useNavigate, useLocation, useMatch } from "react-router-dom";
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom"; // Updated imports for v6
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
 import { AppHome, processLinkData } from "../../components/Home";
@@ -16,6 +16,7 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
+import ImageComponent from "../../components/ImageComponent";
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -26,7 +27,7 @@ const sidebarHiddenFor = [
 ];
 
 const getTenants = (codes, tenants) => {
-  return tenants.filter((tenant) => codes?.map((item) => item.code).includes(tenant.code));
+  return tenants.filter((tenant) => codes.map((item) => item.code).includes(tenant.code));
 };
 
 const Home = ({
@@ -41,12 +42,12 @@ const Home = ({
   stateCode,
   modules,
   appTenants,
-  sourceUrl,
-  pathname,
+  sourceUrl, // This prop seems unused, consider removing
+  pathname, // This prop seems unused, `useLocation().pathname` is used directly
   initData,
 }) => {
   const { isLoading: islinkDataLoading, data: linkData, isFetched: isLinkDataFetched } = Digit.Hooks.useCustomMDMS(
-    Digit?.ULBService?.getStateId(),
+    Digit.ULBService.getStateId(),
     "ACCESSCONTROL-ACTIONS-TEST",
     [
       {
@@ -66,29 +67,30 @@ const Home = ({
       },
     }
   );
-  const classname = Digit.Hooks.useRouteSubscription(pathname);
+  const classname = Digit.Hooks.useRouteSubscription(pathname); // Assuming this hook is compatible or doesn't rely on v5 specific router props
   const { t } = useTranslation();
-  const location = useLocation();
-  const navigate = useNavigate();
-
-
-  const path = location.pathname.split('/').slice(0, -1).join('/');
+  // const { path } = useRouteMatch(); // Removed: Replaced by relative paths in Routes
+  const navigate = useNavigate(); // Replaced useHistory with useNavigate
+  const location = useLocation(); // Keep useLocation for current path checks
 
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
   };
 
   const hideSidebar = sidebarHiddenFor.some((e) => window.location.href.includes(e));
-  const appRoutes = modules?.map(({ code, tenants }, index) => {
+
+  // The `appRoutes` and `ModuleLevelLinkHomePages` arrays now build `Route` elements with `element` prop.
+  // The `path` prop should be relative to the base path where this `Home` component is mounted (e.g., `/citizen`).
+  const appRoutes = modules.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
     return Module ? (
-      <Route key={index} path={`${code.toLowerCase()}`} element={
+      <Route key={index} path={`${code.toLowerCase()}/*`} element={ // Added /* for nested routes within modules
         <Module stateCode={stateCode} moduleCode={code} userType="citizen" tenants={getTenants(tenants, appTenants)} />
       } />
     ) : null;
   });
 
-  const ModuleLevelLinkHomePages = modules?.map(({ code, bannerImage }, index) => {
+  const ModuleLevelLinkHomePages = modules.map(({ code, bannerImage }, index) => {
     let Links = Digit.ComponentRegistryService.getComponent(`${code}Links`) || (() => <React.Fragment />);
     let mdmsDataObj = isLinkDataFetched ? processLinkData(linkData, code, t) : undefined;
 
@@ -98,11 +100,11 @@ const Home = ({
       });
     }
     return (
-      <React.Fragment key={`module-${index}`}>
+      <React.Fragment key={code + "-routes"}> {/* Added a key to the fragment */}
         <Route path={`${code.toLowerCase()}-home`} element={
           <div className="moduleLinkHomePage">
-            <img src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
-            <BackLink className="moduleLinkHomePageBackButton" onClick={() => window.history.back()} />
+            <ImageComponent src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
+            <BackLink className="moduleLinkHomePageBackButton" onClick={() => navigate(-1)} /> {/* navigate(-1) for back */}
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
               {mdmsDataObj && (
@@ -113,17 +115,18 @@ const Home = ({
                   Info={
                     code === "OBPS"
                       ? () => (
-                        <CitizenInfoLabel
-                          style={{ margin: "0px", padding: "10px" }}
-                          info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                          text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
-                        />
-                      )
+                          <CitizenInfoLabel
+                            style={{ margin: "0px", padding: "10px" }}
+                            info={t("CS_FILE_APPLICATION_INFO_LABEL")}
+                            text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
+                          />
+                        )
                       : null
                   }
                   isInfo={code === "OBPS" ? true : false}
                 />
               )}
+              {/* If Links component expects router props, ensure it's v6 compatible or pass navigate/location */}
               {/* <Links key={index} matchPath={`/digit-ui/citizen/${code.toLowerCase()}`} userType={"citizen"} /> */}
             </div>
             <StaticDynamicCard moduleCode={code?.toUpperCase()} />
@@ -158,8 +161,9 @@ const Home = ({
           </div>
         )}
 
-        <Routes>
-          <Route path="/" element={<CitizenHome />} />
+        <Routes> {/* Replaced Switch with Routes */}
+          {/* Base routes for /citizen */}
+          <Route path="/" element={<CitizenHome />} /> {/* Exact path not needed, it matches "/" exactly */}
 
           <Route path="select-language" element={<LanguageSelection />} />
 
@@ -169,7 +173,7 @@ const Home = ({
             <ErrorComponent
               initData={initData}
               goToHome={() => {
-                navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
+                navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`); // Use navigate
               }}
             />
           } />
@@ -184,23 +188,21 @@ const Home = ({
             />
           } />
 
-          <Route path="login" element={<Login stateCode={stateCode} />} />
+          <Route path="login/*" element={<Login stateCode={stateCode} />} /> {/* Use /* if Login has nested routes */}
 
-          <Route path="register" element={<Login stateCode={stateCode} isUserRegistered={false} />} />
+          <Route path="register/*" element={<Login stateCode={stateCode} isUserRegistered={false} />} /> {/* Use /* if Login has nested routes */}
 
           <Route path="user/profile" element={<UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />} />
 
           <Route path="Audit" element={<Search />} />
 
-
-          <ErrorBoundary initData={initData}>
-            {appRoutes}
-            {ModuleLevelLinkHomePages}
-          </ErrorBoundary>
+          {/* Dynamic App Routes and Module Level Link Home Pages */}
+          {appRoutes}
+          {ModuleLevelLinkHomePages}
         </Routes>
       </div>
       <div className="citizen-home-footer" style={window.location.href.includes("citizen/obps") ? { zIndex: "-1" } : {}}>
-        <img
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
           style={{ height: "1.2em", cursor: "pointer" }}

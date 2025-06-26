@@ -7,6 +7,7 @@ import Header from "./Header";
 
 const CustomErrorComponent = (props) => {
   const { state = {} } = useLocation();
+  // const module = state?.module;
   const { t } = useTranslation();
   const stateInfo = props.stateInfo;
 

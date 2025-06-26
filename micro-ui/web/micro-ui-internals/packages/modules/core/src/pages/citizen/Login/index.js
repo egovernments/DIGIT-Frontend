@@ -1,15 +1,7 @@
-
 import { AppContainer, BackLink, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useNavigate,
-  useLocation,
-  useMatch,
-} from "react-router-dom";
+import { Routes, Route, useLocation, useNavigate } from "react-router-dom"; // Updated imports for v6
 import { loginSteps } from "./config";
 import SelectMobileNumber from "./SelectMobileNumber";
 import SelectName from "./SelectName";
@@ -17,10 +9,10 @@ import SelectOtp from "./SelectOtp";
 
 const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
-const DEFAULT_USER = "digit-user";
+const DEFAULT_USER = "digit-user"; // This variable is unused, consider removing
 const DEFAULT_REDIRECT_URL = `/${window?.contextPath}/citizen`;
 
-/* set citizen details to enable backward compatiable */
+/* set citizen details to enable backward compatible */
 const setCitizenDetail = (userObject, token, tenantId) => {
   if (Digit.Utils.getMultiRootTenant()) {
     return;
@@ -44,13 +36,14 @@ const getFromLocation = (state, searchParams) => {
 const Login = ({ stateCode, isUserRegistered = true }) => {
   const { t } = useTranslation();
   const location = useLocation();
-  const match = useMatch("/citizen/*");
-  const navigate = useNavigate();
+  const navigate = useNavigate(); // Replaced useHistory with useNavigate
+  // useRouteMatch is removed in v6. Path matching is handled by Routes/Route.
+  // `path` and `url` were used for constructing sub-routes. In v6, paths are often relative.
   const [user, setUser] = useState(null);
   const [error, setError] = useState(null);
   const [isOtpValid, setIsOtpValid] = useState(true);
-  const [tokens, setTokens] = useState(null);
-  const [params, setParmas] = useState(isUserRegistered ? {} : location?.state?.data);
+  const [tokens, setTokens] = useState(null); // This variable is unused, consider removing
+  const [params, setParams] = useState(isUserRegistered ? {} : location?.state?.data); // Renamed setParmas to setParams for consistency
   const [errorTO, setErrorTO] = useState(null);
   const searchParams = Digit.Hooks.useQueryParams();
   const [canSubmitName, setCanSubmitName] = useState(false);
@@ -82,43 +75,43 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     Digit.UserService.setUser(user);
     setCitizenDetail(user?.info, user?.access_token, stateCode);
     const redirectPath = location.state?.from || DEFAULT_REDIRECT_URL;
-    if (!Digit?.ULBService?.getCitizenCurrentTenant(true)) {
-      navigate(`/${window?.contextPath}/citizen/select-location`, {
-        replace: true,
-        state: { redirectBackTo: redirectPath },
-      });
+    if (!Digit.ULBService.getCitizenCurrentTenant(true)) {
+      navigate(
+        `/${window?.contextPath}/citizen/select-location`,
+        { state: { redirectBackTo: redirectPath }, replace: true } // `replace: true` for history.replace
+      );
     } else {
-      navigate(redirectPath, { replace: true });
+      navigate(redirectPath, { replace: true }); // `replace: true` for history.replace
     }
-  }, [user, navigate, location.state?.from, stateCode]);
+  }, [user]);
 
-  const stepItems = useMemo(() =>
-    loginSteps.map(
-      (step) => {
+  const stepItems = useMemo(
+    () =>
+      loginSteps.map((step) => {
         const texts = {};
         for (const key in step.texts) {
           texts[key] = t(step.texts[key]);
         }
         return { ...step, texts };
       },
-      [loginSteps, t]
-    )
+        [loginSteps]
+      )
   );
 
-  const getUserType = () => Digit.UserService.getType();
+  const getUserType = () => "citizen" || Digit.UserService.getType();
 
   const handleOtpChange = (otp) => {
-    setParmas({ ...params, otp });
+    setParams({ ...params, otp });
   };
 
   const handleMobileChange = (event) => {
     const { value } = event.target;
-    setParmas({ ...params, mobileNumber: value });
+    setParams({ ...params, mobileNumber: value });
   };
 
   const selectMobileNumber = async (mobileNumber) => {
     setCanSubmitNo(false);
-    setParmas({ ...params, ...mobileNumber });
+    setParams({ ...params, ...mobileNumber });
     const data = {
       ...mobileNumber,
       tenantId: stateCode,
@@ -128,18 +121,14 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
       if (!err) {
         setCanSubmitNo(true);
-        navigate(`${match.pathname}/otp`, {
-          state: { from: getFromLocation(location.state, searchParams), role: location.state?.role },
-          replace: true,
-        });
+        // Use relative path for navigation, `.` means current base path
+        navigate(`otp`, { state: { from: getFromLocation(location.state, searchParams), role: location.state?.role }, replace: true });
         return;
       } else {
         setCanSubmitNo(true);
         if (!(location.state && location.state.role === "FSM_DSO")) {
-          navigate(`/${window?.contextPath}/citizen/register/name`, {
-            state: { from: getFromLocation(location.state, searchParams), data: data },
-            replace: true,
-          });
+          // Use absolute path if navigating outside the current route's scope, or relative if it's a sibling route
+          navigate(`/${window?.contextPath}/citizen/register/name`, { state: { from: getFromLocation(location.state, searchParams), data: data } });
         }
       }
       if (location.state?.role) {
@@ -150,7 +139,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
       if (!err) {
         setCanSubmitNo(true);
-        navigate(`${match.pathname}/otp`, { state: { from: getFromLocation(location.state, searchParams) }, replace: true });
+        navigate(`otp`, { state: { from: getFromLocation(location.state, searchParams) }, replace: true });
         return;
       }
       setCanSubmitNo(true);
@@ -164,12 +153,12 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       userType: getUserType(),
       ...name,
     };
-    setParmas({ ...params, ...name });
+    setParams({ ...params, ...name });
     setCanSubmitName(true);
     const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
     if (res) {
       setCanSubmitName(false);
-      navigate(`${match.pathname}/otp`, { state: { from: getFromLocation(location.state, searchParams) }, replace: true });
+      navigate(`otp`, { state: { from: getFromLocation(location.state, searchParams) }, replace: true });
     } else {
       setCanSubmitName(false);
     }
@@ -193,12 +182,13 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
           const roleInfo = info.roles.find((userRole) => userRole.code === location.state.role);
           if (!roleInfo || !roleInfo.code) {
             setError(t("ES_ERROR_USER_NOT_PERMITTED"));
+            // navigate also handles timeouts for redirects
             setTimeout(() => navigate(DEFAULT_REDIRECT_URL, { replace: true }), 5000);
             return;
           }
         }
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
-          info.tenantId = Digit?.ULBService?.getStateId();
+          info.tenantId = Digit.ULBService.getStateId();
         }
 
         setUser({ info, ...tokens });
@@ -213,7 +203,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.registerUser(requestData, stateCode);
 
         if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
-          info.tenantId = Digit?.ULBService?.getStateId();
+          info.tenantId = Digit.ULBService.getStateId();
         }
 
         setUser({ info, ...tokens });
@@ -249,35 +239,30 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
 
   return (
     <div className="citizen-form-wrapper">
-      <Routes>
-        <Route
-          path={`${match.pathname}`}
-          element={
-            <AppContainer>
-              {location.pathname.includes("login") ? null : <BackLink onClick={() => window.history.back()} />}
+      <AppContainer>
+        {/* BackLink now uses navigate(-1) for going back */}
+        {location.pathname.includes("login") ? null : <BackLink onClick={() => navigate(-1)} />}
+        <Routes> {/* Replaced Switch with Routes */}
+          {/* Route path is now relative to the parent <Routes> */}
+          <Route
+            path="/" // This will match the base path where this component is rendered (e.g., /citizen/login if mounted there)
+            element={
               <SelectMobileNumber
                 onSelect={selectMobileNumber}
                 config={stepItems[0]}
-                mobileNumber={params?.mobileNumber || ""}
+                mobileNumber={params.mobileNumber || ""}
                 onMobileChange={handleMobileChange}
                 canSubmit={canSubmitNo}
                 showRegisterLink={isUserRegistered && !location.state?.role}
                 t={t}
               />
-              {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
-            </AppContainer>
-          }
-        />
-        <Route
-          path={`${match.pathname}/otp`}
-          element={
-            <AppContainer>
-              <BackLink onClick={() => window.history.back()} />
+            }
+          />
+          <Route
+            path="otp" // This will match /path/to/current/route/otp
+            element={
               <SelectOtp
-                config={{
-                  ...stepItems[1],
-                  texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params?.mobileNumber || ""}` },
-                }}
+                config={{ ...stepItems[1], texts: { ...stepItems[1].texts, cardText: `${stepItems[1].texts.cardText} ${params.mobileNumber || ""}` } }}
                 onOtpChange={handleOtpChange}
                 onResend={resendOtp}
                 onSelect={selectOtp}
@@ -286,29 +271,17 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
                 canSubmit={canSubmitOtp}
                 t={t}
               />
-              {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
-            </AppContainer>
-          }
-        />
-        <Route
-          path={`${match.pathname}/name`}
-          element={
-            <AppContainer>
-              <BackLink onClick={() => window.history.back()} />
-              <SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />
-              {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
-            </AppContainer>
-          }
-        />
-      </Routes>
+            }
+          />
+          <Route
+            path="name" // This will match /path/to/current/route/name
+            element={<SelectName config={stepItems[2]} onSelect={selectName} t={t} isDisabled={canSubmitName} />}
+          />
+          {error && <Toast type={"error"} label={error} onClose={() => setError(null)} />}
+        </Routes>
+      </AppContainer>
     </div>
   );
 };
 
-const LoginWrapper = ({ stateCode, isUserRegistered }) => (
-  <Router>
-    <Login stateCode={stateCode} isUserRegistered={isUserRegistered} />
-  </Router>
-);
-
-export default LoginWrapper;
+export default Login;

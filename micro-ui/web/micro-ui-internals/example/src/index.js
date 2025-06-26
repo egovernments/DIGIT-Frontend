@@ -71,7 +71,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {window.Digit && (
-        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules} allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
+        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
       )}
     </Suspense>
   );

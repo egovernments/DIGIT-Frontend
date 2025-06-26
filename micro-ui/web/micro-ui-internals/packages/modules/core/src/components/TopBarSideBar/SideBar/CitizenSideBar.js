@@ -168,16 +168,18 @@ export const CitizenSideBar = ({
     } else {
       url[0] === "/"
         ? navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
-        : navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
+        : navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`)
       toggleSidebar();
     }
   };
 
   const redirectToLoginPage = () => {
-    if (isEmployee) {
-      navigate(`/${window?.contextPath}/employee/user/language-selection`);
-    } else {
+    if(isEmployee){
+     navigate(`/${window?.contextPath}/employee/user/language-selection`);
+    }
+    else{
       navigate(`/${window?.contextPath}/citizen/login`);
+
     }
     closeSidebar();
   };
@@ -287,7 +289,7 @@ export const CitizenSideBar = ({
   }
 
   /*  URL with openlink wont have sidebar and actions    */
-  if (navigate.location.pathname.includes("/openlink")) {
+  if (location.pathname.includes("/openlink")) {
     profileItem = <span></span>;
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
@@ -304,10 +306,10 @@ export const CitizenSideBar = ({
   } else {
     city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`);
   }
-  const goToHome = () => {
-    if (isEmployee) {
+  const goToHome= () => {
+    if(isEmployee){
       navigate(`/${window?.contextPath}/employee`);
-    } else {
+    }else{
       navigate(`/${window?.contextPath}/citizen`);
     }
   };

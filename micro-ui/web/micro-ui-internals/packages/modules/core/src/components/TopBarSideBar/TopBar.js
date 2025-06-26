@@ -1,11 +1,12 @@
 import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
-import React, { Fragment } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
+import React,{Fragment} from "react";
+import {useNavigate, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
 import { Header as TopBarComponentMain } from "@egovernments/digit-ui-components";
 import ImageComponent from "../ImageComponent";
+
 const TopBar = ({
   t,
   stateInfo,
@@ -23,7 +24,9 @@ const TopBar = ({
   showLanguageChange = true,
 }) => {
   const [profilePic, setProfilePic] = React.useState(null);
-  React.useEffect(async () => {
+
+  React.useEffect( () => {
+    const app=async ()=>{
     const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId();
     const uuid = userDetails?.info?.uuid;
     if (uuid) {
@@ -34,10 +37,15 @@ const TopBar = ({
         setProfilePic(thumbs?.at(0));
       }
     }
+  }
+  app()
   }, [profilePic !== null, userDetails?.info?.uuid]);
+
   const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+
   let navigate = useNavigate();
   const { pathname } = useLocation();
+
   const conditionsToDisableNotificationCountTrigger = () => {
     if (Digit.UserService?.getUser()?.info?.type === "EMPLOYEE") return false;
     if (Digit.UserService?.getUser()?.info?.type === "CITIZEN") {
@@ -46,12 +54,14 @@ const TopBar = ({
     }
     return false;
   };
+
   const { data: { unreadCount: unreadNotificationCount } = {}, isSuccess: notificationCountLoaded } = Digit.Hooks.useNotificationCount({
     tenantId: CitizenHomePageTenantId,
     config: {
       enabled: conditionsToDisableNotificationCountTrigger(),
     },
   });
+
   const updateSidebar = () => {
     if (!Digit.clikOusideFired) {
       toggleSidebar(true);
@@ -59,13 +69,16 @@ const TopBar = ({
       Digit.clikOusideFired = false;
     }
   };
+
   function onNotificationIconClick() {
     navigate(`/${window?.contextPath}/citizen/engagement/notifications`);
   }
+
   const urlsToDisableNotificationIcon = (pathname) =>
     !!Digit.UserService?.getUser()?.access_token
       ? false
       : [`/${window?.contextPath}/citizen/select-language`, `/${window?.contextPath}/citizen/select-location`].includes(pathname);
+
   if (CITIZEN) {
     return (
       <div>
@@ -87,8 +100,10 @@ const TopBar = ({
     );
   }
   const loggedin = userDetails?.access_token ? true : false;
+
   //checking for custom topbar components
   const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar");
+
   if (CustomEmployeeTopBar) {
     return (
       <CustomEmployeeTopBar
@@ -161,4 +176,5 @@ const TopBar = ({
     />
   );
 };
+
 export default TopBar;

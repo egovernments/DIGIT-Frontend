@@ -1,7 +1,9 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Button, LandingPageCard, LandingPageWrapper, Loader } from "@egovernments/digit-ui-components";
+import { Button, LandingPageCard, LandingPageWrapper } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 
 export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
