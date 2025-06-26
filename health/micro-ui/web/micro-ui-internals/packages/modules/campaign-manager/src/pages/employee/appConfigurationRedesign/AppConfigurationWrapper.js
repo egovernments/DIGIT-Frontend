@@ -479,15 +479,18 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     for (const locale of Object.keys(localeArrays)) {
       if (localeArrays[locale].length > 0) {
         try {
+          setLoading(true);
           const result = await localisationMutate(localeArrays[locale]);
           updateCount = updateCount + 1;
           updateSuccess = true;
         } catch (error) {
+          setLoading(false);
           setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
           console.error(`Error sending ${locale} localisation data:`, error);
         }
       }
     }
+    setLoading(false);
     return;
   };
   const handleSubmit = async (finalSubmit) => {
