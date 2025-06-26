@@ -24,6 +24,7 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , 
           variation={type}
           style={{ width: '19rem' }}
           isDisabled = {disabled}
+          title = {buttonLabel}
         />
       </div>
       <div className="details-desc">{desc}</div>
