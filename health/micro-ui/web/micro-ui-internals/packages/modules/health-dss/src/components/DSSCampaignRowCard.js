@@ -9,7 +9,7 @@ const getTagElements = (rowData) => {
   const tags = {};
   if (rowData?.projectType) {
     tags.group = {
-      label: rowData?.projectType,
+      label: rowData?.projectType || "",
       showIcon: false,
       type: "monochrome",
       stroke: true,
@@ -84,7 +84,7 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
                 <Tag
                   key={key}
                   icon={tag.icon || ""}
-                  label={t(tag.label)}
+                  label={t(tag.label || "")}
                   showIcon={tag.showIcon}
                   labelStyle={tag.labelStyle || {}}
                   style={tag.style || {}}

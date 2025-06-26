@@ -2,6 +2,7 @@ import { useQueries } from "react-query";
 import { useEffect, useState } from "react";
 import ProjectService from "../services/ProjectService";
 
+//TODO : We need to show past,live and future campaigns as the api doesnot support this we are showing all campaigns in one tab and past in one tab need to update filter for live campaigns once enhancememnt is done in the api
 const useInboxSearch = ({ state, body, params, config = {} }) => {
   const { campaignName, campaignType } = state?.searchForm || {};
   const nowEpoch = Date.now();
@@ -28,8 +29,8 @@ const useInboxSearch = ({ state, body, params, config = {} }) => {
   // Step 4: Fetching projects using each projectId from staff response
   const projectQueries = useQueries(
     (staffResponse || []).map((staff) => {
-      const pastCampaignsInbox = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX") === 0;
-      const liveCampaignsInbox = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX") === 1;
+      const pastCampaignsInbox = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX") === 1;
+      const liveCampaignsInbox = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX") === 2;
 
       const filter = {
         id: staff.projectId,

@@ -2,55 +2,120 @@ import React from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useEffect, useState, Fragment } from "react";
+import { useLocation } from "react-router-dom";
+import { Loader } from "@egovernments/digit-ui-components";
 
 const ViewDashbaord = ({ stateCode }) => {
   const { t } = useTranslation();
-  const [redirected, setRedirected] = useState(false);
+  const location = useLocation();
   const history = useHistory();
   const queryStrings = Digit.Hooks.useQueryParams();
-  const roles = Digit.UserService.getUser().info.roles;
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const project = location?.state?.project;
+  const campaignId = project?.referenceID;
 
-  const data = {
-    Projects: [
-      {
-        id: queryStrings?.projectId,
-        tenantId: Digit.ULBService.getCurrentTenantId(),
-      },
-    ],
-  };
-
-  const params = {
-    tenantId: Digit.ULBService.getCurrentTenantId(),
-    limit: 1000,
-    offset: 0,
-  };
-
-  const projectResult = Digit.Hooks.DSS.useProjectSearch({
-    data,
-    params,
-    config: {},
-  })?.data?.[0];
-
-  const { isLoading: isLoadingMdmsData, data: levelConfig } = Digit.Hooks.useCustomMDMS(
-    Digit.ULBService.getCurrentTenantId(),
-    "dashboard-level-config",
-    [{ name: "roleToDashboardLevelMapping" }],
-    {
+  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
+    tenantId: tenantId,
+    filter: {
+      campaignNumber: campaignId,
+      isActive: true,
+    },
+    config: {
+      enabled: campaignId ? true : false,
       select: (data) => {
-        return data?.["dashboard-level-config"]?.["roleToDashboardLevelMapping"]?.filter(
-          (item) => item.heirarchyType === queryStrings?.hierarchyType
-        );
+        return data;
       },
     },
-    { schemaCode: "dashboard-level-config.roleToDashboardLevelMapping" } //mdmsv2
-  );
+  });
 
-  const dashboardLinks = levelConfig?.[0]?.config.filter((configItem) => roles.some((role) => role.code === configItem.role));
-
-  const dashboardId = dashboardLinks?.[0]?.dashboardId;
+  const hierarchyType = campaignData?.[0]?.hierarchyType || "";
 
   const reqCriteria = {
+    url: `/boundary-service/boundary-hierarchy-definition/_search`,
+    changeQueryName: `${hierarchyType}`,
+    body: {
+      BoundaryTypeHierarchySearchCriteria: {
+        tenantId: tenantId,
+        limit: 2,
+        offset: 0,
+        hierarchyType: hierarchyType,
+        hierarchyType: "NEWTEST00222",
+      },
+    },
+    config: {
+      enabled: !!hierarchyType,
+      select: (data) => {
+        return data?.BoundaryHierarchy?.[0];
+      },
+    },
+  };
+
+  const { isLoading: hierarchyLoading, data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  const processBoundaryHierarchy = (hierarchyDefinition) => {
+    const hierarchyList = hierarchyDefinition?.boundaryHierarchy;
+    if (!Array.isArray(hierarchyList)) return {};
+
+    const parentToChildMap = new Map();
+    const allTypes = new Set();
+
+    // Build parent -> child map and track all types
+    hierarchyList.forEach(({ boundaryType, parentBoundaryType }) => {
+      if (parentBoundaryType) {
+        parentToChildMap.set(parentBoundaryType, boundaryType);
+      }
+      allTypes.add(boundaryType);
+    });
+
+    // Find the root (no parentBoundaryType)
+    const root = hierarchyList.find((item) => item.parentBoundaryType === null)?.boundaryType;
+    if (!root) return {};
+
+    // Build level map from root down
+    const levelMap = {};
+    let current = root;
+    let level = 1;
+
+    while (current) {
+      levelMap[current] = `level-${["one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten"][level - 1]}`;
+      current = parentToChildMap.get(current);
+      level++;
+    }
+
+    return levelMap;
+  };
+
+  const levelMap = processBoundaryHierarchy(hierarchyDefinition);
+  const boundaryType = project?.address.boundaryType?.toUpperCase() || "";
+  const levelLinked = levelMap?.[boundaryType];
+
+  const { data: mdmsData, isLoading: isMDMSLoading } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "hcm-dashboard",
+    [{ name: "dashboardProjectConfig" }],
+    {},
+    { schemaCode: "hcm-dashboard.dashboardProjectConfig" }
+  );
+
+  const getDashboardId = (mdmsData, projectType, levelLinked) => {
+    const dashboardConfigs = mdmsData?.["hcm-dashboard"]?.dashboardProjectConfig;
+    if (!Array.isArray(dashboardConfigs)) return null;
+
+    // Try to find matching campaignType first
+    let campaignConfig = dashboardConfigs.find((cfg) => cfg.campaignType === projectType);
+
+    // Fallback to "FALLBACK-CAMPAIGNTYPE" if not found
+    if (!campaignConfig) {
+      campaignConfig = dashboardConfigs.find((cfg) => cfg.campaignType === "FALLBACK-CAMPAIGNTYPE");
+    }
+
+    // Get the config entry matching the level
+    const matchedConfig = campaignConfig?.config?.find((cfg) => cfg.level === levelLinked);
+    return matchedConfig?.dashboardId || null;
+  };
+  const dashboardId = getDashboardId(mdmsData, project?.projectType, levelLinked);
+
+  const dashboardReqCriteria = {
     url: `/dashboard-analytics/dashboard/getDashboardConfig/${dashboardId}`,
     changeQueryName: dashboardId,
     body: {},
@@ -68,21 +133,15 @@ const ViewDashbaord = ({ stateCode }) => {
       },
     },
   };
-  const { data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
 
-  useEffect(() => {
-    if (dashboardDataResponse?.responseData && !redirected) {
-      setRedirected(true);
-      history.push(`/${window?.contextPath}/employee/dss/${dashboardLinks?.[0]?.level}/${dashboardLinks?.[0]?.dashboardId}?projectTypeId=${projectResult?.projectTypeId}`, {
-          dashboardData: dashboardDataResponse?.responseData,
-          projectTypeId: projectResult?.projectTypeId,
-          dashboardLink: dashboardLinks?.[0],
-          stateCode: stateCode,
-        });
-    }
-  }, [dashboardDataResponse?.responseData, redirected, history]);
-
-  return <>{!dashboardDataResponse?.responseData || isLoadingMdmsData || !projectResult?.projectTypeId || projectResult?.projectTypeId === undefined ? <div>{t("IN_PROGRESS")}</div> : null}</>;
+  if (campaignSearchLoading || hierarchyLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
+  if (!campaignData || campaignData.length === 0) {
+    return <div>{t("CAMPAIGN_NOT_FOUND")}</div>;
+  }
+  return null;
 };
 
 export default ViewDashbaord;
