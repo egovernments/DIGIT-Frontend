@@ -173,7 +173,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         isMultiSelect: field?.isMultiSelect ? true : false,
         includeInForm: field?.includeInForm || false,
         includeInSummary: field?.includeInSummary || false,
-        helpText: field?.helpText || "",
+        helpText: typeof field?.helpText === "string" ? field.helpText : "",
       }));
 
     return {
@@ -276,7 +276,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         includeInSummary: field?.includeInSummary || true,
         enums: field?.dropDownOptions,
         validations: toArrayFields,
-        helpText: field?.helpText || "",
+        helpText: typeof field?.helpText === "string" ? field.helpText : "",
       };
     });
 
