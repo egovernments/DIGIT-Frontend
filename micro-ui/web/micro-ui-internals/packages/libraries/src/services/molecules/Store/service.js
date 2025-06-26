@@ -91,21 +91,6 @@ export const StoreService = {
   },
   digitInitData: async (stateCode, enabledModules, modulePrefix) => {
 
-      const keyword = stateCode;
-  // 1. Gather matching keys
-  const keysToDelete = Object.keys(localStorage)
-    .filter(key => key.includes(keyword));    
-
-
-
-  // 2. Remove each one
-  keysToDelete.forEach(key => {
-    // console.log(`Deleting localStorage key **: ${key}`);
-    localStorage.removeItem(key);
-  });
-
-
-
     const { MdmsRes } = await MdmsService.init(stateCode);
     const stateInfo = MdmsRes["common-masters"]?.StateInfo?.[0] || {};
     const uiHomePage = MdmsRes["common-masters"]?.uiHomePage?.[0] || {};
