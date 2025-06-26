@@ -149,7 +149,7 @@ function getProjectTypeFromURL() {
 const L2Main = ({}) => {
   const location = useLocation();
   const stateCode = location.state?.stateCode;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const projectTypeId = getProjectTypeIDFromURL();
   const [filters, setFilters] = useState(() => {

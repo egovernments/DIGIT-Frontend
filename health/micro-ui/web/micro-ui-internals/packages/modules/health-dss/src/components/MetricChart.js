@@ -40,7 +40,7 @@ const MetricData = ({ t, data, code }) => {
 
 const MetricChartRow = ({ data, setChartDenomination, index }) => {
   const { id, chartType } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { projectTypeId} = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 

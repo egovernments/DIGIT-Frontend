@@ -18,7 +18,7 @@ const getInitialRange = () => {
 
 const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNational = false }) => {
   const { id } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [isPieClicked, setIsPieClicked] = useState(false);

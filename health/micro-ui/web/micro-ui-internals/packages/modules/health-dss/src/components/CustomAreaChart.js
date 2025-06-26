@@ -56,7 +56,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   };
   const { t } = useTranslation();
   const { id } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const [totalCapacity, setTotalCapacity] = useState(0);
   const [totalWaste, setTotalWaste] = useState(0);
@@ -66,7 +66,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
 
 
   const [manageChart, setmanageChart] = useState("Area");
-  const stateTenant = Digit.ULBService.getStateId();
+  const stateTenant = Digit?.ULBService?.getStateId();
   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateTenant, "FSM", "FSTPPlantInfo", {
     enabled: id === "fsmCapacityUtilization",
   });

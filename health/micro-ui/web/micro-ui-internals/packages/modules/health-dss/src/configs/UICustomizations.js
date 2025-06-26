@@ -66,7 +66,7 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       data.body.ProjectStaff = {};
       data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
-      data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.params.tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.params.limit = data.state.tableForm.limit;
       data.params.offset = data.state.tableForm.offset;
       delete data.body.ProjectStaff.campaignName;
@@ -75,7 +75,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -194,7 +194,7 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       data.body.ProjectStaff = {};
       data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
-      data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.params.tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.params.limit = data.state.tableForm.limit;
       data.params.offset = data.state.tableForm.offset;
       cleanObject(data.body.ProjectStaff);
@@ -216,7 +216,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigCompleted: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -244,7 +244,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -289,7 +289,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigUpcoming: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -318,7 +318,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -363,7 +363,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigDrafts: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -391,7 +391,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -436,7 +436,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigDraftsNew: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -464,7 +464,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -509,7 +509,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigFailed: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -536,7 +536,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,

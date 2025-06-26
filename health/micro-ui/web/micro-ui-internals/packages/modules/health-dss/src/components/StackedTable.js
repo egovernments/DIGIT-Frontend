@@ -11,7 +11,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
   const [chartData, setChartData] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const { value } = useContext(FilterContext);
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const history = useHistory();

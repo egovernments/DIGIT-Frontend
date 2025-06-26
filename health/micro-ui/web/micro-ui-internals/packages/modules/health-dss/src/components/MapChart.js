@@ -70,7 +70,7 @@ const geographyStyle = {
 const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, settotalCount, setliveCount }) => {
   const { t } = useTranslation();
   const { id } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [tooltipContent, settooltipContent] = useState("");
   const { startDate, endDate, interval } = getInitialRange();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
@@ -83,7 +83,7 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
     title: "home",
   };
 
-  const { data: topoJSON, isLoading: isLoadingNAT } = Digit.Hooks.dss.useMDMS(Digit.ULBService.getStateId(), "dss-dashboard", ["dashboard-config"], {
+  const { data: topoJSON, isLoading: isLoadingNAT } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "dss-dashboard", ["dashboard-config"], {
     select: (data) => {
       const topoJson = data?.["dss-dashboard"]?.["dashboard-config"]?.[0]?.["MAP_CONFIG"]?.[0] || {};
       return topoJson;

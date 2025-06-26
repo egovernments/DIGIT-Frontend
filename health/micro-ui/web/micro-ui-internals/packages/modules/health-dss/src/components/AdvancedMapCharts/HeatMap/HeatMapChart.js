@@ -80,7 +80,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     return { startDate, endDate, interval };
   };
 
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { startDate, endDate, interval } = getInitialRange();
   const requestDate = {
     startDate: startDate.getTime(),
@@ -89,8 +89,8 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     title: "home",
   };
 
-  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit.ULBService.getStateId(), "map-config", "GeoJson")
-  // const { isLoading, data } = Digit.Hooks.dss.useDSSGeoJson(Digit.ULBService.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
+  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson")
+  // const { isLoading, data } = Digit.Hooks.dss.useDSSGeoJson(Digit?.ULBService?.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
   //   // Ensure the second query only runs if the first query is successful
   //   enabled: !isGeoJsonLoading
   // });

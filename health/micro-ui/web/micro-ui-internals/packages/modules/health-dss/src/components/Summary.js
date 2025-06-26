@@ -36,7 +36,7 @@ const MetricData = ({ t, data }) => {
 
 const Chart = ({ data }) => {
   const { id, chartType } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const { projectTypeId} = Digit.Hooks.useQueryParams();

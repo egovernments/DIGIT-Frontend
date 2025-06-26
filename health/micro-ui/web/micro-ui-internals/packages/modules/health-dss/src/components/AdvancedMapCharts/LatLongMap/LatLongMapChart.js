@@ -37,7 +37,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const [chartKey, setChartKey] = useState(chartId);
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
 
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { projectTypeId} = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
@@ -81,8 +81,8 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   //   }
   // }, [value, chartId]);
 
-  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit.ULBService.getStateId(), "map-config", "GeoJson");
-   const { isLoading, data: mapConfigData } = Digit.Hooks.dss.useDSSGeoJson(Digit.ULBService.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
+  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
+   const { isLoading, data: mapConfigData } = Digit.Hooks.dss.useDSSGeoJson(Digit?.ULBService?.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
     // Ensure the second query only runs if the first query is successful
     enabled: !isGeoJsonLoading
   });
@@ -93,7 +93,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
 
   const generateTable = (chart, value) => {
     const { id, chartType } = chart;
-    const tenantId = Digit.ULBService.getCurrentTenantId();
+    const tenantId = Digit?.ULBService?.getCurrentTenantId();
     const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
       key: id,
       type: chartType,

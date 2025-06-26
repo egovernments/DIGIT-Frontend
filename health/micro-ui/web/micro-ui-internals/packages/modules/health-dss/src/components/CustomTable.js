@@ -45,7 +45,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
   const { t } = useTranslation();
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
   const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");

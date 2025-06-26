@@ -71,7 +71,7 @@ const colors = [
 
 const Chart = ({ data, moduleLevel, overview = false }) => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { id, chartType } = data;
   const { startDate, endDate, interval } = getInitialRange();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
@@ -136,7 +136,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
 const HorBarChart = ({ data, setselectState = "" }) => {
   const barColors = ["#298CFF", "#54D140"];
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { id, chartType } = data;
   let filters = {};
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
@@ -249,7 +249,7 @@ const L1Main = () => {
   const { t } = useTranslation();
   const location = useLocation();
   const dashboardData = location.state?.dashboardData;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
   const projectTypeId = location.state?.projectTypeId;
   const dashboardLink = location.state?.dashboardLink;

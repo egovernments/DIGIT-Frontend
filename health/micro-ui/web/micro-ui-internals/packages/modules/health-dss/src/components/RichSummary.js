@@ -75,7 +75,7 @@ const Insight = ({ data, t }) => {
 
 const Chart = ({ data, showDivider }) => {
   const { id, chartType } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");

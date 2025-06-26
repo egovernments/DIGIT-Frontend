@@ -10,7 +10,7 @@ const ViewDashbaord = ({ stateCode }) => {
   const location = useLocation();
   const history = useHistory();
   const queryStrings = Digit.Hooks.useQueryParams();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const project = location?.state?.project;
   const campaignId = project?.referenceID;
 

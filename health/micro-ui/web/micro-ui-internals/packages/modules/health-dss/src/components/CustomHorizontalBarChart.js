@@ -70,7 +70,7 @@ const CustomHorizontalBarChart = ({
   const [filterStack, setFilterStack] = useState([{ id: id }]);
   const [drillDownFilters, setDrillDownFilters] = useState({});
   const [symbolKeyMap, setSymbolKeyMap] = useState({});
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
   const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 

@@ -63,7 +63,7 @@ const VennDiagramChart = ({data, isNational = false,}) => {
   const {t} = useTranslation();
   const { value } = useContext(FilterContext);
   const { id, chartType } = data;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [chartKey, setChartKey] = useState(id);
 
   const { startDate, endDate, interval } = getInitialRange();

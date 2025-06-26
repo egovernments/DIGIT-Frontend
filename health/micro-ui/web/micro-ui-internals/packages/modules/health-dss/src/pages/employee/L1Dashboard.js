@@ -7,7 +7,7 @@ const L1Dashboard = ({}) => {
   const { t } = useTranslation();
   const location = useLocation();
   const dashboardData = location.state?.dashboardData;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
   const projectTypeId = location.state?.projectTypeId;
   const dashboardLink = location.state?.dashboardLink;

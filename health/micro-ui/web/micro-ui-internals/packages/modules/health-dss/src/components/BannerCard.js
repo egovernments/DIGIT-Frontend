@@ -11,7 +11,7 @@ const BannerCard = ({ data }) => {
   const { t } = useTranslation();
   const { id, chartType } = data;
   const chartName = data?.name;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const isMobile = window.Digit.Utils.browser.isMobile();
   const { projectTypeId } = Digit.Hooks.useQueryParams();
