@@ -262,7 +262,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       const switchRef = useRef(null);
       const [showTooltip, setShowTooltip] = useState(false);
       const type = getTypeAndFormatFromAppType(drawerState, state?.MASTER_DATA?.AppFieldType)?.type;
-      const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData) || type === "template" || type === "custom";
+      const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData) || type === "template" || type === "dynamic";
       return (
         <div
           ref={switchRef}
@@ -293,13 +293,13 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
               fieldPairClassName: "drawer-toggle-conditional-field",
               options: (state?.MASTER_DATA?.AppFieldType || [])
-                .filter((item) => item?.metadata?.type !== "template" || item?.metadata?.type !== "custom")
+                .filter((item) => item?.metadata?.type !== "template" || item?.metadata?.type !== "dynamic")
                 ?.sort((a, b) => a?.order - b?.order),
               optionsKey: "type",
             }}
             type={"dropdown"}
             value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-            disabled={type === "template" || type === "custom" ? true : disableFieldForMandatory(drawerState, panelItem, resourceData)}
+            disabled={type === "template" || type === "dynamic" ? true : disableFieldForMandatory(drawerState, panelItem, resourceData)}
           />
         </div>
       );
