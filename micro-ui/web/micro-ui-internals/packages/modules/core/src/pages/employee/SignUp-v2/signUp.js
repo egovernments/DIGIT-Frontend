@@ -2,7 +2,6 @@ import { BackLink, Loader, FormComposerV2, Toast, useCustomAPIMutationHook } fro
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Background from "../../../components/Background";
 import SandBoxHeader from "../../../components/SandBoxHeader";
 import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";

@@ -728,13 +728,15 @@ input[type="number"] {
   }
 }
 
+.connection-details-new-value-wrapper {
+  flex: 1 1 auto;
+}
+
 .plumber-details-new-value-wrapper {
   flex: 2 1 auto;
 }
 
-.connection-details-new-value-wrapper {
-  flex: 1 1 auto;
-}
+
 
 .connection-details-old-value-wrapper,
 .plumber-details-old-value-wrapper {

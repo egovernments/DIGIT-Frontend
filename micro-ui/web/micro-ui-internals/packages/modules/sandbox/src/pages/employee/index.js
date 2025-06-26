@@ -21,7 +21,6 @@ import RoleLanding from "./RoleLanding";
 const bredCrumbStyle = { maxWidth: "min-content" };
 
 const ProjectBreadCrumb = ({ location, defaultPath }) => {
-  console.log(defaultPath,"defaultPath");
   
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
@@ -66,7 +65,6 @@ const App = ({ path, stateCode, userType, tenants }) => {
 
   const hideClass =
     location.pathname.includes(`${path}/productDetailsPage/`);
-    console.log(hideClass,"hideClass");
     
   return (
     <div className="employee-ui">

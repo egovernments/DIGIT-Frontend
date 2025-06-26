@@ -159,17 +159,6 @@ const EmployeeApp = ({
               />
             </div>
           </div>
-          {/* <Route>
-            {
-              isSuperUserWithMultipleRootTenant && <Redirect to={`${path}/sandbox/productPage`} />}
-          </Route> */}
-          {/* <Route exact path={path}>
-            {({ location }) =>
-              isSuperUserWithMultipleRootTenant && location.pathname === path ? (
-                <Redirect to={`${path}/sandbox/productPage`} />
-              ) : null
-            }
-          </Route> */}
         </Route>
         <Route>
           <Redirect to={`${path}/user/language-selection`} />
