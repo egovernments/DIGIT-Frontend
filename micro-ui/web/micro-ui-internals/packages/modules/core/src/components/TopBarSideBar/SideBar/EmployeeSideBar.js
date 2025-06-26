@@ -1,18 +1,18 @@
 import React, { useRef, useEffect, useState } from "react";
-import { Sidebar, Loader } from "@egovernments/digit-ui-components";
+import { SideNav, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import MediaQuery from 'react-responsive';
 
 
-const DIGIT_UI_CONTEXTS = ["digit-ui", "works-ui", "workbench-ui", "health-ui", "sanitation-ui", "core-ui", "mgramseva-web", "sandbox-ui","kibana-v8"];
+
 
 const EmployeeSideBar = () => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const { t } = useTranslation();
   const navigate = useNavigate();
-  const tenantId = Digit?.ULBService?.getStateId();
+  const tenantId = Digit.ULBService.getStateId();
 
   function extractLeftIcon(data = {}) {
     for (const key in data) {
@@ -84,26 +84,25 @@ const EmployeeSideBar = () => {
     return configEmployeeSideBar;
   };
 
-  const navigateToRespectiveURL = (navigate, url = "") => {
-    if (url === "/") return;
-  
+  const navigateToRespectiveURL = (navigate = {}, url = "") => {
+    if (url == "/") {
+      return;
+    } 
     if (url?.indexOf(`/${window?.contextPath}`) === -1) {
       const hostUrl = window.location.origin;
-      let updatedUrl = null;
-  
-      if (isMultiRootTenant) {
-        url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+      let updatedUrl=null;
+      if(isMultiRootTenant){
+        url=url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
         updatedUrl = url;
-        navigate(updatedUrl); 
-      } else {
-        updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1)
-          ? hostUrl + "/employee/" + url
-          : hostUrl + url;
-        window.location.href = updatedUrl; 
+        navigate(updatedUrl);
+      }
+      else{
+        updatedUrl = hostUrl + url;
+        window.location.href = updatedUrl;
       }
     } else {
-      navigate(url); 
-    }
+      navigate(url);
+    } 
   };
 
   const onItemSelect = ({ item, index, parentIndex }) => {
@@ -165,7 +164,7 @@ const EmployeeSideBar = () => {
   
   return (
     <MediaQuery minWidth={768}>
-      <Sidebar
+      <SideNav
         items={sortedTransformedData}
         hideAccessbilityTools={true}
         onSelect={({ item, index, parentIndex }) => onItemSelect({ item, index, parentIndex })}
@@ -183,8 +182,3 @@ const EmployeeSideBar = () => {
 };
 
 export default EmployeeSideBar;
-
-
-
-
-
