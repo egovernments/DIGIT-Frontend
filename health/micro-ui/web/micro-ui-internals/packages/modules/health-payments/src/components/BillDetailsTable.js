@@ -197,11 +197,11 @@ const BillDetailsTable = ({ ...props }) => {
                                 : t("NA")
                             }
                             </span>
-                            {row?.status === "PENDING_EDIT" && row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?
+                            {/* {row?.status === "VERIFICATION_FAILED" && row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?
                             (
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                {props?.editBill?
-                               ( <Button
+                                <div style={{ display: "flex", alignItems: "center" }}> */}
+                                {props?.editBill && row?.status === "PENDING_EDIT"? (
+                               <Button
                                 style={{ minWidth: "auto" }}
                                 variation="secondary"
                                 size="small"
@@ -216,6 +216,10 @@ const BillDetailsTable = ({ ...props }) => {
                                 }}
                                 />):null
                                 }
+                        {
+                        (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
+                        row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?(
+                                <div style={{ display: "flex", alignItems: "center" }}>
                                 <div>
                  
                                 <TooltipWrapper
@@ -261,10 +265,10 @@ const BillDetailsTable = ({ ...props }) => {
         textOverflow: "ellipsis",
         minWidth: 0, }}>
             {t(row?.mobileNumber) || t("ES_COMMON_NA")} </span>
-            {row?.status === "PENDING_EDIT" && row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?(
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                {props?.editBill?
-                               ( <Button
+            {/* {row?.status === "PENDING_EDIT" && row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?( */}
+                                {/* <div style={{ display: "flex", alignItems: "center" }}> */}
+                                {props?.editBill && row?.status === "PENDING_EDIT"? (
+                                <Button
                                 style={{ minWidth: "auto" }}
                                 variation="secondary"
                                 size="small"
@@ -275,6 +279,10 @@ const BillDetailsTable = ({ ...props }) => {
                                 }}
                                 />):null
                                 }
+                                {
+                                (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
+                        row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?(
+                                <div style={{ display: "flex", alignItems: "center" }}>
                                 <div>
                  
                                 <TooltipWrapper
@@ -428,6 +436,23 @@ const BillDetailsTable = ({ ...props }) => {
                 paginationRowsPerPageOptions={defaultPaginationValues}
                 fixedHeader={true}
                 selectableRows={props?.selectableRows}
+                selectableRowDisabled={(row) =>
+                (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
+                (row?.status === 'EDITED' && props?.editBill)
+                }
+            conditionalRowStyles={[
+                {
+                when: (row) =>
+                    (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
+                    (row?.status === 'EDITED' && props?.editBill),
+                style: {
+                    backgroundColor: "#f0f0f0",
+                    color: "#999",
+                    // cursor: "not-allowed",
+                    opacity: 0.6, 
+                },
+                },
+            ]}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 fixedHeaderScrollHeight={"70vh"}
                 paginationComponentOptions={getCustomPaginationOptions(t)}
