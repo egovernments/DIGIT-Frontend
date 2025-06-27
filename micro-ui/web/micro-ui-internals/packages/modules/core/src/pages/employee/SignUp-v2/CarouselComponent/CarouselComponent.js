@@ -80,13 +80,13 @@ const Carousel = ({ bannerImages }) => {
           transform: 'translateX(-50%)',
           display: 'flex',
           alignItems: 'center',
-          gap: '2rem',
-          zIndex: 3
+          justifyContent: 'center',
+          zIndex: 3,
+          gap: '1rem'
         }}
       >
         {/* Left Arrow */}
         <button
-          className="carousel-prev"
           onClick={goToPrev}
           style={{
             backgroundColor: 'transparent',
@@ -106,28 +106,27 @@ const Carousel = ({ bannerImages }) => {
 
         {/* Dot indicators */}
         <div
-          className="carousel-dots"
           style={{
             display: 'flex',
-            gap: '1rem'
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: '0.75rem'
           }}
         >
           {bannerImages.map((_, index) => (
             <button
               key={index}
-              className={`carousel-dot ${index === currentIndex ? 'active' : ''}`}
               onClick={() => goToSlide(index)}
               style={{
-                width: '8px',
-                height: '8px',
+                width: '10px',
+                height: '10px',
                 borderRadius: '50%',
                 border: 'none',
                 padding: 0,
                 background: index === currentIndex ? 'white' : 'rgba(255, 255, 255, 0.4)',
                 cursor: 'pointer',
                 transition: 'all 0.3s ease',
-                transform: index === currentIndex ? 'scale(1.4)' : 'scale(1)',
-                boxSizing: 'border-box',
+                transform: index === currentIndex ? 'scale(1.4)' : 'scale(1)'
               }}
             />
           ))}
@@ -135,7 +134,6 @@ const Carousel = ({ bannerImages }) => {
 
         {/* Right Arrow */}
         <button
-          className="carousel-next"
           onClick={goToNext}
           style={{
             backgroundColor: 'transparent',
