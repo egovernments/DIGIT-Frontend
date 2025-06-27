@@ -4,6 +4,9 @@ Here's the `CHANGELOG` file for the specified versions:
 # Changelog
 
 
+## [1.8.22]  [27-Jun-2025]
+- Tab change issue fixed for inbox-search-composer
+
 ## [1.8.21]  [10-Jun-2025]
 - integrated with updated version
 
