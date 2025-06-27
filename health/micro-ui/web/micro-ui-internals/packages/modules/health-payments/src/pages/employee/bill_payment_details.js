@@ -17,7 +17,7 @@ import BillDetailsTable from "../../components/BillDetailsTable";
  * @param {boolean} editBillDetails - Whether bill is editable or not.
  * @returns {ReactFragment} A React Fragment containing the attendance details.
  */
-const BillPaymentDetails = ({ editBillDetails = true }) => { //TODO : set editBillDetails true or false to toggle actions
+const BillPaymentDetails = ({ editBillDetails = false }) => {
   const location = useLocation();
   const billID = location.state?.billID;
   console.log("billID", billID);
@@ -31,6 +31,7 @@ const BillPaymentDetails = ({ editBillDetails = true }) => { //TODO : set editBi
   const [paginatedData, setPaginatedData] = useState([]);
   const [openSendForEditPopUp, setOpenSendForEditPopUp] = useState(false);
   const [selectedRows, setSelectedRows] = useState([]);
+  const [showToast, setShowToast] = useState(null);
 
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [limitAndOffset, setLimitAndOffset] = useState({
@@ -48,9 +49,11 @@ const BillPaymentDetails = ({ editBillDetails = true }) => { //TODO : set editBi
         setLimitAndOffset({ limit: currentRowsPerPage, offset: (currentPage - 1) * rowsPerPage });
     }
   const [activeLink, setActiveLink] = useState({
-          code: "NOT_VERIFIED",
-          name: `${`${t(`HCM_AM_NOT_VERIFIED`)} `}`,
-      });
+  code: editBillDetails ? "PENDING_FOR_EDIT" : "NOT_VERIFIED",
+  name: editBillDetails
+    ? `${t("HCM_AM_PENDING_FOR_EDIT")} `
+    : `${t("HCM_AM_NOT_VERIFIED")} `,
+});
   const billDetails = [
         {
             "id": "123456",
@@ -218,8 +221,8 @@ const BillPaymentDetails = ({ editBillDetails = true }) => { //TODO : set editBi
         url: `/individual/v1/bulk/_update`
     });
 
-const triggerIndividualBulkUpdate = async(individualsData, selectedRows) => {
-  console.log("triggerIndividualBulkUpdate called with:", individualsData, selectedRows);
+const triggerIndividualBulkUpdate = async(individualsData, selectedRows, bill) => {
+  console.log("triggerIndividualBulkUpdate called with:", individualsData, selectedRows, bill);
   const selectedIds = selectedRows.map(row => row?.payee?.identifier);
   const updatedIndividualsList = individualsData?.Individual?.filter(individual =>
       selectedIds.includes(individual.id)
@@ -244,21 +247,35 @@ const triggerIndividualBulkUpdate = async(individualsData, selectedRows) => {
                  },
             },
             {
-                onSuccess: async (individualUpdateResponse) => {
-                  selectedRows.forEach((row) => {
-                  updateBillDetailWorkflow(row, "EDIT");
-                });
+                onSuccess: async () => {
+                await updateBillDetailWorkflow(bill, selectedRows, "EDIT");
+                setShowToast({
+                        key: "success",
+                        label: t("HCM_AM_BILL_DETAIL_UPDATE_SUCCESS"),//TODO UPDATE TOAST MSG
+                        transitionTime: 6000,
+                    });
+
               }
-            })
-            refetchAllIndividuals();
+            });
+            refetchBill();
+             history.push(`/${window.contextPath}/employee/payments/edit-bill-success`, {
+              state: "success",
+              info: t("HCM_AM_BILL_ID"),
+              fileName: BillData?.bills?.[0]?.billNumber || t("NA"),
+              description: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS_DESCRIPTION`),
+              message: t(`HCM_AM_BILL_DETAIL_UPDATE_SUCCESS`),
+              isShowButton: false,
+              back: t(`GO_BACK_TO_HOME`),
+              backlink: `/${window.contextPath}/employee`
+            });
           }
           catch (error) {
             console.error("Error updating individuals:", error);
-            // setShowToast({
-            //             key: "error",
-            //             label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),//TODO UPDATE TOAST MSG
-            //             transitionTime: 3000,
-            //         });
+            setShowToast({
+                        key: "error",
+                        label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_DETAIL_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
+                        transitionTime: 3000,
+                    });
 
             }
           
@@ -267,16 +284,47 @@ const triggerIndividualBulkUpdate = async(individualsData, selectedRows) => {
     const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
        url: `/${expenseContextPath}/v1/bill/details/status/_update`,
     });
-    const updateBillDetailWorkflow = (billDetail, wfState) => {
-        updateBillDetailMutation.mutateAsync({
+    const updateBillDetailWorkflow = async(bill,selectedRows, wfState) => {
+      try{
+        await updateBillDetailMutation.mutateAsync(
+          {
             body: {
-                billDetail,
+                bill:{
+                  ...bill,
+                  billDetails: selectedRows,
+                },                
                 workflow: {
                     action: wfState,
                 },
-                businessService: "PAYMENTS.BILLDETAILS",
             },
-        })
+        },
+        {
+            onSuccess: async () => {
+                refetchBill();
+                setShowToast({
+                    key: "success",
+                    label: t(`HCM_AM_SELECTED_BILL_DETAILS_${wfState}_SUCCESS`), //TODO UPDATE TOAST MSG
+                    transitionTime: 2000,
+                });             
+            },
+            onError: (error) => {
+              console.log("12Error updating bill detail workflow:", error);
+                    setShowToast({
+                        key: "error",
+                        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"),//TODO UPDATE TOAST MSG
+                        transitionTime: 2000,
+                    });
+                },
+        }, 
+          )
+        }catch (error) {
+            console.log("Error updating bill detail workflow:", error);
+            setShowToast({
+                key: "error",
+                label: t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"), //TODO UPDATE TOAST MSG
+                transitionTime: 3000,
+            }); 
+        }
             }
 
 useEffect(() => {
@@ -310,9 +358,12 @@ useEffect(() => {
       workerRatesData
     );
    const statusMap = {
-        VERIFIED: ["VERIFIED","PAYMENT_FAILED"],
+        VERIFICATION_FAILED: ["VERIFICATION_FAILED",], //send for edit action
+        VERIFIED: ["VERIFIED","PAYMENT_FAILED"], //generate payment action
         PAYMENT_GENERATED: ["PAID"],
-        NOT_VERIFIED: ["VERIFICATION_FAILED", "PENDING_VERIFICATION","PENDING_EDIT","EDITED"]
+        NOT_VERIFIED: ["PENDING_VERIFICATION","PENDING_EDIT","EDITED"], //verify action
+        PENDING_FOR_EDIT: ["PENDING_EDIT"], //EDIT action
+        EDITED: ["EDITED"]
     };
     const filtered = enriched.filter((item) =>
       statusMap[activeLink.code]?.includes(item.status)
@@ -403,10 +454,14 @@ console.log("mob num:", tableData);
                                         configItemKey="code"
                                         configDisplayKey="name"
                                         itemStyle={{ width: "400px" }}
-                                        configNavItems={[
+                                        configNavItems={!editBillDetails?[
                                             {
                                                 code: "NOT_VERIFIED",
                                                 name: `${`${t(`HCM_AM_NOT_VERIFIED`)} `}`,
+                                            },
+                                            {
+                                                code: "VERIFICATION_FAILED",
+                                                name: `${`${t(`HCM_AM_VERIFICATION_FAILED`)} `}`,
                                             },
                                             {
                                               code: "VERIFIED",
@@ -416,6 +471,16 @@ console.log("mob num:", tableData);
                                                 code: "PAYMENT_GENERATED",
                                                 name: `${`${t(`HCM_AM_PAYMENT_GENERATED`)} `}`,
                                             },
+                                        ]:
+                                      [
+                                            {
+                                                code: "PENDING_FOR_EDIT",
+                                                name: `${`${t(`HCM_AM_PENDING_FOR_EDIT`)} `}`,
+                                            },
+                                            {
+                                                code: "EDITED",
+                                                name: `${`${t(`HCM_AM_EDITED`)} `}`,
+                                            }
                                         ]}
                                         navStyles={{}}
                                         onTabClick={(e) => {
@@ -457,6 +522,16 @@ console.log("mob num:", tableData);
             </Card>
         
       </div>
+      {showToast && (
+                      <Toast
+                          style={{ zIndex: 10001 }}
+                          label={showToast.label}
+                          type={showToast.key}
+                          // error={showToast.key === "error"}
+                          transitionTime={showToast.transitionTime}
+                          onClose={() => setShowToast(null)}
+                      />
+                  )}
 
      
  {openSendForEditPopUp && <SendForEditPopUp
@@ -477,28 +552,25 @@ console.log("mob num:", tableData);
         actionFields={
           !editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
           [          
-            <Button
-              className="custom-class"
-              icon="ArrowBack"
-              label={t(`HCM_AM_SEND_FOR_EDIT`)}
-              menuStyles={{
-                bottom: "40px",
-              }}
-              onClick={() => {
-                // setOpenSendForEditPopUp(true);
-                //todo: workflow update
-                selectedRows.forEach((row) => {
-                  updateBillDetailWorkflow(row, "SEND_BACK_FOR_EDIT");
-                });
-              }}  
-              optionsKey="name"
-              size=""
-              style={{ minWidth: "14rem" }}
-              title=""
-              type="button"
-              variation="secondary"
-              isDisabled={selectedRows.length === 0}
-            />,
+            // <Button
+            //   className="custom-class"
+            //   icon="ArrowBack"
+            //   label={t(`HCM_AM_SEND_FOR_EDIT`)}
+            //   menuStyles={{
+            //     bottom: "40px",
+            //   }}
+            //   onClick={() => {
+            //     // setOpenSendForEditPopUp(true);
+            //     updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
+            //   }}  
+            //   optionsKey="name"
+            //   size=""
+            //   style={{ minWidth: "14rem" }}
+            //   title=""
+            //   type="button"
+            //   variation="secondary"
+            //   isDisabled={billData?.status === "PENDING_VERIFICATION" || selectedRows.length === 0}
+            // />,
                 <Button
               className="custom-class"
               iconFill=""
@@ -512,10 +584,51 @@ console.log("mob num:", tableData);
               title=""
               type="button"
               variation="primary"
+              isDisabled={selectedRows.length === 0}
 
             />
             ]:
-             editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
+            !editBillDetails && activeLink?.code === 'VERIFICATION_FAILED' ?
+          [          
+            <Button
+              className="custom-class"
+              icon="ArrowBack"
+              label={t(`HCM_AM_SEND_FOR_EDIT`)}
+              menuStyles={{
+                bottom: "40px",
+              }}
+              onClick={() => {
+                // setOpenSendForEditPopUp(true);
+                updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
+              }}  
+              optionsKey="name"
+              size=""
+              style={{ minWidth: "14rem" }}
+              title=""
+              type="button"
+              // variation="secondary"
+              variation="primary"
+              isDisabled={billData?.status === "PENDING_VERIFICATION" || selectedRows.length === 0}
+            />
+            // ,
+            //     <Button
+            //   className="custom-class"
+            //   iconFill=""
+            //   label={t(`HCM_AM_VERIFY`)}
+            //   menuStyles={{
+            //     bottom: "40px",
+            //   }}             
+            //   optionsKey="name"
+            //   size=""
+            //   style={{ minWidth: "14rem" }}
+            //   title=""
+            //   type="button"
+            //   variation="primary"
+            //   isDisabled={selectedRows.length === 0}
+
+            // />
+            ]:
+             editBillDetails && activeLink?.code === 'PENDING_FOR_EDIT' ?
           [          
             <Button
               className="custom-class"
@@ -525,7 +638,7 @@ console.log("mob num:", tableData);
                 bottom: "40px",
               }}
               onClick={() => {
-                triggerIndividualBulkUpdate(AllIndividualsData,selectedRows);
+                triggerIndividualBulkUpdate(AllIndividualsData,selectedRows, billData);
                 // setOpenSendForEditPopUp(true);
               }}  
               optionsKey="name"
@@ -538,7 +651,7 @@ console.log("mob num:", tableData);
 
             />
             ]
-          : 'VERIFIED' ? [
+          : !editBillDetails && activeLink?.code === 'VERIFIED'  ? [
             <Button
               label={t(`HCM_AM_GENERATE_PAYMENT`)}
               title={t(`HCM_AM_GENERATE_PAYMENT`)}
@@ -549,6 +662,7 @@ console.log("mob num:", tableData);
               style={{ minWidth: "14rem" }}
               type="button"
               variation="primary"
+              isDisabled={selectedRows.length === 0}
               // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
             />
             ]
