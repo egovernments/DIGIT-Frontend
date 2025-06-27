@@ -74,8 +74,9 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { id, chartType } = data;
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const requestDate = {
     startDate: startDate.getTime(),
     endDate: endDate.getTime(),
@@ -87,7 +88,10 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
     type: chartType,
     tenantId,
     requestDate,
-    filters: { projectTypeId: selectedProjectTypeId },
+    filters: { 
+      // projectTypeId: selectedProjectTypeId
+      campaignId : campaignId
+     },
     moduleLevel: moduleLevel,
   });
 
@@ -139,13 +143,14 @@ const HorBarChart = ({ data, setselectState = "" }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { id, chartType } = data;
   let filters = {};
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   if (setselectState !== "") filters.state = setselectState;
 
   filters = { ...filters };
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+    const { campaignId } = Digit.Hooks.useQueryParams();
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -159,7 +164,10 @@ const HorBarChart = ({ data, setselectState = "" }) => {
     type: chartType,
     tenantId,
     requestDate,
-    filters: { ...filters, projectTypeId: selectedProjectTypeId },
+    filters: { ...filters, 
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
+     },
   });
 
   const constructChartData = (data) => {
@@ -251,7 +259,8 @@ const L1Main = () => {
   const dashboardData = location.state?.dashboardData;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
-  const projectTypeId = location.state?.projectTypeId;
+  // const projectTypeId = location.state?.projectTypeId;
+  const campaignId = location.state?.campaignId;
   const dashboardLink = location.state?.dashboardLink;
   const dashboardId = dashboardLink?.dashboardId;
   const stateCode = location.state?.stateCode;
@@ -266,28 +275,28 @@ const L1Main = () => {
   const [pageZoom, setPageZoom] = useState(false);
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, dashboardId, language });
 
-  console.log(location.state.projectTypeId, "projectTypeId");
+  // console.log(location.state.projectTypeId, "projectTypeId");
 
-  function getProjectTypeIDFromURL() {
-    const url = window.location.pathname;
-    const projectTypes = Digit.SessionStorage.get("projectTypes");
-    const matchingProject = projectTypes?.find(
-      (item) => item?.dashboardUrls && Object.values(item?.dashboardUrls)?.some((dashboardUrl) => url === dashboardUrl)
-    );
+  // function getProjectTypeIDFromURL() {
+  //   const url = window.location.pathname;
+  //   const projectTypes = Digit.SessionStorage.get("projectTypes");
+  //   const matchingProject = projectTypes?.find(
+  //     (item) => item?.dashboardUrls && Object.values(item?.dashboardUrls)?.some((dashboardUrl) => url === dashboardUrl)
+  //   );
 
-    // Return the id of the matching object or null if not found
-    const projectTypeId = matchingProject ? matchingProject.id : null;
+  //   // Return the id of the matching object or null if not found
+  //   const projectTypeId = matchingProject ? matchingProject.id : null;
 
-    return projectTypeId;
-  }
+  //   return projectTypeId;
+  // }
 
-  useEffect(() => {
-    if (projectTypeId) {
-      Digit.SessionStorage.set("selectedProjectTypeId", projectTypeId);
-    } else {
-      Digit.SessionStorage.set("selectedProjectTypeId", getProjectTypeIDFromURL());
-    }
-  }, []);
+  // useEffect(() => {
+  //   if (projectTypeId) {
+  //     Digit.SessionStorage.set("selectedProjectTypeId", projectTypeId);
+  //   } else {
+  //     Digit.SessionStorage.set("selectedProjectTypeId", getProjectTypeIDFromURL());
+  //   }
+  // }, []);
 
   useEffect(() => {
     if (showDownloadOptions === false) {

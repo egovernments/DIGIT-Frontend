@@ -71,8 +71,9 @@ const CustomHorizontalBarChart = ({
   const [drillDownFilters, setDrillDownFilters] = useState({});
   const [symbolKeyMap, setSymbolKeyMap] = useState({});
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   useEffect(() => {
     if (filterStack.length > 1) {
@@ -126,9 +127,15 @@ const CustomHorizontalBarChart = ({
             : requestDate,
         filters:
           id === chartKey && value?.filters != null
-            ? { ...value.filters, projectTypeId: selectedProjectTypeId }
+            ? { ...value.filters, 
+              // projectTypeId: selectedProjectTypeId 
+              campaignId:campaignId
+            }
             : value?.filters != null || drillDownFilters || selectedStack
-            ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, projectTypeId: selectedProjectTypeId }
+            ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, 
+              // projectTypeId: selectedProjectTypeId 
+              campaignId:campaignId
+            }
             : {},
         moduleLevel: value?.moduleLevel,
         aggregationFactors: null,
@@ -146,7 +153,7 @@ const CustomHorizontalBarChart = ({
       select: defaultSelect,
     },
   };
-  const { data: response, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: response, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
 
   // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
   //   key: chartKey,
@@ -183,11 +190,16 @@ const CustomHorizontalBarChart = ({
         requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
         filters:
           id === targetLineChart
-            ? { ...value.filters, projectTypeId: projectTypeId }
+            ? { ...value.filters,
+              //  projectTypeId: projectTypeId
+              campaignId:campaignId
+               }
             : {
                 ...value?.filters,
                 [filterStack[filterStack.length - 1]["filterKey"]]: filterStack[filterStack.length - 1]?.filterValue,
-                projectTypeId: projectTypeId,
+                // projectTypeId: projectTypeId,
+                campaignId:campaignId
+
               },
         moduleLevel: value?.moduleLevel,
       },

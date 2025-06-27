@@ -61,8 +61,9 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   const [totalCapacity, setTotalCapacity] = useState(0);
   const [totalWaste, setTotalWaste] = useState(0);
   const [keysArr, setKeysArr] = useState([]);
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+      const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
 
   const [manageChart, setmanageChart] = useState("Area");
@@ -77,7 +78,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: {
       ...value?.filters,
-      projectTypeId: selectedProjectTypeId
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
     },
     moduleLevel: value?.moduleLevel
   });

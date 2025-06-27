@@ -14,8 +14,9 @@ const BannerCard = ({ data }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+      const { campaignId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const getWidth = (name) => {
     if (isMobile) return "auto";
@@ -39,7 +40,8 @@ const BannerCard = ({ data }) => {
     requestDate: { ...value?.requestDate, startDate: requestDate?.startDate?.getTime(), endDate: requestDate?.endDate?.getTime() },
     filters: {
       ...value?.filters,
-      projectTypeId: selectedProjectTypeId,
+      // projectTypeId: selectedProjectTypeId,
+      campaignId:campaignId
     },
   });
 

@@ -47,8 +47,9 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
@@ -63,11 +64,15 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     requestDate: { ...lastYearDate },
     filters:
       id === chartKey
-        ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
+        ? { ...value?.filters, 
+          // projectTypeId: selectedProjectTypeId
+          campaignId:campaignId
+         }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            projectTypeId: projectTypeId,
+            // projectTypeId: projectTypeId,
+            campaignId:campaignId
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
@@ -79,11 +84,15 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters:
       id === chartKey
-        ? { ...value?.filters, projectTypeId: selectedProjectTypeId }
+        ? { ...value?.filters, 
+          // projectTypeId: selectedProjectTypeId 
+          campaignId:campaignId
+        }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            projectTypeId: selectedProjectTypeId,
+            // projectTypeId: selectedProjectTypeId,
+            campaignId:campaignId
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,

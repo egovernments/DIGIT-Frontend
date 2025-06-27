@@ -39,8 +39,9 @@ const Chart = ({ data }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
   const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
@@ -48,7 +49,10 @@ const Chart = ({ data }) => {
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: {...value?.filters, projectTypeId: selectedProjectTypeId},
+    filters: {...value?.filters, 
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
+    },
   });
   if (isLoading) {
     return <Loader />;

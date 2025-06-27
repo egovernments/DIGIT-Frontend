@@ -73,8 +73,9 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [tooltipContent, settooltipContent] = useState("");
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -95,7 +96,10 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
     type: "metric",
     tenantId,
     requestDate: requestDate,
-    filters: { projectTypeId: selectedProjectTypeId },
+    filters: { 
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
+     },
   });
 
   const onMouseEnter = (geo, current = { value: "0" }, event) => {

@@ -27,8 +27,9 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const [drillDownId, setdrillDownId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -52,8 +53,14 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
           }
         : requestDate,
     filters: isPieClicked
-      ? { ...value?.filters, selectedType: pieSelected, projectTypeId: selectedProjectTypeId }
-      : { ...value?.filters, projectTypeId: selectedProjectTypeId },
+      ? { ...value?.filters, selectedType: pieSelected, 
+        // projectTypeId: selectedProjectTypeId 
+        campaignId:campaignId
+      }
+      : { ...value?.filters,
+        //  projectTypeId: selectedProjectTypeId
+        campaignId:campaignId
+         },
     moduleLevel: value?.moduleLevel,
   });
 
@@ -186,7 +193,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   };
   const totalValue = useCallback(() => {
     let accumulatedValue = 0;
-    response?.responseData?.data?.[0]?.plots.forEach((entry) => {
+    response?.responseData?.data?.[0]?.plots?.forEach((entry) => {
       accumulatedValue = accumulatedValue + entry?.value;
     });
     accumulatedValue = Digit.Utils.dss.formatter(accumulatedValue, "number", value?.denomination, true, t);

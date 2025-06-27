@@ -67,8 +67,9 @@ const VennDiagramChart = ({data, isNational = false,}) => {
   const [chartKey, setChartKey] = useState(id);
 
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   let todayDate = today;
@@ -83,7 +84,10 @@ const VennDiagramChart = ({data, isNational = false,}) => {
     type: "metric",
     tenantId,
     requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
-    filters: {projectTypeId: selectedProjectTypeId},
+    filters: {
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
+    },
     moduleLevel: value?.moduleLevel
   });
 

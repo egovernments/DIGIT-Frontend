@@ -9,10 +9,11 @@ const ViewDashbaord = ({ stateCode }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
-  const queryStrings = Digit.Hooks.useQueryParams();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const project = location?.state?.project;
   const campaignId = project?.referenceID;
+  const [redirected, setRedirected] = useState(false);
+  const queryStrings = Digit.Hooks.useQueryParams();
 
   const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -39,7 +40,6 @@ const ViewDashbaord = ({ stateCode }) => {
         limit: 2,
         offset: 0,
         hierarchyType: hierarchyType,
-        hierarchyType: "NEWTEST00222",
       },
     },
     config: {
@@ -111,9 +111,10 @@ const ViewDashbaord = ({ stateCode }) => {
 
     // Get the config entry matching the level
     const matchedConfig = campaignConfig?.config?.find((cfg) => cfg.level === levelLinked);
-    return matchedConfig?.dashboardId || null;
+    return matchedConfig || null;
   };
-  const dashboardId = getDashboardId(mdmsData, project?.projectType, levelLinked);
+  const selectedDashboard = getDashboardId(mdmsData, project?.projectType, levelLinked);
+  const dashboardId = selectedDashboard?.dashboardId;
 
   const dashboardReqCriteria = {
     url: `/dashboard-analytics/dashboard/getDashboardConfig/${dashboardId}`,
@@ -134,6 +135,24 @@ const ViewDashbaord = ({ stateCode }) => {
     },
   };
   const { data: dashboardDataResponse } = Digit.Hooks.DSS.useAPIHook(dashboardReqCriteria);
+
+  useEffect(() => {
+    if (dashboardDataResponse?.responseData && !redirected) {
+      setRedirected(true);
+      history.push(
+        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level}/${dashboardId}?campaignId=${campaignData?.[0]?.id}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
+        {
+          dashboardData: dashboardDataResponse?.responseData,
+          projectTypeId: project?.projectTypeId,
+          dashboardLink: selectedDashboard?.level,
+          stateCode: stateCode,
+        }
+      );
+      Digit.SessionStorage.set("dashboardData", dashboardDataResponse?.responseData);
+      Digit.SessionStorage.set("projectSelected", project);
+      Digit.SessionStorage.set("campaignSelected", campaignData?.[0]);
+    }
+  }, [dashboardDataResponse?.responseData, redirected, history]);
 
   if (campaignSearchLoading || hierarchyLoading) {
     return <Loader page={true} variant={"PageLoader"} />;

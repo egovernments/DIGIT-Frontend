@@ -91,8 +91,9 @@ const CustomBarChart = ({
   const [maxValue, setMaxValue] = useState({});
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { startDate, endDate, interval } = getInitialRange();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -105,7 +106,10 @@ const CustomBarChart = ({
     type: "metric",
     tenantId,
     requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
-    filters: {...value?.filters, projectTypeId: selectedProjectTypeId},
+    filters: {...value?.filters, 
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
+    },
     moduleLevel: value?.moduleLevel
   });
   const chartData = useMemo(() => {

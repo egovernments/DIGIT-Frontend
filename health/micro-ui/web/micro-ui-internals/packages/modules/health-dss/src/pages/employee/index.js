@@ -78,8 +78,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashbaord stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/l1-dashboard`} component={() => <L1Dashboard />} />
         {/* TODO: update the dashboard path */}
-        <PrivateRoute path={`${path}/level1/:moduleCode`} component={() => <L1Main />} />
-        <PrivateRoute path={`${path}/level2/:moduleCode`} component={() => <L2Main />} />
+        <PrivateRoute path={`${path}/level-one/:moduleCode`} component={() => <L1Main />} />
+        <PrivateRoute path={`${path}/level-two/:moduleCode`} component={() => <L2Main />} />
       </AppContainer>
     </Switch>
   );

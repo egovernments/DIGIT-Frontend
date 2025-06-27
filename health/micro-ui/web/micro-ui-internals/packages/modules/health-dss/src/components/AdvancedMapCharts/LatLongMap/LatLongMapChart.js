@@ -38,8 +38,9 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
 
   useEffect(() => {
@@ -99,7 +100,10 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       type: chartType,
       tenantId,
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {...value?.filters , projectTypeId: selectedProjectTypeId},
+      filters: {...value?.filters , 
+        // projectTypeId: selectedProjectTypeId
+        campaignId:campaignId
+      },
     });
     if (isLoading) {
       return <Loader />;
@@ -128,7 +132,10 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       type: "table",
       tenantId,
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {...filterStack?.value?.filters, ...filterFeature, projectTypeId: selectedProjectTypeId},
+      filters: {...filterStack?.value?.filters, ...filterFeature, 
+        // projectTypeId: selectedProjectTypeId
+        campaignId:campaignId
+      },
     });
 
     useEffect(() => {

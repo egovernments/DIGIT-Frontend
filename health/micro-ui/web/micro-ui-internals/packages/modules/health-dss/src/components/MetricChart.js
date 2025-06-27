@@ -41,8 +41,9 @@ const MetricData = ({ t, data, code }) => {
 const MetricChartRow = ({ data, setChartDenomination, index }) => {
   const { id, chartType } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
@@ -53,7 +54,10 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
     type: chartType,
     tenantId,
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: {...value?.filters, projectTypeId: selectedProjectTypeId},
+    filters: {...value?.filters, 
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
+    },
     moduleLevel: value?.moduleLevel
   });
 

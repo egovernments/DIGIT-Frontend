@@ -38,8 +38,9 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const [drillDownChart, setDrillDownChart] = useState("none");
   const [chartKey, setChartKey] = useState(chartId);
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
-  const { projectTypeId} = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId} = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   useEffect(() => {
     setChartKey(chartId);
@@ -116,7 +117,8 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     tenantId,
     requestDate: requestDate,
     filters: {...filterStack?.value?.filters, ...filterFeature, 
-      projectTypeId: selectedProjectTypeId
+      // projectTypeId: selectedProjectTypeId
+      campaignId:campaignId
     },
   });
 

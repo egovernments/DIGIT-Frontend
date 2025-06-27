@@ -12,8 +12,9 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
   const [searchQuery, setSearchQuery] = useState("");
   const { value } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { projectTypeId } = Digit.Hooks.useQueryParams();
-  const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+        const { campaignId } = Digit.Hooks.useQueryParams();
+  // const { projectTypeId } = Digit.Hooks.useQueryParams();
+  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const history = useHistory();
 
   const getInitialRange = () => {
@@ -40,7 +41,10 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     type: "table",
     tenantId,
     requestDate: requestDate,
-    filters: { projectTypeId: selectedProjectTypeId },
+    filters: { 
+      // projectTypeId: selectedProjectTypeId 
+      campaignId:campaignId
+    },
   });
 
   const AbsoluteCell = (absValue, absText) => {
@@ -98,8 +102,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
           onClick={() => {
             console.log("button clicked");
             //Update the level here, make it dynamic(maybe)
-            history.push(`/${window.contextPath}/employee/dss/level2/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`, {
-
+            history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?province=${rowData?.name}&campaignId=${campaignId}`, {
             })
             // routeTo(`/${window.contextPath}/employee/dss/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`);
           }}

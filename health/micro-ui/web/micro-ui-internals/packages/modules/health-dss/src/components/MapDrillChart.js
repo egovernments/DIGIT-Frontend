@@ -46,8 +46,9 @@ const MapDrillChart = ({
 
 }) => {
     const { t } = useTranslation();
-    const { projectTypeId} = Digit.Hooks.useQueryParams();
-    const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+          const { campaignId } = Digit.Hooks.useQueryParams();
+    // const { projectTypeId} = Digit.Hooks.useQueryParams();
+    // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
     const { id } = data;
     const tenantId = Digit?.ULBService?.getCurrentTenantId();
     let filters = {}
@@ -70,7 +71,10 @@ const MapDrillChart = ({
       type: "metric",
       tenantId,
       requestDate: requestDate,
-      filters: {...filters, projectTypeId: selectedProjectTypeId}
+      filters: {...filters, 
+        // projectTypeId: selectedProjectTypeId
+        campaignId:campaignId
+      }
     });
 
     const onBack = (selectedState ) => {

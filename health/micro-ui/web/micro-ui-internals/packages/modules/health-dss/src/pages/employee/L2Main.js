@@ -253,7 +253,7 @@ const L2Main = ({}) => {
       },
     },
   };
-  const { data: response, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: response, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
 
   // const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("DSS");
