@@ -27,7 +27,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const [drillDownId, setdrillDownId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const { startDate, endDate, interval } = getInitialRange();
-        const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
   // const { projectTypeId } = Digit.Hooks.useQueryParams();
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
@@ -40,10 +40,34 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     interval: interval,
     title: "home",
   };
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: isPieClicked ? drillDownId : id,
-    type: "metric",
-    tenantId,
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: isPieClicked ? drillDownId : id,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate:
+  //     value?.requestDate != null
+  //       ? {
+  //           ...value?.requestDate,
+  //           startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+  //           endDate: value?.range?.endDate?.getTime(),
+  //         }
+  //       : requestDate,
+  //   filters: isPieClicked
+  //     ? { ...value?.filters, selectedType: pieSelected,
+  //       // projectTypeId: selectedProjectTypeId
+  //       campaignId:campaignId
+  //     }
+  //     : { ...value?.filters,
+  //       //  projectTypeId: selectedProjectTypeId
+  //       campaignId:campaignId
+  //        },
+  //   moduleLevel: value?.moduleLevel,
+  // });
+
+  const aggregationRequestDto = {
+    visualizationCode: isPieClicked ? drillDownId : id,
+    visualizationType: "metric",
+    queryType: "",
     requestDate:
       value?.requestDate != null
         ? {
@@ -52,17 +76,11 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
             endDate: value?.range?.endDate?.getTime(),
           }
         : requestDate,
-    filters: isPieClicked
-      ? { ...value?.filters, selectedType: pieSelected, 
-        // projectTypeId: selectedProjectTypeId 
-        campaignId:campaignId
-      }
-      : { ...value?.filters,
-        //  projectTypeId: selectedProjectTypeId
-        campaignId:campaignId
-         },
+    filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected, campaignId: campaignId } : { ...value?.filters, campaignId: campaignId },
     moduleLevel: value?.moduleLevel,
-  });
+    aggregationFactors: null,
+  };
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   const onPieEnter = useCallback(
     (_, index) => {
@@ -286,11 +304,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                   </>
                 )}
               </Pie>
-              {showTooltip && (
-                <Tooltip
-                  content={renderTooltip}
-                />
-              )}
+              {showTooltip && <Tooltip content={renderTooltip} />}
               <Legend
                 layout="vertical"
                 verticalAlign="middle"

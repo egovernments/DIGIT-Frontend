@@ -36,16 +36,26 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     interval: interval,
     title: "home",
   };
-  const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-    key: chartId,
-    type: "table",
-    tenantId,
+  // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: chartId,
+  //   type: "table",
+  //   tenantId,
+  //   requestDate: requestDate,
+  //   filters: { 
+  //     // projectTypeId: selectedProjectTypeId 
+  //     campaignId:campaignId
+  //   },
+  // });
+  const aggregationRequestDto = {
+    visualizationCode: chartId,
+    visualizationType: "table",
+    queryType: "",
     requestDate: requestDate,
-    filters: { 
-      // projectTypeId: selectedProjectTypeId 
-      campaignId:campaignId
-    },
-  });
+    filters: {campaignId: campaignId },
+    aggregationFactors: null,
+  };
+  const { isLoading:isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
 
   const AbsoluteCell = (absValue, absText) => {
     return (

@@ -110,50 +110,85 @@ const CustomHorizontalBarChart = ({
   }
   return data;
 };
-  const reqCriteria = {
-    url: `/dashboard-analytics/dashboard/getChartV2`,
-    body: {
-      "aggregationRequestDto" : {
-        visualizationCode: chartKey,
-        visualizationType: "METRIC",
-        queryType: "",
-        requestDate:
-          value?.requestDate != null
-            ? {
-                ...value?.requestDate,
-                startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
-                endDate: value?.range?.endDate?.getTime(),
-              }
-            : requestDate,
-        filters:
-          id === chartKey && value?.filters != null
-            ? { ...value.filters, 
-              // projectTypeId: selectedProjectTypeId 
-              campaignId:campaignId
+
+  // const reqCriteria = {
+  //   url: `/dashboard-analytics/dashboard/getChartV2`,
+  //   body: {
+  //     "aggregationRequestDto" : {
+  //       visualizationCode: chartKey,
+  //       visualizationType: "METRIC",
+  //       queryType: "",
+  //       requestDate:
+  //         value?.requestDate != null
+  //           ? {
+  //               ...value?.requestDate,
+  //               startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+  //               endDate: value?.range?.endDate?.getTime(),
+  //             }
+  //           : requestDate,
+  //       filters:
+  //         id === chartKey && value?.filters != null
+  //           ? { ...value.filters, 
+  //             // projectTypeId: selectedProjectTypeId 
+  //             campaignId:campaignId
+  //           }
+  //           : value?.filters != null || drillDownFilters || selectedStack
+  //           ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, 
+  //             // projectTypeId: selectedProjectTypeId 
+  //             campaignId:campaignId
+  //           }
+  //           : {},
+  //       moduleLevel: value?.moduleLevel,
+  //       aggregationFactors: null,
+  //     },
+  //     headers: {
+  //       tenantId: tenantId
+  //     }
+  //   },
+  //   params: {},
+  //   headers: {
+  //     "auth-token": Digit.UserService.getUser()?.access_token || null,
+  //   },
+  //   config: {
+  //     // enabled: !!moduleCode,
+  //     select: defaultSelect,
+  //   },
+  // };
+  // const { data: response, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
+
+    const aggregationRequestDto = {
+      visualizationCode: chartKey,
+      visualizationType: "METRIC",
+      queryType: "",
+      requestDate:
+        value?.requestDate != null
+          ? {
+              ...value?.requestDate,
+              startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+              endDate: value?.range?.endDate?.getTime(),
             }
-            : value?.filters != null || drillDownFilters || selectedStack
-            ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, 
-              // projectTypeId: selectedProjectTypeId 
-              campaignId:campaignId
+          : requestDate,
+      filters:
+        id === chartKey && value?.filters != null
+          ? {
+              ...value.filters,
+              // projectTypeId: selectedProjectTypeId
+              campaignId: campaignId,
             }
-            : {},
-        moduleLevel: value?.moduleLevel,
-        aggregationFactors: null,
-      },
-      headers: {
-        tenantId: tenantId
-      }
-    },
-    params: {},
-    headers: {
-      "auth-token": Digit.UserService.getUser()?.access_token || null,
-    },
-    config: {
-      // enabled: !!moduleCode,
-      select: defaultSelect,
-    },
-  };
-  const { data: response, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
+          : value?.filters != null || drillDownFilters || selectedStack
+          ? {
+              ...value?.filters,
+              ...drillDownFilters,
+              selectedStack: selectedStack,
+              // projectTypeId: selectedProjectTypeId
+              campaignId: campaignId,
+            }
+          : {},
+      moduleLevel: value?.moduleLevel,
+      aggregationFactors: null,
+    };
+    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
 
   // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
   //   key: chartKey,

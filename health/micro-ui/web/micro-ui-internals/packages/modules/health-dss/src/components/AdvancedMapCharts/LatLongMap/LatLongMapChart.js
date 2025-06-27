@@ -95,16 +95,27 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const generateTable = (chart, value) => {
     const { id, chartType } = chart;
     const tenantId = Digit?.ULBService?.getCurrentTenantId();
-    const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-      key: id,
-      type: chartType,
-      tenantId,
+    // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+    //   key: id,
+    //   type: chartType,
+    //   tenantId,
+    //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+    //   filters: {...value?.filters ,
+    //     // projectTypeId: selectedProjectTypeId
+    //     campaignId:campaignId
+    //   },
+    // });
+
+    const aggregationRequestDto = {
+      visualizationCode: id,
+      visualizationType: chartType,
+      queryType: "",
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {...value?.filters , 
-        // projectTypeId: selectedProjectTypeId
-        campaignId:campaignId
-      },
-    });
+      filters: { ...value?.filters, campaignId: campaignId },
+      aggregationFactors: null,
+    };
+    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
     if (isLoading) {
       return <Loader />;
     }
@@ -127,16 +138,28 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const generateMarkers = (chart, value, addlFilter, tenantId) => {
     const chartId = chart?.id;
 
-    const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-      key: chartKey,
-      type: "table",
-      tenantId,
+    // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
+    //   key: chartKey,
+    //   type: "table",
+    //   tenantId,
+    //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+    //   filters: {...filterStack?.value?.filters, ...filterFeature, 
+    //     // projectTypeId: selectedProjectTypeId
+    //     campaignId:campaignId
+    //   },
+    // });
+
+    const aggregationRequestDto = {
+      visualizationCode: chartKey,
+      visualizationType: "table",
+      queryType: "",
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {...filterStack?.value?.filters, ...filterFeature, 
-        // projectTypeId: selectedProjectTypeId
-        campaignId:campaignId
+      filters: {...filterStack?.value?.filters, ...filterFeature,campaignId:campaignId
       },
-    });
+      aggregationFactors: null,
+    };
+    const { isLoading:isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
 
     useEffect(() => {
       setDrillDownChart(response?.responseData?.drillDownChartId || "none");

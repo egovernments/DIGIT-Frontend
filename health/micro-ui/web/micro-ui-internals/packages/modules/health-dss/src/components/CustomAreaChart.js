@@ -71,18 +71,33 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateTenant, "FSM", "FSTPPlantInfo", {
     enabled: id === "fsmCapacityUtilization",
   });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: "metric",
-    tenantId,
-    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: {
-      ...value?.filters,
-      // projectTypeId: selectedProjectTypeId
-      campaignId:campaignId
-    },
-    moduleLevel: value?.moduleLevel
-  });
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+  //   filters: {
+  //     ...value?.filters,
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //   },
+  //   moduleLevel: value?.moduleLevel
+  // });
+
+    const aggregationRequestDto = {
+      visualizationCode: id,
+      visualizationType: "metric",
+      queryType: "",
+      requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+      filters: {
+        ...value?.filters,
+        campaignId: campaignId,
+      },
+      aggregationFactors: null,
+      moduleLevel: value?.moduleLevel,
+    };
+
+    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   useEffect(() => {
     if (mdmsData) {

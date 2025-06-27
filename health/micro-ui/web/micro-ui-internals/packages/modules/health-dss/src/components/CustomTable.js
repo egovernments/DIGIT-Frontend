@@ -57,46 +57,93 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     interval: "month",
     title: "",
   };
-  const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
-    key: chartKey,
-    type: "metric",
-    tenantId,
+  // const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
+  //   key: chartKey,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate: { ...lastYearDate },
+  //   filters:
+  //     id === chartKey
+  //       ? { ...value?.filters,
+  //         // projectTypeId: selectedProjectTypeId
+  //         campaignId:campaignId
+  //        }
+  //       : {
+  //           ...value?.filters,
+  //           [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+  //           // projectTypeId: projectTypeId,
+  //           campaignId:campaignId
+  //         },
+  //   addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
+  //   moduleLevel: value?.moduleLevel,
+  // });
+  const aggregationRequestDto1 = {
+    visualizationCode: chartKey,
+    visualizationType: "metric",
+    queryType: "",
     requestDate: { ...lastYearDate },
     filters:
       id === chartKey
-        ? { ...value?.filters, 
-          // projectTypeId: selectedProjectTypeId
-          campaignId:campaignId
-         }
+        ? {
+            ...value?.filters,
+            campaignId: campaignId,
+          }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            // projectTypeId: projectTypeId,
-            campaignId:campaignId
+            campaignId: campaignId,
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
-  });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: chartKey,
-    type: "metric",
-    tenantId,
+    aggregationFactors: null,
+  };
+  const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto1);
+
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: chartKey,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+  //   filters:
+  //     id === chartKey
+  //       ? { ...value?.filters,
+  //         // projectTypeId: selectedProjectTypeId
+  //         campaignId:campaignId
+  //       }
+  //       : {
+  //           ...value?.filters,
+  //           [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
+  //           // projectTypeId: selectedProjectTypeId,
+  //           campaignId:campaignId
+  //         },
+  //   addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
+  //   moduleLevel: value?.moduleLevel,
+  // });
+  const aggregationRequestDto2 = {
+    visualizationCode: chartKey,
+    visualizationType: "metric",
+    queryType: "",
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters:
       id === chartKey
-        ? { ...value?.filters, 
-          // projectTypeId: selectedProjectTypeId 
-          campaignId:campaignId
-        }
+        ? {
+            ...value?.filters,
+            // projectTypeId: selectedProjectTypeId
+            campaignId: campaignId,
+          }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
             // projectTypeId: selectedProjectTypeId,
-            campaignId:campaignId
+            campaignId: campaignId,
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
-  });
+    aggregationFactors: null,
+  };
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto2);
+
+
   useEffect(() => {
     const { id } = data;
     setChartKey(id);

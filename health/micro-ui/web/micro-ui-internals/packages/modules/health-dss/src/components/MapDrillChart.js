@@ -66,16 +66,28 @@ const MapDrillChart = ({
       title: "home",
     };
   
-    const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-      key: drilldownId,
-      type: "metric",
-      tenantId,
+    // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+    //   key: drilldownId,
+    //   type: "metric",
+    //   tenantId,
+    //   requestDate: requestDate,
+    //   filters: {
+    //     ...filters,
+    //     // projectTypeId: selectedProjectTypeId
+    //     campaignId: campaignId,
+    //   },
+    // });
+
+    const aggregationRequestDto = {
+      visualizationCode: drilldownId,
+      visualizationType: "metric",
+      queryType: "",
       requestDate: requestDate,
-      filters: {...filters, 
-        // projectTypeId: selectedProjectTypeId
-        campaignId:campaignId
-      }
-    });
+      filters: { ...filters, campaignId: campaignId },
+      aggregationFactors: null,
+    };
+    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
 
     const onBack = (selectedState ) => {
       setselectedState("");

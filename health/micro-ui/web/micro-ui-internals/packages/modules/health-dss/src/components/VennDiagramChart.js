@@ -60,36 +60,53 @@ const transformData = (data) => {
 const VennDiagramChart = ({data, isNational = false,}) => {
   const [chartData, setChartData] = useState([]);
   const [chartLoaded, setChartLoaded] = useState(false);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const { id, chartType } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [chartKey, setChartKey] = useState(id);
 
   const { startDate, endDate, interval } = getInitialRange();
-        const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
   // const { projectTypeId} = Digit.Hooks.useQueryParams();
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   let todayDate = today;
   const requestDate = {
-    startDate: startDate.getTime() ,
+    startDate: startDate.getTime(),
     endDate: endDate.getTime(),
     interval: interval,
     title: "home",
   };
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: "metric",
-    tenantId,
-    requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
-    filters: {
-      // projectTypeId: selectedProjectTypeId
-      campaignId:campaignId
-    },
-    moduleLevel: value?.moduleLevel
-  });
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
+  //   filters: {
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //   },
+  //   moduleLevel: value?.moduleLevel
+  // });
+  const aggregationRequestDto = {
+    visualizationCode: id,
+    visualizationType: "metric",
+    queryType: "",
+    requestDate:
+      value?.requestDate != null
+        ? {
+            ...value?.requestDate,
+            startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
+            endDate: value?.range?.endDate?.getTime(),
+          }
+        : requestDate,
+    filters: { campaignId: campaignId },
+    moduleLevel: value?.moduleLevel,
+    aggregationFactors: null,
+  };
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   useEffect(() => {
     if (!response?.responseData?.data) return; // Wait until data is available
@@ -110,34 +127,27 @@ const VennDiagramChart = ({data, isNational = false,}) => {
         dataLabels: {
           style: {
             fontSize: "16px",
-            color: "#505A5F"
+            color: "#505A5F",
           },
           format: "{point.value}",
         },
       }));
 
-        // Step 1: Identify single sets with non-zero values (valid sets)
-        const validSets = new Set(
-          chartFormattedData
-            ?.filter((item) => item.sets.length === 1 && item.value > 0)
-            .map((item) => item.sets[0])
-        );
+      // Step 1: Identify single sets with non-zero values (valid sets)
+      const validSets = new Set(chartFormattedData?.filter((item) => item.sets.length === 1 && item.value > 0).map((item) => item.sets[0]));
 
-        // Step 2: Retain only objects that are entirely derived from valid sets
-        const filteredData = chartFormattedData.filter(
-          (item) => item.sets.every((set) => validSets.has(set))
-        );
+      // Step 2: Retain only objects that are entirely derived from valid sets
+      const filteredData = chartFormattedData.filter((item) => item.sets.every((set) => validSets.has(set)));
 
       setChartData(filteredData); // Set chart data once available
     } else {
       setChartData([]); // No valid data
     }
   }, [response]);
-    
 
   const vennOptions = {
     title: {
-      text: ""
+      text: "",
     },
     chart: {
       backgroundColor: "#EEEEEE",
@@ -150,15 +160,15 @@ const VennDiagramChart = ({data, isNational = false,}) => {
       },
     },
     credits: {
-      enabled: false  // Remove the Highcharts watermark
+      enabled: false, // Remove the Highcharts watermark
     },
     tooltip: {
-			pointFormat: `{point.name} </i><br><b>${t("CAMPAIGN_VALUE_LABEL")}: {point.value}</v>`,
-      style:{
+      pointFormat: `{point.name} </i><br><b>${t("CAMPAIGN_VALUE_LABEL")}: {point.value}</v>`,
+      style: {
         fontSize: "16px",
-        color: "#505A5F"
-        }
-		},
+        color: "#505A5F",
+      },
+    },
     plotOptions: {
       venn: {
         states: {
@@ -169,23 +179,23 @@ const VennDiagramChart = ({data, isNational = false,}) => {
         point: {
           events: {
             mouseOver() {
-              if (!chartLoaded) return; 
+              if (!chartLoaded) return;
               // Save original colors of points before hover
-              this.series.data.forEach(point => {
+              this.series.data.forEach((point) => {
                 point.update({ originalColor: point.color }, false); // Save original color
               });
-              
+
               // Dim other points
-              this.series.data.forEach(point => {
-                if (point !== this) point.update({ color: 'rgba(200,200,200,0.3)' }, false);
+              this.series.data.forEach((point) => {
+                if (point !== this) point.update({ color: "rgba(200,200,200,0.3)" }, false);
               });
-              
+
               // Highlight hovered point
               this.update({ color: this.color }, false);
               this.series.chart.redraw();
             },
             mouseOut() {
-              if (!chartLoaded) return; 
+              if (!chartLoaded) return;
               // Reset colors after hover to their original color
               this.series.data.forEach((point) => {
                 point.update({ color: point.originalColor }, false); // Reset to original color
@@ -195,65 +205,66 @@ const VennDiagramChart = ({data, isNational = false,}) => {
             // click : function () {
 
             // }
-          }
-        }
-      }
+          },
+        },
+      },
     },
     series: [
       {
-        type: 'venn',
-        name: '',
+        type: "venn",
+        name: "",
         data: chartData,
-        colorByPoint: true, 
-      }
-    ]
+        colorByPoint: true,
+      },
+    ],
   };
   if (isLoading) {
     return <Loader />;
-  }
-  else if(chartData?.length === 0){
-    return <NoData t={t} />
-  }
-  else{
-  return (
-    <div style={{width: "100%"}}>
-      <div style={{ width: '98%', margin: 'auto', backgroundColor: "#FAFAFA", border: "1px solid rgb(214, 213, 212)"}}>
-      <HighchartsReact highcharts={Highcharts} options={vennOptions} />
-      </div>
-      {/* Custom Legend */}
-      <div style={{  
-        display: 'flex',
-        justifyContent: 'center',
-        marginTop: 30,
-        maxWidth: "94%",
-        maxHeight: '100px', // Set maximum height for the legend container
-        overflowY: 'auto',  // Make it scrollable if content overflows
-        flexWrap: 'wrap',  }}>
-        {chartData?.map((item) => (
-          <div
-            key={item.id}
-            style={{
-              display: 'flex',
-              alignItems: 'center',
-              marginRight: 30,
-            }}
-          >
+  } else if (chartData?.length === 0) {
+    return <NoData t={t} />;
+  } else {
+    return (
+      <div style={{ width: "100%" }}>
+        <div style={{ width: "98%", margin: "auto", backgroundColor: "#FAFAFA", border: "1px solid rgb(214, 213, 212)" }}>
+          <HighchartsReact highcharts={Highcharts} options={vennOptions} />
+        </div>
+        {/* Custom Legend */}
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: 30,
+            maxWidth: "94%",
+            maxHeight: "100px", // Set maximum height for the legend container
+            overflowY: "auto", // Make it scrollable if content overflows
+            flexWrap: "wrap",
+          }}
+        >
+          {chartData?.map((item) => (
             <div
+              key={item.id}
               style={{
-                width: 10,
-                height: 10,
-                backgroundColor: item.legendColor,
-                borderRadius: '50%',
-                marginRight: 5,
+                display: "flex",
+                alignItems: "center",
+                marginRight: 30,
               }}
-            ></div>
-            <span style={{ fontSize: "16px", color: "#505A5F"}}>{t(item.id)}</span>
-          </div>
-        ))}
+            >
+              <div
+                style={{
+                  width: 10,
+                  height: 10,
+                  backgroundColor: item.legendColor,
+                  borderRadius: "50%",
+                  marginRight: 5,
+                }}
+              ></div>
+              <span style={{ fontSize: "16px", color: "#505A5F" }}>{t(item.id)}</span>
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  }
 };
 
 export default VennDiagramChart;

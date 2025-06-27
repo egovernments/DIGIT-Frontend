@@ -33,18 +33,32 @@ const BannerCard = ({ data }) => {
     endDate: endOfToday(new Date()),
   };
 
-  const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: chartType,
-    tenantId,
-    requestDate: { ...value?.requestDate, startDate: requestDate?.startDate?.getTime(), endDate: requestDate?.endDate?.getTime() },
+  // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: chartType,
+  //   tenantId,
+  //   requestDate: { ...value?.requestDate, startDate: requestDate?.startDate?.getTime(), endDate: requestDate?.endDate?.getTime() },
+  //   filters: {
+  //     ...value?.filters,
+  //     // projectTypeId: selectedProjectTypeId,
+  //     campaignId:campaignId
+  //   },
+  // });
+
+  const aggregationRequestDto = {
+    visualizationCode: id,
+    visualizationType: chartType,
+    queryType: "",
+    requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: {
       ...value?.filters,
-      // projectTypeId: selectedProjectTypeId,
-      campaignId:campaignId
+      campaignId: campaignId,
     },
-  });
+    aggregationFactors: null,
+  };
 
+  const { isLoading: isFetchingChart, data: response } =Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+  
   const getSubHeading = () => {
     const date = new Date();
     // const zeroTime = new Date(date.getFullYear(), date.getMonth(), date.getDate());

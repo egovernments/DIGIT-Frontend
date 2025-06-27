@@ -83,16 +83,32 @@ const Chart = ({ data, showDivider }) => {
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: chartType,
-    tenantId,
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: chartType,
+  //   tenantId,
+  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+  //   filters: { ...value?.filters, 
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //    },
+  // });
+
+  const aggregationRequestDto = {
+    visualizationCode: id,
+    visualizationType: chartType,
+    queryType: "",
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: { ...value?.filters, 
-      // projectTypeId: selectedProjectTypeId
-      campaignId:campaignId
-     },
-  });
+    filters: {
+      ...value?.filters,
+      campaignId: campaignId,
+    },
+    aggregationFactors: null,
+  };
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
+  console.log(response,"ressssssssssssss1111111111111111")
+
   if (isLoading) {
     return <Loader className={"digit-center-loader"} />;
   }

@@ -91,7 +91,7 @@ const CustomBarChart = ({
   const [maxValue, setMaxValue] = useState({});
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { startDate, endDate, interval } = getInitialRange();
-        const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
   // const { projectTypeId} = Digit.Hooks.useQueryParams();
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
@@ -101,17 +101,35 @@ const CustomBarChart = ({
     interval: interval,
     title: "home",
   };
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: "metric",
-    tenantId,
-    requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
-    filters: {...value?.filters, 
-      // projectTypeId: selectedProjectTypeId
-      campaignId:campaignId
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
+  //   filters: {...value?.filters,
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //   },
+  //   moduleLevel: value?.moduleLevel
+  // });
+  const aggregationRequestDto = {
+    visualizationCode: id,
+    visualizationType: "metric",
+    queryType: "",
+    requestDate:
+      value?.requestDate != null
+        ? { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() }
+        : requestDate,
+    filters: {
+      ...value?.filters,
+      campaignId: campaignId,
     },
-    moduleLevel: value?.moduleLevel
-  });
+    aggregationFactors: null,
+    moduleLevel: value?.moduleLevel,
+  };
+
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
   const chartData = useMemo(() => {
     if (!response) return null;
     setChartDenomination(response?.responseData?.data?.[0]?.headerSymbol);

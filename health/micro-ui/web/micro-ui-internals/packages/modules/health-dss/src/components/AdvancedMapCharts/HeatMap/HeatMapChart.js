@@ -111,16 +111,29 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   };
 
   const addlFilter = locationKeyState?.length ? { locationKey: locationKeyState.toUpperCase() } : {};
-  const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-    key: chartKey,
-    type: "table",
-    tenantId,
-    requestDate: requestDate,
+  // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: chartKey,
+  //   type: "table",
+  //   tenantId,
+  //   requestDate: requestDate,
+  //   filters: {...filterStack?.value?.filters, ...filterFeature, 
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //   },
+  // });
+
+  const aggregationRequestDto = {
+    visualizationCode: chartKey,
+    visualizationType: "table",
+    queryType: "",
+    requestDate:requestDate,
     filters: {...filterStack?.value?.filters, ...filterFeature, 
-      // projectTypeId: selectedProjectTypeId
       campaignId:campaignId
     },
-  });
+    aggregationFactors: null,
+  };
+  const { isLoading : isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
 
   // const date = new Date();
   // const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());

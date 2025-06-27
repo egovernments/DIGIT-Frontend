@@ -73,7 +73,7 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [tooltipContent, settooltipContent] = useState("");
   const { startDate, endDate, interval } = getInitialRange();
-        const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
   // const { projectTypeId } = Digit.Hooks.useQueryParams();
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
@@ -84,23 +84,38 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
     title: "home",
   };
 
-  const { data: topoJSON, isLoading: isLoadingNAT } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "dss-dashboard", ["dashboard-config"], {
-    select: (data) => {
-      const topoJson = data?.["dss-dashboard"]?.["dashboard-config"]?.[0]?.["MAP_CONFIG"]?.[0] || {};
-      return topoJson;
-    },
-    enabled: true,
-  });
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: "metric",
-    tenantId,
+  const { data: topoJSON, isLoading: isLoadingNAT } = Digit.Hooks.dss.useMDMS(
+    Digit?.ULBService?.getStateId(),
+    "dss-dashboard",
+    ["dashboard-config"],
+    {
+      select: (data) => {
+        const topoJson = data?.["dss-dashboard"]?.["dashboard-config"]?.[0]?.["MAP_CONFIG"]?.[0] || {};
+        return topoJson;
+      },
+      enabled: true,
+    }
+  );
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: "metric",
+  //   tenantId,
+  //   requestDate: requestDate,
+  //   filters: {
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //    },
+  // });
+
+  const aggregationRequestDto = {
+    visualizationCode: id,
+    visualizationType: "metric",
+    queryType: "",
     requestDate: requestDate,
-    filters: { 
-      // projectTypeId: selectedProjectTypeId
-      campaignId:campaignId
-     },
-  });
+    filters: { campaignId: campaignId },
+    aggregationFactors: null,
+  };
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   const onMouseEnter = (geo, current = { value: "0" }, event) => {
     return settooltipContent(`${t(`${geo.properties.name}`)}: ${current.value ? Number(current.value).toFixed() + " ULBs" : "NA"} `);

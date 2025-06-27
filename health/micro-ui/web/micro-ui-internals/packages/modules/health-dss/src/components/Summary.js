@@ -44,16 +44,26 @@ const Chart = ({ data }) => {
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    key: id,
-    type: chartType,
-    tenantId,
+  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
+  //   key: id,
+  //   type: chartType,
+  //   tenantId,
+  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
+  //   filters: {...value?.filters, 
+  //     // projectTypeId: selectedProjectTypeId
+  //     campaignId:campaignId
+  //   },
+  // });
+  const aggregationRequestDto = {
+    visualizationCode: id,
+    visualizationType: chartType,
+    queryType: "",
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: {...value?.filters, 
-      // projectTypeId: selectedProjectTypeId
-      campaignId:campaignId
-    },
-  });
+    filters: { ...value?.filters, campaignId: campaignId },
+    aggregationFactors: null,
+  };
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
   if (isLoading) {
     return <Loader />;
   }
