@@ -73,7 +73,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 const pollTaskUntilDone = async (billId) => {
     console.log("Polling...", billId);
 
-    const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+    const POLLING_INTERVAL = 12 * 1000; // 12 seconds - TODO: update later
 
     try {
         const statusResponse = await taskStatusAPI.mutateAsync({
