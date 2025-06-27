@@ -7,7 +7,15 @@ import "@egovernments/digit-ui-health-css/example/index.css";
 import { Loader } from "@egovernments/digit-ui-components";
 
 import { UICustomizations } from "./UICustomizations";
-
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
+import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
+import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
+import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
+import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
 var Digit = window.Digit || {};
 
@@ -58,7 +66,7 @@ const initTokens = (stateCode) => {
   if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
 };
 
-const initDigitUI = async() => {
+const initDigitUI = () => {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
   window.Digit.Customizations = {
     commonUiConfig: UICustomizations
@@ -68,54 +76,15 @@ const initDigitUI = async() => {
     // ...paymentConfigs,
     // PaymentLinks,
   });
-  // initUtilitiesComponents();
-  // initWorkbenchComponents();
-  // initWorkbenchHCMComponents();
-  // initCampaignComponents();
-  // initMicroplanComponents();
-  // initPaymentComponents();
-  // initHRMSComponents();
-  // initPGRComponents();
-  // initDSSComponents();
-  
-
-
-// Dynamically import and register modules after initLibraries
-const [
-  { initCampaignComponents },
-  { initWorkbenchComponents },
-  { initUtilitiesComponents },
-  { initWorkbenchHCMComponents },
-  { initMicroplanComponents },
-  { initPaymentComponents },
-  { initHRMSComponents },
-  { initPGRComponents },
-  { initDSSComponents },
-] = await Promise.all([
-  import("@egovernments/digit-ui-module-campaign-manager"),
-  import("@egovernments/digit-ui-module-workbench"),
-  import("@egovernments/digit-ui-module-utilities"),
-  import("@egovernments/digit-ui-module-hcmworkbench"),
-  import("@egovernments/digit-ui-module-microplan"),
-  import("@egovernments/digit-ui-module-health-payments"),
-  import("@egovernments/digit-ui-module-health-hrms"),
-  import("@egovernments/digit-ui-module-health-pgr"),
-  import("@egovernments/digit-ui-module-health-dss"),
-]);
-
-// Initialize them in safe order
-initUtilitiesComponents();
-initWorkbenchComponents();
-initWorkbenchHCMComponents();
-initCampaignComponents();
-initMicroplanComponents();
-initPaymentComponents();
-initHRMSComponents();
-initPGRComponents();
-initDSSComponents();
-
-
-
+  initUtilitiesComponents();
+  initWorkbenchComponents();
+  initWorkbenchHCMComponents();
+  initCampaignComponents();
+  initMicroplanComponents();
+  initPaymentComponents();
+  initHRMSComponents();
+  initPGRComponents();
+  initDSSComponents();
 
   const moduleReducers = (initData) => initData;
 

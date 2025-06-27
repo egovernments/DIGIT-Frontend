@@ -97,8 +97,8 @@ const ViewDashbaord = ({ stateCode }) => {
     { schemaCode: "hcm-dashboard.dashboardProjectConfig" }
   );
 
-  const getDashboardId = (mdmsData, projectType, levelLinked) => {
-    const dashboardConfigs = mdmsData?.["hcm-dashboard"]?.dashboardProjectConfig;
+  const getDashboardId = (mdmsData, projectType, levelLinked) => {  
+    const dashboardConfigs = mdmsData?.MdmsRes?.["hcm-dashboard"]?.dashboardProjectConfig;
     if (!Array.isArray(dashboardConfigs)) return null;
 
     // Try to find matching campaignType first
@@ -134,8 +134,7 @@ const ViewDashbaord = ({ stateCode }) => {
       },
     },
   };
-  const { data: dashboardDataResponse } = Digit.Hooks.DSS.useAPIHook(dashboardReqCriteria);
-
+  const { data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
   useEffect(() => {
     if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
