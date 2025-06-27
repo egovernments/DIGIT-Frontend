@@ -374,12 +374,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
-      result[locale] = locState.map((item) => ({
-        code: item.code,
-        message: item[locale] || " ",
-        module: localeModule ? localeModule : "hcm-dummy-module",
-        locale: locale,
-      }));
+      result[locale] = locState
+        ?.filter((item) => typeof item?.code !== "boolean")
+        ?.map((item) => ({
+          code: item.code,
+          message: item[locale] || " ",
+          module: localeModule ? localeModule : "hcm-dummy-module",
+          locale: locale,
+        }));
       // .filter((item) => item.message !== "");
     });
 
@@ -822,6 +824,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               variation={"primary"}
               label={t("SUBMIT")}
               onClick={() => {
+                if (!addFieldData || !addFieldData?.label?.trim() || !addFieldData?.type) {
+                  setShowToast({ key: "error", label: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                }
                 dispatch({
                   type: "ADD_FIELD",
                   payload: {
