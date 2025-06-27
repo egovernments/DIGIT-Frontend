@@ -70,6 +70,84 @@ const VerifyAndGeneratePaymentsTable = ({
             "localityCode": "Locality 1",
         }
     ]
+
+    const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
+       url: `/health-expense/v1/bill/details/status/_update`,
+    });
+    const updateBillDetailWorkflow = async(bill,billDetails, wfState) => {
+      try{
+        await updateBillDetailMutation.mutateAsync(
+          {
+            body: {
+                bill:{
+                    ...bill,
+                    billDetails: billDetails
+                },
+                workflow: {
+                    action: wfState,
+                }
+            },
+        },
+        {
+            onSuccess: async () => {
+                setShowToast({
+                    key: "success",
+                    label: t(`HCM_AM_SELECTED_BILL_DETAILS_${wfState}_SUCCESS`), //TODO UPDATE TOAST MSG
+                    transitionTime: 2000,
+                });             
+            },
+            onError: (error) => {
+              console.log("12Error updating bill detail workflow:", error);
+                    setShowToast({
+                        key: "error",
+                        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"),//TODO UPDATE TOAST MSG
+                        transitionTime: 2000,
+                    });
+                },
+        }, 
+          )
+        }catch (error) {
+            console.log("Error updating bill detail workflow:", error);
+            setShowToast({
+                key: "error",
+                label: t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_ERROR"), //TODO UPDATE TOAST MSG
+                transitionTime: 3000,
+            }); 
+        }
+            }
+        const sendBillDetailsForEdit = async (bill) => {
+            const detailsToEdit = bill?.billDetails?.filter(
+                (detail) => detail?.status === "VERIFICATION_FAILED" || detail?.status === "PAYMENT_FAILED"
+            );
+
+            if (!detailsToEdit || detailsToEdit.length === 0){
+                setShowToast({
+                    key: "info",
+                    label: t("HCM_AM_NO_BILL_DETAILS_TO_EDIT"), //TODO UPDATE TOAST MSG
+                    transitionTime: 2000,
+                });
+                return;
+            }
+
+            // await Promise.all(
+            //     detailsToEdit.map((detail) => {
+            //     return updateBillDetailWorkflow(detail, "SEND_BACK_FOR_EDIT");
+            //     })
+            // );
+            setIsLoading(true);
+            await updateBillDetailWorkflow(bill, detailsToEdit, "SEND_BACK_FOR_EDIT");
+            setIsLoading(false);
+
+            setShowToast({
+                key: "success",
+                label: t("HCM_AM_BILL_DETAILS_SENT_FOR_EDIT_SUCCESS"), //TODO UPDATE TOAST MSG
+                transitionTime: 2000,
+            });
+            onTaskDone?.(); //  trigger bill search in parent
+
+        };
+
+            
      const getTaskStatusMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: `/health-expense/v1/task/_status`,
     });
@@ -86,6 +164,7 @@ const VerifyAndGeneratePaymentsTable = ({
             },
             {
                 onSuccess: async (verifyResponse) => {
+                    console.log("Verify Response", verifyResponse);
                     const taskId = verifyResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
@@ -175,6 +254,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
             },
             {
                 onSuccess: async (paymentResponse) => {
+                    console.log("Payment Response", paymentResponse);
                     const taskId = paymentResponse?.taskId;
                     if (!taskId) {
                          setIsLoading(false);
@@ -183,7 +263,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                     }
 
                     let attempts = 0;
-                    const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+                    const POLLING_INTERVAL = 12 * 1000; // 12 seconds
                     const MAX_ATTEMPTS = 20;
 
                     const pollStatus = async () => {
@@ -195,8 +275,9 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                                     } 
                                     },
                             });
+                            console.log("Status ResponsePayment", statusResponse);
 
-                            const status = statusResponse?.status;
+                            const status = statusResponse?.task?.status;
                             setTaskStatus?.(status);
                              if (status === "DONE") {
                                 setIsLoading(false);
@@ -209,7 +290,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                 onTaskDone?.(); //  trigger bill search in parent
               }  else if (status === "IN_PROGRESS") {
                 setInProgressBills(prev => ({ ...prev, [bill?.id]: true }));
-                         setIsLoading(true); // start loader
+                        //  setIsLoading(true); // start loader
                         //TODO UPDATE TOAST MSG
                         setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
 
@@ -253,7 +334,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
 };
 
 const getAvailableActions = (status) => {
-  switch (status) {
+  switch (status) { //TODO : add Download action
     case "PARTIALLY_VERIFIED":
       return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
 case "PENDING_VERIFICATION":
@@ -261,7 +342,7 @@ case "PENDING_VERIFICATION":
     case "FULLY_VERIFIED":
       return ["HCM_AM_GENERATE_PAYMENT"];
     case "PARTIALLY_PAID":
-        return ["HCM_AM_GENERATE_PAYMENT"];
+        return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
     case "FULLY_PAID":
     case "SENT_BACK":
     default:
@@ -293,20 +374,6 @@ case "PENDING_VERIFICATION":
                     );
                 },
             },
-            // {
-            //     name: (
-            //         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-            //             {t("HCM_AM_BILL_DATE")}
-            //         </div>
-            //     ),
-            //     selector: (row) => {
-            //         return (
-            //             <div className="ellipsis-cell" >
-            //                 {formatTimestampToDate(row.billDate) || t("NA")}
-            //             </div>
-            //         );
-            //     },
-            // },
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
@@ -331,7 +398,8 @@ case "PENDING_VERIFICATION":
                     </div>
                 ),
                 selector: (row) => {
-                    const pendingCount = row?.billDetails?.filter((detail) => detail?.status === "PENDING_VERIFICATION" || detail?.status ==="VERIFICATION_FAILED")?.length || 0;
+                    const pendingCount = row?.billDetails?.filter((detail) => detail?.status === "PENDING_VERIFICATION" || 
+                    detail?.status ==="VERIFICATION_FAILED" || detail?.status ==="PENDING_EDIT" || detail?.status ==="EDITED")?.length || 0;
                     return (
                         <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>
                              {t(pendingCount)}
@@ -440,7 +508,6 @@ case "PENDING_VERIFICATION":
                             isSuffix
                             label={t(`HCM_AM_TAKE_ACTION`)}
                             title={t(`HCM_AM_TAKE_ACTION`)}
-                            // isDisabled={isInProgress}
                             showBottom={isLastRow && props.data.length !== 1? false : true}
                             // showBottom={!(props?.data?.length === 1 || isLastRow)}
                             onOptionSelect={(value) => {
@@ -459,9 +526,10 @@ case "PENDING_VERIFICATION":
 
                                 // }
                                 if (value.code === "HCM_AM_VERIFY") {
-                                    triggerVerifyBill(row);                                   
-                                } else if (value.code === "HCM_AM_EDIT") {                                    
-                                setShowToast({ key: "error", label: t(`HCM_AM_EDIT_FAILED`), transitionTime: 3000 });
+                                    triggerVerifyBill(row);
+                                } else if (value.code === "HCM_AM_EDIT") {
+                                    sendBillDetailsForEdit(row);
+                                // setShowToast({ key: "error", label: t(`HCM_AM_EDIT_FAILED`), transitionTime: 3000 });
                                 }
                                 else if (value.code === "HCM_AM_GENERATE_PAYMENT") {      
                                     triggerGeneratePayment(row);                             
@@ -511,7 +579,7 @@ case "PENDING_VERIFICATION":
         ];
 
         return baseColumns;
-    }, [props.data, t]);
+    }, [props.data, t, inProgressBills]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
