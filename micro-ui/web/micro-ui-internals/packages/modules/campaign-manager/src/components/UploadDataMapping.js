@@ -547,7 +547,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     return { ...newSchema };
   };
 
-  useEffect(async () => {
+  useEffect(()=>{
+    const app=async () => {
     if (convertedSchema && Object.keys(convertedSchema).length > 0) {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
@@ -573,9 +574,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
       setTranslatedSchema(schema);
     }
-  }, [convertedSchema]);
+  }
+  app()
+}, [convertedSchema]);
 
-  useEffect(async () => {
+
+  useEffect(()=>{
+    const app=async () => {
     if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
       const facility = await convertIntoSchema(
         SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
@@ -596,7 +601,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
       setConvertedSchema(schema);
     }
-  }, [SchemasAJV, type]);
+  }
+  app()
+}, [SchemasAJV, type]);
 
   const validateData = (data) => {
 

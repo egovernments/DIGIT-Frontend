@@ -242,7 +242,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
   }
 
   //API CALL
-  useEffect(async () => {
+  useEffect(()=>{
+    const app=async () => {
     if (shouldUpdate === true) {
       if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
         return;
@@ -441,7 +442,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
       }
       setShouldUpdate(false);
     }
-  }, [shouldUpdate]);
+  }
+  app()
+}, [shouldUpdate]);
 
   function validateBoundaryLevel(data) {
     const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];

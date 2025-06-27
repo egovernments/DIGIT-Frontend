@@ -234,7 +234,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [uploadedFile]);
 
-  useEffect(async () => {
+  useEffect(()=>{
+    const app=async () => {
     if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
       const facility = await convertIntoSchema(
         Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
@@ -255,10 +256,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setConvertedSchema(schema);
     }
-  }, [Schemas, type ,uploadedFile]);
+  }
+  app()
+}, [Schemas, type ,uploadedFile]);
 
 
-  useEffect(async () => {
+  useEffect(()=>{
+    const app=async () => {
     if (convertedSchema && Object.keys(convertedSchema).length > 0) {
       const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
       const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
@@ -288,9 +292,12 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       setSheetHeaders(headers);
       setTranslatedSchema(schema);
     }
-  }, [convertedSchema]);
+  }
+  app()
+}, [convertedSchema]);
 
-  useEffect(async () => {
+  useEffect( ()=>{
+   const app= async () => {
     if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
       const newReadMeFacility = await translateReadMeInfo(
         readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
@@ -310,7 +317,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setReadMeInfo(readMeText);
     }
-  }, [readMe?.[CONSOLE_MDMS_MODULENAME], type]);
+  }
+  app()
+}, [readMe?.[CONSOLE_MDMS_MODULENAME], type]);
 
   useEffect(() => {
     if (executionCount < 5) {

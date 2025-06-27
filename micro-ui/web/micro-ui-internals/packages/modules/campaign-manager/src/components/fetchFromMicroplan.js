@@ -194,7 +194,8 @@ const FetchFromMicroplanScreen = () => {
     fetchCampaign();
   }, [currentStep, completed]);
 
-  useEffect(async () => {
+  useEffect(()=>{
+    const app=async () => {
     if (currentStep === steps.length && microplan) {
       setShowToast({ key: "success", label: t("CMN_ALL_DATA_FETCH_DONE") });
 
@@ -206,7 +207,9 @@ const FetchFromMicroplanScreen = () => {
 
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
-  }, [currentStep, microplan]);
+  }
+  app()
+}, [currentStep, microplan]);
 
   const closeToast = () => {
     setShowToast(null);

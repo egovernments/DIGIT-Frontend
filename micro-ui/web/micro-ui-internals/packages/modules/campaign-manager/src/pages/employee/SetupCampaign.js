@@ -230,7 +230,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   }, [currentKey]);
 
   //API CALL
-  useEffect(async () => {
+  useEffect(()=>{
+   const app= async () => {
     if (shouldUpdate === true) {
       if (isChangeDates === "true") {
         const reqCreate = async () => {
@@ -538,7 +539,9 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       }
       setShouldUpdate(false);
     }
-  }, [shouldUpdate]);
+  }
+  app()
+}, [shouldUpdate]);
 
   useEffect(() => {
     if (showToast) {
