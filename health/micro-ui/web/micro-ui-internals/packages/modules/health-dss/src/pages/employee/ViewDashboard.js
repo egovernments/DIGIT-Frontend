@@ -94,13 +94,6 @@ const ViewDashbaord = ({ stateCode }) => {
     "hcm-dashboard",
     [{ name: "dashboardProjectConfig" }],
     {},
-    {
-      config: {
-        select: (data) => {
-          return data;
-        },
-      },
-    },
     { schemaCode: "hcm-dashboard.dashboardProjectConfig" }
   );
 
