@@ -1,26 +1,31 @@
 # Changelog 
 
-## [1.8.42]  [18-Jun-2025]
--Updated the loader logic in login page
 
-## [1.8.41]  [12-Jun-2025]
--Introduced new hook `useLoginConfig` for mdms call
+## [1.8.43]  [26-June-2025]
+- Login and SignUp Pages UI for Sandbox is updated
+- Sandbox Product Details Page Updated 
 
-## [1.8.40]  [11-Jun-2025]
+## [1.8.42] [18-Jun-2025]
+- Updated the loader logic in login page
+
+## [1.8.41] [12-Jun-2025]
+- Introduced new hook useLoginConfig for mdms call
+
+## [1.8.40] [11-Jun-2025]
 - Added module name config for login and privacy screen
 
-## [1.8.39]  [11-Jun-2025]
+## [1.8.39] [11-Jun-2025]
 - integrated with updated version
 
 ## [1.8.38] - [06-June-2025]
-- Added `Fragment` wherever required as older version of react doesn't support <></>
-- PrivateRoute is using `component   as a prop in index.js file
+- Added Fragment wherever required as older version of react doesn't support <></>
+  PrivateRoute is using `component as a prop in index.js file
 
 ## [1.8.37] - [04-June-2025]
-- Added an additional component `Carousel.js`
-- config updated as per additional carousel component
-- Updated `FormComposer` usage in `login.js` with conditional banner rendering.
-- Leveraged newly added class `.login-form-container` for styling the Login page.
+- Added an additional component Carousel.js
+  config updated as per additional carousel component
+  Updated FormComposer usage in login.js with conditional banner rendering.
+  Leveraged newly added class .login-form-container for styling the Login page.
 
 ## [1.8.36]  [27-May-2025]
 - FEATURE/CCSD-216 : Privacy component alignment changes

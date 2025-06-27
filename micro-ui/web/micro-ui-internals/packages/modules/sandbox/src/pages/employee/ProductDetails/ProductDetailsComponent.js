@@ -43,7 +43,7 @@ const ProductDetailsComponent = ({config,module}) => {
   const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon,"#c84c0e"): null;
 
   const handleButtonClick = (action) => {
-    const url = '/' + window.contextPath + action;
+    const url = '/' + window.contextPath + action + "?from=sandbox";
     window.open(url, "_blank");
   };
 

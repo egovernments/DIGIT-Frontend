@@ -2,9 +2,10 @@ import { BackLink, Loader, FormComposerV2, Toast, useCustomAPIMutationHook } fro
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
-import Background from "../../../components/Background";
-import Header from "../../../components/Header";
+import SandBoxHeader from "../../../components/SandBoxHeader";
 import ImageComponent from "../../../components/ImageComponent";
+import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
+
 const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
@@ -41,7 +42,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         onError: (error, variables) => {
           setShowToast({
             key: "error",
-            label: error?.response?.data?.Errors?.[0]?.code ? `SANDBOX_SIGNUP_${error?.response?.data?.Errors?.[0]?.code}` : `SANDBOX_SIGNUP_ERROR`,
+            label: error?.response?.data?.Errors?.[0]?.code
+              ? `SANDBOX_SIGNUP_${error?.response?.data?.Errors?.[0]?.code}`
+              : `SANDBOX_SIGNUP_ERROR`,
           });
         },
         onSuccess: async (data) => {
@@ -61,30 +64,50 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   let config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+  if (
+    mode === "admin" &&
+    config?.[0]?.body?.[2]?.disable === false &&
+    config?.[0]?.body?.[2]?.populators?.defaultValue === undefined
+  ) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
   }
 
   const onFormValueChange = (setValue, formData, formState) => {
-    // Extract keys from the config
     const keys = config[0].body.map((field) => field.key);
 
     const hasEmptyFields = keys.some((key) => {
       const value = formData[key];
-      return value == null || value === "" || (key === "check" && value === false) || (key === "captcha" && value === false);
+      return (
+        value == null ||
+        value === "" ||
+        (key === "check" && value === false) ||
+        (key === "captcha" && value === false)
+      );
     });
 
-    // Set disable based on the check
     setDisable(hasEmptyFields);
   };
 
-  return isLoading || isStoreLoading ? (
-    <Loader />
-  ) : (
-    <Background>
-      <div className="employeeBackbuttonAlign">
+  // Mobile detection (simple)
+  const isMobile = window.innerWidth <= 768;
+
+  // Render form section helper
+  const renderFormSection = () => (
+    <div
+      style={{
+        padding: isMobile ? "1rem" : "2rem",
+        width: isMobile ? "100%" : "30%",
+        backgroundColor: "#fff",
+        overflowY: "auto",
+        justifyContent: "center",
+        display: "flex",
+        alignItems: "center",
+        flexDirection: "column",
+      }}
+    >
+      <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
         <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
@@ -99,14 +122,12 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         onFormValueChange={onFormValueChange}
         heading={propsConfig?.texts?.header}
         className="sandbox-signup-form"
-        cardSubHeaderClassName="signupCardSubHeaderClassName"
-        cardClassName="signupCardClassName sandbox-onboarding-wrapper"
-        buttonClassName="buttonClassName"
+        cardClassName="sandbox-onboarding-wrapper"
       >
-        <Header showTenant={false} />
+        <SandBoxHeader showTenant={false} />
       </FormComposerV2>
-      {showToast && <Toast type={"error"} label={t(showToast?.label)} onClose={closeToast} />}
-      <div className="employee-login-home-footer" style={{ backgroundColor: "unset" }}>
+      {showToast && <Toast type="error" label={t(showToast?.label)} onClose={closeToast} />}
+      <div className="employee-login-home-footer" style={{ backgroundColor: "unset", marginTop: "auto" }}>
         <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
@@ -116,7 +137,24 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
           }}
         />
       </div>
-    </Background>
+    </div>
+  );
+
+  if (isLoading || isStoreLoading) return <Loader />;
+
+  if (isMobile) {
+    // On mobile return only form section
+    return renderFormSection();
+  }
+
+  // Desktop layout: Carousel + Form side by side
+  return (
+    <div style={{ display: "flex", height: "100vh" }}>
+      <div style={{ width: "70%", position: "relative" }}>
+        <Carousel bannerImages={propsConfig.bannerImages} />
+      </div>
+      {renderFormSection()}
+    </div>
   );
 };
 

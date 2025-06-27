@@ -13,6 +13,8 @@ import { useState } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
+import LoginSignupSelector from "./components/LoginSignupSelector";
+import ForgotOrganizationTooltip from "./components/ForgotOrganizationTooltip";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
 
 const DigitUIWrapper = ({ stateCode, enabledModules, moduleReducers, defaultLanding,allowedUserTypes }) => {
@@ -155,6 +157,8 @@ const componentsToRegister = {
   SelectOtp,
   ChangeCity,
   ChangeLanguage,
+  LoginSignupSelector,
+  ForgotOrganizationTooltip,
   PrivacyComponent,
   OtpComponent,
 };
