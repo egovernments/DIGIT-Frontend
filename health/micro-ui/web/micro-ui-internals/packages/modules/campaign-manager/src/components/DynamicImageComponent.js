@@ -12,8 +12,8 @@ export const DynamicImageComponent = ({ type, appType }) => {
 };
 
 DynamicImageComponent.propTypes = {
-  /** custom width of the svg icon */
+  /** custom field type  */
   type: PropTypes.string,
-  /** custom height of the svg icon */
+  /** custom field apptype  */
   appType: PropTypes.string,
 };
