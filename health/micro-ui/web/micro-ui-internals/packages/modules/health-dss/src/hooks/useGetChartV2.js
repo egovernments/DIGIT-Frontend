@@ -27,7 +27,7 @@ const useGetChartV2 = (aggregationRequestDto) => {
     [aggregationRequestDto, tenantId, authToken, defaultSelect]
   );
 
-  const { data, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
+  const { data, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   return { data, isLoading };
 };
