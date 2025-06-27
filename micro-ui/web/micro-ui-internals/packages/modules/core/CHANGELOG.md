@@ -1,5 +1,12 @@
 # Changelog 
 
+## [1.8.35-rc19.01] [27-Jun-2025]
+- core(1.8.35) from develop Upgraded to react19
+- App.js changes in routes
+- webpack for build
+- npm packages upgraded and syntax changed to make them react19 compatible
+- react, react-dom, react-router-dom and @tanstack/react-query are in peer dependencies now to avoid version conflict
+
 ## [1.8.42]  [18-Jun-2025]
 -Updated the loader logic in login page
 
