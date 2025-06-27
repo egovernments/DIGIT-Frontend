@@ -37,6 +37,8 @@ const AppModule = () => {
       `MDMSDATA-${schemaCode}-${campaignType}`,
       {
         enabled: !!campaignType,
+        cacheTime: 1000000,
+        staleTime: 1000000
       }
     )
   );
