@@ -11,7 +11,8 @@ const Response = () => {
   const queryStrings = Digit.Hooks.useQueryParams();
   const { state } = useLocation();
   const back = state?.back ? state?.back : "BACK";
-
+  //TODO : test for button in both attendance and payments
+  const isShowButton = state?.isShowButton === false ? false : true;
   return (
     <>
       <PanelCard
@@ -24,13 +25,13 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description)}
-        footerChildren={[
+        footerChildren={isShowButton === true ? [
           <Button label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)} onClick={
             () => {
               history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
             }
           } variation="teritiary" icon="ArrowForward" isSuffix />
-        ]}
+        ] : []}
         footerStyles={{}}
         iconFill=""
         info={t(state?.info)}

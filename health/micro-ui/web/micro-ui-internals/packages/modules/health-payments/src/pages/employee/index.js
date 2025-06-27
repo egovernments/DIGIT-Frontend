@@ -75,6 +75,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/verify-bills`} component={() => <UploadAndFetchBillsCard />} />
         <PrivateRoute path={`${path}/verify-and-generate-payments`} component={() => <VerifyAndGeneratePayments />} />
         <PrivateRoute path={`${path}/edit-bills`} component={() => <VerifyAndGeneratePayments editBills={true} />} />
+        <PrivateRoute path={`${path}/edit-bill-success`} component={() => <Response />} />
         <PrivateRoute path={`${path}/view-bill-payment-details`} component={() => <BillPaymentDetails />} />
         <PrivateRoute path={`${path}/edit-bill-payment-details`} component={() => <BillPaymentDetails editBillDetails={true} />} />
         <PrivateRoute path={`${path}/project-selection`} component={() => <ProjectSelect />} />
