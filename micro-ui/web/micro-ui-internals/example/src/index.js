@@ -52,9 +52,6 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager");
-      initCampaignComponents();
-
       setIsReady(true);
     });
   }, []);
