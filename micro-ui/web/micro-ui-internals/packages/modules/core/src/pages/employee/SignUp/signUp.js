@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
+import ImageComponent from "../../../components/ImageComponent";
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
@@ -85,7 +86,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   ) : (
     <Background>
       <div className="employeeBackbuttonAlign">
-      <BackLink onClick={() => window.history.back()}/>
+        <BackLink onClick={() => window.history.back()} />
       </div>
       <FormComposerV2
         onSubmit={onLogin}

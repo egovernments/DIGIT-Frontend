@@ -160,7 +160,7 @@ module.exports = {
           "/default-data-handler",
           "/facility/v1/_create"
         ],
-        target: "https://unified-qa.digit.org",
+        target: "https://unified-dev.digit.org",
         changeOrigin: true,
         secure: false,
       },

@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import AuditSearchApplication from "../../components/Search";
 const Search = ({ path }) => {
   const { t } = useTranslation();
-  const tenantId = Digit?.ULBService?.getCitizenCurrentTenant()
+  const tenantId = Digit.ULBService.getCitizenCurrentTenant()
   const [payload, setPayload] = useState({});
   const convertDateToEpoch = (dateString, dayStartOrEnd = "dayend") => {
     //example input format : "2018-10-02"

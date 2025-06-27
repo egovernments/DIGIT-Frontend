@@ -18,6 +18,6 @@ export const loginConfig = [
         name: "city",
         error: "ERR_HRMS_INVALID_CITY",
       },
-    ],
+    ]
   },
 ];

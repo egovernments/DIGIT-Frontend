@@ -25,10 +25,10 @@ const DummyLoaderScreen = () => {
       if (currentStep < steps.length) {
         setCurrentStep((prev) => prev + 1);
       }
-    }, 2000); 
+    }, 2000); // 1 second delay for each step
 
     if (currentStep === steps.length) {
-      clearInterval(stepInterval); 
+      clearInterval(stepInterval); // Clear the interval to stop further updates
       const navigateTimeout = setTimeout(() => {
         navigate({
           pathname: `/${window?.globalPath}/user/url`,
@@ -36,7 +36,7 @@ const DummyLoaderScreen = () => {
         });
       }, 1000);
 
-      return () => clearTimeout(navigateTimeout); 
+      return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
 
     return () => {

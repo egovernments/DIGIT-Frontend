@@ -4,8 +4,8 @@ import React,{Fragment} from "react";
 import {useNavigate, useLocation } from "react-router-dom";
 import ChangeCity from "../ChangeCity";
 import ChangeLanguage from "../ChangeLanguage";
-import {TopBar as TopBarComponentMain } from "@egovernments/digit-ui-components";
-// import {useNotificationCount} from "../../../libraries/src/hooks/events"
+import { Header as TopBarComponentMain } from "@egovernments/digit-ui-components";
+import ImageComponent from "../ImageComponent";
 
 const TopBar = ({
   t,
@@ -25,51 +25,25 @@ const TopBar = ({
 }) => {
   const [profilePic, setProfilePic] = React.useState(null);
 
-  // React.useEffect(async () => {
-
-  //   const tenant = Digit.Utils.getMultiRootTenant() ? Digit?.ULBService?.getStateId(): Digit?.ULBService?.getCurrentTenantId();
-  //   const uuid = userDetails?.info?.uuid;
-  //   if (uuid) {
-  //     const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
-  //     if (usersResponse && usersResponse.user && usersResponse.user.length) {
-  //       const userDetails = usersResponse.user[0];
-  //       const thumbs = userDetails?.photo?.split(",");
-  //       setProfilePic(thumbs?.at(0));
-  //     }
-  //   }
-  // }, [profilePic !== null, userDetails?.info?.uuid]);
-
-  React.useEffect(() => {
-    const fetchProfilePic = async () => {
-      const tenant = Digit.Utils.getMultiRootTenant()
-        ? Digit?.ULBService?.getStateId()
-        : Digit?.ULBService?.getCurrentTenantId();
-      const uuid = userDetails?.info?.uuid;
-      if (uuid) {
-        try {
-          const usersResponse = await Digit.UserService.userSearch(
-            tenant,
-            { uuid: [uuid] },
-            {}
-          );
-          if (usersResponse?.user?.length) {
-            const userDetails = usersResponse.user[0];
-            const thumbs = userDetails?.photo?.split(",");
-            setProfilePic(thumbs?.at(0));
-          }
-        } catch (error) {
-          console.error("Error fetching profile picture:", error);
-        }
+  React.useEffect( () => {
+    const app=async ()=>{
+    const tenant = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCurrentTenantId();
+    const uuid = userDetails?.info?.uuid;
+    if (uuid) {
+      const usersResponse = await Digit.UserService.userSearch(tenant, { uuid: [uuid] }, {});
+      if (usersResponse && usersResponse.user && usersResponse.user.length) {
+        const userDetails = usersResponse.user[0];
+        const thumbs = userDetails?.photo?.split(",");
+        setProfilePic(thumbs?.at(0));
       }
-    };
-  
-    fetchProfilePic();
-  }, [userDetails?.info?.uuid]); // ✅ Correct dependency array
-  
-  const CitizenHomePageTenantId = Digit?.ULBService?.getCitizenCurrentTenant(true);
+    }
+  }
+  app()
+  }, [profilePic !== null, userDetails?.info?.uuid]);
 
-  // let history = useHistory();
-  const navigate = useNavigate()
+  const CitizenHomePageTenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+
+  let navigate = useNavigate();
   const { pathname } = useLocation();
 
   const conditionsToDisableNotificationCountTrigger = () => {
@@ -128,23 +102,29 @@ const TopBar = ({
   const loggedin = userDetails?.access_token ? true : false;
 
   //checking for custom topbar components
-  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar")
+  const CustomEmployeeTopBar = Digit.ComponentRegistryService?.getComponent("CustomEmployeeTopBar");
 
-  if(CustomEmployeeTopBar) {
-    return <CustomEmployeeTopBar {...{t,
-      stateInfo,
-      toggleSidebar,
-      isSidebarOpen,
-      handleLogout,
-      userDetails,
-      CITIZEN,
-      cityDetails,
-      mobileView,
-      userOptions,
-      handleUserDropdownSelection,
-      logoUrl,
-      showLanguageChange,
-      loggedin}} />
+  if (CustomEmployeeTopBar) {
+    return (
+      <CustomEmployeeTopBar
+        {...{
+          t,
+          stateInfo,
+          toggleSidebar,
+          isSidebarOpen,
+          handleLogout,
+          userDetails,
+          CITIZEN,
+          cityDetails,
+          mobileView,
+          userOptions,
+          handleUserDropdownSelection,
+          logoUrl,
+          showLanguageChange,
+          loggedin,
+        }}
+      />
+    );
   }
   return (
     <TopBarComponentMain
@@ -185,7 +165,7 @@ const TopBar = ({
               {t(`ULBGRADE_${cityDetails?.city?.ulbGrade.toUpperCase().replace(" ", "_").replace(".", "_")}`).toUpperCase()}
             </>
           ) : (
-            <img className="state" src={logoUrlWhite} alt="State Logo" />
+            <ImageComponent className="state" src={logoUrlWhite} alt="State Logo" />
           )
         ) : (
           <>

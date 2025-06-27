@@ -10,7 +10,23 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
   const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
   const tenantId = Digit.ULBService.getStateId();
 
-
+  // const transformURL = (url = "") => {
+  //   if (url == "/") {
+  //     return;
+  //   }
+  //   if (Digit.Utils.isContextPathMissing(url)) {
+  //     let updatedUrl = null;
+  //     if (isMultiRootTenant) {
+  //       url = url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`);
+  //       updatedUrl = url;
+  //     } else {
+  //       updatedUrl = DIGIT_UI_CONTEXTS?.every((e) => url?.indexOf(`/${e}`) === -1) ? "/employee/" + url : url;
+  //     }
+  //     return updatedUrl;
+  //   } else {
+  //     return url;
+  //   }
+  // };
 
   const configEmployeeSideBar = data?.actions
     .filter((e) => e.url === "card" && e.parentModule)
@@ -267,6 +283,7 @@ const QuickSetupConfigComponent = ({ onSelect, formData, control, formState, ...
     },
   ];
 
+  // return <QuickSetupComponent config={QuickSetupConfig}></QuickSetupComponent>;
   return <QuickSetup cardConfig={cardConfig}></QuickSetup>;
 };
 
