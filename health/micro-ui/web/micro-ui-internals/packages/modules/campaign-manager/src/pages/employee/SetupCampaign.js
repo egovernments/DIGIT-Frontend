@@ -385,7 +385,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       // }
       else if (!isDraftCreated && !id) {
 
-        console.log("aaaaaaaa");
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.hierarchyType = hierarchyType;
@@ -462,7 +461,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         reqCreate();
       } else {
 
-        console.log("pppppppp");
         const reqCreate = async () => {
           let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
