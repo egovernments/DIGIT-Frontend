@@ -41,6 +41,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
   const [summaryErrors, setSummaryErrors] = useState({});
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const [isDataCreating, setIsDataCreating] = useState(false);
+  const [isUpdating, setIsUpdating] = useState(false);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
   const { mutate: updateMapping } = Digit.Hooks.campaign.useUpdateAndUploadExcel(tenantId);
   const [loader, setLoader] = useState(null);
@@ -383,6 +384,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
       //   reqCreate();
       // }
       else if (!isDraftCreated && !id) {
+
+        console.log("aaaaaaaa");
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.hierarchyType = hierarchyType;
@@ -458,6 +461,8 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
         reqCreate();
       } else {
+
+        console.log("pppppppp");
         const reqCreate = async () => {
           let payloadData = { ...draftData };
           payloadData.hierarchyType = hierarchyType;
@@ -515,6 +520,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             delete payloadData?.endDate;
           }
           if (compareIdentical(draftData, payloadData) === false) {
+            setIsUpdating(true);
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
@@ -528,6 +534,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                   setCurrentKey(currentKey + 1);
                 }
               },
+              onSettled: () => {
+              // This will always run after the mutation completes
+              setIsUpdating(false);
+              // Final function logic here
+            },
             });
           } else {
             setCurrentKey(currentKey + 1);
@@ -1046,7 +1057,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
 
   return (
     <React.Fragment>
-      {loader && <Loader page={true} variant={"PageLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
+      {loader || isUpdating && <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />}
       {/* {noAction !== "false" && (
         <Stepper
           customSteps={["HCM_CAMPAIGN_SETUP_DETAILS", "HCM_BOUNDARY_DETAILS", "HCM_DELIVERY_DETAILS", "HCM_UPLOAD_DATA", "HCM_REVIEW_DETAILS"]}

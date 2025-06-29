@@ -536,6 +536,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 
+  const currentPage = parseInt(pageTag.split(" ")[1]);
+
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
@@ -553,7 +555,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           label={t("PREVIOUS")}
           title={t("PREVIOUS")}
           icon="ArrowBack"
-          isDisabled={false}
+          isDisabled={currentPage === 1}
           onClick={() => back()}
         />
         <span className="app-config-tag-page"> {pageTag} </span>
@@ -585,7 +587,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               <Button
                 className="app-configure-drawer-footer-button"
                 type={"button"}
-                size={"large"}
+                size={"medium"}
                 variation={"secondary"}
                 icon={"Translate"}
                 label={t("ADD_LOCALISATION")}

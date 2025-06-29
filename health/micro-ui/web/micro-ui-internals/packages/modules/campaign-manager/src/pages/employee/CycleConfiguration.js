@@ -324,7 +324,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
           {/* </Card> */}
           <Card className="campaign-counter-container">
-            <CardSubHeader>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
+            <CardSubHeader className = {"start-header"}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel>

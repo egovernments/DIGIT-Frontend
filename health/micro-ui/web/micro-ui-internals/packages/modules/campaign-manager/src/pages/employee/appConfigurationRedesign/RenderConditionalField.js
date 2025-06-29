@@ -179,6 +179,7 @@ export const RenderConditionalField = ({
 
           <Button
             type={"button"}
+            icon="AddIcon"
             size={"small"}
             variation={"teritiary"}
             label={t("ADD_OPTIONS")}

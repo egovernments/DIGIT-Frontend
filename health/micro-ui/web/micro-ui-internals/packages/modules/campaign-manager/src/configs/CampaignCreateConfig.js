@@ -71,7 +71,7 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
               disable: false,
               // populators: { name: "salutation", error: "Required", validation: { pattern: /^[A-Za-z]+$/i , maxlength:5} },
               populators: {
-                fieldPairClassName: "boldLabel",
+                fieldPairClassName: "boldLabel withoutMargin",
                 name: "CampaignName",
                 error: "ES__REQUIRED_NAME_AND_LENGTH",
                 // required: "true",
