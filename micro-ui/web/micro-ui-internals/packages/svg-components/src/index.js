@@ -820,6 +820,7 @@ import { OutpatientMed } from "./svg/OutpatientMed";
 import { AdUnits } from "./svg/AdUnits";
 import { ListAltCheck } from "./svg/ListAltCheck";
 import { UploadCloud } from "./svg/UploadCloud";
+import { MobileWrench } from "./svg/MobileWrench";
 
 export {
   AddCircle,
@@ -1643,5 +1644,6 @@ export {
   AdUnits,
   ListAltCheck,
   UploadCloud,
-  TutorialGuide
+  TutorialGuide,
+  MobileWrench
 };
