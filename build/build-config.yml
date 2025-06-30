@@ -29,7 +29,13 @@ config:
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/sandbox/Dockerfile
-        image-name: sandbox-ui      
+        image-name: sandbox-ui
+
+  - name: builds/Digit-Frontend/health/console
+    build:
+    - work-dir: health/micro-ui/
+      dockerfile: health/micro-ui/web/console/Dockerfile
+      image-name: console    
 
   - name: builds/Digit-Frontend/storybook-svg
     build:
