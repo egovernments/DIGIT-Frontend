@@ -791,7 +791,8 @@ import {
     OutpatientMed,
     AdUnits,
     ListAltCheck,
-    UploadCloud
+    UploadCloud,
+    MobileWrench
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1589,5 +1590,6 @@ import {
     OutpatientMed,
     AdUnits,
     ListAltCheck,
-    UploadCloud
+    UploadCloud,
+    MobileWrench
   }
