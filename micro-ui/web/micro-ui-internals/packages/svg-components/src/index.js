@@ -820,7 +820,13 @@ import { OutpatientMed } from "./svg/OutpatientMed";
 import { AdUnits } from "./svg/AdUnits";
 import { ListAltCheck } from "./svg/ListAltCheck";
 import { UploadCloud } from "./svg/UploadCloud";
+import { BarsChart } from "./svg/BarsChart";
+import { Calculate } from "./svg/Calculate";
+import { Employee } from "./svg/Employee";
+import { FeatureSearch } from "./svg/FeatureSearch";
+import { HierarchyGraph } from "./svg/HierarchyGraph";
 import { MobileWrench } from "./svg/MobileWrench";
+
 
 export {
   AddCircle,
@@ -1645,5 +1651,10 @@ export {
   ListAltCheck,
   UploadCloud,
   TutorialGuide,
+  BarsChart,
+  Calculate,
+  Employee,
+  FeatureSearch,
+  HierarchyGraph,
   MobileWrench
 };
