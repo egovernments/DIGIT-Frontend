@@ -56,6 +56,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
   const [localeModule, setLocaleModule] = useState(null);
+  const [changeLoader, setChangeLoader] = useState(false);
 
   // const localeModule = useMemo(() => {
   //   if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
@@ -236,6 +237,8 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
+      setChangeLoader(true);
+
       await updateMutate(
         {
           moduleName: "HCM-ADMIN-CONSOLE",
@@ -271,11 +274,13 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+            setChangeLoader(false);
             if (isNextTabAvailable && !finalSubmit) {
               tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
               setCurrentStep(1);
               return;
             } else {
+               setChangeLoader(false);
               history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
                 message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
                 preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
@@ -334,6 +339,9 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       setCurrentStep((prev) => prev - 1);
     }
   };
+  if(changeLoader){
+    return  <Loader page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")}/>
+  }
 
   return (
     <div>
@@ -346,6 +354,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             showIcon={false}
             label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
             style={{ background: "#EFF8FF", height: "fit-content" }}
+            className={"version-tag"}
           />
         </div>
       </Header>

@@ -113,10 +113,6 @@
   min-width: 12.5rem;
 }
 
-.info-text {
-  padding-bottom: 1.5rem;
-}
-
 .microplan-bulk-upload {
   display: flex;
   justify-content: space-between;
@@ -392,6 +388,7 @@ tbody {
 }
 
 .campaign-summary-container {
+  overflow: auto;
   .setup-campaign-card {
     .employeeCard.employeeCard-override {
       padding: 1.5rem;
@@ -937,7 +934,7 @@ tbody {
 }
 
 .app-configure-action-button {
-  border-radius: 0.75rem;
+  border-radius: 1.25rem;
   padding: 0.25rem 0.25rem;
   height: 3rem;
   width: 10rem;
@@ -1103,7 +1100,7 @@ tbody {
   }
   background-color: #c84c0e1a;
   border: 2px solid #c84c0e;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   .digit-field {
     .digit-radio-options-wrap {
       flex-direction: column;
@@ -1241,7 +1238,7 @@ tbody {
   display: flex;
   flex-direction: row-reverse;
   .mobile-bezel-zoom-container {
-    display: flex;
+    display: none;
     height: fit-content;
     gap: 0.5rem;
     flex-direction: column-reverse;
@@ -1262,6 +1259,10 @@ tbody {
       font-size: 14px;
     }
   }
+}
+
+.info-text{
+  color: theme(digitv2.lightTheme.text-color-secondary);
 }
 
 .appConfig-flex-action {

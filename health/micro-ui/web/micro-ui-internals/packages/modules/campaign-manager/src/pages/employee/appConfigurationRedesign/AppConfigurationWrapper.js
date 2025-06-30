@@ -374,12 +374,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
-      result[locale] = locState.map((item) => ({
-        code: item.code,
-        message: item[locale] || " ",
-        module: localeModule ? localeModule : "hcm-dummy-module",
-        locale: locale,
-      }));
+      result[locale] = locState
+        ?.filter((item) => typeof item?.code !== "boolean")
+        ?.map((item) => ({
+          code: item.code,
+          message: item[locale] || " ",
+          module: localeModule ? localeModule : "hcm-dummy-module",
+          locale: locale,
+        }));
       // .filter((item) => item.message !== "");
     });
 
@@ -536,6 +538,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 
+  const currentPage = parseInt(pageTag.split(" ")[1]);
+
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
@@ -553,7 +557,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           label={t("PREVIOUS")}
           title={t("PREVIOUS")}
           icon="ArrowBack"
-          isDisabled={false}
+          isDisabled={currentPage === 1}
           onClick={() => back()}
         />
         <span className="app-config-tag-page"> {pageTag} </span>
@@ -585,7 +589,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               <Button
                 className="app-configure-drawer-footer-button"
                 type={"button"}
-                size={"large"}
+                size={"medium"}
                 variation={"secondary"}
                 icon={"Translate"}
                 label={t("ADD_LOCALISATION")}
@@ -822,6 +826,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               variation={"primary"}
               label={t("SUBMIT")}
               onClick={() => {
+                if (!addFieldData || !addFieldData?.label?.trim() || !addFieldData?.type) {
+                  setShowToast({ key: "error", label: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                }
                 dispatch({
                   type: "ADD_FIELD",
                   payload: {
