@@ -281,7 +281,7 @@ const BillDetailsTable = ({ ...props }) => {
                                 }
                                 {
                                 (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
-                        row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?(
+                        row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?( //TODO : SET REASON FOR FAILURE
                                 <div style={{ display: "flex", alignItems: "center" }}>
                                 <div>
                  

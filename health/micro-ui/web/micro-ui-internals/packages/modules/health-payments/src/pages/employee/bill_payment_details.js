@@ -217,6 +217,22 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     });
   }
 
+  const userSearchCri = {
+        url: `/egov-hrms/employees/_search`,
+         params: {
+            tenantId : tenantId,
+            roles: "PAYMENT_EDITOR",
+          },
+        config: {
+            enabled: project && !editBillDetails ? true : false,
+            select: (data) => {
+                return data?.Employees || [];
+            },
+        },
+    };
+
+  const { isLoading: isHrmsSearchLoading, data: hrmsUsersData, refetch: refetchHrmsUsers, isHrmsSearchFetching } = Digit.Hooks.useCustomAPIHook(userSearchCri);
+ 
    const updateIndividualMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: `/individual/v1/bulk/_update`
     });
@@ -284,7 +300,7 @@ const triggerIndividualBulkUpdate = async(individualsData, selectedRows, bill) =
     const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
        url: `/${expenseContextPath}/v1/bill/details/status/_update`,
     });
-    const updateBillDetailWorkflow = async(bill,selectedRows, wfState) => {
+    const updateBillDetailWorkflow = async(bill,selectedRows, wfState,assignee) => {
       try{
         await updateBillDetailMutation.mutateAsync(
           {
@@ -295,6 +311,7 @@ const triggerIndividualBulkUpdate = async(individualsData, selectedRows, bill) =
                 },                
                 workflow: {
                     action: wfState,
+                    assignee: assignee ? assignee.value : null,
                 },
             },
         },
@@ -383,7 +400,7 @@ useEffect(() => {
 
   
 
-  if ( isBillLoading || isAllIndividualsLoading || isFetching) {
+  if ( isBillLoading || isAllIndividualsLoading || isFetching || isHrmsSearchLoading) {
     console.log("Loading bill data or individual data...");
     return <LoaderScreen />
   }
@@ -510,7 +527,9 @@ console.log("mob num:", tableData);
     <Fragment>
                 <BillDetailsTable 
                 style={{ width: "100%", }}
-                data={paginatedData} totalCount={tableData.length} selectableRows={true} 
+                data={paginatedData} totalCount={tableData.length} 
+                // selectableRows={true}
+                selectableRows={!["PAYMENT_GENERATED", "EDITED"].includes(activeLink?.code)} 
                 status={activeLink?.code} editBill={editBillDetails}
                 onSelectionChange={setSelectedRows}
                 selectedBills={selectedRows}
@@ -536,12 +555,17 @@ console.log("mob num:", tableData);
      
  {openSendForEditPopUp && <SendForEditPopUp
         isEditTrue={editBillDetails}
+        dropdownOptions={hrmsUsersData ? hrmsUsersData.map((emp) => ({
+                title: emp?.user?.name,
+                value: emp?.user?.uuid,
+              })) : []}
         onClose={() => {
           setOpenSendForEditPopUp(false);
         }}
-        onSubmit={(comment) => {
+        onSubmit={(comment, selectedUser) => {
           // setComment(comment);
           setOpenSendForEditPopUp(false);
+          updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT", selectedUser);
           // setOpenApproveAlertPopUp(true);
         }}
       />}
@@ -598,8 +622,9 @@ console.log("mob num:", tableData);
                 bottom: "40px",
               }}
               onClick={() => {
-                // setOpenSendForEditPopUp(true);
-                updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
+                // triggerSearchHrmsUsers();
+                setOpenSendForEditPopUp(true);
+                // updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
               }}  
               optionsKey="name"
               size=""

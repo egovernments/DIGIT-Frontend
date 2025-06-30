@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { PopUp, Button, TextArea, Toast } from "@egovernments/digit-ui-components";
-import { Dropdown} from "@egovernments/digit-ui-react-components";
+import { Dropdown } from "@egovernments/digit-ui-react-components";
 
 /**
  * Component to show a pop-up to allow the user to enter a comment before approving an attendance register.
@@ -19,6 +19,7 @@ const SendForEditPopUp = ({ ...props }) => {
     // state variables
     const [comment, setComment] = useState(null);
     const [showToast, setShowToast] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
 
 
     const handleTextAreaChange = (e) => {
@@ -27,6 +28,17 @@ const SendForEditPopUp = ({ ...props }) => {
     };
 
     const handleSave = () => {
+
+        if (!selectedUser) {
+            setShowToast({
+                key: "error",
+                label: t("HCM_AM_SELECT_USER_REQUIRED"),
+                transitionTime: 3000
+            });
+            return;
+        }
+        setShowToast(null);
+
         if (!comment || comment.trim() === "") {
             // Show toast if comment is empty
             setShowToast({
@@ -38,8 +50,7 @@ const SendForEditPopUp = ({ ...props }) => {
         }
         // remove the toast if comment is valid
         setShowToast(null);
-        // Call the onSubmit function with the valid comment
-        props?.onSubmit(comment);
+        props?.onSubmit(comment, selectedUser);
     };
 
     const handleKeyPress = (e) => {
@@ -53,7 +64,7 @@ const SendForEditPopUp = ({ ...props }) => {
             <PopUp
                 style={{ width: "700px" }}
                 onClose={props?.onClose}
-                heading={ props?.isEditTrue? t(`HCM_AM_FORWARD_BILL`) : t(`HCM_AM_SEND_BACK_FOR_EDITING`)}
+                heading={props?.isEditTrue ? t(`HCM_AM_FORWARD_BILL`) : t(`HCM_AM_SEND_BACK_FOR_EDITING`)}
                 onOverlayClick={props?.onClose}
                 equalWidthButtons={true}
                 footerChildren={[
@@ -75,39 +86,35 @@ const SendForEditPopUp = ({ ...props }) => {
                         size="large"
                         variation="primary"
                         style={{ minWidth: "270px" }}
-                        label={ props?.isEditTrue? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
-                        title={ props?.isEditTrue? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
+                        label={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
+                        title={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND`)}
                         onClick={() => handleSave()}
                     />,
                 ]}
             >
                 <div key="comment-section">
-                <div className="comment-label">
-                   { props?.isEditTrue? t(`HCM_AM_FORWARD_TO`) : t(`HCM_AM_SEND_FOR_EDIT`)}<span className="required"> *</span>
-                        </div>
-                   <Dropdown
-                            //   option={dropdownOptions}
-                            //   select={(ev) => {
-                            //     setSurveyQuestionConfig((prevState) => ({ ...prevState, type: {title:ev.title,value:ev.value} }));
-                            //   }}
-                              //placeholder={"Short Answer"}
-                              //selected={surveyQuestionConfig.type || {title: "Short Answer",value: "SHORT_ANSWER_TYPE"}}
-                              optionKey="title"
-                            //   disable={disableInputs}
-                            //   selected={surveyQuestionConfig?.type}
-                            />
-                    </div>        
-                    <div key="comment-section">
-                        <div className="comment-label">
-                            {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
-                        </div>
-                        <TextArea
-                            style={{ maxWidth: "100%" }}
-                            value={comment}
-                            onChange={handleTextAreaChange}
-                            onKeyPress={handleKeyPress}
-                        />
+                    <div className="comment-label">
+                        {props?.isEditTrue ? t(`HCM_AM_FORWARD_TO`) : t(`HCM_AM_SEND_FOR_EDIT`)}<span className="required"> *</span>
                     </div>
+                    <Dropdown
+                        option={props?.dropdownOptions}
+                        optionKey="title"
+                        selected={selectedUser}
+                        select={(option) => setSelectedUser(option)}
+                        placeholder={t("HCM_AM_SELECT_EDITOR")}
+                    />
+                </div>
+                <div key="comment-section">
+                    <div className="comment-label">
+                        {t(`HCM_AM_APPROVE_COMMENT_LABEL`)}<span className="required"> *</span>
+                    </div>
+                    <TextArea
+                        style={{ maxWidth: "100%" }}
+                        value={comment}
+                        onChange={handleTextAreaChange}
+                        onKeyPress={handleKeyPress}
+                    />
+                </div>
             </PopUp>
             {showToast && (
                 <Toast

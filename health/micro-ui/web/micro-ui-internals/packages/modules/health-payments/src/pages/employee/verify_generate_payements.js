@@ -70,7 +70,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     url: `/health-expense/v1/task/_status`,
 });
 
-const pollTaskUntilDone = async (billId) => {
+const pollTaskUntilDone = async (billId, type) => {
     console.log("Polling...", billId);
 
     const POLLING_INTERVAL = 12 * 1000; // 12 seconds - TODO: update later
@@ -78,17 +78,17 @@ const pollTaskUntilDone = async (billId) => {
     try {
         const statusResponse = await taskStatusAPI.mutateAsync({
             body: {
-                task: { billId: billId, type: "Transfer" },
+                task: { billId: billId, type: type },
             },
         });
 
         const status = statusResponse?.task?.status;
-        const type = statusResponse?.task?.type;
+        const res_type = statusResponse?.task?.type;
 
-         if (status === "IN_PROGRESS" && type === "Transfer") {
+         if (status === "IN_PROGRESS" && res_type === type) {
             setTransferPollTimers(prev => {
                 if (prev[billId]) clearTimeout(prev[billId]);
-                const timer = setTimeout(() => pollTaskUntilDone(billId), POLLING_INTERVAL);
+                const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
                 return { ...prev, [billId]: timer };
             });
         }else  {
@@ -106,6 +106,21 @@ const pollTaskUntilDone = async (billId) => {
     }
 };
     
+const userSearchCri = {
+        url: `/egov-hrms/employees/_search`,
+         params: {
+            tenantId : tenantId,
+            roles: "PAYMENT_EDITOR",
+          },
+        config: {
+            enabled: project && !editBills ? true : false,
+            select: (data) => {
+                return data?.Employees || [];
+            },
+        },
+    };
+
+  const { isLoading: isHrmsSearchLoading, data: hrmsUsersData, refetch: refetchHrmsUsers, isHrmsSearchFetching } = Digit.Hooks.useCustomAPIHook(userSearchCri);
     
     
     const handlePageChange = (page, totalRows) => {
@@ -145,10 +160,35 @@ const pollTaskUntilDone = async (billId) => {
                     setInProgressBills(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Transfer") {
                         console.log("Polling started for billId:", billId);
-                        pollTaskUntilDone(billId);
+                        pollTaskUntilDone(billId,"Transfer");
                     }
                 } else {
                     console.log("inside else 2")
+                    setInProgressBills(prev => ({ ...prev, [billId]: false }));
+                }
+            } catch (e) {
+                console.warn("Task status check failed for", billId, e);
+            }
+
+            try {
+                const res1 = await taskStatusAPI.mutateAsync({
+                    body: {
+                        task:{
+                        billId: billId,
+                        type:"Verify",
+                    }
+                },
+                });
+                console.log("Task status response for billId:", billId, res1);
+
+                if (res1?.task?.status === "IN_PROGRESS") {
+                    setInProgressBills(prev => ({ ...prev, [billId]: true }));
+                    if (res1?.task?.type === "Verify") {
+                        console.log("Polling started for billId:", billId);
+                        pollTaskUntilDone(billId,"Verify");
+                    }
+                } else {
+                    console.log("inside else 3")
                     setInProgressBills(prev => ({ ...prev, [billId]: false }));
                 }
             } catch (e) {
@@ -181,12 +221,10 @@ const pollTaskUntilDone = async (billId) => {
     };
 
 
-    if (isBillLoading) {
+    if (isBillLoading || isTableActionLoading || isHrmsSearchLoading || isHrmsSearchFetching) {
         return <LoaderScreen />
     }
-    if (isTableActionLoading ) {
-        return <LoaderScreen />
-    }
+
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
@@ -214,6 +252,7 @@ const pollTaskUntilDone = async (billId) => {
                     onTaskDone={handleTaskDone}
                     handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange}
+                    hrmsUsersData={hrmsUsersData}
                     isLoading={isTableActionLoading}
                     setIsLoading={setIsTableActionLoading}
                     inProgressBills={inProgressBills}
