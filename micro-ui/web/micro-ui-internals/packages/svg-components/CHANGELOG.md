@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.22]  [30-June-2025]
+- Added BarsChart,Calculate,Employee,FeatureSearch and HierarchyGraph icons
+
 ## [1.0.18]  [13-May-2025]
 - Added UploadCloud and ListAltCheck icons
 

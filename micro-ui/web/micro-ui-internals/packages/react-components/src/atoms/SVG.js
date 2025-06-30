@@ -791,7 +791,12 @@ import {
     OutpatientMed,
     AdUnits,
     ListAltCheck,
-    UploadCloud
+    UploadCloud,
+    BarsChart,
+    Calculate,
+    Employee,
+    FeatureSearch,
+    HierarchyGraph
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1589,5 +1594,10 @@ import {
     OutpatientMed,
     AdUnits,
     ListAltCheck,
-    UploadCloud
+    UploadCloud,
+    BarsChart,
+    Calculate,
+    Employee,
+    FeatureSearch,
+    HierarchyGraph
   }
