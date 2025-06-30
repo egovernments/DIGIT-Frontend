@@ -6,11 +6,10 @@ import Map from "./Map";
 import NoData from "../../NoData";
 import GenericChart from "../../GenericChart";
 import FilterContext from "../../FilterContext";
-import {ResponsiveContainer} from "recharts";
-import NationalMap from "../national-map.json";
-import Gaza from "../gaza.json";
+import { ResponsiveContainer } from "recharts";
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
+import { subDays, addMinutes } from "date-fns";
 
 export default function HeatMapChart({ chartId, visualizer, initialRange, isNational, showLabel, pageZoom }) {
   const { t } = useTranslation();
@@ -25,20 +24,34 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
 
   const mapData = useRef({});
   const [locationKeyState, setLocationKeyState] = useState("");
-  const [filterStack, setFilterStack] = useState({value: copyOfValue});
+  const [filterStack, setFilterStack] = useState({ value: copyOfValue });
   const [boundaryLevel, setBoundaryLevel] = useState(
-    filterStack?.value?.filters?.district ? toFilterCase(BoundaryTypes.DISTRICT) : 
-    filterStack?.value?.filters?.province ? toFilterCase(BoundaryTypes.PROVINCE) : 
-    toFilterCase(BoundaryTypes.NATIONAL));
+    filterStack?.value?.filters?.district
+      ? toFilterCase(BoundaryTypes.DISTRICT)
+      : filterStack?.value?.filters?.province
+      ? toFilterCase(BoundaryTypes.PROVINCE)
+      : toFilterCase(BoundaryTypes.NATIONAL)
+  );
   const [filterFeature, setFilterFeature] = useState(null);
-  const campaignInfo = Digit.SessionStorage.get("campaigns-info");
-  const campaignCode = Object.keys(campaignInfo)?.[0];
-  const nationalMap = campaignInfo?.[campaignCode]?.[0]?.boundaries?.country?.[0]?.toLowerCase() || "national-map";
-  const [mapSelector, setMapSelector] = useState(filterStack?.value?.filters?.district ? filterStack?.value?.filters?.district?.toLowerCase() : filterStack?.value?.filters?.province ? filterStack?.value?.filters?.province?.toLowerCase() : nationalMap);
+  // const campaignInfo = Digit.SessionStorage.get("campaigns-info");
+  // const campaignCode = Object.keys(campaignInfo)?.[0];
+  // const nationalMap = campaignInfo?.[campaignCode]?.[0]?.boundaries?.country?.[0]?.toLowerCase() || "national-map";
+
+  const projectSelected = Digit.SessionStorage.get("projectSelected");
+  const boundaries = projectSelected?.boundaries;
+  const nationalMap = boundaries?.[0].country?.[0]?.toLowerCase() || "national-map";
+
+  const [mapSelector, setMapSelector] = useState(
+    filterStack?.value?.filters?.district
+      ? filterStack?.value?.filters?.district?.toLowerCase()
+      : filterStack?.value?.filters?.province
+      ? filterStack?.value?.filters?.province?.toLowerCase()
+      : nationalMap
+  );
   const [drillDownChart, setDrillDownChart] = useState("none");
   const [chartKey, setChartKey] = useState(chartId);
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
-        const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
   // const { projectTypeId} = Digit.Hooks.useQueryParams();
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
@@ -54,23 +67,23 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     const district = filterStack?.value?.filters?.district;
     if (district) {
       setMapSelector(district?.toLowerCase().replaceAll(" ", "_"));
-      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT))
+      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT));
     } else if (province) {
       setMapSelector(province?.toLowerCase().replaceAll(" ", "_"));
-      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE))
+      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE));
     }
-  }, [filterStack])
+  }, [filterStack]);
 
   useEffect(() => {
     if (drillDownStack?.length > 0) {
-      setChartKey(drillDownStack[drillDownStack.length-1].id);
+      setChartKey(drillDownStack[drillDownStack.length - 1].id);
       setDrillDownChart("none");
     }
   }, [drillDownStack]);
 
   //TODO: Replace this with the values from the campaign interval
   const getInitialRange = () => {
-    if(initialRange) {
+    if (initialRange) {
       return initialRange;
     }
 
@@ -90,18 +103,18 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     title: "home",
   };
 
-  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson")
-  // const { isLoading, data } = Digit.Hooks.dss.useDSSGeoJson(Digit?.ULBService?.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
-  //   // Ensure the second query only runs if the first query is successful
-  //   enabled: !isGeoJsonLoading
-  // });
-  const isLoading = false;
-  console.log("mapSelector", mapSelector);
-  
-  let data = NationalMap;
-  if (mapSelector !== "national-map") {
-    data = Gaza;
-  }
+  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
+  const { isLoading, data } = Digit.Hooks.DSS.useDSSGeoJson(
+    Digit?.ULBService?.getStateId(),
+    "GeoJsonMapping",
+    [mapSelector?.toLowerCase().replaceAll(" ", "_")],
+    geoJsonConfig,
+    {
+      // Ensure the second query only runs if the first query is successful
+      enabled: !isGeoJsonLoading,
+    }
+  );
+
   mapData.current = data || {};
 
   const toTitleCase = (str) => {
@@ -116,7 +129,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   //   type: "table",
   //   tenantId,
   //   requestDate: requestDate,
-  //   filters: {...filterStack?.value?.filters, ...filterFeature, 
+  //   filters: {...filterStack?.value?.filters, ...filterFeature,
   //     // projectTypeId: selectedProjectTypeId
   //     campaignId:campaignId
   //   },
@@ -126,14 +139,11 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     visualizationCode: chartKey,
     visualizationType: "table",
     queryType: "",
-    requestDate:requestDate,
-    filters: {...filterStack?.value?.filters, ...filterFeature, 
-      campaignId:campaignId
-    },
+    requestDate: requestDate,
+    filters: { ...filterStack?.value?.filters, ...filterFeature, campaignId: campaignId },
     aggregationFactors: null,
   };
-  const { isLoading : isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
-
+  const { isLoading: isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   // const date = new Date();
   // const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
@@ -233,15 +243,14 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
 
   const chartData = useCallback(() => {
     let locationObject = {};
-     
+
     response?.responseData?.data?.forEach((item) => {
       const value = item.plots?.filter((p) => p.symbol === "percentage")?.[0]?.value;
       locationObject[getTitleHeading(item.headerName)] = value;
     });
-    
+
     return locationObject;
   }, [response]);
-
 
   const markers = useCallback(() => {
     return mapData.current?.geoJSON?.features?.map((feature) => {
@@ -289,23 +298,25 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   };
 
   const removeDrillStack = (id) => {
-    if(filterFeature) {setFilterFeature(null)};
-    const removedDrillStack = drillDownStack.filter((filter, index) => index>=id);
-    const newDrillStack  = drillDownStack.filter((filter, index) => index<id);
+    if (filterFeature) {
+      setFilterFeature(null);
+    }
+    const removedDrillStack = drillDownStack.filter((filter, index) => index >= id);
+    const newDrillStack = drillDownStack.filter((filter, index) => index < id);
     setDrillDownStack(newDrillStack);
-    const lastChart = newDrillStack[newDrillStack.length-1].id;
+    const lastChart = newDrillStack[newDrillStack.length - 1].id;
     setChartKey(lastChart);
-    setMapSelector(newDrillStack[newDrillStack.length-1].label);
-    
-    let finalFilterStack  = {...filterStack};
+    setMapSelector(newDrillStack[newDrillStack.length - 1].label);
+
+    let finalFilterStack = { ...filterStack };
     removedDrillStack.map((filter, index) => {
       delete finalFilterStack?.value.filters[filter.boundary?.toLowerCase()];
-    })
+    });
     if (Object.keys(finalFilterStack.value.filters).length === 0) {
       finalFilterStack.value = undefined;
     }
     setFilterStack(finalFilterStack);
-  }
+  };
   const RemovableFilters = () => {
     return (
       <React.Fragment>
@@ -316,9 +327,11 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
               id > 0 ? (
                 <RemoveableTag
                   key={id}
-                  text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter.boundary)}`)}: ${filter.label && getTitleHeading(filter.label)}`}
+                  text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter.boundary)}`)}: ${
+                    filter.label && getTitleHeading(filter.label)
+                  }`}
                   onClick={() => {
-                    removeDrillStack(id)
+                    removeDrillStack(id);
                     // const filtered = drillDownStack.filter((d) => d.id !== filter.id);
                     // setDrillDownStack(filtered);
 
@@ -351,11 +364,13 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
 
     const data = chartData();
 
-    if (Object.keys(mapData.current).length === 0) {     
-    return <ResponsiveContainer width="99%" height={400}>
-      <RemovableFilters />
-        <NoData t={t} />
-      </ResponsiveContainer>;
+    if (Object.keys(mapData.current).length === 0) {
+      return (
+        <ResponsiveContainer width="99%" height={400}>
+          <RemovableFilters />
+          <NoData t={t} />
+        </ResponsiveContainer>
+      );
     }
 
     return (

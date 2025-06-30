@@ -135,7 +135,36 @@ const ViewDashbaord = ({ stateCode }) => {
     },
   };
   const { data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
+
+  const reqCriteriaResource = {
+    url: `/boundary-service/boundary-relationships/_search`,
+    changeQueryName: hierarchyType,
+    params: {
+      tenantId: tenantId,
+      includeParents: true,
+      codes: project?.address?.boundary,
+      hierarchyType: hierarchyType,
+    },
+    config: {
+      enabled: !!hierarchyType,
+      select: (data) => {
+        return data?.["TenantBoundary"]?.[0]?.boundary;
+      },
+    },
+  };
+
+  const { isLoading: dataLoading, data: data, isFetching, refetch2 } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+
   useEffect(() => {
+    const boundaries =
+      data?.map((item) => ({
+        [item.boundaryType.toLowerCase()]: [t(item.code)],
+      })) || [];
+
+    const projectsInfo = {
+      project: project,
+      boundaries: boundaries,
+    };
     if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
       history.push(
@@ -148,10 +177,10 @@ const ViewDashbaord = ({ stateCode }) => {
         }
       );
       Digit.SessionStorage.set("dashboardData", dashboardDataResponse?.responseData);
-      Digit.SessionStorage.set("projectSelected", project);
+      Digit.SessionStorage.set("projectSelected", projectsInfo);
       Digit.SessionStorage.set("campaignSelected", campaignData?.[0]);
     }
-  }, [dashboardDataResponse?.responseData, redirected, history]);
+  }, [dashboardDataResponse?.responseData, redirected, history,data]);
 
   if (campaignSearchLoading || hierarchyLoading) {
     return <Loader page={true} variant={"PageLoader"} />;

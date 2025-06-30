@@ -38,7 +38,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-        const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
   // const { projectTypeId} = Digit.Hooks.useQueryParams();
   // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
@@ -83,7 +83,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   // }, [value, chartId]);
 
   const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
-   const { isLoading, data: mapConfigData } = Digit.Hooks.dss.useDSSGeoJson(Digit?.ULBService?.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
+   const { isLoading, data: mapConfigData } = Digit.Hooks.DSS.useDSSGeoJson(Digit?.ULBService?.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
     // Ensure the second query only runs if the first query is successful
     enabled: !isGeoJsonLoading
   });

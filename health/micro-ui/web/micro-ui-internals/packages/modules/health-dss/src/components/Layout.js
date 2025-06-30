@@ -144,9 +144,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
       case "kibanaScreen": 
         return <KibanaCard moduleName={visualizer?.moduleName} pageName={visualizer?.pageName} />
       case "latlong":
-        //TODO: Add LatLongMapChart chart back
-        return <div>LatLongMapChart has to rendered here</div>
-        // return <LatLongMapChart data={visualizer} chartId={visualizer?.id} chartName={visualizer?.name} pageZoom={pageZoom}/>;
+        return <LatLongMapChart data={visualizer} chartId={visualizer?.id} chartName={visualizer?.name} pageZoom={pageZoom}/>;
       default:
         return null;
     }

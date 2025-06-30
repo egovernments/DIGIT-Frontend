@@ -512,14 +512,14 @@ const L1Main = () => {
                   return null;
                 } else if (item?.charts?.[0]?.chartType === "heatmap") {
                   return (
-                    // <HeatMapChart
-                    //   initialRange={getInitialRange()}
-                    //   visualizer={item}
-                    //   chartId={item?.charts?.[0].id}
-                    //   isNational={true}
-                    //   pageZoom={pageZoom}
-                    // />
-                    <div>{"HEAT MAP HERE"}</div>
+                    <HeatMapChart
+                      initialRange={getInitialRange()}
+                      visualizer={item}
+                      chartId={item?.charts?.[0].id}
+                      isNational={true}
+                      pageZoom={pageZoom}
+                    />
+                  
                   );
                 } else if (item?.vizType === "stacked-table") {
                   return (
