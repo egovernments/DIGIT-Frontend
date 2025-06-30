@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-svg-components",
-  "version": "1.0.21",
+  "version": "1.0.23",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "source": "src/index.js",
