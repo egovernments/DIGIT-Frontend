@@ -1,14 +1,35 @@
-module.exports = {
-  stories: ["../src/**/*.stories.mdx", "../src/**/*.stories.@(js|jsx|ts|tsx)"],
-  addons: ["@storybook/addon-links", "@storybook/addon-essentials","@storybook/addon-postcss"],
+
+
+import { join, dirname } from "path"
+
+/**
+* This function is used to resolve the absolute path of a package.
+* It is needed in projects that use Yarn PnP or are set up within a monorepo.
+*/
+function getAbsolutePath(value) {
+  return dirname(require.resolve(join(value, 'package.json')))
+}
+
+/** @type { import('@storybook/react-webpack5').StorybookConfig } */
+const config = {
+  "stories": [
+    "../src/**/*.mdx",
+    "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
+  ],
+  "addons": [
+    getAbsolutePath('@storybook/addon-webpack5-compiler-swc'),
+    getAbsolutePath('@storybook/addon-essentials'),
+    getAbsolutePath('@storybook/addon-onboarding'),
+    getAbsolutePath('@storybook/addon-interactions'),
+    '@storybook/addon-a11y',
+    '@storybook/addon-docs'
+  ],
   docs: {
-    autodocs: 'tag',
+    autodocs: true,
   },
-  titlePrefix: 'MyComponents',
-  features: {
-    postcss: false,
-  },
+  "framework": {
+    "name": getAbsolutePath('@storybook/react-webpack5'),
+    "options": {}
+  }
 };
-
-
-
+export default config;

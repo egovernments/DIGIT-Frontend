@@ -63,11 +63,17 @@ const Toast = (props) => {
   if (!isVisible) {
     return null;
   }
+  const commonProps = {
+    role: props?.type === "error" || props?.type === "warning" ? "alert" : "status",
+    "aria-live": props?.type === "error" || props?.type === "warning" ? "assertive" : "polite",
+    "aria-label": sentenceCaseLabel,
+  };
 
   if (props?.type === "warning") {
     return (
       <div>
         <div
+          {...commonProps}
           className={`digit-toast-success ${
             isVisible && isAnimating ? "animate" : ""
           } ${variant} ${isWarningButtons}`}
@@ -124,6 +130,7 @@ const Toast = (props) => {
     
   return (
     <div
+      {...commonProps}
       className={`digit-toast-success ${
         isVisible && isAnimating ? "animate" : ""
       } ${variant}`}

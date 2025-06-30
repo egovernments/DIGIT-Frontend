@@ -17,8 +17,20 @@ const Card = ({
   const info = window?.Digit?.UserService?.getUser()?.info || null;
   const userType = info?.type || null;
 
+  const handleKeyDown = (e) => {
+    if ((e.key === "Enter" || e.key === " ") && typeof onClick === "function") {
+      e.preventDefault();
+      onClick(e);
+    }
+  };
+
+  const isClickable = typeof onClick === "function";
+
   return (
     <div
+      role={isClickable ? "button" : undefined}
+      tabIndex={isClickable ? 0 : undefined}
+      onKeyDown={isClickable ? handleKeyDown : undefined}
       className={`${
         props?.noCardStyle
           ? ""

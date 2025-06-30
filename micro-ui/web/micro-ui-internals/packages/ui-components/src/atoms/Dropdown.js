@@ -332,6 +332,12 @@ const Dropdown = (props) => {
           props.variant ? props?.variant : ""
         } ${index === optionIndex ? "keyChange" : ""}`}
         key={index}
+        role="button"
+        onKeyDown={(e)=>{
+          if (e.key=="Enter" || e.key==" "){
+            onSelect(option)
+          }
+        }}
         onClick={() => onSelect(option)}
         onMouseDown={handleMouseDown}
         onMouseUp={handleMouseUp}
@@ -466,6 +472,12 @@ const Dropdown = (props) => {
           className={`header-dropdown-label ${props?.theme || ""}`}
           onClick={menuSwitch}
           ref={selectorRef}
+          role="button"
+          aria-expanded={menuStatus}
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") menuSwitch();
+          }}
         >
           {props?.profilePic && (
             <span
@@ -510,6 +522,13 @@ const Dropdown = (props) => {
               ? dropdownSwitch
               : null
           }
+          role="button"
+          tabIndex={0}
+          aria-expanded={dropdownStatus}
+          aria-label="Select an option"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") dropdownSwitch();
+          }}
         >
           <TextField
             variant={props?.variant}
@@ -598,6 +617,7 @@ const Dropdown = (props) => {
             className={`digit-dropdown-options-card`}
             style={{ ...props.optionCardStyles }}
             ref={optionRef}
+            role="listbox"
           >
             {props.variant === "treedropdown" ? (
               <TreeSelect
@@ -638,6 +658,7 @@ const Dropdown = (props) => {
             }}
             id="jk-dropdown-unique"
             ref={optionRef}
+            role="listbox"
           >
             {props.option
               ?.filter(
@@ -648,16 +669,23 @@ const Dropdown = (props) => {
                 return (
                   <p
                     key={index}
+                    role="option"
+                    aria-selected={index === optionIndex}
+                    onClick={() => onSelect(option)}
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ")
+                        onSelect(option);
+                    }}
                     style={
                       index === optionIndex
                         ? {
-                            opacity: 1,
-                            backgroundColor:
-                              "rgba(238, 238, 238, var(--bg-opacity))",
-                          }
+                          opacity: 1,
+                          backgroundColor:
+                            "rgba(238, 238, 238, var(--bg-opacity))",
+                        }
                         : {}
                     }
-                    onClick={() => onSelect(option)}
                   >
                     {option}
                   </p>
