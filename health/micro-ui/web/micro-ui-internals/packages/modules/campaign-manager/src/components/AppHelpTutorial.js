@@ -100,6 +100,8 @@ const AppHelpTutorial = ({ appPath, location, buttonLabel="HELP",buttonIcon="Tut
           }}
           title="Help"
           variation="secondary"
+          size={"medium"}
+          style={{borderRadius: "0.25rem"}}
         />
       )}
 

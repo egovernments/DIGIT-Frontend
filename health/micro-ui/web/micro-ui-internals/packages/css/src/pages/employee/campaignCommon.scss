@@ -287,10 +287,20 @@
     .digit-header-content{
       font-weight: 700;
     }
+
+    &.withoutMargin{
+      margin-bottom: 0rem !important;
+    }
   }
   .clickable:hover{
       border: 0.063rem solid theme(digitv2.lightTheme.primary);
       box-shadow: 0.063rem theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer0) #00000029;
+  }
+
+  .setup-campaign{
+.digit-label-field-pair{
+margin-bottom: 0rem;
+}
   }
 
 .cmn-help-info-card{

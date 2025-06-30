@@ -18,6 +18,7 @@ import { DynamicImageComponent } from "./DynamicImageComponent";
 import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
 import GenericTemplateScreen from "./GenericTemplateScreen";
+import DynamicSVG from "./DynamicSVGComponent";
 
 const dummydata = {
   name: "HOUSEHOLD_LOCATION",
@@ -289,6 +290,10 @@ const renderField = (field, t) => {
     case "custom":
       return (
         <DynamicImageComponent type={field?.type} appType={field?.appType} />
+      );
+    case "customsvg":
+      return (
+        <DynamicSVG type={field?.type} appType={field?.appType} data={field} />
       );
     default:
       return<DynamicImageComponent type={field?.type} appType={field?.appType} />

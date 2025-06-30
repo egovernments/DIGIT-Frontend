@@ -154,7 +154,7 @@ const HouseHoldDetailsCard = (props) => {
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex", alignItems: "center", minWidth: "100vh"
+              display: "flex", alignItems: "center", minWidth: "100vh" , paddingBottom: "1rem"
             }}
             key={index}
             inline={true}
