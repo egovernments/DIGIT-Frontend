@@ -2,11 +2,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;600;700&display=swap');
 
 /* Base Styles */
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
 
 .login-container {
   display: flex;
@@ -40,27 +35,27 @@
   justify-content: centre
 }
 
-.login-container .bannerHeader .bannerLogo {
-  width: 50%;
-}
+ .login-container .bannerHeader .bannerLogo {
+   width: 50%;
+ }
 
-.login-form-container .digit-header-content {
-  text-align: center;
-  font-weight: 1000;
-  font-size: x-large;
-  color: rgba(20, 82, 107, 255);
-}
+ .login-form-container .digit-header-content {
+   text-align: center;
+   font-weight: 1000;
+   font-size: x-large;
+   color: rgba(20, 82, 107, 255);
+ }
 
-.login-form-container .label-styles {
-  font-weight: 600;
-  font-size: small;
-  text-align: left;
-  overflow: unset !important;
-}
+ .login-form-container .label-styles {
+   font-weight: 600;
+   font-size: small;
+   text-align: left;
+   overflow: unset !important;
+ }
 
-.login-form-container .employeeForgotPassword .digit-header-content{
-  font-size: 1.25rem;
-}
+ .login-form-container .employeeForgotPassword .digit-header-content{
+   font-size: 1.25rem;
+ }
 
 /*.login-container .digit-submit-bar{
   margin-top: 1rem;
@@ -239,7 +234,7 @@
   font-weight: 600;
 }
 
-.login-form>p {
+.login-form p {
   color: #666;
   margin-bottom: 2.5rem;
   font-size: 1rem;
