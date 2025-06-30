@@ -213,10 +213,10 @@
 }
 .campaign-tag {
   .digit-tag-text {
-    color: theme(digitv2.alert.info) !important;
+    color: #0057bd !important;
   }
   background-color: #eff8ff !important;
-  border-color: theme(digitv2.alert.info) !important;
+  border-color:  #0057bd !important;
 }
 .digit-popup-wrapper.dataMapping {
   .digit-popup-children-wrap {
@@ -424,14 +424,11 @@
 .campaign-header-style {
   color: theme(digitv2.lightTheme.primary-2);
   font-size: 2.5rem;
-  padding-bottom: 1rem;
 }
 .SubHeadingClass {
   color: theme(digitv2.lightTheme.text-color-secondary);
   font-weight: 400;
   font-size: 1rem;
-  margin-top: 1.5rem;
-  margin-bottom: 1.5rem;
 }
 .date-header {
   width: 100% !important;
@@ -545,6 +542,7 @@
   display: flex;
   gap: 1.5rem;
   align-items: flex-start;
+  padding-left: 0rem;
   padding: 1rem;
 }
 .campaign-module-button {
@@ -654,6 +652,13 @@
   .app-config-version-tag {
     width: 40%;
   }
+}
+
+.version-tag{
+  .digit-tag-text{
+    font-size: 0.75rem;
+  }
+
 }
 
 .content-group {
@@ -795,4 +800,7 @@
   max-width: 100%;
   margin-top: -2rem;
   margin-bottom: 0.5rem;
+}
+.start-header{
+  color: theme(digitv2.lightTheme.primary-2) !important;
 }
