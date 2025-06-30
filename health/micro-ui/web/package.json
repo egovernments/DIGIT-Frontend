@@ -85,7 +85,9 @@
     "build:libraries": "cd micro-ui-internals && yarn build",
     "buildD:prod": "webpack --mode development",
     "buildD:webpack": "yarn build:libraries && cd .. && ls && cd ./web && ls && yarn build:prod",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
+
   },
  
   "browserslist": {
