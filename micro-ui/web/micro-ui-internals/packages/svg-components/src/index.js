@@ -821,6 +821,16 @@ import { AdUnits } from "./svg/AdUnits";
 import { ListAltCheck } from "./svg/ListAltCheck";
 import { UploadCloud } from "./svg/UploadCloud";
 import { MobileWrench } from "./svg/MobileWrench";
+import { BarsChart } from "./svg/BarsChart";
+import { Calculate } from "./svg/Calculate";
+import { Employee } from "./svg/Employee";
+import { FeatureSearch } from "./svg/FeatureSearch";
+import { HierarchyGraph } from "./svg/HierarchyGraph";
+
+
+
+
+
 
 export {
   AddCircle,
@@ -1645,5 +1655,10 @@ export {
   ListAltCheck,
   UploadCloud,
   TutorialGuide,
-  MobileWrench
+  MobileWrench,
+  BarsChart,
+  Calculate,
+  Employee,
+  FeatureSearch,
+  HierarchyGraph
 };

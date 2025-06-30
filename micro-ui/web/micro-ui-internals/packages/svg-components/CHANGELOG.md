@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.0.23]  [30-June-2025]
+- Added BarsChart,Calculate,Employee,FeatureSearch and HierarchyGraph icons
+
 ## [1.0.22]  [28-June-2025]
 - Added MobileWrench icon
 
