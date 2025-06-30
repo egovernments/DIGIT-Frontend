@@ -71,7 +71,7 @@ function getRequiredFieldNames(data, projectType, flowName, screenName) {
 
     for (const prop of page.properties) {
       if (Array.isArray(prop.validations)) {
-        const hasRequired = prop.validations.some((v) => v.type === "required" && v.value === true);
+        const hasRequired = Array.isArray(prop?.validations) && prop?.validations?.some((v) => v?.type === "required" && v?.value === true);
         if (hasRequired) {
           result.push(prop.fieldName);
         }
