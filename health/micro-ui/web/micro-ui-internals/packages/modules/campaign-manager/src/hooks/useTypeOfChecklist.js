@@ -1,4 +1,4 @@
-import { useMutation } from "react-query";
+import { useMutation } from "@tanstack/react-query";
 import createTypeOfChecklist from "./services/createTypeOfChecklist";
 import { result } from "lodash";
 

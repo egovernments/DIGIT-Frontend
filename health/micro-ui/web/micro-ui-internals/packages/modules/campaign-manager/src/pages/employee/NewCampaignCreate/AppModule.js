@@ -1,7 +1,7 @@
 import { Card, HeaderComponent, Button, Footer, Loader, Toast, TextBlock } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { SVG } from "@egovernments/digit-ui-components";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
@@ -11,7 +11,7 @@ export const TEMPLATE_BASE_CONFIG_MASTER = "FormConfigTemplate";
 //TODO @bhavya @jagan Cleanup and handle negative scenarios for unselect etc
 const AppModule = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const campaignType = searchParams.get("projectType");
@@ -24,7 +24,7 @@ const AppModule = () => {
   const [isCreatingModule, setIsCreatingModule] = useState(false);
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
-  const locales = languages?.map(locale => locale.value);
+  const locales = languages?.map((locale) => locale.value);
 
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`;
   const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(
@@ -37,8 +37,6 @@ const AppModule = () => {
       `MDMSDATA-${schemaCode}-${campaignType}`,
       {
         enabled: !!campaignType,
-        cacheTime: 1000000,
-        staleTime: 1000000
       }
     )
   );
@@ -84,163 +82,162 @@ const AppModule = () => {
   };
 
   const handleNext = async () => {
-  const uniqueModules = [...new Set(selectedModuleCodes)];
+    const uniqueModules = [...new Set(selectedModuleCodes)];
 
-  if (uniqueModules.length === 0) {
-    setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
-    return;
-  }
-
-  const alreadyCreatedModules =
-    mdmsData
-      ?.filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
-      ?.map((item) => item?.data?.name)
-      ?.filter(Boolean) || [];
-
-  const newModulesToCreate = uniqueModules.filter((code) => !alreadyCreatedModules.includes(code));
-
-  const needsUpdate = (mdmsData || []).some((item) => {
-    const moduleCode = item?.data?.name;
-    const shouldBeSelected = uniqueModules.includes(moduleCode);
-    return item?.data?.isSelected !== shouldBeSelected;
-  });
-
-  if (newModulesToCreate.length === 0 && !needsUpdate) {
-    history.push(
-      `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
-    );
-    return;
-  }
-
-  // Step 1: Update selection flags in MDMS
-  for (const item of mdmsData || []) {
-    const moduleCode = item?.data?.name;
-    const shouldBeSelected = uniqueModules.includes(moduleCode);
-    if (item?.data?.isSelected === shouldBeSelected) continue;
-
-    const updatedData = {
-      ...item,
-      data: {
-        ...item.data,
-        isSelected: shouldBeSelected,
-      },
-    };
-
-    try {
-      const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
-      setIsCreatingModule(true);
-      await Digit.CustomService.getResponse({
-        url: `${url}/v2/_update/${schemaCode}`,
-        body: {
-          Mdms: {
-            tenantId,
-            schemaCode,
-            ...updatedData,
-          },
-        },
-      });
-    } catch (error) {
-      console.error(`Failed to update module ${moduleCode}:`, error);
-      setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPDATE_ERROR") });
+    if (uniqueModules.length === 0) {
+      setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
       return;
-    } finally {
-      setIsCreatingModule(false);
     }
-  }
 
-  // Step 2: Create modules and handle localization
-  const selectedModules = modulesData?.filter((module) => newModulesToCreate.includes(module?.data?.name));
-  const baseProjectType = campaignType.toLowerCase();
+    const alreadyCreatedModules =
+      mdmsData
+        ?.filter((item) => item?.uniqueIdentifier?.includes(campaignNumber))
+        ?.map((item) => item?.data?.name)
+        ?.filter(Boolean) || [];
 
-  for (const module of selectedModules) {
-    const moduleName = module?.data?.name?.toLowerCase();
-    const baseModuleKey = `hcm-base-${moduleName}-${baseProjectType}`;
-    const updatedModuleKey = `hcm-${moduleName}-${campaignNumber}`;
+    const newModulesToCreate = uniqueModules.filter((code) => !alreadyCreatedModules.includes(code));
 
-    for (const loc of locales) {
-      let localisationData = null;
+    const needsUpdate = (mdmsData || []).some((item) => {
+      const moduleCode = item?.data?.name;
+      const shouldBeSelected = uniqueModules.includes(moduleCode);
+      return item?.data?.isSelected !== shouldBeSelected;
+    });
+
+    if (newModulesToCreate.length === 0 && !needsUpdate) {
+      navigate(
+        `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}`
+      );
+      return;
+    }
+
+    // Step 1: Update selection flags in MDMS
+    for (const item of mdmsData || []) {
+      const moduleCode = item?.data?.name;
+      const shouldBeSelected = uniqueModules.includes(moduleCode);
+      if (item?.data?.isSelected === shouldBeSelected) continue;
+
+      const updatedData = {
+        ...item,
+        data: {
+          ...item.data,
+          isSelected: shouldBeSelected,
+        },
+      };
+
       try {
+        const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
         setIsCreatingModule(true);
-        localisationData = await Digit.CustomService.getResponse({
-          url: `/localization/messages/v1/_search`,
-          params: {
-            locale: loc,
-            module: baseModuleKey,
-            tenantId,
+        await Digit.CustomService.getResponse({
+          url: `${url}/v2/_update/${schemaCode}`,
+          body: {
+            Mdms: {
+              tenantId,
+              schemaCode,
+              ...updatedData,
+            },
           },
         });
-      } catch (e) {
-        console.error(`Failed to fetch localisation for locale ${loc}`, e);
-        setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
+      } catch (error) {
+        console.error(`Failed to update module ${moduleCode}:`, error);
+        setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPDATE_ERROR") });
         return;
+      } finally {
+        setIsCreatingModule(false);
       }
-      finally {
-          setIsCreatingModule(false);
-        }
+    }
 
-      const updatedLocalizations =
-        localisationData?.messages?.map((entry) => ({
-          ...entry,
-          locale: loc,
-          module: updatedModuleKey,
-        })) || [];
+    // Step 2: Create modules and handle localization
+    const selectedModules = modulesData?.filter((module) => newModulesToCreate.includes(module?.data?.name));
+    const baseProjectType = campaignType.toLowerCase();
 
-      if (updatedLocalizations.length > 0) {
+    for (const module of selectedModules) {
+      const moduleName = module?.data?.name?.toLowerCase();
+      const baseModuleKey = `hcm-base-${moduleName}-${baseProjectType}`;
+      const updatedModuleKey = `hcm-${moduleName}-${campaignNumber}`;
+
+      for (const loc of locales) {
+        let localisationData = null;
         try {
           setIsCreatingModule(true);
-          await Digit.CustomService.getResponse({
-            url: `/localization/messages/v1/_upsert`,
-            body: {
+          localisationData = await Digit.CustomService.getResponse({
+            url: `/localization/messages/v1/_search`,
+            params: {
+              locale: loc,
+              module: baseModuleKey,
               tenantId,
-              messages: updatedLocalizations,
             },
           });
-        } catch (error) {
-          console.error(`Failed to upsert localization for ${moduleName} (${loc}):`, error);
-          setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
+        } catch (e) {
+          console.error(`Failed to fetch localisation for locale ${loc}`, e);
+          setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
           return;
         } finally {
           setIsCreatingModule(false);
         }
+
+        const updatedLocalizations =
+          localisationData?.messages?.map((entry) => ({
+            ...entry,
+            locale: loc,
+            module: updatedModuleKey,
+          })) || [];
+
+        if (updatedLocalizations.length > 0) {
+          try {
+            setIsCreatingModule(true);
+            await Digit.CustomService.getResponse({
+              url: `/localization/messages/v1/_upsert`,
+              body: {
+                tenantId,
+                messages: updatedLocalizations,
+              },
+            });
+          } catch (error) {
+            console.error(`Failed to upsert localization for ${moduleName} (${loc}):`, error);
+            setShowToast({ key: "error", label: t("LOCALISATION_ERROR") });
+            return;
+          } finally {
+            setIsCreatingModule(false);
+          }
+        }
+      }
+
+      // Step 3: Create the final module in MDMS
+      const moduleWithProject = {
+        ...module?.data,
+        project: `${campaignNumber}`,
+        isSelected: true,
+      };
+
+      try {
+        const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
+        setIsCreatingModule(true);
+        await Digit.CustomService.getResponse({
+          url: `${url}/v2/_create/${schemaCode}`,
+          body: {
+            Mdms: {
+              tenantId,
+              schemaCode,
+              data: moduleWithProject,
+            },
+          },
+        });
+      } catch (error) {
+        console.error(`Failed to create module for ${moduleName}:`, error);
+        setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
+        return;
+      } finally {
+        setIsCreatingModule(false);
       }
     }
 
-    // Step 3: Create the final module in MDMS
-    const moduleWithProject = {
-      ...module?.data,
-      project: `${campaignNumber}`,
-      isSelected: true,
-    };
+    navigate(
+      `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}&code=${selectedModules?.[0]?.data?.name}`
+    );
+  };
 
-    try {
-      const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
-      setIsCreatingModule(true);
-      await Digit.CustomService.getResponse({
-        url: `${url}/v2/_create/${schemaCode}`,
-        body: {
-          Mdms: {
-            tenantId,
-            schemaCode,
-            data: moduleWithProject,
-          },
-        },
-      });
-    } catch (error) {
-      console.error(`Failed to create module for ${moduleName}:`, error);
-      setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
-      return;
-    } finally {
-      setIsCreatingModule(false);
-    }
-  }
-
-  history.push(
-    `/${window.contextPath}/employee/campaign/app-features?tenantId=${tenantId}&campaignNumber=${campaignNumber}&projectType=${campaignType}&code=${selectedModules?.[0]?.data?.name}`
-  );
-};
-
-  if (productTypeLoading || isLoading ) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")}/>
+  if (productTypeLoading || isLoading) {
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />;
   }
 
   return (
@@ -295,7 +292,7 @@ const AppModule = () => {
               marginLeft: "2.5rem",
             }}
             onClick={() => {
-              history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+              navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
             }}
             icon={"ArrowBack"}
           />,

@@ -192,8 +192,8 @@ export const cycleDataRemap=(data)=> {
     
       if (attr?.operator?.code === "IN_BETWEEN") {
         // Round toValue and fromValue to the nearest integer
-        const roundedToValue =(attr.toValue);
-        const roundedFromValue = (attr.fromValue);
+        const roundedToValue = Math.round(attr.toValue);
+        const roundedFromValue = Math.round(attr.fromValue);
 
         // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
         if (type === "create") {
@@ -205,7 +205,7 @@ export const cycleDataRemap=(data)=> {
       } else {
         if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
           // Round attr.value to the nearest integer
-          const roundedValue = (Number(attr.value));
+          const roundedValue = Math.round(Number(attr.value));
           return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
         } else {
           // Return the value as it is if it doesn't contain only numbers

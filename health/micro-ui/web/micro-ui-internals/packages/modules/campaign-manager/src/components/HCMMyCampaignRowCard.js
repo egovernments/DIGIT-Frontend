@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Tag, Button, Card, SummaryCardFieldPair, Divider , PopUp , CardText } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import CloneCampaignWrapper from "./CloneCampaignWrapper";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
 import QRButton from "./CreateCampaignComponents/QRButton";
@@ -107,7 +107,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
+const getActionButtons = (rowData, tabData, navigate ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -162,7 +162,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
       label: "EDIT_CAMPAIGN",
       size:"medium",
       onClick: () =>
-        history.push(
+        navigate(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
             rowData?.campaignNumber
           }&tenantId=${Digit.ULBService.getCurrentTenantId()}`
@@ -177,7 +177,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
 
 const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
@@ -185,7 +185,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp , setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp , setShowCreatingPopUp] = useState(false);
   const [showQRPopUp , setShowQRPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp);
+  const actionButtons = getActionButtons(rowData, tabData, navigate , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 

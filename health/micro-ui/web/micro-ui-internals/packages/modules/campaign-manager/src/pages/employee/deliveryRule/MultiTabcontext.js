@@ -80,13 +80,13 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
-  function updateUrlParams(params) {
-    const url = new URL(window.location.href);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    window.history.replaceState({}, "", url);
-  }
+  // function updateUrlParams(params) {
+  //   const url = new URL(window.location.href);
+  //   Object.entries(params).forEach(([key, value]) => {
+  //     url.searchParams.set(key, value);
+  //   });
+  //   window.history.replaceState({}, "", url);
+  // }
   const handleTabChange = (tabIndex, index) => {
     dispatchCampaignData({
       type: "TAB_CHANGE_UPDATE",
@@ -108,10 +108,10 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
     setCurrentStep(currentKey);
   }, [currentKey]);
 
-  useEffect(() => {
-    updateUrlParams({ key: key });
-    window.dispatchEvent(new Event("checking"));
-  }, [key]);
+  // useEffect(() => {
+  //   updateUrlParams({ key: key });
+  //   window.dispatchEvent(new Event("checking"));
+  // }, [key]);
 
   // const onStepClick = (currentStep) => {
   //   if (currentStep === 0) {

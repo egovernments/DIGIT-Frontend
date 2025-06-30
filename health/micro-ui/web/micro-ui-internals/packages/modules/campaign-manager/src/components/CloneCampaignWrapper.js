@@ -2,13 +2,13 @@ import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair, ActionBar, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { FieldV1, Stepper, Card, HeaderComponent, Button, PopUp, Toast, Loader } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProgressBar } from "./ProgressBar";
 import { min } from "lodash";
 
 const CloneCampaignWrapper = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [name, setName] = useState(`${props?.campaignName}-copy`);
   const [startDate, setStartDate] = useState(null);
@@ -110,7 +110,7 @@ const CloneCampaignWrapper = (props) => {
       const res = await executeFlow();
       if (res?.success && res?.CampaignDetails?.campaignNumber) {
         setToast({ key: false, label: `${res?.CampaignDetails?.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`, type: "success" });
-        history.push(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
+        navigate(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
       } else {
         setToast({ key: true, label: `${t("FAILED_TO_CREATE_COPY_CAMPAIGN")}`, type: "error" });
         props.setCampaignCopying(false);
@@ -189,13 +189,9 @@ const CloneCampaignWrapper = (props) => {
                       }}
                       value={startDate}
                       onChange={(event) => {
-                        const localDate = new Date(event);
-                        localDate.setHours(0, 0, 0, 0); // Local midnight
-                        // Add 5.5 hours so UTC becomes local midnight
-                        const adjustedDate = new Date(localDate.getTime() + 19800000);
-                        const isoString = adjustedDate.toISOString();
-                        setStartDate(isoString);
-                        if (isoString) setStartError(false);
+                        const value = event.target.value;
+                        setStartDate(event);
+                        if (event) setStartError(false);
                       }}
                     />
                   </LabelFieldPair>
@@ -216,13 +212,9 @@ const CloneCampaignWrapper = (props) => {
                       }}
                       value={endDate}
                       onChange={(event) => {
-                        const localDate = new Date(event);
-                        localDate.setHours(0, 0, 0, 0); // Local midnight
-                        // Add 5.5 hours so UTC becomes local midnight
-                        const adjustedDate = new Date(localDate.getTime() + 19800000);
-                        const isoString = adjustedDate.toISOString();
-                        setEndDate(isoString);
-                        if (isoString) setEndError(false);
+                        const value = event.target.value;
+                        setEndDate(event);
+                        if (event) setEndError(false);
                       }}
                     />
                   </LabelFieldPair>

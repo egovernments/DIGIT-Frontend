@@ -357,7 +357,7 @@ function AppConfigurationWrapper({ screenConfig }) {
           <Divider />
           <Button
             type={"button"}
-            size={"medium"}
+            size={"large"}
             variation={"primary"}
             label={t("ADD_LOCALISATION")}
             onClick={() => {

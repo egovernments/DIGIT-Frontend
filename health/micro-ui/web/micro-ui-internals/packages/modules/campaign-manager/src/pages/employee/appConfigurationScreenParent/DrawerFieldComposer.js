@@ -378,7 +378,6 @@ function DrawerFieldComposer() {
             size={"small"}
             variation={"teritiary"}
             label={t("ADD_OPTIONS")}
-            icon="AddIcon"
             onClick={() =>
               setDrawerState((prev) => ({
                 ...prev,

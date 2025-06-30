@@ -1,10 +1,8 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 
 const MDMS_V2_CONTEXT_PATH = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
-
-
 
 const generateFile = async (hierarchyType, tenantId) => {
   const res = await Digit.CustomService.getResponse({
@@ -81,7 +79,7 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
           MdmsCriteria: {
             tenantId: tenantId,
             schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema`,
-            isActive: true
+            isActive: true,
           },
         },
       });
@@ -93,8 +91,8 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
       const boundaryConfig = final?.[screenType];
 
       const employeeDetails = (boundaryConfig?.department?.length > 0 && (await fetchEmployeeDetails(userName, tenantId))) || null;
-      const hierarchyName=hierarchyType || boundaryConfig?.hierarchy;
-      const defaultHierarchyName=defaultHierarchyType || final?.["default"]?.hierarchy;
+      const hierarchyName = hierarchyType || boundaryConfig?.hierarchy;
+      const defaultHierarchyName = defaultHierarchyType || final?.["default"]?.hierarchy;
       const boundaryData = await fetchBoundaryHierarchy(hierarchyName, tenantId);
       const defaultBoundaryData = await fetchBoundaryHierarchy(defaultHierarchyName, tenantId);
       // boundaryData && generateFile(hierarchyType || boundaryConfig?.hierarchy, tenantId);
@@ -110,7 +108,7 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
           boundaryData,
           employeeDetails,
           hierarchyName,
-          defaultHierarchyName
+          defaultHierarchyName,
         };
         resolve(mergedData);
       });
@@ -120,13 +118,11 @@ const useBoundaryHome = ({ screenType = "campaign", defaultHierarchyType = "", h
     }
   };
 
-  const { data, isFetching, refetch, isLoading, error } = useQuery(
-    ["mdmsData", screenType, defaultHierarchyType, hierarchyType, userName, tenantId],
-    fetchConsolidatedData,
-    {
-      cacheTime: 0,
-    }
-  );
+  const { data, isFetching, refetch, isLoading, error } = useQuery({
+    queryKey: ["mdmsData", screenType, defaultHierarchyType, hierarchyType, userName, tenantId],
+    queryFn: fetchConsolidatedData,
+    cacheTime: 0,
+  });
 
   return {
     data,

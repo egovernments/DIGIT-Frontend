@@ -234,21 +234,11 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   };
 
   const selectToDate = (index, d) => {
-    const localDate = new Date(d);
-    localDate.setHours(0, 0, 0, 0); // Local midnight
-    // Add 5.5 hours so UTC becomes local midnight
-    const adjustedDate = new Date(localDate.getTime() + 19800000);
-    const isoString = adjustedDate.toISOString();
-    dispatch({ type: "SELECT_TO_DATE", index, payload: isoString });
+    dispatch({ type: "SELECT_TO_DATE", index, payload: d });
   };
 
   const selectFromDate = (index, d) => {
-    const localDate = new Date(d);
-    localDate.setHours(0, 0, 0, 0); // Local midnight
-    // Add 5.5 hours so UTC becomes local midnight
-    const adjustedDate = new Date(localDate.getTime() + 19800000);
-    const isoString = adjustedDate.toISOString();
-    dispatch({ type: "SELECT_FROM_DATE", index, payload: isoString });
+    dispatch({ type: "SELECT_FROM_DATE", index, payload: d });
   };
 
   useEffect(() => {
@@ -324,7 +314,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
           {/* </Card> */}
           <Card className="campaign-counter-container">
-            <CardSubHeader className = {"start-header"}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
+            <CardSubHeader>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel>

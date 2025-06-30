@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { AlertCard, Toast ,HeaderComponent, Loader } from "@egovernments/digit-ui-components";
+import { AlertCard, Toast, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
 import { fetchFromMicroplan, searchCampaign, waitForSomeTime } from "../hooks/useFetchFromMicroplan";
 
@@ -15,7 +15,7 @@ const MICROPLAN_FETCH_TIMEOUT = 8000;
 
 const FetchFromMicroplanScreen = () => {
   const [currentStep, setCurrentStep] = useState(0);
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(location.search);
@@ -131,7 +131,7 @@ const FetchFromMicroplanScreen = () => {
   useEffect(() => {
     if (showToast?.key == "error") {
       const navigateTimeout = setTimeout(() => {
-        history.push(`/${window?.contextPath}/employee/`);
+        navigate(`/${window?.contextPath}/employee/`);
       }, 3000);
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
@@ -194,19 +194,22 @@ const FetchFromMicroplanScreen = () => {
     fetchCampaign();
   }, [currentStep, completed]);
 
-  useEffect(async () => {
+  useEffect(()=>{
+    const app=async () => {
     if (currentStep === steps.length && microplan) {
       setShowToast({ key: "success", label: t("CMN_ALL_DATA_FETCH_DONE") });
 
       const navigateTimeout = setTimeout(() => {
         searchParams?.set("id", data?.updatedCampaignData?.id);
         searchParams?.set("microName", data?.updatedCampaignData?.campaignName);
-        history.push(`/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`);
+        navigate(`/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`);
       }, 1500);
 
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
-  }, [currentStep, microplan]);
+  }
+  app()
+}, [currentStep, microplan]);
 
   const closeToast = () => {
     setShowToast(null);
@@ -223,7 +226,7 @@ const FetchFromMicroplanScreen = () => {
       />
 
       <div className="sandbox-loader-screen ">
-        {showToast?.key != "error" && <Loader page={true} variant={"PageLoader"} loaderText={t(" ")}/>}
+        {showToast?.key != "error" && <Loader page={true} variant={"PageLoader"} loaderText={t(" ")} />}
         <ul className="sandbox-installation-steps">
           {steps.map((step, index) => (
             <li key={index} className={`sandbox-step ${index < currentStep ? "sandbox-visible" : ""}`}>

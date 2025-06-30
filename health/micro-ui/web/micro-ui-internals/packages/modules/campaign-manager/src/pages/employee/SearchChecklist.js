@@ -2,14 +2,14 @@ import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { Dropdown, Toast, Button, PopUp, Footer } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { checklistSearchConfig } from "../../configs/checklistSearchConfig";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
 
 const SearchChecklist = () => {
   const { t } = useTranslation();
-  const history = useHistory(); // Get history object for navigation
+  const navigate = useNavigate(); // Get history object for navigation
   const [showPopUp, setShowPopUp] = useState(false);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
@@ -35,7 +35,7 @@ const SearchChecklist = () => {
 
   const createNewChecklist = () => {
     localStorage.removeItem("questions");
-    history.push(
+    navigate(
       `/${window.contextPath}/employee/campaign/checklist/create?checklistType=${list?.list}&campaignName=${stateData?.name}&role=${code?.code}&campaignType=${stateData?.campaignType}`
     );
     const navEvent1 = new PopStateEvent("popstate");
@@ -93,7 +93,7 @@ const SearchChecklist = () => {
   const onStepClick = (step) => {
     setShowToast({ key: "error", label: "CAMPAIGN_CANNOT_CLICK" });
     return;
-    // history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
+    // navigate(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
   // useEffect(() => {
   //   setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: `HCM_CHECKLIST_TYPE_${item.code}` })));
@@ -246,7 +246,7 @@ const SearchChecklist = () => {
                 marginLeft: "2.5rem",
               }}
               onClick={() => {
-                history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+                navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
               }}
               icon={"ArrowBack"}
             />,

@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const fetchServiceDefinition = async (serviceCodes, tenantId) => {
@@ -39,9 +39,7 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
   const searchParams = new URLSearchParams(location.search);
   const campaignType = searchParams.get("projectType");
   const updatedMdmsCriteria = body?.MdmsCriteria;
-  updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, 
-    campaignType
- };
+  updatedMdmsCriteria.filters = { ...body?.MdmsCriteria?.filters, campaignType };
   const fetchMDMSData = async () => {
     try {
       // First API Call: Fetch MDMS Data
@@ -54,7 +52,6 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
       // Second API Call: Merge MDMS Data with Service Definition
       const final = mergeData(mdmsResponse?.mdms);
       const serviceData = await fetchServiceDefinition(final, tenantId);
-
 
       // Return a promise that resolves after both API calls are complete
       return new Promise((resolve) => {
@@ -74,13 +71,11 @@ const useMDMSServiceSearch = ({ url, params, body, config = {}, plainAccessReque
     }
   };
 
-  const { data: mdmsData, isFetching, refetch, isLoading: isMDMSLoading, error: mdmsError } = useQuery(
-    ["mdmsData", tenantId, updatedMdmsCriteria],
-    fetchMDMSData,
-    {
-      cacheTime: 0,
-    }
-  );
+  const { data: mdmsData, isFetching, refetch, isLoading: isMDMSLoading, error: mdmsError } = useQuery({
+    queryKey: ["mdmsData", tenantId, updatedMdmsCriteria],
+    queryFn: fetchMDMSData,
+    cacheTime: 0,
+  });
 
   return {
     data: { mdmsData },

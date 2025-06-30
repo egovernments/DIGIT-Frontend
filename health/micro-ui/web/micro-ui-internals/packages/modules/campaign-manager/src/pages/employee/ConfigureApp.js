@@ -1,7 +1,7 @@
 import { Loader, FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { ConfigureAppConfig } from "../../configs/ConfigureAppConfig";
@@ -29,7 +29,7 @@ function updateUrlParams(params) {
 const ConfigureApp = ({ hierarchyType }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [totalFormData, setTotalFormData] = useState({});
   const [campaignConfig, setCampaignConfig] = useState(ConfigureAppConfig(totalFormData));
   const [showToast, setShowToast] = useState(null);

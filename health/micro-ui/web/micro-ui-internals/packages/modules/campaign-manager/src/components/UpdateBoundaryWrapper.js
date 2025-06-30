@@ -1,7 +1,6 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
 import { Card, HeaderComponent, AlertCard } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";

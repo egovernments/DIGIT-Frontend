@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useReducer, useState, Fragment } from "react
 import { Button, Footer, Loader, Stepper, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
 import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
@@ -40,7 +40,7 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, isPreviousTabAvailable, tabStateDispatch, tabState }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
@@ -56,7 +56,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const [showToast, setShowToast] = useState(null);
   const [currentScreen, setCurrentScreen] = useState({});
   const [localeModule, setLocaleModule] = useState(null);
-  const [changeLoader, setChangeLoader] = useState(false);
 
   // const localeModule = useMemo(() => {
   //   if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
@@ -65,18 +64,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   //   return null;
   // }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
 
-  useEffect(() => {
-    const handleResetStep = () => {
-      setCurrentStep(1);
-    };
-
-    window.addEventListener("resetStep", handleResetStep);
-
-    // Clean up the event listener when the component unmounts
-    return () => {
-      window.removeEventListener("resetStep", handleResetStep);
-    };
-  }, []);
   useEffect(() => {
     const template = parentState?.actualTemplate;
     if (parentState?.actualTemplate?.localeModule) {
@@ -126,10 +113,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   // const { mutate: updateCache } = Digit.Hooks.campaign.useUpdateCache(tenantId);
 
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
-
-  const closeToast = () => {
-    setShowToast(null);
-  };
 
   useEffect(() => {
     if (showToast) {
@@ -241,8 +224,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
-      setChangeLoader(true);
-
       await updateMutate(
         {
           moduleName: "HCM-ADMIN-CONSOLE",
@@ -278,14 +259,11 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
-            setChangeLoader(false);
             if (isNextTabAvailable && !finalSubmit) {
               tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
-              setCurrentStep(1);
               return;
             } else {
-               setChangeLoader(false);
-              history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
+              navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
                 message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
                 preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
                 actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
@@ -328,10 +306,13 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
     }
   };
 
+  const closeToast = () => {
+    setShowToast(null);
+  };
+
   const back = () => {
     if (stepper?.find((i) => i.active)?.isFirst && isPreviousTabAvailable) {
       tabStateDispatch({ key: "PREVIOUS_TAB" });
-      setCurrentStep(1);
       return;
     } else if (stepper?.find((i) => i.active)?.isFirst && !isPreviousTabAvailable) {
       setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
@@ -339,9 +320,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       setCurrentStep((prev) => prev - 1);
     }
   };
-  if(changeLoader){
-    return  <Loader page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")}/>
-  }
 
   return (
     <div>
@@ -354,7 +332,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             showIcon={false}
             label={`${t("APPCONFIG_VERSION")} - ${parentState?.actualTemplate?.version}`}
             style={{ background: "#EFF8FF", height: "fit-content" }}
-            className={"version-tag"}
           />
         </div>
       </Header>

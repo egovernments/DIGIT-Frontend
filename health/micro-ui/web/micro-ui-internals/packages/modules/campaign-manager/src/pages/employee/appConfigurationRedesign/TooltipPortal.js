@@ -8,7 +8,8 @@ const TooltipPortal = ({ text, targetRef, visible }) => {
     if (targetRef.current && visible) {
       const rect = targetRef.current.getBoundingClientRect();
       setCoords({
-        top: rect.top + window.scrollY - 50, // 35px above the element
+        top: rect.top + window.scrollY - 35, // 35px above the element
+        left: rect.left + rect.width / 2 + window.scrollX,
       });
     }
   }, [targetRef, visible]);
@@ -19,16 +20,16 @@ const TooltipPortal = ({ text, targetRef, visible }) => {
     <div
       style={{
         position: "absolute",
-        width: "22rem",
-        right: "2rem",
         top: coords.top,
         left: coords.left,
+        transform: "translateX(-50%)",
         backgroundColor: "#333",
         color: "#fff",
         padding: "6px 10px",
         borderRadius: "4px",
         fontSize: "12px",
         zIndex: 9999,
+        whiteSpace: "nowrap",
         pointerEvents: "none",
       }}
     >

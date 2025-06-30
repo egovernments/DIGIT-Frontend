@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SummaryCardFieldPair, Toast, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import data_hook from "../../hooks/data_hook";
@@ -10,8 +10,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
 import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
 
-
-let temp_data = []
+let temp_data = [];
 
 const CreateChecklist = () => {
   const { t } = useTranslation();
@@ -20,7 +19,7 @@ const CreateChecklist = () => {
   const [showToast, setShowToast] = useState(null);
   const checklistType = searchParams.get("checklistType");
   let clt = searchParams.get("checklistType");
-  const checklistTypeLocal = (!clt.startsWith("HCM_CHECKLIST_TYPE_")) ? "HCM_CHECKLIST_TYPE_" + clt : clt;
+  const checklistTypeLocal = !clt.startsWith("HCM_CHECKLIST_TYPE_") ? "HCM_CHECKLIST_TYPE_" + clt : clt;
   const clTranslated = t(`${checklistTypeLocal}`);
   const projectName = searchParams.get("campaignName");
   const projectType = searchParams.get("projectType");
@@ -30,7 +29,7 @@ const CreateChecklist = () => {
   const flow = searchParams.get("flow");
   const role = searchParams.get("role");
   const rlt = searchParams.get("role");
-  const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
+  const roleLocal = !rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_") ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
   const campaignNumber = searchParams.get("campaignNumber");
@@ -43,7 +42,7 @@ const CreateChecklist = () => {
   const [loading_new, setLoading_New] = useState(true);
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { mutateAsync } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [serviceCode, setServiceCode] = useState(null);
   const [def_data, setDef_Data] = useState(null);
   const [helpText, setHelpText] = useState("");
@@ -52,7 +51,7 @@ const CreateChecklist = () => {
   const [localisationData, setLocalisationData] = useState([]);
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
-  const currentLocales = languages?.map(locale => locale.value);
+  const currentLocales = languages?.map((locale) => locale.value);
 
   const presentLocale = Digit?.SessionStorage.get("locale") || locale;
   module = "hcm-checklist";
@@ -61,19 +60,17 @@ const CreateChecklist = () => {
   let processedData = [];
 
   useEffect(() => {
-    setServiceCode(`${campaignName}.${checklistType}.${role}`)
-  }, [])
+    setServiceCode(`${campaignName}.${checklistType}.${role}`);
+  }, []);
 
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
-
   useEffect(() => {
-
     const callSearch = async () => {
       const res = await Digit.CustomService.getResponse({
         url: `/${mdms_context_path}/v2/_search`,
         params: {
-          tenantId: tenantId
+          tenantId: tenantId,
         },
         body: {
           MdmsCriteria: {
@@ -81,40 +78,35 @@ const CreateChecklist = () => {
             schemaCode: `${CONSOLE_MDMS_MODULENAME}.ChecklistTemplates`,
             filters: {
               role: role,
-              checklistType: checklistType
+              checklistType: checklistType,
             },
-            isActive: true
-          }
+            isActive: true,
+          },
         },
       });
       return res;
-    }
+    };
     const fetchData = async () => {
       try {
         const res = await callSearch();
 
         if (res?.mdms?.[0]?.data?.data) {
-          setLoading_New(false)
-          let temp_data = res?.mdms?.[0]?.data?.data
+          setLoading_New(false);
+          let temp_data = res?.mdms?.[0]?.data?.data;
           let formatted_data = temp_data;
           setDef_Data(formatted_data);
-
         }
-      }
-      catch (error) {
-      }
-    }
+      } catch (error) {}
+    };
     fetchData();
-  }, [serviceCode])
+  }, [serviceCode]);
 
   useEffect(() => {
-
     const currentTime = new Date();
     if (def_data !== null) {
       setConfig(checklistCreateConfig(def_data, currentTime, "create"));
     }
-
-  }, [def_data])
+  }, [def_data]);
 
   const [checklistName, setChecklistName] = useState(`${checklistType} ${role}`);
 
@@ -138,36 +130,39 @@ const CreateChecklist = () => {
     const currentTime = new Date();
     const newId = crypto.randomUUID();
     // localStorage.removeItem("questions");
-    const cleared_data = [{
-      id: newId,
-      parentId: null,
-      level: 1,
-      key: 1,
-      title: null,
-      type: { "code": "SingleValueList" },
-      value: null,
-      isRequired: true,
-      isActive: true,
-      options: [{
-        id: crypto.randomUUID(),
+    const cleared_data = [
+      {
+        id: newId,
+        parentId: null,
+        level: 1,
         key: 1,
-        parentQuestionId: newId,
-        label: `${t("HCM_CHECKLIST_OPTION")} 1`,
-        optionDependency: false,
-        optionComment: false,
-      }]
-    }];
+        title: null,
+        type: { code: "SingleValueList" },
+        value: null,
+        isRequired: true,
+        isActive: true,
+        options: [
+          {
+            id: crypto.randomUUID(),
+            key: 1,
+            parentQuestionId: newId,
+            label: `${t("HCM_CHECKLIST_OPTION")} 1`,
+            optionDependency: false,
+            optionComment: false,
+          },
+        ],
+      },
+    ];
     // const cleared_data = [{ id: crypto.randomUUID(), parentId: null, level: 1, key: 1, title: null, type: { "code": "SingleValueList" }, value: null, isRequired: false }];
     setConfig(checklistCreateConfig(cleared_data, currentTime, "clear"));
-  }
+  };
 
   const { defaultData, setDefaultData } = data_hook();
 
   const useTemplateData = () => {
     const currentTime = new Date();
     setConfig(checklistCreateConfig(mdms, currentTime));
-  }
-
+  };
 
   const onFormValueChange = (ll, formData) => {
     setTempFormData(formData?.createQuestion?.questionData);
@@ -213,9 +208,9 @@ const CreateChecklist = () => {
     return organizedQuestions;
   }
 
-  const LocalisationCodeUpdate =(temp)=>{
+  const LocalisationCodeUpdate = (temp) => {
     return temp.toUpperCase().replace(/ /g, "_");
-  }
+  };
 
   const generateCodes = (questions) => {
     const codes = {};
@@ -225,8 +220,8 @@ const CreateChecklist = () => {
     // Precompute common values once
     let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-    let roleTemp =  LocalisationCodeUpdate(role);
-    let helpTextCode =  LocalisationCodeUpdate(helpText);
+    let roleTemp = LocalisationCodeUpdate(role);
+    let helpTextCode = LocalisationCodeUpdate(helpText);
 
     // Add the new static entries to localization data
     local.push(
@@ -234,20 +229,20 @@ const CreateChecklist = () => {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
         locale: locale,
         message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-        module: "hcm-checklist"
+        module: "hcm-checklist",
       },
       {
         code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
         locale: locale,
         message: helpText || "",
-        module: "hcm-checklist"
+        module: "hcm-checklist",
       }
     );
 
     // Helper function to generate codes recursively
-    const generateCode = (question, prefix, index, parentCounter = '') => {
+    const generateCode = (question, prefix, index, parentCounter = "") => {
       // Generate code regardless of isActive status
-      let code = '';
+      let code = "";
       if (question.parentId === null) {
         code = `SN${index + 1}`;
         // Only increment counter for active questions
@@ -259,7 +254,7 @@ const CreateChecklist = () => {
         code = `${prefix}.SN${index + 1}`;
 
         // Initialize counter for this nesting level if it doesn't exist
-        const nestingKey = prefix || 'root';
+        const nestingKey = prefix || "root";
         if (!activeCounters[nestingKey]) {
           activeCounters[nestingKey] = 0;
         }
@@ -268,15 +263,15 @@ const CreateChecklist = () => {
         if (question.isActive) {
           activeCounters[nestingKey] += 1;
           // Build the counter string (e.g., "2.1" or "2.1.3")
-          parentCounter = parentCounter + '.' + activeCounters[nestingKey];
+          parentCounter = parentCounter + "." + activeCounters[nestingKey];
         }
       }
 
       codes[question.id] = code;
 
       let moduleChecklist = "hcm-checklist";
-      let checklistTypeTemp =  LocalisationCodeUpdate(checklistType)
-      let roleTemp =  LocalisationCodeUpdate(role)
+      let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
+      let roleTemp = LocalisationCodeUpdate(role);
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
 
       // Format the final string with the code (generate for all questions)
@@ -286,11 +281,11 @@ const CreateChecklist = () => {
       if (question.isActive) {
         const msg = `${parentCounter}) ${String(question.title)}`;
         const obj = {
-          "code": formattedString,
-          "message": String(msg),
-          "module": moduleChecklist,
-          "locale": locale
-        }
+          code: formattedString,
+          message: String(msg),
+          module: moduleChecklist,
+          locale: locale,
+        };
         local.push(obj);
       }
 
@@ -299,18 +294,18 @@ const CreateChecklist = () => {
         question.options.forEach((option, optionIndex) => {
           const optionval = option.label;
           const upperCaseString = optionval.toUpperCase();
-          const transformedString = upperCaseString.replace(/ /g, '_');
+          const transformedString = upperCaseString.replace(/ /g, "_");
 
           if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
           let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
 
           // Generate codes for options regardless of question's active status
           const obj = {
-            "code": formattedStringTemp,
-            "message": String(optionval),
-            "module": moduleChecklist,
-            "locale": locale
-          }
+            code: formattedStringTemp,
+            message: String(optionval),
+            module: moduleChecklist,
+            locale: locale,
+          };
           local.push(obj);
 
           // Process subquestions under options
@@ -319,12 +314,7 @@ const CreateChecklist = () => {
             activeCounters[optionNestingKey] = 0;
 
             option.subQuestions.forEach((subQuestion, subQuestionIndex) => {
-              generateCode(
-                subQuestion,
-                `${code}.${transformedString}`,
-                subQuestionIndex,
-                question.isActive ? parentCounter : ''
-              );
+              generateCode(subQuestion, `${code}.${transformedString}`, subQuestionIndex, question.isActive ? parentCounter : "");
             });
           }
         });
@@ -336,12 +326,7 @@ const CreateChecklist = () => {
         activeCounters[code] = 0;
 
         question.subQuestions.forEach((subQuestion, subQuestionIndex) => {
-          generateCode(
-            subQuestion,
-            code,
-            subQuestionIndex,
-            question.isActive ? parentCounter : ''
-          );
+          generateCode(subQuestion, code, subQuestionIndex, question.isActive ? parentCounter : "");
         });
       }
     };
@@ -349,64 +334,61 @@ const CreateChecklist = () => {
     // Process all top-level questions
     questions.forEach((question, index) => {
       if (question.parentId === null) {
-        generateCode(question, '', index);
+        generateCode(question, "", index);
       }
     });
 
     return { codes: codes, local: local };
   };
-function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
-  const messages = new Set();
-  let activeCount = 0;
+  function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
+    const messages = new Set();
+    let activeCount = 0;
 
-  if (helpText?.trim()) {
-    messages.add(helpText.trim());
+    if (helpText?.trim()) {
+      messages.add(helpText.trim());
+    }
+
+    function traverseQuestions(questions, prefix = "") {
+      questions.forEach((question, qIndex) => {
+        if (!question?.isActive) return;
+
+        const currentPrefix = prefix ? `${prefix}.${qIndex + 1}` : `${++activeCount}`;
+        const formattedPrefix = `${currentPrefix}) `;
+
+        if (question.title) messages.add(formattedPrefix + question.title.trim());
+        if (question.helpText) messages.add(question.helpText.trim());
+
+        if (Array.isArray(question.options)) {
+          question.options.forEach((option) => {
+            if (option.label) messages.add(option.label.trim());
+
+            if (Array.isArray(option.subQuestions)) {
+              traverseQuestions(option.subQuestions, currentPrefix);
+            }
+          });
+        }
+
+        if (Array.isArray(question.subQuestions)) {
+          traverseQuestions(question.subQuestions, currentPrefix);
+        }
+      });
+    }
+
+    traverseQuestions(quesArray);
+
+    const filteredLocales = localeArray.filter((entry) => messages.has(entry.message?.trim()));
+
+    return filteredLocales;
   }
-
-  function traverseQuestions(questions, prefix = "") {
-    questions.forEach((question, qIndex) => {
-      if (!question?.isActive) return;
-
-      const currentPrefix = prefix ? `${prefix}.${qIndex + 1}` : `${++activeCount}`;
-      const formattedPrefix = `${currentPrefix}) `;
-
-      if (question.title) messages.add(formattedPrefix + question.title.trim());
-      if (question.helpText) messages.add(question.helpText.trim());
-
-      if (Array.isArray(question.options)) {
-        question.options.forEach((option) => {
-          if (option.label) messages.add(option.label.trim());
-
-          if (Array.isArray(option.subQuestions)) {
-            traverseQuestions(option.subQuestions, currentPrefix);
-          }
-        });
-      }
-
-      if (Array.isArray(question.subQuestions)) {
-        traverseQuestions(question.subQuestions, currentPrefix);
-      }
-    });
-  }
-
-  traverseQuestions(quesArray);
-
-  const filteredLocales = localeArray.filter((entry) =>
-    messages.has(entry.message?.trim())
-  );
-
-  return filteredLocales;
-}
-
 
   // Helper function remains unchanged as it already handles both active and inactive questions
   function createQuestionObject(item, tenantId, idCodeMap) {
     let labelsArray = [];
     if (item?.options) {
-      labelsArray = item.options.map(option => {
+      labelsArray = item.options.map((option) => {
         const optionval = option?.label || "";
         const upperCaseString = optionval.toUpperCase();
-        return upperCaseString.replace(/ /g, '_');
+        return upperCaseString.replace(/ /g, "_");
       });
     }
     if (String(item?.type?.code) === "SingleValueList") {
@@ -428,22 +410,21 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
         version: 1,
         fields: [
           {
-            key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
-            value: item
-          }
-        ]
-      }
+            key: crypto.randomUUID(), // Using crypto.randomUUID() for a unique key
+            value: item,
+          },
+        ],
+      },
     };
 
     return questionObject;
   }
 
-
   // Recursive function to traverse the question array and its nested subquestions
   function transformQuestions(questions, tenantId, idCodeMap) {
     const result = [];
 
-    questions.forEach(question => {
+    questions.forEach((question) => {
       // Create the main question object
       const questionObject = createQuestionObject(question, tenantId, idCodeMap);
       result.push(questionObject);
@@ -456,7 +437,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
 
       // Handle options with subQuestions
       if (question.options && question.options.length > 0) {
-        question.options.forEach(option => {
+        question.options.forEach((option) => {
           if (option.subQuestions && option.subQuestions.length > 0) {
             const optionSubQuestions = transformQuestions(option.subQuestions, tenantId, idCodeMap);
             result.push(...optionSubQuestions);
@@ -470,7 +451,6 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
   let uniqueLocal;
 
   const payloadData = (data) => {
-
     data.forEach((question) => {
       if (question.type.code === "Short Answer") {
         question.type.code = "String";
@@ -482,14 +462,10 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
     let { codes, local } = generateCodes(processedData);
     // let codes = generateCodes(processedData);
     let final_payload = transformQuestions(processedData, tenantId, codes);
-    uniqueLocal = local.filter((value, index, self) =>
-      index === self.findIndex((t) => t.code === value.code)
-    );
-    let fp = final_payload.filter((value, index, self) =>
-      index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
-    );
-    let checklistTypeTemp =  LocalisationCodeUpdate(checklistType)
-    let roleTemp =  LocalisationCodeUpdate(role)
+    uniqueLocal = local.filter((value, index, self) => index === self.findIndex((t) => t.code === value.code));
+    let fp = final_payload.filter((value, index, self) => index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value)));
+    let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
+    let roleTemp = LocalisationCodeUpdate(role);
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
     let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
@@ -503,20 +479,18 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
         version: 1,
         fields: [
           {
-            key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+            key: crypto.randomUUID(), // Using crypto.randomUUID() for a unique key
             value: {
               name: checklistName,
               type: checklistType,
               role: role,
-              helpText: helpText
-            }
-          }
-        ]
+              helpText: helpText,
+            },
+          },
+        ],
       },
-
-    }
+    };
   };
-
 
   const onSubmit = async (formData, flag = 0, preview = null, translations) => {
     let payload;
@@ -525,15 +499,13 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
     } else {
       payload = payloadData(formData?.createQuestion?.questionData);
     }
-    let allLocalisations = [...uniqueLocal, ...translations].filter(
-      (value, index, self) =>
-        index === self.findIndex((t) => t.code === value.code && t.locale === value.locale)
-    ).filter((item) => item.message !== "");
+    let allLocalisations = [...uniqueLocal, ...translations]
+      .filter((value, index, self) => index === self.findIndex((t) => t.code === value.code && t.locale === value.locale))
+      .filter((item) => item.message !== "");
 
     setSubmitting(true);
     try {
-      
-       // Group localizations by locale
+      // Group localizations by locale
       const groupedByLocale = allLocalisations.reduce((acc, entry) => {
         acc[entry.locale] = acc[entry.locale] || [];
         acc[entry.locale].push(entry);
@@ -551,12 +523,13 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
       // Proceed to create checklist after all locales succeed
       const data = await mutateAsync(payload);
 
-      if (data?.success) { // Updated success condition check
-        history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+      if (data?.success) {
+        // Updated success condition check
+        navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
           actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
+          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
           secondaryActionLabel: "VIEW_DETAILS",
           secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
         });
@@ -566,7 +539,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
     } catch (error) {
       setShowToast({
         label: error.response?.data?.message || "CHECKLIST_CREATED_FAILED",
-        isError: "true"
+        isError: "true",
       });
     } finally {
       setSubmitting(false);
@@ -577,29 +550,29 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
     if (showToast !== null) {
       setShowPopUp(false);
     }
-  }, [showToast])
+  }, [showToast]);
 
   const onSecondayActionClick = () => {
-    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`);
+    navigate(
+      `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`
+    );
   };
 
   const fieldPairs = [
     { label: "CHECKLIST_ROLE", value: roleLocal },
     { label: "TYPE_OF_CHECKLIST", value: checklistTypeLocal },
-    { label: "CAMPAIGN_NAME", value: campaignName }
+    { label: "CAMPAIGN_NAME", value: campaignName },
   ];
   return (
     <div>
-      {loading_new && <Loader page={true} variant={"PageLoader"}/>}
-      {!loading_new && submitting && <Loader page={true} variant={"PageLoader"}/>}
-      {!submitting && !loading_new &&
+      {loading_new && <Loader page={true} variant={"PageLoader"} />}
+      {!loading_new && submitting && <Loader page={true} variant={"PageLoader"} />}
+      {!submitting && !loading_new && (
         <div>
           <TagComponent campaignName={campaignName} />
           <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
-              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
-                {t("CREATE_NEW_CHECKLIST")}
-              </h2>
+              <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CREATE_NEW_CHECKLIST")}</h2>
             </div>
             <div style={{ display: "flex", gap: "1rem" }}>
               <Button
@@ -609,7 +582,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
                 style={{ marginTop: "2rem", marginBottom: "2rem" }}
                 // icon={<AddIcon style={{ height: "1.5rem", width: "1.5rem" }} fill={PRIMARY_COLOR} />}
                 onClick={clearData}
-              // onClick={useTemplateData}
+                // onClick={useTemplateData}
               />
               <Button
                 icon="Preview"
@@ -627,8 +600,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
               className={"custom-pop-up"}
               type={"default"}
               heading={t("CHECKLIST_PREVIEW")}
-              children={[
-              ]}
+              children={[]}
               onOverlayClick={() => {
                 setShowPopUp(false);
               }}
@@ -662,7 +634,12 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
               ]}
               sortFooterChildren={true}
             >
-              <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
+              <MobileChecklist
+                questions={previewData}
+                campaignName={campaignName}
+                checklistRole={t(`${roleLocal}`)}
+                typeOfChecklist={t(`${checklistTypeLocal}`)}
+              ></MobileChecklist>
             </PopUp>
           )}
           <Card type={"primary"} variant={"viewcard"} className={"example-view-card"}>
@@ -674,14 +651,12 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
                   inline
                   label={t(pair.label)} // Dynamically set the label
                   value={t(pair.value)} // Dynamically set the value
-                // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
+                  // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                 />
-                {(index !== (fieldPairs.length - 1)) && <div style={{ height: "1rem" }}></div>}
+                {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
               </div>
             ))}
-            {
-              <hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />
-            }
+            {<hr style={{ width: "100%", borderTop: "1px solid #ccc" }} />}
             <div style={{ display: "flex" }}>
               <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("NAME_OF_CHECKLIST")}</div>
               <TextInput
@@ -744,8 +719,8 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
               }}
             >
               <LocalisationEditorPopup
-                locales={currentLocales.filter(local => local !== presentLocale)}
-                languages = {languages.filter(item => item.value !== presentLocale)}
+                locales={currentLocales.filter((local) => local !== presentLocale)}
+                languages={languages.filter((item) => item.value !== presentLocale)}
                 currentLocale={presentLocale}
                 localisationData={localisationData}
                 onSave={(translations) => {
@@ -756,7 +731,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
             </PopUp>
           )}
         </div>
-      }
+      )}
       <div style={{ height: "2rem" }}></div>
     </div>
   );

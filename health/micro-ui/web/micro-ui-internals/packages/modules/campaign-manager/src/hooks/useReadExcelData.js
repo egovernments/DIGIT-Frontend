@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from "react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import axios from "axios";
 import * as XLSX from "xlsx";
 import ExcelJS from "exceljs";
@@ -21,9 +21,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
     let phoneNumberColumnIndex = null;
     let userNameColumnIndex = null;
 
-
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
-
       //for boundary cell
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES" && cell.value === t(schemas?.find((i) => i.description === "Boundary Code")?.name)) {
         boundaryCodeColumnIndex = colIndex;
@@ -73,7 +71,6 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
           facilityStatusColumnIndex = colIndex;
         }
       }
-
     });
 
     if (boundaryCodeColumnIndex === null) {
@@ -92,7 +89,6 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         }
       });
     });
-
 
     // Update the cells based on sheet type
     updatedData.forEach((newData, rowIndex) => {
@@ -115,7 +111,6 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         employmentTypeCell.value = newData?.[t(schemas?.find((i) => i.description === "Employement Type")?.name)];
         phoneNumberCell.value = Number(newData?.[t(schemas?.find((i) => i.description === "Phone Number")?.name)] || 0);
         userNameCell.value = newData?.[t(schemas?.find((i) => i.description === "User Name")?.name)];
-
       } else if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES") {
         // Keep existing facility update logic
         const facilityTypeCell = targetSheet.getCell(rowIndex + 2, facilityTypeColumnIndex);
@@ -206,14 +201,13 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
         Object.keys(row).forEach((key) => {
           if (row[key] !== undefined && row[key] !== "") {
             allNull = false;
-          }            
+          }
           rowData[key] = row[key] === undefined || row[key] == "" ? null : row[key];
         });
-     
+
         if (!allNull) {
           rowData["!row#number!"] = index + 1;
-        }
-        else{
+        } else {
           rowData = null;
         }
         return rowData;
@@ -227,11 +221,9 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
 };
 
 export const useReadExcelData = ({ tenantId, fileStoreId, currentCategories, sheetNameToFetch, config = {} }) => {
-  return useQuery(
-    ["fetchExcelData", tenantId, fileStoreId, sheetNameToFetch],
-    () => fetchExcelData({ tenantId, fileStoreId, currentCategories, sheetNameToFetch }),
-    {
-      ...config,
-    }
-  );
+  return useQuery({
+    queryKey: ["fetchExcelData", tenantId, fileStoreId, sheetNameToFetch],
+    queryFn: () => fetchExcelData({ tenantId, fileStoreId, currentCategories, sheetNameToFetch }),
+    ...config,
+  });
 };

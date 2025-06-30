@@ -154,7 +154,7 @@ const HouseHoldDetailsCard = (props) => {
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex", alignItems: "center", minWidth: "100vh" , paddingBottom: "1rem"
+              display: "flex", alignItems: "center", minWidth: "100vh"
             }}
             key={index}
             inline={true}
@@ -169,7 +169,7 @@ const HouseHoldDetailsCard = (props) => {
 };
 
 const HouseholdOverViewMemberCard = (props) => {
-  const attributes = props.attributes || [{ label: "Gender", value: "Male" },
+  const attributes = props.attributes || [{ label: "Gender", value: "Female" },
   { label: "Age", value: "30 years" },
   { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
