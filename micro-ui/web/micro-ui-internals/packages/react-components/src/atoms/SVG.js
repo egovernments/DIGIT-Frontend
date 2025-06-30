@@ -792,7 +792,12 @@ import {
     AdUnits,
     ListAltCheck,
     UploadCloud,
-    MobileWrench
+    MobileWrench,
+    BarsChart,
+    Calculate,
+    Employee,
+    FeatureSearch,
+    HierarchyGraph
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1591,5 +1596,10 @@ import {
     AdUnits,
     ListAltCheck,
     UploadCloud,
-    MobileWrench
+    MobileWrench,
+    BarsChart,
+    Calculate,
+    Employee,
+    FeatureSearch,
+    HierarchyGraph
   }
