@@ -169,7 +169,7 @@ const HouseHoldDetailsCard = (props) => {
 };
 
 const HouseholdOverViewMemberCard = (props) => {
-  const attributes = props.attributes || [{ label: "Gender", value: "Female" },
+  const attributes = props.attributes || [{ label: "Gender", value: "Male" },
   { label: "Age", value: "30 years" },
   { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
