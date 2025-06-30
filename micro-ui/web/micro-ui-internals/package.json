@@ -46,7 +46,8 @@
     "build:engagement": "cd packages/modules/engagement && yarn build",
     "build:workbench": "cd packages/modules/workbench && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
