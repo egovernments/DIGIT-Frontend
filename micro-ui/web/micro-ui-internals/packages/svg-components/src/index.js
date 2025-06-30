@@ -825,10 +825,7 @@ import { Calculate } from "./svg/Calculate";
 import { Employee } from "./svg/Employee";
 import { FeatureSearch } from "./svg/FeatureSearch";
 import { HierarchyGraph } from "./svg/HierarchyGraph";
-
-
-
-
+import { MobileWrench } from "./svg/MobileWrench";
 
 
 export {
@@ -1658,5 +1655,6 @@ export {
   Calculate,
   Employee,
   FeatureSearch,
-  HierarchyGraph
+  HierarchyGraph,
+  MobileWrench
 };

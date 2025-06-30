@@ -1,5 +1,6 @@
 # Changelog
 
+
 ## [1.0.23]  [30-June-2025]
 - Added BarsChart,Calculate,Employee,FeatureSearch and HierarchyGraph icons
 
