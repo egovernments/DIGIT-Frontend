@@ -17,8 +17,6 @@ const iconMap = {
     BarChart
 };
 import { useHistory } from "react-router-dom";
-
-
 const Breadcrumb = ({ path }) => {
     const history = useHistory();
     const redirectPath = `/${window?.contextPath}/employee/sandbox/productPage`;

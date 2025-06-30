@@ -36,9 +36,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
 
       {/* Product Cards Section */}
       <div className="products-list">
-        {detailsConfig?.map((product, index) => {
-          console.log(product);
-          
+        {detailsConfig?.map((product, index) => {                    
           return (
           <Card key={index} className="product-card">
             { 

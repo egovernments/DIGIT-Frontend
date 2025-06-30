@@ -213,6 +213,11 @@ import {
   HelpOutlineIcon,
   InputIcon,
   TreatmentQualityIcon,
+  BarsChart,
+  Employee,
+  Calculate,
+  FeatureSearch,
+  HierarchyGraph
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
@@ -598,7 +603,11 @@ export {
   HistoryIcon,
   WarningIcon,
   AttentionListIcon,
-
+  BarsChart,
+  Employee,
+  Calculate,
+  FeatureSearch,
+  HierarchyGraph,
 
   // Exported all svgs from svg-component library
   SVG

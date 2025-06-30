@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -30,10 +30,11 @@ const DummyLoaderScreen = () => {
     if (currentStep === steps.length) {
       clearInterval(stepInterval); // Clear the interval to stop further updates
       const navigateTimeout = setTimeout(() => {
-        history.push({
-          pathname: `/${window?.globalPath}/user/url`,
-          state: { tenant: tenant },
-        });
+        if (roleForLandingPage(getUserRoles, MdmsRes)) {
+          window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
+        } else {
+          window.location.href = `/${window?.globalPath}/${tenant}/employee`;
+        }
       }, 1000);
 
       return () => clearTimeout(navigateTimeout); // Cleanup timeout
@@ -43,6 +44,48 @@ const DummyLoaderScreen = () => {
       clearInterval(stepInterval);
     };
   }, [currentStep]);
+
+  const ref = useRef(null);
+  const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenant,
+    "SandBoxLanding",
+    [
+      {
+        name: "LandingPageRoles",
+      },
+    ],
+    {
+      enabled: true,
+      staleTime: 0,
+      cacheTime: 0,
+      select: (data) => {
+        return data?.["SandBoxLanding"]?.["LandingPageRoles"];
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (MdmsRes?.[0].url) {
+      setButtonDisabled(false);
+    }
+  }, [MdmsRes]);
+
+  const RoleLandingUrl = MdmsRes?.[0].url;
+
+  const roleForLandingPage = (getUserRoles, MdmsRes) => {
+    const userRole = getUserRoles?.[0]?.code;
+    return userRole === "SUPERUSER" && MdmsRes.some((page) => page.rolesForLandingPage.includes("SUPERUSER"));
+  };
+
+  const onButtonClick = () => {
+    if (roleForLandingPage(getUserRoles, MdmsRes)) {
+      window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
+    } else {
+      window.location.href = `/${window?.globalPath}/${tenant}/employee`;
+    }
+  };
 
   return (
     <div className="sandbox-loader-screen">
