@@ -246,7 +246,7 @@ const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedF
   const { t } = useTranslation();
 
   return (
-    <div className="modules-container">
+    <div className="modules-feature-container">
       {selectedModuleFeatures?.map((feature) => {
         const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
         return (
