@@ -83,11 +83,12 @@ module.exports = {
     historyApiFallback: true,
     proxy: [
       {
-        context: ["/egov-mdms-service",
+        context: [
           "/access/v1/actions/mdms",
           "/tenant-management",
           "/user-otp",
           "/egov-mdms-service",
+          "/plan-service",
           "/mdms-v2",
           "/egov-idgen",
           "/egov-location",
