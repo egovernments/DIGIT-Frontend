@@ -544,6 +544,14 @@
   align-items: flex-start;
   padding-left: 0rem;
   padding: 1rem;
+  padding-left: 0rem;
+}
+
+.modules-feature-container {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  padding: 1rem;
 }
 .campaign-module-button {
   width: auto;
