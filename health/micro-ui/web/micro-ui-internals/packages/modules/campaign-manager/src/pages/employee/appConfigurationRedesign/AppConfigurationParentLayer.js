@@ -127,6 +127,10 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
 
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
 
+  const closeToast = () => {
+    setShowToast(null);
+  };
+
   useEffect(() => {
     if (showToast) {
       setTimeout(closeToast, 10000);
@@ -322,10 +326,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       );
       setCurrentStep((prev) => prev + 1);
     }
-  };
-
-  const closeToast = () => {
-    setShowToast(null);
   };
 
   const back = () => {
