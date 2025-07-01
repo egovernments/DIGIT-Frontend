@@ -4,6 +4,51 @@
   }
 }
 
+.customTable {
+  .rdt_TableRow:hover {
+    background-color: #FBEEE8 !important;
+  }
+  .rdt_TableRow>.rdt_TableCell:first-of-type {
+    position: sticky;
+    z-index: 10;
+    left: 0rem;
+    background-color: #ffffff;
+  }
+  .rdt_TableRow:hover>.rdt_TableCell:first-of-type {
+    position: sticky;
+    z-index: 10;
+    left: 0rem;
+    background-color: #FBEEE8;
+  }
+  .rdt_TableHeadRow>.rdt_TableCol:first-of-type {
+    position: sticky;
+    z-index: 12;
+    left: 0rem;
+    top: 0rem;
+    background-color: #eeeeee;
+  }
+  .rdt_TableRow>.rdt_TableCell:nth-of-type(2) {
+    position: sticky;
+    z-index: 10;
+    left: 100px;
+    background-color: #ffffff;
+  }
+  .rdt_TableRow:hover>.rdt_TableCell:nth-of-type(2) {
+    position: sticky;
+    z-index: 10;
+    left: 100px;
+    background-color: #FBEEE8;
+  }
+  .rdt_TableHeadRow>.rdt_TableCol:nth-of-type(2) {
+    position: sticky;
+    z-index: 12;
+    left: 100px;
+    top: 0rem;
+    background-color: #eeeeee;
+  }
+}
+
+
 .custom-daterange-wrapper {
   position: relative;
   font-family: theme(digitv2.fontFamily.sans);
@@ -730,8 +775,7 @@
 }
 
 .table-column-header {
-  max-width: 5rem;
-  white-space: normal;
+  white-space: nowrap;
   overflow-wrap: break-word;
 }
 
@@ -745,6 +789,9 @@
   max-width: 80%;
 }
 
+.rdt_TableCol_Sortable .__rdt_custom_sort_icon__ {
+  flex-shrink: 0;
+}
 
 .digit-chart-header-wrapper {
   width: 100%;
@@ -881,25 +928,25 @@
   box-shadow: 0rem 0.063rem 0.125rem 0rem #00000029;
   border-radius: 0.25rem;
   margin-bottom: 1.5rem;
-  overflow: auto;
+  display: flex;
 }
 
-.digit-dss-switch-tabs::-webkit-scrollbar {
+.digit-dss-switch-tab-wrapper::-webkit-scrollbar {
   width: 0.5rem;
   background-color: theme(digitv2.lightTheme.background);
 }
 
-.digit-dss-switch-tabs::-webkit-scrollbar-track {
+.digit-dss-switch-tab-wrapper::-webkit-scrollbar-track {
   background-color: theme(digitv2.lightTheme.background);
   border-radius: 0.563rem;
 }
 
-.digit-dss-switch-tabs::-webkit-scrollbar-thumb {
+.digit-dss-switch-tab-wrapper::-webkit-scrollbar-thumb {
   background-color: theme(digitv2.lightTheme.divider);
   border-radius: 0.563rem;
 }
 
-.digit-dss-switch-tabs::-webkit-scrollbar:horizontal {
+.digit-dss-switch-tab-wrapper::-webkit-scrollbar:horizontal {
   height: 0.5rem;
   background-color: theme(digitv2.lightTheme.divider);
 }
@@ -910,6 +957,8 @@
   flex-direction: row;
   height: 4.5rem;
   align-items: center;
+  max-width: 80%;
+  overflow: auto;
 }
 
 .digit-dss-switch-tab-selected {
@@ -924,6 +973,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 
   @media (max-aspect-ratio: 9/16) {
     /* Media query for mobile */
@@ -953,22 +1003,24 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  white-space: nowrap;
 }
 
 
 .digit-parentDiv-progress {
   display: flex;
   align-items: center;
-  min-width: 100%;
-  padding: 0.625rem 0.625rem 0.625rem 3.125rem;
-  margin: 0 auto;
+  gap: 16px;
+  justify-content: flex-end;
+  width: 20%;
+  margin-right: 32px;
 }
 
 .digit-containerDiv-progress {
   background-color: theme(digitv2.lightTheme.divider);
-  border-radius: 1.563rem;
-  width: 80%;
-  height: 20%;
+  border-radius: 24px;
+  width: 80px;
+  height: 8px;
 }
 
 .digit-progress-fill {
@@ -980,7 +1032,6 @@
   white-space: nowrap;
   text-align: center;
   max-width: auto;
-  margin-left: 1rem
 }
 
 .digit-chart-row {
@@ -1207,7 +1258,7 @@
   color: theme(digitv2.lightTheme.primary);
 }
 
-.recharts-tooltip-wrapper  {
+.recharts-tooltip-wrapper {
   outline: none;
   border: 0.063rem solid #b1b4b6;
   border-radius: 0.25rem;
@@ -1235,8 +1286,8 @@
   background-color: theme(digitv2.lightTheme.divider);
 }
 
-.digit-results-card-buttons{
-  &.dsscampaigncard{
-    justify-content: flex-end;
+.digit-results-card-buttons {
+  &.dsscampaigncard {
+    justify-content: flex-end !important;
   }
 }

@@ -58,9 +58,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
           />
         );
       case "heatmap":
-        //TODO: Add HeatMap chart back
-        return <div>HeatMap has to rendered here</div>
-        // return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
+        return <HeatMapChart visualizer={chart} chartId={chart?.id} isNational={false} showLabel={true} pageZoom={pageZoom} />;
       case "bar":
       case "sideBySideBar":
         return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title, t)} pageZoom={pageZoom} downloadChartsId={downloadChartsId} />;

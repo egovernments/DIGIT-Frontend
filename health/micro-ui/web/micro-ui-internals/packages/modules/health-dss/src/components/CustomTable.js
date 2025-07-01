@@ -476,13 +476,13 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
             // Fallback to string comparison
             return valueA.toString().localeCompare(valueB.toString());
           },
-          
 
+          
           id: columnId,
           symbol: plot?.symbol,
-
           // keeping as-is for any other consumers of this object
           nameText: t(tooltipLocaleKey),
+          width:plot?.name==="S.N." ? "100px" : "300px",
         };
       });
   }, [response, value?.denomination, value?.range]);
@@ -527,9 +527,8 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       ) : (
         <DataTable
           columns={tableColumns}
-          className={`data-table`}
+          className={`data-table health-dss-inbox-table customTable`}
           data={tableData?.filter((tRow) => tRow) || []}
-          sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
           pagination
           highlightOnHover
           persistTableHead
@@ -537,8 +536,8 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           customStyles={tableCustomStyle}
           defaultSortFieldId={tableColumns[0]?.id}
           fixedHeader={true}
-          paginationComponentOptions={{ rowsPerPageText: t("ROWS_PER_PAGE") }}
-          sortIcon={<SVG.ArrowUpward fill={"#0B4B66"}/>}
+          paginationComponentOptions={{ rowsPerPageText: t("CS_COMMON_ROWS_PER_PAGE") }}
+          sortIcon={<SVG.ArrowUpward width={"16px"} height={"16px"} fill={"#0b4b66"}/>}
         />
       )}
     </div>
