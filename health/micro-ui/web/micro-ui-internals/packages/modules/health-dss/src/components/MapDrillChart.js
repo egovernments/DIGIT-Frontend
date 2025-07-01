@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Loader } from "@egovernments/digit-ui-react-components";
 import { ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
+import { getDuration } from "../utils/getDuration";
 
 
 const Backsvg = ({ onClick }) => (
@@ -28,7 +29,7 @@ const getInitialRange = () => {
   const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
   const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
-  const interval = Digit.Utils.dss.getDuration(startDate, endDate);
+  const interval = getDuration(startDate, endDate);
   const denomination = data?.denomination || "Lac";
   const tenantId = data?.filters?.tenantId || [];
   return { startDate, endDate, title, interval, denomination, tenantId };

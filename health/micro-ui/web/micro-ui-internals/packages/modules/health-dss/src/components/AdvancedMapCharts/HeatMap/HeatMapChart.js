@@ -10,6 +10,7 @@ import { ResponsiveContainer } from "recharts";
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
 import { subDays, addMinutes } from "date-fns";
+import { getDuration } from "../../../utils/getDuration";
 
 export default function HeatMapChart({ chartId, visualizer, initialRange, isNational, showLabel, pageZoom }) {
   const { t } = useTranslation();
@@ -39,7 +40,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
 
   const projectSelected = Digit.SessionStorage.get("projectSelected");
   const boundaries = projectSelected?.boundaries;
-  const nationalMap = boundaries?.[0].country?.[0]?.toLowerCase() || "national-map";
+  const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
 
   const [mapSelector, setMapSelector] = useState(
     filterStack?.value?.filters?.district
@@ -90,7 +91,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     const data = Digit.SessionStorage.get("DSS_FILTERS");
     const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
     const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
-    const interval = Digit.Utils.dss.getDuration(startDate, endDate);
+    const interval = getDuration(startDate, endDate);
     return { startDate, endDate, interval };
   };
 

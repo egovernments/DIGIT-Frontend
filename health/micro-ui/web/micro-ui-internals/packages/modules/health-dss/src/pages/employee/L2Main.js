@@ -11,6 +11,7 @@ import ProgressBar from "../../components/ProgressBar";
 import { getTitleHeading } from "../../utils/locale";
 import { Loader, Chip, Button } from "@egovernments/digit-ui-components";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
+import { getDuration } from "../../utils/getDuration";
 
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
@@ -65,7 +66,7 @@ const getInitialRange = () => {
     endDate = new Date(filteredInfo?.[0]["endDate"]);
   }
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
-  const interval = Digit.Utils.dss.getDuration(startDate, endDate);
+  const interval = getDuration(startDate, endDate);
   const denomination = data?.denomination || "Lac";
   const dateFilterSelected = "DSS_TODAY";
   const tenantId = data?.filters?.tenantId || [];

@@ -6,6 +6,7 @@ import { useTranslation } from 'react-i18next';
 import FilterContext from './FilterContext';
 import NoData from "./NoData";
 import { Loader } from '@egovernments/digit-ui-react-components';
+import { getDuration } from "../utils/getDuration";
 // Initialize the VennModule
 VennModule(Highcharts);
 
@@ -13,7 +14,7 @@ const getInitialRange = () => {
   const data = Digit.SessionStorage.get("DSS_FILTERS");
   const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
   const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
-  const interval = Digit.Utils.dss.getDuration(startDate, endDate);
+  const interval = getDuration(startDate, endDate);
   return { startDate, endDate, interval };
 };
 // Function to generate dynamic colors based on the number of sets
