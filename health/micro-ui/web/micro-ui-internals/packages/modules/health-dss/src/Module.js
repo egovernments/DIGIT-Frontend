@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
@@ -22,7 +22,7 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
     modulePrefix,
   });
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"}/>;
   } else {
     return (
       <ProviderContext>

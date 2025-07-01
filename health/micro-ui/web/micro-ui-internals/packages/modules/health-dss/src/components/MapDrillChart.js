@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import { ResponsiveContainer } from "recharts";
 import { format } from "date-fns";
 import { getDuration } from "../utils/getDuration";
@@ -98,7 +98,7 @@ const MapDrillChart = ({
     }
 
     if(isLoading){
-        return <Loader />;
+        return <Loader className={"digit-center-loader"}/>;
     }
 
     const data2 = response?.responseData?.data;

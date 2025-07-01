@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React, { Fragment, useContext, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -162,7 +162,7 @@ const CustomBarChart = ({
     );
   };
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"}/>;
   }
   if (chartData?.length === 0 || !chartData) {
     return <NoData t={t} />;

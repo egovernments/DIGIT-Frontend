@@ -1,9 +1,8 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LatLngBounds } from "leaflet";
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader,Chip } from "@egovernments/digit-ui-components";
 import LatLongMap from "./LatLongMap";
-import { RemoveableTag } from "@egovernments/digit-ui-react-components";
 import NoData from "../../NoData";
 import GenericChart from "../../GenericChart";
 import FilterContext from "../../FilterContext";
@@ -117,7 +116,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
     const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
     if (isLoading) {
-      return <Loader />;
+      return <Loader className={"digit-center-loader"}/>;
     }
     response?.responseData?.data?.forEach((d) => {
       let plotLabel = response?.responseData?.plotLabel;
@@ -231,12 +230,13 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
     return (
       <React.Fragment>
         {drillDownStack?.length > 1 && (
-          <div className="tag-container">
-            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+          <div className="digit-tag-container">
+            <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
             {drillDownStack.map((filter, id) =>
               id > 0 ? (
-                <RemoveableTag
+                <Chip
                   key={id}
+                  hideClose={false}
                   text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter.boundary)}`)}: ${filter.label && getTitleHeading(filter.label)}`}
                   onClick={() => {
                     removeDrillStack(id)
@@ -270,7 +270,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   });
   const renderMap = () => {
     if (pointProps.current.isFetchingChart || isLoading) {
-      return <Loader />;
+      return <Loader className={"digit-center-loader"}/>;
     }
 
     const data = pointProps.current.chartData;

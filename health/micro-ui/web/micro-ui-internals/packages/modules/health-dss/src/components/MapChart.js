@@ -142,7 +142,7 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
     }, {}) || {};
 
   if (isLoading || isLoadingNAT) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"}/>;
   }
 
   return (

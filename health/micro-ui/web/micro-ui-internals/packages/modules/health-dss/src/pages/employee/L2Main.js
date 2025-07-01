@@ -1,4 +1,4 @@
-import { DownloadIcon, FilterIcon, MultiLink, RemoveableTag, ShareIcon } from "@egovernments/digit-ui-react-components";
+import { DownloadIcon, FilterIcon, MultiLink, ShareIcon } from "@egovernments/digit-ui-react-components";
 import { format, differenceInDays } from "date-fns";
 import React, { useEffect, Fragment, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";

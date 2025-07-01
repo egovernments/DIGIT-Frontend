@@ -5,7 +5,7 @@ import HighchartsReact from 'highcharts-react-official';
 import { useTranslation } from 'react-i18next';
 import FilterContext from './FilterContext';
 import NoData from "./NoData";
-import { Loader } from '@egovernments/digit-ui-react-components';
+import { Loader } from '@egovernments/digit-ui-components';
 import { getDuration } from "../utils/getDuration";
 // Initialize the VennModule
 VennModule(Highcharts);
@@ -220,7 +220,7 @@ const VennDiagramChart = ({data, isNational = false,}) => {
     ],
   };
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"}/>;
   } else if (chartData?.length === 0) {
     return <NoData t={t} />;
   } else {

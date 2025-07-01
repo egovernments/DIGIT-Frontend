@@ -1,4 +1,4 @@
-import { Card, Loader } from "@egovernments/digit-ui-react-components";
+import { Card, Loader } from "@egovernments/digit-ui-components";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
 // import { ArrowUpwardElement } from "./ArrowUpward";
@@ -65,7 +65,7 @@ const Chart = ({ data }) => {
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   if (isLoading) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"}/>;
   }
   let name = t(data?.name) || "";
 

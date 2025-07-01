@@ -1,4 +1,3 @@
-import { RemoveableTag } from "@egovernments/digit-ui-react-components";
 import { Loader, Chip } from "@egovernments/digit-ui-components";
 import React, { Fragment, useContext, useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";

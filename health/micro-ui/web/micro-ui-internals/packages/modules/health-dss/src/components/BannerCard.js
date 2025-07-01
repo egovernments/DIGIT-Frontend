@@ -140,7 +140,7 @@ const BannerCard = ({ data }) => {
       </div>
       {isFetchingChart ? (
         <div style={{ margin: "auto" }}>
-          <Loader />
+          <Loader className={"digit-center-loader"}/>
         </div>
       ) : (
         <React.Fragment>{renderMetrics()}</React.Fragment>

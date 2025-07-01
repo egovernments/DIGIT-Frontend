@@ -12,7 +12,7 @@ const CampaignsInbox = () => {
     ? CampaignsInboxConfig({ headerLabel: t("PAST_CAMPAIGNS") })?.CampaignsInboxConfig?.[1]
     : CampaignsInboxConfig({ headerLabel: t("LIVE_CAMPAIGNS") })?.CampaignsInboxConfig?.[0];
   if (!config) {
-    return <Loader />;
+    return <Loader className={"digit-center-loader"}/>;
   }
   return (
     <React.Fragment>

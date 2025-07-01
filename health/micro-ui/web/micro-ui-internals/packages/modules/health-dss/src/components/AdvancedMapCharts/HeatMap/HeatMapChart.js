@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LatLngBounds } from "leaflet";
-import { Loader, RemoveableTag } from "@egovernments/digit-ui-react-components";
+import { Loader, Chip } from "@egovernments/digit-ui-components";
 import Map from "./Map";
 import NoData from "../../NoData";
 import GenericChart from "../../GenericChart";
@@ -322,15 +322,16 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     return (
       <React.Fragment>
         {drillDownStack?.length > 1 && (
-          <div className="tag-container">
-            <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
+          <div className="digit-tag-container">
+            <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
             {drillDownStack.map((filter, id) =>
               id > 0 ? (
-                <RemoveableTag
+                <Chip
                   key={id}
                   text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter.boundary)}`)}: ${
                     filter.label && getTitleHeading(filter.label)
                   }`}
+                  hideClose={false}
                   onClick={() => {
                     removeDrillStack(id);
                     // const filtered = drillDownStack.filter((d) => d.id !== filter.id);
@@ -360,7 +361,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
 
   const renderMap = () => {
     if (isFetchingChart || isLoading) {
-      return <Loader />;
+      return <Loader className={"digit-center-loader"}/>;
     }
 
     const data = chartData();
