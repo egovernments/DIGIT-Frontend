@@ -318,7 +318,8 @@ const L2Main = ({}) => {
     }
     Digit.SessionStorage.set(key, updatedData);
     setFilters(updatedData);
-    if (campaignInfo) {
+    const sessionCampaignDates = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters;
+    if (sessionCampaignDates?.campaignStartDate && sessionCampaignDates?.campaignEndDate) {
       setShowProgressBar(true);
       setProgressDuration(getValuesForProgressBar);
     }
