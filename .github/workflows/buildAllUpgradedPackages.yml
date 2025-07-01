@@ -2,12 +2,12 @@ name: Digit build upgraded packages workflow
 on:
   push:
     branches:
-      - VersionUpgrade-test5-withPackages
+      - VersionUpgrade-test6-campaign
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
   pull_request:
     branches:
-      - VersionUpgrade-test5
+      - VersionUpgrade-test6-campaign
   workflow_dispatch:
 jobs:
   docker_image-build:
