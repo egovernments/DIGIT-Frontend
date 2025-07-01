@@ -79,8 +79,6 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
     module: localeModule,
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
-      staleTime: 0,
-      cacheTime: 0,
       select: (data) => {
         return data;
       },
