@@ -524,14 +524,6 @@ const DetailsCardSection = ({ field, t }) => {
 
       <div
         className="no-x-scroll"
-        style={{
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          scrollbarWidth: 'thin',       // Firefox
-          msOverflowStyle: 'auto',      // Edge/IE
-          maxHeight: '300px',
-          whiteSpace: 'nowrap'
-        }}
       >
         <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
           {heading}
