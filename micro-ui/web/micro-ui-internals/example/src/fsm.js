@@ -11,7 +11,7 @@ const fsmCustomizations = {
             label: t("EXAMPLE"),
             type: "text",
             isMandatory: true,
-            populators: {
+            populators: { 
               name: "example",
               validation: {
                 required: true,
