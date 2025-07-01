@@ -273,6 +273,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 isFetching={isFetching} 
                                 fullConfig={configs}
                                 additionalConfig={additionalConfig}
+                                tabData={tabData}
                                 />
                             </MediaQuery>
                             <MediaQuery maxWidth={426}>
