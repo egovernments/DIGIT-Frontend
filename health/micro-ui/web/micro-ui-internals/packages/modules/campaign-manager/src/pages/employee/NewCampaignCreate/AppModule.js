@@ -246,7 +246,7 @@ const AppModule = () => {
   return (
     <>
       <div>
-        <HeaderComponent className="campaign-header-style">{t(`HCM_CHOOSE_MODULE`)}</HeaderComponent>
+        <HeaderComponent className="campaign-header-module-style" style={{marginBottom: "1rem"}}>{t(`HCM_CHOOSE_MODULE`)}</HeaderComponent>
         <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       </div>
       {isCreatingModule && <Loader page={true} variant={"OverlayLoader"} loaderText={t("COPYING_CONFIG_FOR_SELECTED_MODULES")} />}
