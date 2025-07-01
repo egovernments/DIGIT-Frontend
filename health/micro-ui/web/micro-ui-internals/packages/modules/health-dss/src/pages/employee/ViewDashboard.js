@@ -158,7 +158,7 @@ const ViewDashbaord = ({ stateCode }) => {
   useEffect(() => {
     const boundaries =
       data?.map((item) => ({
-        [item.boundaryType.toLowerCase()]: [t(item.code)],
+        [item.boundaryType.toLowerCase()]: [item.code.toLowerCase()],
       })) || [];
 
     const projectsInfo = {

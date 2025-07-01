@@ -6,9 +6,8 @@ const useDSSGeoJson = (moduleCode, tenantId, selector, geoJsonConfig) => {
   return useQuery(
     [`DSS_DASHBOARD_${selector}`, moduleCode],
     () => {
-        const geoJsonUrl = geoJsonConfig?.["map-config"]?.GeoJsonMapping?.find((item) => item?.code === selector[0])?.url;
+        const geoJsonUrl = geoJsonConfig?.MdmsRes?.["map-config"]?.GeoJsonMapping?.find((item) => item?.code === selector[0])?.url;
         return DSSService.getDashboardGeoJsonConfig(geoJsonUrl);
-    
     },{
         enabled: !!geoJsonConfig
     }

@@ -104,7 +104,15 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     title: "home",
   };
 
-  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
+  // const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
+  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.useCustomMDMS(
+    Digit?.ULBService?.getStateId(),
+    "map-config",
+    [{ name: "GeoJsonMapping" }],
+    {},
+    { schemaCode: "map-config.GeoJsonMapping" }
+  );
+
   const { isLoading, data } = Digit.Hooks.DSS.useDSSGeoJson(
     Digit?.ULBService?.getStateId(),
     "GeoJsonMapping",

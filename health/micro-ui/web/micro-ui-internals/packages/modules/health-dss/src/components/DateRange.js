@@ -40,7 +40,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
   const [selectionRange, setSelectionRange] = useState(values);
   const wrapperRef = useRef(null);
   const dateFilterSelected = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.dateFilterSelected;
-  const isHealthCampaignDashboard = Digit.SessionStorage.get("campaigns-info")?.value ? Object.keys(Digit.SessionStorage.get("campaigns-info")?.value)?.length > 0 : false
+  const isHealthCampaignDashboard = Digit.SessionStorage.get("projectSelected")?.value ? Object.keys(Digit.SessionStorage.get("projectSelected")?.value)?.length > 0 : false
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
@@ -148,18 +148,6 @@ const DateRange = ({ values, onFilterChange, t }) => {
       },
     ]);
   }, []);
-  // const getDuration = (startDate, endDate) => {
-  //   let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
-  //   if (noOfDays > 91) {
-  //     return "month";
-  //   }
-  //   if (noOfDays < 90 && noOfDays >= 14) {
-  //     return "week";
-  //   }
-  //   if (noOfDays <= 14) {
-  //     return "day";
-  //   }
-  // };
 
   const handleSelect = (ranges, e) => {
     let { range1: selection } = ranges;

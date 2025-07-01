@@ -3,9 +3,9 @@ import { useTranslation } from "react-i18next";
 import { scaleQuantile } from "d3-scale";
 import ReactTooltip from "react-tooltip";
 import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simple-maps";
-// import { Icon } from "../../common/Icon";
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
+import { Button } from "@egovernments/digit-ui-components";
 const Map = ({
   chartId,
   mapData,
@@ -19,7 +19,7 @@ const Map = ({
   pageZoom,
   filterStack,
   setFilterStack,
-  setBoundaryLevel
+  setBoundaryLevel,
 }) => {
   const { t } = useTranslation();
   const [geoJSONData, setGeoJSONData] = useState(null);
@@ -94,21 +94,7 @@ const Map = ({
 
       return (
         <button
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "5px 10px",
-            width: "100%",
-            background: "#FFFFFF",
-            border: "1px solid #D6D5D4",
-            boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.16)",
-            color: "#F47738",
-            fontWeight: "700",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
+          className={"digit-heat-map-zoom-button"}
           onClick={() => {
             if (label === "+") {
               handleZoomIn();
@@ -123,42 +109,33 @@ const Map = ({
     };
 
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "end",
-          flexDirection: "column",
-          alignItems: "center",
-          marginBottom: "24px",
-          marginRight: "24px"
-        }}
-      >
+      <div className={"digit-heat-map-zoom-wrap"}>
         {button("+")}
         {button("-")}
       </div>
     );
   };
 
-  
   const Recentre = () => {
     const recentreHandler = () => {
       setZoom((prev) => {
         return { ...prev, coordinates: mapData.center };
       });
-    }
+    };
     return (
-    <div style={{    
-      display: "flex",
-      marginBottom: "24px",
-      marginLeft: "24px",
-      cursor: "pointer"
-      }} >
-        <div style={{border: "1px solid #F47738", display: "flex",flexDirection: "row", whiteSpace:"nowrap"}} onClick={() => {recentreHandler();}}>
-          {/* <div style={{margin:"9px"}}>{Icon("recenter-map")}</div> */}
-          <div style={{color: "#F47738", fontSize: "14px", fontWeight: 700, margin: "9px", textAlign:"center", whiteSpace:"nowrap"}}>{t("DSS_MAP_RECENTRE")}</div>
-        </div>
-    </div>)
-  }
+      <Button
+        type={"button"}
+        label={t("DSS_MAP_RECENTRE")}
+        variation={"secondary"}
+        title={t("DSS_MAP_RECENTRE")}
+        t={t}
+        className={"digit-heat-map-recenter"}
+        icon={"AssistantNavigation"}
+        onClick={() => recentreHandler()}
+        size={"small"}
+      ></Button>
+    );
+  };
   const formatPercentage = (value) => {
     // const formatter = new Intl.NumberFormat("en-IN", { maximumSignificantDigits: 3 });
     // const formattedValue = `${formatter.format(value?.toFixed(2))}%`;
@@ -193,9 +170,7 @@ const Map = ({
         }}
       >
         <div style={{ fontWeight: 700, fontSize: "16px", margin: "10px" }}>{formattedName}</div>
-        {
-          dataTip.value!==undefined ? <div>{formatPercentage(dataTip.value)}</div> : null
-        }
+        {dataTip.value !== undefined ? <div>{formatPercentage(dataTip.value)}</div> : null}
         {/* {showInsights ? (
           <React.Fragment>
             <div style={{ fontWeight: 400, fontSize: "16px", margin: "10px" }}>{dataTip.indicator !== "no_diff" ? formatPercentage(dataTip.insightValue): null}</div>
@@ -218,32 +193,44 @@ const Map = ({
   const drillDown = (name, value, level, hasCoordinatesDown) => {
     if (drillDownChart === "none") return;
     if (!hasCoordinatesDown) {
-      if(level===4){
-        setFilterFeature({finalFilter: name})
+      if (level === 4) {
+        setFilterFeature({ finalFilter: name });
       } else return;
     }
 
     if (level === 2) {
-      let dummy = {...filterStack};
+      let dummy = { ...filterStack };
       if (dummy.value == undefined || Object.keys(dummy.value).length == 0) {
-        dummy.value = {"filters": {province: name}}
+        dummy.value = { filters: { province: name } };
       }
-      setFilterStack(dummy); 
-      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE))
-    } 
+      setFilterStack(dummy);
+      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE));
+    }
 
     if (level === 3) {
-      let dummy = {...filterStack};
-      dummy.value.filters = {...dummy.value.filters, district:name}
-      setFilterStack(dummy); 
-      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT))
-    } 
+      let dummy = { ...filterStack };
+      dummy.value.filters = { ...dummy.value.filters, district: name };
+      setFilterStack(dummy);
+      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT));
+    }
 
     setChartKey(drillDownChart);
     setDrillDownStack((prev) => {
-      return [...prev, { id: drillDownChart, label: name, boundary: level===2 ? toFilterCase(BoundaryTypes.PROVINCE) : 
-      level===3 ? toFilterCase(BoundaryTypes.DISTRICT): 
-      level===4 ? toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE) : "" }];
+      return [
+        ...prev,
+        {
+          id: drillDownChart,
+          label: name,
+          boundary:
+            level === 2
+              ? toFilterCase(BoundaryTypes.PROVINCE)
+              : level === 3
+              ? toFilterCase(BoundaryTypes.DISTRICT)
+              : level === 4
+              ? toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE)
+              : "",
+        },
+      ];
     });
   };
 
@@ -260,9 +247,7 @@ const Map = ({
         height: "480px",
       }}
     >
-      <div
-        style={{ width: "90%", display: "flex", flexDirection: "column", zoom: pageZoom ? 1 : 1.25 }}
-      >
+      <div style={{ width: "90%", display: "flex", flexDirection: "column", zoom: pageZoom ? 1 : 1.25 }}>
         {geoJSONData ? (
           <React.Fragment>
             <ReactTooltip id={`tooltip-for-${chartId}`} border={true} type={"light"}>
@@ -296,7 +281,7 @@ const Map = ({
               >
                 <Geographies geography={geoJSONData}>
                   {({ geographies }) => {
-                    return geographies.map((geo) => {                      
+                    return geographies.map((geo) => {
                       const locationName = getTitleHeading(geo.properties?.name);
                       const level = geo.properties?.level;
                       const hasCoordinatesDown = geo.properties?.hasCoordinatesDown;
@@ -329,7 +314,7 @@ const Map = ({
                           }}
                           onMouseEnter={() => {
                             // const insight = insightsResults[locationName];
-                              setTooltipContent({
+                            setTooltipContent({
                               name: locationName,
                               value: chartData?.[locationName],
                               // insightValue: insight?.insightValue,
@@ -390,7 +375,7 @@ const Map = ({
             </ComposableMap>
           </React.Fragment>
         ) : null}
-      <Recentre />
+        <Recentre />
       </div>
       <ZoomButtons />
     </div>
