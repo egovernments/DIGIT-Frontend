@@ -1,41 +1,25 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
-import ReactDOM from "react-dom/client"; // Use createRoot from React 18
-import { initGlobalConfigs } from "./globalConfig";
-// import {initAssignmentComponents} from "@egovernments/digit-ui-module-assignment"
-// import {initWorkbenchComponents} from "@egovernments/digit-ui-module-workbench"
-// import { BrowserRouter } from "react-router-dom";
-// import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 
-// Ensure Digit is defined before using it
+import { initLibraries } from "@egovernments/digit-ui-libraries";
 window.Digit = window.Digit || {};
-window.Digit.Hooks = Hooks; 
-// const queryClient = new QueryClient();
-const DigitUILazy = lazy(() =>
-  import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI }))
-);import { initLibraries } from "@egovernments/digit-ui-libraries";
+window.Digit.Hooks = Hooks;
+const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
-const enabledModules = ["assignment", "HRMS", "Workbench"];
+
+const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities","Campaign"];
 
 const initTokens = (stateCode) => {
-  console.log(window.globalConfigs, "window.globalConfigs");
-
-  const userType =
-    window.sessionStorage.getItem("userType") ||
-    process.env.REACT_APP_USER_TYPE ||
-    "CITIZEN";
-  const token =
-    window.localStorage.getItem("token") ||
-    process.env[`REACT_APP_${userType}_TOKEN`];
+  const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
+  const token = window.localStorage.getItem("token") || process.env[`REACT_APP_${userType}_TOKEN`];
 
   const citizenInfo = window.localStorage.getItem("Citizen.user-info");
-  const citizenTenantId =
-    window.localStorage.getItem("Citizen.tenant-id") || stateCode;
+  const citizenTenantId = window.localStorage.getItem("Citizen.tenant-id") || stateCode;
   const employeeInfo = window.localStorage.getItem("Employee.user-info");
   const employeeTenantId = window.localStorage.getItem("Employee.tenant-id");
 
-  const userTypeInfo =
-    userType === "CITIZEN" || userType === "QACT" ? "citizen" : "employee";
+  const userTypeInfo = userType === "CITIZEN" || userType === "QACT" ? "citizen" : "employee";
   window.Digit.SessionStorage.set("user_type", userTypeInfo);
   window.Digit.SessionStorage.set("userType", userTypeInfo);
 
@@ -54,41 +38,30 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  initGlobalConfigs(); // Ensure global configs are set first
-  // console.log("initWorkbenchComponents", initWorkbenchComponents)
-  // initWorkbenchComponents();
-  window.contextPath =
-  window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
-  
-  const stateCode = Digit?.ULBService?.getStateId();
-  
-  const root = ReactDOM.createRoot(document.getElementById("root")); // ✅ React 18 uses createRoot()
-  root.render(
-    <MainApp stateCode={stateCode} enabledModules={enabledModules} />);
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
+
+  const root = ReactDOM.createRoot(document.getElementById("root"));
+  root.render(<MainApp stateCode={stateCode} enabledModules={enabledModules} />);
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
   const [isReady, setIsReady] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  
-  
-  
+
   useEffect(() => {
-    
-    initLibraries().then(() => {
-      console.log(Digit,window?.Digit);
-      // initAssignmentComponents();
-      
-      setIsReady(true)
+    initLibraries().then(async () => {
+      const {initCampaignComponents}=await import("@egovernments/digit-ui-module-campaign-manager")
+      initCampaignComponents()
+      setIsReady(true);
     });
-    // initWorkbenchComponents();
-    
   }, []);
 
   useEffect(() => {
     initTokens(stateCode);
-     setLoaded(true);
-  }, [stateCode,isReady]);
+    setLoaded(true);
+  }, [stateCode, isReady]);
 
   if (!loaded) {
     return <div>Loading...</div>;
@@ -96,16 +69,11 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   return (
     <Suspense fallback={<div>Loading...</div>}>
-    {window.Digit && (
-      <DigitUILazy
-        stateCode={stateCode}
-        enabledModules={enabledModules}
-        defaultLanding="home"
-      />
-    )}
-  </Suspense>
+      {window.Digit && (
+        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
+      )}
+    </Suspense>
   );
 };
 
-// Start the app
 initDigitUI();

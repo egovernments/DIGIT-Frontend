@@ -2,11 +2,22 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const dotenv = require("dotenv");
+const fs = require("fs");
+
+// Load .env variables
+const envFile = dotenv.config().parsed || {};
+
+// Make DefinePlugin-compatible keys
+const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
+  acc[`process.env.${key}`] = JSON.stringify(val);
+  return acc;
+}, {});
 
 module.exports = {
-  mode: "development", // Set mode to development
-  entry: path.resolve(__dirname, 'src/index.js'),
-  devtool: "source-map", // Enable source maps for easier debugging in development
+  mode: "development",
+  entry: path.resolve(__dirname, "src/index.js"),
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -16,14 +27,14 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"]
-          }
+            plugins: ["@babel/plugin-proposal-optional-chaining"],
+          },
         },
       },
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      }
+      },
     ],
   },
   output: {
@@ -33,43 +44,51 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       minSize: 20000,
       maxSize: 50000,
       enforceSizeThreshold: 50000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 30
+      maxInitialRequests: 30,
     },
   },
   plugins: [
     new webpack.ProvidePlugin({
       process: "process/browser",
     }),
+    new webpack.DefinePlugin(envKeys), // <-- Add this
     new CleanWebpackPlugin(),
-    new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
+    new HtmlWebpackPlugin({
+      inject: true,
+      template: "public/index.html",
+      templateParameters: {
+        REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+      },
+    }),
   ],
   resolve: {
-    modules: [path.resolve(__dirname, 'src'), 'node_modules'],
-    extensions: ['.js', '.jsx', '.ts', '.tsx'],
-    preferRelative: true, // Try resolving relatively if needed
+    modules: [path.resolve(__dirname, "src"), "node_modules"],
+    extensions: [".js", ".jsx", ".ts", ".tsx"],
+    preferRelative: true,
     fallback: {
       process: require.resolve("process/browser"),
     },
   },
   devServer: {
-    static: path.join(__dirname, "dist"), // Change this to "dist"
+    static: path.join(__dirname, "dist"),
     compress: true,
     port: 3000,
     hot: true,
     historyApiFallback: true,
     proxy: [
       {
-        context: ["/egov-mdms-service",
+        context: [
           "/access/v1/actions/mdms",
           "/tenant-management",
           "/user-otp",
           "/egov-mdms-service",
+          "/plan-service",
           "/mdms-v2",
           "/egov-idgen",
           "/egov-location",
@@ -141,11 +160,12 @@ module.exports = {
           "/tenant-management",
           "/default-data-handler",
           "/facility/v1/_create"
-        ], // Add all endpoints that need to be proxied
-        target: "https://unified-qa.digit.org",
+        ],
+        target: "https://unified-dev.digit.org",
         changeOrigin: true,
         secure: false,
       },
     ],
-}
+  },
 };
+
