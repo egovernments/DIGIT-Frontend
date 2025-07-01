@@ -110,7 +110,7 @@ const CloneCampaignWrapper = (props) => {
       const res = await executeFlow();
       if (res?.success && res?.CampaignDetails?.campaignNumber) {
         setToast({ key: false, label: `${res?.CampaignDetails?.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`, type: "success" });
-        navigate(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
+        navigate(`/${window?.contextPath}/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
       } else {
         setToast({ key: true, label: `${t("FAILED_TO_CREATE_COPY_CAMPAIGN")}`, type: "error" });
         props.setCampaignCopying(false);

@@ -41,7 +41,7 @@ const CampaignCard = () => {
     },
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
-      link: `/workbench-ui/employee/campaign/campaign-home`,
+      link: `/${window?.contextPath}/employee/campaign/campaign-home`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
@@ -70,25 +70,25 @@ const CampaignCard = () => {
     },
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_MOBILE"),
-    //   link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`,
+    //   link: `/${window?.contextPath}/employee/campaign/app-configuration-parent?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE`,
     //   roles: ROLES.CAMPAIGN_MANAGER,
     //   // count: isLoading?"-":data
     // },
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION_PARENT_WEB"),
-    //   link: `/workbench-ui/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&fieldType=FormBuilderFieldType&prefix=FORMONE`,
+    //   link: `/${window?.contextPath}/employee/campaign/app-configuration-parent?variant=web&masterName=FormBuilderConfig&fieldType=FormBuilderFieldType&prefix=FORMONE`,
     //   roles: ROLES.CAMPAIGN_MANAGER,
     //   // count: isLoading?"-":data
     // },
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION_3.0"),
-    //   link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE&formId=default`,
+    //   link: `/${window?.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigOne&fieldType=AppFieldType&prefix=APPONE&localeModule=APPONE&formId=default`,
     //   roles: ROLES.CAMPAIGN_MANAGER,
     //   // count: isLoading?"-":data
     // },
     // {
     //   label: t("ACTION_TEST_APP_CONFIGURATION"),
-    //   link: `/workbench-ui/employee/campaign/app-configuration`,
+    //   link: `/${window?.contextPath}/employee/campaign/app-configuration`,
     //   roles: ROLES.CAMPAIGN_MANAGER,
     //   // count: isLoading?"-":data
     // },  WILLBEDISABLEDINPATCHRELEASE
