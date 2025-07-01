@@ -11,7 +11,7 @@ const CycleSelection = ({ onSelect, formData, ...props }) => {
     { code: "HCM_MULTI_ROUND", name: t("HCM_MULTI_ROUND") },
   ];
 
-useEffect(()=>{
+useEffect(()=>{ 
   if(formData?.CampaignType?.cycles?.length > 1){
     setSelectedOption("HCM_MULTI_ROUND");
   }
