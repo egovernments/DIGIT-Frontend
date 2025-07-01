@@ -10,7 +10,7 @@ const pgrCustomizations = {
 };
 
 const overrideComponents = {
-  SelectName: SelectName,
+  SelectName: SelectName, 
   DocumentCard,
   EngagementCard
 };
