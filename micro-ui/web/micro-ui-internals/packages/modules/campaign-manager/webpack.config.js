@@ -5,7 +5,7 @@ module.exports = {
   mode: "development",
   entry: "./src/Module.js",
   output: {
-    filename: "main.js",
+    filename: "Main.js",
     path: path.resolve(__dirname, "dist"),
     library: {
       name: "@egovernments/digit-ui-module-campaign-manager",

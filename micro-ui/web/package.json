@@ -78,7 +78,7 @@
     "start:core":"cd micro-ui-internals && yarn build:core && cd ../ && yarn start:dev",
 
     "start:dev": "webpack serve --config webpack.dev.js --mode development",
-    "build": "GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true react-scripts build",
+    "build": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true build",
     "build:prepare": "./build.sh",
     "build:libraries": "cd micro-ui-internals && yarn build",
     "build:prod": "webpack --mode development",
