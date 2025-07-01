@@ -18,6 +18,8 @@ const iconMap = {
 };
 
 
+
+
 import { useHistory } from "react-router-dom";
 const Breadcrumb = ({ path }) => {
     const history = useHistory();
@@ -164,13 +166,13 @@ const RoleContent = ({ role, cards, config, t }) => (
     </div>
 );
 
-const WalkthroughSection = ({ activeTab, setActiveTab, t }) => {
+const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink,citizenWTLink }) => {
     const iframeSrc = activeTab === "citizen"
-        ? "https://example.com"
-        : "https://www.wikipedia.org";
+        ? citizenWTLink
+        : employeeWTLink;
 
     return (
-        <div className="walkthrough-container" style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
+        <div className="walkthrough-container" style={{backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
             <div className="wt-c1">
                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
@@ -256,11 +258,28 @@ function getImageByType(config, type) {
     return imageObject?.text || null;
 }
 
+function getLinkByType(config, type) {
+    const contentArray = config[0]?.subsections?.[1]?.content;
+
+    if (!Array.isArray(contentArray)) {
+        return null;
+    }
+
+    const imageObject = contentArray.find(item => item.type === type);
+
+    return imageObject?.link || null;
+}
+
 
 const ProductDetailsComponentUpdated = ({ config, module }) => {
 
+    console.log(`*** LOG ***`,config);
+
     const { t } = useTranslation();
     const [activeTab, setActiveTab] = useState("citizen");
+    const [employeeWTLink, setEmployeeWTLink] = useState('');
+    const [citizenWTLink, setCitizenWTLink] = useState('');
+
 
 
     content.heroTitle = `${t(config[0].heading)}`
@@ -343,7 +362,6 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             roles[currentRoleIndex].cards.push({ icon, text: t(item.text) });
         }
     });
-
     content.experience.roles = roles;
     return (
         <div>
@@ -351,7 +369,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
             <ExperienceSection experience={content.experience} t={t} />
-            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} />
+            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} />
         </div>
     );
 };
