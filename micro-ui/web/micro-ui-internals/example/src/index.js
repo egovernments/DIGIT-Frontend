@@ -83,5 +83,5 @@ const initDigitUI = () => {
 };
 
 initLibraries().then(() => {
-  initDigitUI();
+  initDigitUI(); 
 });
