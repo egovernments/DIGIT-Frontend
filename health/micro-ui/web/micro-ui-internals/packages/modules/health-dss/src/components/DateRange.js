@@ -24,6 +24,7 @@ import {
 } from "date-fns";
 import React, { useEffect, Fragment, useMemo, useRef, useState } from "react";
 import { createStaticRanges, DateRangePicker } from "react-date-range";
+import { getDuration } from "../utils/getDuration";
 
 function isEndDateFocused(focusNumber) {
   return focusNumber === 1;
@@ -147,18 +148,18 @@ const DateRange = ({ values, onFilterChange, t }) => {
       },
     ]);
   }, []);
-  const getDuration = (startDate, endDate) => {
-    let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
-    if (noOfDays > 91) {
-      return "month";
-    }
-    if (noOfDays < 90 && noOfDays >= 14) {
-      return "week";
-    }
-    if (noOfDays <= 14) {
-      return "day";
-    }
-  };
+  // const getDuration = (startDate, endDate) => {
+  //   let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
+  //   if (noOfDays > 91) {
+  //     return "month";
+  //   }
+  //   if (noOfDays < 90 && noOfDays >= 14) {
+  //     return "week";
+  //   }
+  //   if (noOfDays <= 14) {
+  //     return "day";
+  //   }
+  // };
 
   const handleSelect = (ranges, e) => {
     let { range1: selection } = ranges;

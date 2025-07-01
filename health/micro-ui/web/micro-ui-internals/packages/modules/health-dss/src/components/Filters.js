@@ -6,6 +6,7 @@ import Switch from "./Switch";
 import { format } from "date-fns";
 import FilterByCycleDropdown from "./FilterByCycle";
 import { Toggle, Chip } from "@egovernments/digit-ui-components";
+import { getDuration } from "../utils/getDuration";
 
 const Filters = ({
   t,
@@ -86,18 +87,18 @@ const Filters = ({
     [selected, ulbTenants]
   );
 
-  const getDuration = (startDate, endDate) => {
-    let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
-    if (noOfDays > 91) {
-      return "month";
-    }
-    if (noOfDays < 90 && noOfDays >= 14) {
-      return "week";
-    }
-    if (noOfDays <= 14) {
-      return "day";
-    }
-  };
+  // const getDuration = (startDate, endDate) => {
+  //   let noOfDays = (new Date(endDate).getTime() - new Date(startDate).getTime()) / (1000 * 3600 * 24);
+  //   if (noOfDays > 91) {
+  //     return "month";
+  //   }
+  //   if (noOfDays < 90 && noOfDays >= 14) {
+  //     return "week";
+  //   }
+  //   if (noOfDays <= 14) {
+  //     return "day";
+  //   }
+  // };
 
   const setDateAndInterval = (startDate, endDate, label) => {
     const interval = getDuration(startDate, endDate);

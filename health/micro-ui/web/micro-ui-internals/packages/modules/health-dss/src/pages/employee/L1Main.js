@@ -18,6 +18,7 @@ import HeatMapChart from "../../components/AdvancedMapCharts/HeatMap";
 import CustomPieChart from "../../components/CustomPieChart";
 import CustomHorizontalBarChart from "../../components/CustomHorizontalBarChart";
 import VennDiagramChart from "../../components/VennDiagramChart";
+import { getDuration } from "../../utils/getDuration";
 
 const key = "DSS_FILTERS";
 const getInitialRange = () => {
@@ -29,7 +30,7 @@ const getInitialRange = () => {
   let startDate = today;
   let endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
   const title = `${format(startDate, "MMM d, yyyy")} - ${format(endDate, "MMM d, yyyy")}`;
-  const interval = Digit.Utils.dss.getDuration(startDate, endDate);
+  const interval = getDuration(startDate, endDate);
   const denomination = data?.denomination || "Lac";
   const tenantId = data?.filters?.tenantId || [];
 

@@ -5,6 +5,7 @@ import { useHistory } from "react-router-dom";
 import { Bar, BarChart, CartesianGrid, ResponsiveContainer, XAxis, YAxis } from "recharts";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
+import { getDuration } from "../utils/getDuration";
 
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
@@ -67,7 +68,7 @@ const getInitialRange = () => {
   const data = Digit.SessionStorage.get("DSS_FILTERS");
   const startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
   const endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
-  const interval = Digit.Utils.dss.getDuration(startDate, endDate);
+  const interval = getDuration(startDate, endDate);
   return { startDate, endDate, interval };
 };
 const CustomBarChart = ({
