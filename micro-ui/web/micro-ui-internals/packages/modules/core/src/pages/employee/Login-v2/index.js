@@ -1,12 +1,12 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
-import { SignUpConfig as defaultSignUpConfig  } from "./config";
+import { SignUpConfig as defaultSignUpConfig  } from "./config-v2";
 import Login from "./signUp";
 import { useHistory, useLocation } from "react-router-dom";
 
 
-const SignUp = ({stateCode}) => {
+const LoginV2 = ({stateCode}) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const [SignUpConfig, setSignUpConfig] = useState(defaultSignUpConfig);
@@ -78,4 +78,4 @@ const SignUp = ({stateCode}) => {
   );
 };
 
-export default SignUp;
+export default LoginV2;

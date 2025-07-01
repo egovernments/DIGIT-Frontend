@@ -6,7 +6,7 @@ import Login from "./signUp";
 import { useHistory, useLocation } from "react-router-dom";
 
 
-const SignUp = ({stateCode}) => {
+const SignUpV2 = ({stateCode}) => {
   const { t } = useTranslation();
   const { path } = useRouteMatch();
   const [SignUpConfig, setSignUpConfig] = useState(defaultSignUpConfig);
@@ -78,4 +78,4 @@ const SignUp = ({stateCode}) => {
   );
 };
 
-export default SignUp;
+export default SignUpV2;
