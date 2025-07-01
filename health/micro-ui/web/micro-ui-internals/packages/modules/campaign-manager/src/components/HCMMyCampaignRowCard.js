@@ -289,6 +289,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         {cloneCampaign && (
           <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign} />
         )}
+        <div style={{display: "flex"}}>
         {actionTags && Object.keys(actionTags).length > 0 && (
           <div className="digit-results-card-buttons-internal">
             {Object.entries(actionTags)?.map(([key, tag]) => (
@@ -328,6 +329,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             ))}
           </div>
         )}
+        </div>
       </div>
       {showErrorPopUp && (
         <PopUp
