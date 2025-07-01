@@ -41,6 +41,7 @@ const useCustomAPIHook = ({
   options = {},
 }) => {
   const client = useQueryClient();
+  console.log("999 UseCustomApi File method initially ",method);
 
   // Memoize body to prevent unnecessary re-fetching
   const stableBody = useMemo(() => JSON.stringify(body), [body]);
@@ -50,6 +51,8 @@ const useCustomAPIHook = ({
   // Fetch function with error handling
   const fetchData = async () => {
     try {
+      console.log("999 UseCustomApi File method before CustomService call ",method);
+
       const response = await CustomService.getResponse({ url, params, body, plainAccessRequest, headers, method, ...options });
       return response || null; // Ensure it never returns undefined
     } catch (error) {
