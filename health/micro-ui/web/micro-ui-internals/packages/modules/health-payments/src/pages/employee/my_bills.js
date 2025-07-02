@@ -90,7 +90,7 @@ const MyBills = (props) => {
 
             const updateBillData = async () => {
                 BillData.bills.forEach(async (bill) => {
-                    const bill = BillData?.bills?.[0];
+                    // const bill = BillData?.bills?.[0];
 
                     if (props?.isSelectableRows && bill?.id) {
                         console.log("Bill ID:", bill.id);
