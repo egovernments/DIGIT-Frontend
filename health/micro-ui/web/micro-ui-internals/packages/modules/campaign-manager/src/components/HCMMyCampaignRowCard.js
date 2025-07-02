@@ -262,11 +262,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               value={{}}
               renderCustomContent={({ status }) => {
                 if (rowData?.status === "created") {
-                  return <Tag label="CAMPAIGN_CREATED" type="success" stroke={true}/>;
+                  return <Tag label={t("CAMPAIGN_CREATED")}  type="success" stroke={true}/>;
                 } else if (rowData?.status === "creating") {
-                  return <Tag label="CAMPAIGN_CREATION_INPROGRESS" type="warning" showIcon={false} stroke={true} />;
+                  return <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={true} />;
                 } else {
-                   return <Tag label= {rowData?.status} showIcon={false} stroke={true}/>;
+                   return <Tag label= {t(rowData?.status)} showIcon={false} stroke={true}/>;
                 }
               }}
             />
