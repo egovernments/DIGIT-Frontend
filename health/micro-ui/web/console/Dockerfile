@@ -5,6 +5,7 @@ RUN apk add --no-cache git>2.30.0
 ARG WORK_DIR
 WORKDIR /app
 ENV NODE_OPTIONS "--max-old-space-size=4792"
+ENV YARN_IGNORE_ENGINES=true
 
 COPY ${WORK_DIR} .
 RUN ls -lah
@@ -17,7 +18,6 @@ RUN cd web/ \
     && chmod +x ./install-deps.sh \
     &&  ./install-deps.sh \
     && cd ../ \
-    && npm config set engine-strict false \
     && yarn install \ 
     && yarn build:webpack 
 
