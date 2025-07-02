@@ -556,7 +556,7 @@ function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
           actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
+          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
           secondaryActionLabel: "VIEW_DETAILS",
           secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
         });

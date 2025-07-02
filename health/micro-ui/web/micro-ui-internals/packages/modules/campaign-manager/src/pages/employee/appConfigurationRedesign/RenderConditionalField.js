@@ -13,11 +13,11 @@ export const RenderConditionalField = ({
   state,
   drawerState,
   AppScreenLocalisationConfig,
-  disabled
+  disabled,
 }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
-    ?.find((i) => i.fieldType === drawerState?.type)
+    ?.find((i) => i.fieldType === (drawerState?.appType || drawerState?.type))
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
@@ -152,7 +152,6 @@ export const RenderConditionalField = ({
                 }}
                 placeholder={""}
                 disabled={disabled}
-
               />
               <div
                 onClick={() =>
@@ -180,11 +179,11 @@ export const RenderConditionalField = ({
 
           <Button
             type={"button"}
+            icon="AddIcon"
             size={"small"}
             variation={"teritiary"}
             label={t("ADD_OPTIONS")}
             disabled={disabled}
-
             onClick={() =>
               setDrawerState((prev) => ({
                 ...prev,
@@ -214,7 +213,6 @@ export const RenderConditionalField = ({
           t={t}
           option={cField?.options || []}
           disabled={disabled}
-
           optionKey={cField?.optionKey || "code"}
           selected={cField?.options?.find((i) => i.code === drawerState?.[cField?.bindTo]) || {}}
           select={(value) => {
@@ -269,7 +267,6 @@ export const RenderConditionalField = ({
         <RadioButtons
           options={cField?.options}
           disabled={disabled}
-
           additionalWrapperClass="app-config-radio"
           selectedOption={cField?.options?.find((i) => i.pattern === drawerState?.[cField?.bindTo])}
           onSelect={(value) => {

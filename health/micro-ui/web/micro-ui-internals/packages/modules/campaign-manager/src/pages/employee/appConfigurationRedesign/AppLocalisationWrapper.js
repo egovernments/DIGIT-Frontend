@@ -23,7 +23,7 @@ const locReducer = (state = initialState, action) => {
         return [...state, newEntry];
       }
     case "UPDATE_LOCALIZATION":
-      const checkCodeAlreadyPresent = state.some((item) => item.code === action.payload.code);
+      const checkCodeAlreadyPresent = Array.isArray(state) && state?.some((item) => item?.code === action?.payload?.code);
       if (checkCodeAlreadyPresent) {
         return state.map((item) => (item.code === action.payload.code ? { ...item, [action.payload.locale]: action.payload.message } : item));
       } else {
@@ -79,8 +79,6 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
     module: localeModule,
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
     config: {
-      staleTime: 0,
-      cacheTime: 0,
       select: (data) => {
         return data;
       },

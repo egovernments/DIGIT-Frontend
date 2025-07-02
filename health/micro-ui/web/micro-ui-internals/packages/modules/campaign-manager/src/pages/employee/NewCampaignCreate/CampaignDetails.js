@@ -28,7 +28,6 @@ const CampaignDetails = () => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
-    // window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
   }, []);
 
   const reqCriteria = {
@@ -48,6 +47,13 @@ const CampaignDetails = () => {
   };
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+
+  useEffect(() => {
+    if (campaignData) {
+      sessionStorage.setItem("HCM_CAMPAIGN_NUMBER", JSON.stringify({ id: campaignData?.id, campaignNumber: campaignNumber }));
+    }
+  }, [campaignData]);
+
 
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -189,7 +195,32 @@ const CampaignDetails = () => {
 
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
+  const validateCampaignDates = (cycles, campaignData) => {
+
+  // Sort the cycles by startDate to find the first and last
+  const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
+
+  const firstCycleStart = sortedCycles[0]?.startDate;
+  const lastCycleEnd = sortedCycles[sortedCycles.length - 1]?.endDate;
+
+  const campaignStart = campaignData?.startDate;
+  const campaignEnd = campaignData?.endDate;
+
+  if(campaignStart<= firstCycleStart && campaignEnd >= lastCycleEnd){
+    return true;
+  }
+  else return false;
+
+  
+};
+
+
   const onsubmit = async () => {
+    const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
+    if(!valideDates){
+      setShowToast({ key: "error", label: "INVALID_DATES" });
+      return;
+    }
     await mutationUpdate.mutate(
       {
         url: `/project-factory/v1/project-type/update`,

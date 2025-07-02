@@ -168,7 +168,7 @@ const AppFeatures = () => {
       <div className="hcm-app-features">
         {(isSelectedFeatureLoading || isModuleToggleLoading) && <Loader page={true} variant={"PageLoader"} />}
         {isUpdateLoading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />}
-        <HeaderComponent className="campaign-header-style">{t("HCM_CHOOSE_FEATURE_FOR_APP")}</HeaderComponent>
+        <HeaderComponent className="campaign-header-module-style">{t("HCM_CHOOSE_FEATURE_FOR_APP")}</HeaderComponent>
         <TextBlock
           body=""
           caption={t("CMP_DRAWER_WHAT_IS_FEATURE_APP_CONFIG_SCREEN")}
@@ -246,7 +246,7 @@ const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedF
   const { t } = useTranslation();
 
   return (
-    <div className="modules-container">
+    <div className="modules-feature-container">
       {selectedModuleFeatures?.map((feature) => {
         const featureSelected = isFeatureSelected(feature, selectedModuleCode, selectedFeaturesByModule);
         return (

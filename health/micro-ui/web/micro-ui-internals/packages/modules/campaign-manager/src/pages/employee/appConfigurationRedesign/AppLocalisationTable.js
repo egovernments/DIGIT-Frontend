@@ -22,13 +22,34 @@ const Tabs = ({ availableLocales, onTabChange, setActiveLocale, activeLocale }) 
     </div>
   );
 };
-export const AppLocalisationTable = ({ data, currentScreen, state }) => {
+export const AppLocalisationTable = ({ currentScreen, state }) => {
   const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
   const currentLocState = useMemo(() => {
     return locState?.filter(
-      (i) => i?.code && (i?.code?.includes(Digit.Utils.locale.getTransformedLocale(currentScreen)) || i?.code?.includes(currentScreen))
+      (i) =>
+        i?.code &&
+        typeof i?.code !== "boolean" &&
+        (i?.code?.includes(Digit.Utils.locale.getTransformedLocale(currentScreen)) || i?.code?.includes(currentScreen))
     );
   }, [locState, currentScreen]);
+
+  const hiddenFields = useMemo(() => {
+    return state?.screenData?.[0]?.cards?.[0]?.fields?.filter((i) => i?.hidden);
+  }, [state?.screenData]);
+
+  const fieldValuesSet = useMemo(() => {
+    const set = new Set();
+    for (const field of hiddenFields || []) {
+      for (const val of Object.values(field)) {
+        if (typeof val === "string") {
+          set.add(val);
+        }
+      }
+    }
+    return set;
+  }, [hiddenFields]);
+
+  const filteredLocData = useMemo(() => currentLocState.filter((locItem) => !fieldValuesSet.has(locItem.code)), [currentLocState, fieldValuesSet]);
   const { t } = useTranslation();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const availableLocales = (Digit?.SessionStorage.get("initData")?.languages || []).filter((locale) => locale?.value !== currentLocale);
@@ -77,7 +98,7 @@ export const AppLocalisationTable = ({ data, currentScreen, state }) => {
         // title={t(`LABEL_TRANSLATIONS_FOR_${activeLocale.label.toUpperCase()}`)}
         customStyles={tableCustomStyle}
         columns={columns}
-        data={currentLocState}
+        data={filteredLocData}
         pagination
         highlightOnHover
       />

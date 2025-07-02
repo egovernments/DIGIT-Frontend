@@ -154,7 +154,7 @@ const HouseHoldDetailsCard = (props) => {
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex", alignItems: "center", minWidth: "100vh"
+              display: "flex", alignItems: "center", minWidth: "100vh" , paddingBottom: "1rem"
             }}
             key={index}
             inline={true}
@@ -169,7 +169,7 @@ const HouseHoldDetailsCard = (props) => {
 };
 
 const HouseholdOverViewMemberCard = (props) => {
-  const attributes = props.attributes || [{ label: "Gender", value: "Female" },
+  const attributes = props.attributes || [{ label: "Gender", value: "Male" },
   { label: "Age", value: "30 years" },
   { label: "Relationship", value: "Father" },
   { label: "Status", value: "Verified" }];
@@ -524,14 +524,6 @@ const DetailsCardSection = ({ field, t }) => {
 
       <div
         className="no-x-scroll"
-        style={{
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          scrollbarWidth: 'thin',       // Firefox
-          msOverflowStyle: 'auto',      // Edge/IE
-          maxHeight: '300px',
-          whiteSpace: 'nowrap'
-        }}
       >
         <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
           {heading}

@@ -1,6 +1,18 @@
 import React, { createContext, Fragment, useContext, useEffect, useReducer, useRef, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Footer, Button, Divider, Loader, PopUp, SidePanel, Dropdown, LabelFieldPair, TextInput, Toast } from "@egovernments/digit-ui-components";
+import {
+  Footer,
+  Button,
+  Divider,
+  Loader,
+  PopUp,
+  SidePanel,
+  Dropdown,
+  LabelFieldPair,
+  TextInput,
+  Toast,
+  FieldV1,
+} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -34,8 +46,10 @@ const reorderConfig = (config, fromIndex, toIndex) => {
   const updatedConfig = [...config]; // Copy array to avoid mutation
   const [movedItem] = updatedConfig.splice(fromIndex, 1); // Remove item
   updatedConfig.splice(toIndex, 0, movedItem); // Insert item at new index
-
-  return updatedConfig;
+  return updatedConfig?.map((item, index) => ({
+    ...item,
+    order: index + 1,
+  }));
 };
 const reducer = (state = initialState, action, updateLocalization) => {
   switch (action.type) {
@@ -301,7 +315,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   // const localeModule = searchParams.get("localeModule");
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-
+  const [showError, setShowError] = useState(null);
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
@@ -373,13 +387,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
       result[locale] = locState
-        .map((item) => ({
+        ?.filter((item) => typeof item?.code !== "boolean")
+        ?.map((item) => ({
           code: item.code,
-          message: item[locale] || "",
+          message: item[locale] || " ",
           module: localeModule ? localeModule : "hcm-dummy-module",
           locale: locale,
-        }))
-        .filter((item) => item.message !== "");
+        }));
+      // .filter((item) => item.message !== "");
     });
 
     return result;
@@ -491,6 +506,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
         }
       }
     }
+    setLoading(false);
     return;
   };
   const handleSubmit = async (finalSubmit) => {
@@ -534,6 +550,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 
+  const currentPage = parseInt(pageTag.split(" ")[1]);
+
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
@@ -551,7 +569,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           label={t("PREVIOUS")}
           title={t("PREVIOUS")}
           icon="ArrowBack"
-          isDisabled={false}
+          isDisabled={currentPage === 1}
           onClick={() => back()}
         />
         <span className="app-config-tag-page"> {pageTag} </span>
@@ -583,7 +601,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               <Button
                 className="app-configure-drawer-footer-button"
                 type={"button"}
-                size={"large"}
+                size={"medium"}
                 variation={"secondary"}
                 icon={"Translate"}
                 label={t("ADD_LOCALISATION")}
@@ -724,7 +742,16 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={locUpdate} />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                locUpdate();
+                setShowPopUp(false);
+              }}
+            />,
           ]}
         >
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
@@ -736,62 +763,73 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           type={"default"}
           heading={t("ADD_FIELD_POP_HEADING")}
           children={[
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("ADD_FIELD_LABEL")}`}</span>
-                <span className="mandatory-span">*</span>
-              </div>
-              <TextInput
-                // style={{ maxWidth: "40rem" }}
-                name="name"
-                value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
-                onChange={(event) => {
-                  updateLocalization(
+            <FieldV1
+              required={true}
+              type={"text"}
+              label={`${t("ADD_FIELD_LABEL")}`}
+              value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
+              config={{
+                step: "",
+              }}
+              onChange={(event) => {
+                updateLocalization(
+                  addFieldData?.label && addFieldData?.label !== true
+                    ? addFieldData?.label
+                    : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
+                  Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                  event.target.value
+                );
+                setAddFieldData((prev) => ({
+                  ...prev,
+                  label:
                     addFieldData?.label && addFieldData?.label !== true
                       ? addFieldData?.label
                       : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
-                    Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-                    event.target.value
-                  );
-                  setAddFieldData((prev) => ({
-                    ...prev,
-                    label:
-                      addFieldData?.label && addFieldData?.label !== true
-                        ? addFieldData?.label
-                        : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
-                  }));
-                }}
-              />
-            </LabelFieldPair>,
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("ADD_FIELD_TYPE")}`}</span>
-                <span className="mandatory-span">*</span>
-              </div>
-              <Dropdown
-                // style={}
-                variant={""}
-                t={t}
-                option={(state?.MASTER_DATA?.AppFieldType || [])
+                }));
+              }}
+              populators={{ fieldPairClassName: "" }}
+              error={showError?.label ? t(showError?.label) : null}
+            />,
+            <FieldV1
+              required={true}
+              label={`${t("ADD_FIELD_TYPE")}`}
+              type={"dropdown"}
+              value={addFieldData?.type}
+              config={{
+                step: "",
+              }}
+              onChange={(value) => {
+                const isIdPopulator = value?.type === "idPopulator";
+                setAddFieldData((prev) => ({
+                  ...prev,
+                  type: value,
+                  ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
+                }));
+              }}
+              populators={{
+                t: t,
+                title: "ADD_FIELD_TYPE",
+                fieldPairClassName: "",
+                // mdmsConfig: field?.isMdms
+                //   ? {
+                //       moduleName: field?.schemaCode?.split(".")[0],
+                //       masterName: field?.schemaCode?.split(".")[1],
+                //     }
+                //   : null,
+                options: (state?.MASTER_DATA?.AppFieldType || [])
                   .filter((item) => item?.metadata?.type !== "template")
-                  ?.sort((a, b) => a?.order - b?.order)}
-                optionKey={"type"}
-                selected={addFieldData?.type}
-                select={(value) => {
-                  const isIdPopulator = value?.type === "idPopulator";
-                  setAddFieldData((prev) => ({
-                    ...prev,
-                    type: value,
-                    ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
-                  }));
-                }}
-              />
-            </LabelFieldPair>,
+                  ?.sort((a, b) => a?.order - b?.order),
+                optionsKey: "type",
+              }}
+              error={showError?.dropdown ? t(showError?.dropdown) : null}
+            />,
           ]}
           onOverlayClick={() => {
+            setShowError(null);
             setPopupData(null);
           }}
           onClose={() => {
+            setShowError(null);
             setPopupData(null);
           }}
           equalWidthButtons={"false"}
@@ -802,6 +840,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               variation={"secondary"}
               label={t("CLOSE")}
               onClick={() => {
+                setShowError(null);
                 setPopupData(null);
               }}
             />,
@@ -811,6 +850,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               variation={"primary"}
               label={t("SUBMIT")}
               onClick={() => {
+                if (!addFieldData) {
+                  setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED", dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                } else if (!addFieldData?.label?.trim() && !addFieldData?.type) {
+                  setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED", dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                } else if (!addFieldData?.type) {
+                  setShowError({ dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                } else if (!addFieldData?.label?.trim()) {
+                  setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                }
                 dispatch({
                   type: "ADD_FIELD",
                   payload: {
@@ -818,6 +870,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                     fieldData: addFieldData,
                   },
                 });
+                setShowError(null);
                 setPopupData(null);
                 setAddFieldData(null);
               }}
