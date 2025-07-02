@@ -501,7 +501,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     } catch (error) {
       setLoading(false);
       setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
-      console.error(`Error sending ${locale} localisation data:`, error);
+      console.error(`Error sending localisation data:`, error);
     }
     // for (const locale of Object.keys(localeArrays)) {
     //   if (localeArrays[locale].length > 0) {
@@ -547,7 +547,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     } catch (error) {
       setLoading(false);
       setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
-      console.error(`Error sending ${locale} localisation data:`, error);
+      console.error(`Error sending localisation data:`, error);
     }
     setShowPopUp(false);
     setLoading(false);
