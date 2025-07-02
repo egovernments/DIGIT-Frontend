@@ -200,8 +200,8 @@ const DateRange = ({ values, onFilterChange, t }) => {
             className={`employee-select-wrap--elipses ${dateFilterSelected!=="DSS_CUSTOM_DATE_RANGE" ? "disabled" : ""}`}
             type="text"
             value={
-              selectionRange?.startDate && selectionRange?.endDate
-                ? `${format(new Date(selectionRange.startDate), "MMM d, yyyy")} - ${format(new Date(selectionRange.endDate), "MMM d, yyyy")}`
+              values?.startDate && values?.endDate
+                ? `${format(new Date(values.startDate), "MMM d, yyyy")} - ${format(new Date(values.endDate), "MMM d, yyyy")}`
                 : ""
             }
             readOnly
