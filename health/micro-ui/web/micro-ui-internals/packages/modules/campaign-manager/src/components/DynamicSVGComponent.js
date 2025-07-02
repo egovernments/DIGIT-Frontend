@@ -24,7 +24,7 @@ const DynamicSVG = ({ type,appType, data }) => {
   }, [url, data]);
 
   return (
-    <div
+    <div style={{ marginTop: "0.5rem", marginBottom: "0.5rem" }} // TODO @Nabeel @jagan @bhavya scan through the app we should have s3 urls added in app directly
       dangerouslySetInnerHTML={{ __html: svgContent }}
     />
   );

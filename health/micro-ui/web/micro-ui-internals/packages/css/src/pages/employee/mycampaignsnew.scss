@@ -91,3 +91,19 @@
         }
     }
 }
+
+.digit-viewcard-field-pair {
+    &.digit-results-status-card-field-pair {
+            align-items: center;
+            gap: 1.5rem;
+            flex-direction: unset;
+        .digit-viewcard-label {
+            color: theme(digitv2.lightTheme.primary-2);
+            width: unset;
+        }
+
+        .digit-viewcard-value {
+            color: #787878;
+        }
+    }
+}

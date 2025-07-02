@@ -1,13 +1,13 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Tag, Button, Card, SummaryCardFieldPair, Divider , PopUp , CardText } from "@egovernments/digit-ui-components";
+import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
 import CloneCampaignWrapper from "./CloneCampaignWrapper";
 import { convertEpochToNewDateFormat } from "../utils/convertEpochToNewDateFormat";
 import QRButton from "./CreateCampaignComponents/QRButton";
-
+import TagComponent from "./TagComponent";
 
 /**
  * HCMMyCampaignRowCard Component
@@ -56,8 +56,7 @@ const getTagElements = (rowData) => {
       type: "warning",
       stroke: true,
     };
-  }
-  else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
+  } else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
     tags.type = {
       label: "MULTIROUND_CAMPAIGN",
       showIcon: false,
@@ -65,7 +64,11 @@ const getTagElements = (rowData) => {
       stroke: true,
     };
   }
-  if (Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user" && rowData?.status == "created")) {
+  if (
+    Array.isArray(rowData?.resources) &&
+    rowData.resources.length > 0 &&
+    rowData.resources.some((resource) => resource.type === "user" && rowData?.status == "created")
+  ) {
     tags.userCreds = {
       label: "USER_CREDS_GENERATED",
       showIcon: true,
@@ -107,7 +110,7 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp) => {
+const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp) => {
   const actions = {};
   const userResource =
     Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
@@ -119,7 +122,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
     actions.downloadApp = {
       label: "DOWNLOAD_APP",
       onClick: () => setShowQRPopUp(true),
-      size:"medium",
+      size: "medium",
       icon: "FileDownload",
       variation: "secondary",
     };
@@ -127,7 +130,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
       label: "DOWNLOAD_USER_CREDENTIALS",
       onClick: () => handleDownloadUserCreds(userResource),
       icon: "FileDownload",
-      size:"medium",
+      size: "medium",
       variation: "secondary",
     };
   }
@@ -136,21 +139,19 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
     actions.downloadUserCreds = {
       label: "EDIT_CREATING_CAMPAIGN",
       onClick: () => setShowCreatingPopUp(true),
-      size:"medium",
+      size: "medium",
       variation: "secondary",
       icon: "Edit",
     };
   }
 
-
   const currentTab = tabData?.find((i) => i?.active === true)?.label;
 
-  if(currentTab === "CAMPAIGN_FAILED"){
+  if (currentTab === "CAMPAIGN_FAILED") {
     actions.editCampaign = {
       label: "SHOW_ERROR",
-      size:"medium",
-      onClick: () =>
-        setShowErrorPopUp(true),
+      size: "medium",
+      onClick: () => setShowErrorPopUp(true),
       icon: "",
       variation: "primary",
     };
@@ -160,7 +161,7 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
   if (!(currentTab === "CAMPAIGN_COMPLETED" || currentTab === "CAMPAIGN_FAILED" || rowData?.status == "creating")) {
     actions.editCampaign = {
       label: "EDIT_CAMPAIGN",
-      size:"medium",
+      size: "medium",
       onClick: () =>
         history.push(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
@@ -175,6 +176,23 @@ const getActionButtons = (rowData, tabData, history ,setShowErrorPopUp , setShow
   return actions;
 };
 
+const getActionTags = (rowData) => {
+  const actions = {};
+
+  if (rowData?.status == "creating") {
+    actions.generateUserCreds = {
+      label: "GENERATING_USER_CRED",
+      loader: true,
+    };
+    actions.generateAPK = {
+      label: "GENERATING_APK",
+      loader: true,
+    };
+  }
+
+  return actions;
+};
+
 const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -182,10 +200,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
-  const [showErrorPopUp , setShowErrorPopUp] = useState(false);
-  const [showCreatingPopUp , setShowCreatingPopUp] = useState(false);
-  const [showQRPopUp , setShowQRPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history , setShowErrorPopUp , setShowCreatingPopUp ,setShowQRPopUp);
+  const [showErrorPopUp, setShowErrorPopUp] = useState(false);
+  const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
+  const [showQRPopUp, setShowQRPopUp] = useState(false);
+  const actionButtons = getActionButtons(rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp);
+  const actionTags = getActionTags(rowData);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
 
@@ -220,7 +239,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               className={"digit-results-card-field-pair"}
               inline={true}
               label={t("START_DATE")}
-              value = {convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
+              value={convertEpochToNewDateFormat(rowData?.startDate) || "NA"}
             />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
@@ -234,26 +253,62 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           <div className="right-column">
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("NO_OF_CYCLES")} value={noOfCycles} />
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("RESOURCES")} value={resources} />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("STATUS")} value={t(rowData?.status) || "NA"} />
+            <SummaryCardFieldPair
+              className={"digit-results-status-card-field-pair"}
+              //  inline={true}
+              label={t("STATUS")}
+              type="custom"
+              // value={t(rowData?.status) || "NA"}
+              value={{}}
+              renderCustomContent={({ status }) => {
+                if (rowData?.status === "created") {
+                  return <Tag label="CAMPAIGN_CREATED" type="success" stroke={true}/>;
+                } else if (rowData?.status === "creating") {
+                  return <Tag label="CAMPAIGN_CREATION_INPROGRESS" type="warning" showIcon={false} stroke={true} />;
+                } else {
+                   return <Tag label= {rowData?.status} showIcon={false} stroke={true}/>;
+                }
+              }}
+            />
           </div>
         </div>
       </Card>
       {/* Action Buttons */}
       <div className="digit-results-card-buttons">
-        { currentTab != "CAMPAIGN_FAILED" && 
-        <Button
-          key={"DuplicateCampaign"}
-          icon={"TabInactive"} 
-          label={t("DUPLICATE_CAMPAIGN")}
-          onClick={() => setCloneCampaign(true)}
-          variation={"teritiary"}
-          size={"medium"}
-          title={t("DUPLICATE_CAMPAIGN")}
-        />
-      }
-          {cloneCampaign && (
-              <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign}/>
-          )}
+        {currentTab != "CAMPAIGN_FAILED" && (
+          <Button
+            key={"DuplicateCampaign"}
+            icon={"TabInactive"}
+            label={t("DUPLICATE_CAMPAIGN")}
+            onClick={() => setCloneCampaign(true)}
+            variation={"teritiary"}
+            size={"medium"}
+            title={t("DUPLICATE_CAMPAIGN")}
+          />
+        )}
+        {cloneCampaign && (
+          <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign} />
+        )}
+        <div style={{display: "flex"}}>
+        {actionTags && Object.keys(actionTags).length > 0 && (
+          <div className="digit-results-card-buttons-internal">
+            {Object.entries(actionTags)?.map(([key, tag]) => (
+              <Tag
+                key={key}
+                className={tag.className || "tag-class"}
+                iconClassName={tag.iconClassName || "tag-icon-class"}
+                icon={tag.icon || ""}
+                iconColor={tag.iconColor || ""}
+                label={t(tag.label)}
+                showIcon={tag.showBottom}
+                type={tag.type}
+                loader={tag.loader}
+                style={tag.style}
+                stroke={tag.stroke}
+              />
+            ))}
+          </div>
+        )}
         {actionButtons && Object.keys(actionButtons).length > 0 && (
           <div className="digit-results-card-buttons-internal">
             {Object.entries(actionButtons)?.map(([key, btn]) => (
@@ -274,46 +329,45 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             ))}
           </div>
         )}
+        </div>
       </div>
       {showErrorPopUp && (
-          <PopUp
-            type={"default"}
-            heading={t("ES_CAMPAIGN_FAILED_ERROR")}
-            children={[
-              <div>
-                <CardText style={{ margin: 0 }}>{rowData?.additionalDetails?.error}</CardText>
-              </div>,
-            ]}
-            onOverlayClick={() => {
-              setShowErrorPopUp(false);
-            }}
-            onClose={() => {
-              setShowErrorPopUp(false);
-            }}
-            footerChildren={[]}
-          ></PopUp>
-        )}
-        {showCreatingPopUp && (
-          <PopUp
-            type={"default"}
-            heading={t("ES_CAMPAIGN_CREATING")}
-            children={[
-              <div>
-                <CardText style={{ margin: 0 }}>{t("HCM_CAMPAIGN_CREATION_PROGRESS")}</CardText>
-              </div>,
-            ]}
-            onOverlayClick={() => {
-              setShowCreatingPopUp(false);
-            }}
-            onClose={() => {
-              setShowCreatingPopUp(false);
-            }}
-            footerChildren={[]}
-          ></PopUp>
-        )}
-        {showQRPopUp && (
-          <QRButton setShowQRPopUp={setShowQRPopUp} />
+        <PopUp
+          type={"default"}
+          heading={t("ES_CAMPAIGN_FAILED_ERROR")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{rowData?.additionalDetails?.error}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowErrorPopUp(false);
+          }}
+          onClose={() => {
+            setShowErrorPopUp(false);
+          }}
+          footerChildren={[]}
+        ></PopUp>
       )}
+      {showCreatingPopUp && (
+        <PopUp
+          type={"default"}
+          heading={t("ES_CAMPAIGN_CREATING")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("HCM_CAMPAIGN_CREATION_PROGRESS")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowCreatingPopUp(false);
+          }}
+          onClose={() => {
+            setShowCreatingPopUp(false);
+          }}
+          footerChildren={[]}
+        ></PopUp>
+      )}
+      {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
     </>
   );
 };
