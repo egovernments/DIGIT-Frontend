@@ -530,6 +530,7 @@ const L2Main = ({}) => {
                 type="actionButton"
                 className={"digit-dss-options-header-option-button"}
                 variation="teritiary"
+                wrapperClassName={"digit-dss-options-header-options-button-wrapper"}
                 label={t(`ES_DSS_DOWNLOAD`)}
                 options={downloadOptions}
                 optionsKey="label"
