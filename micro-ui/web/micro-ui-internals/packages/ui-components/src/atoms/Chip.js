@@ -48,13 +48,16 @@ const Chip = ({
           onTagClick(e);
         }
       }}
-      aria-label={text}
+      aria-label={onTagClick ? `${text} chip` : undefined}
+      aria-disabled={disabled ? "true" : undefined}
     >
       <div
         className={`digit-tag ${isErrorTag ? "errortag" : ""} ${hideClose ? "noClose" : ""} ${!iconReq ? "noIcon" : ""} ${onTagClick || onClick ? "clickable" : ""} ${
           className ? className : ""
         }`}
         style={tagStyles}
+        role="group"
+        aria-label={`${text}${isErrorTag ? " error" : ""} chip${!hideClose ? " with remove button" : ""}`}
       >
         {iconReq && IconRender(iconReq,isErrorTag)}
         <span className="digit-text" style={textStyles}>
@@ -73,6 +76,7 @@ const Chip = ({
             }}
             className={`close-icon ${disabled ? "disabled" : ""} ${hideClose ? "hideClose" : ""}`}
             aria-label={`Remove ${text}`}
+            aria-disabled={disabled ? "true" : undefined}
           >
             <SVG.Close fill={IconColor} className="close" style={closeIconStyles} />
         </span>
@@ -82,7 +86,7 @@ const Chip = ({
         <div
           className={`${onErrorClick ? "cp" : "nonclickable"}`}
           onClick={onErrorClick}
-          role={onErrorClick ? "button" : undefined}
+          role={onErrorClick ? "button" : "alert"}
           tabIndex={onErrorClick ? 0 : undefined}
           onKeyDown={(e) => {
             if ((e.key === "Enter" || e.key === " ") && onErrorClick) {
@@ -90,7 +94,8 @@ const Chip = ({
               onErrorClick(e);
             }
           }}
-          aria-label="View error message"
+          aria-label={onErrorClick ? "View error message" : undefined}
+          aria-live="assertive"
         >
           <ErrorMessage
             message={error}
