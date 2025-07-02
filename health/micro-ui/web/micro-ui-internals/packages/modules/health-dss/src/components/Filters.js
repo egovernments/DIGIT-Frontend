@@ -148,7 +148,6 @@ const Filters = ({
       range: Digit.Utils.dss.getInitialRange(),
     });
   };
-  console.log(showDateRange, showFilterByCycle, showDDR, showUlb, showModuleFilter, showDenomination, "testing");
   return (
     <div className={`digit-filters-wrapper ${isOpen ? "filters-modal" : ""}`}>
       <span className="filter-close" onClick={() => closeFilters()}>

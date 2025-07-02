@@ -107,8 +107,6 @@ const Chart = ({ data, showDivider }) => {
   };
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
-  console.log(response,"ressssssssssssss1111111111111111")
-
   if (isLoading) {
     return <Loader className={"digit-center-loader"} />;
   }

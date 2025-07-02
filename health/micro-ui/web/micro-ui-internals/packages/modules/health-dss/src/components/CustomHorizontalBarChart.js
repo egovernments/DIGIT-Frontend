@@ -57,7 +57,6 @@ const CustomHorizontalBarChart = ({
   downloadChartsId = null,
   isNational = false,
 }) => {
-  console.log(data, "dataaaaaaaaaaaaaaaaaaa");
   const { id, chartType } = data;
   const { t } = useTranslation();
   const history = useHistory();
@@ -250,7 +249,6 @@ const CustomHorizontalBarChart = ({
   const constructChartData = (data, denomination) => {
     let result = {};
     let symbolKeyObject = {};
-    console.log(data,"pppppppppppppp")
 
     for (let i = 0; i < data?.length; i++) {
       const row = data[i];
@@ -349,7 +347,6 @@ const CustomHorizontalBarChart = ({
 
   const chartData = useMemo(() => constructChartData(response?.responseData?.data, value?.denomination), [response, value?.denomination]);
 
-  console.log(chartData,"chartData ppppppp")
   const renderLegend = (value) => (
     <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`DSS_LEGEND_${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>
   );

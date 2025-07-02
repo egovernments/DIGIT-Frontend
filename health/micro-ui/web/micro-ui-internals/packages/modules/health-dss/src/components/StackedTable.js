@@ -111,7 +111,6 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
           title={t("DSS_VIEW_DASHBOARD")}
           t={t}
           onClick={() => {
-            console.log("button clicked");
             //Update the level here, make it dynamic(maybe)
             history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?province=${rowData?.name}&campaignId=${campaignId}`, {
             })

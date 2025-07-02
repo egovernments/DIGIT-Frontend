@@ -299,8 +299,6 @@ const L1Main = () => {
   const [pageZoom, setPageZoom] = useState(false);
   const { isLoading: localizationLoading, data: store } = Digit.Services.useStore({ stateCode, dashboardId, language });
 
-  // console.log(location.state.projectTypeId, "projectTypeId");
-
   // function getProjectTypeIDFromURL() {
   //   const url = window.location.pathname;
   //   const projectTypes = Digit.SessionStorage.get("projectTypes");
@@ -508,7 +506,6 @@ const L1Main = () => {
           return (
             <div className={`digit-dss-card add-margin`} key={key}>
               {row.vizArray.map((item, index) => {
-                console.log(item?.charts?.[0]?.chartType, item?.vizType, "chartTypeqqqqqqqqqqqqqqqqqqqqqqq");
                 if (item?.charts?.[0]?.chartType == "bar") {
                   return null;
                 } else if (item?.charts?.[0]?.chartType === "heatmap") {
@@ -629,7 +626,6 @@ const L1Main = () => {
                   );
                 } else if (item?.charts?.[0]?.chartType == "v-bar") {
                   const barChart = item?.charts?.[0];
-                  console.log(barChart, "barChart");
                   return (
                     <GenericChart header={item.name} className={"digit-dss-card-parent heatMap"} subHeader={`SUB_${item.name}`}>
                       <CustomHorizontalBarChart data={barChart} title={item?.name} isNational={true} />
