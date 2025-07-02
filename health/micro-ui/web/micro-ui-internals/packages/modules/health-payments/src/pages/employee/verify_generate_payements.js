@@ -73,8 +73,7 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
 const pollTaskUntilDone = async (billId, type) => {
     console.log("Polling...", billId);
 
-    const POLLING_INTERVAL = 12 * 1000; // 12 seconds - TODO: update later
-
+    const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
     try {
         const statusResponse = await taskStatusAPI.mutateAsync({
             body: {
@@ -170,30 +169,32 @@ const userSearchCri = {
                 console.warn("Task status check failed for", billId, e);
             }
 
-            try {
-                const res1 = await taskStatusAPI.mutateAsync({
-                    body: {
-                        task:{
-                        billId: billId,
-                        type:"Verify",
-                    }
-                },
-                });
-                console.log("Task status response for billId:", billId, res1);
+            //TODO: Check polling for Verify task
 
-                if (res1?.task?.status === "IN_PROGRESS") {
-                    setInProgressBills(prev => ({ ...prev, [billId]: true }));
-                    if (res1?.task?.type === "Verify") {
-                        console.log("Polling started for billId:", billId);
-                        pollTaskUntilDone(billId,"Verify");
-                    }
-                } else {
-                    console.log("inside else 3")
-                    setInProgressBills(prev => ({ ...prev, [billId]: false }));
-                }
-            } catch (e) {
-                console.warn("Task status check failed for", billId, e);
-            }
+            // try {
+            //     const res1 = await taskStatusAPI.mutateAsync({
+            //         body: {
+            //             task:{
+            //             billId: billId,
+            //             type:"Verify",
+            //         }
+            //     },
+            //     });
+            //     console.log("Task status response for billId:", billId, res1);
+
+            //     if (res1?.task?.status === "IN_PROGRESS") {
+            //         setInProgressBills(prev => ({ ...prev, [billId]: true }));
+            //         if (res1?.task?.type === "Verify") {
+            //             console.log("Polling started for billId:", billId);
+            //             pollTaskUntilDone(billId,"Verify");
+            //         }
+            //     } else {
+            //         console.log("inside else 3")
+            //         setInProgressBills(prev => ({ ...prev, [billId]: false }));
+            //     }
+            // } catch (e) {
+            //     console.warn("Task status check failed for", billId, e);
+            // }
         });
     
             
@@ -228,7 +229,7 @@ const userSearchCri = {
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
-                {t("HCM_AM_VERIFY_AND_GENERATE_PAYMENTS")}
+                {!editBills ? t("HCM_AM_VERIFY_AND_GENERATE_PAYMENTS") : t("HCM_AM_EDIT_BILLS")}
             </Header>
 
 

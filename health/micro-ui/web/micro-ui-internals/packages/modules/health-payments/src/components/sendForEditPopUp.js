@@ -64,7 +64,7 @@ const SendForEditPopUp = ({ ...props }) => {
             <PopUp
                 style={{ width: "700px" }}
                 onClose={props?.onClose}
-                heading={props?.isEditTrue ? t(`HCM_AM_FORWARD_BILL`) : t(`HCM_AM_SEND_BACK_FOR_EDITING`)}
+                heading={props?.isEditTrue ? t(`HCM_AM_FORWARD`) : t(`HCM_AM_SEND_FOR_EDIT`)}
                 onOverlayClick={props?.onClose}
                 equalWidthButtons={true}
                 footerChildren={[

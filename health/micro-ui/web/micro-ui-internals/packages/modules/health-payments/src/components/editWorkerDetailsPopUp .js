@@ -49,7 +49,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             <PopUp
                 style={{ width: "700px" }}
                 onClose={onClose}
-                heading={t(`HCM_AM_EDIT_${editFieldName}_LABEL`)}
+                heading={t(`HCM_AM_EDIT_WORKER_DETAILS_LABEL`)}
                 children={[
                     <div key="comment-section">
                         <div className="comment-label">

@@ -11,7 +11,6 @@ const Response = () => {
   const queryStrings = Digit.Hooks.useQueryParams();
   const { state } = useLocation();
   const back = state?.back ? state?.back : "BACK";
-  //TODO : test for button in both attendance and payments
   const isShowButton = state?.isShowButton === false ? false : true;
   return (
     <>

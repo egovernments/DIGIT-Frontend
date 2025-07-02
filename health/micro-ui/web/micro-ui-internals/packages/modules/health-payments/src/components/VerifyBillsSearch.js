@@ -45,7 +45,7 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
                 />
             </div>
             <div style={{ width: "80%" }}>
-                <TextBlock body={"STATUS"}></TextBlock>
+                <TextBlock body={`${t("HCM_AM_STATUS")}`}></TextBlock>
                 <TextInput
                     value={billStatus}
                     onChange={(e) => {

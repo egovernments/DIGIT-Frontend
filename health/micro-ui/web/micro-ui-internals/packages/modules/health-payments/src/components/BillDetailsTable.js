@@ -163,7 +163,7 @@ const BillDetailsTable = ({ ...props }) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_WORKER_ID_NO.")}
+                        {t("HCM_AM_WORKER_ID")}
                     </div>
                 ),
                 selector: (row) => {
@@ -267,7 +267,8 @@ const BillDetailsTable = ({ ...props }) => {
             {t(row?.mobileNumber) || t("ES_COMMON_NA")} </span>
             {/* {row?.status === "PENDING_EDIT" && row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?( */}
                                 {/* <div style={{ display: "flex", alignItems: "center" }}> */}
-                                {props?.editBill && row?.status === "PENDING_EDIT"? (
+                                {props?.editBill && row?.status === "PENDING_EDIT" && 
+                        row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"? (
                                 <Button
                                 style={{ minWidth: "auto" }}
                                 variation="secondary"
@@ -393,7 +394,7 @@ const BillDetailsTable = ({ ...props }) => {
         ];
 
         return baseColumns;
-    }, [tableData, t]);
+    }, [tableData, t, props?.isSelectionDisabled]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -437,12 +438,14 @@ const BillDetailsTable = ({ ...props }) => {
                 fixedHeader={true}
                 selectableRows={props?.selectableRows}
                 selectableRowDisabled={(row) =>
+                (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
                 (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
                 (row?.status === 'EDITED' && props?.editBill)
                 }
             conditionalRowStyles={[
                 {
                 when: (row) =>
+                    (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
                     (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
                     (row?.status === 'EDITED' && props?.editBill),
                 style: {

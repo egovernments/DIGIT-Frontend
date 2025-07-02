@@ -54,13 +54,13 @@ const UploadAndFetchBillsCard = () => {
           }}
         >
 <div style={{ display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "0.5rem", marginTop: "1rem", width: "100%" }}>
-<Header className="pop-inbox-header">{t("UPLOAD_OR_FETCH_BILLS")}</Header>
-          <div className="label-pair">{t("PLEASE_SELECT_ONE")}</div>
+<Header className="pop-inbox-header">{t("HCM_AM_UPLOAD_OR_FETCH_BILLS")}</Header>
+          <div className="label-pair">{t("HCM_AM_PLEASE_SELECT_ONE_VERIFY")}</div>
           </div>
           <div style={{ display: "flex", justifyContent: "center", gap: "2rem", marginTop: "1rem" }}>
             <div style={{ flex: 1, display: "flex", justifyContent: "center" }}>
             <Card
-  className="upload-card hover-highlight"
+  className="upload-card hover-highlight"S
   style={{
     display: "flex",
     flexDirection: "column",
@@ -77,7 +77,7 @@ const UploadAndFetchBillsCard = () => {
   <div style={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
     <FileUpload style={{ width: "80%", height: "80%" }} />
   </div>
-  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t("UPLOAD_BILLS")}</div>
+  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t("HCM_AM_UPLOAD_BILLS")}</div>
 </Card>
 
 <Card
@@ -100,7 +100,7 @@ const UploadAndFetchBillsCard = () => {
   <div style={{ flexGrow: 1, display: "flex", justifyContent: "center", alignItems: "center" }}>
     <CloudDownload style={{ width: "80%", height: "80%" }} />
   </div>
-  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t("FETCH_BILLS")}</div>
+  <div className="label-pair" style={{ marginTop: "0.5rem" }}>{t("HCM_AM_FETCH_BILLS")}</div>
 </Card>
             </div>
           </div>

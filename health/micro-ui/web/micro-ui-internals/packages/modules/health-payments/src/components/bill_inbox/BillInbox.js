@@ -259,7 +259,7 @@ const BillInboxComponent = () => {
             }
         };
         // if(billUpdate){
-        updateBillData();
+        // updateBillData();
         // setBillUpdate(false);
         // }
     }, [BillData]);

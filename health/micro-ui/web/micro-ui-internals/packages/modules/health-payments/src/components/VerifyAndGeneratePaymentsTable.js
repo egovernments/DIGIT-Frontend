@@ -92,7 +92,7 @@ const VerifyAndGeneratePaymentsTable = ({
                 },
                 workflow: {
                     action: wfState,
-                    assignee: assignee ? assignee.value : null,
+                    assignes: assignee ? [assignee.value] : null
                 }
             },
         },
@@ -271,7 +271,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                     }
 
                     let attempts = 0;
-                    const POLLING_INTERVAL = 12 * 1000; // 12 seconds
+                    const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes 
                     const MAX_ATTEMPTS = 20;
 
                     const pollStatus = async () => {
@@ -402,7 +402,7 @@ case "PENDING_VERIFICATION":
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_PENDING_COUNT")}
+                        {t("HCM_AM_PENDING_VERIFICATION_COUNT")}
                     </div>
                 ),
                 selector: (row) => {
@@ -623,17 +623,14 @@ case "PENDING_VERIFICATION":
         isEditTrue={false}
         dropdownOptions={hrmsUsersData ? hrmsUsersData.map((emp) => ({
                 title: emp?.user?.name,
-                value: emp?.user?.uuid,
+                value: emp?.user?.userServiceUuid,
               })) : []}
         onClose={() => {
           setEditPopupState({ open: false, row: null });
         }}
         onSubmit={(comment, selectedUser) => {
-          // setComment(comment);
           sendBillDetailsForEdit(editPopupState.row, selectedUser);
           setEditPopupState({ open: false, row: null });
-        //   updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT", selectedUser);
-          // setOpenApproveAlertPopUp(true);
         }}
       />}
             {showToast && (
