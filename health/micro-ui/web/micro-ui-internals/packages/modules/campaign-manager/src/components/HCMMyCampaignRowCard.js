@@ -325,6 +325,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                 variation={btn.variation}
                 size={btn.size}
                 title={t(btn.title) || ""}
+                style={btn.style}
               />
             ))}
           </div>
