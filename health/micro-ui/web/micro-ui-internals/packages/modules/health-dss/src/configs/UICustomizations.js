@@ -66,11 +66,43 @@ export const UICustomizations = {
     preProcess: (data, additionalDetails) => {
       data.body.ProjectStaff = {};
       data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
-      data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.params.tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.params.limit = data.state.tableForm.limit;
       data.params.offset = data.state.tableForm.offset;
+      delete data.body.ProjectStaff.campaignName;
+      delete data.body.ProjectStaff.campaignType;
       cleanObject(data.body.ProjectStaff);
       return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       switch (key) {
@@ -88,25 +120,25 @@ export const UICustomizations = {
             } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
           };
           return (
-                <ButtonNew
-                  type="actionButton"
-                  variation="secondary"
-                  label={t("TAKE_ACTION")}
-                  title={t("TAKE_ACTION")}
-                  options={options}
-                  style={{ width: "20rem" }}
-                  optionsKey="name"
-                  showBottom={true}
-                  isSearchable={false}
-                  onOptionSelect={(item) => onActionSelect(item, row)}
-                />
+            <ButtonNew
+              type="actionButton"
+              variation="secondary"
+              label={t("TAKE_ACTION")}
+              title={t("TAKE_ACTION")}
+              options={options}
+              style={{ width: "20rem" }}
+              optionsKey="name"
+              showBottom={true}
+              isSearchable={false}
+              onOptionSelect={(item) => onActionSelect(item, row)}
+            />
           );
 
         case "CAMPAIGN_NAME":
-          return renderText(value,t);
+          return renderText(value, t);
 
         case "BOUNDARY_NAME":
-          return renderText(value,t);
+          return renderText(value, t);
 
         case "START_DATE":
           return (
@@ -123,7 +155,7 @@ export const UICustomizations = {
           );
 
         case "YEAR":
-          return renderText(value,t);
+          return renderText(value, t);
 
         case "END_DATE":
           return (
@@ -160,64 +192,13 @@ export const UICustomizations = {
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      data.body = { RequestInfo: data.body.RequestInfo };
-      const { limit, offset } = data?.state?.tableForm || {};
-      const { campaignName, campaignType } = data?.state?.searchForm || {};
-      data.body.CampaignDetails = {
-        tenantId: tenantId,
-        status: ["creating", "created"],
-        createdBy: Digit.UserService.getUser().info.uuid,
-        campaignsIncludeDates: true,
-        startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
-        endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
-        pagination: {
-          sortBy: "createdTime",
-          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
-          limit: limit,
-          offset: offset,
-        },
-      };
-      if (campaignName) {
-        data.body.CampaignDetails.campaignName = campaignName;
-      }
-      if (campaignType) {
-        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
-      }
-      delete data.body.custom;
-      delete data.body.inbox;
-      delete data.params;
+      data.body.ProjectStaff = {};
+      data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
+      data.params.tenantId = Digit?.ULBService?.getCurrentTenantId();
+      data.params.limit = data.state.tableForm.limit;
+      data.params.offset = data.state.tableForm.offset;
+      cleanObject(data.body.ProjectStaff);
       return data;
-    },
-    populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
-      const url = getMDMSUrl(true);
-      return {
-        url: `${url}/v1/_search`,
-        params: { tenantId },
-        body: {
-          MdmsCriteria: {
-            tenantId: tenantId,
-            moduleDetails: [
-              {
-                moduleName: "HCM-PROJECT-TYPES",
-                masterDetails: [
-                  {
-                    name: "projectTypes",
-                  },
-                ],
-              },
-            ],
-          },
-        },
-        changeQueryName: "setWorkflowStatus",
-        config: {
-          enabled: true,
-          select: (data) => {
-            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
-          },
-        },
-      };
     },
     additionalCustomizations: (row, key, column, value, searchResult) => {},
     getCustomActionLabel: (obj, row) => {
@@ -235,7 +216,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigCompleted: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -263,7 +244,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -308,7 +289,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigUpcoming: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -337,7 +318,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -382,7 +363,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigDrafts: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -410,7 +391,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -455,7 +436,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigDraftsNew: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -483,7 +464,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -528,7 +509,7 @@ export const UICustomizations = {
   },
   MyCampaignConfigFailed: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
@@ -555,7 +536,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
