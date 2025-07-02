@@ -17,6 +17,7 @@ RUN cd web/ \
     && chmod +x ./install-deps.sh \
     &&  ./install-deps.sh \
     && cd ../ \
+    && npm config set engine-strict false \
     && yarn install \ 
     && yarn build:webpack 
 
