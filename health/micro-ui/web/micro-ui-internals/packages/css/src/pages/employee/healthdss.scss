@@ -34,21 +34,21 @@
   .rdt_TableRow>.rdt_TableCell:nth-of-type(2) {
     position: sticky;
     z-index: 10;
-    left: 100rem;
+    left: 6.25rem;
     background-color: #ffffff;
   }
 
   .rdt_TableRow:hover>.rdt_TableCell:nth-of-type(2) {
     position: sticky;
     z-index: 10;
-    left: 100rem;
+    left: 6.25rem;
     background-color: #FBEEE8;
   }
 
   .rdt_TableHeadRow>.rdt_TableCol:nth-of-type(2) {
     position: sticky;
     z-index: 12;
-    left: 100rem;
+    left: 6.25rem;
     top: 0rem;
     background-color: #eeeeee;
   }
@@ -780,6 +780,14 @@
   }
 }
 
+.digit-dss-options-header-options-button-wrapper{
+.header-dropdown-container{
+  .header-dropdown-menu{
+    left: -40px !important;
+  }
+}
+}
+
 .table-column-header {
   white-space: nowrap;
   overflow-wrap: break-word;
@@ -935,6 +943,7 @@
   border-radius: 0.25rem;
   margin-bottom: 1.5rem;
   display: flex;
+  gap: 2rem;
 }
 
 .digit-dss-switch-tab-wrapper::-webkit-scrollbar {
