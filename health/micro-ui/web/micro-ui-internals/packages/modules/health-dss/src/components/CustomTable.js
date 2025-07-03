@@ -512,9 +512,14 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   };
 
   const removeFilter = (id) => {
-    setFilterStack(prev => prev.filter((_, idx) => idx < id));
-    setChartKey(filterStack?.[-1]?.id || data?.id);
+    setFilterStack(prev => {
+      const newStack = prev.filter((_, idx) => idx < id);
+      const lastId = newStack.length > 0 ? newStack[newStack.length - 1].id : data?.id;
+      setChartKey(lastId);
+      return newStack;
+    });
   };
+  
 
   
 
