@@ -7,6 +7,7 @@ import { tableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues } from "../utils/constants";
 import { useHistory } from "react-router-dom";
 import SendForEditPopUp from "../components/sendForEditPopUp";
+import AlertPopUp from "../components/alertPopUp";
 
 /**
  * @function VerifyAndGeneratePaymentsTable
@@ -35,7 +36,16 @@ const VerifyAndGeneratePaymentsTable = ({
     const project = Digit?.SessionStorage.get("staffProjects");
     const selectedProject = Digit?.SessionStorage.get("selectedProject");
     const [openSendForEditPopUp, setOpenSendForEditPopUp] = useState(false);
+    
     const [editPopupState, setEditPopupState] = useState({
+            open: false,
+            row: null,
+            });
+    const [verifyPopupState, setVerifyPopupState] = useState({
+            open: false,
+            row: null,
+            });
+    const [paymentPopupState, setPaymentPopupState] = useState({
             open: false,
             row: null,
             });
@@ -533,16 +543,13 @@ case "PENDING_VERIFICATION":
                                 //     }
 
                                 // }
-                                if (value.code === "HCM_AM_VERIFY") {
-                                    triggerVerifyBill(row);
+                                if (value.code === "HCM_AM_VERIFY") {                                    
+                                    setVerifyPopupState({ open: true, row });
                                 } else if (value.code === "HCM_AM_EDIT") {
-                                    setEditPopupState({ open: true, row });
-                                    // sendBillDetailsForEdit(row);
-                                // setShowToast({ key: "error", label: t(`HCM_AM_EDIT_FAILED`), transitionTime: 3000 });
+                                    setEditPopupState({ open: true, row });                                
                                 }
                                 else if (value.code === "HCM_AM_GENERATE_PAYMENT") {      
-                                    triggerGeneratePayment(row);                             
-                                    // setShowToast({ key: "error", label: t(`HCM_AM_PAYMENT_GENERATION_FAILED`), transitionTime: 3000 });
+                                    setPaymentPopupState({ open: true, row });
                                 }
                                 else if (value.code === "HCM_AM_DOWNLOAD_REPORT") {
                                     if (reportDetails?.excelReportId) {
@@ -619,6 +626,32 @@ case "PENDING_VERIFICATION":
                 fixedHeaderScrollHeight={"70vh"}
                 paginationComponentOptions={getCustomPaginationOptions(t)}
             />
+            {verifyPopupState.open && <AlertPopUp
+        onClose={() => {
+          setVerifyPopupState({ open: false, row: null });
+        }}
+        alertHeading={t(`HCM_AM_ALERT_VERIFY_HEADING`)}
+        alertMessage={t(`HCM_AM_ALERT_VERIFY_DESCRIPTION`)}
+        submitLabel={t(`HCM_AM_APPROVE`)}
+        cancelLabel={t(`HCM_AM_CANCEL`)}
+        onPrimaryAction={() => {
+          triggerVerifyBill(verifyPopupState.row);
+          setVerifyPopupState({ open: false, row: null });
+        }}
+      />}
+      {paymentPopupState.open && <AlertPopUp
+        onClose={() => {
+          setPaymentPopupState({ open: false, row: null });
+        }}
+        alertHeading={t(`HCM_AM_ALERT_PAYMENT_HEADING`)}
+        alertMessage={t(`HCM_AM_ALERT_PAYMENT_DESCRIPTION`)}
+        submitLabel={t(`HCM_AM_APPROVE`)}
+        cancelLabel={t(`HCM_AM_CANCEL`)}
+        onPrimaryAction={() => {
+          triggerGeneratePayment(paymentPopupState.row);
+          setPaymentPopupState({ open: false, row: null });
+        }}
+      />}
             {editPopupState.open && <SendForEditPopUp
         isEditTrue={false}
         dropdownOptions={hrmsUsersData ? hrmsUsersData.map((emp) => ({

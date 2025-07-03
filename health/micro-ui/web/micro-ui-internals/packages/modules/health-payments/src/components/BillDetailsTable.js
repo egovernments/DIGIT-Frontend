@@ -431,6 +431,7 @@ const BillDetailsTable = ({ ...props }) => {
                 paginationDefaultPage={props?.currentPage}
                 onChangePage={handlePageChange}
                 onChangeRowsPerPage={handlePerRowsChange}
+                clearSelectedRows={props?.clearSelectedRows}
                 paginationTotalRows={props?.totalCount}
                 paginationPerPage={props?.rowsPerPage}
                 sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
