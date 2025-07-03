@@ -885,7 +885,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 [
                   <Button
                     className="custom-class"
-                    icon="ArrowBack"
+                    icon="Arrow"
                     label={t(`HCM_AM_SEND_FOR_EDIT`)}
                     menuStyles={{
                       bottom: "40px",

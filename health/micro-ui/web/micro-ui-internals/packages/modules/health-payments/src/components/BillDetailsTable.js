@@ -447,8 +447,8 @@ const BillDetailsTable = ({ ...props }) => {
                 {
                 when: (row) =>
                     (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
-                    (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
-                    (row?.status === 'EDITED' && props?.editBill),
+                    (row?.status === 'PENDING_EDIT' && !props?.editBill),
+                    // || (row?.status === 'EDITED' && props?.editBill),
                 style: {
                     backgroundColor: "#f0f0f0",
                     color: "#999",

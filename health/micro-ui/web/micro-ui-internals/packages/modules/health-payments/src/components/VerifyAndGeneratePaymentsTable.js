@@ -412,7 +412,7 @@ case "PENDING_VERIFICATION":
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_PENDING_VERIFICATION_COUNT")}
+                        {t("HCM_AM_PENDING_VERIFICATION")}
                     </div>
                 ),
                 selector: (row) => {
@@ -431,7 +431,7 @@ case "PENDING_VERIFICATION":
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_VERIFIED_COUNT")}
+                        {t("HCM_AM_VERIFIED")}
                     </div>
                 ),
                  selector: (row) => {
@@ -450,7 +450,7 @@ case "PENDING_VERIFICATION":
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_PAID_COUNT")}
+                        {t("HCM_AM_PAID")}
                     </div>
                 ),
                selector: (row) => {
@@ -524,8 +524,8 @@ case "PENDING_VERIFICATION":
                             icon="ArrowDropDown"
                             size="medium"
                             isSuffix
-                            label={t(`HCM_AM_TAKE_ACTION`)}
-                            title={t(`HCM_AM_TAKE_ACTION`)}
+                            label={t(`HCM_AM_BILL_ACTIONS`)}
+                            title={t(`HCM_AM_BILL_ACTIONS`)}
                             showBottom={isLastRow && props.data.length !== 1? false : true}
                             // showBottom={!(props?.data?.length === 1 || isLastRow)}
                             onOptionSelect={(value) => {

@@ -229,7 +229,7 @@ const userSearchCri = {
     return (
         <React.Fragment>
             <Header styles={{ fontSize: "32px" }}>
-                {!editBills ? t("HCM_AM_VERIFY_AND_GENERATE_PAYMENTS") : t("HCM_AM_EDIT_BILLS")}
+                {!editBills ? t("HCM_AM_VERIFY_AND_GENERATE_PAYMENTS") : t("HCM_AM_EDIT_BILL")}
             </Header>
 
 
