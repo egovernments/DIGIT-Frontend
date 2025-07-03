@@ -183,10 +183,18 @@ const getActionTags = (rowData) => {
     actions.generateUserCreds = {
       label: "GENERATING_USER_CRED",
       loader: true,
+      animationStyle: {
+        width : "2rem",
+        height : "2rem"
+      }
     };
     actions.generateAPK = {
       label: "GENERATING_APK",
       loader: true,
+      animationStyle: {
+        width : "2rem",
+        height : "2rem"
+      }
     };
   }
 
@@ -262,11 +270,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               value={{}}
               renderCustomContent={({ status }) => {
                 if (rowData?.status === "created") {
-                  return <Tag label="CAMPAIGN_CREATED" type="success" stroke={true}/>;
+                  return <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={true}/>;
                 } else if (rowData?.status === "creating") {
-                  return <Tag label="CAMPAIGN_CREATION_INPROGRESS" type="warning" showIcon={false} stroke={true} />;
+                  return <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={true} />;
                 } else {
-                   return <Tag label= {rowData?.status} showIcon={false} stroke={true}/>;
+                   return <Tag label= {t(rowData?.status)} showIcon={false} stroke={true}/>;
                 }
               }}
             />
@@ -305,6 +313,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
                 loader={tag.loader}
                 style={tag.style}
                 stroke={tag.stroke}
+                animationStyles = {tag.animationStyle}
               />
             ))}
           </div>
