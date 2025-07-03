@@ -1,6 +1,7 @@
 .health-dss-inbox-table {
   .rdt_TableBody {
     border: none !important;
+    border-bottom: 0.063rem solid theme(digitv2.lightTheme.divider) !important;
   }
 }
 
@@ -780,12 +781,12 @@
   }
 }
 
-.digit-dss-options-header-options-button-wrapper{
-.header-dropdown-container{
-  .header-dropdown-menu{
-    left: -40px !important;
+.digit-dss-options-header-options-button-wrapper {
+  .header-dropdown-container {
+    .header-dropdown-menu {
+      left: -100px !important;
+    }
   }
-}
 }
 
 .table-column-header {
