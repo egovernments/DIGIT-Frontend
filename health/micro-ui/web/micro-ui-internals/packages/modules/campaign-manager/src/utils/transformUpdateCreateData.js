@@ -36,10 +36,37 @@ export const transformUpdateCreateData = ({ campaignData }) => {
       ...cycle,
       deliveries: cycle?.deliveries.map((delivery) => ({
         ...delivery,
-        doseCriteria: delivery.doseCriteria.map((criteria) => ({
-          ...criteria,
-          condition: normalizeCondition(criteria.condition),
-        })),
+        doseCriteria: delivery.doseCriteria.map((criteria) => {
+          // ...criteria,
+          // condition: normalizeCondition(criteria.condition),
+          let conditionString;
+
+          const projectType = campaignData?.projectType;
+          const originalCondition = criteria.condition;
+
+          let memberCount, maxCount;
+
+          // extract memberCount
+          const memberMatch = originalCondition.match(/memberCount\s*>=\s*([\d.]+)/i);
+          if (memberMatch) {
+            memberCount = memberMatch[1];
+          }
+
+          // extract maxCount
+          const maxMatch = originalCondition.match(/maxCount\s*<=\s*([\d.]+)/i);
+          if (maxMatch) {
+            maxCount = maxMatch[1];
+          }
+          if (projectType === "LLIN-mz" && memberCount !== undefined && maxCount !== undefined) {
+            conditionString = `MIN(ROUND(memberCount/${memberCount}), ${maxCount})`;
+          } else {
+            conditionString = normalizeCondition(criteria.condition);
+          }
+          return {
+            ...criteria,
+            condition: conditionString,
+          };
+        }),
       })),
     }));
   }
