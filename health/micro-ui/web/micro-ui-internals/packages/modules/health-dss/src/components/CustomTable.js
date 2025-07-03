@@ -141,7 +141,11 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     moduleLevel: value?.moduleLevel,
     aggregationFactors: null,
   };
-  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto2);
+  const { isLoading, data: response, refetch } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto2);
+
+  useEffect(() => {
+    refetch();
+  }, [filterStack]);
 
 
   useEffect(() => {
@@ -217,7 +221,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           return acc;
         }, {});
       });
-  }, [response, lastYearResponse, onSearch]);
+  }, [response, lastYearResponse, onSearch, filterStack]);
 
   useEffect(() => {
     if (tableData) {
@@ -506,6 +510,13 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     setFilterStack(nextState);
     setChartKey(nextState[nextState?.length - 1]?.id);
   };
+
+  const removeFilter = (id) => {
+    setFilterStack(prev => prev.filter((_, idx) => idx !== id));
+    setChartKey(filterStack?.[id - 1]?.id);
+  };
+
+  
 
   if (isLoading || isRequestLoading) {
     return <Loader className={"digit-center-loader"} />;
