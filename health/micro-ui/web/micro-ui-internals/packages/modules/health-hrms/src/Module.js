@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 
 import CreateEmployeePage from "./pages/employee/createEmployee";
@@ -16,28 +16,50 @@ import Jurisdictions from "./components/pageComponents/Jurisdictions";
 
 import BreadCrumbs from "./components/pageComponents/BreadCrumb";
 import { Loader } from "@egovernments/digit-ui-components";
+import HierarchySelection from "./pages/employee/HierarchySelection";
+export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
+   const tenantId = Digit.ULBService.getCurrentTenantId();
   const modulePrefix = "hcm";
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
-  const moduleCode = ["HR", `boundary-${hierarchyType?.toString().toLowerCase()}`];
+  const [hierarchySelected, setHierarchySelected] = useState(null);
+
+
+  const { data: hierarchies,
+    isLoading : isHierarchyLoading,
+     } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({tenantId});
+
+  const moduleCode = ["HR",];
   const language = Digit.StoreData.getCurrentLanguage();
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language, modulePrefix });
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  useEffect(() => {
+    Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
+  }, []);
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode : moduleCode, language, modulePrefix });
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
-
-  const { isLoading: isPaymentsModuleInitializing } = Digit.Hooks.hrms.useHrmsInitialization({
-    tenantId: tenantId,
-  });
-
+  Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
+  
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
     return null;
   }
 
-  if (isLoading || isPaymentsModuleInitializing) {
+  if (isLoading || isHierarchyLoading) {
       return <Loader />;
-    } else {
+    } 
+
+  if (!hierarchySelected) {
+    return (
+      <HierarchySelection
+        onHierarchyChosen={(hier) => {
+          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
+          setHierarchySelected(hier);
+        }}
+      />
+    );
+  }
+    
+  else {
   if (userType === "employee") {
     return <EmployeeApp path={path} url={url} />;
   } 
@@ -56,6 +78,7 @@ const componentsToRegister = {
   Jurisdictions,
   HRCreateEmployee: CreateEmployeePage,
   BreadCrumbs,
+  HierarchySelection,
 };
 
 export const initHRMSComponents = () => {
