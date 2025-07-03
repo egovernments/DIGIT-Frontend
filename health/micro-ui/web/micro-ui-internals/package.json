@@ -47,7 +47,8 @@
     "**/styled-components": "5.0.0",
     "**/@babel/traverse": "7.25.9",
     "**/babel-preset-react-app": "10.0.0",
-    "**/@jridgewell/gen-mapping": "0.3.5"
+    "**/@jridgewell/gen-mapping": "0.3.5",
+    "**/minimatch": "7.4.6"
   },
   "devDependencies": {
     "husky": "7.0.4",
