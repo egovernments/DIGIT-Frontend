@@ -42,7 +42,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
 const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setChartDenomination }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
-  const [filterStack, setFilterStack] = useState([{ id: chartKey }]);
+  const [filterStack, setFilterStack] = useState([{ id: chartKey}]);
   const { t } = useTranslation();
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
@@ -95,7 +95,11 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     moduleLevel: value?.moduleLevel,
     aggregationFactors: null,
   };
-  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto2);
+  const { isLoading, data: response, refetch } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto2);
+
+  useEffect(() => {
+    refetch();
+  }, [filterStack]);
 
 
   useEffect(() => {
@@ -171,7 +175,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           return acc;
         }, {});
       });
-  }, [response, lastYearResponse, onSearch]);
+  }, [response, lastYearResponse, onSearch, filterStack]);
 
   useEffect(() => {
     if (tableData) {
@@ -460,6 +464,18 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     setFilterStack(nextState);
     setChartKey(nextState[nextState?.length - 1]?.id);
   };
+
+  const removeFilter = (id) => {
+    setFilterStack(prev => {
+      const newStack = prev.filter((_, idx) => idx < id);
+      const lastId = newStack.length > 0 ? newStack[newStack.length - 1].id : data?.id;
+      setChartKey(lastId);
+      return newStack;
+    });
+  };
+  
+
+  
 
   if (isLoading || isRequestLoading) {
     return <Loader className={"digit-center-loader"} />;
