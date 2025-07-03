@@ -17,7 +17,6 @@ import Jurisdictions from "./components/pageComponents/Jurisdictions";
 import BreadCrumbs from "./components/pageComponents/BreadCrumb";
 import { Loader } from "@egovernments/digit-ui-components";
 import HierarchySelection from "./pages/employee/HierarchySelection";
-export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
    const tenantId = Digit.ULBService.getCurrentTenantId();
