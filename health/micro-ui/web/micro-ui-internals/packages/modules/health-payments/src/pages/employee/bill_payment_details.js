@@ -39,6 +39,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [transferPollTimers, setTransferPollTimers] = useState({});
   const [isSelectionDisabled, setIsSelectionDisabled] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
+  const [clearSelectedRows, setClearSelectedRows] = useState(false);
   const [limitAndOffset, setLimitAndOffset] = useState({
     limit: rowsPerPage,
     offset: (currentPage - 1) * rowsPerPage,
@@ -59,48 +60,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       ? `${t("HCM_AM_PENDING_FOR_EDIT")} `
       : `${t("HCM_AM_NOT_VERIFIED")} `,
   });
-  const billDetails = [
-    {
-      "id": "123456",
-      "name": "Worker 1",
-      "role": "Distrubutor",
-      "billDate": 1698307200000,
-      "noOfDays": 5,
-      "wage": "30",
-      "status": "NOT_VERIFIED",
-      "totalAmount": "150",
-    },
-    {
-      "id": "223456",
-      "name": "Worker 1",
-      "role": "Distrubutor",
-      "billDate": 1698307200000,
-      "noOfDays": 5,
-      "wage": "30",
-      "status": "VERIFIED",
-      "totalAmount": "150",
-    },
-    {
-      "id": "323456",
-      "name": "Worker 1",
-      "role": "Distrubutor",
-      "billDate": 1698307200000,
-      "noOfDays": 5,
-      "wage": "30",
-      "status": "PAYMENT_GENERATED",
-      "totalAmount": "150",
-    },
-    {
-      "id": "222456",
-      "name": "Worker 1",
-      "role": "Distrubutor",
-      "billDate": 1698307200000,
-      "noOfDays": 5,
-      "wage": "30",
-      "status": "VERIFIED",
-      "totalAmount": "150",
-    }
-  ]
 
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
@@ -129,7 +88,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       }
     },
     config: {
-      enabled: project ? true : false,
+      enabled: project && billID ? true : false,
       select: (data) => {
         return data;
       },
@@ -139,7 +98,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
   const fetchIndividualIds = (billData) => {
-    console.log("here ???0990")
     const billDetails = billData?.billDetails || [];
     if (Array.isArray(billDetails)) {
       const ids = billDetails.map((billDetail) => billDetail?.payee?.identifier).filter(Boolean);
@@ -282,7 +240,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
     }
     catch (error) {
-      console.error("Error updating individuals:", error);
+      setSelectedRows([]);
+      setClearSelectedRows(prev => !prev);
+            console.error("Error updating individuals:", error);
       setShowToast({
         key: "error",
         label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_DETAIL_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
@@ -313,13 +273,15 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async () => {
-            refetchBill();
+            setSelectedRows([]);
+            setClearSelectedRows(prev => !prev);
+                        refetchBill();
             setShowToast({
               key: "success",
               label: t(`HCM_AM_SELECTED_BILL_DETAILS_${wfAction}_SUCCESS`), //TODO UPDATE TOAST MSG
               transitionTime: 2000,
             });
-            if (wfAction === "EDIT") {
+            if (wfAction === "EDIT") { //move to success response page after edit success
               history.push(`/${window.contextPath}/employee/payments/edit-bill-success`, {
                 state: "success",
                 info: t("HCM_AM_BILL_NUMBER"),
@@ -333,7 +295,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             }
           },
           onError: (error) => {
-            console.log("12Error updating bill detail workflow:", error);
+            setSelectedRows([]);  
+            setClearSelectedRows(prev => !prev);      
+                console.log("12Error updating bill detail workflow:", error);
             setShowToast({
               key: "error",
               label: error?.response?.data?.Errors?.[0]?.message || t(`HCM_AM_BILL_DETAILS_${wfAction}_ERROR`),//TODO UPDATE TOAST MSG
@@ -342,9 +306,12 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           },
         },
       )
+      
     } catch (error) {
       console.log("Error updating bill detail workflow:", error);
-      setShowToast({
+      setSelectedRows([]);
+      setClearSelectedRows(prev => !prev);
+       setShowToast({
         key: "error",
         label: t(`HCM_AM_BILL_DETAILS_${wfAction}_ERROR`), //TODO UPDATE TOAST MSG
         transitionTime: 3000,
@@ -372,6 +339,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async (verifyResponse) => {
+            setSelectedRows([]);
+            setClearSelectedRows(prev => !prev);
             console.log("Verify Response", verifyResponse);
             const taskId = verifyResponse?.taskId;
             if (!taskId) {
@@ -431,6 +400,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           },
           onError: (error) => {
             setIsLoading(false);
+            setSelectedRows([]);
+            setClearSelectedRows(prev => !prev);
             setShowToast({
               key: "error",
               label: t(error?.response?.data?.Errors?.[0]?.message || "HCM_AM_BILL_VERIFY_ERROR"),//TODO UPDATE TOAST MSG
@@ -441,6 +412,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
     } catch (error) {
       setIsLoading(false);
+      setSelectedRows([]);
+      setClearSelectedRows(prev => !prev);
       setShowToast({
         key: "error",
         label: t("HCM_AM_BILL_VERIFY_EXCEPTION"),//TODO UPDATE TOAST MSG
@@ -467,6 +440,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         },
         {
           onSuccess: async (paymentResponse) => {
+            setSelectedRows([]);
+            setClearSelectedRows(prev => !prev);
             console.log("Payment Response", paymentResponse);
             const taskId = paymentResponse?.taskId;
             if (!taskId) {
@@ -530,6 +505,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             pollStatus();
           },
           onError: (error) => {
+            setSelectedRows([]);
+            setClearSelectedRows(prev => !prev);
             setIsLoading(false);
             setShowToast({
               key: "error",
@@ -541,6 +518,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
     } catch (error) {
       setIsLoading(false);
+      setSelectedRows([]);
+      setClearSelectedRows(prev => !prev);
       setShowToast({
         key: "error",
         label: t("HCM_AM_PAYMENT_GENERATION_EXCEPTION"),//TODO UPDATE TOAST MSG
@@ -650,7 +629,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     const slicedData = getPaginatedData(tableData, currentPage, rowsPerPage);
     setPaginatedData(slicedData);
   }, [tableData, currentPage, rowsPerPage]);
-
+  useEffect(() => {
+    setSelectedRows([]);
+    setClearSelectedRows(prev => !prev);
+  }, [activeLink])
   useEffect(() => {
     if (billData && AllIndividualsData && workerRatesData) {
       const enriched = addIndividualDetailsToBillDetails(
@@ -659,10 +641,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         workerRatesData
       );
       const statusMap = {
-        VERIFICATION_FAILED: ["VERIFICATION_FAILED",], //send for edit action
+        VERIFICATION_FAILED: ["VERIFICATION_FAILED","PENDING_EDIT"], //send for edit action
         VERIFIED: ["VERIFIED", "PAYMENT_FAILED"], //generate payment action
         PAYMENT_GENERATED: ["PAID"],
-        NOT_VERIFIED: ["PENDING_VERIFICATION", "PENDING_EDIT", "EDITED"], //verify action
+        NOT_VERIFIED: ["PENDING_VERIFICATION", "EDITED"], //verify action
         PENDING_FOR_EDIT: ["PENDING_EDIT"], //EDIT action
         EDITED: ["EDITED"]
       };
@@ -792,7 +774,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   };
                 });
                 setCurrentPage(1);
-                setActiveLink(e);
+                setActiveLink(e);                
               }}
               setActiveLink={setActiveLink}
               showNav={true}
@@ -813,6 +795,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 // selectableRows={true}
                 selectableRows={!["PAYMENT_GENERATED", "EDITED"].includes(activeLink?.code)}
                 status={activeLink?.code} editBill={editBillDetails}
+                clearSelectedRows={clearSelectedRows}
                 onSelectionChange={setSelectedRows}
                 selectedBills={selectedRows}
                 isSelectionDisabled={isSelectionDisabled}
@@ -1007,8 +990,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         onClose={() => {
           setOpenEditAlertPopUp(false);
         }}
-        alertHeading={t(`HCM_AM_ALERT_EDIT_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
+        alertHeading={t(`HCM_AM_ALERT_BILL_EDIT_HEADING`)}
+        alertMessage={t(`HCM_AM_ALERT_BILL_EDIT_DESCRIPTION`)}
         submitLabel={t(`HCM_AM_APPROVE`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
