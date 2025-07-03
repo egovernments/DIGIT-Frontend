@@ -5,7 +5,7 @@ const useProjectUpdateWithBoundary = async ({ formData }) => {
   const requests = formData.map((item) => {
     return Digit.CustomService.getResponse({
       url: `${url}/v1/_update`,
-      // url: "/health-project/v1/_update", // todo should be picked up from globalconfig
+      // url: "/health-project/v1/_update", 
       body: {
         Projects: [item],
         isCascadingProjectDateUpdate: true,

@@ -70,6 +70,7 @@
     border-bottom-left-radius: 0.5rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
 
     .digit-results-card-buttons-internal {
@@ -95,7 +96,7 @@
 .digit-viewcard-field-pair {
     &.digit-results-status-card-field-pair {
             align-items: center;
-            gap: 1.5rem;
+            gap: 4rem;
             flex-direction: unset;
         .digit-viewcard-label {
             color: theme(digitv2.lightTheme.primary-2);
