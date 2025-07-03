@@ -47,6 +47,9 @@
     "postcss-scss": "3.0.5",
     "sass": "^1.26.11"
   },
+  "resolutions": {
+    "**/minimatch": "7.4.6"
+  },
   "files": [
     "dist/index.min.css",
     "dist/index.css",
