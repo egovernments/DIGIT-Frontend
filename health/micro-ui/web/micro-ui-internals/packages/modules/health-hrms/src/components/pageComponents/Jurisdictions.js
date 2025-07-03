@@ -4,7 +4,6 @@ import { useTranslation } from "react-i18next";
 import BoundaryComponent from "./SelectEmployeeBoundary";
 import { Loader } from "@egovernments/digit-ui-components";
 const Jurisdictions = ({ config, onSelect, formData }) => {
-  console.log("Jurisdictions config", formData);
   const { t } = useTranslation();
   const selectedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
   const initialBoundaries = formData?.Jurisdictions || [];
