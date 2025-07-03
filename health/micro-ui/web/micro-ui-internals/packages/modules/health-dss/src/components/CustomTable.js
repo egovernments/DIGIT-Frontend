@@ -42,7 +42,7 @@ const calculateFSTPCapacityUtilization = (value, totalCapacity, numberOfDays = 1
 const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setChartDenomination }) => {
   const { id } = data;
   const [chartKey, setChartKey] = useState(id);
-  const [filterStack, setFilterStack] = useState([{ id: chartKey, hierarchyLevel:2 }]);
+  const [filterStack, setFilterStack] = useState([{ id: chartKey}]);
   const { t } = useTranslation();
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
