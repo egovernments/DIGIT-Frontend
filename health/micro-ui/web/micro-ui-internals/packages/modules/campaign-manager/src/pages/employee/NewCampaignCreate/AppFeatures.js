@@ -337,6 +337,7 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
       type="toggle"
       additionalWrapperClass={wrapperClassName}
       variant="vertical"
+      disabled={finalToggleOptions.every(option => option.disabled)}
     />
   );
 };
