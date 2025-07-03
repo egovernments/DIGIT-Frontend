@@ -527,40 +527,31 @@ const MultiSelectDropdown = ({
   const MenuItem = ({ option, index }) => {
     const [isActive, setIsActive] = useState(false);
     const isFrozen = frozenData.some((frozenOption) => frozenOption.code === option.code);
+  const isSelected = alreadyQueuedSelectedState.find(
+    (selectedOption) => selectedOption.code === option.code
+  );
+  const isKeyboardFocused = index === optionIndex && !isSelected;
+
     return (
       <div
         key={index}
         className={`digit-multiselectdropodwn-menuitem ${
           variant ? variant : ""
-        } ${
-          alreadyQueuedSelectedState.find(
-            (selectedOption) => selectedOption.code === option.code
-          )
-            ? "checked"
-            : ""
-        } ${
-          index === optionIndex &&
-          !alreadyQueuedSelectedState.find(
-            (selectedOption) => selectedOption.code === option.code
-          )
-            ? "keyChange"
-            : ""
+        } ${isSelected ? "checked" : ""} ${
+          isKeyboardFocused ? "keyChange" : ""
         } ${isFrozen ? "frozen" : ""}`}
         onMouseDown={() => setIsActive(true)}
         onMouseUp={() => setIsActive(false)}
         onMouseLeave={() => setIsActive(false)}
+        role="option"
+        aria-selected={isSelected ? "true" : "false"}
+        aria-disabled={isFrozen ? "true" : "false"}
+        tabIndex={-1}
       >
         <input
           type="checkbox"
           value={option.code}
-          checked={
-            isFrozen ||
-            alreadyQueuedSelectedState.find(
-              (selectedOption) => selectedOption.code === option.code
-            )
-              ? true
-              : false
-          }
+          checked={isFrozen || isSelected ? true : false}
           onChange={(e) => {
             if (!isFrozen) {
               isPropsNeeded
@@ -575,6 +566,16 @@ const MultiSelectDropdown = ({
           style={{
             cursor: isFrozen ? "not-allowed" : "pointer",
           }}
+          aria-label={`${isFrozen ? "Disabled option" : "Select option"}: ${t(
+            option[optionsKey] &&
+              typeof option[optionsKey] == "string" &&
+              option[optionsKey]
+          )}`}
+          aria-describedby={
+            variant === "nestedtextmultiselect" && option.description
+              ? `option-desc-${index}`
+              : undefined
+          }
         />
         <div className="digit-multiselectdropodwn-custom-checkbox">
           <SVG.Check width="20px" height="20px" fill={primaryColor} />
@@ -586,11 +587,7 @@ const MultiSelectDropdown = ({
               IconRender(
                 option?.icon,
                 isActive,
-                alreadyQueuedSelectedState.find(
-                  (selectedOption) => selectedOption.code === option.code
-                )
-                  ? true
-                  : false
+                isSelected ? true : false
               )}
             <p className="digit-label">
               {t(
@@ -601,7 +598,13 @@ const MultiSelectDropdown = ({
             </p>
           </div>
           {variant === "nestedtextmultiselect" && option.description && (
-            <div className="option-description">{option.description}</div>
+            <div 
+              className="option-description" 
+              id={`option-desc-${index}`}
+              aria-label="Option description"
+            >
+              {option.description}
+            </div>
           )}
         </div>
       </div>
@@ -613,11 +616,15 @@ const MultiSelectDropdown = ({
       className={`digit-multiselectdropodwn-menuitem ${
         variant ? variant : ""
       } ${addSelectAllCheck ? "selectAll" : ""}`}
+      role="option"
+      aria-selected={selectAllChecked ? "true" : "false"}
+      tabIndex={-1}
     >
       <input
         type="checkbox"
         checked={selectAllChecked}
         onChange={handleSelectAll}
+        aria-label={`Select all options: ${selectAllLabel ? selectAllLabel : t("SELECT_ALL")}`}
       />
       <div className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}>
         <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
@@ -640,6 +647,10 @@ const MultiSelectDropdown = ({
           } unsuccessfulresults`}
           key={"-1"}
           onClick={() => {}}
+          role="option"
+          aria-selected="false"
+          aria-disabled="true"
+          tabIndex={-1}
         >
           {<span> {t("NO_RESULTS_FOUND")}</span>}
         </div>
@@ -647,7 +658,7 @@ const MultiSelectDropdown = ({
     }
 
     return (
-      <div>
+      <div role="listbox" aria-multiselectable="true">
         {selectAllOption}
         {optionsToRender?.map((option, index) => {
           if (option.options) {
@@ -657,6 +668,8 @@ const MultiSelectDropdown = ({
                 className={`digit-nested-category ${
                   addSelectAllCheck || addCategorySelectAllCheck ? "selectAll" : ""
                 }`}
+                role="group"
+                aria-label={`Category: ${t(option[optionsKey])}`}
               >
                 <div className="digit-category-name">
                   {t(option[optionsKey])}
@@ -665,6 +678,10 @@ const MultiSelectDropdown = ({
                   <div
                     className="digit-category-selectAll"
                     onClick={() => handleCategorySelection(option)}
+                    role="option"
+                    aria-selected={selectAllChecked || categorySelected[option?.code] ? "true" : "false"}
+                    tabIndex={-1}
+                    aria-label={`Select all items in category: ${t(option[optionsKey])}`}
                   >
                     <div className="category-selectAll-label">
                       {categorySelectAllLabel
@@ -676,9 +693,11 @@ const MultiSelectDropdown = ({
                       checked={
                         selectAllChecked || categorySelected[option?.code]
                       }
+                      aria-label={`Select all in ${t(option[optionsKey])} category`}
                     />
                     <div
                       className={`digit-multiselectdropodwn-custom-checkbox-selectAll`}
+                      aria-hidden="true"
                     >
                       <SVG.Check width="20px" height="20px" fill={primaryIconColor} />
                     </div>
@@ -707,6 +726,12 @@ const MultiSelectDropdown = ({
           className={`digit-multiselectdropdown-master${
             active ? `-active` : ``
           } ${disabled ? "disabled" : ""}  ${variant ? variant : ""} ${isSearchable ? "searchable" : ""}`}
+          role="combobox"
+          aria-expanded={active ? "true" : "false"}
+          aria-haspopup="listbox"
+          aria-label={`Multi-select dropdown: ${defaultLabel}`}
+          aria-owns="jk-dropdown-unique"
+          aria-describedby="dropdown-description"
         >
           <input
             className="digit-cursorPointer"
@@ -716,6 +741,8 @@ const MultiSelectDropdown = ({
             onFocus={() => setActive(true)}
             value={searchQuery}
             onChange={onSearch}
+            aria-label={`Search options in ${defaultLabel}`}
+            aria-autocomplete="list"            
           />
           <div
             className="digit-multiselectdropdown-label"
@@ -727,6 +754,8 @@ const MultiSelectDropdown = ({
                    ${defaultUnit} Selected`
                 : defaultLabel
             }
+            id="dropdown-description"
+            aria-live="polite"
           >
             {variant === "treemultiselect" ? (
               <p>
@@ -751,6 +780,8 @@ const MultiSelectDropdown = ({
             className="digit-multiselectdropdown-server"
             id="jk-dropdown-unique"
             style={ServerStyle ? ServerStyle : {}}
+            role="region"
+            aria-label="Dropdown options"
           >
             {variant === "treemultiselect" ? (
               <TreeSelect
@@ -767,7 +798,7 @@ const MultiSelectDropdown = ({
         ) : null}
       </div>
       {config?.isDropdownWithChip ? (
-        <div className="digit-tag-container">
+        <div className="digit-tag-container" role="region" aria-label="Selected options">
           {alreadyQueuedSelectedState.length > 0 &&
             alreadyQueuedSelectedState
               ?.filter((value) => !value.propsData[1]?.options)

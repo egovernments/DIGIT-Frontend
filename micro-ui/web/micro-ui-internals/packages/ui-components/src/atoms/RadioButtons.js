@@ -17,8 +17,15 @@ const RadioButtons = (props) => {
   );
 
   return (
-    <div style={props?.style} className={`digit-radio-options-wrap ${props?.alignVertical ? "vertical" : ""} ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}>
+    <div 
+      style={props?.style} 
+      className={`digit-radio-options-wrap ${props?.alignVertical ? "vertical" : ""} ${props?.additionalWrapperClass ? props?.additionalWrapperClass : ""}`}
+      aria-label={props?.label || "Radio button"}
+      aria-describedby={props?.errors?.errorMessage ? "radio-error" : undefined}
+      aria-invalid={props?.errors?.errorMessage ? "true" : "false"}
+    >
       {props?.options?.map((option, ind) => {
+        const uniqueId = `${props?.id || 'radio'}-${ind}`;
         if (props?.optionsKey && !props?.isDependent) {
           return (
             <div className={`radio-option-container ${props?.disabled ? "disabled" : ""} ${(props?.value === option?.code && props?.disabled) ? "preselected" : ""} ${isAnyPreselected ? "has-preselected" : ""} ${props?.isLabelFirst ? "label-first" : ""}`} key={ind}>
@@ -31,12 +38,16 @@ const RadioButtons = (props) => {
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props?.name}
-                  id={props?.id}
+                  id={uniqueId}
                   ref={props?.inputRef}
+                  aria-describedby={props?.errors?.errorMessage ? "radio-error" : undefined}
                 />
-                <span className="digit-radio-btn-checkmark"></span>
+                <span className="digit-radio-btn-checkmark" aria-hidden="true"></span>
               </span>
-              <label style={props?.inputStyle} for={props?.id}>
+              <label 
+                style={props?.inputStyle} 
+                htmlFor={uniqueId}
+              >
                 {StringManipulator(
                   "TOSENTENCECASE",
                   t(option[props?.optionsKey])
@@ -56,12 +67,16 @@ const RadioButtons = (props) => {
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props?.name}
-                  id={props?.id}
+                  id={uniqueId}
                   ref={props?.inputRef}
+                  aria-describedby={props?.errors?.errorMessage ? "radio-error" : undefined}
                 />
-                <span className="digit-radio-btn-checkmark"></span>
+                <span className="digit-radio-btn-checkmark" aria-hidden="true"></span>
               </span>
-              <label style={props?.inputStyle} for={props?.id}>
+              <label 
+                style={props?.inputStyle} 
+                htmlFor={uniqueId}
+              >
                 {StringManipulator("TOSENTENCECASE",t(
                   props?.labelKey
                     ? `${props?.labelKey}_${option?.code}`
@@ -77,24 +92,33 @@ const RadioButtons = (props) => {
                 <input
                   className="digit-radio-btn"
                   type="radio"
-                  id={props?.id}
+                  id={uniqueId}
                   value={option}
                   checked={selected === option ? 1 : 0}
                   onChange={() => selectOption(option)}
                   disabled={props?.disabled}
                   name={props?.name}
                   ref={props?.inputRef}
+                  aria-describedby={props?.errors?.errorMessage ? "radio-error" : undefined}
                 />
-                <span className="digit-radio-btn-checkmark"></span>
+                <span className="digit-radio-btn-checkmark" aria-hidden="true"></span>
               </span>
 
-              <label style={props?.inputStyle} for={props?.id}>
+              <label 
+                style={props?.inputStyle} 
+                htmlFor={uniqueId}
+              >
                 {StringManipulator("TOSENTENCECASE", t(option))}
               </label>
             </div>
           );
         }
       })}
+      {props?.errors?.errorMessage && (
+        <div id="radio-error" role="alert" aria-live="polite">
+          {props.errors.errorMessage}
+        </div>
+      )}
     </div>
   );
 };

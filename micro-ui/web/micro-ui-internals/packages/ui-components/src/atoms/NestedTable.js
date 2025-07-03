@@ -23,7 +23,15 @@ const NestedTable = ({ nestedData, toggleRowExpansion, rowIndex }) => {
 
   const renderNestedTable = () => {
     return (
-      <div className={`digit-table-container withBorder`}>
+      <div
+        className="digit-table-container withBorder"
+        role="region"
+        aria-label={
+          tableDetails?.tableTitle
+            ? `${tableDetails.tableTitle} data table`
+            : "Nested data table"
+        }
+      >
         <TableMain>
           <TableHeader>
             <TableRow>
@@ -70,7 +78,13 @@ const NestedTable = ({ nestedData, toggleRowExpansion, rowIndex }) => {
         <div className="table-header-wrapper">
           <div className="header-filter-wrapper">
             {tableDetails?.tableTitle && (
-              <div className="table-header">{tableDetails?.tableTitle}</div>
+              <div
+                className="table-header"
+                role="heading"
+                aria-level="3"
+              >
+                {tableDetails?.tableTitle}
+              </div>
             )}
             {tableDetails?.addClose && (
               <SVG.Close
@@ -83,7 +97,10 @@ const NestedTable = ({ nestedData, toggleRowExpansion, rowIndex }) => {
             )}
           </div>
           {tableDetails?.tableDescription && (
-            <div className="table-description">
+            <div
+              className="table-description"
+              id={`nested-desc-${rowIndex}`}
+            >
               {tableDetails?.tableDescription}
             </div>
           )}

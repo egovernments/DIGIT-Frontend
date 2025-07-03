@@ -123,12 +123,17 @@ const OTPInput = ({
     >
       <div className={`digit-otp-label`}>{label}</div>
       <div className={`otp-error-wrapper`}>
-      <div className="otp-input-container" style={{display:"flex"}}>
+      <div className="otp-input-container" style={{ display: "flex" }}
+        role="group"
+        aria-labelledby="otp-label"
+      >
         {otp.map((data, index) => (
           <input
             key={index}
             type="text"
             maxLength="1"
+            inputMode={type === "numeric" ? "numeric" : "text"}
+            aria-label={`${index + 1} of ${length}`}
             value={masking && otp[index] ? "●" : otp[index]}
             ref={(el) => (inputRefs.current[index] = el)}
             onChange={(e) => handleInputChange(e, index)}

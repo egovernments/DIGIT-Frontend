@@ -30,8 +30,15 @@ const Numeric = (props, customProps) => {
   return (
     <React.Fragment>
       <div className="digit-text-input">
-        <div className={inputClassName}>
-          <button type="button" onClick={() => decrementCount()} className="NumericButton">
+        <div className={inputClassName} role="group" aria-label="Numeric input control">
+          <button 
+            type="button" 
+            onClick={() => decrementCount()} 
+            className="NumericButton"
+            aria-label="Decrease value"
+            disabled={props.disable || count <= 0}
+            tabIndex={props.disable ? -1 : 0}
+          >
             -
           </button>
           <input
@@ -41,7 +48,14 @@ const Numeric = (props, customProps) => {
               border: "1px solid #505A5F",
             }}
           />
-          <button type="button" onClick={() => incrementCount()} className="NumericButton">
+          <button 
+            type="button" 
+            onClick={() => incrementCount()} 
+            className="NumericButton"
+            aria-label="Increase value"
+            disabled={props.disable}
+            tabIndex={props.disable ? -1 : 0}
+          >
             +
           </button>
         </div>

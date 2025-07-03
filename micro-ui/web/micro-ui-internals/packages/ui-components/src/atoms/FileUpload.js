@@ -246,6 +246,13 @@ const FileUpload = (props) => {
     window.open(url, "_blank");
   };
 
+  const handleKeyDown = (e, callback) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      callback();
+    }
+  };
+
   const primaryColor = Colors.lightTheme.paper.primary;
   const errorColor = Colors.lightTheme.alert.error;
 
@@ -292,6 +299,9 @@ const FileUpload = (props) => {
   };
 
   const renderVariant = () => {
+    const inputId = props.id || `document-${getRandomId()}`;
+    const hasErrors = errors.length > 0;
+    
     switch (props.variant) {
       case "uploadWidget":
         return (
@@ -350,13 +360,14 @@ const FileUpload = (props) => {
                   }`}
                   ref={inpRef}
                   type="file"
-                  id={props.id || `document-${getRandomId()}`}
+                  id={inputId}
                   name="file"
                   multiple={props.multiple}
                   accept={props.accept}
                   disabled={props.disabled}
                   onChange={handleFileUpload}
                   style={{ display: "none" }}
+                  aria-describedby={`${inputId}-description ${inputId}-error`}
                 />
                 <input
                   className={`digit-uploader-input ${
@@ -366,6 +377,9 @@ const FileUpload = (props) => {
                   placeholder={"No File Selected"}
                   value={inputLabel}
                   readOnly
+                  aria-label={`Selected files: ${inputLabel}`}
+                  aria-invalid={hasErrors ? "true" : "false"}
+                  aria-describedby={hasErrors ? `${inputId}-error` : `${inputId}-description`}
                 />
               </div>
               <Button
@@ -390,7 +404,12 @@ const FileUpload = (props) => {
               />
             </div>
             {props?.showAsTags && (
-              <div className="digit-tag-container" style={{ marginTop: "0px" }}>
+              <div 
+                className="digit-tag-container" 
+                style={{ marginTop: "0px" }}
+                role="list"
+                aria-label="Uploaded files"
+              >
                 {uploadedFiles?.map((file, index) => {
                   const fileErrors = errors.filter(
                     (error) => error.file === file
@@ -415,7 +434,11 @@ const FileUpload = (props) => {
               </div>
             )}
             {props?.showAsPreview && (
-              <div className="digit-img-container">
+              <div 
+                className="digit-img-container"
+                role="list"
+                aria-label="File previews"
+              >
                 {uploadedFiles.map((file, index) => {
                   const fileErrors = errors.filter(
                     (error) => error.file === file
@@ -428,11 +451,16 @@ const FileUpload = (props) => {
                         className={`preview-container ${
                           uploadedFilesCount > 1 ? " multiple" : "single"
                         } ${file?.type.startsWith("image/") ? "imageFile" : ""} ${isError ? "error" : ""}`}
+                        role="listitem"
                       >
                         <div
                           onClick={() => {
                             handleFileClick(index, file);
                           }}
+                          onKeyDown={(e) => handleKeyDown(e, () => handleFileClick(index, file))}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Open ${file?.name} in new tab`}
                         >
                           {file?.type.startsWith("image/") ? (
                             <img
@@ -448,6 +476,10 @@ const FileUpload = (props) => {
                           onClick={() => {
                             handleFileClick(index, file);
                           }}
+                          onKeyDown={(e) => handleKeyDown(e, () => handleFileClick(index, file))}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Open ${file?.name} in new tab`}
                         ></div>
                         <div className="preview-file-name">
                           {file?.name && !isError ? file?.name : ""}
@@ -456,9 +488,13 @@ const FileUpload = (props) => {
                           onClick={(e) => {
                             handleFileRemove(file);
                           }}
+                          onKeyDown={(e) => handleKeyDown(e, () => handleFileRemove(file))}
                           className={`digit-uploader-close-icon ${
                             isError ? "error" : ""
                           }`}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`Remove ${file?.name}`}
                         >
                           <SVG.Close
                             fill={primaryColor}
@@ -490,10 +526,16 @@ const FileUpload = (props) => {
     }
   };
 
+  const inputId = props.id || `document-${getRandomId()}`;
+
   return (
     <Fragment>
       <div className={`digit-uploader-wrap ${props?.inline ? "inline" : ""} ${props?.iserror ? "error" : ""}`}>
-        {showLabel && <p className="digit-upload-label">{t(props?.label)}</p>}
+        {showLabel && (
+          <p className="digit-upload-label" id={`${inputId}-label`}>
+            {t(props?.label)}
+          </p>
+        )}
         {renderVariant()}
         {props?.iserror && (
           <ErrorMessage
@@ -506,7 +548,7 @@ const FileUpload = (props) => {
           />
         )}
         {showHint && (
-          <p className="digit-upload-helptext">
+          <p className="digit-upload-helptext" id={`${inputId}-description`}>
             {StringManipulator(
               "toSentenceCase",
               StringManipulator("truncateString", t(props?.hintText), {
