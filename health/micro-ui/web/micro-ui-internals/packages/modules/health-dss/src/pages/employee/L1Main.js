@@ -461,6 +461,7 @@ const L1Main = () => {
                 size={"medium"}
                 className={"digit-dss-options-header-option-button"}
                 isSearchable={false}
+                wrapperClassName={"digit-dss-options-header-options-button-wrapper"}
                 onOptionSelect={onActionSelect}
                 icon={"Share"}
                 iconFill={"#505a5f"}
