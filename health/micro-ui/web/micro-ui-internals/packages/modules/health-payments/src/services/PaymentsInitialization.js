@@ -118,10 +118,10 @@ const initializePaymentsModule = async ({ tenantId }) => {
         hierarchyType: hierarchyType,
         includeChildren: true,
         codes: tenantId,
-        boundaryType: "COUNTRY",
+        boundaryType: "Pays",
       }
     });
-
+    //TODO : NEEDS BE TO CHANGED TO COUNTRY
     if (!fetchBoundaryData) {
       throw new Error("Couldn't fetch boundary data");
     }

@@ -51,10 +51,12 @@ const BillInboxComponent = () => {
     const project = Digit?.SessionStorage.get("staffProjects");
     const [billGenerationStatus, setBillGenerationStatus] = useState(null);
     const [openAlertPopUp, setOpenAlertPopUp] = useState(false);
+    const [isDataLoading, setIsDataLoading] = useState(false);
     const [activeLink, setActiveLink] = useState({
         code: "APPROVED",
         name: "HCM_AM_APPROVED_REGISTER",
     });
+    const [billUpdate, setBillUpdate] = useState(false);
 
     /**
      * Query to fetch the attendance register data
@@ -150,7 +152,13 @@ const BillInboxComponent = () => {
             refetchAttendance();
         }
     }, [activeLink, limitAndOffset]);
-
+    //TODO : CHECK UPDATE
+    const updateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/${expenseContextPath}/bill/v1/_update`,
+    });
+    const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
+        url: `/${expenseContextPath}/v1/bill/details/status/_update`,
+    });
     // Refetch data and bill when boundary code changes
     useEffect(() => {
         if (selectedBoundaryCode) {
@@ -170,12 +178,92 @@ const BillInboxComponent = () => {
 
     // update bill generation info message when bill data is loaded
     useEffect(() => {
-        if (BillData) {
-            if (BillData?.bills?.length > 0) {
-                setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
-            }
+        if (BillData?.bills?.length > 0) {
+            setInfoDescription(`HCM_AM_BILL_IS_ALREADY_GENERATED_INFO_MESSAGE`);
         }
+        const updateBillData = async () => {
+
+            const bill = BillData?.bills?.[0];
+
+            if (bill?.id) {
+                console.log("Bill ID:", bill.id);
+                try {
+                    if (bill.businessService != "PAYMENTS.BILL") {
+
+                        const updatedBillResponse = await updateBillMutation.mutateAsync(
+                            {
+                                body: {
+                                    bill: {
+                                        ...bill,
+                                        businessService: "PAYMENTS.BILL",
+                                    },
+                                    workflow: {
+                                        action: "CREATE",
+                                    },
+                                },
+                            },
+                            {
+                                onSuccess: async (response) => {
+                                    const bill = response?.bills?.[0];
+                                    console.log("Bill updated:", bill);
+                                    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+                                    await sleep(10000);
+                                    updateBillDetailMutation.mutateAsync(
+                                        {
+                                            body: {
+                                                bill: {
+                                                    ...bill,
+                                                },
+                                                workflow: {
+                                                    action: "CREATE",
+                                                }
+                                            },
+                                        },
+                                        {
+                                            onSuccess: (data) => {
+                                                console.log("Bill detail workflow updated successfully:", data);
+                                                setShowToast({
+                                                    key: "success",
+                                                    label: t(`HCM_AM_BILL_DETAILS_SUCCESS`), //TODO UPDATE TOAST MSG
+                                                    transitionTime: 2000,
+                                                });
+                                            },
+                                            onError: (error) => {
+                                                console.log("Error updating bill detail workflow:", error);
+                                                setShowToast({
+                                                    key: "error",
+                                                    label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
+                                                    transitionTime: 2000,
+                                                });
+                                            }
+                                        }
+                                    )
+                                },
+                                onError: (error) => {
+                                    console.log("12Error updating bill detail workflow:", error);
+                                    setShowToast({
+                                        key: "error",
+                                        label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
+                                        transitionTime: 2000,
+                                    });
+                                },
+                            },
+                        );
+                        updatedBillResponse();
+                    }
+                } catch (error) {
+                    console.error("Error in bill or billDetails update:", error);
+                    setShowToast({ key: "error", label: t(`HCM_AM_BILL_UPDATE_ERROR`), transitionTime: 3000 });
+                }
+
+            }
+        };
+        // if(billUpdate){
+        // updateBillData();
+        // setBillUpdate(false);
+        // }
     }, [BillData]);
+
 
     const handleFilterUpdate = (boundaryCode) => {
 
@@ -234,12 +322,29 @@ const BillInboxComponent = () => {
                 },
                 {
                     // Callback for successful mutation response
-                    onSuccess: (data) => {
+                    onSuccess: async (data) => {
+                        console.log("Bill generation response:", data);
                         setBillGenerationStatus(data?.statusCode);
+                        // setIsDataLoading(true);
+                        // let refetchResult = await refetchBill();
+                        // // Keep polling until bills are available
+                        // while (!refetchResult?.BillData?.bills || refetchResult.BillData.bills.length === 0) {
+                        //     // Wait for 2 seconds before next try
+                        //     await new Promise((resolve) => setTimeout(resolve, 1500));
+                        //     refetchResult = await refetchBill();
+                        // }
+                        // setIsDataLoading(false);
                         if (data?.statusCode === "SUCCESSFUL") {
+                            console.log("Bill generation successful:", data);
                             // Show success toast and refetch bill data
                             setShowToast({ key: "success", label: t("HCM_AM_BILL_GENERATED_SUCCESSFULLY"), transitionTime: 3000 });
-                            refetchBill();
+                            console.log("here refetch:");
+                            //  refetchBill(); // Make sure this returns a promise
+                            const refetchResult = await refetchBill();
+                            console.log("Refetched bill data:", refetchResult?.data);
+                            // setBillUpdate(true);
+                            console.log("Bill refetched successfully", BillData);
+
                         } else {
                             // Update info description and show status-specific toast message
                             setInfoDescription(`HCM_AM_${data?.statusCode}_INFO_MESSAGE`);
@@ -259,7 +364,7 @@ const BillInboxComponent = () => {
         }
     };
 
-    if (generateBillMutation.isLoading) {
+    if (generateBillMutation.isLoading || isDataLoading) {
         return <LoaderWithGap />
     }
     if (isAttendanceLoading || isBillLoading) {

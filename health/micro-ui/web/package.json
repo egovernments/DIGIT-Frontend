@@ -65,6 +65,13 @@
     "build:webpack": "yarn build:libraries &&cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules"
   },
+  "resolutions": {
+    "**/@babel/runtime": "7.20.1",
+    "**/styled-components": "5.0.0",
+    "**/@babel/traverse": "7.25.9",
+    "**/babel-preset-react-app": "10.0.0",
+    "**/@jridgewell/gen-mapping": "0.3.5"
+  },
   "eslintConfig": {
     "extends": [
       "react-app"
