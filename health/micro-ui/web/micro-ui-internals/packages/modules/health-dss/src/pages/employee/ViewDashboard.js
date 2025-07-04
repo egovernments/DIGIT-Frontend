@@ -14,7 +14,9 @@ const ViewDashbaord = ({ stateCode }) => {
   const campaignId = project?.referenceID;
   const [redirected, setRedirected] = useState(false);
   const queryStrings = Digit.Hooks.useQueryParams();
+  const [loaderText, setLoaderText] = useState(t("LOADING"));
 
+  // campaign search call
   const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -31,7 +33,8 @@ const ViewDashbaord = ({ stateCode }) => {
 
   const hierarchyType = campaignData?.[0]?.hierarchyType || "";
 
-  const reqCriteria = {
+  // boundary hierarchy definition search call
+  const reqCriteriaForBoundaryDefinitionSearch = {
     url: `/boundary-service/boundary-hierarchy-definition/_search`,
     changeQueryName: `${hierarchyType}`,
     body: {
@@ -50,7 +53,7 @@ const ViewDashbaord = ({ stateCode }) => {
     },
   };
 
-  const { isLoading: hierarchyLoading, data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading: hierarchyLoading, data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteriaForBoundaryDefinitionSearch);
 
   const processBoundaryHierarchy = (hierarchyDefinition) => {
     const hierarchyList = hierarchyDefinition?.boundaryHierarchy;
@@ -89,6 +92,7 @@ const ViewDashbaord = ({ stateCode }) => {
   const boundaryType = project?.address.boundaryType?.toUpperCase() || "";
   const levelLinked = levelMap?.[boundaryType];
 
+  // MDMS call : to get dashboard config id fro specific hierarchyType
   const { data: mdmsData, isLoading: isMDMSLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "hcm-dashboard",
@@ -97,7 +101,7 @@ const ViewDashbaord = ({ stateCode }) => {
     { schemaCode: "hcm-dashboard.dashboardProjectConfig" }
   );
 
-  const getDashboardId = (mdmsData, projectType, levelLinked) => {  
+  const getDashboardId = (mdmsData, projectType, levelLinked) => {
     const dashboardConfigs = mdmsData?.MdmsRes?.["hcm-dashboard"]?.dashboardProjectConfig;
     if (!Array.isArray(dashboardConfigs)) return null;
 
@@ -116,6 +120,7 @@ const ViewDashbaord = ({ stateCode }) => {
   const selectedDashboard = getDashboardId(mdmsData, project?.projectType, levelLinked);
   const dashboardId = selectedDashboard?.dashboardId;
 
+  // Dashboard analytics call to get the dashoard data for specific dashboard id
   const dashboardReqCriteria = {
     url: `/dashboard-analytics/dashboard/getDashboardConfig/${dashboardId}`,
     changeQueryName: dashboardId,
@@ -134,9 +139,10 @@ const ViewDashbaord = ({ stateCode }) => {
       },
     },
   };
-  const { data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
+  const { isLoading: isDashboardLoading, data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
 
-  const reqCriteriaResource = {
+  // Boundary releationship search
+  const reqCriteriaForBoundaryReleationshipSearch = {
     url: `/boundary-service/boundary-relationships/_search`,
     changeQueryName: hierarchyType,
     params: {
@@ -153,11 +159,22 @@ const ViewDashbaord = ({ stateCode }) => {
     },
   };
 
-  const { isLoading: dataLoading, data: data, isFetching, refetch2 } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
+  const { isLoading: boundaryDataLoading, data: boundaryData, isFetching, refetch2 } = Digit.Hooks.useCustomAPIHook(
+    reqCriteriaForBoundaryReleationshipSearch
+  );
+
+  // Dynamic loader text based on current API
+  useEffect(() => {
+    if (campaignSearchLoading) setLoaderText(t("FETCHING_CAMPAIGN_DETAILS"));
+    else if (hierarchyLoading) setLoaderText(t("FETCHING_HIERARCHY"));
+    else if (isMDMSLoading) setLoaderText(t("LOADING_DASHBOARD_CONFIGURATION"));
+    else if (isDashboardLoading) setLoaderText(t("LOADING_DASHBOARD"));
+    else if (boundaryDataLoading) setLoaderText(t("FETCHING_BOUNDARIES"));
+  }, [campaignSearchLoading, hierarchyLoading, isMDMSLoading, isDashboardLoading, boundaryDataLoading, t]);
 
   useEffect(() => {
     const boundaries =
-      data?.map((item) => ({
+      boundaryData?.map((item) => ({
         [item.boundaryType.toLowerCase()]: [item.code.toLowerCase()],
       })) || [];
 
@@ -180,13 +197,11 @@ const ViewDashbaord = ({ stateCode }) => {
       Digit.SessionStorage.set("projectSelected", projectsInfo);
       Digit.SessionStorage.set("campaignSelected", campaignData?.[0]);
     }
-  }, [dashboardDataResponse?.responseData, redirected, history,data]);
+  }, [dashboardDataResponse?.responseData, redirected, history, boundaryData]);
 
-  if (campaignSearchLoading || hierarchyLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
-  }
-  if (!campaignData || campaignData.length === 0) {
-    return <div>{t("CAMPAIGN_NOT_FOUND")}</div>;
+  // Always show loader until redirect
+  if (!redirected) {
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} loaderText={loaderText || t("LOADING")} />;
   }
   return null;
 };
