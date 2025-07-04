@@ -11,6 +11,7 @@ import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
 import useCreateChecklist from "./useCreateChecklist";
 import useUpsertLocalisation from "./useUpsertLocalisation";
+import useUpsertLocalisationParallel from "./useUpsertLocalisationParallel";
 import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
@@ -47,6 +48,7 @@ const campaign = {
   useProjectUpdateWithBoundary,
   useCreateChecklist,
   useUpsertLocalisation,
+  useUpsertLocalisationParallel,
   useTypeOfChecklist,
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
