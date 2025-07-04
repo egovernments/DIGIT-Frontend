@@ -84,6 +84,13 @@ const SelectionTag = ({
     onSelectionChanged(updatedSelections);
   };
 
+  const handleKeyDown = (e, option) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleOptionClick(option);
+    }
+  };
+
   const secondaryIconColor = Colors.lightTheme.generic.inputBorder;
   const primaryIconColor = Colors.lightTheme.paper.primary;
 
@@ -102,9 +109,14 @@ const SelectionTag = ({
         className={`option ${isSelected ? "selected" : ""}`}
         style={{ width }}
         onClick={() => handleOptionClick(option)}
+        onKeyDown={(e) => handleKeyDown(e, option)}
+        tabIndex={0}
+        role={allowMultipleSelection ? "checkbox" : "radio"}
+        aria-checked={isSelected}
+        aria-label={t(option?.[optionsKey])}
       >
         {option.prefixIcon && (
-          <span className="selectiontagicon">
+          <span className="selectiontagicon" aria-hidden="true">
             {IconRender(option?.prefixIcon, isSelected)}
           </span>
         )}
@@ -112,7 +124,7 @@ const SelectionTag = ({
           {t(option?.[optionsKey])}
         </span>
         {option.suffixIcon && (
-          <span className="selectiontagicon">
+          <span className="selectiontagicon" aria-hidden="true">
             {IconRender(option?.suffixIcon, isSelected)}
           </span>
         )}
@@ -126,6 +138,9 @@ const SelectionTag = ({
         className={`selection-card ${errorMessage ? "error" : ""} ${
           !withContainer ? "hideContainer" : ""
         }`}
+        role={allowMultipleSelection ? "group" : "radiogroup"}
+        aria-label={allowMultipleSelection ? "Select multiple options" : "Select one option"}
+        aria-invalid={errorMessage ? "true" : "false"}
       >
         {data ? data?.map(renderOption) : options?.map(renderOption)}
       </div>

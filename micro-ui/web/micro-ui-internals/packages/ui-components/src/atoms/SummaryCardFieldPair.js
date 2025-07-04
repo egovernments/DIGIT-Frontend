@@ -107,8 +107,10 @@ const SummaryCardFieldPair = ({
       className={`digit-viewcard-field-pair ${className || ""} ${
         inline ? "inline" : ""
       }`}
+      role="group"
+      aria-labelledby={label}
     >
-      <div className="digit-viewcard-label">{label}</div>
+      <div className="digit-viewcard-label" id={label}>{label}</div>
       {renderValue()}
     </div>
   );

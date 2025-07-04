@@ -74,14 +74,35 @@ const Stepper = ({
   };
   const actions = getAction(totalSteps, customSteps);
 
+  // Helper function to get step status
+  const getStepStatus = (index) => {
+    if ((index < currentStep - 1) || (index < activeSteps)) {
+      return "completed";
+    } else if (currentStep - 1 === index) {
+      return "current";
+    } else {
+      return "upcoming";
+    }
+  };
+
   return (
     <div
       className={`digit-stepper-container ${direction ? direction : ""} ${
         className ? className : ""
       }`}
       style={style ? style : null}
+      role="progressbar"
+      aria-valuemax={totalSteps}
+      aria-valuenow={currentStep}
+      aria-label={`Step ${currentStep} of ${totalSteps}`}
     >
-      {actions.map((action, index, arr) => (
+      {actions.map((action, index, arr) => {
+        const stepStatus = getStepStatus(index);
+        const isCompleted = (index < currentStep - 1) || (index < activeSteps);
+        const isCurrent = currentStep - 1 === index;
+        const isActive = ((index <= currentStep - 1) || (index < activeSteps));
+        
+      return (
         <div
           ref={(el) => (stepRefs.current[index] = el)}
           className={`digit-stepper-checkpoint ${direction ? direction : ""}`}
@@ -91,16 +112,26 @@ const Stepper = ({
             currentStep = index;
             onStepClick(index);
           }}
+          role="button"
+          tabIndex="0"
+          aria-label={`${t(StringManipulator("TRUNCATESTRING", action, { maxLength: 64 }))} - ${stepStatus === "completed" ? "Completed" : stepStatus === "current" ? "Current step" : "Upcoming step"}`}
+          aria-current={isCurrent ? "step" : undefined}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              currentStep = index;
+              onStepClick(index);
+            }
+          }}
         >
           <div
             className={`digit-stepper-content ${direction ? direction : ""}`}
           >
             <span
-              className={`stepper-circle ${
-                ((index <= currentStep - 1) || (index < activeSteps) ) && "active"
-              }`}
+              className={`stepper-circle ${isActive && "active"}`}
+              aria-hidden="true"
             >
-              {((index < currentStep - 1) || (index < activeSteps) ) ? (
+              {isCompleted ? (
                 <SVG.Check
                   width={isMobileView ? "18px" : "24px"}
                   height={isMobileView ? "18px" : "24px"}
@@ -112,8 +143,8 @@ const Stepper = ({
             </span>
             <span
               className={`stepper-label ${
-                ((index < currentStep - 1) || (index < activeSteps)) && "completed"
-              } ${currentStep - 1 === index && "current"} ${direction ? direction : ""}`}
+                isCompleted && "completed"
+              } ${isCurrent && "current"} ${direction ? direction : ""}`}
               style={{ ...props?.labelStyles }}
             >
               {t(
@@ -126,13 +157,15 @@ const Stepper = ({
               className={`stepper-connect ${
                 ((index < currentStep - 1) || (index < activeSteps && index < activeSteps - 1 ) ) && "active"
               } ${direction ? direction : ""} ${(index === arr.length-2 && direction !=="vertical") ? "lastbutone" : ""}`}
+              aria-hidden="true"
             ></span>
           )}
           {index < arr.length - 1 && direction === "vertical" && !hideDivider &&  (
             <Divider className="stepper-vertical-divider"></Divider>
           )}
         </div>
-      ))}
+      );
+    })}
     </div>
   );
 };

@@ -173,10 +173,22 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
     switch(uiConfig?.type) {
       case "filter" : {
         return (
-          <div className="digit-filter-header-wrapper">
+          <div className="digit-filter-header-wrapper" role="banner">
             <div className="icon-filter"><CustomSVG.FilterIcon></CustomSVG.FilterIcon></div>
             <div className="label">{t(header)}</div>
-            <div className="icon-refresh" onClick={handleFilterRefresh}><CustomSVG.RefreshIcon></CustomSVG.RefreshIcon></div>
+            <div className="icon-refresh" onClick={handleFilterRefresh}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  handleFilterRefresh();
+                }
+              }}
+              tabIndex={0}
+              role="button"
+              aria-label="Icon Refresh"
+            >
+              <CustomSVG.RefreshIcon></CustomSVG.RefreshIcon>
+            </div>
           </div>
         )
       }
@@ -250,15 +262,29 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
           {renderContent()}
         </FilterCard>
       ) : (
-        <div className={"digit-search-wrapper"}>
-          {header && renderHeader()}
+        <div 
+          className={"digit-search-wrapper"} 
+          role="tabpanel" 
+          aria-labelledby={header ? "search-header" : undefined}
+        >
+          {header && (
+            <div id="search-header">
+              {renderHeader()}
+            </div>
+          )}
           <form
             onSubmit={handleSubmit(onSubmit)}
             onKeyDown={(e) => checkKeyDown(e)}
+            role="search"
+            aria-label={t("Search form")}
           >
             <div>
               {uiConfig?.showFormInstruction && (
-                <p className="search-instruction-header">
+                <p 
+                  className="search-instruction-header"
+                  id="search-instructions"
+                  aria-live="polite"
+                >
                   {t(uiConfig?.showFormInstruction)}
                 </p>
               )}
@@ -266,6 +292,8 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
                 className={`digit-search-field-wrapper ${screenType} ${
                   uiConfig?.formClassName ? uiConfig?.formClassName : ""
                 }`}
+                role="group"
+                aria-labelledby={uiConfig?.showFormInstruction ? "search-instructions" : undefined}
               >
                 {renderContent()}
                 <div
@@ -276,6 +304,8 @@ const SearchComponent = ({ uiConfig, header = "", screenType = "search", fullCon
                   }`}
                   style={uiConfig?.searchWrapperStyles}
                   ref={buttonWrapperRef}
+                  role="group"
+                  aria-label={t("Search actions")}
                 >
                   {uiConfig?.isPopUp && uiConfig?.primaryLabel && (
                     <Button

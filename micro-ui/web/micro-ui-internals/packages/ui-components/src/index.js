@@ -136,9 +136,9 @@ import {
 // import { initCoreLibraries } from "@egovernments/digit-ui-libraries-core";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 
-// initLibraries().then(() => {
-//   console.info("DIGIT Contants enabled");
-// });
+initLibraries().then(() => {
+  console.info("DIGIT Contants enabled");
+});
 
 export {
   Footer,
