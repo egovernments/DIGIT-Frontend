@@ -358,7 +358,7 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           alignment="flex-end"
         />
 
-        <DetailsCardSection t={t} field={detailsCard}/>
+        {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard}/>}
 
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
