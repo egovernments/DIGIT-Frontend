@@ -3,10 +3,10 @@ import React, { useEffect,useState, } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Card, Header, Button, ActionBar, Dropdown, Toast,PopUp } from "@egovernments/digit-ui-components";
-import { CloudDownload } from "../../../../../../../../../../micro-ui/web/micro-ui-internals/packages/svg-components/src";
-import { FileUpload } from "../../../../../../../../../../micro-ui/web/micro-ui-internals/packages/svg-components/src";
 import MyBills from "./my_bills";
 import FetchBills from "./fetch_bills";
+import { CloudDownload } from "./svg_components/CloudDownload";
+import { FileUpload } from "./svg_components/FileUpload";
 
 const ROLES = {
   ATTENDANCE: ["PROXIMITY_SUPERVISOR"],
