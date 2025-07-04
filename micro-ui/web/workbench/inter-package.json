@@ -46,7 +46,9 @@
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
     "**/babel-preset-react-app": "10.0.0",
-     "**/styled-components": "5.3.11"
+     "**/styled-components": "5.3.11",
+     "minimatch": "^3.0.4",
+     "glob": "^7.1.2"
   },
   "devDependencies": {
     "husky": "7.0.4",

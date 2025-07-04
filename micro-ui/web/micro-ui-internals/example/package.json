@@ -27,7 +27,9 @@
   },
   "resolutions": {
     "**/@babel/traverse": "7.25.9",
-     "**/styled-components": "5.3.11"
+     "**/styled-components": "5.3.11",
+     "minimatch": "^3.0.4",
+     "glob": "^7.1.2"
     
   },
   "browserslist": {

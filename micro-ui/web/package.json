@@ -62,7 +62,9 @@
       "**/@babel/preset-env": "7.14.0",
       "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
       "**/polished":"4.2.2",
-      "fast-uri":"2.1.0"
+      "fast-uri":"2.1.0",
+      "minimatch": "^3.0.4",
+      "glob": "^7.1.2"
     },
   "scripts": {
     "start": "react-scripts start",
