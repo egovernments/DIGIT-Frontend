@@ -8,7 +8,7 @@ const FilterByCycleDropdown = ({ handleItemClick }) => {
   const projectData= Digit.SessionStorage.get("projectSelected");
 
   const dropdownItems =
-  projectData?.project?.additionalDetails?.projectType?.cycles.map((item) => ({
+  projectData?.project?.additionalDetails?.projectType?.cycles?.map((item) => ({
       code: item.id,
       name: `${t("CYCLE")} 0${item.id}`,
       id: item.id,
