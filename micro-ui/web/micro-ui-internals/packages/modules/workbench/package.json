@@ -39,7 +39,9 @@
     "exceljs": "^4.4.0"
   },
   "resolutions": {
-    "**/styled-components": "5.0.0"
+    "**/styled-components": "5.0.0",
+    "**/minimatch": "^3.0.4",
+    "**/glob": "^7.1.2"
   },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
