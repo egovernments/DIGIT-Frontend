@@ -137,7 +137,7 @@ function getProjectTypeIDFromURL() {
   return projectTypeId;
 }
 
-function getProjectTypeFromURL() {
+function getProjectTypeFromSession() {
   const projectTypeSession = Digit.SessionStorage.get("projectSelected")?.project?.projectType;
   // Return the id of the matching object or null if not found
   const projectTypeCode = projectTypeSession ? projectTypeSession : null;
@@ -283,7 +283,7 @@ const L2Main = ({}) => {
 
   const [progressDuration, setProgressDuration] = useState({ campaignDuration: 0, daysElapsed: 0 });
   const campaignInfo = Digit.SessionStorage.get("campaigns-info");
-  const projectType = getProjectTypeFromURL(window.location.pathname);
+  const projectType = getProjectTypeFromSession();
   const campaignCode = Object.keys(campaignData[projectType]);
 
   const handleFilters = (data) => {
@@ -570,7 +570,7 @@ const L2Main = ({}) => {
             showDDR={!hideFilterFields.includes("DDR")}
             showUlb={!hideFilterFields.includes("Ulb")}
             showDenomination={!hideFilterFields.includes("Denomination")}
-            showFilterByCycle={campaignData && campaignData?.additionalDetails.beneficiaryType === "INDIVIDUAL" ? true : false}
+            showFilterByCycle={campaignData && campaignData?.additionalDetails.beneficiaryType === "INDIVIDUAL"}
           />
         )}
         {filters?.filters?.tenantId?.length > 0 && (
