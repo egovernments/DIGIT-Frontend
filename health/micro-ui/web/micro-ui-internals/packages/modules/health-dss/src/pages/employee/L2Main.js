@@ -150,6 +150,7 @@ const L2Main = ({}) => {
   const { t } = useTranslation();
   const projectTypeId = getProjectTypeIDFromURL();
   const campaignData = Digit.SessionStorage.get("campaignSelected");
+  const projectData= Digit.SessionStorage.get("projectSelected");
   const [filters, setFilters] = useState(() => {
     const {
       startDate,
@@ -181,9 +182,9 @@ const L2Main = ({}) => {
         province: province || boundaries?.province?.[0] || "",
         district: district || boundaries?.district?.[0] || "",
         projectTypeId: projectTypeId,
-        cycle: (campaignData?.additionalDetails?.cycleData 
-          && Object.keys(campaignData.additionalDetails.cycleData).length > 0)
-         ? campaignData.additionalDetails.cycleData 
+        cycle: (projectData?.project?.additionalDetails?.projectType?.cycles
+          && Object.keys(projectData?.project?.additionalDetails?.projectType?.cycles).length > 0)
+         ? projectData?.project?.additionalDetails?.projectType?.cycles
          : null
    
       },
