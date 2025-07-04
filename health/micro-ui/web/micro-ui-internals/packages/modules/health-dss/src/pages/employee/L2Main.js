@@ -41,6 +41,9 @@ const getInitialRange = () => {
   const location = useLocation();
   const campaignData = Digit.SessionStorage.get("campaigns-info");
   const projectType = getProjectTypeFromURL(window.location.pathname);
+  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  console.log(boundaryType,"boundaryType",boundaryValue,"boundaryValue","values from url")
   const province = new URLSearchParams(location.search).get("province");
   const district = new URLSearchParams(location.search).get("district");
   if (!Digit.SessionStorage.get(key)) {
