@@ -5,13 +5,10 @@ import { Button } from "@egovernments/digit-ui-components";
 const FilterByCycleDropdown = ({ handleItemClick }) => {
   const { t } = useTranslation();
   const actionRef = useRef(null);
-
-  const campaignsInfo = window.Digit.SessionStorage.get("currentProject");
-  const selectedProjectTypeId = window.Digit.SessionStorage.get("selectedProjectTypeId");
-  const campaign = campaignsInfo?.find((item) => item.projectTypeId === selectedProjectTypeId);
+  const projectData= Digit.SessionStorage.get("projectSelected");
 
   const dropdownItems =
-    campaign?.additionalDetails?.projectType?.cycles?.map((item) => ({
+  projectData?.project?.additionalDetails?.projectType?.cycles.map((item) => ({
       code: item.id,
       name: `${t("CYCLE")} 0${item.id}`,
       id: item.id,
