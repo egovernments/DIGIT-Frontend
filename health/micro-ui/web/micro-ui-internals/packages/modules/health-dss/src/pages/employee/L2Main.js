@@ -181,8 +181,8 @@ const L2Main = ({}) => {
         tenantId,
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
-        province: province || boundaries?.province?.[0] || "",
-        district: district || boundaries?.district?.[0] || "",
+        province: province || boundaries?.province?.[0] || null,
+        district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId,
       },
       moduleLevel: moduleLevel,
@@ -522,6 +522,7 @@ const L2Main = ({}) => {
                 size={"medium"}
                 className={"digit-dss-options-header-option-button"}
                 isSearchable={false}
+                wrapperClassName={"digit-dss-options-header-options-button-wrapper"}
                 onOptionSelect={onActionSelect}
                 icon={"Share"}
                 iconFill={"#505a5f"}

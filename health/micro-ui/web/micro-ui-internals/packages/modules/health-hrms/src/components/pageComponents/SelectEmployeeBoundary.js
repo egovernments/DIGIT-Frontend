@@ -1,109 +1,134 @@
 import { LabelFieldPair, CardLabel, Loader } from "@egovernments/digit-ui-components";
 import { Dropdown } from "@egovernments/digit-ui-react-components";
-import React, { useEffect, useState} from "react";
+import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-const BoundaryComponent = ({ t, config, onSelect, userType, formData, index }) => {
+const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.hrms.useBoundriesFetch(tenantId);
+  const { data: childrenData, isLoading } = Digit.Hooks.hrms.useBoundriesFetch({
+    tenantId,
+    hierarchyType: hierarchy?.hierarchyType,
+    config: { enabled: !!hierarchy?.hierarchyType },
+  });
 
-  const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder")?.map((item) => item.code) || [];
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+  // list of all levels, e.g. ["COUNTRY","STATE","LGA",...]
+  const levels = hierarchy?.boundaryHierarchy?.map((i) => i.boundaryType) || [];
 
-  // State to manage selected values and dropdown options
-  const [selectedValues, setSelectedValues] = useState({});
-  const [value, setValue] = useState({});
+  const [optionsByType, setOptionsByType] = useState({});
+  const [selectedByType, setSelectedByType] = useState({});
 
-  // Effect to initialize dropdowns when data loads
   useEffect(() => {
-    if (childrenData && childrenData.length > 0) {
-      const firstBoundaryType = childrenData[0]?.boundary[0].boundaryType;
-      setValue({ [firstBoundaryType]: [childrenData[0]?.boundary[0]] });
+    // 1) wait for your array
+    if (!Array.isArray(childrenData) || childrenData.length === 0) return;
+
+    // 2) pull out the single root node
+    const root = childrenData[0].boundary?.[0];
+    if (!root) return;
+
+    // DFS: find path from root → formData.code (if editing)
+    const findPath = (node, code, trail = []) => {
+      const here = [...trail, node];
+      if (node.code === code) return here;
+      for (const c of node.children || []) {
+        const p = findPath(c, code, here);
+        if (p.length) return p;
+      }
+      return [];
+    };
+
+    const path = formData?.code
+      ? findPath(root, formData.code)
+      : [];
+
+    const newOpts = {};
+    const newSel  = {};
+
+    if (path.length) {
+      // editing: pre-populate every level in path
+      path.forEach((node, idx) => {
+        const type = node.boundaryType;
+        newSel[type] = { ...node, hierarchyType: hierarchy.hierarchyType };
+
+        // siblings at this level
+        newOpts[type] = idx === 0
+          ? [root]
+          : (path[idx - 1].children || []);
+
+        // next-level options
+        if ((node.children || []).length) {
+          const next = node.children[0].boundaryType;
+          newOpts[next] = node.children;
+        }
+      });
+    } else {
+      // brand-new: only show root + its children
+      newOpts[root.boundaryType] = [root];
     }
-  }, [childrenData]);
 
-  /**
-   * Handle dropdown selection.
-   * - Stores the selected boundary.
-   * - Clears all children dropdowns.
-   * - Loads children of the selected boundary.
-   */
-  const handleSelection = (selectedBoundary) => {
-    if (!selectedBoundary) return;
+    setOptionsByType(newOpts);
+    setSelectedByType(newSel);
+  }, [childrenData, formData?.code, hierarchy.hierarchyType]);
 
-    const boundaryType = selectedBoundary.boundaryType;
+  const handleSelection = (node) => {
+    if (!node) return;
+    const type = node.boundaryType;
+    const idx  = levels.indexOf(type);
 
-    // Reset all child selections
-    const index = boundaryHierarchy.indexOf(boundaryType);
-    const newSelectedValues = { ...selectedValues };
-    const newValue = { ...value };
+    const opts = { ...optionsByType };
+    const sel  = { ...selectedByType, [type]: { ...node, hierarchyType: hierarchy.hierarchyType } };
 
-    for (let i = index + 1; i < boundaryHierarchy.length; i++) {
-      delete newSelectedValues[boundaryHierarchy[i]]; // Clear selected children
-      delete newValue[boundaryHierarchy[i]]; // Clear child dropdowns
+    // clear deeper levels
+    for (let i = idx + 1; i < levels.length; i++) {
+      delete opts[levels[i]];
+      delete sel[levels[i]];
     }
 
-    // Update selected values
-    newSelectedValues[boundaryType] = selectedBoundary;
-    setSelectedValues(newSelectedValues);
-    setValue(newValue);
-    // always sending the last selected boundary code
-    const lastSelectedCode = selectedBoundary.code;
-
-    onSelect(config.key, selectedBoundary);
-
-    // Load child boundaries
-    if (selectedBoundary.children && selectedBoundary.children.length > 0) {
-      newValue[selectedBoundary.children[0].boundaryType] = selectedBoundary.children;
-      setValue(newValue);
+    // populate children of the selected node
+    if (Array.isArray(node.children) && node.children.length) {
+      opts[node.children[0].boundaryType] = node.children;
     }
+
+    setOptionsByType(opts);
+    setSelectedByType(sel);
+    onSelect(config.key, sel[type]);
   };
 
-  if (isBoundaryLoading) {
-    return <Loader />;
-  }
+  if (isLoading) return <Loader />;
 
   return (
     <LabelFieldPair>
       <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-        {t("HRMS_BOUNDARY_LABEL")} {index || ""}*{/*input.isMandatory ? " * " : null*/}
+        {t("HRMS_BOUNDARY_LABEL")} {index}*
       </CardLabel>
-
       <div style={{ width: "100%" }}>
-        {boundaryHierarchy.map((key) => {
-          if (value[key]?.length > 0) {
-            return (
-              <BoundaryDropdown
-              key={key}
-              label={`${t(`${hierarchyType}_${key}`)}`}
-                data={value[key]}
-                onChange={(selectedValue) => handleSelection(selectedValue)}
-                selected={selectedValues[key] || null}
-              />
-            );
-          }
-          return null;
-        })}
+        {levels.map((lvl) =>
+          Array.isArray(optionsByType[lvl]) && optionsByType[lvl].length > 0 ? (
+            <BoundaryDropdown
+              key={lvl}
+              label={t(`${hierarchy.hierarchyType}_${lvl}`)}
+              data={optionsByType[lvl]}
+              selected={selectedByType[lvl] || null}
+              onChange={handleSelection}
+            />
+          ) : null
+        )}
       </div>
     </LabelFieldPair>
   );
 };
 
-/**
- * BoundaryDropdown Component
- */
 const BoundaryDropdown = ({ label, data, onChange, selected }) => {
   const { t } = useTranslation();
   return (
-    <div style={{ width: "100%", marginTop: "0px", paddingLeft: "0%" }}>
+    <div style={{ width: "100%", marginTop: 0, paddingLeft: 0 }}>
       <div className="comment-label">{t(label)}</div>
       <Dropdown
         style={{ width: "100%", maxWidth: "37.5rem" }}
+        option={data}
+        optionKey="code"
         selected={selected}
         t={t}
-        option={data}
-        optionKey={"code"}
-        select={(value) => onChange(value)}
+        select={onChange}
       />
     </div>
   );

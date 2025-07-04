@@ -172,9 +172,8 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
 
 function formJuridiction(data, tenantId) {
   const boundaries = data?.Jurisdictions || [];
-
   const jurisdictions = boundaries.map((boundary) => ({
-    hierarchy: hierarchyType,
+    hierarchy: boundary?.hierarchyType,
     boundaryType: boundary?.boundaryType,
     boundary: boundary?.code,
     tenantId: tenantId,

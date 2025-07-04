@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-health-css",
-  "version": "0.2.129",
+  "version": "0.2.131",
   "license": "MIT",
   "main": "dist/index.css",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
@@ -46,6 +46,9 @@
     "postcss-preset-env": "6.7.1",
     "postcss-scss": "3.0.5",
     "sass": "^1.26.11"
+  },
+  "resolutions": {
+    "**/minimatch": "7.4.6"
   },
   "files": [
     "dist/index.min.css",
