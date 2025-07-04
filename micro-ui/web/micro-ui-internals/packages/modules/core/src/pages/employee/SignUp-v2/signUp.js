@@ -88,6 +88,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     });
 
     setDisable(hasEmptyFields);
+    if (formData?.accountName !== formData?.accountName?.toUpperCase()){
+      setValue("accountName", formData?.accountName?.toUpperCase());
+    }
   };
 
   // Mobile detection (simple)
