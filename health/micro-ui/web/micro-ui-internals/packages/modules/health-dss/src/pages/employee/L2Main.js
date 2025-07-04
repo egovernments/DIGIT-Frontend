@@ -179,8 +179,8 @@ const L2Main = ({}) => {
         tenantId,
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
-        province: province || boundaries?.province?.[0] || "",
-        district: district || boundaries?.district?.[0] || "",
+        province: province || boundaries?.province?.[0] || null,
+        district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId,
         cycle: (projectData?.project?.additionalDetails?.projectType?.cycles
           && Object.keys(projectData?.project?.additionalDetails?.projectType?.cycles).length > 0)
