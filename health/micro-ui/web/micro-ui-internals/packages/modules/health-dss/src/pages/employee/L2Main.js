@@ -284,7 +284,6 @@ const L2Main = ({}) => {
   const [progressDuration, setProgressDuration] = useState({ campaignDuration: 0, daysElapsed: 0 });
   const campaignInfo = Digit.SessionStorage.get("campaigns-info");
   const projectType = getProjectTypeFromSession();
-  const campaignCode = Object.keys(campaignData[projectType]);
 
   const handleFilters = (data) => {
     const userInfo = Digit.UserService.getUser()?.info;
