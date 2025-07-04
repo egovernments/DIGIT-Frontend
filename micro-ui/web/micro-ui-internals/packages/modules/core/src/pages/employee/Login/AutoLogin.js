@@ -25,6 +25,7 @@ const AutoLogin = () => {
 
 
   const queryParams = new URLSearchParams(location.search);
+  const fromSandbox= queryParams.get("fromSandbox") || false
   const defaultCredentials = {
     username: queryParams.get("username"),
     password: queryParams.get("password"), 
@@ -44,6 +45,7 @@ const AutoLogin = () => {
     if (user?.info?.roles?.length > 0) user.info.roles = filteredRoles;
     Digit.UserService.setUser(user);
     setEmployeeDetail(user?.info, user?.access_token);
+    Digit.SessionStorage.set("fromSandbox", fromSandbox);  
     if(queryParams.get("redirectUrl")) 
       {
         window.location.href = redirectUrl;

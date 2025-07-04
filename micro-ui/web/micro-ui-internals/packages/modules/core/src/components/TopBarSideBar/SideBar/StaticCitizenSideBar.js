@@ -148,6 +148,7 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     return <Item />;
   };
   let profileItem;
+  const fromSandbox = Digit.SessionStorage.get("fromSandbox");
 
   if (isFetched && user && user.access_token) {
     profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} />;
@@ -161,39 +162,43 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
         populators: {
           onClick: showProfilePage,
         },
-      },
-      {
+      }
+    ];
+
+    if (!fromSandbox) {
+      menuItems.push({
         text: t("CORE_COMMON_LOGOUT"),
         element: "LOGOUT",
         icon: "LogoutIcon",
         populators: { onClick: handleLogout },
-      },
-      {
-        text: (
-          <React.Fragment>
-            {t("CS_COMMON_HELPLINE")}
-            <div className="telephone" style={{ marginTop: "-10%" }}>
-              {storeData?.tenants.map((i) => {
-                i.code === tenantId ? (
-                  <div className="link">
-                    <a href={`tel:${storeData?.tenants[i].contactNumber}`}>{storeData?.tenants[i].contactNumber}</a>
-                  </div>
-                ) : (
-                  <div className="link">
-                    <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
-                  </div>
-                );
-              })}
-              <div className="link">
-                <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
-              </div>
+      })
+    }
+
+    menuItems.push({
+      text: (
+        <React.Fragment>
+          {t("CS_COMMON_HELPLINE")}
+          <div className="telephone" style={{ marginTop: "-10%" }}>
+            {storeData?.tenants.map((i) => {
+              i.code === tenantId ? (
+                <div className="link">
+                  <a href={`tel:${storeData?.tenants[i].contactNumber}`}>{storeData?.tenants[i].contactNumber}</a>
+                </div>
+              ) : (
+                <div className="link">
+                  <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                </div>
+              );
+            })}
+            <div className="link">
+              <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
             </div>
-          </React.Fragment>
-        ),
-        element: "Helpline",
-        icon: "Phone",
-      },
-    ];
+          </div>
+        </React.Fragment>
+      ),
+      element: "Helpline",
+      icon: "Phone",
+    })
   }
   Object.keys(linkData)
     ?.sort((x, y) => y.localeCompare(x))
