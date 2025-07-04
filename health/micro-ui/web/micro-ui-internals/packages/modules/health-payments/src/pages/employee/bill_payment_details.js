@@ -36,6 +36,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [openEditAlertPopUp, setOpenEditAlertPopUp] = useState(false);
   const [openApprovePaymentAlertPopUp, setOpenApprovePaymentAlertPopUp] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [tabCounts, setTabCounts] = useState({});
   const [transferPollTimers, setTransferPollTimers] = useState({});
   const [isSelectionDisabled, setIsSelectionDisabled] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
@@ -268,6 +269,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             workflow: {
               action: wfAction,
               assignes: assignee ? [assignee.value] : null
+              //TODO: Add comments too
             },
           },
         },
@@ -641,10 +643,11 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         workerRatesData
       );
       const statusMap = {
-        VERIFICATION_FAILED: ["VERIFICATION_FAILED","PENDING_EDIT"], //send for edit action
+        VERIFICATION_FAILED: ["VERIFICATION_FAILED"], //send for edit action
+        PAYMENT_FAILED: ["PAYMENT_FAILED"],
         VERIFIED: ["VERIFIED", "PAYMENT_FAILED"], //generate payment action
         PAYMENT_GENERATED: ["PAID"],
-        NOT_VERIFIED: ["PENDING_VERIFICATION", "EDITED"], //verify action
+        NOT_VERIFIED: ["PENDING_VERIFICATION", "EDITED","PENDING_EDIT"], //verify action
         PENDING_FOR_EDIT: ["PENDING_EDIT"], //EDIT action
         EDITED: ["EDITED"]
       };
@@ -653,6 +656,14 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       );
       console.log("Filtered Data:", filtered);
       setTableData(filtered || []);
+        const counts = {};
+    Object.keys(statusMap).forEach((key) => {
+      counts[key] = enriched.filter((item) =>
+        statusMap[key]?.includes(item.status)
+      ).length;
+    });
+
+    setTabCounts(counts);
     }
   }, [AllIndividualsData, billData, workerRatesData, activeLink]);
 
@@ -716,7 +727,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               )}
               {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
-                  {billData?.status === "PARTIALLY_VERIFIED" && (
+                  {
+                    billData?.billDetails?.some((item) =>
+        ["VERIFICATION_FAILED", "PENDING_EDIT", "EDITED", "PAYMENT_FAILED"].includes(item.status)
+      ) && (
                     <InfoCard
                       variant="error"
                       style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
@@ -736,36 +750,49 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               activeLink={activeLink?.code}
               configItemKey="code"
               configDisplayKey="name"
-              itemStyle={{ width: "400px" }}
+              itemStyle={{
+                  flex: "1 1 auto",        
+                  textAlign: "center",     
+                  overflow: "hidden",     
+                  whiteSpace: "nowrap",   
+                  textOverflow: "ellipsis" 
+              }}
               configNavItems={!editBillDetails ? [
                 {
-                  code: "NOT_VERIFIED",
-                  name: `${`${t(`HCM_AM_NOT_VERIFIED`)} `}`,
-                },
-                {
-                  code: "VERIFICATION_FAILED",
-                  name: `${`${t(`HCM_AM_VERIFICATION_FAILED`)} `}`,
-                },
-                {
-                  code: "VERIFIED",
-                  name: `${`${t(`HCM_AM_VERIFIED`)} `}`,
-                },
-                {
-                  code: "PAYMENT_GENERATED",
-                  name: `${`${t(`HCM_AM_PAYMENT_GENERATED`)} `}`,
-                },
-              ] :
-                [
-                  {
-                    code: "PENDING_FOR_EDIT",
-                    name: `${`${t(`HCM_AM_PENDING_FOR_EDIT`)} `}`,
-                  },
-                  {
-                    code: "EDITED",
-                    name: `${`${t(`HCM_AM_EDITED`)} `}`,
-                  }
+        code: "NOT_VERIFIED",
+        name: `${t("HCM_AM_NOT_VERIFIED")} (${tabCounts["NOT_VERIFIED"] || 0})`,
+      },
+      {
+        code: "VERIFICATION_FAILED",
+        name: `${t("HCM_AM_VERIFICATION_FAILED")} (${tabCounts["VERIFICATION_FAILED"] || 0})`,
+      },
+      {
+        code: "VERIFIED",
+        name: `${t("HCM_AM_VERIFIED")} (${tabCounts["VERIFIED"] || 0})`,
+      },
+      {
+        code: "PAYMENT_GENERATED",
+        name: `${t("HCM_AM_PAYMENT_GENERATED")} (${tabCounts["PAYMENT_GENERATED"] || 0})`,
+      },
+      {
+        code: "PAYMENT_FAILED",
+        name: `${t("HCM_AM_PAYMENT_FAILED")} (${tabCounts["PAYMENT_FAILED"] || 0})`,
+      },
+    ]
+  : [
+      {
+        code: "PENDING_FOR_EDIT",
+        name: `${t("HCM_AM_PENDING_FOR_EDIT")} (${tabCounts["PENDING_FOR_EDIT"] || 0})`,
+      },
+      {
+        code: "EDITED",
+        name: `${t("HCM_AM_EDITED")} (${tabCounts["EDITED"] || 0})`,
+      },
                 ]}
-              navStyles={{}}
+              navStyles={{
+                  display: "flex",
+                  width: "100%",
+                }}
               onTabClick={(e) => {
                 setLimitAndOffset((prev) => {
                   return {
@@ -778,7 +805,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               }}
               setActiveLink={setActiveLink}
               showNav={true}
-              style={{}}
+              style={{ width: "100%" }} 
             />
           )
         }
@@ -841,26 +868,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         <ActionBar
           actionFields={
             !editBillDetails && activeLink?.code === 'NOT_VERIFIED' ?
-              [
-                // <Button
-                //   className="custom-class"
-                //   icon="ArrowBack"
-                //   label={t(`HCM_AM_SEND_FOR_EDIT`)}
-                //   menuStyles={{
-                //     bottom: "40px",
-                //   }}
-                //   onClick={() => {
-                //     // setOpenSendForEditPopUp(true);
-                //     updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
-                //   }}  
-                //   optionsKey="name"
-                //   size=""
-                //   style={{ minWidth: "14rem" }}
-                //   title=""
-                //   type="button"
-                //   variation="secondary"
-                //   isDisabled={billData?.status === "PENDING_VERIFICATION" || selectedRows.length === 0}
-                // />,
+              [                
                 <Button
                   className="custom-class"
                   iconFill=""
@@ -952,6 +960,39 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   : !editBillDetails && activeLink?.code === 'VERIFIED' ? [
                     <Button
                       label={t(`HCM_AM_GENERATE_PAYMENT`)}
+                      title={t(`HCM_AM_GENERATE_PAYMENT`)}
+                      onClick={() => {
+                        setOpenApprovePaymentAlertPopUp(true);
+                      }}
+                      style={{ minWidth: "14rem" }}
+                      type="button"
+                      variation="primary"
+                      isDisabled={selectedRows.length === 0}
+                    // isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
+                    />
+                  ]
+                   : !editBillDetails && activeLink?.code === 'PAYMENT_FAILED' ? [
+                    <Button
+                    className="custom-class"
+                    icon="Arrowback"
+                    label={t(`HCM_AM_SEND_FOR_EDIT`)}
+                    menuStyles={{
+                      bottom: "40px",
+                    }}
+                    onClick={() => {
+                      setOpenSendForEditPopUp(true);
+                    }}
+                    optionsKey="name"
+                    size=""
+                    style={{ minWidth: "14rem" }}
+                    title=""
+                    type="button"
+                    variation="secondary"
+                    
+                    isDisabled={selectedRows.length === 0}
+                  />,
+                    <Button
+                      label={t(`HCM_AM_GENERATE_PAYMENT`)} //TODO : change to RETRY PAYMENT
                       title={t(`HCM_AM_GENERATE_PAYMENT`)}
                       onClick={() => {
                         setOpenApprovePaymentAlertPopUp(true);

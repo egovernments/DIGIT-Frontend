@@ -50,43 +50,6 @@ const VerifyAndGeneratePaymentsTable = ({
             row: null,
             });
 
-    const bills = [
-        {
-            "billNumber": "123456",
-            "billDate": 1698307200000,
-            "additionalDetails": {
-                "noOfRegisters": 5,
-                "reportDetails": {
-                    "status": "COMPLETED", 
-                }
-            },
-            "localityCode": "Locality 1",
-        },
-        {
-            "billNumber": "123456",
-            "billDate": 1698307200000,
-            "additionalDetails": {
-                "noOfRegisters": 5,
-            },
-            "localityCode": "Locality 1",
-        },
-        {
-            "billNumber": "123456",
-            "billDate": 1698307200000,
-            "additionalDetails": {
-                "noOfRegisters": 5,
-            },
-            "localityCode": "Locality 1",
-        },
-        {
-            "billNumber": "123456",
-            "billDate": 1698307200000,
-            "additionalDetails": {
-                "noOfRegisters": 5,
-            },
-            "localityCode": "Locality 1",
-        }
-    ]
 
     const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
        url: `/health-expense/v1/bill/details/status/_update`,
@@ -103,6 +66,7 @@ const VerifyAndGeneratePaymentsTable = ({
                 workflow: {
                     action: wfState,
                     assignes: assignee ? [assignee.value] : null
+                    //TODO: Add comments too
                 }
             },
         },
@@ -355,14 +319,15 @@ const getAvailableActions = (status) => {
   switch (status) { //TODO : add Download action
     case "PARTIALLY_VERIFIED":
       return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
-case "PENDING_VERIFICATION":
+    case "PENDING_VERIFICATION":
       return ["HCM_AM_VERIFY"];
     case "FULLY_VERIFIED":
       return ["HCM_AM_GENERATE_PAYMENT"];
     case "PARTIALLY_PAID":
         return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
+    case "PAYMENT_FAILED":
+            return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
     case "FULLY_PAID":
-    case "SENT_BACK":
     default:
       return []; // No actions allowed except download
   }
