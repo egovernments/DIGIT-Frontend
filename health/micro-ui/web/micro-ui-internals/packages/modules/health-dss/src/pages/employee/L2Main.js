@@ -40,7 +40,7 @@ const key = "DSS_FILTERS";
 const getInitialRange = () => {
   const location = useLocation();
   const campaignData = Digit.SessionStorage.get("campaignSelected");
-  const projectType = getProjectTypeFromURL(window.location.pathname);
+  const projectType = getProjectTypeFromSession();
   const province = new URLSearchParams(location.search).get("province");
   const district = new URLSearchParams(location.search).get("district");
   if (!Digit.SessionStorage.get(key)) {
