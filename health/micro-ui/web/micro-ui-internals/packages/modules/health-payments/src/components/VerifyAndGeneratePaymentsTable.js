@@ -110,14 +110,9 @@ const VerifyAndGeneratePaymentsTable = ({
                 });
                 return;
             }
-
-            // await Promise.all(
-            //     detailsToEdit.map((detail) => {
-            //     return updateBillDetailWorkflow(detail, "SEND_BACK_FOR_EDIT");
-            //     })
-            // );
+          
             setIsLoading(true);
-            await updateBillDetailWorkflow(selectedBill, detailsToEdit, "SEND_BACK_FOR_EDIT", assignee);
+            await updateBillDetailWorkflow(selectedBill, detailsToEdit, "SEND_FOR_EDIT", assignee);
             setIsLoading(false);
 
             setShowToast({
@@ -245,7 +240,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                     }
 
                     let attempts = 0;
-                    const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes 
+                    const POLLING_INTERVAL = 2 * 60 * 1000; // 2 minutes 
                     const MAX_ATTEMPTS = 20;
 
                     const pollStatus = async () => {
@@ -274,7 +269,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                 setInProgressBills(prev => ({ ...prev, [bill?.id]: true }));
                         //  setIsLoading(true); // start loader
                         //TODO UPDATE TOAST MSG
-                        setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
+                        setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 3000 });//TODO UPDATE TOAST MSG
 
                                 if (attempts < MAX_ATTEMPTS) {
                                     attempts++;

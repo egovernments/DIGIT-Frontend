@@ -453,7 +453,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             }
 
             let attempts = 0;
-            const POLLING_INTERVAL = 5 * 60 * 1000; // 5 minutes
+            const POLLING_INTERVAL = 2 * 60 * 1000; // 2 minutes
             const MAX_ATTEMPTS = 5;
 
             const pollStatus = async () => {
@@ -858,7 +858,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         onSubmit={(comment, selectedUser) => {
           // setComment(comment);
           setOpenSendForEditPopUp(false);
-          updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT", selectedUser);
+          updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT", selectedUser);
           // setOpenApproveAlertPopUp(true);
         }}
       />}
