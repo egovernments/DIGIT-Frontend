@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
@@ -69,42 +69,52 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     const taskStatusAPI = Digit.Hooks.useCustomAPIMutationHook({
     url: `/health-expense/v1/task/_status`,
 });
+const pollingInProgressRef = useRef(new Set());
 
-const pollTaskUntilDone = async (billId, type) => {
-    console.log("Polling...", billId);
-
+const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => {
     const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
-    try {
-        const statusResponse = await taskStatusAPI.mutateAsync({
-            body: {
-                task: { billId: billId, type: type },
-            },
+  
+
+    let statusResponse = initialStatusResponse;
+
+    if (!statusResponse) {
+        console.log("res null")
+        try {
+            statusResponse = await taskStatusAPI.mutateAsync({
+                body: { task: { billId, type } },
+            });
+        } catch (err) {
+            console.error("Polling failed for billId", billId, err);
+            pollingInProgressRef.current.delete(billId); // cleanup
+
+            return;
+        }
+    }
+
+    const status = statusResponse?.task?.status;
+    const res_type = statusResponse?.task?.type;
+
+    if (status === "IN_PROGRESS" && res_type === type) {
+        console.log("res ",statusResponse)
+        setTransferPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
+            return { ...prev, [billId]: timer };
         });
+    } else {
+        setInProgressBills(prev => ({ ...prev, [billId]: false }));
+        setTransferPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const newTimers = { ...prev };
+            delete newTimers[billId];
+            return newTimers;
+        });
+        pollingInProgressRef.current.delete(billId); // cleanup
 
-        const status = statusResponse?.task?.status;
-        const res_type = statusResponse?.task?.type;
-
-         if (status === "IN_PROGRESS" && res_type === type) {
-            setTransferPollTimers(prev => {
-                if (prev[billId]) clearTimeout(prev[billId]);
-                const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
-                return { ...prev, [billId]: timer };
-            });
-        }else  {
-            setInProgressBills(prev => ({ ...prev, [billId]: false }));
-            setTransferPollTimers(prev => {
-                if (prev[billId]) clearTimeout(prev[billId]);
-                const newTimers = { ...prev };
-                delete newTimers[billId];
-                return newTimers;
-            });
-            refetchBill();
-        } 
-    } catch (err) {
-        console.error("Polling failed for billId", billId, err);
+        refetchBill();
     }
 };
-    
+  
 const userSearchCri = {
         url: `/egov-hrms/employees/_search`,
          params: {
@@ -143,13 +153,14 @@ const userSearchCri = {
             setTotalCount(BillData?.pagination?.totalCount);
              BillData.bills.forEach(async (bill) => {
                 const billId = bill?.id;
-
+            // Avoid duplicate polling if already in progress
+        if (pollingInProgressRef.current.has(billId)) return;
             try {
                 const res = await taskStatusAPI.mutateAsync({
                     body: {
                         task:{
                         billId: billId,
-                        type:"Transfer", // Assuming the type is Transfer, adjust as necessary
+                        type:"Transfer",
                     }
                 },
                 });
@@ -159,7 +170,9 @@ const userSearchCri = {
                     setInProgressBills(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Transfer") {
                         console.log("Polling started for billId:", billId);
-                        pollTaskUntilDone(billId,"Transfer");
+                         //  Track that polling has started
+                         pollingInProgressRef.current.add(billId);
+                        pollTaskUntilDone(billId,"Transfer",res);
                     }
                 } else {
                     console.log("inside else 2")
@@ -204,6 +217,7 @@ const userSearchCri = {
     useEffect(() => {
     return () => {
         Object.values(transferPollTimers).forEach(clearTimeout);
+        pollingInProgressRef.current.clear(); // Clear tracking
     };
 }, []);
 
