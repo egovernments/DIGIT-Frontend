@@ -250,6 +250,9 @@ const TextInput = (props) => {
           props?.populators?.suffix ? "suffix" : ""
         } `}
         style={props?.textInputStyle ? { ...props.textInputStyle } : {}}
+        role="group"
+        aria-label={props?.label || t(props.placeholder)}
+        aria-describedby={props.error ? `${props.id || props.name}-error` : undefined}
       >
         {props.type === "date" && props?.populators?.newDateFormat ? (
           <div className={inputContainerClass}>
@@ -289,6 +292,15 @@ const TextInput = (props) => {
                   props.disabled ? "disabled" : ""
                 }`}
                 onClick={() => datePickerRef.current?.setOpen(true)}
+                role="button"
+                aria-label="Open date picker"
+                tabIndex={props.disabled ? -1 : 0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    datePickerRef.current?.setOpen(true);
+                  }
+                }}
               >
                 <SVG.CalendarToday fill={"#c84c0e"}/>
               </div>
@@ -300,6 +312,15 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                role="button"
+                aria-label="Select icon"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    props?.onIconSelection();
+                  }
+                }}
               >
                 {icon}
               </span>
@@ -377,6 +398,10 @@ const TextInput = (props) => {
                   }
                 }
               }}
+              aria-label={props?.label || t(props.placeholder)}
+              aria-describedby={props.error ? `${props.id || props.name}-error` : undefined}
+              aria-invalid={props.error ? "true" : "false"}
+              aria-required="true"
             />
             {renderSuffix()}
             {props.signature && props.signatureImg}
@@ -384,6 +409,15 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                role="button"
+                aria-label="Select icon"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    props?.onIconSelection();
+                  }
+                }}
               >
                 {icon}
               </span>
@@ -469,6 +503,10 @@ const TextInput = (props) => {
                   }
                 }
               }}
+              aria-label={props?.label || t(props.placeholder)}
+              aria-describedby={props.error ? `${props.id || props.name}-error` : undefined}
+              aria-invalid={props.error ? "true" : "false"}
+              aria-required={props.required ? "true" : "false"}
             />
             {renderSuffix()}
             {props.signature && props.signatureImg}
@@ -476,6 +514,15 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
+                role="button"
+                aria-label="Select icon"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    props?.onIconSelection();
+                  }
+                }}
               >
                 {icon}
               </span>
