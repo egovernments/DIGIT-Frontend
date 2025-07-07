@@ -39,8 +39,8 @@ const key = "DSS_FILTERS";
 
 const getInitialRange = () => {
   const location = useLocation();
-  const campaignData = Digit.SessionStorage.get("campaigns-info");
-  const projectType = getProjectTypeFromURL(window.location.pathname);
+  const campaignData = Digit.SessionStorage.get("campaignSelected");
+  const projectType = getProjectTypeFromSession();
   const boundaryType = new URLSearchParams(location.search).get("boundaryType");
   const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
   // const province = new URLSearchParams(location.search).get("province");
@@ -48,6 +48,7 @@ const getInitialRange = () => {
   if (!Digit.SessionStorage.get(key)) {
     Digit.SessionStorage.set(key, {});
   }
+  // ToDo: Check with previous implementation 
   overrideDescendantDateRange(boundaryValue);
   let data = Digit.SessionStorage.get(key);
   let filteredInfo = null;
@@ -138,15 +139,10 @@ function getProjectTypeIDFromURL() {
   return projectTypeId;
 }
 
-function getProjectTypeFromURL() {
-  const url = window.location.pathname;
-  const projectTypes = Digit.SessionStorage.get("projectTypes");
-  const matchingProject = projectTypes?.find(
-    (item) => item?.dashboardUrls && Object.values(item?.dashboardUrls)?.some((dashboardUrl) => url === dashboardUrl)
-  );
-
+function getProjectTypeFromSession() {
+  const projectTypeSession = Digit.SessionStorage.get("projectSelected")?.project?.projectType;
   // Return the id of the matching object or null if not found
-  const projectTypeCode = matchingProject ? matchingProject.code : null;
+  const projectTypeCode = projectTypeSession ? projectTypeSession : null;
   return projectTypeCode;
 }
 const L2Main = ({}) => {
@@ -192,6 +188,10 @@ const L2Main = ({}) => {
         // province: province || boundaries?.province?.[0] || null,
         // district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId,
+        cycle: (projectData?.project?.additionalDetails?.projectType?.cycles
+          && Object.keys(projectData?.project?.additionalDetails?.projectType?.cycles).length > 0)
+         ? projectData?.project?.additionalDetails?.projectType?.cycles
+         : null,
         campaignId : campaignId,
         ...dynamicBoundaryFilter,
    
@@ -278,7 +278,6 @@ const L2Main = ({}) => {
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [pageZoom, setPageZoom] = useState(false);
 
-
   useEffect(() => {
     if (showDownloadOptions === false) {
       setPageZoom(true);
@@ -292,8 +291,7 @@ const L2Main = ({}) => {
 
   const [progressDuration, setProgressDuration] = useState({ campaignDuration: 0, daysElapsed: 0 });
   const campaignInfo = Digit.SessionStorage.get("campaigns-info");
-  const projectType = getProjectTypeFromURL(window.location.pathname);
-  const campaignCode = Object.keys(campaignData[projectType])?.[0];
+  const projectType = getProjectTypeFromSession();
 
   const handleFilters = (data) => {
     const userInfo = Digit.UserService.getUser()?.info;
@@ -589,7 +587,7 @@ const L2Main = ({}) => {
             showDDR={!hideFilterFields.includes("DDR")}
             showUlb={!hideFilterFields.includes("Ulb")}
             showDenomination={!hideFilterFields.includes("Denomination")}
-            showFilterByCycle={campaignData?.[projectType]?.[0]?.beneficiaryType == "INDIVIDUAL" ? true : false}
+            showFilterByCycle={campaignData && campaignData?.additionalDetails.beneficiaryType === "INDIVIDUAL"}
           />
         )}
         {filters?.filters?.tenantId?.length > 0 && (
