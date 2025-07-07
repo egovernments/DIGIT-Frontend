@@ -96,6 +96,8 @@ const BottomSheet = ({
       } ${className || ""}`}
       style={{ ...style, height }}
       ref={sheetRef}
+      role="dialog"
+      aria-label="Bottom Sheet"
     >
       <div
         className={`digit-bottom-sheet-header ${currentSheetState} ${
@@ -105,14 +107,21 @@ const BottomSheet = ({
         <div
           className="digit-bottom-sheet-drag-cursor"
           onMouseDown={handleDragStart}
+          role="separator"
+          aria-label="Drag to resize the bottom sheet"
         />
-        <div className="digit-bottom-sheet-handle-indicator"></div>
+        <div
+          className="digit-bottom-sheet-handle-indicator"
+          aria-hidden="true"
+        ></div>
       </div>
       {currentSheetState !== "closed" && (
         <div
           className={`digit-bottom-sheet-content ${
             enableActions ? "actionsEnabled" : ""
           }`}
+          role="region"
+          aria-label="Bottom sheet content"
         >
           {children}
         </div>
@@ -122,6 +131,8 @@ const BottomSheet = ({
           className={`digit-bottom-sheet-actions ${currentSheetState} ${
             equalWidthButtons ? "equalButtons" : ""
           }`}
+          role="group"
+          aria-label="Bottom sheet actions"
         >
           {actions}
         </div>

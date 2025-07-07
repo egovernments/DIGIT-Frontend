@@ -7,7 +7,12 @@ import Footer from "../atoms/Footer";
 
 export const Details = ({ label, name, onClick }) => {
   return (
-    <div className="digit-detail" onClick={onClick}>
+    <div className="digit-detail" onClick={onClick} role="button" tabIndex={0} onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick && onClick(e);
+      }
+    }}>
       <span className="digit-label">
         <h2>{label}</h2>
       </span>
@@ -37,7 +42,7 @@ const DetailsCard = ({
 }) => {
   if (linkPrefix && serviceRequestIdKey) {
     return (
-      <div>
+      <div role="list" aria-label="Details list">
         {data.map((object, itemIndex) => {
           return (
             <Link
@@ -56,7 +61,7 @@ const DetailsCard = ({
                   : `${linkPrefix}${typeof serviceRequestIdKey === "function" ? serviceRequestIdKey(object) : object[serviceRequestIdKey]}`
               }
             >
-              <div className="digit-details-container">
+              <div className="digit-details-container" role="listitem">
                 {Object.keys(object).map((name, index) => {
                   if (name === "applicationNo" || name === "Vehicle Log") return null;
                   return <Details label={name} name={object[name]} key={index} />;
@@ -70,10 +75,23 @@ const DetailsCard = ({
   }
 
   return (
-    <div>
+    <div role="list" aria-label="Details list">
       {data.map((object, itemIndex) => {
         return (
-          <div key={itemIndex} className={`digit-details-container ${styleVariant}`} onClick={() => handleClickEnabled && handleSelect(object)}>
+          <div 
+            key={itemIndex} 
+            className={`digit-details-container ${styleVariant}`} 
+            onClick={() => handleClickEnabled && handleSelect(object)}
+            role="listitem"
+            tabIndex={handleClickEnabled ? 0 : -1}
+            onKeyDown={(e) => {
+              if (handleClickEnabled && (e.key === 'Enter' || e.key === ' ')) {
+                e.preventDefault();
+                handleSelect(object);
+              }
+            }}
+            aria-label={`Details card ${itemIndex + 1}`}
+          >
             {Object.keys(object)
               .filter((rowEle) => !(typeof object[rowEle] == "object" && object[rowEle]?.hidden == true))
               .map((name, index) => {

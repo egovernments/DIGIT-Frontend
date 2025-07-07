@@ -137,6 +137,8 @@ const FilterCard = ({
     <div
       ref={childrenWrapRef}
       className={`content-container ${isOverflowing ? "with-shadow" : ""} ${contentClassName || ""}`}
+      role="region"
+      aria-label="Filter content"
     >
       {children}
       {(secondaryActionLabel || primaryActionLabel) &&
@@ -167,7 +169,16 @@ const FilterCard = ({
 
         {title && <div className="filter-title">{title}</div>}
         {addClose && (
-          <div className="close-icon" onClick={handleClose}>
+          <div
+            className="close-icon"
+            onClick={handleClose}
+            role="button"
+            tabIndex={0}
+            aria-label="Close filter panel"
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") handleClose(e);
+            }}
+          >
             <SVG.Close width={"32px"} height={"32px"} fill={"#363636"} />
           </div>
         )}
@@ -180,7 +191,13 @@ const FilterCard = ({
       <div
         className={`digit-filter-card-popup-overlay`}
         tabIndex={0}
+        role="button"
         onClick={() => handleOverlayClick()}
+        onKeyDown={(e)=>{
+          if(e.key==="Enter" || e.key==" "){
+            handleOverlayClick()
+          }
+        }}
       >
         <div
           className={`digit-filter-card-popup-wrapper ${
@@ -190,6 +207,13 @@ const FilterCard = ({
           } ${isClosing ? "closing" : ""} ${className ? className : ""}`}
           style={style}
           onClick={(e) => e.stopPropagation()}
+          onKeyDown={(e)=>{
+            if (e.key===" " || e.key==="Enter"){
+              e.stopPropagation()
+            }
+          }}
+          role="dialog"
+          aria-label={title || "Filter panel"}
         >
           {(title || titleIcon || addClose) && renderHeader()}
 
@@ -211,6 +235,8 @@ const FilterCard = ({
       <div
         className={`filter-card filter-card-vertical ${className || ""}`}
         style={style}
+        role="region"
+        aria-label={title || "Filter panel"}
       >
         {(title || titleIcon || addClose) && renderHeader()}
         {renderContent()}
@@ -222,6 +248,8 @@ const FilterCard = ({
     <div
       className={`filter-card filter-card-horizontal ${className || ""}`}
       style={style}
+      role="region"
+      aria-label={title || "Filter panel"}
     >
       {(title || titleIcon || addClose) && renderHeader()}
       <div className="content-action-wrapper">{renderContent()}</div>
