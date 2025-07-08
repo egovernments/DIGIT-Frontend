@@ -14,7 +14,7 @@
     position: sticky;
     z-index: 10;
     left: 0rem;
-    background-color: #ffffff;
+    background-color: theme(digitv2.lightTheme.paper);
   }
 
   .rdt_TableRow:hover>.rdt_TableCell:first-of-type {
@@ -29,14 +29,14 @@
     z-index: 12;
     left: 0rem;
     top: 0rem;
-    background-color: #eeeeee;
+    background-color: theme(digitv2.lightTheme.background);
   }
 
   .rdt_TableRow>.rdt_TableCell:nth-of-type(2) {
     position: sticky;
     z-index: 10;
     left: 6.25rem;
-    background-color: #ffffff;
+    background-color: theme(digitv2.lightTheme.paper);
   }
 
   .rdt_TableRow:hover>.rdt_TableCell:nth-of-type(2) {
@@ -51,7 +51,7 @@
     z-index: 12;
     left: 6.25rem;
     top: 0rem;
-    background-color: #eeeeee;
+    background-color: theme(digitv2.lightTheme.background);
   }
 }
 
@@ -646,7 +646,7 @@
   }
 
   &.decrease {
-    color: #D4351C;
+    color: theme(digitv2.lightTheme.error-v2);
   }
 
   &.metric-card {
@@ -1156,7 +1156,7 @@
   font-family: theme(digitv2.fontFamily.sans);
   font-weight: theme(digitv2.fontWeight.bold);
   font-size: 1.75rem;
-  color: #0B0C0C;
+  color: theme(digitv2.lightTheme.text-color-primary);
 }
 
 .digit-banner-sub-heading {
@@ -1333,7 +1333,48 @@
   height: 2rem;
 }
 
-.digit-heat-map-recenter{
+.digit-heat-map-recenter {
   margin-bottom: 1.5rem;
   margin-left: 1.5rem;
+}
+
+.digit-kibana-card {
+  width: 100%;
+
+  h1 {
+    margin: 0rem;
+    margin-bottom: 1.5rem;
+    color: theme(digitv2.lightTheme.text-color-primary);
+    font-family: theme(digitv2.fontFamily.sans);
+    font-style: theme(digitv2.fontStyle.normal);
+    font-weight: theme(digitv2.fontWeight.bold);
+
+    @media (max-aspect-ratio: 9/16) {
+      /* Media query for mobile */
+      font-size: theme(digitv2.fontSize.heading-m.mobile);
+    }
+
+    @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
+      /* Media query for tablets */
+      font-size: theme(digitv2.fontSize.heading-m.tablet);
+    }
+
+    @media (min-aspect-ratio: 3/4) {
+      /* Media query for desktop */
+      font-size: theme(digitv2.fontSize.heading-m.desktop);
+    }
+  }
+}
+
+.app-iframe-wrapper.digit-dss-kibana-iframe-wrapper {
+  left: unset !important;
+  top: unset !important;
+  position: unset !important;
+  height: 37.5rem;
+}
+
+.app-iframe.digit-dss-kibana-iframe {
+  position: unset !important;
+  height: 37.5rem !important;
+  width: 100% !important;
 }
