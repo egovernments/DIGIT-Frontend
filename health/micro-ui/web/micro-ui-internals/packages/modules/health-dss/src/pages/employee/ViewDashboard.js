@@ -191,6 +191,7 @@ const ViewDashbaord = ({ stateCode }) => {
           projectTypeId: project?.projectTypeId,
           dashboardLink: selectedDashboard?.level,
           stateCode: stateCode,
+          levelMap:levelMap
         }
       );
       Digit.SessionStorage.set("dashboardData", dashboardDataResponse?.responseData);
