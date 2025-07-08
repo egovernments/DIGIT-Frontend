@@ -199,7 +199,7 @@ const Filters = ({
         <div className={"digit-filter-by-cycle-wrapper"}>
           {value?.filters?.cycle && (
             <div className="digit-tag-container">
-              <Chip text={`${t(`CYCLE`)} ${value?.filters?.cycle}`} onClick={(e) => clearCycleFilter(e)} hideClose={false} />
+              <Chip text={`${t(`CYCLEE`)} ${value?.filters?.cycle}`} onClick={(e) => clearCycleFilter(e)} hideClose={false} />
             </div>
           )}
           <FilterByCycleDropdown
