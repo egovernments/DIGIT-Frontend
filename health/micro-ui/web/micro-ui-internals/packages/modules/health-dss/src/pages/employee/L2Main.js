@@ -43,25 +43,24 @@ const getInitialRange = () => {
   const projectType = getProjectTypeFromURL(window.location.pathname);
   const boundaryType = new URLSearchParams(location.search).get("boundaryType");
   const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
-  console.log(boundaryType,"boundaryType",boundaryValue,"boundaryValue","values from url")
-  const province = new URLSearchParams(location.search).get("province");
-  const district = new URLSearchParams(location.search).get("district");
+  // const province = new URLSearchParams(location.search).get("province");
+  // const district = new URLSearchParams(location.search).get("district");
   if (!Digit.SessionStorage.get(key)) {
     Digit.SessionStorage.set(key, {});
   }
-  overrideDescendantDateRange(province);
+  overrideDescendantDateRange(boundaryValue);
   let data = Digit.SessionStorage.get(key);
   let filteredInfo = null;
-  if (province != null) {
-    filteredInfo = campaignData?.[projectType]?.filter((obj) => {
-      return obj["boundaries"]["province"]?.[0] === province;
-    });
-  }
-  if (district != null) {
-    filteredInfo = campaignData?.[projectType]?.filter((obj) => {
-      return obj["boundaries"]["district"]?.[0] === district;
-    });
-  }
+  // if (province != null) {
+  //   filteredInfo = campaignData?.[projectType]?.filter((obj) => {
+  //     return obj["boundaries"]["province"]?.[0] === province;
+  //   });
+  // }
+  // if (district != null) {
+  //   filteredInfo = campaignData?.[projectType]?.filter((obj) => {
+  //     return obj["boundaries"]["district"]?.[0] === district;
+  //   });
+  // }
   let startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
   let endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
   if (filteredInfo && filteredInfo?.length !== 0) {
@@ -83,31 +82,31 @@ const getInitialRange = () => {
       startDate = data?.[0].startDate ? new Date(data?.[0].startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
       endDate = data?.[0].endDate ? new Date(data?.[0].endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
       boundaries = data?.[0].boundaries;
-      if (descendantDateRange?.[province]) {
-        startDate = new Date(descendantDateRange[province]?.startDate);
-        endDate = new Date(descendantDateRange[province]?.endDate);
+      if (descendantDateRange?.[boundaryValue]) {
+        startDate = new Date(descendantDateRange[boundaryValue]?.startDate);
+        endDate = new Date(descendantDateRange[boundaryValue]?.endDate);
       }
       if (filteredInfo !== null && filteredInfo?.length !== 0) {
         startDate = new Date(filteredInfo[0]["startDate"]);
         endDate = new Date(filteredInfo[0]["endDate"]);
       }
-      return { startDate, endDate, title, interval, denomination, dateFilterSelected, tenantId, moduleLevel, boundaries, province, district };
+      return { startDate, endDate, title, interval, denomination, dateFilterSelected, tenantId, moduleLevel, boundaries };
     }
   }
-  return { startDate, endDate, title, interval, denomination, dateFilterSelected, tenantId, moduleLevel, province, district };
+  return { startDate, endDate, title, interval, denomination, dateFilterSelected, tenantId, moduleLevel };
 };
 
-const overrideDescendantDateRange = (province) => {
+const overrideDescendantDateRange = (boundaryValue) => {
   let dssFilters = {};
   Object.assign(dssFilters, Digit.SessionStorage.get(key));
   let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
 if (
   dssFilters?.filters &&
   dssFilters?.range &&
-  descendantDateRange?.[province]
+  descendantDateRange?.[boundaryValue]
 ) {
-  const startRaw = descendantDateRange[province]?.startDate;
-  const endRaw = descendantDateRange[province]?.endDate;
+  const startRaw = descendantDateRange[boundaryValue]?.startDate;
+  const endRaw = descendantDateRange[boundaryValue]?.endDate;
   const startDate = new Date(startRaw);
   const endDate = new Date(endRaw);
   const isStartValid = startDate instanceof Date && !isNaN(startDate);
@@ -156,6 +155,8 @@ const L2Main = ({}) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const projectTypeId = getProjectTypeIDFromURL();
+  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
   const [filters, setFilters] = useState(() => {
     const {
       startDate,
@@ -167,9 +168,10 @@ const L2Main = ({}) => {
       tenantId,
       moduleLevel,
       boundaries,
-      province,
-      district,
+      // // province,
+      // district,
     } = getInitialRange();
+    const dynamicBoundaryFilter = boundaryType && boundaryValue ? { [boundaryType]: boundaryValue || null, "boundaryType" : boundaryType} : {};
     return {
       denomination,
       dateFilterSelected,
@@ -184,9 +186,10 @@ const L2Main = ({}) => {
         tenantId,
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
-        province: province || boundaries?.province?.[0] || null,
-        district: district || boundaries?.district?.[0] || null,
+        // province: province || boundaries?.province?.[0] || null,
+        // district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId,
+        ...dynamicBoundaryFilter
       },
       moduleLevel: moduleLevel,
     };
@@ -289,7 +292,9 @@ const L2Main = ({}) => {
 
   const handleFilters = (data) => {
     const userInfo = Digit.UserService.getUser()?.info;
-    const province = new URLSearchParams(search).get("province");
+    // const province = new URLSearchParams(search).get("province");
+    const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+    const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
     const eligibleRolesForFilter = {
       NATIONAL_SUPERVISOR: true,
       PROVINCIAL_SUPERVISOR: true,
@@ -302,10 +307,10 @@ const L2Main = ({}) => {
         ...data.filters,
       };
 
-      if (province && campaignInfo?.[projectType]?.boundaries?.province?.includes(province)) {
+      if (boundaryValue && campaignInfo?.[projectType]?.boundaries?.[boundaryType]?.includes(boundaryValue)) {
         updatedFilters = {
           ...updatedFilters,
-          province,
+          boundaryValue,
         };
       }
 
@@ -315,9 +320,9 @@ const L2Main = ({}) => {
       };
     }
     let descendantDateRange = Digit.SessionStorage.get("descendantDateRange");
-    if (updatedData?.filters && descendantDateRange?.[province]) {
-      updatedData["filters"]["campaignStartDate"] = descendantDateRange?.[province]?.startDate?.toString();
-      updatedData["filters"]["campaignEndDate"] = descendantDateRange?.[province]?.endDate?.toString();
+    if (updatedData?.filters && descendantDateRange?.[boundaryValue]) {
+      updatedData["filters"]["campaignStartDate"] = descendantDateRange?.[boundaryValue]?.startDate?.toString();
+      updatedData["filters"]["campaignEndDate"] = descendantDateRange?.[boundaryValue]?.endDate?.toString();
     }
     Digit.SessionStorage.set(key, updatedData);
     setFilters(updatedData);
@@ -503,7 +508,7 @@ const L2Main = ({}) => {
     return <Loader className={"digit-center-loader"} />;
   }
 
-  const boundaryName = filters.filters.district != "" ? filters.filters.district : filters.filters.province;
+  const boundaryName = boundaryValue
 
   return (
     <FilterContext.Provider value={provided}>
