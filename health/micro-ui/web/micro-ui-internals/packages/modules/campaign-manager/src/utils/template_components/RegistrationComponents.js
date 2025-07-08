@@ -52,7 +52,7 @@ const Filter = (props) => (
 );
 
 
-const ProximitySearch = (props) => (
+const Toggle = (props) => (
   <Switch
     label={props.t(props.field?.label) || "LABEL"}
     onToggle={null}
@@ -358,7 +358,7 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           alignment="flex-end"
         />
 
-        <DetailsCardSection t={t} field={detailsCard}/>
+        {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard}/>}
 
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
@@ -574,7 +574,8 @@ const Table = ({ field, t }) => {
 // Register all components
 registerComponent("searchBar", SearchBar);
 registerComponent("filter", Filter);
-registerComponent("searchByProximity", ProximitySearch);
+registerComponent("searchByProximity", Toggle);
+registerComponent("searchByID", Toggle);
 registerComponent("DetailsCard", DetailsCardSection);
 registerComponent("Table", Table);
 

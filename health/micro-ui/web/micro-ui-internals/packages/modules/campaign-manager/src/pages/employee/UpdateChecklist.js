@@ -548,7 +548,7 @@ const UpdateChecklist = () => {
                     actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
                     actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
                     secondaryActionLabel: "MY_CAMPAIGN",
-                    secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
+                    secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
                 });
             } else {
                 setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });

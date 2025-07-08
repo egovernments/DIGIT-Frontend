@@ -316,7 +316,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(null);
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, localeModule, currentLocale);
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisationParallel(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
