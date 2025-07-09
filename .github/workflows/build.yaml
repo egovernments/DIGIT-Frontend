@@ -208,15 +208,27 @@ jobs:
             --iidfile digest.txt \
             .
 
+      - name: Inspect Manifest List
+        run: |
+          docker buildx imagetools inspect egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }}
+
       - name: Export Digest (amd64)
         if: matrix.arch == 'amd64'
         id: digest_amd64
-        run: echo "digest=sha256:$(cut -d':' -f2 digest.txt)" >> $GITHUB_OUTPUT
+        run: |
+          digest=$(docker buildx imagetools inspect \
+            egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }} \
+            --format '{{json .}}' | jq -r '.manifests[] | select(.platform.architecture=="amd64" and .platform.os=="linux") | .digest')
+          echo "digest=$digest" >> $GITHUB_OUTPUT
 
       - name: Export Digest (arm64)
         if: matrix.arch == 'arm64'
         id: digest_arm64
-        run: echo "digest=sha256:$(cut -d':' -f2 digest.txt)" >> $GITHUB_OUTPUT
+        run: |
+          digest=$(docker buildx imagetools inspect \
+            egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }} \
+            --format '{{json .}}' | jq -r '.manifests[] | select(.platform.architecture=="arm64" and .platform.os=="linux") | .digest')
+          echo "digest=$digest" >> $GITHUB_OUTPUT
 
   create-manifest:
     needs: [build-matrix, resolve-config]
