@@ -76,7 +76,7 @@ jobs:
             .config[]
             | select(.name | test("/'"$PIPELINE_NAME"'$"))
             | .build[]
-            | select(.["image-name"] | not)
+            | select(.["image-name"])
             ' build/build-config.yml)
           
           # Step 5: Print for confirmation
