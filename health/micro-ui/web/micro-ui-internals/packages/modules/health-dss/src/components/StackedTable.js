@@ -6,6 +6,7 @@ import FilterContext from "./FilterContext";
 import { Button } from "@egovernments/digit-ui-components";
 import { useHistory } from "react-router-dom";
 import { getDuration } from "../utils/getDuration";
+import { useLocation } from "react-router-dom";
 
 export default function StackedTable({ chartId, visualizer, initialRange, isNational, routeTo, redirectUrl }) {
   const { t } = useTranslation();
@@ -92,6 +93,10 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
   const StackedRowV2 = (rowData) => {
     const values = rowData?.values;
     const valueKeys = Object.keys(values);
+    const location = useLocation();
+    const levelMap = location.state?.levelMap;
+    const targetValue = "level-two";
+    const boundaryType = Object.keys(levelMap).find(key => levelMap[key] === targetValue)?.toLowerCase();
 
     return (
       <div className="digit-stacked-row">
@@ -112,7 +117,9 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
           t={t}
           onClick={() => {
             //Update the level here, make it dynamic(maybe)
-            history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?province=${rowData?.name}&campaignId=${campaignId}`, {
+            // history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?province=${rowData?.name}&campaignId=${campaignId}`, {
+            // })
+            history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?boundaryType=${boundaryType}&boundaryValue=${rowData?.name}&campaignId=${campaignId}`, {
             })
             // routeTo(`/${window.contextPath}/employee/dss/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`);
           }}

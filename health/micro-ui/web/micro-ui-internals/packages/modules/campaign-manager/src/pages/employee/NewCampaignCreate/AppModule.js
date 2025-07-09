@@ -8,7 +8,7 @@ import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
 
 export const TEMPLATE_BASE_CONFIG_MASTER = "FormConfigTemplate";
-//TODO @bhavya @jagan Cleanup and handle negative scenarios for unselect etc
+//TODO @bhavya @jagan Cleanup and handle negative scenarios for unselect etc remove isSelected and make changes in the mdms v2
 const AppModule = () => {
   const { t } = useTranslation();
   const history = useHistory();

@@ -61,7 +61,7 @@ const CampaignDetails = () => {
     [
       {
         name: AppConfigSchema,
-        filter: `[?(@.project=='${campaignNumber}')].name`,
+        filter: `[?(@.project=='${campaignNumber}')].version`,
       },
     ],
     {
@@ -72,6 +72,13 @@ const CampaignDetails = () => {
     { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigSchema` }
   );
 
+  let hasVersionGreaterThanOne = false;
+
+  if(modulesData){
+   hasVersionGreaterThanOne = modulesData?.some(version => version > 1);
+  }
+
+  
   const data = {
     cards: [
       {
@@ -136,8 +143,8 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
-              type: modulesData?.length > 0 ? "secondary" : "primary",
+              buttonLabel: hasVersionGreaterThanOne ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              type: hasVersionGreaterThanOne ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
               disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),

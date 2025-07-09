@@ -34,7 +34,7 @@ const getTagElements = (rowData) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history) => {
+const getActionButtons = (rowData, tabData, history,t) => {
   const actions = {};
 
   actions.customReport = {
@@ -54,7 +54,7 @@ const getActionButtons = (rowData, tabData, history) => {
     size: "medium",
     onClick: () =>
       history.push(
-        `/${window?.contextPath}/employee/dss/view-dashboard?campaignId=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType}&boundaryValue=${rowData?.address?.boundary}`,
+        `/${window?.contextPath}/employee/dss/view-dashboard?campaignId=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType?.toLowerCase()}&boundaryValue=${t(rowData?.address?.boundary)}`,
         {
           project: rowData,
         }
@@ -70,7 +70,7 @@ const getActionButtons = (rowData, tabData, history) => {
 const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const actionButtons = getActionButtons(rowData, tabData, history);
+  const actionButtons = getActionButtons(rowData, tabData, history,t);
   const tagElements = getTagElements(rowData);
   return (
     <>

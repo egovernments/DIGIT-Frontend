@@ -1,9 +1,9 @@
 import fetchBoundaries from "../../services/boundary/BoundaryService";
 import { useQuery } from "react-query";
 
-const useFetchBoundaries = (tenantId, config = {}) => {
+const useFetchBoundaries = ({tenantId, hierarchyType, config = {}}) => {
     
-  return useQuery(["FETCH_BOUNDARIES",], () => fetchBoundaries({tenantId}), config);
+  return useQuery(["FETCH_BOUNDARIES",tenantId, hierarchyType], () => fetchBoundaries({tenantId, hierarchyType}), config);
 };
 
-export default useFetchBoundaries;
+export default useFetchBoundaries; 

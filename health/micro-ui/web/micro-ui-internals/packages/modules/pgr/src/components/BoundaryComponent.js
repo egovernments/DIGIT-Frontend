@@ -4,10 +4,12 @@ import { useTranslation } from "react-i18next";
 
 const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries(tenantId);
+  const hierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+  const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries({
+    tenantId, hierarchyType: hierarchy?.hierarchyType, config: { enabled: !!hierarchy?.hierarchyType } });
 
-  const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder")?.map((item) => item.code) || [];
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+  const boundaryHierarchy = hierarchy?.boundaryHierarchy?.map((item) => item.code) || [];
+
 
   // State to manage selected values and dropdown options
   const [selectedValues, setSelectedValues] = useState({});

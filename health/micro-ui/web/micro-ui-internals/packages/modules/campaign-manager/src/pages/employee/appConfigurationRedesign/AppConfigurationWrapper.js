@@ -316,7 +316,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(null);
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, localeModule, currentLocale);
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisationParallel(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
@@ -492,20 +492,32 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const localeArrays = createLocaleArrays();
     let updateCount = 0;
     let updateSuccess = false;
-    for (const locale of Object.keys(localeArrays)) {
-      if (localeArrays[locale].length > 0) {
-        try {
-          setLoading(true);
-          const result = await localisationMutate(localeArrays[locale]);
-          updateCount = updateCount + 1;
-          updateSuccess = true;
-        } catch (error) {
-          setLoading(false);
-          setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
-          console.error(`Error sending ${locale} localisation data:`, error);
-        }
-      }
+    try {
+      setLoading(true);
+      const result = await localisationMutate(localeArrays);
+      // queryClient.invalidateQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
+      updateCount = updateCount + 1;
+      updateSuccess = true;
+    } catch (error) {
+      setLoading(false);
+      setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+      console.error(`Error sending localisation data:`, error);
     }
+    // for (const locale of Object.keys(localeArrays)) {
+    //   if (localeArrays[locale].length > 0) {
+    //     try {
+    //       setLoading(true);
+    //       const result = await localisationMutate(localeArrays[locale]);
+    //       queryClient.invalidateQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
+    //       updateCount = updateCount + 1;
+    //       updateSuccess = true;
+    //     } catch (error) {
+    //       setLoading(false);
+    //       setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+    //       console.error(`Error sending ${locale} localisation data:`, error);
+    //     }
+    //   }
+    // }
     setLoading(false);
     return;
   };
@@ -526,19 +538,16 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const localeArrays = createLocaleArrays();
     let updateCount = 0;
     let updateSuccess = false;
-    for (const locale of Object.keys(localeArrays)) {
-      if (localeArrays[locale].length > 0) {
-        try {
-          setLoading(true);
-          const result = await localisationMutate(localeArrays[locale]);
-          updateCount = updateCount + 1;
-          updateSuccess = true;
-        } catch (error) {
-          setLoading(false);
-          setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
-          console.error(`Error sending ${locale} localisation data:`, error);
-        }
-      }
+    try {
+      setLoading(true);
+      const result = await localisationMutate(localeArrays);
+      // queryClient.invalidateQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
+      updateCount = updateCount + 1;
+      updateSuccess = true;
+    } catch (error) {
+      setLoading(false);
+      setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+      console.error(`Error sending localisation data:`, error);
     }
     setShowPopUp(false);
     setLoading(false);
