@@ -2,6 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export const DynamicImageComponent = ({ type, appType }) => {
+  //TODO add this in global config @bhavya
   return (
     <img
       src={`https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/${type}/${appType}.svg`}
