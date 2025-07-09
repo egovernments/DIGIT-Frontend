@@ -35,6 +35,7 @@ jobs:
       work_dir: ${{ steps.setenv.outputs.work_dir }}
       image_name: ${{ steps.setenv.outputs.image_name }}
       dockerfile: ${{ steps.setenv.outputs.dockerfile }}
+      tag: ${{ steps.tag.outputs.tag }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -114,6 +115,42 @@ jobs:
             exit 1  # Fail the step
           fi
 
+      - name: Generate the Next Tag
+        id: tag
+        run: |
+          set -euxo pipefail
+
+          BRANCH="${GITHUB_REF##*/}"
+          COMMIT_HASH=$(git rev-parse --short HEAD)
+          SERVICE_NAME="${{ env.SERVICE_IMAGE_NAME }}"
+
+          TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
+            -H "Content-Type: application/json" \
+            -d "{\"username\": \"$DOCKER_USERNAME\", \"password\": \"$DOCKER_PASSWORD\"}" \
+            | jq -r .token)
+
+          if [ -z "$TOKEN" ]; then
+            echo "Failed to authenticate with Docker Hub." >&2
+            exit 1
+          fi
+
+          REPO_CHECK=$(curl -s -o /dev/null -w '%{http_code}' \
+            -H "Authorization: JWT $TOKEN" \
+            "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$SERVICE_NAME/")
+
+          if [ "$REPO_CHECK" -ne 200 ]; then
+            NEXT_TAG="${BRANCH}-${COMMIT_HASH}"
+          else
+            EXISTING_TAGS=$(curl -s -H "Authorization: JWT $TOKEN" \
+              "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$SERVICE_NAME/tags?page_size=100" \
+              | jq -r '.results[].name')
+            LATEST_TAG=$(echo "$EXISTING_TAGS" | grep "^${BRANCH}-${COMMIT_HASH}" || true | sort -V | tail -n 1)
+            NEXT_TAG="${LATEST_TAG:-${BRANCH}-${COMMIT_HASH}}"
+          fi
+
+          echo "tag=$NEXT_TAG" >> "$GITHUB_OUTPUT"
+          echo "NEXT_TAG=$NEXT_TAG" >> "$GITHUB_ENV"
+
   #  build-profile:
   #    needs: resolve-config
   #    uses: ./.github/workflows/build-${{ needs.resolve-config.outputs.build_profile }}.yml
@@ -161,7 +198,7 @@ jobs:
             --platform ${{ matrix.platform }} \
             --build-arg WORK_DIR=${{ needs.resolve-config.outputs.work_dir }} \
             --file ${{ needs.resolve-config.outputs.dockerfile }} \
-            --tag egovio/${{ needs.resolve-config.outputs.image_name }}:${{ matrix.arch }} \
+            --tag egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
             --push .
@@ -172,8 +209,10 @@ jobs:
     steps:
       - name: Create and push manifest
         run: |
-          docker manifest create egovio/${{ needs.resolve-config.outputs.image_name }}:latest \
-            --amend egovio/${{ needs.resolve-config.outputs.image_name }}:amd64 \
-            --amend egovio/${{ needs.resolve-config.outputs.image_name }}:arm64
+          docker manifest create egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }} \
+            --amend egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-amd64 \
+            --amend egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-arm64
 
-          docker manifest push egovio/${{ needs.resolve-config.outputs.image_name }}:latest
+          docker manifest push egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}
+          docker manifest rm egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-amd64
+          docker manifest rm egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-arm64
