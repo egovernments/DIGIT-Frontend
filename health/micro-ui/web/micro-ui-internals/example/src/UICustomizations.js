@@ -2073,7 +2073,7 @@ export const UICustomizations = {
             </div>
           );
         case "PROJECT_BOUNDARY_TYPE":
-          return value ? <span>{t(`${hierarchyType}_${value}`)}</span> : <span>{t("NA")}</span>;
+          return value ? <span>{t(`${hrmsData.Employees[0]?.jurisdictions?.[0]?.hierarchy}_${value}`)}</span> : <span>{t("NA")}</span>;
         case "PROJECT_BOUNDARY":
         case "PROJECT_TYPE":
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;

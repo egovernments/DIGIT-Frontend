@@ -267,7 +267,7 @@ export const CreateEmployeeConfig = {
               },
             },
             {
-              isMandatory: false,
+              isMandatory: true,
               key: "RolesAssigned",
               type: "dropdown",
               label: "HRMS_ROLES",
@@ -290,7 +290,6 @@ export const CreateEmployeeConfig = {
                 },
               },
             },
-      
             {
               type: "component",
               isMandatory: true,
