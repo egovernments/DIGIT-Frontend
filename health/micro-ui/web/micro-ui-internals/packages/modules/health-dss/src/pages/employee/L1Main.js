@@ -280,7 +280,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
 const L1Main = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const dashboardData = location.state?.dashboardData;
+  const dashboardData = location.state?.dashboardData || Digit.SessionStorage.get("dashboardData");
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
   // const projectTypeId = location.state?.projectTypeId;
