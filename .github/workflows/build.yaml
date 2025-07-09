@@ -208,10 +208,15 @@ jobs:
             --iidfile digest.txt \
             .
 
-      - name: Export Digest for ${{ matrix.arch }}
-        id: digest_${{ matrix.arch }}
-        run: |
-          echo "digest=sha256:$(cat digest.txt | cut -d':' -f2)" >> $GITHUB_OUTPUT
+      - name: Export Digest (amd64)
+        if: matrix.arch == 'amd64'
+        id: digest_amd64
+        run: echo "digest=sha256:$(cut -d':' -f2 digest.txt)" >> $GITHUB_OUTPUT
+
+      - name: Export Digest (arm64)
+        if: matrix.arch == 'arm64'
+        id: digest_arm64
+        run: echo "digest=sha256:$(cut -d':' -f2 digest.txt)" >> $GITHUB_OUTPUT
 
   create-manifest:
     needs: [build-matrix, resolve-config]
