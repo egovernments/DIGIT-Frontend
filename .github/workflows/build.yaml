@@ -227,7 +227,7 @@ jobs:
         run: |
           digest=$(docker buildx imagetools inspect \
             egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }} \
-            --format '{{json .}}' | jq -r '.manifests[] | select(.platform.architecture=="arm64" and .platform.os=="linux") | .digest')
+            --format '{{json .}}' | jq -r '.manifest.manifests[] | select(.platform.architecture=="arm64" and .platform.os=="linux") | .digest')
           echo "digest=$digest" >> $GITHUB_OUTPUT
 
   create-manifest:
