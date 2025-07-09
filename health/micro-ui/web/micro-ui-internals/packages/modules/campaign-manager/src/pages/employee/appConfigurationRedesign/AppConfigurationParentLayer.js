@@ -137,10 +137,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
     }
   }, [showToast]);
 
-  //TODO CHECK FOR AUTO SAVE
-  // MDMS CALL WITH PROJECT TYPE AND CAMPAIGN NUMBER AND FLOW NAME
-  //CHECK IF DATA THERE THEN SAVE PARENT STATE AS THAT OR COMING FORMDATA
-
   useEffect(() => {
     if (!isCacheLoading && Array.isArray(cacheData?.data?.data)) {
       parentDispatch({
@@ -220,7 +216,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       return updated ? updated : item;
     });
     if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
-      //TODO LAST UPDATE WE WILL CLEAR SAVE MDMS AND SAVE TO FINAL MDMS
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;

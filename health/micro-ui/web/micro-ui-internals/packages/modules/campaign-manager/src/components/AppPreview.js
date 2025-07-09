@@ -204,6 +204,7 @@ const renderField = (field, t) => {
       );
     case "selection":
       //[TODO: Need to allow support for static options or any API or hook support to fetch options] @nabeel @ram
+      // Dropdown values move to drawerpanel
       const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(
         Digit?.ULBService?.getStateId(),
         field?.schemaCode?.split(".")[0],
@@ -300,6 +301,7 @@ const renderField = (field, t) => {
   }
 };
 
+// remove this function
 const getFieldType = (field) => {
   //TODO Why do we still need this swtich case this should be set as a default supported fields and app field master should help to map this
   switch (field.type) {
