@@ -1,29 +1,39 @@
-FROM node:14-alpine AS build
-#FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
-RUN apk update && apk upgrade
-RUN apk add --no-cache git>2.30.0
-ARG WORK_DIR
+# syntax=docker/dockerfile:1.4
+
+#### 1) DEPS STAGE — install & cache just JS deps
+FROM node:14-alpine AS deps
 WORKDIR /app
-ENV NODE_OPTIONS "--max-old-space-size=4792"
+ARG WORK_DIR
+# Copy only the manifest first
+COPY ${WORK_DIR}/web/package.json ${WORK_DIR}/web/yarn.lock ./web/
+ENV YARN_CACHE_FOLDER=/app/.yarncache
 
+RUN --mount=type=cache,target=/app/.yarncache \
+    apk update && apk add --no-cache git \
+  && yarn config set network-timeout 600000 \
+  && cd web \
+  && yarn install --frozen-lockfile --prefer-offline
+
+#### 2) BUILD STAGE — your existing build steps
+FROM node:14-alpine AS build
+WORKDIR /app
+ARG WORK_DIR
+ENV NODE_OPTIONS="--max-old-space-size=4792"
+
+# bring in cached node_modules
+COPY --from=deps /app/web/node_modules ./web/node_modules
+# now copy the rest of your source
 COPY ${WORK_DIR} .
-RUN ls -lah
 
-#RUN node web/envs.js
-RUN cd web/ \
-    && node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' \
-    && node -e 'console.log("core only")' \
-    && cd microplan/ \
-    && chmod +x ./install-deps.sh \
-    &&  ./install-deps.sh \
-    && cd ../ \
-    && yarn install \ 
-    && yarn build:webpack 
+RUN cd web && \
+    node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' && \
+    node -e 'console.log("core only")' && \
+    cd microplan && chmod +x ./install-deps.sh && ./install-deps.sh && cd .. && \
+    yarn build:webpack
 
-FROM nginx:mainline-alpine
-#FROM ghcr.io/egovernments/nginx:mainline-alpine
+#### 3) RUNTIME IMAGE
+FROM nginx:mainline-alpine AS runtime
 ENV WORK_DIR=/var/web/microplan-ui
-
 RUN mkdir -p ${WORK_DIR}
 
 COPY --from=build /app/web/build ${WORK_DIR}/
