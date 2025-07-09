@@ -1,5 +1,4 @@
-# FROM egovio/alpine-node-builder-14:yarn AS build
-FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
+FROM node:14-alpine3.16 AS build
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
