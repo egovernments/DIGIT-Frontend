@@ -73,6 +73,10 @@ const LandingPageWrapper = ({ children, className, styles }) => {
       className={`digit-landing-page-wrapper ${className}`}
       style={styles}
       ref={wrapperRef}
+      role="main"
+      aria-label="Landing page content"
+      aria-live="polite"
+      aria-atomic="false"
     >
       {children}
     </div>

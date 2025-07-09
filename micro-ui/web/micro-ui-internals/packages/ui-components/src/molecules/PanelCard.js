@@ -99,9 +99,16 @@ const PanelCard = (props) => {
           } ${isOverflowing ? "with-shadow" : ""} ${
             !hasFooterChildren ? "without-footer" : ""
           }`}
+          role="main"
+          aria-label={isOverflowing ? "Scrollable content area" : "Content area"}
+          aria-live="polite"
         >
           {props?.description && (
-            <div className="digit-panelcard-description">
+            <div 
+              className="digit-panelcard-description"
+              role="note"
+              aria-label="Description"
+            >
               {props?.description}
             </div>
           )}
@@ -117,6 +124,8 @@ const PanelCard = (props) => {
           <div
             className="digit-panelcard-footer-buttons"
             style={{ ...props?.footerStyles }}
+            role="group"
+            aria-label="Action buttons"
           >
             {finalFooterArray}
           </div>
