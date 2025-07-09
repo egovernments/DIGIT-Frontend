@@ -1,4 +1,4 @@
-export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectType ,summaryErrors}) => {
+export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectType ,summaryErrors ,  campaignData}) => {
     return [
       {
         form: [
@@ -40,14 +40,15 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     isMandatory: false,
                     key: "uploadFacility",
                     type: "component",
-                    component: "UploadData",
+                    component: "DataUploadWrapper",
                     withoutLabel: true,
                     withoutLabelFieldPair: true,
                     disable: false,
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
-                      type: "facilityWithBoundary",
+                       campaignData: campaignData,
+                      type: "facility",
                       projectType: projectType
                     },
                     populators: {
@@ -66,14 +67,15 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     isMandatory: false,
                     key: "uploadUser",
                     type: "component",
-                    component: "UploadData",
+                    component: "DataUploadWrapper",
                     withoutLabel: true,
                     withoutLabelFieldPair: true,
                     disable: false,
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
-                      type: "userWithBoundary",
+                       campaignData: campaignData,
+                      type: "user",
                       projectType: projectType
                     },
                     populators: {
@@ -92,13 +94,14 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     isMandatory: false,
                     key: "uploadBoundary",
                     type: "component",
-                    component: "UploadData",
+                    component: "DataUploadWrapper",
                     withoutLabel: true,
                     withoutLabelFieldPair: true,
                     disable: false,
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
+                       campaignData: campaignData,
                       type: "boundary",
                       projectType :projectType
                     },
@@ -125,6 +128,7 @@ export const UpdateBoundaryConfig = ({totalFormData , hierarchyType , projectTyp
                     customProps: {
                       module: "HCM",
                       sessionData: totalFormData,
+                       campaignData: campaignData,
                       summaryErrors: summaryErrors,
                       hierarchyType : hierarchyType
                     },

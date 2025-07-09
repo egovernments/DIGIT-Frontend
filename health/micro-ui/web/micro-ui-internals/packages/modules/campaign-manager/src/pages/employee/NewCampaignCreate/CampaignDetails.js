@@ -156,7 +156,8 @@ const CampaignDetails = () => {
               headingName: t("HCM_UPLOAD_DATA_HEADING"),
               desc: t("HCM_UPLOAD_DATA_DESC"),
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
-              navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
+              navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
+              // navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
               disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
@@ -196,7 +197,7 @@ const CampaignDetails = () => {
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   const validateCampaignDates = (cycles, campaignData) => {
-
+    
   // Sort the cycles by startDate to find the first and last
   const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
 
@@ -250,24 +251,20 @@ const CampaignDetails = () => {
   };
 
   const onDownloadCredentails = async (data) => {
-    const userResource =
-      Array.isArray(data?.resources) && data.resources.length > 0 && data.resources.some((resource) => resource.type === "user")
-        ? data.resources.find((resource) => resource.type === "user")
-        : null;
 
     try {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       const responseTemp = await Digit.CustomService.getResponse({
-        url: `/project-factory/v1/data/_search`,
-        body: {
-          SearchCriteria: {
-            tenantId: tenantId,
-            id: [userResource?.createResourceId],
-          },
+        url: `/project-factory/v1/data/_download`,
+        params: {
+          tenantId: tenantId,
+          campaignId: campaignData?.id,
+          type: "userCredential",
+          hierarchyType : campaignData?.hierarchyType
         },
       });
 
-      const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+      const response = responseTemp?.GeneratedResource?.map((i) => i?.fileStoreid);
 
       if (response?.[0]) {
         downloadExcelWithCustomName({

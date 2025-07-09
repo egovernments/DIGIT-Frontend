@@ -26,6 +26,7 @@ import AppFeatures from "./NewCampaignCreate/AppFeatures";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
+import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -69,10 +70,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       content: t("MY_CAMPAIGN"),
-      show:
-        pathVar === "my-campaign-new" ||  pathVar === "checklist/update" 
-          ? true
-          : false,
+      show: pathVar === "my-campaign-new" || pathVar === "checklist/update" ? true : false,
     },
     {
       path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
@@ -95,8 +93,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.match("app-modules") ||
         pathVar.match("app-features") ||
         pathVar === "update-dates-boundary" ||
-        pathVar === "update-campaign" || 
-        pathVar === "checklist/search"
+        pathVar === "update-campaign" ||
+        pathVar === "checklist/search" ||
+        pathVar === "upload-screen"
           ? true
           : false,
     },
@@ -115,6 +114,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_CREATE_CHECKLIST"),
       show: pathVar === "checklist/create" ? true : false,
+    },
+     {
+      path: "",
+      content: t("ACTION_UPLOAD_SCREEN"),
+      show: pathVar === "upload-screen" ? true : false,
     },
     {
       path: "",
@@ -203,7 +207,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
       }
     };
   }, []);
-  
+
   return (
     <React.Fragment>
       <div className="wbh-header-container">
@@ -211,7 +215,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        <AppHelpTutorial  appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT"/>
+        <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
       </div>
       <Switch>
         <AppContainer className="campaign">
@@ -253,6 +257,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
           <PrivateRoute path={`${path}/app-modules`} component={() => <AppModule />} />
           <PrivateRoute path={`${path}/app-features`} component={() => <AppFeatures />} />
+          <PrivateRoute path={`${path}/upload-screen`} component={() => <NewUploadScreen />} />
           <HelpInfoCard appPath={path} location={location} />
         </AppContainer>
       </Switch>
