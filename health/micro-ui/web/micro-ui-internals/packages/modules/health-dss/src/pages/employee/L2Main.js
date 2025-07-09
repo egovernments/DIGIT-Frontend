@@ -39,15 +39,16 @@ const key = "DSS_FILTERS";
 
 const getInitialRange = () => {
   const location = useLocation();
-  const campaignData = Digit.SessionStorage.get("campaignSelected");
-  const projectType = getProjectTypeFromSession();
-  const province = new URLSearchParams(location.search).get("province");
-  const district = new URLSearchParams(location.search).get("district");
+  const campaignData = Digit.SessionStorage.get("campaigns-info");
+  const projectType = getProjectTypeFromURL(window.location.pathname);
+  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  // const province = new URLSearchParams(location.search).get("province");
+  // const district = new URLSearchParams(location.search).get("district");
   if (!Digit.SessionStorage.get(key)) {
     Digit.SessionStorage.set(key, {});
   }
-  // ToDo: Check with previous implementation 
-  overrideDescendantDateRange(province);
+  overrideDescendantDateRange(boundaryValue);
   let data = Digit.SessionStorage.get(key);
   let filteredInfo = null;
   // if (province != null) {
@@ -137,10 +138,15 @@ function getProjectTypeIDFromURL() {
   return projectTypeId;
 }
 
-function getProjectTypeFromSession() {
-  const projectTypeSession = Digit.SessionStorage.get("projectSelected")?.project?.projectType;
+function getProjectTypeFromURL() {
+  const url = window.location.pathname;
+  const projectTypes = Digit.SessionStorage.get("projectTypes");
+  const matchingProject = projectTypes?.find(
+    (item) => item?.dashboardUrls && Object.values(item?.dashboardUrls)?.some((dashboardUrl) => url === dashboardUrl)
+  );
+
   // Return the id of the matching object or null if not found
-  const projectTypeCode = projectTypeSession ? projectTypeSession : null;
+  const projectTypeCode = matchingProject ? matchingProject.code : null;
   return projectTypeCode;
 }
 const L2Main = ({}) => {
@@ -149,8 +155,8 @@ const L2Main = ({}) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const projectTypeId = getProjectTypeIDFromURL();
-  const campaignData = Digit.SessionStorage.get("campaignSelected");
-  const projectData= Digit.SessionStorage.get("projectSelected");
+  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
   const [filters, setFilters] = useState(() => {
     const {
       startDate,
@@ -180,10 +186,10 @@ const L2Main = ({}) => {
         tenantId,
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
-        province: province || boundaries?.province?.[0] || null,
-        district: district || boundaries?.district?.[0] || null,
-        projectTypeId: projectTypeId
-   
+        // province: province || boundaries?.province?.[0] || null,
+        // district: district || boundaries?.district?.[0] || null,
+        projectTypeId: projectTypeId,
+        ...dynamicBoundaryFilter
       },
       moduleLevel: moduleLevel,
     };
@@ -266,6 +272,7 @@ const L2Main = ({}) => {
   const { search } = useLocation();
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [pageZoom, setPageZoom] = useState(false);
+  const campaignData = Digit.SessionStorage.get("campaigns-info");
 
   useEffect(() => {
     if (showDownloadOptions === false) {
@@ -280,7 +287,8 @@ const L2Main = ({}) => {
 
   const [progressDuration, setProgressDuration] = useState({ campaignDuration: 0, daysElapsed: 0 });
   const campaignInfo = Digit.SessionStorage.get("campaigns-info");
-  const projectType = getProjectTypeFromSession();
+  const projectType = getProjectTypeFromURL(window.location.pathname);
+  const campaignCode = Object.keys(campaignData[projectType])?.[0];
 
   const handleFilters = (data) => {
     const userInfo = Digit.UserService.getUser()?.info;
@@ -568,7 +576,7 @@ const L2Main = ({}) => {
             showDDR={!hideFilterFields.includes("DDR")}
             showUlb={!hideFilterFields.includes("Ulb")}
             showDenomination={!hideFilterFields.includes("Denomination")}
-            showFilterByCycle={campaignData && campaignData?.additionalDetails.beneficiaryType === "INDIVIDUAL"}
+            showFilterByCycle={campaignData?.[projectType]?.[0]?.beneficiaryType == "INDIVIDUAL" ? true : false}
           />
         )}
         {filters?.filters?.tenantId?.length > 0 && (
