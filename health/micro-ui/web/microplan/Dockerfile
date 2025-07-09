@@ -5,7 +5,7 @@
 
 # Copy the files we actually have:
 COPY ${WORK_DIR}/web/package.json     ./web/package.json
-COPY ${WORK_DIR}/yarn.lock            ./yarn.lock
+COPY yarn.lock                        ./yarn.lock
 
  ENV YARN_CACHE_FOLDER=/app/.yarncache
  RUN --mount=type=cache,target=/app/.yarncache \
