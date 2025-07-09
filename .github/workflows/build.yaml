@@ -171,6 +171,9 @@ jobs:
             platform: linux/arm64
             runner: ubuntu-24.04-arm
     runs-on: ${{ matrix.runner }}
+    outputs:
+      amd64_digest: ${{ steps.digest_amd64.outputs.digest }}
+      arm64_digest: ${{ steps.digest_arm64.outputs.digest }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -201,7 +204,14 @@ jobs:
             --tag egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-${{ matrix.arch }} \
             --cache-from=type=local,src=/tmp/.buildx-cache \
             --cache-to=type=local,dest=/tmp/.buildx-cache,mode=max \
-            --push .
+            --push \
+            --iidfile digest.txt \
+            .
+
+      - name: Export Digest for ${{ matrix.arch }}
+        id: digest_${{ matrix.arch }}
+        run: |
+          echo "digest=sha256:$(cat digest.txt | cut -d':' -f2)" >> $GITHUB_OUTPUT
 
   create-manifest:
     needs: [build-matrix, resolve-config]
@@ -210,8 +220,8 @@ jobs:
       - name: Create and push manifest
         run: |
           docker manifest create egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }} \
-            --amend egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-amd64 \
-            --amend egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-arm64
+            --amend egovio/${{ needs.resolve-config.outputs.image_name }}@${{ needs.build-matrix.outputs.amd64_digest }} \
+            --amend egovio/${{ needs.resolve-config.outputs.image_name }}@${{ needs.build-matrix.outputs.arm64_digest }}
 
           docker manifest push egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}
           docker manifest rm egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}-amd64
