@@ -1,4 +1,5 @@
-// import "@egovernments/digit-ui-components-css/example/index.css";
+import React from "react";
+import { MemoryRouter } from "react-router-dom";
 import "@egovernments/digit-ui-components-css/dist/index.css";
 // import { initCoreLibraries } from "@egovernments/digit-ui-libraries-core";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
@@ -47,6 +48,13 @@ const preview = {
       ],
     },
   },
+  decorators: [
+    (Story) => (
+      <MemoryRouter>
+        <Story />
+      </MemoryRouter>
+    ),
+  ],
 };
 
 initLibraries().then(() => {

@@ -128,7 +128,7 @@ const ResultsDataTable = ({
               height={"1.5rem"}
               fill={"#C84C0E"}
             ></SVG.DoneAll>
-            <div className={"selected-state"}>{`${selectedRows.length} ${t(
+            <div className="selected-state" role="status" aria-live="polite"> {`${selectedRows.length} ${t(
               "ROWS_SELECTED"
             )}`}</div>
           </div>

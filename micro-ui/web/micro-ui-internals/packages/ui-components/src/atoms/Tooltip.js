@@ -5,6 +5,8 @@ const Tooltip = ({ tooltipRef, content, placement, arrow, style, className,heade
   return (
     <div
       role="tooltip"
+      aria-live="polite"
+      tabIndex={0}
       className={`tooltip-content tooltip-${placement} ${
         arrow ? "with-arrow" : ""
       } ${theme || ""} ${className || ""}`}
