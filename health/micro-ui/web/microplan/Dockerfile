@@ -1,7 +1,7 @@
 FROM egovio/alpine-node-builder-14:yarn AS build
 #FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
-RUN apk update && apk upgrade
-RUN apk add --no-cache git>2.30.0
+RUN apk update
+RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
 WORKDIR /app
 ENV NODE_OPTIONS "--max-old-space-size=4792"
@@ -17,7 +17,7 @@ RUN cd web/ \
     && chmod +x ./install-deps.sh \
     &&  ./install-deps.sh \
     && cd ../ \
-    && yarn install \ 
+    && yarn install \
     && yarn build:webpack 
 
 FROM nginx:mainline-alpine
