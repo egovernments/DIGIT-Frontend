@@ -3,67 +3,30 @@ name: Build Pipeline
 on:
   workflow_dispatch:
     inputs:
-      service_folder:
-        description: 'Folder prefix for the service'
+      pipeline_name:
+        description: 'Name of the config pipeline to build and deploy'
         required: true
         type: choice
         options:
-          - core-services
-          - micro-ui
-        default: core-services
-      service:
-        description: 'Name of the service to build and deploy'
-        required: true
-        type: choice
-        options:
-          - "core-ui"
-          - "audit-service"
-          - "boundary-service"
-          - "build"
-          - "chatbot"
-          - "docs"
-          - "egov-accesscontrol"
-          - "egov-common-masters"
-          - "egov-data-uploader"
-          - "egov-document-uploader"
-          - "egov-enc-service"
-          - "egov-filestore"
-          - "egov-idgen"
-          - "egov-indexer"
-          - "egov-localization"
-          - "egov-location"
-          - "egov-mdms-service"
-          - "egov-notification-mail"
-          - "egov-notification-sms"
-          - "egov-otp"
-          - "egov-persister"
-          - "egov-pg-service"
-          - "egov-searcher"
-          - "egov-telemetry"
-          - "egov-url-shortening"
-          - "egov-user-event"
-          - "egov-user"
-          - "egov-workflow-v2"
-          - "gateway"
-          - "internal-gateway-scg"
-          - "internal-gateway"
-          - "libraries"
-          - "national-dashboard-ingest"
-          - "national-dashboard-kafka-pipeline"
-          - "nlp-engine"
-          - "pdf-service"
-          - "report"
-          - "service-request"
-          - "tenant"
-          - "user-otp"
-          - "xstate-chatbot"
-          - "zuul"
-        default: "audit-service"
+          - digit-ui
+          - core-ui
+          - workbench-ui
+          - sandbox-ui
+          - microplan-ui
+          - console
+          - payments-ui
+          - storybook-svg
+          - storybook
+          - egov-bff
+          - core-digit-ui
+          - dss-ui
+          - hrms-ui
+          - karnataka-ui
+          - meghalaya-ui
 
 env:
-  # Credentials for Docker Hub
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_ACCESS_TOKEN }}
 
 jobs:
   build:
@@ -71,11 +34,10 @@ jobs:
 
     strategy:
       matrix:
-        service: [ "${{ github.event.inputs.service }}" ]
+        pipeline: [ "${{ github.event.inputs.pipeline_name }}" ]
 
     outputs:
       docker_image: ${{ steps.save_docker_image.outputs.docker_image }}
-      db_image:     ${{ steps.save_db_image.outputs.db_image }}
 
     steps:
       - name: Checkout Code
@@ -88,47 +50,66 @@ jobs:
           sudo curl -sSL "$URL" -o /usr/local/bin/yq
           sudo chmod +x /usr/local/bin/yq
 
-      - name: Determine build paths from build-config.yml
-        id: pick_dockerfile
+      - name: Resolve env from build-config.yml
+        id: resolve_config
         run: |
-          SERVICE="${{ matrix.service }}"
-          DEFAULT_DOCKERFILE="build/maven/Dockerfile"
-          DEFAULT_WORKDIR="${{ github.event.inputs.service_folder }}/${{ matrix.service }}"
-
-          # Debug: list all image-name / dockerfile / work-dir pairs
-          echo "All build entries from build-config.yml:"
-          yq eval '.config[].build[] | "✱ image-name: \(.["image-name"]) → dockerfile: \(.dockerfile // "N/A") work-dir: \(."work-dir" // "N/A")"' build/build-config.yml || true
-
-          # Extract dockerfile and work-dir
-          DF=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile // \"\"" build/build-config.yml | head -n 1)
-          WD=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .\"work-dir\" // \"\"" build/build-config.yml | head -n 1)
-
-          # Warn if multiple entries
-          MATCH_COUNT=$(yq eval ".config[].build[] | select(.\"image-name\" == \"${SERVICE}\") | .dockerfile" build/build-config.yml | wc -l)
-          if [ "$MATCH_COUNT" -gt 1 ]; then
-            echo "Multiple build entries found for \"$SERVICE\"; using first dockerfile: $DF and first work-dir: $WD"
+          PIPELINE_NAME="${{ matrix.pipeline }}"
+          DEFAULT_DOCKERFILE="Dockerfile"
+          
+          # Step 1: List matching config blocks
+          MATCHING_CONFIGS=$(yq eval -o=json '.config[] | select(.name | test("/'"$PIPELINE_NAME"'$"))' build/build-config.yml)
+          
+          # Step 2: Show matched config(s)
+          echo "Matching config(s) for pipeline '$PIPELINE_NAME':"
+          echo "$MATCHING_CONFIGS" | yq eval -P -  # pretty-print for readability
+          
+          # Step 3: Check count of matching configs
+          MATCH_COUNT=$(echo "$MATCHING_CONFIGS" | yq eval -o=json '.' - | jq -s 'length')
+          
+          if [ "$MATCH_COUNT" -ne 1 ]; then
+            echo "ERROR: Expected exactly 1 matching pipeline config, but found $MATCH_COUNT"
+            exit 1
           fi
-
-          # Fallbacks
-          if [ -z "$DF" ] || [ "$DF" = "null" ]; then
+          
+          # Step 4: Extract service build config
+          SERVICE_BUILD_CONFIG=$(yq eval -o=json '
+            .config[]
+            | select(.name | test("/'"$PIPELINE_NAME"'$"))
+            | .build[]
+            | select(.["image-name"] | not)
+            ' build/build-config.yml)
+          
+          # Step 5: Print for confirmation
+          echo "SERVICE_BUILD_CONFIG: $SERVICE_BUILD_CONFIG"
+          
+          # Step 6: Extract Required Environment Variables
+          SERVICE_DOCKERFILE=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -r '.dockerfile // ""' -)
+          SERVICE_IMAGE_NAME=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -r '.["image-name"] // ""' -)
+          SERVICE_WORK_DIR=$(echo "$SERVICE_BUILD_CONFIG" | yq eval -r '.["work-dir"] // ""' -)
+          
+          # Step 7: Set Default Dockerfile if service dockerfile config is missing
+          if [ -z "$SERVICE_DOCKERFILE" ]; then
             echo "No dockerfile entry found for \"$SERVICE\" in build-config.yml; using default"
-            DF="$DEFAULT_DOCKERFILE"
-          else
-            echo "Found dockerfile \"$DF\" for service \"$SERVICE\"."
+            SERVICE_DOCKERFILE="$SERVICE_WORK_DIR/$DEFAULT_DOCKERFILE"
           fi
-
-          if [ -z "$WD" ] || [ "$WD" = "null" ]; then
-            echo "No work-dir entry found for \"$SERVICE\"; using default"
-            WD="$DEFAULT_WORKDIR"
-          else
-            echo "Found work-dir \"$WD\" for service \"$SERVICE\"."
+          
+          # Step 8: Export to github environment
+          echo "SERVICE_WORK_DIR=$SERVICE_WORK_DIR" >> "$GITHUB_ENV"
+          echo "SERVICE_IMAGE_NAME=$SERVICE_IMAGE_NAME" >> "$GITHUB_ENV"
+          echo "SERVICE_DOCKERFILE=$SERVICE_DOCKERFILE" >> "$GITHUB_ENV"
+          missing_vars=()
+          
+          for var in SERVICE_WORK_DIR SERVICE_IMAGE_NAME SERVICE_DOCKERFILE; do
+            if [ -z "${!var}" ]; then
+              echo "ERROR: $var is not set or is empty"
+              missing_vars+=("$var")
+            fi
+          done
+          
+          if [ ${#missing_vars[@]} -gt 0 ]; then
+            echo "Required environment variables are missing: ${missing_vars[*]}"
+            exit 1  # Fail the step
           fi
-
-          # Export outputs
-          echo "dockerfile_path=$DF" >> "$GITHUB_OUTPUT"
-          echo "work_dir=$WD" >> "$GITHUB_OUTPUT"
-          echo "DOCKERFILE_PATH=$DF" >> "$GITHUB_ENV"
-          echo "WORK_DIR=$WD" >> "$GITHUB_ENV"
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
@@ -137,7 +118,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-buildx-${{ matrix.service }}-${{ github.ref_name }}
+          key: ${{ runner.os }}-buildx-${{ matrix.pipeline }}-${{ github.ref_name }}
           restore-keys: |
             ${{ runner.os }}-buildx-
 
@@ -154,7 +135,7 @@ jobs:
 
           BRANCH="${GITHUB_REF##*/}"
           COMMIT_HASH=$(git rev-parse --short HEAD)
-          SERVICE_NAME="${{ matrix.service }}"
+          SERVICE_NAME="${{ env.SERVICE_IMAGE_NAME }}"
 
           TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
@@ -189,50 +170,22 @@ jobs:
         with:
           platforms: linux/amd64,linux/arm64
           context: .
-          file: ${{ env.DOCKERFILE_PATH }}
+          file: ${{ env.SERVICE_DOCKERFILE }}
           push: true
           tags: |
-            egovio/${{ matrix.service }}:${{ steps.tag.outputs.tag }}
+            egovio/${{ env.SERVICE_IMAGE_NAME }}:${{ steps.tag.outputs.tag }}
           build-args: |
-            WORK_DIR=${{ env.WORK_DIR }}
-
-      - name: Check if DB folder exists
-        id: check-db-folder
-        run: |
-          FOLDER_PATH="${{ github.event.inputs.service_folder }}/${{ matrix.service }}/src/main/resources/db"
-          if [ -d "$FOLDER_PATH" ]; then
-            echo "folder_exists=true" >> "$GITHUB_OUTPUT"
-          else
-            echo "folder_exists=false" >> "$GITHUB_OUTPUT"
-          fi
-
-      - name: Build and Push Database Docker Image
-        if: ${{ steps.check-db-folder.outputs.folder_exists == 'true' }}
-        id: build_push_db_docker
-        uses: docker/build-push-action@v5
-        with:
-          platforms: linux/amd64,linux/arm64
-          context: ${{ github.event.inputs.service_folder }}/${{ matrix.service }}/src/main/resources/db
-          file: ${{ github.event.inputs.service_folder }}/${{ matrix.service }}/src/main/resources/db/Dockerfile
-          push: true
-          tags: |
-            egovio/${{ matrix.service }}-db:${{ steps.tag.outputs.tag }}
+            WORK_DIR=${{ env.SERVICE_WORK_DIR }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache
 
       - name: Save Application Docker Image
         id: save_docker_image
         run: |
-          IMG="egovio/${{ matrix.service }}:${{ steps.tag.outputs.tag }}"
+          IMG="egovio/${{ env.SERVICE_IMAGE_NAME }}:${{ steps.tag.outputs.tag }}"
           echo "$IMG"
           echo "docker_image=$IMG" >> "$GITHUB_OUTPUT"
-          echo "### Application Docker Image" >> "$GITHUB_STEP_SUMMARY"
-          echo "$IMG" >> "$GITHUB_STEP_SUMMARY"
 
-      - name: Save Database Docker Image
-        id: save_db_image
-        if: ${{ steps.check-db-folder.outputs.folder_exists == 'true' }}
-        run: |
-          IMG="egovio/${{ matrix.service }}-db:${{ steps.tag.outputs.tag }}"
-          echo "$IMG"
-          echo "db_image=$IMG" >> "$GITHUB_OUTPUT"
-          echo "### Database Docker Image" >> "$GITHUB_STEP_SUMMARY"
+          # Append to GitHub Actions summary
+          echo "### Application Docker Image" >> "$GITHUB_STEP_SUMMARY"
           echo "$IMG" >> "$GITHUB_STEP_SUMMARY"
