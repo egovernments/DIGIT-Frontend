@@ -417,10 +417,8 @@ const CustomHorizontalBarChart = ({
     );
   };
   let showOnDownload = downloadChartsId === response?.responseData?.visualizationCode ? true : false;
-  const bars = useMemo(
-      () => response?.responseData?.data?.map((bar) => bar?.headerName) ?? [],
-     [response]
-    );
+  const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
+ 
 
   return (
     <Fragment>
