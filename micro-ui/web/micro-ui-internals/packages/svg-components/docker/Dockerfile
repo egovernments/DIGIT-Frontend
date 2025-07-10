@@ -8,8 +8,9 @@ ENV NODE_OPTIONS="--max-old-space-size=1792"
 COPY ${WORK_DIR} .
 
 #RUN node web/envs.js
-RUN  yarn install \
-    && yarn build-storybook
+RUN yarn config set network-timeout 600000
+RUN yarn install
+RUN yarn build-storybook
 
 FROM nginx:mainline-alpine
 ENV WORK_DIR=/var/storybook-svg
