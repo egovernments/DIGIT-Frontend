@@ -23,7 +23,7 @@ const useGetChartV2 = (aggregationRequestDto) => {
       config: {
         select: defaultSelect,
         staleTime: 5 * 60 * 1000, 
-        cacheTime: 30 * 30 * 1000
+        cacheTime: 30 * 60 * 1000
       },
     }),
     [aggregationRequestDto, tenantId, authToken, defaultSelect]
