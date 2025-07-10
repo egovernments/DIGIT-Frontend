@@ -54,14 +54,14 @@ const CampaignDetails = () => {
     }
   }, [campaignData]);
 
-
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
     [
       {
         name: AppConfigSchema,
-        filter: `[?(@.project=='${campaignNumber}')].version`,
+        filter: `[?(@.project=='${campaignNumber}')].name`,
+        // filter: `[?(@.project=='${campaignNumber}')].version`,
       },
     ],
     {
@@ -74,11 +74,10 @@ const CampaignDetails = () => {
 
   let hasVersionGreaterThanOne = false;
 
-  if(modulesData){
-   hasVersionGreaterThanOne = modulesData?.some(version => version > 1);
+  if (modulesData) {
+    hasVersionGreaterThanOne = modulesData?.some((version) => version > 1);
   }
 
-  
   const data = {
     cards: [
       {
@@ -143,8 +142,10 @@ const CampaignDetails = () => {
             props: {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
-              buttonLabel: hasVersionGreaterThanOne ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
-              type: hasVersionGreaterThanOne ? "secondary" : "primary",
+              // buttonLabel: hasVersionGreaterThanOne ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              type: modulesData?.length > 0 ? "secondary" : "primary",
+              // type: hasVersionGreaterThanOne ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
               disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),
@@ -203,28 +204,23 @@ const CampaignDetails = () => {
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   const validateCampaignDates = (cycles, campaignData) => {
+    // Sort the cycles by startDate to find the first and last
+    const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
 
-  // Sort the cycles by startDate to find the first and last
-  const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
+    const firstCycleStart = sortedCycles[0]?.startDate;
+    const lastCycleEnd = sortedCycles[sortedCycles.length - 1]?.endDate;
 
-  const firstCycleStart = sortedCycles[0]?.startDate;
-  const lastCycleEnd = sortedCycles[sortedCycles.length - 1]?.endDate;
+    const campaignStart = campaignData?.startDate;
+    const campaignEnd = campaignData?.endDate;
 
-  const campaignStart = campaignData?.startDate;
-  const campaignEnd = campaignData?.endDate;
-
-  if(campaignStart<= firstCycleStart && campaignEnd >= lastCycleEnd){
-    return true;
-  }
-  else return false;
-
-  
-};
-
+    if (campaignStart <= firstCycleStart && campaignEnd >= lastCycleEnd) {
+      return true;
+    } else return false;
+  };
 
   const onsubmit = async () => {
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
-    if(!valideDates){
+    if (!valideDates) {
       setShowToast({ key: "error", label: "INVALID_DATES" });
       return;
     }
@@ -297,7 +293,7 @@ const CampaignDetails = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate )}`;
+  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate)}`;
 
   const closeToast = () => {
     setShowToast(null);
@@ -353,7 +349,7 @@ const CampaignDetails = () => {
             }
           }}
         >
-          <Edit width={"18"} height={"18"}/>
+          <Edit width={"18"} height={"18"} />
         </div>
       </div>
       <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
@@ -392,9 +388,7 @@ const CampaignDetails = () => {
         maxActionFieldsAllowed={5}
         setactionFieldsToRight={true}
       />
-      {showQRPopUp && (
-        <QRButton setShowQRPopUp={setShowQRPopUp}/>
-      )}
+      {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
