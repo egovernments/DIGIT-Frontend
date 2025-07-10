@@ -186,7 +186,8 @@ const L2Main = ({}) => {
         campaignEndDate: endDate?.getTime()?.toString(),
         // province: province || boundaries?.province?.[0] || null,
         // district: district || boundaries?.district?.[0] || null,
-        projectTypeId: projectTypeId
+        projectTypeId: projectTypeId,
+        ...dynamicBoundaryFilter,
    
       },
       moduleLevel: moduleLevel,
