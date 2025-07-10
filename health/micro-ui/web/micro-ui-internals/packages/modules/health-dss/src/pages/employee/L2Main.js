@@ -43,8 +43,6 @@ const getInitialRange = () => {
   const projectType = getProjectTypeFromSession();
   const boundaryType = new URLSearchParams(location.search).get("boundaryType");
   const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
-  // const province = new URLSearchParams(location.search).get("province");
-  // const district = new URLSearchParams(location.search).get("district");
   if (!Digit.SessionStorage.get(key)) {
     Digit.SessionStorage.set(key, {});
   }
