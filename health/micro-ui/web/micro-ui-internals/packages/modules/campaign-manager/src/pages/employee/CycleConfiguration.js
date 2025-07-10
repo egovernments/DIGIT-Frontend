@@ -1,4 +1,4 @@
-import React, { useReducer, Fragment, useEffect, useState, act } from "react";
+import React, { useReducer, Fragment, useEffect, useState } from "react";
 import { CardText, LabelFieldPair, CardLabel, CardSubHeader, Paragraph, Header, Card } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { TextInput, InfoCard, Stepper, TextBlock, Loader, FieldV1 } from "@egovernments/digit-ui-components";
@@ -61,34 +61,16 @@ const reducer = (state, action) => {
   }
 };
 
-// const updateCycleData = (cycleData, index, update) => {
-//   const existingItem = cycleData.find((item) => item.key === index);
-
-//   if (!existingItem) {
-//     // If the item with the specified key doesn't exist, add a new item
-//     return [...cycleData, { key: index, ...update }];
-//   }
-
-//   // If the item exists, update it
-//   return cycleData.map((item) => (item.key === index ? { ...item, ...update } : item));
-// };
-
 const updateCycleData = (cycleData, index, update) => {
-
   const existingItem = cycleData.find((item) => item.key === index);
 
-  let updatedData;
-
   if (!existingItem) {
-    // Add new item if not found
-    updatedData = [...cycleData, { key: index, ...update }];
-  } else {
-    // Update existing item
-    updatedData = cycleData.map((item) => (item.key === index ? { ...item, ...update } : item));
+    // If the item with the specified key doesn't exist, add a new item
+    return [...cycleData, { key: index, ...update }];
   }
 
-  // Filter out items that don't have a 'key'
-  return updatedData.filter((item) => item.key !== undefined && item.key !== null);
+  // If the item exists, update it
+  return cycleData.map((item) => (item.key === index ? { ...item, ...update } : item));
 };
 
 function CycleConfiguration({ onSelect, formData, control, ...props }) {
@@ -342,7 +324,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
           </Card>
           {/* </Card> */}
           <Card className="campaign-counter-container">
-            <CardSubHeader className={"start-header"}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
+            <CardSubHeader className = {"start-header"}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel>

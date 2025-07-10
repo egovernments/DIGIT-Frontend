@@ -81,20 +81,20 @@ const getTagElements = (rowData) => {
 };
 
 // function to handle download user creds
-const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
+const handleDownloadUserCreds = async (data) => {
   try {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const responseTemp = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/data/_download`,
-      params: {
-        tenantId: tenantId,
-        campaignId: campaignId,
-        type : "userCredential",
-        hierarchyType
+      url: `/project-factory/v1/data/_search`,
+      body: {
+        SearchCriteria: {
+          tenantId: tenantId,
+          id: [data?.createResourceId],
+        },
       },
     });
 
-    const response = responseTemp?.GeneratedResource?.map((i) => i?.fileStoreid);
+    const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
 
     if (response?.[0]) {
       downloadExcelWithCustomName({
@@ -112,15 +112,13 @@ const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
 // function to generate action buttons
 const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp) => {
   const actions = {};
-  // const userResource =
-  //   Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
-  //     ? rowData.resources.find((resource) => resource.type === "user")
-  //     : null;
-       const campaignId = rowData?.id;
-      const hierarchyType = rowData?.hierarchyType;
+  const userResource =
+    Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
+      ? rowData.resources.find((resource) => resource.type === "user")
+      : null;
 
   // Always show download if userCreds exist
-  if (rowData?.status == "created") {
+  if (userResource && rowData?.status == "created") {
     actions.downloadApp = {
       label: "DOWNLOAD_APP",
       onClick: () => setShowQRPopUp(true),
@@ -130,7 +128,7 @@ const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowC
     };
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
-      onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
+      onClick: () => handleDownloadUserCreds(userResource),
       icon: "FileDownload",
       size: "medium",
       variation: "secondary",

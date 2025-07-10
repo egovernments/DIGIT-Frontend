@@ -80,7 +80,7 @@ const DataUploadSummary = (props) => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id") || props?.props?.sessionData?.campaignData?.id;
+  const id = searchParams.get("id");
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
@@ -109,8 +109,7 @@ const DataUploadSummary = (props) => {
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     history.push(newUrl);
   };
-
-  const campaignName = props?.props?.sessionData?.campaignData?.campaignName;
+  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
 
   useEffect(() => {
     setKey(currentKey);
@@ -222,7 +221,7 @@ const DataUploadSummary = (props) => {
                   type: "COMPONENT",
                   component: "CampaignDocumentsPreview",
                   props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
