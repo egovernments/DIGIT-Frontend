@@ -89,8 +89,8 @@ const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
       params: {
         tenantId: tenantId,
         campaignId: campaignId,
-        type : "userCredential",
-        hierarchyType
+        type: "userCredential",
+        hierarchyType,
       },
     });
 
@@ -110,14 +110,14 @@ const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp , handleRetryLogic) => {
+const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp, handleRetryLogic) => {
   const actions = {};
   // const userResource =
   //   Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
   //     ? rowData.resources.find((resource) => resource.type === "user")
   //     : null;
-       const campaignId = rowData?.id;
-      const hierarchyType = rowData?.hierarchyType;
+  const campaignId = rowData?.id;
+  const hierarchyType = rowData?.hierarchyType;
 
   // Always show download if userCreds exist
   if (rowData?.status == "created") {
@@ -159,7 +159,7 @@ const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowC
     };
   }
 
-  if (currentTab === "CAMPAIGN_FAILED" && rowData?.startDate > Date.now() ) {
+  if (currentTab === "CAMPAIGN_FAILED" && rowData?.startDate > Date.now()) {
     actions.downloadUserCreds = {
       label: "RETRY",
       size: "medium",
@@ -214,25 +214,26 @@ const getActionTags = (rowData) => {
 };
 
 const reqUpdate = {
-    url: `/project-factory/v1/project-type/update`,
-    params: {},
-    body: {},
-    config: {
-      enabled: false,
-    },
-  };
+  url: `/project-factory/v1/project-type/update`,
+  params: {},
+  body: {},
+  config: {
+    enabled: false,
+  },
+};
 
 const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const history = useHistory();
-   const [showRetryPopUp, setShowRetryPopUp] = useState(false);
+  const [showRetryPopUp, setShowRetryPopUp] = useState(false);
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
   const handleRetryLogic = async (rowData) => {
-
     const updatedRowData = {
-    ...rowData,
-    action: "CREATE", // override action
-  };
+      CampaignDetails: {
+        ...rowData,
+        action: "create", // override action
+      },
+    };
 
     await mutationUpdate.mutate(
       {
@@ -259,7 +260,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
   const [showQRPopUp, setShowQRPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp , handleRetryLogic);
+  const actionButtons = getActionButtons(rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp, handleRetryLogic);
   const actionTags = getActionTags(rowData);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
