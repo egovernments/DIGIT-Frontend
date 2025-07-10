@@ -6,7 +6,7 @@ RUN apk add --no-cache \
     python3 \
     make \
     g++ \
-    && ln -sf python3 /usr/bin/python \
+    && ln -sf python3 /usr/bin/python
 
 ARG WORK_DIR
 WORKDIR /app
