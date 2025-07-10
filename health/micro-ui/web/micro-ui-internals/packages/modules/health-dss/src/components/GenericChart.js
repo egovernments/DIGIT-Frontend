@@ -116,7 +116,7 @@ const GenericChart = ({
           <span className="digit-table-search-wrapper">
             {showSearch && (
               <div className="digit-field">
-                <TextInput className={"digit-generic-chart-search-field"} placeholder={t("DSS_SEARCHH")} onChange={onChange} type={"search"} />
+                <TextInput className={"digit-generic-chart-search-field"} placeholder={t("DSS_SEARCH")} onChange={onChange} type={"search"} />
               </div>
             )}
             {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} />}
