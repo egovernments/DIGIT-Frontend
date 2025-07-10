@@ -41,8 +41,8 @@ const getInitialRange = () => {
   const location = useLocation();
   const campaignData = Digit.SessionStorage.get("campaignSelected");
   const projectType = getProjectTypeFromSession();
-  const province = new URLSearchParams(location.search).get("province");
-  const district = new URLSearchParams(location.search).get("district");
+  // const province = new URLSearchParams(location.search).get("province");
+  // const district = new URLSearchParams(location.search).get("district");
   const boundaryType = new URLSearchParams(location.search).get("boundaryType");
   const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
   if (!Digit.SessionStorage.get(key)) {
@@ -184,8 +184,8 @@ const L2Main = ({}) => {
         tenantId,
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
-        province: province || boundaries?.province?.[0] || null,
-        district: district || boundaries?.district?.[0] || null,
+        // province: province || boundaries?.province?.[0] || null,
+        // district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId
    
       },
