@@ -13,7 +13,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   const microplanName = searchParams.get("microName");
   const source = searchParams.get("source");
   const [name, setName] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || "");
-  useEffect(() => {
+  useEffect(() => { 
     if(source === "microplan"){
           const sessionName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName.replace(/&/g, "and");
           if(sessionName === microplanName){
@@ -94,7 +94,7 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
   return (
     <>
       <div className="container">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")}  subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -106,12 +106,12 @@ const CampaignName = ({ onSelect, formData, control, formState, ...props }) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
       
       <div className="card-container2">
         <Card className = "setup-campaign-card">
-      <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</HeaderComponent>
-      <p className="name-description">{t(`HCM_CAMPAIGN_NAME_DESCRIPTION`)}</p>
+        <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_NAME_HEADER`)}</HeaderComponent>
+        <p className="name-description">{t(`HCM_CAMPAIGN_NAME_DESCRIPTION`)}</p>
       <LabelFieldPair className="name-container-label" style={{ display: "flex" }}>
         <div className="name-container">
           <span>{`${t("HCM_CAMPAIGN_NAME")}`}</span>

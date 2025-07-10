@@ -191,7 +191,7 @@ const ViewChecklist = () => {
     return (
         <div style={{marginBottom: "2rem"}}>
              <TagComponent campaignName={campaignName} />  
-            <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"-1.2rem" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop:"1rem" }}>
                 <div>
                     <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed"}}>
                         {t("VIEW_CHECKLIST")}
@@ -238,9 +238,6 @@ const ViewChecklist = () => {
                     ]}
                     sortFooterChildren={true}
                 >
-                    {/* <PreviewComponent
-              questionsArray={previewData}></PreviewComponent> */}
-
                     <MobileChecklist questions={previewData} campaignName={campaignName} checklistRole={t(`${roleLocal}`)} typeOfChecklist={t(`${checklistTypeLocal}`)}></MobileChecklist>
                 </PopUp>
             )}
@@ -267,8 +264,6 @@ const ViewChecklist = () => {
                       type={"text"}
                       name={t("CHECKLIST_HELP_TEXT")}
                       value={helpText}
-                      // value={`${clTranslated} ${rlTranslated}`}
-                    //   onChange={(event) => setHelpText(event.target.value)}
                       placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
                     />
                   </div>
@@ -286,12 +281,8 @@ const ViewChecklist = () => {
                 fieldStyle={{ marginRight: 0 }}
                 noBreakLine={true}
                 isDisabled={updateDisable}
-                // cardClassName={"page-padding-fix"}
-                // onFormValueChange={onFormValueChange}
                 actionClassName={"checklistCreate"}
-                // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
                 noCardStyle={true}
-            // showWrapperContainers={false}
             />}
 
         </div>

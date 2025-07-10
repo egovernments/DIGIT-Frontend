@@ -80,7 +80,7 @@ const DataUploadSummary = (props) => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id");
+  const id = searchParams.get("id") || props?.props?.sessionData?.campaignData?.id;
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
@@ -109,7 +109,8 @@ const DataUploadSummary = (props) => {
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
     history.push(newUrl);
   };
-  const campaignName = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_NAME?.campaignName;
+
+  const campaignName = props?.props?.sessionData?.campaignData?.campaignName;
 
   useEffect(() => {
     setKey(currentKey);
@@ -221,7 +222,7 @@ const DataUploadSummary = (props) => {
                   type: "COMPONENT",
                   component: "CampaignDocumentsPreview",
                   props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
@@ -290,7 +291,7 @@ const DataUploadSummary = (props) => {
     <>
       {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
       <div className="container-full">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -302,11 +303,11 @@ const DataUploadSummary = (props) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
 
         <div className="card-container-delivery">
         <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div style={{ display: "flex", justifyContent: "space-between" , marginTop:"1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DATA_UPLOAD_SUMMARY")}</HeaderComponent>
             {/* {userCredential && (
           <Button

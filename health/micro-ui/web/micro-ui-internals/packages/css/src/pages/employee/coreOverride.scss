@@ -105,13 +105,10 @@ header {
   @extend .typography.text-heading-xl;
   margin-bottom: 0rem;
 }
-.digit-button-primary {
-  background-color: theme(digitv2.lightTheme.primary) !important;
-}
 .digit-button-secondary {
   .icon-label-container {
     h2 {
-      color: theme(digitv2.lightTheme.primary) !important;
+      color: theme(digitv2.lightTheme.primary);
     }
   }
 }
@@ -202,10 +199,36 @@ header {
 .action-bar-wrap .actionBarClass {
   z-index: 10;
 }
-.campaign-flow-stepper{
+.campaign-flow-stepper {
   margin-left: -5.625rem;
   margin-right: -6.875rem;
 }
-.wbh-header-container{
+.wbh-header-container {
   margin: 0rem;
+}
+.digit-description {
+  display: contents !important;
+}
+.create-campaign-disable {
+  opacity: 0.5;
+  background: #c5c5c5 !important;
+}
+.date-field-container {
+  .digit-new-date-format {
+    z-index: 0;
+  }
+}
+
+.employee-app-wrapper {
+  &.digit-home-app-wrapper {
+    .ground-container {
+      &.digit-home-ground {
+        margin-left: 0.75rem;
+      }
+    }
+  }
+}
+
+.digit-landing-page-card {
+  border-radius: 0.25rem;
 }

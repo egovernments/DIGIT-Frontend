@@ -102,6 +102,8 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
+   const campaignNumber = searchParams.get("campaignNumber");
+   const campaignId = searchParams.get("id");
   const { state } = useLocation();
   const historyState = window.history.state;
   const [selectedBoundaries, setSelectedBoundaries] = useState(null);
@@ -206,13 +208,35 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
     }
   }, [hierarchyDefinition]);
 
+
+  const reqCriteriaProject = {
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        ids: [campaignId],
+      },
+    },
+    config: {
+      enabled: !!campaignId,
+      select: (data) => {
+        return data?.CampaignDetails?.[0];
+      },
+    },
+  };
+
+  const { isLoading: campaignDataLoading, data: campaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaProject);
+
   useEffect(() => {
     if (state?.data) {
       setSelectedBoundaries(state?.data?.boundaries);
     } else if (historyState?.data) {
       setSelectedBoundaries(historyState?.data?.boundaries);
     }
-  }, [state?.data, historyState?.data]);
+    else{
+      setSelectedBoundaries(campaignData?.boundaries);
+    }
+  }, [state?.data, historyState?.data ,campaignData]);
 
   useEffect(() => {
     if (selectedLevel) {
@@ -248,10 +272,10 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
   };
   return (
     <>
-      <Card className={"campaign-update-container"}>
+      <Card className={"campaign-update-container"} style = {{marginTop: "1rem"}}>
         <Header className="header" styles={{ marginBottom: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_HEADER`)}</Header>
         <div className={"search-field-container"}>
-          <p className="field-description" style={{ marginTop: "0rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
+          <p className="field-description" style={{ marginTop: "0rem" , marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_DATES_CHANGE_BOUNDARY_SUB_TEXT`)}</p>
           <div className="label-field-grid">
             <LabelFieldPair className="update-date-labelField">
               <div className="update-label">

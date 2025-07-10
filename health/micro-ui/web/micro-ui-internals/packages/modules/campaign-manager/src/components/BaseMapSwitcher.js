@@ -2,7 +2,7 @@ import "leaflet/dist/leaflet.css";
 import React from "react";
 import * as DigitSvgs from "@egovernments/digit-ui-svg-components";
 
-
+//TODO delete this file and remove its dependency @bhavya
 export const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
   const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(0, zoom));
   const lat = Math.floor(

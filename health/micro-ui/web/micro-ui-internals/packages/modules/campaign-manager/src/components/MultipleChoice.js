@@ -201,7 +201,7 @@ export const RadioButtonOption = ({
             className="customradiobutton"
             // disabled={dis}
             onClick={(e) => e.preventDefault()} // Prevents interaction
-            style={{ marginTop: "0.7rem" }}
+            style={{ marginTop: "0.7rem" , marginRight: "1rem" }}
           />
           <input
             disabled={dis}
