@@ -1,4 +1,4 @@
-FROM node:14-alpine3.16 AS build
+FROM node:14-alpine3.14 AS build
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
 # Install dependencies required for node-gyp (Python, make, g++, etc.)
