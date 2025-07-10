@@ -214,6 +214,6 @@ jobs:
 
       - name: Add summary to GitHub Actions
         run: |
-          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## Build Summary - ${{ github.event.inputs.pipeline_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- Image: egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
           echo "- Platform: amd64, arm64" >> $GITHUB_STEP_SUMMARY
