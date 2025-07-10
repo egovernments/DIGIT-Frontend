@@ -52,7 +52,7 @@ jobs:
         run: |
           PIPELINE_NAME="${{ github.event.inputs.pipeline_name }}"
           DEFAULT_DOCKERFILE="Dockerfile"
-          echo "## Build Summary - $PIPELINE_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "### Pipeline Name - $PIPELINE_NAME" >> $GITHUB_STEP_SUMMARY
 
           # Find exactly one matching config block
           MATCHING_CONFIGS=$(yq eval -o=json '.config[] | select(.name | test("/'"$PIPELINE_NAME"'$"))' build/build-config.yml)
@@ -80,6 +80,12 @@ jobs:
           echo "work_dir=$SERVICE_WORK_DIR" >> $GITHUB_OUTPUT
           echo "image_name=$SERVICE_IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "dockerfile=$SERVICE_DOCKERFILE" >> $GITHUB_OUTPUT
+          
+          # Put summary for the step
+          echo "#### Application Config Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Application Work Directory - $SERVICE_WORK_DIR" >> $GITHUB_STEP_SUMMARY
+          echo "Image Name - $SERVICE_IMAGE_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "Dockerfile Path - $SERVICE_DOCKERFILE" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate the Next Tag
         id: tag
@@ -119,6 +125,7 @@ jobs:
 
           echo "tag=$NEXT_TAG" >> "$GITHUB_OUTPUT"
           echo "NEXT_TAG=$NEXT_TAG" >> "$GITHUB_ENV"
+          echo "tag - $NEXT_TAG" >> $GITHUB_STEP_SUMMARY
 
   build-matrix:
     needs: [resolve-config]
