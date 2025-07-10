@@ -81,20 +81,20 @@ const getTagElements = (rowData) => {
 };
 
 // function to handle download user creds
-const handleDownloadUserCreds = async (data) => {
+const handleDownloadUserCreds = async (campaignId, hierarchyType) => {
   try {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const responseTemp = await Digit.CustomService.getResponse({
-      url: `/project-factory/v1/data/_search`,
-      body: {
-        SearchCriteria: {
-          tenantId: tenantId,
-          id: [data?.createResourceId],
-        },
+      url: `/project-factory/v1/data/_download`,
+      params: {
+        tenantId: tenantId,
+        campaignId: campaignId,
+        type : "userCredential",
+        hierarchyType
       },
     });
 
-    const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+    const response = responseTemp?.GeneratedResource?.map((i) => i?.fileStoreid);
 
     if (response?.[0]) {
       downloadExcelWithCustomName({
@@ -110,15 +110,17 @@ const handleDownloadUserCreds = async (data) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp) => {
+const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp , handleRetryLogic) => {
   const actions = {};
-  const userResource =
-    Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
-      ? rowData.resources.find((resource) => resource.type === "user")
-      : null;
+  // const userResource =
+  //   Array.isArray(rowData?.resources) && rowData.resources.length > 0 && rowData.resources.some((resource) => resource.type === "user")
+  //     ? rowData.resources.find((resource) => resource.type === "user")
+  //     : null;
+       const campaignId = rowData?.id;
+      const hierarchyType = rowData?.hierarchyType;
 
   // Always show download if userCreds exist
-  if (userResource && rowData?.status == "created") {
+  if (rowData?.status == "created") {
     actions.downloadApp = {
       label: "DOWNLOAD_APP",
       onClick: () => setShowQRPopUp(true),
@@ -128,7 +130,7 @@ const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowC
     };
     actions.downloadUserCreds = {
       label: "DOWNLOAD_USER_CREDENTIALS",
-      onClick: () => handleDownloadUserCreds(userResource),
+      onClick: () => handleDownloadUserCreds(campaignId, hierarchyType),
       icon: "FileDownload",
       size: "medium",
       variation: "secondary",
@@ -154,6 +156,16 @@ const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowC
       onClick: () => setShowErrorPopUp(true),
       icon: "",
       variation: "primary",
+    };
+  }
+
+  if (currentTab === "CAMPAIGN_FAILED" && rowData?.startDate > Date.now() ) {
+    actions.downloadUserCreds = {
+      label: "RETRY",
+      size: "medium",
+      onClick: () => handleRetryLogic(rowData),
+      icon: "",
+      variation: "secondary",
     };
   }
 
@@ -184,26 +196,62 @@ const getActionTags = (rowData) => {
       label: "GENERATING_USER_CRED",
       loader: true,
       animationStyle: {
-        width : "2rem",
-        height : "2rem"
-      }
+        width: "2rem",
+        height: "2rem",
+      },
     };
     actions.generateAPK = {
       label: "GENERATING_APK",
       loader: true,
       animationStyle: {
-        width : "2rem",
-        height : "2rem"
-      }
+        width: "2rem",
+        height: "2rem",
+      },
     };
   }
 
   return actions;
 };
 
+const reqUpdate = {
+    url: `/project-factory/v1/project-type/update`,
+    params: {},
+    body: {},
+    config: {
+      enabled: false,
+    },
+  };
+
 const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const history = useHistory();
+   const [showRetryPopUp, setShowRetryPopUp] = useState(false);
+  const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
+  const handleRetryLogic = async (rowData) => {
+
+    const updatedRowData = {
+    ...rowData,
+    action: "CREATE", // override action
+  };
+
+    await mutationUpdate.mutate(
+      {
+        url: `/project-factory/v1/project-type/update`,
+        body: updatedRowData,
+        config: { enable: true },
+      },
+      {
+        onSuccess: async (result) => {
+          setShowRetryPopUp(true);
+        },
+        onError: () => {
+          setShowRetryPopUp(true);
+          // setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          // setLoader(false);
+        },
+      }
+    );
+  };
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
   const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
@@ -211,7 +259,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
   const [showQRPopUp, setShowQRPopUp] = useState(false);
-  const actionButtons = getActionButtons(rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp);
+  const actionButtons = getActionButtons(rowData, tabData, history, setShowErrorPopUp, setShowCreatingPopUp, setShowQRPopUp , handleRetryLogic);
   const actionTags = getActionTags(rowData);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
@@ -270,11 +318,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
               value={{}}
               renderCustomContent={({ status }) => {
                 if (rowData?.status === "created") {
-                  return <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={true}/>;
+                  return <Tag label={t("CAMPAIGN_CREATED")} type="success" stroke={true} />;
                 } else if (rowData?.status === "creating") {
                   return <Tag label={t("CAMPAIGN_CREATION_INPROGRESS")} type="warning" showIcon={false} stroke={true} />;
                 } else {
-                   return <Tag label= {t(rowData?.status)} showIcon={false} stroke={true}/>;
+                  return <Tag label={t(rowData?.status)} showIcon={false} stroke={true} />;
                 }
               }}
             />
@@ -297,48 +345,48 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         {cloneCampaign && (
           <CloneCampaignWrapper campaignId={rowData?.id} campaignName={rowData?.campaignName} setCampaignCopying={setCloneCampaign} />
         )}
-        <div style={{display: "flex" , alignItems: "center"}}>
-        {actionTags && Object.keys(actionTags).length > 0 && (
-          <div className="digit-results-card-buttons-internal">
-            {Object.entries(actionTags)?.map(([key, tag]) => (
-              <Tag
-                key={key}
-                className={tag.className || "tag-class"}
-                iconClassName={tag.iconClassName || "tag-icon-class"}
-                icon={tag.icon || ""}
-                iconColor={tag.iconColor || ""}
-                label={t(tag.label)}
-                showIcon={tag.showBottom}
-                type={tag.type}
-                loader={tag.loader}
-                style={tag.style}
-                stroke={tag.stroke}
-                animationStyles = {tag.animationStyle}
-              />
-            ))}
-          </div>
-        )}
-        {actionButtons && Object.keys(actionButtons).length > 0 && (
-          <div className="digit-results-card-buttons-internal">
-            {Object.entries(actionButtons)?.map(([key, btn]) => (
-              <Button
-                key={key}
-                className={btn.className || "custom-class"}
-                icon={btn.icon || ""}
-                iconFill={btn.iconFill || ""}
-                label={t(btn.label)}
-                onClick={btn.onClick}
-                options={btn.options || []}
-                optionsKey={btn.optionsKey || ""}
-                showBottom={btn.showBottom}
-                variation={btn.variation}
-                size={btn.size}
-                title={t(btn.title) || ""}
-                style={btn.style}
-              />
-            ))}
-          </div>
-        )}
+        <div style={{ display: "flex", alignItems: "center" }}>
+          {actionTags && Object.keys(actionTags).length > 0 && (
+            <div className="digit-results-card-buttons-internal">
+              {Object.entries(actionTags)?.map(([key, tag]) => (
+                <Tag
+                  key={key}
+                  className={tag.className || "tag-class"}
+                  iconClassName={tag.iconClassName || "tag-icon-class"}
+                  icon={tag.icon || ""}
+                  iconColor={tag.iconColor || ""}
+                  label={t(tag.label)}
+                  showIcon={tag.showBottom}
+                  type={tag.type}
+                  loader={tag.loader}
+                  style={tag.style}
+                  stroke={tag.stroke}
+                  animationStyles={tag.animationStyle}
+                />
+              ))}
+            </div>
+          )}
+          {actionButtons && Object.keys(actionButtons).length > 0 && (
+            <div className="digit-results-card-buttons-internal">
+              {Object.entries(actionButtons)?.map(([key, btn]) => (
+                <Button
+                  key={key}
+                  className={btn.className || "custom-class"}
+                  icon={btn.icon || ""}
+                  iconFill={btn.iconFill || ""}
+                  label={t(btn.label)}
+                  onClick={btn.onClick}
+                  options={btn.options || []}
+                  optionsKey={btn.optionsKey || ""}
+                  showBottom={btn.showBottom}
+                  variation={btn.variation}
+                  size={btn.size}
+                  title={t(btn.title) || ""}
+                  style={btn.style}
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
       {showErrorPopUp && (
@@ -355,6 +403,24 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
           }}
           onClose={() => {
             setShowErrorPopUp(false);
+          }}
+          footerChildren={[]}
+        ></PopUp>
+      )}
+      {showRetryPopUp && (
+        <PopUp
+          type={"default"}
+          heading={t("ES_CAMPAIGN_RETRY")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("RETRY_IN_PROGRESS")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowRetryPopUp(false);
+          }}
+          onClose={() => {
+            setShowRetryPopUp(false);
           }}
           footerChildren={[]}
         ></PopUp>

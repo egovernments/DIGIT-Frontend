@@ -26,6 +26,7 @@ import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
 import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
 import useUpdateAppConfig from "./useUpdateAppConfig";
 import useUpdateAppConfigForFeatures from "./useUpdateAppConfigForFeatures";
+import { useProcessData } from "./useProcessData";
 
 import useCloneCampaign from "./useCloneCampaign";
 
@@ -65,6 +66,7 @@ const campaign = {
   useUpsertSchemaConfig,
   useUpdateAppConfigForFeatures,
   useCloneCampaign,
+  useProcessData
 };
 
 const Hooks = {
