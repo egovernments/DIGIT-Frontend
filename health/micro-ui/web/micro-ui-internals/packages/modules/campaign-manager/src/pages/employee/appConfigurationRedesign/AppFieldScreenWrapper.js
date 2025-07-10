@@ -1,25 +1,12 @@
-import React, { Fragment, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useTranslation } from "react-i18next";
-import {
-  Button,
-  Card,
-  CardHeader,
-  Divider,
-  Stepper,
-  Tab,
-  ActionBar,
-  LabelFieldPair,
-  TextInput,
-  Tooltip,
-  TooltipWrapper,
-} from "@egovernments/digit-ui-components";
+import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import AppFieldComposer from "./AppFieldComposer";
 import _ from "lodash";
 import { useCustomT } from "./useCustomT";
 import DraggableField from "./DraggableField";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
-import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 
 function AppFieldScreenWrapper() {
@@ -32,10 +19,7 @@ function AppFieldScreenWrapper() {
 
   const currentCard = useMemo(() => {
     return state?.screenData?.[0];
-  }, [
-    state?.screenData,
-    // , numberTabs, stepper, currentStep
-  ]);
+  }, [state?.screenData]);
 
   const moveField = useCallback(
     (field, targetedField, fromIndex, toIndex, currentCard, cardIndex) => {
@@ -157,14 +141,6 @@ function AppFieldScreenWrapper() {
                     currentScreen: currentCard,
                     currentCard: card[index],
                   });
-                  // dispatch({
-                  //   type: "ADD_FIELD",
-                  //   payload: {
-                  //     currentScreen: currentCard,
-                  //     currentCard: card[index],
-                  //     isPopup: true,
-                  //   },
-                  // });
                   return;
                 }}
               />
