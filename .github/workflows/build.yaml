@@ -1,4 +1,5 @@
 name: Build Pipeline
+run-name: Build ${{ github.event.inputs.pipeline_name }}
 
 on:
   workflow_dispatch:
@@ -30,6 +31,7 @@ env:
 
 jobs:
   resolve-config:
+    name: Resolve ${{ github.event.inputs.pipeline_name }} config
     runs-on: ubuntu-latest
     outputs:
       work_dir:    ${{ steps.setenv.outputs.work_dir }}
@@ -128,6 +130,7 @@ jobs:
           echo "tag - $NEXT_TAG" >> $GITHUB_STEP_SUMMARY
 
   build-matrix:
+    name: Build application ${{ matrix.arch }}
     needs: [resolve-config]
     strategy:
       matrix:
@@ -199,6 +202,7 @@ jobs:
           echo "digest=$digest" >> $GITHUB_OUTPUT
 
   create-manifest:
+    name: Create and Push Manifest
     needs: [build-matrix, resolve-config]
     runs-on: ubuntu-latest
     steps:
