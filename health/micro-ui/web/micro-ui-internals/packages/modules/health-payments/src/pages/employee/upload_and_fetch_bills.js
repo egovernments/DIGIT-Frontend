@@ -122,7 +122,7 @@ const UploadAndFetchBillsCard = () => {
         type={"button"}
         size={"large"}
         variation={"secondary"}
-        label={t("CANCEL")}
+        label={t("HCM_AM_CANCEL")}
         onClick={() => 
           closePopUp()  
         }
@@ -132,7 +132,7 @@ const UploadAndFetchBillsCard = () => {
         type={"button"}
         size={"large"}
         variation={"primary"}
-        label={t("CONFIRM")}
+        label={t("HCM_AM_NEXT_LABEL")}
         onClick={() => 
           handleConfirm()
           // closePopUp()

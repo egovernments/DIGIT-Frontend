@@ -49,7 +49,7 @@ const PaymentsCard = () => {
 
   const propsForModuleCard = {
     Icon: "UpdateExpense",
-    moduleName: "PAYMENTS", //TODO: add localization key
+    moduleName: t("HCM_AM_PAYMENTS"),
     kpis: [],
     links: links,
     className: "microplan-employee-module-card",

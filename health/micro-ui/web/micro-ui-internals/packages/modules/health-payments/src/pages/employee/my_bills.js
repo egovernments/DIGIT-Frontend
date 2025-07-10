@@ -216,7 +216,7 @@ const MyBills = (props) => {
                         <React.Fragment>
                             {selectedCount > 0 && (
                                 <div style={{ margin: '1rem 0', fontWeight: 'bold', color: '#0B4B66' }}>
-                                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("$")} {totalAmount}
+                                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS")} {totalAmount}
                                 </div>
                             )}
                             <MyBillsTable
