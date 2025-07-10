@@ -1,22 +1,6 @@
-import {
-  Button,
-  Divider,
-  Dropdown,
-  FieldV1,
-  LabelFieldPair,
-  MultiSelectDropdown,
-  PopUp,
-  RadioButtons,
-  Switch,
-  Tag,
-  TextArea,
-  TextBlock,
-  TextInput,
-} from "@egovernments/digit-ui-components";
+import { Divider, FieldV1, MultiSelectDropdown, Switch, Tag, TextBlock } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PRIMARY_COLOR } from "../../../utils";
-import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -81,8 +65,8 @@ const whenToShow = (panelItem, drawerState) => {
     panelItem?.label === "isMdms"
       ? true
       : drawerState?.[panelItem?.bindTo] !== undefined
-        ? drawerState?.[panelItem?.bindTo]
-        : drawerState?.[panelItem?.label];
+      ? drawerState?.[panelItem?.bindTo]
+      : drawerState?.[panelItem?.label];
   if (!panelItem?.showFieldOnToggle || !anyCheck) {
     return false;
   }
@@ -166,24 +150,24 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
           {/* //Render Conditional Fields */}
           {Array.isArray(shouldShow) && shouldShow.length > 0
             ? shouldShow
-              .filter(
-                (cField) =>
-                  cField.condition === undefined || cField.condition === Boolean(drawerState[panelItem.bindTo ? panelItem.bindTo : panelItem.label])
-              )
-              .map((cField, cIndex) => (
-                <RenderConditionalField
-                  key={cIndex}
-                  cField={cField}
-                  cIndex={cIndex}
-                  cArray={shouldShow}
-                  setDrawerState={setDrawerState}
-                  updateLocalization={updateLocalization}
-                  state={state}
-                  drawerState={drawerState}
-                  AppScreenLocalisationConfig={AppScreenLocalisationConfig}
-                  disabled={drawerState?.hidden}
-                />
-              ))
+                .filter(
+                  (cField) =>
+                    cField.condition === undefined || cField.condition === Boolean(drawerState[panelItem.bindTo ? panelItem.bindTo : panelItem.label])
+                )
+                .map((cField, cIndex) => (
+                  <RenderConditionalField
+                    key={cIndex}
+                    cField={cField}
+                    cIndex={cIndex}
+                    cArray={shouldShow}
+                    setDrawerState={setDrawerState}
+                    updateLocalization={updateLocalization}
+                    state={state}
+                    drawerState={drawerState}
+                    AppScreenLocalisationConfig={AppScreenLocalisationConfig}
+                    disabled={drawerState?.hidden}
+                  />
+                ))
             : null}
         </div>
       );
@@ -210,8 +194,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               isLocalisable
                 ? useCustomT(drawerState?.[panelItem?.bindTo])
                 : drawerState?.[panelItem?.bindTo] === true
-                  ? ""
-                  : drawerState?.[panelItem?.bindTo]
+                ? ""
+                : drawerState?.[panelItem?.bindTo]
             }
             config={{
               step: "",
@@ -222,8 +206,9 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                 updateLocalization(
                   drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
                     ? drawerState?.[panelItem?.bindTo]
-                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${drawerState?.jsonPath || drawerState?.id
-                    }`,
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
+                        drawerState?.jsonPath || drawerState?.id
+                      }`,
                   Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                   value
                 );
@@ -232,8 +217,9 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                   [panelItem?.bindTo]:
                     drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
                       ? drawerState?.[panelItem?.bindTo]
-                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${drawerState?.jsonPath || drawerState?.id
-                      }`,
+                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
+                          drawerState?.jsonPath || drawerState?.id
+                        }`,
                 }));
                 return;
               } else {
@@ -246,7 +232,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
             }}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
             disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
-          // charCount={field?.charCount}
+            // charCount={field?.charCount}
           />
         </div>
       );
@@ -343,8 +329,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               clearLabel={t("CLEAR_ALL")}
               config={{ isDropdownWithChip: panelItem?.fieldType === "Table" ? false : true }}
               selected={drawerState?.[panelItem?.bindTo] || []}
-              onSelect={(selectedArray) => {
-              }}
+              onSelect={(selectedArray) => {}}
               onClose={(selectedArray) => {
                 const selected = selectedArray?.map((arr) => arr?.[1]) || [];
                 setDrawerState((prev) => ({
