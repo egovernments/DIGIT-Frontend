@@ -411,7 +411,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
           payloadData.resources = temp;
-          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
+          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
             key: currentKey,
@@ -429,7 +429,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               DeliveryConfig,
-              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
+              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType,
               "draft"
             );
             payloadData.deliveryRules = temp?.[0];
@@ -487,7 +487,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
             totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
           payloadData.resources = temp;
-          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
+          payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
           payloadData.additionalDetails = {
             beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType,
             key: currentKey,
@@ -505,7 +505,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
               totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule,
               totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure,
               DeliveryConfig,
-              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code,
+              totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType,
               "draft"
             );
             payloadData.deliveryRules = [temp?.[0]];
