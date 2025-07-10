@@ -295,7 +295,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     return <div className="table-column-header">{t(code)}</div>;
   };
 
-  const getDrilldownCharts = (value, filterKey, label, filters = []) => {
+  const getDrilldownCharts = useCallback((value, filterKey, label, filters = []) => {
     if (response?.responseData?.drillDownChartId && response?.responseData?.drillDownChartId !== "none") {
       let currentValue = value;
       if (filterKey === "tenantId") {
@@ -324,7 +324,8 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       setFilterStack([...filterStack, newStack]);
       setChartKey(response?.responseData?.drillDownChartId);
     }
-  };
+}, [response, dssTenants, filterStack, setFilterStack, setChartKey]);
+
 
   useEffect(() => {
     if (response?.responseData?.data?.length === 0 && !["none", ""].includes(response?.responseData?.drillDownChartId)) {

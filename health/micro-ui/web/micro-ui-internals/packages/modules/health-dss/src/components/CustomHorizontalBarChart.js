@@ -418,6 +418,8 @@ const CustomHorizontalBarChart = ({
   };
   let showOnDownload = downloadChartsId === response?.responseData?.visualizationCode ? true : false;
   const bars = response?.responseData?.data?.map((bar) => bar?.headerName);
+
+  console.log("999 data", data);
   return (
     <Fragment>
       {/* {filterStack?.length > 1 && (
