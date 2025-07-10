@@ -146,7 +146,7 @@ const TopBar = ({
               )}
             </div>
             <div className="left">{showLanguageChange && <ChangeLanguage dropdown={true} />}</div>
-            {!fromSandbox && userDetails?.access_token && (
+            {fromSandbox !== "true" && userDetails?.access_token && (
               <div className="left">
                 <Dropdown
                   option={userOptions}
