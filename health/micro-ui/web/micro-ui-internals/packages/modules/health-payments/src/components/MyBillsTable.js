@@ -138,13 +138,21 @@ const MyBillsTable = ({ ...props }) => {
                             onOptionSelect={(value) => {
                                 if (value.code === "HCM_AM_PDF") {
                                     if (reportDetails?.pdfReportId) {
-                                        downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" })
+                                        try{
+                                            downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" })
+                                        }catch{
+                                            setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
+                                        }
                                     } else {
                                         setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
                                     }
                                 } else if (value.code === "HCM_AM_EXCEL") {
                                     if (reportDetails?.excelReportId) {
+                                        try{
                                         downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
+                                        }catch{
+                                            setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
+                                        }
                                     } else {
                                         setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
                                     }

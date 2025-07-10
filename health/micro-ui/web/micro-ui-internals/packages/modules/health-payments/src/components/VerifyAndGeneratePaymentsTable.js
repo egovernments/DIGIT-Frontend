@@ -513,7 +513,11 @@ const getAvailableActions = (status) => {
                                 }
                                 else if (value.code === "HCM_AM_DOWNLOAD_REPORT") {
                                     if (reportDetails?.excelReportId) {
-                                        downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
+                                        try{
+                                            downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
+                                        }catch{
+                                            setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
+                                        }
                                     } else {
                                         setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
                                     }
