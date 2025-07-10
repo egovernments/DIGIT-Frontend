@@ -20,7 +20,7 @@
     "@egovernments/digit-ui-module-workbench": "1.0.14",
     "@egovernments/digit-ui-module-hcmworkbench":"0.1.2",
     "@egovernments/digit-ui-module-utilities": "1.0.11",
-    "@egovernments/digit-ui-module-campaign-manager": "0.3.1",
+    "@egovernments/digit-ui-module-campaign-manager": "0.4.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "jsonpath": "^1.1.1",
