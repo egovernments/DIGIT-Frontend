@@ -177,8 +177,10 @@ const MDMSEdit = ({ ...props }) => {
           closeToast();
         },
         onSuccess: () => {
-          setShowToast({ label: t("WBH_SUCCESS_UPD_MDMS_MSG") });
-          gotoView();
+          setShowToast({ label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${transformedFormData?.name}`, type: "success" });
+           setTimeout(() => {
+            gotoView();
+          }, 3000);
         },
       }
     );
