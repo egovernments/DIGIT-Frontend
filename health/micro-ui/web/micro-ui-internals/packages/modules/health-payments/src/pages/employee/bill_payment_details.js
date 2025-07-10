@@ -163,7 +163,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         (ind) => ind.id === billDetail?.payee?.identifier
       );
       const rateObj = workerRatesData?.rates?.find(
-        (rate) => rate?.skillCode === individual?.userDetails?.roles?.[0]?.code
+        (rate) => rate?.skillCode === individual?.userDetails?.roles?.[0]?.code //TODO: Confirm if user will have one role only, so that wage can be fetched for that role
       );
 
       const rateBreakup = rateObj?.rateBreakup || {};
@@ -478,11 +478,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     transitionTime: 5000,
                   });
                   refetchBill();
-                  // setInProgressBills(prev => ({ ...prev, [bill?.id]: false }));
-                  // onTaskDone?.(); //  trigger bill search in parent
                 } else if (status === "IN_PROGRESS") {
-                  // setInProgressBills(prev => ({ ...prev, [bill?.id]: true }));
-                  //  setIsLoading(true); // start loader
                   setIsSelectionDisabled(true);
                   //TODO UPDATE TOAST MSG
                   setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
@@ -529,72 +525,55 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       });
     }
   };
+  
+   const pollTaskUntilDone = async (billId, type) => {
+    console.log("Polling...", billId);
 
-  const pollingTimerRef = useRef(null);
-  const isPollingRef = useRef(false);
-  
-  const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => {
-    if (isPollingRef.current) {
-      console.log("Polling already in progress for", billId);
-      return;
-    }
-  
-    isPollingRef.current = true;
-    console.log("Polling started for", billId);
-  
     const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
-    let statusResponse = initialStatusResponse;
-  
-    if (!statusResponse) {
-      try {
-        statusResponse = await taskStatusAPI.mutateAsync({
-          body: { task: { billId, type } },
+
+    try {
+      const statusResponse = await getTaskStatusMutation.mutateAsync({
+        body: {
+          task: { billId: billId, type: type },
+        },
+      });
+      console.log("Status Response:", statusResponse);
+
+      const status = statusResponse?.task?.status;
+      const res_type = statusResponse?.task?.type;
+
+      if (status === "IN_PROGRESS" && res_type === type) {
+        setIsSelectionDisabled(true);
+        setTransferPollTimers(prev => {
+          if (prev[billId]) clearTimeout(prev[billId]);
+          const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
+          return { ...prev, [billId]: timer };
         });
-      } catch (err) {
-        console.error("Polling failed for billId", billId, err);
-        isPollingRef.current = false;
-        return;
+      } else {
+        setIsSelectionDisabled(false);
+        setTransferPollTimers(prev => {
+          if (prev[billId]) clearTimeout(prev[billId]);
+          const newTimers = { ...prev };
+          delete newTimers[billId];
+          return newTimers;
+        });
+        refetchBill();
       }
-    }
-  
-    const status = statusResponse?.task?.status;
-    const res_type = statusResponse?.task?.type;
-  
-    if (status === "IN_PROGRESS" && res_type === type) {
-      setIsSelectionDisabled(true);
-      pollingTimerRef.current = setTimeout(() => {
-        isPollingRef.current = false; // allow re-entry
-        pollTaskUntilDone(billId, type); // re-call polling
-      }, POLLING_INTERVAL);
-    } else {
-      console.log("Polling complete for billId", billId);
-      setIsSelectionDisabled(false);
-      if (pollingTimerRef.current) {
-        clearTimeout(pollingTimerRef.current);
-        pollingTimerRef.current = null;
-      }
-      isPollingRef.current = false;
-      refetchBill();
+    } catch (err) {
+      console.error("Polling failed for billId", billId, err);
     }
   };
-  
-  // Cleanup polling timer on unmount
+
   useEffect(() => {
     return () => {
-      if (pollingTimerRef.current) {
-        clearTimeout(pollingTimerRef.current);
-      }
-      isPollingRef.current = false;
+      Object.values(transferPollTimers).forEach(clearTimeout);
     };
   }, []);
-  
-  // Effect to trigger polling based on BillData
-  useEffect(() => {
-    const fetchAndCheckStatus = async () => {
-      if (!BillData) return;
-  
-      const bill = BillData.bills?.find(b => b.billNumber === billID);
-      if (!bill) {
+
+  useEffect(async () => {
+    if (BillData) {
+      const bill = BillData.bills?.find(b => b.billNumber === billID) || null;
+      if (bill === null) {
         console.error("Bill not found for billID:", billID);
         setShowToast({
           key: "error",
@@ -603,28 +582,43 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         });
         return;
       }
-  
       setBillData(bill);
       fetchIndividualIds(bill);
-  
+      const billId = bill?.id;
+
       try {
         const res = await getTaskStatusMutation.mutateAsync({
-          body: { task: { billId: bill.id, type: "Transfer" } },
+          body: {
+            task: {
+              billId: billId,
+              type: "Transfer",
+            }
+          },
         });
-  
-        if (res?.task?.status === "IN_PROGRESS" && res?.task?.type === "Transfer") {
+        console.log("Task status response for billId:", billId, res);
+
+        if (res?.task?.status === "IN_PROGRESS") {
           setIsSelectionDisabled(true);
-          pollTaskUntilDone(bill.id, "Transfer", res);
+          if (res?.task?.type === "Transfer") {
+            console.log("Polling started for billId:", billId);
+            pollTaskUntilDone(billId, "Transfer");
+          }
         } else {
+          console.log("inside else 2")
           setIsSelectionDisabled(false);
         }
       } catch (e) {
-        console.warn("Task status check failed for", bill.id, e);
-      }
-    };
-  
-    fetchAndCheckStatus();
+        console.warn("Task status check failed for", billId, e);
+      };
+    }
   }, [BillData]);
+  
+  // Cleanup polling timer on unmount
+  useEffect(() => {
+    return () => {
+      Object.values(transferPollTimers).forEach(clearTimeout);
+    };
+  }, []); 
 
   const getPaginatedData = (data, currentPage, rowsPerPage) => {
     const startIndex = (currentPage - 1) * rowsPerPage;
@@ -705,8 +699,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
               {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
               {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
-              {/* TODO : add Tag conditionally for status */}
-              {/* {renderLabelPair('HCM_AM_STATUS', billData?.status || t("NA"))}  */}
               {renderLabelPair(
                 'HCM_AM_STATUS',
                 <span
@@ -733,7 +725,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                   {
                     billData?.billDetails?.some((item) =>
-        ["VERIFICATION_FAILED", "PENDING_EDIT", "EDITED", "PAYMENT_FAILED"].includes(item.status)
+        ["VERIFICATION_FAILED", "PENDING_EDIT", "PAYMENT_FAILED"].includes(item.status)
       ) && (
                     <InfoCard
                       variant="error"
@@ -759,7 +751,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   textAlign: "center",     
                   overflow: "hidden",     
                   whiteSpace: "nowrap",   
-                  textOverflow: "ellipsis" 
+                  textOverflow: "ellipsis",
+                  minWidth: "240px"
               }}
               configNavItems={!editBillDetails ? [
                 {
@@ -823,9 +816,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               <BillDetailsTable
                 style={{ width: "100%", }}
                 data={paginatedData} totalCount={tableData.length}
-                // selectableRows={true}
                 selectableRows={!["PAYMENT_GENERATED", "EDITED"].includes(activeLink?.code)}
-                status={activeLink?.code} editBill={editBillDetails}
+                status={activeLink?.code}
+                editBill={editBillDetails}
                 clearSelectedRows={clearSelectedRows}
                 onSelectionChange={setSelectedRows}
                 selectedBills={selectedRows}

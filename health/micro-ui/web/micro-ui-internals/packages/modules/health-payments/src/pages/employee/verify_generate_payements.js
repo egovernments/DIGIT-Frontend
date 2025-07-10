@@ -69,24 +69,21 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     const taskStatusAPI = Digit.Hooks.useCustomAPIMutationHook({
     url: `/health-expense/v1/task/_status`,
 });
-const pollingInProgressRef = useRef(new Set());
 
-const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => {
-    const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
-  
+
+  const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => {
+    const POLLING_INTERVAL = 1 * 60 * 1000;
 
     let statusResponse = initialStatusResponse;
 
     if (!statusResponse) {
-        console.log("res null")
         try {
             statusResponse = await taskStatusAPI.mutateAsync({
                 body: { task: { billId, type } },
             });
         } catch (err) {
-            console.error("Polling failed for billId", billId, err);
-            pollingInProgressRef.current.delete(billId); // cleanup
-
+            console.error("Polling failed for", billId, err);
+            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
             return;
         }
     }
@@ -95,13 +92,13 @@ const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => 
     const res_type = statusResponse?.task?.type;
 
     if (status === "IN_PROGRESS" && res_type === type) {
-        console.log("res ",statusResponse)
         setTransferPollTimers(prev => {
             if (prev[billId]) clearTimeout(prev[billId]);
             const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
             return { ...prev, [billId]: timer };
         });
     } else {
+        // Mark as done
         setInProgressBills(prev => ({ ...prev, [billId]: false }));
         setTransferPollTimers(prev => {
             if (prev[billId]) clearTimeout(prev[billId]);
@@ -109,12 +106,9 @@ const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => 
             delete newTimers[billId];
             return newTimers;
         });
-        pollingInProgressRef.current.delete(billId); // cleanup
-
         refetchBill();
     }
 };
-  
 const userSearchCri = {
         url: `/egov-hrms/employees/_search`,
          params: {
@@ -146,15 +140,12 @@ const userSearchCri = {
     refetchBill(); // trigger bill search once DONE
     };
 
-
-    useEffect(() => {
+  useEffect(() => {
         if (BillData) {
             setTableData(BillData.bills);
             setTotalCount(BillData?.pagination?.totalCount);
              BillData.bills.forEach(async (bill) => {
                 const billId = bill?.id;
-            // Avoid duplicate polling if already in progress
-        if (pollingInProgressRef.current.has(billId)) return;
             try {
                 const res = await taskStatusAPI.mutateAsync({
                     body: {
@@ -170,8 +161,6 @@ const userSearchCri = {
                     setInProgressBills(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Transfer") {
                         console.log("Polling started for billId:", billId);
-                         //  Track that polling has started
-                         pollingInProgressRef.current.add(billId);
                         pollTaskUntilDone(billId,"Transfer",res);
                     }
                 } else {
@@ -180,44 +169,17 @@ const userSearchCri = {
                 }
             } catch (e) {
                 console.warn("Task status check failed for", billId, e);
+                setShowToast()
             }
 
-            //TODO: Check polling for Verify task
-
-            // try {
-            //     const res1 = await taskStatusAPI.mutateAsync({
-            //         body: {
-            //             task:{
-            //             billId: billId,
-            //             type:"Verify",
-            //         }
-            //     },
-            //     });
-            //     console.log("Task status response for billId:", billId, res1);
-
-            //     if (res1?.task?.status === "IN_PROGRESS") {
-            //         setInProgressBills(prev => ({ ...prev, [billId]: true }));
-            //         if (res1?.task?.type === "Verify") {
-            //             console.log("Polling started for billId:", billId);
-            //             pollTaskUntilDone(billId,"Verify");
-            //         }
-            //     } else {
-            //         console.log("inside else 3")
-            //         setInProgressBills(prev => ({ ...prev, [billId]: false }));
-            //     }
-            // } catch (e) {
-            //     console.warn("Task status check failed for", billId, e);
-            // }
+         
         });
-    
-            
         }
     }, [BillData])
 
     useEffect(() => {
     return () => {
         Object.values(transferPollTimers).forEach(clearTimeout);
-        pollingInProgressRef.current.clear(); // Clear tracking
     };
 }, []);
 

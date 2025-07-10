@@ -1,4 +1,4 @@
-import React, { Fragment, useState,useEffect, useMemo } from "react";
+import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, CustomSVG, Tag, Toast, Tooltip, TooltipWrapper } from "@egovernments/digit-ui-components";
 import { InfoOutline } from "@egovernments/digit-ui-svg-components";
@@ -35,128 +35,9 @@ const BillDetailsTable = ({ ...props }) => {
     const [initialFieldValue, setInitialFieldValue] = useState("");
     const [tableData, setTableData] = useState(props?.data || []);
 
-    // const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
-
-    // const renderEditField = (field)=>(
-    // <div className="label-pair">
-    //   <EditWorkerDetailsPopUp/>
-    // </div>
-    // );
-    const billDetails = [
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        },
-        {
-            "id": "123456",
-            "name":"Worker 1",
-            "role":"Distrubutor",
-            "billDate": 1698307200000,
-            "noOfDays": 5,
-            "wage": "30",
-            "totalAmount": "150",
-        }
-    ]
-
-
     useEffect(() => {
-    setTableData(props?.data || []);
-}, [props?.data]);
+        setTableData(props?.data || []);
+    }, [props?.data]);
 
     const columns = useMemo(() => {
         const baseColumns = [
@@ -181,158 +62,287 @@ const BillDetailsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
+                    const showErrorName =
+                        (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") &&
+                        (["NAME_MISMATCH", "MTN_USERINFO_MISSING_NAME", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.reasonForFailure));
+
                     return (
-                    <div style={{ display: "flex", alignItems: "center",minWidth: 0  }}>
-                        <span className="ellipsis-cell" style={{ marginRight: "8px",        overflow: "hidden",
-        textOverflow: "ellipsis",
-        minWidth: 0,  }}
-                            title={
-                                row?.givenName
-                                ? t(`${row?.givenName}`)
-                                : t("NA")
-                            }>
-                            {
-                                row?.givenName
-                                ? t(`${row?.givenName}`)
-                                : t("NA")
-                            }
-                            </span>
-                            {/* {row?.status === "VERIFICATION_FAILED" && row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?
-                            (
-                                <div style={{ display: "flex", alignItems: "center" }}> */}
-                                {props?.editBill && row?.status === "PENDING_EDIT"? (
-                               <Button
-                                style={{ minWidth: "auto" }}
-                                variation="secondary"
-                                size="small"
-                                icon="Edit"
-                                onClick={() => {
-                                    setShowEditField(true);
-                                    setFieldKey("givenName");
-                                    setInitialFieldValue(row?.givenName || "");
-                                    setEditingRowIndex(row?.id); // pass index of the row being edited
-                                    setEditFieldName(t("HCM_AM_WORKER_NAME"));
-                                    // renderEditField("name");
+                        <div
+                            className="ellipsis-cell"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                minWidth: 0,
+                                maxWidth: "100%",
+                            }}
+                        >
+                            {/* Name with ellipsis */}
+                            <span
+                                className="ellipsis-cell"
+                                style={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "160px", // control how much space name can take
+                                    display: "inline-block",
+                                    marginRight: "4px",
                                 }}
-                                />):null
-                                }
-                        {
-                        (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
-                        row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?(
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                <div>
-                 
-                                <TooltipWrapper
-                                arrow={true}
-    content={<>
-    <div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>
-        {t(row?.additionalDetails?.reasonForFailure)}</div></>}
-                                enterDelay={100}
-                                header="Data Error"
-                                leaveDelay={0}
-                                placement="right"
-                                >
-                                <span style={{ display: "inline-block" }}>
-                                   
-                                <Button
-                                style={{ minWidth: "auto", color:"#B91900", paddingLeft: "0.5rem", cursor: "default" }}
-                                variation="teritiary"
-                                size="medium"
-                                icon="Error"
-                                iconFill="#B91900"/>
-                                </span>
-                               </TooltipWrapper>
-                               </div>                                
-                                </div>
-                            ):(
-                                    []
+                                title={row?.givenName ? row?.givenName : t("NA")}
+                            >
+                                {row?.givenName ? row?.givenName : t("NA")}
+                            </span>
+
+                            {/* Edit Button - Compact */}
+                            {props?.editBill && row?.status === "PENDING_EDIT" &&
+                                (
+                                    <Button
+                                        style={{
+                                            minWidth: "auto",
+                                            padding: "0px 4px",
+                                            fontSize: "11px",
+                                            height: "20px",
+                                            lineHeight: "16px",
+                                            marginRight: "4px",
+                                        }}
+                                        variation="secondary"
+                                        size="small"
+                                        icon="Edit"
+                                        onClick={() => {
+                                            setShowEditField(true);
+                                            setFieldKey("givenName");
+                                            setInitialFieldValue(row?.givenName || "");
+                                            setEditingRowIndex(row?.id);
+                                            setEditFieldName(t("HCM_AM_WORKER_NAME"));
+                                        }}
+                                    />
                                 )}
+
+                            {/* Error Icon with Tooltip */}
+                            {showErrorName && (
+                                <TooltipWrapper
+                                    arrow
+                                    content={
+                                        <div
+                                            style={{
+                                                maxWidth: "600px",
+                                                whiteSpace: "normal",
+                                                wordWrap: "break-word",
+                                            }}
+                                        >
+                                            {t(row?.additionalDetails?.reasonForFailure)}
+                                        </div>
+                                    }
+                                    enterDelay={100}
+                                    header={t("HCM_AM_DATA_ERROR")}
+                                    leaveDelay={0}
+                                    placement="right"
+                                >
+                                    <span style={{ display: "inline-block" }}>
+                                        <Button
+                                            style={{
+                                                minWidth: "auto",
+                                                color: "#B91900",
+                                                paddingLeft: "0.25rem",
+                                                cursor: "default",
+                                                backgroundColor: "transparent"
+                                            }}
+                                            variation="tertiary"
+                                            size="medium"
+                                            icon="Error"
+                                            iconFill="#B91900"
+                                        />
+                                    </span>
+                                </TooltipWrapper>
+                            )}
+                        </div>
+                    );
+                },
+                //             selector: (row) => {
+                //                 return (
+                //                 <div style={{ display: "flex", alignItems: "center",minWidth: 0  }}>
+                //                     <span className="ellipsis-cell" style={{ marginRight: "8px",        overflow: "hidden",
+                //     textOverflow: "ellipsis",
+                //     minWidth: 0,  }}
+                //                         title={
+                //                             row?.givenName
+                //                             ? t(`${row?.givenName}`)
+                //                             : t("NA")
+                //                         }>
+                //                         {
+                //                             row?.givenName
+                //                             ? t(`${row?.givenName}`)
+                //                             : t("NA")
+                //                         }
+                //                         </span>
+                //                         {/* {row?.status === "VERIFICATION_FAILED" && row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?
+                //                         (
+                //                             <div style={{ display: "flex", alignItems: "center" }}> */}
+                //                             {props?.editBill && row?.status === "PENDING_EDIT"? (
+                //                            <Button
+                //                             style={{ minWidth: "auto" }}
+                //                             variation="secondary"
+                //                             size="small"
+                //                             icon="Edit"
+                //                             onClick={() => {
+                //                                 setShowEditField(true);
+                //                                 setFieldKey("givenName");
+                //                                 setInitialFieldValue(row?.givenName || "");
+                //                                 setEditingRowIndex(row?.id); // pass index of the row being edited
+                //                                 setEditFieldName(t("HCM_AM_WORKER_NAME"));
+                //                                 // renderEditField("name");
+                //                             }}
+                //                             />):null
+                //                             }
+                //                     {
+                //                     (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
+                //                     row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?(
+                //                             <div style={{ display: "flex", alignItems: "center" }}>
+                //                             <div>
+
+                //                             <TooltipWrapper
+                //                             arrow={true}
+                // content={<>
+                // <div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>
+                //     {t(row?.additionalDetails?.reasonForFailure)}</div></>}
+                //                             enterDelay={100}
+                //                             header="Data Error"
+                //                             leaveDelay={0}
+                //                             placement="right"
+                //                             >
+                //                             <span style={{ display: "inline-block" }}>
+
+                //                             <Button
+                //                             style={{ minWidth: "auto", color:"#B91900", paddingLeft: "0.5rem", cursor: "default" }}
+                //                             variation="teritiary"
+                //                             size="medium"
+                //                             icon="Error"
+                //                             iconFill="#B91900"/>
+                //                             </span>
+                //                            </TooltipWrapper>
+                //                            </div>                                
+                //                             </div>
+                //                         ):(
+                //                                 []
+                //                             )}
+                //                 </div>
+                //                 );
+                //             },
+                allowOverflow: true,
+            },
+            {
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t(`HCM_AM_MOBILE_NUMBER`)}
                     </div>
+                ),
+                selector: (row) => {
+                    const showErrorMobileNumber =
+                        (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") &&
+                        (["MTN_ACCOUNT_VALIDATION_FAILED", "MTN_ACCOUNT_INACTIVE", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.reasonForFailure));
+                    return (
+                        <div style={{
+                            display: "flex",
+                            alignItems: "center",
+                            minWidth: 0,
+                            maxWidth: "100%",
+                        }}>
+                            <span className="ellipsis-cell"
+                                style={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "160px",
+                                    display: "inline-block",
+                                    marginRight: "4px",
+                                }}>
+                                {t(row?.mobileNumber) || t("ES_COMMON_NA")}
+                            </span>
+                            {props?.editBill && row?.status === "PENDING_EDIT" ? (
+                                <Button
+                                    style={{
+                                        minWidth: "auto",
+                                        padding: "0px 4px",
+                                        fontSize: "11px",
+                                        height: "20px",
+                                        lineHeight: "16px",
+                                        marginRight: "4px",
+                                    }}
+                                    variation="secondary"
+                                    size="small"
+                                    icon="Edit"
+                                    onClick={() => {
+                                            setFieldKey("mobileNumber");
+                                            setInitialFieldValue(row?.mobileNumber || "");
+                                            setEditingRowIndex(row?.id);
+                                            setShowEditField(true);
+                                            setEditFieldName(t("HCM_AM_MOBILE_NUMBER"));
+                                    }}
+                                />) : null
+                            }
+                            {
+                                showErrorMobileNumber ?
+                                    (
+                                        <div style={{ display: "flex", alignItems: "center" }}>
+                                            <div>
+
+                                                <TooltipWrapper
+                                                    arrow={true}
+                                                    content={<>
+                                                        <div
+                                                            style={{
+                                                                maxWidth: "600px",
+                                                                whiteSpace: "normal",
+                                                                wordWrap: "break-word",
+                                                            }}>
+                                                            {t(row?.additionalDetails?.reasonForFailure)}</div></>}
+                                                    enterDelay={100}
+                                                    header = {t("HCM_AM_DATA_ERROR")}
+                                                    leaveDelay={0}
+                                                    placement="right"
+                                                >
+                                                    <span style={{ display: "inline-block" }}>
+
+                                                        <Button
+                                                            style={{
+                                                                minWidth: "auto",
+                                                                color: "#B91900",
+                                                                paddingLeft: "0.25rem",
+                                                                cursor: "default",
+                                                                backgroundColor: "transparent"
+                                                            }}
+                                                            variation="teritiary"
+                                                            size="medium"
+                                                            icon="Error"
+                                                            iconFill="#B91900" />
+                                                    </span>
+                                                </TooltipWrapper>
+                                            </div>
+                                        </div>
+                                    ) : (
+                                        []
+                                    )}
+                        </div>
                     );
                 },
                 allowOverflow: true,
-            },    
+            },
             {
-      name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-          {t(`HCM_AM_MOBILE_NUMBER`)}
-        </div>
-      ),
-      selector: (row) => {
-        return (
-            <div style={{ display: "flex", alignItems: "center", minWidth: 0 }}>
-          <span className="ellipsis-cell" style={{ marginRight: "8px",        overflow: "hidden",
-        textOverflow: "ellipsis",
-        minWidth: 0, }}>
-            {t(row?.mobileNumber) || t("ES_COMMON_NA")} </span>
-            {/* {row?.status === "PENDING_EDIT" && row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?( */}
-                                {/* <div style={{ display: "flex", alignItems: "center" }}> */}
-                                {props?.editBill && row?.status === "PENDING_EDIT" && 
-                        row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"? (
-                                <Button
-                                style={{ minWidth: "auto" }}
-                                variation="secondary"
-                                size="small"
-                                icon="Edit"
-                                onClick={() => {
-                                    setShowEditField(true);
-                                    setEditFieldName(t("HCM_AM_MOBILE_NUMBER"));
-                                }}
-                                />):null
-                                }
-                                {
-                                (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
-                        row?.additionalDetails?.reasonForFailure === "MOB_MISMATCH"?( //TODO : SET REASON FOR FAILURE
-                                <div style={{ display: "flex", alignItems: "center" }}>
-                                <div>
-                 
-                                <TooltipWrapper
-                                arrow={true}
-    content={<>
-    <div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>
-        {t(row?.additionalDetails?.reasonForFailure)}</div></>}
-                                enterDelay={100}
-                                header="Data Error"
-                                leaveDelay={0}
-                                placement="right"
-                                >
-                                <span style={{ display: "inline-block" }}>
-                                   
-                                <Button
-                                style={{ minWidth: "auto", color:"#B91900", paddingLeft: "0.5rem", cursor: "default" }}
-                                variation="teritiary"
-                                size="medium"
-                                icon="Error"
-                                iconFill="#B91900"/>
-                                </span>
-                               </TooltipWrapper>
-                               </div>                                
-                                </div>
-                            ):(
-                                    []
-                                )}
-          </div>
-        );
-      },
-        allowOverflow: true,
-    },    
-    {
-      name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-          {t(`HCM_AM_MNO`)}
-        </div>
-      ),
-      selector: (row) => {
-        return (
-          <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
-            {t(row?.operator) || t("MTN")}
-          </span>
-        );
-      },
-      style: {
-        justifyContent: "start",
-      },
-    },  
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t(`HCM_AM_MNO_NAME`)}
+                    </div>
+                ),
+                selector: (row) => {
+                    return (
+                        <span className="ellipsis-cell" style={{ fontSize: "14px" }}>
+                            {t(row?.operator) || t("MTN")}
+                        </span>
+                    );
+                },
+                style: {
+                    justifyContent: "start",
+                },
+            },
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
@@ -340,10 +350,10 @@ const BillDetailsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
-                   const totalAmount = parseInt(row?.totalAmount) || 0;
-                   const wage = parseInt(row?.wage) || 0;
-                   const days = wage > 0 ? (totalAmount / wage) : 0; //TODO : ADD LOGIC TO CALCULATE DAYS FROM MUSTERROLL
-                    
+                    const totalAmount = parseInt(row?.totalAmount) || 0;
+                    const wage = parseInt(row?.wage) || 0;
+                    const days = wage > 0 ? (totalAmount / wage) : 0; //TODO : ADD LOGIC TO CALCULATE DAYS FROM MUSTERROLL
+
                     console.log("days", days);
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
@@ -381,7 +391,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                           {row?.totalAmount ? `${row.totalAmount} USD` : t("NA")}
+                            {row?.totalAmount ? `${row.totalAmount} USD` : t("NA")}
                         </div>
                     );
                 },
@@ -389,8 +399,8 @@ const BillDetailsTable = ({ ...props }) => {
                             justifyContent: "flex-end",
                         },
             },
-            
-            
+
+
         ];
 
         return baseColumns;
@@ -407,22 +417,22 @@ const BillDetailsTable = ({ ...props }) => {
     const handleFieldUpdate = (key, newValue) => {
         console.log("inside handleFieldUpdate", key, newValue, editingRowIndex);
         const updatedData = tableData.map((row) =>
-        row.id === editingRowIndex
-            ? { ...row, [key]: newValue } // update and optionally mark as verified
-            : row
-    );
+            row.id === editingRowIndex
+                ? { ...row, [key]: newValue } // update and optionally mark as verified
+                : row
+        );
         setTableData(updatedData);
         setShowEditField(false);
         setEditFieldName(null);
         setEditingRowIndex(null);
-};
-   const handleSelectedRowsChange = ({ selectedRows }) => {
+    };
+    const handleSelectedRowsChange = ({ selectedRows }) => {
         props?.onSelectionChange(selectedRows);
-      };
+    };
     return (
         <>
             <DataTable
-            className="search-component-table"
+                className="search-component-table"
                 columns={columns}
                 data={tableData}
                 pagination
@@ -439,24 +449,26 @@ const BillDetailsTable = ({ ...props }) => {
                 fixedHeader={true}
                 selectableRows={props?.selectableRows}
                 selectableRowDisabled={(row) =>
-                (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
-                (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
-                (row?.status === 'EDITED' && props?.editBill)
-                }
-            conditionalRowStyles={[
-                {
-                when: (row) =>
                     (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
-                    (row?.status === 'PENDING_EDIT' && !props?.editBill),
-                    // || (row?.status === 'EDITED' && props?.editBill),
-                style: {
-                    backgroundColor: "#f0f0f0",
-                    color: "#999",
-                    // cursor: "not-allowed",
-                    opacity: 0.6, 
-                },
-                },
-            ]}
+                    (props?.status === "PENDING_VERIFICATION" && props?.isSelectionDisabled) ||
+                    (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
+                    (row?.status === 'EDITED' && props?.editBill)
+                }
+                conditionalRowStyles={[
+                    {
+                        when: (row) =>
+                            (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
+                            (props?.status === "PENDING_VERIFICATION" && props?.isSelectionDisabled) ||
+                            (row?.status === 'PENDING_EDIT' && !props?.editBill),
+                        // || (row?.status === 'EDITED' && props?.editBill),
+                        style: {
+                            backgroundColor: "#f0f0f0",
+                            color: "#999",
+                            // cursor: "not-allowed",
+                            opacity: 0.6,
+                        },
+                    },
+                ]}
                 onSelectedRowsChange={handleSelectedRowsChange}
                 fixedHeaderScrollHeight={"70vh"}
                 paginationComponentOptions={getCustomPaginationOptions(t)}
