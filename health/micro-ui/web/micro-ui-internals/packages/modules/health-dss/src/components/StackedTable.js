@@ -94,7 +94,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     const values = rowData?.values;
     const valueKeys = Object.keys(values);
     const location = useLocation();
-    const levelMap = location.state?.levelMap;
+    const levelMap = location.state?.levelMap || Digit.SessionStorage.get("levelMap");;
     const targetValue = "level-two";
     const boundaryType = Object.keys(levelMap).find(key => levelMap[key] === targetValue)?.toLowerCase();
 

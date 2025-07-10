@@ -197,6 +197,7 @@ const ViewDashbaord = ({ stateCode }) => {
       Digit.SessionStorage.set("dashboardData", dashboardDataResponse?.responseData);
       Digit.SessionStorage.set("projectSelected", projectsInfo);
       Digit.SessionStorage.set("campaignSelected", campaignData?.[0]);
+      Digit.SessionStorage.set("levelMap", levelMap);
     }
   }, [dashboardDataResponse?.responseData, redirected, history, boundaryData]);
 
