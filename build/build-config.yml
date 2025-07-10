@@ -32,12 +32,6 @@ config:
         dockerfile: micro-ui/web/core/Dockerfile
         image-name: core-ui
 
-  - name: builds/Digit-Frontend/workbench-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/workbench/Dockerfile
-        image-name: workbench-ui
-
   - name: builds/Digit-Frontend/sandbox-ui
     build:
       - work-dir: micro-ui/
@@ -107,14 +101,6 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: dss-ui
-
-  
-  - name: builds/Digit-Frontend/modules/workbench-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
-        image-name: workbench-ui
-
   
   - name: builds/Digit-Frontend/modules/hrms-ui
     build:
