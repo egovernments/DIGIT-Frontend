@@ -184,11 +184,21 @@ const ResultsDataTableWrapper = ({
             return (
               <div
                 className="cursorPointer"
+                role="button"
+                tabIndex={0}
+                aria-label="Edit"
                 style={{ marginLeft: "1rem" }}
                 onClick={() => additionalConfig?.resultsTable?.onClickSvg(row)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    additionalConfig?.resultsTable?.onClickSvg(row);
+                  }
+                }}
               >
                 <CustomSVG.EditIcon />
               </div>
+
             );
           },
         };

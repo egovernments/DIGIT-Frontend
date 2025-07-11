@@ -52,7 +52,9 @@
     "clean:WebyarnLock": "cd ../ && rm -rf yarn.lock",
     "clean:Web": "cd ../ && rm -rf node_modules",
     "clean:mui": "rm -rf node_modules",
-    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +",
+    "cleancmd-dist":"find . \\( -name  -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
+
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",

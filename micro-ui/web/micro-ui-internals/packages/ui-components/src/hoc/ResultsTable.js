@@ -64,7 +64,12 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
                     Header: t(column?.label) || t("ES_COMMON_NA"),
                     accessor:column.jsonPath,
                     Cell: ({ value, col, row }) => {
-                        return <div className='cursorPointer' style={{marginLeft:"1rem"}} onClick={()=>additionalConfig?.resultsTable?.onClickSvg(row)}> <CustomSVG.EditIcon /></div>
+                        return <div className='cursorPointer' style={{marginLeft:"1rem"}} tabIndex={0} onKeyDown={(e)=>{
+                            if (e.key==="Enter" || e.key===" "){
+                                additionalConfig?.resultsTable?.onClickSvg(row)
+                            }
+                            
+                        }} role='button' onClick={()=>additionalConfig?.resultsTable?.onClickSvg(row)}> <CustomSVG.EditIcon /></div>
                     }
                 }
             }

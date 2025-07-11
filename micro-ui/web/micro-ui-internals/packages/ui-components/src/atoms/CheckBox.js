@@ -71,6 +71,7 @@ const CheckBox = ({
           disabled={disabled}
           checked={checked}
           id={props?.id}
+          tabIndex={0}
           aria-checked={checked}
           aria-disabled={disabled}
         />

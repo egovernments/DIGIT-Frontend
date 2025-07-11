@@ -375,7 +375,18 @@ export const FormComposer = (props) => {
         <SubmitBar label={t(props.label)} style={{ width:"100%",...props?.buttonStyle }} submit="submit" disabled={isDisabled} className="w-full"/>
       )}
       {props.secondaryActionLabel && (
-        <div className="primary-label-btn" style={{ margin: "20px auto 0 auto" }} onClick={onSecondayActionClick}>
+        <div
+          className="primary-label-btn"
+          role="button"
+          tabIndex={0}
+          style={{ margin: "20px auto 0 auto" }}
+          onClick={onSecondayActionClick}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              onSecondayActionClick();
+            }
+          }}
+        >
           {props.secondaryActionLabel}
         </div>
       )}
@@ -433,7 +444,7 @@ export const FormComposer = (props) => {
       )}
       {!props.submitInForm && props.label && (
         <Footer className={props.actionClassName}>
-          <SubmitBar label={t(props.label)} className="digit-formcomposer-submitbar" submit="submit" disabled={isDisabled} icon={props?.primaryActionIcon} isSuffix={props?.primaryActionIconAsSuffix} />
+          <SubmitBar label="TEST" className="digit-formcomposer-submitbar" submit="submit" disabled={isDisabled} icon={props?.primaryActionIcon} isSuffix={props?.primaryActionIconAsSuffix} />
           {props?.secondaryLabel && props?.showSecondaryLabel && (
             <Button className="previous-button"  variation="secondary" label={t(props?.secondaryLabel)} onClick={props?.onSecondayActionClick} icon={props?.secondaryActionIcon} isSuffix={props?.secondaryActionIconAsSuffix} />
           )}
