@@ -57,7 +57,7 @@ export const transformUpdateCreateData = ({ campaignData }) => {
           if (maxMatch) {
             maxCount = maxMatch[1];
           }
-          if (projectType === "LLIN-mz" && memberCount !== undefined && maxCount !== undefined) {
+          if ( memberCount !== undefined && maxCount !== undefined) {
             conditionString = `MIN(ROUND(memberCount/${memberCount}), ${maxCount})`;
           } else {
             conditionString = normalizeCondition(criteria.condition);

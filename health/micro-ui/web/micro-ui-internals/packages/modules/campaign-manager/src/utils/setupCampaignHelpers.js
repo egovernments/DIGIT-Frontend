@@ -223,7 +223,7 @@ export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
     }
   });
   let conditionString;
-  if (projectType === "LLIN-mz" && memberCount !== undefined && maxCount !== undefined && type === "create") {
+  if ( memberCount !== undefined && maxCount !== undefined && type === "create") {
     conditionString = `MIN(ROUND(memberCount/${memberCount}), ${maxCount})`;
   } else {
     conditionString = conditions.join("and");
