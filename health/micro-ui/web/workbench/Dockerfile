@@ -1,5 +1,5 @@
-FROM egovio/alpine-node-builder-14:yarn AS build
-#FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
+FROM --platform=linux/amd64 egovio/alpine-node-builder-14:yarn AS build
+#FROM --platform=linux/amd64 ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
 RUN apk update && apk upgrade
 RUN apk add --no-cache git>2.30.0
 ARG WORK_DIR
@@ -20,8 +20,8 @@ RUN cd web/ \
     && yarn install \ 
     && yarn build:webpack 
 
-FROM nginx:mainline-alpine
-#FROM ghcr.io/egovernments/nginx:mainline-alpine
+FROM --platform=linux/amd64 nginx:mainline-alpine
+#FROM --platform=linux/amd64 ghcr.io/egovernments/nginx:mainline-alpine
 ENV WORK_DIR=/var/web/workbench-ui
 
 RUN mkdir -p ${WORK_DIR}
