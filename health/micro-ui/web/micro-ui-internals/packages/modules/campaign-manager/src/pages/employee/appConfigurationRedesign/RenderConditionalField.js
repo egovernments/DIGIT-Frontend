@@ -73,48 +73,6 @@ export const RenderConditionalField = ({
           disabled={disabled}
         />
       );
-    // return (
-    //   <TextInput
-    //     isRequired={true}
-    //     className=""
-    //     type={cField?.type}
-    //     name="title"
-    //     value={
-    //       isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
-    //     }
-    //     onChange={(event) => {
-    //       const value = event.target.value;
-    //       if (isLocalisable) {
-    //         updateLocalization(
-    //           drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
-    //             ? drawerState?.[cField.bindTo]
-    //             : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
-    //                 drawerState?.jsonPath || drawerState?.id
-    //               }`,
-    //           Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-    //           value
-    //         );
-    //         setDrawerState((prev) => ({
-    //           ...prev,
-    //           [cField?.bindTo]:
-    //             drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
-    //               ? drawerState?.[cField.bindTo]
-    //               : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
-    //                   drawerState?.jsonPath || drawerState?.id
-    //                 }`,
-    //         }));
-    //         return;
-    //       } else {
-    //         setDrawerState((prev) => ({
-    //           ...prev,
-    //           [cField?.bindTo]: value,
-    //         }));
-    //         return;
-    //       }
-    //     }}
-    //     placeholder={""}
-    //   />
-    // );
     case "options":
       return (
         <div
