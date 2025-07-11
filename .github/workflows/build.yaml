@@ -1,4 +1,5 @@
 name: Build Pipeline
+run-name: Build ${{ github.event.inputs.pipeline_name }}
 
 on:
   workflow_dispatch:
@@ -30,6 +31,7 @@ env:
 
 jobs:
   resolve-config:
+    name: Resolve ${{ github.event.inputs.pipeline_name }} config
     runs-on: ubuntu-latest
     outputs:
       work_dir:    ${{ steps.setenv.outputs.work_dir }}
@@ -52,6 +54,7 @@ jobs:
         run: |
           PIPELINE_NAME="${{ github.event.inputs.pipeline_name }}"
           DEFAULT_DOCKERFILE="Dockerfile"
+          echo "### Pipeline Name - $PIPELINE_NAME" >> $GITHUB_STEP_SUMMARY
 
           # Find exactly one matching config block
           MATCHING_CONFIGS=$(yq eval -o=json '.config[] | select(.name | test("/'"$PIPELINE_NAME"'$"))' build/build-config.yml)
@@ -79,6 +82,12 @@ jobs:
           echo "work_dir=$SERVICE_WORK_DIR" >> $GITHUB_OUTPUT
           echo "image_name=$SERVICE_IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "dockerfile=$SERVICE_DOCKERFILE" >> $GITHUB_OUTPUT
+          
+          # Put summary for the step
+          echo "#### Application Config Summary" >> $GITHUB_STEP_SUMMARY
+          echo "Application Work Directory - $SERVICE_WORK_DIR" >> $GITHUB_STEP_SUMMARY
+          echo "Image Name - $SERVICE_IMAGE_NAME" >> $GITHUB_STEP_SUMMARY
+          echo "Dockerfile Path - $SERVICE_DOCKERFILE" >> $GITHUB_STEP_SUMMARY
 
       - name: Generate the Next Tag
         id: tag
@@ -118,8 +127,10 @@ jobs:
 
           echo "tag=$NEXT_TAG" >> "$GITHUB_OUTPUT"
           echo "NEXT_TAG=$NEXT_TAG" >> "$GITHUB_ENV"
+          echo "tag - $NEXT_TAG" >> $GITHUB_STEP_SUMMARY
 
   build-matrix:
+    name: Build application ${{ matrix.arch }}
     needs: [resolve-config]
     strategy:
       matrix:
@@ -191,6 +202,7 @@ jobs:
           echo "digest=$digest" >> $GITHUB_OUTPUT
 
   create-manifest:
+    name: Create and Push Manifest
     needs: [build-matrix, resolve-config]
     runs-on: ubuntu-latest
     steps:
@@ -214,6 +226,5 @@ jobs:
 
       - name: Add summary to GitHub Actions
         run: |
-          echo "## Build Summary" >> $GITHUB_STEP_SUMMARY
           echo "- Image: egovio/${{ needs.resolve-config.outputs.image_name }}:${{ needs.resolve-config.outputs.tag }}" >> $GITHUB_STEP_SUMMARY
           echo "- Platform: amd64, arm64" >> $GITHUB_STEP_SUMMARY
