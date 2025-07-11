@@ -4,6 +4,7 @@ import ReactTooltip from "react-tooltip";
 import { ZoomableGroup, Geographies, ComposableMap, Geography, Marker } from "react-simple-maps";
 import { Button } from "@egovernments/digit-ui-components";
 import { getTitleHeading } from "../../../utils/locale";
+import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const LatLongMap = ({ 
   chartId, 
   mapData, 
@@ -149,26 +150,50 @@ const LatLongMap = ({
           setFilterFeature({finalFilter: name})
         } else return;
       }
+
+      const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
   
       if (level === 2) {
+        const boundaryLevel = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
         let dummy = {...filterStack};
         if (dummy.value===undefined) {
-          dummy.value = {"filters": {province: name}}
+          dummy.value = {"filters": {
+            "boundaryType" : boundaryLevel,
+            [boundaryLevel]: name 
+          }}
         }
         setFilterStack(dummy); 
-        setBoundaryLevel("province")
+        setBoundaryLevel(boundaryLevel)
       } 
   
       if (level === 3) {
+        const boundaryLevel = getBoundaryTypeByLevel("level-three", boundaryLevelMap);
         let dummy = {...filterStack};
-        dummy.value.filters = {...dummy.value.filters, district:name}
+        dummy.value.filters = {...dummy.value.filters, 
+          "boundaryType" : boundaryLevel,
+          [boundaryLevel]: name
+        }
         setFilterStack(dummy); 
-        setBoundaryLevel("disrict")
+        setBoundaryLevel(boundaryLevel)
       } 
   
       setChartKey(drillDownChart);
       setDrillDownStack((prev) => {
-        return [...prev, { id: drillDownChart, label: name, boundary: level===2 ? "province" : level===3 ? "district": level===4 ? "administrativeProvince" : "" }];
+        return [
+          ...prev,
+          {
+            id: drillDownChart,
+            label: name,
+            boundary:
+              level === 2
+                ? getBoundaryTypeByLevel("level-two", boundaryLevelMap)
+                : level === 3
+                ? getBoundaryTypeByLevel("level-three", boundaryLevelMap)
+                : level === 4
+                ? getBoundaryTypeByLevel("level-four", boundaryLevelMap)
+                : "",
+          },
+        ];
       });
     }
     
