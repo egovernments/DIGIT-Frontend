@@ -16,8 +16,6 @@ import UpdateChecklist from "./UpdateChecklist";
 import BoundaryHome from "./BoundaryHome";
 import ApprovedMicroplans from "./ApprovedMicroplans";
 import FetchFromMicroplan from "../../components/fetchFromMicroplan";
-import FormBuilder from "./appConfigurationScreenParent/FormBuilder";
-import SchemaBuilder from "./appConfigurationScreenParent/SchemaBuilder";
 import CampaignHome from "./NewCampaignCreate/CampaignHome";
 import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
 import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
@@ -26,6 +24,7 @@ import AppFeatures from "./NewCampaignCreate/AppFeatures";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
+import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -69,10 +68,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       content: t("MY_CAMPAIGN"),
-      show:
-        pathVar === "my-campaign-new" ||  pathVar === "checklist/update" 
-          ? true
-          : false,
+      show: pathVar === "my-campaign-new" || pathVar === "checklist/update" ? true : false,
     },
     {
       path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
@@ -95,8 +91,9 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
         pathVar.match("app-modules") ||
         pathVar.match("app-features") ||
         pathVar === "update-dates-boundary" ||
-        pathVar === "update-campaign" || 
-        pathVar === "checklist/search"
+        pathVar === "update-campaign" ||
+        pathVar === "checklist/search" ||
+        pathVar === "upload-screen"
           ? true
           : false,
     },
@@ -115,6 +112,11 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       path: "",
       content: t("ACTION_CREATE_CHECKLIST"),
       show: pathVar === "checklist/create" ? true : false,
+    },
+    {
+      path: "",
+      content: t("ACTION_UPLOAD_SCREEN"),
+      show: pathVar === "upload-screen" ? true : false,
     },
     {
       path: "",
@@ -184,7 +186,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   const Response = Digit?.ComponentRegistryService?.getComponent("Response");
   const AddProduct = Digit?.ComponentRegistryService?.getComponent("AddProduct");
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
-  const AppConfigurationParentLayer = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentLayer");
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
   useEffect(() => {
@@ -203,7 +204,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
       }
     };
   }, []);
-  
+
   return (
     <React.Fragment>
       <div className="wbh-header-container">
@@ -211,7 +212,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
-        <AppHelpTutorial  appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT"/>
+        <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
       </div>
       <Switch>
         <AppContainer className="campaign">
@@ -240,11 +241,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/boundary/data`} component={() => <ViewHierarchy />} />
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
-          <PrivateRoute path={`${path}/app-configuration-parent`} component={() => <AppConfigurationParentLayer />} />
           <PrivateRoute path={`${path}/app-configuration-redesign`} component={() => <AppConfigurationParentRedesign />} />
-          <PrivateRoute path={`${path}/form-builder-configuration`} component={() => <FormBuilder />} />
-          <PrivateRoute path={`${path}/schema-builder-configuration`} component={() => <SchemaBuilder />} />
-          <PrivateRoute path={`${path}/app-configuration`} component={() => <AppConfigurationWrapper />} />
           <PrivateRoute
             path={`${path}/create-campaign`}
             component={() => <CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
@@ -253,6 +250,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/view-details`} component={() => <CampaignDetails />} />
           <PrivateRoute path={`${path}/app-modules`} component={() => <AppModule />} />
           <PrivateRoute path={`${path}/app-features`} component={() => <AppFeatures />} />
+          <PrivateRoute path={`${path}/upload-screen`} component={() => <NewUploadScreen />} />
           <HelpInfoCard appPath={path} location={location} />
         </AppContainer>
       </Switch>

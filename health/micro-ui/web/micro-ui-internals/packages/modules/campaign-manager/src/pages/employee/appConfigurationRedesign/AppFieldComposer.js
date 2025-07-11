@@ -15,7 +15,6 @@ import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { InfoOutline } from "@egovernments/digit-ui-svg-components";
-import { dummyMaster } from "../../../configs/dummyMaster";
 
 const CheckBoxes = ({ t, option, optionKey, isLabelFirst }) => {
   return (

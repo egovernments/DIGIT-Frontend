@@ -54,14 +54,14 @@ const CampaignDetails = () => {
     }
   }, [campaignData]);
 
-
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
     [
       {
         name: AppConfigSchema,
-        filter: `[?(@.project=='${campaignNumber}')].version`,
+        filter: `[?(@.project=='${campaignNumber}')].name`,
+        // filter: `[?(@.project=='${campaignNumber}')].version`,
       },
     ],
     {
@@ -74,11 +74,10 @@ const CampaignDetails = () => {
 
   let hasVersionGreaterThanOne = false;
 
-  if(modulesData){
-   hasVersionGreaterThanOne = modulesData?.some(version => version > 1);
+  if (modulesData) {
+    hasVersionGreaterThanOne = modulesData?.some((version) => version > 1);
   }
 
-  
   const data = {
     cards: [
       {
@@ -144,6 +143,8 @@ const CampaignDetails = () => {
               headingName: t("HCM_MOBILE_APP_HEADING"),
               desc: t("HCM_MOBILE_APP_DESC"),
               buttonLabel: hasVersionGreaterThanOne ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              // buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
+              // type: modulesData?.length > 0 ? "secondary" : "primary",
               type: hasVersionGreaterThanOne ? "secondary" : "primary",
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
@@ -163,7 +164,8 @@ const CampaignDetails = () => {
               headingName: t("HCM_UPLOAD_DATA_HEADING"),
               desc: t("HCM_UPLOAD_DATA_DESC"),
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
-              navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
+              navLink: `upload-screen?key=1&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`,
+              // navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
               disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
@@ -204,27 +206,23 @@ const CampaignDetails = () => {
 
   const validateCampaignDates = (cycles, campaignData) => {
 
-  // Sort the cycles by startDate to find the first and last
-  const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
+    // Sort the cycles by startDate to find the first and last
+    const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
 
-  const firstCycleStart = sortedCycles[0]?.startDate;
-  const lastCycleEnd = sortedCycles[sortedCycles.length - 1]?.endDate;
+    const firstCycleStart = sortedCycles[0]?.startDate;
+    const lastCycleEnd = sortedCycles[sortedCycles.length - 1]?.endDate;
 
-  const campaignStart = campaignData?.startDate;
-  const campaignEnd = campaignData?.endDate;
+    const campaignStart = campaignData?.startDate;
+    const campaignEnd = campaignData?.endDate;
 
-  if(campaignStart<= firstCycleStart && campaignEnd >= lastCycleEnd){
-    return true;
-  }
-  else return false;
-
-  
-};
-
+    if (campaignStart <= firstCycleStart && campaignEnd >= lastCycleEnd) {
+      return true;
+    } else return false;
+  };
 
   const onsubmit = async () => {
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
-    if(!valideDates){
+    if (!valideDates) {
       setShowToast({ key: "error", label: "INVALID_DATES" });
       return;
     }
@@ -257,24 +255,20 @@ const CampaignDetails = () => {
   };
 
   const onDownloadCredentails = async (data) => {
-    const userResource =
-      Array.isArray(data?.resources) && data.resources.length > 0 && data.resources.some((resource) => resource.type === "user")
-        ? data.resources.find((resource) => resource.type === "user")
-        : null;
 
     try {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       const responseTemp = await Digit.CustomService.getResponse({
-        url: `/project-factory/v1/data/_search`,
-        body: {
-          SearchCriteria: {
-            tenantId: tenantId,
-            id: [userResource?.createResourceId],
-          },
+        url: `/project-factory/v1/data/_download`,
+        params: {
+          tenantId: tenantId,
+          campaignId: campaignData?.id,
+          type: "userCredential",
+          hierarchyType : campaignData?.hierarchyType
         },
       });
 
-      const response = responseTemp?.ResourceDetails?.map((i) => i?.processedFilestoreId);
+      const response = responseTemp?.GeneratedResource?.map((i) => i?.fileStoreid);
 
       if (response?.[0]) {
         downloadExcelWithCustomName({
@@ -297,7 +291,7 @@ const CampaignDetails = () => {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate )}`;
+  const week = `${convertEpochToNewDateFormat(campaignData?.startDate)} - ${convertEpochToNewDateFormat(campaignData?.endDate)}`;
 
   const closeToast = () => {
     setShowToast(null);
@@ -353,7 +347,7 @@ const CampaignDetails = () => {
             }
           }}
         >
-          <Edit width={"18"} height={"18"}/>
+          <Edit width={"18"} height={"18"} />
         </div>
       </div>
       <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
@@ -392,9 +386,7 @@ const CampaignDetails = () => {
         maxActionFieldsAllowed={5}
         setactionFieldsToRight={true}
       />
-      {showQRPopUp && (
-        <QRButton setShowQRPopUp={setShowQRPopUp}/>
-      )}
+      {showQRPopUp && <QRButton setShowQRPopUp={setShowQRPopUp} />}
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
