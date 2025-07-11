@@ -1,6 +1,6 @@
 import { differenceInCalendarDays, subYears } from "date-fns";
 import React, { useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { Loader, CustomSVG, Chip , SVG} from "@egovernments/digit-ui-components";
+import { Loader, Chip , SVG} from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
@@ -47,36 +47,13 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
-        const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
+  const { campaignId } = Digit.Hooks.useQueryParams();
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
     endDate: subYears(value?.range?.endDate, 1).getTime(),
     interval: "month",
     title: "",
   };
-  // const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.dss.useGetChart({
-  //   key: chartKey,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate: { ...lastYearDate },
-  //   filters:
-  //     id === chartKey
-  //       ? { ...value?.filters,
-  //         // projectTypeId: selectedProjectTypeId
-  //         campaignId:campaignId
-  //        }
-  //       : {
-  //           ...value?.filters,
-  //           [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-  //           // projectTypeId: projectTypeId,
-  //           campaignId:campaignId
-  //         },
-  //   addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
-  //   moduleLevel: value?.moduleLevel,
-  // });
   const aggregationRequestDto1 = {
     visualizationCode: chartKey,
     visualizationType: "metric",
@@ -98,27 +75,6 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     aggregationFactors: null,
   };
   const { isLoading: isRequestLoading, data: lastYearResponse } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto1);
-
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: chartKey,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-  //   filters:
-  //     id === chartKey
-  //       ? { ...value?.filters,
-  //         // projectTypeId: selectedProjectTypeId
-  //         campaignId:campaignId
-  //       }
-  //       : {
-  //           ...value?.filters,
-  //           [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-  //           // projectTypeId: selectedProjectTypeId,
-  //           campaignId:campaignId
-  //         },
-  //   addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
-  //   moduleLevel: value?.moduleLevel,
-  // });
   const aggregationRequestDto2 = {
     visualizationCode: chartKey,
     visualizationType: "metric",
@@ -128,13 +84,11 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       id === chartKey
         ? {
             ...value?.filters,
-            // projectTypeId: selectedProjectTypeId
             campaignId: campaignId,
           }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            // projectTypeId: selectedProjectTypeId,
             campaignId: campaignId,
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
@@ -511,10 +465,10 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     return <Loader className={"digit-center-loader"} />;
   }
   return (
-    <div style={{ width: "100%" }}>
+    <div style={{ width: "fit-content" ,maxWidth:"100%"}}>
       {/* Filters stack */}
       {filterStack?.length > 1 && (
-        <div className="digit-tag-container">
+        <div className="digit-tag-container customTable">
           <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
           {filterStack.map((filter, id) =>
             id > 0 ? <Chip key={id} text={`${filter?.label}: ${filter?.name}`} onClick={() => removeFilter(id)} hideClose={false} /> : null
