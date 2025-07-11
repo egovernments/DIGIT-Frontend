@@ -57,9 +57,6 @@ import DateSelection from "./components/CreateCampaignComponents/DateSelection";
 import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
 //App config import
 import AppPreview from "./components/AppPreview";
-import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
-import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
-import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
@@ -181,16 +178,13 @@ const componentsToRegister = {
   UploadDataMappingWrapper,
   DataUploadWrapper,
   AppPreview,
-  AppConfigurationParentLayer: AppConfigurationParentLayer,
-  FormBuilder,
-  // AppConfigurationParentRedesign,
   AppConfigurationParentRedesign: AppConfigurationTabLayer,
   DateSelection,
   ViewDetailComponent,
   CycleSelection,
   HCMMyCampaignRowCard,
   MyCampaignNew,
-  QRButton
+  QRButton,
 };
 
 const overrideHooks = () => {
