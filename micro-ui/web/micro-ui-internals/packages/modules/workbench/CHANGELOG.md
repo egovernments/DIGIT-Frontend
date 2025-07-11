@@ -1,4 +1,6 @@
-
+## [1.0.27]  [11-Jul-2025]
+- Added success toast after editing master data
+  
 ## [1.0.26]  [18-Jun-2025]
 - Provided schema download & upload
 
