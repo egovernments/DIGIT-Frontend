@@ -1,11 +1,10 @@
-import React, { useEffect, useMemo, useReducer, useState, Fragment } from "react";
-import { Button, Footer, Loader, Stepper, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
+import React, { useEffect, useReducer, useState, Fragment } from "react";
+import { Loader, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
-import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 
 const dispatcher = (state, action) => {
   switch (action.key) {
@@ -57,13 +56,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const [currentScreen, setCurrentScreen] = useState({});
   const [localeModule, setLocaleModule] = useState(null);
   const [changeLoader, setChangeLoader] = useState(false);
-
-  // const localeModule = useMemo(() => {
-  //   if (parentState?.actualTemplate?.name && parentState?.actualTemplate?.project) {
-  //     return `hcm-${parentState.actualTemplate.name.toLowerCase()}-${parentState.actualTemplate.project}`;
-  //   }
-  //   return null;
-  // }, [parentState?.actualTemplate?.name, parentState?.actualTemplate?.project]);
 
   useEffect(() => {
     const handleResetStep = () => {
@@ -123,7 +115,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   };
 
   const { isLoading: isCacheLoading, data: cacheData, refetch: refetchCache } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
-  // const { mutate: updateCache } = Digit.Hooks.campaign.useUpdateCache(tenantId);
 
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
 
@@ -221,7 +212,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         return updated ? updated : item;
       });
       const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
-      // const nextTabAvailable = numberTabs.some((tab) => tab.code > currentStep.code && tab.active);
       const reverseFormat = cacheData
         ? {
             ...parentState?.actualTemplate?.actualTemplate,
@@ -256,9 +246,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           onError: (error, variables) => {
             setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
-          onSuccess: async (data) => {
-            // setShowToast({ key: "success", label: "CACHE_CLEAR" });
-          },
+          onSuccess: async (data) => {},
         }
       );
       await updateMutate(
@@ -279,7 +267,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               setCurrentStep(1);
               return;
             } else {
-               setChangeLoader(false);
+              setChangeLoader(false);
               history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
                 message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
                 preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
@@ -314,7 +302,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
             setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
           },
           onSuccess: async (data) => {
-            // setShowToast({ key: "success", label: "CACHE_DONE" });
             refetchCache();
           },
         }
@@ -334,8 +321,8 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       setCurrentStep((prev) => prev - 1);
     }
   };
-  if(changeLoader){
-    return  <Loader page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")}/>
+  if (changeLoader) {
+    return <Loader page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")} />;
   }
 
   return (
@@ -343,7 +330,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       <Header className="app-config-header">
         <div className="app-config-header-group" style={{ display: "flex", alignItems: "center" }}>
           {t(`APP_CONFIG_HEADING_LABEL`)}
-          {/* {t(`${currentScreen?.[0]?.name}`)} */}
           <Tag
             stroke={true}
             showIcon={false}
@@ -376,7 +362,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             />
           </div>
-          {/* <span className="app-config-tag-page-fixed"> {`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}</span> */}
         </div>
       </div>
       {showToast && (
@@ -387,20 +372,6 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           onClose={closeToast}
         />
       )}
-      {/* <Footer
-        actionFields={[
-          <Button
-            type={"button"}
-            style={{ marginLeft: "2.5rem", width: "14rem" }}
-            label={t("HCM_BACK")}
-            variation={"secondary"}
-            t={t}
-            onClick={() => {}}
-          ></Button>,
-          <Button type={"button"} label={t("PROCEED_TO_PREVIEW")} variation={"primary"} onClick={() => {}} style={{ width: "14rem" }} t={t}></Button>,
-        ]}
-        className={"new-actionbar"}
-      /> */}
     </div>
   );
 };
