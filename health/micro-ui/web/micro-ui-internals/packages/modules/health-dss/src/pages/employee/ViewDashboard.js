@@ -66,13 +66,13 @@ const ViewDashbaord = ({ stateCode }) => {
     // Build parent -> child map and track all types
     hierarchyList.forEach(({ boundaryType, parentBoundaryType }) => {
       if (parentBoundaryType) {
-        parentToChildMap.set(parentBoundaryType, boundaryType);
+        parentToChildMap.set(parentBoundaryType.toLowerCase(), boundaryType.toLowerCase());
       }
       allTypes.add(boundaryType);
     });
 
     // Find the root (no parentBoundaryType)
-    const root = hierarchyList.find((item) => item.parentBoundaryType === null)?.boundaryType;
+    const root = hierarchyList.find((item) => item.parentBoundaryType === null)?.boundaryType.toLowerCase();
     if (!root) return {};
 
     // Build level map from root down
@@ -90,7 +90,7 @@ const ViewDashbaord = ({ stateCode }) => {
   };
 
   const levelMap = processBoundaryHierarchy(hierarchyDefinition);
-  const boundaryType = project?.address.boundaryType?.toUpperCase() || "";
+  const boundaryType = project?.address.boundaryType?.toLowerCase() || "";
   const levelLinked = levelMap?.[boundaryType];
 
   // MDMS call : to get dashboard config id fro specific hierarchyType

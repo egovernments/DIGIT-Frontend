@@ -6,6 +6,7 @@ import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simp
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
 import { Button } from "@egovernments/digit-ui-components";
+import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const Map = ({
   chartId,
   mapData,
@@ -168,7 +169,7 @@ const Map = ({
 
   const toFilterCase = (str) => {
     if (str) {
-      return str.charAt(0).toLowerCase() + str.slice(1);
+      return str.toLowerCase();
     }
   };
 
@@ -180,20 +181,30 @@ const Map = ({
       } else return;
     }
 
+    const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
+
     if (level === 2) {
+      const boundaryLevel = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
       let dummy = { ...filterStack };
       if (dummy.value == undefined || Object.keys(dummy.value).length == 0) {
-        dummy.value = { filters: { province: name } };
+        dummy.value = { filters: { 
+          "boundaryType" : boundaryLevel,
+          [boundaryLevel]: name 
+        } };
       }
       setFilterStack(dummy);
-      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE));
+      setBoundaryLevel(toFilterCase(boundaryLevel));
     }
 
     if (level === 3) {
+      const boundaryLevel = getBoundaryTypeByLevel("level-three", boundaryLevelMap);
       let dummy = { ...filterStack };
-      dummy.value.filters = { ...dummy.value.filters, district: name };
+      dummy.value.filters = { ...dummy.value.filters, 
+        "boundaryType" : boundaryLevel,
+        [boundaryLevel]: name
+      };
       setFilterStack(dummy);
-      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT));
+      setBoundaryLevel(toFilterCase(boundaryLevel));
     }
 
     setChartKey(drillDownChart);
@@ -205,11 +216,17 @@ const Map = ({
           label: name,
           boundary:
             level === 2
-              ? toFilterCase(BoundaryTypes.PROVINCE)
+              ? 
+              getBoundaryTypeByLevel("level-two", boundaryLevelMap)
+              // toFilterCase(BoundaryTypes.PROVINCE)
               : level === 3
-              ? toFilterCase(BoundaryTypes.DISTRICT)
+              ? 
+              getBoundaryTypeByLevel("level-three", boundaryLevelMap)
+              // toFilterCase(BoundaryTypes.DISTRICT)
               : level === 4
-              ? toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE)
+              ? 
+              getBoundaryTypeByLevel("level-four", boundaryLevelMap)
+              // toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE)
               : "",
         },
       ];

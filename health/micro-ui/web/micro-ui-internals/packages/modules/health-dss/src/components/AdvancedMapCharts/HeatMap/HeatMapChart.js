@@ -16,34 +16,45 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const { t } = useTranslation();
   const toFilterCase = (str) => {
     if (str) {
-      return str.charAt(0)?.toLowerCase() + str.slice(1);
+      return str.toLowerCase();
     }
   };
   const { value } = useContext(FilterContext);
   const copyOfValue = Object.assign({}, value);
   const subHeader = t(`SUB_${visualizer?.name}`);
+  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
 
   const mapData = useRef({});
   const [locationKeyState, setLocationKeyState] = useState("");
   const [filterStack, setFilterStack] = useState({ value: copyOfValue });
   const [boundaryLevel, setBoundaryLevel] = useState(
-    filterStack?.value?.filters?.district
-      ? toFilterCase(BoundaryTypes.DISTRICT)
-      : filterStack?.value?.filters?.province
-      ? toFilterCase(BoundaryTypes.PROVINCE)
-      : toFilterCase(BoundaryTypes.NATIONAL)
+    filterStack?.value?.filters?.boundaryType
+      ? toFilterCase(filterStack.value.filters.boundaryType)
+      : boundaryType
   );
   const [filterFeature, setFilterFeature] = useState(null);
   const projectSelected = Digit.SessionStorage.get("projectSelected");
   const boundaries = projectSelected?.boundaries;
   const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
-
+  const isLevelOne = boundaryLevelMap?.[boundaryType] === "level-one";
+  const filterBoundaryValue = filterStack?.value?.filters?.boundaryType;
+  // const [mapSelector, setMapSelector] = useState(
+  //   filterStack?.value?.filters?.district
+  //     ? filterStack?.value?.filters?.district?.toLowerCase()
+  //     : filterStack?.value?.filters?.province
+  //     ? filterStack?.value?.filters?.province?.toLowerCase()
+  //     : nationalMap
+  // );
   const [mapSelector, setMapSelector] = useState(
-    filterStack?.value?.filters?.district
-      ? filterStack?.value?.filters?.district?.toLowerCase()
-      : filterStack?.value?.filters?.province
-      ? filterStack?.value?.filters?.province?.toLowerCase()
-      : nationalMap
+    !isLevelOne ?
+    (
+      filterBoundaryValue != null && filterBoundaryValue !== ''
+      ? filterStack?.value?.filters?.[filterBoundaryValue]?.toLowerCase()
+      : filterStack?.value?.filters?.[boundaryType]?.toLowerCase()
+    )
+    : nationalMap
   );
   const [drillDownChart, setDrillDownChart] = useState("none");
   const [chartKey, setChartKey] = useState(chartId);
@@ -60,14 +71,16 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   }, [filterStack, chartId]);
 
   useEffect(() => {
-    const province = filterStack?.value?.filters?.province;
-    const district = filterStack?.value?.filters?.district;
-    if (district) {
-      setMapSelector(district?.toLowerCase().replaceAll(" ", "_"));
-      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT));
-    } else if (province) {
-      setMapSelector(province?.toLowerCase().replaceAll(" ", "_"));
-      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE));
+    // const province = filterStack?.value?.filters?.province;
+    // const district = filterStack?.value?.filters?.district;
+    const boundaryLevel = filterStack?.value?.filters?.boundaryType;
+    const boundaryName = filterStack?.value?.filters?.[boundaryLevel]
+    if (
+      boundaryLevel && boundaryLevelMap?.[boundaryLevel] != undefined && boundaryLevelMap?.[boundaryLevel] !== "level-one" ||
+      boundaryLevelMap?.[boundaryType] != undefined && boundaryLevelMap?.[boundaryType] !== "level-one"
+    ){
+      setMapSelector(boundaryName ? boundaryName?.toLowerCase().replaceAll(" ", "_"): boundaryValue.toLowerCase().replaceAll(" ", "_"));
+      setBoundaryLevel(toFilterCase(boundaryLevel ? boundaryLevel : boundaryType));
     }
   }, [filterStack]);
 
@@ -214,6 +227,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     removedDrillStack.map((filter, index) => {
       delete finalFilterStack?.value.filters[filter.boundary?.toLowerCase()];
     });
+    delete finalFilterStack?.value.filters.boundaryType;
     if (Object.keys(finalFilterStack.value.filters).length === 0) {
       finalFilterStack.value = undefined;
     }
