@@ -14,10 +14,7 @@ const BannerCard = ({ data }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const isMobile = window.Digit.Utils.browser.isMobile();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-      const { campaignId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
+  const { campaignId } = Digit.Hooks.useQueryParams();
   const getWidth = (name) => {
     if (isMobile) return "auto";
     else return t(`TIP_${name}`).length < 50 ? "fit-content" : 400;
@@ -32,18 +29,6 @@ const BannerCard = ({ data }) => {
     startDate: startOfToday(new Date()),
     endDate: endOfToday(new Date()),
   };
-
-  // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: chartType,
-  //   tenantId,
-  //   requestDate: { ...value?.requestDate, startDate: requestDate?.startDate?.getTime(), endDate: requestDate?.endDate?.getTime() },
-  //   filters: {
-  //     ...value?.filters,
-  //     // projectTypeId: selectedProjectTypeId,
-  //     campaignId:campaignId
-  //   },
-  // });
 
   const aggregationRequestDto = {
     visualizationCode: id,

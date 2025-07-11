@@ -2,10 +2,11 @@ import { Rating } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import FilterContext from "./FilterContext";
+import Icon from "./Icon";
 
 const MetricData = ({ t, data, code }) => {
   const { value } = useContext(FilterContext);
-  const insight=data?.insight?.value?.replace(/[+-]/g, "")?.split('%');
+  const insight = data?.insight?.value?.replace(/[+-]/g, "")?.split("%");
   return (
     <div>
       <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px", whiteSpace: "nowrap" }}>
@@ -18,17 +19,18 @@ const MetricData = ({ t, data, code }) => {
         )}
       </p>
       {data?.insight && (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "end",
-          }}
-        >
-          {/* {data?.insight?.indicator === "upper_green" ? ArrowUpwardElement("10px") : ArrowDownwardElement("10px")} */}
-          <p className={`${data?.insight.colorCode}`} style={{ whiteSpace: "pre" }}>
-            {insight?.[0]&&`${Digit.Utils.dss.formatter(insight[0], 'number', value?.denomination, true, t)}% ${t(Digit.Utils.locale.getTransformedLocale('DSS'+insight?.[1]||""))}`}
-          </p>
+        <div className={`digit-dss-insight-card-difference ${data?.insight?.indicator === "upper_green" ? "increase" : "decrease"}`}>
+          <Icon
+            type={data?.insight?.indicator === "upper_green" ? "arrow-upward" : "arrow-downward"}
+            iconColor={data?.insight?.indicator === "upper_green" ? "#00703C" : "#D4351C"}
+            width="1.5rem"
+            height="1.5rem"
+            className="digit-dss-insight-icon"
+          />
+          {insight?.[0] &&
+            `${Digit.Utils.dss.formatter(insight[0], "number", value?.denomination, true, t)}% ${t(
+              Digit.Utils.locale.getTransformedLocale("DSS" + insight?.[1] || "")
+            )}`}
         </div>
       )}
     </div>
@@ -39,25 +41,10 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
   const { id, chartType } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId} = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: chartType,
-  //   tenantId,
-  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-  //   filters: {...value?.filters,
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId:campaignId
-  //   },
-  //   moduleLevel: value?.moduleLevel
-  // });
-
   const aggregationRequestDto = {
     visualizationCode: id,
     visualizationType: chartType,

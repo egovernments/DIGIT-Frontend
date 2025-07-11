@@ -38,9 +38,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId} = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
 
   useEffect(() => {
     setChartKey(chartId);
@@ -54,7 +51,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
     const district = filterStack?.value?.filters?.district;
     if (district) {
       setMapSelector(district.toLowerCase().replaceAll(" ", "_"));
-      // setMapSelector("namacurra");
       setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT))
     } else if (province) {
       setMapSelector(province.toLowerCase().replaceAll(" ", "_"));
@@ -94,17 +90,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const generateTable = (chart, value) => {
     const { id, chartType } = chart;
     const tenantId = Digit?.ULBService?.getCurrentTenantId();
-    // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    //   key: id,
-    //   type: chartType,
-    //   tenantId,
-    //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    //   filters: {...value?.filters ,
-    //     // projectTypeId: selectedProjectTypeId
-    //     campaignId:campaignId
-    //   },
-    // });
-
     const aggregationRequestDto = {
       visualizationCode: id,
       visualizationType: chartType,
@@ -136,18 +121,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
 
   const generateMarkers = (chart, value, addlFilter, tenantId) => {
     const chartId = chart?.id;
-
-    // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-    //   key: chartKey,
-    //   type: "table",
-    //   tenantId,
-    //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    //   filters: {...filterStack?.value?.filters, ...filterFeature, 
-    //     // projectTypeId: selectedProjectTypeId
-    //     campaignId:campaignId
-    //   },
-    // });
-
     const aggregationRequestDto = {
       visualizationCode: chartKey,
       visualizationType: "table",

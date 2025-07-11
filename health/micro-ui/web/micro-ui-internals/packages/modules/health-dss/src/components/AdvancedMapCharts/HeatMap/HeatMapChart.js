@@ -34,10 +34,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
       : toFilterCase(BoundaryTypes.NATIONAL)
   );
   const [filterFeature, setFilterFeature] = useState(null);
-  // const campaignInfo = Digit.SessionStorage.get("campaigns-info");
-  // const campaignCode = Object.keys(campaignInfo)?.[0];
-  // const nationalMap = campaignInfo?.[campaignCode]?.[0]?.boundaries?.country?.[0]?.toLowerCase() || "national-map";
-
   const projectSelected = Digit.SessionStorage.get("projectSelected");
   const boundaries = projectSelected?.boundaries;
   const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
@@ -133,17 +129,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   };
 
   const addlFilter = locationKeyState?.length ? { locationKey: locationKeyState.toUpperCase() } : {};
-  // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: chartKey,
-  //   type: "table",
-  //   tenantId,
-  //   requestDate: requestDate,
-  //   filters: {...filterStack?.value?.filters, ...filterFeature,
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId:campaignId
-  //   },
-  // });
-
   const aggregationRequestDto = {
     visualizationCode: chartKey,
     visualizationType: "table",
@@ -153,98 +138,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     aggregationFactors: null,
   };
   const { isLoading: isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
-
-  // const date = new Date();
-  // const currentDate = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-  // const startTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate()).getTime();
-  // const endTime = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate(), 23, 59, 0).getTime();
-
-  // const { data: todaysResponse } = Digit.Hooks.dss.useGetChart({
-  //   key: chartKey,
-  //   type: "table",
-  //   tenantId,
-  //   requestDate: {
-  //     startDate: startTime,
-  //     endDate: endTime,
-  //     interval: "day",
-  //     title: "home",
-  //   },
-  //   addlFilter,
-  // });
-
-  // const previousDay = subDays(currentDate, 1);
-  // const { data: pastDaysResponse } = Digit.Hooks.dss.useGetChart({
-  //   key: chartKey,
-  //   type: "table",
-  //   tenantId,
-  //   requestDate: {
-  //     startDate: previousDay.getTime(),
-  //     endDate: addMinutes(previousDay, 1439).getTime(),
-  //     interval: "day",
-  //     title: "home",
-  //   },
-  //   addlFilter,
-  // });
-
-  // const insightsResults = useMemo(() => {
-  //   if (!todaysResponse || !pastDaysResponse) return;
-
-  //   const responseList = [todaysResponse, pastDaysResponse];
-  //   let todaysData = {};
-  //   let previousDaysData = {};
-
-  //   responseList.forEach((response, idx) => {
-  //     response?.responseData?.data?.forEach((item) => {
-  //       const key = item.headerName;
-  //       const value = item.plots?.filter((p) => p.label === null && p.name === "total_count")?.[0]?.value;
-
-  //       if (idx === 0) {
-  //         todaysData[key] = value;
-  //       } else {
-  //         previousDaysData[key] = value;
-  //       }
-  //     });
-  //   });
-
-  //   if (todaysData !== {} && previousDaysData !== {}) {
-  //     let mergedKeys = Object.keys(todaysData).concat(Object.keys(previousDaysData));
-  //     mergedKeys = Array.from(new Set(mergedKeys));
-  //     const results = {};
-
-  //     mergedKeys.forEach((key) => {
-  //       const currentData = todaysData[key] || 0;
-  //       const pastData = previousDaysData[key] || 0;
-  //       const diff = currentData - pastData;
-  //       const formattedKey = key.toLowerCase();
-
-  //       if (diff > 0) {
-  //         const insightValue = pastData === 0 ? null : (diff / pastData) * 100;
-  //         if (insightValue) {
-  //           results[formattedKey] = {
-  //             indicator: "positive",
-  //             insightValue,
-  //           };
-  //         }
-  //       } else if (diff === 0) {
-  //         results[formattedKey] = {
-  //           indicator: "no_diff",
-  //           insightValue: 0,
-  //         };
-  //       } else {
-  //         const diff = pastData - currentData;
-  //         const insightValue = pastData === 0 ? null : (diff / pastData) * 100;
-  //         if (insightValue) {
-  //           results[formattedKey] = {
-  //             indicator: "negative",
-  //             insightValue,
-  //           };
-  //         }
-  //       }
-  //     });
-
-  //     return results;
-  //   }
-  // }, [todaysResponse, pastDaysResponse]);
 
   useEffect(() => {
     setDrillDownChart(response?.responseData?.drillDownChartId || "none");
