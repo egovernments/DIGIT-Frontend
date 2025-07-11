@@ -5,6 +5,7 @@ import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simp
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
 import { Button } from "@egovernments/digit-ui-components";
+import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const Map = ({
   chartId,
   mapData,
@@ -165,16 +166,6 @@ const Map = ({
         {dataTip.value !== undefined ? <div>{formatPercentage(dataTip.value)}</div> : null}
       </div>
     );
-  };
-
-  const getBoundaryTypeByLevel = (level, levelMap) => {
-    const entry = Object.entries(levelMap).find(([key, value]) => {
-      return value === level;
-    });
-    if (entry) {
-      return entry[0];
-    }
-    return null;
   };
 
   const toFilterCase = (str) => {

@@ -4,6 +4,7 @@ import ReactTooltip from "react-tooltip";
 import { ZoomableGroup, Geographies, ComposableMap, Geography, Marker } from "react-simple-maps";
 import { Button } from "@egovernments/digit-ui-components";
 import { getTitleHeading } from "../../../utils/locale";
+import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const LatLongMap = ({ 
   chartId, 
   mapData, 
@@ -139,16 +140,6 @@ const LatLongMap = ({
         ) : null}
       </div>
     );
-  };
-
-  const getBoundaryTypeByLevel = (level, levelMap) => {
-    const entry = Object.entries(levelMap).find(([key, value]) => {
-      return value === level;
-    });
-    if (entry) {
-      return entry[0];
-    }
-    return null;
   };
 
   const handleGeographyClick = (name, level, hasCoordinatesDown) => {
