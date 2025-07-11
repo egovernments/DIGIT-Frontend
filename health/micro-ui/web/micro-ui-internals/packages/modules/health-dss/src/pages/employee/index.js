@@ -13,6 +13,10 @@ import Inbox from "./Inbox";
 
 const ProjectBreadCrumb = ({ location }) => {
   const { t } = useTranslation();
+  const dashboardId = Digit.SessionStorage.get("dashboardData")?.[0]?.id || "";
+  const campaignId = Digit.SessionStorage.get("campaignSelected")?.id;
+  const boundaryType = Digit.SessionStorage.get("projectSelected")?.project?.address?.boundaryType?.toLowerCase();
+  const boundaryValue = t(Digit.SessionStorage.get("projectSelected")?.project?.address?.boundary);
   // TODO : NEED TO UPDATE THESE CRUMBS
   const crumbs = [
     {
@@ -33,7 +37,10 @@ const ProjectBreadCrumb = ({ location }) => {
     {
       internalLink: `/${window?.contextPath}/employee/dss/my-campaigns`,
       content: t("ACTION_TEST_MY_CAMPAIGNS"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS",
+      show:
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "MY_CAMPAIGNS" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_ONE_DASHBOARD" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_TWO_DASHBOARD",
     },
     {
       internalLink: `/${window?.contextPath}/employee/dss/view-dashboard`,
@@ -46,12 +53,15 @@ const ProjectBreadCrumb = ({ location }) => {
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "L1_DASHBOARD",
     },
     {
-      internalLink: `/${window?.contextPath}/employee/dss/level1`,
+      internalLink: `/${window?.contextPath}/employee/dss/level-one/${dashboardId}`,
       content: t("LEVEL_ONE_DASHBOARD"),
-      show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_ONE_DASHBOARD",
+      query: `campaignId=${campaignId}&boundaryType=${boundaryType}&boundaryValue=${boundaryValue}`,
+      show:
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_ONE_DASHBOARD" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_TWO_DASHBOARD",
     },
     {
-      internalLink: `/${window?.contextPath}/employee/dss/level2`,
+      internalLink: `/${window?.contextPath}/employee/dss/level-two`,
       content: t("LEVEL_TWO_DASHBOARD"),
       show: Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "LEVEL_TWO_DASHBOARD",
     },

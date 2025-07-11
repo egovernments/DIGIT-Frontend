@@ -1,22 +1,6 @@
-import {
-  Button,
-  Divider,
-  Dropdown,
-  FieldV1,
-  LabelFieldPair,
-  MultiSelectDropdown,
-  PopUp,
-  RadioButtons,
-  Switch,
-  Tag,
-  TextArea,
-  TextBlock,
-  TextInput,
-} from "@egovernments/digit-ui-components";
+import { Divider, FieldV1, MultiSelectDropdown, Switch, Tag, TextBlock } from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PRIMARY_COLOR } from "../../../utils";
-import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -54,11 +38,6 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
 
   // Otherwise, the field should not be disabled
   return false;
-};
-
-//TODO @jagan to make this flow dynamic ie multi flow support this flag to be updated
-const getBaseTemplateFilter = (projectType = "", flowName = "", screenName = "") => {
-  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[?(@.page=='${screenName}')].properties[?(@.validations && @.validations.length > 0 && @.validations[?(@.type=='required' && @.value==true)])].fieldName`;
 };
 
 function getRequiredFieldNames(data, projectType, flowName, screenName) {
@@ -304,24 +283,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         </div>
       );
     }
-    // return (
-    //   <Dropdown
-    //     // style={}
-    //     variant={""}
-    //     t={t}
-    //     option={state?.MASTER_DATA?.AppFieldType}
-    //     optionKey={"type"}
-    //     disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)} // todo need to think about it @nabeel & @jagan
-    //     selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-    //     select={(value) => {
-    //       setDrawerState((prev) => ({
-    //         ...prev,
-    //         type: value?.fieldType,
-    //         appType: value?.type,
-    //       }));
-    //     }}
-    //   />
-    // );
+
     case "DetailsCard":
     case "Table": {
       const switchRef = useRef(null);
@@ -367,14 +329,8 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               clearLabel={t("CLEAR_ALL")}
               config={{ isDropdownWithChip: panelItem?.fieldType === "Table" ? false : true }}
               selected={drawerState?.[panelItem?.bindTo] || []}
-              onChange={(selectedArray) => {
-                const selected = selectedArray?.map((arr) => arr?.[1]) || [];
-                setDrawerState((prev) => ({
-                  ...prev,
-                  [panelItem?.bindTo]: selected,
-                }));
-              }}
-              onSelect={(selectedArray) => {
+              onSelect={(selectedArray) => {}}
+              onClose={(selectedArray) => {
                 const selected = selectedArray?.map((arr) => arr?.[1]) || [];
                 setDrawerState((prev) => ({
                   ...prev,

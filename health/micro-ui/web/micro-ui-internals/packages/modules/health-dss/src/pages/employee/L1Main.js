@@ -280,7 +280,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
 const L1Main = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const dashboardData = location.state?.dashboardData;
+  const dashboardData = location.state?.dashboardData || Digit.SessionStorage.get("dashboardData");
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
   // const projectTypeId = location.state?.projectTypeId;
@@ -461,6 +461,7 @@ const L1Main = () => {
                 size={"medium"}
                 className={"digit-dss-options-header-option-button"}
                 isSearchable={false}
+                wrapperClassName={"digit-dss-options-header-options-button-wrapper"}
                 onOptionSelect={onActionSelect}
                 icon={"Share"}
                 iconFill={"#505a5f"}

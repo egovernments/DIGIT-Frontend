@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
 import { Loader } from "@egovernments/digit-ui-components";
+import { useQueryClient } from "react-query";
 
 const initialState = [];
 const AppLocalisationContext = createContext();
@@ -41,6 +42,7 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
   if (!localeModule) {
     return <Loader />;
   }
+  const queryClient = useQueryClient();
   const [locState, locDispatch] = useReducer(locReducer, initialState);
   const searchParams = new URLSearchParams(location.search);
   // const localeModule = searchParams.get("localeModule");
@@ -84,6 +86,12 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
       },
     },
   });
+
+  useEffect(() => {
+    return () => {
+      queryClient.removeQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
+    };
+  }, [tenantId, localeModule]);
 
   useEffect(() => {
     if (!isLoading) {

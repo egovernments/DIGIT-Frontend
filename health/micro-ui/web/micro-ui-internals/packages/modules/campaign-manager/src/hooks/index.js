@@ -11,6 +11,7 @@ import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
 import useCreateChecklist from "./useCreateChecklist";
 import useUpsertLocalisation from "./useUpsertLocalisation";
+import useUpsertLocalisationParallel from "./useUpsertLocalisationParallel";
 import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
@@ -25,6 +26,7 @@ import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
 import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
 import useUpdateAppConfig from "./useUpdateAppConfig";
 import useUpdateAppConfigForFeatures from "./useUpdateAppConfigForFeatures";
+import { useProcessData } from "./useProcessData";
 
 import useCloneCampaign from "./useCloneCampaign";
 
@@ -47,6 +49,7 @@ const campaign = {
   useProjectUpdateWithBoundary,
   useCreateChecklist,
   useUpsertLocalisation,
+  useUpsertLocalisationParallel,
   useTypeOfChecklist,
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
@@ -63,6 +66,7 @@ const campaign = {
   useUpsertSchemaConfig,
   useUpdateAppConfigForFeatures,
   useCloneCampaign,
+  useProcessData
 };
 
 const Hooks = {

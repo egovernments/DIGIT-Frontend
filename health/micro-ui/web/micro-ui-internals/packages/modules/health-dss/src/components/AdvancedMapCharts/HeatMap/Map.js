@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { scaleQuantile } from "d3-scale";
-import ReactTooltip from "react-tooltip";
 import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simple-maps";
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
@@ -31,6 +30,8 @@ const Map = ({
   });
   const [toolTipContent, setTooltipContent] = useState("");
   const isMobile = window.Digit.Utils.browser.isMobile();
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const [hoveredData, setHoveredData] = useState(null);
 
   const colorScale = scaleQuantile().domain([0, 100]).range(["#FF7373", "#FF8565", "#FFC42E", "#FFAA45", "#9ACC49", "#01D66F"]);
 
@@ -247,12 +248,43 @@ const Map = ({
         height: "480px",
       }}
     >
-      <div style={{ width: "90%", display: "flex", flexDirection: "column", zoom: pageZoom ? 1 : 1.25 }}>
+      <div
+        style={{
+          position: "relative",
+          width: "90%",
+          display: "flex",
+          flexDirection: "column",
+          zoom: pageZoom ? 1 : 1.25,
+        }}
+        onMouseMove={(e) => {
+          const rect = e.currentTarget.getBoundingClientRect();
+          setCursorPosition({
+            x: e.clientX - rect.left - 100,
+            y: e.clientY - rect.top - 25,
+          });
+        }}
+      >
+        {hoveredData && (
+          <div
+            style={{
+              position: "absolute",
+              top: cursorPosition.y,
+              left: cursorPosition.x,
+              transform: "translate(8px, 8px)",
+              background: "white",
+              border: "1px solid #ccc",
+              borderRadius: "4px",
+              padding: "6px 10px",
+              zIndex: 9999,
+              pointerEvents: "none",
+            }}
+          >
+            <div style={{ fontWeight: "bold" }}>{hoveredData.name}</div>
+            <div>{formatPercentage(hoveredData.value)}</div>
+          </div>
+        )}
         {geoJSONData ? (
           <React.Fragment>
-            <ReactTooltip id={`tooltip-for-${chartId}`} border={true} type={"light"}>
-              {tooltip(toolTipContent)}
-            </ReactTooltip>
             <ComposableMap
               projection="geoMercator"
               data-tip=""
@@ -320,9 +352,11 @@ const Map = ({
                               // insightValue: insight?.insightValue,
                               // indicator: insight?.indicator,
                             });
+                            setHoveredData({ name: locationName, value })
                           }}
                           onMouseLeave={() => {
                             setTooltipContent("");
+                            setHoveredData(null);
                           }}
                         />
                       );

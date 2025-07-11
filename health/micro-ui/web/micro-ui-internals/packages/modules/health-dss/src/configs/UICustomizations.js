@@ -7,13 +7,13 @@ import { Button as ButtonNew, Toast } from "@egovernments/digit-ui-components";
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
-const getMDMSUrl = (v2=false) => {
-  if(v2){
+const getMDMSUrl = (v2 = false) => {
+  if (v2) {
     let url = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || window.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
     return `/${url}`;
   }
-    let url = window.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") ||  "egov-mdms-service";
-    return `/${url}`;
+  let url = window.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
+  return `/${url}`;
 };
 
 function cleanObject(obj) {
@@ -58,8 +58,7 @@ const renderText = (value, t) => {
       </div>
     );
   }
-}
-
+};
 
 export const UICustomizations = {
   CampaignsInboxConfig: {
@@ -212,6 +211,36 @@ export const UICustomizations = {
     },
     getCustomActionLabel: (obj, row) => {
       return "TQM_VIEW_TEST_DETAILS";
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
     },
   },
   MyCampaignConfigCompleted: {

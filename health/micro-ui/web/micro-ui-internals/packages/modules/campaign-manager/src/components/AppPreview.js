@@ -126,12 +126,12 @@ const DobPicker = ({ t }) => {
     <div className="dob-picker">
       <Card type="secondary">
         <div>{t("HCM_DATE_OF_BIRTH")}</div>
-        <TextInput name="numeric" onChange={() => { }} type={"date"} />
+        <TextInput name="numeric" onChange={() => {}} type={"date"} />
         <div>({t("HCM_OR")})</div>
         <div>{t("HCM_AGE")}</div>
         <div className="date-style">
-          <TextInput name="numeric" onChange={() => { }} placeholder={t("HCM_YEARS")} disabled={true} />
-          <TextInput name="numeric" onChange={() => { }} placeholder={t("HCM_MONTHS")} disabled={true} />
+          <TextInput name="numeric" onChange={() => {}} placeholder={t("HCM_YEARS")} disabled={true} />
+          <TextInput name="numeric" onChange={() => {}} placeholder={t("HCM_MONTHS")} disabled={true} />
         </div>
       </Card>
     </div>
@@ -148,7 +148,7 @@ const MdmsDropdown = ({
   style = {},
   variant = "",
   selected,
-  select = () => { },
+  select = () => {},
   rest,
 }) => {
   if (!moduleName || !masterName) return null;
@@ -203,7 +203,6 @@ const renderField = (field, t) => {
         />
       );
     case "selection":
-      //[TODO: Need to allow support for static options or any API or hook support to fetch options] @nabeel @ram
       const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(
         Digit?.ULBService?.getStateId(),
         field?.schemaCode?.split(".")[0],
@@ -288,18 +287,15 @@ const renderField = (field, t) => {
         />
       );
     case "custom":
-      return (
-        <DynamicImageComponent type={field?.type} appType={field?.appType} />
-      );
+      return <DynamicImageComponent type={field?.type} appType={field?.appType} />;
     case "customsvg":
-      return (
-        <DynamicSVG type={field?.type} appType={field?.appType} data={field} />
-      );
+      return <DynamicSVG type={field?.type} appType={field?.appType} data={field} />;
     default:
-      return<DynamicImageComponent type={field?.type} appType={field?.appType} />
+      return <DynamicImageComponent type={field?.type} appType={field?.appType} />;
   }
 };
 
+// remove this function
 const getFieldType = (field) => {
   //TODO Why do we still need this swtich case this should be set as a default supported fields and app field master should help to map this
   switch (field.type) {
@@ -339,7 +335,6 @@ const getFieldType = (field) => {
   }
 };
 const AppPreview = ({ data = dummydata, selectedField, t }) => {
-
   return (
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
@@ -394,22 +389,23 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                       label={
                         getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.isMdms ? t(field?.label) : field?.label
                       }
-                      onChange={function noRefCheck() { }}
+                      onChange={function noRefCheck() {}}
                       placeholder={t(field?.innerLabel) || ""}
                       populators={{
                         t: field?.isMdms ? null : t,
                         title: field?.label,
-                        fieldPairClassName: `app-preview-field-pair ${selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
-                          ? `app-preview-selected`
-                          : selectedField?.id && selectedField?.id === field?.id
+                        fieldPairClassName: `app-preview-field-pair ${
+                          selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                            ? `app-preview-selected`
+                            : selectedField?.id && selectedField?.id === field?.id
                             ? `app-preview-selected`
                             : ``
-                          }`,
+                        }`,
                         mdmsConfig: field?.isMdms
                           ? {
-                            moduleName: field?.schemaCode?.split(".")[0],
-                            masterName: field?.schemaCode?.split(".")[1],
-                          }
+                              moduleName: field?.schemaCode?.split(".")[0],
+                              masterName: field?.schemaCode?.split(".")[1],
+                            }
                           : null,
                         options: field?.isMdms ? null : field?.dropDownOptions,
                         optionsKey: field?.isMdms ? "code" : "name",
@@ -428,18 +424,17 @@ const AppPreview = ({ data = dummydata, selectedField, t }) => {
                 variation="primary"
                 label={t(data?.actionLabel)}
                 title={t(data?.actionLabel)}
-                onClick={() => { }}
+                onClick={() => {}}
               />
             )}
-            {data.type === "template" &&
+            {data.type === "template" && (
               <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t} templateName={data.name} />
-            }
+            )}
           </Card>
         ))}
       </div>
     </MobileBezelFrame>
   );
 };
-
 
 export default AppPreview;

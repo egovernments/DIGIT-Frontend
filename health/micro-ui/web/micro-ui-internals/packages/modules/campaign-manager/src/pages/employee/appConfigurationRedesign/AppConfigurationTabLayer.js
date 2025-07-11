@@ -1,6 +1,5 @@
-import React, { Fragment, useEffect, useMemo, useReducer, useState } from "react";
-import { Button, CardText, Loader, PopUp, Stepper, Tag, TextBlock, Toast, Tooltip } from "@egovernments/digit-ui-components";
-import { Header } from "@egovernments/digit-ui-react-components";
+import React, { Fragment, useEffect, useReducer, useState } from "react";
+import { Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
@@ -166,49 +165,6 @@ const AppConfigurationTabLayer = () => {
           />
         </>
       )}
-      {/* {showPopUp && (
-        <PopUp
-          className={"boundaries-pop-module"}
-          type={"default"}
-          heading={t("APP_CONFIG_NOT_SAVED_WARNING_HEADER")}
-          children={[
-            <div>
-              <CardText style={{ margin: 0 }}>{t("APP_CONFIG_NOT_SAVED_WARNING")}</CardText>
-            </div>,
-          ]}
-          onOverlayClick={() => {
-            setShowPopUp(false);
-          }}
-          onClose={() => {
-            setShowPopUp(false);
-          }}
-          footerChildren={[
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"secondary"}
-              label={t("APP_CONFIG_NOT_SAVED_WARNING_MODAL_BACK")}
-              onClick={() => {
-                showPopUp(null);
-              }}
-            />,
-            <Button
-              type={"button"}
-              size={"large"}
-              variation={"primary"}
-              label={t("APP_CONFIG_NOT_SAVED_WARNING_MODAL_SUBMIT")}
-              onClick={() => {
-                tabStateDispatch({
-                  key: "CHANGE_ACTIVE_TAB",
-                  tab: showPopUp,
-                });
-                setShowPopUp(null);
-              }}
-            />,
-          ]}
-          sortFooterChildren={true}
-        ></PopUp>
-      )} */}
     </div>
   );
 };
