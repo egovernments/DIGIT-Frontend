@@ -7,28 +7,6 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getDuration } from "../utils/getDuration";
 
-const nationalScreenURLs = {
-  overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
-  propertytax: { key: "national-propertytax", stateKey: "propertytax", label: "NURT_PROPERTY_TAX", active: true, nActive: true },
-  tradelicense: { key: "national-tradelicense", stateKey: "tradelicense", label: "NURT_TRADE_LICENCE", active: true, nActive: true },
-  pgr: { key: "national-pgr", stateKey: "pgr", label: "NURT_COMPLAINS", active: true, nActive: true },
-  fsm: { key: "fsm", stateKey: "fsm", label: "CS_HOME_FSM_SERVICES", active: true, nActive: false },
-  mCollect: { key: "national-mcollect", stateKey: "mCollect", label: "NURT_MCOLLECT", active: true, nActive: true },
-  ws: { key: "national-ws", stateKey: "ws", label: "NURT_WATER_SEWERAGE", active: true, nActive: true },
-  obps: { key: "nss-obps", stateKey: "obps", label: "DSS_BUILDING_PERMISSION", active: true, nActive: true },
-  noc: { key: "national-firenoc", stateKey: "noc", label: "NURT_FIRENOC", active: true, nActive: true },
-  bnd: { key: "nss-birth-death", stateKey: "birth-death", label: "BIRTH_AND_DEATH", active: true, nActive: true },
-  faqs: { key: "national-faqs", stateKey: "national-faqs", label: "DSS_FAQS", active: false, nActive: true, others: true },
-  finance: { key: "national-finance", stateKey: "finance", label: "DSS_FINANCE", active: true, nActive: false },
-  about: { key: "national-about", stateKey: "national-about", label: "DSS_ABOUT_DASHBOARD", active: false, nActive: true, others: true },
-};
-
-const checkCurrentScreen = () => {
-  const moduleName = Digit.Utils.dss.getCurrentModuleName();
-  const nationalURLS = Object.keys(nationalScreenURLs).map((key) => nationalScreenURLs[key].key);
-  return nationalURLS.filter(ele=>ele!=="fsm").some((e) => moduleName?.includes(e));
-};
-
 const formatValue = (value, symbol) => {
   if (symbol?.toLowerCase() === "percentage") {
     /*   Removed by  percentage formatter.
@@ -93,8 +71,6 @@ const CustomBarChart = ({
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { startDate, endDate, interval } = getInitialRange();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId} = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -102,17 +78,6 @@ const CustomBarChart = ({
     interval: interval,
     title: "home",
   };
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate: value?.requestDate != null ? { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() } : requestDate,
-  //   filters: {...value?.filters,
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId:campaignId
-  //   },
-  //   moduleLevel: value?.moduleLevel
-  // });
   const aggregationRequestDto = {
     visualizationCode: id,
     visualizationType: "metric",
@@ -156,9 +121,7 @@ const CustomBarChart = ({
     history.push(
       `/${window.contextPath}/employee/dss/drilldown?chart=${response?.responseData?.visualizationCode}&ulb=${
         value?.filters?.tenantId
-      }&title=${title}&fromModule=${Digit.Utils.dss.getCurrentModuleName()}&type=performing-metric&fillColor=${fillColor}&isNational=${
-        checkCurrentScreen() ? "YES" : "NO"
-      }`
+      }&title=${title}&fromModule=${Digit.Utils.dss.getCurrentModuleName()}&type=performing-metric&fillColor=${fillColor}`
     );
   };
   if (isLoading) {

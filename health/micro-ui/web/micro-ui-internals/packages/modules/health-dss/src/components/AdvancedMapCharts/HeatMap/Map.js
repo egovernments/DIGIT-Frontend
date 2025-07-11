@@ -152,15 +152,6 @@ const Map = ({
     }
 
     const formattedName = getTitleHeading(dataTip.name);
-    // let showInsights = false;
-    // if (dataTip.indicator) {
-    //   showInsights = true;
-    // }
-    // const indicatorMap = {
-    //   positive: ArrowUpwardElement("10px"),
-    //   negative: ArrowDownwardElement("10px"),
-    //   no_diff: t(`DSS_HEALTH_INSIGHT_SAME_AS_YESTERDAY`),
-    // };
     return (
       <div
         style={{
@@ -172,15 +163,6 @@ const Map = ({
       >
         <div style={{ fontWeight: 700, fontSize: "16px", margin: "10px" }}>{formattedName}</div>
         {dataTip.value !== undefined ? <div>{formatPercentage(dataTip.value)}</div> : null}
-        {/* {showInsights ? (
-          <React.Fragment>
-            <div style={{ fontWeight: 400, fontSize: "16px", margin: "10px" }}>{dataTip.indicator !== "no_diff" ? formatPercentage(dataTip.insightValue): null}</div>
-            {chartData.hasOwnProperty(formattedName.toLowerCase()) && <div style={{ margin: "10px" }}>{formatPercentage(chartData[formattedName.toLowerCase()])}</div>}
-            <div style={{ margin: "10px", fontWeight: 400, fontSize: "16px" }}>
-              {dataTip.indicator !== "no_diff" ? t(`DSS_HEALTH_INSIGHTS_THAN_YESTERDAY`) : null}
-            </div>
-          </React.Fragment>
-        ) : null} */}
       </div>
     );
   };
@@ -371,12 +353,9 @@ const Map = ({
                             drillDown(locationName, value, level, hasCoordinatesDown);
                           }}
                           onMouseEnter={() => {
-                            // const insight = insightsResults[locationName];
                             setTooltipContent({
                               name: locationName,
                               value: chartData?.[locationName],
-                              // insightValue: insight?.insightValue,
-                              // indicator: insight?.indicator,
                             });
                             setHoveredData({ name: locationName, value })
                           }}
@@ -389,48 +368,6 @@ const Map = ({
                     });
                   }}
                 </Geographies>
-                {/* {markers.map(({ name, origin }) => {
-                  const value = chartData[name];
-                  if (filterFeature && filterFeature !== name) {
-                    return null;
-                  }
-                  if (value > -1) {
-                    const formattedValue = formatPercentage(value);
-                    return (
-                      <Marker
-                        key={name}
-                        cursor={value ? "pointer" : "default"}
-                        coordinates={[origin.lat, origin.lng]}
-                        onMouseEnter={() => {
-                          const insight = insightsResults[name];
-                          setTooltipContent({
-                            name,
-                            insightValue: insight?.insightValue,
-                            indicator: insight?.indicator,
-                          });
-                        }}
-                        onMouseLeave={() => {
-                          setTooltipContent("");
-                        }}
-                        onClick={() => {
-                          drillDown(name, value);
-                        }}
-                      >
-                        <text textAnchor="middle" style={{ fill: "#505A5F", fontSize: mapStyle?.fontSize || "10%" }}>
-                          {formattedValue}
-                        </text>
-                        {showLabel && name ? (
-                          <text
-                            textAnchor="middle"
-                            style={{ fill: "#505A5F", fontSize: mapStyle?.fontSize || "0.2px", transform: "translateY(0.3px)" }}
-                          >
-                            {name[0].toUpperCase() + name.slice(1)}
-                          </text>
-                        ) : null}
-                      </Marker>
-                    );
-                  }
-                })} */}
               </ZoomableGroup>
             </ComposableMap>
           </React.Fragment>
