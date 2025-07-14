@@ -137,7 +137,7 @@ const CustomHorizontalBarChart = ({
       moduleLevel: value?.moduleLevel,
       aggregationFactors: null,
     };
-  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+  const { isLoading, isFetching, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   let target = 0;
   let targetMessage = "";
@@ -287,8 +287,12 @@ const CustomHorizontalBarChart = ({
     return value;
   };
 
-  if (isLoading) {
-    return <Loader className={"digit-center-loader"} />;
+  if (isLoading || isFetching) {
+    return (
+     <div style={{ width: "100%", height: "500px" }}>
+        <Loader className={"digit-center-loader"} />
+      </div>
+    );
   }
   const formatXAxis = (tickFormat) => {
     // if (tickFormat && typeof tickFormat == "string") {

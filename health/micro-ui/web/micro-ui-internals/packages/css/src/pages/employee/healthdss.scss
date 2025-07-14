@@ -3227,21 +3227,21 @@
     }
 
     /*.digit-text-input-field {
-      height: 2rem !important;
-
-      .input-container {
         height: 2rem !important;
-
-        .digit-employeeCard-input {
+  
+        .input-container {
           height: 2rem !important;
+  
+          .digit-employeeCard-input {
+            height: 2rem !important;
+          }
+  
+          .digit-text-input-customIcon {
+            top: 0.25rem;
+            right: 0.5rem;
+          }
         }
-
-        .digit-text-input-customIcon {
-          top: 0.25rem;
-          right: 0.5rem;
-        }
-      }
-    }*/
+      }*/
   }
 }
 
@@ -3370,6 +3370,7 @@
 .digit-loader-new {
   &.digit-center-loader {
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
