@@ -278,6 +278,16 @@ const PlanInbox = () => {
     },
   });
 
+    useEffect(() => {
+      if (tableRef.current) {
+        // Get full rendered height including borders/padding
+        const height = tableRef.current.offsetHeight;
+        setTableHeight(height / 16 + 7.25);
+      }else{
+        setTableHeight(33);
+      }
+    }, [planWithCensus, tableRef, tableRef?.current]); 
+
 
   const {
     isLoading: isPlanWithToAllCensusLoading,
@@ -947,7 +957,7 @@ const PlanInbox = () => {
   });
 
 
-  
+
   return (
     <div className="pop-inbox-wrapper">
       <div>
