@@ -1,14 +1,15 @@
 # Changelog
 
-## 0.4 - 2025-7-10
+## 0.3.3 - 2025-7-10
 
 #### Admin console
+  1. App configuration CSS
+  2. Updated Console CSS
 
-- **Redesigned Campaign Creation Flow**  
-  Improved UI/UX for campaign creation with a more intuitive, streamlined experience.
 
-- **Introduced App Screen Configuration Feature**  
-  Added a new dynamic configuration interface to manage app screens, with support for localization and modular setup.
+## 0.3.2 - 2025-3-19
+#### Admin console , Microplan & Payments
+  1. Updated Payment module CSS
 
 ## 0.3.1 - 2025-2-11
 
