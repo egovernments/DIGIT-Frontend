@@ -400,10 +400,12 @@
   gap: 1rem;
   width: auto;
   justify-content: flex-end;
+  max-width: 55%;
+  min-width: 45%;
 
   .digit-table-search-wrapper {
     display: flex !important;
-    width: fit-content;
+    width: 80%;
     align-items: center;
     gap: 0.5rem;
 
