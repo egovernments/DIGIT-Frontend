@@ -22,8 +22,13 @@ const LanguageSelection = () => {
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 
-  const handleSubmit = (event) => {
-    history.push(`/${window?.contextPath}/employee/user/login`);
+  function getContextPath(contextPath) {
+    if (!contextPath || typeof contextPath !== "string") return "";
+    return contextPath.split("/")[0];
+  }
+
+  const handleSubmit = (event) => {    
+    history.push(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
   };
 
   if (isLoading) return <Loader />;

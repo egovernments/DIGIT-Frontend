@@ -4,6 +4,9 @@ Here's the `CHANGELOG` file for the specified versions:
 # Changelog
 
 
+## [1.8.21]  [10-Jun-2025]
+- integrated with updated version
+
 ## [1.8.19]  [4-Mar-2025]
 - DUCE-254 :  introduced a new formcomposercitizen for citizen variant
 

@@ -8,9 +8,11 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isChecked, setIsChecked] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-  const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, "commonUiConfig", [{ name: "PrivacyPolicy" }], {
+  const moduleName=Digit.Utils.getConfigModuleName();
+
+  const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, moduleName, [{ name: "PrivacyPolicy" }], {
     select: (data) => {
-      const filteredPrivacyPolicy = data?.commonUiConfig?.PrivacyPolicy.find(policy => policy.module === props?.props?.module);
+      const filteredPrivacyPolicy = data?.[moduleName]?.PrivacyPolicy.find(policy => policy.module === props?.props?.module);
       return filteredPrivacyPolicy;
     },
   });
@@ -33,12 +35,12 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
 
   return (
     <React.Fragment>
-      <div className="digit-privacy-checkbox">
+      <div className="digit-privacy-checkbox digit-privacy-checkbox-align">
         <CheckBox label={t("ES_BY_CLICKING")} checked={isChecked} onChange={handleCheckboxChange} id={"privacy-component-check"}></CheckBox>
         <Button
           label={t(`ES_PRIVACY_POLICY`)}
           variation={"link"}
-          size={"medium"}
+          size={"small"}
           onClick={onButtonClick}
           // isSuffix={true}
           style={{ marginBottom: "1.18rem", paddingLeft: "0.2rem" }}
@@ -93,6 +95,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
                       e.preventDefault();
                       handleScrollToElement(content?.header);
                     }}
+                    style={{justifyContent: "flex-start"}}
                   ></Button>
                 </li>
               ))}

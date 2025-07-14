@@ -785,7 +785,7 @@ const LocalisationAdd = () => {
               className={""}
               type={"button"}
               size={"large"}
-              variation={"primary"}
+              variation={"secondary"}
               label={t("WBH_DOWLOAD_TEMPLATE")}
               title={t("WBH_DOWLOAD_TEMPLATE")}
               onClick={callInputClick}

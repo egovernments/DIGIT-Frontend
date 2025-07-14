@@ -4,6 +4,7 @@ import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
+import { useHistory, useLocation } from "react-router-dom";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -14,6 +15,22 @@ const EmployeeLogin = ({ stateCode }) => {
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
   const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
+  const history = useHistory();
+  const location = useLocation();
+
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    if (!query.get("ts")) {
+      const ts = Date.now();
+      history.replace({
+        pathname: location.pathname,
+        search: `?ts=${ts}`
+      });
+    }
+  }, [location, history]);
+
+
   const { data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,

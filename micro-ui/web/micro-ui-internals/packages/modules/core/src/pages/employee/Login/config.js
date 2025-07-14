@@ -2,7 +2,7 @@ export const loginConfig = [
   {
     texts: {
       header: "CORE_COMMON_LOGIN",
-      submitButtonLabel: "CORE_COMMON_CONTINUE",
+      submitButtonLabel: "CORE_COMMON_LOGIN",
       secondaryButtonLabel: "CORE_COMMON_FORGOT_PASSWORD",
     },
     inputs: [
@@ -50,7 +50,21 @@ export const loginConfig = [
               "(data)=>{ return Array.isArray(data['tenant'].tenants) && Digit.Utils.getUnique(data['tenant'].tenants).map(ele=>({code:ele.code,name:Digit.Utils.locale.getTransformedLocale('TENANT_TENANTS_'+ele.code)}))}",
           },
         },
-      }
+      },
+      {
+        key: "check",
+        type: "component",
+        disable: false,
+        component: "PrivacyComponent",
+        populators: {
+          name: "check"
+        },
+        customProps: {
+          module: "HCM"
+        },
+        isMandatory: false,
+        withoutLabel: true
+      },
     ],
   },
 ];

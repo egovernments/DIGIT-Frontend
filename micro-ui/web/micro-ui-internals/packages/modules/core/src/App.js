@@ -2,11 +2,13 @@ import React, { useEffect } from "react";
 import { Redirect, Route, Switch, useHistory, useLocation } from "react-router-dom";
 import CitizenApp from "./pages/citizen";
 import EmployeeApp from "./pages/employee";
-import SignUp from "./pages/employee/SignUp";
+// import SignUp from "./pages/employee/SignUp";
 import Otp from "./pages/employee/Otp";
 import ViewUrl from "./pages/employee/ViewUrl";
 import CustomErrorComponent from "./components/CustomErrorComponent";
 import DummyLoaderScreen from "./components/DummyLoader";
+import SignUpV2 from "./pages/employee/SignUp-v2";
+import LoginV2 from "./pages/employee/Login-v2";
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen",allowedUserTypes=["citizen","employee"] }) => {
   const history = useHistory();
@@ -111,8 +113,14 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
           <CustomErrorComponent />
         </Route>
         <Route exact path={`/${window?.globalPath}/user/sign-up`}>
-          <SignUp stateCode={stateCode} />
+          <SignUpV2 stateCode={stateCode} />
         </Route>
+        <Route exact path={`/${window?.globalPath}/user/login`}>
+          <LoginV2 stateCode={stateCode} />
+        </Route>
+        {/* <Route exact path={`/${window?.globalPath}/user/sign-up`}>
+          <SignUp stateCode={stateCode} />
+        </Route> */}
         <Route exact path={`/${window?.globalPath}/user/otp`}>
           <Otp />
         </Route>

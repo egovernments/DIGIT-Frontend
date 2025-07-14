@@ -15,7 +15,7 @@ import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import ImageComponent from "../../components/ImageComponent";
-const userScreensExempted = ["user/landing", "user/profile", "user/error","user/productPage"];
+const userScreensExempted = ["user/landing", "user/profile", "user/error", "user/productPage"];
 
 const EmployeeApp = ({
   stateInfo,
@@ -33,9 +33,9 @@ const EmployeeApp = ({
   sourceUrl,
   pathname,
   initData,
-  noTopBar=false
+  noTopBar = false
 }) => {
-  
+
 
   const history = useHistory();
   const { t } = useTranslation();
@@ -48,7 +48,16 @@ const EmployeeApp = ({
   }, []);
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
-
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+  const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPage/`);
+  useEffect(() => {
+    const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
+    const queryParams = new URLSearchParams(location.search);
+    const cameFromButton = queryParams.get("from") === "sandbox";
+    if (isSuperUserWithMultipleRootTenant && isDirectAccess && !cameFromButton) {
+      history.replace(`${path}/sandbox/productPage`);
+    }
+  }, [location.pathname, location.search, path, history, isSuperUserWithMultipleRootTenant]);
   return (
     <div className="employee">
       <Switch>
@@ -77,22 +86,21 @@ const EmployeeApp = ({
             }
           >
             <Switch>
-              <Route exact path={`${path}/user/login`}>
-                <EmployeeLogin stateCode={stateCode} />
-              </Route>
+              {!Digit.Utils.getMultiRootTenant() && (
+                <Route exact path={`${path}/user/login`}>
+                  <EmployeeLogin stateCode={stateCode} />
+                </Route>
+              )}
               <Route exact path={`${path}/user/login/otp`}>
                 <Otp isLogin={true} />
               </Route>
               <Route path={`${path}/user/forgot-password`}>
-                <ForgotPassword />
+                <ForgotPassword stateCode={stateCode}/>
               </Route>
               <Route path={`${path}/user/change-password`}>
                 <ChangePassword />
               </Route>
-              <PrivateRoute path={`${path}/user/profile`}>
-                <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />
-              </PrivateRoute>
-
+              <PrivateRoute path={`${path}/user/profile`} component={()=><UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />}/>
               <Route path={`${path}/user/error`}>
                 <ErrorComponent
                   initData={initData}
@@ -109,9 +117,9 @@ const EmployeeApp = ({
               </Route>
             </Switch>
           </div>
-        </Route> 
-       <Route>
-          {!noTopBar&&<TopBarSideBar
+        </Route>
+        <Route>
+          {!noTopBar && <TopBarSideBar
             t={t}
             stateInfo={stateInfo}
             userDetails={userDetails}
@@ -123,8 +131,10 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar?`main ${DSO ? "m-auto" : ""} digit-home-main`:""}>
-            <div className="employee-app-wrapper digit-home-app-wrapper">
+          <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+
+            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
+              {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
               <ErrorBoundary initData={initData}>
                 <AppModules
                   stateCode={stateCode}
