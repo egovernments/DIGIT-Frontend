@@ -958,7 +958,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
+            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code, transitionTime: 5000000 });
+            setIsError(true);
+            setApiError(errorMessage);
+            setNotValid(2);
+            return;
+          }
+          if (temp?.additionalDetails?.error?.code) {
+            setLoader(false);
+            setIsValidation(false);
+            // const errorMessage = temp?.error.replaceAll(":", "-");
+            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
