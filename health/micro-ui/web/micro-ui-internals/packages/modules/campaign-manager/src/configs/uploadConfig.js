@@ -1,4 +1,4 @@
-export const uploadConfig = (totalFormData, campaignData,  summaryErrors, hierarchyData) => {
+export const uploadConfig = ({totalFormData, campaignData,  summaryErrors}) => {
   return [
     {
       form: [
