@@ -408,44 +408,52 @@
     width: 80%;
     align-items: center;
     gap: 0.5rem;
+    width: 24rem;
+    max-width: 100%;
+
+    svg {
+      flex-shrink: 0;
+    }
+
+    @media (max-width: 64rem) {
+      width: 20rem;
+    }
+
+    @media (max-width: 48rem) {
+      width: 100%;
+    }
 
     .digit-field {
-      @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
-        /* Media query for tablets */
-        max-width: 27.5rem;
+      width: 24rem;
+      max-width: 100%;
+
+      @media (max-width: 64rem) {
+        width: 20rem;
       }
 
-      @media (max-aspect-ratio: 9/16) {
-        /* Media query for mobile */
-        max-width: 100%;
+      @media (max-width: 48rem) {
         width: 100%;
-      }
-
-      @media (min-aspect-ratio: 3/4) {
-        /* Media query for desktop */
-        width: 37.5rem;
       }
     }
 
     /*.digit-text-input-field {
-      height: 2rem !important;
-
-      .input-container {
         height: 2rem !important;
-
-        .digit-employeeCard-input {
+  
+        .input-container {
           height: 2rem !important;
+  
+          .digit-employeeCard-input {
+            height: 2rem !important;
+          }
+  
+          .digit-text-input-customIcon {
+            top: 0.25rem;
+            right: 0.5rem;
+          }
         }
-
-        .digit-text-input-customIcon {
-          top: 0.25rem;
-          right: 0.5rem;
-        }
-      }
-    }*/
+      }*/
   }
 }
-
 .custom-table.digit-side-content {
   width: auto;
 }
@@ -571,6 +579,7 @@
 .digit-loader-new {
   &.digit-center-loader {
     width: 100%;
+    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;

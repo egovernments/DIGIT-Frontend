@@ -16,7 +16,7 @@ WORKDIR /app/web
 RUN node -e "console.log('Heap limit (MB):', v8.getHeapStatistics().heap_size_limit / (1024 * 1024))"
 
 # Print a marker log (optional debug message)
-RUN node -e "console.log('core only')"
+RUN node -e "console.log('health-workbench only')"
 
 # Move into microplan and run install script
 WORKDIR /app/web/workbench

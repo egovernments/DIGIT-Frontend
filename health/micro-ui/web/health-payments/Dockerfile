@@ -1,24 +1,42 @@
-FROM egovio/alpine-node-builder-14:yarn AS build
-#FROM ghcr.io/egovernments/alpine-node-builder-14:yarn AS build
-RUN apk update && apk upgrade
-RUN apk add --no-cache git>2.30.0
+FROM node:14-alpine3.14 AS build
+RUN apk update
+RUN apk add --no-cache 'git>2.30.0'
+# Install dependencies required for node-gyp (Python, make, g++, etc.)
+RUN apk add --no-cache python2 make g++ \
+    && ln -sf /usr/bin/python2 /usr/bin/python
+
 ARG WORK_DIR
 WORKDIR /app
-ENV NODE_OPTIONS "--max-old-space-size=4792"
+ENV NODE_OPTIONS="--max-old-space-size=4792"
 
 COPY ${WORK_DIR} .
 RUN ls -lah
 
-#RUN node web/envs.js
-RUN cd web/ \
-    && node -e 'console.log(v8.getHeapStatistics().heap_size_limit/(1024*1024))' \
-    && node -e 'console.log("core only")' \
-    && cd health-payments/ \
-    && chmod +x ./install-deps.sh \
-    &&  ./install-deps.sh \
-    && cd ../ \
-    && yarn install \ 
-    && yarn build:webpack 
+# Set working directory
+WORKDIR /app/web
+
+# Show heap size limit
+RUN node -e "console.log('Heap limit (MB):', v8.getHeapStatistics().heap_size_limit / (1024 * 1024))"
+
+# Print a marker log (optional debug message)
+RUN node -e "console.log('core only')"
+
+# Move into microplan and run install script
+WORKDIR /app/web/health-payments
+RUN chmod +x ./install-deps.sh
+RUN ./install-deps.sh
+
+# Return to main directory for install/build
+WORKDIR /app/web
+
+# Increase timeout before install (recommended for GitHub Actions)
+RUN yarn config set network-timeout 600000
+
+# Install dependencies
+RUN yarn install
+
+# Build the project
+RUN yarn build:webpack
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
