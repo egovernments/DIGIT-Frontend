@@ -244,7 +244,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? t(error?.response?.data?.Errors?.[0]?.code) : error });
           },
           onSuccess: async (data) => {},
         }
@@ -257,7 +257,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? t(error?.response?.data?.Errors?.[0]?.code) : error });
           },
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
@@ -299,7 +299,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         },
         {
           onError: (error, variables) => {
-            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : error });
+            setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? t(error?.response?.data?.Errors?.[0]?.code) : error });
           },
           onSuccess: async (data) => {
             refetchCache();

@@ -452,6 +452,7 @@ tbody {
 .add-new-product-container {
   border: 1px solid #d6d5d4;
   background-color: #fafafa;
+  margin-bottom: 1.5rem;
   width: 100%;
   .heading-bar {
     font-weight: 700;
@@ -1091,6 +1092,11 @@ tbody {
   .infotext {
     width: 12rem !important;
   }
+  .digit-field {
+    .digit-radio-options-wrap {
+      flex-direction: column;
+    }
+  }
 }
 .app-preview-field-pair.app-preview-selected {
   .digit-header-content .label {
@@ -1259,7 +1265,7 @@ tbody {
   }
 }
 
-.info-text{
+.info-text {
   color: theme(digitv2.lightTheme.text-color-secondary);
 }
 

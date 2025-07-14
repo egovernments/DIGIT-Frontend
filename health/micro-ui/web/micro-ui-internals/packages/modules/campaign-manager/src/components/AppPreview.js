@@ -1,142 +1,10 @@
 import React, { Fragment } from "react";
-import {
-  Card,
-  CardText,
-  TextInput,
-  SelectionTag,
-  Dropdown,
-  CardHeader,
-  Button,
-  TooltipWrapper,
-  AlertCard,
-  FieldV1,
-  SVG,
-  Loader,
-  CheckBox,
-} from "@egovernments/digit-ui-components";
+import { Card, CardText, TextInput, SelectionTag, Dropdown, CardHeader, Button, FieldV1, Loader, CheckBox } from "@egovernments/digit-ui-components";
 import { DynamicImageComponent } from "./DynamicImageComponent";
 import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
 import GenericTemplateScreen from "./GenericTemplateScreen";
 import DynamicSVG from "./DynamicSVGComponent";
-
-const dummydata = {
-  name: "HOUSEHOLD_LOCATION",
-  cards: [
-    {
-      fields: [
-        {
-          type: "text",
-          label: "Address Line 1",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-        {
-          type: "Selection",
-          label: "Address Line 1",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-        {
-          type: "numeric",
-          label: "Address Line 1",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-        {
-          type: "dropdown",
-          label: "Address Line 2",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-        {
-          type: "date",
-          label: "Address Line 2",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-        {
-          type: "dob",
-          label: "Address Line 4",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-      ],
-      header: "Header",
-      description: "Desc",
-      headerFields: [
-        {
-          type: "text",
-          label: "SCREEN_HEADING",
-          active: true,
-          jsonPath: "ScreenHeading",
-          metaData: {},
-          required: true,
-        },
-        {
-          type: "text",
-          label: "SCREEN_DESCRIPTION",
-          active: true,
-          jsonPath: "Description",
-          metaData: {},
-          required: true,
-        },
-      ],
-    },
-  ],
-  order: 1,
-  config: {
-    enableComment: true,
-    enableFieldAddition: true,
-    allowFieldsAdditionAt: ["body"],
-    enableSectionAddition: true,
-    allowCommentsAdditionAt: ["body"],
-  },
-  parent: "REGISTRATION",
-  headers: [
-    {
-      type: "header",
-      label: "KJHSJKDHKJH",
-    },
-    {
-      type: "info",
-      label: "KJHSJKDHKJH",
-    },
-    {
-      type: "description",
-      label: "KJHSJKDHKJH",
-    },
-  ],
-};
-
-const DobPicker = ({ t }) => {
-  return (
-    <div className="dob-picker">
-      <Card type="secondary">
-        <div>{t("HCM_DATE_OF_BIRTH")}</div>
-        <TextInput name="numeric" onChange={() => {}} type={"date"} />
-        <div>({t("HCM_OR")})</div>
-        <div>{t("HCM_AGE")}</div>
-        <div className="date-style">
-          <TextInput name="numeric" onChange={() => {}} placeholder={t("HCM_YEARS")} disabled={true} />
-          <TextInput name="numeric" onChange={() => {}} placeholder={t("HCM_MONTHS")} disabled={true} />
-        </div>
-      </Card>
-    </div>
-  );
-};
 
 const MdmsDropdown = ({
   t,
@@ -230,8 +98,8 @@ const renderField = (field, t) => {
         <SelectionTag
           errorMessage=""
           onSelectionChanged={() => {}}
-          schemaCode={field?.schemaCode}
-          options={data || field?.dropDownOptions}
+          schemaCode={field?.isMdms ? field?.schemaCode : null}
+          options={field?.isMdms ? data : field?.dropDownOptions}
           optionsKey={"name"}
           selected={[]}
           withContainer={true}
@@ -334,7 +202,7 @@ const getFieldType = (field) => {
       return "button";
   }
 };
-const AppPreview = ({ data = dummydata, selectedField, t }) => {
+const AppPreview = ({ data = {}, selectedField, t }) => {
   return (
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
