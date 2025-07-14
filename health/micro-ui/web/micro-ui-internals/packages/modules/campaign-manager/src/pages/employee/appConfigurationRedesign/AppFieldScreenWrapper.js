@@ -84,7 +84,6 @@ function AppFieldScreenWrapper() {
               <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
               <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
             </div>
-            {/* todo update localisation */}
             {fields?.map(
               ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
                 return (

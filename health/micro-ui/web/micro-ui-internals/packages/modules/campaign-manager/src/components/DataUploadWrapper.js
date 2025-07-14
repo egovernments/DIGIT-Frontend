@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import UploadData from "./UploadData";
 import { useTranslation } from "react-i18next";
 import UploadDataMappingWrapper from "./UploadDataMappingWrapper";
+import NewUploadData from "./CreateCampaignComponents/NewUploadData";
 
 function DataUploadWrapper({ formData, props, onSelect }) {
   const { t } = useTranslation();
@@ -69,7 +70,8 @@ function DataUploadWrapper({ formData, props, onSelect }) {
         {mappingCategories?.includes(currentCategories) ? (
           <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
         ) : (
-          <UploadData formData={formData} props={props} onSelect={onSelect} />
+          // <UploadData formData={formData} props={props} onSelect={onSelect} />
+          <NewUploadData formData={formData} props={props} onSelect={onSelect} />
         )}
       </div>
     </>

@@ -54,6 +54,7 @@ const MyCampaignNew = ({showDashboardLink}) => {
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
     sessionStorage.removeItem("HCM_CAMPAIGN_NUMBER");
+    window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
   }, []);
 
   // useEffect(() => {

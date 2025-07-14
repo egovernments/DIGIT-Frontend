@@ -1,18 +1,6 @@
-import React, { createContext, Fragment, useContext, useEffect, useReducer, useRef, useState } from "react";
+import React, { createContext, Fragment, useContext, useEffect, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import {
-  Footer,
-  Button,
-  Divider,
-  Loader,
-  PopUp,
-  SidePanel,
-  Dropdown,
-  LabelFieldPair,
-  TextInput,
-  Toast,
-  FieldV1,
-} from "@egovernments/digit-ui-components";
+import { Footer, Button, Loader, PopUp, SidePanel, Toast, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -20,10 +8,7 @@ import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AppPreview from "../../../components/AppPreview";
-import { dummyMaster } from "../../../configs/dummyMaster";
 import { useCustomT } from "./useCustomT";
-import { add } from "lodash";
-// import { dummyMaster } from "../../configs/dummyMaster";
 
 const AppConfigContext = createContext();
 
@@ -312,7 +297,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const [addFieldData, setAddFieldData] = useState(null);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
-  // const localeModule = searchParams.get("localeModule");
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
   const [showError, setShowError] = useState(null);
@@ -345,18 +329,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     },
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
-  // const isLoadingAppConfigMdmsData = false;
-  // useEffect(() => {
-  //   dispatch({
-  //     type: "MASTER_DATA",
-  //     state: {
-  //       screenConfig: screenConfig,
-  //       ...dummyMaster?.["HCM-ADMIN-CONSOLE"],
-  //       AppFieldType: dummyMaster?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
-  //       // ...dummyMaster,
-  //     },
-  //   });
-  // }, [dummyMaster]);
 
   const openAddFieldPopup = (data) => {
     setPopupData({ ...data, id: crypto.randomUUID() });
@@ -394,7 +366,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           module: localeModule ? localeModule : "hcm-dummy-module",
           locale: locale,
         }));
-      // .filter((item) => item.message !== "");
     });
 
     return result;
@@ -409,7 +380,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     const errors = {};
     const fields = state?.fields;
     const headerFields = state?.headerFields;
-    // const findConfig = (bindTo) => drawerPanelConfig.find((item) => item.bindTo === bindTo);
 
     for (let i = 0; i < headerFields.length; i++) {
       if (headerFields[i]?.jsonPath === "ScreenHeading") {
@@ -495,7 +465,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     try {
       setLoading(true);
       const result = await localisationMutate(localeArrays);
-      // queryClient.invalidateQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
       updateCount = updateCount + 1;
       updateSuccess = true;
     } catch (error) {
@@ -503,22 +472,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
       setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
       console.error(`Error sending localisation data:`, error);
     }
-    // for (const locale of Object.keys(localeArrays)) {
-    //   if (localeArrays[locale].length > 0) {
-    //     try {
-    //       setLoading(true);
-    //       const result = await localisationMutate(localeArrays[locale]);
-    //       queryClient.invalidateQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
-    //       updateCount = updateCount + 1;
-    //       updateSuccess = true;
-    //     } catch (error) {
-    //       setLoading(false);
-    //       setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
-    //       console.error(`Error sending ${locale} localisation data:`, error);
-    //     }
-    //   }
-    // }
-    setLoading(false);
     return;
   };
   const handleSubmit = async (finalSubmit) => {
@@ -541,7 +494,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     try {
       setLoading(true);
       const result = await localisationMutate(localeArrays);
-      // queryClient.invalidateQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
       updateCount = updateCount + 1;
       updateSuccess = true;
     } catch (error) {
@@ -554,9 +506,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     if (updateSuccess || !updateCount) {
       onSubmit(state, finalSubmit);
     }
-
     console.info("LOCALISATION_UPSERT_SUCCESS");
-    // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
   };
 
   const currentPage = parseInt(pageTag.split(" ")[1]);
@@ -564,13 +514,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      {/* <div className="app-config-flex-container"> */}
       <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
-      {/* <DndProvider backend={HTML5Backend}>
-          <AppFieldScreenWrapper onSubmit={onSubmit} />
-        </DndProvider> */}
-      {/* </div> */}
-
       <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
@@ -618,16 +562,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                   setShowPopUp(true);
                 }}
               />
-              {/* <Button
-                className="app-configure-drawer-footer-button"
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("PREVIEW")}
-                onClick={() => {
-                  setShowPreview(true);
-                }}
-              /> */}
             </div>,
           ]}
           header={[
@@ -641,12 +575,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           sections={[]}
           styles={{}}
           type="static"
-          // addClose={true}
-          // onClose={() =>
-          // dispatch({
-          // type: "UNSELECT_DRAWER_FIELD",
-          // })
-          // }
         >
           {state?.drawerField ? (
             <>
@@ -664,25 +592,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 }
               />
               <DrawerFieldComposer />
-              {/* <Divider /> */}
-              {/* <Button
-                type={"button"}
-                size={"large"}
-                variation={"primary"}
-                label={t("ADD_LOCALISATION")}
-                onClick={() => {
-                  setShowPopUp(true);
-                }}
-              /> */}
-              {/* <Button
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("PREVIEW")}
-                onClick={() => {
-                  setShowPreview(true);
-                }}
-              /> */}
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
@@ -819,12 +728,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 t: t,
                 title: "ADD_FIELD_TYPE",
                 fieldPairClassName: "",
-                // mdmsConfig: field?.isMdms
-                //   ? {
-                //       moduleName: field?.schemaCode?.split(".")[0],
-                //       masterName: field?.schemaCode?.split(".")[1],
-                //     }
-                //   : null,
                 options: (state?.MASTER_DATA?.AppFieldType || [])
                   .filter((item) => item?.metadata?.type !== "template")
                   ?.sort((a, b) => a?.order - b?.order),
@@ -918,10 +821,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
         ]}
         className={"new-actionbar"}
       />
-      {/* <ActionBar className="app-config-actionBar">
-        {showBack && <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />}
-        <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />
-      </ActionBar> */}
     </AppConfigContext.Provider>
   );
 }

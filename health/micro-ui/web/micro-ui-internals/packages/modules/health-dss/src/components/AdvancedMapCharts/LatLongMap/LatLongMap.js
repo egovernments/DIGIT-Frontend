@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import ReactTooltip from "react-tooltip";
 import { ZoomableGroup, Geographies, ComposableMap, Geography, Marker } from "react-simple-maps";
-// import { Icon } from "../../common/Icon";
+import { Button } from "@egovernments/digit-ui-components";
 import { getTitleHeading } from "../../../utils/locale";
+import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const LatLongMap = ({ 
   chartId, 
   mapData, 
@@ -92,21 +93,7 @@ const LatLongMap = ({
 
       return (
         <button
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            padding: "5px 10px",
-            width: "100%",
-            background: "#FFFFFF",
-            border: "1px solid #D6D5D4",
-            boxShadow: "0px 1px 2px rgba(0, 0, 0, 0.16)",
-            color: "#F47738",
-            fontWeight: "700",
-            fontSize: "16px",
-            cursor: "pointer",
-          }}
+          className={"digit-heat-map-zoom-button"}
           onClick={() => {
             if (label === "+") {
               handleZoomIn();
@@ -121,16 +108,7 @@ const LatLongMap = ({
     };
 
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "end",
-          flexDirection: "column",
-          alignItems: "center",
-          marginBottom: "24px",
-          marginRight: "24px"
-        }}
-      >
+      <div className={"digit-heat-map-zoom-wrap"}>
         {button("+")}
         {button("-")}
       </div>
@@ -172,49 +150,74 @@ const LatLongMap = ({
           setFilterFeature({finalFilter: name})
         } else return;
       }
+
+      const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
   
       if (level === 2) {
+        const boundaryLevel = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
         let dummy = {...filterStack};
         if (dummy.value===undefined) {
-          dummy.value = {"filters": {province: name}}
+          dummy.value = {"filters": {
+            "boundaryType" : boundaryLevel,
+            [boundaryLevel]: name 
+          }}
         }
         setFilterStack(dummy); 
-        setBoundaryLevel("province")
+        setBoundaryLevel(boundaryLevel)
       } 
   
       if (level === 3) {
+        const boundaryLevel = getBoundaryTypeByLevel("level-three", boundaryLevelMap);
         let dummy = {...filterStack};
-        dummy.value.filters = {...dummy.value.filters, district:name}
+        dummy.value.filters = {...dummy.value.filters, 
+          "boundaryType" : boundaryLevel,
+          [boundaryLevel]: name
+        }
         setFilterStack(dummy); 
-        setBoundaryLevel("disrict")
+        setBoundaryLevel(boundaryLevel)
       } 
   
       setChartKey(drillDownChart);
       setDrillDownStack((prev) => {
-        return [...prev, { id: drillDownChart, label: name, boundary: level===2 ? "province" : level===3 ? "district": level===4 ? "administrativeProvince" : "" }];
+        return [
+          ...prev,
+          {
+            id: drillDownChart,
+            label: name,
+            boundary:
+              level === 2
+                ? getBoundaryTypeByLevel("level-two", boundaryLevelMap)
+                : level === 3
+                ? getBoundaryTypeByLevel("level-three", boundaryLevelMap)
+                : level === 4
+                ? getBoundaryTypeByLevel("level-four", boundaryLevelMap)
+                : "",
+          },
+        ];
       });
     }
     
   };
   const Recentre = () => {
-    const recentreHandler = () => {
-      setZoom((prev) => {
-        return { ...prev, coordinates: mapData.center };
-      });
-    }
-    return (
-    <div style={{    
-      display: "flex",
-      marginBottom: "24px",
-      marginLeft: "24px",
-      cursor: "pointer"
-    }} >
-        <div style={{border: "1px solid #F47738", display: "flex",flexDirection: "row"}} onClick={() => {recentreHandler();}}>
-          {/* <div style={{margin:"9px"}}>{Icon("recenter-map")}</div> */}
-          <div style={{color: "#F47738", fontSize: "14px", fontWeight: 700, margin: "9px"}}>{t("DSS_MAP_RECENTRE")}</div>
-        </div>
-    </div>)
-  }
+      const recentreHandler = () => {
+        setZoom((prev) => {
+          return { ...prev, coordinates: mapData.center };
+        });
+      };
+      return (
+        <Button
+          type={"button"}
+          label={t("DSS_MAP_RECENTRE")}
+          variation={"secondary"}
+          title={t("DSS_MAP_RECENTRE")}
+          t={t}
+          className={"digit-heat-map-recenter"}
+          icon={"AssistantNavigation"}
+          onClick={() => recentreHandler()}
+          size={"small"}
+        ></Button>
+      );
+    };
   const PointsDataTable = () => {
     return (
       <div

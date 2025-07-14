@@ -6,12 +6,6 @@ import { Area, AreaChart, CartesianGrid, Legend, Line, LineChart, ResponsiveCont
 import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 const COLORS = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
-const increasedHeightCharts = [
-  "nssOBPSTotalPermitsVsTotalOCSubmittedVsTotalOCIssued",
-  "nssNOCApplicationVsProvisionalVsActual",
-  "nocApplicationVsProvisionalVsActual",
-  "permitsandOCissued",
-];
 const getColors = (index = 0) => {
   index = COLORS.length > index ? index : 0;
   return COLORS[index];
@@ -61,30 +55,13 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   const [totalCapacity, setTotalCapacity] = useState(0);
   const [totalWaste, setTotalWaste] = useState(0);
   const [keysArr, setKeysArr] = useState([]);
-      const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId} = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
-
+  const { campaignId } = Digit.Hooks.useQueryParams();
   const [manageChart, setmanageChart] = useState("Area");
   const stateTenant = Digit?.ULBService?.getStateId();
   const { isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateTenant, "FSM", "FSTPPlantInfo", {
     enabled: id === "fsmCapacityUtilization",
   });
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-  //   filters: {
-  //     ...value?.filters,
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId:campaignId
-  //   },
-  //   moduleLevel: value?.moduleLevel
-  // });
-
-    const aggregationRequestDto = {
+  const aggregationRequestDto = {
       visualizationCode: id,
       visualizationType: "metric",
       queryType: "",
@@ -95,9 +72,9 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
       },
       aggregationFactors: null,
       moduleLevel: value?.moduleLevel,
-    };
+  };
 
-    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   useEffect(() => {
     if (mdmsData) {
@@ -297,7 +274,7 @@ const strokeDash = (key) => {
           {t("DSS_FSM_TOTAL_SLUDGE_TREATED")} - {totalWaste} {t("DSS_KL")}
         </p>
       )}
-      <ResponsiveContainer width="94%" height={increasedHeightCharts.includes(id) ? 700 : 450}>
+      <ResponsiveContainer width="94%" height={450}>
         {!chartData || chartData?.length === 0 ? (
           <NoData t={t} />
         ) : manageChart == "Area" ? (

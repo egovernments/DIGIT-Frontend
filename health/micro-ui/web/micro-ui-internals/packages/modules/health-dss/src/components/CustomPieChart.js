@@ -29,8 +29,6 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const [activeIndex, setActiveIndex] = useState(null);
   const { startDate, endDate, interval } = getInitialRange();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -41,30 +39,6 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
     interval: interval,
     title: "home",
   };
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: isPieClicked ? drillDownId : id,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate:
-  //     value?.requestDate != null
-  //       ? {
-  //           ...value?.requestDate,
-  //           startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
-  //           endDate: value?.range?.endDate?.getTime(),
-  //         }
-  //       : requestDate,
-  //   filters: isPieClicked
-  //     ? { ...value?.filters, selectedType: pieSelected,
-  //       // projectTypeId: selectedProjectTypeId
-  //       campaignId:campaignId
-  //     }
-  //     : { ...value?.filters,
-  //       //  projectTypeId: selectedProjectTypeId
-  //       campaignId:campaignId
-  //        },
-  //   moduleLevel: value?.moduleLevel,
-  // });
-
   const aggregationRequestDto = {
     visualizationCode: isPieClicked ? drillDownId : id,
     visualizationType: "metric",
@@ -189,27 +163,6 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
       </div>
     );
   };
-
-  ///chartIDArray : Array of id's which are placed in a row of 2 charts
-  const chartIDArray = [
-    "mcCollectionByPaymentModev2",
-    "mcRceiptsByPaymentModev2",
-    "nssWsCollectionByChannel",
-    "nssWsCollectionByUsage",
-    "nssOBPSPermitIssuedByOccupancyType",
-    "nssOBPSPermitIssuedByRiskType",
-    "mcCollectionByPaymentType",
-    "mcReceiptsByPaymentMode",
-    "wscollectionByUsage",
-    "wscollectionByChannel",
-    "permitIssuedByOccupancyType",
-    "permitIssuedByRiskType",
-  ];
-
-  ///checkChartID: This function will check if the id is of chartIDArray
-  const checkChartID = (chartID) => {
-    return chartIDArray.includes(chartID);
-  };
   const totalValue = useCallback(() => {
     let accumulatedValue = 0;
     response?.responseData?.data?.[0]?.plots?.forEach((entry) => {
@@ -279,8 +232,8 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                 dataKey={dataKey}
                 cy={200}
                 style={{ cursor: response?.responseData?.drillDownChartId !== "none" ? "pointer" : "default", outline: "none" }}
-                innerRadius={checkChartID(id) && !mobileView ? 80 : 100} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
-                outerRadius={checkChartID(id) && !mobileView ? 100 : 130}
+                innerRadius={!mobileView ? 80 : 100} ///Charts in rows(which contains 2 charts) are little bigger in size than charts in rows(which contains 3 charts) charts
+                outerRadius={!mobileView ? 100 : 130}
                 margin={{ top: isPieClicked ? 0 : 5 }}
                 fill="#8884d8"
                 label={response?.responseData?.showLabel ? renderCustomLabel : ""}
@@ -316,14 +269,14 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                 wrapperStyle={
                   chartData?.length > 6
                     ? {
-                        paddingRight: checkChartID(id) && !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
+                        paddingRight: !mobileView ? 60 : 0, ///Padding for 2 charts in a row cases
                         overflowY: "scroll",
                         height: 250,
                         width: "35%",
                         overflowX: "auto",
                         paddingTop: -20,
                       }
-                    : { paddingRight: checkChartID(id) && !mobileView ? 60 : 0, overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
+                    : { paddingRight: !mobileView ? 60 : 0, overflowX: "auto", paddingTop: -20 } ///Padding for 2 charts in a row cases
                 }
               />
             </PieChart>
