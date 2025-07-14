@@ -13,7 +13,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const { t } = useTranslation();
   const toFilterCase = (str) => {
     if (str) {
-      return str.charAt(0).toLowerCase() + str.slice(1);
+      return str.toLowerCase();
     }
   };
   const { value } = useContext(FilterContext);
@@ -94,7 +94,14 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   //   }
   // }, [value, chartId]);
 
-  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
+  // const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useCustomMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
+  const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.useCustomMDMS(
+    Digit?.ULBService?.getStateId(),
+    "map-config",
+    [{ name: "GeoJsonMapping" }],
+    {},
+    { schemaCode: "map-config.GeoJsonMapping" }
+  );
    const { isLoading, data: mapConfigData } = Digit.Hooks.DSS.useDSSGeoJson(Digit?.ULBService?.getStateId(), "GeoJsonMapping", [mapSelector?.toLowerCase().replaceAll(" ", "_")], geoJsonConfig,{
     // Ensure the second query only runs if the first query is successful
     enabled: !isGeoJsonLoading
