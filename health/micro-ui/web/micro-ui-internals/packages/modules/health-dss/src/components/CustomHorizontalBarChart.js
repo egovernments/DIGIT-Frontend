@@ -288,7 +288,11 @@ const CustomHorizontalBarChart = ({
   };
 
   if (isLoading || isFetching) {
-    return <Loader className={"digit-center-loader"} />;
+    return (
+     <div style={{ width: "100%", height: "500px" }}>
+        <Loader className={"digit-center-loader"} />
+      </div>
+    );
   }
   const formatXAxis = (tickFormat) => {
     // if (tickFormat && typeof tickFormat == "string") {
