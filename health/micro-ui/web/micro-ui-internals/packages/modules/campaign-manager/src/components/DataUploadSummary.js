@@ -80,7 +80,7 @@ const DataUploadSummary = (props) => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id") || props?.props?.sessionData?.campaignData?.id;
+  const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
@@ -110,7 +110,7 @@ const DataUploadSummary = (props) => {
     history.push(newUrl);
   };
 
-  const campaignName = props?.props?.sessionData?.campaignData?.campaignName;
+  const campaignName = props?.props?.campaignData?.campaignName;
 
   useEffect(() => {
     setKey(currentKey);
@@ -184,7 +184,7 @@ const DataUploadSummary = (props) => {
                   },
                   cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(10)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -205,7 +205,7 @@ const DataUploadSummary = (props) => {
                   },
                   cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(11)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -226,7 +226,7 @@ const DataUploadSummary = (props) => {
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(12)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>

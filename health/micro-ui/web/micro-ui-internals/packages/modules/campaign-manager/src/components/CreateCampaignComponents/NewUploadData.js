@@ -36,7 +36,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const [downloadError, setDownloadError] = useState(false);
   const [resourceId, setResourceId] = useState(null);
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id") || props?.props?.sessionData?.campaignData?.id;
+  const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
@@ -360,7 +360,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   useEffect(() => {
     const totalFormData = props?.props?.sessionData?.totalFormData;
-    const campaignResources = props?.props?.sessionData?.campaignData?.resources || [];
+    const campaignResources = props?.props?.campaignData?.resources || [];
 
     const getUploadedData = (dataPath, typeKey) => {
       const data = totalFormData?.[dataPath];
@@ -412,7 +412,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setDownloadError(false);
     setIsError(false);
-  }, [type, props?.props?.sessionData?.totalFormData, props?.campaignData?.resources]);
+  }, [type, props?.props?.sessionData?.totalFormData, props?.props?.campaignData?.resources]);
 
   useEffect(() => {
     if (errorsType[type]) {
@@ -948,7 +948,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         try {
           const temp = await Digit.Hooks.campaign.useProcessData(
             uploadedFile,
-            params?.hierarchyType || props?.props?.sessionData?.campaignData?.hierarchyType,
+            params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
             `${type}Validation`,
             tenantId,
             id,
@@ -958,7 +958,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             setLoader(false);
             setIsValidation(false);
             const errorMessage = temp?.error.replaceAll(":", "-");
-            setShowToast({ key: "error", label: errorMessage, transitionTime: 5000000 });
+            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code, transitionTime: 5000000 });
+            setIsError(true);
+            setApiError(errorMessage);
+            setNotValid(2);
+            return;
+          }
+          if (temp?.additionalDetails?.error?.code) {
+            setLoader(false);
+            setIsValidation(false);
+            // const errorMessage = temp?.error.replaceAll(":", "-");
+            setShowToast({ key: "error", label: temp?.additionalDetails?.error?.code, transitionTime: 5000000 });
             setIsError(true);
             setApiError(errorMessage);
             setNotValid(2);
@@ -1052,7 +1062,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     params: {
       tenantId: tenantId,
       type: type,
-      hierarchyType: params?.hierarchyType || props?.props?.sessionData?.campaignData?.hierarchyType,
+      hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
       id: type === "boundary" ? params?.boundaryId : type === "facility" ? params?.facilityId : params?.userId,
     },
   };
@@ -1071,7 +1081,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         params: {
           tenantId: tenantId,
           type: type,
-          hierarchyType: params?.hierarchyType || props?.props?.sessionData?.campaignData?.hierarchyType,
+          hierarchyType: params?.hierarchyType || props?.props?.campaignData?.hierarchyType,
           campaignId: id,
           status: "completed",
           id: downloadId?.[type],

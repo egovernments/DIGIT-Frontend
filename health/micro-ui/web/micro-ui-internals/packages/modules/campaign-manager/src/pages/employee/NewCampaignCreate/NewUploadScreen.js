@@ -1,6 +1,6 @@
-import { FormComposerV2, Loader } from "@egovernments/digit-ui-components";
+import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { uploadConfig } from "../../../configs/uploadConfig";
 import { transformCreateData } from "../../../utils/transformCreateData";
@@ -14,6 +14,7 @@ const NewUploadScreen = () => {
   const [config, setUploadConfig] = useState(uploadConfig(totalFormData));
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
+  const [summaryErrors, setSummaryErrors] = useState({});
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -64,12 +65,14 @@ const NewUploadScreen = () => {
   }, [params]);
 
   useEffect(() => {
-    setUploadConfig(uploadConfig({ totalFormData, campaignData }));
-  }, [campaignData, totalFormData]);
+    setUploadConfig(uploadConfig({ totalFormData, campaignData , summaryErrors }));
+  }, [campaignData, totalFormData , summaryErrors]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
   }, [currentKey]);
+
+
 
   const filterUploadConfig = (config, currentKey) => {
     return config
@@ -82,16 +85,15 @@ const NewUploadScreen = () => {
       .filter((config) => config.form.length > 0);
   };
 
-  const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey));
+  const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey ));
 
   useEffect(() => {
-    setfilteredConfig(filterUploadConfig(config, currentKey));
-  }, [config, currentKey]);
+    setfilteredConfig(filterUploadConfig(config, currentKey, summaryErrors));
+  }, [config, currentKey, summaryErrors]);
 
   const latestConfig = filteredConfig?.[0];
 
   const restructureData = (params, apiResources, formData) => {
-
     const payload = {
       resources: [],
       campaignNumber: campaignData?.campaignNumber,
@@ -132,6 +134,78 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
+    const key = Object.keys(formData)?.[0];
+    if (key === "DataUploadSummary") {
+      const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
+        ? false
+        : (setSummaryErrors((prev) => {
+            return {
+              ...prev,
+              target: [
+                {
+                  name: `target`,
+                  error: t(`TARGET_FILE_MISSING`),
+                },
+              ],
+            };
+          }),
+          true);
+
+      const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
+        ? false
+        : (setSummaryErrors((prev) => {
+            return {
+              ...prev,
+              facility: [
+                {
+                  name: `facility`,
+                  error: t(`FACILITY_FILE_MISSING`),
+                },
+              ],
+            };
+          }),
+          true);
+      const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
+        ? false
+        : (setSummaryErrors((prev) => {
+            return {
+              ...prev,
+              user: [
+                {
+                  name: `user`,
+                  error: t(`USER_FILE_MISSING`),
+                },
+              ],
+            };
+          }),
+          true);
+
+      if (isTargetError) {
+        setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
+        return false;
+      }
+      if (isFacilityError) {
+        setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
+        return false;
+      }
+      if (isUserError) {
+        setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
+        return false;
+      }
+      setShowToast(null);
+      return true;
+    }
+    const { uploadFacility, uploadUser, uploadBoundary } = formData || {};
+
+    if (
+      (uploadFacility?.uploadedFile?.length !== 0 && uploadFacility?.isError === true) ||
+      (uploadUser?.uploadedFile?.length !== 0 && uploadUser?.isError === true) ||
+      (uploadBoundary?.uploadedFile?.length !== 0 && uploadBoundary?.isError === true)
+    ) {
+      setShowToast({ key: "error", label: "ENTER_VALID_FILE" });
+      return;
+    }
+
     if (latestConfig?.form?.[0]?.last) {
       history.push(
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
@@ -185,6 +259,7 @@ const NewUploadScreen = () => {
     }
   };
 
+
   const onSecondayActionClick = async () => {
     if (currentKey == 1) {
       history.push(
@@ -199,28 +274,44 @@ const NewUploadScreen = () => {
     return <Loader page={true} variant={"OverlayLoader"} loaderText={t("PLEASE_WAIT_WHILE_UPDATING")} />;
   }
 
+  const closeToast = () => {
+    setShowToast(null);
+  };
+
+
   return (
-    <FormComposerV2
-      config={latestConfig?.form.map((config) => {
-        return {
-          ...config,
-          body: config?.body.filter((a) => !a.hideInEmployee),
-        };
-      })}
-      onSubmit={onSubmit}
-      defaultValues={params}
-      showSecondaryLabel={true}
-      secondaryLabel={t("HCM_BACK")}
-      actionClassName={"actionBarClass"}
-      // className="setup-campaign"
-      noCardStyle={true}
-      onSecondayActionClick={onSecondayActionClick}
-      // isDisabled={isDataCreating}
-      label={config?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
-      secondaryActionIcon={"ArrowBack"}
-      primaryActionIconAsSuffix={true}
-      primaryActionIcon={"ArrowDirection"}
-    />
+    <>
+      <FormComposerV2
+        config={latestConfig?.form.map((config) => {
+          return {
+            ...config,
+            body: config?.body.filter((a) => !a.hideInEmployee),
+          };
+        })}
+        onSubmit={onSubmit}
+        defaultValues={params}
+        showSecondaryLabel={true}
+        secondaryLabel={t("HCM_BACK")}
+        actionClassName={"actionBarClass"}
+        // className="setup-campaign"
+        noCardStyle={true}
+        onSecondayActionClick={onSecondayActionClick}
+        // isDisabled={isDataCreating}
+        label={config?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        secondaryActionIcon={"ArrowBack"}
+        primaryActionIconAsSuffix={true}
+        primaryActionIcon={"ArrowDirection"}
+      />
+      {showToast && (
+        <Toast
+          style={{ zIndex: 10001 }}
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
+          onClose={closeToast}
+        />
+      )}
+    </>
   );
 };
 

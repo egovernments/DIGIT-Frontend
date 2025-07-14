@@ -241,12 +241,12 @@ const DeliveryDetailsSummary = (props) => {
                 {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
+                  // cardSecondaryAction: noAction !== "false" && (
+                  //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                  //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                  //     <EditIcon />
+                  //   </div>
+                  // ),
                   values: [
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
@@ -275,12 +275,12 @@ const DeliveryDetailsSummary = (props) => {
                     name: `CYCLE_${index + 1}`,
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
+                    // cardSecondaryAction: noAction !== "false" && (
+                    //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
+                    //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                    //     <EditIcon />
+                    //   </div>
+                    // ),
                     component: "CycleDataPreview",
                     props: {
                       data: item,
