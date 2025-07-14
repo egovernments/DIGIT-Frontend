@@ -1,8 +1,7 @@
 import { Card, Loader } from "@egovernments/digit-ui-components";
 import React, { useContext, useState } from "react";
 import { useTranslation } from "react-i18next";
-// import { ArrowUpwardElement } from "./ArrowUpward";
-// import { ArrowDownwardElement } from "./ArrowDownward";
+import Icon from "./Icon";
 import FilterContext from "./FilterContext";
 
 const MetricData = ({ t, data }) => {
@@ -14,20 +13,18 @@ const MetricData = ({ t, data }) => {
         {`${Digit.Utils.dss.formatter(data?.headerValue, data?.headerSymbol, value?.denomination, true, t)}`}
       </p>
       {data?.insight && (
-        <div
-          style={{
-            width: "100%",
-            display: "flex",
-            justifyContent: "end",
-          }}
-        >
-          {/* {data?.insight?.indicator === "upper_green" ? ArrowUpwardElement("10px") : ArrowDownwardElement("10px")} */}
-          <p className={`${data?.insight.colorCode}`} style={{ whiteSpace: "pre" }}>
-            {insight?.[0] &&
-              `${Digit.Utils.dss.formatter(insight[0], "number", value?.denomination, true, t)}% ${t(
-                Digit.Utils.locale.getTransformedLocale("DSS" + insight?.[1] || "")
-              )}`}
-          </p>
+        <div className={`digit-dss-insight-card-difference ${data?.insight?.indicator === "upper_green" ? "increase" : "decrease"}`}>
+          <Icon
+            type={data?.insight?.indicator === "upper_green" ? "arrow-upward" : "arrow-downward"}
+            iconColor={data?.insight?.indicator === "upper_green" ? "#00703C" : "#D4351C"}
+            width="1.5rem"
+            height="1.5rem"
+            className="digit-dss-insight-icon"
+          />
+          {insight?.[0] &&
+            `${Digit.Utils.dss.formatter(insight[0], "number", value?.denomination, true, t)}% ${t(
+              Digit.Utils.locale.getTransformedLocale("DSS" + insight?.[1] || "")
+            )}`}
         </div>
       )}
     </div>

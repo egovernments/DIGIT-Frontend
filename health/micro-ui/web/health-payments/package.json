@@ -66,6 +66,7 @@
     "**/@babel/preset-env": "7.14.0",
     "**/@babel/traverse": "7.25.9",
     "**/styled-components": "5.0.0",
+    "**/minimatch": "7.4.6",
     "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
     "**/polished": "4.2.2",
     "**/@jridgewell/gen-mapping": "0.3.5",

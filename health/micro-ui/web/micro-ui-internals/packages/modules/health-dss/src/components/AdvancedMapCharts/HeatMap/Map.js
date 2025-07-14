@@ -5,6 +5,7 @@ import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simp
 import { getTitleHeading } from "../../../utils/locale";
 import BoundaryTypes from "../../../utils/enums";
 import { Button } from "@egovernments/digit-ui-components";
+import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const Map = ({
   chartId,
   mapData,
@@ -152,15 +153,6 @@ const Map = ({
     }
 
     const formattedName = getTitleHeading(dataTip.name);
-    // let showInsights = false;
-    // if (dataTip.indicator) {
-    //   showInsights = true;
-    // }
-    // const indicatorMap = {
-    //   positive: ArrowUpwardElement("10px"),
-    //   negative: ArrowDownwardElement("10px"),
-    //   no_diff: t(`DSS_HEALTH_INSIGHT_SAME_AS_YESTERDAY`),
-    // };
     return (
       <div
         style={{
@@ -172,22 +164,13 @@ const Map = ({
       >
         <div style={{ fontWeight: 700, fontSize: "16px", margin: "10px" }}>{formattedName}</div>
         {dataTip.value !== undefined ? <div>{formatPercentage(dataTip.value)}</div> : null}
-        {/* {showInsights ? (
-          <React.Fragment>
-            <div style={{ fontWeight: 400, fontSize: "16px", margin: "10px" }}>{dataTip.indicator !== "no_diff" ? formatPercentage(dataTip.insightValue): null}</div>
-            {chartData.hasOwnProperty(formattedName.toLowerCase()) && <div style={{ margin: "10px" }}>{formatPercentage(chartData[formattedName.toLowerCase()])}</div>}
-            <div style={{ margin: "10px", fontWeight: 400, fontSize: "16px" }}>
-              {dataTip.indicator !== "no_diff" ? t(`DSS_HEALTH_INSIGHTS_THAN_YESTERDAY`) : null}
-            </div>
-          </React.Fragment>
-        ) : null} */}
       </div>
     );
   };
 
   const toFilterCase = (str) => {
     if (str) {
-      return str.charAt(0).toLowerCase() + str.slice(1);
+      return str.toLowerCase();
     }
   };
 
@@ -199,20 +182,30 @@ const Map = ({
       } else return;
     }
 
+    const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
+
     if (level === 2) {
+      const boundaryLevel = getBoundaryTypeByLevel("level-two", boundaryLevelMap);
       let dummy = { ...filterStack };
       if (dummy.value == undefined || Object.keys(dummy.value).length == 0) {
-        dummy.value = { filters: { province: name } };
+        dummy.value = { filters: { 
+          "boundaryType" : boundaryLevel,
+          [boundaryLevel]: name 
+        } };
       }
       setFilterStack(dummy);
-      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE));
+      setBoundaryLevel(toFilterCase(boundaryLevel));
     }
 
     if (level === 3) {
+      const boundaryLevel = getBoundaryTypeByLevel("level-three", boundaryLevelMap);
       let dummy = { ...filterStack };
-      dummy.value.filters = { ...dummy.value.filters, district: name };
+      dummy.value.filters = { ...dummy.value.filters, 
+        "boundaryType" : boundaryLevel,
+        [boundaryLevel]: name
+      };
       setFilterStack(dummy);
-      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT));
+      setBoundaryLevel(toFilterCase(boundaryLevel));
     }
 
     setChartKey(drillDownChart);
@@ -224,11 +217,17 @@ const Map = ({
           label: name,
           boundary:
             level === 2
-              ? toFilterCase(BoundaryTypes.PROVINCE)
+              ? 
+              getBoundaryTypeByLevel("level-two", boundaryLevelMap)
+              // toFilterCase(BoundaryTypes.PROVINCE)
               : level === 3
-              ? toFilterCase(BoundaryTypes.DISTRICT)
+              ? 
+              getBoundaryTypeByLevel("level-three", boundaryLevelMap)
+              // toFilterCase(BoundaryTypes.DISTRICT)
               : level === 4
-              ? toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE)
+              ? 
+              getBoundaryTypeByLevel("level-four", boundaryLevelMap)
+              // toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE)
               : "",
         },
       ];
@@ -345,12 +344,9 @@ const Map = ({
                             drillDown(locationName, value, level, hasCoordinatesDown);
                           }}
                           onMouseEnter={() => {
-                            // const insight = insightsResults[locationName];
                             setTooltipContent({
                               name: locationName,
                               value: chartData?.[locationName],
-                              // insightValue: insight?.insightValue,
-                              // indicator: insight?.indicator,
                             });
                             setHoveredData({ name: locationName, value })
                           }}
@@ -363,48 +359,6 @@ const Map = ({
                     });
                   }}
                 </Geographies>
-                {/* {markers.map(({ name, origin }) => {
-                  const value = chartData[name];
-                  if (filterFeature && filterFeature !== name) {
-                    return null;
-                  }
-                  if (value > -1) {
-                    const formattedValue = formatPercentage(value);
-                    return (
-                      <Marker
-                        key={name}
-                        cursor={value ? "pointer" : "default"}
-                        coordinates={[origin.lat, origin.lng]}
-                        onMouseEnter={() => {
-                          const insight = insightsResults[name];
-                          setTooltipContent({
-                            name,
-                            insightValue: insight?.insightValue,
-                            indicator: insight?.indicator,
-                          });
-                        }}
-                        onMouseLeave={() => {
-                          setTooltipContent("");
-                        }}
-                        onClick={() => {
-                          drillDown(name, value);
-                        }}
-                      >
-                        <text textAnchor="middle" style={{ fill: "#505A5F", fontSize: mapStyle?.fontSize || "10%" }}>
-                          {formattedValue}
-                        </text>
-                        {showLabel && name ? (
-                          <text
-                            textAnchor="middle"
-                            style={{ fill: "#505A5F", fontSize: mapStyle?.fontSize || "0.2px", transform: "translateY(0.3px)" }}
-                          >
-                            {name[0].toUpperCase() + name.slice(1)}
-                          </text>
-                        ) : null}
-                      </Marker>
-                    );
-                  }
-                })} */}
               </ZoomableGroup>
             </ComposableMap>
           </React.Fragment>

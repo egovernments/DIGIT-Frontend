@@ -75,9 +75,6 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
   const [tooltipContent, settooltipContent] = useState("");
   const { startDate, endDate, interval } = getInitialRange();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
   const requestDate = {
     startDate: startDate.getTime(),
     endDate: endDate.getTime(),
@@ -97,17 +94,6 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
       enabled: true,
     }
   );
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate: requestDate,
-  //   filters: {
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId:campaignId
-  //    },
-  // });
-
   const aggregationRequestDto = {
     visualizationCode: id,
     visualizationType: "metric",
