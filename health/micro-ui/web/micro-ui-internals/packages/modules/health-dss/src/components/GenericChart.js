@@ -113,14 +113,16 @@ const GenericChart = ({
         </div>
         <div className="digit-side-content">
           {chip && chip.length > 1 && <Chip items={chip} onClick={updateChip} t={t} />}
-          <span className="digit-table-search-wrapper">
-            {showSearch && (
-              <div className="digit-field">
-                <TextInput className={"digit-generic-chart-search-field"} placeholder={t("DSS_SEARCH")} onChange={onChange} type={"search"} />
-              </div>
-            )}
-            {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} />}
-          </span>
+          {(showSearch || showDownload) && (
+            <span className="digit-table-search-wrapper">
+              {showSearch && (
+                <div className="digit-field">
+                  <TextInput className={"digit-generic-chart-search-field"} placeholder={t("DSS_SEARCH")} onChange={onChange} type={"search"} />
+                </div>
+              )}
+              {showDownload && <SVG.FileDownload onClick={handleExcelDownload} fill={"#505A5F"} />}
+            </span>
+          )}
           {!showDownload && (
             <Button
               type="actionButton"
