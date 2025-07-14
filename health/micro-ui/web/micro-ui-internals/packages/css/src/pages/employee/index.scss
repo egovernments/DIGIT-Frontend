@@ -1092,6 +1092,11 @@ tbody {
   .infotext {
     width: 12rem !important;
   }
+  .digit-field {
+    .digit-radio-options-wrap {
+      flex-direction: column;
+    }
+  }
 }
 .app-preview-field-pair.app-preview-selected {
   .digit-header-content .label {
@@ -1260,7 +1265,7 @@ tbody {
   }
 }
 
-.info-text{
+.info-text {
   color: theme(digitv2.lightTheme.text-color-secondary);
 }
 

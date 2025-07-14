@@ -85,7 +85,7 @@ const NewUploadScreen = () => {
       .filter((config) => config.form.length > 0);
   };
 
-  const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey));
+  const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey ));
 
   useEffect(() => {
     setfilteredConfig(filterUploadConfig(config, currentKey, summaryErrors));
@@ -179,6 +179,7 @@ const NewUploadScreen = () => {
             };
           }),
           true);
+
       if (isTargetError) {
         setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
         return false;
@@ -197,9 +198,9 @@ const NewUploadScreen = () => {
     const { uploadFacility, uploadUser, uploadBoundary } = formData || {};
 
     if (
-      (uploadFacility?.uploadedFile?.length !== 0 && uploadFacility?.isValidation === false) ||
-      (uploadUser?.uploadedFile?.length !== 0 && uploadUser?.isValidation === false) ||
-      (uploadBoundary?.uploadedFile?.length !== 0 && uploadBoundary?.isValidation === false)
+      (uploadFacility?.uploadedFile?.length !== 0 && uploadFacility?.isError === true) ||
+      (uploadUser?.uploadedFile?.length !== 0 && uploadUser?.isError === true) ||
+      (uploadBoundary?.uploadedFile?.length !== 0 && uploadBoundary?.isError === true)
     ) {
       setShowToast({ key: "error", label: "ENTER_VALID_FILE" });
       return;
@@ -276,6 +277,7 @@ const NewUploadScreen = () => {
   const closeToast = () => {
     setShowToast(null);
   };
+
 
   return (
     <>

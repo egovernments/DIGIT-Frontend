@@ -182,36 +182,14 @@ export const RenderConditionalField = ({
         />
       );
     case "MdmsDropdown":
-      const mdmsOptions = [
-        {
-          moduleName: "common-masters",
-          masterName: "GenderType",
-          schemaCode: "common-masters.GenderType",
-        },
-        {
-          moduleName: "HCM",
-          masterName: "HOUSE_STRUCTURE_TYPES",
-          schemaCode: "HCM.HOUSE_STRUCTURE_TYPES",
-        },
-        {
-          moduleName: "HCM",
-          masterName: "ID_TYPE_OPTIONS_POPULATOR",
-          schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR",
-        },
-        {
-          moduleName: "HCM",
-          masterName: "DELIVERY_COMMENT_OPTIONS_POPULATOR",
-          schemaCode: "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
-        },
-      ];
       return (
         <Dropdown
           variant={""}
           t={t}
           disabled={disabled}
-          option={mdmsOptions}
+          option={cField?.mdmsOptions || []}
           optionKey={"schemaCode"}
-          selected={mdmsOptions.find((i) => i.schemaCode === drawerState?.[cField?.bindTo]) || {}}
+          selected={(cField?.mdmsOptions || []).find((i) => i.schemaCode === drawerState?.[cField?.bindTo]) || {}}
           select={(value) => {
             setDrawerState((prev) => ({
               ...prev,

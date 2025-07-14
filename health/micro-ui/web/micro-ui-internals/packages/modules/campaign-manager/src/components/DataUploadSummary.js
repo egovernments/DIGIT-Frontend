@@ -80,7 +80,7 @@ const DataUploadSummary = (props) => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id") || props?.props?.sessionData?.campaignData?.id;
+  const id = searchParams.get("id") || props?.props?.campaignData?.id;
   const noAction = searchParams.get("action");
   const [showToast, setShowToast] = useState(null);
   const [userCredential, setUserCredential] = useState(null);
@@ -110,7 +110,7 @@ const DataUploadSummary = (props) => {
     history.push(newUrl);
   };
 
-  const campaignName = props?.props?.sessionData?.campaignData?.campaignName;
+  const campaignName = props?.props?.campaignData?.campaignName;
 
   useEffect(() => {
     setKey(currentKey);
