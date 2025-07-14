@@ -1,7 +1,10 @@
 import React, { Fragment, useEffect, useState } from "react";
-import AppLocalisationWrapper from "./AppLocalisationWrapper";
-import { dummyMaster } from "../../../configs/dummyMaster";
-import { Loader } from "@egovernments/digit-ui-components";
+// import { dummyMaster } from "../../../configs/dummyMaster";
+//production mode
+import { AppLocalisationWrapper, Loader, useCustomT } from "@egovernments/digit-ui-components";
+// import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
+//development mode
+import AppPreview from "../../../components/AppPreview";
 
 function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
@@ -172,7 +175,22 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     submit(restructuredData, finalSubmit);
   };
 
+  // if (process.env.NODE_ENV === "development") {
+  //   return (
+  //     //development mode
+  //     <AppLocalisationWrapperDev
+  //       onSubmit={onSubmit}
+  //       back={back}
+  //       showBack={showBack}
+  //       screenConfig={screenConfig}
+  //       parentDispatch={parentDispatch}
+  //       localeModule={localeModule}
+  //       pageTag={pageTag}
+  //     />
+  //   );
+  // }
   return (
+    //production mode
     <AppLocalisationWrapper
       onSubmit={onSubmit}
       back={back}
@@ -181,7 +199,9 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
       parentDispatch={parentDispatch}
       localeModule={localeModule}
       pageTag={pageTag}
-    />
+    >
+      <AppPreview />
+    </AppLocalisationWrapper>
   );
 }
 

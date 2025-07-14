@@ -272,7 +272,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
               title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
               fieldPairClassName: "drawer-toggle-conditional-field",
               options: (state?.MASTER_DATA?.AppFieldType || [])
-                .filter((item) => item?.metadata?.type !== "template" || item?.metadata?.type !== "dynamic")
+                .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
                 ?.sort((a, b) => a?.order - b?.order),
               optionsKey: "type",
             }}
