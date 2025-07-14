@@ -47,9 +47,7 @@ const MapDrillChart = ({
 
 }) => {
     const { t } = useTranslation();
-          const { campaignId } = Digit.Hooks.useQueryParams();
-    // const { projectTypeId} = Digit.Hooks.useQueryParams();
-    // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+    const { campaignId } = Digit.Hooks.useQueryParams();
     const { id } = data;
     const tenantId = Digit?.ULBService?.getCurrentTenantId();
     let filters = {}
@@ -66,19 +64,6 @@ const MapDrillChart = ({
       interval: interval,
       title: "home",
     };
-  
-    // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    //   key: drilldownId,
-    //   type: "metric",
-    //   tenantId,
-    //   requestDate: requestDate,
-    //   filters: {
-    //     ...filters,
-    //     // projectTypeId: selectedProjectTypeId
-    //     campaignId: campaignId,
-    //   },
-    // });
-
     const aggregationRequestDto = {
       visualizationCode: drilldownId,
       visualizationType: "metric",

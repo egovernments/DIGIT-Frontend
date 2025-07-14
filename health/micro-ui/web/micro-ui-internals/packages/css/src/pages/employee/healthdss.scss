@@ -926,7 +926,7 @@
 .digit-filter-by-cycle-wrapper {
   display: inline-flex;
   position: absolute;
-  right: 1.5rem;
+  right: 2.5rem;
   margin-inline-end: 1.5rem;
   align-content: flex-end;
   align-items: center;
@@ -936,6 +936,17 @@
     margin: 0rem;
     align-items: center;
     justify-content: flex-end;
+  }
+
+  .header-dropdown-menu{
+    min-width: 11.25rem !important;
+  }
+}
+
+.digit-tag-container{
+  &.customTable{
+    margin:0rem;
+    margin-bottom: 1.5rem;
   }
 }
 

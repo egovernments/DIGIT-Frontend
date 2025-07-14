@@ -20,6 +20,9 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const copyOfValue = Object.assign({}, value);
   const chartId = data.charts.filter((c) => c.chartType === "points")?.[0].id;
   const subHeader = t(`SUB_${chartName}`);
+  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
   const mapData = useRef({});
   const pointProps = useRef({});
   const tableData = useRef({});
@@ -27,20 +30,28 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
 
   const [filterStack, setFilterStack] = useState({value: copyOfValue});
   const [boundaryLevel, setBoundaryLevel] = useState(
-    filterStack?.value?.filters?.district ? toFilterCase(BoundaryTypes.DISTRICT) : 
-    filterStack?.value?.filters?.province ? toFilterCase(BoundaryTypes.PROVINCE) : 
-    toFilterCase(BoundaryTypes.NATIONAL));
+    filterStack?.value?.filters?.boundaryType
+      ? toFilterCase(filterStack.value.filters.boundaryType)
+      : boundaryType
+  );
   const [filterFeature, setFilterFeature] = useState(null);
-  const [mapSelector, setMapSelector] = useState(filterStack?.value?.filters?.district ? filterStack?.value?.filters?.district.toLowerCase() : filterStack?.value?.filters?.province ? filterStack?.value?.filters?.province.toLowerCase() : "national-map");
+  const isLevelOne = boundaryLevelMap?.[boundaryType] === "level-one";
+  const filterBoundaryValue = filterStack?.value?.filters?.boundaryType;
+  const [mapSelector, setMapSelector] = useState(
+    !isLevelOne ?
+    (
+      filterBoundaryValue != null && filterBoundaryValue !== ''
+      ? filterStack?.value?.filters?.[filterBoundaryValue]?.toLowerCase()
+      : filterStack?.value?.filters?.[boundaryType]?.toLowerCase()
+    )
+    : nationalMap
+  );
   const [drillDownChart, setDrillDownChart] = useState("none");
   const [chartKey, setChartKey] = useState(chartId);
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId} = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
 
   useEffect(() => {
     setChartKey(chartId);
@@ -50,15 +61,17 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   }, [filterStack, chartId]);
 
   useEffect(() => {
-    const province = filterStack?.value?.filters?.province;
-    const district = filterStack?.value?.filters?.district;
-    if (district) {
-      setMapSelector(district.toLowerCase().replaceAll(" ", "_"));
-      // setMapSelector("namacurra");
-      setBoundaryLevel(toFilterCase(BoundaryTypes.DISTRICT))
-    } else if (province) {
-      setMapSelector(province.toLowerCase().replaceAll(" ", "_"));
-      setBoundaryLevel(toFilterCase(BoundaryTypes.PROVINCE))
+    // const province = filterStack?.value?.filters?.province;
+    // const district = filterStack?.value?.filters?.district;
+    const boundaryLevel = filterStack?.value?.filters?.boundaryType;
+    const boundaryName = filterStack?.value?.filters?.[boundaryLevel]
+    if (
+      boundaryLevel && boundaryLevelMap?.[boundaryLevel] != undefined && boundaryLevelMap?.[boundaryLevel] !== "level-one" ||
+      boundaryLevelMap?.[boundaryType] != undefined && boundaryLevelMap?.[boundaryType] !== "level-one"
+    ){
+      setMapSelector(boundaryName ? boundaryName?.toLowerCase().replaceAll(" ", "_"): boundaryValue.toLowerCase().replaceAll(" ", "_"));
+      setBoundaryLevel(toFilterCase(boundaryLevel ? boundaryLevel : boundaryType));
+
     }
   }, [filterStack]);
 
@@ -94,17 +107,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const generateTable = (chart, value) => {
     const { id, chartType } = chart;
     const tenantId = Digit?.ULBService?.getCurrentTenantId();
-    // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-    //   key: id,
-    //   type: chartType,
-    //   tenantId,
-    //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    //   filters: {...value?.filters ,
-    //     // projectTypeId: selectedProjectTypeId
-    //     campaignId:campaignId
-    //   },
-    // });
-
     const aggregationRequestDto = {
       visualizationCode: id,
       visualizationType: chartType,
@@ -136,18 +138,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
 
   const generateMarkers = (chart, value, addlFilter, tenantId) => {
     const chartId = chart?.id;
-
-    // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-    //   key: chartKey,
-    //   type: "table",
-    //   tenantId,
-    //   requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    //   filters: {...filterStack?.value?.filters, ...filterFeature, 
-    //     // projectTypeId: selectedProjectTypeId
-    //     campaignId:campaignId
-    //   },
-    // });
-
     const aggregationRequestDto = {
       visualizationCode: chartKey,
       visualizationType: "table",
@@ -220,6 +210,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
     removedDrillStack.map((filter, index) => {
       delete finalFilterStack?.value.filters[filter.boundary];
     })
+    delete finalFilterStack?.value.filters.boundaryType;
     if (Object.keys(finalFilterStack.value.filters).length === 0) {
       finalFilterStack.value = undefined;
     }

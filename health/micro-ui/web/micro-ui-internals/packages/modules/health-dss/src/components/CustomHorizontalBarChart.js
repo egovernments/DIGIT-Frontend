@@ -70,9 +70,7 @@ const CustomHorizontalBarChart = ({
   const [drillDownFilters, setDrillDownFilters] = useState({});
   const [symbolKeyMap, setSymbolKeyMap] = useState({});
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-        const { campaignId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  const { campaignId } = Digit.Hooks.useQueryParams();
 
   useEffect(() => {
     if (filterStack.length > 1) {
@@ -110,52 +108,7 @@ const CustomHorizontalBarChart = ({
   return data;
 };
 
-  // const reqCriteria = {
-  //   url: `/dashboard-analytics/dashboard/getChartV2`,
-  //   body: {
-  //     "aggregationRequestDto" : {
-  //       visualizationCode: chartKey,
-  //       visualizationType: "METRIC",
-  //       queryType: "",
-  //       requestDate:
-  //         value?.requestDate != null
-  //           ? {
-  //               ...value?.requestDate,
-  //               startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
-  //               endDate: value?.range?.endDate?.getTime(),
-  //             }
-  //           : requestDate,
-  //       filters:
-  //         id === chartKey && value?.filters != null
-  //           ? { ...value.filters, 
-  //             // projectTypeId: selectedProjectTypeId 
-  //             campaignId:campaignId
-  //           }
-  //           : value?.filters != null || drillDownFilters || selectedStack
-  //           ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, 
-  //             // projectTypeId: selectedProjectTypeId 
-  //             campaignId:campaignId
-  //           }
-  //           : {},
-  //       moduleLevel: value?.moduleLevel,
-  //       aggregationFactors: null,
-  //     },
-  //     headers: {
-  //       tenantId: tenantId
-  //     }
-  //   },
-  //   params: {},
-  //   headers: {
-  //     "auth-token": Digit.UserService.getUser()?.access_token || null,
-  //   },
-  //   config: {
-  //     // enabled: !!moduleCode,
-  //     select: defaultSelect,
-  //   },
-  // };
-  // const { data: response, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
-
-    const aggregationRequestDto = {
+  const aggregationRequestDto = {
       visualizationCode: chartKey,
       visualizationType: "METRIC",
       queryType: "",
@@ -171,7 +124,6 @@ const CustomHorizontalBarChart = ({
         id === chartKey && value?.filters != null
           ? {
               ...value.filters,
-              // projectTypeId: selectedProjectTypeId
               campaignId: campaignId,
             }
           : value?.filters != null || drillDownFilters || selectedStack
@@ -179,37 +131,13 @@ const CustomHorizontalBarChart = ({
               ...value?.filters,
               ...drillDownFilters,
               selectedStack: selectedStack,
-              // projectTypeId: selectedProjectTypeId
               campaignId: campaignId,
             }
           : {},
       moduleLevel: value?.moduleLevel,
       aggregationFactors: null,
     };
-    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
-
-
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: chartKey,
-  //   type: "metric",
-  //   tenantId,
-  //   requestDate:
-  //     value?.requestDate != null
-  //       ? {
-  //           ...value?.requestDate,
-  //           startDate: isNational ? todayDate?.getTime() : value?.range?.startDate?.getTime(),
-  //           endDate: value?.range?.endDate?.getTime(),
-  //         }
-  //       : requestDate,
-  //   filters:
-  //     id === chartKey && value?.filters != null
-  //       ? { ...value.filters, projectTypeId: selectedProjectTypeId }
-  //       : value?.filters != null || drillDownFilters || selectedStack
-  //       ? { ...value?.filters, ...drillDownFilters, selectedStack: selectedStack, projectTypeId: selectedProjectTypeId }
-  //       : {},
-  //   moduleLevel: value?.moduleLevel,
-  // });
-
+  const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
   let target = 0;
   let targetMessage = "";
@@ -225,13 +153,11 @@ const CustomHorizontalBarChart = ({
         filters:
           id === targetLineChart
             ? { ...value.filters,
-              //  projectTypeId: projectTypeId
               campaignId:campaignId
                }
             : {
                 ...value?.filters,
                 [filterStack[filterStack.length - 1]["filterKey"]]: filterStack[filterStack.length - 1]?.filterValue,
-                // projectTypeId: projectTypeId,
                 campaignId:campaignId
 
               },
@@ -422,20 +348,6 @@ const CustomHorizontalBarChart = ({
 
   return (
     <Fragment>
-      {/* {filterStack?.length > 1 && (
-        <div className="tag-container">
-          <span style={{ marginTop: "20px" }}>{t("DSS_FILTERS_APPLIED")}: </span>
-          {filterStack.map((filter, id) =>
-            id > 0 ? (
-              <RemoveableTag
-                key={id}
-                text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter?.filterKey)}`)}: ${getTitleHeading(filter?.name)}`}
-                onClick={() => removeFilter(id, filter?.filterKey)}
-              />
-            ) : null
-          )}
-        </div>
-      )} */}
       {filterStack?.length > 1 && (
         <div className="digit-tag-container digit-pie-chart-tags">
           <div className="digit-tag-filter-text">{t("DSS_FILTERS_APPLIED")}: </div>
