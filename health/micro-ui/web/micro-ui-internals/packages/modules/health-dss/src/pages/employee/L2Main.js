@@ -467,9 +467,10 @@ const L2Main = ({}) => {
   const onActionSelect = (item) => {
     switch (item?.code) {
       case "ES_DSS_DOWNLOAD_IMAGE":
-        setTimeout(() => {
-          return Digit.Download.Image(fullPageRef, t(dashboardConfig?.[0]?.name));
-        }, 500);
+        // setTimeout(() => {
+        //   return Digit.Download.Image(fullPageRef, t(dashboardConfig?.[0]?.name));
+        // }, 500);
+        Digit.Download.Image(fullPageRef, t(dashboardConfig?.[0]?.name));
       case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
           return Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
