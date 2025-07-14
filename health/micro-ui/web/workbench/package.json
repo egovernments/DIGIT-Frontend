@@ -63,7 +63,8 @@
     "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
     "**/@jridgewell/gen-mapping": "0.3.5",
     "**/polished": "4.2.2",
-    "fast-uri": "2.1.0"
+    "fast-uri": "2.1.0",
+    "**/minimatch": "7.4.6"
   },
   "scripts": {
     "start": "react-scripts start",
