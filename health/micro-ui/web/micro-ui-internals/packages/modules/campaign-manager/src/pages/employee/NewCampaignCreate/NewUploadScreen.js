@@ -182,18 +182,20 @@ const NewUploadScreen = () => {
 
       if (isTargetError) {
         setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
-        return false;
+        return ;
       }
       if (isFacilityError) {
         setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
-        return false;
+        return ;
       }
       if (isUserError) {
         setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
-        return false;
+        return ;
       }
       setShowToast(null);
-      return true;
+      history.push(
+        `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
+      );
     }
     const { uploadFacility, uploadUser, uploadBoundary } = formData || {};
 
