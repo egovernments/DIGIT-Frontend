@@ -89,7 +89,7 @@ function AddProduct() {
           const target = formData?.["addProduct"]?.find((f) => {
             const combination = `${f.name}-${f.variant}`;
             if (f.name === i.name && !usedCombinations.has(combination)) {
-              usedCombinations.add(combination); 
+              usedCombinations.add(combination);
               return true;
             }
             return false;
@@ -101,19 +101,24 @@ function AddProduct() {
               variation: target?.variant,
               sku: `${target?.name} - ${target?.variant}`,
               additionalFields: {
-                "schema": "ProductVariant",
-                "version": 1,
+                schema: "ProductVariant",
+                version: 1,
                 fields: [
-                    {
-                        value: state?.projectType,
-                        key: "projectType"
-                    }
-                ]
-            }
+                  {
+                    value: state?.projectType,
+                    key: "projectType",
+                  },
+                ],
+              },
             };
           }
           return;
         });
+        // const cleanedPayload = variantPayload.filter(item => item !== null && item !== undefined);
+        if ((variantPayload || []).some((item) => item == null && item == undefined)) {
+          setShowToast({ key: "error", label: "DUPLICATE_ERROR", isError: true });
+          return;
+        }
         await createProductVariant(variantPayload, {
           onError: (error, variables) => {
             console.log(error);

@@ -198,6 +198,7 @@
     border-bottom: 4px solid theme(digitv2.lightTheme.primary);
     box-sizing: border-box;
     font-size: 1.5rem;
+    cursor: default;
   }
   :focus {
     outline: none;
@@ -222,6 +223,7 @@
     font-family: "Roboto";
     font-weight: 700;
     font-size: 1rem;
+    cursor: default;
   }
 }
 .tab-content-header {
