@@ -113,6 +113,16 @@ header {
   }
 }
 
+.card-container-delivery{
+  .additional-elements-column{
+    .icon-label-container{
+    .digit-button-label{
+      margin-top: 0.125rem;
+    }
+  }
+  }
+}
+
 /*.digit-popup-wrap {
   background: rgba(0, 0, 0, 0.7);
   @apply flex  fixed w-full h-full overflow-auto top-0 left-0 min-h-screen;

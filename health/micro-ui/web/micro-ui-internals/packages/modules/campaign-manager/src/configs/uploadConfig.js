@@ -1,6 +1,4 @@
-import { last } from "lodash";
-
-export const uploadConfig = (totalFormData, campaignData, dataParams, isSubmitting, summaryErrors, hierarchyData) => {
+export const uploadConfig = (totalFormData, campaignData,  summaryErrors, hierarchyData) => {
   return [
     {
       form: [
