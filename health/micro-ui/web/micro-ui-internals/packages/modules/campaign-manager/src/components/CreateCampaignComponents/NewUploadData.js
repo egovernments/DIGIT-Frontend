@@ -976,7 +976,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
           }
           if (temp?.status === "completed") {
             setLoader(false);
-            setIsValidation(false);
+            setIsValidation(true);
             if (!temp?.additionalDetails?.sheetErrors?.length) {
               setShowToast({ key: "success", label: t("HCM_VALIDATION_COMPLETED") });
               if (temp?.id) {
