@@ -8,6 +8,8 @@ import data_hook from "../../hooks/data_hook";
 import MobileChecklist from "../../components/MobileChecklist";
 import { CONSOLE_MDMS_MODULENAME } from "../../Module";
 import TagComponent from "../../components/TagComponent";
+import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
+
 
 let temp_data = []
 
@@ -31,10 +33,10 @@ const CreateChecklist = () => {
   const roleLocal = (!rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_")) ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
+  const campaignNumber = searchParams.get("campaignNumber");
   let module = searchParams.get("module");
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
-  const [tempFormData1, setTempFormData1] = useState([]);
   const [config, setConfig] = useState(null);
   const [previewData, setPreviewData] = useState([]);
   const [submitting, setSubmitting] = useState(false);
@@ -46,7 +48,13 @@ const CreateChecklist = () => {
   const [def_data, setDef_Data] = useState(null);
   const [helpText, setHelpText] = useState("");
 
+  const [showLocalisationPopup, setShowLocalisationPopup] = useState(false);
+  const [localisationData, setLocalisationData] = useState([]);
+  const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
+  const { languages, stateInfo } = storeData || {};
+  const currentLocales = languages?.map(locale => locale.value);
 
+  const presentLocale = Digit?.SessionStorage.get("locale") || locale;
   module = "hcm-checklist";
   const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
 
@@ -123,7 +131,7 @@ const CreateChecklist = () => {
   const popShow = () => {
     const pr = organizeQuestions(tempFormData);
     setPreviewData(pr);
-    setShowPopUp(!showPopUp);
+    setShowPopUp(true);
   };
 
   const clearData = () => {
@@ -205,10 +213,36 @@ const CreateChecklist = () => {
     return organizedQuestions;
   }
 
+  const LocalisationCodeUpdate =(temp)=>{
+    return temp.toUpperCase().replace(/ /g, "_");
+  }
+
   const generateCodes = (questions) => {
     const codes = {};
     const local = [];
     let activeCounters = { top: 0 }; // Track active question counts at each level
+
+    // Precompute common values once
+    let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
+    if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+    let roleTemp =  LocalisationCodeUpdate(role);
+    let helpTextCode =  LocalisationCodeUpdate(helpText);
+
+    // Add the new static entries to localization data
+    local.push(
+      {
+        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
+        locale: locale,
+        message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
+        module: "hcm-checklist"
+      },
+      {
+        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+        locale: locale,
+        message: helpText || "",
+        module: "hcm-checklist"
+      }
+    );
 
     // Helper function to generate codes recursively
     const generateCode = (question, prefix, index, parentCounter = '') => {
@@ -241,8 +275,8 @@ const CreateChecklist = () => {
       codes[question.id] = code;
 
       let moduleChecklist = "hcm-checklist";
-      let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-      let roleTemp = role.toUpperCase().replace(/ /g, "_");
+      let checklistTypeTemp =  LocalisationCodeUpdate(checklistType)
+      let roleTemp =  LocalisationCodeUpdate(role)
       if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
 
       // Format the final string with the code (generate for all questions)
@@ -321,6 +355,49 @@ const CreateChecklist = () => {
 
     return { codes: codes, local: local };
   };
+function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
+  const messages = new Set();
+  let activeCount = 0;
+
+  if (helpText?.trim()) {
+    messages.add(helpText.trim());
+  }
+
+  function traverseQuestions(questions, prefix = "") {
+    questions.forEach((question, qIndex) => {
+      if (!question?.isActive) return;
+
+      const currentPrefix = prefix ? `${prefix}.${qIndex + 1}` : `${++activeCount}`;
+      const formattedPrefix = `${currentPrefix}) `;
+
+      if (question.title) messages.add(formattedPrefix + question.title.trim());
+      if (question.helpText) messages.add(question.helpText.trim());
+
+      if (Array.isArray(question.options)) {
+        question.options.forEach((option) => {
+          if (option.label) messages.add(option.label.trim());
+
+          if (Array.isArray(option.subQuestions)) {
+            traverseQuestions(option.subQuestions, currentPrefix);
+          }
+        });
+      }
+
+      if (Array.isArray(question.subQuestions)) {
+        traverseQuestions(question.subQuestions, currentPrefix);
+      }
+    });
+  }
+
+  traverseQuestions(quesArray);
+
+  const filteredLocales = localeArray.filter((entry) =>
+    messages.has(entry.message?.trim())
+  );
+
+  return filteredLocales;
+}
+
 
   // Helper function remains unchanged as it already handles both active and inactive questions
   function createQuestionObject(item, tenantId, idCodeMap) {
@@ -332,7 +409,7 @@ const CreateChecklist = () => {
         return upperCaseString.replace(/ /g, '_');
       });
     }
-    if(String(item?.type?.code) === "SingleValueList"){
+    if (String(item?.type?.code) === "SingleValueList") {
       labelsArray.push("NOT_SELECTED");
     }
 
@@ -411,8 +488,8 @@ const CreateChecklist = () => {
     let fp = final_payload.filter((value, index, self) =>
       index === self.findIndex((t) => JSON.stringify(t) === JSON.stringify(value))
     );
-    let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-    let roleTemp = role.toUpperCase().replace(/ /g, "_");
+    let checklistTypeTemp =  LocalisationCodeUpdate(checklistType)
+    let roleTemp =  LocalisationCodeUpdate(role)
     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
     let code_of_checklist = `${campaignName}.${checklistTypeTemp}.${roleTemp}`;
     return {
@@ -441,82 +518,70 @@ const CreateChecklist = () => {
   };
 
 
-  const onSubmit = async (formData, flag = 0, preview = null) => {
+  const onSubmit = async (formData, flag = 0, preview = null, translations) => {
     let payload;
     if (flag === 1) {
       payload = payloadData(preview);
     } else {
       payload = payloadData(formData?.createQuestion?.questionData);
     }
+    let allLocalisations = [...uniqueLocal, ...translations].filter(
+      (value, index, self) =>
+        index === self.findIndex((t) => t.code === value.code && t.locale === value.locale)
+    ).filter((item) => item.message !== "");
+
     setSubmitting(true);
     try {
-      // Prepare localization data
-      let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-      if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-      let roleTemp = role.toUpperCase().replace(/ /g, "_");
-      let helpTextCode = helpText.toUpperCase().replace(/ /g, "_");
-      uniqueLocal.push({
-        code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
-        locale: locale,
-        message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-        module: "hcm-checklist"
-      });
-      if(helpText.trim() !== ""){
-        uniqueLocal.push({
-          code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
-          locale: locale,
-          message: helpText,
-          module: "hcm-checklist"
-        });
+      
+       // Group localizations by locale
+      const groupedByLocale = allLocalisations.reduce((acc, entry) => {
+        acc[entry.locale] = acc[entry.locale] || [];
+        acc[entry.locale].push(entry);
+        return acc;
+      }, {});
+      // Process each locale group
+      for (const [localeCode, entries] of Object.entries(groupedByLocale)) {
+        const result = await localisationMutateAsync(entries);
+        if (!result.success) {
+          setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+          return;
+        }
       }
-        
-      // Call upsert first
-      const localisations = uniqueLocal;
-      const localisationResult = await localisationMutateAsync(localisations);
-  
-      if (!localisationResult.success) {
-        // Exit if upsert (localisation) fails
-        setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
-        return;
-      }
-  
-      // Proceed to create checklist
+
+      // Proceed to create checklist after all locales succeed
       const data = await mutateAsync(payload);
-  
-      if (data.success) { // Replace with your actual condition
+
+      if (data?.success) { // Updated success condition check
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
           message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
           preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
           actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
-          secondaryActionLabel: "MY_CAMPAIGN",
-          secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
+          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
+          secondaryActionLabel: "VIEW_DETAILS",
+          secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
         });
       } else {
         setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
       }
     } catch (error) {
-      // Handle error scenario
-      setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
-      // console.error("Error creating checklist:", error);
+      setShowToast({
+        label: error.response?.data?.message || "CHECKLIST_CREATED_FAILED",
+        isError: "true"
+      });
     } finally {
       setSubmitting(false);
     }
   };
 
-  useEffect(()=>{
-    if(showToast !== null)
-    {
+  useEffect(() => {
+    if (showToast !== null) {
       setShowPopUp(false);
     }
   }, [showToast])
 
   const onSecondayActionClick = () => {
-    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`);
+    history.push(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`);
   };
-
-
-
 
   const fieldPairs = [
     { label: "CHECKLIST_ROLE", value: roleLocal },
@@ -529,8 +594,8 @@ const CreateChecklist = () => {
       {!loading_new && submitting && <Loader page={true} variant={"PageLoader"}/>}
       {!submitting && !loading_new &&
         <div>
-          <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between", height:"5.8rem", marginTop: "-1.2rem"}}>
+          <TagComponent campaignName={campaignName} />
+          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                 {t("CREATE_NEW_CHECKLIST")}
@@ -586,7 +651,12 @@ const CreateChecklist = () => {
                   variation={"primary"}
                   label={t("CREATE_CHECKLIST")}
                   onClick={() => {
-                    onSubmit(null, 1, tempFormData);
+                    const processed = organizeQuestions(tempFormData);
+                    const { local: generatedLocal } = generateCodes(processed);
+                    const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
+                    setLocalisationData(currentLocalisationData);
+                    setShowLocalisationPopup(true);
+                    setShowPopUp(false);
                   }}
                 />,
               ]}
@@ -647,14 +717,12 @@ const CreateChecklist = () => {
             onSubmit={popShow}
             fieldStyle={{ marginRight: 0 }}
             noBreakLine={true}
-            // cardClassName={"page-padding-fix"}
             onFormValueChange={onFormValueChange}
             actionClassName={"actionBarClass"}
             noCardStyle={true}
             showSecondaryLabel={true}
             secondaryLabel={t("HCM_BACK")}
             onSecondayActionClick={onSecondayActionClick}
-          // showWrapperContainers={false}
           />
 
           {showToast && (
@@ -665,6 +733,27 @@ const CreateChecklist = () => {
               isDleteBtn={"true"}
               onClose={() => closeToast()}
             />
+          )}
+          {showLocalisationPopup && (
+            <PopUp
+              className="localisation-popup-container"
+              heading={t("ADD_TRANSLATIONS")}
+              onClose={() => setShowLocalisationPopup(false)}
+              onOverlayClick={() => {
+                setShowLocalisationPopup(false);
+              }}
+            >
+              <LocalisationEditorPopup
+                locales={currentLocales.filter(local => local !== presentLocale)}
+                languages = {languages.filter(item => item.value !== presentLocale)}
+                currentLocale={presentLocale}
+                localisationData={localisationData}
+                onSave={(translations) => {
+                  onSubmit(null, 1, tempFormData, translations);
+                }}
+                onClose={() => setShowLocalisationPopup(false)}
+              />
+            </PopUp>
           )}
         </div>
       }

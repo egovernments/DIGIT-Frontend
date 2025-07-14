@@ -11,6 +11,7 @@ import useProjectSearchWithBoundary from "./useProjectSearchWithBoundary";
 import useProjectUpdateWithBoundary from "./useProjectUpdateWithBoundary";
 import useCreateChecklist from "./useCreateChecklist";
 import useUpsertLocalisation from "./useUpsertLocalisation";
+import useUpsertLocalisationParallel from "./useUpsertLocalisationParallel";
 import useTypeOfChecklist from "./useTypeOfChecklist";
 import { useBoundaryRelationshipSearch } from "./useBoundaryRelationshipSearch";
 import useUpdateChecklist from "./useUpdateChecklist";
@@ -18,6 +19,16 @@ import useMDMSServiceSearch from "./useMDMSServiceSearch";
 import useBoundaryHome from "./useBoundaryHome";
 import useFetchFromMicroplan from "./useFetchFromMicroplan";
 import { useReadExcelData, useUpdateAndUploadExcel } from "./useReadExcelData";
+import { useSearchLocalisation } from "./useSearchLocalisation";
+import useUpsertFormBuilderConfig from "./useUpsertFormBuilderConfig";
+import { useMDMSV2Search } from "./useMDMSV2Search";
+import useUpdateFormBuilderConfig from "./useUpdateFormBuilderConfig";
+import useUpsertSchemaConfig from "./useUpsertSchemaConfig";
+import useUpdateAppConfig from "./useUpdateAppConfig";
+import useUpdateAppConfigForFeatures from "./useUpdateAppConfigForFeatures";
+import { useProcessData } from "./useProcessData";
+
+import useCloneCampaign from "./useCloneCampaign";
 
 const UserService = {};
 
@@ -38,6 +49,7 @@ const campaign = {
   useProjectUpdateWithBoundary,
   useCreateChecklist,
   useUpsertLocalisation,
+  useUpsertLocalisationParallel,
   useTypeOfChecklist,
   useBoundaryRelationshipSearch,
   useUpdateChecklist,
@@ -46,6 +58,15 @@ const campaign = {
   useFetchFromMicroplan,
   useReadExcelData,
   useUpdateAndUploadExcel,
+  useSearchLocalisation,
+  useUpsertFormBuilderConfig,
+  useMDMSV2Search,
+  useUpdateFormBuilderConfig,
+  useUpdateAppConfig,
+  useUpsertSchemaConfig,
+  useUpdateAppConfigForFeatures,
+  useCloneCampaign,
+  useProcessData
 };
 
 const Hooks = {

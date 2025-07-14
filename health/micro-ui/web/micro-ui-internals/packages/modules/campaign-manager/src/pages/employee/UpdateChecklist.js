@@ -6,9 +6,11 @@ import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useHistory, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
+import LocalisationEditorPopup from "../../components/LocalisationEditorPopup";
 
 const UpdateChecklist = () => {
     const { t } = useTranslation();
+    const module = "hcm-checklist";
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const campaignName = searchParams.get("campaignName");
@@ -28,9 +30,9 @@ const UpdateChecklist = () => {
     const [searching, setSearching] = useState(true);
     const [viewData, setViewData] = useState(null);
     let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+    const presentLocale = Digit?.SessionStorage.get("locale");
     const { mutateAsync } = Digit.Hooks.campaign.useUpdateChecklist(tenantId);
     const { mutateAsync: localisationMutateAsync } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, locale);
-    module = "hcm-checklist";
     let processedData = [];
     let checklistName = `${checklistType} ${role}`;
     const [submitting, setSubmitting] = useState(false);
@@ -40,12 +42,17 @@ const UpdateChecklist = () => {
     const [showPopUp, setShowPopUp] = useState(false);
     const [curActive, setCurActive] = useState(false);
     const [helpText, setHelpText] = useState("");
+    const [showLocalisationPopup, setShowLocalisationPopup] = useState(false);
+    const [localisationData, setLocalisationData] = useState([]);
+    const { data: storeData } = Digit.Hooks.useStore.getInitData();
+    const { languages, stateInfo } = storeData || {};
+    const currentLocales = languages.map(locale => locale.value);
 
 
     const popShow = () => {
         const pr = organizeQuestions(tempFormData);
         setPreviewData(pr);
-        setShowPopUp(!showPopUp);
+        setShowPopUp(true);
     };
 
     const closeToast = () => {
@@ -110,10 +117,6 @@ const UpdateChecklist = () => {
 
     }, [viewData])
 
-    const callUpdate = () => {
-
-    }
-
     function organizeQuestions(questions) {
         // Deep clone the questions to avoid mutating the original tempFormData
         const clonedQuestions = JSON.parse(JSON.stringify(questions));
@@ -154,11 +157,64 @@ const UpdateChecklist = () => {
         return organizedQuestions;
     }
 
+  const { data: searchLocalisationData, refetch } = Digit.Hooks.campaign.useSearchLocalisation({
+    tenantId: tenantId,
+    locale: currentLocales,
+    module: module,
+    isMultipleLocale: currentLocales?.length > 1 ? true : false,
+    config: {
+      staleTime: Infinity,
+      cacheTime: Infinity,
+      select: (data) => {
+        return data;
+      },
+    },
+  });
+
+
+  function enrichLocalizationData(localArray, searchLocalizationData) {
+    const existingCodeLocales = localArray.map(item => `${item.code}|${item.locale}`);
+    
+    const entriesToAdd = searchLocalizationData?.filter(searchItem => {
+      const codeLocaleKey = `${searchItem.code}|${searchItem.locale}`;
+      
+      return existingCodeLocales.includes(codeLocaleKey) === false && 
+             localArray.some(localItem => localItem.code === searchItem.code);
+    });
+        return [...entriesToAdd];
+  }
+  
+  const LocalisationCodeUpdate =(temp)=>{
+    return temp.toUpperCase().replace(/ /g, "_");
+  }
+
+
     const generateCodes = (questions) => {
         const codes = {};
         const local = [];
         let activeCounters = { top: 0 }; // Track active question counts at each level
-    
+
+        // Precompute common values once
+        let checklistTypeTemp = LocalisationCodeUpdate(checklistType);
+        if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
+        let roleTemp = LocalisationCodeUpdate(role);
+        let helpTextCode =  LocalisationCodeUpdate(helpText);
+
+        // Add the new static entries to localization data
+        local.push(
+            {
+                code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
+                locale: locale,
+                message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
+                module: "hcm-checklist"
+            },
+            {
+                code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
+                locale: locale,
+                message: helpText || "." ,
+                module: "hcm-checklist"
+            }
+        );
         // Helper function to generate codes recursively
         const generateCode = (question, prefix, index, parentCounter = '') => {
             // Generate code regardless of isActive status
@@ -172,13 +228,13 @@ const UpdateChecklist = () => {
                 }
             } else {
                 code = `${prefix}.SN${index + 1}`;
-                
+
                 // Initialize counter for this nesting level if it doesn't exist
                 const nestingKey = prefix || 'root';
                 if (!activeCounters[nestingKey]) {
                     activeCounters[nestingKey] = 0;
                 }
-                
+
                 // Only increment counter for active questions
                 if (question.isActive) {
                     activeCounters[nestingKey] += 1;
@@ -186,17 +242,17 @@ const UpdateChecklist = () => {
                     parentCounter = parentCounter + '.' + activeCounters[nestingKey];
                 }
             }
-            
+
             codes[question.id] = code;
-    
+
             let moduleChecklist = "hcm-checklist";
-            let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-            let roleTemp = role.toUpperCase().replace(/ /g, "_");
+            let checklistTypeTemp =  LocalisationCodeUpdate(checklistType);
+            let roleTemp = LocalisationCodeUpdate(role);
             if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-            
+
             // Format the final string with the code (generate for all questions)
             let formattedString = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${code}`;
-            
+
             // Only add message with numbering for active questions
             if (question.isActive) {
                 const msg = `${parentCounter}) ${String(question.title)}`;
@@ -208,17 +264,17 @@ const UpdateChecklist = () => {
                 }
                 local.push(obj);
             }
-    
+
             // Process options
             if (question.options) {
                 question.options.forEach((option, optionIndex) => {
                     const optionval = option.label;
                     const upperCaseString = optionval.toUpperCase();
                     const transformedString = upperCaseString.replace(/ /g, '_');
-                    
+
                     if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
                     let formattedStringTemp = `${campaignName}.${checklistTypeTemp}.${roleTemp}.${transformedString}`;
-                    
+
                     // Generate codes for options regardless of question's active status
                     const obj = {
                         "code": formattedStringTemp,
@@ -227,16 +283,16 @@ const UpdateChecklist = () => {
                         "locale": locale
                     }
                     local.push(obj);
-    
+
                     // Process subquestions under options
                     if (option.subQuestions) {
                         const optionNestingKey = `${code}.${transformedString}`;
                         activeCounters[optionNestingKey] = 0;
-                        
+
                         option.subQuestions.forEach((subQuestion, subQuestionIndex) => {
                             generateCode(
-                                subQuestion, 
-                                `${code}.${transformedString}`, 
+                                subQuestion,
+                                `${code}.${transformedString}`,
                                 subQuestionIndex,
                                 question.isActive ? parentCounter : ''
                             );
@@ -244,33 +300,95 @@ const UpdateChecklist = () => {
                     }
                 });
             }
-    
+
             // Process direct subquestions
             if (question.subQuestions) {
                 // Reset counter for this level of subquestions
                 activeCounters[code] = 0;
-                
+
                 question.subQuestions.forEach((subQuestion, subQuestionIndex) => {
                     generateCode(
-                        subQuestion, 
-                        code, 
-                        subQuestionIndex, 
+                        subQuestion,
+                        code,
+                        subQuestionIndex,
                         question.isActive ? parentCounter : ''
                     );
                 });
             }
         };
-    
+
         // Process all top-level questions
         questions.forEach((question, index) => {
             if (question.parentId === null) {
                 generateCode(question, '', index);
             }
         });
-    
+
         return { codes: codes, local: local };
     };
-    
+
+    function getFilteredLocaleEntries(quesArray, localeArray, helpText = "") {
+        const messages = new Set();
+        let activeCount = 0;
+      
+        if (helpText?.trim()) {
+          messages.add(helpText.trim());
+        }
+      
+        function traverseQuestions(questions, prefix = "") {
+          questions.forEach((question, qIndex) => {
+            if (!question?.isActive) return;
+      
+            const currentPrefix = prefix ? `${prefix}.${qIndex + 1}` : `${++activeCount}`;
+            const formattedPrefix = `${currentPrefix}) `;
+      
+            if (question.title) messages.add(formattedPrefix + question.title.trim());
+            if (question.helpText) messages.add(question.helpText.trim());
+      
+            if (Array.isArray(question.options)) {
+              question.options.forEach((option) => {
+                if (option.label) messages.add(option.label.trim());
+      
+                if (Array.isArray(option.subQuestions)) {
+                  traverseQuestions(option.subQuestions, currentPrefix);
+                }
+              });
+            }
+      
+            if (Array.isArray(question.subQuestions)) {
+              traverseQuestions(question.subQuestions, currentPrefix);
+            }
+          });
+        }
+      
+        traverseQuestions(quesArray);
+      
+        const filteredLocales = localeArray.filter((entry) =>
+          messages.has(entry.message?.trim())
+        );
+      
+        return filteredLocales;
+      }
+
+      function freshMessage(currentLocalisationData, enrichedArray) {
+        const common = enrichedArray.filter((enrichedItem) => {
+          const match = currentLocalisationData.find((localItem) => {
+            const localeMessage = localItem[enrichedItem.locale]; // e.g., en_IN
+            return (
+              localItem.code === enrichedItem.code &&
+              localItem.module === enrichedItem.module &&
+              localeMessage === enrichedItem.message
+            );
+          });
+          return match !== undefined;
+        });
+
+        setLocalisationData(common);
+      
+        return common;
+      }
+      
+
     // Helper function remains unchanged as it already handles both active and inactive questions
     function createQuestionObject(item, tenantId, idCodeMap) {
         let labelsArray = [];
@@ -281,10 +399,10 @@ const UpdateChecklist = () => {
                 return upperCaseString.replace(/ /g, '_');
             });
         }
-        if(String(item?.type?.code) === "SingleValueList"){
+        if (String(item?.type?.code) === "SingleValueList") {
             labelsArray.push("NOT_SELECTED");
         }
-    
+
         const questionObject = {
             id: item.id,
             tenantId: tenantId,
@@ -299,14 +417,14 @@ const UpdateChecklist = () => {
                 schema: "serviceDefinition",
                 version: 1,
                 fields: [
-                  {
-                    key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
-                    value: item
-                  }
+                    {
+                        key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+                        value: item
+                    }
                 ]
-              }
+            }
         };
-    
+
         return questionObject;
     }
 
@@ -375,89 +493,79 @@ const UpdateChecklist = () => {
                 schema: "serviceDefinition",
                 version: 1,
                 fields: [
-                  {
-                    key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
-                    value: {
-                      name: checklistName,
-                      type: checklistType,
-                      role: role,
-                      helpText: helpText
+                    {
+                        key: crypto.randomUUID(),  // Using crypto.randomUUID() for a unique key
+                        value: {
+                            name: checklistName,
+                            type: checklistType,
+                            role: role,
+                            helpText: helpText
+                        }
                     }
-                  }
                 ]
-              },
+            },
 
         }
     };
 
 
-    const onSubmit = async (formData, flag = 0, preview = null) => {
+    const onSubmit = async (formData, flag = 0, preview = null, translations) => {
         let payload;
         if (flag === 1) {
-          payload = payloadData(preview);
+            payload = payloadData(preview);
         } else {
-          payload = payloadData(formData?.createQuestion?.questionData);
+            payload = payloadData(formData?.createQuestion?.questionData);
         }
+        let allLocalisations = [...uniqueLocal, ...translations].filter(
+            (value, index, self) =>
+                index === self.findIndex((t) => t.code === value.code && t.locale === value.locale)
+        );
         setSubmitting(true);
         try {
-          // Prepare localization data
-          let checklistTypeTemp = checklistType.toUpperCase().replace(/ /g, "_");
-          if (checklistTypeCode) checklistTypeTemp = checklistTypeCode;
-          let roleTemp = role.toUpperCase().replace(/ /g, "_");
-          let helpTextCode = helpText.toUpperCase().replace(/ /g, "_");
-          uniqueLocal.push({
-            code: `${campaignName}.${checklistTypeTemp}.${roleTemp}`,
-            locale: locale,
-            message: `${t(checklistTypeLocal)} ${t(roleLocal)}`,
-            module: "hcm-checklist"
-          });
-          uniqueLocal.push({
-            code: `${campaignName}.${checklistTypeTemp}.${roleTemp}.${helpTextCode}`,
-            locale: locale,
-            message: helpText,
-            module: "hcm-checklist"
-          });
-      
-          // Call upsert first
-          const localisations = uniqueLocal;
-          const localisationResult = await localisationMutateAsync(localisations);
-      
-          if (!localisationResult.success) {
-            // Exit if upsert (localisation) fails
-            setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
-            return;
-          }
-      
-          // Proceed to create checklist
-          const data = await mutateAsync(payload);
-      
-          if (data.success) { // Replace with your actual condition
-            history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-                message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
-                preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
-                actionLabel: "CS_CHECKLIST_NEW_RESPONSE_ACTION",
-                actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
-                secondaryActionLabel: "MY_CAMPAIGN",
-                secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
-            });
-          } else {
-            setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
-          }
-        } catch (error) {
-          // Handle error scenario
-          setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
-          // console.error("Error creating checklist:", error);
-        } finally {
-          setSubmitting(false);
-        }
-      };
+            const groupedByLocale = allLocalisations.reduce((acc, entry) => {
+                acc[entry.locale] = acc[entry.locale] || [];
+                acc[entry.locale].push(entry);
+                return acc;
+            }, {});
 
-    useEffect(()=>{
-        if(showToast !== null)
-        {
-          setShowPopUp(false);
+            // Process each locale group
+            for (const [localeCode, entries] of Object.entries(groupedByLocale)) {
+                const result = await localisationMutateAsync(entries);
+                if (!result.success) {
+                    setShowToast({ label: "LOCALIZATION_FAILED_PLEASE_TRY_AGAIN", isError: "true" });
+                    return;
+                }
+            }
+
+            // Proceed to create checklist
+            const data = await mutateAsync(payload);
+
+            if (data.success) { // Replace with your actual condition
+                refetch();
+                history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
+                    message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
+                    preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
+                    actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
+                    secondaryActionLabel: "MY_CAMPAIGN",
+                    secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+                });
+            } else {
+                setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
+            }
+        } catch (error) {
+            // Handle error scenario
+            setShowToast({ label: "CHECKLIST_UPDATE_FAILED", isError: "true" });
+        } finally {
+            setSubmitting(false);
         }
-      }, [showToast])
+    };
+
+    useEffect(() => {
+        if (showToast !== null) {
+            setShowPopUp(false);
+        }
+    }, [showToast])
 
 
 
@@ -479,8 +587,8 @@ const UpdateChecklist = () => {
             {/* {submitting && <Loader />} */}
             {!submitting &&
                 <div>
-                     <TagComponent campaignName={campaignName} />  
-                    <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop:"-1.2rem" }}>
+                    <TagComponent campaignName={campaignName} />
+                    <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "1rem" }}>
                         <div>
                             <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>
                                 {t("UPDATE_CHECKLIST")}
@@ -504,9 +612,6 @@ const UpdateChecklist = () => {
                             type={"default"}
                             heading={t("CHECKLIST_PREVIEW")}
                             children={[
-                                // <div>
-                                //   <CardText style={{ margin: 0 }}>{"testing" + " "}</CardText>
-                                // </div>, 
                             ]}
                             onOverlayClick={() => {
                                 setShowPopUp(false);
@@ -515,16 +620,30 @@ const UpdateChecklist = () => {
                                 setShowPopUp(false);
                             }}
                             footerChildren={[
-                                <div></div>,
                                 <Button
                                     type={"button"}
                                     size={"large"}
-                                    variation={"primary"}
+                                    variation={"secondary"}
                                     label={t("CLOSE")}
                                     onClick={() => {
                                         setShowPopUp(false);
                                     }}
-                                />
+                                />,
+                                <Button
+                                    type={"button"}
+                                    size={"large"}
+                                    variation={"primary"}
+                                    label={t("CREATE_CHECKLIST")}
+                                    onClick={() => {
+                                        const processed = organizeQuestions(tempFormData);
+                                        const { local: generatedLocal } = generateCodes(processed);
+                                        const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
+                                        const enrichedArray = enrichLocalizationData(generatedLocal, searchLocalisationData);
+                                        const fresh = freshMessage(currentLocalisationData , enrichedArray);
+                                        setShowLocalisationPopup(true);
+                                        setShowPopUp(false);
+                                    }}
+                                />,
                             ]}
                             sortFooterChildren={true}
                         >
@@ -541,24 +660,22 @@ const UpdateChecklist = () => {
                                     inline
                                     label={t(pair.label)} // Dynamically set the label
                                     value={t(pair.value)} // Dynamically set the value
-                                // style={{ fontSize: "16px", fontWeight: "bold" }} // Optional: customize styles
                                 />
                                 {index !== fieldPairs.length - 1 && <div style={{ height: "1rem" }}></div>}
                             </div>
                         ))}
                         {
                             <div style={{ display: "flex" }}>
-                            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
-                            <TextInput
-                                disabled={false}
-                                className="tetxinput-example"
-                                type={"text"}
-                                name={t("CHECKLIST_HELP_TEXT")}
-                                value={helpText}
-                                // value={`${clTranslated} ${rlTranslated}`}
-                                onChange={(event) => setHelpText(event.target.value)}
-                                placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
-                            />
+                                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>{t("CHECKLIST_HELP_TEXT")}</div>
+                                <TextInput
+                                    disabled={false}
+                                    className="tetxinput-example"
+                                    type={"text"}
+                                    name={t("CHECKLIST_HELP_TEXT")}
+                                    value={helpText}
+                                    onChange={(event) => setHelpText(event.target.value)}
+                                    placeholder={t("CHECKLIST_HELP_TEXT_PALCEHOLDER")}
+                                />
                             </div>
                         }
                     </Card>
@@ -567,30 +684,46 @@ const UpdateChecklist = () => {
                         showMultipleCardsWithoutNavs={true}
                         label={t("UPDATE_CHECKLIST")}
                         config={config}
-                        onSubmit={onSubmit}
+                        onSubmit={popShow}
                         fieldStyle={{ marginRight: 0 }}
                         noBreakLine={true}
-                        // cardClassName={"page-padding-fix"}
                         onFormValueChange={onFormValueChange}
                         actionClassName={"checklistCreate"}
-                        // noCardStyle={currentKey === 4 || currentStep === 7 || currentStep === 0 ? false : true}
                         noCardStyle={true}
-                    // showWrapperContainers={false}
                     />}
                     {showToast && (
                         <Toast
                             type={showToast?.isError ? "error" : "success"}
-                            // error={showToast?.isError}
                             label={t(showToast?.label)}
                             isDleteBtn={"true"}
                             onClose={() => closeToast()}
                         />
                     )}
+                    {showLocalisationPopup && (
+                        <PopUp
+                            className="localisation-popup-container"
+                            heading={t("ADD_TRANSLATIONS")}
+                            onClose={() => setShowLocalisationPopup(false)}
+                            onOverlayClick={() => setShowLocalisationPopup(false)}
+                        >
+                            <LocalisationEditorPopup
+                                locales={currentLocales.filter(local => local !== locale)}
+                                currentLocale={locale}
+                                languages = {languages.filter(item => item.value !== locale)}
+                                localisationData={localisationData}
+                                onSave={(translations) => {
+                                    onSubmit(null, 1, tempFormData, translations);
+                                }}
+                                onClose={() => setShowLocalisationPopup(false)}
+                            />
+                        </PopUp>
+                    )}
+
 
 
                 </div>
             }
-            <div style={{height: "2rem"}}></div>
+            <div style={{ height: "2rem" }}></div>
         </div>
     )
 

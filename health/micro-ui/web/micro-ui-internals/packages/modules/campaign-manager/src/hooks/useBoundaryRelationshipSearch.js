@@ -1,5 +1,5 @@
 export const useBoundaryRelationshipSearch = ({BOUNDARY_HIERARCHY_TYPE , tenantId}) => {
-    const reqCriteria = {
+  const reqCriteria = {
         url: `/boundary-service/boundary-relationships/_search`,
         changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
         params: {
@@ -14,7 +14,7 @@ export const useBoundaryRelationshipSearch = ({BOUNDARY_HIERARCHY_TYPE , tenantI
         },
       };
     
-    const { data: hierarchyData, refetch, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+    const { data: hierarchyData, isLoading } = Digit.Hooks.useCustomAPIHook(reqCriteria);
     return hierarchyData?.TenantBoundary?.[0]?.boundary;
   };
   

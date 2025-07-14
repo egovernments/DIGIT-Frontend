@@ -1,5 +1,5 @@
 import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Dropdown, Toast, Button, PopUp} from "@egovernments/digit-ui-components";
+import { Dropdown, Toast, Button, PopUp, Footer } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -14,6 +14,7 @@ const SearchChecklist = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("campaignId");
+  const campaignNumber = searchParams.get("campaignNumber");
   const [showToast, setShowToast] = useState(null);
   const [campaignName, setCampaignName] = useState(searchParams.get("name"));
 
@@ -51,19 +52,18 @@ const SearchChecklist = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: `${CONSOLE_MDMS_MODULENAME}.rolesForChecklist`,
-        isActive: true
-      }
-    }
+        isActive: true,
+      },
+    },
   };
   const { isLoading1, data: dataBT, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqCriteria);
   useEffect(() => {
     const data = dataBT?.mdms;
-    if(data)
-    {
+    if (data) {
       const newCodesOpt = data.map((item) => ({
-        code: `ACCESSCONTROL_ROLES_ROLES_${item?.data?.code}`
+        code: `ACCESSCONTROL_ROLES_ROLES_${item?.data?.code}`,
       }));
-      setCodesOpt(newCodesOpt)
+      setCodesOpt(newCodesOpt);
     }
   }, [dataBT]);
 
@@ -73,27 +73,26 @@ const SearchChecklist = () => {
       MdmsCriteria: {
         tenantId: tenantId,
         schemaCode: "HCM.CHECKLIST_TYPES",
-        filters: {"type": "DEFAULT"},
-        isActive: true
-      }
+        filters: { type: "DEFAULT" },
+        isActive: true,
+      },
     },
-    changeQueryName: "HCM"
+    changeQueryName: "HCM",
   };
   const { isLoading, data: HCM, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria1);
   useEffect(() => {
     let data = HCM?.mdms;
-    if(data)
-    {
+    if (data) {
       const newListsOpt = data.map((item) => ({
-        list: `HCM_CHECKLIST_TYPE_${item?.data?.code}`
+        list: `HCM_CHECKLIST_TYPE_${item?.data?.code}`,
       }));
-      setListsOpt(newListsOpt)
+      setListsOpt(newListsOpt);
     }
   }, [HCM]);
 
   const onStepClick = (step) => {
-      setShowToast({ key: "error", label: "CAMPAIGN_CANNOT_CLICK" });
-      return;
+    setShowToast({ key: "error", label: "CAMPAIGN_CANNOT_CLICK" });
+    return;
     // history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
   // useEffect(() => {
@@ -135,8 +134,8 @@ const SearchChecklist = () => {
           activeSteps={6}
           // className={"campaign-flow-stepper"}
         /> */}
-         <TagComponent campaignName={campaignName} />  
-        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CONFIGURE_CHECKLIST")}</div>
+        <TagComponent campaignName={campaignName} />
+        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1rem" }}>{t("CONFIGURE_CHECKLIST")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
@@ -151,10 +150,7 @@ const SearchChecklist = () => {
               className={"boundaries-pop-module"}
               type={"default"}
               heading={t("CREATE_CHECKLIST")}
-              children={
-                [
-                ]
-              }
+              children={[]}
               style={{
                 height: "30rem",
               }}
@@ -218,7 +214,7 @@ const SearchChecklist = () => {
             </PopUp>
           )}
         </div>
-          <div className="container-full">
+        <div className="container-full">
           {/* <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("ACTION_LABEL_CONFIGURE_APP")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
@@ -228,8 +224,8 @@ const SearchChecklist = () => {
             </Card>
           </div> */}
           <div className="inbox-search-wrapper card-container1" style={{ width: "100%" }}>
-            {/* Pass defaultValues as props to InboxSearchComposer */} 
-           <InboxSearchComposer
+            {/* Pass defaultValues as props to InboxSearchComposer */}
+            <InboxSearchComposer
               configs={checklistSearchConfig?.[0]}
               // defaultValues={defaultValues}
               additionalConfig={{
@@ -240,14 +236,30 @@ const SearchChecklist = () => {
             ></InboxSearchComposer>
           </div>
         </div>
-        {showToast && (
-        <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          label={t(showToast?.label)}
-          transitionTime={showToast.transitionTime}
-          onClose={closeToast}
+        <Footer
+          actionFields={[
+            <Button
+              label={t("GO_BACK")}
+              title={t("GO_BACK")}
+              variation="secondary"
+              style={{
+                marginLeft: "2.5rem",
+              }}
+              onClick={() => {
+                history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+              }}
+              icon={"ArrowBack"}
+            />,
+          ]}
         />
-      )}
+        {showToast && (
+          <Toast
+            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+            label={t(showToast?.label)}
+            transitionTime={showToast.transitionTime}
+            onClose={closeToast}
+          />
+        )}
       </React.Fragment>
     );
   }

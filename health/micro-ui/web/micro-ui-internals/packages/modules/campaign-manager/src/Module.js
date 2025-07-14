@@ -1,4 +1,4 @@
-import {  TourProvider } from "@egovernments/digit-ui-react-components";
+import { TourProvider } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useRouteMatch } from "react-router-dom";
@@ -53,8 +53,15 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import AppConfigurationWrapper from "./pages/employee/AppConfigurationWrapper";
-
+import DateSelection from "./components/CreateCampaignComponents/DateSelection";
+import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
+//App config import
+import AppPreview from "./components/AppPreview";
+import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
+import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
+import MyCampaignNew from "./pages/employee/MyCampaignNew";
+import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
+import QRButton from "./components/CreateCampaignComponents/QRButton";
 /**
  * MDMS Module name
  */
@@ -66,15 +73,16 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  * @returns The CampaignModule component returns either a Loader component if data is still loading, or
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
-const CampaignModule = ({ stateCode, userType, tenants }) => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
+  const moduleName = Digit.Utils.campaign.getModuleName();
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
     [
       {
         name: "HierarchySchema",
-        filter: `[?(@.type=='${window.Digit.Utils.campaign.getModuleName()}')]`,
+        filter: `[?(@.type=='${moduleName}')]`,
       },
     ],
     {
@@ -82,13 +90,15 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
         return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
       },
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.HierarchySchema` }
+    { schemaCode: "HierarchySchema" }
   );
 
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE, tenantId });
   const modulePrefix = "hcm";
 
-  const moduleCode = BOUNDARY_HIERARCHY_TYPE ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`] : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration"];
+  const moduleCode = BOUNDARY_HIERARCHY_TYPE
+    ? [`boundary-${BOUNDARY_HIERARCHY_TYPE}`]
+    : ["campaignmanager", "schema", "admin-schemas", "checklist", "appconfiguration", "dummy-module"];
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -100,7 +110,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
   });
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
@@ -117,7 +127,7 @@ const CampaignModule = ({ stateCode, userType, tenants }) => {
       </TourProvider>
     </ErrorBoundary>
   );
-};
+});
 
 const componentsToRegister = {
   CampaignModule: CampaignModule,
@@ -167,7 +177,14 @@ const componentsToRegister = {
   NoResultsFound,
   UploadDataMappingWrapper,
   DataUploadWrapper,
-  AppConfigurationWrapper,
+  AppPreview,
+  AppConfigurationParentRedesign: AppConfigurationTabLayer,
+  DateSelection,
+  ViewDetailComponent,
+  CycleSelection,
+  HCMMyCampaignRowCard,
+  MyCampaignNew,
+  QRButton,
 };
 
 const overrideHooks = () => {
