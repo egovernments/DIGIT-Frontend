@@ -739,10 +739,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           onOverlayClick={() => {
             setShowError(null);
             setPopupData(null);
+            setAddFieldData(null);
           }}
           onClose={() => {
             setShowError(null);
             setPopupData(null);
+            setAddFieldData(null);
           }}
           equalWidthButtons={"false"}
           footerChildren={[
@@ -754,6 +756,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               onClick={() => {
                 setShowError(null);
                 setPopupData(null);
+                setAddFieldData(null);
               }}
             />,
             <Button

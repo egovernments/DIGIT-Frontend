@@ -76,7 +76,7 @@ const PanelFieldDisplay = ({ t, label, appType, config, onToggle, isDelete, onDe
     <>
       <div className="appConfigLabelField-label-container">
         <div className="appConfigLabelField-label">
-          <span>{t(label)}</span>
+          <span>{label}</span>
         </div>
         <Tag icon="" label={t(appType)} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />
       </div>
