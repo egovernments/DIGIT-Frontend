@@ -1,8 +1,10 @@
-import React, { Fragment, useContext, useState , useEffect } from "react";
+import React, { Fragment, useContext, useState, useEffect } from "react";
 import AddDeliveryRuleWrapper from "./AddDeliverycontext";
 import { CycleContext } from ".";
 import { useTranslation } from "react-i18next";
-import { Stepper ,TextBlock , Tag , Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Paragraph, CardText } from "@egovernments/digit-ui-components";
+import TagComponent from "../../../components/TagComponent";
+import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDateFormat";
 
 const Tabs = ({ onTabChange }) => {
   const { campaignData, dispatchCampaignData } = useContext(CycleContext);
@@ -37,29 +39,6 @@ const TabContent = ({ activeSubTab, subTabCount = 3, onSubTabChange, project }) 
         {/* <CardSubHeader className="tab-content-header">{t(`CAMPAIGN_TAB_TEXT`)}</CardSubHeader> */}
         <CardText>{t(`CAMPAIGN_DELIVERY_TAB_SUB_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)} </CardText>
       </div>
-      {/* Add content specific to each tab as needed */}
-      {/* <InfoCard
-        populators={{
-          name: "infocard",
-        }}
-        variant="default"
-        style={{ marginTop: "1.5rem", marginLeft: "0rem" , marginBottom: "0rem", maxWidth: "100%" }}
-        className= {"infoClass"}
-        headerWrapperClassName = {"headerWrapperClassName"}
-        additionalElements={[
-          <img className="whoLogo"
-            // style="display: block;-webkit-user-select: none;margin: auto;cursor: zoom-in;background-color: hsl(0, 0%, 90%);transition: background-color 300ms;"
-            src="https://cdn.worldvectorlogo.com/logos/world-health-organization-logo-1.svg"
-            alt="WHO Logo"
-            width="164"
-            height="90"
-          ></img>,
-          <span style={{ color: "#505A5F" }}>
-            {t(`CAMPAIGN_TAB_INFO_TEXT_${project?.code ? project?.code?.toUpperCase() : project?.toUpperCase()}`)}
-          </span>
-        ]}
-        label={"Info"}
-      /> */}
     </Card>
   );
 };
@@ -93,7 +72,7 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
   const { t } = useTranslation();
   const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const searchParams = new URLSearchParams(location.search);
-  const [currentStep , setCurrentStep] = useState(1);
+  const [currentStep, setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
   const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
   const [key, setKey] = useState(() => {
@@ -124,28 +103,27 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
     });
   };
 
-  useEffect(() =>{
+  useEffect(() => {
     setKey(currentKey);
     setCurrentStep(currentKey);
-  }, [currentKey])
+  }, [currentKey]);
 
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
   }, [key]);
 
-  const onStepClick = (currentStep) => {
-    if(currentStep === 0){
-      setKey(7);
-    }
-    else if(currentStep === 2) setKey(9);
-    else setKey(8);
-  };
+  // const onStepClick = (currentStep) => {
+  //   if (currentStep === 0) {
+  //     setKey(7);
+  //   } else if (currentStep === 2) setKey(9);
+  //   else setKey(8);
+  // };
 
   return (
     <>
-    <div className="container-full">
-        <div className="card-container">
+      <div className="container-full">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -157,38 +135,41 @@ const MultiTab = ({ tabCount = 3, subTabCount = 2 }) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
         <div className="card-container-delivery">
-        <Tag icon="" label={campaignName} labelStyle={{}} showIcon={false} className={"campaign-tag"} />
-      <HeaderComponent>
-        {t(
-          `CAMPAIGN_PROJECT_${
-            tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-              ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-              : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
-          }`
-        )}
-      </HeaderComponent>
-      <Paragraph
-        customClassName="cycle-paragraph"
-        value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
-          ?.split("-")
-          ?.reverse()
-          ?.join("/")} - ${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate?.split("-")?.reverse()?.join("/")})`}
-      />
-      <div className="campaign-cycle-container">
-        <div className="campaign-tabs-container">
-          <Tabs tabCount={tabCount} activeTab={activeTab} onTabChange={handleTabChange} />
+          <TagComponent campaignName={campaignName} />
+          <HeaderComponent styles={{ marginTop: "1.5rem" }} className="select-boundary">
+            {t(
+              `CAMPAIGN_PROJECT_${
+                tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
+                  ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
+                  : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+              }`
+            )}
+          </HeaderComponent>
+          <Paragraph
+            customClassName="cycle-paragraph"
+            // value={`(${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate
+            //   ?.split("-")
+            //   ?.reverse()
+            //   ?.join("/")} - ${tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate?.split("-")?.reverse()?.join("/")})`}
+            value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
+              tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+            )}`}
+          />
+          <div className="campaign-cycle-container">
+            <div className="campaign-tabs-container">
+              <Tabs tabCount={tabCount} activeTab={activeTab} onTabChange={handleTabChange} />
+            </div>
+            <TabContent
+              activeTab={activeTab}
+              project={tempSession?.HCM_CAMPAIGN_TYPE?.projectType}
+              activeSubTab={activeSubTab}
+              onSubTabChange={handleSubTabChange}
+            />
+            <AddDeliveryRuleWrapper />
+          </div>
         </div>
-        <TabContent
-          activeTab={activeTab}
-          project={tempSession?.HCM_CAMPAIGN_TYPE?.projectType}
-          activeSubTab={activeSubTab}
-          onSubTabChange={handleSubTabChange}
-        />
-        <AddDeliveryRuleWrapper />
-      </div>
-      </div>
       </div>
     </>
   );

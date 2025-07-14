@@ -1,7 +1,7 @@
-import React, { useState, Fragment  , useEffect} from "react";
+import React, { useState, Fragment, useEffect } from "react";
 import { Link, useHistory, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PanelCard ,Footer,Button} from "@egovernments/digit-ui-components";
+import { PanelCard, Footer, Button } from "@egovernments/digit-ui-components";
 
 const Response = () => {
   const { t } = useTranslation();
@@ -15,17 +15,16 @@ const Response = () => {
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   const navigate = (link) => {
-        history.push(link ? link : `/${window.contextPath}/employee/`);
-      
+    history.push(link ? link : `/${window.contextPath}/employee/`);
   };
 
   useEffect(() => {
-    if (state?.actionLabel === "HCM_CONFIGURE_APP_RESPONSE_ACTION" &&  queryStrings?.isSuccess === "true") {
+    if (state?.actionLabel === "HCM_CONFIGURE_APP_RESPONSE_ACTION" && queryStrings?.isSuccess === "true") {
       const timer = setTimeout(() => {
         navigate(state?.actionLink || `/${window.contextPath}/employee/`);
       }, 5000);
 
-      return () => clearTimeout(timer); 
+      return () => clearTimeout(timer);
     }
   }, [state?.actionLabel, state?.actionLink]);
 
@@ -52,29 +51,32 @@ const Response = () => {
         info={t(state?.info)}
         footerChildren={[]}
         children={children}
+        showAsSvg={true}
       />
-      {/* {isMobile ? (
-        <Link to={state?.actionLink ? state?.actionLink : `/${window.contextPath}/employee/`}>
-          <SubmitBar label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} />
-        </Link>
-      ) : (
-        <ActionBar>
-          <Link to={state?.actionLink ? state?.actionLink : `/${window.contextPath}/employee/`}>
-            <SubmitBar label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} />
-          </Link>
-        </ActionBar>
-      )} */}
       <Footer
-  actionFields={[
-     <Button  label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} onClick={()=>navigate(state?.secondaryActionLink)} type="button" variation="secondary"/>,
-      <Button icon="ArrowForward" isSuffix label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")} onClick={()=>navigate(state?.actionLink)} type="button"/>
-  ]}
-  className=""
-  maxActionFieldsAllowed={5}
-  setactionFieldsToRight
-  sortActionFields
-  style={{}}
-/>
+        actionFields={[
+          state?.secondaryActionLabel && (
+            <Button
+              label={state?.secondaryActionLabel ? t(state?.secondaryActionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
+              onClick={() => navigate(state?.secondaryActionLink)}
+              type="button"
+              variation="secondary"
+            />
+          ),
+          <Button
+            icon="ArrowForward"
+            isSuffix
+            label={state?.actionLabel ? t(state?.actionLabel) : t("ES_CAMPAIGN_RESPONSE_ACTION")}
+            onClick={() => navigate(state?.actionLink)}
+            type="button"
+          />,
+        ]}
+        className=""
+        maxActionFieldsAllowed={5}
+        setactionFieldsToRight
+        sortActionFields
+        style={{}}
+      />
     </>
   );
 };

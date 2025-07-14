@@ -126,151 +126,165 @@ export const cycleDataRemap=(data)=> {
         deliveryType: deliveryStrategy || "DIRECT",
         products,
         attributes,
-      }];;
-    };
-    const mapDoseCriteriaToDeliveryRules = (doseCriteria , deliveryStrategy) => {
-      return doseCriteria?.flatMap((criteria, ruleKey) => {
-        const products = mapProductVariants(criteria.ProductVariants);
-        return parseConditionAndCreateRules(criteria.condition, ruleKey, products , deliveryStrategy);
-      });
-    };
-  
-    const mapDeliveries = (deliveries) => {
-      return deliveries?.map((delivery, deliveryIndex) => ({
-        active: deliveryIndex === 0,
-        deliveryIndex: String(deliveryIndex + 1),
-        deliveryType: delivery.deliveryStrategy || "DIRECT",
-        deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria , delivery.deliveryStrategy),
-      }));
-    };
-  
-    const transformedCycles = cycles.map((cycle) => ({
-      active: true,
-      cycleIndex: String(cycle.id),
-      deliveries: mapDeliveries(cycle.deliveries),
-    }));
-  
-  
-  
-    return transformedCycles;
-  
-  }
-  
-  export const  processDelivery=(delivery, resourcesMap, ageInfo , type ,projectType)=> {
-  
-    return {
-      id: parseInt(delivery.deliveryIndex, 10),
-      deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
-      mandatoryWaitSinceLastDeliveryInDays: null,
-      doseCriteria: delivery.deliveryRules.map(rule => {
-        const doseCriteriaResult = processDoseCriteria(rule, resourcesMap ,type ,projectType);
-        const ages = extractAgesFromConditions(doseCriteriaResult.condition);
-        if (ages.length > 0) { 
-          ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
-          ageInfo.minAge = Math.min(ageInfo.minAge, ...ages);
-        }
-        return doseCriteriaResult;
-      })
-    };
-  }
-  export const  processDoseCriteria =(rule, resourcesMap ,type ,projectType) =>{
-    rule.products.forEach(product => {
-      if (resourcesMap.has(product.value)) {
-        resourcesMap.get(product.value).quantity += product.quantity;
-      } else {
-        resourcesMap.set(product.value, {
-          productVariantId: product.value,
-          isBaseUnitVariant: false,
-          name: product.name,
-          quantity: product.quantity
-        });
-      }
+      },
+    ];
+  };
+  const mapDoseCriteriaToDeliveryRules = (doseCriteria, deliveryStrategy) => {
+    return doseCriteria?.flatMap((criteria, ruleKey) => {
+      const products = mapProductVariants(criteria.ProductVariants);
+      return parseConditionAndCreateRules(criteria.condition, ruleKey, products, deliveryStrategy);
     });
-  
-    const conditions = rule.attributes.map(attr => {
-      const attributeCode = attr?.attribute?.code;
-    
-      if (attr?.operator?.code === "IN_BETWEEN") {
-        // Round toValue and fromValue to the nearest integer
-        const roundedToValue = Math.round(attr.toValue);
-        const roundedFromValue = Math.round(attr.fromValue);
+  };
 
-        // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
-        if (type === "create") {
-          return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
-        } else {
-          return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
-        }
-        
-      } else {
-        if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
-          // Round attr.value to the nearest integer
-          const roundedValue = Math.round(Number(attr.value));
-          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
-        } else {
-          // Return the value as it is if it doesn't contain only numbers
-          return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr.value}`;
-        }
+  const mapDeliveries = (deliveries) => {
+    return deliveries?.map((delivery, deliveryIndex) => ({
+      active: deliveryIndex === 0,
+      deliveryIndex: String(deliveryIndex + 1),
+      deliveryType: delivery.deliveryStrategy || "DIRECT",
+      deliveryRules: mapDoseCriteriaToDeliveryRules(delivery.doseCriteria, delivery.deliveryStrategy),
+    }));
+  };
+
+  const transformedCycles = cycles.map((cycle) => ({
+    active: true,
+    cycleIndex: String(cycle.id),
+    deliveries: mapDeliveries(cycle.deliveries),
+  }));
+
+  return transformedCycles;
+};
+
+export const processDelivery = (delivery, resourcesMap, ageInfo, type, projectType) => {
+  return {
+    id: parseInt(delivery.deliveryIndex, 10),
+    deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+    mandatoryWaitSinceLastDeliveryInDays: null,
+    doseCriteria: delivery.deliveryRules.map((rule) => {
+      const doseCriteriaResult = processDoseCriteria(rule, resourcesMap, type, projectType);
+      const ages = extractAgesFromConditions(doseCriteriaResult.condition);
+      if (ages.length > 0) {
+        ageInfo.maxAge = Math.max(ageInfo.maxAge, ...ages);
+        ageInfo.minAge = Math.min(ageInfo.minAge, ...ages);
       }
-    });    
-  
-    return {
-      condition: conditions.join("and"),
-      ProductVariants: rule.products.map(product => ({
+      return doseCriteriaResult;
+    }),
+  };
+};
+export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
+  rule.products.forEach((product) => {
+    if (resourcesMap.has(product.value)) {
+      resourcesMap.get(product.value).quantity += product.quantity;
+    } else {
+      resourcesMap.set(product.value, {
         productVariantId: product.value,
+        isBaseUnitVariant: false,
         name: product.name,
-        quantity: product.quantity
-      }))
-    };
-  }
-  
-  export const  extractAgesFromConditions=(condition)=> {
-    const agePattern = /\b(\d+)\b/g;
-    const matches = condition.match(agePattern);
-    return matches ? matches.map(Number) : []; 
-  }
-  
-  
-  export const  groupByTypeRemap=(data)=> {
-    if (!data) return null;
-  
-    const result = {};
-  
-    data.forEach((item) => {
-      const type = item?.type;
-      const boundaryType = item?.type;
-      const parentCode = item?.parent !== undefined ? item.parent : null;
-  
-      if (!result[type]) {
-        result[type] = {};
+        quantity: product.quantity,
+      });
+    }
+  });
+
+  let memberCount;
+  let maxCount;
+
+  const conditions = rule.attributes.map((attr) => {
+    const attributeCode = attr?.attribute?.code;
+
+    if (projectType === "LLIN-mz") {
+      if (attributeCode === "memberCount" && /^\d+(\.\d+)?$/.test(attr.value)) {
+        memberCount = Number(attr.value);
       }
-  
-      if (!result[type][parentCode]) {
-        result[type][parentCode] = {
-          parentCode,
-          boundaryTypeData: {
-            TenantBoundary: [
-              {
-                boundary: [],
-              },
-            ],
-          },
-        };
+      if (attributeCode === "maxCount" && /^\d+(\.\d+)?$/.test(attr.value)) {
+        maxCount = Number(attr.value);
       }
-  
-      const targetBoundaryArray = result[type][parentCode].boundaryTypeData.TenantBoundary[0].boundary;
-      targetBoundaryArray.push({ ...item, boundaryType });
-    });
+    }
+
+    if (attr?.operator?.code === "IN_BETWEEN") {
+      // Round toValue and fromValue to the nearest integer
+      const roundedToValue = attr.toValue;
+      const roundedFromValue = attr.fromValue;
+
+      // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+      if (type === "create") {
+        return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
+      } else {
+        return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+      }
+    } else {
+
+      if (typeof attr.value === "string" && /^\d+(\.\d+)?$/.test(attr.value)) {
+        // Round attr.value to the nearest integer
+        const roundedValue = Number(attr.value);
+        return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${roundedValue}`;
+      } else {
+        // Return the value as it is if it doesn't contain only numbers
+        return `${attr?.attribute?.code}${getOperatorSymbol(attr?.operator?.code)}${attr.value}`;
+      }
+    }
+  });
+  let conditionString;
+  if ( memberCount !== undefined && maxCount !== undefined && type === "create") {
+    conditionString = `MIN(ROUND(memberCount/${memberCount}), ${maxCount})`;
+  } else {
+    conditionString = conditions.join("and");
   }
-  // Example usage:
-  // updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
-  export const  updateUrlParams=(params) =>{
-    const url = new URL(window.location.href);
-    Object.entries(params).forEach(([key, value]) => {
-      url.searchParams.set(key, value);
-    });
-    window.history.replaceState({}, "", url);
-  }
+
+  return {
+    condition: conditionString,
+    ProductVariants: rule.products.map((product) => ({
+      productVariantId: product.value,
+      name: product.name,
+      quantity: product.quantity,
+    })),
+  };
+};
+
+export const extractAgesFromConditions = (condition) => {
+  const agePattern = /\b(\d+)\b/g;
+  const matches = condition.match(agePattern);
+  return matches ? matches.map(Number) : [];
+};
+
+export const groupByTypeRemap = (data) => {
+  if (!data) return null;
+
+  const result = {};
+
+  data.forEach((item) => {
+    const type = item?.type;
+    const boundaryType = item?.type;
+    const parentCode = item?.parent !== undefined ? item.parent : null;
+
+    if (!result[type]) {
+      result[type] = {};
+    }
+
+    if (!result[type][parentCode]) {
+      result[type][parentCode] = {
+        parentCode,
+        boundaryTypeData: {
+          TenantBoundary: [
+            {
+              boundary: [],
+            },
+          ],
+        },
+      };
+    }
+
+    const targetBoundaryArray = result[type][parentCode].boundaryTypeData.TenantBoundary[0].boundary;
+    targetBoundaryArray.push({ ...item, boundaryType });
+  });
+};
+// Example usage:
+// updateUrlParams({ id: 'sdjkhsdjkhdshfsdjkh', anotherParam: 'value' });
+export const updateUrlParams = (params) => {
+  const url = new URL(window.location.href);
+  Object.entries(params).forEach(([key, value]) => {
+    url.searchParams.set(key, value);
+  });
+  window.history.replaceState({}, "", url);
+};
 
 
   export const  compareIdentical = (draftData, payload) => {

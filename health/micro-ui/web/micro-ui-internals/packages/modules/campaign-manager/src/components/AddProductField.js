@@ -57,7 +57,7 @@ const AddProductField = ({ onSelect }) => {
 
   return (
     <React.Fragment>
-      <HeaderComponent>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
+      <HeaderComponent styles={{marginBottom: "1rem"}}>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
       <p className="name-description">
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT`)} <b> {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT`)} </b>
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT`)}
@@ -138,7 +138,7 @@ const AddProductField = ({ onSelect }) => {
         // className={"hover"}
         icon={"AddIcon"}
         textStyles={{ width: "fit-content" }}
-        styles={{marginTop: "1.5rem"}}
+        style={{marginTop: "1.5rem"}}
         onClick={addMoreField}
       />
     </React.Fragment>
