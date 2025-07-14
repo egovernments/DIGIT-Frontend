@@ -446,7 +446,7 @@ const CreateQuestion = ({ onSelect, className, level = 1, initialQuestionData, p
                       {/* <span className="mandatory-span">*</span> */}
                       {/* <div style={{ height: "0.5rem" }}> */}
                       {/* </div> */}
-                      {!dis && initialQuestionData?.length > 1 && (
+                      {!dis && initialQuestionData?.filter((q) => q.isActive && q.level === 1)?.length > 1  && (
                         <div style={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
                           <Button
                             icon="Delete"
