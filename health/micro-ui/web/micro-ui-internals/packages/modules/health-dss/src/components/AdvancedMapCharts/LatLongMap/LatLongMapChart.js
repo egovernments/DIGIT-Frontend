@@ -94,7 +94,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   //   }
   // }, [value, chartId]);
 
-  // const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useCustomMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
   const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.useCustomMDMS(
     Digit?.ULBService?.getStateId(),
     "map-config",
