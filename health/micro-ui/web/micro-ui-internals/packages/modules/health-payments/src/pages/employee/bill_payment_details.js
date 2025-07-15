@@ -526,18 +526,24 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     }
   };
   
-   const pollTaskUntilDone = async (billId, type) => {
+   const pollTaskUntilDone = async (billId, type, initialStatusResponse = null) => {
     console.log("Polling...", billId);
 
     const POLLING_INTERVAL = 1 * 60 * 1000; // 1 minute
+   
+    let statusResponse = initialStatusResponse;
 
-    try {
-      const statusResponse = await getTaskStatusMutation.mutateAsync({
-        body: {
-          task: { billId: billId, type: type },
-        },
-      });
-      console.log("Status Response:", statusResponse);
+    if (!statusResponse) {
+        try {
+            statusResponse = await getTaskStatusMutation.mutateAsync({
+                body: { task: { billId, type } },
+            });
+        } catch (err) {
+            console.error("Polling failed for", billId, err);
+            setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+            return;
+        }
+    }
 
       const status = statusResponse?.task?.status;
       const res_type = statusResponse?.task?.type;
@@ -559,10 +565,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         });
         refetchBill();
       }
-    } catch (err) {
-      console.error("Polling failed for billId", billId, err);
-    }
-  };
+    };
 
   useEffect(() => {
     return () => {
@@ -601,7 +604,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           setIsSelectionDisabled(true);
           if (res?.task?.type === "Transfer") {
             console.log("Polling started for billId:", billId);
-            pollTaskUntilDone(billId, "Transfer");
+            pollTaskUntilDone(billId, "Transfer", res);
           }
         } else {
           console.log("inside else 2")
@@ -609,6 +612,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         }
       } catch (e) {
         console.warn("Task status check failed for", billId, e);
+        setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
       };
     }
   }, [BillData]);
@@ -696,7 +700,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             <>
               {renderLabelPair('HCM_AM_BILL_NUMBER', billData?.billNumber || t("NA"), { color: "#C84C0E" })}
               {renderLabelPair('HCM_AM_BILL_DATE', billData?.billDate ? formatTimestampToDate(billData.billDate) : t("NA"))}
-              {renderLabelPair('HCM_AM_NUMBER_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
+              {renderLabelPair('HCM_AM_NO_OF_REGISTERS', billData?.additionalDetails.noOfRegisters || t("NA"))}
               {renderLabelPair('HCM_AM_NUMBER_OF_WORKERS', billData?.billDetails.length || t("NA"))}
               {renderLabelPair('HCM_AM_BOUNDARY_CODE', billData?.localityCode || t("NA"))}
               {renderLabelPair(

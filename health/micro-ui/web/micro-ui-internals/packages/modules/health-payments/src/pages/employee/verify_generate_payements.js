@@ -161,7 +161,9 @@ const userSearchCri = {
                     setInProgressBills(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Transfer") {
                         console.log("Polling started for billId:", billId);
-                        pollTaskUntilDone(billId,"Transfer",res);
+                        if (!transferPollTimers[billId]) {
+                            pollTaskUntilDone(billId, "Transfer", res);
+                            }
                     }
                 } else {
                     console.log("inside else 2")
@@ -169,7 +171,7 @@ const userSearchCri = {
                 }
             } catch (e) {
                 console.warn("Task status check failed for", billId, e);
-                setShowToast()
+                setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
             }
 
          

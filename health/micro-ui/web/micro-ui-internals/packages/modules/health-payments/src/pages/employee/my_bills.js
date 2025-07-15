@@ -38,7 +38,7 @@ const MyBills = (props) => {
     const project = Digit?.SessionStorage.get("staffProjects");
 
     const BillSearchCri = {
-        url: `/${expenseContextPath}/bill/v1/_search`,
+        url: props?.isSelectableRows ? `/${expenseContextPath}/bill/v1/search/_calculated` : `/${expenseContextPath}/bill/v1/_search`,
         body: {
             billCriteria: {
                 tenantId: tenantId,
@@ -61,9 +61,6 @@ const MyBills = (props) => {
 
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
-    const updateBillMutation = Digit.Hooks.useCustomAPIMutationHook({
-        url: `/${expenseContextPath}/bill/v1/_update`,
-    });
     const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
         url: `/${expenseContextPath}/v1/bill/details/status/_update`,
     });
@@ -90,34 +87,12 @@ const MyBills = (props) => {
 
             const updateBillData = async () => {
                 BillData.bills.forEach(async (bill) => {
-                    // const bill = BillData?.bills?.[0];
-
                     if (props?.isSelectableRows && bill?.id) {
                         console.log("Bill ID:", bill.id);
-
                         try {
                             if (bill.businessService != "PAYMENTS.BILL") {
                                 setIsUpdateLoading(true);
-
-                                const updatedBillResponse = await updateBillMutation.mutateAsync(
-                                    {
-                                        body: {
-                                            bill: {
-                                                ...bill,
-                                                businessService: "PAYMENTS.BILL",
-                                            },
-                                            workflow: {
-                                                action: "CREATE",
-                                            },
-                                        },
-                                    },
-                                    {
-                                        onSuccess: async (response) => {
-                                            const bill = response?.bills?.[0];
-                                            console.log("Bill updated:", bill);
-                                            const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-                                            await sleep(10000);
-                                            updateBillDetailMutation.mutateAsync(
+                                updateBillDetailMutation.mutateAsync(
                                                 {
                                                     body: {
                                                         bill: {
@@ -150,19 +125,6 @@ const MyBills = (props) => {
                                                     }
                                                 }
                                             )
-                                        },
-                                        onError: (error) => {
-                                            console.log("12Error updating bill detail workflow:", error);
-                                            setIsUpdateLoading(false);
-                                            setShowToast({
-                                                key: "error",
-                                                label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
-                                                transitionTime: 2000,
-                                            });
-                                        },
-                                    },
-                                );
-                                // updatedBillResponse();
                             }
                         } catch (error) {
                             console.error("Error in bill or billDetails update:", error);
@@ -173,9 +135,9 @@ const MyBills = (props) => {
                     }
                 });
             };
-            // if(billUpdate){
+            
             await updateBillData();
-            // setIsUpdateLoading(false);
+
             setTableData(BillData.bills);
             setTotalCount(BillData?.pagination?.totalCount);
         }
@@ -196,7 +158,7 @@ const MyBills = (props) => {
     };
 
 
-    if (isBillLoading || updateBillMutation.isLoading || updateBillDetailMutation.isLoading || isUpdateLoading) {
+    if (isBillLoading || updateBillDetailMutation.isLoading || isUpdateLoading) {
         return <LoaderScreen />
     }
     const totalAmount = getTotalAmount(props?.selectedBills);

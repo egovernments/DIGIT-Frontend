@@ -103,6 +103,7 @@ module.exports = function (app) {
     "/health-muster-roll",
     "/health-expense/bill/v1/_search",
     "/health-expense-calculator/v1/_calculate",
+    "/health-expense/bill/v1/search/_calculated",
     "/filestore/v1/files/id",
     "/attendance/v1/_search",
     "/health-expense/bill/v1/_update",
