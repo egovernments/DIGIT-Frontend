@@ -117,9 +117,9 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
               className={"digit-results-card-field-pair"}
               inline={true}
               label={t("BOUNDARY_NAME")}
-              value={rowData?.address?.boundary}
+              value={t(rowData?.address?.boundary)}
             />
-            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("PROJECT_TYPE")} value={rowData?.projectType} />
+            <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("PROJECT_TYPE")} value={t(rowData?.projectType)} />
             <SummaryCardFieldPair
               className={"digit-results-card-field-pair"}
               inline={true}
