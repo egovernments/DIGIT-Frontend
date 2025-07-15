@@ -13,7 +13,7 @@ msg() {
 msg "Building and publishing css"
 cd "$BASEDIR/packages/css" && rm -rf dist && yarn && npm publish --access public
 
-# msg "Building and publishing Core module"
+msg "Building and publishing Core module"
 cd "$BASEDIR/packages/modules/core" &&   rm -rf dist && yarn&& npm publish --access public
 
 # msg "Building and publishing svg components"
@@ -35,7 +35,7 @@ cd "$BASEDIR/packages/libraries" && rm -rf dist && yarn && npm publish --access 
 # msg "Building and publishing Engagement module"
 cd "$BASEDIR/packages/modules/engagement" &&   rm -rf dist && yarn&& npm publish --access public
 
-# msg "Building and publishing hrms module"
+msg "Building and publishing hrms module"
 cd "$BASEDIR/packages/modules/hrms" &&   rm -rf dist && yarn&& npm publish --access public
 
 # msg "Building and publishing DSS module"
