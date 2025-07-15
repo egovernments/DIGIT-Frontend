@@ -85,13 +85,56 @@ const NewUploadScreen = () => {
       .filter((config) => config.form.length > 0);
   };
 
-  const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey ));
+  const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey));
 
   useEffect(() => {
     setfilteredConfig(filterUploadConfig(config, currentKey, summaryErrors));
   }, [config, currentKey, summaryErrors]);
 
   const latestConfig = filteredConfig?.[0];
+
+  // const restructureData = (params, apiResources, formData) => {
+  //   console.log("params" , params , formData )
+  //   const payload = {
+  //     resources: [],
+  //     campaignNumber: campaignData?.campaignNumber,
+  //     CampaignName: campaignData?.campaignName,
+  //     CampaignType: campaignData?.projectType,
+  //     boundaries: campaignData?.boundaries,
+  //     deliveryRules: campaignData?.deliveryRules,
+  //   };
+
+  //   const mappings = {
+  //     HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: "facility",
+  //     HCM_CAMPAIGN_UPLOAD_USER_DATA: "user",
+  //     HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: "boundary",
+  //   };
+
+  //   Object.keys(mappings).forEach((key) => {
+  //     const paramSection = params?.[key];
+  //     if (!paramSection) return;
+
+  //     const innerKey = Object.keys(paramSection)?.[0]; // e.g., "uploadBoundary"
+  //     if (!innerKey) return;
+
+  //     // Prefer formData if it contains this key
+  //     const data = formData?.[innerKey] || paramSection[innerKey];
+
+  //     if (Array.isArray(data?.uploadedFile)) {
+  //       data.uploadedFile.forEach((file) => {
+  //         payload.resources.push({
+  //           type: mappings[key],
+  //           filename: file.filename,
+  //           filestoreId: file.filestoreId,
+  //         });
+  //       });
+  //     }
+  //   });
+
+  //   console.log("payload" ,payload , formData);
+
+  //   return payload;
+  // };
 
   const restructureData = (params, apiResources, formData) => {
     const payload = {
@@ -109,20 +152,23 @@ const NewUploadScreen = () => {
       HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: "boundary",
     };
 
-    Object.keys(mappings).forEach((key) => {
+    Object.entries(mappings).forEach(([key, type]) => {
       const paramSection = params?.[key];
-      if (!paramSection) return;
+      const innerKey = paramSection ? Object.keys(paramSection)[0] : null;
 
-      const innerKey = Object.keys(paramSection)?.[0]; // e.g., "uploadBoundary"
-      if (!innerKey) return;
+      // Try to get data from formData first (if innerKey is known)
+      const formDataSection = innerKey ? formData?.[innerKey] : null;
 
-      // Prefer formData if it contains this key
-      const data = formData?.[innerKey] || paramSection[innerKey];
+      // If no innerKey from params, try to infer from formData directly
+      const fallbackInnerKey = Object.keys(formData || {}).find((k) => formData[k]?.uploadedFile?.[0]?.type === type);
+      const fallbackFormDataSection = formData?.[fallbackInnerKey];
+
+      const data = formDataSection || fallbackFormDataSection || (innerKey && paramSection?.[innerKey]);
 
       if (Array.isArray(data?.uploadedFile)) {
         data.uploadedFile.forEach((file) => {
           payload.resources.push({
-            type: mappings[key],
+            type,
             filename: file.filename,
             filestoreId: file.filestoreId,
           });
@@ -261,14 +307,14 @@ const NewUploadScreen = () => {
     }
   };
 
-
   const onSecondayActionClick = async () => {
     if (currentKey == 1) {
       history.push(
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     } else {
-      setCurrentKey(currentKey - 1);
+      setShowToast(null);
+      setCurrentKey(currentKey - 1);  
     }
   };
 
@@ -279,7 +325,6 @@ const NewUploadScreen = () => {
   const closeToast = () => {
     setShowToast(null);
   };
-
 
   return (
     <>
