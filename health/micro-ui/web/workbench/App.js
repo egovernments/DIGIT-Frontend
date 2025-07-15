@@ -15,8 +15,8 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
-import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+// import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -24,12 +24,12 @@ const enabledModules = [
   "DSS",
   "NDSS",
   "Utilities",
-  "HRMS",
+  // "HRMS",
   "Engagement",
   "Workbench",
   "HCMWORKBENCH",
   "Campaign",
-  "PGR",
+  // "PGR",
 ];
 
 const moduleReducers = (initData) => ({
