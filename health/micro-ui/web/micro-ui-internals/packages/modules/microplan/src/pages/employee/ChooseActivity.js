@@ -33,7 +33,7 @@ const ChooseActivity = () => {
      refetchProcessInstance();
   }, [microplanId, campaignId]);
 
-    const { isLoading: isBusinessServiceLoading, data: workflowData, } = Digit.Hooks.useCustomAPIHook({
+    const { isLoading: isBusinessServiceLoading, data: workflowDataSample, } = Digit.Hooks.useCustomAPIHook({
         url: "/egov-workflow-v2/egov-wf/businessservice/_search",
         params: {
           tenantId: tenantId,
@@ -67,7 +67,7 @@ const ChooseActivity = () => {
 
 
       useEffect(() => {
-        if(planObject && workflowData && processData){
+        if(planObject && workflowDataSample && processData){
           const updatedActivityCardData = [
             {
               name: "VALIDATE_N_APPROVE_POPULATION_DATA",
@@ -103,7 +103,7 @@ const ChooseActivity = () => {
           ];
           setActivityCardData(updatedActivityCardData);
         }
-     }, [planObject, workflowData, processData]);
+     }, [planObject, workflowDataSample, processData]);
 
 
 // Merged function to disable a card based on user roles 

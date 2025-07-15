@@ -276,6 +276,16 @@ const updatePlan = async (req) => {
   return planRes;
 };
 
+const addColumnsForPlan=async (req)=>{
+  const draftResponse=await Digit.CustomService.getResponse({
+    url: "/resource-generator/drafts",
+    body: req,
+  });
+  return draftResponse;
+}
+
+
+
 const updatePlanEmployee = async (req) => {
   const planEmployeeRes = await Digit.CustomService.getResponse({
     url: "/plan-service/employee/_update",
@@ -353,6 +363,7 @@ const createUpdatePlanProject = async (req) => {
         },
       });
     }
+
 
     const triggeredFrom = config.name;
     switch (triggeredFrom) {
@@ -862,21 +873,24 @@ const createUpdatePlanProject = async (req) => {
           },
         });
 
-        const updatedReqForCompleteSetup = {
-          ...fetchedPlanForSummary,
-          workflow: {
-            action: "INITIATE",
-            // "assignes": null,
-            // "comments": null,
-            // "verificationDocuments": null,
-            // "rating": null
-          },
-          additionalDetails: {
-            ...fetchedPlanForSummary.additionalDetails,
-            setupCompleted: true, //we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
-          },
-        };
-        const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
+        //Commenting update logic since setup completed is converting to draft complete
+        //TODO: @Abishek do this upon freezing microplan
+        // const updatedReqForCompleteSetup = {
+        //   ...fetchedPlanForSummary,
+        //   workflow: {
+        //     action: "INITIATE",
+        //     // "assignes": null,
+        //     // "comments": null,
+        //     // "verificationDocuments": null,
+        //     // "rating": null
+        //   },
+        //   additionalDetails: {
+        //     ...fetchedPlanForSummary.additionalDetails,
+        //     setupCompleted: true, //we can put this in url when we come from microplan search screen to disable routing to other screens -> Only summary screen should show, or only allowed screens should show
+        //   },
+        // };
+        //omitting the update call
+        // const planResForCompleteSetup = await updatePlan(updatedReqForCompleteSetup);
         // const updatedReqForCompleteSetupNextAction = {
         //   ...fetchedPlanForSummary,
         //   workflow: {
@@ -895,25 +909,101 @@ const createUpdatePlanProject = async (req) => {
 
         //here do cleanup activity and go to next screen
 
-        if (planResForCompleteSetup?.PlanConfiguration?.[0]?.id) {
+        if (fetchedPlanForSummary?.id && Digit.Utils.microplanv1.validatePlanConfigForDraftDownload(fetchedPlanForSummary)) {
           // setCurrentKey((prev) => prev + 1);
           // setCurrentStep((prev) => prev + 1);
           return {
             triggeredFrom,
-            redirectTo: `/${window.contextPath}/employee/microplan/setup-completed-response`,
+            redirectTo: `/${window.contextPath}/employee/microplan/draft-completed-response`,
             isState: true,
             state: {
-              message: "SETUP_COMPLETED",
+              message: "DRAFT_COMPLETED",
               back: "BACK_TO_HOME",
               backlink: `/${window.contextPath}/employee`,
-              responseId: planResForCompleteSetup?.PlanConfiguration?.[0]?.name,
-              info: "SETUP_MICROPLAN_SUCCESS_NAME",
+              responseId: fetchedPlanForSummary?.name,
+              info: "DRAFT_MICROPLAN_SUCCESS_NAME",
+              showDraftDownload:true,
+              actionLabel: "DOWNLOAD_DRAFT_MICROPLAN",
+              planObject : fetchedPlanForSummary
               // description: "SETUP_MICROPLAN_SUCCESS_RESPONSE_DESC",
             },
           };
         } else {
-          setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_SETUP" });
+          setShowToast({ key: "error", label: "ERR_FAILED_TO_COMPLETE_DRAFT" });
         }
+
+        case "NEW_COLUMNS": {
+          // Fetch the current plan configuration
+          const fetchedPlan = await searchPlanConfig({
+            PlanConfigurationSearchCriteria: {
+              tenantId,
+              id: microplanId,
+            },
+          });
+        
+          // Safely extract existing plan columns (default to empty array)
+          const existingColumns = fetchedPlan?.additionalDetails?.addColumns || [];
+        
+          // Safely extract new column values from form data
+          const newColumnValues = Array.isArray(totalFormData?.NEW_COLUMNS?.newColumns)
+            ? totalFormData.NEW_COLUMNS.newColumns.filter(item => item !== "")
+            : [];
+        
+          // Function to compare existing and new columns based on 'value'
+          const areColumnsSame = () => {
+            if (existingColumns.length !== newColumnValues.length) return false;
+        
+            return existingColumns.every((existingItem, index) => {
+              const newItem = newColumnValues[index];
+              return existingItem?.value === newItem?.value;
+            });
+          };
+        
+          // Skip updatePlan if both sets of columns are the same
+          if (areColumnsSame()) {
+            setCurrentKey(prev => prev + 1);
+            setCurrentStep(prev => prev + 1);
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+            return { triggeredFrom };
+          }
+        
+          // Otherwise, prepare updated plan object
+          const updatedPlanObject = {
+            ...fetchedPlan,
+            additionalDetails: {
+              ...fetchedPlan.additionalDetails,
+              key: key,
+              newColumns:  newColumnValues.filter(
+                item => item !== null && item !== undefined && item !== ''
+              )
+            },
+          };
+        
+          // Update the plan only if there's a difference
+          const response = await updatePlan(updatedPlanObject);
+        
+          if (response?.PlanConfiguration?.[0]?.id) {
+            setCurrentKey(prev => prev + 1);
+            setCurrentStep(prev => prev + 1);
+            Digit.Utils.microplanv1.updateUrlParams({ isLastVerticalStep: null });
+            Digit.Utils.microplanv1.updateUrlParams({ internalKey: null });
+            
+          } else {
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_PLAN" });
+          }
+
+          const draftResponse = await addColumnsForPlan({
+            DraftDetails: { planConfigurationId: microplanId, tenantId }
+          });
+          if (!draftResponse) {
+            setShowToast({ key: "error", label: "ERR_FAILED_TO_UPDATE_DRAFT_PLAN" });
+            return;
+          }
+          return { triggeredFrom };
+        
+        }
+        
 
       case "ROLE_ACCESS_CONFIGURATION": {
         const fetchedPlan = await searchPlanConfig({
@@ -926,6 +1016,7 @@ const createUpdatePlanProject = async (req) => {
           ...fetchedPlan,
           additionalDetails: { ...fetchedPlan.additionalDetails, key: key },
         };
+
         const response = await updatePlan(updatedPlanObject);
         // Return as expected
         if (response) {

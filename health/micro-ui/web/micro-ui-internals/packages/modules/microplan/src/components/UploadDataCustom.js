@@ -24,6 +24,9 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const [errorsType, setErrorsType] = useState({});
   const [showToast, setShowToast] = useState(null);
   const [sheetErrors, setSheetErrors] = useState(0);
+  const [fileData, setFileData] = useState(null);
+  const [isDownloadDisabled, setIsDownloadDisabled] = useState(true);
+  const [isPolling, setIsPolling] = useState(true);
   // TODO : Use Digit for query params
   const searchParams = new URLSearchParams(location.search);
   const [key, setKey] = useState(() => {
@@ -62,6 +65,7 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
   const XlsPreview = Digit.ComponentRegistryService.getComponent("XlsPreview");
   const BulkUpload = Digit.ComponentRegistryService.getComponent("BulkUpload");
   const baseKey = 4;
+  const [isDownloadClicked,setIsDownloadClicked]=useState(false);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -557,77 +561,113 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
       id: type === "boundary" ? params?.boundaryId : type === "facilityWithBoundary" ? params?.facilityId : params?.userId,
     },
   };
+
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
 
-  const downloadTemplate = async () => {
-    setDownloadTemplateLoader(true);
-    await mutation.mutate(
-      {
-        params: {
-          tenantId: tenantId,
-          type: type,
-          hierarchyType: state?.hierarchyType,
-          campaignId: id,
+  const fetchTemplate = async () => {
+    return new Promise((resolve) => {
+      mutation.mutate(
+        {
+          params: {
+            tenantId,
+            type,
+            hierarchyType: state?.hierarchyType,
+            campaignId: id,
+          },
         },
-      },
-      {
-        onSuccess: async (result) => {
-          setDownloadTemplateLoader(false);
-          if (result?.GeneratedResource?.[0]?.status === "failed") {
-            setDownloadError(true);
-            generateData();
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-            return;
-          }
-          if (result?.GeneratedResource?.[0]?.status === "inprogress") {
-            setDownloadError(true);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-            return;
-          }
-          if (!result?.GeneratedResource?.[0]?.fileStoreid || result?.GeneratedResource?.length == 0) {
-            setDownloadError(true);
-            generateData();
-            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
-            return;
-          }
-          const filesArray = [result?.GeneratedResource?.[0]?.fileStoreid];
-          const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-          const fileData = fileUrl?.map((i) => {
-            const urlParts = i?.url?.split("/");
-            // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-            const fileName = type === "boundary" ? "Population Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
-            return {
-              ...i,
-              filename: fileName,
-            };
-          });
-
-          if (fileData && fileData?.[0]?.url) {
-            setDownloadError(false);
-            if (fileData?.[0]?.id) {
-              Digit.Utils.campaign.downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: fileData?.[0]?.filename });
+        {
+          onSuccess: async (result) => {
+            if (result?.GeneratedResource?.[0]?.status === "completed") {
+              setIsDownloadDisabled(false); // Enabling button
+              setIsPolling(false); // Stop polling
+              setFileData(result);
+              setDownloadTemplateLoader(false);
+              if(isDownloadClicked){
+                downloadTemplate();
+              }
+              resolve(result);
+            } else {
+              resolve(null); // Keep polling
             }
-          } else {
-            setDownloadError(true);
-            setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
-          }
-        },
-        onError: (error, result) => {
-          const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          if (errorCode == "NativeIoException" || errorCode == "ZuulRuntimeException") {
-            setDownloadError(true);
-            setDownloadTemplateLoader(false);
-            setShowToast({ key: "info", label: t("HCM_PLEASE_WAIT_TRY_IN_SOME_TIME") });
-          }
-          else {
-            setDownloadTemplateLoader(false);
-            setDownloadError(true);
-            generateData();
-            setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
-          }
-        },
+          },
+          onError: (error, result) => {
+            const errorCode = error?.response?.data?.Errors?.[0]?.code;
+            if (errorCode !== "NativeIoException" && errorCode !== "ZuulRuntimeException") {
+              setDownloadTemplateLoader(false);
+              setDownloadError(true);
+              setIsPolling(false);
+              generateData();
+              setShowToast({ key: "error", label: t("ERROR_WHILE_DOWNLOADING") });
+            }
+            else{
+              resolve(null);// Continuing polling on error
+            }
+          }, 
+        }
+      );
+    });
+  };
+
+  // Polling Effect
+  useEffect(() => {
+    if (!isPolling) return;
+
+    let timeoutId;
+    const poll = async () => {
+      const result = await fetchTemplate();
+      if (!result) {
+        timeoutId = setTimeout(poll, 2000);
       }
-    );
+    };
+
+    poll();
+    return () => clearTimeout(timeoutId);
+  }, [isPolling,type]);
+
+  useEffect(()=>{
+    if(isDownloadClicked && fileData){
+    downloadTemplate()
+    }
+  },[isDownloadClicked,fileData])
+
+  // Restarting polling whenever the page refreshes
+  useEffect(() => {
+    setIsPolling(true);
+  }, [type]);
+
+  const downloadTemplate = async () => {
+    if (!fileData || !isDownloadClicked){
+      setDownloadTemplateLoader(true);
+      return;
+    }
+
+    setDownloadTemplateLoader(true);
+    const filesArray = [fileData?.GeneratedResource?.[0]?.fileStoreid];
+
+    try {
+      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
+      const finalFileData = fileUrl?.map((i) => ({
+        ...i,
+        filename: type === "boundary" ? "Population Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template",
+      }));
+
+      if (finalFileData?.[0]?.url) {
+        setDownloadError(false);
+        Digit.Utils.campaign.downloadExcelWithCustomName({
+          fileStoreId: finalFileData?.[0]?.id,
+          customName: finalFileData?.[0]?.filename,
+        });
+      } else {
+        setDownloadError(true);
+        setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING_FROM_FILESTORE") });
+      }
+      setIsDownloadClicked(false);
+    } catch (error) {
+      setDownloadError(true);
+      setShowToast({ key: "info", label: t("ERROR_WHILE_DOWNLOADING") });
+    } finally {
+      setDownloadTemplateLoader(false);
+    }
   };
   const closeToast = () => {
     setShowToast(null);
@@ -692,7 +732,11 @@ const UploadDataCustom = React.memo(({ formData, onSelect, ...props }) => {
                 icon={"FileDownload"}
                 type="button"
                 className="campaign-download-template-btn"
-                onClick={downloadTemplate}
+                onClick={() => {
+                  setIsDownloadClicked(true);
+                  downloadTemplate(); 
+                }}
+                
               />
             </div>
             {uploadedFile.length === 0 && (

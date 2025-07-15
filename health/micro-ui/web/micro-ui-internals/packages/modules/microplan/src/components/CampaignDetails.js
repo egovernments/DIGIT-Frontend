@@ -6,13 +6,16 @@ import { Button, CardText, Dropdown, ErrorMessage, PopUp, MultiSelectDropdown, L
 import { useMyContext } from "../utils/context";
 import { Card as CardNew } from "@egovernments/digit-ui-components";
 
-const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
+let globalRenderCount = 0;
+const CampaignDetails = React.memo(({ onSelect, props: customProps, ...props }) => {
   const { campaignType: campaignTypeSession, disease: diseaseSession, distributionStrat: distributionStratSession } =
     customProps?.sessionData?.CAMPAIGN_DETAILS?.[customProps?.name] || {};
   const { dispatch, state } = useMyContext();
   const [executionCount, setExecutionCount] = useState(0);
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getStateId();
+  const tenantId = useMemo(() => Digit.ULBService.getStateId(), []);
+  let hasVisitedOnce = false;
+  const [initialLoading, setInitialLoading] = useState(!hasVisitedOnce);
   const [campaignType, setCampaignType] = useState(campaignTypeSession);
   const [disease, setDisease] = useState(
     diseaseSession
@@ -22,6 +25,23 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
       }
   );
   const [distributionStrat, setDistributionStrat] = useState(distributionStratSession);
+
+  useEffect(() => {
+    globalRenderCount += 1;
+    if (globalRenderCount == 1 && !(campaignTypeSession === undefined)) {
+      setInitialLoading(false);
+      setTimeout(() => {
+        globalRenderCount = 0;
+      }, 1000);
+    }
+    if (globalRenderCount > 2 && !hasVisitedOnce) {
+      setInitialLoading(false);
+      setTimeout(() => {
+        globalRenderCount = 0;
+        hasVisitedOnce = true;
+      }, 1000);
+    }
+  }, []);
   useEffect(() => {
     setCampaignType(campaignTypeSession);
     setDisease(diseaseSession ? diseaseSession : { code: "MALARIA" });
@@ -57,15 +77,9 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     { schemaCode: "ProjectType" }
   );
 
-  const campaignTypeOptions = state?.MicroplanCampaignTypes?.map(item => item.code) || [];
-
-  useEffect(() => {
-    onSelect(customProps.name, {
-      distributionStrat,
-      disease,
-      campaignType,
-    });
-  }, [distributionStrat, disease, campaignType]);
+  const campaignTypeOptions = useMemo(() => {
+    return state?.MicroplanCampaignTypes?.map((item) => item.code) || [];
+  }, [state?.MicroplanCampaignTypes]);
 
   useEffect(() => {
     if (executionCount < 5) {
@@ -78,7 +92,25 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
     }
   });
 
-  if (isLoading) {
+  const handleSelect = useCallback(() => {
+    onSelect(customProps.name, {
+      distributionStrat,
+      disease,
+      campaignType,
+    });
+  }, [onSelect, customProps.name, distributionStrat, disease, campaignType]);
+
+  useEffect(() => {
+    handleSelect();
+  }, [handleSelect]);
+
+  const filteredCampaignTypes = useMemo(() => {
+    return data?.campaignTypes?.filter((campaign) =>
+      campaignTypeOptions?.includes(campaign.code)
+    );
+  }, [data?.campaignTypes, campaignTypeOptions]);
+
+  if (initialLoading || isLoading) {
     return <Loader />;
   }
 
@@ -113,9 +145,7 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
           style={{ width: "40rem" }}
           // variant={error ? "error" : ""}
           t={t}
-          option={data?.campaignTypes?.filter(
-            (campaign) => campaignTypeOptions?.includes(campaign.code)
-          )}
+          option={filteredCampaignTypes}
           optionKey={"i18nKey"}
           selected={campaignType}
           select={(value) => {
@@ -144,6 +174,6 @@ const CampaignDetails = ({ onSelect, props: customProps, ...props }) => {
       </LabelFieldPair>
     </CardNew>
   );
-};
+});
 
 export default CampaignDetails;

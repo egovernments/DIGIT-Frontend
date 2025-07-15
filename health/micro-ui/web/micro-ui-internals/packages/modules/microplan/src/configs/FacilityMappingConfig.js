@@ -152,6 +152,11 @@ const facilityMappingConfig = (projectType, disabledAction) => {
               jsonPath: "",
               additionalCustomization: true,
             },
+            {
+              label: "VIEW_ON_MAP",
+              jsonPath: "",
+              additionalCustomization: true,
+            },
             // {
             //   label: "MICROPLAN_FACILITY_ACTION",
             //   // jsonPath: "message",

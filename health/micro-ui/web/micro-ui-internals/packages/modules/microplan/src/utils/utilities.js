@@ -167,10 +167,9 @@ const formValidator = (formData, key, state, t) => {
   const checkValueInvalid = (data) => {
     return data.some(item => {
       const value = item.value;
-      
       // Check if the value is null, 0, or less than 0
       return value === null || value <= 0 || value > 1000;
-  });
+    });
   }
 
   const microplanAssumptionsValidator = (formData) => {
@@ -213,6 +212,40 @@ const formValidator = (formData, key, state, t) => {
     return { key: "error", label: "ERROR_VALID_MANDATORY_FILES" };
   }
 
+  const newColumnsValidator = (formData) => {
+    // Return null if formData is not an array
+    if (!Array.isArray(formData)) return null;
+  
+    // Regex: allow letters, numbers, and spaces only
+    const noSpecialCharsExceptSpace = /^[A-Za-z0-9 ]+$/;
+
+    const seen = new Set(); // To track unique non-empty values
+    // Loop through each value
+    for (let val of formData) {
+      // Allow empty strings
+      if (val === "") continue;
+  
+      // Check length first
+      if (val.length > 200) {
+        return { key: "error", label: "COLUMN_NAME_TOO_LONG" };
+      }
+  
+      // Check allowed characters
+      if (!noSpecialCharsExceptSpace.test(val)) {
+        return { key: "error", label: "ERROR_INVALID_COL_NAME" };
+      }
+      if (seen.has(val.trim())) {
+
+        return { key: "error", label: "DUPLICATE_COLUMN_NAME" };
+      }
+      seen.add(val.trim());
+    }
+  
+    // If all values are valid
+    return null;
+  };
+  
+
   //here we'll validate formData based on the config
   switch (key) {
     case "campaignDetails":
@@ -231,6 +264,8 @@ const formValidator = (formData, key, state, t) => {
       return uploadDataValidator(formData);
     case "facilityWithBoundary":
       return uploadDataValidator(formData);
+    case "newColumns":
+      return newColumnsValidator(formData);
 
     default:
       return null;
@@ -276,11 +311,11 @@ function generateCampaignString(sessionData, t) {
   const campaignTypeCode = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.campaignType.i18nKey;
   const resourceDistributionStrategy = sessionData?.CAMPAIGN_DETAILS?.campaignDetails.distributionStrat.resourceDistributionStrategyCode;
 
-   // Get current date details
-   const currentDate = new Date();
-   const day = String(currentDate.getDate()).padStart(2, '0'); // Two-digit day
-   const monthAbbr = currentDate.toLocaleString('en-US', { month: 'short' }); // Three-letter month abbreviation
-   const yearLastTwoDigits = currentDate.getFullYear().toString().slice(-2); // Last two digits of the year
+  // Get current date details
+  const currentDate = new Date();
+  const day = String(currentDate.getDate()).padStart(2, '0'); // Two-digit day
+  const monthAbbr = currentDate.toLocaleString('en-US', { month: 'short' }); // Three-letter month abbreviation
+  const yearLastTwoDigits = currentDate.getFullYear().toString().slice(-2); // Last two digits of the year
 
   // Construct the final string
   const result = `${t(diseaseCode)}-${t(campaignTypeCode)}-${t(resourceDistributionStrategy)}-${day} ${monthAbbr} ${yearLastTwoDigits}`;
@@ -509,6 +544,73 @@ function filterUniqueByKey(arr, key) {
 }
 export const PRIMARY_COLOR = "#C84C0E";
 
+function validatePlanConfigForDraftDownload(planConfig) {
+  const validationFunctions = [
+    validateTenantId,
+    validateStatus,
+    // validateResourceMapping,
+    validateOperations,
+    validateAssumptions,
+    validateCampaignId,
+    validateId,
+    validateName,
+    validateFiles
+  ];
+
+  for (const validationFunction of validationFunctions) {
+    if (!validationFunction(planConfig)) {
+      return false; // Early return if any validation fails
+    }
+  }
+
+  return true; // All validations passed
+}
+
+// Validation Functions
+
+function validateTenantId(planConfig) {
+  return typeof planConfig.tenantId === 'string' && planConfig.tenantId.trim() !== '';
+}
+
+function validateStatus(planConfig) {
+  return typeof planConfig.status === 'string' && planConfig.status.trim() !== '';
+}
+
+function validateResourceMapping(planConfig) {
+  return Array.isArray(planConfig.resourceMapping) && planConfig.resourceMapping.length >= 1;
+}
+
+function validateOperations(planConfig) {
+  return Array.isArray(planConfig.operations) && planConfig.operations.length >= 1;
+}
+
+function validateAssumptions(planConfig) {
+  return Array.isArray(planConfig.assumptions) && planConfig.assumptions.length >= 1;
+}
+
+function validateCampaignId(planConfig) {
+  return typeof planConfig.campaignId === 'string' && planConfig.campaignId.trim() !== '';
+}
+
+function validateId(planConfig) {
+  return typeof planConfig.id === 'string' && planConfig.id.trim() !== '';
+}
+
+function validateName(planConfig) {
+  return typeof planConfig.name === 'string' && planConfig.name.trim() !== '';
+}
+
+function validateFiles(planConfig) {
+  if (!Array.isArray(planConfig.files) || planConfig.files.length < 1) {
+    return false;
+  }
+
+  const hasPopulationTemplate = planConfig.files.some(file => file.templateIdentifier === 'Population');
+  const hasFacilitiesTemplate = planConfig.files.some(file => file.templateIdentifier === 'Facilities');
+
+  return hasPopulationTemplate && hasFacilitiesTemplate;
+}
+
 
 export default {
   destroySessionHelper,
@@ -522,6 +624,7 @@ export default {
   createBoundaryDataByHierarchy,
   groupByParent,
   epochToDateTime,
-  filterUniqueByKey
+  filterUniqueByKey,
+  validatePlanConfigForDraftDownload
   // constructBoundaryOptions
 }
