@@ -359,7 +359,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   // }, [type, props?.props?.sessionData?.totalFormData]);
 
   useEffect(() => {
-    const totalFormData = props?.props?.sessionData?.totalFormData;
+    const totalFormData = props?.props?.sessionData;
     const campaignResources = props?.props?.campaignData?.resources || [];
 
     const getUploadedData = (dataPath, typeKey) => {
@@ -412,7 +412,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setDownloadError(false);
     setIsError(false);
-  }, [type, props?.props?.sessionData?.totalFormData, props?.props?.campaignData?.resources]);
+  }, [type, props?.props?.totalFormData, props?.props?.campaignData?.resources]);
 
   useEffect(() => {
     if (errorsType[type]) {
