@@ -13,10 +13,6 @@ const useHrmsMDMS = (tenantId, moduleCode, type, config = {}) => {
     return useQuery(["HRMS_EMP_REASON", tenantId], () => MdmsService.getHrmsEmployeeReason(tenantId, moduleCode, type), config);
   };
 
-  const useHrmsBoundriesFetch = (tenantId, type) => {
-    return useQuery(["FETCH_BOUNDRIES",], () => MdmsService.getBoundaries({ tenantId }));
-  };
-
   switch (type) {
     case "HRMSRolesandDesignation":
       return useHrmsRolesandDesignations();
@@ -24,8 +20,6 @@ const useHrmsMDMS = (tenantId, moduleCode, type, config = {}) => {
       return useHrmsEmployeeTypes();
     case "DeactivationReason":
       return useHrmsEmployeeReasons();
-    case "FetchBoundaries":
-      return useHrmsBoundriesFetch();
   }
 };
 export default useHrmsMDMS;
