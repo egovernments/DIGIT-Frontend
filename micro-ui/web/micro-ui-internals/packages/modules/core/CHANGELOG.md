@@ -1,4 +1,6 @@
 # Changelog 
+## [1.8.44]  [15-July-2025]
+- Citizen login page continue button added 
 
 ## [1.8.33]  [9-April-2025]
 - FEATURE/CCSD-57 :Sandbox Changes
