@@ -98,7 +98,6 @@ const Jurisdictions = ({ t, config, onSelect, userType, formData }) => {
       config.key,
       [...jurisdictionsData, ...inactiveJurisdictions].filter((value) => Object.keys(value).length !== 0)
     );
-    console.log("*** Log ===> jurisdictions", jurisdictions);
   }, [jurisdictions]);
 
 
@@ -282,7 +281,6 @@ function Jurisdiction({
     }
     else {
       selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
-      console.log("*** Log ===>Boundary ", Boundary);
     }
   }, [jurisdiction?.boundaryType, data?.MdmsRes, cities]);
 
@@ -326,7 +324,6 @@ function Jurisdiction({
   };
 
   const selectedboundary = (value) => {
-    console.log("*** Log ===> ", value);
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, boundary: value } : item)));
   };
 
@@ -346,7 +343,6 @@ function Jurisdiction({
 
     res?.forEach(resData => { resData.labelKey = 'ACCESSCONTROL_ROLES_ROLES_' + resData.code })
 
-    console.log("*** Log ===> ", res);
 
     setjurisdictions((pre) => pre.map((item) => (item.key === jurisdiction.key ? { ...item, roles: res } : item)));
   };
@@ -360,7 +356,6 @@ function Jurisdiction({
 
   };
 
-  // console.log("*** Log ===> ", gethierarchylistdata());
   return (
     <div key={jurisdiction?.keys} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
