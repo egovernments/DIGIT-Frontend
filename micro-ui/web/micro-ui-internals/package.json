@@ -90,7 +90,11 @@
     "**/babel-preset-react-app": "10.0.0",
     "**/@babel/traverse": "7.25.9",
     "**/styled-components": "5.0.0",
-    "fast-uri": "2.1.0"
+    "fast-uri": "2.1.0",
+    "**/minimatch": "7.4.6",
+    "minimatch": "7.4.6",
+    "**/glob": "7.2.3",
+    "glob": "7.2.3"   
   },
   "devDependencies": {
     "husky": "7.0.4",
