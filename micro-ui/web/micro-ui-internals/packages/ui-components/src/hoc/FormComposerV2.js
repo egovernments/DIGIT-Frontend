@@ -444,7 +444,7 @@ export const FormComposer = (props) => {
       )}
       {!props.submitInForm && props.label && (
         <Footer className={props.actionClassName}>
-          <SubmitBar label="TEST" className="digit-formcomposer-submitbar" submit="submit" disabled={isDisabled} icon={props?.primaryActionIcon} isSuffix={props?.primaryActionIconAsSuffix} />
+          <SubmitBar label={t(props.label)} className="digit-formcomposer-submitbar" submit="submit" disabled={isDisabled} icon={props?.primaryActionIcon} isSuffix={props?.primaryActionIconAsSuffix} />
           {props?.secondaryLabel && props?.showSecondaryLabel && (
             <Button className="previous-button"  variation="secondary" label={t(props?.secondaryLabel)} onClick={props?.onSecondayActionClick} icon={props?.secondaryActionIcon} isSuffix={props?.secondaryActionIconAsSuffix} />
           )}

@@ -30,7 +30,7 @@
     "dev:example": "cd example && yarn start",
     "clean": "run-s clean:**",
     "clean-nm": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:assignment && yarn clean:sample && yarn clean:example && yarn clean:workbench",
-    "clean-dist": "yarn clean:ui-components-dist && yarn clean:react-components-dist && yarn clean:svg-components-dist && yarn clean:libraries-dist && yarn clean:core-dist && yarn clean:assignment-dist && yarn clean:sample-dist && yarn clean:workbench-dist",
+    "clean-dist": "yarn clean:ui-components-dist && yarn clean:react-components-dist && yarn clean:core-dist && yarn clean:campaign-dist",
     "clean:ui-components": "cd packages/ui-components && rm -rf node_modules",
     "clean:react-components": "cd packages/react-components && rm -rf node_modules",
     "clean:svg-components": "cd packages/svg-components && rm -rf node_modules",
@@ -45,7 +45,7 @@
     "clean:react-components-dist": "cd packages/react-components && rm -rf dist",
     "clean:libraries-dist": "cd packages/libraries && rm -rf dist",
     "clean:core-dist": "cd packages/modules/core && rm -rf dist",
-    "clean:workbench-dist": "cd packages/modules/workbench && rm -rf dist",
+    "clean:campaign-dist": "cd packages/modules/campaign-manager && rm -rf dist",
     "cleanD:assignment-dist": "cd packages/modules/assignment && rm -rf dist",
     "cleanD:sample-dist": "cd packages/modules/sample && rm -rf dist",
     "clean:yarnLock": "rm -rf yarn.lock",
@@ -53,7 +53,7 @@
     "clean:Web": "cd ../ && rm -rf node_modules",
     "clean:mui": "rm -rf node_modules",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +",
-    "cleancmd-dist":"find . \\( -name  -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
+    "cleancmd-dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
 
   },
   "resolutions": {

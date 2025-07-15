@@ -48,7 +48,14 @@ const CheckBox = ({
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              props?.onLabelClick?.();
+              if (typeof props?.onLabelClick === "function") {
+                props.onLabelClick();
+              } else {
+                const inputElement = document.getElementById(props?.id || `checkbox-${value}`);
+                if (inputElement) {
+                  inputElement.click();
+                }
+              }
             }
           }}
         >
@@ -108,7 +115,20 @@ const CheckBox = ({
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              props?.onLabelClick?.();
+              // First try onLabelClick if it exists
+              if (typeof props?.onLabelClick === "function") {
+                props.onLabelClick();
+              } else {
+                // Fallback to triggering onChange with the opposite of current checked state
+                if (typeof onChange === "function") {
+                  onChange({
+                    target: {
+                      checked: !checked,
+                      value: value || label
+                    }
+                  });
+                }
+              }
             }
           }}
         >

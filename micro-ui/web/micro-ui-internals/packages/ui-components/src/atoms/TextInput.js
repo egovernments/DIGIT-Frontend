@@ -415,7 +415,7 @@ const TextInput = (props) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    props?.onIconSelection;
+                    handleVisibility?.();
                   }
                 }}
               >
