@@ -3,6 +3,8 @@ import { useTranslation } from "react-i18next";
 import { Route, Switch, useRouteMatch } from "react-router-dom";
 import { SignUpConfig as defaultSignUpConfig  } from "./config";
 import Login from "./signUp";
+import { useHistory, useLocation } from "react-router-dom";
+
 
 const SignUp = ({stateCode}) => {
   const { t } = useTranslation();
@@ -17,6 +19,22 @@ const SignUp = ({stateCode}) => {
     language,
     modulePrefix
   });
+
+  const history = useHistory();
+  const location = useLocation();
+
+
+    // Timestamp handling
+    useEffect(() => {
+      const query = new URLSearchParams(location.search);
+      if (!query.get("ts")) {
+        const ts = Date.now();
+        history.replace({
+          pathname: location.pathname,
+          search: `?ts=${ts}`
+        });
+      }
+    }, [location, history]);
 
   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["SignUpConfig"], {
     select: (data) => {

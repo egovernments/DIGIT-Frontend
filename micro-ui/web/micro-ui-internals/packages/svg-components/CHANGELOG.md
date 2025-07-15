@@ -1,5 +1,18 @@
 # Changelog
 
+
+## [1.0.23]  [30-June-2025]
+- Added BarsChart,Calculate,Employee,FeatureSearch and HierarchyGraph icons
+
+## [1.0.22]  [28-June-2025]
+- Added MobileWrench icon
+
+## [1.0.18]  [13-May-2025]
+- Added UploadCloud and ListAltCheck icons
+
+## [1.0.17]  [30-April-2025]
+- Added OutpatientMed and AdUnits icons
+
 ## [1.0.15]  [21-Feb-2025]
 - Publishing a new version for more stability & as part of Components Release
 

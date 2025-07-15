@@ -785,7 +785,19 @@ import {
     ZoomOutMap,
     ContractIcon,
     HRIcon,
-    MeasurementMuktaIcon
+    MeasurementMuktaIcon,
+    GlobeLocationPin,
+    NewWindow,
+    OutpatientMed,
+    AdUnits,
+    ListAltCheck,
+    UploadCloud,
+    MobileWrench,
+    BarsChart,
+    Calculate,
+    Employee,
+    FeatureSearch,
+    HierarchyGraph
   } from "@egovernments/digit-ui-svg-components";
 
 
@@ -1577,5 +1589,17 @@ import {
     ZoomOutMap,
     ContractIcon,
     HRIcon,
-    MeasurementMuktaIcon
+    MeasurementMuktaIcon,
+    GlobeLocationPin,
+    NewWindow,
+    OutpatientMed,
+    AdUnits,
+    ListAltCheck,
+    UploadCloud,
+    MobileWrench,
+    BarsChart,
+    Calculate,
+    Employee,
+    FeatureSearch,
+    HierarchyGraph
   }

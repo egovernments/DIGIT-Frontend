@@ -732,6 +732,7 @@ import { TrendingUp } from "./svg/TrendingUp";
 import { TripOrigin } from "./svg/TripOrigin";
 import { TurnedIn } from "./svg/TurnedIn";
 import { TurnedInNot } from "./svg/TurnedInNot";
+import { TutorialGuide } from "./svg/TutorialGuide";
 import { TwoWheeler } from "./svg/TwoWheeler";
 import { UnfoldLess } from "./svg/UnfoldLess";
 import { UnfoldMore } from "./svg/UnfoldMore";
@@ -813,6 +814,19 @@ import { UserManagementSvg } from "./svg/UserManagementSvg";
 import { OpenMicroplanSvg } from "./svg/OpenMicroplanSvg";
 import { SetUpMicroplanSvg } from "./svg/SetUpMicroplanSvg";
 import { AddCircle } from "./svg/AddCircle";
+import { GlobeLocationPin } from "./svg/GlobeLocationPin";
+import { NewWindow } from "./svg/NewWindow";
+import { OutpatientMed } from "./svg/OutpatientMed";
+import { AdUnits } from "./svg/AdUnits";
+import { ListAltCheck } from "./svg/ListAltCheck";
+import { UploadCloud } from "./svg/UploadCloud";
+import { BarsChart } from "./svg/BarsChart";
+import { Calculate } from "./svg/Calculate";
+import { Employee } from "./svg/Employee";
+import { FeatureSearch } from "./svg/FeatureSearch";
+import { HierarchyGraph } from "./svg/HierarchyGraph";
+import { MobileWrench } from "./svg/MobileWrench";
+
 
 export {
   AddCircle,
@@ -1629,5 +1643,18 @@ export {
   Warehouse,
   ContractIcon,
   HRIcon,
-  MeasurementMuktaIcon
+  MeasurementMuktaIcon,
+  GlobeLocationPin,
+  NewWindow,
+  OutpatientMed,
+  AdUnits,
+  ListAltCheck,
+  UploadCloud,
+  TutorialGuide,
+  BarsChart,
+  Calculate,
+  Employee,
+  FeatureSearch,
+  HierarchyGraph,
+  MobileWrench
 };

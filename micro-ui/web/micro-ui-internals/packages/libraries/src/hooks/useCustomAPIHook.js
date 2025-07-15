@@ -34,6 +34,8 @@ const useCustomAPIHook = ({
   params = {},
   body = {},
   config = {},
+  headers = {},
+  method = "POST",
   plainAccessRequest,
   changeQueryName = "Random",
   options = {},
@@ -48,7 +50,7 @@ const useCustomAPIHook = ({
   // Fetch function with error handling
   const fetchData = async () => {
     try {
-      const response = await CustomService.getResponse({ url, params, body, plainAccessRequest, ...options });
+      const response = await CustomService.getResponse({ url, params, body, plainAccessRequest, headers, method, ...options });
       return response || null; // Ensure it never returns undefined
     } catch (error) {
       console.error("Error fetching data:", error);
