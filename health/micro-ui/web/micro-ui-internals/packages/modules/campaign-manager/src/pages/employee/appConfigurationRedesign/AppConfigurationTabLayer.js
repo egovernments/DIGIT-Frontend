@@ -114,6 +114,7 @@ const AppConfigurationTabLayer = () => {
   }, [tabState]);
   const reqCriteriaTab = {
     url: `/${mdms_context_path}/v2/_search`,
+    changeQueryName: `APPCONFIG-${campaignNumber}`,
     body: {
       MdmsCriteria: {
         tenantId: Digit.ULBService.getCurrentTenantId(),
