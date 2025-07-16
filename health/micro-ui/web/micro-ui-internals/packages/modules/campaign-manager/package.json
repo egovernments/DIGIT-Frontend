@@ -21,7 +21,7 @@
     "@cyntler/react-doc-viewer": "1.10.3",
     "@egovernments/digit-ui-react-components": "1.8.20",
     "@egovernments/digit-ui-svg-components": "1.0.21",
-    "@egovernments/digit-ui-components":  "0.2.0-beta.48",
+    "@egovernments/digit-ui-components":  "0.2.0-beta.49",
     "react-data-table-component": "7.6.2",
     "styled-components": "5.0.0",
     "@rjsf/core": "5.10.0",
