@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair , Dropdown ,TextInput , Button ,Card ,CardText , HeaderComponent} from "@egovernments/digit-ui-components";
+import { LabelFieldPair, Dropdown, TextInput, Button, Card, CardText, HeaderComponent } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "./icons/DustbinIcon";
 // import { productType } from "../configs/productType";
 import { PRIMARY_COLOR } from "../utils";
@@ -57,12 +57,12 @@ const AddProductField = ({ onSelect }) => {
 
   return (
     <React.Fragment>
-      <HeaderComponent styles={{marginBottom: "1rem"}}>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
+      <HeaderComponent styles={{ marginBottom: "1rem" }}>{t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_HEADER`)}</HeaderComponent>
       <p className="name-description">
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_PRE_TEXT`)} <b> {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_BOLD_TEXT`)} </b>
         {t(`HCM_CAMPAIGN_ADD_NEW_PRODUCT_DESCRIPTION_POST_TEXT`)}
       </p>
-      <div style={{height:"1.5rem"}}></div>
+      <div style={{ height: "1.5rem" }}></div>
       {productFieldData?.map((field, index) => {
         return (
           <Card className="add-new-product-container">
@@ -88,45 +88,79 @@ const AddProductField = ({ onSelect }) => {
                 </div>
               )}
             </div>
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("HCM_PRODUCT_NAME")}`}</span>
-                <span className="mandatory-span">*</span>
-              </div>
-              <TextInput
-                // style={{ maxWidth: "40rem" }}
-                name="name"
-                value={field?.name || ""}
-                onChange={(event) => handleUpdateField(event.target.value, "name", field.key)}
-              />
-            </LabelFieldPair>
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("HCM_PRODUCT_TYPE")}`}</span>
-                <span className="mandatory-span">*</span>
-              </div>
-              <Dropdown
-                style={{ width: "100%" }}
-                t={t}
-                option={productType}
-                optionKey={"code"}
-                selected={field?.type}
-                select={(value) => {
-                  handleUpdateField(value, "type", field.key);
+            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+              <div
+                className="product-label-field"
+                style={{
+                  width: "18rem",
+                  flexShrink: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
                 }}
-              />
-            </LabelFieldPair>
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("HCM_PRODUCT_VARIANT")}`}</span>
+              >
+                <span>{t("HCM_PRODUCT_NAME")}</span>
                 <span className="mandatory-span">*</span>
               </div>
-              <TextInput
-                // style={{ maxWidth: "40rem" }}
-                name="variant"
-                value={field?.variant || ""}
-                onChange={(event) => handleUpdateField(event.target.value, "variant", field?.key)}
-              />
+              <div style={{ flex: 1 }}>
+                <TextInput
+                  name="name"
+                  value={field?.name || ""}
+                  onChange={(event) => handleUpdateField(event.target.value, "name", field.key)}
+                />
+              </div>
+            </LabelFieldPair>
+
+            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+              <div
+                className="product-label-field"
+                style={{
+                  width: "18rem",
+                  flexShrink: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
+                }}
+              >
+                <span>{t("HCM_PRODUCT_TYPE")}</span>
+                <span className="mandatory-span">*</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <Dropdown
+                  style={{ width: "100%" }}
+                  t={t}
+                  option={productType}
+                  optionKey="code"
+                  selected={field?.type}
+                  select={(value) => handleUpdateField(value, "type", field.key)}
+                />
+              </div>
+            </LabelFieldPair>
+
+            <LabelFieldPair style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+              <div
+                className="product-label-field"
+                style={{
+                  width: "18rem",
+                  flexShrink: 0,
+                  display: "flex",
+                  flexDirection: "column",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
+                }}
+              >
+                <span>{t("HCM_PRODUCT_VARIANT")}</span>
+                <span className="mandatory-span">*</span>
+              </div>
+              <div style={{ flex: 1 }}>
+                <TextInput
+                  name="variant"
+                  value={field?.variant || ""}
+                  onChange={(event) => handleUpdateField(event.target.value, "variant", field?.key)}
+                />
+              </div>
             </LabelFieldPair>
           </Card>
         );
@@ -138,7 +172,7 @@ const AddProductField = ({ onSelect }) => {
         // className={"hover"}
         icon={"AddIcon"}
         textStyles={{ width: "fit-content" }}
-        style={{marginTop: "1.5rem"}}
+        style={{ marginTop: "1.5rem" }}
         onClick={addMoreField}
       />
     </React.Fragment>
