@@ -12,6 +12,7 @@ const ViewChecklist = () => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const campaignName = searchParams.get("campaignName");
+    const campaignNumber = searchParams.get("campaignNumber");
     const role = searchParams.get("role");
     const rlt = searchParams.get("role");
     const projectType = searchParams.get("projectType");
@@ -276,7 +277,7 @@ const ViewChecklist = () => {
                 label={t("UPDATE")}
                 config={config}
                 onSubmit={() => {
-                    history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}&projectType=${projectType}&campaignId=${campaignId}`)
+                    history.push(`/${window.contextPath}/employee/campaign/checklist/update?campaignName=${campaignName}&role=${role}&checklistType=${checklistType}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}&tenantId=${tenantId}`)
                 }}
                 fieldStyle={{ marginRight: 0 }}
                 noBreakLine={true}
