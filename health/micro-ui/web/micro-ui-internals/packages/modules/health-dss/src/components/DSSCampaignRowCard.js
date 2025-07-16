@@ -38,18 +38,6 @@ const getActionButtons = (rowData, tabData, history,t,boundaryCodeResponse,campa
   const actions = {};
   const boundaryValue = boundaryCodeResponse?.message || t(rowData?.address?.boundary);
 
-  actions.customReport = {
-    label: "VIEW_CUSTOM_REPORT",
-    size: "medium",
-    // TODO : Update the link
-    onClick: () => {
-      console.log("view custom report");
-    },
-    icon: "",
-    variation: "link",
-    style: { height: "32px" },
-  };
-
   actions.dashboardLink = {
     label: "VIEW_DASHBOARD",
     size: "medium",
