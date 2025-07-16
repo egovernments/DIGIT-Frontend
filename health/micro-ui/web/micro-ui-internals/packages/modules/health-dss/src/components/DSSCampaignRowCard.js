@@ -74,17 +74,17 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
   const history = useHistory();
   const tagElements = getTagElements(rowData);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
 
   // campaign search call
-  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
+  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
       campaignNumber:rowData?.referenceID,
       isActive: true,
     },
     config: {
-      enabled: rowData?.referenceID ? true : false,
+      enabled: !!rowData?.referenceID,
       select: (data) => {
         return data;
       },
