@@ -34,8 +34,9 @@ const getTagElements = (rowData) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history,t) => {
+const getActionButtons = (rowData, tabData, history,t,boundaryCodeResponse,campaignData) => {
   const actions = {};
+  const boundaryValue = boundaryCodeResponse?.message || t(rowData?.address?.boundary);
 
   actions.customReport = {
     label: "VIEW_CUSTOM_REPORT",
@@ -54,9 +55,10 @@ const getActionButtons = (rowData, tabData, history,t) => {
     size: "medium",
     onClick: () =>
       history.push(
-        `/${window?.contextPath}/employee/dss/view-dashboard?campaignId=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType?.toLowerCase()}&boundaryValue=${t(rowData?.address?.boundary)}`,
+        `/${window?.contextPath}/employee/dss/view-dashboard?campaignId=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType?.toLowerCase()}&boundaryValue=${boundaryValue}`,
         {
           project: rowData,
+          boundaryCodeResponse:boundaryCodeResponse
         }
       ),
     icon: "",
@@ -70,8 +72,51 @@ const getActionButtons = (rowData, tabData, history,t) => {
 const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
   const { t } = useTranslation();
   const history = useHistory();
-  const actionButtons = getActionButtons(rowData, tabData, history,t);
   const tagElements = getTagElements(rowData);
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
+  let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+
+  // campaign search call
+  const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
+    tenantId: tenantId,
+    filter: {
+      campaignNumber:rowData?.referenceID,
+      isActive: true,
+    },
+    config: {
+      enabled: rowData?.referenceID ? true : false,
+      select: (data) => {
+        return data;
+      },
+    },
+  });
+
+  const hierarchyType = campaignData?.[0]?.hierarchyType || "";
+
+  const boundaryCodeReqCritera = {
+    url: `/localization/messages/v1/_search`,
+    changeQueryName: `${rowData?.address?.boundary} ${hierarchyType}`,
+    body: {},
+    params: {
+      tenantId,
+      module:`hcm-boundary-${hierarchyType.toLowerCase()}`,
+      locale:locale,
+      codes:rowData?.address?.boundary
+    },
+    headers: {
+      "auth-token": Digit.UserService.getUser()?.access_token || null,
+    },
+    config: {
+      enabled: !!(rowData?.address?.boundary && hierarchyType),
+      select: (data) => {
+        return data?.messages?.[0];
+      },
+    },
+  };
+  const { isLoading: isBoundaryValueLoading, data: boundaryCodeResponse } = Digit.Hooks.useCustomAPIHook(boundaryCodeReqCritera);
+
+  const actionButtons = getActionButtons(rowData, tabData, history,t,boundaryCodeResponse,campaignData);
+
   return (
     <>
       <Card className={"digit-results-card-component"}>
@@ -117,7 +162,7 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
               className={"digit-results-card-field-pair"}
               inline={true}
               label={t("BOUNDARY_NAME")}
-              value={t(rowData?.address?.boundary)}
+              value={boundaryCodeResponse?.message || t(rowData?.address?.boundary)}
             />
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("PROJECT_TYPE")} value={t(rowData?.projectType)} />
             <SummaryCardFieldPair
