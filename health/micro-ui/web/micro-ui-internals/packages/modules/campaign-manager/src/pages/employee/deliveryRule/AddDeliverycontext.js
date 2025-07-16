@@ -578,7 +578,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       </Card>
       {showModal && (
         <PopUp
-          className={"campaign-product-wrapper"}
+          className={"campaign-product-wrapper campaign-popup-wrap"}
           type={"default"}
           heading={t(`CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT`)}
           onOverlayClick={() => {
