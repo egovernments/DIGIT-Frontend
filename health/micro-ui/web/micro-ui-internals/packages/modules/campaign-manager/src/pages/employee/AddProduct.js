@@ -116,7 +116,7 @@ function AddProduct() {
         });
         // const cleanedPayload = variantPayload.filter(item => item !== null && item !== undefined);
         if ((variantPayload || []).some((item) => item == null && item == undefined)) {
-          setShowToast({ key: "error", label: "DUPLICATE_ERROR", isError: true });
+          setShowToast({ key: "error", label: "DUPLICATE_PRODUCT_VARIANT_ERROR", isError: true });
           return;
         }
         await createProductVariant(variantPayload, {
