@@ -94,7 +94,6 @@ const NewUploadScreen = () => {
   const latestConfig = filteredConfig?.[0];
 
   // const restructureData = (params, apiResources, formData) => {
-  //   console.log("params" , params , formData )
   //   const payload = {
   //     resources: [],
   //     campaignNumber: campaignData?.campaignNumber,
@@ -130,8 +129,6 @@ const NewUploadScreen = () => {
   //       });
   //     }
   //   });
-
-  //   console.log("payload" ,payload , formData);
 
   //   return payload;
   // };
@@ -314,7 +311,7 @@ const NewUploadScreen = () => {
       );
     } else {
       setShowToast(null);
-      setCurrentKey(currentKey - 1);  
+      setCurrentKey(currentKey - 1);
     }
   };
 
