@@ -116,11 +116,10 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
           title={t("DSS_VIEW_DASHBOARD")}
           t={t}
           onClick={() => {
-            //Update the level here, make it dynamic(maybe)
-            // history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?province=${rowData?.name}&campaignId=${campaignId}`, {
-            // })
-            history.push(`/${window.contextPath}/employee/dss/level-two/${redirectUrl}?boundaryType=${boundaryType}&boundaryValue=${rowData?.name}&campaignId=${campaignId}`, {
-            })
+            history.push(
+              `/${window.contextPath}/employee/dss/level-two/${redirectUrl}?campaignId=${campaignId}&boundaryType=${boundaryType}&boundaryValue=${rowData?.name}`,
+              {}
+            );
             // routeTo(`/${window.contextPath}/employee/dss/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`);
           }}
         ></Button>
