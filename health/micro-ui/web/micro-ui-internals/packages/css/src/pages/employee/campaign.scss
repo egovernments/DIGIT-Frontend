@@ -216,7 +216,7 @@
     color: #0057bd !important;
   }
   background-color: #eff8ff !important;
-  border-color:  #0057bd !important;
+  border-color: #0057bd !important;
 }
 .digit-popup-wrapper.dataMapping {
   .digit-popup-children-wrap {
@@ -425,7 +425,7 @@
   color: theme(digitv2.lightTheme.primary-2);
   font-size: 2.5rem;
 }
-.campaign-header-module-style{
+.campaign-header-module-style {
   color: theme(digitv2.lightTheme.primary-2);
   font-size: 2.5rem;
   margin-bottom: 1rem !important;
@@ -542,14 +542,21 @@
   height: 20rem;
   border: 1px;
   border-radius: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+                  
 }
 .modules-container {
   display: flex;
   gap: 1.5rem;
-  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: stretch;
   padding-left: 0rem;
   padding: 1rem;
   padding-left: 0rem;
+  grid-template-columns: repeat(auto-fill, minmax(21rem, 1fr));
+
 }
 
 .modules-feature-container {
@@ -617,6 +624,7 @@
   font-family: theme(digitv2.fontFamily.sans);
   font-size: theme(digitv2.fontSize.heading-s);
   color: theme(digitv2.lightTheme.text-color-secondary);
+  overflow-wrap: break-word;
 }
 .name-container-popUp {
   margin-top: 0.8rem;
@@ -666,11 +674,10 @@
   }
 }
 
-.version-tag{
-  .digit-tag-text{
+.version-tag {
+  .digit-tag-text {
     font-size: 0.75rem;
   }
-
 }
 
 .content-group {
@@ -808,10 +815,16 @@
   top: 1rem;
   right: 1rem;
 }
-.dynamic-image-component{
+.dynamic-image-component {
   max-width: 100%;
   margin-bottom: -2.5rem;
 }
-.start-header{
+.start-header {
   color: theme(digitv2.lightTheme.primary-2) !important;
+}
+.digit-loader-new.Overlayloader.loader-center {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }

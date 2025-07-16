@@ -33,7 +33,7 @@ const updateAppConfigService = async (req, tenantId) => {
         });
     return response;
   } catch (error) {
-    throw new Error(error?.response?.data?.Errors?.[0].code);
+    throw error;
   }
 };
 

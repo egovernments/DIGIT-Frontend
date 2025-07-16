@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
+import { useQueryClient } from "react-query";
 
 const dispatcher = (state, action) => {
   switch (action.key) {
@@ -39,6 +40,7 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, isPreviousTabAvailable, tabStateDispatch, tabState }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
+  const queryClient = useQueryClient();
   const history = useHistory();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
@@ -212,7 +214,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         return updated ? updated : item;
       });
       const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
-      const reverseFormat = cacheData
+      const reverseFormat = cacheData && cacheData?.data?.data
         ? {
             ...parentState?.actualTemplate?.actualTemplate,
             version: parentState?.actualTemplate?.version + 1,
@@ -246,7 +248,9 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           onError: (error, variables) => {
             setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? t(error?.response?.data?.Errors?.[0]?.code) : error });
           },
-          onSuccess: async (data) => {},
+          onSuccess: async (data) => {
+            return null;
+          },
         }
       );
       await updateMutate(
@@ -257,6 +261,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         },
         {
           onError: (error, variables) => {
+            setChangeLoader(false);
             setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.code ? t(error?.response?.data?.Errors?.[0]?.code) : error });
           },
           onSuccess: async (data) => {
@@ -268,6 +273,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               return;
             } else {
               setChangeLoader(false);
+              queryClient.invalidateQueries(`APPCONFIG-${campaignNumber}`);
               history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
                 message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
                 preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
@@ -322,7 +328,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
     }
   };
   if (changeLoader) {
-    return <Loader page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")} />;
+    return <Loader className="loader-center" page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")} />;
   }
 
   return (
