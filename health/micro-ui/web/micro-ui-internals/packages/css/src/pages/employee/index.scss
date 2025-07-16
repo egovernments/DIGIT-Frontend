@@ -38,13 +38,13 @@
     margin-left: 0;
     margin-right: 0rem;
     padding-right: 0;
-    margin-bottom: 0rem;
+    margin-bottom: 1.5rem;
     min-height: calc(100vh - 10em);
 
     .ground-container.digit-home-ground {
       padding: 0;
       padding-right: 0;
-      margin-bottom: 0rem;
+      margin-bottom: 1.5rem;
 
       .employee-app-container.digit-home-employee-app {
         .ground-container.moduleCardWrapper.gridModuleWrapper.digit-home-moduleCardWrapper {
@@ -52,7 +52,7 @@
           padding-right: 0;
           margin-top: 1.5rem;
           margin-left: 1rem;
-          margin-bottom: 0rem;
+          margin-bottom: 1.5rem;
           padding: 0;
           display: grid !important;
           grid-template-columns: repeat(auto-fill, minmax(263px, 1fr));

@@ -6,31 +6,42 @@
  * `DigitUI` component is responsible for rendering the UI based on the provided configuration and
  * modules.
  */
-import React from "react";
+import React, { Suspense } from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
 // import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
-import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
+import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
 // import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
 // import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
+import { Loader } from "@egovernments/digit-ui-components";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+
+// Lazy load DigitUI
+const DigitUI = React.lazy(() =>
+  import("@egovernments/digit-ui-module-core").then((mod) => ({
+    default: mod.DigitUI,
+  }))
+);
 
 const enabledModules = [
   "DSS",
   "NDSS",
   "Utilities",
-  // "HRMS",
+  "HRMS",
   "Engagement",
   "Workbench",
   "HCMWORKBENCH",
   "Campaign",
-  // "PGR",
+  "PGR",
 ];
+
+initLibraries().then(() => {
+  initDigitUI();
+});
 
 const moduleReducers = (initData) => ({
   initData,
@@ -42,18 +53,14 @@ const initDigitUI = () => {
     PGR: {},
     commonUiConfig: UICustomizations,
   };
+
   // initHRMSComponents();
   initUtilitiesComponents();
   initWorkbenchComponents();
   initWorkbenchHCMComponents();
   initCampaignComponents();
-  initHRMSComponents();
-  initPGRComponents();
+  // initPGRComponents();
 };
-
-initLibraries().then(() => {
-  initDigitUI();
-});
 
 function App() {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -64,13 +71,15 @@ function App() {
     return <h1>stateCode is not defined</h1>;
   }
   return (
-    <DigitUI
-    stateCode={stateCode}
-    enabledModules={enabledModules}
-    moduleReducers={moduleReducers}
-    defaultLanding="employee"
-    allowedUserTypes={["employee"]}
-  />
+    <Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
+      <DigitUI
+        stateCode={stateCode}
+        enabledModules={enabledModules}
+        moduleReducers={moduleReducers}
+        defaultLanding="employee"
+        allowedUserTypes={["employee"]}
+      />
+    </Suspense>
   );
 }
 

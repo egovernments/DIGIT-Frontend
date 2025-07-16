@@ -1,14 +1,46 @@
 import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew, Dropdown,Toast } from "@egovernments/digit-ui-components";
+import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward, Modal,CloseSvg, Close, } from "@egovernments/digit-ui-react-components";
+import { Button as ButtonNew, Dropdown, Toast, Tag, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
+
+const wrapTextStyle = {
+  maxWidth: "15rem",
+  wordWrap: "break-word",
+  whiteSpace: "normal",
+  overflowWrap: "break-word",
+};
+
+const renderText = (value, t) => {
+  if (value && value !== "NA") {
+    return (
+      <div style={wrapTextStyle}>
+        <p>{t(value)}</p>
+      </div>
+    );
+  } else {
+    return (
+      <div>
+        <p>{t("NA")}</p>
+      </div>
+    );
+  }
+}
+
+const getMDMSUrl = (v2=false) => {
+  if(v2){
+    let url = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || window.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
+    return `/${url}`;
+  }
+    let url = window.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") ||  "egov-mdms-service";
+    return `/${url}`;
+};
 
 const businessServiceMap = {
   "muster roll": "MR",
@@ -17,6 +49,14 @@ const businessServiceMap = {
 const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
+
+const convertDateToEpoch= (dateString) => {
+  // Create a Date object from the input date string
+  const date = new Date(dateString);
+
+  // Convert the date to epoch time (seconds)
+  return Math.floor(date.getTime());
+}
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
@@ -930,7 +970,7 @@ export const UICustomizations = {
               <div>
                 {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                   <div>
-                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId} />
+                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={()=>handleDownload({type:"Estimations"})} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId} />
                   </div>
                 ) : (
                   <div className={"action-button-open-microplan"}>
@@ -1529,5 +1569,1031 @@ export const UICustomizations = {
   },
   UserManagementConfigPlan: {
     test: "yes",
+  },
+  PGRInboxConfig: {
+    preProcess: (data) => {
+      data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+
+      const requestDate = data?.body?.inbox?.moduleSearchCriteria?.range?.requestDate;
+
+      if (requestDate?.startDate && requestDate?.endDate) {
+        const fromDate = new Date(requestDate.startDate).getTime();
+        const toDate = new Date(requestDate.endDate).getTime();
+
+        data.body.inbox.moduleSearchCriteria.fromDate = fromDate;
+        data.body.inbox.moduleSearchCriteria.toDate = toDate;
+      }
+      else{
+        delete data.body.inbox.moduleSearchCriteria.fromDate;
+        delete data.body.inbox.moduleSearchCriteria.toDate;
+      }
+
+      // Always delete the full range object if it exists
+      delete data.body.inbox.moduleSearchCriteria.range;
+    
+      const assignee = _.clone(data.body.inbox.moduleSearchCriteria.assignedToMe);
+      delete data.body.inbox.moduleSearchCriteria.assignedToMe;
+      delete data.body.inbox.moduleSearchCriteria.assignee;
+    
+      if (assignee?.code === "ASSIGNED_TO_ME" || data?.state?.filterForm?.assignedToMe?.code === "ASSIGNED_TO_ME") {
+        data.body.inbox.moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
+      }
+    
+      // --- Handle serviceCode ---
+      let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
+      serviceCodes = serviceCodes?.serviceCode;
+      delete data.body.inbox.moduleSearchCriteria.serviceCode;
+      if (serviceCodes != null) {
+        data.body.inbox.moduleSearchCriteria.complaintType = serviceCodes;
+      } else {
+        delete data.body.inbox.moduleSearchCriteria.complaintType;
+      }
+
+      delete data.body.inbox.moduleSearchCriteria.locality;
+      let rawLocality = data?.state?.filterForm?.locality;
+      let localityArray = [];
+      if (rawLocality) {
+        if (Array.isArray(rawLocality)) {
+          localityArray = rawLocality.map((loc) => loc?.code).filter(Boolean);
+        } else if (rawLocality.code) {
+          localityArray = [rawLocality.code];
+        }
+      }
+      
+      if (localityArray.length > 0) {
+        delete data.body.inbox.moduleSearchCriteria.locality;
+        data.body.inbox.moduleSearchCriteria.area = localityArray;
+      } else {
+        delete data.body.inbox.moduleSearchCriteria.area;
+      }
+    
+      // --- Handle status from state.filterForm ---
+      const rawStatuses = _.clone(data?.state?.filterForm?.status || {});
+      const statuses = Object.keys(rawStatuses).filter((key) => rawStatuses[key] === true);
+    
+      if (statuses.length > 0) {
+        data.body.inbox.moduleSearchCriteria.status = statuses;
+      } else {
+        delete data.body.inbox.moduleSearchCriteria.status;
+      }
+    
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "CS_COMMON_COMPLAINT_NO":
+          return (
+            <div style={{display:"grid"}}>
+            <span className="link" style={{display:"grid"}}>
+            <Link
+              to={ `/${window.contextPath}/employee/pgr/complaint-details/${value}`}
+            >
+              {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+            </Link>
+          </span>
+          <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
+          </div>
+          );
+
+          case "WF_INBOX_HEADER_LOCALITY":
+          return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
+
+        case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
+          return <span>{t(`CS_COMMON_${value}`)}</span>;
+
+        case "WF_INBOX_HEADER_CURRENT_OWNER":
+          return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
+
+        case "WF_INBOX_HEADER_SLA_DAYS_REMAINING":
+          return value > 0 ? <Tag label={value} showIcon={false} type="success" /> : <Tag label={value} showIcon={false} type="error" />;
+
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+  },
+  CampaignsInboxConfig: {
+    preProcess: (data, additionalDetails) => {
+      data.body.ProjectStaff = {};
+      data.body.ProjectStaff.staffId = [Digit.UserService.getUser().info.uuid];
+      data.params.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.params.limit = data.state.tableForm.limit;
+      data.params.offset = data.state.tableForm.offset;
+      delete data.body.ProjectStaff.campaignName;
+      delete data.body.ProjectStaff.campaignType;
+      cleanObject(data.body.ProjectStaff);
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "ACTIONS":
+          let options = [
+            { code: "1", name: "VIEW_DASHBOARD" },
+            { code: "2", name: "VIEW_CUSTOM_REPORT" },
+          ];
+          const onActionSelect = async (e, row) => {
+            if (e.name == "VIEW_DASHBOARD") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
+            if (e.name == "VIEW_CUSTOM_REPORT") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&setup-completed=true`;
+            } // TODO : NEED TO UPDATE THE LINKS ONCE CONFIRMED
+          };
+          return (
+            <ButtonNew
+              type="actionButton"
+              variation="secondary"
+              label={t("TAKE_ACTION")}
+              title={t("TAKE_ACTION")}
+              options={options}
+              style={{ width: "20rem" }}
+              optionsKey="name"
+              showBottom={true}
+              isSearchable={false}
+              onOptionSelect={(item) => onActionSelect(item, row)}
+            />
+          );
+
+        case "CAMPAIGN_NAME":
+          return renderText(value, t);
+
+        case "BOUNDARY_NAME":
+          return renderText(value, t);
+
+        case "START_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+
+        case "YEAR":
+          return renderText(value, t);
+
+        case "END_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+
+        case "PLANNED_END_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+
+        default:
+          return null; // Handle any unexpected keys here if needed
+      }
+    },
+  },
+
+  HRMSInboxConfig: {
+      preProcess: (data) => {
+        // filterForm
+        // params
+  
+        if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+          const updatedParams = {}; // Temporary object to store updates
+  
+          if (data.state.filterForm.roles?.code) {
+            updatedParams.roles = data.state.filterForm.roles.code;
+          }
+  
+          if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+            updatedParams.isActive = data.state.filterForm.isActive.code;
+          }
+  
+          // Update `data.params` only if `updatedParams` has values
+          if (Object.keys(updatedParams).length > 0) {
+            data.params = { ...data.params, ...updatedParams };
+          }
+        }
+  
+        return data;
+      },
+  
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        switch (key) {
+          case "HR_EMP_ID_LABEL":
+            return (
+              <span className="link">
+                <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
+              </span>
+            );
+            
+          case "HR_EMP_NAME_LABEL":
+            return value ? `${value}` : t("ES_COMMON_NA");
+  
+          case "HR_ROLE_NO_LABEL":
+            return value?.length > 0 ? value?.length : t("ES_COMMON_NA");
+  
+          case "HR_DESG_LABEL":
+            return value ? t(`${value.designation}`) : t("ES_COMMON_NA");
+  
+          case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
+            return value ? t(`${value.department}`) : t("ES_COMMON_NA");
+  
+          case "HR_JURIDICTIONS_LABEL":
+            return value?.length > 0 ? (
+              value?.map((j) => t(j?.boundary)).join(",")
+            ) : (
+              t("ES_COMMON_NA")
+            );
+          default:
+            return t("ES_COMMON_NA");
+        }
+      },
+  },
+  AssignCampaignInboxConfig: {
+    preProcess: (data) => {
+      const formState = data?.state?.searchForm || {};
+    
+      const sharedFields = {};
+      if (formState.projectType?.code) sharedFields.projectType = formState.projectType.code;
+      if (formState.name?.trim()) sharedFields.name = formState.name.trim();
+      if (formState.projectNumber?.trim()) sharedFields.projectNumber = formState.projectNumber.trim();
+      if (formState.startDate) sharedFields.startDate = new Date(formState.startDate).getTime();
+      if (formState.endDate) sharedFields.endDate = new Date(formState.endDate).getTime();
+    
+      // 🟢 Reset to all original Projects from config when filters are cleared
+     // ✅ Convert object to array
+      const allProjects = Object.values(data?.body?.jurisdictionProjects || {});
+
+    
+      let filteredProjects = [...allProjects];
+    
+      if (formState.boundary?.code) {
+        filteredProjects = filteredProjects.filter(
+          (p) => p?.address?.boundary === formState.boundary.code
+        );
+      }
+    
+      // Enrich filtered projects
+      data.body.Projects = filteredProjects.map((p) => ({
+        ...p,
+        ...sharedFields,
+      }));
+    
+      return data;
+    },
+    
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const { id } = useParams();
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+      const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
+      const [toast, setToast] = useState(null);
+      const [modalOpen, setModalOpen] = useState(false);
+      const [sessionFormData, setSessionFormData] = useState({});
+      const [refreshKey, setRefreshKey,] = useState(Date.now());
+      const formConfig = {
+          label: {
+            heading: "ASSIGN_CAMPAIGN_MODAL_TITLE",
+            submit: "CORE_COMMON_SUBMIT",
+            cancel: "CORE_COMMON_CANCEL"
+          },
+          form: [
+            {
+              body: [
+                {
+                  inline: true,
+                  label: "HR_CAMPAIGN_FROM_DATE_LABEL",
+                  isMandatory: true,
+                  key: "startDate",
+                  type: "date",
+                  populators: {
+                    name: "startDate",
+                    required: true,
+                    error: "CORE_COMMON_REQUIRED_ERRMSG",
+                    validation: {
+                      max: new Date().toISOString().split("T")[0]
+                    }
+                  }
+                },
+                {
+                  inline: true,
+                  label: "HR_CAMPAIGN_TO_DATE_LABEL",
+                  isMandatory: false,
+                  key: "endDate",
+                  type: "date",
+                  populators: {
+                    name: "endDate",
+                    required: false,
+                    error: "CORE_COMMON_REQUIRED_ERRMSG",
+                    validation: {
+                      max: new Date().toISOString().split("T")[0]
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        };
+
+      const { isLoading: isHRMSSearchLoading, isError, error, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);      // API request criteria for fetching project staff details
+      const reqCri = {
+        url: `/${projectContextPath}/staff/v1/_search`,
+        params: {
+          tenantId: tenantId,
+          limit: 100,
+          offset: 0,
+        },
+        body: {
+          ProjectStaff: {
+            staffId: hrmsData.Employees[0]?.user?.userServiceUuid ? [hrmsData.Employees[0]?.user?.userServiceUuid] : [],
+          },
+        },
+        config: {
+          enabled: !!hrmsData.Employees[0]?.user?.userServiceUuid,
+          select: (data) => {
+            return data.ProjectStaff;
+          },
+        },
+      };
+      // Fetch project staff details using custom API hook
+      const { isLoading: isProjectStaffLoading, data: projectStaff, revalidate: revalidateProjectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
+
+      const createStaffMutation = Digit.Hooks.hrms.useHRMSStaffCreate(tenantId);
+      const deleteStaffMutation = Digit.Hooks.hrms.useHRMSStaffDelete(tenantId);
+
+      const validateFormData = (formData, config, t) => {
+        const missingFields = [];
+      
+        config?.form?.forEach((section) => {
+          section.body?.forEach((field) => {
+            const key = field.key;
+            const isRequired = field.isMandatory || field.populators?.required;
+      
+            if (isRequired && !formData[key]) {
+              missingFields.push(t(field.label)); // Push the translated label
+            }
+          });
+        });
+      
+        return missingFields;
+      };
+
+      const CloseBtn = (props) => {
+        return (
+          <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
+            {props?.isMobileView ? (
+              <CloseSvg />
+            ) : (
+              <div className={"icon-bg-secondary"} style={{ backgroundColor: "#FFFFFF" }}>
+                <Close />
+              </div>
+            )}
+          </div>
+        );
+      };
+      const Heading = (props) => {
+        return <h1 className="heading-m">{props.heading}</h1>;
+      };
+
+      const handleToastClose = () => {
+        setToast(null);
+      };
+
+      const handleModalSubmit = async () => {
+        const missingFields = validateFormData(sessionFormData, formConfig, t);
+        if (missingFields.length > 0) return;
+        setModalOpen(false);
+        const payload = {
+          tenantId: tenantId,
+          userId: hrmsData.Employees[0]?.user?.userServiceUuid,
+          projectId: row?.id,
+          startDate: sessionFormData?.startDate
+            ? convertDateToEpoch(sessionFormData?.startDate)
+            : row?.startDate,
+          endDate: sessionFormData?.endDate
+          ? convertDateToEpoch(sessionFormData?.endDate)
+          : row?.endDate,
+        };
+        await createStaffService(payload);
+      };
+      const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
+        if (!_.isEqual(sessionFormData, formData)) {
+          setSessionFormData({ ...sessionFormData, ...formData });
+        }
+      }
+      const createStaffService = async (payload) => {
+        try {
+          await createStaffMutation.mutateAsync(
+            {
+              projectStaff: payload,
+            },
+            {
+              onSuccess: async (res) => {
+                setToast({ key: false, label: `${id} ${t("ASSIGNED_SUCCESSFULLY")}`, type: "success" });
+                setRefreshKey(Date.now());
+                await revalidateProjectStaff();
+              },
+              onError: async (error) => {
+                setToast({ key: true, label: `${id} ${t("FAILED_TO_ASSIGN_CAMPAIGN")}`, type: "error" });
+                setRefreshKey(Date.now());
+                await revalidateProjectStaff();
+              },
+            }
+          );
+        } catch (error) {
+          // setTriggerEstimate(true);
+          setToast({ key: true, label: `${id} ${t("FAILED_TO_ASSIGN_CAMPAIGN")}`, type: "error" });
+        }
+      };
+      
+
+      switch (key) {
+        case "CAMPAIGN_START_DATE":
+        case "CAMPAIGN_END_DATE":
+          return (
+            <div
+              style={{
+                maxWidth: "15rem", // Set the desired maximum width
+                wordWrap: "break-word", // Allows breaking within words
+                whiteSpace: "normal", // Ensures text wraps normally
+                overflowWrap: "break-word", // Break long words at the edge
+              }}
+            >
+              <p>{Digit.DateUtils.ConvertEpochToDate(value)}</p>
+            </div>
+          );
+        case "PROJECT_BOUNDARY_TYPE":
+          return value ? <span>{t(`${hrmsData.Employees[0]?.jurisdictions?.[0]?.hierarchy}_${value}`)}</span> : <span>{t("NA")}</span>;
+        case "PROJECT_BOUNDARY":
+        case "PROJECT_TYPE":
+          return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
+        case "ASSIGNMENT":
+
+          if (isHRMSSearchLoading || isProjectStaffLoading) {
+            return <Loader />;
+          }
+
+          return (
+            // <span style={{color: "#F18F5E", cursor: "pointer"}}>{t(`ASSIGN`)}</span>
+            <>
+            <Button
+              key={refreshKey}
+              variation={projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id) ? "secondary" : "primary"}
+              label={projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id) ? t("UNASSIGN") : t("ASSIGN")}
+              style={{ minWidth: "10rem" }}
+              onButtonClick={() => {
+                if (projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id)) {
+                  deleteStaffMutation.mutateAsync(
+                    {
+                      projectStaff: projectStaff?.find(item => item.projectId === row?.id),
+                    },
+                    {
+                      onSuccess: async (res) => {
+                        setToast({ key: false, label: `${id} ${t("UNASSIGNED_SUCCESSFULLY")}`, type: "success" });
+                        setRefreshKey(Date.now());
+                        await revalidateProjectStaff();
+                      },
+                      onError: async (error) => {
+                        setToast({ key: true, label: `${id} ${t("FAILED_TO_UNASSIGN_CAMPAIGN")}`, type: "error" });
+                        setRefreshKey(Date.now());
+                        await revalidateProjectStaff();
+                      },
+                    }
+                  );
+                  return;
+                }
+                else{
+                setModalOpen(true);
+                }
+              }}
+            />
+            {modalOpen && (
+            <Modal
+                popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height: "fit-content" }}
+                headerBarMain={<Heading t={t} heading={t(formConfig.label.heading)} />}
+                headerBarEnd={<CloseBtn onClick={() => setModalOpen(false)} />}
+                actionSaveLabel={t(formConfig.label.submit)}
+                actionCancelLabel={t(formConfig.label.cancel)}
+                actionCancelOnSubmit={() => setModalOpen(false)}
+                actionSaveOnSubmit={handleModalSubmit}
+                formId="modal-action"
+            >
+              <FormComposerV2
+                config={formConfig.form}
+                defaultValues={sessionFormData}
+                noBoxShadow
+                inline
+                childrenAtTheBottom
+                formId="modal-action"
+                onFormValueChange={onFormValueChange}
+                />
+            </Modal>
+            )}
+             {toast && (
+                    <Toast
+                      error={toast.key}
+                      isDleteBtn="true"
+                      label={t(toast.label)}
+                      onClose={handleToastClose}
+                      type={toast.type}
+                    />
+                  )}
+            </>
+          );
+
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
+  },
+  MyCampaignConfigOngoing: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        campaignsIncludeDates: true,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
+        endDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0]),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigCompleted: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        endDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigUpcoming: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["creating", "created"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        campaignsIncludeDates: false,
+        startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigDrafts: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["drafted"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigDraftsNew: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["drafted"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
+  },
+  MyCampaignConfigFailed: {
+    preProcess: (data, additionalDetails) => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body = { RequestInfo: data.body.RequestInfo };
+      const { limit, offset } = data?.state?.tableForm || {};
+      const { campaignName, campaignType } = data?.state?.searchForm || {};
+      data.body.CampaignDetails = {
+        tenantId: tenantId,
+        status: ["failed"],
+        createdBy: Digit.UserService.getUser().info.uuid,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: data?.state?.tableForm?.sortOrder || "desc",
+          limit: limit,
+          offset: offset,
+        },
+      };
+      if (campaignName) {
+        data.body.CampaignDetails.campaignName = campaignName;
+      }
+      if (campaignType) {
+        data.body.CampaignDetails.projectType = campaignType?.[0]?.code;
+      }
+      delete data.body.custom;
+      delete data.body.inbox;
+      delete data.params;
+      return data;
+    },
+    populateCampaignTypeReqCriteria: () => {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const url = getMDMSUrl(true);
+      return {
+        url: `${url}/v1/_search`,
+        params: { tenantId },
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            moduleDetails: [
+              {
+                moduleName: "HCM-PROJECT-TYPES",
+                masterDetails: [
+                  {
+                    name: "projectTypes",
+                  },
+                ],
+              },
+            ],
+          },
+        },
+        changeQueryName: "setWorkflowStatus",
+        config: {
+          enabled: true,
+          select: (data) => {
+            return data?.MdmsRes?.["HCM-PROJECT-TYPES"]?.projectTypes;
+          },
+        },
+      };
+    },
+    additionalCustomizations: (row, key, column, value, searchResult) => {},
+    getCustomActionLabel: (obj, row) => {
+      return "";
+    },
+    onCardClick: (obj) => {
+      // return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    onCardActionClick: (obj) => {
+      // return `view-test-results?tenantId=${obj?.apiResponse?.businessObject?.tenantId}&id=${obj?.apiResponse?.businessObject?.testId}&from=TQM_BREAD_INBOX`;
+    },
+    getCustomActionLabel: (obj, row) => {
+      return "TQM_VIEW_TEST_DETAILS";
+    },
   },
 };

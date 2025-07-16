@@ -230,6 +230,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
                 border: "1px solid #C84C0E",
                 background: background,
                 marginTop: "1rem",
+                marginBottom: "1rem",
               }}
               textStyles={{
                 height: "auto",

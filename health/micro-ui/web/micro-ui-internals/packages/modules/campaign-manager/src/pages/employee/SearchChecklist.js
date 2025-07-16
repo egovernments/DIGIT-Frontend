@@ -246,7 +246,7 @@ const SearchChecklist = () => {
                 marginLeft: "2.5rem",
               }}
               onClick={() => {
-                history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}`);
+                history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
               }}
               icon={"ArrowBack"}
             />,

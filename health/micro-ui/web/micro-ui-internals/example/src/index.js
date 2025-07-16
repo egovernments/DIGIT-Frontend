@@ -1,10 +1,10 @@
-import React from "react";
+import React, { Suspense } from "react";
 import ReactDOM from "react-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
 import "@egovernments/digit-ui-health-css/example/index.css";
+import { Loader } from "@egovernments/digit-ui-components";
 
 import { UICustomizations } from "./UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
@@ -18,6 +18,12 @@ import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 
 var Digit = window.Digit || {};
 
+// Lazy load DigitUI
+const DigitUI = React.lazy(() =>
+  import("@egovernments/digit-ui-module-core").then((mod) => ({
+    default: mod.DigitUI,
+  }))
+);
 const enabledModules = [
   "DSS",
   "HRMS",
@@ -83,8 +89,10 @@ const initDigitUI = () => {
 
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
-
-  ReactDOM.render(<DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />, document.getElementById("root"));
+  
+  ReactDOM.render(<Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
+    <DigitUI stateCode={stateCode} enabledModules={enabledModules}       defaultLanding="employee"  moduleReducers={moduleReducers} />
+  </Suspense>, document.getElementById("root"));
 };
 
 initLibraries().then(() => {

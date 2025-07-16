@@ -558,6 +558,7 @@
   align-items: stretch;
   justify-content: flex-start;
   gap: 1.5rem;
+  flex-wrap: wrap;
 
   .digit-dss-card-parent {
     flex: 1;
@@ -577,7 +578,6 @@
 .digit-loader-new {
   &.digit-center-loader {
     width: 100%;
-    height: 100%;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -737,8 +737,9 @@
 }
 
 .digit-stacked-collection-card {
-  width: 33%;
+  /*width: 33%;*/
   gap: 2rem;
+  flex: 1 1 0;
 }
 
 .digit-dss-options-header-wrapper {
@@ -1075,6 +1076,11 @@
   gap: 1.5rem;
   align-items: stretch;
   margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+
+  .digit-chart-item{
+    flex: 1 1 0;
+  }
 }
 
 .wrapper-child {
