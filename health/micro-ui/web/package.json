@@ -14,7 +14,7 @@
   ],
   "homepage": "/digit-ui",
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.17",
+    "@egovernments/digit-ui-libraries": "1.8.10",
     "@egovernments/digit-ui-module-workbench": "1.0.23",
     "@egovernments/digit-ui-module-core": "1.8.39",
     "@egovernments/digit-ui-module-hrms": "1.8.0-beta.2",
