@@ -1,4 +1,4 @@
-# egovernments/digit-ui-module-health-payments
+# egovernments/digit-ui-module-health-pgr
 
 ## Install
 
