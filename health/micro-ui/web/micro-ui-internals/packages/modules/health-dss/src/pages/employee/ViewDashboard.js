@@ -11,6 +11,7 @@ const ViewDashbaord = ({ stateCode }) => {
   const history = useHistory();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const project = location?.state?.project;
+  const boundaryCodeResponse = location?.state?.boundaryCodeResponse;
   const campaignId = project?.referenceID;
   const [redirected, setRedirected] = useState(false);
   const queryStrings = Digit.Hooks.useQueryParams();
@@ -181,11 +182,12 @@ const ViewDashbaord = ({ stateCode }) => {
     const projectsInfo = {
       project: project,
       boundaries: boundaries,
+      boundaryCodeResponse : boundaryCodeResponse
     };
     if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
       history.push(
-        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level}/${dashboardId}?campaignId=${campaignData?.[0]?.id}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
+        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignId=${campaignData?.[0]?.id}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
         {
           dashboardData: dashboardDataResponse?.responseData,
           projectTypeId: project?.projectTypeId,
@@ -198,6 +200,7 @@ const ViewDashbaord = ({ stateCode }) => {
       Digit.SessionStorage.set("projectSelected", projectsInfo);
       Digit.SessionStorage.set("campaignSelected", campaignData?.[0]);
       Digit.SessionStorage.set("levelMap", levelMap);
+      Digit.SessionStorage.set("selectedDashboard",selectedDashboard);
     }
   }, [dashboardDataResponse?.responseData, redirected, history, boundaryData]);
 
