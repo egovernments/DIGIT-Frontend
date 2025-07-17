@@ -62,6 +62,7 @@ import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
 import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
 import QRButton from "./components/CreateCampaignComponents/QRButton";
+import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
 /**
  * MDMS Module name
  */
@@ -185,6 +186,9 @@ const componentsToRegister = {
   HCMMyCampaignRowCard,
   MyCampaignNew,
   QRButton,
+  // new 
+EqualHeightWrapper
+  
 };
 
 const overrideHooks = () => {

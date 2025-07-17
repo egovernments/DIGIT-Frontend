@@ -14,6 +14,7 @@ const UpdateChecklist = () => {
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const searchParams = new URLSearchParams(location.search);
     const campaignName = searchParams.get("campaignName");
+    const campaignNumber = searchParams.get("campaignNumber");
     const role = searchParams.get("role");
     const rlt = searchParams.get("role");
     const projectType = searchParams.get("projectType");
@@ -546,7 +547,7 @@ const UpdateChecklist = () => {
                     message: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE",
                     preText: "ES_CHECKLIST_UPDATE_SUCCESS_RESPONSE_PRE_TEXT",
                     actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}`,
+                    actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${campaignName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
                     secondaryActionLabel: "MY_CAMPAIGN",
                     secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
                 });

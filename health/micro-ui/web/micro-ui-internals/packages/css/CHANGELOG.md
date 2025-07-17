@@ -1,5 +1,17 @@
 # Changelog
 
+## 0.3.5 - 2025-7-17
+
+#### Admin console
+  1. added the missing css
+
+
+## 0.3.4 - 2025-7-16
+
+#### Admin console
+  1. App configuration CSS
+  2. Updated Console CSS
+
 ## 0.3.3 - 2025-7-10
 
 #### Admin console

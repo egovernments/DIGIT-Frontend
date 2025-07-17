@@ -304,7 +304,6 @@ const NewUploadScreen = () => {
     }
   };
 
-
   const onSecondayActionClick = async () => {
     if (currentKey == 1) {
       history.push(
@@ -323,7 +322,6 @@ const NewUploadScreen = () => {
   const closeToast = () => {
     setShowToast(null);
   };
-
 
   return (
     <>

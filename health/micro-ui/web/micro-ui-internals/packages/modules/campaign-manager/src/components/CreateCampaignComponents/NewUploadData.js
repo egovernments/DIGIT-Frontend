@@ -412,7 +412,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     setIsValidation(false);
     setDownloadError(false);
     setIsError(false);
-  }, [type, props?.props?.sessionData, props?.props?.campaignData?.resources]);
+  }, [type, props?.props?.totalFormData, props?.props?.campaignData?.resources]);
 
   useEffect(() => {
     if (errorsType[type]) {
