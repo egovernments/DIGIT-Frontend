@@ -5,6 +5,7 @@ import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
 import GenericTemplateScreen from "./GenericTemplateScreen";
 import DynamicSVG from "./DynamicSVGComponent";
+import RenderSelectionField from "./RenderSelectionField";
 
 const MdmsDropdown = ({
   t,
@@ -71,43 +72,7 @@ const renderField = (field, t) => {
         />
       );
     case "selection":
-      const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(
-        Digit?.ULBService?.getStateId(),
-        field?.schemaCode?.split(".")[0],
-        [
-          {
-            name: field?.schemaCode?.split(".")[1],
-          },
-        ],
-        {
-          select: (data) => {
-            const optionsData = _.get(data, `${field?.schemaCode?.split(".")[0]}.${field?.schemaCode?.split(".")[1]}`, []);
-            return optionsData
-              .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
-              .map((opt) => ({ ...opt, name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}` }));
-          },
-          enabled: field?.isMdms && field?.schemaCode ? true : false,
-        },
-        { schemaCode: "SELCTIONTABMDMSLIST" }
-      );
-
-      if (isLoading) {
-        return <Loader />;
-      }
-      return (
-        <SelectionTag
-          errorMessage=""
-          onSelectionChanged={() => {}}
-          schemaCode={field?.isMdms ? field?.schemaCode : null}
-          options={field?.isMdms ? data : field?.dropDownOptions}
-          optionsKey={"name"}
-          selected={[]}
-          withContainer={true}
-          populators={{
-            t: field?.isMdms ? null : t,
-          }}
-        />
-      );
+      return <RenderSelectionField field={field} t={t} />;
     case "numeric":
     case "counter":
       return <TextInput name="numeric" onChange={() => {}} type={"numeric"} />;
