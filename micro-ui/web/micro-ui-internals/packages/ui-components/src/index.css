@@ -6,3 +6,16 @@
     width: 100px;
     height: 100px;
 }
+/* 
+*:focus-visible{
+outline: 2px solid  red !important;
+} */
+
+.focus-visible-outline {
+  outline: 2px solid red !important; /* Replace with your desired focus color */
+  outline-offset: 2px; /* Optional: adds space between element and outline */
+}
+
+.focus-no-outline {
+  outline: none !important;
+}

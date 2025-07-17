@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
+import "../index.css"
 
 const TextInput = (props) => {
   const { t: i18nT } = useTranslation();
@@ -45,6 +46,35 @@ const TextInput = (props) => {
       ? newValue
       : Math.max(newValue, 0);
     props.onChange(finalValue);
+  };
+
+  // Track last input type (keyboard or mouse)
+  let isKeyboard = false;
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Tab') {
+      isKeyboard = true;
+    }
+  };
+
+  const handleMouseDown = () => {
+    isKeyboard = false;
+  };
+
+  const handleFocus = (event) => {
+    if (isKeyboard) {
+      event.target.classList.add("focus-visible-outline");
+      event.target.classList.remove("focus-no-outline");
+    } else {
+      event.target.classList.remove("focus-visible-outline");
+      event.target.classList.add("focus-no-outline");
+    }
+  };
+
+  const handleBlur = (event) => {
+    // reset on blur
+    event.target.classList.remove("focus-visible-outline");
+    event.target.classList.remove("focus-no-outline");
   };
 
   const renderPrefix = () => {
@@ -286,6 +316,10 @@ const TextInput = (props) => {
                     ? new Date(props?.populators?.max)
                     : undefined
                 }
+                onFocus={handleFocus}
+                onBlur={handleBlur}
+                onKeyDown={handleKeyDown}
+                onMouseDown={handleMouseDown}
               />
               <div
                 className={`digit-new-date-format ${
@@ -318,7 +352,7 @@ const TextInput = (props) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    props?.onIconSelection;
+                    props?.onIconSelection?.();
                   }
                 }}
               >
@@ -382,10 +416,23 @@ const TextInput = (props) => {
               }
               step={props.step}
               autoFocus={props.autoFocus}
-              onBlur={props.onBlur}
+              onBlur={(event) => {
+              if (typeof props?.onBlur === "function") {
+                props.onBlur(event);
+              }
+              handleBlur(event);
+              }}
+              onKeyDown={handleKeyDown}
+              onMouseDown={handleMouseDown}
+              
               autoComplete="off"
               disabled={props.disabled}
-              onFocus={props?.onFocus}
+              onFocus={(event) => {
+                if (typeof props?.onFocus === "function") {
+                  props.onFocus(event);
+                }
+                handleFocus(event);
+              }}      
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
@@ -415,7 +462,7 @@ const TextInput = (props) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    handleVisibility?.();
+                    props?.onIconSelection?.();
                   }
                 }}
               >
@@ -486,11 +533,26 @@ const TextInput = (props) => {
               }
               step={props.step}
               autoFocus={props.autoFocus}
-              onBlur={props.onBlur}
               onKeyPress={props.onKeyPress}
+              onFocus={(event) => {
+                if (typeof props?.onFocus === "function") {
+                  props.onFocus(event);
+                }
+                handleFocus(event);
+              }}
+              onBlur={(event) => {
+                if (typeof props?.onBlur === "function") {
+                  props.onBlur(event);
+                }
+                handleBlur(event);
+              }}
+              onKeyDown={(event) => {
+                handleKeyDown(event);
+              }}
+              onMouseDown={handleMouseDown}
+
               autoComplete="off"
               disabled={props.disabled}
-              onFocus={props?.onFocus}
               nonEditable={props.nonEditable}
               config={props.config}
               populators={props.populators}
@@ -520,7 +582,7 @@ const TextInput = (props) => {
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    props?.onIconSelection;
+                    props?.onIconSelection?.();
                   }
                 }}
               >
