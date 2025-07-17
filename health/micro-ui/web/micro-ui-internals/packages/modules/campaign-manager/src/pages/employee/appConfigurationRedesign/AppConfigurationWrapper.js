@@ -729,7 +729,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 title: "ADD_FIELD_TYPE",
                 fieldPairClassName: "",
                 options: (state?.MASTER_DATA?.AppFieldType || [])
-                  .filter((item) => item?.metadata?.type !== "template")
+                  .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
                   ?.sort((a, b) => a?.order - b?.order),
                 optionsKey: "type",
               }}
