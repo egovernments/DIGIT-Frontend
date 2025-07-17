@@ -307,8 +307,8 @@ const AddAttributeField = ({
             }}
           >
             {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
-            attribute?.attribute?.valuesSchema ||
-            isNaN(attribute?.value) ? (
+              attribute?.attribute?.valuesSchema ||
+              isNaN(attribute?.value) ? (
               <Dropdown
                 className="form-field"
                 selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
@@ -371,9 +371,9 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       prev.map((item, index) =>
         index + 1 === deliveryRuleIndex
           ? {
-              ...item,
-              attributes: [...item.attributes, { key: item.attributes.length + 1, attribute: "", operator: "", value: "" }],
-            }
+            ...item,
+            attributes: [...item.attributes, { key: item.attributes.length + 1, attribute: "", operator: "", value: "" }],
+          }
           : item
       )
     );
@@ -612,7 +612,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   );
 };
 
-const AddDeliveryRuleWrapper = ({}) => {
+const AddDeliveryRuleWrapper = ({ }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [targetedData, setTargetedData] = useState(campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true));
   const [deliveryRules, setDeliveryRules] = useState(targetedData?.deliveryRules);
@@ -625,14 +625,24 @@ const AddDeliveryRuleWrapper = ({}) => {
     setDeliveryRules(tt);
   }, [campaignData]);
 
+  const prevRulesRef = useRef();
+  const deepEqual = (a, b) => {
+  return JSON.stringify(a) === JSON.stringify(b);
+};
+  // TODO: check
   useEffect(() => {
-    dispatchCampaignData({
-      type: "UPDATE_CAMPAIGN_DATA",
-      payload: {
-        currentDeliveryRules: deliveryRules,
-      },
-    });
+    if (!deepEqual(prevRulesRef.current, deliveryRules)) {
+      prevRulesRef.current = deliveryRules;
+
+      dispatchCampaignData({
+        type: "UPDATE_CAMPAIGN_DATA",
+        payload: {
+          currentDeliveryRules: deliveryRules,
+        },
+      });
+    }
   }, [deliveryRules]);
+
 
   const addMoreDelivery = () => {
     dispatchCampaignData({
@@ -670,24 +680,24 @@ const AddDeliveryRuleWrapper = ({}) => {
       ))}
       {filteredDeliveryConfig?.projectType === "IRS-mz"
         ? selectedStructureCodes?.length < 4 && (
-            <Button
-              variation="secondary"
-              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-              className={"add-rule-btn hover"}
-              icon="AddIcon"
-              onClick={addMoreDelivery}
-            />
-          )
+          <Button
+            variation="secondary"
+            label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+            className={"add-rule-btn hover"}
+            icon="AddIcon"
+            onClick={addMoreDelivery}
+          />
+        )
         : !filteredDeliveryConfig?.deliveryAddDisable &&
-          deliveryRules?.length < 5 && (
-            <Button
-              variation="secondary"
-              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-              className={"add-rule-btn hover"}
-              icon="AddIcon"
-              onClick={addMoreDelivery}
-            />
-          )}
+        deliveryRules?.length < 5 && (
+          <Button
+            variation="secondary"
+            label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+            className={"add-rule-btn hover"}
+            icon="AddIcon"
+            onClick={addMoreDelivery}
+          />
+        )}
     </>
   );
 };
