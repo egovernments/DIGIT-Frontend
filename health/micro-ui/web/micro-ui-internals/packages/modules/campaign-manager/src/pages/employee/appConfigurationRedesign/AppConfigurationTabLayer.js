@@ -9,7 +9,7 @@ const tabDispatcher = (state, action) => {
   switch (action.key) {
     case "SET_TAB": {
       let firstSelectedFound = false;
-      const sortedData = action?.data?.sort((a, b) => a?.data?.order - b?.data?.order);
+      const sortedData = action?.data?.filter((i) => i?.data?.isSelected)?.sort((a, b) => a?.data?.order - b?.data?.order);
       const temp =
         sortedData
           ?.map((i, c) => {
