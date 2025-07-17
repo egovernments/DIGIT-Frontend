@@ -44,6 +44,19 @@ const AppModule = () => {
     )
   );
 
+
+  const { data: allowedModules } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "AllowedModules",
+      },
+    ],
+    { select: (MdmsRes) => MdmsRes?.["HCM-ADMIN-CONSOLE"]?.AllowedModules?.[0] },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.AllowedModules` }
+  );
+
   const handleSelectModule = (moduleCode) => {
     if (selectedModuleCodes.includes(moduleCode)) {
       setSelectedModuleCodes((prev) => prev.filter((code) => code !== moduleCode));
@@ -89,6 +102,16 @@ const AppModule = () => {
 
     if (uniqueModules.length === 0) {
       setShowToast({ key: "error", label: t("SELECT_ATLEAST_ONE_MODULE") });
+      return;
+    }
+
+    const areAllowedModulesPresent = allowedModules?.allowedModule.every((module) => uniqueModules.includes(module));
+
+    if (!areAllowedModulesPresent) {
+      setShowToast({
+        key: "error",
+        label: `${t("HCM_MANDATORY_MODULES")} ${allowedModules?.allowedModule.join(", ")}`,
+      });
       return;
     }
 
@@ -213,26 +236,27 @@ const AppModule = () => {
         isSelected: true,
       };
 
-      try {
-        const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
-        setIsCreatingModule(true);
-        await Digit.CustomService.getResponse({
-          url: `${url}/v2/_create/${schemaCode}`,
-          body: {
-            Mdms: {
-              tenantId,
-              schemaCode,
-              data: moduleWithProject,
-            },
-          },
-        });
-      } catch (error) {
-        console.error(`Failed to create module for ${moduleName}:`, error);
-        setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
-        return;
-      } finally {
-        setIsCreatingModule(false);
-      }
+
+      // try {
+      //   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
+      //   setIsCreatingModule(true);
+      //   await Digit.CustomService.getResponse({
+      //     url: `${url}/v2/_create/${schemaCode}`,
+      //     body: {
+      //       Mdms: {
+      //         tenantId,
+      //         schemaCode,
+      //         data: moduleWithProject,
+      //       },
+      //     },
+      //   });
+      // } catch (error) {
+      //   console.error(`Failed to create module for ${moduleName}:`, error);
+      //   setShowToast({ key: "error", label: t("HCM_MDMS_DATA_UPSERT_ERROR") });
+      //   return;
+      // } finally {
+      //   setIsCreatingModule(false);
+      // }
     }
 
     history.push(
@@ -240,8 +264,9 @@ const AppModule = () => {
     );
   };
 
-  if (productTypeLoading || isLoading) {
-    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />
+
+  if (productTypeLoading || isLoading || mdmsData?.length == 0) {
+    return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />;
   }
 
 
