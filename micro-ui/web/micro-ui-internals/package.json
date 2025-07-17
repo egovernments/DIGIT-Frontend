@@ -55,7 +55,6 @@
     "clean:mui": "rm -rf node_modules",
     "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +",
     "cleancmd-dist": "find . -name 'dist' -type d -prune -exec rm -rf '{}' +"
-
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",

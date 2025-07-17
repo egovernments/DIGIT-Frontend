@@ -3,8 +3,9 @@ import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import PropTypes from "prop-types";
 import { useTranslation } from "react-i18next";
-import { Colors} from "../constants/colors/colorconstants";
+import { Colors } from "../constants/colors/colorconstants";
 import { getUserType } from "../utils/digitUtils";
+import "../index.css"
 
 const CheckBox = ({
   onChange,
@@ -33,9 +34,8 @@ const CheckBox = ({
 
   return (
     <div
-      className={`digit-checkbox-container ${
-        !isLabelFirst ? "checkboxFirst" : "labelFirst"
-      } ${disabled ? "disabled" : " "} ${props?.mainClassName}`}
+      className={`digit-checkbox-container ${!isLabelFirst ? "checkboxFirst" : "labelFirst"
+        } ${disabled ? "disabled" : " "} ${props?.mainClassName}`}
     >
       {isLabelFirst && !hideLabel ? (
         <label
@@ -68,32 +68,42 @@ const CheckBox = ({
       >
         <input
           type="checkbox"
-          className={`input ${userType === "employee" ? "input-emp" : ""} ${
-            props?.inputClassName
-          } `}
+          className={`input ${userType === "employee" ? "input-emp" : ""} ${props?.inputClassName
+            } `}
           onChange={onChange}
           value={value || label}
           {...props}
+          tabIndex={-1}
           ref={inputRef}
           disabled={disabled}
           checked={checked}
           id={props?.id}
-          tabIndex={0}
           aria-checked={checked}
           aria-disabled={disabled}
         />
         <p
-          className={`digit-custom-checkbox ${
-            userType === "employee" ? "digit-custom-checkbox-emp" : ""
-          } ${isIntermediate ? "intermediate" : ""} ${
-            props?.inputIconClassname
-          } `}
+          {...(typeof onChange === "function" && {
+            tabIndex: 0,
+            onKeyDown: (e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onChange({
+                  target: {
+                    checked: !checked,
+                    value: value || label,
+                  },
+                });
+              }
+            },
+          })}
+          className={`digit-custom-checkbox ${userType === "employee" ? "digit-custom-checkbox-emp" : ""
+            } ${isIntermediate ? "intermediate" : ""} ${props?.inputIconClassname
+            } `}
         >
           {isIntermediate && !checked ? (
             <span
-              className={`intermediate-square ${
-                disabled ? "squaredisabled" : ""
-              }`}
+              className={`intermediate-square ${disabled ? "squaredisabled" : ""
+                }`}
             />
           ) : (
             <SVG.Check
@@ -153,7 +163,7 @@ CheckBox.propTypes = {
    */
   ref: PropTypes.func,
   userType: PropTypes.string,
-  hideLabel:PropTypes.bool,
+  hideLabel: PropTypes.bool,
   isIntermediate: PropTypes.bool,
 };
 
