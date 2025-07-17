@@ -613,6 +613,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
 };
 
 const AddDeliveryRuleWrapper = ({ }) => {
+
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [targetedData, setTargetedData] = useState(campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true));
   const [deliveryRules, setDeliveryRules] = useState(targetedData?.deliveryRules);
@@ -625,15 +626,19 @@ const AddDeliveryRuleWrapper = ({ }) => {
     setDeliveryRules(tt);
   }, [campaignData]);
 
+  // INFO:: Avoid unnecessary dispatches when deliveryRules hasn't actually changed in value
+
   const prevRulesRef = useRef();
   const deepEqual = (a, b) => {
-  return JSON.stringify(a) === JSON.stringify(b);
-};
-  // TODO: check
+    return JSON.stringify(a) === JSON.stringify(b);
+  };
+
   useEffect(() => {
+
+    // Compare current deliveryRules with previous ones stored in ref
     if (!deepEqual(prevRulesRef.current, deliveryRules)) {
       prevRulesRef.current = deliveryRules;
-
+      // Dispatch only when deliveryRules has truly changed to prevent infinite update loops
       dispatchCampaignData({
         type: "UPDATE_CAMPAIGN_DATA",
         payload: {
@@ -642,6 +647,8 @@ const AddDeliveryRuleWrapper = ({ }) => {
       });
     }
   }, [deliveryRules]);
+
+
 
 
   const addMoreDelivery = () => {
