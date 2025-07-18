@@ -302,6 +302,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const [showError, setShowError] = useState(null);
   const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisationParallel(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
+  const [nextButtonDisable, setNextButtonDisable] = useState(null);
+  const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
@@ -336,6 +338,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const fetchLoc = (key) => {
     return locState?.find((i) => i.code === key)?.[currentLocale];
   };
+
+  useEffect(() => {
+    const handleStepChange = (e) => {
+      setNextButtonDisable(e.detail);
+    };
+
+    window.addEventListener("lastButtonDisabled", handleStepChange);
+
+    return () => {
+      window.removeEventListener("lastButtonDisabled", handleStepChange);
+    };
+  }, []);
+
   useEffect(() => {
     dispatch({
       type: "SET_SCREEN_DATA",
@@ -533,7 +548,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
-          isDisabled={false}
+          isDisabled={nextButtonDisable}
           onClick={async () => {
             await handleSubmit();
           }}
@@ -551,17 +566,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
           defaultClosedWidth=""
           footer={[
             <div className="app-configure-drawer-footer-container">
-              <Button
-                className="app-configure-drawer-footer-button"
-                type={"button"}
-                size={"medium"}
-                variation={"secondary"}
-                icon={"Translate"}
-                label={t("ADD_LOCALISATION")}
-                onClick={() => {
-                  setShowPopUp(true);
-                }}
-              />
+              {enabledModules?.length > 1 ? (
+                <Button
+                  className="app-configure-drawer-footer-button"
+                  type={"button"}
+                  size={"medium"}
+                  variation={"secondary"}
+                  icon={"Translate"}
+                  label={t("ADD_LOCALISATION")}
+                  onClick={() => {
+                    setShowPopUp(true);
+                  }}
+                />
+              ) : null}
             </div>,
           ]}
           header={[
