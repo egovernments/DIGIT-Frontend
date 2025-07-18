@@ -18,7 +18,7 @@ const searchLocalisationService = async ({ tenantId, module, locale, params = {}
         translations.forEach(({ code, message, module }) => {
           let item = result.find((obj) => obj.code === code);
           if (!item) {
-            item = { code, module, en_IN: "", pt_IN: "", fr_IN: "" };
+            item = { code, module };
             result.push(item);
           }
           item[locale] = message; // Use "en", "pt", etc.
@@ -36,7 +36,15 @@ const searchLocalisationService = async ({ tenantId, module, locale, params = {}
         params: { ...params, tenantId: tenantId, module: module, locale: locale },
         body: {},
       });
-      return response?.messages; // Indicate success
+
+      const result = [];
+      response?.messages?.forEach(({ code, message, module }) => {
+        let item = { code, module };
+        item[locale] = message; // mimic same format as multipleLocale
+        result.push(item);
+      });
+
+      return result;
     }
   } catch (error) {
     const errorCode = error?.response?.data?.Errors[0]?.code || "Unknown error";

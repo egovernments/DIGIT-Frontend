@@ -4,7 +4,7 @@ import { Loader, SelectionTag } from "@egovernments/digit-ui-components";
 const RenderSelectionField = ({ field, t }) => {
   const isMdmsEnabled = field?.isMdms && !!field?.schemaCode;
 
-  const { isLoading, data } = Digit?.Hooks.useCustomMDMSuseCustomMDMS(
+  const { isLoading, data } = Digit?.Hooks.useCustomMDMS(
     Digit?.ULBService?.getStateId(),
     field?.schemaCode?.split(".")[0],
     [{ name: field?.schemaCode?.split(".")[1] }],
