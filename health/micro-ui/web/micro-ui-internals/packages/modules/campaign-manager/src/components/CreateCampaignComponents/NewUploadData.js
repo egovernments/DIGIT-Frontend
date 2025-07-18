@@ -17,6 +17,8 @@ import TagComponent from "../TagComponent";
  * messages if any validation errors occur during file upload.
  */
 const NewUploadData = ({ formData, onSelect, ...props }) => {
+  
+
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [uploadedFile, setUploadedFile] = useState([]);

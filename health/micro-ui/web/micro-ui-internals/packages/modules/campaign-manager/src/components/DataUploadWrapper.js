@@ -8,6 +8,7 @@ import NewUploadData from "./CreateCampaignComponents/NewUploadData";
 function DataUploadWrapper({ formData, props, onSelect }) {
   const { t } = useTranslation();
   const { parentId, key: currentKey, ...queryParams } = Digit.Hooks.useQueryParams();
+    
   const categories = [
     "HCM_UPLOAD_FACILITY",
     "HCM_UPLOAD_FACILITY_MAPPING",
@@ -18,7 +19,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   ];
   const mappingCategories = ["HCM_UPLOAD_FACILITY_MAPPING", "HCM_UPLOAD_USER_MAPPING"];
   const [currentStep, setCurrentStep] = useState(1);
-  const currentCategories = categories?.[currentStep - 1];
+  const currentCategories = categories?.[parseInt(currentKey) - 1];
   const [key, setKey] = useState(() => {
     return currentKey ? parseInt(currentKey) : 1;
   });
@@ -32,16 +33,21 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   }
 
   useEffect(() => {
+
     setKey(currentKey);
     setCurrentStep(currentKey - baseKey + 1);
+    ;
   }, [currentKey]);
 
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
+
+
   }, [key]);
 
   const onStepClick = (currentStep) => {
+    ;
     setCurrentStep(currentStep + 1);
     if (currentStep === 0) {
       setKey(10);
@@ -53,6 +59,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
       setKey(14);
     } else setKey(12);
   };
+
 
   return (
     <>
@@ -67,12 +74,20 @@ function DataUploadWrapper({ formData, props, onSelect }) {
             </Card>
           </div>
         )} */}
-        {mappingCategories?.includes(currentCategories) ? (
-          <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
-        ) : (
-          // <UploadData formData={formData} props={props} onSelect={onSelect} />
-          <NewUploadData formData={formData} props={props} onSelect={onSelect} />
-        )}
+        {/*
+          
+             <UploadDataMappingWrapper currentCategories={"HCM_UPLOAD_FACILITY_MAPPING"} formData={formData} props={props} onSelect={onSelect} />
+          
+       */ }
+        {
+          mappingCategories?.includes(currentCategories) ? (
+            <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
+          ) : (
+            // <UploadData formData={formData} props={props} onSelect={onSelect} />
+            <NewUploadData formData={formData} props={props} onSelect={onSelect} />
+          )
+
+        }
       </div>
     </>
   );

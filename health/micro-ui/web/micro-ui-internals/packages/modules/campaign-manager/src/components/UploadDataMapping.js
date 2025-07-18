@@ -201,9 +201,9 @@ const reducer = (state, action) => {
             return item;
           })
           : state?.data?.map((item) => {
-            const ActiveLoc = action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name);
-            const facilityCode = item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
-            const facilityName = item?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
+            const ActiveLoc = (action?.schemas?.find((i) => i.description === "Facility usage")?.name);
+            const facilityCode = item?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
+            const facilityName = item?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
             // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
             //   return {
             //     ...item,
@@ -212,9 +212,9 @@ const reducer = (state, action) => {
             // }
             // return item;
             if (
-              (facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+              (facilityCode && facilityCode === action?.payload?.row?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
               (!facilityCode &&
-                facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
+                facilityName === action?.payload?.row?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
             ) {
               return {
                 ...item,
@@ -223,6 +223,8 @@ const reducer = (state, action) => {
             }
             return item;
           });
+          
+          console.log("temp", temp1);
       return {
         ...state,
         data: temp1,
@@ -231,7 +233,7 @@ const reducer = (state, action) => {
             ? temp1?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
                 ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
             )
             : temp1,
           state.currentPage,
@@ -368,17 +370,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   );
 
   // Checking for sheet is uploaded
-  if (
-    (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
-      sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
-    (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
-  ) {
-    return (
-      <Fragment>
-        <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
-      </Fragment>
-    );
-  }
+  // if (
+  //   (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
+  //     sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
+  //   (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
+  // ) {
+  //   return (
+  //     <Fragment>
+  //       <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
+  //     </Fragment>
+  //   );
+  // }
   useEffect(() => {
     refetchSchema();
   }, [schemaFilter, currentCategories]);
@@ -470,7 +472,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   };
   const { data, isLoading } = Digit.Hooks.campaign.useReadExcelData({
     tenantId: tenantId,
-    fileStoreId: getFileStoreId(),
+    fileStoreId: "aa5bf2ce-18bf-4ac7-ae26-68c02572fca1",
     currentCategories: currentCategories,
     sheetNameToFetch: currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("HCM_ADMIN_CONSOLE_FACILITIES") : t("HCM_ADMIN_CONSOLE_USER_LIST"),
     schemas: Schemas,
@@ -479,6 +481,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       enabled: true,
     },
   });
+
+
+  console.log(data);
 
   function enrichSchema(data, properties, required, columns) {
     // Sort columns based on orderNumber, using name as tie-breaker if orderNumbers are equal
@@ -910,18 +915,19 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         {
           name: t("FACILITY_NAME"),
           selector: (row) => {
-            return row?.[t(Schemas?.find((i) => i.description === "Facility Name")?.name)] || t("NA");
+            console.log("row",row,Schemas);
+            return row?.[(Schemas?.find((i) => i.description === "Facility Name")?.name)] || t("NA");
           },
           sortable: true,
         },
         {
           name: t("FACILITY_TYPE"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Facility type")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Facility type")?.name)] || t("NA"),
           sortable: true,
         },
         {
           name: t("FACILITY_STATUS"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Facility status")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Facility status")?.name)] || t("NA"),
           sortable: true,
         },
         {
@@ -939,7 +945,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             return (
               <Dropdown
                 className="roleTableCell"
-                selected={b?.find((item) => item?.code === row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
+                selected={b?.find((item) => item?.code === row?.[(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
                 isMandatory={true}
                 option={b}
                 select={(value) => {
@@ -963,7 +969,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         {
           name: t("BOUNDARY"),
           cell: (row) => {
-            const listOfBoundaries = row?.[t(Schemas?.find((i) => i.description === "Boundary Code")?.name)]?.split(",") || [];
+            const listOfBoundaries = row?.[(Schemas?.find((i) => i.description === "Boundary Code")?.name)]?.split(",") || [];
             return (
               <div>
                 <div>
@@ -1050,6 +1056,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           },
         },
       ];
+
+      console.log("column- state",columns , state?.currentData);
+      
   return (
     <Fragment>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
@@ -1322,6 +1331,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   isMandatory={true}
                   option={boundaryHierarchy}
                   select={(value) => {
+                    
                     setSelectedLevel(value);
                     setSelectedBoundary(null);
                   }}

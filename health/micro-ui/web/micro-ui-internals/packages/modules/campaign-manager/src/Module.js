@@ -63,6 +63,7 @@ import MyCampaignNew from "./pages/employee/MyCampaignNew";
 import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
 import QRButton from "./components/CreateCampaignComponents/QRButton";
 import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
+import MyUploadDataMapping from "./components/MyUploadDataMapping";
 /**
  * MDMS Module name
  */
@@ -187,7 +188,8 @@ const componentsToRegister = {
   MyCampaignNew,
   QRButton,
   // new 
-EqualHeightWrapper
+EqualHeightWrapper,
+MyUploadDataMapping
   
 };
 
