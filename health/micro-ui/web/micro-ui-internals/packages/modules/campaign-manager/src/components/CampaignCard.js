@@ -28,17 +28,17 @@ const CampaignCard = () => {
   const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
 
   let links = [
-    {
-      label: t("ACTION_TEST_SETUP_CAMPAIGN"),
-      link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      roles: ROLES.BOUNDARY_MANAGER,
-    },
-    {
-      label: t("ACTION_TEST_MY_CAMPAIGN"),
-      link: `/${window?.contextPath}/employee/campaign/my-campaign`,
-      roles: ROLES.BOUNDARY_MANAGER,
-      // count: isLoading?"-":data
-    },
+    // {
+    //   label: t("ACTION_TEST_SETUP_CAMPAIGN"),
+    //   link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
+    //   roles: ROLES.BOUNDARY_MANAGER,
+    // },
+    // {
+    //   label: t("ACTION_TEST_MY_CAMPAIGN"),
+    //   link: `/${window?.contextPath}/employee/campaign/my-campaign`,
+    //   roles: ROLES.BOUNDARY_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/campaign-home`,

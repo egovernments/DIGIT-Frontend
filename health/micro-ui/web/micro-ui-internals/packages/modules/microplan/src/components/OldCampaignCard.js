@@ -21,17 +21,18 @@ const CampaignCard = () => {
  
   let links = [
 
-    {
-      label: t("ACTION_TEST_SETUP_CAMPAIGN"),
-      link: `/workbench-ui/employee/campaign/setup-campaign`,
-      roles: ROLES.CAMPAIGN_MANAGER_ONLY
-    },
-    {
-      label: t("ACTION_TEST_MY_CAMPAIGN"),
-      link: `/workbench-ui/employee/campaign/my-campaign`,
+   {
+      label: t("ACTION_TEST_CREATE_CAMPAIGN"),
+      link: `/workbench-ui/employee/campaign/campaign-home`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
-    },  
+    },
+    {
+      label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
+      link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
+      roles: ROLES.CAMPAIGN_MANAGER,
+      // count: isLoading?"-":data
+    },
     { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?userId=${userId}&status=${microplanStatus}`,

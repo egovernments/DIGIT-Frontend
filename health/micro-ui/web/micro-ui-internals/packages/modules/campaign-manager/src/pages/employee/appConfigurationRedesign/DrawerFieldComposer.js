@@ -118,7 +118,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
 
   const { data: resourceData } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
-  switch (panelItem?.fieldType) {
+  switch (panelItem?.fieldType) {    
     case "toggle": {
       const switchRef = useRef(null);
       const [showTooltip, setShowTooltip] = useState(false);

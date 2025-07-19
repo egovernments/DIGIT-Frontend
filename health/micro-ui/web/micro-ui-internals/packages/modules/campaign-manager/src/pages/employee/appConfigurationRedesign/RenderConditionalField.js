@@ -3,6 +3,131 @@ import { TextInput, Dropdown, RadioButtons, Button, FieldV1 } from "@egovernment
 import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+const getDefaultRules = (key) => {
+  switch (key) {
+    case "minAge":
+      return [
+        {
+          type: "compare",
+          compareWith: "toArray.maxAge",
+          operator: "<=",
+          message: "Minimum age must be less than or equal to maximum age",
+        },
+      ];
+
+    case "maxAge":
+      return [
+        {
+          type: "compare",
+          compareWith: "toArray.minAge",
+          operator: ">=",
+          message: "Maximum age must be greater than or equal to minimum age",
+        },
+      ];
+
+    case "min":
+      return [
+        {
+          type: "compare",
+          compareWith: "toArray.max",
+          operator: "<=",
+          message: "Min must be less than or equal to Max",
+        },
+      ];
+
+    case "max":
+      return [
+        {
+          type: "compare",
+          compareWith: "toArray.min",
+          operator: ">=",
+          message: "Max must be greater than or equal to Min",
+        },
+      ];
+
+    case "minLength":
+      return [
+        {
+          type: "compare",
+          compareWith: "toArray.maxLength",
+          operator: "<=",
+          message: "Minimum length must be less than or equal to maximum length",
+        },
+      ];
+
+    case "maxLength":
+      return [
+        {
+          type: "compare",
+          compareWith: "toArray.minLength",
+          operator: ">=",
+          message: "Maximum length must be greater than or equal to minimum length",
+        },
+      ];
+
+    default:
+      return [];
+  }
+};
+
+const ErrorComponent = ({ error }) => <span style={{ color: "red" }}>{error}</span>;
+const displayError = (field, currentField) => {
+  let error = "";
+  const attr = field.bindTo;
+  const valueStr = currentField?.[attr];
+
+  // 1. Pattern Validation
+  const pattern = field?.validation?.pattern;
+  if (pattern) {
+    try {
+      const regex = new RegExp(pattern);
+      if (!regex.test(valueStr)) {
+        error = `${attr}: Value doesn't match required pattern`;
+        return <ErrorComponent error={error} />;
+      }
+    } catch (e) {
+      console.warn(`Invalid regex pattern: ${pattern}`);
+    }
+  }
+
+  // 2. Generic Rule Support (e.g. defined in config)
+  const rules = field?.validation?.rules || getDefaultRules(field.bindTo?.split(".")?.[1]);
+  if (field?.type == "number") {
+    const value = Number(valueStr);
+
+    for (const rule of rules) {
+      const { compareWith, operator, message } = rule;
+      const compareValue = currentField?.[compareWith];
+
+      if (compareValue !== undefined) {
+        const compareNum = Number(compareValue);
+        switch (operator) {
+          case ">":
+            if (!(value > compareNum)) error = message || `${attr} must be > ${compareWith}`;
+            break;
+          case "<":
+            if (!(value < compareNum)) error = message || `${attr} must be < ${compareWith}`;
+            break;
+          case ">=":
+            if (!(value >= compareNum)) error = message || `${attr} must be >= ${compareWith}`;
+            break;
+          case "<=":
+            if (!(value <= compareNum)) error = message || `${attr} must be <= ${compareWith}`;
+            break;
+          case "===":
+            if (!(value === compareNum)) error = message || `${attr} must equal ${compareWith}`;
+            break;
+          // Add more operators as needed
+        }
+      }
+    }
+  }
+
+  if (error != "") {
+    return <ErrorComponent error={error} />;
+  }
+  return null;
+};
 
 export const RenderConditionalField = ({
   cField,
@@ -28,50 +153,53 @@ export const RenderConditionalField = ({
     case "date":
     case "time":
       return (
-        <FieldV1
-          type={cField?.type}
-          label={cField?.label}
-          withoutLabel={Boolean(!cField?.label)}
-          value={
-            isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
-          }
-          config={{
-            step: "",
-          }}
-          onChange={(event) => {
-            const value = event.target.value;
-            if (isLocalisable) {
-              updateLocalization(
-                drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
-                  ? drawerState?.[cField.bindTo]
-                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
-                Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-                value
-              );
-              setDrawerState((prev) => ({
-                ...prev,
-                [cField?.bindTo]:
+        <span>
+          <FieldV1
+            type={cField?.type}
+            label={cField?.label}
+            withoutLabel={Boolean(!cField?.label)}
+            value={
+              isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
+            }
+            config={{
+              step: "",
+            }}
+            onChange={(event) => {
+              const value = event.target.value;
+              if (isLocalisable) {
+                updateLocalization(
                   drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
                     ? drawerState?.[cField.bindTo]
                     : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
                         drawerState?.jsonPath || drawerState?.id
                       }`,
-              }));
-              return;
-            } else {
-              setDrawerState((prev) => ({
-                ...prev,
-                [cField?.bindTo]: value,
-              }));
-              return;
-            }
-          }}
-          populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
-          // charCount={field?.charCount}
-          disabled={disabled}
-        />
+                  Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                  value
+                );
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [cField?.bindTo]:
+                    drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
+                      ? drawerState?.[cField.bindTo]
+                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
+                          drawerState?.jsonPath || drawerState?.id
+                        }`,
+                }));
+                return;
+              } else {
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [cField?.bindTo]: value,
+                }));
+                return;
+              }
+            }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            // charCount={field?.charCount}
+            disabled={disabled}
+          />
+          {displayError(cField, drawerState)}
+        </span>
       );
     case "options":
       return (
