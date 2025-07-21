@@ -33,7 +33,7 @@ then navigate to App.js
 ```jsx
 /** add this import **/
 
-import { initHrmsComponents } from "egovernments/digit-ui-module-health-hrms"
+import { initHRMSComponents } from "egovernments/digit-ui-module-health-hrms"
 
 /** inside enabledModules add this new module key **/
 
@@ -42,7 +42,7 @@ const enabledModules = ["HRMS"];
 /** inside init Function call this function **/
 
 const initDigitUI = () => {
-  initHrmsComponents();
+  initHRMSComponents();
 };
 
 ```
@@ -52,22 +52,7 @@ const initDigitUI = () => {
 1. Implement User create and edit functionality.
 2. Implement Campaign assign and edit functionality.
 3. Enable Activate/Deactivate user functionality.
-
-## Initialization module
-1. Fetches Logged-in Staff Details:
-   It retrieves the logged-in user’s staff information to personalize the data fetch for the user.
-
-2. Fetches Associated Project Data:
-   Based on the staff record, it fetches the linked projects to which the user is assigned.
-
-3. Fetches National Level Project Data:
-   If the project has a hierarchy (like sub-projects), it fetches the national or parent project to get the boundary details.
-
-4. Fetches and Processes Boundary Data:
-   It retrieves the administrative boundaries linked to the project and arranges them in a hierarchical order using getBoundaryTypeOrder, ensuring boundaries are handled consistently across the module.
-
-5. Stores Data in Session Storage:
-   Fetched staff projects and boundary hierarchy are stored in session storage to improve performance and reduce redundant API calls during the session.
+4. Assign Campaign to created users.
 
 
 
@@ -83,8 +68,6 @@ const initDigitUI = () => {
 ## Documentation
 
 Documentation Site (https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
-
-[Microplan Module Documentation](https://docs.digit.org/public-health/v1.7/setup/configuration/ui-configuration)
 
 ## Maintainer
 

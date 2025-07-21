@@ -60,6 +60,13 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const [changeLoader, setChangeLoader] = useState(false);
 
   useEffect(() => {
+    if (currentStep === parentState?.currentTemplate?.length) {
+      const event = new CustomEvent("lastButtonDisabled", { detail: true });
+      window.dispatchEvent(event);
+    }
+  }, [currentStep, parentState]);
+
+  useEffect(() => {
     const handleResetStep = () => {
       setCurrentStep(1);
     };
@@ -214,17 +221,18 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         return updated ? updated : item;
       });
       const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
-      const reverseFormat = cacheData && cacheData?.data?.data
-        ? {
-            ...parentState?.actualTemplate?.actualTemplate,
-            version: parentState?.actualTemplate?.version + 1,
-            pages: reverseData,
-          }
-        : {
-            ...parentState?.actualTemplate,
-            version: parentState?.actualTemplate?.version + 1,
-            pages: reverseData,
-          };
+      const reverseFormat =
+        cacheData && cacheData?.data?.data
+          ? {
+              ...parentState?.actualTemplate?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            }
+          : {
+              ...parentState?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            };
 
       const updatedFormData = { ...formData, data: reverseFormat };
 

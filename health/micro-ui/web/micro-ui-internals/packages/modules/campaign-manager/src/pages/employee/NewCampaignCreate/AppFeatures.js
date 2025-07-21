@@ -80,7 +80,7 @@ const AppFeatures = () => {
       `MDMSDATA-${campaignNumber}-${availableFormats}`,
       {
         enabled: availableFormats?.length > 0,
-         cacheTime: 0,
+        cacheTime: 0,
         staleTime: 0,
         ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, HCMCONSOLE_APPCONFIG_MODULENAME),
       }

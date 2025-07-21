@@ -5,7 +5,6 @@ import ExcelJS from "exceljs";
 
 const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdate, tenantId, schemas, t }) => {
   try {
-    
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(arrayBuffer);
     const targetSheet = workbook.getWorksheet(t(sheetNameToUpdate));
@@ -24,55 +23,53 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
 
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
-      
+
       //for boundary cell
-      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES" && cell.value === (schemas?.find((i) => i.description === "Boundary Code")?.name)) {
-        
+      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES" && cell.value === t(schemas?.find((i) => i.description === "Boundary Code")?.name)) {
         boundaryCodeColumnIndex = colIndex;
       } else if (
         sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST" &&
-        cell.value === (schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)
+        cell.value === t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)
       ) {
-        
         boundaryCodeColumnIndex = colIndex;
       }
       //for status cell
-      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES" && cell.value === (schemas?.find((i) => i.description === "Facility usage")?.name)) {
+      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES" && cell.value === t(schemas?.find((i) => i.description === "Facility usage")?.name)) {
         statusColumnIndex = colIndex;
       } else if (
         sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST" &&
-        cell.value === (schemas?.find((i) => i.description === "User Usage")?.name)
+        cell.value === t(schemas?.find((i) => i.description === "User Usage")?.name)
       ) {
         statusColumnIndex = colIndex;
       }
 
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST") {
-        if (cell.value === (schemas?.find((i) => i.description === "User Role")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "User Role")?.name)) {
           userRoleColumnIndex = colIndex;
         }
-        if (cell.value === (schemas?.find((i) => i.description === "Employement Type")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "Employement Type")?.name)) {
           employmentTypeColumnIndex = colIndex;
         }
-        if (cell.value === (schemas?.find((i) => i.description === "Phone Number")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "Phone Number")?.name)) {
           phoneNumberColumnIndex = colIndex;
         }
-        if (cell.value === (schemas?.find((i) => i.description === "User Name")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "User Name")?.name)) {
           userNameColumnIndex = colIndex;
         }
       }
 
       // Facility-specific columns (keeping existing facility related code)
-      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES") {
-        if (cell.value === (schemas?.find((i) => i.description === "Facility type")?.name)) {
+      if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES") {
+        if (cell.value === t(schemas?.find((i) => i.description === "Facility type")?.name)) {
           facilityTypeColumnIndex = colIndex;
         }
-        if (cell.value === (schemas?.find((i) => i.description === "Facility Name")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "Facility Name")?.name)) {
           facilityNameColumnIndex = colIndex;
         }
-        if (cell.value === (schemas?.find((i) => i.description === "Capacity")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "Capacity")?.name)) {
           capacityColumnIndex = colIndex;
         }
-        if (cell.value === (schemas?.find((i) => i.description === "Facility status")?.name)) {
+        if (cell.value === t(schemas?.find((i) => i.description === "Facility status")?.name)) {
           facilityStatusColumnIndex = colIndex;
         }
       }
@@ -110,28 +107,28 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         const userNameCell = targetSheet.getCell(rowIndex + 2, userNameColumnIndex);
 
         // Update boundary code and status
-        cell.value = newData?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)];
-        statusCell.value = newData?.[(schemas?.find((i) => i.description === "User Usage")?.name)];
+        cell.value = newData?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)];
+        statusCell.value = newData?.[t(schemas?.find((i) => i.description === "User Usage")?.name)];
 
         // Update user-specific fields
-        userRoleCell.value = newData?.[(schemas?.find((i) => i.description === "User Role")?.name)];
-        employmentTypeCell.value = newData?.[(schemas?.find((i) => i.description === "Employement Type")?.name)];
-        phoneNumberCell.value = Number(newData?.[(schemas?.find((i) => i.description === "Phone Number")?.name)] || 0);
-        userNameCell.value = newData?.[(schemas?.find((i) => i.description === "User Name")?.name)];
+        userRoleCell.value = newData?.[t(schemas?.find((i) => i.description === "User Role")?.name)];
+        employmentTypeCell.value = newData?.[t(schemas?.find((i) => i.description === "Employement Type")?.name)];
+        phoneNumberCell.value = Number(newData?.[t(schemas?.find((i) => i.description === "Phone Number")?.name)] || 0);
+        userNameCell.value = newData?.[t(schemas?.find((i) => i.description === "User Name")?.name)];
 
-      } else if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES") {
+      } else if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_FACILITIES") {
         // Keep existing facility update logic
         const facilityTypeCell = targetSheet.getCell(rowIndex + 2, facilityTypeColumnIndex);
         const facilityNameCell = targetSheet.getCell(rowIndex + 2, facilityNameColumnIndex);
         const capacityCell = targetSheet.getCell(rowIndex + 2, capacityColumnIndex);
         const facilityStatusCell = targetSheet.getCell(rowIndex + 2, facilityStatusColumnIndex);
 
-        cell.value = newData?.[(schemas?.find((i) => i.description === "Boundary Code")?.name)];
-        statusCell.value = newData?.[(schemas?.find((i) => i.description === "Facility usage")?.name)];
-        facilityTypeCell.value = newData?.[(schemas?.find((i) => i.description === "Facility type")?.name)];
-        facilityNameCell.value = newData?.[(schemas?.find((i) => i.description === "Facility Name")?.name)];
-        capacityCell.value = Number(newData?.[(schemas?.find((i) => i.description === "Capacity")?.name)] || 0);
-        facilityStatusCell.value = newData?.[(schemas?.find((i) => i.description === "Facility status")?.name)];
+        cell.value = newData?.[t(schemas?.find((i) => i.description === "Boundary Code")?.name)];
+        statusCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility usage")?.name)];
+        facilityTypeCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility type")?.name)];
+        facilityNameCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility Name")?.name)];
+        capacityCell.value = Number(newData?.[t(schemas?.find((i) => i.description === "Capacity")?.name)] || 0);
+        facilityStatusCell.value = newData?.[t(schemas?.find((i) => i.description === "Facility status")?.name)];
       }
     });
     // Reapply the protection settings for the updated cells
@@ -162,7 +159,6 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
     const module = "HCM-ADMIN-CONSOLE-CLIENT";
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, [file], tenantId);
     const filesArray = fileStoreIds?.[0]?.fileStoreId;
-    
     return filesArray;
   } catch (error) {
     console.error("Error updating or uploading Excel file:", error);
@@ -203,12 +199,7 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
     const workbook = XLSX.read(arrayBuffer, { type: "array" });
     const sheetName = workbook?.SheetNames?.find((i) => i === sheetNameToFetch);
     const sheetData = XLSX.utils.sheet_to_json(workbook?.Sheets?.[sheetName]);
-  
-     console.log("sheetName",sheetName);
-    console.log("sheetData",sheetData);
-    
     var jsonData = sheetData.map((row, index) => {
-       
       let rowData = {};
       if (Object.keys(row).length > 0) {
         let allNull = true;
@@ -228,7 +219,7 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
         return rowData;
       }
     });
-    jsonData = jsonData.filter((element) => element).slice(1);
+    jsonData = jsonData.filter((element) => element);
     return { sheetData: jsonData, workbook: workbook, arrayBuffer: arrayBuffer }; // Return as array of objects
   } catch (error) {
     throw new Error(error);

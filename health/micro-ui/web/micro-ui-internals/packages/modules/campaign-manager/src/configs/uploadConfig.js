@@ -31,38 +31,37 @@ export const uploadConfig = ({totalFormData, campaignData,  summaryErrors}) => {
             },
           ],
         },
-        // need to fix
+        // {
+        //   stepCount: "2",
+        //   key: "2",
+        //   name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING",
+        //   body: [
+        //     {
+        //       isMandatory: false,
+        //       key: "uploadFacilityMapping",
+        //       type: "component",
+        //       component: "DataUploadWrapper",
+        //       withoutLabel: true,
+        //       withoutLabelFieldPair: true,
+        //       disable: false,
+        //       customProps: {
+        //         module: "HCM",
+        //         dataParams: dataParams,
+        //         sessionData: totalFormData,
+        //         hierarchyData: hierarchyData,
+        //         type: "facilityWithBoundaryMapping",
+        //         validationType: "facilityWithBoundary"
+        //       },
+        //       populators: {
+        //         name: "uploadFacilityMapping",
+        //         required: true,
+        //       },
+        //     },
+        //   ],
+        // },
         {
           stepCount: "2",
           key: "2",
-          name: "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING",
-          body: [
-            {
-              isMandatory: false,
-              key: "uploadFacilityMapping",
-              type: "component",
-              component: "DataUploadWrapper",
-              withoutLabel: true,
-              withoutLabelFieldPair: true,
-              disable: false,
-              customProps: {
-                module: "HCM",
-                //dataParams: dataParams,
-                sessionData: totalFormData,
-                // /hierarchyData: hierarchyData,
-                type: "facilityWithBoundaryMapping",
-                validationType: "facilityWithBoundary"
-              },
-              populators: {
-                name: "uploadFacilityMapping",
-                required: true,
-              },
-            },
-          ],
-        },
-        {
-          stepCount: "3",
-          key: "3",
           name: "HCM_CAMPAIGN_UPLOAD_USER_DATA",
           body: [
             {
@@ -118,8 +117,8 @@ export const uploadConfig = ({totalFormData, campaignData,  summaryErrors}) => {
         //   ],
         // },
         {
-          stepCount: "4",
-          key: "4",
+          stepCount: "3",
+          key: "3",
           name: "HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA",
           body: [
             {
@@ -149,8 +148,8 @@ export const uploadConfig = ({totalFormData, campaignData,  summaryErrors}) => {
           ],
         },
         {
-          stepCount: "5",
-          key: "5",
+          stepCount: "4",
+          key: "4",
           last: true,
           body: [
             {
