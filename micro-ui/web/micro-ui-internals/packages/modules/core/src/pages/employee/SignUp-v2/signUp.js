@@ -111,7 +111,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
       }}
     >
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
-        <BackLink onClick={() => window.history.back()} />
+        {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
       <FormComposerV2
         onSubmit={onLogin}
