@@ -8,7 +8,7 @@ import { useTranslation } from "react-i18next";
 import DatePicker from "react-datepicker";
 import { format } from "date-fns";
 import "react-datepicker/dist/react-datepicker.css";
-import "../index.css"
+import "./SubmitBar.css";
 
 const TextInput = (props) => {
   const { t: i18nT } = useTranslation();
@@ -62,9 +62,10 @@ const TextInput = (props) => {
   };
 
   const handleFocus = (event) => {
+    console.log(event.target);
     if (isKeyboard) {
-      event.target.classList.add("focus-visible-outline");
       event.target.classList.remove("focus-no-outline");
+      event.target.classList.add("focus-visible-outline");
     } else {
       event.target.classList.remove("focus-visible-outline");
       event.target.classList.add("focus-no-outline");
@@ -151,6 +152,16 @@ const TextInput = (props) => {
       console.error("Geolocation is not supported");
     }
   };
+
+  // useEffect(()=>{
+  //   window.addEventListener('keydown', handleKeyDown);
+  //   window.addEventListener('mousedown', handleMouseDown);
+
+  //   return () => {
+  //     window.removeEventListener('keydown', handleKeyDown);
+  //     window.removeEventListener('mousedown', handleMouseDown);
+  //   };
+  // },[])
 
   const disabledColor = Colors.lightTheme.generic.divider;
   const iconColor = Colors.lightTheme.generic.inputBorder;
@@ -328,7 +339,7 @@ const TextInput = (props) => {
                 onClick={() => datePickerRef.current?.setOpen(true)}
                 role="button"
                 aria-label="Open date picker"
-                tabIndex={props.disabled ? -1 : 0}
+                tabIndex={props.disabled ? -1 : 5}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -346,15 +357,17 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
-                role="button"
-                aria-label="Select icon"
-                tabIndex={0}
-                onKeyDown={(e) => {
+                {...(typeof props?.onIconSelection === 'function' && {
+                tabIndex: 5,
+                role: 'button',
+                'aria-label': 'Select icon',
+                onKeyDown: (e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    props?.onIconSelection?.();
+                    e.preventDefault(); 
+                    props.onIconSelection();
                   }
-                }}
+                }
+                })}
               >
                 {icon}
               </span>
@@ -416,15 +429,14 @@ const TextInput = (props) => {
               }
               step={props.step}
               autoFocus={props.autoFocus}
-              onBlur={(event) => {
-              if (typeof props?.onBlur === "function") {
-                props.onBlur(event);
-              }
-              handleBlur(event);
-              }}
               onKeyDown={handleKeyDown}
               onMouseDown={handleMouseDown}
-              
+              onBlur={(event) => {
+                if (typeof props?.onBlur === "function") {
+                  props.onBlur(event);
+                }
+                handleBlur(event);
+              }}
               autoComplete="off"
               disabled={props.disabled}
               onFocus={(event) => {
@@ -456,15 +468,17 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
-                role="button"
-                aria-label="Select icon"
-                tabIndex={0}
-                onKeyDown={(e) => {
+                {...(typeof props?.onIconSelection === 'function' && {
+                tabIndex: 5,
+                role: 'button',
+                'aria-label': 'Select icon',
+                onKeyDown: (e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    props?.onIconSelection?.();
+                    e.preventDefault(); 
+                    props.onIconSelection();
                   }
-                }}
+                }
+                })}
               >
                 {icon}
               </span>
@@ -534,6 +548,10 @@ const TextInput = (props) => {
               step={props.step}
               autoFocus={props.autoFocus}
               onKeyPress={props.onKeyPress}
+              onKeyDown={(event) => {
+                handleKeyDown(event);
+              }}
+              onMouseDown={handleMouseDown}
               onFocus={(event) => {
                 if (typeof props?.onFocus === "function") {
                   props.onFocus(event);
@@ -546,11 +564,6 @@ const TextInput = (props) => {
                 }
                 handleBlur(event);
               }}
-              onKeyDown={(event) => {
-                handleKeyDown(event);
-              }}
-              onMouseDown={handleMouseDown}
-
               autoComplete="off"
               disabled={props.disabled}
               nonEditable={props.nonEditable}
@@ -576,15 +589,17 @@ const TextInput = (props) => {
               <span
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
-                role="button"
-                aria-label="Select icon"
-                tabIndex={0}
-                onKeyDown={(e) => {
+                {...(typeof props?.onIconSelection === 'function' && {
+                tabIndex: 5,
+                role: 'button',
+                'aria-label': 'Select icon',
+                onKeyDown: (e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    props?.onIconSelection?.();
+                    e.preventDefault(); 
+                    props.onIconSelection();
                   }
-                }}
+                }
+                })}
               >
                 {icon}
               </span>

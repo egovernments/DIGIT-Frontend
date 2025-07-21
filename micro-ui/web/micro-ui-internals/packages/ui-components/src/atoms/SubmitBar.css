@@ -1,3 +1,10 @@
 .spanWrapper .digit-submit-bar:focus-visible{
     outline: 2px solid #b91900 !important;
 }
+.focus-visible-outline {
+  outline: 2px solid #b91900 !important; 
+}
+
+.focus-no-outline {
+  outline: none !important;
+}
