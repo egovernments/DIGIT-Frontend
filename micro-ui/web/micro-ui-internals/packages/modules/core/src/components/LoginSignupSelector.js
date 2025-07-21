@@ -1,9 +1,11 @@
-import React, { useState, useEffect, Fragment } from "react";
+import React, { useState, useEffect, Fragment,useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CheckBox, PopUp, Button, HeaderComponent } from "@egovernments/digit-ui-components";
 const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props }) => {
     const { t } = useTranslation();
     const [isChecked, setIsChecked] = useState(true);
+    const wrapperRef = useRef(null);
+    const [topMargin, setTopMargin] = useState("-2rem");
 
 
     useEffect(() => {
@@ -13,6 +15,26 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
         window.location.replace(`/${window?.contextPath}/user/login`);
     };
 
+     useEffect(() => {
+        const computeTopMargin = () => {
+          if (
+            window.screen.availWidth <= 1366 &&
+            window.screen.availHeight <= 768 &&
+            window.devicePixelRatio > 1.0
+          ) {
+            return "-0.5rem";
+          }
+          return "-2rem";
+        };
+    
+        setTopMargin(computeTopMargin());
+    
+        const handleResize = () => setTopMargin(computeTopMargin());
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+      }, []);
+    
+
     const onButtonClickSignUP = () => {
         window.location.replace(`/${window?.contextPath}/user/sign-up`);
     };
@@ -20,7 +42,7 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
     const isSignupPage = window.location.href.includes("sandbox-ui/user/sign-up");
     return (
         <React.Fragment>
-            <div className="loginSignUpSelector" style={{ marginTop: window.screen.availWidth <= 1366 && window.screen.availHeight <= 768 && window.devicePixelRatio > 1.0 ? "-0.5rem" : "-2rem" }}>
+            <div ref={wrapperRef} className="loginSignUpSelector" style={{ marginTop: topMargin }}>
                 {
                     isSignupPage ?
                         <Button
