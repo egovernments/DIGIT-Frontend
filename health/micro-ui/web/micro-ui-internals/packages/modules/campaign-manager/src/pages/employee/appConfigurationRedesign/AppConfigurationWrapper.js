@@ -1,4 +1,4 @@
-import React, { createContext, Fragment, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, Fragment, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
 import { Footer, Button, Loader, PopUp, SidePanel, Toast, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
@@ -295,6 +295,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
+  const addFieldDataLabel = useMemo(() => {
+    return addFieldData?.label ? useCustomT(addFieldData?.label) : null;
+  }, [addFieldData]);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   const [showPreview, setShowPreview] = useState(null);
@@ -482,10 +485,14 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
       const result = await localisationMutate(localeArrays);
       updateCount = updateCount + 1;
       updateSuccess = true;
+      setShowToast({ key: "success", label: "TRANSLATIONS_SAVED_SUCCESSFULLY" });
     } catch (error) {
       setLoading(false);
       setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
       console.error(`Error sending localisation data:`, error);
+    } finally {
+      setShowPopUp(false);
+      setLoading(false);
     }
     return;
   };
@@ -785,13 +792,13 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                 if (!addFieldData) {
                   setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED", dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
                   return;
-                } else if (!addFieldData?.label?.trim() && !addFieldData?.type) {
+                } else if (!addFieldDataLabel?.trim() && !addFieldData?.type) {
                   setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED", dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
                   return;
                 } else if (!addFieldData?.type) {
                   setShowError({ dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
                   return;
-                } else if (!addFieldData?.label?.trim()) {
+                } else if (!addFieldDataLabel?.trim()) {
                   setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED" });
                   return;
                 }

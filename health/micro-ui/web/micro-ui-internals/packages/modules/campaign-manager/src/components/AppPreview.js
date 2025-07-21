@@ -163,6 +163,8 @@ const getFieldType = (field) => {
       return "date";
     case "radio":
       return "radio";
+    case "custom":
+      return "custom";
     default:
       return "button";
   }
@@ -220,7 +222,11 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                       error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
                       infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
                       label={
-                        getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.isMdms ? t(field?.label) : field?.label
+                        getFieldType(field) === "checkbox" || getFieldType(field) === "button" || getFieldType(field) === "custom"
+                          ? null
+                          : field?.isMdms
+                          ? t(field?.label)
+                          : field?.label
                       }
                       onChange={function noRefCheck() {}}
                       placeholder={t(field?.innerLabel) || ""}
@@ -242,9 +248,12 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                           : null,
                         options: field?.isMdms ? null : field?.dropDownOptions,
                         optionsKey: field?.isMdms ? "code" : "name",
-                        component: getFieldType(field) === "button" || getFieldType(field) === "select" ? renderField(field, t) : null,
+                        component:
+                          getFieldType(field) === "button" || getFieldType(field) === "select" || getFieldType(field) === "custom"
+                            ? renderField(field, t)
+                            : null,
                       }}
-                      required={field?.["toArray.required"] || false}
+                      required={getFieldType(field) === "custom" ? null : field?.["toArray.required"]}
                       type={getFieldType(field) === "button" || getFieldType(field) === "select" ? "custom" : getFieldType(field) || "text"}
                       value={field?.value === true ? "" : field?.value || ""}
                       disabled={field?.readOnly || false}
