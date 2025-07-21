@@ -20,7 +20,7 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
     const isSignupPage = window.location.href.includes("sandbox-ui/user/sign-up");
     return (
         <React.Fragment>
-            <div className="loginSignUpSelector" style={{ marginTop: '-0.5rem' }}>
+            <div className="loginSignUpSelector" style={{ marginTop: window.screen.availWidth <= 1366 && window.screen.availHeight <= 768 && window.devicePixelRatio > 1.0 ? "-0.5rem" : "-2rem" }}>
                 {
                     isSignupPage ?
                         <Button
