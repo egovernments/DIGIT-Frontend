@@ -11,6 +11,7 @@ const CloneCampaignWrapper = (props) => {
   const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [name, setName] = useState(`${props?.campaignName}-copy`);
+  const isoDate = (d) => new Date(d).toISOString().split("T")[0];
   const [startDate, setStartDate] = useState(null);
   const [endDate, setEndDate] = useState(null);
   const [startError, setStartError] = useState(null);
@@ -20,6 +21,11 @@ const CloneCampaignWrapper = (props) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [toast, setToast] = useState(null);
   const [isValidatingName, setIsValidatingName] = useState(false);
+  // derive the minimum end‐date as startDate + 1 day
+  const endMin = startDate
+  ? isoDate(new Date(new Date(startDate).getTime() + 24 * 3600 * 1000))
+  : isoDate(Date.now() + 2 * 24 * 3600 * 1000);
+
 
   const steps = [
     "SEARCHING_CAMPAIGN_DETAILS",
@@ -37,7 +43,7 @@ const CloneCampaignWrapper = (props) => {
     return Math.floor(date.getTime());
   };
 
-  const { mutateAsync: executeFlow, isLoading, campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
+  const { mutateAsync: executeFlow, isLoading, error: cloneCampaignError , campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
     tenantId,
     campaignId: props?.campaignId,
     campaignName: name,
@@ -45,7 +51,7 @@ const CloneCampaignWrapper = (props) => {
     endDate: convertDateToEpoch(endDate),
     setStep: useCallback((step) => setCurrentStep(step), []),
   });
-
+ 
   const handleToastClose = () => {
     setToast(null);
   };
@@ -89,7 +95,10 @@ const CloneCampaignWrapper = (props) => {
     if (!endDate) {
       setEndError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
       hasError = true;
-    } else {
+    } else if (startDate && endDate && convertDateToEpoch(endDate) <= convertDateToEpoch(startDate)){
+      setEndError({ message: "CAMPAIGN_END_DATE_BEFORE_ERROR" });
+    }
+    else{
       setEndError(null);
     }
 
@@ -108,18 +117,16 @@ const CloneCampaignWrapper = (props) => {
 
     try {
       const res = await executeFlow();
-      if (res?.success && res?.CampaignDetails?.campaignNumber) {
-        setToast({ key: false, label: `${res?.CampaignDetails?.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`, type: "success" });
+      if (res?.success && res?.CampaignDetails?.campaignNumber && !cloneCampaignError) {
+        setToast({ key: "success", label: `${res?.CampaignDetails?.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`, type: "success" });
         history.push(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
       } else {
-        setToast({ key: true, label: `${t("FAILED_TO_CREATE_COPY_CAMPAIGN")}`, type: "error" });
-        props.setCampaignCopying(false);
+        setToast({ key: "error", label: `${t("FAILED_TO_CREATE_COPY_CAMPAIGN")}`, type: "error" });
         setShowProgress(false);
       }
     } catch (err) {
       setToast({ key: true, label: `${t(err)}`, type: "error" });
       setShowProgress(false);
-      props.setCampaignCopying(false);
     }
   };
 
@@ -208,11 +215,12 @@ const CloneCampaignWrapper = (props) => {
                       type="date"
                       error={endError?.message ? t(endError.message) : ""}
                       style={{ width: "-webkit-fill-available", marginBottom: "0" }}
+                      // disabled={!startDate}
                       populators={{
                         newDateFormat: true,
-                        min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0],
+                        min: endMin,
                         name: "campaignEndDate",
-                        validation: { min: new Date(Date.now() + 2 * 86400000).toISOString().split("T")[0] },
+                        validation: { min: endMin},
                       }}
                       value={endDate}
                       onChange={(event) => {
