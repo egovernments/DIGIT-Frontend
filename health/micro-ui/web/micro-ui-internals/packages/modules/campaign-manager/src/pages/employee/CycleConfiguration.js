@@ -293,6 +293,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     <>
       <div className="container">
         <div className="card-container2">
+          <div style={{marginBottom: "1.5rem"}}>
           <Card>
             <TagComponent campaignName={campaignName} />
             <Header styles={{ marginTop: "1.5rem", color: "#0b4b66" }} className="select-boundary">
@@ -304,8 +305,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                 }`
               )}
             </Header>
-            <Paragraph
-              customClassName="cycle-paragraph"
+            <p className="dates-description"
               value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
                 tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
               )}`}
@@ -321,14 +321,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               )}
             </CardText>
             <LabelFieldPair style={{ marginBottom: "1.5rem" }}>
-              <CardLabel className="cycleBold">
+              <CardLabel className="cycleBold" style={{fontWeight: "700"}}>
                 {t(`CAMPAIGN_NO_OF_CYCLE`)}
                 <span className="mandatory-span">*</span>
               </CardLabel>
               <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
             </LabelFieldPair>
             <LabelFieldPair>
-              <CardLabel className="cycleBold">
+              <CardLabel className="cycleBold" style={{fontWeight: "700"}}>
                 {t(`CAMPAIGN_NO_OF_DELIVERY`)}
                 <span className="mandatory-span">*</span>
               </CardLabel>
@@ -340,13 +340,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               />
             </LabelFieldPair>
           </Card>
-          {/* </Card> */}
+          </div>
           <Card className="campaign-counter-container">
-            <CardSubHeader className={"start-header"}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
+            <CardSubHeader className={"start-header"} style={{marginBottom: "1.5rem"}}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel>
                   {t(`CAMPAIGN_CYCLE`)} {index + 1}
+                   <span className="mandatory-span">*</span>
                 </CardLabel>
                 <div className="date-field-container">
                   <FieldV1

@@ -255,7 +255,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   };
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
-  const noOfCycles = rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
+  const noOfCycles = rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle || "NA";
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
   const [showCreatingPopUp, setShowCreatingPopUp] = useState(false);
@@ -311,8 +311,8 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("NO_OF_CYCLES")} value={noOfCycles} />
             <SummaryCardFieldPair className={"digit-results-card-field-pair"} inline={true} label={t("RESOURCES")} value={resources} />
             <SummaryCardFieldPair
-              className={"digit-results-status-card-field-pair"}
-              //  inline={true}
+              className={"digit-results-card-field-pair"}
+              inline={true}
               label={t("STATUS")}
               type="custom"
               // value={t(rowData?.status) || "NA"}
