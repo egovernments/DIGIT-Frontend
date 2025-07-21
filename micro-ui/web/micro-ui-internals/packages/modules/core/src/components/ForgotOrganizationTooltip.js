@@ -19,7 +19,7 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
         };
     }, []);
     return (
-            <div ref={wrapperRef} className="loginSignUpSelector" style={{ position: "relative", marginTop: "-2rem" }}>
+            <div ref={wrapperRef} className="loginSignUpSelector" style={{ position: "relative", marginTop: "-0.5rem" }}>
                 <Button
                         label={t(`SB_FORGOTORGANIZATION_TOOLTIP`)}
                         variation={"link"}
