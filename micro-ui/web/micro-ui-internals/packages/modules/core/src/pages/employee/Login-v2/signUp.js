@@ -116,7 +116,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const renderFormSection = () => (
     <div style={{ padding: isMobile ? "1rem" : "2rem", width: isMobile ? "100%" : "30%", backgroundColor: "#fff", overflowY: "auto", justifyContent: "center", display: "flex", alignItems: "center", flexDirection: "column" }}>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
-        <BackLink onClick={() => window.history.back()} />
+        {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
       <FormComposerV2
         onSubmit={onLogin}
