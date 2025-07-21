@@ -6,6 +6,26 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
     const { t } = useTranslation();
     const [showTip, setShowTip] = useState(false);
     const wrapperRef = useRef(null);
+    const [topMargin, setTopMargin] = useState("-2rem");
+
+    useEffect(() => {
+    const computeTopMargin = () => {
+      if (
+        window.screen.availWidth <= 1366 &&
+        window.screen.availHeight <= 768 &&
+        window.devicePixelRatio > 1.0
+      ) {
+        return "-0.5rem";
+      }
+      return "-2rem";
+    };
+
+    setTopMargin(computeTopMargin());
+
+    const handleResize = () => setTopMargin(computeTopMargin());
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -19,7 +39,7 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
         };
     }, []);
     return (
-            <div ref={wrapperRef} className="loginSignUpSelector" style={{ position: "relative", marginTop: window.screen.availWidth <= 1366 && window.screen.availHeight <= 768 && window.devicePixelRatio > 1.0 ? "-0.5rem" : "-2rem" }}>
+            <div ref={wrapperRef} className="loginSignUpSelector" style={{ position: "relative", marginTop: topMargin}}>
                 <Button
                         label={t(`SB_FORGOTORGANIZATION_TOOLTIP`)}
                         variation={"link"}
