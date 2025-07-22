@@ -135,7 +135,7 @@ const Wrapper = ({ boundaryOptions, setShowPopUp, alreadyQueuedSelectedState, on
       sortFooterChildren={true}
     >
       <LabelFieldPair>
-        <CardLabel>
+        <CardLabel className={"boundary-selection-label"}>
           {t((hierarchyType + "_" + boundaryType).toUpperCase())}
           <span className="mandatory-span">*</span>
         </CardLabel>

@@ -125,7 +125,7 @@ const CloneCampaignWrapper = (props) => {
         setShowProgress(false);
       }
     } catch (err) {
-      setToast({ key: true, label: `${t(err)}`, type: "error" });
+      setToast({ key: "error", label: `${t(err)}`, type: "error" });
       setShowProgress(false);
     }
   };
