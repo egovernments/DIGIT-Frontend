@@ -247,8 +247,9 @@ const CampaignDetails = () => {
           });
         },
         onError: (error, result) => {
+          console.log("error" , error);
           const errorCode = error?.response?.data?.Errors?.[0]?.description;
-          setShowToast({ key: "error", label: errorCode });
+          setShowToast({ key: "error", label: t(errorCode) });
         },
       }
     );
@@ -366,7 +367,8 @@ const CampaignDetails = () => {
                     campaignData?.boundaries?.length === 0 ||
                     campaignData?.deliveryRules?.length === 0 ||
                     campaignData?.resources?.length === 0 ||
-                    modulesData?.length === 0
+                    // modulesData?.length === 0
+                    !hasVersionGreaterThanOne
                   }
                   type="button"
                   variation="primary"

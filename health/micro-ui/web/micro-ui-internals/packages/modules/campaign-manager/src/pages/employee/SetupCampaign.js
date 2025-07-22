@@ -962,6 +962,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (currentKey > 1) {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
+      setSummaryErrors(null);
     }
     if (isSubmit) {
       if (currentKey == 5 || currentKey == 7 || currentKey == 10) {

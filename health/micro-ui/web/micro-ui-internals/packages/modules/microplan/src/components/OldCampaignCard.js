@@ -20,6 +20,7 @@ const CampaignCard = () => {
   const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
  
   let links = [
+    
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/campaign-home`,
@@ -27,6 +28,7 @@ const CampaignCard = () => {
       // count: isLoading?"-":data
     },
     {
+
       label: t("ACTION_TEST_MY_CAMPAIGN_NEW"),
       link: `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       roles: ROLES.CAMPAIGN_MANAGER,
@@ -35,7 +37,7 @@ const CampaignCard = () => {
     { 
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?userId=${userId}&status=${microplanStatus}`,
-      roles: ROLES.CAMPAIGN_MANAGER
+      roles: ROLES.BOUNDARY_MANAGER,
     },
     {
       label: t("NATIONAL_DASHBOARD"),
@@ -54,7 +56,13 @@ const CampaignCard = () => {
       link: `/workbench-ui/employee/campaign/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
-    }
+    },
+    {
+      label: t("ACTION_TEST_APP_CONFIGURATION_3.0"),
+      link: `/workbench-ui/employee/campaign/app-configuration-redesign?variant=app&masterName=SimplifiedAppConfigTwo&fieldType=AppFieldTypeOne&prefix=APPTWO&localeModule=APPTWO&formId=default`,
+      roles: ROLES.BOUNDARY_MANAGER,
+      // count: isLoading?"-":data
+    },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
