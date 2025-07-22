@@ -14,7 +14,9 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
  */
 const getTemplateFormatFilter = (projectNo = "", formats = []) => {
   const formatFilter = formats?.map((format) => `@.format=='${format}'`).join("||");
-  return `[?(@.project=='${projectNo}')].pages.*.properties[?((${formatFilter})&& @.hidden==false)].format`;
+  console.log("formatFilter", formatFilter);
+  return `[?(@.project=='${projectNo}')]`;
+  // return `[?(@.project=='${projectNo}')].pages.*.properties[?((${formatFilter})&& @.hidden==false)].format`;
 };
 
 /**
@@ -30,8 +32,8 @@ const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeature
   const modules = Object?.keys(selectedFeaturesByModule);
   const keys = modules.map((key) => {
     return (
-      selectedFeatureConfigs.every((elem) => selectedFeaturesByModule[key].includes(elem)) &&
-      selectedFeaturesByModule[key].every((elem) => selectedFeatureConfigs.includes(elem)) &&
+      selectedFeatureConfigs[key].every((elem) => selectedFeaturesByModule[key].includes(elem)) &&
+      selectedFeaturesByModule[key].every((elem) => selectedFeatureConfigs[key].includes(elem)) &&
       key
     );
   });
@@ -43,6 +45,29 @@ const findIsAnyChangedFeatures = (selectedFeaturesByModule = {}, selectedFeature
  * Checks if a given feature is selected for the given module.
  */
 const isFeatureSelected = (feature, module, selectedFeaturesByModule) => selectedFeaturesByModule?.[module]?.some((e) => e === feature?.format);
+
+const getSelectedFeaturesByProjectName = (data, projectNo, formats) => {
+  const result = {};
+
+  for (const obj of data) {
+    if (obj.project !== projectNo) continue;
+
+    const projectName = obj.name || obj.project; // fallback if name is missing
+    const selectedFormats = [];
+
+    for (const page of obj.pages || []) {
+      for (const prop of page.properties || []) {
+        if (formats.includes(prop.format) && prop.hidden === false) {
+          selectedFormats.push(prop.format);
+        }
+      }
+    }
+
+    result[projectName] = selectedFormats;
+  }
+
+  return result;
+};
 
 const AppFeatures = () => {
   const { t } = useTranslation();
@@ -108,7 +133,11 @@ const AppFeatures = () => {
         enabled: availableFormats?.length > 0,
         cacheTime: 0,
         staleTime: 0,
-        ...Digit.Utils.campaign.getMDMSV1Selector(CONSOLE_MDMS_MODULENAME, HCMCONSOLE_APPCONFIG_MODULENAME),
+        select: (data) => {
+          const respArr = data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.[HCMCONSOLE_APPCONFIG_MODULENAME];
+          const temp = getSelectedFeaturesByProjectName(respArr, campaignNumber, availableFormats);
+          return temp;
+        },
       }
     );
   }, [availableFormats, campaignNumber]);
@@ -152,9 +181,9 @@ const AppFeatures = () => {
 
   // Auto-select features when data is loaded
   useEffect(() => {
-    if (!selectedFeaturesByModule && selectedFeatureConfigs?.length > 0 && moduleToggleData?.length) {
+    if (!selectedFeaturesByModule && selectedFeatureConfigs && moduleToggleData?.length) {
       const defaultSelection = moduleToggleData.reduce((acc, moduleCode) => {
-        acc[moduleCode] = [...selectedFeatureConfigs];
+        acc[moduleCode] = [...selectedFeatureConfigs?.[moduleCode]];
         return acc;
       }, {});
       setSelectedFeaturesByModule(defaultSelection);
