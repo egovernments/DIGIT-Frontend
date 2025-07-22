@@ -5,6 +5,7 @@ import { SVG } from "./SVG";
 import StringManipulator from "./StringManipulator";
 import { Colors} from "../constants/colors/colorconstants";
 import Divider from "./Divider";
+import "./SubmitBar.css"
 
 const Stepper = ({
   currentStep = 1,
@@ -87,14 +88,13 @@ const Stepper = ({
 
   return (
     <div
-      className={`digit-stepper-container ${direction ? direction : ""} ${
-        className ? className : ""
-      }`}
-      style={style ? style : null}
-      role="progressbar"
-      aria-valuemax={totalSteps}
-      aria-valuenow={currentStep}
-      aria-label={`Step ${currentStep} of ${totalSteps}`}
+        className={`digit-stepper-container ${direction ? direction : ""} ${
+          className ? className : ""
+        }`}
+        style={style ? style : null}
+        role="group"
+        aria-labelledby="stepper-heading"
+      aria-describedby="stepper-description"
     >
       {actions.map((action, index, arr) => {
         const stepStatus = getStepStatus(index);
@@ -113,9 +113,10 @@ const Stepper = ({
             onStepClick(index);
           }}
           role="button"
-          tabIndex="0"
-          aria-label={`${t(StringManipulator("TRUNCATESTRING", action, { maxLength: 64 }))} - ${stepStatus === "completed" ? "Completed" : stepStatus === "current" ? "Current step" : "Upcoming step"}`}
-          aria-current={isCurrent ? "step" : undefined}
+          tabIndex={(isCompleted||isActive)?  0:-1}
+          aria-label={`Step ${index + 1}: ${t(StringManipulator("TRUNCATESTRING", action, { maxLength: 64 }))}`}
+          aria-describedby={`step-${index}-status`}
+          aria-current={isCurrent ? "step" : "false"}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
@@ -146,6 +147,7 @@ const Stepper = ({
                 isCompleted && "completed"
               } ${isCurrent && "current"} ${direction ? direction : ""}`}
               style={{ ...props?.labelStyles }}
+              aria-hidden="true"
             >
               {t(
                 StringManipulator("TRUNCATESTRING", action, { maxLength: 64 })
@@ -161,12 +163,12 @@ const Stepper = ({
             ></span>
           )}
           {index < arr.length - 1 && direction === "vertical" && !hideDivider &&  (
-            <Divider className="stepper-vertical-divider"></Divider>
+            <Divider className="stepper-vertical-divider" aria-hidden="true"></Divider>
           )}
         </div>
       );
     })}
     </div>
-  );
+);
 };
 export default Stepper;
