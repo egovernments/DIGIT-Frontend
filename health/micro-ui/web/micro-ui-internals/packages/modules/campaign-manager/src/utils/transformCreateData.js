@@ -2,6 +2,15 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
   const startDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || formData?.DateSelection?.startDate || params?.DateSelection?.startDate);
   const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.endDate || formData?.DateSelection?.endDate || params?.DateSelection?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const cycleDataFromForm =
+    totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleData ||
+    params?.additionalDetails?.cycleData?.cycleData ||
+    [];
+
+  const cycleConfgureDateFromForm =
+    totalFormData?.HCM_CAMPAIGN_DATE?.additionalDetails?.cycleData?.cycleConfgureDate ||
+    params?.additionalDetails?.cycleData?.cycleConfgureDate ||
+    {};
   return {
     CampaignDetails: {
       hierarchyType: hierarchyType,
@@ -21,7 +30,10 @@ export const transformCreateData = ({totalFormData, hierarchyType , params , for
       additionalDetails: {
         beneficiaryType: totalFormData?.HCM_CAMPAIGN_TYPE?.CampaignType?.beneficiaryType,
         key: 2,
-        cycleData: {},
+        cycleData:{
+          cycleData: cycleDataFromForm,
+          cycleConfgureDate: cycleConfgureDateFromForm,
+        }
       },
     },
   };

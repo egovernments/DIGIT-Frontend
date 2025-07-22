@@ -54,6 +54,46 @@ const CampaignDetails = () => {
     }
   }, [campaignData]);
 
+  useEffect(() => {
+  if (!campaignData) return;
+
+  const cycleConfig = campaignData?.deliveryRules?.[0];
+  const cycles = cycleConfig?.cycles || [];
+
+  const formattedCycleData = cycles.map((cycle, idx) => ({
+    key: idx + 1,
+    fromDate: new Date(cycle?.startDate).toISOString(),
+    toDate: new Date(cycle?.endDate).toISOString(),
+  }));
+
+  const cycleConfgureDate = {
+    cycle: cycles.length,
+    deliveries: cycles?.[0]?.deliveries?.length || 0,
+    isDisable: cycleConfig?.IsCycleDisable !== undefined ? cycleConfig.IsCycleDisable : false
+  };
+
+  const campaignSessionData = {
+    CampaignType: { code: campaignData?.projectType },
+    CampaignName: campaignData?.campaignName,
+    DateSelection: {
+      startDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.startDate)?.split("/")?.reverse()?.join("-"),
+      endDate: Digit.DateUtils.ConvertEpochToDate(campaignData?.endDate)?.split("/")?.reverse()?.join("-"),
+    },
+    additionalDetails: {
+      cycleData: formattedCycleData,
+      cycleConfgureDate: cycleConfgureDate,
+    },
+    startDate: campaignData?.startDate,
+    endDate: campaignData?.endDate,
+    projectType: campaignData?.projectType,
+    deliveryRules: campaignData?.deliveryRules,
+    id: campaignData?.id,
+  };
+
+  Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", campaignSessionData);
+}, [campaignData]);
+
+
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
