@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo  , useRef} from "react";
 import { useHistory } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
 import { Stepper, Toast, Button, Footer, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
@@ -28,6 +28,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
   const [isValidatingName, setIsValidatingName] = useState(false);
+
+  const prevProjectTypeRef = useRef();
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -144,7 +146,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSubmit = async (formData) => {
-    const projectType = formData?.CampaignType?.code;
+    const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
 
     const validDates = handleCreateValidate(formData);
     if (validDates?.label) {
@@ -161,8 +163,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       if (formData?.CampaignName?.length > 30) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return;
-      }
-      else{
+      } else {
         setShowToast(null);
       }
       setIsValidatingName(true);
@@ -171,14 +172,18 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
         setIsValidatingName(false);
         return;
-      }
-      else {
+      } else {
         setShowToast(null);
       }
       setIsValidatingName(false);
     }
 
-    if (typeof params?.CampaignName === "object" || !params?.CampaignName) {
+    const prevProjectType = prevProjectTypeRef.current;
+
+    const isProjectTypeChanged = prevProjectType && prevProjectType !== projectType;
+    const isCampaignNameMissing = typeof params?.CampaignName === "object" || !params?.CampaignName;
+
+    if (isCampaignNameMissing || isProjectTypeChanged) {
       const formattedDate = new Date()
         .toLocaleDateString("en-GB", {
           month: "long",
@@ -190,9 +195,20 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       const campaignName = `${projectType}_${formattedDate}`;
 
       setParams({ ...params, ...formData, CampaignName: campaignName });
+
+      // Update the formData itself if needed
+      setTotalFormData((prevData) => ({
+        ...prevData,
+        [name]: {
+          ...formData,
+          CampaignName: campaignName,
+        },
+      }));
     } else {
       setParams({ ...params, ...formData });
     }
+
+    prevProjectTypeRef.current = projectType;
 
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       setShowToast(null);
