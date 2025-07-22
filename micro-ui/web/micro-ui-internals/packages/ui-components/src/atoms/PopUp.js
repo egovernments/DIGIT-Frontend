@@ -151,7 +151,7 @@ const PopUp = (props) => {
         } ${props?.type ? props?.type : ""}`}
         style={props?.style}
         onClick={(e) => e.stopPropagation()}
-        tabIndex={0}
+       
         role="button"
         onKeyDown={(e)=>{
           if (e.key=="Enter" || e.key==" "){
