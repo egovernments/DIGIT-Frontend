@@ -807,7 +807,7 @@ const createSVGWrapper = (Component, ariaLabel) => {
           role="button"
           className="wrapperSpan"
         >
-          <Component  onClick={onClick} {...otherProps}/>
+          <Component style={{position: "unset"}} onClick={onClick} {...otherProps}/>
         </span>
       );
     }

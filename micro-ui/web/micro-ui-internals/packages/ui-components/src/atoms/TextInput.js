@@ -339,7 +339,7 @@ const TextInput = (props) => {
                 onClick={() => datePickerRef.current?.setOpen(true)}
                 role="button"
                 aria-label="Open date picker"
-                tabIndex={props.disabled ? -1 : 5}
+                tabIndex={props.disabled ? -1 : 0}
                 onKeyDown={(e) => {
                   if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
@@ -358,7 +358,7 @@ const TextInput = (props) => {
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
                 {...(typeof props?.onIconSelection === 'function' && {
-                tabIndex: 5,
+                tabIndex: 0,
                 role: 'button',
                 'aria-label': 'Select icon',
                 onKeyDown: (e) => {
@@ -469,7 +469,7 @@ const TextInput = (props) => {
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
                 {...(typeof props?.onIconSelection === 'function' && {
-                tabIndex: 5,
+                tabIndex: 0,
                 role: 'button',
                 'aria-label': 'Select icon',
                 onKeyDown: (e) => {
@@ -590,7 +590,7 @@ const TextInput = (props) => {
                 className="digit-cursor-pointer"
                 onClick={props?.onIconSelection}
                 {...(typeof props?.onIconSelection === 'function' && {
-                tabIndex: 5,
+                tabIndex: 0,
                 role: 'button',
                 'aria-label': 'Select icon',
                 onKeyDown: (e) => {

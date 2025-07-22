@@ -8,3 +8,7 @@
 .focus-no-outline {
   outline: none !important;
 }
+
+.digit-stepper-container{
+  overflow: unset !important;
+}
