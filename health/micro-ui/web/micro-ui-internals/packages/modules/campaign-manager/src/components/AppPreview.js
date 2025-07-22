@@ -5,6 +5,7 @@ import "../utils/template_components/RegistrationComponents";
 import MobileBezelFrame from "./MobileBezelFrame";
 import GenericTemplateScreen from "./GenericTemplateScreen";
 import DynamicSVG from "./DynamicSVGComponent";
+import RenderSelectionField from "./RenderSelectionField";
 
 const MdmsDropdown = ({
   t,
@@ -71,43 +72,7 @@ const renderField = (field, t) => {
         />
       );
     case "selection":
-      const { isLoading, data } = window?.Digit?.Hooks.useCustomMDMS(
-        Digit?.ULBService?.getStateId(),
-        field?.schemaCode?.split(".")[0],
-        [
-          {
-            name: field?.schemaCode?.split(".")[1],
-          },
-        ],
-        {
-          select: (data) => {
-            const optionsData = _.get(data, `${field?.schemaCode?.split(".")[0]}.${field?.schemaCode?.split(".")[1]}`, []);
-            return optionsData
-              .filter((opt) => (opt?.hasOwnProperty("active") ? opt.active : true))
-              .map((opt) => ({ ...opt, name: `${Digit.Utils.locale.getTransformedLocale(opt.code)}` }));
-          },
-          enabled: field?.isMdms && field?.schemaCode ? true : false,
-        },
-        { schemaCode: "SELCTIONTABMDMSLIST" }
-      );
-
-      if (isLoading) {
-        return <Loader />;
-      }
-      return (
-        <SelectionTag
-          errorMessage=""
-          onSelectionChanged={() => {}}
-          schemaCode={field?.isMdms ? field?.schemaCode : null}
-          options={field?.isMdms ? data : field?.dropDownOptions}
-          optionsKey={"name"}
-          selected={[]}
-          withContainer={true}
-          populators={{
-            t: field?.isMdms ? null : t,
-          }}
-        />
-      );
+      return <RenderSelectionField field={field} t={t} />;
     case "numeric":
     case "counter":
       return <TextInput name="numeric" onChange={() => {}} type={"numeric"} />;
@@ -198,6 +163,8 @@ const getFieldType = (field) => {
       return "date";
     case "radio":
       return "radio";
+    case "custom":
+      return "custom";
     default:
       return "button";
   }
@@ -255,7 +222,11 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                       error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
                       infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
                       label={
-                        getFieldType(field) === "checkbox" || getFieldType(field) === "button" ? null : field?.isMdms ? t(field?.label) : field?.label
+                        getFieldType(field) === "checkbox" || getFieldType(field) === "button" || getFieldType(field) === "custom"
+                          ? null
+                          : field?.isMdms
+                          ? t(field?.label)
+                          : field?.label
                       }
                       onChange={function noRefCheck() {}}
                       placeholder={t(field?.innerLabel) || ""}
@@ -277,9 +248,12 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                           : null,
                         options: field?.isMdms ? null : field?.dropDownOptions,
                         optionsKey: field?.isMdms ? "code" : "name",
-                        component: getFieldType(field) === "button" || getFieldType(field) === "select" ? renderField(field, t) : null,
+                        component:
+                          getFieldType(field) === "button" || getFieldType(field) === "select" || getFieldType(field) === "custom"
+                            ? renderField(field, t)
+                            : null,
                       }}
-                      required={field?.["toArray.required"] || false}
+                      required={getFieldType(field) === "custom" ? null : field?.["toArray.required"]}
                       type={getFieldType(field) === "button" || getFieldType(field) === "select" ? "custom" : getFieldType(field) || "text"}
                       value={field?.value === true ? "" : field?.value || ""}
                       disabled={field?.readOnly || false}
