@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo  , useRef} from "react";
 import { useHistory } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
 import { Stepper, Toast, Button, Footer, Loader, FormComposerV2, PopUp, CardText } from "@egovernments/digit-ui-components";
@@ -30,6 +30,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [isValidatingName, setIsValidatingName] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
   const [pendingFormData, setPendingFormData] = useState(null);
+
+  const prevProjectTypeRef = useRef();
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -194,7 +196,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   };
 
   const onSubmit = async (formData) => {
-    const projectType = formData?.CampaignType?.code;
+    const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
 
     const validDates = handleCreateValidate(formData);
     if (validDates?.label) {
@@ -226,7 +228,12 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       setIsValidatingName(false);
     }
 
-    if (typeof params?.CampaignName === "object" || !params?.CampaignName) {
+    const prevProjectType = prevProjectTypeRef.current;
+
+    const isProjectTypeChanged = prevProjectType && prevProjectType !== projectType;
+    const isCampaignNameMissing = typeof params?.CampaignName === "object" || !params?.CampaignName;
+
+    if (isCampaignNameMissing || isProjectTypeChanged) {
       const formattedDate = new Date()
         .toLocaleDateString("en-GB", {
           month: "long",
@@ -238,9 +245,20 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       const campaignName = `${projectType}_${formattedDate}`;
 
       setParams({ ...params, ...formData, CampaignName: campaignName });
+
+      // Update the formData itself if needed
+      setTotalFormData((prevData) => ({
+        ...prevData,
+        [name]: {
+          ...formData,
+          CampaignName: campaignName,
+        },
+      }));
     } else {
       setParams({ ...params, ...formData });
     }
+
+    prevProjectTypeRef.current = projectType;
 
     const oldStartDate = normalizeDate(params?.startDate);
     const oldEndDate = normalizeDate(params?.endDate);
