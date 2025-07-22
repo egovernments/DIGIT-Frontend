@@ -1,4 +1,4 @@
-import React, { useMemo, useState, useEffect } from "react";
+import React, { useMemo, useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
@@ -82,70 +82,167 @@ const MyBills = (props) => {
         return selectedBills.reduce((total, bill) => total + (bill?.totalAmount || 0), 0);
     }
 
-    useEffect(async () => {
-        if (BillData) {
+    // const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+    
+    // useEffect(async () => {
+    //     if (BillData) {
 
-            const updateBillData = async () => {
-                BillData.bills.forEach(async (bill) => {
-                    if (props?.isSelectableRows && bill?.id) {
-                        console.log("Bill ID:", bill.id);
-                        try {
-                            if (bill.businessService != "PAYMENTS.BILL") {
-                                setIsUpdateLoading(true);
-                                updateBillDetailMutation.mutateAsync(
-                                                {
-                                                    body: {
-                                                        bill: {
-                                                            ...bill,
-                                                        },
-                                                        workflow: {
-                                                            action: "CREATE",
-                                                        }
-                                                    },
-                                                },
-                                                {
-                                                    onSuccess: (data) => {
-                                                        console.log("Bill detail workflow updated successfully:", data);
-                                                        setShowToast({
-                                                            key: "success",
-                                                            label: t(`HCM_AM_BILL_UPDATE_SUCCESS`), //TODO UPDATE TOAST MSG
-                                                            transitionTime: 2000,
-                                                        });
-                                                        setIsUpdateLoading(false);
-                                                        refetchBill(); // refetch bills after update
-                                                    },
-                                                    onError: (error) => {
-                                                        console.log("Error updating bill detail workflow:", error);
-                                                        setIsUpdateLoading(false);
-                                                        setShowToast({
-                                                            key: "error",
-                                                            label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
-                                                            transitionTime: 2000,
-                                                        });
-                                                    }
-                                                }
-                                            )
-                            }
-                        } catch (error) {
-                            console.error("Error in bill or billDetails update:", error);
-                            setIsUpdateLoading(false);
-                            setShowToast({ key: "error", label: t(`HCM_AM_BILL_UPDATE_ERROR`), transitionTime: 3000 });
-                        }
+    //         const updateBillData = async () => {                                                      
+    //             await sleep(5000);
+    //             console.log("timer done for calculated");
+    //             // BillData.bills.forEach(async (bill) => {
+    //             //     console.log("Bill ID:", bill.id);  
+    //                 // if (props?.isSelectableRows && bill?.id) {
+    //                     if (bill?.id) {
+    //                     try {
+    //                         if (bill.businessService != "PAYMENTS.BILL") {
+    //                             updateBillDetailMutation.mutateAsync(
+    //                                             {
+    //                                                 body: {
+    //                                                     bill: {
+    //                                                         ...bill,
+    //                                                     },
+    //                                                     workflow: {
+    //                                                         action: "CREATE",
+    //                                                     }
+    //                                                 },
+    //                                             },
+    //                                             {
+    //                                                 onSuccess: (data) => {
+    //                                                     console.log("Bill detail workflow updated successfully:", data);
+    //                                                     setShowToast({
+    //                                                         key: "success",
+    //                                                         label: t(`HCM_AM_BILL_UPDATE_SUCCESS`), //TODO UPDATE TOAST MSG
+    //                                                         transitionTime: 2000,
+    //                                                     });
+    //                                                     // setIsUpdateLoading(false);
+    //                                                     // refetchBill(); // refetch bills after update
+    //                                                 },
+    //                                                 onError: (error) => {
+    //                                                     console.log("Error updating bill detail workflow:", error);
+    //                                                     setIsUpdateLoading(false);
+    //                                                     setShowToast({
+    //                                                         key: "error",
+    //                                                         label: error?.response?.data?.Errors?.[0]?.message || t("HCM_AM_BILL_DETAILS_UPDATE_ERROR"),//TODO UPDATE TOAST MSG
+    //                                                         transitionTime: 2000,
+    //                                                     });
+    //                                                 }
+    //                                             }
+    //                                         )
+    //                         }
+    //                     } catch (error) {
+    //                         console.error("Error in bill or billDetails update:", error);
+    //                         setIsUpdateLoading(false);
+    //                         setShowToast({ key: "error", label: t(`HCM_AM_BILL_UPDATE_ERROR`), transitionTime: 3000 });
+    //                     }
 
+    //                 }
+    //             // })
+    //             setIsUpdateLoading(false);
+    //             refetchBill(); // refetch bills after update;
+    //         };
+    //         if (props?.isSelectableRows) {
+    //             setIsUpdateLoading(true);
+    //             BillData.bills.forEach(async (bill) => {
+    //                 console.log("Bill ID:", bill.id);  
+    //                 await updateBillData();
+    //             })
+    //             setIsUpdateLoading(false);
+    //         }
+
+    //         setTableData(BillData.bills);
+    //         setTotalCount(BillData?.pagination?.totalCount);
+    //     }
+    // }, [BillData])
+
+    // useEffect(() => {
+    //     refetchBill();
+    // }, [billID, dateRange, limitAndOffset])
+const didUpdateOnce = useRef(false); // Prevent infinite update loop
+useEffect(() => {
+    const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+    const updateBillData = async (bill) => {
+        if (bill?.id && bill.businessService !== "PAYMENTS.BILL") {
+            try {
+                await updateBillDetailMutation.mutateAsync(
+                    {
+                        body: {
+                            bill: { ...bill },
+                            workflow: {
+                                action: "CREATE",
+                            },
+                        },
+                    },
+                    {
+                        onSuccess: (data) => {
+                            console.log("Bill detail workflow updated successfully:", data);
+                            setShowToast({
+                                key: "success",
+                                label: t(`HCM_AM_BILL_UPDATE_SUCCESS`),
+                                transitionTime: 2000,
+                            });
+                        },
+                        onError: (error) => {
+                            setShowToast({
+                                key: "error",
+                                label:
+                                    error?.response?.data?.Errors?.[0]?.message ||
+                                    t("HCM_AM_BILL_DETAILS_UPDATE_ERROR"),
+                                transitionTime: 2000,
+                            });
+                        },
                     }
+                );
+            } catch (error) {
+                console.error("Error updating bill:", error);
+                setShowToast({
+                    key: "error",
+                    label: t(`HCM_AM_BILL_UPDATE_ERROR`),
+                    transitionTime: 3000,
                 });
-            };
-            
-            await updateBillData();
-
-            setTableData(BillData.bills);
-            setTotalCount(BillData?.pagination?.totalCount);
+            }
         }
-    }, [BillData])
+    };
 
-    useEffect(() => {
-        refetchBill();
-    }, [billID, dateRange, limitAndOffset])
+    const processBills = async () => {
+        if (!BillData || !props?.isSelectableRows || didUpdateOnce.current) return;
+
+        didUpdateOnce.current = true;
+        setIsUpdateLoading(true);
+
+        const updatableBills = BillData.bills.filter(
+            (bill) => bill.businessService !== "PAYMENTS.BILL"
+        );
+
+        if (updatableBills.length === 0) {
+            setIsUpdateLoading(false); // Nothing to update
+            return;
+        }
+
+
+        await sleep(5000);
+
+        for (const bill of BillData.bills) {
+            await updateBillData(bill);
+        }
+
+        setIsUpdateLoading(false);
+        refetchBill(); //  Refetch to get the updated backend state
+    };
+
+    if (BillData) {
+        setTableData(BillData.bills);
+        setTotalCount(BillData?.pagination?.totalCount);
+        processBills(); // will not re-run due to didUpdateOnce
+    }
+}, [BillData]);
+
+   // Only fetch on filter change
+useEffect(() => {
+    refetchBill();
+    didUpdateOnce.current = false; // Reset so updates can run on fresh data
+}, [billID, dateRange, limitAndOffset]);
 
     const onSubmit = (billID, dateRange) => {
         setBillID(billID);

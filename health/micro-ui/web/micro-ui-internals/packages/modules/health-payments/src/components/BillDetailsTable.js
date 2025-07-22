@@ -10,17 +10,6 @@ import { defaultPaginationValues } from "../utils/constants";
 import { useHistory } from "react-router-dom";
 import EditWorkerDetailsPopUp from "./editWorkerDetailsPopUp ";
 
-/**
- * @function VerifyAndGeneratePaymentsTable
- * @param {Object} props - Component props
- * @param {Array} props.data - Array of objects containing bill data
- * @param {Function} props.handlePageChange - Function to handle page change
- * @param {Function} props.handlePerRowsChange - Function to handle per row change
- * @param {Number} props.currentPage - Current page number
- * @param {Number} props.rowsPerPage - Number of rows per page
- * @param {Number} props.totalCount - Total count of bills
- * @returns {React.ReactElement} Returns the component
- */
 
 const BillDetailsTable = ({ ...props }) => {
     const { t } = useTranslation();
@@ -450,6 +439,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selectableRows={props?.selectableRows}
                 selectableRowDisabled={(row) =>
                     (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
+                    (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabled) ||
                     (props?.status === "PENDING_VERIFICATION" && props?.isSelectionDisabled) ||
                     (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
                     (row?.status === 'EDITED' && props?.editBill)
@@ -458,6 +448,7 @@ const BillDetailsTable = ({ ...props }) => {
                     {
                         when: (row) =>
                             (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
+                            (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabled) ||
                             (props?.status === "PENDING_VERIFICATION" && props?.isSelectionDisabled) ||
                             (row?.status === 'PENDING_EDIT' && !props?.editBill),
                         // || (row?.status === 'EDITED' && props?.editBill),

@@ -128,7 +128,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     config: {
       enabled: billData ? true : false,
       select: (mdmsData) => {
-        return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === billData?.referenceId)?.[0]
+        const referenceCampaignId = billData?.referenceId?.split(".")?.[0];
+        return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
       },
     }
   };
@@ -276,8 +277,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         {
           onSuccess: async () => {
             setSelectedRows([]);
-            setClearSelectedRows(prev => !prev);
-                        refetchBill();
+            setClearSelectedRows(prev => !prev);            
             setShowToast({
               key: "success",
               label: t(`HCM_AM_SELECTED_BILL_DETAILS_${wfAction}_SUCCESS`), //TODO UPDATE TOAST MSG
@@ -294,6 +294,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 back: t(`GO_BACK_TO_HOME`),
                 backlink: `/${window.contextPath}/employee`
               });
+            }
+            else{
+              refetchBill();
             }
           },
           onError: (error) => {
@@ -647,7 +650,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       const statusMap = {
         VERIFICATION_FAILED: ["VERIFICATION_FAILED"], //send for edit action
         PAYMENT_FAILED: ["PAYMENT_FAILED"],
-        VERIFIED: ["VERIFIED", "PAYMENT_FAILED"], //generate payment action
+        VERIFIED: ["VERIFIED"], //generate payment action
         PAYMENT_GENERATED: ["PAID"],
         NOT_VERIFIED: ["PENDING_VERIFICATION", "EDITED","PENDING_EDIT"], //verify action
         PENDING_FOR_EDIT: ["PENDING_EDIT"], //EDIT action
@@ -679,7 +682,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
 
-  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || isHrmsSearchLoading) {
+  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading || isHrmsSearchLoading) {
     console.log("Loading bill data or individual data...");
     return <LoaderScreen />
   }

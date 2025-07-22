@@ -315,7 +315,7 @@ const getAvailableActions = (status) => {
     case "PARTIALLY_VERIFIED":
       return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
     case "PENDING_VERIFICATION":
-      return ["HCM_AM_VERIFY"];
+      return ["HCM_AM_VERIFY","HCM_AM_EDIT"];
     case "FULLY_VERIFIED":
       return ["HCM_AM_GENERATE_PAYMENT"];
     case "PARTIALLY_PAID":
