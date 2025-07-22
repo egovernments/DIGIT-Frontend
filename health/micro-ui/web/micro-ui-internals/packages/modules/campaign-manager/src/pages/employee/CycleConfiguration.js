@@ -74,7 +74,6 @@ const reducer = (state, action) => {
 // };
 
 const updateCycleData = (cycleData, index, update) => {
-
   const existingItem = cycleData.find((item) => item.key === index);
 
   let updatedData;
@@ -122,6 +121,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     },
     config: {
       enabled: !!campaignNumber,
+      cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         return data?.CampaignDetails?.[0];
       },
@@ -156,11 +157,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   // const saved =
   //   Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure ||
   //   campaignData?.additionalDetails?.cycleData || filteredDeliveryConfig?.cycleConfig;
-  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+  // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+  const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.additionalDetails?.cycleData;
   const campaignCycleData = campaignData?.additionalDetails?.cycleData;
   const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 
-  const saved = sessionData?.cycleData?.length > 0 ? sessionData : campaignCycleData?.cycleData?.length > 0 ? campaignCycleData : filteredCycleConfig;
+  let saved = sessionData?.cycleData?.length > 0 ? sessionData :  filteredCycleConfig;
   const refetch = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure?.cycleConfgureDate
     ?.refetch;
   const tempSession = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -199,7 +201,8 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
   // }, [filteredDeliveryConfig, deliveryConfigLoading]);
 
   useEffect(() => {
-    const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+    // const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_CYCLE_CONFIGURE?.cycleConfigure;
+    const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.additionalDetails?.cycleData;
     const campaignCycleData = campaignData?.additionalDetails?.cycleData;
     const filteredCycleConfig = filteredDeliveryConfig?.cycleConfig;
 
@@ -293,66 +296,75 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     <>
       <div className="container">
         <div className="card-container2">
-          <Card>
-            <TagComponent campaignName={campaignName} />
-            <Header styles={{ marginTop: "1.5rem", color: "#0b4b66" }} className="select-boundary">
-              {t(
-                `CAMPAIGN_PROJECT_${
-                  tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-                    ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-                    : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
-                }`
-              )}
-            </Header>
-            <Paragraph
-              customClassName="cycle-paragraph"
-              value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
-                tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
-              )}`}
-            />
-            {/* <Card className="campaign-counter-container"> */}
-            <CardText>
-              {t(
-                `CAMPAIGN_CYCLE_CONFIGURE_HEADING_${
-                  tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-                    ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-                    : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
-                }`
-              )}
-            </CardText>
-            <LabelFieldPair style={{ marginBottom: "1.5rem" }}>
-              <CardLabel className="cycleBold">
-                {t(`CAMPAIGN_NO_OF_CYCLE`)}
-                <span className="mandatory-span">*</span>
-              </CardLabel>
-              <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
-            </LabelFieldPair>
-            <LabelFieldPair>
-              <CardLabel className="cycleBold">
-                {t(`CAMPAIGN_NO_OF_DELIVERY`)}
-                <span className="mandatory-span">*</span>
-              </CardLabel>
-              <TextInput
-                type="numeric"
-                value={cycleConfgureDate?.deliveries}
-                onChange={(d) => updateDelivery(d)}
-                disabled={cycleConfgureDate?.isDisable}
+          <div style={{ marginBottom: "1.5rem" }}>
+            <Card>
+              <TagComponent campaignName={campaignName} />
+              <Header styles={{ marginTop: "1.5rem", color: "#0b4b66" }} className="select-boundary">
+                {t(
+                  `CAMPAIGN_PROJECT_${
+                    tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
+                      ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
+                      : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+                  }`
+                )}
+              </Header>
+              <p
+                className="dates-description"
+                value={`${convertEpochToNewDateFormat(tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate)} - ${convertEpochToNewDateFormat(
+                  tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate
+                )}`}
               />
-            </LabelFieldPair>
-          </Card>
-          {/* </Card> */}
+              {/* <Card className="campaign-counter-container"> */}
+              <CardText>
+                {t(
+                  `CAMPAIGN_CYCLE_CONFIGURE_HEADING_${
+                    tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
+                      ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
+                      : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+                  }`
+                )}
+              </CardText>
+              <LabelFieldPair style={{ marginBottom: "1.5rem" }}>
+                <CardLabel className="cycleBold" style={{ fontWeight: "700" }}>
+                  {t(`CAMPAIGN_NO_OF_CYCLE`)}
+                  <span className="mandatory-span">*</span>
+                </CardLabel>
+                <TextInput type="numeric" value={cycleConfgureDate?.cycle} onChange={(d) => updateCycle(d)} disabled={cycleConfgureDate?.isDisable} />
+              </LabelFieldPair>
+              <LabelFieldPair>
+                <CardLabel className="cycleBold" style={{ fontWeight: "700" }}>
+                  {t(`CAMPAIGN_NO_OF_DELIVERY`)}
+                  <span className="mandatory-span">*</span>
+                </CardLabel>
+                <TextInput
+                  type="numeric"
+                  value={cycleConfgureDate?.deliveries}
+                  onChange={(d) => updateDelivery(d)}
+                  disabled={cycleConfgureDate?.isDisable}
+                />
+              </LabelFieldPair>
+            </Card>
+          </div>
           <Card className="campaign-counter-container">
-            <CardSubHeader className={"start-header"}>{t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}</CardSubHeader>
+            <CardSubHeader className={"start-header"} style={{ marginBottom: "1.5rem" }}>
+              {t(`CAMPAIGN_ADD_START_END_DATE_TEXT`)}
+            </CardSubHeader>
             {[...Array(cycleConfgureDate.cycle)].map((_, index) => (
               <LabelFieldPair key={index}>
                 <CardLabel>
                   {t(`CAMPAIGN_CYCLE`)} {index + 1}
+                  <span className="mandatory-span">*</span>
                 </CardLabel>
                 <div className="date-field-container">
                   <FieldV1
                     type="date"
                     placeholder={t("FROM_DATE")}
-                    value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                    // value={cycleData?.find((j) => j.key === index + 1)?.fromDate}
+                    value={
+                      cycleData?.find((j) => j.key === index + 1)?.fromDate
+                        ? new Date(cycleData.find((j) => j.key === index + 1)?.fromDate).toISOString().split("T")[0]
+                        : ""
+                    }
                     withoutLabel={true}
                     min={
                       index > 0 && cycleData?.find((j) => j.key === index)?.toDate
@@ -373,7 +385,12 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
                   <FieldV1
                     type="date"
                     placeholder={t("TO_DATE")}
-                    value={cycleData?.find((j) => j.key === index + 1)?.toDate}
+                    // value={cycleData?.find((j) => j.key === index + 1)?.toDate}
+                    value={
+                      cycleData?.find((j) => j.key === index + 1)?.toDate
+                        ? new Date(cycleData.find((j) => j.key === index + 1)?.toDate).toISOString().split("T")[0]
+                        : ""
+                    }
                     withoutLabel={true}
                     min={
                       cycleData?.find((j) => j.key === index + 1)?.fromDate

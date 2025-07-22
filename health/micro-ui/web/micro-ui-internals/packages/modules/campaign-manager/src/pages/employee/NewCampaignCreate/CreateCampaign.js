@@ -2,7 +2,7 @@ import { useTranslation } from "react-i18next";
 import React, { useState, useEffect, useMemo  , useRef} from "react";
 import { useHistory } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
-import { Stepper, Toast, Button, Footer, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer, Loader, FormComposerV2, PopUp, CardText } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
@@ -28,6 +28,8 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     return keyParam ? parseInt(keyParam) : 1;
   });
   const [isValidatingName, setIsValidatingName] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState(null);
 
   const prevProjectTypeRef = useRef();
 
@@ -37,6 +39,14 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       url.searchParams.set(key, value);
     });
     window.history.replaceState({}, "", url);
+  };
+
+  const normalizeDate = (date) => {
+    if (!date) return "";
+    if (typeof date === "number") {
+      return Digit.DateUtils.ConvertEpochToDate(date)?.split("/")?.reverse()?.join("-");
+    }
+    return date;
   };
 
   const closeToast = () => {
@@ -145,6 +155,46 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     return res?.CampaignDetails;
   };
 
+  const handleCampaignMutation = async (formData, hasDateChanged = false) => {
+    setLoader(true);
+    const isEdit = editName || campaignNumber;
+    const mutation = isEdit ? mutationUpdate : mutationCreate;
+    const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
+    const payload = transformCreateData({
+      totalFormData,
+      hierarchyType,
+      params,
+      formData,
+      ...(isEdit ? { id } : {}),
+      hasDateChanged,
+    });
+
+    await mutation.mutate(
+      {
+        url: url,
+        body: payload,
+        config: { enable: true },
+      },
+      {
+        onSuccess: async (result) => {
+          setShowToast({
+            key: "success",
+            label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
+          });
+          setTimeout(() => {
+            const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`;
+            history.push(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
+            setLoader(false);
+          }, 2000);
+        },
+        onError: () => {
+          setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          setLoader(false);
+        },
+      }
+    );
+  };
+
   const onSubmit = async (formData) => {
     const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
 
@@ -210,56 +260,31 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
 
     prevProjectTypeRef.current = projectType;
 
+    const oldStartDate = normalizeDate(params?.startDate);
+    const oldEndDate = normalizeDate(params?.endDate);
+    const newStartDate = formData?.DateSelection?.startDate;
+    const newEndDate = formData?.DateSelection?.endDate;
+
+    const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
+
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
       setShowToast(null);
       setCurrentKey(currentKey + 1);
     } else {
-      setLoader(true);
-      const isEdit = editName || campaignNumber;
-      const mutation = isEdit ? mutationUpdate : mutationCreate;
-      const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
-      const payload = transformCreateData({
-        totalFormData,
-        hierarchyType,
-        params,
-        formData,
-        ...(isEdit ? { id } : {}),
-      });
-
-      await mutation.mutate(
-        {
-          url: url,
-          body: payload,
-          config: { enable: true },
-        },
-        {
-          onSuccess: async (result) => {
-            setShowToast({
-              key: "success",
-              label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
-            });
-            setTimeout(() => {
-              // history.replace(
-              //   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
-              // );
-              if (isDraft === "true") {
-                history.push(
-                  `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
-                );
-              } else {
-                history.push(
-                  `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
-                );
-              }
-              setLoader(false);
-            }, 2000);
+      if (hasDateChanged && params?.deliveryRules) {
+        setParams((prev) => ({
+          ...prev,
+          additionalDetails: {
+            ...(prev?.additionalDetails || {}),
+            cycleData: [],
+            cycleConfgureDate: undefined,
           },
-          onError: () => {
-            setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
-            setLoader(false);
-          },
-        }
-      );
+        }));
+        setPendingFormData(formData);
+        setShowPopUp(true);
+        return;
+      }
+      handleCampaignMutation(formData);
     }
   };
   const onStepperClick = (step) => {
@@ -308,6 +333,50 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         // primaryActionIconAsSuffix={true}
         // primaryActionIcon={"ArrowDirection"}
       />
+      {showPopUp && (
+        <PopUp
+          className={"boundaries-pop-module"}
+          type={"warning"}
+          heading={t("ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("ES_CAMPAIGN_DELIVERY_BACK")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
+              onClick={() => {
+                setShowPopUp(false);
+                if (pendingFormData) {
+                  handleCampaignMutation(pendingFormData, true);
+                }
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
+      )}
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}

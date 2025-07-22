@@ -144,11 +144,82 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     }
   );
 
+    // Mutation to create new MDMS entries using a dynamic URL with schemaCode
+    const mdmsUpdateMutation = useMutation(
+      async ({ schemaCode, body }) => {
+        const dynamicUrl = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${schemaCode}`;
+        const res = await Digit.CustomService.getResponse({
+          url: dynamicUrl,
+          body,
+        });
+        return res;
+      },
+      {
+        select: (data) => data?.SchemaDefinitions?.[0] || {},
+      }
+    );
+
   // Hook to create service definitions (checklists)
   const useCreateChecklist = Digit.Hooks.campaign.useCreateChecklist(tenantId);
 
   // Clone all MDMS records by regenerating uniqueIdentifiers and replacing campaignNumber
   const createAllMDMSRecords = async (newCampaignNumber) => {
+    const existingCampaignConfig = await Promise.all(
+      SCHEMA_CODES.map(schemaCode =>
+        Digit.CustomService.getResponse({
+          url: `${url}/v2/_search`,
+          body: {
+            MdmsCriteria: {
+              tenantId,
+              schemaCode: `${CONSOLE_MDMS_MODULENAME}.${schemaCode}`,
+              isActive: true,
+              filters: { project: newCampaignNumber},
+            },
+          },
+        }).then(res =>
+          res?.mdms || []
+        )
+      )
+    );
+    const existingCampaignConfigList = existingCampaignConfig?.flat();
+
+    if(existingCampaignConfigList?.length > 0){
+      for (const newItem of mdmsData) {
+        // find the existing MDMS object whose data.name matches
+        const existingItem = existingCampaignConfigList?.find(
+          e => e.data?.name === newItem.data?.name
+        );
+        if (!existingItem) continue; // nothing to update if no match
+  
+        // build payload by taking the full existing object,
+        // but swapping in the fresh data + project number
+        const payload = {
+          Mdms: {
+            ...existingItem,
+            data: {
+              ...newItem.data,
+              project: newCampaignNumber,
+            },
+          },
+        };
+        try {
+          await mdmsUpdateMutation.mutateAsync({
+            schemaCode: existingItem.schemaCode,
+            body: payload,
+          });
+        } catch (err) {
+          setError(err);
+          console.error(
+            `Failed to update MDMS entry for ${existingItem.data?.name}`,
+            err
+          );
+          throw new Error(
+            `MDMS update failed for ${existingItem.data?.name}`
+          );
+        }
+      }
+    } 
+    else {
     for (const mdmsItem of mdmsData) {
       const payload = {
         Mdms: {
@@ -172,6 +243,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         throw new Error(`MDMS creation failed for ${mdmsItem.data?.name}`);
       }
     }
+  }
   };
 
   // Clone all checklists by resetting their IDs and updating their codes
