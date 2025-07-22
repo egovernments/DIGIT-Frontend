@@ -14,7 +14,6 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
  */
 const getTemplateFormatFilter = (projectNo = "", formats = []) => {
   const formatFilter = formats?.map((format) => `@.format=='${format}'`).join("||");
-  console.log("formatFilter", formatFilter);
   return `[?(@.project=='${projectNo}')]`;
   // return `[?(@.project=='${projectNo}')].pages.*.properties[?((${formatFilter})&& @.hidden==false)].format`;
 };
