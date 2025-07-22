@@ -189,7 +189,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         const existingItem = existingCampaignConfigList?.find(
           e => e.data?.name === newItem.data?.name
         );
-        console.log("existingItem", existingItem);
         if (!existingItem) continue; // nothing to update if no match
   
         // build payload by taking the full existing object,
