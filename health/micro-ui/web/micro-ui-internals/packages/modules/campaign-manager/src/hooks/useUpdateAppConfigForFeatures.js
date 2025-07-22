@@ -73,11 +73,7 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
   // Extract enabled feature formats for the current module
   const currentModuleFeatures = availableFormats
     ?.filter((module) => module?.code === currentModule)
-    ?.flatMap((module) =>
-      module?.features
-        ?.filter((feature) => !feature?.disabled)
-        ?.map((feature) => feature?.format)
-    );
+    ?.flatMap((module) => module?.features?.filter((feature) => !feature?.disabled)?.map((feature) => feature?.format));
 
   // Update each page's properties based on feature selection
   dataConfig.data.pages = dataConfig.data.pages.map((page) => {
@@ -85,9 +81,7 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
       let hidden = property?.hidden;
 
       // Check if field is required (should always be visible)
-      const isFieldRequired = property?.validations?.some(
-        (rule) => rule?.type === "required" && rule?.value
-      );
+      const isFieldRequired = property?.validations?.some((rule) => rule?.type === "required" && rule?.value);
 
       // Set hidden based on feature toggle and field requirement
       if (isFieldRequired) {
@@ -111,7 +105,6 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
   return dataConfig;
 };
 
-
 /**
  * Main business logic to search existing MDMS entries and update them.
  *
@@ -119,16 +112,16 @@ const updateAppConfigForFeature = (dataConfig = {}, selectedFeaturesByModule, av
  * @param {string} campaignNo - Campaign identifier (project field in MDMS).
  * @returns {Promise<object>} Result of batch updates or error.
  */
-const updateCurrentAppConfig = async (tenantId, campaignNo,changes,selectedFeaturesByModule,availableFormats) => {
+const updateCurrentAppConfig = async (tenantId, campaignNo, changes, selectedFeaturesByModule, availableFormats) => {
   try {
     const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${HCMCONSOLE_APPCONFIG_MODULENAME}`;
 
     // Fetch all MDMS entries for the given campaign
-    const filters={
+    const filters = {
       project: campaignNo,
-      ...(changes?.keys.length==1?{name:changes?.keys?.[0]}:{})
-    }
-    
+      ...(changes?.keys.length == 1 ? { name: changes?.keys?.[0] } : {}),
+    };
+
     const mdmsRecords = await searchMDMSV2Data(tenantId, schemaCode, filters);
 
     if (!mdmsRecords || mdmsRecords.length === 0) {
@@ -137,7 +130,7 @@ const updateCurrentAppConfig = async (tenantId, campaignNo,changes,selectedFeatu
 
     // Prepare and trigger parallel update calls
     const updatePromises = mdmsRecords.map((record) =>
-      updateMDMSV2Data(schemaCode, { Mdms: updateAppConfigForFeature(record,selectedFeaturesByModule,availableFormats) })
+      updateMDMSV2Data(schemaCode, { Mdms: updateAppConfigForFeature(record, selectedFeaturesByModule, availableFormats) })
     );
 
     const updateResults = await Promise.all(updatePromises);
@@ -155,17 +148,10 @@ const updateCurrentAppConfig = async (tenantId, campaignNo,changes,selectedFeatu
  * @returns {object} Object containing the mutation function and related states.
  */
 const useUpdateAppConfigForFeatures = () => {
-  const {
-    mutate,
-    isLoading,
-    isError,
-    error,
-    data,
-    isSuccess,
-    reset,
-  } = useMutation(
+  const { mutate, isLoading, isError, error, data, isSuccess, reset } = useMutation(
     // Mutation function
-    ({ tenantId, campaignNo ,changes,selectedFeaturesByModule,availableFormats}) => updateCurrentAppConfig(tenantId, campaignNo,changes,selectedFeaturesByModule,availableFormats)
+    ({ tenantId, campaignNo, changes, selectedFeaturesByModule, availableFormats }) =>
+      updateCurrentAppConfig(tenantId, campaignNo, changes, selectedFeaturesByModule, availableFormats)
   );
 
   return {

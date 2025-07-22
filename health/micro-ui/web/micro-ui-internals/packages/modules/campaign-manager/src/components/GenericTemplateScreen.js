@@ -22,7 +22,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
     .filter(
       (field) =>
         !field.hidden &&
-        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton")
+        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton" || field.jsonPath === "qrscanner")
     )
     .sort((a, b) => (a.order || 0) - (b.order || 0));
 
