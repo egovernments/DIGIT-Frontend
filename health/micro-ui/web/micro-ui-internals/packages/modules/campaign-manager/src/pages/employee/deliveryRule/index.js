@@ -30,8 +30,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       cacheTime: 0,
       enabled: true,
       select: (data) => {
-        
-        const temp= getDeliveryConfig({data: data?.["HCM-PROJECT-TYPES"], projectType:selectedProjectType});
+        const temp = getDeliveryConfig({ data: data?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
         return temp;
       },
     },
@@ -42,7 +41,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
 
   const generateTabsData = (tabs, subTabs) => {
-    if (!saved || saved?.length === 0) {
+    if(!saved || saved?.length === 0){
       return [...Array(tabs)].map((_, tabIndex) => ({
         cycleIndex: `${tabIndex + 1}`,
         active: activeCycle == tabIndex + 1 ? true : tabIndex === 0 ? true : false,
@@ -57,25 +56,26 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                       ruleKey: index + 1,
                       delivery: {},
                       deliveryType: item?.deliveryType,
-                      attributes: item?.attributeConfig
-                        ? item?.attributeConfig?.map((i, c) => {
-                            if (i?.operatorValue === "IN_BETWEEN") {
+                      attributes:
+                        Array.isArray(item?.attributeConfig) && item?.attributeConfig.length > 0
+                          ? item?.attributeConfig?.map((i, c) => {
+                              if (i?.operatorValue === "IN_BETWEEN") {
+                                return {
+                                  key: c + 1,
+                                  attribute: { code: i?.attrValue },
+                                  operator: { code: i?.operatorValue },
+                                  toValue: i?.fromValue,
+                                  fromValue: i?.toValue,
+                                };
+                              }
                               return {
                                 key: c + 1,
                                 attribute: { code: i?.attrValue },
                                 operator: { code: i?.operatorValue },
-                                toValue: i?.fromValue,
-                                fromValue: i?.toValue,
+                                value: i?.value,
                               };
-                            }
-                            return {
-                              key: c + 1,
-                              attribute: { code: i?.attrValue },
-                              operator: { code: i?.operatorValue },
-                              value: i?.value,
-                            };
-                          })
-                        : [{ key: 1, attribute: null, operator: null, value: "" }],
+                            })
+                          : [{ key: 1, attribute: null, operator: null, value: "" }],
                       // products: [],
                       products: item?.productConfig
                         ? item?.productConfig?.map((i, c) => ({
@@ -146,25 +146,26 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                         ruleKey: index + 1,
                         delivery: {},
                         deliveryType: item?.deliveryType,
-                        attributes: item?.attributeConfig
-                          ? item?.attributeConfig?.map((i, c) => {
-                              if (i?.operatorValue === "IN_BETWEEN") {
+                        attributes:
+                          Array.isArray(item?.attributeConfig) && item?.attributeConfig.length > 0
+                            ? item?.attributeConfig?.map((i, c) => {
+                                if (i?.operatorValue === "IN_BETWEEN") {
+                                  return {
+                                    key: c + 1,
+                                    attribute: { code: i?.attrValue },
+                                    operator: { code: i?.operatorValue },
+                                    toValue: i?.fromValue,
+                                    fromValue: i?.toValue,
+                                  };
+                                }
                                 return {
                                   key: c + 1,
                                   attribute: { code: i?.attrValue },
                                   operator: { code: i?.operatorValue },
-                                  toValue: i?.fromValue,
-                                  fromValue: i?.toValue,
+                                  value: i?.value,
                                 };
-                              }
-                              return {
-                                key: c + 1,
-                                attribute: { code: i?.attrValue },
-                                operator: { code: i?.operatorValue },
-                                value: i?.value,
-                              };
-                            })
-                          : [{ key: 1, attribute: null, operator: null, value: "" }],
+                              })
+                            : [{ key: 1, attribute: null, operator: null, value: "" }],
                         // products: [],
                         products: item?.productConfig
                           ? item?.productConfig?.map((i, c) => ({
@@ -187,8 +188,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
                       ruleKey: 1,
                       delivery: {},
                       deliveryType: null,
-                      attributes:
-                        [{ key: 1, attribute: null, operator: null, value: "" }],
+                      attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
                       products: [],
                     },
                   ],
@@ -211,15 +211,14 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
           cycle.deliveries.push({
             deliveryIndex: newIndex,
             active: false,
-            deliveryRules:
-              [
-                    {
-                      ruleKey: 1,
-                      delivery: {},
-                      attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                      products: [],
-                    },
-                  ],
+            deliveryRules: [
+              {
+                ruleKey: 1,
+                delivery: {},
+                attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
+                products: [],
+              },
+            ],
           });
         }
       }
@@ -275,16 +274,15 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
         });
         return tempSub;
       case "ADD_DELIVERY_RULE":
-        const updatedDeliveryRules = 
-          [
-              ...action.payload.currentDeliveryRules,
-              {
-                ruleKey: action.payload.currentDeliveryRules.length + 1,
-                delivery: {},
-                attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                products: [],
-              },
-            ];
+        const updatedDeliveryRules = [
+          ...action.payload.currentDeliveryRules,
+          {
+            ruleKey: action.payload.currentDeliveryRules.length + 1,
+            delivery: {},
+            attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
+            products: [],
+          },
+        ];
         const updatedData = state.map((i) => {
           if (i.active) {
             const activeDelivery = i.deliveries.find((j) => j.active);
@@ -385,7 +383,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       cycle: cycleData?.cycleConfgureDate?.cycle,
       deliveries: cycleData?.cycleConfgureDate?.deliveries,
     });
-  }, [cycleData , filteredDeliveryConfig]);
+  }, [cycleData, filteredDeliveryConfig]);
 
   useEffect(() => {
     onSelect("deliveryRule", campaignData);
@@ -399,7 +397,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
   });
 
   if (deliveryConfigLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   return (
     <CycleContext.Provider
