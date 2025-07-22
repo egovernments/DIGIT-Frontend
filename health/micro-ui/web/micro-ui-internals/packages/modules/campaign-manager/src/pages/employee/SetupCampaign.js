@@ -891,6 +891,18 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         ...params,
         [name]: { ...formData },
       });
+      if (formData?.cycleConfigure?.cycleData?.length > 0) {
+        const tempSession = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA") || {};
+        const updated = {
+          ...tempSession,
+          additionalDetails: {
+            ...(tempSession.additionalDetails || {}),
+            cycleData: formData?.cycleConfigure?.cycleData,
+            cycleConfgureDate: formData?.cycleConfigure?.cycleConfgureDate,
+          },
+        };
+        Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", updated);
+      }
     }
 
     if (
