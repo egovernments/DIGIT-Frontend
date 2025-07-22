@@ -1,11 +1,13 @@
 import React, { useState, useEffect, useMemo, Fragment } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, Button, Toggle, Footer, Loader, SVG, TextBlock, CardText, PopUp } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
 import { TEMPLATE_BASE_CONFIG_MASTER } from "./AppModule";
 import { HCMCONSOLE_APPCONFIG_MODULENAME } from "./CampaignDetails";
+
+const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
 /**
  * Utility to create a filter string to fetch formats based on project and allowed formats.
@@ -52,6 +54,7 @@ const AppFeatures = () => {
   const [selectedFeaturesByModule, setSelectedFeaturesByModule] = useState(null);
   const [availableFormats, setAvailableFormats] = useState([]);
   const [selectedModuleCode, setSelectedModuleCode] = useState(null);
+  const [showPopUp, setShowPopUp] = useState(null);
 
   // Fetch all module schemas and their features from MDMS
   const { isLoading: isModuleDataLoading, data: moduleSchemas } = Digit.Hooks.useCustomAPIHook(
@@ -65,6 +68,29 @@ const AppFeatures = () => {
   );
 
   const { updateConfig, isLoading: isUpdateLoading } = Digit.Hooks.campaign.useUpdateAppConfigForFeatures();
+  const { mutate: clearCacheMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
+
+  const reqCriteriaForm = {
+    url: `/${mdms_context_path}/v2/_search`,
+    changeQueryName: `APP_FEATURES_CONFIG_CACHE`,
+    body: {
+      MdmsCriteria: {
+        tenantId: Digit.ULBService.getCurrentTenantId(),
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.AppConfigCache`,
+        isActive: true,
+        filters: {
+          campaignNumber: campaignNumber,
+        },
+      },
+    },
+    config: {
+      select: (data) => {
+        return data?.mdms;
+      },
+    },
+  };
+
+  const { isLoading: isCacheLoading, data: cacheData, refetch: refetchCache } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
   // Fetch selected feature configurations for the campaign
   const selectedFeatureCriteria = useMemo(() => {
@@ -165,6 +191,72 @@ const AppFeatures = () => {
 
   if (isModuleDataLoading) return <Loader page={true} variant={"PageLoader"} />;
 
+  const handleNext = async (clearCache) => {
+    const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
+    const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=FieldTypeMappingConfig&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
+    if (changes?.changed) {
+      if (clearCache) {
+        await Promise.all(
+          clearCache.map(async (cacheData) => {
+            await clearCacheMutate(
+              {
+                moduleName: "HCM-ADMIN-CONSOLE",
+                masterName: "AppConfigCache",
+                data: {
+                  ...cacheData,
+                  data: {
+                    projectType: cacheData?.data?.projectType,
+                    campaignNumber: cacheData?.data?.campaignNumber,
+                    flow: cacheData?.data?.flow,
+                    data: null,
+                  },
+                },
+              },
+              {
+                onError: (error, variables) => {
+                  console.error("Cache clear failed:", error, variables);
+                },
+                onSuccess: async (data) => {
+                  return null;
+                },
+              }
+            );
+          })
+        );
+      }
+      updateConfig(
+        {
+          tenantId,
+          campaignNo: campaignNumber,
+          changes: changes,
+          selectedFeaturesByModule,
+          availableFormats: moduleSchemas,
+        },
+        {
+          onSuccess: () => {
+            history.push(redirectURL);
+          },
+          onError: (err) => {
+            console.error("Update failed:", err);
+          },
+        }
+      );
+    } else {
+      history.push(redirectURL);
+    }
+  };
+
+  const handleConfirmCacheClear = () => {
+    const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
+    const changeExists = changes?.changed || false;
+    const moduleToClearCache = cacheData.filter((i) => changes.keys.includes(i.data.flow) && i.data.data);
+    if (moduleToClearCache?.length > 0 && changeExists) {
+      setShowPopUp(moduleToClearCache);
+    } else {
+      handleNext(false);
+    }
+  };
+  
   return (
     <>
       <div className="hcm-app-features">
@@ -210,34 +302,52 @@ const AppFeatures = () => {
             variation="primary"
             icon={"ArrowDirection"}
             isSuffix
-            onClick={() => {
-              const changes = findIsAnyChangedFeatures(selectedFeaturesByModule, selectedFeatureConfigs);
-              const redirectURL = `/${window.contextPath}/employee/campaign/app-configuration-redesign?variant=app&masterName=${AppConfigSchema}&fieldType=FieldTypeMappingConfig&prefix=${campaignNumber}&localeModule=APPONE&tenantId=${tenantId}&campaignNumber=${campaignNumber}&formId=default&projectType=${projectType}`;
-              if (changes?.changed) {
-                updateConfig(
-                  {
-                    tenantId,
-                    campaignNo: campaignNumber,
-                    changes: changes,
-                    selectedFeaturesByModule,
-                    availableFormats: moduleSchemas,
-                  },
-                  {
-                    onSuccess: () => {
-                      history.push(redirectURL);
-                    },
-                    onError: (err) => {
-                      console.error("Update failed:", err);
-                    },
-                  }
-                );
-              } else {
-                history.push(redirectURL);
-              }
-            }}
+            onClick={() => handleConfirmCacheClear()}
           />,
         ]}
       />
+      {showPopUp && (
+        <PopUp
+          className={"boundaries-pop-module"}
+          type={"default"}
+          heading={t("SURE_TO_CLEAR_CACHE")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("SURE_TO_CLEAR_CACHE_MODAL_TEXT")}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("NO")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("CONFIRM")}
+              onClick={() => {
+                handleNext(showPopUp);
+                setShowPopUp(false);
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        />
+      )}
     </>
   );
 };
@@ -274,6 +384,7 @@ const AppFeaturesList = ({ selectedModuleFeatures, selectedModuleCode, selectedF
     </div>
   );
 };
+
 export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedOption, wrapperClassName = "app-config" }) => {
   // Construct schema code using constants
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`;
@@ -323,7 +434,7 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
 
   // Sort finalToggleOptions by order
   finalToggleOptions.sort((a, b) => {
-    return (orderMap.get(a.code)) - (orderMap.get(b.code));
+    return orderMap.get(a.code) - orderMap.get(b.code);
   });
 
   // Render the toggle UI component
@@ -339,7 +450,7 @@ export const AppConfigTab = ({ toggleOptions = [], handleToggleChange, selectedO
       type="toggle"
       additionalWrapperClass={wrapperClassName}
       variant="vertical"
-      disabled={finalToggleOptions.every(option => option.disabled)}
+      disabled={finalToggleOptions.every((option) => option.disabled)}
     />
   );
 };
