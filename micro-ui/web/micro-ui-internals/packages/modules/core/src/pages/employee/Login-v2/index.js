@@ -32,7 +32,7 @@ const LoginV2 = ({stateCode}) => {
     // 2. Construct the request body for the POST call
     body: {
       MdmsCriteria:{
-        "tenantId": "KAIF",
+        "tenantId": stateCode,
         "moduleDetails": [
             {
                 "moduleName": "sandbox",
