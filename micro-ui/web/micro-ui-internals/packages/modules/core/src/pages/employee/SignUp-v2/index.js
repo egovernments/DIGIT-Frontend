@@ -24,10 +24,8 @@ const SignUpV2 = ({stateCode}) => {
   const location = useLocation();
 
    const { data: mdmsBannerImages, isLoading: loadingimages } = Digit.Hooks.useCustomAPIHook({
-    // 1. Specify the API URL for MDMS search
     url: "/mdms-v2/v1/_search",
 
-    // 2. Construct the request body for the POST call
     body: {
       MdmsCriteria:{
         "tenantId": stateCode,
@@ -44,31 +42,24 @@ const SignUpV2 = ({stateCode}) => {
     }
     },
 
-    // 3. Provide the react-query configuration, including the 'select' function
     config: {
       select: (response) => {
         console.log(response, "response from useCustomAPIHook");
         try {
-          // IMPORTANT: The key in the response is 'mdms' (lowercase).
-          // Path: response -> mdms -> [0] -> data -> bannerImages
           const fetchedBanners =response?.MdmsRes?.sandbox?.BannerImages?.[0]?.bannerImages;
 
-          // Check if we received a valid array
           if (Array.isArray(fetchedBanners) && fetchedBanners.length > 0) {
-            // SUCCESS: Return the full bannerImages array from MDMS
             return fetchedBanners;
           }
 
-          // FAILURE or NO DATA: Return null to fall back to the default
           return null;
 
         } catch (error) {
           console.error("Error processing MDMS data from useCustomAPIHook:", error);
-          // On any processing error, return null
           return null;
         }
       },
-      retry: false, // Optional: prevents retrying on failure
+      retry: false, 
     },
   });
 
@@ -105,22 +96,18 @@ const SignUpV2 = ({stateCode}) => {
   },[mdmsData, isLoading])
 
    const finalConfig = useMemo(() => {
-      // While loading, it's safe to use the default
+      
       if (loadingimages) {
         return defaultSignUpConfig;
       }
-      console.log(mdmsBannerImages, "mdmsBannerImages");
-      // If the API call was successful and returned banner images, merge them
       if (mdmsBannerImages) {
         return [
           {
-            ...defaultSignUpConfig[0],           // Keep all default texts and inputs
-            bannerImages: mdmsBannerImages,    // Override ONLY the bannerImages with the fetched data
+            ...defaultSignUpConfig[0],
+            bannerImages: mdmsBannerImages,
           },
         ];
       }
-  
-      // Otherwise (API failed or returned null), use the local default config
       return defaultSignUpConfig;
   
     }, [loadingimages, mdmsBannerImages]);
