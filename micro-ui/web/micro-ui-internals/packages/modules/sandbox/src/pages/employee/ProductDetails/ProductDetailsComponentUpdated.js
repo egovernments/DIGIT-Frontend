@@ -183,9 +183,11 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink,citizen
                 <div className="wt-tab-wrapper">
                     <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
                     <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
-                    <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
-                        {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
-                    </div>
+                    {module && (
+                        <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
+                            {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
+                        </div>
+                    )}
                 </div>
                 <div className="wt-iframe-wrapper">
                     <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
@@ -375,7 +377,11 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
             <ExperienceSection experience={content.experience} t={t} />
-            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} stakeholderWTLink={getLinkByType(config, 'stakeholder')} module={module} />
+            {module === "FSM" || module === "OBPS" ? (
+                <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} stakeholderWTLink={getLinkByType(config, 'stakeholder')} module={module} />
+            ) : (
+                <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} />
+            )}
         </div>
     );
 };
