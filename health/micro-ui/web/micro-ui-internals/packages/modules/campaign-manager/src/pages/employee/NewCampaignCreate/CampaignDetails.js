@@ -24,11 +24,11 @@ const CampaignDetails = () => {
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
 
-  useEffect(() => {
-    window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-    window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-    window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
-  }, []);
+  // useEffect(() => {
+  //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
+  // }, []);
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,

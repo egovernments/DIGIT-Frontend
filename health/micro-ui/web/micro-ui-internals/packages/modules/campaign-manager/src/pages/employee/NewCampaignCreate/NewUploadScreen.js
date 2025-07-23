@@ -48,6 +48,7 @@ const NewUploadScreen = () => {
   };
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { mutate: updateMapping } = Digit.Hooks.campaign.useUpdateAndUploadExcel(tenantId);
 
   const reqUpdate = {
     url: `/project-factory/v1/project-type/update`,
@@ -178,6 +179,8 @@ const NewUploadScreen = () => {
 
   const onSubmit = async (formData) => {
     const key = Object.keys(formData)?.[0];
+    const name = filteredConfig?.[0]?.form?.[0]?.name;
+
     if (key === "DataUploadSummary") {
       const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
         ? false
@@ -240,6 +243,280 @@ const NewUploadScreen = () => {
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     }
+    else if (name === "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING" && formData?.uploadFacilityMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadFacilityMapping?.schemas;
+      const checkValid = formData?.uploadFacilityMapping?.data?.some(
+        (item) =>
+          item?.[(schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active" &&
+          (!item?.[(schemas?.find((i) => i.description === "Boundary Code")?.name)] ||
+            item?.[(schemas?.find((i) => i.description === "Boundary Code")?.name)]?.length === 0)
+      );
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadFacilityMapping?.arrayBuffer,
+          updatedData: formData?.uploadFacilityMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES",
+          schemas: schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+          },
+          onSuccess: async (data) => {
+            try {
+              
+              const responseTemp = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_create",
+                body: {
+                  ResourceDetails: {
+                    type: "facility",
+                    hierarchyType: campaignData?.hierarchyType,
+                    tenantId: Digit.ULBService.getCurrentTenantId(),
+                    fileStoreId: data,
+                    action: "validate",
+                    campaignId: id,
+                    additionalDetails: {},
+                  },
+                },
+              });
+              const callSecondApiUntilComplete = async () => {
+                let secondApiResponse;
+                let isCompleted = false;
+                let isError = false;
+                while (!isCompleted && !isError) {
+                  secondApiResponse = await Digit.CustomService.getResponse({
+                    url: `/project-factory/v1/data/_search`,
+                    body: {
+                      SearchCriteria: {
+                        tenantId: tenantId,
+                        id: [responseTemp?.ResourceDetails?.id],
+                      },
+                    },
+                  });
+                  // Check if the response has the expected data to continue
+                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isCompleted = true;
+                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isError = true;
+                  } else {
+                    // Optionally, add a delay before retrying
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+                  }
+                }
+                return secondApiResponse;
+              };
+              const reqCriteriaResource = await callSecondApiUntilComplete();
+              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+                setLoader(false);
+                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+                return;
+              }
+              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
+              const restructureTemp = {
+                ...temp,
+                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+                filestoreId: data,
+              };
+              setTotalFormData((prevData) => ({
+                ...prevData,
+                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                  uploadFacility: {
+                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              }));
+              //to set the data in the local storage
+              setParams({
+                ...params,
+                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                  uploadFacility: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              });
+              setLoader(false);
+              if (
+                filteredConfig?.[0]?.form?.[0]?.isLast ||
+                !filteredConfig[0].form[0].body[0].skipAPICall ||
+                (filteredConfig[0].form[0].body[0].skipAPICall && id)
+              ) {
+                setShouldUpdate(true);
+              }
+              if (isChangeDates === "true" && currentKey == 6) {
+                setCurrentKey(16);
+              }
+              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
+              if (isDraft === "true" && isSkip !== "false") {
+                updateUrlParams({ skip: "false" });
+              }
+              return;
+            } catch (error) {
+              if (error?.response?.data?.Errors?.[0]?.description) {
+                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                setLoader(false);
+                return;
+              } else {
+                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                setLoader(false);
+                return;
+              }
+            }
+          },
+        }
+      );
+      return;
+    } else if (name === "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING" && formData?.uploadUserMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadUserMapping?.schemas;
+      const checkValid = formData?.uploadUserMapping?.data?.some(
+        (item) =>
+          item?.[t(schemas?.find((i) => i.description === "User Usage")?.name)] === "Active" &&
+          (!item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
+            item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
+      );
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadUserMapping?.arrayBuffer,
+          updatedData: formData?.uploadUserMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
+          schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+          },
+          onSuccess: async (data) => {
+            try {
+              const responseTemp = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/data/_create",
+                body: {
+                  ResourceDetails: {
+                    type: "user",
+                    hierarchyType: campaignData?.hierarchyType,
+                    tenantId: Digit.ULBService.getCurrentTenantId(),
+                    fileStoreId: data,
+                    action: "validate",
+                    campaignId: id,
+                    additionalDetails: {},
+                  },
+                },
+              });
+              const callSecondApiUntilComplete = async () => {
+                let secondApiResponse;
+                let isCompleted = false;
+                let isError = false;
+                while (!isCompleted && !isError) {
+                  secondApiResponse = await Digit.CustomService.getResponse({
+                    url: `/project-factory/v1/data/_search`,
+                    body: {
+                      SearchCriteria: {
+                        tenantId: tenantId,
+                        id: [responseTemp?.ResourceDetails?.id],
+                      },
+                    },
+                  });
+                  // Check if the response has the expected data to continue
+                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isCompleted = true;
+                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+                    // Replace `someCondition` with your own condition to determine if it's complete
+                    isError = true;
+                  } else {
+                    // Optionally, add a delay before retrying
+                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+                  }
+                }
+                return secondApiResponse;
+              };
+              const reqCriteriaResource = await callSecondApiUntilComplete();
+              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+                setLoader(false);
+                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+                return;
+              }
+              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
+              const restructureTemp = {
+                ...temp,
+                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+                filestoreId: data,
+              };
+              setTotalFormData((prevData) => ({
+                ...prevData,
+                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                  uploadUser: {
+                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              }));
+              //to set the data in the local storage
+              setParams({
+                ...params,
+                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                  uploadUser: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              });
+              setLoader(false);
+              if (
+                filteredConfig?.[0]?.form?.[0]?.isLast ||
+                !filteredConfig[0].form[0].body[0].skipAPICall ||
+                (filteredConfig[0].form[0].body[0].skipAPICall && id)
+              ) {
+                setShouldUpdate(true);
+              }
+              if (isChangeDates === "true" && currentKey == 6) {
+                setCurrentKey(16);
+              }
+              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
+              if (isDraft === "true" && isSkip !== "false") {
+                updateUrlParams({ skip: "false" });
+              }
+              return;
+            } catch (error) {
+              if (error?.response?.data?.Errors?.[0]?.description) {
+                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                setLoader(false);
+                return;
+              } else {
+                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                setLoader(false);
+                return;
+              }
+            }
+          },
+        }
+      );
+      return;
+      }
     const { uploadFacility, uploadUser, uploadBoundary } = formData || {};
 
     if (
@@ -256,7 +533,6 @@ const NewUploadScreen = () => {
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     }
-    const name = latestConfig?.form?.[0]?.name;
 
     setTotalFormData((prevData) => ({
       ...prevData,

@@ -201,9 +201,9 @@ const reducer = (state, action) => {
             return item;
           })
           : state?.data?.map((item) => {
-            const ActiveLoc = action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name);
-            const facilityCode = item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
-            const facilityName = item?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
+            const ActiveLoc = (action?.schemas?.find((i) => i.description === "Facility usage")?.name);
+            const facilityCode = item?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
+            const facilityName = item?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
             // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
             //   return {
             //     ...item,
@@ -212,9 +212,9 @@ const reducer = (state, action) => {
             // }
             // return item;
             if (
-              (facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+              (facilityCode && facilityCode === action?.payload?.row?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
               (!facilityCode &&
-                facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
+                facilityName === action?.payload?.row?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
             ) {
               return {
                 ...item,
@@ -230,8 +230,8 @@ const reducer = (state, action) => {
           state?.filter
             ? temp1?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+                ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
             )
             : temp1,
           state.currentPage,
@@ -243,8 +243,8 @@ const reducer = (state, action) => {
       const tempFilter = action.payload?.filter
         ? state.data?.filter((i) =>
           action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-            ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-            : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+            : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
         )
         : state.data;
       const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
@@ -256,8 +256,8 @@ const reducer = (state, action) => {
         totalRows: action.payload?.filter
           ? state.data?.filter((i) =>
             action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+              ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+              : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
           )?.length
           : state.data?.length,
         filter: action?.payload?.filter,
@@ -368,17 +368,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   );
 
   // Checking for sheet is uploaded
-  if (
-    (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
-      sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
-    (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
-  ) {
-    return (
-      <Fragment>
-        <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
-      </Fragment>
-    );
-  }
+  // if (
+  //   (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
+  //     sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
+  //   (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
+  // ) {
+  //   return (
+  //     <Fragment>
+  //       <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
+  //     </Fragment>
+  //   );
+  // }
   useEffect(() => {
     refetchSchema();
   }, [schemaFilter, currentCategories]);
@@ -439,7 +439,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     }
   }, [allLowestHierarchyCodes, childrenData]);
   useEffect(() => {
-    const lowestBoundary = boundaryHierarchy.reduce((prev, current) => {
+    const lowestBoundary = boundaryHierarchy?.reduce((prev, current) => {
       return prev.parentBoundaryType && !current.parentBoundaryType ? current : prev;
     });
 
@@ -456,14 +456,22 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [lowestHierarchy]);
 
   const getFileStoreId = () => {
+    console.log("formData", formData);
+    debugger;
     switch (formData?.name) {
+    // switch (formData?.config?.[0]?.body?.[0]?.key) {
+      
       case "uploadFacilityMapping":
+        console.log("uploadFacilityMapping");
+        console.log(sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0]?.filestoreId);
         return sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0]?.filestoreId;
         break;
       case "uploadUserMapping":
+        console.log("uploadUserMapping");
         return sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0]?.filestoreId;
         break;
       default:
+        console.log("default");
         return null;
         break;
     }
@@ -910,18 +918,18 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         {
           name: t("FACILITY_NAME"),
           selector: (row) => {
-            return row?.[t(Schemas?.find((i) => i.description === "Facility Name")?.name)] || t("NA");
+            return row?.[(Schemas?.find((i) => i.description === "Facility Name")?.name)] || t("NA");
           },
           sortable: true,
         },
         {
           name: t("FACILITY_TYPE"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Facility type")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Facility type")?.name)] || t("NA"),
           sortable: true,
         },
         {
           name: t("FACILITY_STATUS"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Facility status")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Facility status")?.name)] || t("NA"),
           sortable: true,
         },
         {
@@ -939,7 +947,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             return (
               <Dropdown
                 className="roleTableCell"
-                selected={b?.find((item) => item?.code === row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
+                selected={b?.find((item) => item?.code === row?.[(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
                 isMandatory={true}
                 option={b}
                 select={(value) => {
@@ -963,7 +971,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         {
           name: t("BOUNDARY"),
           cell: (row) => {
-            const listOfBoundaries = row?.[t(Schemas?.find((i) => i.description === "Boundary Code")?.name)]?.split(",") || [];
+            const listOfBoundaries = row?.[(Schemas?.find((i) => i.description === "Boundary Code")?.name)]?.split(",") || [];
             return (
               <div>
                 <div>
