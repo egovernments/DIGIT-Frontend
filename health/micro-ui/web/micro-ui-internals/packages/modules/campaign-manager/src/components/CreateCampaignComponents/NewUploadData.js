@@ -40,6 +40,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
+  const [uploadLoader , setUploadLoader] = useState(false);
+   const [showUploadToast, setShowUploadToast] = useState(null);
   // const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
   //   tenantId,
   //   CONSOLE_MDMS_MODULENAME,
@@ -881,11 +883,22 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
       return;
     }
+    try{
     setFileName(file?.[0]?.name);
+    setUploadLoader(true);
     const module = "HCM-ADMIN-CONSOLE-CLIENT";
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
+     if (!fileStoreIds || fileStoreIds.length === 0) {
+      setUploadLoader(false);
+      setShowToast({key: "error" , label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED")})
+        throw new Error(t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED"));
+      }
     const filesArray = [fileStoreIds?.[0]?.fileStoreId];
     const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
+    if (!fileUrl || fileUrl.length === 0) {
+       setUploadLoader(false);
+        throw new Error(t("HCM_CONSOLE_ERROR_FILE_FETCH_FAILED"));
+      }
     const fileData = fileUrl
       .map((i) => {
         const urlParts = i?.url?.split("/");
@@ -902,9 +915,18 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         };
       })
       .map(({ id, ...rest }) => rest);
+       setUploadLoader(false);
     setUploadedFile(fileData);
     setErrorsType(0);
     // const validate = await validateExcel(file[0]);
+    }
+    catch(error){
+     setShowUploadToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD") });
+    
+    }
+    finally {
+    setUploadLoader(false);
+  }
   };
 
   const onFileDelete = (file, index) => {
@@ -1156,6 +1178,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
 
   const closeToast = () => {
     setShowToast(null);
+    setShowUploadToast(null);
   };
   useEffect(() => {
     if (showToast) {
@@ -1191,6 +1214,7 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
     <>
       <div className="container-full">
         {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
+        {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
           <Card>
              <div style={{display: "flex" , justifyContent: "space-between" }}>
@@ -1316,6 +1340,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
               setShowPopUp(false);
             }}
           ></PopUp>
+        )}
+        {showUploadToast  && (
+          <Toast
+            type={showUploadToast?.key === "error" ? "error" : showUploadToast?.key === "info" ? "info" : showUploadToast?.key === "warning" ? "warning" : "success"}
+            // error={showToast.key === "error" ? true : false}
+            // warning={showToast.key === "warning" ? true : false}
+            // info={showToast.key === "info" ? true : false}
+            label={t(showUploadToast.label)}
+            transitionTime={showUploadToast.transitionTime}
+            onClose={closeToast}
+          />
         )}
         {showToast && (uploadedFile?.length > 0 || downloadError) && (
           <Toast

@@ -13,10 +13,12 @@ import {
   Card,
   CardHeader,
   PopUp,
+  Loader,
 } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR } from "../../../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import getMDMSUrl from "../../../utils/getMDMSUrl";
+import isEqual from "lodash/isEqual";
 
 const DustbinIcon = () => (
   <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -232,104 +234,118 @@ const AddAttributeField = ({
     setDeliveryRules(updatedData);
   };
 
-  return (
-    <div key={attribute?.key} className="attribute-field-wrapper">
-      <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <CardLabel isMandatory={true} className="card-label-smaller">
-          {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
-        </CardLabel>
-        <Dropdown
-          className="form-field"
-          selected={attributeConfig?.find((item) => item?.code === attribute?.attribute?.code)}
-          disable={false}
-          isMandatory={true}
-          option={addedOption ? attributeConfig?.filter((item) => !addedOption.includes(item.code)) : attributeConfig}
-          select={(value) => selectAttribute(value)}
-          optionKey="i18nKey"
-          t={t}
-        />
-      </LabelFieldPair>
-      <LabelFieldPair style={{ marginBottom: "0rem" }}>
-        <CardLabel isMandatory={true} className="card-label-smaller">
-          {t(`CAMPAIGN_OPERATOR_LABEL`)}
-        </CardLabel>
-        <Dropdown
-          className="form-field"
-          selected={attribute?.operator}
-          // disable={attribute?.attribute?.code === "Gender" ? true : false}
-          isMandatory={true}
-          option={operatorConfig}
-          select={(value) => selectOperator(value)}
-          optionKey="code"
-          t={t}
-        />
-      </LabelFieldPair>
+  try {
+    return (
+      <>
+        <div className="attribute-field-wrapper">
+          <LabelFieldPair style={{ marginBottom: "0rem" }}>
+            <CardLabel isMandatory={true} className="card-label-smaller">
+              {t(`CAMPAIGN_ATTRIBUTE_LABEL`)}
+            </CardLabel>
+            <Dropdown
+              className="form-field"
+              showToolTip = {true}
+              selected={attributeConfig?.find((item) => item?.code === attribute?.attribute?.code)}
+              disable={false}
+              isMandatory={true}
+              option={addedOption ? attributeConfig?.filter((item) => !addedOption.includes(item.code)) : attributeConfig}
+              select={(value) => selectAttribute(value)}
+              optionKey="i18nKey"
+              t={t}
+            />
+          </LabelFieldPair>
+          <LabelFieldPair style={{ marginBottom: "0rem" }}>
+            <CardLabel isMandatory={true} className="card-label-smaller">
+              {t(`CAMPAIGN_OPERATOR_LABEL`)}
+            </CardLabel>
+            <Dropdown
+              className="form-field"
+              selected={attribute?.operator}
+              // disable={attribute?.attribute?.code === "Gender" ? true : false}
+              isMandatory={true}
+              option={operatorConfig}
+              showToolTip = {true}
+              select={(value) => selectOperator(value)}
+              optionKey="code"
+              t={t}
+            />
+          </LabelFieldPair>
 
-      {attribute?.operator?.code === "IN_BETWEEN" ? (
-        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
-          <LabelFieldPair style={{ marginBottom: "0rem" }}>
-            <CardLabel className="card-label-smaller">{t(`CAMPAIGN_FROM_LABEL`)}</CardLabel>
-            <div className="field" style={{ display: "flex", width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <TextInput
-                  className=""
-                  // textInputStyle={{ width: "80%" }}
-                  value={attribute?.toValue}
-                  onChange={(e) => selectToFromValue(e, "to")}
-                  disable={false}
-                />
-              </div>
+          {attribute?.operator?.code === "IN_BETWEEN" ? (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem" }}>
+              <LabelFieldPair style={{ marginBottom: "0rem" }}>
+                <CardLabel className="card-label-smaller">{t(`CAMPAIGN_FROM_LABEL`)}</CardLabel>
+                <div className="field" style={{ display: "flex", width: "100%" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                    <TextInput
+                      className=""
+                      // textInputStyle={{ width: "80%" }}
+                      value={attribute?.toValue}
+                      onChange={(e) => selectToFromValue(e, "to")}
+                      disable={false}
+                    />
+                  </div>
+                </div>
+              </LabelFieldPair>
+              <LabelFieldPair style={{ marginBottom: "0rem" }}>
+                <CardLabel className="card-label-smaller">{t(`CAMPAIGN_TO_LABEL`)}</CardLabel>
+                <div className="field" style={{ display: "flex", width: "100%" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
+                    <TextInput
+                      className=""
+                      // textInputStyle={{ width: "80%" }}
+                      value={attribute?.fromValue}
+                      onChange={(e) => selectToFromValue(e, "from")}
+                      disable={false}
+                    />
+                  </div>
+                </div>
+              </LabelFieldPair>
             </div>
-          </LabelFieldPair>
-          <LabelFieldPair style={{ marginBottom: "0rem" }}>
-            <CardLabel className="card-label-smaller">{t(`CAMPAIGN_TO_LABEL`)}</CardLabel>
-            <div className="field" style={{ display: "flex", width: "100%" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <TextInput
-                  className=""
-                  // textInputStyle={{ width: "80%" }}
-                  value={attribute?.fromValue}
-                  onChange={(e) => selectToFromValue(e, "from")}
-                  disable={false}
-                />
+          ) : (
+            <LabelFieldPair style={{ marginBottom: "0rem" }}>
+              <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
+              <div
+                className="field"
+                style={{
+                  display: "flex",
+                  width: "100%",
+                }}
+              >
+                {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
+                attribute?.attribute?.valuesSchema ||
+                isNaN(attribute?.value) ? (
+                  <Dropdown
+                    className="form-field"
+                    selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
+                    disable={false}
+                    isMandatory={true}
+                    option={dropdownOption ? dropdownOption : []}
+                    select={(value) => selectDropdownValue(value)}
+                    optionKey="code"
+                    t={t}
+                  />
+                ) : (
+                  <TextInput
+                    textInputStyle={{ width: "100%" }}
+                    value={attribute?.value ? attribute?.value : ""}
+                    onChange={selectValue}
+                    disable={false}
+                  />
+                )}
               </div>
-            </div>
-          </LabelFieldPair>
+            </LabelFieldPair>
+          )}
+          {delivery.attributes.length !== 1 && (
+            <Button variation="link" style={{ marginTop: "3rem" }} label={t(`CAMPAIGN_DELETE_ROW_TEXT`)} icon="Delete" onClick={() => onDelete()} />
+          )}
         </div>
-      ) : (
-        <LabelFieldPair style={{ marginBottom: "0rem" }}>
-          <CardLabel className="card-label-smaller">{t(`CAMPAIGN_VALUE_LABEL`)}</CardLabel>
-          <div
-            className="field"
-            style={{
-              display: "flex",
-              width: "100%",
-            }}
-          >
-            {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
-            attribute?.attribute?.valuesSchema ||
-            isNaN(attribute?.value) ? (
-              <Dropdown
-                className="form-field"
-                selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
-                disable={false}
-                isMandatory={true}
-                option={dropdownOption ? dropdownOption : []}
-                select={(value) => selectDropdownValue(value)}
-                optionKey="code"
-                t={t}
-              />
-            ) : (
-              <TextInput textInputStyle={{ width: "100%" }} value={attribute?.value ? attribute?.value : ""} onChange={selectValue} disable={false} />
-            )}
-          </div>
-        </LabelFieldPair>
-      )}
-      {delivery.attributes.length !== 1 && (
-        <Button variation="link" style={{ marginTop: "3rem" }} label={t(`CAMPAIGN_DELETE_ROW_TEXT`)} icon="Delete" onClick={() => onDelete()} />
-      )}
-    </div>
-  );
+      </>
+    );
+  } catch (e) {
+    console.error("Rendering error in AddAttributeField", e);
+    return <div>Error rendering field</div>;
+  }
 };
 
 const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
@@ -402,6 +418,15 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
   const selectedStructureCodes = campaignData?.flatMap((cycle) =>
     cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
+
+  if (operatorConfigLoading || commonAttributesLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
+
+  if (Array.isArray(delivery?.attributes) && delivery.attributes.length === 0) {
+    delivery.attributes = [{ key: 1, attribute: null, operator: null, value: "" }];
+  }
+
   return (
     <Card className="attribute-container">
       {delivery.attributes.map((item, index) => (
@@ -504,6 +529,9 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       return updatedDeliveryRules;
     });
   };
+  if (deliveryTypeConfigLoading) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
   return (
     <>
       <Card className="delivery-rule-container">
@@ -578,7 +606,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
       </Card>
       {showModal && (
         <PopUp
-          className={"campaign-product-wrapper campaign-popup-wrap"}
+          className={"campaign-product-wrapper"}
           type={"default"}
           heading={t(`CAMPAIGN_PRODUCTS_MODAL_HEADER_TEXT`)}
           onOverlayClick={() => {
@@ -622,7 +650,13 @@ const AddDeliveryRuleWrapper = ({}) => {
     const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
     const tt = dd?.deliveryRules;
     setTargetedData(dd);
-    setDeliveryRules(tt);
+    // Only update if deliveryRules actually changed
+    setDeliveryRules((prev) => {
+      if (!isEqual(prev, tt)) {
+        return tt;
+      }
+      return prev; // no change
+    });
   }, [campaignData]);
 
   useEffect(() => {
