@@ -44,7 +44,6 @@ const SignUpV2 = ({stateCode}) => {
 
     config: {
       select: (response) => {
-        console.log(response, "response from useCustomAPIHook");
         try {
           const fetchedBanners =response?.MdmsRes?.sandbox?.BannerImages?.[0]?.bannerImages;
 

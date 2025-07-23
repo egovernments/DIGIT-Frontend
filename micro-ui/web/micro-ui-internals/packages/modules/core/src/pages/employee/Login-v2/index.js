@@ -65,8 +65,6 @@ const LoginV2 = ({stateCode}) => {
     },
   });
 
-
-  console.log(mdmsBannerImages, "mdmsBannerImages12345")
     // Timestamp handling
     useEffect(() => {
       const query = new URLSearchParams(location.search);
