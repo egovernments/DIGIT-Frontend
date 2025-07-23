@@ -139,6 +139,14 @@ const AppConfigurationTabLayer = () => {
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
 
   if (isTabLoading) return <Loader />;
+  const waitForTabSave = () => {
+    return new Promise((resolve) => {
+      const event = new CustomEvent("tabChangeWithSave", {
+        detail: { onComplete: resolve },
+      });
+      window.dispatchEvent(event);
+    });
+  };
   return (
     <div>
       {variant === "app" && (
@@ -147,8 +155,9 @@ const AppConfigurationTabLayer = () => {
             wrapperClassName={"app-config-tab"}
             toggleOptions={numberTabs}
             selectedOption={numberTabs?.find((i) => i.active)?.code}
-            handleToggleChange={(tab, index) => {
+            handleToggleChange={async (tab, index) => {
               // setShowPopUp(tab);
+              await waitForTabSave(); // Waits for onComplete to be called
               window.dispatchEvent(new Event("resetStep"));
 
               tabStateDispatch({
