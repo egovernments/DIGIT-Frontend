@@ -330,7 +330,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [chipPopUpRowId, setChipPopUpRowId] = useState(null);
   const [allLowestHierarchyCodes, setAllLowestHierarchyCodes] = useState(null);
   const [allSelectedBoundary, setAllSelectedBoundary] = useState([]);
-  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const sessionData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
   const paramsData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
   const selectedBoundaryData = sessionData?.["HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA"]?.boundaryType?.selectedData;
   const schemaFilter = currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? "facility" : "user";
@@ -339,7 +339,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [translatedSchema, setTranslatedSchema] = useState({});
   const [convertedSchema, setConvertedSchema] = useState({});
-  const totalData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  const totalData = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_UPLOAD_DATA");
   const [showToast, setShowToast] = useState(false);
   const type = formData?.validationType;
 
@@ -457,9 +457,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
   const getFileStoreId = () => {
     console.log("formData", formData);
-    debugger;
-    switch (formData?.name) {
-    // switch (formData?.config?.[0]?.body?.[0]?.key) {
+    
+    //switch (formData?.name) {
+     switch (formData?.config?.[0]?.body?.[0]?.key) {
       
       case "uploadFacilityMapping":
         console.log("uploadFacilityMapping");

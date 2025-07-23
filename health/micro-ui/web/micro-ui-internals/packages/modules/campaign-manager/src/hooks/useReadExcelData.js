@@ -7,6 +7,8 @@ import ExcelJS from "exceljs";
 const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdate, tenantId, schemas, t }) => {
   try {
 
+    console.log("schema", schemas)
+
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(arrayBuffer);
     const targetSheet = workbook.getWorksheet(t(sheetNameToUpdate));
@@ -29,9 +31,12 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
 
+
+      
       //for boundary cell
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES" && cell.value === (schemas?.find((i) => i.description === "Boundary Code")?.name)) {
-
+        console.log("cell",cell.value)
+        console.log("cell-schema",cell.value === (schemas?.find((i) => i.description === "Boundary Code")?.name))
         boundaryCodeColumnIndex = colIndex;
         console.log("boundaryCodeColumnIndex", boundaryCodeColumnIndex);
       } else if (
@@ -141,6 +146,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
 
       } else if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES") {
+
         // Keep existing facility update logic
         const facilityTypeCell = targetSheet.getCell(rowIndex + 2, facilityTypeColumnIndex);
         const facilityNameCell = targetSheet.getCell(rowIndex + 2, facilityNameColumnIndex);
@@ -161,6 +167,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       const cell = targetSheet.getCell(setting.rowIndex + 2, setting.colIndex);
       cell.protection = { locked: setting.locked };
     });
+
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
       if (!cell.value || cell.value === "") {
         // If the header is empty, protect the entire column
@@ -185,9 +192,10 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
     const module = "HCM-ADMIN-CONSOLE-CLIENT";
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, [file], tenantId);
     const filesArray = fileStoreIds?.[0]?.fileStoreId;
-
+    debugger
     return filesArray;
   } catch (error) {
+    debugger
     console.error("Error updating or uploading Excel file:", error);
     throw error;
   }
@@ -229,7 +237,7 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
     const workbook = XLSX.read(arrayBuffer, { type: "array" });
     const sheetName = workbook?.SheetNames?.find((i) => i === sheetNameToFetch);
     const sheetData = XLSX.utils.sheet_to_json(workbook?.Sheets?.[sheetName]);
-    console.log("sheetData", sheetData);  
+    console.log("sheetData", sheetData);
     var jsonData = sheetData.map((row, index) => {
 
       let rowData = {};
@@ -264,7 +272,7 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
 export const useReadExcelData = ({ tenantId, fileStoreId, currentCategories, sheetNameToFetch, config = {} }) => {
   console.log("fileStoreId", fileStoreId);
   console.log("currentCategories", currentCategories);
-  console.log("sheetNameToFetch", sheetNameToFetch);  
+  console.log("sheetNameToFetch", sheetNameToFetch);
 
   return useQuery(
     ["fetchExcelData", tenantId, fileStoreId, sheetNameToFetch],

@@ -22,7 +22,9 @@ const NewUploadScreen = () => {
   });
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-
+  //const id = searchParams.get("id");
+  const id = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.id;
+debugger
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -66,8 +68,8 @@ const NewUploadScreen = () => {
   }, [params]);
 
   useEffect(() => {
-    setUploadConfig(uploadConfig({ totalFormData, campaignData , summaryErrors }));
-  }, [campaignData, totalFormData , summaryErrors]);
+    setUploadConfig(uploadConfig({ totalFormData, campaignData, summaryErrors }));
+  }, [campaignData, totalFormData, summaryErrors]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -185,58 +187,58 @@ const NewUploadScreen = () => {
       const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
         ? false
         : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              target: [
-                {
-                  name: `target`,
-                  error: t(`TARGET_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+          return {
+            ...prev,
+            target: [
+              {
+                name: `target`,
+                error: t(`TARGET_FILE_MISSING`),
+              },
+            ],
+          };
+        }),
           true);
 
       const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
         ? false
         : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              facility: [
-                {
-                  name: `facility`,
-                  error: t(`FACILITY_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+          return {
+            ...prev,
+            facility: [
+              {
+                name: `facility`,
+                error: t(`FACILITY_FILE_MISSING`),
+              },
+            ],
+          };
+        }),
           true);
       const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
         ? false
         : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              user: [
-                {
-                  name: `user`,
-                  error: t(`USER_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+          return {
+            ...prev,
+            user: [
+              {
+                name: `user`,
+                error: t(`USER_FILE_MISSING`),
+              },
+            ],
+          };
+        }),
           true);
 
       if (isTargetError) {
         setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
-        return ;
+        return;
       }
       if (isFacilityError) {
         setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
-        return ;
+        return;
       }
       if (isUserError) {
         setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
-        return ;
+        return;
       }
       setShowToast(null);
       history.push(
@@ -288,6 +290,7 @@ const NewUploadScreen = () => {
                   },
                 },
               });
+              
               const callSecondApiUntilComplete = async () => {
                 let secondApiResponse;
                 let isCompleted = false;
@@ -317,6 +320,7 @@ const NewUploadScreen = () => {
                 return secondApiResponse;
               };
               const reqCriteriaResource = await callSecondApiUntilComplete();
+              
               if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
                 setLoader(false);
                 setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
@@ -337,16 +341,32 @@ const NewUploadScreen = () => {
                   },
                 },
               }));
+              
               //to set the data in the local storage
+              // setParams({
+              //   ...params,
+              //   ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+              //     uploadFacility: {
+              //       ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+              //       uploadedFile: [restructureTemp],
+              //     },
+              //   },
+              // });
               setParams({
                 ...params,
                 ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
                   uploadFacility: {
                     ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
-                    uploadedFile: [restructureTemp],
+                    uploadedFile: [
+                      {
+                        ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0],
+                        filestoreId: data,
+                      },
+                    ],
                   },
                 },
               });
+
               setLoader(false);
               if (
                 filteredConfig?.[0]?.form?.[0]?.isLast ||
@@ -516,7 +536,7 @@ const NewUploadScreen = () => {
         }
       );
       return;
-      }
+    }
     const { uploadFacility, uploadUser, uploadBoundary } = formData || {};
 
     if (

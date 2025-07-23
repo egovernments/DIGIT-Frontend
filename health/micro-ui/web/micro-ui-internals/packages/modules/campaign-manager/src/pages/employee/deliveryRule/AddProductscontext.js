@@ -26,6 +26,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
         deliveryRule: campaignData,
       },
     };
+    
     window.Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", newData);
   };
   const searchParams = new URLSearchParams(location.search);
