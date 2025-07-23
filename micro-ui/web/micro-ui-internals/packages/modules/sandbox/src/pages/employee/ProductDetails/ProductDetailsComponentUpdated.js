@@ -166,10 +166,12 @@ const RoleContent = ({ role, cards, config, t }) => (
     </div>
 );
 
-const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink,citizenWTLink }) => {
+const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink,citizenWTLink,stakeholderWTLink,module }) => {
     const iframeSrc = activeTab === "citizen"
         ? citizenWTLink
-        : employeeWTLink;
+        : activeTab === "employee"
+            ? employeeWTLink
+            : stakeholderWTLink;
 
     return (
         <div className="walkthrough-container" style={{backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
@@ -181,6 +183,9 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink,citizen
                 <div className="wt-tab-wrapper">
                     <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
                     <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+                    <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
+                        {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
+                    </div>
                 </div>
                 <div className="wt-iframe-wrapper">
                     <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
@@ -279,6 +284,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     const [activeTab, setActiveTab] = useState("citizen");
     const [employeeWTLink, setEmployeeWTLink] = useState('');
     const [citizenWTLink, setCitizenWTLink] = useState('');
+    const [stakeholderWTLink, setStakeholderWTLink] = useState('');
 
 
 
@@ -369,7 +375,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
             <ExperienceSection experience={content.experience} t={t} />
-            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} />
+            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} stakeholderWTLink={getLinkByType(config, 'stakeholder')} module={module} />
         </div>
     );
 };
