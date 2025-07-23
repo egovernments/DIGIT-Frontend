@@ -59,15 +59,15 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const [localeModule, setLocaleModule] = useState(null);
   const [changeLoader, setChangeLoader] = useState(false);
 
-  // useEffect(() => {
-  //   if (currentStep === parentState?.currentTemplate?.length) {
-  //     const event = new CustomEvent("lastButtonDisabled", { detail: true });
-  //     window.dispatchEvent(event);
-  //   } else {
-  //     const event = new CustomEvent("lastButtonDisabled", { detail: false });
-  //     window.dispatchEvent(event);
-  //   }
-  // }, [currentStep, parentState]);
+  useEffect(() => {
+    if (currentStep === parentState?.currentTemplate?.length) {
+      const event = new CustomEvent("lastButtonDisabled", { detail: true });
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent("lastButtonDisabled", { detail: false });
+      window.dispatchEvent(event);
+    }
+  }, [currentStep, parentState]);
 
   useEffect(() => {
     const handleResetStep = () => {
@@ -278,7 +278,9 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
             setChangeLoader(false);
-            if (isNextTabAvailable && !finalSubmit) {
+            if (tabChange) {
+              return;
+            } else if (isNextTabAvailable && !finalSubmit) {
               tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
               setCurrentStep(1);
               return;
