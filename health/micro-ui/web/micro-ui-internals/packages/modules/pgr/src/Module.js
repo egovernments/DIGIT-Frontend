@@ -40,7 +40,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
   let user = Digit?.SessionStorage.get("User");
 
 
-  if (isLoading || isPGRInitializing || isHierarchyLoading) {
+  if (isLoading  || isHierarchyLoading) {
     return <Loader />;
   } 
   if (!hierarchySelected) {

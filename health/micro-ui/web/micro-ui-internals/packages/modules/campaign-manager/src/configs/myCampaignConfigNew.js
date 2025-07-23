@@ -14,7 +14,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -113,7 +116,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -212,7 +218,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -311,7 +320,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -410,7 +422,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
