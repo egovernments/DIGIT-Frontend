@@ -7,7 +7,7 @@ import ExcelJS from "exceljs";
 const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdate, tenantId, schemas, t }) => {
   try {
 
-    console.log("schema", schemas)
+
 
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(arrayBuffer);
@@ -29,16 +29,16 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
 
 
+
+
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
 
 
-      
+
       //for boundary cell
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES" && cell.value === (schemas?.find((i) => i.description === "Boundary Code")?.name)) {
-        console.log("cell",cell.value)
-        console.log("cell-schema",cell.value === (schemas?.find((i) => i.description === "Boundary Code")?.name))
         boundaryCodeColumnIndex = colIndex;
-        console.log("boundaryCodeColumnIndex", boundaryCodeColumnIndex);
+
       } else if (
         sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST" &&
         cell.value === (schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)
@@ -49,12 +49,13 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       //for status cell
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES" && cell.value === (schemas?.find((i) => i.description === "Facility usage")?.name)) {
         statusColumnIndex = colIndex;
+
       } else if (
         sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST" &&
         cell.value === (schemas?.find((i) => i.description === "User Usage")?.name)
       ) {
         statusColumnIndex = colIndex;
-        console.log("statusColumnIndex", statusColumnIndex);
+
       }
 
 
@@ -88,10 +89,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         if (cell.value === (schemas?.find((i) => i.description === "Facility status")?.name)) {
           facilityStatusColumnIndex = colIndex;
         }
-        console.log("facilityTypeColumnIndex", facilityTypeColumnIndex);
-        console.log("facilityNameColumnIndex", facilityNameColumnIndex);
-        console.log("capacityColumnIndex", capacityColumnIndex);
-        console.log("facilityStatusColumnIndex", facilityStatusColumnIndex);
+
       }
 
 
@@ -117,20 +115,22 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
 
 
-    console.log("updatedData", updatedData);
+
 
     // Update the cells based on sheet type
     updatedData.forEach((newData, rowIndex) => {
-      const cell = targetSheet.getCell(rowIndex + 2, boundaryCodeColumnIndex);
-      const statusCell = targetSheet.getCell(rowIndex + 2, statusColumnIndex);
+
+
+      const cell = targetSheet.getCell(rowIndex + 3, boundaryCodeColumnIndex);
+      const statusCell = targetSheet.getCell(rowIndex + 3, statusColumnIndex);
 
 
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST") {
         // Update user-specific fields
-        const userRoleCell = targetSheet.getCell(rowIndex + 2, userRoleColumnIndex);
-        const employmentTypeCell = targetSheet.getCell(rowIndex + 2, employmentTypeColumnIndex);
-        const phoneNumberCell = targetSheet.getCell(rowIndex + 2, phoneNumberColumnIndex);
-        const userNameCell = targetSheet.getCell(rowIndex + 2, userNameColumnIndex);
+        const userRoleCell = targetSheet.getCell(rowIndex + 3, userRoleColumnIndex);
+        const employmentTypeCell = targetSheet.getCell(rowIndex + 3, employmentTypeColumnIndex);
+        const phoneNumberCell = targetSheet.getCell(rowIndex + 3, phoneNumberColumnIndex);
+        const userNameCell = targetSheet.getCell(rowIndex + 3, userNameColumnIndex);
 
 
         // Update boundary code and status
@@ -148,10 +148,11 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       } else if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES") {
 
         // Keep existing facility update logic
-        const facilityTypeCell = targetSheet.getCell(rowIndex + 2, facilityTypeColumnIndex);
-        const facilityNameCell = targetSheet.getCell(rowIndex + 2, facilityNameColumnIndex);
-        const capacityCell = targetSheet.getCell(rowIndex + 2, capacityColumnIndex);
-        const facilityStatusCell = targetSheet.getCell(rowIndex + 2, facilityStatusColumnIndex);
+        const facilityTypeCell = targetSheet.getCell(rowIndex + 3, facilityTypeColumnIndex);
+        const facilityNameCell = targetSheet.getCell(rowIndex + 3, facilityNameColumnIndex);
+        const capacityCell = targetSheet.getCell(rowIndex + 3, capacityColumnIndex);
+        const facilityStatusCell = targetSheet.getCell(rowIndex + 3, facilityStatusColumnIndex);
+
 
 
         cell.value = newData?.[(schemas?.find((i) => i.description === "Boundary Code")?.name)];
@@ -160,6 +161,10 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         facilityNameCell.value = newData?.[(schemas?.find((i) => i.description === "Facility Name")?.name)];
         capacityCell.value = Number(newData?.[(schemas?.find((i) => i.description === "Capacity")?.name)] || 0);
         facilityStatusCell.value = newData?.[(schemas?.find((i) => i.description === "Facility status")?.name)];
+
+
+
+
       }
     });
     // Reapply the protection settings for the updated cells
@@ -192,10 +197,10 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
     const module = "HCM-ADMIN-CONSOLE-CLIENT";
     const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, [file], tenantId);
     const filesArray = fileStoreIds?.[0]?.fileStoreId;
-    debugger
+
     return filesArray;
   } catch (error) {
-    debugger
+
     console.error("Error updating or uploading Excel file:", error);
     throw error;
   }
@@ -237,7 +242,7 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
     const workbook = XLSX.read(arrayBuffer, { type: "array" });
     const sheetName = workbook?.SheetNames?.find((i) => i === sheetNameToFetch);
     const sheetData = XLSX.utils.sheet_to_json(workbook?.Sheets?.[sheetName]);
-    console.log("sheetData", sheetData);
+
     var jsonData = sheetData.map((row, index) => {
 
       let rowData = {};
@@ -259,9 +264,9 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
         return rowData;
       }
     });
-    console.log("jsonData", jsonData);
+
     jsonData = jsonData.filter((element) => element).slice(1);
-    console.log("jsonDataSliced", jsonData);
+
     return { sheetData: jsonData, workbook: workbook, arrayBuffer: arrayBuffer }; // Return as array of objects
   } catch (error) {
     throw new Error(error);
@@ -270,9 +275,7 @@ const fetchExcelData = async ({ tenantId, fileStoreId, currentCategories, sheetN
 
 
 export const useReadExcelData = ({ tenantId, fileStoreId, currentCategories, sheetNameToFetch, config = {} }) => {
-  console.log("fileStoreId", fileStoreId);
-  console.log("currentCategories", currentCategories);
-  console.log("sheetNameToFetch", sheetNameToFetch);
+
 
   return useQuery(
     ["fetchExcelData", tenantId, fileStoreId, sheetNameToFetch],

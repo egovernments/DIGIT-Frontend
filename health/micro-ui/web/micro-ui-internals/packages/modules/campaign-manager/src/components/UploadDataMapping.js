@@ -456,22 +456,21 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [lowestHierarchy]);
 
   const getFileStoreId = () => {
-    console.log("formData", formData);
-    
+
+
     //switch (formData?.name) {
-     switch (formData?.config?.[0]?.body?.[0]?.key) {
-      
+    switch (formData?.config?.[0]?.body?.[0]?.key) {
+
       case "uploadFacilityMapping":
-        console.log("uploadFacilityMapping");
-        console.log(sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0]?.filestoreId);
+
         return sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0]?.filestoreId;
         break;
       case "uploadUserMapping":
-        console.log("uploadUserMapping");
+
         return sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0]?.filestoreId;
         break;
       default:
-        console.log("default");
+
         return null;
         break;
     }
@@ -754,22 +753,22 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         {
           name: t("NAME_OF_PERSON"),
           selector: (row) => {
-            return row?.[t(Schemas?.find((i) => i.description === "User Name")?.name)] || t("NA");
+            return row?.[(Schemas?.find((i) => i.description === "User Name")?.name)] || t("NA");
           },
           sortable: true,
         },
         {
           name: t("PHONE_NUMBER"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Phone Number")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Phone Number")?.name)] || t("NA"),
           sortable: true,
         },
         {
           name: t("ROLE"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA"),
           sortable: true,
           cell: (row) => (
             <div
-              title={row?.[t(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
+              title={row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
               style={{
                 whiteSpace: "nowrap",
                 overflow: "hidden",
@@ -777,13 +776,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 maxWidth: "150px",
               }}
             >
-              {row?.[t(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
+              {row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
             </div>
           )
         },
         {
           name: t("EMPLOYEMENT_TYPE"),
-          selector: (row) => row?.[t(Schemas?.find((i) => i.description === "Employement Type")?.name)] || t("NA"),
+          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Employement Type")?.name)] || t("NA"),
           sortable: true,
 
         },
@@ -802,7 +801,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             return (
               <Dropdown
                 className="roleTableCell"
-                selected={a?.find((item) => item?.code === row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)]) || null}
+                selected={a?.find((item) => item?.code === row?.[(Schemas?.find((i) => i.description === "User Usage")?.name)]) || null}
                 isMandatory={true}
                 option={a}
                 select={(value) => {
@@ -826,7 +825,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         {
           name: t("BOUNDARY"),
           cell: (row) => {
-            const listOfBoundaries = row?.[t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.split(",") || [];
+            const listOfBoundaries = row?.[(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.split(",") || [];
             return (
               <div>
                 <div>

@@ -14,7 +14,7 @@ export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 
 function transformCampaignData(inputObj = {}) {
-  console.log("inputObj",inputObj);
+
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
   const deliveryResources = deliveryRule.resources || [];
 
@@ -28,10 +28,10 @@ function transformCampaignData(inputObj = {}) {
         ...deliveryRule,
         resources: Array.isArray(deliveryResources)
           ? deliveryResources.map(r => ({
-              name: r?.name || '',
-              productVariantId: r?.productVariantId ||null,
-              isBaseUnitVariant: r?.isBaseUnitVariant || false
-            }))
+            name: r?.name || '',
+            productVariantId: r?.productVariantId || null,
+            isBaseUnitVariant: r?.isBaseUnitVariant || false
+          }))
           : []
       }
     },
@@ -51,7 +51,7 @@ function transformCampaignData(inputObj = {}) {
       }
     },
     HCM_CAMPAIGN_DELIVERY_DATA: {
-      deliveryRule: [] 
+      deliveryRule: []
     },
     HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
       boundaryType: {
@@ -163,11 +163,11 @@ const CampaignDetails = () => {
       deliveryRules: campaignData?.deliveryRules,
       id: campaignData?.id,
     };
-      
-     const tranformedManagerUploadData= transformCampaignData(campaignData);
-    console.log("tranformedDAta", tranformedManagerUploadData)
+
+    const tranformedManagerUploadData = transformCampaignData(campaignData);
+
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", campaignSessionData);
-     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
+    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
   }, [campaignData]);
 
 
@@ -364,7 +364,7 @@ const CampaignDetails = () => {
           });
         },
         onError: (error, result) => {
-          console.log("error", error);
+
           const errorCode = error?.response?.data?.Errors?.[0]?.description;
           setShowToast({ key: "error", label: t(errorCode) });
         },

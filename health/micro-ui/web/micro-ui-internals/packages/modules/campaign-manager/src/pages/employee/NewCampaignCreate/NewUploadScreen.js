@@ -24,7 +24,7 @@ const NewUploadScreen = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   //const id = searchParams.get("id");
   const id = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.id;
-debugger
+
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
@@ -275,7 +275,7 @@ debugger
           },
           onSuccess: async (data) => {
             try {
-              
+
               const responseTemp = await Digit.CustomService.getResponse({
                 url: "/project-factory/v1/data/_create",
                 body: {
@@ -290,7 +290,7 @@ debugger
                   },
                 },
               });
-              
+
               const callSecondApiUntilComplete = async () => {
                 let secondApiResponse;
                 let isCompleted = false;
@@ -320,7 +320,7 @@ debugger
                 return secondApiResponse;
               };
               const reqCriteriaResource = await callSecondApiUntilComplete();
-              
+
               if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
                 setLoader(false);
                 setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
@@ -341,7 +341,7 @@ debugger
                   },
                 },
               }));
-              
+
               //to set the data in the local storage
               // setParams({
               //   ...params,
