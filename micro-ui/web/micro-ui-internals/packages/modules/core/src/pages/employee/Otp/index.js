@@ -102,7 +102,7 @@ const Otp = ({ isLogin = false }) => {
 
     body: {
       MdmsCriteria:{
-        "tenantId": tenant || "DEFAULT",
+        "tenantId": "DEFAULT" || tenant,
         "moduleDetails": [
             {
                 "moduleName": "sandbox",

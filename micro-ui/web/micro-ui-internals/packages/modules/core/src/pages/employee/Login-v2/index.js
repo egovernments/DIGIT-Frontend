@@ -30,7 +30,7 @@ const LoginV2 = ({stateCode}) => {
 
     body: {
       MdmsCriteria:{
-        "tenantId": stateCode,
+        "tenantId":"DEFAULT"|| stateCode,
         "moduleDetails": [
             {
                 "moduleName": "sandbox",
