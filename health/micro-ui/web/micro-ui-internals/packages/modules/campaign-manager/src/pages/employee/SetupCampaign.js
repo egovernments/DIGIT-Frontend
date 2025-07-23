@@ -891,6 +891,18 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
         ...params,
         [name]: { ...formData },
       });
+      if (formData?.cycleConfigure?.cycleData?.length > 0) {
+        const tempSession = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA") || {};
+        const updated = {
+          ...tempSession,
+          additionalDetails: {
+            ...(tempSession.additionalDetails || {}),
+            cycleData: formData?.cycleConfigure?.cycleData,
+            cycleConfgureDate: formData?.cycleConfigure?.cycleConfgureDate,
+          },
+        };
+        Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", updated);
+      }
     }
 
     if (
@@ -962,6 +974,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (currentKey > 1) {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
+      setSummaryErrors(null);
     }
     if (isSubmit) {
       if (currentKey == 5 || currentKey == 7 || currentKey == 10) {

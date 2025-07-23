@@ -496,7 +496,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     }
     return;
   };
-  const handleSubmit = async (finalSubmit) => {
+  const handleSubmit = async (finalSubmit, tabChange) => {
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
       const errorCheck = validateFromState(
@@ -526,11 +526,25 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     setShowPopUp(false);
     setLoading(false);
     if (updateSuccess || !updateCount) {
-      onSubmit(state, finalSubmit);
+      onSubmit(state, finalSubmit, tabChange); // assumes onSubmit is a stable function
     }
     console.info("LOCALISATION_UPSERT_SUCCESS");
   };
 
+  // useEffect(() => {
+  //   const handleStepChange = (e) => {
+  //     setNextButtonDisable(e.detail);
+  //   };
+  //   // const handleTabChange = (e) => handleSubmit(false, true);
+
+  //   window.addEventListener("lastButtonDisabled", handleStepChange);
+  //   // window.addEventListener("tabChangeWithSave", handleTabChange);
+
+  //   return () => {
+  //     // window.removeEventListener("tabChangeWithSave", handleTabChange);
+  //     window.removeEventListener("lastButtonDisabled", handleStepChange);
+  //   };
+  // }, []);
   const currentPage = parseInt(pageTag.split(" ")[1]);
 
   return (

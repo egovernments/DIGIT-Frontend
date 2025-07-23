@@ -59,12 +59,15 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   const [localeModule, setLocaleModule] = useState(null);
   const [changeLoader, setChangeLoader] = useState(false);
 
-  useEffect(() => {
-    if (currentStep === parentState?.currentTemplate?.length) {
-      const event = new CustomEvent("lastButtonDisabled", { detail: true });
-      window.dispatchEvent(event);
-    }
-  }, [currentStep, parentState]);
+  // useEffect(() => {
+  //   if (currentStep === parentState?.currentTemplate?.length) {
+  //     const event = new CustomEvent("lastButtonDisabled", { detail: true });
+  //     window.dispatchEvent(event);
+  //   } else {
+  //     const event = new CustomEvent("lastButtonDisabled", { detail: false });
+  //     window.dispatchEvent(event);
+  //   }
+  // }, [currentStep, parentState]);
 
   useEffect(() => {
     const handleResetStep = () => {
@@ -201,7 +204,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  const submit = async (screenData, finalSubmit) => {
+  const submit = async (screenData, finalSubmit, tabChange) => {
     if (!finalSubmit && stepper?.find((i) => i.active)?.isLast && !isNextTabAvailable) {
       setShowToast({ key: "error", label: "LAST_PAGE_ERROR" });
       return;
@@ -215,7 +218,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       const updated = screenData.find((d) => d.name === item.name);
       return updated ? updated : item;
     });
-    if (stepper?.find((i) => i.active)?.isLast || finalSubmit) {
+    if (stepper?.find((i) => i.active)?.isLast || finalSubmit || tabChange) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;
