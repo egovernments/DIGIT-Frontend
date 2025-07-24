@@ -369,17 +369,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   );
 
   // Checking for sheet is uploaded
-  // if (
-  //   (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
-  //     sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
-  //   (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
-  // ) {
-  //   return (
-  //     <Fragment>
-  //       <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
-  //     </Fragment>
-  //   );
-  // }
+  if (
+    (currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" &&
+      sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.length === 0) ||
+    (currentCategories === "HCM_UPLOAD_USER_MAPPING" && sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.length === 0)
+  ) {
+    return (
+      <Fragment>
+        <NoResultsFound text={Digit.Utils.locale.getTransformedLocale(`NO_RESULTS_FOR_MAPPING_${currentCategories}`)} />
+      </Fragment>
+    );
+  }
   useEffect(() => {
     refetchSchema();
   }, [schemaFilter, currentCategories]);
