@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import React, { Fragment } from "react";
+import React, { Fragment , useEffect } from "react";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const ROLES = {
@@ -26,6 +26,10 @@ const CampaignCard = () => {
 
   const { t } = useTranslation();
   const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
+
+   useEffect(() => {
+      sessionStorage.removeItem("HCM_SELECTED_TAB_INDEX");
+    }, []);
 
   let links = [
     {
