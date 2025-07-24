@@ -56,7 +56,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
             }
         }
         setShowToast(null);
-        onSubmit(fieldKey, inputValue); // send back key and value
+        onSubmit(fieldKey, trimmedInput); // send back key and value
     };
 
     const handleKeyPress = (e) => {

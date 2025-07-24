@@ -2,6 +2,7 @@ import { TextBlock, TextInput, Card, Button, ButtonGroup } from "@egovernments/d
 import React, { useEffect, Fragment, useState, } from "react";
 import { useTranslation } from "react-i18next";
 import DateRangePicker from "./DateRangePicker";
+import { Dropdown } from "@egovernments/digit-ui-react-components";
 
 /**
  * MyBillsSearch component allows users to search for bills based on bill ID and date range.
@@ -16,6 +17,34 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
     const [billID, setBillID] = useState(null);
     const [billStatus, setBillStatus] = useState(null);
     const [key, setKey] = useState(0);
+    const [selectedStatus, setSelectedStatus] = useState(null);
+
+    const statusValues = [{
+        "title": t("PENDING_VERIFICATION"),
+        "value": "PENDING_VERIFICATION"
+    },
+    {
+        "title": t("PARTIALLY_VERIFIED"),
+        "value": "PARTIALLY_VERIFIED"
+    },
+    {
+        "title": t("FULLY_VERIFIED"),
+        "value": "FULLY_VERIFIED"
+    },
+    {
+        "title": t("PARTIALLY_PAID"),
+        "value": "PARTIALLY_PAID"
+    },
+    {
+        "title": t("FULLY_PAID"),
+        "value": "FULLY_PAID"
+    },
+    {
+        "title": t("PAYMENT_FAILED"),
+        "value": "PAYMENT_FAILED"
+    },
+]
+    // ,"PARTIALLY_VERIFIED","FULLY_VERIFIED","PARTIALLY_PAID","PAYMENT_FAILED","FULLY_PAID"]
 
     // const handleFilterChange = (data) => {
     //     setDateRange(data.range);
@@ -29,6 +58,7 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
         // setDateRange({ startDate: '', endDate: '', title: '' });
         setBillID("");
         setBillStatus("");
+        setSelectedStatus(null);
         setKey((prevKey) => prevKey + 1);
         onClear();
     };
@@ -46,11 +76,15 @@ const VerifyBillsSearch = ({ onSubmit = () => { }, onClear = () => { } }) => {
             </div>
             <div style={{ width: "80%" }}>
                 <TextBlock body={`${t("HCM_AM_STATUS")}`}></TextBlock>
-                <TextInput
-                    value={billStatus}
-                    onChange={(e) => {
-                        setBillStatus(e.target.value);
+                <Dropdown
+                    option={statusValues}
+                    optionKey="title"
+                    selected={selectedStatus}
+                    select={(option) => {
+                        setSelectedStatus(option);
+                        setBillStatus(option.value);
                     }}
+                    placeholder={t("HCM_AM_STATUS")}
                 />
             </div>
             <ButtonGroup
