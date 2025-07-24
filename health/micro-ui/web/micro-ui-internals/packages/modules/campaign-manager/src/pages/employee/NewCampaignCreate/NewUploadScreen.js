@@ -193,7 +193,6 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
-    debugger;
     
     const key = Object.keys(formData)?.[0];
     const name = filteredConfig?.[0]?.form?.[0]?.name;

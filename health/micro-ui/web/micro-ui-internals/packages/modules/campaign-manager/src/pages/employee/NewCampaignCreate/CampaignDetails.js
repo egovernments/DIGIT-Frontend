@@ -1,6 +1,6 @@
 import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
@@ -40,8 +40,8 @@ function transformCampaignData(inputObj = {}) {
     },
     HCM_CAMPAIGN_DATE: {
       campaignDates: {
-        startDate: formatIsoDate(cycle?.fromDate),
-        endDate: formatIsoDate(cycle?.toDate)
+        startDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-"),
+        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-")
       }
     },
     HCM_CAMPAIGN_CYCLE_CONFIGURE: {
@@ -97,6 +97,45 @@ const CampaignDetails = () => {
   const [showQRPopUp, setShowQRPopUp] = useState(false);
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
+  const moduleName = Digit.Utils.campaign.getModuleName();
+
+
+  const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [
+      {
+        name: "HierarchySchema",
+        filter: `[?(@.type=='${moduleName}')]`,
+      },
+    ],
+    {
+      select: (data) => {
+        return data?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.[0]?.hierarchy;
+      },
+    },
+    { schemaCode: "HierarchySchema" }
+  );
+
+  const hierarchyDefinitionReqCriteria = useMemo(() => {
+    return {
+      url: `/boundary-service/boundary-hierarchy-definition/_search`,
+      changeQueryName: `${BOUNDARY_HIERARCHY_TYPE}`,
+      body: {
+        BoundaryTypeHierarchySearchCriteria: {
+          tenantId: tenantId,
+          limit: 2,
+          offset: 0,
+          hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+        },
+      },
+      config: {
+        enabled: !!BOUNDARY_HIERARCHY_TYPE
+      }
+    };
+  }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
+
+  const { data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(hierarchyDefinitionReqCriteria);
 
   // useEffect(() => {
   //   window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
@@ -166,10 +205,14 @@ const CampaignDetails = () => {
     };
 
     const tranformedManagerUploadData = transformCampaignData(campaignData);
-
+    const hierarchyData = {
+      hierarchyType: BOUNDARY_HIERARCHY_TYPE,
+      hierarchy: hierarchyDefinition?.BoundaryHierarchy?.[0],
+    };
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", campaignSessionData);
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
-  }, [campaignData]);
+    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
+  }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
 
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
