@@ -21,7 +21,7 @@ const TopBar = ({
   changeLanguage,
 }) => {
   const { pathname } = useLocation();
-
+  console.log("TopBar pathname", pathname);
   // const showHaburgerorBackButton = () => {
   //   if (pathname === "/digit-ui/citizen" || pathname === "/digit-ui/citizen/" || pathname === "/digit-ui/citizen/select-language") {
   //     return <Hamburger handleClick={toggleSidebar} />;

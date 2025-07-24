@@ -27,7 +27,7 @@ const ProjectStaffComponent = (props) => {
     url: `${healthProjecturl}/staff/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi",
       offset: 0,
       limit: 10,
     },
@@ -63,7 +63,7 @@ const ProjectStaffComponent = (props) => {
   const userRequestCriteria = {
     url: "/user/_search",
     body: {
-      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi",
       uuid: userIds,
     },
     config: {

@@ -97,7 +97,7 @@ export const UICustomizations = {
           },
           dateConfig: {},
           selectConfig: {},
-          textConfig: ["productId", "sku", "variation" , "id"],
+          textConfig: ["productId", "sku", "variation", "id"],
         },
         SearchProjectBeneficiaryConfig: {
           basePath: "ProjectBeneficiary",
@@ -109,7 +109,7 @@ export const UICustomizations = {
             dateOfRegistration: "daystart",
           },
           selectConfig: {},
-          textConfig: ["beneficiaryId", "projectId" , "id" , "clientReferenceId"],
+          textConfig: ["beneficiaryId", "projectId", "id", "clientReferenceId"],
         },
         SearchProjectStaffConfig: {
           basePath: "ProjectStaff",
@@ -121,7 +121,7 @@ export const UICustomizations = {
             endDate: "dayend",
           },
           selectConfig: {},
-          textConfig: ["projectId", "userId" , "id"],
+          textConfig: ["projectId", "userId", "id"],
         },
         SearchProjectResourceConfig: {
           basePath: "ProjectResource",
@@ -181,7 +181,7 @@ export const UICustomizations = {
       const textConfig = paths[id]?.textConfig;
 
       if (paths[id].basePath == "Projects") {
-        data.state.searchForm = { ...data.state.searchForm, tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg" };
+        data.state.searchForm = { ...data.state.searchForm, tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi" };
       }
       let Product = Object.keys(requestBody)
         .map((key) => {

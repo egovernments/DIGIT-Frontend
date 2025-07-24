@@ -8,9 +8,9 @@ const ProductDeliveryComponent = (props) => {
 
     const requestCriteria = {
         url: "/product/v1/_search",
-        changeQueryName:props.projectId,
+        changeQueryName: props.projectId,
         params: {
-            tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
+            tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi",
             offset: 0,
             limit: 10,
         },
@@ -19,12 +19,12 @@ const ProductDeliveryComponent = (props) => {
             Product: {
             },
         },
-        config:{
-            enabled: props.projectId ? true: false
+        config: {
+            enabled: props.projectId ? true : false
         }
     };
 
-    const {isLoading, data: product } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+    const { isLoading, data: product } = Digit.Hooks.useCustomAPIHook(requestCriteria);
 
 
     const columns = [

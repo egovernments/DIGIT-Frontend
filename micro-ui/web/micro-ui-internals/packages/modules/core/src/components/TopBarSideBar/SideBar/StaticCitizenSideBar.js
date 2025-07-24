@@ -154,14 +154,14 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     menuItems = menuItems.filter((item) => item?.id !== "login-btn");
     menuItems = [
       ...menuItems,
-      {
-        text: t("EDIT_PROFILE"),
-        element: "PROFILE",
-        icon: "EditPencilIcon",
-        populators: {
-          onClick: showProfilePage,
-        },
-      },
+      // {
+      //   text: t("EDIT_PROFILE"),
+      //   element: "PROFILE",
+      //   icon: "EditPencilIcon",
+      //   populators: {
+      //     onClick: showProfilePage,
+      //   },
+      // },
       {
         text: t("CORE_COMMON_LOGOUT"),
         element: "LOGOUT",

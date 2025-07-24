@@ -609,7 +609,7 @@ export const UICustomizations = {
       const textConfig = paths[id]?.textConfig;
 
       if (paths[id].basePath == "Projects") {
-        data.state.searchForm = { ...data.state.searchForm, tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg" };
+        data.state.searchForm = { ...data.state.searchForm, tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi" };
       }
       let Product = Object.keys(requestBody)
         .map((key) => {
@@ -832,8 +832,7 @@ export const UICustomizations = {
               window.location.href = url;
             }
             if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${
-                  row.campaignDetails.id
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${10}&microplanId=${row.id}&campaignId=${row.campaignDetails.id
                 }&setup-completed=true`;
             }
           };
@@ -842,7 +841,7 @@ export const UICustomizations = {
             <div>
               {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                 <div>
-                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")}  />
+                  <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={handleDownload} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} />
                 </div>
               ) : (
                 <div className={"action-button-open-microplan"}>
@@ -1032,7 +1031,7 @@ export const UICustomizations = {
               icon={"ArrowForward"}
               type="button"
               isSuffix={true}
-              style={{width:"290px"}}
+              style={{ width: "290px" }}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
@@ -1043,7 +1042,7 @@ export const UICustomizations = {
               title={t("WBH_DOWNLOAD_MICROPLAN")}
               variation="primary"
               icon={"FileDownload"}
-              style={{width:"290px"}}
+              style={{ width: "290px" }}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("DOWNLOAD", row)}
@@ -1054,7 +1053,7 @@ export const UICustomizations = {
               title={t("WBH_EDIT")}
               variation="primary"
               icon={"Edit"}
-              style={{width:"290px"}}
+              style={{ width: "290px" }}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
@@ -1308,9 +1307,9 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return <div style={{display:"flex", gap:".5rem"}}>
+          return <div style={{ display: "flex", gap: ".5rem" }}>
             {t(row?.residingBoundary)}
-          <VillageHierarchyTooltipWrapper  boundaryCode={row?.residingBoundary}/>
+            <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
           </div>
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;

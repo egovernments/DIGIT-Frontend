@@ -1,9 +1,9 @@
-export const UserManagementConfig =() =>{
+export const UserManagementConfig = () => {
 
   const hrms_context_path = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || 'health-hrms';
 
   return {
-    "tenantId": window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
+    "tenantId": window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi",
     "moduleName": "UserManagementConfig",
     "UserManagementConfig": [
       {
@@ -27,8 +27,8 @@ export const UserManagementConfig =() =>{
           "search": {
             "uiConfig": {
               "headerLabel": "ES_COMMON_SEARCH",
-            "type":"search",
-            "typeMobile":"filter",
+              "type": "search",
+              "typeMobile": "filter",
               "searchWrapperStyles": {
                 "flexDirection": "column-reverse",
                 "marginTop": "1.4rem",
@@ -41,8 +41,8 @@ export const UserManagementConfig =() =>{
               "secondaryLabel": "ES_COMMON_CLEAR_SEARCH",
               "minReqFields": 0,
               "defaultValues": {
-              "name":"",
-              "phone":""
+                "name": "",
+                "phone": ""
 
               },
               "fields": [
@@ -54,8 +54,8 @@ export const UserManagementConfig =() =>{
                   "populators": {
                     "name": "name",
                     "error": "ERR_INVALID_NAME",
-                  "style":{
-                    "marginBottom":"0px"
+                    "style": {
+                      "marginBottom": "0px"
                     }
                   },
 
@@ -68,8 +68,8 @@ export const UserManagementConfig =() =>{
                   "populators": {
                     "name": "phone",
                     "error": "ERR_INVALID_PHONE_NUMBER",
-                  "style":{
-                    "marginBottom":"0px"
+                    "style": {
+                      "marginBottom": "0px"
                     },
 
                   },
@@ -98,16 +98,16 @@ export const UserManagementConfig =() =>{
                   "jsonPath": "user.mobileNumber",
                 },
                 {
-                "label":"MP_USER_MANAGEMENT_ROLE",
-                "jsonPath":"user.roles",
-                "additionalCustomization":true
+                  "label": "MP_USER_MANAGEMENT_ROLE",
+                  "jsonPath": "user.roles",
+                  "additionalCustomization": true
                 }
               ],
               "enableGlobalSearch": false,
               "enableColumnSort": true,
               "resultsJsonPath": "Employees",
-            "tableClassName":"table pqm-table",
-            "rowClassName":"table-row-mdms table-row-mdms-hover",
+              "tableClassName": "table pqm-table",
+              "rowClassName": "table-row-mdms table-row-mdms-hover",
 
             },
             "children": {},
@@ -146,7 +146,7 @@ export const UserManagementConfig =() =>{
               "secondaryLabel": "ES_COMMON_CLEAR_FILTER",
               "formClassName": "filter",
               "type": "filter",
-            "typeMobile":"sort",
+              "typeMobile": "sort",
               "headerStyle": null,
               "primaryLabel": "MP_UM_FILTER",
               "minReqFields": 0,
@@ -166,7 +166,7 @@ export const UserManagementConfig =() =>{
                     },
                     "name": "roleschosen",
                     "optionsKey": "roleCode",
-                  "labelKey":"i18nKey",
+                    "labelKey": "i18nKey",
                     "allowMultiSelect": false,
                     "masterName": "commonUiConfig",
                     "moduleName": "UserManagementConfig",
@@ -181,8 +181,8 @@ export const UserManagementConfig =() =>{
           }
         },
         "additionalSections": {},
-      "persistFormData":true,
-      "showAsRemovableTagsInMobile":true
+        "persistFormData": true,
+        "showAsRemovableTagsInMobile": true
       }
     ]
   };

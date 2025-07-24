@@ -12,7 +12,7 @@ const ProjectChildrenComponent = (props) => {
     url: `${url}/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
+      tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi",
       offset: 0,
       limit: 100,
       includeDescendants: true,
@@ -20,7 +20,7 @@ const ProjectChildrenComponent = (props) => {
     body: {
       Projects: [
         {
-          tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg",
+          tenantId: window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi",
           id: props.projectId,
         },
       ],

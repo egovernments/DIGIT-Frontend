@@ -159,7 +159,7 @@ const SelectingBoundaryComponent = ({
     const currentPath = parentPath ? `${data?.code}.${parentPath}` : data?.code;
 
     result[data?.boundaryType] = result[data?.boundaryType] || {};
-    result[data?.boundaryType][data?.code] = parentPath || window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "tg";
+    result[data?.boundaryType][data?.code] = parentPath || window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "gi";
 
     if (data?.boundaryType === lowestBoundaryType) {
       return result;
@@ -220,7 +220,7 @@ const SelectingBoundaryComponent = ({
     if (isBoundaryDataValid && hierarchy && selectedData1?.length > 0 && boundaryOptions[parentRoot]) {
       updateBoundaryOptions(selectedData1, boundaryData, hierarchy);
     }
-  }, [hierarchy, isBoundaryDataValid ,boundaryOptions[parentRoot] ]);
+  }, [hierarchy, isBoundaryDataValid, boundaryOptions[parentRoot]]);
 
   function createHierarchyStructure(hierarchy) {
     const hierarchyStructure = {};
