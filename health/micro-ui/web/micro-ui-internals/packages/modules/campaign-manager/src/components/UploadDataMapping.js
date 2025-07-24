@@ -137,8 +137,8 @@ const reducer = (state, action) => {
       const temp =
         action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
           ? state?.data?.map((item) => {
-            const numberLoc = action.t(action?.schemas?.find((i) => i.description === "Phone Number")?.name);
-            const BoundaryLoc = action.t(action?.schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
+            const numberLoc = (action?.schemas?.find((i) => i.description === "Phone Number")?.name);
+            const BoundaryLoc = (action?.schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
             if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
               return {
                 ...item,
@@ -148,9 +148,9 @@ const reducer = (state, action) => {
             return item;
           })
           : state?.data?.map((item) => {
-            const BoundaryLoc = action.t(action?.schemas?.find((i) => i.description === "Boundary Code")?.name);
-            const facilityCode = item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
-            const facilityName = item?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
+            const BoundaryLoc = (action?.schemas?.find((i) => i.description === "Boundary Code")?.name);
+            const facilityCode = item?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
+            const facilityName = item?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
             // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
             //   return {
             //     ...item,
@@ -190,8 +190,8 @@ const reducer = (state, action) => {
       const temp1 =
         action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
           ? state?.data?.map((item) => {
-            const numberLoc = action.t(action?.schemas?.find((i) => i.description === "Phone Number")?.name);
-            const ActiveLoc = action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name);
+            const numberLoc = (action?.schemas?.find((i) => i.description === "Phone Number")?.name);
+            const ActiveLoc = (action?.schemas?.find((i) => i.description === "User Usage")?.name);
             if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
               return {
                 ...item,
@@ -1320,8 +1320,15 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               <CardText>
                 {currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER_TITLE") : t("USER_MAPPING_POP_HEADER_TITLE")}
               </CardText>
-              <LabelFieldPair key={1}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
+              <LabelFieldPair key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+                <CardLabel style={{ 
+                  marginBottom: "0.4rem",
+                  width: "19rem",
+                  flexShrink: 0,
+                  display: "flex",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
+                  }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
                 <Dropdown
                   className="mappingPopUp"
                   selected={selectedLevel}
@@ -1336,8 +1343,15 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   t={t}
                 />
               </LabelFieldPair>
-              <LabelFieldPair className={"multiselect-label-field"} key={1}>
-                <CardLabel style={{ marginBottom: "0.4rem" }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
+              <LabelFieldPair className={"multiselect-label-field"} key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
+                <CardLabel style={{ 
+                  marginBottom: "0.4rem",
+                  width: "19rem",
+                  flexShrink: 0,
+                  display: "flex",
+                  wordBreak: "break-word",
+                  whiteSpace: "normal",
+                   }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
                 <MultiSelectDropdown
                   variant="nestedmultiselect"
                   props={{
