@@ -3,7 +3,6 @@ import React, { createContext, Fragment, useContext, useEffect, useState } from 
 import { useTranslation } from "react-i18next";
 import UploadDataMapping from "./UploadDataMapping";
 import TagComponent from "./TagComponent";
-import MyUploadDataMapping from "./MyUploadDataMapping";
 
 const UploadDataMappingContext = createContext("UploadDataMappingContext");
 
@@ -31,7 +30,6 @@ function UploadDataMappingWrapper({ props: customProps, formData, currentCategor
             <div style={{ width: "100%" }}>
               {<UploadDataMapping formData={customProps} currentCategories={currentCategories} onSelect={onSelect} />}
 
-             {/* { <MyUploadDataMapping formData={customProps} currentCategories={currentCategories} onSelect={onSelect}  />} */}
             </div>
           </Card>
         </div>
