@@ -580,7 +580,7 @@ const UpdateChecklist = () => {
         // { label: "CHECKLIST_NAME", value: name}            
     ];
 
-    if (isLoading) {
+    if (isLoading || !searchLocalisationData || searchLocalisationData?.length === 0) {
         return <Loader page={true} variant={"PageLoader"}/>;
     }
     return (

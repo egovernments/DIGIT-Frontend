@@ -1,20 +1,56 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import DataTable from "react-data-table-component";
-import { TextInput } from "@egovernments/digit-ui-components";
+import { TextInput, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { tableCustomStyle } from "./tableCustomStyle";
 
 export const AppLocalisationTable = ({ currentScreen, state }) => {
-  const { locState, addMissingKey, updateLocalization } = useAppLocalisationContext();
+  const { locState, locDispatch, addMissingKey, updateLocalization, localeModule } = useAppLocalisationContext();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
+  const { t } = useTranslation();
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+  const availableLocales = (Digit?.SessionStorage.get("initData")?.languages || []).filter((locale) => locale?.value !== currentLocale);
   const currentLocState = useMemo(() => {
-    return locState?.filter(
+    if (!locState || !Array.isArray(locState) || locState.length === 0) {
+      return [];
+    }
+    return (locState || [])?.filter(
       (i) =>
         i?.code &&
         typeof i?.code !== "boolean" &&
         (i?.code?.includes(Digit.Utils.locale.getTransformedLocale(currentScreen)) || i?.code?.includes(currentScreen))
     );
   }, [locState, currentScreen]);
+
+  const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
+    queryKey: "FOR_TABLE",
+    tenantId: tenantId,
+    locale: enabledModules?.map((i) => i.value),
+    fetchCurrentLocaleOnly: false,
+    module: localeModule,
+    isMultipleLocale: enabledModules?.length > 0 ? true : false,
+    config: {
+      select: (data) => {
+        return data;
+      },
+    },
+  });
+
+  useEffect(() => {
+    if (!isLoading) {
+      locDispatch({
+        type: "SET_LOC",
+        payload: {
+          localisationData: localisationData,
+          currentLocale: currentLocale,
+          enabledModules: enabledModules,
+          localeModule: localeModule,
+        },
+      });
+    }
+  }, [localisationData, isLoading, localeModule]);
 
   const hiddenFields = useMemo(() => {
     return state?.screenData?.[0]?.cards?.[0]?.fields?.filter((i) => i?.hidden);
@@ -31,11 +67,10 @@ export const AppLocalisationTable = ({ currentScreen, state }) => {
     }
     return set;
   }, [hiddenFields]);
-
-  const filteredLocData = useMemo(() => currentLocState.filter((locItem) => !fieldValuesSet.has(locItem.code)), [currentLocState, fieldValuesSet]);
-  const { t } = useTranslation();
-  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
-  const availableLocales = (Digit?.SessionStorage.get("initData")?.languages || []).filter((locale) => locale?.value !== currentLocale);
+  const filteredLocData = useMemo(() => (currentLocState || []).filter((locItem) => !fieldValuesSet.has(locItem.code)), [
+    currentLocState,
+    fieldValuesSet,
+  ]);
 
   const columns = [
     {
@@ -61,6 +96,9 @@ export const AppLocalisationTable = ({ currentScreen, state }) => {
     })) || []),
   ];
 
+  if (isLoading || !locState) {
+    return <Loader />;
+  }
   return (
     <div>
       <DataTable customStyles={tableCustomStyle} columns={columns} data={filteredLocData} pagination highlightOnHover />

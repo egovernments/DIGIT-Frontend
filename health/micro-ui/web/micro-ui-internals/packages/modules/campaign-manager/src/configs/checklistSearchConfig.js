@@ -1,6 +1,4 @@
-
-  
-  const tenantId = Digit?.ULBService?.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId() || "mz";
   const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
   export const checklistSearchConfig = [
     {
