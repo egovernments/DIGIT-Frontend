@@ -106,13 +106,11 @@ const CampaignDetails = () => {
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
-    params:{
-      isOverrideDatesFromProject: true
-    },
     body: {
       CampaignDetails: {
         tenantId: tenantId,
         campaignNumber: campaignNumber,
+        isOverrideDatesFromProject: true
       },
     },
     config: {

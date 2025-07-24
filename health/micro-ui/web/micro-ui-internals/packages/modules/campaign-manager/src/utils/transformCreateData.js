@@ -1,5 +1,21 @@
 export const transformCreateData = ({totalFormData, hierarchyType , params , formData ,id , hasDateChanged}) => {
-  const startDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || formData?.DateSelection?.startDate || params?.DateSelection?.startDate);
+  function getStartDateEpoch(rawDate) {
+  if (!rawDate) return null;
+
+  let dateObj;
+
+  // Case 1: ISO format "2025-07-27T00:00:00.000Z"
+  if (rawDate.includes("T")) {
+    dateObj = new Date(rawDate);
+  } else {
+    // Case 2: "2025-07-27"
+    const [year, month, day] = rawDate.split("-").map(Number);
+    dateObj = new Date(Date.UTC(year, month - 1, day)); // UTC midnight
+  }
+
+  return dateObj.getTime(); // Epoch in milliseconds
+}
+  const startDate =  getStartDateEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.startDate || formData?.DateSelection?.startDate || params?.DateSelection?.startDate);
   const endDate =  Digit.Utils.date.convertDateToEpoch(totalFormData?.HCM_CAMPAIGN_DATE?.DateSelection?.endDate || formData?.DateSelection?.endDate || params?.DateSelection?.endDate);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const cycleDataFromForm =

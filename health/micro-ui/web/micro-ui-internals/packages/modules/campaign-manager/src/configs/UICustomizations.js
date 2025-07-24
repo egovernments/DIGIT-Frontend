@@ -372,6 +372,8 @@ export const UICustomizations = {
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: true,
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
@@ -564,6 +566,8 @@ export const UICustomizations = {
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         endDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
@@ -708,6 +712,8 @@ export const UICustomizations = {
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: false,
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
@@ -902,6 +908,8 @@ export const UICustomizations = {
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["drafted"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
@@ -996,6 +1004,8 @@ export const UICustomizations = {
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["drafted"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
@@ -1090,6 +1100,8 @@ export const UICustomizations = {
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["failed"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
