@@ -144,6 +144,28 @@ const CreateEmployee = () => {
   };
 
 
+  const ToastOverlay = ({ showToast, t, onClose }) => {
+  if (!showToast) return null;
+  return (
+    <div style={{
+      position: "fixed",
+      bottom: "100px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      zIndex: 9999,
+      maxWidth: "90%",
+    }}>
+      <Toast
+        type={showToast.key}
+        label={t(showToast.label)}
+        onClose={onClose}
+      />
+    </div>
+  );
+};
+
+
+
 
   const onSubmit = async (data) => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
@@ -281,15 +303,8 @@ const CreateEmployee = () => {
         // isDisabled={!canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
-      {showToast && (
-        <Toast
-          type={showToast.key}
-          label={t(showToast.label)}
-          onClose={() => {
-            setShowToast(null);
-          }}
-        />
-      )}
+
+      <ToastOverlay showToast={showToast} t={t} onClose={() => setShowToast(null)} />
     </div>
   );
 };
