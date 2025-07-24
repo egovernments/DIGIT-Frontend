@@ -9,6 +9,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AppPreview from "../../../components/AppPreview";
 import { useCustomT } from "./useCustomT";
+import { useQueryClient } from "react-query";
 
 const AppConfigContext = createContext();
 
@@ -287,6 +288,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
 function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
+    const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -355,14 +357,16 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     setShowToast(null);
   };
 
-  function createLocaleArrays() {
+  function createLocaleArrays(fetchCurrentLocaleOnly) {
     const result = {};
 
     if (!Array.isArray(locState) || !locState[0] || typeof currentLocale !== "string" || !currentLocale.includes("_")) {
       return result;
     }
     // Dynamically determine locales
-    const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
+    const locales = fetchCurrentLocaleOnly
+      ? []
+      : Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
       result[locale] = locState
@@ -474,6 +478,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
       const result = await localisationMutate(localeArrays);
       updateCount = updateCount + 1;
       updateSuccess = true;
+      queryClient.removeQueries(`SEARCH_APP_LOCALISATION_FOR_TABLE`);
       setShowToast({ key: "success", label: "TRANSLATIONS_SAVED_SUCCESSFULLY" });
     } catch (error) {
       setLoading(false);
@@ -499,7 +504,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
         return;
       }
     }
-    const localeArrays = createLocaleArrays();
+    const localeArrays = createLocaleArrays(true);
     let updateCount = 0;
     let updateSuccess = false;
     try {

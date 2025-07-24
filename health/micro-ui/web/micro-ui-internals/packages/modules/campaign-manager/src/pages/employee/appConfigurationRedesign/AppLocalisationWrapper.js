@@ -78,6 +78,7 @@ function AppLocalisationWrapperDev({ onSubmit, localeModule, screenConfig, back,
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
     tenantId: tenantId,
     locale: enabledModules?.map((i) => i.value),
+    fetchCurrentLocaleOnly: true,
     module: localeModule,
     isMultipleLocale: enabledModules?.length > 0 ? true : false,
     config: {
@@ -122,6 +123,7 @@ function AppLocalisationWrapperDev({ onSubmit, localeModule, screenConfig, back,
         back,
         showBack,
         parentDispatch,
+        localeModule
       }}
     >
       <AppConfigurationWrapper pageTag={props?.pageTag} screenConfig={screenConfig} localeModule={localeModule} />

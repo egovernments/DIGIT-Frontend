@@ -335,7 +335,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       />
       {showPopUp && (
         <PopUp
-          className={"boundaries-pop-module"}
+          className={"deliveries-pop-module"}
           type={"warning"}
           heading={t("ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS")}
           children={[
