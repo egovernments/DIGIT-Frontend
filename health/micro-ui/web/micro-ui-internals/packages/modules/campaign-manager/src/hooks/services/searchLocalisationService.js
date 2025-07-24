@@ -1,5 +1,6 @@
-const searchLocalisationService = async ({ tenantId, module, locale, params = {}, isMultipleLocale = false }) => {
+const searchLocalisationService = async ({ tenantId, module, locale: locales, params = {}, fetchCurrentLocaleOnly, isMultipleLocale = false }) => {
   try {
+    const locale = fetchCurrentLocaleOnly ? Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage : locales;
     if (isMultipleLocale && Array.isArray(locale)) {
       // Parallel API calls for multiple modules
       const promises = locale.map((loc) =>
