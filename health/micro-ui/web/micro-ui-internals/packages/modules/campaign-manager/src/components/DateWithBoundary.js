@@ -260,6 +260,7 @@ const DateWithBoundary = ({ onSelect, formData, ...props }) => {
       name: state?.name ? state.name : historyState?.name,
       tenantId: tenantId,
       boundaries: targetBoundary,
+      referenceID: campaignNumber
     });
     setProjectData(temp);
   };
