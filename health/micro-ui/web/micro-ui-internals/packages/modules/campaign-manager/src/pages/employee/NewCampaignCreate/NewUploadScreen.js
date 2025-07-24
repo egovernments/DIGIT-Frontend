@@ -441,9 +441,9 @@ const NewUploadScreen = () => {
       const schemas = formData?.uploadUserMapping?.schemas;
       const checkValid = formData?.uploadUserMapping?.data?.some(
         (item) =>
-          item?.[t(schemas?.find((i) => i.description === "User Usage")?.name)] === "Active" &&
-          (!item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
-            item?.[t(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
+          item?.[(schemas?.find((i) => i.description === "User Usage")?.name)] === "Active" &&
+          (!item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
+            item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
       );
       if (checkValid) {
         setLoader(false);
@@ -465,59 +465,90 @@ const NewUploadScreen = () => {
             setShowToast({ key: "error", label: error });
           },
           onSuccess: async (data) => {
+
             try {
+              debugger
+              const useProcess = await Digit.Hooks.campaign.useProcessData(
+                [{ filestoreId: data }],
+                hirechyType,
+                `${type}Validation`,
+                tenantId,
+                id,
+                baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
+              );
+
+              debugger
+              const campaignDetails = {
+                ...campaignData, "resources": [
+                  {
+                    "type": type,
+                    "filename": params?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile[0].filename,
+                    "filestoreId": data
+                  }
+                ]
+              }
+
               const responseTemp = await Digit.CustomService.getResponse({
-                url: "/project-factory/v1/data/_create",
+                url: "/project-factory/v1/project-type/update",
                 body: {
-                  ResourceDetails: {
-                    type: "user",
-                    hierarchyType: campaignData?.hierarchyType,
-                    tenantId: Digit.ULBService.getCurrentTenantId(),
-                    fileStoreId: data,
-                    action: "validate",
-                    campaignId: id,
-                    additionalDetails: {},
+                  CampaignDetails: campaignDetails,
+                },
+              });
+
+              debugger
+              const secondApiResponse = await Digit.CustomService.getResponse({
+                url: `/project-factory/v1/data/_search`,
+                body: {
+                  SearchCriteria: {
+                    tenantId: tenantId,
+                    id: [useProcess?.id],
+                    type: useProcess?.type
                   },
                 },
               });
-              const callSecondApiUntilComplete = async () => {
-                let secondApiResponse;
-                let isCompleted = false;
-                let isError = false;
-                while (!isCompleted && !isError) {
-                  secondApiResponse = await Digit.CustomService.getResponse({
-                    url: `/project-factory/v1/data/_search`,
-                    body: {
-                      SearchCriteria: {
-                        tenantId: tenantId,
-                        id: [responseTemp?.ResourceDetails?.id],
-                      },
-                    },
-                  });
-                  // Check if the response has the expected data to continue
-                  if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
-                    // Replace `someCondition` with your own condition to determine if it's complete
-                    isCompleted = true;
-                  } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
-                    // Replace `someCondition` with your own condition to determine if it's complete
-                    isError = true;
-                  } else {
-                    // Optionally, add a delay before retrying
-                    await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
-                  }
-                }
-                return secondApiResponse;
-              };
-              const reqCriteriaResource = await callSecondApiUntilComplete();
-              if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
-                setLoader(false);
-                setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
-                return;
-              }
+
+              debugger
+
+              // const callSecondApiUntilComplete = async () => {
+              //   let secondApiResponse;
+              //   let isCompleted = false;
+              //   let isError = false;
+              //   while (!isCompleted && !isError) {
+              //     secondApiResponse = await Digit.CustomService.getResponse({
+              //       url: `/project-factory/v1/data/_search`,
+              //       body: {
+              //         SearchCriteria: {
+              //           tenantId: tenantId,
+              //           id: [responseTemp?.ResourceDetails?.id],
+              //         },
+              //       },
+              //     });
+              //     // Check if the response has the expected data to continue
+              //     if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+              //       // Replace `someCondition` with your own condition to determine if it's complete
+              //       isCompleted = true;
+              //     } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+              //       // Replace `someCondition` with your own condition to determine if it's complete
+              //       isError = true;
+              //     } else {
+              //       // Optionally, add a delay before retrying
+              //       await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+              //     }
+              //   }
+              //   return secondApiResponse;
+              // };
+              // const reqCriteriaResource = await callSecondApiUntilComplete();
+              // if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+              //   setLoader(false);
+              //   setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+              //   return;
+              // }
+
+
               const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
               const restructureTemp = {
                 ...temp,
-                resourceId: reqCriteriaResource?.ResourceDetails?.[0]?.id,
+                resourceId: useProcess?.id,
                 filestoreId: data,
               };
               setTotalFormData((prevData) => ({
@@ -530,15 +561,32 @@ const NewUploadScreen = () => {
                 },
               }));
               //to set the data in the local storage
+              // setParams({
+              //   ...params,
+              //   ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+              //     uploadUser: {
+              //       ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+              //       uploadedFile: [restructureTemp],
+              //     },
+              //   },
+              // });
+
               setParams({
                 ...params,
                 ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
-                  uploadUser: {
-                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
-                    uploadedFile: [restructureTemp],
+                  uploadFacility: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadFacility,
+                    uploadedFile: [
+                      {
+                        ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadFacility?.uploadedFile?.[0],
+                        filestoreId: data,
+                      },
+                    ],
                   },
                 },
               });
+
+
               setLoader(false);
               if (
                 filteredConfig?.[0]?.form?.[0]?.isLast ||
@@ -554,6 +602,7 @@ const NewUploadScreen = () => {
 
               return;
             } catch (error) {
+              debugger
               if (error?.response?.data?.Errors?.[0]?.description) {
                 setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
                 setLoader(false);
