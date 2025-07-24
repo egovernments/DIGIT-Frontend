@@ -52,6 +52,7 @@ const initDigitUI = () => {
 ### Changelog
 
 ```bash
+1.8.14 PRR-VALIDATIONS ADDED
 1.8.1-beta.1 used new color constants
 1.8.0 workbench v1.0 release
 1.8.0-beta.3 republished due to some version issues
