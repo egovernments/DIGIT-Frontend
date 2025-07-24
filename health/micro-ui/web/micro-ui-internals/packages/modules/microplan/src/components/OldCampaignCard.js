@@ -1,5 +1,5 @@
 import { EmployeeModuleCard, SVG } from "@egovernments/digit-ui-react-components";
-import React from "react";
+import React, { useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 const ROLES = {
@@ -17,8 +17,12 @@ const CampaignCard = () => {
 
   const { t } = useTranslation();
   const userId = Digit.UserService.getUser().info.uuid;
-  const microplanStatus =  "RESOURCE_ESTIMATIONS_APPROVED"
- 
+  const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
+
+  useEffect(() => {
+    sessionStorage.removeItem("HCM_SELECTED_TAB_INDEX");
+  }, []);
+
   let links = [
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
