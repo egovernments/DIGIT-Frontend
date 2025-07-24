@@ -49,7 +49,8 @@ export const uploadConfig = ({totalFormData, campaignData,  summaryErrors}) => {
                 // dataParams: dataParams,
                 sessionData: totalFormData,
                 // hierarchyData: hierarchyData,
-                type: "facilityWithBoundaryMapping",
+                // type: "facilityWithBoundaryMapping",
+                type: "facility",
                 validationType: "facilityWithBoundary"
               },
               populators: {
