@@ -22,16 +22,38 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
 
 
 
+    const handleSave = () => {
+        const trimmedInput = inputValue?.trim();
+        // Mobile number validation
+        if (fieldKey === "mobileNumber") {
+            const mobileRegex = /^[0-9]{9}$/;
 
-  const handleSave = () => {
-    console.log("handleSave called with inputValue:", inputValue);
-        if (!inputValue || inputValue.trim() === "") {
-            setShowToast({
-                key: "error",
-                label: t("HCM_AM_COMMENT_REQUIRED_ERROR_TOAST_MESSAGE"),
-                transitionTime: 3000
-            });
-            return;
+            if (!trimmedInput) {
+                setShowToast({
+                    key: "error",
+                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 9-digit mobile number.",
+                    transitionTime: 3000
+                });
+                return;
+            }
+            else if (!mobileRegex.test(trimmedInput)) {
+                setShowToast({
+                    key: "error",
+                    label: t("HCM_AM_INVALID_MOBILE_NUMBER_ERROR_TOAST_MESSAGE") || "Please enter a valid 9-digit mobile number.",
+                    transitionTime: 3000
+                });
+                return;
+            }
+        }
+        else if (fieldKey === "givenName") {
+            if (!trimmedInput) {
+                setShowToast({
+                    key: "error",
+                    label: t("HCM_AM_INVALID_NAME_ERROR_TOAST_MESSAGE") || "Please enter a valid name.",
+                    transitionTime: 3000
+                });
+                return;
+            }
         }
         setShowToast(null);
         onSubmit(fieldKey, inputValue); // send back key and value
@@ -45,7 +67,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
 
     return (
         <>
-        {/*TODO: ADD LOGIC TO CLEAR SAVED FIELDS NAMES */}
+            {/*TODO: ADD LOGIC TO CLEAR SAVED FIELDS NAMES */}
             <PopUp
                 style={{ width: "700px" }}
                 onClose={onClose}
@@ -59,7 +81,7 @@ const EditWorkerDetailsPopUp = ({ onClose, onSubmit, editFieldName, fieldKey, in
                             style={{ maxWidth: "100%" }}
                             value={inputValue}
                             onChange={(e) => setInputValue(e.target.value)}
-                            
+
                         />
                     </div>
                 ]}
