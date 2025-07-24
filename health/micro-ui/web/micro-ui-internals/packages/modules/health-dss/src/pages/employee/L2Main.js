@@ -156,7 +156,10 @@ const L2Main = ({}) => {
   const { t } = useTranslation();
   const projectTypeId = getProjectTypeIDFromURL();
   const boundaryType = new URLSearchParams(location.search).get("boundaryType");
-  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");  
+  const campaignData = Digit.SessionStorage.get("campaignSelected");
+  const projectData= Digit.SessionStorage.get("projectSelected");
+  const campaignId = new URLSearchParams(location.search).get("campaignId");
   const [filters, setFilters] = useState(() => {
     const {
       startDate,
@@ -189,7 +192,9 @@ const L2Main = ({}) => {
         // province: province || boundaries?.province?.[0] || null,
         // district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId,
-        ...dynamicBoundaryFilter
+        campaignId : campaignId,
+        ...dynamicBoundaryFilter,
+   
       },
       moduleLevel: moduleLevel,
     };
@@ -272,7 +277,7 @@ const L2Main = ({}) => {
   const { search } = useLocation();
   const [showProgressBar, setShowProgressBar] = useState(false);
   const [pageZoom, setPageZoom] = useState(false);
-  const campaignData = Digit.SessionStorage.get("campaigns-info");
+
 
   useEffect(() => {
     if (showDownloadOptions === false) {
