@@ -349,25 +349,28 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const { data: Schemas, isLoading: isThisLoading, refetch: refetchSchema } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [{ name: "adminSchema" }],
+    [{ name: "schemas" }],
     {
       cacheTime: 0,
       staleTime: 0,
       select: (data) => {
-        const currentSchema = data?.["HCM-ADMIN-CONSOLE"]?.adminSchema?.filter((i) => i?.title === schemaFilter && i?.campaignType === "all");
+        console.log("currentSchema Data:", data);
+
+        const currentSchema = data?.["HCM-ADMIN-CONSOLE"]?.schemas?.filter((i) => i?.title === schemaFilter);
+        console.log("currentSchema:", currentSchema);
         const result = Object.values(currentSchema?.[0]?.properties)?.flatMap((arr) => arr?.map((item) => item));
         return result;
       },
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.schemas` }
   );
 
   const { data: SchemasAJV, isLoading: isThisLoadingAJV } = Digit.Hooks.useCustomMDMS(
     tenantId,
     CONSOLE_MDMS_MODULENAME,
-    [{ name: "adminSchema" }],
+    [{ name: "schemas" }],
     {},
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.adminSchema` }
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.schemas` }
   );
 
   // Checking for sheet is uploaded
@@ -508,6 +511,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }
 
   function convertIntoSchema(data) {
+    console.log("convertIntoSchema data:", data);
     var convertData = { ...data };
     var properties = {};
     var required = [];
@@ -545,11 +549,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
     // Translate properties keys and their 'name' fields
     Object.keys(schema?.properties).forEach((key) => {
-      const translatedKey = t(key);
-      const translatedProperty = { ...schema.properties[key], name: t(schema.properties[key].name) };
+      const translatedKey = (key);
+      const translatedProperty = { ...schema.properties[key], name: (schema.properties[key].name) };
       newProp[translatedKey] = translatedProperty;
     });
-    const newRequired = schema?.required.map((e) => t(e));
+    const newRequired = schema?.required.map((e) => (e));
 
     newSchema.properties = newProp;
     newSchema.required = newRequired;
@@ -568,7 +572,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           return schemaProperties[key].isUpdate !== true;
         });
       };
-
+      console.log("newBoundarySchema:", newBoundarySchema);
+      console.log("newFacilitySchema:", newFacilitySchema);
+      console.log("newUserSchema:", newUserSchema); 
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),
         facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
@@ -581,22 +587,24 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         userWithBoundary: newUserSchema,
       };
 
+      console.log("Schema:", schema);
+
       setTranslatedSchema(schema);
     }
   }, [convertedSchema]);
 
   useEffect(async () => {
-    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
+    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
       const facility = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
       );
       const boundary = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter(
           (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
         )?.[0]
       );
       const user = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
       );
       const schema = {
         boundary: boundary,
@@ -611,7 +619,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const validateData = (data) => {
     console.log("Validate Data:", data);
 
-    const roleKey = "Role (Mandatory)"
+    const roleKey = "HCM_ADMIN_CONSOLE_USER_ROLE"
     const roles = data[roleKey];
     // Role max limit validation (if it's an array)
     if (typeof roles === "string" && roles.split(",").length > 5) {
@@ -630,6 +638,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       data[capacityKey] = Number(data[capacityKey]);
     }
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
+    console.log("translateSchema[type]:", translateSchema);
+     console.log("[type]:", type);
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 

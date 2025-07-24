@@ -5,8 +5,10 @@ import ExcelJS from "exceljs";
 
 
 const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdate, tenantId, schemas, t }) => {
-  try {
+  
 
+  try {
+    
 
 
     const workbook = new ExcelJS.Workbook();
@@ -22,6 +24,11 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
     // Column index tracking variables
     let userRoleColumnIndex = null;
+    let userRole1ColumnIndex = null;
+    let userRole2ColumnIndex = null;
+    let userRole3ColumnIndex = null;
+    let userRole4ColumnIndex = null;
+    let userRole5ColumnIndex = null;
     let employmentTypeColumnIndex = null;
     let phoneNumberColumnIndex = null;
     let userNameColumnIndex = null;
@@ -62,6 +69,11 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST") {
         if (cell.value === (schemas?.find((i) => i.description === "User Role")?.name)) {
           userRoleColumnIndex = colIndex;
+          userRole1ColumnIndex = userRoleColumnIndex - schemas?.find((i) => i.description === "User Role")?.multiSelectDetails?.maxSelections;
+          userRole2ColumnIndex = userRole1ColumnIndex + 1;
+          userRole3ColumnIndex = userRole1ColumnIndex + 2;
+          userRole4ColumnIndex = userRole1ColumnIndex + 3;
+          userRole5ColumnIndex = userRole1ColumnIndex + 4;
         }
         if (cell.value === (schemas?.find((i) => i.description === "Employement Type")?.name)) {
           employmentTypeColumnIndex = colIndex;
@@ -72,6 +84,21 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         if (cell.value === (schemas?.find((i) => i.description === "User Name")?.name)) {
           userNameColumnIndex = colIndex;
         }
+        // if(cell.value === (schemas?.find((i) => i.description === "User Role 1")?.name)) {
+        //   userRole1ColumnIndex = colIndex;
+        // }
+        // if(cell.value === (schemas?.find((i) => i.description === "User Role 2")?.name)) {
+        //   userRole2ColumnIndex = colIndex;
+        // }
+        // if(cell.value === (schemas?.find((i) => i.description === "User Role 3")?.name)) {
+        //   userRole3ColumnIndex = colIndex;
+        // }
+        // if(cell.value === (schemas?.find((i) => i.description === "User Role 4")?.name)) {
+        //   userRole4ColumnIndex = colIndex;
+        // }
+        // if(cell.value === (schemas?.find((i) => i.description === "User Role 5")?.name)) {  
+        //   userRole5ColumnIndex = colIndex;
+        // }
       }
 
 
@@ -128,6 +155,13 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_USER_LIST") {
         // Update user-specific fields
         const userRoleCell = targetSheet.getCell(rowIndex + 3, userRoleColumnIndex);
+
+        const userRole1Cell = targetSheet.getCell(rowIndex + 3, userRole1ColumnIndex);
+        const userRole2Cell = targetSheet.getCell(rowIndex + 3, userRole2ColumnIndex);
+        const userRole3Cell = targetSheet.getCell(rowIndex + 3, userRole3ColumnIndex);
+        const userRole4Cell = targetSheet.getCell(rowIndex + 3, userRole4ColumnIndex);
+        const userRole5Cell = targetSheet.getCell(rowIndex + 3, userRole5ColumnIndex);
+
         const employmentTypeCell = targetSheet.getCell(rowIndex + 3, employmentTypeColumnIndex);
         const phoneNumberCell = targetSheet.getCell(rowIndex + 3, phoneNumberColumnIndex);
         const userNameCell = targetSheet.getCell(rowIndex + 3, userNameColumnIndex);
@@ -139,7 +173,13 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
 
         // Update user-specific fields
-        userRoleCell.value = newData?.[(schemas?.find((i) => i.description === "User Role")?.name)];
+        // userRoleCell.value = newData?.[(schemas?.find((i) => i.description === "User Role")?.name)];
+        userRole1Cell.value = newData?.["HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_1"] || "";
+        userRole2Cell.value = newData?.["HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_2"] || "";
+        userRole3Cell.value = newData?.["HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_3"] || "";
+        userRole4Cell.value = newData?.["HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_4"] || "";
+        userRole5Cell.value = newData?.["HCM_ADMIN_CONSOLE_USER_ROLE_MULTISELECT_5"] || "";
+
         employmentTypeCell.value = newData?.[(schemas?.find((i) => i.description === "Employement Type")?.name)];
         phoneNumberCell.value = Number(newData?.[(schemas?.find((i) => i.description === "Phone Number")?.name)] || 0);
         userNameCell.value = newData?.[(schemas?.find((i) => i.description === "User Name")?.name)];
@@ -200,7 +240,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
     return filesArray;
   } catch (error) {
-
+    
     console.error("Error updating or uploading Excel file:", error);
     throw error;
   }

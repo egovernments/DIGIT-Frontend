@@ -193,6 +193,7 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
+    
     const key = Object.keys(formData)?.[0];
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const type = filteredConfig?.[0]?.form?.[0]?.body?.[0]?.customProps?.type;
@@ -445,6 +446,7 @@ const NewUploadScreen = () => {
           (!item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
             item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
       );
+    
       if (checkValid) {
         setLoader(false);
         setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
@@ -467,7 +469,7 @@ const NewUploadScreen = () => {
           onSuccess: async (data) => {
 
             try {
-              debugger
+              
               const useProcess = await Digit.Hooks.campaign.useProcessData(
                 [{ filestoreId: data }],
                 hirechyType,
@@ -477,7 +479,7 @@ const NewUploadScreen = () => {
                 baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
               );
 
-              debugger
+              
               const campaignDetails = {
                 ...campaignData, "resources": [
                   {
@@ -495,7 +497,7 @@ const NewUploadScreen = () => {
                 },
               });
 
-              debugger
+              
               const secondApiResponse = await Digit.CustomService.getResponse({
                 url: `/project-factory/v1/data/_search`,
                 body: {
@@ -507,7 +509,7 @@ const NewUploadScreen = () => {
                 },
               });
 
-              debugger
+              
 
               // const callSecondApiUntilComplete = async () => {
               //   let secondApiResponse;
@@ -602,7 +604,7 @@ const NewUploadScreen = () => {
 
               return;
             } catch (error) {
-              debugger
+              
               if (error?.response?.data?.Errors?.[0]?.description) {
                 setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
                 setLoader(false);

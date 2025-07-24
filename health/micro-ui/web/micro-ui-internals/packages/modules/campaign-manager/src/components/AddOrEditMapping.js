@@ -5,7 +5,7 @@ import { Dropdown, TextInput, LabelFieldPair, CardLabel, MultiSelectDropdown } f
 const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allSelectedBoundary, typeOfOperation, curData }, ref) => {
   const { t } = useTranslation();
   // const columns = schema.filter(item => !item.hideColumn);
-  const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role" && item.multiSelectDetails));
+  const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role" ));
 
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
@@ -23,6 +23,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
 
 
   const renderInput = (column) => {
+    console.log("COLUMN:", column);
     if ((column?.description === "Boundary Code" || column?.description === "Boundary Code (Mandatory)") && typeOfOperation === "edit") {
       return null; // Hide boundary selection in edit mode
     }
@@ -175,7 +176,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           />
         </div>
       );
-    } else if (column?.description === "User Role" && column?.multiSelectDetails) {
+    } else if (column?.description?.includes("User Role" )) {
       const dropdownValues = Array.isArray(column?.multiSelectDetails?.enum)
         ? column.multiSelectDetails.enum.map((item) => ({ code: item }))
         : [];
@@ -199,7 +200,17 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             onSelect={(value) => {
               const rolesInEvent = value?.map((event) => event?.[1]);
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const updatedData = { ...newdata, [column.name]: values };
+              const multiSelectKey = `${column.name}_MULTISELECT_`;
+              const rolesData = rolesInEvent?.map((r, idx) => {
+                return {
+                  [ `${column.name}_MULTISELECT_${idx + 1}` ]: r?.code
+                }
+              });
+              const rolesObj = Object.assign({}, ...rolesData);
+              // {
+              //   "User Role 1": "DISTRIBUTOR"
+              // }
+              const updatedData = { ...newdata, [column.name]: values, ...rolesObj };
               setNewData(updatedData);
             }}
             optionsKey="code"
