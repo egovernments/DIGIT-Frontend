@@ -166,21 +166,34 @@ const RoleContent = ({ role, cards, config, t }) => (
     </div>
 );
 
-const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink,citizenWTLink }) => {
+const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citizenWTLink, stakeholderWTLink, module }) => {
     const iframeSrc = activeTab === "citizen"
         ? citizenWTLink
-        : employeeWTLink;
+        : activeTab === "employee"
+            ? employeeWTLink
+            : stakeholderWTLink;
 
     return (
-        <div className="walkthrough-container" style={{backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
+        <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
             <div className="wt-c1">
                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
             </div>
             <div className="wt-tabs-center wt-tabs-and-iframe">
                 <div className="wt-tab-wrapper">
-                    <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
-                    <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+                    {module === "Finance" ? (
+                        <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+                    ) : (
+                        <div className="wt-tab-wrapper">
+                            <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
+                            <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+                            {(module === "FSM" || module === "OBPS") && (
+                                <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
+                                    {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
                 <div className="wt-iframe-wrapper">
                     <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
@@ -276,9 +289,10 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     console.log(`*** LOG ***`,config);
 
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState("citizen");
+    const [activeTab, setActiveTab] = useState(module === "Finance" ? "employee" : "citizen");
     const [employeeWTLink, setEmployeeWTLink] = useState('');
     const [citizenWTLink, setCitizenWTLink] = useState('');
+    const [stakeholderWTLink, setStakeholderWTLink] = useState('');
 
 
 
@@ -369,7 +383,15 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
             <ExperienceSection experience={content.experience} t={t} />
-            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} employeeWTLink={getLinkByType(config, 'employee')} citizenWTLink={getLinkByType(config, 'citizen')} />
+            <WalkthroughSection
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                t={t}
+                employeeWTLink={getLinkByType(config, 'employee')}
+                citizenWTLink={getLinkByType(config, 'citizen')}
+                stakeholderWTLink={getLinkByType(config, 'stakeholder')}
+                module={module}
+            />
         </div>
     );
 };
