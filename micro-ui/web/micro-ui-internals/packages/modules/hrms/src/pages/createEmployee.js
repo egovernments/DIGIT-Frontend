@@ -8,6 +8,7 @@ import { Toast } from "@egovernments/digit-ui-components";
 
 const CreateEmployee = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const userInfo = Digit.UserService.getUser();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -164,6 +165,12 @@ const CreateEmployee = () => {
   );
 };
 
+function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
+  if (!Array.isArray(jurisdictions) || !parentCity) return false;
+
+  return jurisdictions.some(j => j?.boundary === parentCity);
+}
+
 
 
 
@@ -177,10 +184,20 @@ const CreateEmployee = () => {
       };
     });
 
+    
+    if(!hasMatchingJurisdiction(data?.Jurisdictions,userInfo.info.tenantId)){
+      setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
+      return;
+    }
+
     if(!canSubmit){
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
       return;
     }
+
+
+
+
     if (!hasCurrentAssignment) {
       setShowToast({ key: "error", label: "ERR_NO_CURRENT_ASSIGNMENT" });
       return;
@@ -189,9 +206,11 @@ const CreateEmployee = () => {
       setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
       return;
     }
+
+
     if (!Object.values(data.Jurisdictions.reduce((acc, sum) => {
-      if (sum && sum?.tenantId) {
-        acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
+      if (sum && sum?.boundary) {
+        acc[sum.boundary] = acc[sum.boundary] ? acc[sum.boundary] + 1 : 1;
       }
       return acc;
     }, {})).every(s => s == 1)) {
