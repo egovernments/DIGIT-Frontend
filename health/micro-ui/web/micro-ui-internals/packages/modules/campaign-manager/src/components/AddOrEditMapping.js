@@ -11,7 +11,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
   const [selectedBoundary, setSelectedBoundary] = useState(null);
 
   const [newdata, setNewData] = useState(
-    typeOfOperation === "edit" ? Object.fromEntries(columns.map((column) => [t(column.name), curData[t(column.name)]])) : []
+    typeOfOperation === "edit" ? Object.fromEntries(columns.map((column) => [column.name, curData[column.name]])) : []
   );
 
   // Expose a method to the parent component
@@ -39,9 +39,9 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             className="tetxinput-example"
             type={"number"}
             name="title"
-            value={newdata[t(column.name)] || ""}
+            value={newdata[column.name] || ""}
             onChange={(event) => {
-              const updatedData = { ...newdata, [t(column.name)]: event.target.value };
+              const updatedData = { ...newdata, [column.name]: event.target.value };
               setNewData(updatedData);
             }}
             placeholder={t("")}
@@ -107,14 +107,14 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               onClose={(value) => {
                 const boundariesInEvent = value?.map((event) => event?.[1]);
                 const values = boundariesInEvent?.map((i) => i?.code)?.join(",");
-                const updatedData = { ...newdata, [t(column.name)]: values };
+                const updatedData = { ...newdata, [column.name]: values };
                 setNewData(updatedData);
                 setSelectedBoundary(boundariesInEvent);
               }}
               onSelect={(value) => {
                 const boundariesInEvent = value?.map((event) => event?.[1]);
                 const values = boundariesInEvent?.map((i) => i?.code)?.join(",");
-                const updatedData = { ...newdata, [t(column.name)]: values };
+                const updatedData = { ...newdata, [column.name]: values };
                 setNewData(updatedData);
                 setSelectedBoundary(boundariesInEvent);
               }}
@@ -136,9 +136,9 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               className="tetxinput-example"
               type={"text"}
               name="title"
-              value={newdata[t(column.name)] || ""}
+              value={newdata[column.name] || ""}
               onChange={(event) => {
-                const updatedData = { ...newdata, [t(column.name)]: event.target.value };
+                const updatedData = { ...newdata, [column.name]: event.target.value };
                 setNewData(updatedData);
               }}
               placeholder={t("")}
@@ -160,14 +160,14 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             className="roleTableCell"
             selected={
               dropdownValues?.find(
-                (item) => item?.code === newdata[t(column.name)] // Get value from newdata
+                (item) => item?.code === newdata[column.name] // Get value from newdata
               ) || null
             }
             isMandatory={true}
             option={dropdownValues}
             select={(value) => {
               // Update the newdata state with the selected value from the dropdown
-              const updatedData = { ...newdata, [t(column.name)]: value?.code };
+              const updatedData = { ...newdata, [column.name]: value?.code };
               setNewData(updatedData); // Update state
             }}
             optionKey="code"
@@ -187,19 +187,19 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           </div>
           <MultiSelectDropdown
             className="roleTableCell"
-            selected={newdata[t(column.name)] ? dropdownValues.filter(item => newdata[t(column.name)].split(',').includes(item.code)) : []}
+            selected={newdata[column.name] ? dropdownValues.filter(item => newdata[column.name].split(',').includes(item.code)) : []}
             options={dropdownValues}
             onClose={(value) => {
               const rolesInEvent = value?.map((event) => event?.[1]);
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const updatedData = { ...newdata, [t(column.name)]: values };
+              const updatedData = { ...newdata, [column.name]: values };
               setNewData(updatedData);
             }}
             type={"multiselectdropdown"}
             onSelect={(value) => {
               const rolesInEvent = value?.map((event) => event?.[1]);
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const updatedData = { ...newdata, [t(column.name)]: values };
+              const updatedData = { ...newdata, [column.name]: values };
               setNewData(updatedData);
             }}
             optionsKey="code"

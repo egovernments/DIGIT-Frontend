@@ -42,22 +42,25 @@ const reducer = (state, action) => {
       };
     case "ADD_DATA":
       const updatedData = [...state.data, action.payload];
+      console.log("state.data:", state.data);
+      console.log("payload:", action.payload);
+      console.log("Updated Data:", updatedData);
       return {
         ...state,
         data: updatedData,
         filteredData: state?.filter
           ? updatedData?.filter((i) =>
             action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+              ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+              : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
           )
           : updatedData,
         currentData: getPageData(
           state?.filter
             ? updatedData?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+                ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
             )
             : updatedData,
           state.currentPage,
@@ -69,8 +72,8 @@ const reducer = (state, action) => {
         totalRows: state?.filter
           ? updatedData?.filter((i) =>
             action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+              ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+              : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
           )?.length
           : updatedData.length, // Use the new array length directly
         updated: true,
@@ -159,9 +162,9 @@ const reducer = (state, action) => {
             // }
             // Check facility code first, if not present then check facility name
             if (
-              (facilityCode && facilityCode === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
+              (facilityCode && facilityCode === action?.payload?.row?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
               (!facilityCode &&
-                facilityName === action?.payload?.row?.[action.t(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
+                facilityName === action?.payload?.row?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
             ) {
               return {
                 ...item,
@@ -177,8 +180,8 @@ const reducer = (state, action) => {
           state?.filter
             ? temp?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+                ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
             )
             : temp,
           state.currentPage,
@@ -606,6 +609,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [SchemasAJV, type]);
 
   const validateData = (data) => {
+    console.log("Validate Data:", data);
 
     const roleKey = "Role (Mandatory)"
     const roles = data[roleKey];
@@ -615,13 +619,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       return;
     }
     // Phone Number conversion
-    const phoneNumberKey = t(Schemas?.find((i) => i.description === "Phone Number")?.name);
+    const phoneNumberKey = (Schemas?.find((i) => i.description === "Phone Number")?.name);
     if (data[phoneNumberKey] !== undefined) {
       data[phoneNumberKey] = Number(data[phoneNumberKey]);
     }
 
     // Capacity conversion
-    const capacityKey = t(Schemas?.find((i) => i.description === "Capacity")?.name);
+    const capacityKey = (Schemas?.find((i) => i.description === "Capacity")?.name);
     if (data[capacityKey] !== undefined) {
       data[capacityKey] = Number(data[capacityKey]);
     }
@@ -629,13 +633,13 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 
-    const boundaryCodeFac = t(Schemas?.find((i) => i.description === "Boundary Code")?.name);
+    const boundaryCodeFac = (Schemas?.find((i) => i.description === "Boundary Code")?.name);
     if (data[boundaryCodeFac]?.trim()?.length === 0) {
       setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
       return;
     }
 
-    const boundaryCode = t(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
+    const boundaryCode = (Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
     if (data[boundaryCode]?.trim()?.length === 0) {
       setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
       return;
