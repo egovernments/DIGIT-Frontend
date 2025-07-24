@@ -23,7 +23,6 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
 
 
   const renderInput = (column) => {
-    console.log("COLUMN:", column);
     if ((column?.description === "Boundary Code" || column?.description === "Boundary Code (Mandatory)") && typeOfOperation === "edit") {
       return null; // Hide boundary selection in edit mode
     }
@@ -193,7 +192,13 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             onClose={(value) => {
               const rolesInEvent = value?.map((event) => event?.[1]);
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const updatedData = { ...newdata, [column.name]: values };
+              const rolesData = rolesInEvent?.map((r, idx) => {
+                return {
+                  [ `${column.name}_MULTISELECT_${idx + 1}` ]: r?.code
+                }
+              });
+              const rolesObj = Object.assign({}, ...rolesData);
+              const updatedData = { ...newdata, [column.name]: values , ...rolesObj};
               setNewData(updatedData);
             }}
             type={"multiselectdropdown"}

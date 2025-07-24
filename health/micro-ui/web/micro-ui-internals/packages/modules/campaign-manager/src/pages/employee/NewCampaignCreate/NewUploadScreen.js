@@ -193,6 +193,7 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
+    debugger;
     
     const key = Object.keys(formData)?.[0];
     const name = filteredConfig?.[0]?.form?.[0]?.name;
@@ -576,11 +577,11 @@ const NewUploadScreen = () => {
               setParams({
                 ...params,
                 ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
-                  uploadFacility: {
-                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadFacility,
+                  uploadUser: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
                     uploadedFile: [
                       {
-                        ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadFacility?.uploadedFile?.[0],
+                        ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0],
                         filestoreId: data,
                       },
                     ],

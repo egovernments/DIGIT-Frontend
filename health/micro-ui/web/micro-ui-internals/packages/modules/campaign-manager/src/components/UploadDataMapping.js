@@ -42,9 +42,6 @@ const reducer = (state, action) => {
       };
     case "ADD_DATA":
       const updatedData = [...state.data, action.payload];
-      console.log("state.data:", state.data);
-      console.log("payload:", action.payload);
-      console.log("Updated Data:", updatedData);
       return {
         ...state,
         data: updatedData,
@@ -354,10 +351,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       cacheTime: 0,
       staleTime: 0,
       select: (data) => {
-        console.log("currentSchema Data:", data);
 
         const currentSchema = data?.["HCM-ADMIN-CONSOLE"]?.schemas?.filter((i) => i?.title === schemaFilter);
-        console.log("currentSchema:", currentSchema);
         const result = Object.values(currentSchema?.[0]?.properties)?.flatMap((arr) => arr?.map((item) => item));
         return result;
       },
@@ -511,7 +506,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }
 
   function convertIntoSchema(data) {
-    console.log("convertIntoSchema data:", data);
     var convertData = { ...data };
     var properties = {};
     var required = [];
@@ -572,9 +566,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           return schemaProperties[key].isUpdate !== true;
         });
       };
-      console.log("newBoundarySchema:", newBoundarySchema);
-      console.log("newFacilitySchema:", newFacilitySchema);
-      console.log("newUserSchema:", newUserSchema); 
+
       const headers = {
         boundary: filterByUpdateFlag(newBoundarySchema?.properties),
         facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
@@ -587,7 +579,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         userWithBoundary: newUserSchema,
       };
 
-      console.log("Schema:", schema);
 
       setTranslatedSchema(schema);
     }
@@ -617,7 +608,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [SchemasAJV, type]);
 
   const validateData = (data) => {
-    console.log("Validate Data:", data);
 
     const roleKey = "HCM_ADMIN_CONSOLE_USER_ROLE"
     const roles = data[roleKey];
@@ -638,8 +628,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       data[capacityKey] = Number(data[capacityKey]);
     }
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
-    console.log("translateSchema[type]:", translateSchema);
-     console.log("[type]:", type);
     let validate = ajv.compile(translatedSchema[type]);
     const errors = []; // Array to hold validation errors
 
@@ -780,7 +768,20 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           name: t("ROLE"),
           selector: (row) => row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA"),
           sortable: true,
-          cell: (row) => (
+          cell: (row) => 
+          {  
+            
+            const baseName = Schemas?.find(i => i.description === "User Role")?.name;
+            if (!baseName) return t("NA");
+
+            // 1. grab only the keys that start with `${baseName}_MULTISELECT_`
+            // 2. filter out any null/undefined values
+            // 3. map to the actual values
+            const values = Object
+              .keys(row)
+              .filter(key => key.startsWith(`${baseName}_MULTISELECT_`) && row[key] != null)
+              .map(key => t(row[key]));
+            return (
             <div
               title={row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
               style={{
@@ -790,9 +791,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 maxWidth: "150px",
               }}
             >
-              {row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
+              {values?.join(",")|| t("NA")}
             </div>
-          )
+          )}
         },
         {
           name: t("EMPLOYEMENT_TYPE"),
