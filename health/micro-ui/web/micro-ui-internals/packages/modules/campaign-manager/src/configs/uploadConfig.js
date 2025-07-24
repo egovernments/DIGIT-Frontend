@@ -107,7 +107,7 @@ export const uploadConfig = ({totalFormData, campaignData,  summaryErrors}) => {
                 // dataParams: dataParams,
                 sessionData: totalFormData,
                 // hierarchyData: hierarchyData,
-                type: "userMapping",
+                type: "user",
                 validationType: "userWithBoundary"
               },
               populators: {
