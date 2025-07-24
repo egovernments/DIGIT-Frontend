@@ -43,11 +43,28 @@ const CloneCampaignWrapper = (props) => {
     return Math.floor(date.getTime());
   };
 
+  function getStartDateEpoch(rawDate) {
+  if (!rawDate) return null;
+
+  let dateObj;
+
+  // Case 1: ISO format "2025-07-27T00:00:00.000Z"
+  if (rawDate.includes("T")) {
+    dateObj = new Date(rawDate);
+  } else {
+    // Case 2: "2025-07-27"
+    const [year, month, day] = rawDate.split("-").map(Number);
+    dateObj = new Date(Date.UTC(year, month - 1, day)); // UTC midnight
+  }
+
+  return dateObj.getTime(); // Epoch in milliseconds
+}
+
   const { mutateAsync: executeFlow, isLoading, error: cloneCampaignError , campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
     tenantId,
     campaignId: props?.campaignId,
     campaignName: name,
-    startDate: convertDateToEpoch(startDate),
+    startDate: getStartDateEpoch(startDate),
     endDate: convertDateToEpoch(endDate),
     setStep: useCallback((step) => setCurrentStep(step), []),
   });
