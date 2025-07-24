@@ -5,13 +5,9 @@ import ExcelJS from "exceljs";
 
 
 const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdate, tenantId, schemas, t }) => {
-  
+
 
   try {
-    
-
-
-
     const workbook = new ExcelJS.Workbook();
     await workbook.xlsx.load(arrayBuffer);
     const targetSheet = workbook.getWorksheet(t(sheetNameToUpdate));
@@ -34,14 +30,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
     let phoneNumberColumnIndex = null;
     let userNameColumnIndex = null;
 
-
-
-
-
-
     targetSheet.getRow(1).eachCell((cell, colIndex) => {
-
-
 
       //for boundary cell
       if (sheetNameToUpdate === "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES" && cell.value === (schemas?.find((i) => i.description === "Boundary Code")?.name)) {
@@ -85,21 +74,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
         if (cell.value === (schemas?.find((i) => i.description === "User Name")?.name)) {
           userNameColumnIndex = colIndex;
         }
-        // if(cell.value === (schemas?.find((i) => i.description === "User Role 1")?.name)) {
-        //   userRole1ColumnIndex = colIndex;
-        // }
-        // if(cell.value === (schemas?.find((i) => i.description === "User Role 2")?.name)) {
-        //   userRole2ColumnIndex = colIndex;
-        // }
-        // if(cell.value === (schemas?.find((i) => i.description === "User Role 3")?.name)) {
-        //   userRole3ColumnIndex = colIndex;
-        // }
-        // if(cell.value === (schemas?.find((i) => i.description === "User Role 4")?.name)) {
-        //   userRole4ColumnIndex = colIndex;
-        // }
-        // if(cell.value === (schemas?.find((i) => i.description === "User Role 5")?.name)) {  
-        //   userRole5ColumnIndex = colIndex;
-        // }
+     
       }
 
 
@@ -241,7 +216,7 @@ const updateAndUploadExcel = async ({ arrayBuffer, updatedData, sheetNameToUpdat
 
     return filesArray;
   } catch (error) {
-    
+
     console.error("Error updating or uploading Excel file:", error);
     throw error;
   }
