@@ -38,7 +38,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [tabCounts, setTabCounts] = useState({});
   const [transferPollTimers, setTransferPollTimers] = useState({});
-  const [isSelectionDisabled, setIsSelectionDisabled] = useState(false);
+  const [verifyPollTimers, setVerifyPollTimers] = useState({});
+  const [isSelectionDisabledTransfer, setIsSelectionDisabledTransfer] = useState(false);
+  const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
   const [limitAndOffset, setLimitAndOffset] = useState({
@@ -372,9 +374,10 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 // setTaskStatus?.(status);
                 if (status === "DONE") {
                   setIsLoading(false);
+                  setIsSelectionDisabledVerify(false);
                   setShowToast({
-                    key: "success",
-                    label: t("HCM_AM_BILL_VERIFICATION_DONE"),
+                    key: "info",
+                    label: t("HCM_AM_BILL_VERIFICATION_COMPLETED"),
                     transitionTime: 5000,
                   });
                   refetchBill();
@@ -388,7 +391,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     setTimeout(pollStatus, POLLING_INTERVAL);
                   } else {
                     setIsLoading(false);
-                    setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME"), transitionTime: 3000 });
+                    setIsSelectionDisabledVerify(true);
+                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME"), transitionTime: 3000 });
                   }
                 } else {
                   setIsLoading(false);
@@ -474,7 +478,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 // setTaskStatus?.(status);
                 if (status === "DONE") {
                   setIsLoading(false);
-                  setIsSelectionDisabled(false);
+                  setIsSelectionDisabledTransfer(false);
                   setShowToast({
                     key: "success",
                     label: t("HCM_AM_PAYMENT_GENERATION_DONE"),
@@ -482,7 +486,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   });
                   refetchBill();
                 } else if (status === "IN_PROGRESS") {
-                  setIsSelectionDisabled(true);
+                  setIsSelectionDisabledTransfer(true);
                   //TODO UPDATE TOAST MSG
                   setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 2000 });//TODO UPDATE TOAST MSG
 
@@ -491,7 +495,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     setTimeout(pollStatus, POLLING_INTERVAL);
                   } else {
                     setIsLoading(false);
-                    setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME"), transitionTime: 3000 });
+                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME"), transitionTime: 3000 });
                   }
                 } else {
                   setIsLoading(false);
@@ -552,27 +556,47 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       const res_type = statusResponse?.task?.type;
 
       if (status === "IN_PROGRESS" && res_type === type) {
-        setIsSelectionDisabled(true);
-        setTransferPollTimers(prev => {
-          if (prev[billId]) clearTimeout(prev[billId]);
-          const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
-          return { ...prev, [billId]: timer };
-        });
-      } else {
-        setIsSelectionDisabled(false);
-        setTransferPollTimers(prev => {
-          if (prev[billId]) clearTimeout(prev[billId]);
-          const newTimers = { ...prev };
-          delete newTimers[billId];
-          return newTimers;
-        });
-        refetchBill();
+        if(type = "Transfer"){
+          setIsSelectionDisabledTransfer(true);
+          setTransferPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
+            return { ...prev, [billId]: timer };
+          });
+      }else if(type = "Verify"){
+          setIsSelectionDisabledVerify(true);
+          setVerifyPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
+            return { ...prev, [billId]: timer };
+          });
       }
+      } else {
+          if(type = "Transfer"){
+          setIsSelectionDisabledTransfer(false);
+          setTransferPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const newTimers = { ...prev };
+            delete newTimers[billId];
+            return newTimers;
+          });          
+      }else if(type = "Verify"){
+          setIsSelectionDisabledVerify(false);
+          setVerifyPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const newTimers = { ...prev };
+            delete newTimers[billId];
+            return newTimers;
+          });          
+      }
+      refetchBill();
+    }
     };
 
   useEffect(() => {
     return () => {
       Object.values(transferPollTimers).forEach(clearTimeout);
+      Object.values(verifyPollTimers).forEach(clearTimeout);
     };
   }, []);
 
@@ -604,14 +628,41 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         console.log("Task status response for billId:", billId, res);
 
         if (res?.task?.status === "IN_PROGRESS") {
-          setIsSelectionDisabled(true);
           if (res?.task?.type === "Transfer") {
+            setIsSelectionDisabledTransfer(true);
             console.log("Polling started for billId:", billId);
             pollTaskUntilDone(billId, "Transfer", res);
           }
         } else {
           console.log("inside else 2")
-          setIsSelectionDisabled(false);
+          setIsSelectionDisabledTransfer(false);
+        }
+      } catch (e) {
+        console.warn("Task status check failed for", billId, e);
+        setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+      };
+
+      //Verify polling
+      try {
+        const res = await getTaskStatusMutation.mutateAsync({
+          body: {
+            task: {
+              billId: billId,
+              type: "Verify",
+            }
+          },
+        });
+        console.log("Task status response for billId:", billId, res);
+
+        if (res?.task?.status === "IN_PROGRESS") {
+          if (res?.task?.type === "Verify") {
+            setIsSelectionDisabledVerify(true);
+            console.log("Polling started for billId:", billId);
+            pollTaskUntilDone(billId, "Verify", res);
+          }
+        } else {
+          console.log("inside else 2")
+          setIsSelectionDisabledVerify(false);
         }
       } catch (e) {
         console.warn("Task status check failed for", billId, e);
@@ -619,13 +670,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       };
     }
   }, [BillData]);
-  
-  // Cleanup polling timer on unmount
-  useEffect(() => {
-    return () => {
-      Object.values(transferPollTimers).forEach(clearTimeout);
-    };
-  }, []); 
 
   const getPaginatedData = (data, currentPage, rowsPerPage) => {
     const startIndex = (currentPage - 1) * rowsPerPage;
@@ -829,7 +873,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 clearSelectedRows={clearSelectedRows}
                 onSelectionChange={setSelectedRows}
                 selectedBills={selectedRows}
-                isSelectionDisabled={isSelectionDisabled}
+                isSelectionDisabledTransfer={isSelectionDisabledTransfer}
+                isSelectionDisabledVerify={isSelectionDisabledVerify}
                 rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                 handlePerRowsChange={handlePerRowsChange}
               />

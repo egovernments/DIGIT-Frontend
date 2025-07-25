@@ -393,7 +393,7 @@ const BillDetailsTable = ({ ...props }) => {
         ];
 
         return baseColumns;
-    }, [tableData, t, props?.isSelectionDisabled]);
+    }, [tableData, t, props?.isSelectionDisabledTransfer, props?.isSelectionDisabledVerify]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
@@ -418,6 +418,7 @@ const BillDetailsTable = ({ ...props }) => {
     const handleSelectedRowsChange = ({ selectedRows }) => {
         props?.onSelectionChange(selectedRows);
     };
+    console.log("iselectionVerify",  props?.isSelectionDisabledVerify)
     return (
         <>
             <DataTable
@@ -438,18 +439,18 @@ const BillDetailsTable = ({ ...props }) => {
                 fixedHeader={true}
                 selectableRows={props?.selectableRows}
                 selectableRowDisabled={(row) =>
-                    (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
-                    (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabled) ||
-                    (props?.status === "PENDING_VERIFICATION" && props?.isSelectionDisabled) ||
+                    (props?.status === "VERIFIED" && props?.isSelectionDisabledTransfer) ||
+                    (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabledTransfer) ||
+                    (props?.status === "NOT_VERIFIED" && props?.isSelectionDisabledVerify) || //TODO
                     (row?.status === 'PENDING_EDIT' && !props?.editBill) ||
                     (row?.status === 'EDITED' && props?.editBill)
                 }
                 conditionalRowStyles={[
                     {
                         when: (row) =>
-                            (props?.status === "VERIFIED" && props?.isSelectionDisabled) ||
-                            (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabled) ||
-                            (props?.status === "PENDING_VERIFICATION" && props?.isSelectionDisabled) ||
+                            (props?.status === "VERIFIED" && props?.isSelectionDisabledTransfer) ||
+                            (props?.status === "PAYMENT_FAILED" && props?.isSelectionDisabledTransfer) ||
+                            (props?.status === "NOT_VERIFIED" && props?.isSelectionDisabledVerify) ||//TODO
                             (row?.status === 'PENDING_EDIT' && !props?.editBill),
                         // || (row?.status === 'EDITED' && props?.editBill),
                         style: {

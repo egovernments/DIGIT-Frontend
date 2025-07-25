@@ -26,8 +26,10 @@ const VerifyAndGeneratePaymentsTable = ({
     onTaskDone,
     isLoading,
     setIsLoading,
-    inProgressBills = {},
-    setInProgressBills,
+    inProgressBillsVerify = {},
+    inProgressBillsTransfer = {},
+    setInProgressBillsTransfer,
+    setInProgressBillsVerify,
     hrmsUsersData,
     ...props }) => {
     const { t } = useTranslation();
@@ -151,7 +153,7 @@ const VerifyAndGeneratePaymentsTable = ({
 
                     let attempts = 0;
                     const POLLING_INTERVAL = 3000;
-                    const MAX_ATTEMPTS = 20;
+                    const MAX_ATTEMPTS = 10;
 
                     const pollStatus = async () => {
                         try {
@@ -168,23 +170,23 @@ const VerifyAndGeneratePaymentsTable = ({
                              if (status === "DONE") {
                                 setIsLoading(false);
                 setShowToast({
-                  key: "success",
-                  label: t("HCM_AM_BILL_VERIFICATION_DONE"),
+                  key: "info",
+                  label: t("HCM_AM_BILL_VERIFICATION_COMPLETED"),
                   transitionTime: 5000,
                 });
-
+                setInProgressBillsVerify(prev => ({ ...prev, [bill?.id]: false }));
                 onTaskDone?.(); //  trigger bill search in parent
               }  else if (status === "IN_PROGRESS") {
-                         setIsLoading(true); // start loader
-
+                        setIsLoading(true); // start loader                        
                         setShowToast({ key: "info", label: t("HCM_AM_BILL_VERIFICATION_IN_PROGRESS"), transitionTime: 2000 });
 
                                 if (attempts < MAX_ATTEMPTS) {
                                     attempts++;
                                     setTimeout(pollStatus, POLLING_INTERVAL);
                                 } else {
-                                     setIsLoading(false);
-                                    setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
+                                    setIsLoading(false);
+                                    setInProgressBillsVerify(prev => ({ ...prev, [bill?.id]: true }));                                     
+                                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
                                 }
                             } else {
                                  setIsLoading(false);
@@ -259,14 +261,14 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                              if (status === "DONE") {
                                 setIsLoading(false);
                 setShowToast({
-                  key: "success",
-                  label: t("HCM_AM_PAYMENT_GENERATION_DONE"),
+                  key: "info",
+                  label: t("HCM_AM_PAYMENT_GENERATION_COMPLETED"),
                   transitionTime: 5000,
                 });
-                setInProgressBills(prev => ({ ...prev, [bill?.id]: false }));
+                setInProgressBillsTransfer(prev => ({ ...prev, [bill?.id]: false }));
                 onTaskDone?.(); //  trigger bill search in parent
               }  else if (status === "IN_PROGRESS") {
-                setInProgressBills(prev => ({ ...prev, [bill?.id]: true }));
+                setInProgressBillsTransfer(prev => ({ ...prev, [bill?.id]: true }));
                         //  setIsLoading(true); // start loader
                         //TODO UPDATE TOAST MSG
                         setShowToast({ key: "info", label: t("HCM_AM_PAYMENT_GENERATION_IN_PROGRESS"), transitionTime: 3000 });//TODO UPDATE TOAST MSG
@@ -276,7 +278,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
                                     setTimeout(pollStatus, POLLING_INTERVAL);
                                 } else {
                                      setIsLoading(false);
-                                    setShowToast({ key: "error", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
+                                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT"), transitionTime: 3000 });
                                 }
                             } else {
                                  setIsLoading(false);
@@ -468,8 +470,7 @@ const getAvailableActions = (status) => {
                     const isLastRow = index === props.totalCount - 1;
                     const status = row?.status || "UNKNOWN";
                     const actions = getAvailableActions(status);
-                    const isInProgress = inProgressBills?.[id] === true;
-                    console.log("isInProgress", isInProgress, id, inProgressBills);
+                    const isInProgress = inProgressBillsTransfer?.[id] === true || inProgressBillsVerify?.[id] === true;
                     const options = actions.map((code) => ({
                         code,
                         name: t(code),
@@ -559,7 +560,7 @@ const getAvailableActions = (status) => {
         ];
 
         return baseColumns;
-    }, [props.data, t, inProgressBills]);
+    }, [props.data, t, inProgressBillsTransfer, inProgressBillsVerify]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);

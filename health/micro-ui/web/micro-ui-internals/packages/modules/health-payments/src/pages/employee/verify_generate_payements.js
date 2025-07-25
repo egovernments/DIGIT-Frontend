@@ -26,8 +26,10 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     const [billID, setBillID] = useState(null);//to search by bill number
     const [billStatus, setBillStatus] = useState(null);
     const [taskStatus, setTaskStatus] = useState(null);
-    const [inProgressBills, setInProgressBills] = useState({});
+    const [inProgressBillsTransfer, setInProgressBillsTransfer] = useState({});
+    const [inProgressBillsVerify, setInProgressBillsVerify] = useState({});
     const [transferPollTimers, setTransferPollTimers] = useState({});
+    const [verifyPollTimers, setVerifyPollTimers] = useState({});
     // const [isEditBill, setIsEditBill] = useState(false);
     //TODO: SET isEditBill based on the ROLE
     const [dateRange, setDateRange] = useState({
@@ -92,20 +94,38 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
     const res_type = statusResponse?.task?.type;
 
     if (status === "IN_PROGRESS" && res_type === type) {
-        setTransferPollTimers(prev => {
-            if (prev[billId]) clearTimeout(prev[billId]);
-            const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
-            return { ...prev, [billId]: timer };
-        });
+        if(type == "Transfer"){
+            setTransferPollTimers(prev => {
+                if (prev[billId]) clearTimeout(prev[billId]);
+                const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
+                return { ...prev, [billId]: timer };
+            });
+    }else if(type == "Verify"){
+        setVerifyPollTimers(prev => {
+                if (prev[billId]) clearTimeout(prev[billId]);
+                const timer = setTimeout(() => pollTaskUntilDone(billId, type), POLLING_INTERVAL);
+                return { ...prev, [billId]: timer };
+            });
+    }
     } else {
         // Mark as done
-        setInProgressBills(prev => ({ ...prev, [billId]: false }));
+         if(type == "Transfer"){
+        setInProgressBillsTransfer(prev => ({ ...prev, [billId]: false }));
         setTransferPollTimers(prev => {
             if (prev[billId]) clearTimeout(prev[billId]);
             const newTimers = { ...prev };
             delete newTimers[billId];
             return newTimers;
         });
+    }else if(type == "Verify"){
+        setInProgressBillsVerify(prev => ({ ...prev, [billId]: false }));
+        setVerifyPollTimers(prev => {
+            if (prev[billId]) clearTimeout(prev[billId]);
+            const newTimers = { ...prev };
+            delete newTimers[billId];
+            return newTimers;
+        });
+    }
         refetchBill();
     }
 };
@@ -158,7 +178,7 @@ const userSearchCri = {
                 console.log("Task status response for billId:", billId, res);
 
                 if (res?.task?.status === "IN_PROGRESS") {
-                    setInProgressBills(prev => ({ ...prev, [billId]: true }));
+                    setInProgressBillsTransfer(prev => ({ ...prev, [billId]: true }));
                     if (res?.task?.type === "Transfer") {
                         console.log("Polling started for billId:", billId);
                         if (!transferPollTimers[billId]) {
@@ -167,7 +187,36 @@ const userSearchCri = {
                     }
                 } else {
                     console.log("inside else 2")
-                    setInProgressBills(prev => ({ ...prev, [billId]: false }));
+                    setInProgressBillsTransfer(prev => ({ ...prev, [billId]: false }));
+                }
+            } catch (e) {
+                console.warn("Task status check failed for", billId, e);
+                setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+            }
+
+            //Verify poilling
+            try {
+                const res = await taskStatusAPI.mutateAsync({
+                    body: {
+                        task:{
+                        billId: billId,
+                        type:"Verify",
+                    }
+                },
+                });
+                console.log("Task status response for billId:", billId, res);
+
+                if (res?.task?.status === "IN_PROGRESS") {
+                    setInProgressBillsVerify(prev => ({ ...prev, [billId]: true }));
+                    if (res?.task?.type === "Verify") {
+                        console.log("Polling started for billId:", billId);
+                        if (!verifyPollTimers[billId]) {
+                            pollTaskUntilDone(billId, "Verify", res);
+                            }
+                    }
+                } else {
+                    console.log("inside else 2")
+                    setInProgressBillsVerify(prev => ({ ...prev, [billId]: false }));
                 }
             } catch (e) {
                 console.warn("Task status check failed for", billId, e);
@@ -182,6 +231,7 @@ const userSearchCri = {
     useEffect(() => {
     return () => {
         Object.values(transferPollTimers).forEach(clearTimeout);
+        Object.values(verifyPollTimers).forEach(clearTimeout);
     };
 }, []);
 
@@ -234,8 +284,10 @@ const userSearchCri = {
                     hrmsUsersData={hrmsUsersData}
                     isLoading={isTableActionLoading}
                     setIsLoading={setIsTableActionLoading}
-                    inProgressBills={inProgressBills}
-                    setInProgressBills={setInProgressBills}
+                    inProgressBillsTransfer={inProgressBillsTransfer}
+                    setInProgressBillsTransfer={setInProgressBillsTransfer}
+                    inProgressBillsVerify={inProgressBillsVerify}
+                    setInProgressBillsVerify={setInProgressBillsVerify}
                     />
                 )}
             </Card>
