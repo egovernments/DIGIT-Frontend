@@ -25,7 +25,7 @@ const AppModule = () => {
   const [isCreatingModule, setIsCreatingModule] = useState(false);
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { languages, stateInfo } = storeData || {};
-  const locales = languages?.map(locale => locale.value);
+  const locales = languages?.map((locale) => locale.value);
 
   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${TEMPLATE_BASE_CONFIG_MASTER}`;
   const { isLoading: productTypeLoading, data: modulesData } = Digit.Hooks.useCustomAPIHook(
@@ -39,11 +39,10 @@ const AppModule = () => {
       {
         enabled: !!campaignType,
         cacheTime: 1000000,
-        staleTime: 1000000
+        staleTime: 1000000,
       }
     )
   );
-
 
   const { data: allowedModules } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -110,7 +109,7 @@ const AppModule = () => {
     if (!areAllowedModulesPresent) {
       setShowToast({
         key: "error",
-        label: `${t("HCM_MANDATORY_MODULES")} ${allowedModules?.allowedModule.join(", ")}`,
+        label: `${t("HCM_MANDATORY_MODULES")} ${allowedModules?.allowedModule.map((m) => t(m)).join(", ")}`,
       });
       return;
     }
@@ -197,8 +196,7 @@ const AppModule = () => {
           console.error(`Failed to fetch localisation for locale ${loc}`, e);
           setShowToast({ key: "error", label: t("LOCALISATION_FETCH_ERROR") });
           return;
-        }
-        finally {
+        } finally {
           setIsCreatingModule(false);
         }
 
@@ -236,7 +234,6 @@ const AppModule = () => {
         isSelected: true,
       };
 
-
       // try {
       //   const schemaCode = `${CONSOLE_MDMS_MODULENAME}.${AppConfigSchema}`;
       //   setIsCreatingModule(true);
@@ -264,17 +261,16 @@ const AppModule = () => {
     );
   };
 
-
   if (productTypeLoading || isLoading || mdmsData?.length == 0) {
     return <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_FEATURES_CONFIG_IN_SERVER")} />;
   }
 
-
-
   return (
     <>
       <div>
-        <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>{t(`HCM_CHOOSE_MODULE`)}</HeaderComponent>
+        <HeaderComponent className="campaign-header-module-style" style={{ marginBottom: "1rem" }}>
+          {t(`HCM_CHOOSE_MODULE`)}
+        </HeaderComponent>
         <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_MODULE_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
       </div>
       {isCreatingModule && <Loader page={true} variant={"OverlayLoader"} loaderText={t("COPYING_CONFIG_FOR_SELECTED_MODULES")} />}
@@ -301,10 +297,9 @@ const AppModule = () => {
                   {t(module?.data?.name)}
                 </HeaderComponent>
                 <hr style={{ border: "1px solid #e0e0e0", width: "100%", margin: "0.5rem 0" }} />
-                <p className="module-description">{
-
-                  t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)
-                }</p>
+                <p className="module-description">
+                  {t(`HCM_MODULE_DESCRIPTION_${campaignType?.toUpperCase()}_${module?.data?.name?.toUpperCase()}`)}
+                </p>
                 <Button
                   className={"campaign-module-button"}
                   type={"button"}
@@ -316,9 +311,6 @@ const AppModule = () => {
                 />
               </Card>
             ))}
-
-
-
         </div>
       </EqualHeightWrapper>
       <Footer
