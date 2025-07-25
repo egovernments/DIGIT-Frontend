@@ -5,8 +5,8 @@ import { Dropdown, TextInput, LabelFieldPair, CardLabel, MultiSelectDropdown } f
 const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allSelectedBoundary, typeOfOperation, curData }, ref) => {
   const { t } = useTranslation();
   // const columns = schema.filter(item => !item.hideColumn);
-  const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role" ));
-
+  const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role"));
+  
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
 
@@ -175,7 +175,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           />
         </div>
       );
-    } else if (column?.description?.includes("User Role" )) {
+    } else if (column?.description?.includes("User Role")) {
       const dropdownValues = Array.isArray(column?.multiSelectDetails?.enum)
         ? column.multiSelectDetails.enum.map((item) => ({ code: item }))
         : [];
@@ -194,11 +194,11 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
               const rolesData = rolesInEvent?.map((r, idx) => {
                 return {
-                  [ `${column.name}_MULTISELECT_${idx + 1}` ]: r?.code
+                  [`${column.name}_MULTISELECT_${idx + 1}`]: r?.code
                 }
               });
               const rolesObj = Object.assign({}, ...rolesData);
-              const updatedData = { ...newdata, [column.name]: values , ...rolesObj};
+              const updatedData = { ...newdata, [column.name]: values, ...rolesObj };
               setNewData(updatedData);
             }}
             type={"multiselectdropdown"}
@@ -208,7 +208,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               const multiSelectKey = `${column.name}_MULTISELECT_`;
               const rolesData = rolesInEvent?.map((r, idx) => {
                 return {
-                  [ `${column.name}_MULTISELECT_${idx + 1}` ]: r?.code
+                  [`${column.name}_MULTISELECT_${idx + 1}`]: r?.code
                 }
               });
               const rolesObj = Object.assign({}, ...rolesData);

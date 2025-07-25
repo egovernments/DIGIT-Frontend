@@ -585,17 +585,17 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [convertedSchema]);
 
   useEffect(async () => {
-    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
+    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code)) {
       const facility = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility")?.[0]
       );
       const boundary = await convertIntoSchema(
         SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code)
         )?.[0]
       );
       const user = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user")?.[0]
       );
       const schema = {
         boundary: boundary,
@@ -625,10 +625,14 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     // Capacity conversion
     const capacityKey = (Schemas?.find((i) => i.description === "Capacity")?.name);
     if (data[capacityKey] !== undefined) {
+
       data[capacityKey] = Number(data[capacityKey]);
     }
+
+
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
+
     const errors = []; // Array to hold validation errors
 
     const boundaryCodeFac = (Schemas?.find((i) => i.description === "Boundary Code")?.name);
@@ -655,6 +659,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
+              debugger
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (error.instancePath === "/Phone Number (Mandatory)") {
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
@@ -664,12 +669,12 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               }
               if (error.keyword === "required") {
                 const missingProperty = error.params?.missingProperty || "";
-                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} '${missingProperty}' ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
+                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(missingProperty)} ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
               }
               if (error.keyword === "type" && error.message === "must be string") {
-                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")}`;
+                return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t("HCM_IS_INVALID")}`;
               }
-              let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
+              let formattedError = `${t("HCM_IN_COLUMN")} ${instancePath} ${error.message}`;
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
                 formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
               }
@@ -679,6 +684,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           return formattedErrors;
         })
         .join(", ");
+        debugger
       return {
         isValid: false,
         message: errorMessage,
@@ -699,6 +705,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       try {
         const childData = childRef.current.getData();
         // Convert data types first
+
         const validationResult = validateData(childData);
 
         if (validationResult.isValid) {
@@ -768,9 +775,8 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           name: t("ROLE"),
           selector: (row) => row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA"),
           sortable: true,
-          cell: (row) => 
-          {  
-            
+          cell: (row) => {
+
             const baseName = Schemas?.find(i => i.description === "User Role")?.name;
             if (!baseName) return t("NA");
 
@@ -782,18 +788,19 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
               .filter(key => key.startsWith(`${baseName}_MULTISELECT_`) && row[key] != null)
               .map(key => t(row[key]));
             return (
-            <div
-              title={row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
-              style={{
-                whiteSpace: "nowrap",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                maxWidth: "150px",
-              }}
-            >
-              {values?.join(",")|| t("NA")}
-            </div>
-          )}
+              <div
+                title={row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
+                style={{
+                  whiteSpace: "nowrap",
+                  overflow: "hidden",
+                  textOverflow: "ellipsis",
+                  maxWidth: "150px",
+                }}
+              >
+                {values?.join(",") || t("NA")}
+              </div>
+            )
+          }
         },
         {
           name: t("EMPLOYEMENT_TYPE"),
@@ -1336,14 +1343,14 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 {currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER_TITLE") : t("USER_MAPPING_POP_HEADER_TITLE")}
               </CardText>
               <LabelFieldPair key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
-                <CardLabel style={{ 
+                <CardLabel style={{
                   marginBottom: "0.4rem",
                   width: "19rem",
                   flexShrink: 0,
                   display: "flex",
                   wordBreak: "break-word",
                   whiteSpace: "normal",
-                  }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
+                }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
                 <Dropdown
                   className="mappingPopUp"
                   selected={selectedLevel}
@@ -1359,14 +1366,14 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 />
               </LabelFieldPair>
               <LabelFieldPair className={"multiselect-label-field"} key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
-                <CardLabel style={{ 
+                <CardLabel style={{
                   marginBottom: "0.4rem",
                   width: "19rem",
                   flexShrink: 0,
                   display: "flex",
                   wordBreak: "break-word",
                   whiteSpace: "normal",
-                   }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
+                }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
                 <MultiSelectDropdown
                   variant="nestedmultiselect"
                   props={{

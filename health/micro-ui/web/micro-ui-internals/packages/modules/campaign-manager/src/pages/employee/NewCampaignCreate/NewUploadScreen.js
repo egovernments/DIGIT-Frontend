@@ -7,11 +7,13 @@ import { transformCreateData } from "../../../utils/transformCreateData";
 
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 
+
+
 const NewUploadScreen = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const [totalFormData, setTotalFormData] = useState({});
-  const [showToast, setShowToast] = useState(null);
+  const [showToast, setShowToast] = useState(false);
   const [loader, setLoader] = useState(false);
   const [config, setUploadConfig] = useState(uploadConfig(totalFormData));
   const searchParams = new URLSearchParams(location.search);
@@ -103,6 +105,16 @@ const NewUploadScreen = () => {
 
   const [filteredConfig, setfilteredConfig] = useState(filterUploadConfig(config, currentKey));
 
+  // INFO:: To autometically close the toast message after 3 seconds
+  const showErrorToast = (messageKey) => {
+    setShowToast({ key: "error", label: messageKey });
+
+    setTimeout(() => {
+      setShowToast(false); // Close the toast
+    }, 3000); // adjust the time as needed
+  };
+
+
   useEffect(() => {
     setfilteredConfig(filterUploadConfig(config, currentKey, summaryErrors));
   }, [config, currentKey, summaryErrors]);
@@ -193,7 +205,7 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
-    
+
     const key = Object.keys(formData)?.[0];
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const type = filteredConfig?.[0]?.form?.[0]?.body?.[0]?.customProps?.type;
@@ -244,15 +256,15 @@ const NewUploadScreen = () => {
           true);
 
       if (isTargetError) {
-        setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
+        showErrorToast(t("TARGET_DETAILS_ERROR"));
         return;
       }
       if (isFacilityError) {
-        setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
+        showErrorToast(t("FACILITY_DETAILS_ERROR"));
         return;
       }
       if (isUserError) {
-        setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
+        showErrorToast(t("USER_DETAILS_ERROR"));
         return;
       }
       setShowToast(null);
@@ -261,7 +273,20 @@ const NewUploadScreen = () => {
       );
     }
     else if (name === "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING" && formData?.uploadFacilityMapping?.data?.length > 0) {
+
       setLoader(true);
+
+      const isAnyFacilityActive = formData?.uploadFacilityMapping?.data?.some(
+        item => item.HCM_ADMIN_CONSOLE_FACILITY_USAGE === "Active"
+      );
+
+      if (!isAnyFacilityActive) {
+        setLoader(false);
+        showErrorToast(t("ONE_FACILITY_ATLEAST_SHOULD_BE_ACTIVE"))
+        //setShowToast({ key: "error", label: t("ONE_FACILITY_ATLEAST_SHOULD_BE_ACTIVE") });
+        return;
+      }
+
       const schemas = formData?.uploadFacilityMapping?.schemas;
       const checkValid = formData?.uploadFacilityMapping?.data?.some(
         (item) =>
@@ -271,9 +296,11 @@ const NewUploadScreen = () => {
       );
       if (checkValid) {
         setLoader(false);
-        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY" });
+        showErrorToast(t("NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY"));
         return;
       }
+
+
       await updateMapping(
         {
           arrayBuffer: formData?.uploadFacilityMapping?.arrayBuffer,
@@ -286,7 +313,7 @@ const NewUploadScreen = () => {
         {
           onError: (error, variables) => {
             setLoader(false);
-            setShowToast({ key: "error", label: error });
+            showErrorToast(error);
           },
           onSuccess: async (data) => {
             try {
@@ -331,39 +358,6 @@ const NewUploadScreen = () => {
               });
 
 
-
-              // const callSecondApiUntilComplete = async () => {
-              //   let secondApiResponse;
-              //   let isCompleted = false;
-              //   let isError = false;
-              //   while (!isCompleted && !isError) {
-              //     secondApiResponse = await Digit.CustomService.getResponse({
-              //       url: `/project-factory/v1/data/_search`,
-              //       body: {
-              //         SearchCriteria: {
-              //           tenantId: tenantId,
-              //           id: [useProcess?.ResourceDetails?.id],
-              //           type:useProcess?.ResourceDetails?.type
-              //         },
-              //       },
-              //     });
-              //     // Check if the response has the expected data to continue
-              //     if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
-              //       // Replace `someCondition` with your own condition to determine if it's complete
-              //       isCompleted = true;
-              //     } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
-              //       // Replace `someCondition` with your own condition to determine if it's complete
-              //       isError = true;
-              //     } else {
-              //       // Optionally, add a delay before retrying
-              //       await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
-              //     }
-              //   }
-              //   return secondApiResponse;
-              // };
-
-
-
               const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
               const restructureTemp = {
                 ...temp,
@@ -381,16 +375,7 @@ const NewUploadScreen = () => {
                 },
               }));
 
-              //to set the data in the local storage
-              // setParams({
-              //   ...params,
-              //   ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
-              //     uploadFacility: {
-              //       ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
-              //       uploadedFile: [restructureTemp],
-              //     },
-              //   },
-              // });
+
               setParams({
                 ...params,
                 ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
@@ -424,11 +409,11 @@ const NewUploadScreen = () => {
             } catch (error) {
 
               if (error?.response?.data?.Errors?.[0]?.description) {
-                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                showErrorToast(error?.response?.data?.Errors?.[0]?.description);
                 setLoader(false);
                 return;
               } else {
-                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                showErrorToast(t("UPLOAD_MAPPING_ERROR"));
                 setLoader(false);
                 return;
               }
@@ -439,6 +424,18 @@ const NewUploadScreen = () => {
       return;
     } else if (name === "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING" && formData?.uploadUserMapping?.data?.length > 0) {
       setLoader(true);
+
+
+      const isAnyUserActive = formData?.uploadFacilityMapping?.data?.some(
+        item => item.HCM_ADMIN_CONSOLE_USER_USAGE === "Active"
+      );
+      if (!isAnyUserActive) {
+        setLoader(false);
+        showErrorToast(t("ONE_FACILITY_ATLEAST_SHOULD_BE_ACTIVE"))
+
+        return;
+      }
+
       const schemas = formData?.uploadUserMapping?.schemas;
       const checkValid = formData?.uploadUserMapping?.data?.some(
         (item) =>
@@ -446,10 +443,10 @@ const NewUploadScreen = () => {
           (!item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
             item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
       );
-    
+
       if (checkValid) {
         setLoader(false);
-        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
+        showErrorToast(t("NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER"));
         return;
       }
       await updateMapping(
@@ -464,12 +461,12 @@ const NewUploadScreen = () => {
         {
           onError: (error, variables) => {
             setLoader(false);
-            setShowToast({ key: "error", label: error });
+            showErrorToast(error);
           },
           onSuccess: async (data) => {
 
             try {
-              
+
               const useProcess = await Digit.Hooks.campaign.useProcessData(
                 [{ filestoreId: data }],
                 hirechyType,
@@ -479,7 +476,7 @@ const NewUploadScreen = () => {
                 baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
               );
 
-              
+
               const campaignDetails = {
                 ...campaignData, "resources": [
                   {
@@ -497,7 +494,7 @@ const NewUploadScreen = () => {
                 },
               });
 
-              
+
               const secondApiResponse = await Digit.CustomService.getResponse({
                 url: `/project-factory/v1/data/_search`,
                 body: {
@@ -508,43 +505,6 @@ const NewUploadScreen = () => {
                   },
                 },
               });
-
-              
-
-              // const callSecondApiUntilComplete = async () => {
-              //   let secondApiResponse;
-              //   let isCompleted = false;
-              //   let isError = false;
-              //   while (!isCompleted && !isError) {
-              //     secondApiResponse = await Digit.CustomService.getResponse({
-              //       url: `/project-factory/v1/data/_search`,
-              //       body: {
-              //         SearchCriteria: {
-              //           tenantId: tenantId,
-              //           id: [responseTemp?.ResourceDetails?.id],
-              //         },
-              //       },
-              //     });
-              //     // Check if the response has the expected data to continue
-              //     if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
-              //       // Replace `someCondition` with your own condition to determine if it's complete
-              //       isCompleted = true;
-              //     } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
-              //       // Replace `someCondition` with your own condition to determine if it's complete
-              //       isError = true;
-              //     } else {
-              //       // Optionally, add a delay before retrying
-              //       await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
-              //     }
-              //   }
-              //   return secondApiResponse;
-              // };
-              // const reqCriteriaResource = await callSecondApiUntilComplete();
-              // if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
-              //   setLoader(false);
-              //   setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
-              //   return;
-              // }
 
 
               const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
@@ -562,16 +522,7 @@ const NewUploadScreen = () => {
                   },
                 },
               }));
-              //to set the data in the local storage
-              // setParams({
-              //   ...params,
-              //   ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
-              //     uploadUser: {
-              //       ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
-              //       uploadedFile: [restructureTemp],
-              //     },
-              //   },
-              // });
+
 
               setParams({
                 ...params,
@@ -604,13 +555,13 @@ const NewUploadScreen = () => {
 
               return;
             } catch (error) {
-              
+
               if (error?.response?.data?.Errors?.[0]?.description) {
-                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                showErrorToast(error?.response?.data?.Errors?.[0]?.description);
                 setLoader(false);
                 return;
               } else {
-                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                showErrorToast(t("UPLOAD_MAPPING_ERROR"));
                 setLoader(false);
                 return;
               }
@@ -627,7 +578,7 @@ const NewUploadScreen = () => {
       (uploadUser?.uploadedFile?.length !== 0 && uploadUser?.isError === true) ||
       (uploadBoundary?.uploadedFile?.length !== 0 && uploadBoundary?.isError === true)
     ) {
-      setShowToast({ key: "error", label: "ENTER_VALID_FILE" });
+      showErrorToast(t("ENTER_VALID_FILE"));
       return;
     }
 
@@ -675,7 +626,7 @@ const NewUploadScreen = () => {
             setCurrentKey(currentKey + 1);
           },
           onError: () => {
-            setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+            showErrorToast(t("HCM_ERROR_IN_CAMPAIGN_CREATION"));
             setLoader(false);
           },
         }
