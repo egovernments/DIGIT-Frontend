@@ -1,3 +1,6 @@
+## [1.8.16] [25-July-2025] 
+- DatePicker HRMS - Maxwidth Added for 2 more fields
+
 ## [1.8.15] [25-July-2025] 
 - DatePicker HRMS Maxwidth Added
 
