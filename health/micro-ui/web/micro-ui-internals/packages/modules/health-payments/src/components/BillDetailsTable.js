@@ -37,12 +37,72 @@ const BillDetailsTable = ({ ...props }) => {
                     </div>
                 ),
                 selector: (row) => {
+                    const showErrorPayments =
+                        (row?.status === "PAYMENT_FAILED")
                     return (
-                        <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}>
-                            {t(row?.userId) || t("NA")}
+                        <div className="ellipsis-cell"
+                            style={{
+                                display: "flex",
+                                alignItems: "center",
+                                minWidth: 0,
+                                maxWidth: "100%",
+                            }}
+                            >
+                                <span
+                                className="ellipsis-cell"
+                                style={{
+                                    overflow: "hidden",
+                                    textOverflow: "ellipsis",
+                                    whiteSpace: "nowrap",
+                                    maxWidth: "160px", // control how much space name can take
+                                    display: "inline-block",
+                                    marginRight: "4px",
+                                }}
+                                title={t(row?.billNumber) || t("NA")}
+                            >
+                               {t(row?.userId) || t("NA")}
+                            </span>
+                            
+                            {showErrorPayments && (
+                                <TooltipWrapper
+                                    arrow
+                                    content={
+                                        <div
+                                            style={{
+                                                maxWidth: "600px",
+                                                whiteSpace: "normal",
+                                                wordWrap: "break-word",
+                                            }}
+                                        >
+                                            {t(row?.additionalDetails?.reasonForFailure)}
+                                        </div>
+                                    }
+                                    enterDelay={100}
+                                    header={t("HCM_AM_DATA_ERROR")}
+                                    leaveDelay={0}
+                                    placement="right"
+                                >
+                                    <span style={{ display: "inline-block" }}>
+                                        <Button
+                                            style={{
+                                                minWidth: "auto",
+                                                color: "#B91900",
+                                                paddingLeft: "0.25rem",
+                                                cursor: "default",
+                                                backgroundColor: "transparent"
+                                            }}
+                                            variation="tertiary"
+                                            size="medium"
+                                            icon="Error"
+                                            iconFill="#B91900"
+                                        />
+                                    </span>
+                                </TooltipWrapper>
+                            )}
                         </div>
                     );
                 },
+                allowOverflow: true,
             },
             {
                 name: (
@@ -146,76 +206,6 @@ const BillDetailsTable = ({ ...props }) => {
                         </div>
                     );
                 },
-                //             selector: (row) => {
-                //                 return (
-                //                 <div style={{ display: "flex", alignItems: "center",minWidth: 0  }}>
-                //                     <span className="ellipsis-cell" style={{ marginRight: "8px",        overflow: "hidden",
-                //     textOverflow: "ellipsis",
-                //     minWidth: 0,  }}
-                //                         title={
-                //                             row?.givenName
-                //                             ? t(`${row?.givenName}`)
-                //                             : t("NA")
-                //                         }>
-                //                         {
-                //                             row?.givenName
-                //                             ? t(`${row?.givenName}`)
-                //                             : t("NA")
-                //                         }
-                //                         </span>
-                //                         {/* {row?.status === "VERIFICATION_FAILED" && row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?
-                //                         (
-                //                             <div style={{ display: "flex", alignItems: "center" }}> */}
-                //                             {props?.editBill && row?.status === "PENDING_EDIT"? (
-                //                            <Button
-                //                             style={{ minWidth: "auto" }}
-                //                             variation="secondary"
-                //                             size="small"
-                //                             icon="Edit"
-                //                             onClick={() => {
-                //                                 setShowEditField(true);
-                //                                 setFieldKey("givenName");
-                //                                 setInitialFieldValue(row?.givenName || "");
-                //                                 setEditingRowIndex(row?.id); // pass index of the row being edited
-                //                                 setEditFieldName(t("HCM_AM_WORKER_NAME"));
-                //                                 // renderEditField("name");
-                //                             }}
-                //                             />):null
-                //                             }
-                //                     {
-                //                     (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") && 
-                //                     row?.additionalDetails?.reasonForFailure === "NAME_MISMATCH"?(
-                //                             <div style={{ display: "flex", alignItems: "center" }}>
-                //                             <div>
-
-                //                             <TooltipWrapper
-                //                             arrow={true}
-                // content={<>
-                // <div style={{ maxWidth: "600px", whiteSpace: "normal", wordWrap: "break-word" }}>
-                //     {t(row?.additionalDetails?.reasonForFailure)}</div></>}
-                //                             enterDelay={100}
-                //                             header="Data Error"
-                //                             leaveDelay={0}
-                //                             placement="right"
-                //                             >
-                //                             <span style={{ display: "inline-block" }}>
-
-                //                             <Button
-                //                             style={{ minWidth: "auto", color:"#B91900", paddingLeft: "0.5rem", cursor: "default" }}
-                //                             variation="teritiary"
-                //                             size="medium"
-                //                             icon="Error"
-                //                             iconFill="#B91900"/>
-                //                             </span>
-                //                            </TooltipWrapper>
-                //                            </div>                                
-                //                             </div>
-                //                         ):(
-                //                                 []
-                //                             )}
-                //                 </div>
-                //                 );
-                //             },
                 allowOverflow: true,
             },
             {
