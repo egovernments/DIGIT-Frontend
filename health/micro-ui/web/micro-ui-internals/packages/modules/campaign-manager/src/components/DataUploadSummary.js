@@ -205,7 +205,7 @@ const DataUploadSummary = (props) => {
                   },
                   cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(2)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
@@ -226,7 +226,7 @@ const DataUploadSummary = (props) => {
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
+                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
                       <span>{t(`CAMPAIGN_EDIT`)}</span>
                       <EditIcon />
                     </div>
