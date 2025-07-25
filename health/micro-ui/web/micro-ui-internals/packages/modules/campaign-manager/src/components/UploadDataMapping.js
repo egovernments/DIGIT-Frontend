@@ -659,7 +659,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
-              debugger
+
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (error.instancePath === "/Phone Number (Mandatory)") {
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
@@ -684,7 +684,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           return formattedErrors;
         })
         .join(", ");
-        debugger
+
       return {
         isValid: false,
         message: errorMessage,
