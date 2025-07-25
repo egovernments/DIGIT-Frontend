@@ -409,7 +409,7 @@ const CampaignDetails = () => {
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          setShowToast({ key: "error", label: errorCode ? t(errorCode): "ERROR_CREATE_CAMPAIGN" });
+          setShowToast({ key: "error", label: errorCode ? t(errorCode): t("ERROR_CREATE_CAMPAIGN") });
         },
       }
     );
