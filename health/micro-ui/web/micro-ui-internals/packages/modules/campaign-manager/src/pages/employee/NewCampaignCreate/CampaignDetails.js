@@ -408,9 +408,8 @@ const CampaignDetails = () => {
           });
         },
         onError: (error, result) => {
-
-          const errorCode = error?.response?.data?.Errors?.[0]?.description;
-          setShowToast({ key: "error", label: t(errorCode) });
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          setShowToast({ key: "error", label: errorCode ? t(errorCode): t("ERROR_CREATE_CAMPAIGN") });
         },
       }
     );

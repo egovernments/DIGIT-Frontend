@@ -94,7 +94,7 @@ const Response = ({ useWindowState = false }) => {
         <Toast
           type={showToast?.type}
           label={showToast?.label}
-          transitionTime={showToast?.transitionTime}
+          transitionTime={showToast?.transitionTime || 5000}
           onClose={() => {
             setShowToast(false);
           }}

@@ -205,7 +205,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   }
 
   const submit = async (screenData, finalSubmit, tabChange) => {
-    if (!finalSubmit && stepper?.find((i) => i.active)?.isLast && !isNextTabAvailable) {
+    if (!tabChange && !finalSubmit && stepper?.find((i) => i.active)?.isLast && !isNextTabAvailable) {
       setShowToast({ key: "error", label: "LAST_PAGE_ERROR" });
       return;
     }

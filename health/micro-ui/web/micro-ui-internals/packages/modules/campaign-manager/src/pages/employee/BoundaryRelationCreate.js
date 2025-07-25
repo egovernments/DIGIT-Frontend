@@ -579,7 +579,7 @@ const onConfirmClick=()=>{
                     />
                     {creatingData&& <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")}/>}
 
-                    {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />}
+                    {showToast && <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime || 5000} onClose={() => setShowToast(null)} />}
                 </React.Fragment>
 
             );
@@ -683,7 +683,7 @@ const onConfirmClick=()=>{
                   <Toast
                     label={showToast.label}
                     type={showToast.isError}
-                    transitionTime={showToast?.transitionTime}
+                    transitionTime={showToast?.transitionTime || 5000}
                     onClose={() => setShowToast(null)}
                   />
                 )}
