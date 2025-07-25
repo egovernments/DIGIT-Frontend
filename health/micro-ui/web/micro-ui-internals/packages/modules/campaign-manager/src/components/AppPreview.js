@@ -174,7 +174,7 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
       <div className="mobile-bezel-child-container">
-        {data.cards.map((card, index) => (
+        {data?.cards?.map((card, index) => (
           <Card key={index} className="app-card" style={{}}>
             {card.headerFields.map((headerField, headerIndex) => (
               <div key={headerIndex}>
