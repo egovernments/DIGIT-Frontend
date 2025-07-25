@@ -188,22 +188,25 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
-  useEffect(() => {
-    if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-    }
-    if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-    }
-    return () => {
-      if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-      }
-    };
-  }, []);
+  // useEffect(() => {
+  //   if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
+  
+  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  //   }
+  //   if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
+  
+  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  //   }
+  //   return () => {
+  //     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
+  
+  //       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+  //       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+  //     }
+  //   };
+  // }, []);
 
   return (
     <React.Fragment>

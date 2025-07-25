@@ -5,6 +5,8 @@ import { useHistory } from "react-router-dom";
 import { uploadConfig } from "../../../configs/uploadConfig";
 import { transformCreateData } from "../../../utils/transformCreateData";
 
+import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
+
 const NewUploadScreen = () => {
   const { t } = useTranslation();
   const history = useHistory();
@@ -21,7 +23,11 @@ const NewUploadScreen = () => {
     return keyParam ? parseInt(keyParam) : 1;
   });
 
+  const hirechyType = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_UPLOAD_ID")?.hierarchyType || null;
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  //const id = searchParams.get("id");
+  const id = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_DATA")?.id;
+  const [shouldUpdate, setShouldUpdate] = useState(false);
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -30,6 +36,15 @@ const NewUploadScreen = () => {
     });
     window.history.replaceState({}, "", url);
   };
+
+  const { data: baseTimeOut } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    CONSOLE_MDMS_MODULENAME,
+    [{ name: "baseTimeout" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.baseTimeout` }
+  );
+
 
   const reqCriteria = {
     url: `/project-factory/v1/project-type/search`,
@@ -48,6 +63,7 @@ const NewUploadScreen = () => {
   };
 
   const { isLoading, data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { mutate: updateMapping } = Digit.Hooks.campaign.useUpdateAndUploadExcel(tenantId);
 
   const reqUpdate = {
     url: `/project-factory/v1/project-type/update`,
@@ -65,8 +81,8 @@ const NewUploadScreen = () => {
   }, [params]);
 
   useEffect(() => {
-    setUploadConfig(uploadConfig({ totalFormData, campaignData , summaryErrors }));
-  }, [campaignData, totalFormData , summaryErrors]);
+    setUploadConfig(uploadConfig({ totalFormData, campaignData, summaryErrors }));
+  }, [campaignData, totalFormData, summaryErrors]);
 
   useEffect(() => {
     updateUrlParams({ key: currentKey });
@@ -177,68 +193,432 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
+    
     const key = Object.keys(formData)?.[0];
+    const name = filteredConfig?.[0]?.form?.[0]?.name;
+    const type = filteredConfig?.[0]?.form?.[0]?.body?.[0]?.customProps?.type;
+
     if (key === "DataUploadSummary") {
       const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
         ? false
         : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              target: [
-                {
-                  name: `target`,
-                  error: t(`TARGET_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+          return {
+            ...prev,
+            target: [
+              {
+                name: `target`,
+                error: t(`TARGET_FILE_MISSING`),
+              },
+            ],
+          };
+        }),
           true);
 
       const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
         ? false
         : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              facility: [
-                {
-                  name: `facility`,
-                  error: t(`FACILITY_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+          return {
+            ...prev,
+            facility: [
+              {
+                name: `facility`,
+                error: t(`FACILITY_FILE_MISSING`),
+              },
+            ],
+          };
+        }),
           true);
       const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
         ? false
         : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              user: [
-                {
-                  name: `user`,
-                  error: t(`USER_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+          return {
+            ...prev,
+            user: [
+              {
+                name: `user`,
+                error: t(`USER_FILE_MISSING`),
+              },
+            ],
+          };
+        }),
           true);
 
       if (isTargetError) {
         setShowToast({ key: "error", label: "TARGET_DETAILS_ERROR" });
-        return ;
+        return;
       }
       if (isFacilityError) {
         setShowToast({ key: "error", label: "FACILITY_DETAILS_ERROR" });
-        return ;
+        return;
       }
       if (isUserError) {
         setShowToast({ key: "error", label: "USER_DETAILS_ERROR" });
-        return ;
+        return;
       }
       setShowToast(null);
       history.push(
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
+    }
+    else if (name === "HCM_CAMPAIGN_UPLOAD_FACILITY_DATA_MAPPING" && formData?.uploadFacilityMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadFacilityMapping?.schemas;
+      const checkValid = formData?.uploadFacilityMapping?.data?.some(
+        (item) =>
+          item?.[(schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active" &&
+          (!item?.[(schemas?.find((i) => i.description === "Boundary Code")?.name)] ||
+            item?.[(schemas?.find((i) => i.description === "Boundary Code")?.name)]?.length === 0)
+      );
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_FACILITY" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadFacilityMapping?.arrayBuffer,
+          updatedData: formData?.uploadFacilityMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES",
+          schemas: schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+          },
+          onSuccess: async (data) => {
+            try {
+
+              const useProcess = await Digit.Hooks.campaign.useProcessData(
+                [{ filestoreId: data }],
+                hirechyType,
+                `${type}Validation`,
+                tenantId,
+                id,
+                baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
+              );
+
+
+              const campaignDetails = {
+                ...campaignData, "resources": [
+                  {
+                    "type": type,
+                    "filename": params?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile[0].filename,
+                    "filestoreId": data
+                  }
+                ]
+              }
+
+              const responseTemp = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/project-type/update",
+                body: {
+                  CampaignDetails: campaignDetails,
+                },
+              });
+
+
+              const secondApiResponse = await Digit.CustomService.getResponse({
+                url: `/project-factory/v1/data/_search`,
+                body: {
+                  SearchCriteria: {
+                    tenantId: tenantId,
+                    id: [useProcess?.id],
+                    type: useProcess?.type
+                  },
+                },
+              });
+
+
+
+              // const callSecondApiUntilComplete = async () => {
+              //   let secondApiResponse;
+              //   let isCompleted = false;
+              //   let isError = false;
+              //   while (!isCompleted && !isError) {
+              //     secondApiResponse = await Digit.CustomService.getResponse({
+              //       url: `/project-factory/v1/data/_search`,
+              //       body: {
+              //         SearchCriteria: {
+              //           tenantId: tenantId,
+              //           id: [useProcess?.ResourceDetails?.id],
+              //           type:useProcess?.ResourceDetails?.type
+              //         },
+              //       },
+              //     });
+              //     // Check if the response has the expected data to continue
+              //     if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+              //       // Replace `someCondition` with your own condition to determine if it's complete
+              //       isCompleted = true;
+              //     } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+              //       // Replace `someCondition` with your own condition to determine if it's complete
+              //       isError = true;
+              //     } else {
+              //       // Optionally, add a delay before retrying
+              //       await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+              //     }
+              //   }
+              //   return secondApiResponse;
+              // };
+
+
+
+              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0];
+              const restructureTemp = {
+                ...temp,
+                resourceId: useProcess?.id,
+                filestoreId: data,
+              };
+
+              setTotalFormData((prevData) => ({
+                ...prevData,
+                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                  uploadFacility: {
+                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              }));
+
+              //to set the data in the local storage
+              // setParams({
+              //   ...params,
+              //   ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+              //     uploadFacility: {
+              //       ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+              //       uploadedFile: [restructureTemp],
+              //     },
+              //   },
+              // });
+              setParams({
+                ...params,
+                ["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]: {
+                  uploadFacility: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility,
+                    uploadedFile: [
+                      {
+                        ...params?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0],
+                        filestoreId: data,
+                      },
+                    ],
+                  },
+                },
+              });
+
+              setLoader(false);
+              if (
+                filteredConfig?.[0]?.form?.[0]?.isLast ||
+                !filteredConfig[0].form[0].body[0].skipAPICall ||
+                (filteredConfig[0].form[0].body[0].skipAPICall && id)
+              ) {
+                setShouldUpdate(true);
+              }
+
+              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
+
+
+              return;
+            } catch (error) {
+
+              if (error?.response?.data?.Errors?.[0]?.description) {
+                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                setLoader(false);
+                return;
+              } else {
+                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                setLoader(false);
+                return;
+              }
+            }
+          },
+        }
+      );
+      return;
+    } else if (name === "HCM_CAMPAIGN_UPLOAD_USER_DATA_MAPPING" && formData?.uploadUserMapping?.data?.length > 0) {
+      setLoader(true);
+      const schemas = formData?.uploadUserMapping?.schemas;
+      const checkValid = formData?.uploadUserMapping?.data?.some(
+        (item) =>
+          item?.[(schemas?.find((i) => i.description === "User Usage")?.name)] === "Active" &&
+          (!item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)] ||
+            item?.[(schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.length === 0)
+      );
+    
+      if (checkValid) {
+        setLoader(false);
+        setShowToast({ key: "error", label: "NO_BOUNDARY_SELECTED_FOR_ACTIVE_USER" });
+        return;
+      }
+      await updateMapping(
+        {
+          arrayBuffer: formData?.uploadUserMapping?.arrayBuffer,
+          updatedData: formData?.uploadUserMapping?.data,
+          tenantId: tenantId,
+          sheetNameToUpdate: "HCM_ADMIN_CONSOLE_USER_LIST",
+          schemas,
+          t: t,
+        },
+        {
+          onError: (error, variables) => {
+            setLoader(false);
+            setShowToast({ key: "error", label: error });
+          },
+          onSuccess: async (data) => {
+
+            try {
+              
+              const useProcess = await Digit.Hooks.campaign.useProcessData(
+                [{ filestoreId: data }],
+                hirechyType,
+                `${type}Validation`,
+                tenantId,
+                id,
+                baseTimeOut?.[CONSOLE_MDMS_MODULENAME]
+              );
+
+              
+              const campaignDetails = {
+                ...campaignData, "resources": [
+                  {
+                    "type": type,
+                    "filename": params?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile[0].filename,
+                    "filestoreId": data
+                  }
+                ]
+              }
+
+              const responseTemp = await Digit.CustomService.getResponse({
+                url: "/project-factory/v1/project-type/update",
+                body: {
+                  CampaignDetails: campaignDetails,
+                },
+              });
+
+              
+              const secondApiResponse = await Digit.CustomService.getResponse({
+                url: `/project-factory/v1/data/_search`,
+                body: {
+                  SearchCriteria: {
+                    tenantId: tenantId,
+                    id: [useProcess?.id],
+                    type: useProcess?.type
+                  },
+                },
+              });
+
+              
+
+              // const callSecondApiUntilComplete = async () => {
+              //   let secondApiResponse;
+              //   let isCompleted = false;
+              //   let isError = false;
+              //   while (!isCompleted && !isError) {
+              //     secondApiResponse = await Digit.CustomService.getResponse({
+              //       url: `/project-factory/v1/data/_search`,
+              //       body: {
+              //         SearchCriteria: {
+              //           tenantId: tenantId,
+              //           id: [responseTemp?.ResourceDetails?.id],
+              //         },
+              //       },
+              //     });
+              //     // Check if the response has the expected data to continue
+              //     if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "completed") {
+              //       // Replace `someCondition` with your own condition to determine if it's complete
+              //       isCompleted = true;
+              //     } else if (secondApiResponse && secondApiResponse?.ResourceDetails?.[0]?.status === "failed") {
+              //       // Replace `someCondition` with your own condition to determine if it's complete
+              //       isError = true;
+              //     } else {
+              //       // Optionally, add a delay before retrying
+              //       await new Promise((resolve) => setTimeout(resolve, 1000)); // Delay for 1 second before retrying
+              //     }
+              //   }
+              //   return secondApiResponse;
+              // };
+              // const reqCriteriaResource = await callSecondApiUntilComplete();
+              // if (reqCriteriaResource?.ResourceDetails?.[0]?.status === "failed") {
+              //   setLoader(false);
+              //   setShowToast({ key: "error", label: JSON.parse(reqCriteriaResource?.ResourceDetails?.[0]?.additionalDetails?.error)?.description });
+              //   return;
+              // }
+
+
+              const temp = totalFormData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0];
+              const restructureTemp = {
+                ...temp,
+                resourceId: useProcess?.id,
+                filestoreId: data,
+              };
+              setTotalFormData((prevData) => ({
+                ...prevData,
+                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                  uploadUser: {
+                    ...prevData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                    uploadedFile: [restructureTemp],
+                  },
+                },
+              }));
+              //to set the data in the local storage
+              // setParams({
+              //   ...params,
+              //   ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+              //     uploadUser: {
+              //       ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+              //       uploadedFile: [restructureTemp],
+              //     },
+              //   },
+              // });
+
+              setParams({
+                ...params,
+                ["HCM_CAMPAIGN_UPLOAD_USER_DATA"]: {
+                  uploadUser: {
+                    ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser,
+                    uploadedFile: [
+                      {
+                        ...params?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0],
+                        filestoreId: data,
+                      },
+                    ],
+                  },
+                },
+              });
+
+
+              setLoader(false);
+              if (
+                filteredConfig?.[0]?.form?.[0]?.isLast ||
+                !filteredConfig[0].form[0].body[0].skipAPICall ||
+                (filteredConfig[0].form[0].body[0].skipAPICall && id)
+              ) {
+                setShouldUpdate(true);
+              }
+
+              if (!filteredConfig?.[0]?.form?.[0]?.isLast && !filteredConfig[0].form[0].body[0].mandatoryOnAPI) {
+                setCurrentKey(currentKey + 1);
+              }
+
+              return;
+            } catch (error) {
+              
+              if (error?.response?.data?.Errors?.[0]?.description) {
+                setShowToast({ key: "error", label: error?.response?.data?.Errors?.[0]?.description });
+                setLoader(false);
+                return;
+              } else {
+                setShowToast({ key: "error", label: `UPLOAD_MAPPING_ERROR` });
+                setLoader(false);
+                return;
+              }
+            }
+          },
+        }
+      );
+      return;
     }
     const { uploadFacility, uploadUser, uploadBoundary } = formData || {};
 
@@ -256,7 +636,6 @@ const NewUploadScreen = () => {
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     }
-    const name = latestConfig?.form?.[0]?.name;
 
     setTotalFormData((prevData) => ({
       ...prevData,
