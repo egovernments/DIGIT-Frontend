@@ -1,3 +1,9 @@
+## [1.8.15] [25-July-2025] 
+- DatePicker HRMS Maxwidth Added
+
+## [1.8.15]  [25-July-2025]
+- DatePicker HRMS Maxwidth Added, 
+
 ## [1.8.13]  [15-July-2025]
 - Publishing PGR Demo changes, 
 - Boudnary and locality chanages were added, Edit, Create and Inbox   
