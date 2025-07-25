@@ -41,7 +41,7 @@ function transformCampaignData(inputObj = {}) {
     HCM_CAMPAIGN_DATE: {
       campaignDates: {
         startDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-"),
-        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-")
+        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.endDate)?.split("/")?.reverse()?.join("-")
       }
     },
     HCM_CAMPAIGN_CYCLE_CONFIGURE: {
