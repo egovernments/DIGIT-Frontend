@@ -5,13 +5,13 @@ import { Dropdown, TextInput, LabelFieldPair, CardLabel, MultiSelectDropdown } f
 const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allSelectedBoundary, typeOfOperation, curData }, ref) => {
   const { t } = useTranslation();
   // const columns = schema.filter(item => !item.hideColumn);
-  const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role" && item.multiSelectDetails));
+  const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role" ));
 
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
 
   const [newdata, setNewData] = useState(
-    typeOfOperation === "edit" ? Object.fromEntries(columns.map((column) => [t(column.name), curData[t(column.name)]])) : []
+    typeOfOperation === "edit" ? Object.fromEntries(columns.map((column) => [column.name, curData[column.name]])) : []
   );
 
   // Expose a method to the parent component
@@ -39,9 +39,9 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             className="tetxinput-example"
             type={"number"}
             name="title"
-            value={newdata[t(column.name)] || ""}
+            value={newdata[column.name] || ""}
             onChange={(event) => {
-              const updatedData = { ...newdata, [t(column.name)]: event.target.value };
+              const updatedData = { ...newdata, [column.name]: event.target.value };
               setNewData(updatedData);
             }}
             placeholder={t("")}
@@ -107,14 +107,14 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               onClose={(value) => {
                 const boundariesInEvent = value?.map((event) => event?.[1]);
                 const values = boundariesInEvent?.map((i) => i?.code)?.join(",");
-                const updatedData = { ...newdata, [t(column.name)]: values };
+                const updatedData = { ...newdata, [column.name]: values };
                 setNewData(updatedData);
                 setSelectedBoundary(boundariesInEvent);
               }}
               onSelect={(value) => {
                 const boundariesInEvent = value?.map((event) => event?.[1]);
                 const values = boundariesInEvent?.map((i) => i?.code)?.join(",");
-                const updatedData = { ...newdata, [t(column.name)]: values };
+                const updatedData = { ...newdata, [column.name]: values };
                 setNewData(updatedData);
                 setSelectedBoundary(boundariesInEvent);
               }}
@@ -136,9 +136,9 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
               className="tetxinput-example"
               type={"text"}
               name="title"
-              value={newdata[t(column.name)] || ""}
+              value={newdata[column.name] || ""}
               onChange={(event) => {
-                const updatedData = { ...newdata, [t(column.name)]: event.target.value };
+                const updatedData = { ...newdata, [column.name]: event.target.value };
                 setNewData(updatedData);
               }}
               placeholder={t("")}
@@ -160,14 +160,14 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             className="roleTableCell"
             selected={
               dropdownValues?.find(
-                (item) => item?.code === newdata[t(column.name)] // Get value from newdata
+                (item) => item?.code === newdata[column.name] // Get value from newdata
               ) || null
             }
             isMandatory={true}
             option={dropdownValues}
             select={(value) => {
               // Update the newdata state with the selected value from the dropdown
-              const updatedData = { ...newdata, [t(column.name)]: value?.code };
+              const updatedData = { ...newdata, [column.name]: value?.code };
               setNewData(updatedData); // Update state
             }}
             optionKey="code"
@@ -175,7 +175,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           />
         </div>
       );
-    } else if (column?.description === "User Role" && column?.multiSelectDetails) {
+    } else if (column?.description?.includes("User Role" )) {
       const dropdownValues = Array.isArray(column?.multiSelectDetails?.enum)
         ? column.multiSelectDetails.enum.map((item) => ({ code: item }))
         : [];
@@ -187,19 +187,35 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           </div>
           <MultiSelectDropdown
             className="roleTableCell"
-            selected={newdata[t(column.name)] ? dropdownValues.filter(item => newdata[t(column.name)].split(',').includes(item.code)) : []}
+            selected={newdata[column.name] ? dropdownValues.filter(item => newdata[column.name].split(',').includes(item.code)) : []}
             options={dropdownValues}
             onClose={(value) => {
               const rolesInEvent = value?.map((event) => event?.[1]);
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const updatedData = { ...newdata, [t(column.name)]: values };
+              const rolesData = rolesInEvent?.map((r, idx) => {
+                return {
+                  [ `${column.name}_MULTISELECT_${idx + 1}` ]: r?.code
+                }
+              });
+              const rolesObj = Object.assign({}, ...rolesData);
+              const updatedData = { ...newdata, [column.name]: values , ...rolesObj};
               setNewData(updatedData);
             }}
             type={"multiselectdropdown"}
             onSelect={(value) => {
               const rolesInEvent = value?.map((event) => event?.[1]);
               const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const updatedData = { ...newdata, [t(column.name)]: values };
+              const multiSelectKey = `${column.name}_MULTISELECT_`;
+              const rolesData = rolesInEvent?.map((r, idx) => {
+                return {
+                  [ `${column.name}_MULTISELECT_${idx + 1}` ]: r?.code
+                }
+              });
+              const rolesObj = Object.assign({}, ...rolesData);
+              // {
+              //   "User Role 1": "DISTRIBUTOR"
+              // }
+              const updatedData = { ...newdata, [column.name]: values, ...rolesObj };
               setNewData(updatedData);
             }}
             optionsKey="code"

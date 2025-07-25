@@ -18,7 +18,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   ];
   const mappingCategories = ["HCM_UPLOAD_FACILITY_MAPPING", "HCM_UPLOAD_USER_MAPPING"];
   const [currentStep, setCurrentStep] = useState(1);
-  const currentCategories = categories?.[currentStep - 1];
+  const currentCategories = categories?.[parseInt(currentKey) - 1];
   const [key, setKey] = useState(() => {
     return currentKey ? parseInt(currentKey) : 1;
   });

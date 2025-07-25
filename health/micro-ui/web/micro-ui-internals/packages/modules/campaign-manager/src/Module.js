@@ -187,7 +187,7 @@ const componentsToRegister = {
   MyCampaignNew,
   QRButton,
   // new 
-EqualHeightWrapper
+EqualHeightWrapper,
   
 };
 
