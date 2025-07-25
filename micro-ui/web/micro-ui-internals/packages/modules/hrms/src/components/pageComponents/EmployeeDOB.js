@@ -18,6 +18,11 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
     },
   ];
 
+  const fieldStyle = {
+  maxWidth: "36.25rem",
+  paddingRight: "2.5rem",
+};
+
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
   }
@@ -31,7 +36,9 @@ const SelectDateofBirthEmployment = ({ t, config, onSelect, formData = {}, userT
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field">
+            <div className="field" style={{
+              fieldStyle
+            }}>
               <DatePicker
                 key={input.name}
                 date={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
