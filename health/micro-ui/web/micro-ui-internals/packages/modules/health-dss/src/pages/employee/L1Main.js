@@ -287,7 +287,7 @@ const L1Main = () => {
   const campaignId = location.state?.campaignId;
   const dashboardLink = location.state?.dashboardLink;
   const dashboardId = dashboardLink?.dashboardId;
-  const stateCode = location.state?.stateCode;
+  const stateCode = Digit?.ULBService?.getStateId();
   const [filters, setFilters] = useState(() => {});
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
@@ -409,34 +409,42 @@ const L1Main = () => {
         setTimeout(() => {
           return Digit.Download.Image(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
       case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
           return Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
       case "ES_DSS_SHARE_PDF_EMAIL":
         setTimeout(() => {
           return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
         }, 500);
+        break;
       case "ES_DSS_SHARE_PDF_WHATSAPP":
         setTimeout(() => {
           return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
         }, 500);
+        break;
       case "ES_DSS_SHARE_IMAGE_EMAIL":
         setTimeout(() => {
           return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
         }, 500);
+        break;
       case "ES_DSS_SHARE_IMAGE_WHATSAPP":
         setTimeout(() => {
           return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
         }, 500);
+        break;
       case "ES_DSS_SHARE_PDF":
         setTimeout(() => {
           return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
       case "ES_DSS_SHARE_IMAGE":
         setTimeout(() => {
           return Digit.ShareFiles.Image(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
     }
   };
 
