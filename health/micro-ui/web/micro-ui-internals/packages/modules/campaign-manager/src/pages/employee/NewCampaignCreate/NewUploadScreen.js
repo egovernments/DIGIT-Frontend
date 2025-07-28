@@ -614,10 +614,16 @@ const NewUploadScreen = () => {
         id: campaignData?.id,
       });
 
+
+      const CampaignDetails = {
+        ...payload.CampaignDetails,
+        "additionalDetails": campaignData?.additionalDetails
+      }
+
       await mutationUpdate.mutate(
         {
           url: url,
-          body: payload,
+          body: { CampaignDetails },
           config: { enable: true },
         },
         {
