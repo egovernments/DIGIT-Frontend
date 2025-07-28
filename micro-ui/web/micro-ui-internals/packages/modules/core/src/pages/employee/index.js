@@ -15,6 +15,8 @@ import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components"; // Assuming PrivateRoute is v6 compatible or will be adapted
 import ImageComponent from "../../components/ImageComponent";
+// import SkipToMainContent from "./SkipToMainContent/SkipToMainContent.js";
+import withAutoFocusMain from "../../hoc/withAutoFocusMain";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error", "user/productPage"];
 
@@ -169,4 +171,4 @@ const EmployeeApp = ({
   );
 };
 
-export default EmployeeApp;
+export default withAutoFocusMain(EmployeeApp, ".digit-home-main");

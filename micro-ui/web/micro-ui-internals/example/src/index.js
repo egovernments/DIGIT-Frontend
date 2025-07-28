@@ -9,7 +9,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities","Campaign"];
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -44,7 +44,9 @@ const initDigitUI = () => {
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(<MainApp stateCode={stateCode} enabledModules={enabledModules} />);
+  root.render(<>
+    <MainApp stateCode={stateCode} enabledModules={enabledModules} />
+  </>);
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
@@ -53,8 +55,10 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      const {initCampaignComponents}=await import("@egovernments/digit-ui-module-campaign-manager")
-      initCampaignComponents()
+      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
+      const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+      initCampaignComponents();
+      initWorkbenchComponents();
       setIsReady(true);
     });
   }, []);
@@ -71,7 +75,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {window.Digit && (
-        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
+        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules} allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
       )}
     </Suspense>
   );

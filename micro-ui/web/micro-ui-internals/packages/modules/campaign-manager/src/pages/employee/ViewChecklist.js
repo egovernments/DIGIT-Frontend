@@ -2,7 +2,7 @@ import React, { useEffect, useState, createContext, useContext, useCallback } fr
 import { checklistCreateConfig } from "../../configs/checklistCreateConfig";
 import { useTranslation } from "react-i18next";
 import { SummaryCardFieldPair, Card, Button, PopUp, TextInput, Loader } from "@egovernments/digit-ui-components";
-import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2 } from "@egovernments/digit-ui-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import MobileChecklist from "../../components/MobileChecklist";
 import TagComponent from "../../components/TagComponent";
