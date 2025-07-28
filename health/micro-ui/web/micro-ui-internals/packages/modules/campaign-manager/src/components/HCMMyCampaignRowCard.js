@@ -53,7 +53,7 @@ const getTagElements = (rowData) => {
     tags.type = {
       label: "SINGLEROUND_CAMPAIGN",
       showIcon: false,
-      type: "error",
+      type: "warning",
       stroke: true,
     };
   } else if (rowData?.deliveryRules?.[0]?.cycles?.length > 1) {
