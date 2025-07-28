@@ -121,7 +121,8 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       enabled: formId ? true : false,
       select: (data) => {
         const filteredCache = data?.mdms?.find((i) => i.data.flow === formData?.data?.name);
-        return filteredCache ? filteredCache : null;
+        // return filteredCache ? filteredCache : null;
+        return { filteredCache: filteredCache || null, mdms: data?.mdms || [] };
       },
     },
   };
@@ -141,18 +142,18 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   }, [showToast]);
 
   useEffect(() => {
-    if (!isCacheLoading && Array.isArray(cacheData?.data?.data)) {
+    if (!isCacheLoading && Array.isArray(cacheData?.filteredCache?.data?.data)) {
       parentDispatch({
         key: "SET",
-        data: [...cacheData?.data?.data],
-        template: cacheData?.data,
-        appIdData: cacheData?.data?.data,
+        data: [...cacheData?.filteredCache?.data?.data],
+        template: cacheData?.filteredCache?.data,
+        appIdData: cacheData?.filteredCache?.data?.data,
       });
       setCurrentStep((prev) => (prev ? prev : 1));
       return;
     } else if (
       !isCacheLoading &&
-      !Array.isArray(cacheData?.data?.data) &&
+      !Array.isArray(cacheData?.filteredCache?.data?.data) &&
       formData?.data &&
       formId &&
       AppConfigMdmsData?.[fieldTypeMaster]?.length > 0
@@ -167,7 +168,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       });
       setCurrentStep(1);
     }
-  }, [isCacheLoading, cacheData, isLoadingAppConfigMdmsData, AppConfigMdmsData, formData]);
+  }, [isCacheLoading, cacheData?.filteredCache, isLoadingAppConfigMdmsData, AppConfigMdmsData, formData]);
 
   useEffect(() => {
     setNumberTabs(
@@ -218,14 +219,123 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
       const updated = screenData.find((d) => d.name === item.name);
       return updated ? updated : item;
     });
-    if (stepper?.find((i) => i.active)?.isLast || finalSubmit || tabChange) {
+    if (finalSubmit) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;
       });
       const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
       const reverseFormat =
-        cacheData && cacheData?.data?.data
+        cacheData && cacheData?.filteredCache?.data?.data
+          ? {
+              ...parentState?.actualTemplate?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            }
+          : {
+              ...parentState?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            };
+
+      const updatedFormData = { ...formData, data: reverseFormat };
+
+      const allUpdatedFormat = tabState?.actualData?.map((i) => {
+        if (i?.id === updatedFormData?.id) {
+          return {
+            ...updatedFormData,
+          };
+        } else if (cacheData?.mdms?.find((x) => x?.data?.flow === i?.data?.name)?.data?.data) {
+          const reverseData = reverseRestructure(
+            cacheData?.mdms?.find((x) => x.id === i.id)?.data?.data?.pages,
+            AppConfigMdmsData?.[fieldTypeMaster]
+          );
+          const reverseFormat = {
+            ...cacheData?.mdms?.find((x) => x?.data?.flow === i?.data?.name)?.data?.data,
+            version: cacheData?.mdms?.find((x) => x?.data?.flow === i?.data?.name)?.data?.data?.version + 1,
+            pages: reverseData,
+          };
+
+          return {
+            ...reverseFormat,
+          };
+        } else {
+          return {
+            ...i,
+          };
+        }
+      });
+
+      setChangeLoader(true);
+
+      try {
+        for (const updatedObj of allUpdatedFormat) {
+          const checkCache = cacheData?.mdms?.find((x) => x?.data?.flow === updatedObj?.data?.name);
+          if (checkCache?.data?.data) {
+            await updateMutate(
+              {
+                moduleName: "HCM-ADMIN-CONSOLE",
+                masterName: "AppConfigCache",
+                data: {
+                  ...checkCache,
+                  data: {
+                    projectType,
+                    campaignNumber,
+                    flow: checkCache?.data?.flow,
+                    data: null,
+                  },
+                },
+              },
+              {
+                onError: (error) => {
+                  throw error;
+                },
+              }
+            );
+          }
+
+          await updateMutate(
+            {
+              moduleName: "HCM-ADMIN-CONSOLE",
+              masterName,
+              data: updatedObj,
+            },
+            {
+              onError: (error) => {
+                throw error;
+              },
+            }
+          );
+        }
+
+        // All updates succeeded
+        setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
+        setChangeLoader(false);
+        queryClient.invalidateQueries(`APPCONFIG-${campaignNumber}`);
+
+        history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
+          message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
+          preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
+          actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
+          actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+        });
+        return;
+      } catch (error) {
+        setChangeLoader(false);
+        setShowToast({
+          key: "error",
+          label: error?.response?.data?.Errors?.[0]?.code ? t(error?.response?.data?.Errors?.[0]?.code) : error.message || error,
+        });
+        return;
+      }
+    } else if (stepper?.find((i) => i.active)?.isLast || tabChange) {
+      const mergedTemplate = parentState.currentTemplate.map((item) => {
+        const updated = screenData.find((d) => d.name === item.name);
+        return updated ? updated : item;
+      });
+      const reverseData = reverseRestructure(mergedTemplate, AppConfigMdmsData?.[fieldTypeMaster]);
+      const reverseFormat =
+        cacheData && cacheData?.filteredCache?.data?.data
           ? {
               ...parentState?.actualTemplate?.actualTemplate,
               version: parentState?.actualTemplate?.version + 1,
@@ -246,11 +356,11 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           moduleName: "HCM-ADMIN-CONSOLE",
           masterName: "AppConfigCache",
           data: {
-            ...cacheData,
+            ...cacheData?.filteredCache,
             data: {
               projectType: projectType,
               campaignNumber: campaignNumber,
-              flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
+              flow: cacheData?.filteredCache?.data?.flow ? cacheData?.filteredCache?.data?.flow : parentState?.actualTemplate?.name,
               data: null,
             },
           },
@@ -304,15 +414,17 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           moduleName: "HCM-ADMIN-CONSOLE",
           masterName: "AppConfigCache",
           data: {
-            ...cacheData,
+            ...cacheData?.filteredCache,
             data: {
               projectType: projectType,
               campaignNumber: campaignNumber,
-              flow: cacheData?.data?.flow ? cacheData?.data?.flow : parentState?.actualTemplate?.name,
+              flow: cacheData?.filteredCache?.data?.flow ? cacheData?.filteredCache?.data?.flow : parentState?.actualTemplate?.name,
               data: mergedTemplate,
-              version: cacheData?.data?.version ? cacheData?.data?.version : parentState?.actualTemplate?.version,
+              version: cacheData?.filteredCache?.data?.version ? cacheData?.filteredCache?.data?.version : parentState?.actualTemplate?.version,
               localeModule: localeModule,
-              actualTemplate: cacheData?.data?.actualTemplate ? cacheData?.data?.actualTemplate : parentState?.actualTemplate,
+              actualTemplate: cacheData?.filteredCache?.data?.actualTemplate
+                ? cacheData?.filteredCache?.data?.actualTemplate
+                : parentState?.actualTemplate,
             },
           },
         },

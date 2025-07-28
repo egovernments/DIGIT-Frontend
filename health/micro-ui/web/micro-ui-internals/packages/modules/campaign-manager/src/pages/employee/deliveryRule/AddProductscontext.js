@@ -169,6 +169,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           justifyContent: "center",
           gap: "1rem",
           marginTop: "1rem",
+          marginBottom: "1rem"
         }}
       >
         <p>{t("CAMPAIGN_NEW_PRODUCT_TEXT")}</p>
