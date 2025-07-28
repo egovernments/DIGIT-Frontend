@@ -108,7 +108,6 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
               `/${window.contextPath}/employee/dss/level-two/${redirectUrl}?campaignId=${campaignId}&boundaryType=${boundaryType}&boundaryValue=${rowData?.name}`,
               {}
             );
-            // routeTo(`/${window.contextPath}/employee/dss/${redirectUrl}?province=${rowData?.name}&projectTypeId=${selectedProjectTypeId}`);
           }}
         ></Button>
       </div>

@@ -46,20 +46,9 @@ const getInitialRange = () => {
   if (!Digit.SessionStorage.get(key)) {
     Digit.SessionStorage.set(key, {});
   }
-  // ToDo: Check with previous implementation 
   overrideDescendantDateRange(boundaryValue);
   let data = Digit.SessionStorage.get(key);
   let filteredInfo = null;
-  // if (province != null) {
-  //   filteredInfo = campaignData?.[projectType]?.filter((obj) => {
-  //     return obj["boundaries"]["province"]?.[0] === province;
-  //   });
-  // }
-  // if (district != null) {
-  //   filteredInfo = campaignData?.[projectType]?.filter((obj) => {
-  //     return obj["boundaries"]["district"]?.[0] === district;
-  //   });
-  // }
   let startDate = data?.range?.startDate ? new Date(data?.range?.startDate) : Digit.Utils.dss.getDefaultFinacialYear().startDate;
   let endDate = data?.range?.endDate ? new Date(data?.range?.endDate) : Digit.Utils.dss.getDefaultFinacialYear().endDate;
   if (filteredInfo && filteredInfo?.length !== 0) {
@@ -165,8 +154,6 @@ const L2Main = ({}) => {
       tenantId,
       moduleLevel,
       boundaries,
-      // // province,
-      // district,
     } = getInitialRange();
     const dynamicBoundaryFilter = boundaryType && boundaryValue ? { [boundaryType]: boundaryValue || null, "boundaryType" : boundaryType} : {};
     return {
@@ -183,13 +170,7 @@ const L2Main = ({}) => {
         tenantId,
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
-        // province: province || boundaries?.province?.[0] || null,
-        // district: district || boundaries?.district?.[0] || null,
         projectTypeId: projectTypeId,
-        cycle: (projectData?.project?.additionalDetails?.projectType?.cycles
-          && Object.keys(projectData?.project?.additionalDetails?.projectType?.cycles).length > 0)
-         ? projectData?.project?.additionalDetails?.projectType?.cycles
-         : null,
         campaignId : campaignId,
         ...dynamicBoundaryFilter,
    
@@ -264,10 +245,7 @@ const L2Main = ({}) => {
     },
   };
   const { data: response, isLoading } = Digit.Hooks.DSS.useAPIHook(reqCriteria);
-
-  // const { data: response, isLoading } = Digit.Hooks.dss.useDashboardConfig(moduleCode);
   const { data: ulbTenants, isLoading: isUlbLoading } = Digit.Hooks.useModuleTenants("DSS");
-  // const { isLoading: isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateCode, "FSM", "FSTPPlantInfo");
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [showDownloadOptions, setShowDownloadOptions] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
@@ -293,7 +271,6 @@ const L2Main = ({}) => {
 
   const handleFilters = (data) => {
     const userInfo = Digit.UserService.getUser()?.info;
-    // const province = new URLSearchParams(search).get("province");
     const boundaryType = new URLSearchParams(location.search).get("boundaryType");
     const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
     const eligibleRolesForFilter = {
@@ -339,7 +316,6 @@ const L2Main = ({}) => {
       value: filters,
       setValue: handleFilters,
       ulbTenants: isNational ? nationalInfo : ulbTenants,
-      // fstpMdmsData: mdmsData,
       screenConfig: screenConfig,
     }),
     [filters, isUlbLoading, isServicesLoading]

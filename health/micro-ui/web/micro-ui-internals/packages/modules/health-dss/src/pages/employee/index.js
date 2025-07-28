@@ -16,7 +16,6 @@ const ProjectBreadCrumb = ({ location }) => {
   const campaignId = Digit.SessionStorage.get("campaignSelected")?.id;
   const boundaryType = Digit.SessionStorage.get("projectSelected")?.project?.address?.boundaryType?.toLowerCase();
   const boundaryValue = Digit.SessionStorage.get("projectSelected")?.boundaryCodeResponse?.message || t(Digit.SessionStorage.get("projectSelected")?.project?.address?.boundary);
-  // TODO : NEED TO UPDATE THESE CRUMBS
   const crumbs = [
     {
       internalLink: `/${window?.contextPath}/employee`,

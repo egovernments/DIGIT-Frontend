@@ -6,17 +6,14 @@ export const tableCustomStyle = {
   },
   table: {
     style: {
-      // overflow: "scroll",
     },
   },
   responsiveWrapper: {
     style: {
-      // overflow: "scroll",
     },
   },
   contextMenu: {
     style: {
-      // overflow: "scroll",
     },
   },
   header: {
@@ -101,22 +98,18 @@ export const tableCustomStyle = {
 export const getTableCustomStyle = (freezeFirstColumn = false) => ({
   tableWrapper: {
     style: {
-      // overflow: "scroll",
     },
   },
   table: {
     style: {
-      // overflow: "scroll",
     },
   },
   responsiveWrapper: {
     style: {
-      // overflow: "scroll",
     },
   },
   contextMenu: {
     style: {
-      // overflow: "scroll",
     },
   },
   header: {
