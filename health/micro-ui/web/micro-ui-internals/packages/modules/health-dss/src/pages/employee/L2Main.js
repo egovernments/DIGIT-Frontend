@@ -147,7 +147,7 @@ function getProjectTypeFromSession() {
 }
 const L2Main = ({}) => {
   const location = useLocation();
-  const stateCode = location.state?.stateCode;
+  const stateCode = Digit?.ULBService?.getStateId();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const projectTypeId = getProjectTypeIDFromURL();
@@ -472,34 +472,43 @@ const L2Main = ({}) => {
         setTimeout(() => {
           return Digit.Download.Image(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
       case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
           return Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
       case "ES_DSS_SHARE_PDF_EMAIL":
+        console.log("came hereeee")
         setTimeout(() => {
           return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
         }, 500);
+        break;
       case "ES_DSS_SHARE_PDF_WHATSAPP":
         setTimeout(() => {
           return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
         }, 500);
+        break;
       case "ES_DSS_SHARE_IMAGE_EMAIL":
         setTimeout(() => {
           return Digit.ShareFiles.DownloadImage(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
         }, 500);
+        break;
       case "ES_DSS_SHARE_IMAGE_WHATSAPP":
         setTimeout(() => {
           return Digit.ShareFiles.DownloadImage(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "whatsapp");
         }, 500);
+        break;
       case "ES_DSS_SHARE_PDF":
         setTimeout(() => {
           return Digit.ShareFiles.DownloadImage(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
       case "ES_DSS_SHARE_IMAGE":
         setTimeout(() => {
           return Digit.ShareFiles.DownloadImage(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
+        break;
     }
   };
 
