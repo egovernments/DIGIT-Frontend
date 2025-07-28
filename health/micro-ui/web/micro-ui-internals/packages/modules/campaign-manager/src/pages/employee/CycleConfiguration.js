@@ -302,9 +302,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               <Header styles={{ marginTop: "1.5rem", color: "#0b4b66" }} className="select-boundary">
                 {t(
                   `CAMPAIGN_PROJECT_${
-                    tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-                      ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-                      : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+                    selectedProjectType.toUpperCase()
                   }`
                 )}
               </Header>
@@ -318,9 +316,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
               <CardText>
                 {t(
                   `CAMPAIGN_CYCLE_CONFIGURE_HEADING_${
-                    tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code
-                      ? tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.code?.toUpperCase()
-                      : tempSession?.HCM_CAMPAIGN_TYPE?.projectType?.toUpperCase()
+                   selectedProjectType.toUpperCase()
                   }`
                 )}
               </CardText>
