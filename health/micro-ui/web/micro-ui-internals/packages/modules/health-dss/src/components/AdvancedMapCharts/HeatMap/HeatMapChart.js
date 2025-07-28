@@ -8,7 +8,6 @@ import GenericChart from "../../GenericChart";
 import FilterContext from "../../FilterContext";
 import { ResponsiveContainer } from "recharts";
 import { getTitleHeading } from "../../../utils/locale";
-import BoundaryTypes from "../../../utils/enums";
 import { subDays, addMinutes } from "date-fns";
 import { getDuration } from "../../../utils/getDuration";
 
@@ -40,13 +39,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
   const isLevelOne = boundaryLevelMap?.[boundaryType] === "level-one";
   const filterBoundaryValue = filterStack?.value?.filters?.boundaryType;
-  // const [mapSelector, setMapSelector] = useState(
-  //   filterStack?.value?.filters?.district
-  //     ? filterStack?.value?.filters?.district?.toLowerCase()
-  //     : filterStack?.value?.filters?.province
-  //     ? filterStack?.value?.filters?.province?.toLowerCase()
-  //     : nationalMap
-  // );
   const [mapSelector, setMapSelector] = useState(
     !isLevelOne ?
     (
@@ -60,8 +52,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const [chartKey, setChartKey] = useState(chartId);
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId} = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
 
   useEffect(() => {
     setChartKey(chartId);
@@ -71,8 +61,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   }, [filterStack, chartId]);
 
   useEffect(() => {
-    // const province = filterStack?.value?.filters?.province;
-    // const district = filterStack?.value?.filters?.district;
     const boundaryLevel = filterStack?.value?.filters?.boundaryType;
     const boundaryName = filterStack?.value?.filters?.[boundaryLevel]
     if (
@@ -113,7 +101,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     title: "home",
   };
 
-  // const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.dss.useMDMS(Digit?.ULBService?.getStateId(), "map-config", "GeoJson");
   const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.useCustomMDMS(
     Digit?.ULBService?.getStateId(),
     "map-config",

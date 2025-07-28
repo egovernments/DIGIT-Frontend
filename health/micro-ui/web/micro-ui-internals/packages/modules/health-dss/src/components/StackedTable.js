@@ -14,9 +14,7 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
   const [searchQuery, setSearchQuery] = useState("");
   const { value } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-        const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
+  const { campaignId } = Digit.Hooks.useQueryParams();
   const history = useHistory();
 
   const getInitialRange = () => {
@@ -38,16 +36,6 @@ export default function StackedTable({ chartId, visualizer, initialRange, isNati
     interval: interval,
     title: "home",
   };
-  // const { isLoading: isFetchingChart, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: chartId,
-  //   type: "table",
-  //   tenantId,
-  //   requestDate: requestDate,
-  //   filters: { 
-  //     // projectTypeId: selectedProjectTypeId 
-  //     campaignId:campaignId
-  //   },
-  // });
   const aggregationRequestDto = {
     visualizationCode: chartId,
     visualizationType: "table",

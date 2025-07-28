@@ -7,7 +7,6 @@ import NoData from "../../NoData";
 import GenericChart from "../../GenericChart";
 import FilterContext from "../../FilterContext";
 import { getTitleHeading } from "../../../utils/locale";
-import BoundaryTypes from "../../../utils/enums";
 
 const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const { t } = useTranslation();
@@ -61,8 +60,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   }, [filterStack, chartId]);
 
   useEffect(() => {
-    // const province = filterStack?.value?.filters?.province;
-    // const district = filterStack?.value?.filters?.district;
     const boundaryLevel = filterStack?.value?.filters?.boundaryType;
     const boundaryName = filterStack?.value?.filters?.[boundaryLevel]
     if (

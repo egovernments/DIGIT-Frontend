@@ -4,11 +4,9 @@ import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
-import CampaignsInbox from "./CampaignsInbox";
 import L1Main from "./L1Main";
 import L2Main from "./L2Main";
 import ViewDashbaord from "./ViewDashboard";
-import L1Dashboard from "./L1Dashboard";
 import Inbox from "./Inbox";
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -83,12 +81,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
-        <PrivateRoute path={`${path}/live-campaigns`} component={() => <CampaignsInbox />} />
-        <PrivateRoute path={`${path}/past-campaigns`} component={() => <CampaignsInbox />} />
         <PrivateRoute path={`${path}/my-campaigns`} component={() => <Inbox />} />
         <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashbaord stateCode={stateCode} />} />
-        <PrivateRoute path={`${path}/l1-dashboard`} component={() => <L1Dashboard />} />
-        {/* TODO: update the dashboard path */}
         <PrivateRoute path={`${path}/level-one/:moduleCode`} component={() => <L1Main />} />
         <PrivateRoute path={`${path}/level-two/:moduleCode`} component={() => <L2Main />} />
       </AppContainer>

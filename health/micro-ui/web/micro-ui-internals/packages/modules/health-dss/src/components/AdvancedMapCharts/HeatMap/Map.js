@@ -3,7 +3,6 @@ import { useTranslation } from "react-i18next";
 import { scaleQuantile } from "d3-scale";
 import { ZoomableGroup, Geographies, ComposableMap, Geography } from "react-simple-maps";
 import { getTitleHeading } from "../../../utils/locale";
-import BoundaryTypes from "../../../utils/enums";
 import { Button } from "@egovernments/digit-ui-components";
 import { getBoundaryTypeByLevel } from "../../../utils/getBoundaryTypeByLevel";
 const Map = ({
@@ -219,15 +218,12 @@ const Map = ({
             level === 2
               ? 
               getBoundaryTypeByLevel("level-two", boundaryLevelMap)
-              // toFilterCase(BoundaryTypes.PROVINCE)
               : level === 3
               ? 
               getBoundaryTypeByLevel("level-three", boundaryLevelMap)
-              // toFilterCase(BoundaryTypes.DISTRICT)
               : level === 4
               ? 
               getBoundaryTypeByLevel("level-four", boundaryLevelMap)
-              // toFilterCase(BoundaryTypes.ADMINISTRATIVE_PROVINCE)
               : "",
         },
       ];

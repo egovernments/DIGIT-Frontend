@@ -5,7 +5,6 @@ import { default as EmployeeApp } from "./pages/employee";
 import { overrideHooks, updateCustomConfigs } from "./utils";
 import { ProviderContext } from "./utils/context";
 import DSSCard from "./components/DSSCard";
-import InboxFilter from "./components/InboxFilter";
 import DateRangePicker from "./components/DateRangePicker";
 import DSSCampaignRowCard from "./components/DSSCampaignRowCard";
 
@@ -35,7 +34,6 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   DSSModule,
   DSSCard,
-  InboxFilter,
   DateRangePicker,
   DSSCampaignRowCard
 };

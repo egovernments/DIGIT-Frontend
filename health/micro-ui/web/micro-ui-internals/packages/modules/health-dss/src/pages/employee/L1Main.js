@@ -76,26 +76,12 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   const { id, chartType } = data;
   const { startDate, endDate, interval } = getInitialRange();
   const { campaignId } = Digit.Hooks.useQueryParams();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
   const requestDate = {
     startDate: startDate.getTime(),
     endDate: endDate.getTime(),
     interval: interval,
     title: "home",
   };
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: chartType,
-  //   tenantId,
-  //   requestDate,
-  //   filters: { 
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId : campaignId
-  //    },
-  //   moduleLevel: moduleLevel,
-  // });
-
   const aggregationRequestDto = {
       visualizationCode: id,
       visualizationType: chartType,
@@ -156,14 +142,11 @@ const HorBarChart = ({ data, setselectState = "" }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { id, chartType } = data;
   let filters = {};
-  // const selectedProjectTypeId = projectTypeId ? projectTypeId : Digit.SessionStorage.get("selectedProjectTypeId");
-
   if (setselectState !== "") filters.state = setselectState;
 
   filters = { ...filters };
   const { startDate, endDate, interval } = getInitialRange();
-  // const { projectTypeId } = Digit.Hooks.useQueryParams();
-    const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignId } = Digit.Hooks.useQueryParams();
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -171,17 +154,6 @@ const HorBarChart = ({ data, setselectState = "" }) => {
     interval: interval,
     title: "home",
   };
-
-  // const { isLoading, data: response } = Digit.Hooks.dss.useGetChart({
-  //   key: id,
-  //   type: chartType,
-  //   tenantId,
-  //   requestDate,
-  //   filters: { ...filters, 
-  //     // projectTypeId: selectedProjectTypeId
-  //     campaignId:campaignId
-  //    },
-  // });
 
   const aggregationRequestDto = {
       visualizationCode: id,
