@@ -41,7 +41,7 @@ function transformCampaignData(inputObj = {}) {
     HCM_CAMPAIGN_DATE: {
       campaignDates: {
         startDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-"),
-        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-")
+        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.endDate)?.split("/")?.reverse()?.join("-")
       }
     },
     HCM_CAMPAIGN_CYCLE_CONFIGURE: {
@@ -174,11 +174,15 @@ const CampaignDetails = () => {
     const cycleConfig = campaignData?.deliveryRules?.[0];
     const cycles = cycleConfig?.cycles || [];
 
-    const formattedCycleData = cycles.map((cycle, idx) => ({
-      key: idx + 1,
-      fromDate: new Date(cycle?.startDate).toISOString(),
-      toDate: new Date(cycle?.endDate).toISOString(),
-    }));
+    const formattedCycleData = cycles.map((cycle, idx) => {
+      const startDate = cycle?.startDate ? new Date(cycle.startDate) : null;
+      const endDate = cycle?.endDate ? new Date(cycle.endDate) : null;
+      return {
+        key: idx + 1,
+        fromDate: startDate && !isNaN(startDate.getTime()) ? startDate.toISOString() : null,
+        toDate: endDate && !isNaN(endDate.getTime()) ? endDate.toISOString() : null,
+        };
+      });
 
     const cycleConfgureDate = {
       cycle: cycles.length,
