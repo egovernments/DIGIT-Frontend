@@ -583,10 +583,8 @@ const L1Main = () => {
                   );
                 } else if (item?.vizType === "stacked-collection") {
                   return (
-                    // TO DO : UPDATE THE ICONS
                     <Card key={index} className={"digit-stacked-collection-card"}>
                       <div className={"digit-stacked-collection-card-header-wrapper"}>
-                        {/* {Icon(item.name, colors[index].dark)} */}
                         <Icon type={item.name} iconColor={"#C84C0E"} width="1.5rem" height="1.5rem" className="digit-dss-stacked-card-icon" />
                         <div className={"digit-stacked-collection-card-header-text"}>{t(item.name)}</div>
                       </div>
