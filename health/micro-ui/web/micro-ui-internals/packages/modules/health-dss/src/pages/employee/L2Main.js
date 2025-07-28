@@ -479,7 +479,6 @@ const L2Main = ({}) => {
         }, 500);
         break;
       case "ES_DSS_SHARE_PDF_EMAIL":
-        console.log("came hereeee")
         setTimeout(() => {
           return Digit.ShareFiles.PDF(tenantId, fullPageRef, t(dashboardConfig?.[0]?.name), "mail");
         }, 500);
