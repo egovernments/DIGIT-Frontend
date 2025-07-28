@@ -85,7 +85,7 @@ const MDMSView = ({ ...props }) => {
     const onError = (resp) => {
       setShowToast({
         label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-        type: "error"
+        type:"error"
       });
       closeToast()
       refetch()
@@ -132,7 +132,7 @@ const MDMSView = ({ ...props }) => {
 
   const tranformLocModuleName = (localModuleName) => {
     if (!localModuleName) return null;
-    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
   const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`).toLowerCase();
 
@@ -146,7 +146,7 @@ const MDMSView = ({ ...props }) => {
   if (data?.data && localisableFields?.length > 0) {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
   }
-  const locale = Digit.StoreData.getCurrentLanguage();
+  const locale=Digit.StoreData.getCurrentLanguage();
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},
@@ -181,7 +181,7 @@ const MDMSView = ({ ...props }) => {
     finalData = updatedData;
   }
 
-  if (isLoading || isFetching || isLocalizationLoading) return <Loader page={true} variant={"PageLoader"} />;
+  if (isLoading || isFetching || isLocalizationLoading)     return <Loader page={true} variant={"PageLoader"} />;
 
   return (
     <React.Fragment>
@@ -201,7 +201,7 @@ const MDMSView = ({ ...props }) => {
           navigate(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
       />
-      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
     </React.Fragment>
   )
 }

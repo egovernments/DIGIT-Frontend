@@ -16,7 +16,7 @@ const UploadBoundary = () => {
   const [selectedValue, setSelectedValue] = useState(null);
   const navigate = useNavigate();
   const [showToast, setShowToast] = useState(null);
-  const [success, setSuccess] = useState(false);
+  const [success , setSuccess] = useState(false);
 
   const callInputClick = async (event) => {
     inputRef.current.click();
@@ -91,7 +91,7 @@ const UploadBoundary = () => {
     for (let i = 0; i < headerRow.length; i++) {
       if (headerRow[i] !== expectedHeaders[i]) {
         const boundary = t(`HCM_${headerRow[i].replace(/\s+/g, '_').toUpperCase()}`);
-        if (boundary === t("HCM_BOUNDARY_CODE")) {
+        if(boundary === t("HCM_BOUNDARY_CODE")){
           continue;
         }
         return false;
@@ -131,6 +131,7 @@ const UploadBoundary = () => {
             closeToast();
           }
         } catch (error) {
+          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -232,7 +233,7 @@ const UploadBoundary = () => {
             isDisabled={!selectedValue}
             onButtonClick={callInputClick}
           />
-          <GenerateXlsx inputRef={inputRef} jsonData={[modifiedHierarchy]} skipHeader={true} sheetName="Boundary Data" />
+          <GenerateXlsx inputRef={inputRef} jsonData={[modifiedHierarchy]} skipHeader={true} sheetName="Boundary Data"/>
         </div>
         <BulkUpload onSubmit={onBulkUploadSubmit} onSuccess={success} />
         {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={() => setShowToast(null)}></Toast>}

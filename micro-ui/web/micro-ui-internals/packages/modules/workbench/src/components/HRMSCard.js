@@ -8,12 +8,23 @@ const HRMSCard = () => {
     return null;
   }
   const { t } = useTranslation();
- 
+  // const tenantId = Digit.ULBService.getCurrentTenantId();
+  // const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
+
   const propsForModuleCard = {
     Icon: 'SupervisorAccount',
     moduleName: t("ACTION_TEST_9HRMS"),
     kpis: [
-
+      // {
+      //     count:  isLoading ? "-" : data?.EmployeCount?.totalEmployee,
+      //     label: t("TOTAL_EMPLOYEES"),
+      //     link: `/${window?.contextPath}/employee/hrms/inbox`
+      // },
+      // {
+      //   count:  isLoading ? "-" : data?.EmployeCount?.activeEmployee,
+      //     label: t("ACTIVE_EMPLOYEES"),
+      //     link: `/${window?.contextPath}/employee/hrms/inbox`
+      // }
     ],
     links: [
       {

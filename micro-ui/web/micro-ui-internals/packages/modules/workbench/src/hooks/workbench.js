@@ -1,5 +1,4 @@
-
-import { useQuery } from "@tanstack/react-query"; // Updated import
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 
 /**
@@ -8,7 +7,7 @@ import _ from "lodash";
  * @author jagankumar-egov
  *
  * @example
- * Digit.Hooks.workbench.UIFormBodyGenerator({},{})
+ *   Digit.Hooks.workbench.UIFormBodyGenerator({},{})
  *
  * @returns {Array<object>} Returns the Form Body config
  */
@@ -49,7 +48,7 @@ const UIFormBodyGenerator = (JSONSchema = {}, UISchema = {}) => {
  * @author jagankumar-egov
  *
  * @example
- * Digit.Hooks.workbench.UICreateConfigGenerator({},{})
+ *   Digit.Hooks.workbench.UICreateConfigGenerator({},{})
  *
  * @returns {Array<object>} Returns the Create screen config
  */
@@ -67,7 +66,7 @@ const UICreateConfigGenerator = (MDMSSchema = {}, UISchema = {}) => {
  * @author jagankumar-egov
  *
  * @example
- * Digit.Hooks.workbench.getMDMSContextPath()
+ *   Digit.Hooks.workbench.getMDMSContextPath()
  *
  * @returns {Array<object>} Returns the Create screen config
  */
@@ -79,16 +78,21 @@ const isSchemaCodeInMDMSAction = () => {
   return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION") === false ? false : true;
 };
 
+
+
+
+
 /**
  * Custom function to get the schema of the screen to be rendered
  *
  * @author jagankumar-egov
  *
  * @example
- * Digit.Hooks.workbench.getMDMSSchema(schemaCode,tenantId)
+ *   Digit.Hooks.workbench.getMDMSSchema(schemaCode,tenantId)
  *
  * @returns schema object
  */
+
 const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantId()) => {
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
@@ -100,21 +104,15 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       },
     },
   };
-
-  // Updated: Using the options object structure for useQuery
-  const {
-    isLoading: schemaLoading,
-    data: schemaData,
-    error: schemaError,
-  } = useQuery({
-    queryKey: ["API_SCHEMA", schemaCode, tenantId].filter((e) => e), // Updated: Using queryKey
-    queryFn: () => Digit.CustomService.getResponse({ ...reqCriteria }), // Updated: Using queryFn
+  const { isLoading: schemaLoading, data: schemaData, error: schemaError } = useQuery({
+    queryKey: ["API_SCHEMA", schemaCode, tenantId].filter(Boolean),
+    queryFn: () => Digit.CustomService.getResponse({ ...reqCriteria }),
     cacheTime: 0,
-    enabled: !!schemaCode, // Updated: Ensuring query is enabled only if schemaCode exists
+    enabled: !!schemaCode,
     select: (data) => {
       return data?.SchemaDefinitions?.[0] || { noSchemaFound: true };
     },
-  });
+  })
 
   const reqCriteriaData = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -129,17 +127,11 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       },
     },
   };
-
-  // Updated: Using the options object structure for useQuery
-  const {
-    isLoading: uiSchemaLoading,
-    error,
-    data,
-  } = useQuery({
-    queryKey: ["UI_SCHEMA", schemaCode, tenantId], // Updated: Using queryKey
-    queryFn: () => Digit.CustomService.getResponse({ ...reqCriteriaData }), // Updated: Using queryFn
+  const { isLoading: uiSchemaLoading, error, data } = useQuery({
+    queryKey: ["UI_SCHEMA", schemaCode, tenantId],
+    queryFn: () => Digit.CustomService.getResponse({ ...reqCriteriaData }),
     cacheTime: 0,
-    enabled: !!schemaCode, // Updated: Ensuring query is enabled only if schemaCode exists
+    enabled: schemaCode && true,
     select: (data) => {
       const customUiConfigs = data?.mdms?.[0]?.data;
       const responseData = {};
@@ -149,7 +141,8 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       }
       return responseData;
     },
-  });
+  }
+  );
 
   let finalResponse = {};
   if (!uiSchemaLoading && !schemaLoading) {
@@ -158,7 +151,7 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       schemaData.definition = Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schemaData?.definition, schemaData?.code);
     }
     if (schemaData?.definition?.["x-ref-schema"]?.length > 0) {
-      schemaData?.definition?.["x-ref-schema"]?.forEach((dependent) => { // Updated: Using forEach for clarity
+      schemaData?.definition?.["x-ref-schema"]?.map((dependent) => {
         if (dependent?.fieldPath) {
           let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
           if (_.get(schemaData?.definition?.properties, updatedPath)) {
@@ -174,7 +167,7 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       });
     }
     if (schemaData && finalResponse?.customUiConfigs?.custom?.length > 0) {
-      finalResponse?.customUiConfigs?.custom?.forEach((dependent) => { // Updated: Using forEach for clarity
+      finalResponse?.customUiConfigs?.custom?.map((dependent) => {
         if (dependent?.fieldPath && dependent?.dataSource) {
           let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
           if (_.get(schemaData?.definition?.properties, updatedPath)) {

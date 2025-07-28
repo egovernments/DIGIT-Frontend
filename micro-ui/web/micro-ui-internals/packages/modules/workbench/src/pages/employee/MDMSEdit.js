@@ -24,7 +24,8 @@ const MDMSEdit = ({ ...props }) => {
   const gotoView = () => {
     setRenderLoader(true);
     navigate(
-      `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${from ? `&from=${from}` : ""
+      `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${
+        from ? `&from=${from}` : ""
       }`
     );
   };
@@ -75,12 +76,12 @@ const MDMSEdit = ({ ...props }) => {
 
   const tranformLocModuleName = (localModuleName) => {
     if (!localModuleName) return null;
-    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
 
   // Localization Search
   const localizationModule = tranformLocModuleName(`DIGIT_MDMS_${data?.schemaCode}`).toLowerCase();
-  let locale = Digit.StoreData.getCurrentLanguage();
+  let locale=Digit.StoreData.getCurrentLanguage();
 
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${stateId}&module=${localizationModule}`,
@@ -132,7 +133,7 @@ const MDMSEdit = ({ ...props }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
   const handleUpdate = async (formData, additionalProperties) => {
     const schemaCodeToValidate = `${moduleName}.${masterName}`;
-    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTransformedData(formData, data);
+    let transformedData = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.getTransformedData(formData, data) ;
     transformedData = transformedData && transformedData !== undefined && transformedData !== "undefined" ? transformedData : formData;
     const validation = await Digit?.Customizations?.["commonUiConfig"]?.["AddMdmsConfig"]?.[schemaCodeToValidate]?.validateForm(transformedData, { tenantId: stateId });
 
@@ -146,10 +147,10 @@ const MDMSEdit = ({ ...props }) => {
 
     const transformedFormData = { ...transformedData };
     const locale = Digit.StoreData.getCurrentLanguage();
-
+  
     // Prepare Localization Messages using the utility function
     const messages = buildLocalizationMessages(additionalProperties, localizationModule, locale);
-
+  
     try {
       if (messages.length > 0) {
         await localizationUpsertMutation.mutateAsync({
@@ -158,11 +159,11 @@ const MDMSEdit = ({ ...props }) => {
       }
     } catch (err) {
       console.error("Localization Upsert Failed:", err);
-      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), type: "error" });
+      setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), type:"error" });
       closeToast();
       return;
     }
-
+  
     // Perform MDMS Update
     mutation.mutate(
       {
@@ -172,7 +173,7 @@ const MDMSEdit = ({ ...props }) => {
       },
       {
         onError: (resp) => {
-          setShowToast({ label: t("WBH_ERROR_MDMS_DATA"), type: "error" });
+          setShowToast({ label: t("WBH_ERROR_MDMS_DATA"), type:"error" });
           closeToast();
         },
         onSuccess: () => {
@@ -183,8 +184,8 @@ const MDMSEdit = ({ ...props }) => {
     );
   };
 
-  if (isLoading || isFetching || isSchemaLoading || isLocalizationLoading || renderLoader) return <Loader page={true} variant={"PageLoader"} />;
-
+  if (isLoading || isFetching || isSchemaLoading || isLocalizationLoading || renderLoader) return  <Loader page={true} variant={"PageLoader"} />;
+  
 
   return (
     <React.Fragment>

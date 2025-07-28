@@ -26,7 +26,21 @@ const WorkbenchCard = () => {
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
     },
-
+    // {
+    //   label: t("ACTION_TEST_UPLOAD_BOUNDARY"),
+    //   link: `/${window?.contextPath}/employee/workbench/upload-boundary`,
+    //   roles: ROLES.LOCALISATION,
+    // },
+    // {
+    //   label: t("Sample Create master"),
+    //   link: `/${window?.contextPath}/employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Sample`,
+    //   roles: ROLES.MDMS,
+    // },
+    // {
+    //   label: t("Sample Search master"),
+    //   link: `/${window?.contextPath}/employee/workbench/mdms-search-v2?masterName=common-masters&moduleName=Sample`,
+    //   roles: ROLES.MDMS,
+    // },
   ];
 
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));

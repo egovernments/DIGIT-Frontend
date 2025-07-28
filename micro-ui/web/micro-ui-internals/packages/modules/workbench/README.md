@@ -112,7 +112,6 @@ https://github.com/egovernments/DIGIT-OSS/pull/99/commits/6e711bdc005c226c7debd5
 ### Changelog
 
 ```bash
-1.0.19-test.1 : React19 compatibility with latest dependencies such as react-router-dom.GenerateXlsxNew no longer exists in components.
 1.0.2-beta.7 : localisation admin issue fixed
 1.0.2-beta.6 : boundary screen updated for support migration of data
 1.0.2-beta.4 If you dont want to use modulename and mastername in mdms-v2 data create and update api use {MDMS_SCHEMACODE_INACTION} this constant in global config and set it as false

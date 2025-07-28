@@ -58,6 +58,7 @@ const BulkUpload = ({ multiple = true, onSubmit , onSuccess }) => {
       closeToast();
       return;
     }
+    // setFiles([...files, ...newFiles]);
     setFiles([...newFiles]);
   };
 

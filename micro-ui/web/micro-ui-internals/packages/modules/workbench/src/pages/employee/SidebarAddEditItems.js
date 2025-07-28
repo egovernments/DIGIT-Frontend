@@ -65,7 +65,11 @@ const SidebarAddEditItems = () => {
             .then(text => {
                 const icons = extractExports(text);
                 const iconObjects = icons.map(icon => ({ code: icon }));
-                
+                // SidebarAddEditConfig({ t, typeOfAction: typeOfAction })[0].body.forEach((field) => {
+                //     if (field.populators?.name === "leftIcon") {
+                //         field.populators.options = iconObjects; 
+                //     }
+                // });   
 
                 setIconNames(iconObjects);
             });
