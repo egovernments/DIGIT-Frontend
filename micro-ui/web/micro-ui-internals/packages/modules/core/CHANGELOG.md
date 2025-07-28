@@ -1,5 +1,10 @@
 # Changelog 
 
+## [1.8.35-rc19.02] [27-Jun-2025]
+-Accessibility features implemented
+-New HOC component withAutoFocusMain.js added for targeted keyboard focus
+-Webpack config changes for css compatibility
+
 ## [1.8.35-rc19.01] [27-Jun-2025]
 - core(1.8.35) from develop Upgraded to react19
 - App.js changes in routes

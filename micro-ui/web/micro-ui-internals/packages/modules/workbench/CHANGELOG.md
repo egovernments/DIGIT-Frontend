@@ -1,4 +1,7 @@
 
+## [1.0.19-test.2]  [18-Jun-2025]
+-React19 compatible as per latest workbench from develop
+
 ## [1.0.26]  [18-Jun-2025]
 - Provided schema download & upload
 
