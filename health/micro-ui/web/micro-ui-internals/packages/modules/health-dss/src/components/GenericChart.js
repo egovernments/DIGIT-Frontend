@@ -143,7 +143,7 @@ const GenericChart = ({
         </div>
       </div>
       {subHeader && <div className="digit-generic-chart-subheader">{t(subHeader)}</div>}
-      {caption && <div className="digit-generic-chart-caption">{caption}</div>}
+      {caption && <div className="digit-generic-chart-caption">{t(caption)}</div>}
       {React.cloneElement(children, { setChartData, setChartDenomination })}
     </Card>
   );
