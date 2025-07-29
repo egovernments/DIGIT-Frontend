@@ -1,23 +1,33 @@
-
-import { useQuery, useQueryClient } from "@tanstack/react-query"; // Importing from the new @tanstack/react-query package
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { LocalisationSearch } from "../utils/LocalisationSearch";
 
-const useLocalisationSearch = ({ url, params, body, config = {}, plainAccessRequest, changeQueryName = "Random", state }) => {
+const useLocalisationSearch = ({
+  url,
+  params,
+  body,
+  config = {},
+  plainAccessRequest,
+  changeQueryName = "Random",
+  state
+}) => {
   const client = useQueryClient();
-  const CustomService = Digit.CustomService;
 
-  // Updated: Using the options object structure for useQuery
-  const {
-    isLoading,
-    data,
-    isFetching,
-    refetch,
-    error,
-  } = useQuery({
-    queryKey: [url, changeQueryName].filter((e) => e), // Updated: Using queryKey for unique identification
-    queryFn: () => LocalisationSearch.fetchResults({ url, params, body, plainAccessRequest, state }), // Updated: Using queryFn for data fetching
+  const queryKey = [url, changeQueryName].filter(Boolean);
+
+  const queryFn = () =>
+    LocalisationSearch.fetchResults({
+      url,
+      params,
+      body,
+      plainAccessRequest,
+      state
+    });
+
+  const { isLoading, data, isFetching, refetch, error } = useQuery({
+    queryKey,
+    queryFn,
     cacheTime: 0,
-    ...config,
+    ...config
   });
 
   return {
@@ -26,10 +36,9 @@ const useLocalisationSearch = ({ url, params, body, config = {}, plainAccessRequ
     data,
     refetch,
     revalidate: () => {
-      // Updated: Using client.invalidateQueries with the queryKey
-      client.invalidateQueries({ queryKey: [url].filter((e) => e) });
+      data && client.invalidateQueries({ queryKey: [url].filter(Boolean) });
     },
-    error,
+    error
   };
 };
 

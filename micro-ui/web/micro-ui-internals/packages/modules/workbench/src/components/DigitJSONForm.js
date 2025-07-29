@@ -16,6 +16,7 @@ import { useTranslation } from "react-i18next";
 import _ from "lodash";
 import Form from "@rjsf/core";
 import validator from "@rjsf/validator-ajv8";
+// import { UiSchema } from '@rjsf/utils';
 import { titleId } from "@rjsf/utils";
 import CustomDropdown from "./MultiSelect";
 import CustomDropdownV2 from "./MultiSelectV2";
@@ -25,6 +26,11 @@ import { tranformLocModuleName } from "../pages/employee/localizationUtility";
 import { PopUp } from "@egovernments/digit-ui-components";
 import JSONViewer from "./JSONViewer";
 
+/*created the form using rjfs json form 
+https://rjsf-team.github.io/react-jsonschema-form/docs/
+*/
+
+/* context added for state management in MdmsAddV2*/
 const AdditionalPropertiesContext = createContext();
 export const useAdditionalProperties = () => useContext(AdditionalPropertiesContext);
 
@@ -470,7 +476,7 @@ const DigitJSONForm = ({
                     textStyles={{ margin: "0px" }}
                   />
                 ) : null}
-                <SubmitBar label={t("WORKS_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
+                <SubmitBar label={t("WORKBENCH_ACTIONS")} onSubmit={() => setDisplayMenu(!displayMenu)} />
               </ActionBar>
             )}
           </Form>

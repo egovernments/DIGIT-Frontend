@@ -6,6 +6,8 @@ import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import Carousel from "./Carousel/Carousel";
 import ImageComponent from "../../../components/ImageComponent";
+// import SkipToMainContent from "../SkipToMainContent/SkipToMainContent";
+import withAutoFocusMain from "../../../hoc/withAutoFocusMain";
 
 const setEmployeeDetail = (userObject, token) => {
   if (Digit.Utils.getMultiRootTenant() && process.env.NODE_ENV !== "development") {
@@ -225,6 +227,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   }
   return propsConfig?.bannerImages ? (
     <div className="login-container">
+      {/* <SkipToMainContent class_name={".login-form-container"}/> */}
       <Carousel bannerImages={propsConfig?.bannerImages} />
       <div className="login-form-container">
         {renderLoginForm("login-form-container", "", loginOTPBased ? "sandbox-onboarding-wrapper" : "")}
@@ -257,4 +260,4 @@ Login.defaultProps = {
   loginParams: null,
 };
 
-export default Login;
+export default withAutoFocusMain(Login, ".login-form-container");

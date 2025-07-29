@@ -1,3 +1,21 @@
+
+## [1.0.19-test.2]  [18-Jun-2025]
+-React19 compatible as per latest workbench from develop
+
+## [1.0.26]  [18-Jun-2025]
+- Provided schema download & upload
+
+## [1.0.25]  [16-Jun-2025]
+- Set default download capability disabled 'ENABLE_MDMS_BULK_DOWNLOAD'
+
+## [1.0.24]  [16-Jun-2025]
+- provided download of all data per schema & enable based on flag
+- flag name 'ENABLE_MDMS_BULK_DOWNLOAD'
+
+
+## [1.8.23]  [10-Jun-2025]
+- integrated with updated version
+
 ## [1.0.22]  [28-Apr-2025]
 - Localization Bulk Upload - Updated SheetName and Column Widths
 

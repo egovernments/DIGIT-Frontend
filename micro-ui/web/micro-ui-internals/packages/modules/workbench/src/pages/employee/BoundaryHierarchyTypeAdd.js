@@ -91,7 +91,7 @@ const BoundaryHierarchyTypeAdd = () => {
                 label = label + t(Digit.Utils.locale.getTransformedLocale(err?.code)) + ", ";
               }
             });
-            setShowToast({ label, type: "error" });
+            setShowToast({ label, type:"error" });
             closeToast();
           },
           onSuccess: () => {
@@ -106,7 +106,7 @@ const BoundaryHierarchyTypeAdd = () => {
           },
         }
       );
-    } catch { }
+    } catch {}
   };
 
   return (

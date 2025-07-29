@@ -10,7 +10,7 @@ module.exports = {
       name: "@egovernments/digit-ui-module-core",
       type: "umd",
     },
-    globalObject: 'this', 
+    globalObject: 'this',
   },
   resolve: {
     extensions: [".js"],
@@ -43,6 +43,10 @@ module.exports = {
             presets: ["@babel/preset-env", "@babel/preset-react"],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: ['style-loader', 'css-loader'],
       },
     ],
   },
