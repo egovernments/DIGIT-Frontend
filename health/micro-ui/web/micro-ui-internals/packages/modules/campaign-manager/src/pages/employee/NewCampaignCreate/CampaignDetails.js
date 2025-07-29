@@ -15,7 +15,7 @@ export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 function transformCampaignData(inputObj = {}) {
 
-  console.log("obj",inputObj);
+
 
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
   const deliveryResources = deliveryRule.resources || [];
@@ -24,7 +24,7 @@ function transformCampaignData(inputObj = {}) {
   const cycle = cycleDataArray?.[0] || {};
   const configure = inputObj.additionalDetails?.cycleData?.cycleConfgureDate || {};
 
-    // Extract resource by type
+  // Extract resource by type
   const resourceByType = (type) =>
     inputObj.resources?.filter((r) => r.type === type) || [];
 
@@ -191,8 +191,8 @@ const CampaignDetails = () => {
         key: idx + 1,
         fromDate: startDate && !isNaN(startDate.getTime()) ? startDate.toISOString() : null,
         toDate: endDate && !isNaN(endDate.getTime()) ? endDate.toISOString() : null,
-        };
-      });
+      };
+    });
 
     const cycleConfgureDate = {
       cycle: cycles.length,
@@ -423,7 +423,7 @@ const CampaignDetails = () => {
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          setShowToast({ key: "error", label: errorCode ? t(errorCode): t("ERROR_CREATE_CAMPAIGN") });
+          setShowToast({ key: "error", label: errorCode ? t(errorCode) : t("ERROR_CREATE_CAMPAIGN") });
         },
       }
     );
