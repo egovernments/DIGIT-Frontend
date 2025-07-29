@@ -8,7 +8,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities","Campaign"];
+const enabledModules = ["Workbench"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -52,8 +52,8 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      const {initCampaignComponents}=await import("@egovernments/digit-ui-module-campaign-manager")
-      initCampaignComponents()
+      const {initWorkbenchComponents}=await import("@egovernments/digit-ui-module-workbench")
+      initWorkbenchComponents();
       setIsReady(true);
     });
   }, []);
