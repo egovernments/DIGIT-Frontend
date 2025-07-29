@@ -23,7 +23,9 @@ const useInboxSearch = ({ state, body, params, config = {} }) => {
 
   // Step 3: Call fetchStaff once on mount and when body/params change
   useEffect(() => {
-    fetchStaff();
+    if (state?.searchForm && Object.keys(state?.searchForm).length !== 0) {
+      fetchStaff();
+    }
   }, []);
 
   // Step 4: Fetching projects using each projectId from staff response
@@ -83,7 +85,9 @@ const useInboxSearch = ({ state, body, params, config = {} }) => {
 
   // Step 8: Refetching the data when the body or params changes
   useEffect(() => {
-    refetch();
+    if (state?.searchForm && Object.keys(state?.searchForm).length !== 0) {
+      refetch();
+    }
   }, [campaignName, campaignTypeCode, body, params?.limit, params?.offset, config?.queryKey]);
 
   return {
@@ -93,7 +97,7 @@ const useInboxSearch = ({ state, body, params, config = {} }) => {
       Project: projects,
     },
     refetch,
-    revalidate: () => {},
+    revalidate: () => { },
   };
 };
 
