@@ -80,9 +80,6 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
           </GenericChart>
         );
       case "chart":
-        if (
-          value?.filters?.tenantId?.length === 0 )
-          return null;
         return (
           <GenericChart
             key={key}
@@ -105,8 +102,6 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
           </GenericChart>
         );
       case "performing-metric":
-        if (value?.filters?.tenantId?.length > 0)
-          return null;
         return (
           <GenericChart
             value={value}
