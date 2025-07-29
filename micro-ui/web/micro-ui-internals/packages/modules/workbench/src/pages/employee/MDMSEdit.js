@@ -164,7 +164,7 @@ const MDMSEdit = ({ ...props }) => {
       return;
     }
   
-    console.log("transformedFormData", transformedFormData);
+    
     // Perform MDMS Update
     mutation.mutate(
       {
