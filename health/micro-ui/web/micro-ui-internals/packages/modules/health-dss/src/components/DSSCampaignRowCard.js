@@ -34,7 +34,7 @@ const getTagElements = (rowData) => {
 };
 
 // function to generate action buttons
-const getActionButtons = (rowData, tabData, history,t,boundaryCodeResponse,campaignData) => {
+const getActionButtons = (rowData, tabData, history, t, boundaryCodeResponse, campaignData) => {
   const actions = {};
   const boundaryValue = boundaryCodeResponse?.message || t(rowData?.address?.boundary);
 
@@ -46,7 +46,7 @@ const getActionButtons = (rowData, tabData, history,t,boundaryCodeResponse,campa
         `/${window?.contextPath}/employee/dss/view-dashboard?campaignId=${rowData?.referenceID}&boundaryType=${rowData?.address?.boundaryType?.toLowerCase()}&boundaryValue=${boundaryValue}`,
         {
           project: rowData,
-          boundaryCodeResponse:boundaryCodeResponse
+          boundaryCodeResponse: boundaryCodeResponse
         }
       ),
     icon: "",
@@ -68,7 +68,7 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
   const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
-      campaignNumber:rowData?.referenceID,
+      campaignNumber: rowData?.referenceID,
       isActive: true,
     },
     config: {
@@ -81,15 +81,32 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
 
   const hierarchyType = campaignData?.[0]?.hierarchyType || "";
 
+  // NOTE:
+  // The boundary value displayed under "BOUNDARY_NAME" in this card is fetched using the boundary code 
+  // from the project response (`rowData?.address?.boundary`). This code is used to make a localization API 
+  // call (`/localization/messages/v1/_search`) with the appropriate tenant ID, hierarchy type, and selected locale.
+  //
+  // The response provides a localized boundary name (if available), which is then used as the `boundaryValue` 
+  // across all dashboard-related screens in the application.
+  //
+  // If any data issues arise due to the boundaryValue (e.g., missing, incorrect, or untranslated value), 
+  // this is the first place to debug:
+  // - Confirm that `rowData?.address?.boundary` has a valid code.
+  // - Ensure the `hierarchyType` is correctly fetched from the campaign.
+  // - Check if the localization entry exists in the module `hcm-boundary-{hierarchyType}`.
+  // - Verify that the correct `locale` is being passed from session storage (`initData.selectedLanguage`).
+  //
+  // This localized boundary name plays a critical role in how the boundaryValue is used across the dashboard UI.
+
   const boundaryCodeReqCritera = {
     url: `/localization/messages/v1/_search`,
     changeQueryName: `${rowData?.address?.boundary} ${hierarchyType}`,
     body: {},
     params: {
       tenantId,
-      module:`hcm-boundary-${hierarchyType.toLowerCase()}`,
-      locale:locale,
-      codes:rowData?.address?.boundary
+      module: `hcm-boundary-${hierarchyType.toLowerCase()}`,
+      locale: locale,
+      codes: rowData?.address?.boundary
     },
     headers: {
       "auth-token": Digit.UserService.getUser()?.access_token || null,
@@ -103,7 +120,7 @@ const DSSCampaignRowCard = ({ key, rowData, tabData }) => {
   };
   const { isLoading: isBoundaryValueLoading, data: boundaryCodeResponse } = Digit.Hooks.useCustomAPIHook(boundaryCodeReqCritera);
 
-  const actionButtons = getActionButtons(rowData, tabData, history,t,boundaryCodeResponse,campaignData);
+  const actionButtons = getActionButtons(rowData, tabData, history, t, boundaryCodeResponse, campaignData);
 
   return (
     <>
