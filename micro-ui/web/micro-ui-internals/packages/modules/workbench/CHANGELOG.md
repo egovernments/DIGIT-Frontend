@@ -1,3 +1,6 @@
+## [1.0.29]  [29-Jul-2025]
+- Added unique identifier to success toast message  after editing master data
+
 ## [1.0.28]  [29-Jul-2025]
 - Fixed success toast message  after editing master data
 
