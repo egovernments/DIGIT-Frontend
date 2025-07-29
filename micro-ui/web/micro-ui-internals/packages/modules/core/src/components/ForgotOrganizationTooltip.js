@@ -15,9 +15,9 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
         window.screen.availHeight <= 768 &&
         window.devicePixelRatio > 1.0
       ) {
-        return "-0.5rem";
+        return "-0.1rem";
       }
-      return "-2rem";
+      return "-0.5rem";
     };
 
     setTopMargin(computeTopMargin());
