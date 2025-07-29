@@ -36,7 +36,7 @@ const Map = ({
   const colorScale = scaleQuantile().domain([0, 100]).range(["#FF7373", "#FF8565", "#FFC42E", "#FFAA45", "#9ACC49", "#01D66F"]);
 
   useEffect(() => {
-    if (mapData == {}) return;
+    if (!mapData || Object.keys(mapData).length === 0) return;
 
     const { center, zoomLevels, geoJSON, fontSize } = mapData;
 
@@ -181,7 +181,7 @@ const Map = ({
       } else return;
     }
 
-    const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
+    const boundaryLevelMap = Digit.SessionStorage.get("levelMap") || {}
 
     if (level === 2) {
       const boundaryLevel = getBoundaryTypeByLevel("level-two", boundaryLevelMap);

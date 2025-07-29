@@ -5,7 +5,7 @@ import { useEffect, useState, Fragment } from "react";
 import { useLocation } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-components";
 
-const ViewDashbaord = ({ stateCode }) => {
+const ViewDashboard = ({ stateCode }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
@@ -182,9 +182,8 @@ const ViewDashbaord = ({ stateCode }) => {
     const projectsInfo = {
       project: project,
       boundaries: boundaries,
-      boundaryCodeResponse : boundaryCodeResponse
+      boundaryCodeResponse: boundaryCodeResponse
     };
-    if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
       history.push(
         `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignId=${campaignData?.[0]?.id}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
@@ -193,14 +192,14 @@ const ViewDashbaord = ({ stateCode }) => {
           projectTypeId: project?.projectTypeId,
           dashboardLink: selectedDashboard?.level,
           stateCode: stateCode,
-          levelMap:levelMap
+          levelMap: levelMap
         }
       );
       Digit.SessionStorage.set("dashboardData", dashboardDataResponse?.responseData);
       Digit.SessionStorage.set("projectSelected", projectsInfo);
       Digit.SessionStorage.set("campaignSelected", campaignData?.[0]);
       Digit.SessionStorage.set("levelMap", levelMap);
-      Digit.SessionStorage.set("selectedDashboard",selectedDashboard);
+      Digit.SessionStorage.set("selectedDashboard", selectedDashboard);
     }
   }, [dashboardDataResponse?.responseData, redirected, history, boundaryData]);
 
@@ -211,4 +210,4 @@ const ViewDashbaord = ({ stateCode }) => {
   return null;
 };
 
-export default ViewDashbaord;
+export default ViewDashboard;

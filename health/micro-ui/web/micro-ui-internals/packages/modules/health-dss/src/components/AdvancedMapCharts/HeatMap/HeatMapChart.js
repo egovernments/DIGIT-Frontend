@@ -236,21 +236,6 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
                   hideClose={false}
                   onClick={() => {
                     removeDrillStack(id);
-                    // const filtered = drillDownStack.filter((d) => d.id !== filter.id);
-                    // setDrillDownStack(filtered);
-
-                    // if (filtered.length === 0) return;
-
-                    // const currentChart = filtered[filtered.length - 1];
-                    // if (filtered?.length === 1) {
-                    //   setLocationKeyState(currentChart.label);
-                    //   setChartKey(currentChart.id);
-                    //   setDrillDownChart("none");
-                    //   return;
-                    // }
-
-                    // setLocationKeyState(currentChart.label);
-                    // setChartKey(currentChart.id);
                   }}
                 />
               ) : null

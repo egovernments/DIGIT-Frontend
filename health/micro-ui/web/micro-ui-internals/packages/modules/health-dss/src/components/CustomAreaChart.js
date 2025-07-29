@@ -109,7 +109,8 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
         return response?.responseData?.data?.[0]?.plots;
       }
       return response?.responseData?.data?.[0]?.plots.map((plot) => {
-        const [month, year] = plot?.name.split("-");
+        const [month, year] = plot?.name.split("-") || [];
+        if (!month || !year) return plot;
         const totalDays = getDaysInMonth(Date.parse(`${month} 1, ${year}`));
         const value = Math.round((plot?.value / (totalCapacity * totalDays)) * 100);
         return { ...plot, value };
@@ -314,13 +315,6 @@ const strokeDash = (key) => {
                 />
               );
             })}
-            {/* <Line
-              type="monotone"
-              dataKey={response?.responseData?.data?.[0]?.headerName}
-              stroke="#8884d8"
-              activeDot={{ r: 8 }}
-            />
-            <Line type="monotone" dataKey={response?.responseData?.data?.[1]?.headerName} stroke="#82ca9d" /> */}
           </LineChart>
         )}
       </ResponsiveContainer>

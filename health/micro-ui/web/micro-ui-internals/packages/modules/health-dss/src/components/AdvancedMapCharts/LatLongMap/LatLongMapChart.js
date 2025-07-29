@@ -34,6 +34,9 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       : boundaryType
   );
   const [filterFeature, setFilterFeature] = useState(null);
+  const projectSelected = Digit.SessionStorage.get("projectSelected");
+  const boundaries = projectSelected?.boundaries;
+  const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
   const isLevelOne = boundaryLevelMap?.[boundaryType] === "level-one";
   const filterBoundaryValue = filterStack?.value?.filters?.boundaryType;
   const [mapSelector, setMapSelector] = useState(
@@ -78,18 +81,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       setDrillDownChart("none");
     }
   }, [drillDownStack]);
-
-  // useEffect(() => {
-  //   const province = value?.filters?.province;
-  //   const district = value?.filters?.district;
-
-  //   if (province) {
-  //     if (district) {
-  //       setFilterFeature(district.toLowerCase());
-  //     }
-  //     setLocationKeyState(province.toLowerCase());
-  //   }
-  // }, [value, chartId]);
 
   const { data: geoJsonConfig, isLoading: isGeoJsonLoading } = Digit.Hooks.useCustomMDMS(
     Digit?.ULBService?.getStateId(),
@@ -234,21 +225,6 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
                   text={`${t(`DSS_HEADER_${Digit.Utils.locale.getTransformedLocale(filter.boundary)}`)}: ${filter.label && getTitleHeading(filter.label)}`}
                   onClick={() => {
                     removeDrillStack(id)
-                    // const filtered = drillDownStack.filter((d) => d.id !== filter.id);
-                    // setDrillDownStack(filtered);
-
-                    // if (filtered.length === 0) return;
-
-                    // const currentChart = filtered[filtered.length - 1];
-                    // if (filtered?.length === 1) {
-                    //   setLocationKeyState(currentChart.label);
-                    //   setChartKey(currentChart.id);
-                    //   setDrillDownChart("none");
-                    //   return;
-                    // }
-
-                    // setLocationKeyState(currentChart.label);
-                    // setChartKey(currentChart.id);
                   }}
                 />
               ) : null

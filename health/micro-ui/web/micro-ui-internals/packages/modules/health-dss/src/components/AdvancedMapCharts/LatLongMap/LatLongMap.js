@@ -35,7 +35,7 @@ const LatLongMap = ({
   const [toolTipContent, setTooltipContent] = useState("");
 
   useEffect(() => {
-    if (mapData == {}) return;
+    if (!mapData || Object.keys(mapData).length === 0) return;
     const { center, zoomLevels, geoJSON, fontSize } = mapData;
 
     if (isMobile) {
@@ -374,7 +374,7 @@ const LatLongMap = ({
                       return (
                         <Marker
                           key={name}
-                          cursor={tableData != {} ? "pointer" : "default"}
+                          cursor={Object.keys(tableData).length > 0 ? "pointer" : "default"}
                           coordinates={[origin.lng, origin.lat]}
                           onClick={() => {
                             Object.keys(tableData).length > 0 && setPointName(name);

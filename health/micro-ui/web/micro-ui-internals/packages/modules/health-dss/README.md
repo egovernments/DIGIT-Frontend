@@ -1,5 +1,3 @@
-<!-- TODO: update this -->
-
 # digit-ui-module-health-dss
 
 

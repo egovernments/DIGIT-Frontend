@@ -42,8 +42,8 @@ const iconRender = (iconReq, iconFill, width, height, className) => {
     const components = require("@egovernments/digit-ui-svg-components");
     const DynamicIcon = components?.[iconReq];
     if (DynamicIcon) return <DynamicIcon {...iconProps} />;
-    const svgIcon = CustomSVG?.[iconReq];
-    if (svgIcon) return <svgIcon {...iconProps} />;
+    const SvgIcon = CustomSVG?.[iconReq];
+    if (SvgIcon) return <SvgIcon {...iconProps} />;
     return null;
   } catch (error) {
     return null;

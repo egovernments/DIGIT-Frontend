@@ -6,7 +6,7 @@ import { useLocation } from "react-router-dom";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
 import L1Main from "./L1Main";
 import L2Main from "./L2Main";
-import ViewDashbaord from "./ViewDashboard";
+import ViewDashboard from "./ViewDashboard";
 import Inbox from "./Inbox";
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -81,7 +81,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
         <PrivateRoute path={`${path}/my-campaigns`} component={() => <Inbox />} />
-        <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashbaord stateCode={stateCode} />} />
+        <PrivateRoute path={`${path}/view-dashboard`} component={() => <ViewDashboard stateCode={stateCode} />} />
         <PrivateRoute path={`${path}/level-one/:moduleCode`} component={() => <L1Main />} />
         <PrivateRoute path={`${path}/level-two/:moduleCode`} component={() => <L2Main />} />
       </AppContainer>

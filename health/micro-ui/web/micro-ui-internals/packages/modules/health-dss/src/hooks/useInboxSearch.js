@@ -34,6 +34,9 @@ const useInboxSearch = ({ state, body, params, config = {} }) => {
       const pastCampaignsInbox = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX") === 1;
       const liveCampaignsInbox = Digit.SessionStorage.get("HCM_SELECTED_TAB_INDEX") === 2;
 
+      // Constants for date filtering
+      const EARLIEST_CAMPAIGN_DATE = -5353313289000; // Represents earliest possible campaign date
+
       const filter = {
         id: staff.projectId,
         tenantId: Digit.ULBService.getCurrentTenantId(),
@@ -44,7 +47,7 @@ const useInboxSearch = ({ state, body, params, config = {} }) => {
       // Add date filters based on the tab selected
       if (pastCampaignsInbox) {
         // startdate earlier and end date one day less than todays date
-        filter.startDate = -5353313289000;
+        filter.startDate = EARLIEST_CAMPAIGN_DATE;
         filter.endDate = nowEpoch - 24 * 60 * 60 * 1000;
       }
 
