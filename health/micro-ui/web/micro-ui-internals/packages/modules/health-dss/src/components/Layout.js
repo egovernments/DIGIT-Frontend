@@ -81,9 +81,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
         );
       case "chart":
         if (
-          value?.filters?.tenantId?.length === 0 &&
-          (visualizer?.charts?.[0].id === "fsmTopDsoByPerformance" || visualizer?.charts?.[0].id === "fsmBottomDsoByPerformance")
-        )
+          value?.filters?.tenantId?.length === 0 )
           return null;
         return (
           <GenericChart
@@ -107,10 +105,7 @@ const Layout = ({ rowData, forHome = false, pageZoom }) => {
           </GenericChart>
         );
       case "performing-metric":
-        if (
-          value?.filters?.tenantId?.length > 0 &&
-          (visualizer?.charts?.[0].id === "fsmTopUlbByPerformance" || visualizer?.charts?.[0].id === "fsmBottomUlbByPerformance")
-        )
+        if (value?.filters?.tenantId?.length > 0)
           return null;
         return (
           <GenericChart

@@ -58,9 +58,6 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   const { campaignId } = Digit.Hooks.useQueryParams();
   const [manageChart, setmanageChart] = useState("Area");
   const stateTenant = Digit?.ULBService?.getStateId();
-  const { isMdmsLoading, data: mdmsData } = Digit.Hooks.useCommonMDMS(stateTenant, "FSM", "FSTPPlantInfo", {
-    enabled: id === "fsmCapacityUtilization",
-  });
   const aggregationRequestDto = {
       visualizationCode: id,
       visualizationType: "metric",
@@ -75,17 +72,6 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   };
 
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
-
-  useEffect(() => {
-    if (mdmsData) {
-      let fstpPlants = mdmsData;
-      if (value?.filters?.tenantId?.length > 0) {
-        fstpPlants = mdmsData.filter((plant) => value?.filters?.tenantId?.some((tenant) => plant?.ULBS.includes(tenant)));
-      }
-      const totalCapacity = fstpPlants.reduce((acc, plant) => acc + Number(plant?.PlantOperationalCapacityKLD), 0);
-      setTotalCapacity(totalCapacity);
-    }
-  }, [mdmsData, value]);
 
   useEffect(() => {
     if (response) {
@@ -161,9 +147,6 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
 
   const renderPlot = (plot, key) => {
     const plotValue = key ? plot?.[key] : plot?.value || 0;
-    if (id === "fsmCapacityUtilization") {
-      return Number(plotValue.toFixed(1));
-    }
     if (plot?.symbol?.toLowerCase() === "amount") {
       const { denomination } = value;
       return getDenominatedValue(denomination, plotValue);
@@ -269,11 +252,6 @@ const strokeDash = (key) => {
   }
   return (
     <div style={{ display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", height: "100%", zoom:pageZoom ? 1 : 1.25 }}>
-      {id === "fsmCapacityUtilization" && (
-        <p>
-          {t("DSS_FSM_TOTAL_SLUDGE_TREATED")} - {totalWaste} {t("DSS_KL")}
-        </p>
-      )}
       <ResponsiveContainer width="94%" height={450}>
         {!chartData || chartData?.length === 0 ? (
           <NoData t={t} />

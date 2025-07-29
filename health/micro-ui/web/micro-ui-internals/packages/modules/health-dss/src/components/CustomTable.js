@@ -127,7 +127,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
           }
           let prevData = lyData?.plots?.[currentIndex]?.value;
           let insight = null;
-          if (row?.name === "CapacityUtilization" && chartKey !== "fsmVehicleLogReportByVehicleNo") {
+          if (row?.name === "CapacityUtilization") {
             const { range } = value;
             const { startDate, endDate } = range;
             const numberOfDays = differenceInCalendarDays(endDate, startDate) + 1;
@@ -140,7 +140,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
             cellValue = calculateFSTPCapacityUtilization(cellValue, totalCapacity, numberOfDays);
             prevData = calculateFSTPCapacityUtilization(prevData, totalCapacity, numberOfDays);
           }
-          if (row?.name === "CapacityUtilization" && chartKey === "fsmVehicleLogReportByVehicleNo") {
+          if (row?.name === "CapacityUtilization") {
             const tankCapcity = rows?.plots.find((plot) => plot?.name === "TankCapacity");
             cellValue = calculateFSTPCapacityUtilization(cellValue, tankCapcity?.value);
             prevData = calculateFSTPCapacityUtilization(prevData, tankCapcity?.value);

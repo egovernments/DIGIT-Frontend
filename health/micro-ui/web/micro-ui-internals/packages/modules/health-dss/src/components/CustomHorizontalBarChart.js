@@ -226,11 +226,6 @@ const CustomHorizontalBarChart = ({
       let hoverItem;
       if (payload.length > 1) {
         hoverItem = renderLegend(payload[hoverBarId]?.dataKey);
-      }
-      if (id === "fsmMonthlyWasteCal") {
-        value = `${Digit.Utils.dss.formatter(Math.round((value + Number.EPSILON) * 100) / 100, "number", value?.denomination, true, t)} ${t(
-          "DSS_KL"
-        )}`;
       } else if (symbolKeyMap && symbolKeyMap[payload[0]?.payload?.name] === "percentage") {
         value = Digit.Utils.dss.formatter(value, "percentage", value?.denomination, true, t);
       } else {
@@ -409,7 +404,7 @@ const CustomHorizontalBarChart = ({
                 allowDecimals={false}
                 tickCount={5}
                 tickFormatter={tickFormatter}
-                unit={id === "fsmCapacityUtilization" || response?.responseData?.data?.[0]?.headerSymbol === "percentage" ? "%" : ""}
+                unit={response?.responseData?.data?.[0]?.headerSymbol === "percentage" ? "%" : ""}
                 width={layout === "vertical" ? 120 : 60}
                 domain={shouldDisplayTargetline ? ["auto", target + 10] : [0, (dataMax) => Math.ceil(dataMax / 10) * 10]}
               />
