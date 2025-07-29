@@ -15,12 +15,22 @@ export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
 function transformCampaignData(inputObj = {}) {
 
+  console.log("obj",inputObj);
+
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
   const deliveryResources = deliveryRule.resources || [];
 
   const cycleDataArray = inputObj.additionalDetails?.cycleData?.cycleData || [];
   const cycle = cycleDataArray?.[0] || {};
   const configure = inputObj.additionalDetails?.cycleData?.cycleConfgureDate || {};
+
+    // Extract resource by type
+  const resourceByType = (type) =>
+    inputObj.resources?.filter((r) => r.type === type) || [];
+
+  const boundaryFiles = resourceByType("boundary");
+  const facilityFiles = resourceByType("facility");
+  const userFiles = resourceByType("user");
 
   return {
     HCM_CAMPAIGN_TYPE: {
@@ -60,22 +70,22 @@ function transformCampaignData(inputObj = {}) {
     },
     HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
       uploadBoundary: {
-        uploadedFile: [],
-        isSuccess: false
-      }
+        uploadedFile: boundaryFiles,
+        isSuccess: boundaryFiles.length > 0,
+      },
     },
     HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
       uploadFacility: {
-        uploadedFile: [],
-        isSuccess: false
-      }
+        uploadedFile: facilityFiles,
+        isSuccess: facilityFiles.length > 0,
+      },
     },
     HCM_CAMPAIGN_UPLOAD_USER_DATA: {
       uploadUser: {
-        uploadedFile: [],
-        isSuccess: false
-      }
-    }
+        uploadedFile: userFiles,
+        isSuccess: userFiles.length > 0,
+      },
+    },
   };
 }
 
