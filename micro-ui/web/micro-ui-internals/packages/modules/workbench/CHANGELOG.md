@@ -1,3 +1,5 @@
+## [1.0.27]  [29-Jul-2025]
+- File Upload Issues Resolved & Edit MDMS view incorrect data fix   
 
 ## [1.0.26]  [18-Jun-2025]
 - Provided schema download & upload
