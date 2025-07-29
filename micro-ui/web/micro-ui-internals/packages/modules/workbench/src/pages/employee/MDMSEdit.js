@@ -49,6 +49,7 @@ const MDMSEdit = ({ ...props }) => {
 
   const { isLoading, data, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
+
   // Fetch Schema Definitions
   const reqCriteriaSchema = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
@@ -144,6 +145,7 @@ const MDMSEdit = ({ ...props }) => {
       });
       return;
     }
+   
 
     const transformedFormData = { ...transformedData };
     const locale = Digit.StoreData.getCurrentLanguage();
@@ -164,7 +166,6 @@ const MDMSEdit = ({ ...props }) => {
       return;
     }
   
-    
     // Perform MDMS Update
     mutation.mutate(
       {
@@ -179,7 +180,8 @@ const MDMSEdit = ({ ...props }) => {
         },
         onSuccess: () => {
           setShowToast({
-            label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${transformedFormData?.code ? transformedFormData?.code : transformedFormData?.name}`,
+            label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${transformedFormData?.code ? transformedFormData?.code : data?.
+uniqueIdentifier}`,
             type: "success",
           });
            setTimeout(() => {
