@@ -184,6 +184,7 @@ const ViewDashboard = ({ stateCode }) => {
       boundaries: boundaries,
       boundaryCodeResponse: boundaryCodeResponse
     };
+    if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
       history.push(
         `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignId=${campaignData?.[0]?.id}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
