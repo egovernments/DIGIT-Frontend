@@ -392,8 +392,8 @@ const L2Main = ({}) => {
   }, [tabArray]);
 
   const getValuesForProgressBar = () => {
-    const campaignStartDate = new Date(Number(JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignStartDate));
-    const campaignEndDate = new Date(Number(JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignEndDate));
+    const campaignStartDate = new Date(Number(JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.range?.startDate));
+    const campaignEndDate = new Date(Number(JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.range?.endDate));
     const campaignDuration = differenceInDays(campaignEndDate, campaignStartDate);
     const daysElapsed = differenceInDays(new Date().getTime() <= campaignEndDate.getTime() ? new Date() : campaignEndDate, campaignStartDate);
     return { campaignDuration: campaignDuration, daysElapsed: daysElapsed };
