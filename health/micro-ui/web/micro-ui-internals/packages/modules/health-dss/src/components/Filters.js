@@ -105,7 +105,7 @@ const Filters = ({
 
   // method will handle the range to be set for startDate and endDate
   const handleDateRangeFilterSelection = (label) => {
-    let campaignStartDate = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.filters?.campaignStartDate;
+    let campaignStartDate = JSON.parse(window.sessionStorage.getItem("Digit.DSS_FILTERS"))?.value?.range?.startDate;
     switch (label) {
       case "DSS_TODAY": {
         const date = new Date();
@@ -116,12 +116,12 @@ const Filters = ({
       }
       case "DSS_CUMULATIVE": {
         // set entire duration of campaign startDate of campaign
-        let startDate = new Date(new Date(Number(campaignStartDate)));
+        let startDate = new Date(campaignStartDate);
         let endDate = new Date();
         return setDateAndInterval(startDate, endDate, label);
       }
       case "DSS_CUSTOM_DATE_RANGE": {
-        let startDate = new Date(new Date(Number(campaignStartDate)));
+        let startDate = new Date(campaignStartDate);
         let endDate = new Date();
         return setDateAndInterval(startDate, endDate, label);
       }
