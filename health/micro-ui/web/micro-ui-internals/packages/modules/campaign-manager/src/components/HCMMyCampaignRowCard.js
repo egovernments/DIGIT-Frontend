@@ -255,9 +255,9 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   };
   const durationDays = calculateDurationInDays(rowData?.startDate, rowData?.endDate);
   const duration = durationDays !== "NA" ? `${durationDays} ${t("Days")}` : "NA";
-  const noOfCycles = rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle != null
-  ? rowData.additionalDetails.cycleData.cycleConfgureDate.cycle
-  : (rowData?.deliveryRules?.[0]?.cycles?.length != null ? rowData.deliveryRules[0].cycles.length : "NA");
+  const rawCycleCount = rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle;
+  const noOfCycles =
+    rawCycleCount > 0 ? rawCycleCount : rowData?.deliveryRules?.[0]?.cycles?.length > 0 ? rowData.deliveryRules[0].cycles.length : "NA";
   // const noOfCycles = rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle ? rowData?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle : rowData?.deliveryRules?.[0]?.cycles?.length || "NA";
   const resources = rowData?.deliveryRules?.flatMap((rule) => rule.resources?.map((res) => t(res.name))).join(", ") || "NA";
   const [showErrorPopUp, setShowErrorPopUp] = useState(false);
