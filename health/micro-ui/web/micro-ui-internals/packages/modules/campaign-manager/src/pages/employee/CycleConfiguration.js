@@ -129,11 +129,11 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     },
   };
 
-  const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: campaignData, isFetching , isLoading: campaignDataLoading} = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
     if (data && selectedProjectType) {
-      const deliveryData = getDeliveryConfig({ data: data?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
+      const deliveryData = getDeliveryConfig({ data: data?.MdmsRes?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
       setFilterDeliveryConfig(deliveryData);
     }
   }, [data, selectedProjectType]);
@@ -296,7 +296,7 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     } else if (currentStep === 2) setKey(9);
     else setKey(8);
   };
-  if (isLoading) {
+  if (isLoading || campaignDataLoading || deliveryConfigLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 

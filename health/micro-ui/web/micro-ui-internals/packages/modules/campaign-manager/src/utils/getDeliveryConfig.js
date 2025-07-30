@@ -1,5 +1,6 @@
 import { useProductVariantSearch } from "../hooks/useProductVariantSearch";
 const getDeliveryConfig = ({ data, projectType }) => {
+  console.log("dataaaaaaaaaaaa" , data , projectType);
   function parseCondition(condition) {
     let operatorValue = "";
     let value = "";
@@ -104,6 +105,7 @@ const generateConfig = (data) => {
   };
 
   function convertToConfig(data) {
+    console.log("data" , data);
     return {
       beneficiaryType: data?.beneficiaryType,
       code: data?.code,
