@@ -67,7 +67,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
             </Card>
           </div>
         )} */}
-        {mappingCategories?.includes(currentCategories) ? (
+        {mappingCategories?.includes(currentCategories) && !parentId ? (
           <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
         ) : (
           // <UploadData formData={formData} props={props} onSelect={onSelect} />
