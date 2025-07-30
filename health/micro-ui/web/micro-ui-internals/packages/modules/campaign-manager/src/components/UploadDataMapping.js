@@ -665,6 +665,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
               }
               if (instancePath.startsWith("/")) {
+
                 instancePath = instancePath.slice(1);
               }
               if (error.keyword === "required") {
@@ -672,13 +673,15 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(missingProperty)} ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
               }
               if (error.keyword === "type" && error.message === "must be string") {
+
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t("HCM_IS_INVALID")}`;
               }
-              let formattedError = `${t("HCM_IN_COLUMN")} ${instancePath} ${error.message}`;
+              let formattedError = `${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t(error.message)}`;
+
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
                 formattedError += `${t("HCM_DATA_ALLOWED_VALUES_ARE")} ${error.params.allowedValues.join("/ ")}`;
               }
-              return `${t("HCM_DATA_AT_ROW")} ${formattedError}`;
+              return `${t("HCM_DATA_AT_ROW")} ${t(formattedError)}`;
             })
             .join(", ");
           return formattedErrors;
@@ -1339,9 +1342,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           equalWidthButtons={true}
           children={[
             <div>
-              <CardText>
-                {currentCategories === "HCM_UPLOAD_FACILITY_MAPPING" ? t("FACILITY_MAPPING_POP_HEADER_TITLE") : t("USER_MAPPING_POP_HEADER_TITLE")}
-              </CardText>
+
               <LabelFieldPair key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
                 <CardLabel style={{
                   marginBottom: "0.4rem",
