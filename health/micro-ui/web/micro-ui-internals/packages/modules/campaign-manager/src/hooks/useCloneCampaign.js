@@ -88,6 +88,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
   const [mdmsData, setMdmsData] = useState([]);
   const [isMDMSLoading, setIsMDMSLoading] = useState(true);
   const [formConfigError, setFormConfigError] = useState(null);
+  const [error, setError] = useState(null);
 
   // Fetch MDMS entries based on the schema codes and campaign project ID
   useEffect(() => {
@@ -166,6 +167,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
           body: payload,
         });
       } catch (err) {
+        setError(err);
         console.error(`Failed to create MDMS entry for ${mdmsItem.data?.name}`, err);
         throw new Error(`MDMS creation failed for ${mdmsItem.data?.name}`);
       }
@@ -185,6 +187,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         try {
           await useCreateChecklist.mutateAsync(modifiedDefinition);
         } catch (err) {
+          setError(err);
           console.error("Checklist creation failed for:", modifiedDefinition.code, err);
           throw new Error(`Checklist creation failed for ${modifiedDefinition.code}`);
         }
@@ -219,7 +222,10 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
       setStep(1);
       const createRes = await createCampaign.mutateAsync(modifiedCampaign);
       const newCampaignNumber = createRes?.CampaignDetails?.campaignNumber;
-      if (!newCampaignNumber) throw new Error("Campaign creation returned no campaign number");
+      if (!newCampaignNumber) {
+        setError(mutationError);
+        throw new Error("Campaign creation returned no campaign number");
+      }
 
       // Step 2: Clone MDMS and checklist definitions
       setStep(2);
@@ -272,6 +278,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
               });
             }
           } catch (error) {
+            setError(error);
             console.error(`Localization upsert failed for locale ${locale}, module ${mod}:`, error);
             throw new Error(`Localization upsert failed for locale ${locale}, module ${mod}`);
           }
@@ -283,6 +290,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         CampaignDetails: createRes?.CampaignDetails,
       };
     } catch (error) {
+      setError(error);
       console.error("Error during campaign copy:", error);
       throw error;
     }
@@ -293,7 +301,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     mutateAsync,
     isLoading: mutationLoading,
     campaignDetailsLoading: campaignLoading || isMDMSLoading || isChecklistMDMSLoading || isRolesLoading || isServiceDefsLoading,
-    error: mutationError || campaignError || formConfigError || checklistCodesError || rolesError,
+    error: error || mutationError || campaignError || formConfigError || checklistCodesError || rolesError,
     CampaignDetails: campaignData,
   };
 };
