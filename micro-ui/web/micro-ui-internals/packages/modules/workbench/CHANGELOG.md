@@ -1,3 +1,5 @@
+## [1.0.28]  [30-July-2025]
+- Workbench View and edit state issues 
 
 ## [1.0.26]  [18-Jun-2025]
 - Provided schema download & upload
