@@ -380,20 +380,24 @@ const CampaignDetails = () => {
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   const validateCampaignDates = (cycles, campaignData) => {
+  const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
 
-    // Sort the cycles by startDate to find the first and last
-    const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
+  const firstCycleStart = new Date(sortedCycles[0]?.startDate);
+  const lastCycleEnd = new Date(sortedCycles[sortedCycles.length - 1]?.endDate);
 
-    const firstCycleStart = sortedCycles[0]?.startDate;
-    const lastCycleEnd = sortedCycles[sortedCycles.length - 1]?.endDate;
+  const campaignStart = new Date(campaignData?.startDate);
+  const campaignEnd = new Date(campaignData?.endDate);
 
-    const campaignStart = campaignData?.startDate;
-    const campaignEnd = campaignData?.endDate;
+  // Normalize all dates to remove the time portion
+  const toDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-    if (campaignStart <= firstCycleStart && campaignEnd >= lastCycleEnd) {
-      return true;
-    } else return false;
-  };
+  const first = toDateOnly(firstCycleStart);
+  const last = toDateOnly(lastCycleEnd);
+  const campaignS = toDateOnly(campaignStart);
+  const campaignE = toDateOnly(campaignEnd);
+  return campaignS <= first && campaignE >= last;
+};
+
 
   const onsubmit = async () => {
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
