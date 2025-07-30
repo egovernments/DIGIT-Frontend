@@ -173,6 +173,14 @@ function CycleConfiguration({ onSelect, formData, control, ...props }) {
     startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || convertEpochToDate(campaignData?.startDate),
     endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || convertEpochToDate(campaignData?.endDate),
   });
+
+  useEffect(() => {
+  setDateRange({
+    startDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate || convertEpochToDate(campaignData?.startDate),
+    endDate: tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate || convertEpochToDate(campaignData?.endDate),
+  });
+}, [campaignData?.startDate , campaignData?.endDate, tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.startDate , tempSession?.HCM_CAMPAIGN_DATE?.campaignDates?.endDate]);
+
   const [executionCount, setExecutionCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(1);
   const currentKey = searchParams.get("key");
