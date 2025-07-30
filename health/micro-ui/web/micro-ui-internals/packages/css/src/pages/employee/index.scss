@@ -353,6 +353,7 @@ tbody {
   flex-wrap: wrap;
   gap: 1.5rem;
   margin-bottom: 1rem;
+  max-width: 100% !important;
 }
 
 .workbench-download-template-btn {

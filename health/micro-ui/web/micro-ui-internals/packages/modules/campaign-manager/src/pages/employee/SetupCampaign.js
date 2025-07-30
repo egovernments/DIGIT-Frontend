@@ -27,6 +27,9 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
  */
 
 const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
+  const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
+  Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -192,7 +195,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     if (!draftData) return;
     const restructureFormData = transformDraftDataToFormData(draftData, projectType);
     setParams({ ...restructureFormData });
-  }, [ draftData]);
+  }, [draftData]);
 
   useEffect(() => {
     if (draftData?.additionalDetails?.facilityId && draftData?.additionalDetails?.targetId && draftData?.additionalDetails?.userId) {
@@ -405,11 +408,13 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           }
+
           const temp = resourceData(
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
+
           payloadData.resources = temp;
           payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
           payloadData.additionalDetails = {
@@ -481,10 +486,11 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             payloadData.boundaries = totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData;
           }
+
           const temp = resourceData(
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
           payloadData.resources = temp;
           payloadData.projectType = totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType;
@@ -533,10 +539,10 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 }
               },
               onSettled: () => {
-              // This will always run after the mutation completes
-              setIsUpdating(false);
-              // Final function logic here
-            },
+                // This will always run after the mutation completes
+                setIsUpdating(false);
+                // Final function logic here
+              },
             });
           } else {
             setCurrentKey(currentKey + 1);
@@ -555,7 +561,53 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
     }
   }, [showToast]);
 
+  function hasSelectedBoundaryChanged(sessionData, formData) {
+    const sessionSelected = sessionData?.boundaryType?.selectedData || [];
+    const formSelected = formData?.selectedData || [];
+
+    if (sessionSelected.length !== formSelected.length) return true;
+
+    const sortByCode = arr => [...arr].sort((a, b) => a.code.localeCompare(b.code));
+    const sortedSession = sortByCode(sessionSelected);
+    const sortedForm = sortByCode(formSelected);
+
+    for (let i = 0; i < sortedSession.length; i++) {
+      const a = sortedSession[i];
+      const b = sortedForm[i];
+
+      if (
+        a.code !== b.code ||
+        a.name !== b.name ||
+        a.type !== b.type ||
+        a.isRoot !== b.isRoot ||
+        a.includeAllChildren !== b.includeAllChildren ||
+        (a.parent || "") !== (b.parent || "") // handle undefined vs empty string
+      ) {
+        return true; // Something changed
+      }
+    }
+
+    return false; // All matched
+  }
+
+
+
   const onSubmit = async (formData, cc) => {
+
+    //const isChanged = hasSelectedBoundaryChanged(resourceDatas?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA, formData?.boundaryType);
+    let isChanged = false;
+
+    const sessionBoundary = resourceDatas?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA;
+    const formBoundary = formData?.boundaryType;
+
+    if (sessionBoundary && formBoundary) {
+      isChanged = hasSelectedBoundaryChanged(sessionBoundary, formBoundary);
+    }
+    if (isChanged) {
+
+      Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
+    }
+
     setIsSubmitting(true);
     // validating the screen data on clicking next button
     const checkValid = handleValidate({
@@ -930,7 +982,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           history.push(
             `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
           );
-        } 
+        }
         else {
           history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
         }
@@ -982,7 +1034,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           history.push(
             `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}&draft=${isDraft}`
           );
-        } 
+        }
         else {
           history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
         }
@@ -1103,14 +1155,14 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
           isChangeDates === "true" && currentKey == 16
             ? t("HCM_UPDATE_DATE")
             : isChangeDates === "true"
-            ? null
-            : noAction === "false"
-            ? null
-            : isSubmit === true
-            ? t("HCM_NEXT")
-            : filteredConfig?.[0]?.form?.[0]?.isLast === true
-            ? t("HCM_SUBMIT")
-            : t("HCM_NEXT")
+              ? null
+              : noAction === "false"
+                ? null
+                : isSubmit === true
+                  ? t("HCM_NEXT")
+                  : filteredConfig?.[0]?.form?.[0]?.isLast === true
+                    ? t("HCM_SUBMIT")
+                    : t("HCM_NEXT")
         }
       />
       {actionBar === "true" && (

@@ -24,9 +24,12 @@ function UploadDataMappingWrapper({ props: customProps, formData, currentCategor
   return (
     <Fragment>
       <UploadDataMappingContext.Provider value={{ formData: customProps }}>
-        <div className="card-container1">
-          <TagComponent campaignName={campaignName} />
+        <div className="card-container2">
+
+
+
           <Card className="dataMappingCard">
+            <TagComponent campaignName={campaignName} />
             <div style={{ width: "100%" }}>
               {<UploadDataMapping formData={customProps} currentCategories={currentCategories} onSelect={onSelect} />}
 
