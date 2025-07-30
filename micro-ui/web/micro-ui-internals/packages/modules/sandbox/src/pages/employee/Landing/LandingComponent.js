@@ -9,6 +9,8 @@ import {
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import YoutubeVideo from "./YoutubeVideo";
+import SupaDemoPlayer from "./SupaDemoPlayer";
+import { sandboxConfig } from "./SandboxConfig";
 
 /**
  * LandingComponent
@@ -20,10 +22,11 @@ const LandingComponent = ({ config ={}}) => {
 
 
 
+
   // Destructure key config fields with fallback defaults
   const {
     heading = "Sandbox",
-    url = "https://www.youtube.com/watch?v=0wcuD67MVt8",
+    url = "https://app.supademo.com/embed/cmdphco8t0001y90ikoa6o142?embed_v=2&utm_source=embed",
     subsections = [],
   } = config;
 
@@ -66,8 +69,9 @@ const LandingComponent = ({ config ={}}) => {
           </div>
 
           {/* Right section: Video display */}
-          <div className="custom-video-section">
-            <YoutubeVideo link={url} overlay={true} />
+          <div className="custom-video-section"  style={{minHeight: "400px",height: "400px", maxWidth: "500px", width: "100%" }}>
+            <SupaDemoPlayer src={config.url ? config.url : sandboxConfig.url} overlay={true} title="Sandbox Demo" />
+            {/* <YoutubeVideo link={url} overlay={true} /> */}
           </div>
         </div>
 
