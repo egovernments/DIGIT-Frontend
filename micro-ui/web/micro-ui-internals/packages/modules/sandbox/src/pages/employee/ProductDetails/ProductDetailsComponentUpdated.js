@@ -166,12 +166,93 @@ const RoleContent = ({ role, cards, config, t }) => (
     </div>
 );
 
+// const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citizenWTLink, stakeholderWTLink, module }) => {
+//     const iframeSrc = activeTab === "citizen"
+//         ? citizenWTLink
+//         : activeTab === "employee"
+//             ? employeeWTLink
+//             : stakeholderWTLink;
+
+//     return (
+//         <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
+//             <div className="wt-c1">
+//                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
+//                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
+//             </div>
+//             <div className="wt-tabs-center wt-tabs-and-iframe">
+//                 <div className="wt-tab-wrapper">
+//                     {module === "Finance" ? (
+//                         <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+//                     ) : (
+//                         <div className="wt-tab-wrapper">
+//                             <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
+//                             <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+//                             {(module === "FSM" || module === "OBPS") && (
+//                                 <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
+//                                     {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
+//                                 </div>
+//                             )}
+//                         </div>
+//                     )}
+//                 </div>
+//                 <div className="wt-iframe-wrapper">
+//                     <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+
 const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citizenWTLink, stakeholderWTLink, module }) => {
     const iframeSrc = activeTab === "citizen"
         ? citizenWTLink
         : activeTab === "employee"
             ? employeeWTLink
             : stakeholderWTLink;
+
+    const getTabs = () => {
+       
+        const allTabs = [
+            {
+                id: 'stakeholder',
+                label: module === 'FSM' ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER"),
+                show: module === 'FSM' || module === 'OBPS'
+            },
+            {
+                id: 'citizen',
+                label: t("SB_WALK_THROUHG_CITIZEN"),
+                show: true
+            },
+            {
+                id: 'employee',
+                label: t("SB_WALK_THROUHG_EMPLOYEE"),
+                show: true
+            }
+        ];
+
+       
+        let visibleTabs = allTabs.filter(tab => tab.show);
+
+        if (module === "OBPS") {
+            const obpsOrder = ['stakeholder', 'citizen', 'employee'];
+            visibleTabs.sort((a, b) => obpsOrder.indexOf(a.id) - obpsOrder.indexOf(b.id));
+        }
+        if (module === "FSM") {
+            const fsmOrder = ['citizen', 'employee', 'stakeholder'];
+            visibleTabs.sort((a, b) => fsmOrder.indexOf(a.id) - fsmOrder.indexOf(b.id));
+        }
+
+        return visibleTabs.map(tab => (
+            <div
+                key={tab.id}
+                className={`wt-tab ${activeTab === tab.id ? "active" : ""}`}
+                onClick={() => setActiveTab(tab.id)}
+            >
+                {tab.label}
+            </div>
+        ));
+    };
 
     return (
         <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
@@ -184,24 +265,17 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
                     {module === "Finance" ? (
                         <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
                     ) : (
-                        <div className="wt-tab-wrapper">
-                            <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
-                            <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
-                            {(module === "FSM" || module === "OBPS") && (
-                                <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
-                                    {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
-                                </div>
-                            )}
-                        </div>
+                        getTabs()
                     )}
                 </div>
                 <div className="wt-iframe-wrapper">
-                    <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
+                    {iframeSrc && <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>}
                 </div>
             </div>
         </div>
     );
 };
+
 
 const content = {
     heroTitle: "Local Business License Issuing System",
