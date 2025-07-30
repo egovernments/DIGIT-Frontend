@@ -19,6 +19,9 @@ import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } fro
  */
 
 const UpdateCampaign = ({ hierarchyData }) => {
+  // const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
+  // Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -218,7 +221,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
   useEffect(() => {
     setCampaignConfig(
-      UpdateBoundaryConfig({ totalFormData, hierarchyData, projectType: CampaignData?.CampaignDetails?.[0]?.projectType, summaryErrors , CampaignData: CampaignData })
+      UpdateBoundaryConfig({ totalFormData, hierarchyData, projectType: CampaignData?.CampaignDetails?.[0]?.projectType, summaryErrors, CampaignData: CampaignData })
     );
   }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, CampaignData?.CampaignDetails?.[0]?.projectType]);
 
@@ -233,7 +236,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   }, [currentKey]);
 
   function restructureBoundaryData(childBoundaries, parentBoundaries = []) {
-    if(!childBoundaries || !Array.isArray(childBoundaries) || childBoundaries.length === 0){
+    if (!childBoundaries || !Array.isArray(childBoundaries) || childBoundaries.length === 0) {
       return parentBoundaries;
     }
     return childBoundaries;
@@ -258,11 +261,14 @@ const UpdateCampaign = ({ hierarchyData }) => {
             const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
             payloadData.boundaries = temp;
           }
-          const temp = resourceData(
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          );
+          // const temp = resourceData(
+          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+
+          // );
+          const temp = CampaignData?.CampaignDetails?.[0].resources;
+
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
@@ -286,7 +292,6 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
-                console.log(error);
                 setShowToast({ key: "error", label: error?.message ? error?.message : error });
               },
               onSuccess: async (data) => {
@@ -327,11 +332,15 @@ const UpdateCampaign = ({ hierarchyData }) => {
             const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
             payloadData.boundaries = temp;
           }
-          const temp = resourceData(
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          );
+          // const temp = resourceData(
+          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+          // );
+
+          const temp = CampaignData?.CampaignDetails?.[0].resources;
+
+
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
@@ -389,11 +398,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
             const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
             payloadData.boundaries = temp;
           }
-          const temp = resourceData(
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          );
+          // const temp = resourceData(
+          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+          // );
+          const temp = CampaignData?.CampaignDetails?.[0].resources;
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
@@ -447,13 +457,13 @@ const UpdateCampaign = ({ hierarchyData }) => {
   function isBoundaryDiff(parentBoundaries, childBoundaries) {
     const parentBoundaryCodesSet = new Set(parentBoundaries.map((boundary) => boundary.code));
     const childBoundaryCodesSet = new Set(childBoundaries.map((boundary) => boundary.code));
-    for(const boundary  of childBoundaries){
-      if(!parentBoundaryCodesSet.has(boundary.code)){
+    for (const boundary of childBoundaries) {
+      if (!parentBoundaryCodesSet.has(boundary.code)) {
         return true;
       }
     }
-    for(const boundary  of parentBoundaries){
-      if(!childBoundaryCodesSet.has(boundary.code)){
+    for (const boundary of parentBoundaries) {
+      if (!childBoundaryCodesSet.has(boundary.code)) {
         return true;
       }
     }
@@ -574,44 +584,44 @@ const UpdateCampaign = ({ hierarchyData }) => {
         const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
-              return {
-                ...prev,
-                target: [
-                  {
-                    name: `target`,
-                    error: t(`TARGET_FILE_MISSING`),
-                  },
-                ],
-              };
-            }),
+            return {
+              ...prev,
+              target: [
+                {
+                  name: `target`,
+                  error: t(`TARGET_FILE_MISSING`),
+                },
+              ],
+            };
+          }),
             true);
         const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
-              return {
-                ...prev,
-                facility: [
-                  {
-                    name: `facility`,
-                    error: t(`FACILITY_FILE_MISSING`),
-                  },
-                ],
-              };
-            }),
+            return {
+              ...prev,
+              facility: [
+                {
+                  name: `facility`,
+                  error: t(`FACILITY_FILE_MISSING`),
+                },
+              ],
+            };
+          }),
             true);
         const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
-              return {
-                ...prev,
-                user: [
-                  {
-                    name: `user`,
-                    error: t(`USER_FILE_MISSING`),
-                  },
-                ],
-              };
-            }),
+            return {
+              ...prev,
+              user: [
+                {
+                  name: `user`,
+                  error: t(`USER_FILE_MISSING`),
+                },
+              ],
+            };
+          }),
             true);
         if (isTargetError && isFacilityError && isUserError) {
           setShowToast({ key: "error", label: "AT_LEAST_ONE_FILE_REQUIRED_ERROR" });
@@ -643,6 +653,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   }, [showToast]);
 
   const onSubmit = (formData, cc) => {
+
     setIsSubmitting(true);
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
@@ -800,7 +811,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
     }
-    else{
+    else {
       history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     }
   };

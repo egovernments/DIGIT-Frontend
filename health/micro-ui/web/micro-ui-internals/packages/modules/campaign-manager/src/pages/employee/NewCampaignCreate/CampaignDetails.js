@@ -16,7 +16,6 @@ export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 function transformCampaignData(inputObj = {}) {
 
 
-
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
   const deliveryResources = deliveryRule.resources || [];
 
@@ -31,6 +30,51 @@ function transformCampaignData(inputObj = {}) {
   const boundaryFiles = resourceByType("boundary");
   const facilityFiles = resourceByType("facility");
   const userFiles = resourceByType("user");
+
+  const deliveryRulesData = Array.isArray(inputObj.deliveryRules)
+    ? inputObj.deliveryRules.map((rule) => ({
+        id: rule.id || "",
+        code: rule.code || "",
+        name: rule.name || "",
+        group: rule.group || "",
+        validMinAge: rule.validMinAge,
+        validMaxAge: rule.validMaxAge,
+        deliveryAddDisable: rule.deliveryAddDisable,
+        IsCycleDisable: rule.IsCycleDisable,
+        beneficiaryType: rule.beneficiaryType,
+        productCountHide: rule.productCountHide,
+        eligibilityCriteria: rule.eligibilityCriteria || [],
+        taskProcedure: rule.taskProcedure || [],
+        dashboardUrls: rule.dashboardUrls || {},
+        cycles: rule.cycles?.map((cycle) => ({
+          id: cycle.id,
+          startDate: Digit.DateUtils.ConvertEpochToDate(cycle.startDate)
+            ?.split("/")
+            ?.reverse()
+            ?.join("-") || "",
+          endDate: Digit.DateUtils.ConvertEpochToDate(cycle.endDate)
+            ?.split("/")
+            ?.reverse()
+            ?.join("-") || "",
+          mandatoryWaitSinceLastCycleInDays: cycle.mandatoryWaitSinceLastCycleInDays,
+          deliveries: cycle.deliveries?.map((delivery) => ({
+            id: delivery.id,
+            deliveryStrategy: delivery.deliveryStrategy,
+            mandatoryWaitSinceLastDeliveryInDays: delivery.mandatoryWaitSinceLastDeliveryInDays,
+            doseCriteria: delivery.doseCriteria?.map((criteria) => ({
+              condition: criteria.condition,
+              ProductVariants: criteria.ProductVariants || [],
+            })) || [],
+          })) || [],
+        })) || [],
+        resources: rule.resources?.map((r) => ({
+          name: r?.name || '',
+          productVariantId: r?.productVariantId || null,
+          isBaseUnitVariant: r?.isBaseUnitVariant || false,
+          quantity: r?.quantity
+        })) || [],
+      }))
+    : [];
 
   return {
     HCM_CAMPAIGN_TYPE: {
@@ -61,7 +105,7 @@ function transformCampaignData(inputObj = {}) {
       }
     },
     HCM_CAMPAIGN_DELIVERY_DATA: {
-      deliveryRule: []
+      deliveryRule: deliveryRulesData
     },
     HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
       boundaryType: {
@@ -226,6 +270,7 @@ const CampaignDetails = () => {
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_DATA", campaignSessionData);
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
     Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
+    Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", tranformedManagerUploadData);
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
 
 
