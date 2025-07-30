@@ -563,7 +563,8 @@ const L2Main = ({}) => {
             showDDR={!hideFilterFields.includes("DDR")}
             showUlb={!hideFilterFields.includes("Ulb")}
             showDenomination={!hideFilterFields.includes("Denomination")}
-            showFilterByCycle={projectData && projectData?.project?.additionalDetails?.projectType?.cycles?.length>1}
+            showFilterByCycle={projectData && projectData?.project?.additionalDetails?.projectType?.cycles?.length>1 
+              && projectData?.project?.additionalDetails?.projectType?.beneficiaryType === "INDIVIDUAL"}
           />
         )}
         {filters?.filters?.tenantId?.length > 0 && (

@@ -18,7 +18,7 @@ const FilterByCycleDropdown = ({ handleItemClick }) => {
     <Button
       ref={actionRef}
       type="actionButton"
-      label={t("HCM_DSS_FILTER_BY_CYCLE")}
+      label={t("FILTER_BY_CYCLE")}
       size="medium"
       variation="secondary"
       icon="FilterAlt"
