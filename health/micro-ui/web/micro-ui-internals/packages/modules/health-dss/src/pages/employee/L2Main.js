@@ -40,6 +40,7 @@ const key = "DSS_FILTERS";
 const getInitialRange = () => {
   const location = useLocation();
   const campaignData = Digit.SessionStorage.get("campaignSelected");
+  const projectData = Digit.SessionStorage.get("projectSelected");
   const projectType = getProjectTypeFromSession();
   const boundaryType = new URLSearchParams(location.search).get("boundaryType");
   const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
@@ -61,6 +62,7 @@ const getInitialRange = () => {
   const dateFilterSelected = "DSS_TODAY";
   const tenantId = data?.filters?.tenantId || [];
   const moduleLevel = data?.moduleLevel || "";
+  const cycle= projectData?.project?.additionalDetails?.projectType?.cycles || null;
 
   let boundaries;
   if (campaignData && projectType) {
@@ -561,7 +563,7 @@ const L2Main = ({}) => {
             showDDR={!hideFilterFields.includes("DDR")}
             showUlb={!hideFilterFields.includes("Ulb")}
             showDenomination={!hideFilterFields.includes("Denomination")}
-            showFilterByCycle={campaignData && campaignData?.additionalDetails.beneficiaryType === "INDIVIDUAL"}
+            showFilterByCycle={projectData && projectData?.project?.additionalDetails?.projectType?.cycles}
           />
         )}
         {filters?.filters?.tenantId?.length > 0 && (
