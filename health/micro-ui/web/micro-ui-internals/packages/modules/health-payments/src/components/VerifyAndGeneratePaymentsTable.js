@@ -534,7 +534,11 @@ const getAvailableActions = (status) => {
                           <div>
                             <Tag
                                 icon="Info"
-                                label={t("HCM_AM_ACTION_IN_PROGRESS")}
+                                label={
+                                    inProgressBillsTransfer?.[id]
+                                        ? t("HCM_AM_PAYMENT_IN_PROGRESS")
+                                        : t("HCM_AM_VERIFICATION_IN_PROGRESS")
+                                }
                                 showIcon={true}
                             />
                             </div>

@@ -775,16 +775,25 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                   {
-                    billData?.billDetails?.some((item) =>
-        ["VERIFICATION_FAILED", "PENDING_EDIT", "PAYMENT_FAILED"].includes(item.status)
-      ) && (
+                    (isSelectionDisabledTransfer || isSelectionDisabledVerify) ? (
+                    <InfoCard
+                      variant="default"
+                      style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
+                      label={t(`HCM_AM_INFO`)}
+                      text={t(`HCM_AM_VERIFICATION_PAYMENT_IN_PROGRESS_TEXT_INFO`)}
+                    />
+                  )
+                   : billData?.billDetails?.some((item) =>
+                      ["VERIFICATION_FAILED", "PENDING_EDIT"].includes(item.status)
+                    ) ? (
                     <InfoCard
                       variant="error"
                       style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
                       label={t(`HCM_AM_BILL_ERROR_CARD_HEADING`)}
                       text={t(`HCM_AM_BILL_ERROR_INFO_TEXT`)}
                     />
-                  )}
+                  ) : null             
+                  }
                 </div>
               }
             </>
