@@ -20,14 +20,16 @@ const MDMSEdit = ({ ...props }) => {
   const closeToast = () => {
     setTimeout(() => setShowToast(null), 5000);
   };
+  
 
   const gotoView = () => {
     setRenderLoader(true);
-    history.push(
-      `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${
-        from ? `&from=${from}` : ""
-      }`
-    );
+    // history.push(
+    //   `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${
+    //     from ? `&from=${from}` : ""
+    //   }`
+    // );
+    window.location.href = `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${from ? `&from=${from}` : ""}`;
   };
 
   // Fetch MDMS Data
@@ -103,18 +105,20 @@ const MDMSEdit = ({ ...props }) => {
 
   const { data: localizationMap, isLoading: isLocalizationLoading } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
 
-  // Replace values with localized messages
-  let finalData = data;
-  if (data?.data && localizationMap) {
-    const updatedData = _.cloneDeep(data);
-    Object.keys(updatedData.data).forEach((field) => {
-      const localizationKey = tranformLocModuleName(`${data.schemaCode}_${field}_${updatedData.data[field]}`);
-      if (localizationMap[localizationKey]) {
-        updatedData.data[field] = localizationMap[localizationKey];
-      }
-    });
-    finalData = updatedData;
-  }
+  const [initialFormData, setInitialFormData] = useState(null);
+
+  React.useEffect(() => {
+    if (data?.data && localizationMap && !initialFormData) {
+      const updatedData = _.cloneDeep(data);
+      Object.keys(updatedData.data).forEach((field) => {
+        const localizationKey = tranformLocModuleName(`${data.schemaCode}_${field}_${updatedData.data[field]}`);
+        if (localizationMap[localizationKey]) {
+          updatedData.data[field] = localizationMap[localizationKey];
+        }
+      });
+      setInitialFormData(updatedData.data);
+    }
+  }, [data, localizationMap, initialFormData]);
 
   const localizationUpsertMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/localization/messages/v1/_upsert`,
@@ -178,7 +182,9 @@ const MDMSEdit = ({ ...props }) => {
         },
         onSuccess: () => {
           setShowToast({ label: t("WBH_SUCCESS_UPD_MDMS_MSG") });
-          gotoView();
+          setTimeout(() => {
+            window.location.href = `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${from ? `&from=${from}` : ""}`;
+          }, 1000);
         },
       }
     );
@@ -190,7 +196,7 @@ const MDMSEdit = ({ ...props }) => {
   return (
     <React.Fragment>
       <MDMSAdd
-        defaultFormData={finalData?.data}
+        defaultFormData={initialFormData}
         screenType={"edit"}
         onSubmitEditAction={handleUpdate}
         updatesToUISchema={schemaData?.updatesToUiSchema}

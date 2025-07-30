@@ -7,7 +7,6 @@ import { Button } from '@egovernments/digit-ui-components';
 import _ from "lodash";
 import { Loader } from "@egovernments/digit-ui-components";
 
-
 const MDMSView = ({ ...props }) => {
   const history = useHistory()
   const { t } = useTranslation()
@@ -38,7 +37,6 @@ const MDMSView = ({ ...props }) => {
   };
 
   const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
-
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -85,7 +83,7 @@ const MDMSView = ({ ...props }) => {
     const onError = (resp) => {
       setShowToast({
         label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-        type:"error"
+        type: "error"
       });
       closeToast()
       refetch()
@@ -132,8 +130,9 @@ const MDMSView = ({ ...props }) => {
 
   const tranformLocModuleName = (localModuleName) => {
     if (!localModuleName) return null;
-      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
+
   const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`).toLowerCase();
 
   const createLocalizationCode = (fieldName, fieldValue) => {
@@ -146,12 +145,12 @@ const MDMSView = ({ ...props }) => {
   if (data?.data && localisableFields?.length > 0) {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
   }
-  const locale=Digit.StoreData.getCurrentLanguage();
+
+  const locale = Digit.StoreData.getCurrentLanguage();
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},
-    body: {
-    },
+    body: {},
     config: {
       enabled: !!data && !!MdmsRes && !!data?.schemaCode && !!tenantId && localizationCodes.length > 0,
       select: (respData) => {
@@ -168,7 +167,6 @@ const MDMSView = ({ ...props }) => {
 
   const { data: localizationMap, isLoading: isLocalizationLoading } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
 
-  // Transform data if localizationMap is available
   let finalData = data;
   if (data && data.data && localizationMap && localisableFields?.length > 0) {
     const updatedData = _.cloneDeep(data);
@@ -181,7 +179,29 @@ const MDMSView = ({ ...props }) => {
     finalData = updatedData;
   }
 
-  if (isLoading || isFetching || isLocalizationLoading)     return <Loader page={true} variant={"PageLoader"} />;
+  if (isLoading || isFetching || isLocalizationLoading) return <Loader page={true} variant={"PageLoader"} />;
+
+  // ✅ Function to render toast cleanly
+  const renderToast = () => {
+    if (!showToast) return null;
+    return (
+      <Toast
+        label={showToast?.label}
+        type={showToast?.type}
+        isDleteBtn={true}
+        onClose={() => setShowToast(null)}
+        style={{
+          position: "fixed",
+          bottom: "5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 999999,
+          width: "max-content",
+          maxWidth: "90%",
+        }}
+      />
+    );
+  };
 
   return (
     <React.Fragment>
@@ -201,9 +221,9 @@ const MDMSView = ({ ...props }) => {
           history.push(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
       />
-      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
+      {renderToast()}
     </React.Fragment>
   )
-}
+};
 
-export default MDMSView
+export default MDMSView;
