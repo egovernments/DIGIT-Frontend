@@ -20,6 +20,7 @@ const MDMSEdit = ({ ...props }) => {
   const closeToast = () => {
     setTimeout(() => setShowToast(null), 5000);
   };
+  
 
   const gotoView = () => {
     setRenderLoader(true);
@@ -28,6 +29,7 @@ const MDMSEdit = ({ ...props }) => {
         from ? `&from=${from}` : ""
       }`
     );
+
   };
 
   // Fetch MDMS Data
@@ -178,7 +180,9 @@ const MDMSEdit = ({ ...props }) => {
         },
         onSuccess: () => {
           setShowToast({ label: t("WBH_SUCCESS_UPD_MDMS_MSG") });
-          gotoView();
+          setTimeout(() => {
+             gotoView();
+          }, 1000);
         },
       }
     );
