@@ -78,7 +78,7 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
                 validation: {
                   // required: true,
                   error: "ES__REQUIRED_LENGTH",
-                  pattern: /^(?!.*[ \-_]{2})(?! )[^\p{So}\p{C}]{5,32}(?<! )$/u,
+                  pattern: /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,30}$)^.*$/u,
                   // maxlength: 30,
                 },
               },
