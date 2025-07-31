@@ -9,7 +9,6 @@ const LogoutDialog = ({ onSelect, onCancel, onDismiss, PopupStyles, isDisabled, 
     <div>
       <CardText>
         {t("CORE_LOGOUT_WEB_CONFIRMATION_MESSAGE") + " "}
-        <strong>{t("CORE_LOGOUT_MESSAGE")}</strong>
       </CardText>
     </div>,
   ];
