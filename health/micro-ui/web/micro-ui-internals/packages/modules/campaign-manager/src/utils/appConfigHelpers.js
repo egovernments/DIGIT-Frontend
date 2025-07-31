@@ -6,6 +6,9 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   // Try to find a matching field type from master data
   const matched = fieldTypeMasterData.find((item) => {
     // Match both type and format from metadata
+    if(item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom"){
+      return item?.metadata?.type === field.type && item?.metadata?.format === field.format  && item?.type === field?.fieldName
+    }
     return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
     // && item?.metadata?.format === field.fieldName;
   });
