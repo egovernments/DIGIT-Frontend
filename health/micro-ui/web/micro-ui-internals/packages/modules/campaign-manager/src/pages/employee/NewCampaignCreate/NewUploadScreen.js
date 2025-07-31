@@ -431,7 +431,7 @@ const NewUploadScreen = () => {
       );
       if (!isAnyUserActive) {
         setLoader(false);
-        showErrorToast(t("ONE_FACILITY_ATLEAST_SHOULD_BE_ACTIVE"))
+        showErrorToast(t("ONE_USER_ATLEAST_SHOULD_BE_ACTIVE"))
 
         return;
       }
