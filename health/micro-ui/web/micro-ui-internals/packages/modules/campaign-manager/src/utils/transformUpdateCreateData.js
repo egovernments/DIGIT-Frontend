@@ -47,15 +47,15 @@ export const transformUpdateCreateData = ({ campaignData }) => {
           let memberCount, maxCount;
 
           // extract memberCount
-          const memberMatch = originalCondition.match(/memberCount\s*>=\s*([\d.]+)/i);
+          const memberMatch = originalCondition.match(/memberCount\s*(>=|<=|>|<|==)\s*([\d.]+)/i);
           if (memberMatch) {
-            memberCount = memberMatch[1];
+            memberCount = memberMatch[2];
           }
 
           // extract maxCount
-          const maxMatch = originalCondition.match(/maxCount\s*<=\s*([\d.]+)/i);
+          const maxMatch = originalCondition.match(/maxCount\s*(>=|<=|>|<|==)\s*([\d.]+)/i);
           if (maxMatch) {
-            maxCount = maxMatch[1];
+            maxCount = maxMatch[2];
           }
           if ( memberCount !== undefined && maxCount !== undefined) {
             conditionString = `MIN(ROUND(memberCount/${memberCount}), ${maxCount})`;
