@@ -26,7 +26,7 @@ const EmployeeDetailScreen = () => {
   const { id } = useParams();
   const [campaign, setcampaign] = useState([]);
 
-  const { data: mdmsData, isLoading: isLoadings } = Digit.Hooks.useCommonMDMS(
+  const { data: mdmsData, isLoading: isMDMSLoading } = Digit.Hooks.useCommonMDMS(
     Digit.ULBService.getStateId(),
     "egov-hrms",
     ["ActiveWorkflowActions", "DeactiveWorkflows"],
@@ -70,8 +70,8 @@ const EmployeeDetailScreen = () => {
 
   const getActiveWorkFlowActions = (employeeDetails) => {
     if (employeeDetails?.user?.roles?.some((role) => role?.code === "SYSTEM_ADMINISTRATOR")) {
-      return mdmsData.ActiveWorkflowActions
-        ? mdmsData.ActiveWorkflowActions.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD")
+      return mdmsData?.ActiveWorkflowActions
+        ? mdmsData?.ActiveWorkflowActions?.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD")
         : activeworkflowActions.filter((action) => action?.code !== "DEACTIVATE_EMPLOYEE_HEAD");
     }
     return mdmsData?.ActiveWorkflowActions ? mdmsData?.ActiveWorkflowActions : activeworkflowActions;
@@ -178,7 +178,7 @@ const EmployeeDetailScreen = () => {
     }
   };
 
-  if (isLoading) {
+  if (isLoading || isMDMSLoading) {
     return <Loader />;
   }
 

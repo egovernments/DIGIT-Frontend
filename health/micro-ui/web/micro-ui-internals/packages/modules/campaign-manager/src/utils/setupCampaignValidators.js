@@ -144,7 +144,20 @@
   return false;
 };
 
- const  validateBoundaryLevel=(data,hierarchyDefinition,lowestHierarchy)=> {
+const hasInvalidMaxCountAttribute = (deliveryRules = []) => {
+  return deliveryRules.some((cycle) =>
+    cycle?.deliveries?.some((delivery) =>
+      delivery?.deliveryRules?.some((rule) => {
+        const attributeCodes = rule?.attributes?.map((attr) => attr?.attribute?.code) || [];
+        const hasMaxCount = attributeCodes.includes("maxCount");
+        const hasMemberCount = attributeCodes.includes("memberCount");
+        return hasMaxCount && !hasMemberCount;
+      })
+    )
+  );
+};
+
+const validateBoundaryLevel = (data, hierarchyDefinition, lowestHierarchy) => {
   // Extracting boundary hierarchy from hierarchy definition
   const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
 
@@ -335,6 +348,12 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       return true;
 
     case "deliveryRule":
+      const deliveryRules = formData?.deliveryRule;
+      const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
+      if (validateMaxCondition) {
+        setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });
+        return false; 
+      }
       const isAttributeValid = checkAttributeValidity(formData);
       if (isAttributeValid) {
         setShowToast({ key: "error", label: isAttributeValid });
