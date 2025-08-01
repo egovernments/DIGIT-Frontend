@@ -6,7 +6,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
   const { t } = useTranslation();
   // const columns = schema.filter(item => !item.hideColumn);
   const columns = schema.filter((item) => !item.hideColumn || (item.description === "User Role"));
-
+  
   const [selectedLevel, setSelectedLevel] = useState(null);
   const [selectedBoundary, setSelectedBoundary] = useState(null);
 
@@ -127,6 +127,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           </div>
         );
       } else {
+
         return (
           <div key={column.name} style={{ marginBottom: "1rem" }}>
             <div style={{ display: "flex" }}>

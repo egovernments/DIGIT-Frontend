@@ -711,6 +711,47 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
         const validationResult = validateData(childData);
 
+        const userName = childData?.HCM_ADMIN_CONSOLE_USER_NAME;
+        const facilityName = childData?.HCM_ADMIN_CONSOLE_FACILITY_NAME;
+
+
+        // Validation logic for username 
+        if (userName !== undefined) {
+
+          if (typeof userName === "string") {
+            const hasAlphabet = /[a-zA-Z]/.test(userName);
+            if (hasAlphabet) {
+              console.log("Invalid: Only numeric user name");
+            } else {
+              setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
+              return false;
+            }
+          }
+          else {
+            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
+            return false;
+          }
+
+        }
+        // for validation facility name
+        if (facilityName !== undefined) {
+
+          if (typeof facilityName === "string") {
+            const hasAlphabet = /[a-zA-Z]/.test(facilityName);
+            if (hasAlphabet) {
+              console.log("Invalid: Only numeric user name");
+            } else {
+              setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_TYPE_ERROR"), isError: "error" });
+              return false;
+            }
+          }
+          else {
+            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_TYPE_ERROR"), isError: "error" });
+            return false;
+          }
+
+        }
+
         if (validationResult.isValid) {
           if (typeOfOperation === "add") {
             dispatch({
