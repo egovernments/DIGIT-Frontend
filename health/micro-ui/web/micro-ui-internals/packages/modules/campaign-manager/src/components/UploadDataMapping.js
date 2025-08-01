@@ -720,9 +720,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
           if (typeof userName === "string") {
             const hasAlphabet = /[a-zA-Z]/.test(userName);
-            if (hasAlphabet) {
-              console.log("Invalid: Only numeric user name");
-            } else {
+            if (!hasAlphabet) {
               setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
               return false;
             }
@@ -738,9 +736,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
           if (typeof facilityName === "string") {
             const hasAlphabet = /[a-zA-Z]/.test(facilityName);
-            if (hasAlphabet) {
-              console.log("Invalid: Only numeric user name");
-            } else {
+            if (!hasAlphabet) {
               setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
               return false;
             }
