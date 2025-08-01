@@ -78,9 +78,35 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
                 validation: {
                   // required: true,
                   error: "ES__REQUIRED_LENGTH",
-                  pattern: /^(?!.*[ \-_]{2})(?! )[^\p{So}\p{C}]{5,32}(?<! )$/,
+                  pattern: /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,30}$)^.*$/u,
                   // maxlength: 30,
                 },
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "2",
+          key: "2",
+          name: "HCM_CAMPAIGN_INFO",
+          body: [
+            {
+              isMandatory: false,
+              key: "CampaignNameInfo",
+              type: "component",
+              component: "CampaignNameInfo",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+              },
+              populators: {
+                name: "CampaignNameInfo",
+                // optionsKey: "code",
+                error: "ES__REQUIRED_DATE",
+                required: true,
               },
             },
           ],
