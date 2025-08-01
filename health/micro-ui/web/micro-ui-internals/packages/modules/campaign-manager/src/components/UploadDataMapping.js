@@ -728,7 +728,7 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             }
           }
           else {
-            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
+            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
             return false;
           }
 
@@ -741,12 +741,12 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
             if (hasAlphabet) {
               console.log("Invalid: Only numeric user name");
             } else {
-              setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_TYPE_ERROR"), isError: "error" });
+              setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
               return false;
             }
           }
           else {
-            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_TYPE_ERROR"), isError: "error" });
+            setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
             return false;
           }
 
