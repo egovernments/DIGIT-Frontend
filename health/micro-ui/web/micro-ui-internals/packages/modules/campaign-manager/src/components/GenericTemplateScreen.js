@@ -2,7 +2,7 @@ import React from "react";
 import { Button } from "@egovernments/digit-ui-components";
 import { getRegisteredComponent } from "../utils/template_components/RegistrationRegistry";
 import { getTemplateRenderer } from "../utils/template_components/RegistrationComponents";
-
+import { DynamicImageComponent } from "./DynamicImageComponent";
 
 
 const GenericTemplateScreen = ({ components = [], t, selectedField, templateName }) => {
@@ -48,11 +48,20 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
           <TemplateRenderer components={components} t={t} />
         ) :
           contentFields.map((field, index) => {
+            const isSelected = selectedField?.jsonPath === field.jsonPath;
+            if (field.type === "custom" && field.format === "custom" && field.appType) {
+              return (
+                <div
+                  key={index}
+                  className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
+                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                >
+                  <DynamicImageComponent type={field?.type} appType={field?.appType} />
+                </div>
+              )
+            }
             const ComponentToRender = getRegisteredComponent(field.jsonPath);
             if (!ComponentToRender) return null;
-
-            const isSelected = selectedField?.jsonPath === field.jsonPath;
-
             return (
               <div
                 key={index}
