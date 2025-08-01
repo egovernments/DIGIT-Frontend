@@ -119,6 +119,8 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
     },
     config: {
       enabled: formId ? true : false,
+      cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         const filteredCache = data?.mdms?.find((i) => i.data.flow === formData?.data?.name);
         // return filteredCache ? filteredCache : null;
