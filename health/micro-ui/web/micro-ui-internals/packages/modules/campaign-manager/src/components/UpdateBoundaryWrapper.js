@@ -48,6 +48,126 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
 
   const { data: CampaignData } = Digit.Hooks.useCustomAPIHook(reqCriteriaCampaign);
 
+  function transformCampaignData(inputObj = {}) {
+
+
+    const deliveryRule = inputObj.deliveryRules?.[0] || {};
+    const deliveryResources = deliveryRule.resources || [];
+
+    const cycleDataArray = inputObj.additionalDetails?.cycleData?.cycleData || [];
+    const cycle = cycleDataArray?.[0] || {};
+    const configure = inputObj.additionalDetails?.cycleData?.cycleConfgureDate || {};
+
+    // Extract resource by type
+    const resourceByType = (type) =>
+      inputObj.resources?.filter((r) => r.type === type) || [];
+
+    const boundaryFiles = resourceByType("boundary");
+    const facilityFiles = resourceByType("facility");
+    const userFiles = resourceByType("user");
+
+    const deliveryRulesData = Array.isArray(inputObj.deliveryRules)
+      ? inputObj.deliveryRules.map((rule) => ({
+        id: rule.id || "",
+        code: rule.code || "",
+        name: rule.name || "",
+        group: rule.group || "",
+        validMinAge: rule.validMinAge,
+        validMaxAge: rule.validMaxAge,
+        deliveryAddDisable: rule.deliveryAddDisable,
+        IsCycleDisable: rule.IsCycleDisable,
+        beneficiaryType: rule.beneficiaryType,
+        productCountHide: rule.productCountHide,
+        eligibilityCriteria: rule.eligibilityCriteria || [],
+        taskProcedure: rule.taskProcedure || [],
+        dashboardUrls: rule.dashboardUrls || {},
+        cycles: rule.cycles?.map((cycle) => ({
+          id: cycle.id,
+          startDate: Digit.DateUtils.ConvertEpochToDate(cycle.startDate)
+            ?.split("/")
+            ?.reverse()
+            ?.join("-") || "",
+          endDate: Digit.DateUtils.ConvertEpochToDate(cycle.endDate)
+            ?.split("/")
+            ?.reverse()
+            ?.join("-") || "",
+          mandatoryWaitSinceLastCycleInDays: cycle.mandatoryWaitSinceLastCycleInDays,
+          deliveries: cycle.deliveries?.map((delivery) => ({
+            id: delivery.id,
+            deliveryStrategy: delivery.deliveryStrategy,
+            mandatoryWaitSinceLastDeliveryInDays: delivery.mandatoryWaitSinceLastDeliveryInDays,
+            doseCriteria: delivery.doseCriteria?.map((criteria) => ({
+              condition: criteria.condition,
+              ProductVariants: criteria.ProductVariants || [],
+            })) || [],
+          })) || [],
+        })) || [],
+        resources: rule.resources?.map((r) => ({
+          name: r?.name || '',
+          productVariantId: r?.productVariantId || null,
+          isBaseUnitVariant: r?.isBaseUnitVariant || false,
+          quantity: r?.quantity
+        })) || [],
+      }))
+      : [];
+
+    return {
+      HCM_CAMPAIGN_TYPE: {
+        projectType: {
+          ...deliveryRule,
+          resources: Array.isArray(deliveryResources)
+            ? deliveryResources.map(r => ({
+              name: r?.name || '',
+              productVariantId: r?.productVariantId || null,
+              isBaseUnitVariant: r?.isBaseUnitVariant || false
+            }))
+            : []
+        }
+      },
+      HCM_CAMPAIGN_NAME: {
+        campaignName: inputObj?.campaignName || ''
+      },
+      HCM_CAMPAIGN_DATE: {
+        campaignDates: {
+          startDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-"),
+          endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.endDate)?.split("/")?.reverse()?.join("-")
+        }
+      },
+      HCM_CAMPAIGN_CYCLE_CONFIGURE: {
+        cycleConfigure: {
+          cycleConfgureDate: configure,
+          cycleData: cycleDataArray
+        }
+      },
+      HCM_CAMPAIGN_DELIVERY_DATA: {
+        deliveryRule: deliveryRulesData
+      },
+      HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
+        boundaryType: {
+          selectedData: inputObj?.boundaries || []
+        }
+      },
+      HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
+        uploadBoundary: {
+          uploadedFile: boundaryFiles,
+          isSuccess: boundaryFiles.length > 0,
+        },
+      },
+      HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: {
+        uploadFacility: {
+          uploadedFile: facilityFiles,
+          isSuccess: facilityFiles.length > 0,
+        },
+      },
+      HCM_CAMPAIGN_UPLOAD_USER_DATA: {
+        uploadUser: {
+          uploadedFile: userFiles,
+          isSuccess: userFiles.length > 0,
+        },
+      },
+    };
+  }
+
   useEffect(() => {
     if (!id || isDraft) {
       setSelectedData(CampaignData?.CampaignDetails?.[0]?.boundaries);
@@ -64,6 +184,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
       setBoundaryOptions(rootOptions);
     }
     SetHierarchyType(CampaignData?.CampaignDetails?.[0]?.hierarchyType);
+    // const tranformedManagerUploadData = transformCampaignData(CampaignData);
+    // Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_UPLOAD_DATA", tranformedManagerUploadData);
   }, [CampaignData]);
 
   useEffect(() => {

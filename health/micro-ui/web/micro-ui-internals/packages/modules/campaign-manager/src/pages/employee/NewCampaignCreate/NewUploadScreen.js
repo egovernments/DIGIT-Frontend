@@ -426,9 +426,10 @@ const NewUploadScreen = () => {
       setLoader(true);
 
 
-      const isAnyUserActive = formData?.uploadFacilityMapping?.data?.some(
+      const isAnyUserActive = formData?.uploadUserMapping?.data?.some(
         item => item.HCM_ADMIN_CONSOLE_USER_USAGE === "Active"
       );
+
       if (!isAnyUserActive) {
         setLoader(false);
         showErrorToast(t("ONE_USER_ATLEAST_SHOULD_BE_ACTIVE"))

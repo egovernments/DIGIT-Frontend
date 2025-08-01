@@ -33,47 +33,47 @@ function transformCampaignData(inputObj = {}) {
 
   const deliveryRulesData = Array.isArray(inputObj.deliveryRules)
     ? inputObj.deliveryRules.map((rule) => ({
-        id: rule.id || "",
-        code: rule.code || "",
-        name: rule.name || "",
-        group: rule.group || "",
-        validMinAge: rule.validMinAge,
-        validMaxAge: rule.validMaxAge,
-        deliveryAddDisable: rule.deliveryAddDisable,
-        IsCycleDisable: rule.IsCycleDisable,
-        beneficiaryType: rule.beneficiaryType,
-        productCountHide: rule.productCountHide,
-        eligibilityCriteria: rule.eligibilityCriteria || [],
-        taskProcedure: rule.taskProcedure || [],
-        dashboardUrls: rule.dashboardUrls || {},
-        cycles: rule.cycles?.map((cycle) => ({
-          id: cycle.id,
-          startDate: Digit.DateUtils.ConvertEpochToDate(cycle.startDate)
-            ?.split("/")
-            ?.reverse()
-            ?.join("-") || "",
-          endDate: Digit.DateUtils.ConvertEpochToDate(cycle.endDate)
-            ?.split("/")
-            ?.reverse()
-            ?.join("-") || "",
-          mandatoryWaitSinceLastCycleInDays: cycle.mandatoryWaitSinceLastCycleInDays,
-          deliveries: cycle.deliveries?.map((delivery) => ({
-            id: delivery.id,
-            deliveryStrategy: delivery.deliveryStrategy,
-            mandatoryWaitSinceLastDeliveryInDays: delivery.mandatoryWaitSinceLastDeliveryInDays,
-            doseCriteria: delivery.doseCriteria?.map((criteria) => ({
-              condition: criteria.condition,
-              ProductVariants: criteria.ProductVariants || [],
-            })) || [],
+      id: rule.id || "",
+      code: rule.code || "",
+      name: rule.name || "",
+      group: rule.group || "",
+      validMinAge: rule.validMinAge,
+      validMaxAge: rule.validMaxAge,
+      deliveryAddDisable: rule.deliveryAddDisable,
+      IsCycleDisable: rule.IsCycleDisable,
+      beneficiaryType: rule.beneficiaryType,
+      productCountHide: rule.productCountHide,
+      eligibilityCriteria: rule.eligibilityCriteria || [],
+      taskProcedure: rule.taskProcedure || [],
+      dashboardUrls: rule.dashboardUrls || {},
+      cycles: rule.cycles?.map((cycle) => ({
+        id: cycle.id,
+        startDate: Digit.DateUtils.ConvertEpochToDate(cycle.startDate)
+          ?.split("/")
+          ?.reverse()
+          ?.join("-") || "",
+        endDate: Digit.DateUtils.ConvertEpochToDate(cycle.endDate)
+          ?.split("/")
+          ?.reverse()
+          ?.join("-") || "",
+        mandatoryWaitSinceLastCycleInDays: cycle.mandatoryWaitSinceLastCycleInDays,
+        deliveries: cycle.deliveries?.map((delivery) => ({
+          id: delivery.id,
+          deliveryStrategy: delivery.deliveryStrategy,
+          mandatoryWaitSinceLastDeliveryInDays: delivery.mandatoryWaitSinceLastDeliveryInDays,
+          doseCriteria: delivery.doseCriteria?.map((criteria) => ({
+            condition: criteria.condition,
+            ProductVariants: criteria.ProductVariants || [],
           })) || [],
         })) || [],
-        resources: rule.resources?.map((r) => ({
-          name: r?.name || '',
-          productVariantId: r?.productVariantId || null,
-          isBaseUnitVariant: r?.isBaseUnitVariant || false,
-          quantity: r?.quantity
-        })) || [],
-      }))
+      })) || [],
+      resources: rule.resources?.map((r) => ({
+        name: r?.name || '',
+        productVariantId: r?.productVariantId || null,
+        isBaseUnitVariant: r?.isBaseUnitVariant || false,
+        quantity: r?.quantity
+      })) || [],
+    }))
     : [];
 
   return {
@@ -425,23 +425,23 @@ const CampaignDetails = () => {
   const mutationUpdate = Digit.Hooks.useCustomAPIMutationHook(reqUpdate);
 
   const validateCampaignDates = (cycles, campaignData) => {
-  const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
+    const sortedCycles = [...cycles].sort((a, b) => a.startDate - b.startDate);
 
-  const firstCycleStart = new Date(sortedCycles[0]?.startDate);
-  const lastCycleEnd = new Date(sortedCycles[sortedCycles.length - 1]?.endDate);
+    const firstCycleStart = new Date(sortedCycles[0]?.startDate);
+    const lastCycleEnd = new Date(sortedCycles[sortedCycles.length - 1]?.endDate);
 
-  const campaignStart = new Date(campaignData?.startDate);
-  const campaignEnd = new Date(campaignData?.endDate);
+    const campaignStart = new Date(campaignData?.startDate);
+    const campaignEnd = new Date(campaignData?.endDate);
 
-  // Normalize all dates to remove the time portion
-  const toDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
+    // Normalize all dates to remove the time portion
+    const toDateOnly = (date) => new Date(date.getFullYear(), date.getMonth(), date.getDate());
 
-  const first = toDateOnly(firstCycleStart);
-  const last = toDateOnly(lastCycleEnd);
-  const campaignS = toDateOnly(campaignStart);
-  const campaignE = toDateOnly(campaignEnd);
-  return campaignS <= first && campaignE >= last;
-};
+    const first = toDateOnly(firstCycleStart);
+    const last = toDateOnly(lastCycleEnd);
+    const campaignS = toDateOnly(campaignStart);
+    const campaignE = toDateOnly(campaignEnd);
+    return campaignS <= first && campaignE >= last;
+  };
 
 
   const onsubmit = async () => {
