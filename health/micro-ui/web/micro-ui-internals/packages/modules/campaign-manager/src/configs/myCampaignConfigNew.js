@@ -14,7 +14,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -29,11 +32,11 @@ export const myCampaignConfigNew = {
           uiConfig: {
             headerLabel: "ES_COMMON_SEARCH",
             type: "search",
-            typeMobile: "filter",
+            // typeMobile: "filter",
             headerStyle: null,
-            primaryLabel: "FILTER",
-            primaryLabelVariation: "teritiary",
-            primaryLabelIcon: "FilterListAlt",
+            primaryLabel: "Search",
+            // primaryLabelVariation: "teritiary",
+            // primaryLabelIcon: "FilterListAlt",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
@@ -113,7 +116,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -128,11 +134,11 @@ export const myCampaignConfigNew = {
           uiConfig: {
             headerLabel: "ES_COMMON_SEARCH",
             type: "search",
-            typeMobile: "filter",
+            // typeMobile: "filter",
             headerStyle: null,
-            primaryLabel: "FILTER",
-            primaryLabelVariation: "teritiary",
-            primaryLabelIcon: "FilterListAlt",
+            primaryLabel: "Search",
+            // primaryLabelVariation: "teritiary",
+            // primaryLabelIcon: "FilterListAlt",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
@@ -212,7 +218,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -227,11 +236,11 @@ export const myCampaignConfigNew = {
           uiConfig: {
             headerLabel: "ES_COMMON_SEARCH",
             type: "search",
-            typeMobile: "filter",
+            // typeMobile: "filter",
             headerStyle: null,
-            primaryLabel: "FILTER",
-            primaryLabelVariation: "teritiary",
-            primaryLabelIcon: "FilterListAlt",
+            primaryLabel: "Search",
+            // primaryLabelVariation: "teritiary",
+            // primaryLabelIcon: "FilterListAlt",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
@@ -311,7 +320,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -326,11 +338,11 @@ export const myCampaignConfigNew = {
           uiConfig: {
             headerLabel: "ES_COMMON_SEARCH",
             type: "search",
-            typeMobile: "filter",
+            // typeMobile: "filter",
             headerStyle: null,
-            primaryLabel: "FILTER",
-            primaryLabelVariation: "teritiary",
-            primaryLabelIcon: "FilterListAlt",
+            primaryLabel: "Search",
+            // primaryLabelVariation: "teritiary",
+            // primaryLabelIcon: "FilterListAlt",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {
@@ -410,7 +422,10 @@ export const myCampaignConfigNew = {
       type: "search",
       apiDetails: {
         serviceName: "/project-factory/v1/project-type/search",
-        requestParam: {},
+        requestParam: {
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true
+        },
         requestBody: {},
         minParametersForSearchForm: 0,
         minParametersForFilterForm: 0,
@@ -425,11 +440,11 @@ export const myCampaignConfigNew = {
           uiConfig: {
             headerLabel: "ES_COMMON_SEARCH",
             type: "search",
-            typeMobile: "filter",
+            // typeMobile: "filter",
             headerStyle: null,
-            primaryLabel: "FILTER",
-            primaryLabelVariation: "teritiary",
-            primaryLabelIcon: "FilterListAlt",
+            primaryLabel: "Search",
+            // primaryLabelVariation: "teritiary",
+            // primaryLabelIcon: "FilterListAlt",
             secondaryLabel: "ES_COMMON_CLEAR_SEARCH",
             minReqFields: 0,
             defaultValues: {

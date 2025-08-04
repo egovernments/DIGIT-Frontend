@@ -16,8 +16,8 @@ const mdmsV2Search = async ({ tenantId, moduleName, masterName, formId }) => {
 
 export const useMDMSV2Search = ({ tenantId, moduleName, masterName, formId, config = {} }) => {
   return useQuery({
-    queryKey: ["MDMS_V2_SEARCH", tenantId, moduleName, masterName, formId],
+    queryKey: ["MDMS_V2_SEARCH", tenantId, moduleName, masterName, formId, config],
     queryFn: () => mdmsV2Search({ tenantId, moduleName, masterName, formId }),
-    ...config, 
+    ...config,
   });
 };

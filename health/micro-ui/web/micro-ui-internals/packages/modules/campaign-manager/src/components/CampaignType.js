@@ -1,12 +1,29 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
-import { UploadIcon, FileIcon, DeleteIconv2, Toast, Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { LabelFieldPair, Button, CardText, Dropdown, ErrorMessage, PopUp, Stepper, TextBlock, Card ,HeaderComponent,AlertCard} from "@egovernments/digit-ui-components";
+import {
+  AlertCard,
+  LabelFieldPair,
+  Button,
+  CardText,
+  Dropdown,
+  ErrorMessage,
+  PopUp,
+  Stepper,
+  HeaderComponent,
+  TextBlock,
+  Card,
+} from "@egovernments/digit-ui-components";
 
 const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
-  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(tenantId, "HCM-PROJECT-TYPES", [{ name: "projectTypes" }],{select:(MdmsRes)=>MdmsRes}, { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` });
+  const { isLoading, data: projectType } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "HCM-PROJECT-TYPES",
+    [{ name: "projectTypes" }],
+    { select: (MdmsRes) => MdmsRes },
+    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
+  );
   const [type, setType] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType || {});
   const [beneficiaryType, setBeneficiaryType] = useState(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType || "");
   const [showBeneficiary, setShowBeneficiaryType] = useState(Boolean(props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.beneficiaryType));
@@ -65,10 +82,10 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
     }
   });
 
-  useEffect(() =>{
+  useEffect(() => {
     setKey(currentKey);
     setCurrentStep(currentKey);
-  }, [currentKey])
+  }, [currentKey]);
 
   useEffect(() => {
     updateUrlParams({ key: key });
@@ -77,29 +94,26 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
 
   const onStepClick = (currentStep) => {
     if (!props?.props?.sessionData?.HCM_CAMPAIGN_TYPE) return;
-    if(currentStep === 0){
+    if (currentStep === 0) {
       setKey(1);
-    }
-    else if(currentStep === 1){
+    } else if (currentStep === 1) {
       setKey(2);
-    }
-    else if(currentStep === 3){
+    } else if (currentStep === 3) {
       setKey(4);
-    }
-    else setKey(3);
+    } else setKey(3);
   };
 
   return (
     <>
       <div className="container">
-        <div className="card-container" >
-          <Card className="card-header-timeline" >
+        <div className="card-container">
+          <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_CAMPAIGN_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
           <Card className="stepper-card">
             <Stepper
-              customSteps={["HCM_CAMPAIGN_TYPE","HCM_CAMPAIGN_NAME",  "HCM_CAMPAIGN_DATE" , "HCM_SUMMARY"]}
-              currentStep={currentStep }
+              customSteps={["HCM_CAMPAIGN_TYPE", "HCM_CAMPAIGN_NAME", "HCM_CAMPAIGN_DATE", "HCM_SUMMARY"]}
+              currentStep={currentStep}
               onStepClick={onStepClick}
               direction={"vertical"}
             />
@@ -107,10 +121,10 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
         </div>
 
         <div className="card-container2">
-          <Card className = "setup-campaign-card">
-            <HeaderComponent styles={{ margin: '0px' }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</HeaderComponent>
+          <Card className="setup-campaign-card">
+            <HeaderComponent styles={{ margin: "0px" }}>{t(`HCM_CAMPAIGN_TYPE_HEADER`)}</HeaderComponent>
             <p className="description-type">{t(`HCM_CAMPAIGN_TYPE_DESCRIPTION`)}</p>
-            <LabelFieldPair style={{ display: "flex", marginBottom:"-0.8rem" }}>
+            <LabelFieldPair style={{ display: "flex", marginBottom: "-0.8rem" }}>
               <div className="campaign-type">
                 <span>{`${t("HCM_CAMPAIGN_TYPE")}`}</span>
                 <span className="mandatory-span">*</span>
@@ -118,7 +132,7 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
               <div
                 className="campaign-type-wrapper"
                 onClick={(e) => {
-                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && source!=="microplan") {
+                  if (props?.props?.sessionData?.HCM_CAMPAIGN_TYPE?.projectType && !canUpdate && source !== "microplan") {
                     setShowPopUp(true);
                     return;
                   }
@@ -143,27 +157,26 @@ const CampaignSelection = ({ onSelect, formData, formState, ...props }) => {
                     setStartValidation(true);
                     handleChange(value);
                   }}
-                  disabled = {source === "microplan"}
-                  
+                  disabled={source === "microplan"}
                 />
                 {error?.message && <ErrorMessage message={t(error?.message)} showIcon={true} />}
               </div>
             </LabelFieldPair>
             {showBeneficiary && (
-              <LabelFieldPair style={{ alignItems: "center" , display: "flex" , marginBottom: "0rem" }} >
+              <LabelFieldPair style={{ alignItems: "center", display: "flex", marginBottom: "0rem" }}>
                 <div className="beneficiary-type">{`${t("HCM_BENEFICIARY_TYPE")}`}</div>
                 <div>{t(`CAMPAIGN_TYPE_${beneficiaryType}`)}</div>
               </LabelFieldPair>
             )}
           </Card>
-           <AlertCard
-                        populators={{
-                          name: "infocard",
-                        }}
-                        variant="info"
-                        text={t("HCM_UPDATE_CAMPAIGN_TYPE_INFO")}
-                        style={{ marginTop: "1rem", maxWidth: "100%" }}
-                      />
+          <AlertCard
+            populators={{
+              name: "infocard",
+            }}
+            variant="info"
+            text={t("HCM_UPDATE_CAMPAIGN_TYPE_INFO")}
+            style={{ marginTop: "1rem", maxWidth: "100%" }}
+          />
         </div>
         {showPopUp && (
           <PopUp

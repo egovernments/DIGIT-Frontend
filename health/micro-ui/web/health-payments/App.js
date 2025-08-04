@@ -12,7 +12,6 @@ const enabledModules = [
   "DSS",
   "NDSS",
   "Utilities",
-  "HRMS",
   "Engagement",
   "Workbench",
   "Payments"
@@ -25,7 +24,6 @@ const moduleReducers = (initData) => ({
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({
   });
-  initHRMSComponents();
   initPaymentComponents();
 
   window.Digit.Customizations = {

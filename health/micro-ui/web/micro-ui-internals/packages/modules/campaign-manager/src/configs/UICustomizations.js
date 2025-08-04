@@ -100,13 +100,14 @@ export const UICustomizations = {
 
     additionalCustomizations: (row, key, column, value, searchResult) => {
       const { t } = useTranslation();
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const navigate = useNavigate();
       const location = useLocation();
       const searchParams = new URLSearchParams(location.search);
       const campaignName = searchParams.get("name");
       const projectType = searchParams.get("projectType");
       const campaignId = searchParams.get("campaignId");
+      const campaignNumber = searchParams.get("campaignNumber");
       switch (key) {
         case "HCM_CHECKLIST_STATUS":
           const [localIsActive, setLocalIsActive] = useState(row?.ServiceRequest?.[0]?.isActive);
@@ -118,7 +119,6 @@ export const UICustomizations = {
             if (res) {
             }
           };
-
           const switchText = localIsActive ? "Active" : "Inactive";
           return row?.ServiceRequest?.[0] ? (
             <Switch isCheckedInitially={row?.ServiceRequest?.[0]?.isActive} label={switchText} onToggle={toggle} />
@@ -144,7 +144,7 @@ export const UICustomizations = {
                 label={t("HCM_CHECKLIST_VIEW")}
                 onClick={() => {
                   navigate(
-                    `/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`
+                    `/${window.contextPath}/employee/campaign/checklist/view?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
                   );
                 }}
               />
@@ -160,7 +160,7 @@ export const UICustomizations = {
                 label={t("HCM_CHECKLIST_CREATE")}
                 onClick={() => {
                   navigate(
-                    `/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}`
+                    `/${window.contextPath}/employee/campaign/checklist/create?campaignName=${campaignName}&role=${role_code}&checklistType=${cl_code}&projectType=${projectType}&campaignId=${campaignId}&campaignNumber=${campaignNumber}`
                   );
                 }}
               />
@@ -178,7 +178,7 @@ export const UICustomizations = {
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const [isActive, setIsActive] = useState(row?.isActive);
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       let res;
       const callSearch = async () => {
         const res = await Digit.CustomService.getResponse({
@@ -229,7 +229,7 @@ export const UICustomizations = {
           // return row?.auditDetails?.createdTime;
           break;
         case "ACTION":
-          const tenantId = Digit.ULBService.getCurrentTenantId();
+          const tenantId = Digit?.ULBService?.getCurrentTenantId();
           const generateFile = async () => {
             const res = await Digit.CustomService.getResponse({
               url: `/project-factory/v1/data/_generate`,
@@ -355,13 +355,15 @@ export const UICustomizations = {
   },
   MyCampaignConfigOngoing: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: true,
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date().toISOString().split("T")[0], "daystart"),
@@ -385,7 +387,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -547,13 +549,15 @@ export const UICustomizations = {
   },
   MyCampaignConfigCompleted: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         endDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString().split("T")[0]),
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
@@ -575,7 +579,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -694,13 +698,15 @@ export const UICustomizations = {
   },
   MyCampaignConfigUpcoming: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         campaignsIncludeDates: false,
         startDate: Digit.Utils.pt.convertDateToEpoch(new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0], "daystart"),
@@ -723,7 +729,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -888,13 +894,15 @@ export const UICustomizations = {
   },
   MyCampaignConfigDrafts: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["drafted"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
@@ -916,7 +924,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -982,13 +990,15 @@ export const UICustomizations = {
   },
   MyCampaignConfigDraftsNew: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["drafted"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
@@ -1010,7 +1020,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,
@@ -1080,13 +1090,15 @@ export const UICustomizations = {
   },
   MyCampaignConfigFailed: {
     preProcess: (data, additionalDetails) => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       data.body = { RequestInfo: data.body.RequestInfo };
       const { limit, offset } = data?.state?.tableForm || {};
       const { campaignName, campaignType } = data?.state?.searchForm || {};
       data.body.CampaignDetails = {
         tenantId: tenantId,
         status: ["failed"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
         createdBy: Digit.UserService.getUser().info.uuid,
         pagination: {
           sortBy: "createdTime",
@@ -1107,7 +1119,7 @@ export const UICustomizations = {
       return data;
     },
     populateCampaignTypeReqCriteria: () => {
-      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
       const url = getMDMSUrl(true);
       return {
         url: `${url}/v1/_search`,

@@ -3,23 +3,18 @@ import { useMutation } from "@tanstack/react-query";
 import useCreateCampaign from "./useCreateCampaign";
 import getMDMSUrl from "../utils/getMDMSUrl";
 import { useMemo, useEffect, useState } from "react";
+import { HCMCONSOLE_APPCONFIG_MODULENAME } from "../pages/employee/NewCampaignCreate/CampaignDetails";
 
 const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDate, setStep }) => {
-    // Constants for MDMS schema and localization modules
+  // Constants for MDMS schema and localization modules
   const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
-  const SCHEMA_CODES = ["SimpleAppConfiguration"];
-  const LOCALIZATION_MODULES = ["hcm-registrationflow"];
+  const SCHEMA_CODES = [HCMCONSOLE_APPCONFIG_MODULENAME];
 
   const url = getMDMSUrl(true);
   const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
-  
   // Fetch the existing campaign data to clone
-  const {
-    data: campaignData,
-    isLoading: campaignLoading,
-    error: campaignError,
-  } = useSearchCampaign({
+  const { data: campaignData, isLoading: campaignLoading, error: campaignError } = useSearchCampaign({
     tenantId,
     filter: { ids: [campaignId] },
     config: {
@@ -28,7 +23,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     },
   });
 
-  
   // Fetch checklist codes from MDMS
   const reqChecklistCodes = {
     url: `${url}/v2/_search`,
@@ -43,7 +37,6 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
 
   const { data: checklistCodesData, isLoading: isChecklistMDMSLoading, error: checklistCodesError } = Digit.Hooks.useCustomAPIHook(reqChecklistCodes);
 
-  
   // Fetch roles relevant to checklists
   const reqRoles = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -58,12 +51,13 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
 
   const { data: roleData, isLoading: isRolesLoading, error: rolesError } = Digit.Hooks.useCustomAPIHook(reqRoles);
 
-  
   // Generate service codes based on campaign, checklist, and role data
   const serviceCodes = useMemo(() => {
-    return checklistCodesData?.mdms?.flatMap(checklist =>
-      roleData?.mdms?.map(role => `${campaignData?.campaignName}.${checklist?.data?.code}.${role?.data?.code}`)
-    ).filter(Boolean) || [];
+    return (
+      checklistCodesData?.mdms
+        ?.flatMap((checklist) => roleData?.mdms?.map((role) => `${campaignData?.campaignName}.${checklist?.data?.code}.${role?.data?.code}`))
+        .filter(Boolean) || []
+    );
   }, [checklistCodesData, roleData, campaignData]);
 
   // Fetch service definitions based on generated service codes
@@ -81,20 +75,21 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     },
   };
 
-    // Prepare request to fetch service definitions for cloning
+  // Prepare request to fetch service definitions for cloning
   const { isLoading: isServiceDefsLoading, data: serviceDefinitionsData } = Digit.Hooks.useCustomAPIHook(serviceDefinitionFetchReq);
 
-    // State for storing MDMS data and loading/errors
+  // State for storing MDMS data and loading/errors
   const [mdmsData, setMdmsData] = useState([]);
   const [isMDMSLoading, setIsMDMSLoading] = useState(true);
   const [formConfigError, setFormConfigError] = useState(null);
+  const [error, setError] = useState(null);
 
-    // Fetch MDMS entries based on the schema codes and campaign project ID
+  // Fetch MDMS entries based on the schema codes and campaign project ID
   useEffect(() => {
     const fetchAllSchemas = async () => {
       try {
         const results = await Promise.all(
-          SCHEMA_CODES.map(schemaCode =>
+          SCHEMA_CODES.map((schemaCode) =>
             Digit.CustomService.getResponse({
               url: `${url}/v2/_search`,
               body: {
@@ -105,11 +100,12 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
                   filters: { project: campaignData?.campaignNumber },
                 },
               },
-            }).then(res =>
-              res?.mdms?.map(mdms => ({
-                schemaCode: `${CONSOLE_MDMS_MODULENAME}.${schemaCode}`,
-                data: mdms?.data,
-              })) || []
+            }).then(
+              (res) =>
+                res?.mdms?.map((mdms) => ({
+                  schemaCode: `${CONSOLE_MDMS_MODULENAME}.${schemaCode}`,
+                  data: mdms?.data,
+                })) || []
             )
           )
         );
@@ -125,12 +121,12 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     if (campaignData?.campaignNumber) fetchAllSchemas();
   }, [campaignData?.campaignNumber]);
 
-    // Hook to create a new campaign
+  // Hook to create a new campaign
   const createCampaign = useCreateCampaign(tenantId);
 
-    // Mutation to create new MDMS entries using a dynamic URL with schemaCode
-  const mdmsCreateMutation = useMutation({
-    mutationFn: async ({ schemaCode, body }) => {
+  // Mutation to create new MDMS entries using a dynamic URL with schemaCode
+  const mdmsCreateMutation = useMutation(
+    async ({ schemaCode, body }) => {
       const dynamicUrl = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${schemaCode}`;
       const res = await Digit.CustomService.getResponse({
         url: dynamicUrl,
@@ -138,51 +134,117 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
       });
       return res;
     },
-    select: (data) => data?.SchemaDefinitions?.[0] || {},
-  });
-  
+    {
+      select: (data) => data?.SchemaDefinitions?.[0] || {},
+    }
+  );
+
+  // Mutation to create new MDMS entries using a dynamic URL with schemaCode
+  const mdmsUpdateMutation = useMutation(
+    async ({ schemaCode, body }) => {
+      const dynamicUrl = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${schemaCode}`;
+      const res = await Digit.CustomService.getResponse({
+        url: dynamicUrl,
+        body,
+      });
+      return res;
+    },
+    {
+      select: (data) => data?.SchemaDefinitions?.[0] || {},
+    }
+  );
+
   // Hook to create service definitions (checklists)
   const useCreateChecklist = Digit.Hooks.campaign.useCreateChecklist(tenantId);
 
   // Clone all MDMS records by regenerating uniqueIdentifiers and replacing campaignNumber
   const createAllMDMSRecords = async (newCampaignNumber) => {
-    for (const mdmsItem of mdmsData) {
-      const payload = {
-        Mdms: {
-          tenantId,
-          schemaCode: mdmsItem.schemaCode,
-          data: {
-            ...mdmsItem.data,
-            project: newCampaignNumber,
+    const existingCampaignConfig = await Promise.all(
+      SCHEMA_CODES.map((schemaCode) =>
+        Digit.CustomService.getResponse({
+          url: `${url}/v2/_search`,
+          body: {
+            MdmsCriteria: {
+              tenantId,
+              schemaCode: `${CONSOLE_MDMS_MODULENAME}.${schemaCode}`,
+              isActive: true,
+              filters: { project: newCampaignNumber },
+            },
           },
-          isActive: true,
-        },
-      };
-      try {
-        const res = await mdmsCreateMutation.mutateAsync({
-          schemaCode: mdmsItem.schemaCode,
-          body: payload,
-        });
-      } catch (err) {
-        console.error(`Failed to create MDMS entry for ${mdmsItem.data?.name}`, err);
-        throw new Error(`MDMS creation failed for ${mdmsItem.data?.name}`);
+        }).then((res) => res?.mdms || [])
+      )
+    );
+    const existingCampaignConfigList = existingCampaignConfig?.flat();
+
+    if (existingCampaignConfigList?.length > 0) {
+      for (const newItem of mdmsData) {
+        // find the existing MDMS object whose data.name matches
+        const existingItem = existingCampaignConfigList?.find((e) => e.data?.name === newItem.data?.name);
+        if (!existingItem) continue; // nothing to update if no match
+
+        // build payload by taking the full existing object,
+        // but swapping in the fresh data + project number
+        const payload = {
+          Mdms: {
+            ...existingItem,
+            data: {
+              ...newItem.data,
+              project: newCampaignNumber,
+            },
+          },
+        };
+        try {
+          await mdmsUpdateMutation.mutateAsync({
+            schemaCode: existingItem.schemaCode,
+            body: payload,
+          });
+        } catch (err) {
+          setError(err);
+          console.error(`Failed to update MDMS entry for ${existingItem.data?.name}`, err);
+          throw new Error(`MDMS update failed for ${existingItem.data?.name}`);
+        }
+      }
+    } else {
+      for (const mdmsItem of mdmsData) {
+        const payload = {
+          Mdms: {
+            tenantId,
+            schemaCode: mdmsItem.schemaCode,
+            data: {
+              ...mdmsItem.data,
+              project: newCampaignNumber,
+            },
+            isActive: true,
+          },
+        };
+        try {
+          const res = await mdmsCreateMutation.mutateAsync({
+            schemaCode: mdmsItem.schemaCode,
+            body: payload,
+          });
+        } catch (err) {
+          setError(err);
+          console.error(`Failed to create MDMS entry for ${mdmsItem.data?.name}`, err);
+          throw new Error(`MDMS creation failed for ${mdmsItem.data?.name}`);
+        }
       }
     }
   };
 
-    // Clone all checklists by resetting their IDs and updating their codes
-  const createAllChecklists = async (newCampaignNumber) => {
+  // Clone all checklists by resetting their IDs and updating their codes
+  const createAllChecklists = async (campaignName) => {
     if (!serviceDefinitionsData?.ServiceDefinitions?.length) return;
     await Promise.all(
       serviceDefinitionsData.ServiceDefinitions.map(async (def) => {
         const modifiedDefinition = {
           ...def,
           id: null,
-          code: def.code.replace(`${campaignData?.campaignName}`, newCampaignNumber),
+          code: def.code.replace(`${campaignData?.campaignName}`, campaignName),
         };
         try {
           await useCreateChecklist.mutateAsync(modifiedDefinition);
         } catch (err) {
+          setError(err);
           console.error("Checklist creation failed for:", modifiedDefinition.code, err);
           throw new Error(`Checklist creation failed for ${modifiedDefinition.code}`);
         }
@@ -190,11 +252,10 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     );
   };
 
-    // Main mutation to orchestrate the entire cloning flow
-  const { mutateAsync, isLoading: mutationLoading, error: mutationError } = useMutation({
-    mutationFn: async () => {
+  // Main mutation to orchestrate the entire cloning flow
+  const { mutateAsync, isLoading: mutationLoading, error: mutationError } = useMutation(async () => {
     try {
-    // Step 0: Set initial progress step after fetching campaign details
+      // Step 0: Set initial progress step after fetching campaign details
       setStep(0);
       if (!campaignData) throw new Error("Campaign not found");
 
@@ -203,7 +264,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         ...campaignData,
         campaignName,
         deliveryRules: [],
-        resources: [],
+        // resources: [],
         parentId: null,
         isActive: true,
         campaignNumber: null,
@@ -218,49 +279,63 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
       setStep(1);
       const createRes = await createCampaign.mutateAsync(modifiedCampaign);
       const newCampaignNumber = createRes?.CampaignDetails?.campaignNumber;
-      if (!newCampaignNumber) throw new Error("Campaign creation returned no campaign number");
+      if (!newCampaignNumber) {
+        setError(mutationError);
+        throw new Error("Campaign creation returned no campaign number");
+      }
 
       // Step 2: Clone MDMS and checklist definitions
       setStep(2);
-      await Promise.all([
-        createAllMDMSRecords(newCampaignNumber),
-        createAllChecklists(newCampaignNumber),
-      ]);
-
-      // Step 3: Fetch localization messages for the new campaign
+      await Promise.all([createAllMDMSRecords(newCampaignNumber), createAllChecklists(campaignName)]);
       setStep(3);
-      const locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
-      const moduleParam = LOCALIZATION_MODULES.map(mod => `${mod}-${campaignData?.campaignNumber}`).join(",");
-      const neModuleParam = LOCALIZATION_MODULES.map(mod => `${mod}-${newCampaignNumber}`).join(",");
+      const languages = Digit?.SessionStorage.get("initData")?.languages || [];
+      const mdmsModules = mdmsData
+        .map((item) => {
+          const moduleBase = item?.data?.name?.toString()?.toLowerCase();
+          return moduleBase ? `hcm-${moduleBase}` : null;
+        })
+        .filter(Boolean);
 
-      
-      const localisationData = await Digit.CustomService.getResponse({
-        url: `/localization/messages/v1/_search`,
-        params: {
-          locale,
-          module: moduleParam,
-          tenantId,
-        },
-      });
+      for (const lang of languages) {
+        const locale = lang?.value;
+        if (!locale) continue;
 
-       // Step 4: Upsert localization messages for the cloned campaign
-      if (localisationData?.messages?.length) {
-        const updatedMessages = localisationData.messages.map((msg) => ({
-          ...msg,
-          module: msg.module,
-        }));
-        try {
-          await Digit.CustomService.getResponse({
-            url: "/localization/messages/v1/_upsert",
-            body: {
-              tenantId,
-              messages: updatedMessages,
-              module: neModuleParam,
-            },
-          });
-        } catch (error) {
-          console.error("Localization upsert failed:", error);
-          throw new Error("Localization upsert failed");
+        for (const mod of mdmsModules) {
+          const oldModule = `${mod}-${campaignData?.campaignNumber}`;
+          const newModule = `${mod}-${newCampaignNumber}`;
+
+          try {
+            // SEARCH localization entries for old module
+            const localisationData = await Digit.CustomService.getResponse({
+              url: `/localization/messages/v1/_search`,
+              params: {
+                locale,
+                module: oldModule,
+                tenantId,
+              },
+            });
+
+            if (localisationData?.messages?.length) {
+              const updatedMessages = localisationData.messages.map((msg) => ({
+                ...msg,
+                locale,
+                module: newModule, // Replace module with new module name
+              }));
+
+              // UPSERT updated messages under new module
+              await Digit.CustomService.getResponse({
+                url: "/localization/messages/v1/_upsert",
+                body: {
+                  tenantId,
+                  messages: updatedMessages,
+                },
+              });
+            }
+          } catch (error) {
+            setError(error);
+            console.error(`Localization upsert failed for locale ${locale}, module ${mod}:`, error);
+            throw new Error(`Localization upsert failed for locale ${locale}, module ${mod}`);
+          }
         }
       }
       setStep(4);
@@ -269,9 +344,9 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
         CampaignDetails: createRes?.CampaignDetails,
       };
     } catch (error) {
+      setError(error);
       console.error("Error during campaign copy:", error);
       throw error;
-      }
     }
   });
 
@@ -280,7 +355,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     mutateAsync,
     isLoading: mutationLoading,
     campaignDetailsLoading: campaignLoading || isMDMSLoading || isChecklistMDMSLoading || isRolesLoading || isServiceDefsLoading,
-    error: mutationError || campaignError || formConfigError || checklistCodesError || rolesError,
+    error: error || mutationError || campaignError || formConfigError || checklistCodesError || rolesError,
     CampaignDetails: campaignData,
   };
 };

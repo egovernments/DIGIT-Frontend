@@ -36,7 +36,7 @@ jobs:
       
           # Define the branch name pattern
           PREFIXES="FEATURE|BUGFIX|RELEASE"
-          PROJECTS="HCMPRE|DPG|SN|DUCE"
+          PROJECTS="HCMPRE|DPG|SN|DUCE|HCMCONSOLE"
           TICKET_PATTERN="[0-9]{1,5}"
           BRANCH_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN$"
       
@@ -51,7 +51,7 @@ jobs:
         run: |
           # Define constants
           PREFIXES="FEATURE|BUGFIX|RELEASE"
-          PROJECTS="HCMPRE|DPG|SN|DUCE"
+          PROJECTS="HCMPRE|DPG|SN|DUCE|HCMCONSOLE"
           TICKET_PATTERN="[0-9]{1,5}"
           TITLE_PATTERN="^($PREFIXES)\/($PROJECTS)-$TICKET_PATTERN.*$"
           MIN_TITLE_LENGTH=30

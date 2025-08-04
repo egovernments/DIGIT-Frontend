@@ -3,6 +3,7 @@
 .camp-drawer-caption{
     font-size: 1rem !important;
     font-weight: 400 !important;
+    padding-bottom: 1.5rem;
   }
   
   .camp-app-help-tutorial-popup{
@@ -132,7 +133,8 @@
     position: fixed;
     bottom: 0;
     right: 0;
-    width: calc(100vw - 4rem);
+    left: 0;
+    width: 100%;
     border-radius:1rem 1rem 0rem 0rem;
     background: #ffffff;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
@@ -281,13 +283,24 @@
     margin-right: 24rem;
   }
   .boldLabel{
+    margin-bottom: 0rem;
     .digit-header-content{
       font-weight: 700;
+    }
+
+    &.withoutMargin{
+      margin-bottom: 0rem !important;
     }
   }
   .clickable:hover{
       border: 0.063rem solid theme(digitv2.lightTheme.primary);
       box-shadow: 0.063rem theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer1) theme(digitv2.spacers.spacer0) #00000029;
+  }
+
+  .setup-campaign{
+.digit-label-field-pair{
+margin-bottom: 0rem;
+}
   }
 
 .cmn-help-info-card{
@@ -321,4 +334,24 @@
 .digit-text-block-header-content {
     flex-direction: column  !important;
 }
+.copy-campaign-popup{
+  .digit-popup-heading{
+    color: theme(digitv2.lightTheme.primary-2);
+  }
+  .digit-popup-children-wrap{
+    overflow: unset !important;
+  }
+}
+
+
+
+
+.campaign-popup-wrap{
+  
+  .digit-popup-children-wrap{
+    overflow: visible !important;
+  }
+}
+
+
 

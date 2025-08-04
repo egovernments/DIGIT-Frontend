@@ -20,6 +20,9 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
                 name: "CampaignType",
                 fieldPairClassName: "boldLabel",
                 optionsKey: "code",
+                customStyle: {
+                  marginBottom: 0,
+                },
                 error: "ES__REQUIRED_CAMPAIGN_TYPE",
                 mdmsv2: true,
                 mdmsConfig: {
@@ -68,16 +71,42 @@ export const CampaignCreateConfig = (totalFormData, editName) => {
               disable: false,
               // populators: { name: "salutation", error: "Required", validation: { pattern: /^[A-Za-z]+$/i , maxlength:5} },
               populators: {
-                fieldPairClassName: "boldLabel",
+                fieldPairClassName: "boldLabel withoutMargin",
                 name: "CampaignName",
                 error: "ES__REQUIRED_NAME_AND_LENGTH",
                 // required: "true",
                 validation: {
                   // required: true,
                   error: "ES__REQUIRED_LENGTH",
-                  pattern: /^(?=.*[A-Za-z]).{1,30}$/,
+                  pattern: /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,29}$)^.*$/u,
                   // maxlength: 30,
                 },
+              },
+            },
+          ],
+        },
+        {
+          stepCount: "2",
+          key: "2",
+          name: "HCM_CAMPAIGN_INFO",
+          body: [
+            {
+              isMandatory: false,
+              key: "CampaignNameInfo",
+              type: "component",
+              component: "CampaignNameInfo",
+              withoutLabel: true,
+              withoutLabelFieldPair: true,
+              disable: false,
+              customProps: {
+                module: "HCM",
+                sessionData: totalFormData,
+              },
+              populators: {
+                name: "CampaignNameInfo",
+                // optionsKey: "code",
+                error: "ES__REQUIRED_DATE",
+                required: true,
               },
             },
           ],

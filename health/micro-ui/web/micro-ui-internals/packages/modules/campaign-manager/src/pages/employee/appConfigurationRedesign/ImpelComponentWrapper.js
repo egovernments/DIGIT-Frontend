@@ -1,9 +1,12 @@
 import React, { Fragment, useEffect, useState } from "react";
-import AppLocalisationWrapper from "./AppLocalisationWrapper";
-import { dummyMaster } from "../../../configs/dummyMaster";
-import { Loader } from "@egovernments/digit-ui-components";
+// import { dummyMaster } from "../../../configs/dummyMaster";
+//production mode
+import { AppLocalisationWrapper, Loader, useCustomT } from "@egovernments/digit-ui-components";
+// import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
+//development mode
+import AppPreview from "../../../components/AppPreview";
 
-function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, ...props }) {
+function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -162,17 +165,32 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     return JSON.stringify(schema, null, 2);
   }
 
-  const onSubmit = (state) => {
+  const onSubmit = (state, finalSubmit, tabChange) => {
     const restructuredData =
       variant === "web"
         ? formBuilderRestructure(state?.screenData)
         : variant === "schema"
         ? convertToJSONSchema(state?.screenData?.[0])
         : state?.screenData;
-    submit(restructuredData);
+    submit(restructuredData, finalSubmit, tabChange);
   };
 
+  // if (process.env.NODE_ENV === "development") {
+  //   return (
+  //     //development mode
+  //     <AppLocalisationWrapperDev
+  //       onSubmit={onSubmit}
+  //       back={back}
+  //       showBack={showBack}
+  //       screenConfig={screenConfig}
+  //       parentDispatch={parentDispatch}
+  //       localeModule={localeModule}
+  //       pageTag={pageTag}
+  //     />
+  //   );
+  // }
   return (
+    //production mode
     <AppLocalisationWrapper
       onSubmit={onSubmit}
       back={back}
@@ -180,7 +198,10 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
       screenConfig={screenConfig}
       parentDispatch={parentDispatch}
       localeModule={localeModule}
-    />
+      pageTag={pageTag}
+    >
+      <AppPreview />
+    </AppLocalisationWrapper>
   );
 }
 

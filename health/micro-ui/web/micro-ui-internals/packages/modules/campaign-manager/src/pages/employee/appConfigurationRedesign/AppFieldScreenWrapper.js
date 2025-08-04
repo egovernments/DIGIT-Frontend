@@ -84,7 +84,6 @@ function AppFieldScreenWrapper() {
               <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
               <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
             </div>
-            {/* todo update localisation */}
             {fields?.map(
               ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
                 return (
@@ -144,7 +143,7 @@ function AppFieldScreenWrapper() {
                 );
               }
             )}
-            {currentCard.type !== "template" && currentCard?.config?.enableFieldAddition && (
+            {currentCard?.type !== "template" && currentCard?.config?.enableFieldAddition && (
               <Button
                 className={"app-config-drawer-button"}
                 type={"button"}
@@ -172,7 +171,7 @@ function AppFieldScreenWrapper() {
           </>
         );
       })}
-      {currentCard.type !== "template" && currentCard?.config?.enableSectionAddition && (
+      {currentCard?.type !== "template" && currentCard?.config?.enableSectionAddition && (
         <Button
           className={"app-config-add-section"}
           type={"button"}
@@ -191,7 +190,7 @@ function AppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-      {currentCard.type !== "template" && (
+      {currentCard?.type !== "template" && (
         <>
           <div className="app-config-drawer-subheader">
             <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>

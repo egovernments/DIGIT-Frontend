@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 
-import React, { Fragment } from "react";
+import React, { Fragment , useEffect } from "react";
 import { EmployeeModuleCard } from "@egovernments/digit-ui-react-components";
 
 const ROLES = {
@@ -27,18 +27,22 @@ const CampaignCard = () => {
   const { t } = useTranslation();
   const microplanStatus = "RESOURCE_ESTIMATIONS_APPROVED";
 
+   useEffect(() => {
+      sessionStorage.removeItem("HCM_SELECTED_TAB_INDEX");
+    }, []);
+
   let links = [
-    {
-      label: t("ACTION_TEST_SETUP_CAMPAIGN"),
-      link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
-      roles: ROLES.BOUNDARY_MANAGER,
-    },
-    {
-      label: t("ACTION_TEST_MY_CAMPAIGN"),
-      link: `/${window?.contextPath}/employee/campaign/my-campaign`,
-      roles: ROLES.BOUNDARY_MANAGER,
-      // count: isLoading?"-":data
-    },
+    // {
+    //   label: t("ACTION_TEST_SETUP_CAMPAIGN"),
+    //   link: `/${window?.contextPath}/employee/campaign/setup-campaign`,
+    //   roles: ROLES.BOUNDARY_MANAGER,
+    // },
+    // {
+    //   label: t("ACTION_TEST_MY_CAMPAIGN"),
+    //   link: `/${window?.contextPath}/employee/campaign/my-campaign`,
+    //   roles: ROLES.BOUNDARY_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
       link: `/workbench-ui/employee/campaign/campaign-home`,

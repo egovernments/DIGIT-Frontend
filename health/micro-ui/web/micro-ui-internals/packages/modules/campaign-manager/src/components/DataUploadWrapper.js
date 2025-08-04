@@ -3,6 +3,7 @@ import React, { Fragment, useEffect, useState } from "react";
 import UploadData from "./UploadData";
 import { useTranslation } from "react-i18next";
 import UploadDataMappingWrapper from "./UploadDataMappingWrapper";
+import NewUploadData from "./CreateCampaignComponents/NewUploadData";
 
 function DataUploadWrapper({ formData, props, onSelect }) {
   const { t } = useTranslation();
@@ -17,7 +18,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   ];
   const mappingCategories = ["HCM_UPLOAD_FACILITY_MAPPING", "HCM_UPLOAD_USER_MAPPING"];
   const [currentStep, setCurrentStep] = useState(1);
-  const currentCategories = categories?.[currentStep - 1];
+  const currentCategories = categories?.[parseInt(currentKey) - 1];
   const [key, setKey] = useState(() => {
     return currentKey ? parseInt(currentKey) : 1;
   });
@@ -56,7 +57,7 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   return (
     <>
       <div className="container-full">
-        {!parentId && (
+        {/* {!parentId && (
           <div className="card-container">
             <Card className="card-header-timeline">
               <TextBlock subHeader={t("HCM_UPLOAD_DATA")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
@@ -65,11 +66,12 @@ function DataUploadWrapper({ formData, props, onSelect }) {
               <Stepper customSteps={categories} currentStep={currentStep} onStepClick={() => {}} direction={"vertical"} />
             </Card>
           </div>
-        )}
-        {mappingCategories?.includes(currentCategories) ? (
+        )} */}
+        {mappingCategories?.includes(currentCategories) && !parentId ? (
           <UploadDataMappingWrapper currentCategories={currentCategories} formData={formData} props={props} onSelect={onSelect} />
         ) : (
-          <UploadData formData={formData} props={props} onSelect={onSelect} />
+          // <UploadData formData={formData} props={props} onSelect={onSelect} />
+          <NewUploadData formData={formData} props={props} onSelect={onSelect} />
         )}
       </div>
     </>

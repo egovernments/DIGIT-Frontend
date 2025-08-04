@@ -1,7 +1,7 @@
-import { AddIcon , Label } from "@egovernments/digit-ui-react-components";
+import { AddIcon, Label } from "@egovernments/digit-ui-react-components";
 import React, { Fragment, useContext, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, Toast ,Button ,CardText, LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
 import { CycleContext } from ".";
 import { PRIMARY_COLOR } from "../../../utils";
@@ -102,9 +102,10 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
     });
   };
 
+  // INFO:: removed "stref" from dependency array as it was causing infinite rerendering issue
   useEffect(() => {
     stref.current = products; // Update the ref with the latest child state
-  }, [products, stref]);
+  }, [products]);
 
   return (
     <div className="add-resource-wrapper">
@@ -116,32 +117,34 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
             </CardText>
             {products?.length > 1 ? (
               <Button
-              // className="custom-class"
-              icon="Delete"
-              iconFill=""
-              label={t(`DELETE`)}
-              onClick={() => deleteItem(i, c)}
-              size=""
-              style={{}}
-              title=""
-              variation="link"
-            />
+                // className="custom-class"
+                icon="Delete"
+                iconFill=""
+                label={t(`DELETE`)}
+                onClick={() => deleteItem(i, c)}
+                size=""
+                style={{}}
+                title=""
+                variation="link"
+              />
             ) : null}
           </div>
           <div className="add-resource-label-field-container">
-            <LabelFieldPair style={{display: "grid"}}>
+            <LabelFieldPair style={{ display: "grid" }}>
               <Label>{t(`CAMPAIGN_ADD_PRODUCTS_LABEL`)}</Label>
-              <Dropdown
-                t={t}
-                style={{ width: "100%", minWidth: "100%", marginBottom: 0 }}
-                className="form-field"
-                selected={i?.value}
-                disable={false}
-                isMandatory={true}
-                option={temp ? temp : filteredData}
-                select={(d) => updateValue(i, d)}
-                optionKey="displayName"
-              />
+              {
+                <Dropdown
+                  t={t}
+                  style={{ width: "100%", minWidth: "100%", marginBottom: 0 }}
+                  className="form-field"
+                  selected={i?.value}
+                  disable={false}
+                  isMandatory={true}
+                  option={temp ? temp : filteredData}
+                  select={(d) => updateValue(i, d)}
+                  optionKey="displayName"
+                />
+              }
             </LabelFieldPair>
             {!filteredDeliveryConfig?.productCountHide && (
               <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
@@ -168,6 +171,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           justifyContent: "center",
           gap: "1rem",
           marginTop: "1rem",
+          marginBottom: "1rem",
         }}
       >
         <p>{t("CAMPAIGN_NEW_PRODUCT_TEXT")}</p>

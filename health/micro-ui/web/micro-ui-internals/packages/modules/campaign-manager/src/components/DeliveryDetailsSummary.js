@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast, Card, Stepper, TextBlock, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
+import {  EditIcon,  LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
+import {  Toast, Card, Stepper, TextBlock , Loader ,HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
@@ -243,12 +243,12 @@ const DeliveryDetailsSummary = (props) => {
                 {
                   type: "DATA",
                   cardHeader: { value: t("CAMPAIGN_DELIVERY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
+                  // cardSecondaryAction: noAction !== "false" && (
+                  //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(7)}>
+                  //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                  //     <EditIcon />
+                  //   </div>
+                  // ),
                   values: [
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
@@ -275,12 +275,12 @@ const DeliveryDetailsSummary = (props) => {
                     name: `CYCLE_${index + 1}`,
                     type: "COMPONENT",
                     cardHeader: { value: `${t("CYCLE")} ${item?.cycleIndex}`, inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                    cardSecondaryAction: noAction !== "false" && (
-                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
-                        <span>{t(`CAMPAIGN_EDIT`)}</span>
-                        <EditIcon />
-                      </div>
-                    ),
+                    // cardSecondaryAction: noAction !== "false" && (
+                    //   <div className="campaign-preview-edit-container" onClick={() => handleRedirect(8)}>
+                    //     <span>{t(`CAMPAIGN_EDIT`)}</span>
+                    //     <EditIcon />
+                    //   </div>
+                    // ),
                     component: "CycleDataPreview",
                     props: {
                       data: item,
@@ -337,7 +337,7 @@ const DeliveryDetailsSummary = (props) => {
     <>
       {(isLoading || (!data && !error) || isFetching) && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
       <div className="container-full">
-        <div className="card-container">
+        {/* <div className="card-container">
           <Card className="card-header-timeline">
             <TextBlock subHeader={t("HCM_DELIVERY_DETAILS")} subHeaderClassName={"stepper-subheader"} wrapperClassName={"stepper-wrapper"} />
           </Card>
@@ -349,10 +349,10 @@ const DeliveryDetailsSummary = (props) => {
               direction={"vertical"}
             />
           </Card>
-        </div>
+        </div> */}
         <div className="card-container-delivery">
-          <TagComponent campaignName={campaignName} />
-          <div style={{ display: "flex", justifyContent: "space-between" }}>
+        <TagComponent campaignName={campaignName} />  
+          <div style={{ display: "flex", justifyContent: "space-between" , marginTop: "1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
           </div>
           <div className="campaign-summary-container">

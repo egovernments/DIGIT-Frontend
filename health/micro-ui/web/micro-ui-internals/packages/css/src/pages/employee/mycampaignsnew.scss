@@ -70,6 +70,7 @@
     border-bottom-left-radius: 0.5rem;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
 
     .digit-results-card-buttons-internal {
@@ -84,6 +85,22 @@
     &.digit-results-card-field-pair {
         .digit-viewcard-label {
             color: theme(digitv2.lightTheme.primary-2);
+        }
+
+        .digit-viewcard-value {
+            color: #787878;
+        }
+    }
+}
+
+.digit-viewcard-field-pair {
+    &.digit-results-status-card-field-pair {
+            align-items: center;
+            gap: 8.5rem;
+            flex-direction: unset;
+        .digit-viewcard-label {
+            color: theme(digitv2.lightTheme.primary-2);
+            width: unset;
         }
 
         .digit-viewcard-value {

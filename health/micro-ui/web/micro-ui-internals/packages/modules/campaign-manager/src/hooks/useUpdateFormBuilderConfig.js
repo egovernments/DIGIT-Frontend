@@ -8,7 +8,7 @@ const updateFormBuilderConfig = async (req, tenantId) => {
       url: `/${mdms_context_path}/v2/_update/${req.moduleName}.${req.masterName}`,
       body: {
         Mdms: {
-          tenantId,
+          tenantId: tenantId,
           schemaCode: `${req.moduleName}.${req.masterName}`,
           id: req?.data?.id,
           uniqueIdentifier: req?.data?.uniqueIdentifier,
@@ -18,17 +18,17 @@ const updateFormBuilderConfig = async (req, tenantId) => {
         },
       },
     });
-
     return response;
   } catch (error) {
     throw new Error(error?.response?.data?.Errors?.[0].description);
   }
 };
 
-const useUpdateFormBuilderConfig = (tenantId, config = {}) => {
+const useUpdateFormBuilderConfig = (tenantId) => {
   return useMutation({
-    mutationFn: (reqData) => updateFormBuilderConfig(reqData, tenantId),
-    ...config,
+    mutationFn: (reqData) => {
+      return updateFormBuilderConfig(reqData, tenantId);
+    },
   });
 };
 

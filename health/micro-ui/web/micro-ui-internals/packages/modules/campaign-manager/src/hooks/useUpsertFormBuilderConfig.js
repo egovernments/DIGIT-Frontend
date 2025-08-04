@@ -14,17 +14,17 @@ const upsertFormBuilderConfig = async (req, tenantId) => {
         },
       },
     });
-
     return response;
   } catch (error) {
     throw new Error(error?.response?.data?.Errors?.[0].description);
   }
 };
 
-const useUpsertFormBuilderConfig = (tenantId, config = {}) => {
+const useUpsertFormBuilderConfig = (tenantId) => {
   return useMutation({
-    mutationFn: (reqData) => upsertFormBuilderConfig(reqData, tenantId),
-    ...config,
+    mutationFn: (reqData) => {
+      return upsertFormBuilderConfig(reqData, tenantId);
+    },
   });
 };
 

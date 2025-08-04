@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect, useMemo, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
-import { Stepper, Toast, Button, Footer, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
+import { Stepper, Toast, Button, Footer, Loader, FormComposerV2, PopUp, CardText } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
@@ -15,18 +15,23 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [isDataCreating, setIsDataCreating] = useState(false);
   const searchParams = new URLSearchParams(location.search);
   const editName = searchParams.get("editName");
-  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName));
   const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_DATA", {});
+  const [campaignConfig, setCampaignConfig] = useState(CampaignCreateConfig(totalFormData, editName));
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
+  const storedInfo = JSON.parse(sessionStorage.getItem("HCM_CAMPAIGN_NUMBER") || "{}");
   const id = searchParams.get("id");
   const isDraft = searchParams.get("draft");
-  const campaignNumber = searchParams.get("campaignNumber");
+  const campaignNumber = searchParams.get("campaignNumber") || storedInfo?.campaignNumber;
   const [currentKey, setCurrentKey] = useState(() => {
     const keyParam = searchParams.get("key");
     return keyParam ? parseInt(keyParam) : 1;
   });
   const [isValidatingName, setIsValidatingName] = useState(false);
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [pendingFormData, setPendingFormData] = useState(null);
+
+  const prevProjectTypeRef = useRef();
 
   const updateUrlParams = (params) => {
     const url = new URL(window.location.href);
@@ -34,6 +39,14 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       url.searchParams.set(key, value);
     });
     window.history.replaceState({}, "", url);
+  };
+
+  const normalizeDate = (date) => {
+    if (!date) return "";
+    if (typeof date === "number") {
+      return Digit.DateUtils.ConvertEpochToDate(date)?.split("/")?.reverse()?.join("-");
+    }
+    return date;
   };
 
   const closeToast = () => {
@@ -59,7 +72,6 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       },
     },
   });
-
   const transformDraftDataToFormData = (draftData) => {
     const restructureFormData = {
       ...draftData,
@@ -143,8 +155,48 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
     return res?.CampaignDetails;
   };
 
+  const handleCampaignMutation = async (formData, hasDateChanged = false) => {
+    setLoader(true);
+    const isEdit = editName || campaignNumber;
+    const mutation = isEdit ? mutationUpdate : mutationCreate;
+    const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
+    const payload = transformCreateData({
+      totalFormData,
+      hierarchyType,
+      params,
+      formData,
+      ...(isEdit ? { id } : {}),
+      hasDateChanged,
+    });
+
+    await mutation.mutate(
+      {
+        url: url,
+        body: payload,
+        config: { enable: true },
+      },
+      {
+        onSuccess: async (result) => {
+          setShowToast({
+            key: "success",
+            label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
+          });
+          setTimeout(() => {
+            const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`;
+            navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
+            setLoader(false);
+          }, 2000);
+        },
+        onError: () => {
+          setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
+          setLoader(false);
+        },
+      }
+    );
+  };
+
   const onSubmit = async (formData) => {
-    const projectType = formData?.CampaignType?.code;
+    const projectType = formData?.CampaignType?.code || params?.CampaignType?.code;
 
     const validDates = handleCreateValidate(formData);
     if (validDates?.label) {
@@ -157,10 +209,12 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       [name]: formData,
     }));
 
-    if (formData?.CampaignName && !editName) {
+    if (formData?.CampaignName && !editName && !campaignNumber) {
       if (formData?.CampaignName?.length > 30) {
         setShowToast({ key: "error", label: "CAMPAIGN_NAME_LONG_ERROR" });
         return;
+      } else {
+        setShowToast(null);
       }
       setIsValidatingName(true);
       let temp = await fetchValidCampaignName(tenantId, formData);
@@ -168,11 +222,18 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         setShowToast({ key: "error", label: t("CAMPAIGN_NAME_ALREADY_EXIST") });
         setIsValidatingName(false);
         return;
+      } else {
+        setShowToast(null);
       }
       setIsValidatingName(false);
     }
 
-    if (typeof params?.CampaignName === "object" || !params?.CampaignName) {
+    const prevProjectType = prevProjectTypeRef.current;
+
+    const isProjectTypeChanged = prevProjectType && prevProjectType !== projectType;
+    const isCampaignNameMissing = typeof params?.CampaignName === "object" || !params?.CampaignName;
+
+    if (isCampaignNameMissing || isProjectTypeChanged) {
       const formattedDate = new Date()
         .toLocaleDateString("en-GB", {
           month: "long",
@@ -184,59 +245,46 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
       const campaignName = `${projectType}_${formattedDate}`;
 
       setParams({ ...params, ...formData, CampaignName: campaignName });
+
+      // Update the formData itself if needed
+      setTotalFormData((prevData) => ({
+        ...prevData,
+        [name]: {
+          ...formData,
+          CampaignName: campaignName,
+        },
+      }));
     } else {
       setParams({ ...params, ...formData });
     }
 
+    prevProjectTypeRef.current = projectType;
+
+    const oldStartDate = normalizeDate(params?.startDate);
+    const oldEndDate = normalizeDate(params?.endDate);
+    const newStartDate = formData?.DateSelection?.startDate;
+    const newEndDate = formData?.DateSelection?.endDate;
+
+    const hasDateChanged = oldStartDate !== newStartDate || oldEndDate !== newEndDate;
+
     if (!filteredCreateConfig?.[0]?.form?.[0]?.last) {
+      setShowToast(null);
       setCurrentKey(currentKey + 1);
     } else {
-      setLoader(true);
-      const isEdit = editName;
-      const mutation = isEdit ? mutationUpdate : mutationCreate;
-      const url = isEdit ? `/project-factory/v1/project-type/update` : `/project-factory/v1/project-type/create`;
-      const payload = transformCreateData({
-        totalFormData,
-        hierarchyType,
-        params,
-        formData,
-        ...(isEdit ? { id } : {}),
-      });
-
-      await mutation.mutate(
-        {
-          url: url,
-          body: payload,
-          config: { enable: true },
-        },
-        {
-          onSuccess: async (result) => {
-            setShowToast({
-              key: "success",
-              label: t(editName ? "HCM_UPDATE_SUCCESS" : "HCM_DRAFT_SUCCESS"),
-            });
-            setTimeout(() => {
-              // history.replace(
-              //   `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
-              // );
-              if (isDraft === "true") {
-                navigate(
-                  `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}&draft=${isDraft}`
-                );
-              } else {
-                navigate(
-                  `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`
-                );
-              }
-              setLoader(false);
-            }, 2000);
+      if (hasDateChanged && params?.deliveryRules) {
+        setParams((prev) => ({
+          ...prev,
+          additionalDetails: {
+            ...(prev?.additionalDetails || {}),
+            cycleData: [],
+            cycleConfgureDate: undefined,
           },
-          onError: () => {
-            setShowToast({ key: "error", label: t("HCM_ERROR_IN_CAMPAIGN_CREATION") });
-            setLoader(false);
-          },
-        }
-      );
+        }));
+        setPendingFormData(formData);
+        setShowPopUp(true);
+        return;
+      }
+      handleCampaignMutation(formData);
     }
   };
   const onStepperClick = (step) => {
@@ -262,6 +310,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         currentStep={currentKey}
         onStepClick={onStepperClick}
         activeSteps={currentKey}
+        className={"campaign-stepper"}
       />
       <FormComposerV2
         config={config?.form.map((config) => {
@@ -280,10 +329,55 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         onSecondayActionClick={onSecondayActionClick}
         isDisabled={isDataCreating}
         label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
+        noBreakLine={true}
         // secondaryActionIcon={"ArrowBack"}
         // primaryActionIconAsSuffix={true}
         // primaryActionIcon={"ArrowDirection"}
       />
+      {showPopUp && (
+        <PopUp
+          className={"deliveries-pop-module"}
+          type={"warning"}
+          heading={t("ES_CAMPAIGN_UPDATE_DELIVERY_DETAILS")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_TYPE_MODAL_TEXT") + " "}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("ES_CAMPAIGN_DELIVERY_BACK")}
+              onClick={() => {
+                setShowPopUp(false);
+              }}
+            />,
+            <Button
+              className={"campaign-type-alert-button"}
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ES_CAMPAIGN_DELIVERY_SUBMIT")}
+              onClick={() => {
+                setShowPopUp(false);
+                if (pendingFormData) {
+                  handleCampaignMutation(pendingFormData, true);
+                }
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
+      )}
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}

@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import BulkUpload from "./BulkUpload";
 import Ajv from "ajv";
 import XLSX from "xlsx";
-import { AlertCard, PopUp, Toast, Button , Card , HeaderComponent ,Loader} from "@egovernments/digit-ui-components";
+import { AlertCard, PopUp, Toast, Button, Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { downloadExcelWithCustomName } from "../utils";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
@@ -206,7 +206,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     var required = [];
     var columns = [];
     for (const propType of ["enumProperties", "numberProperties", "stringProperties"]) {
-      if (convertData?.properties?.[propType] && Array.isArray(convertData?.properties?.[propType]) && convertData?.properties?.[propType]?.length > 0) {
+      if (
+        convertData?.properties?.[propType] &&
+        Array.isArray(convertData?.properties?.[propType]) &&
+        convertData?.properties?.[propType]?.length > 0
+      ) {
         for (const property of convertData?.properties[propType]) {
           properties[property?.name] = {
             ...property,
@@ -255,8 +259,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
 
       setConvertedSchema(schema);
     }
-  }, [Schemas, type ,uploadedFile]);
-
+  }, [Schemas, type, uploadedFile]);
 
   useEffect(async () => {
     if (convertedSchema && Object.keys(convertedSchema).length > 0) {
@@ -700,33 +703,30 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             let rowData = {};
             if (Object.keys(row).length > 0) {
               let allNull = true;
-          
+
               Object.keys(row).forEach((key) => {
                 if (row[key] !== undefined && row[key] !== "") {
                   allNull = false;
-                }            
+                }
                 rowData[key] = row[key] === undefined || row[key] === "" ? null : row[key];
               });
-          
+
               if (!allNull) {
                 rowData["!row#number!"] = index + 1;
-          
+
                 // Remove keys with null values
-                rowData = Object.fromEntries(
-                  Object.entries(rowData).filter(([_, value]) => value !== null)
-                );
-                
+                rowData = Object.fromEntries(Object.entries(rowData).filter(([_, value]) => value !== null));
               } else {
                 rowData = null;
               }
-          
+
               return rowData;
             }
           });
-          
+
           jsonData = jsonData.filter((element) => element);
           if (type === "boundary") {
-            if (workbook?.SheetNames.filter(sheetName => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
+            if (workbook?.SheetNames.filter((sheetName) => sheetName !== t("HCM_ADMIN_CONSOLE_BOUNDARY_DATA")).length == 0) {
               const errorMessage = t("HCM_INVALID_BOUNDARY_SHEET");
               setErrorsType((prevErrors) => ({
                 ...prevErrors,
@@ -735,8 +735,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               setIsError(true);
               return;
             }
-          } else
-          if (type === "facilityWithBoundary") {
+          } else if (type === "facilityWithBoundary") {
             if (workbook?.SheetNames.filter((sheetName) => sheetName == t("HCM_ADMIN_CONSOLE_AVAILABLE_FACILITIES")).length == 0) {
               const errorMessage = t("HCM_INVALID_FACILITY_SHEET");
               setErrorsType((prevErrors) => ({
@@ -814,7 +813,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log("error" , error);
+          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -822,7 +821,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       reader.readAsArrayBuffer(selectedFile);
     });
   };
-  
 
   const onBulkUploadSubmit = async (file) => {
     if (file.length > 1) {
@@ -872,21 +870,23 @@ const UploadData = ({ formData, onSelect, ...props }) => {
       downloadExcelWithCustomName({ fileStoreId: file?.filestoreId, customName: fileNameWithoutExtension });
     }
   };
-  useEffect(() =>{
-    if(totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated" ||
-      totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId == "not-validated" || 
+  useEffect(() => {
+    if (
+      totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId == "not-validated" ||
+      totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId == "not-validated" ||
       totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId == "not-validated"
-    ){
+    ) {
       setNotValid(1);
-  }
-  },[totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId ,
-  totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId,
-  totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId
-])
+    }
+  }, [
+    totalData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.resourceId,
+    totalData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.resourceId,
+    totalData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.resourceId,
+  ]);
 
   useEffect(() => {
     const fetchData = async () => {
-      if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid==1) {
+      if ((!errorsType[type] && uploadedFile?.length > 0 && !isSuccess) || notValid == 1) {
         setIsValidation(true);
         setIsError(true);
         setLoader(true);
@@ -1005,7 +1005,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     };
 
     fetchData();
-  }, [errorsType , notValid]);
+  }, [errorsType, notValid]);
 
   const Template = {
     url: "/project-factory/v1/data/_download",
@@ -1033,6 +1033,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           type: type,
           hierarchyType: params?.hierarchyType,
           campaignId: id,
+          status: "completed",
         },
       },
       {
@@ -1067,7 +1068,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           if (fileData && fileData?.[0]?.url) {
             setDownloadError(false);
             if (fileData?.[0]?.id) {
-              const customFileName = parentId ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}` : `${campaignName}_${fileData[0].filename}`;
+              const customFileName = parentId
+                ? `${campaignName}_${t("HCM_FILLED")}_${fileData[0].filename}`
+                : `${campaignName}_${fileData[0].filename}`;
               downloadExcelWithCustomName({ fileStoreId: fileData?.[0]?.id, customName: customFileName });
               setDownloadedTemplates((prev) => ({
                 ...prev,
@@ -1136,15 +1139,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
   return (
     <>
       <div className="container-full">
-        {loader && 
-        <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")}/>}
+        {loader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_VALIDATION_INPROGRESS")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
-        <TagComponent campaignName={campaignName} />  
           <Card>
-            <div className="campaign-bulk-upload">
-              <HeaderComponent className="digit-form-composer-sub-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
-              </HeaderComponent>
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <TagComponent campaignName={campaignName} />
               <Button
                 label={getDownloadLabel()}
                 variation="secondary"
@@ -1153,6 +1152,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 className="campaign-download-template-btn"
                 onClick={downloadTemplate}
               />
+            </div>
+            <div className="campaign-bulk-upload">
+              <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
+                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+              </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
@@ -1197,7 +1201,7 @@ const UploadData = ({ formData, onSelect, ...props }) => {
               name: "infocard",
             }}
             variant="default"
-            style={{ marginTop: "1.5rem", maxWidth: "100%" , marginBottom: "1.5rem" }}
+            style={{ marginTop: "1.5rem", maxWidth: "100%", marginBottom: "1.5rem" }}
             additionalElements={readMeInfo[type]?.map((info, index) => (
               <div key={index} style={{ display: "flex", flexDirection: "column" }}>
                 <h2>{info?.header}</h2>

@@ -32,6 +32,7 @@ const CreateChecklist = () => {
   const roleLocal = !rlt.startsWith("ACCESSCONTROL_ROLES_ROLES_") ? "ACCESSCONTROL_ROLES_ROLES_" + rlt : rlt;
   const rlTranslated = t(`${roleLocal}`);
   const campaignName = searchParams.get("campaignName");
+  const campaignNumber = searchParams.get("campaignNumber");
   let module = searchParams.get("module");
   const [showPopUp, setShowPopUp] = useState(false);
   const [tempFormData, setTempFormData] = useState([]);
@@ -525,12 +526,14 @@ const CreateChecklist = () => {
       if (data?.success) {
         // Updated success condition check
         navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-          message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
-          preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-          actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
-          actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`,
-          secondaryActionLabel: "MY_CAMPAIGN",
-          secondaryActionLink: `/${window?.contextPath}/employee/campaign/my-campaign`,
+          state: {
+            message: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE",
+            preText: "ES_CHECKLIST_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
+            actionLabel: "HCM_CONFIGURE_APP_RESPONSE_ACTION",
+            actionLink: `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`,
+            secondaryActionLabel: "VIEW_DETAILS",
+            secondaryActionLink: `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+          },
         });
       } else {
         setShowToast({ label: "CHECKLIST_CREATED_FAILED", isError: "true" });
@@ -552,7 +555,9 @@ const CreateChecklist = () => {
   }, [showToast]);
 
   const onSecondayActionClick = () => {
-    navigate(`/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}`);
+    navigate(
+      `/${window.contextPath}/employee/campaign/checklist/search?name=${projectName}&campaignId=${campaignId}&projectType=${projectType}&campaignNumber=${campaignNumber}`
+    );
   };
 
   const fieldPairs = [
@@ -567,7 +572,7 @@ const CreateChecklist = () => {
       {!submitting && !loading_new && (
         <div>
           <TagComponent campaignName={campaignName} />
-          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", marginTop: "-1.2rem" }}>
+          <div style={{ display: "flex", justifyContent: "space-between", height: "5.8rem", alignItems: "center" }}>
             <div>
               <h2 style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CREATE_NEW_CHECKLIST")}</h2>
             </div>

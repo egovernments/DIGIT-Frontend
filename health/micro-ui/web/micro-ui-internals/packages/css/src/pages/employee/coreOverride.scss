@@ -113,6 +113,16 @@ header {
   }
 }
 
+.card-container-delivery{
+  .additional-elements-column{
+    .icon-label-container{
+    .digit-button-label{
+      margin-top: 0.125rem;
+    }
+  }
+  }
+}
+
 /*.digit-popup-wrap {
   background: rgba(0, 0, 0, 0.7);
   @apply flex  fixed w-full h-full overflow-auto top-0 left-0 min-h-screen;
@@ -199,17 +209,46 @@ header {
 .action-bar-wrap .actionBarClass {
   z-index: 10;
 }
-.campaign-flow-stepper{
+.campaign-flow-stepper {
   margin-left: -5.625rem;
   margin-right: -6.875rem;
 }
-.wbh-header-container{
+.wbh-header-container {
   margin: 0rem;
 }
-.digit-description{
+.digit-description {
   display: contents !important;
 }
-.create-campaign-disable{
-  opacity: .5;
+.create-campaign-disable {
+  opacity: 0.5;
   background: #c5c5c5 !important;
+}
+.date-field-container {
+  .digit-new-date-format {
+    z-index: 0;
+  }
+}
+
+.employee-app-wrapper {
+  &.digit-home-app-wrapper {
+    .ground-container {
+      &.digit-home-ground {
+        margin-left: 0.75rem;
+        margin-bottom: 2rem;
+      }
+    }
+  }
+}
+
+.digit-landing-page-card {
+  border-radius: 0.25rem;
+}
+.campaign-product-wrapper{
+.digit-popup-footer{
+  background-color: #fff;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    z-index: 9;
+}
 }

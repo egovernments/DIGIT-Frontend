@@ -47,8 +47,19 @@ function DraggableField({
 
   drag(drop(ref));
   return (
-    <div ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
-      <span style={{ cursor: "grab", marginRight: "8px", lineHeight: "1" }}>⋮</span>
+    <div className="draggableField-cont" ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
+      {/* <span style={{ cursor: "grab", marginRight: "0.5rem", marginLeft: "0.5rem", lineHeight: "1" }}>⣿</span> */}
+      <div class="drag-handle">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+
       <AppFieldComposer
         type={type}
         label={label}
@@ -58,7 +69,7 @@ function DraggableField({
         dropDownOptions={dropDownOptions}
         onDelete={() => onDelete()}
         onSelectField={() => onSelectField()}
-        onHide={()=>onHide()}
+        onHide={() => onHide()}
         config={config}
         Mandatory={Mandatory}
         helpText={helpText}

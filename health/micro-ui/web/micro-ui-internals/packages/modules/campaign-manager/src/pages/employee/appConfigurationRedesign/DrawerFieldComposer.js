@@ -1,21 +1,6 @@
-import {
-  Button,
-  Divider,
-  Dropdown,
-  FieldV1,
-  LabelFieldPair,
-  PopUp,
-  RadioButtons,
-  Switch,
-  Tag,
-  TextArea,
-  TextBlock,
-  TextInput,
-} from "@egovernments/digit-ui-components";
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { Divider, FieldV1, MultiSelectDropdown, Switch, Tag, TextBlock } from "@egovernments/digit-ui-components";
+import React, { Fragment, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PRIMARY_COLOR } from "../../../utils";
-import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { useAppConfigContext } from "./AppConfigurationWrapper";
 import { useCustomT } from "./useCustomT";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -23,6 +8,9 @@ import Tabs from "./Tabs";
 import { RenderConditionalField } from "./RenderConditionalField";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { getTypeAndFormatFromAppType } from "../../../utils/appConfigHelpers";
+import { TEMPLATE_BASE_CONFIG_MASTER } from "../NewCampaignCreate/AppModule";
+import TooltipPortal from "./TooltipPortal";
 
 /**
  * Determines whether a specific field in a UI panel should be disabled.
@@ -37,7 +25,7 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
  */
 const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   // Check if the current field's jsonPath is in the list of fields to be disabled
-  const shouldDisable = resourceData?.TemplateBaseConfig?.some((ele) => drawerState?.jsonPath === ele);
+  const shouldDisable = resourceData?.[TEMPLATE_BASE_CONFIG_MASTER]?.some((ele) => drawerState?.jsonPath === ele);
 
   // force disable if field is hidden
   if (drawerState?.hidden) {
@@ -52,11 +40,26 @@ const disableFieldForMandatory = (drawerState, panelItem, resourceData) => {
   return false;
 };
 
-//todo @jagan to make this flow dynamic ie multi flow support this flag to be updated
-const getBaseTemplateFilter = (projectType = "", flowName = "") => {
-  return `[?(@.project=='${projectType}' && @.name=='${flowName}')].pages[*].properties[?(@.validations[?(@.type=='required'&&@.value==true)])].fieldName`;
-};
+function getRequiredFieldNames(data, projectType, flowName, screenName) {
+  const result = [];
 
+  for (const flow of data) {
+    if (flow.project !== projectType || flow.name !== flowName) continue;
+    const page = flow.pages.find((p) => p.page === screenName);
+    if (!page) continue;
+
+    for (const prop of page.properties) {
+      if (Array.isArray(prop.validations)) {
+        const hasRequired = Array.isArray(prop?.validations) && prop?.validations?.some((v) => v?.type === "required" && v?.value === true);
+        if (hasRequired) {
+          result.push(prop.fieldName);
+        }
+      }
+    }
+  }
+
+  return result;
+}
 const whenToShow = (panelItem, drawerState) => {
   const anyCheck =
     panelItem?.label === "isMdms"
@@ -90,11 +93,25 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
         CONSOLE_MDMS_MODULENAME,
         [
           {
-            name: "TemplateBaseConfig",
-            filter: getBaseTemplateFilter(projectType, flowName),
+            name: TEMPLATE_BASE_CONFIG_MASTER,
+            // filter: getBaseTemplateFilter(projectType, flowName, state?.currentScreen?.name),
           },
         ],
-        `MDMSDATA-${projectType}-${flowName}`
+        `MDMSDATA-${projectType}-${flowName}-${state?.currentScreen?.name}`,
+        {
+          select: (data) => {
+            // Select and return the module's data
+            const temp = getRequiredFieldNames(
+              data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.[TEMPLATE_BASE_CONFIG_MASTER],
+              projectType,
+              flowName,
+              state?.currentScreen?.name
+            );
+
+            return { [TEMPLATE_BASE_CONFIG_MASTER]: temp };
+            // return data?.MdmsRes?.[CONSOLE_MDMS_MODULENAME];
+          },
+        }
       ),
     [projectType, flowName]
   );
@@ -102,9 +119,22 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
   const { data: resourceData } = Digit.Hooks.useCustomAPIHook(reqCriteriaResource);
 
   switch (panelItem?.fieldType) {
-    case "toggle":
+    case "toggle": {
+      const switchRef = useRef(null);
+      const [showTooltip, setShowTooltip] = useState(false);
+      const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData);
+
       return (
-        <>
+        <div
+          ref={switchRef}
+          className="drawer-container-tooltip"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          {/* {disableFieldForMandatory(drawerState, panelItem, resourceData) && (
+            <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>
+          )} */}
+          {isDisabled && <TooltipPortal text={t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")} targetRef={switchRef} visible={showTooltip} />}
           <Switch
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
             onToggle={(value) =>
@@ -139,102 +169,212 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                   />
                 ))
             : null}
-        </>
+        </div>
       );
-    case "text":
+    }
+    case "text": {
+      const switchRef = useRef(null);
+      const [showTooltip, setShowTooltip] = useState(false);
+      const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData);
       return (
-        <FieldV1
-          type={panelItem?.fieldType}
-          label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-          value={
-            isLocalisable
-              ? useCustomT(drawerState?.[panelItem?.bindTo])
-              : drawerState?.[panelItem?.bindTo] === true
-              ? ""
-              : drawerState?.[panelItem?.bindTo]
-          }
-          config={{
-            step: "",
-          }}
-          onChange={(event) => {
-            const value = event.target.value;
-            if (isLocalisable) {
-              updateLocalization(
-                drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
-                  ? drawerState?.[panelItem?.bindTo]
-                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
-                Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-                value
-              );
-              setDrawerState((prev) => ({
-                ...prev,
-                [panelItem?.bindTo]:
+        <div
+          ref={switchRef}
+          className="drawer-container-tooltip"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          {/* {disableFieldForMandatory(drawerState, panelItem, resourceData) && (
+            <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>
+          )} */}
+          {isDisabled && <TooltipPortal text={t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")} targetRef={switchRef} visible={showTooltip} />}
+          <FieldV1
+            type={panelItem?.fieldType}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+            value={
+              isLocalisable
+                ? useCustomT(drawerState?.[panelItem?.bindTo])
+                : drawerState?.[panelItem?.bindTo] === true
+                ? ""
+                : drawerState?.[panelItem?.bindTo]
+            }
+            config={{
+              step: "",
+            }}
+            onChange={(event) => {
+              const value = event.target.value;
+              if (isLocalisable) {
+                updateLocalization(
                   drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
                     ? drawerState?.[panelItem?.bindTo]
                     : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
                         drawerState?.jsonPath || drawerState?.id
                       }`,
-              }));
-              return;
-            } else {
+                  Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                  value
+                );
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [panelItem?.bindTo]:
+                    drawerState?.[panelItem?.bindTo] && drawerState?.[panelItem?.bindTo] !== true
+                      ? drawerState?.[panelItem?.bindTo]
+                      : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${panelItem?.bindTo}_${
+                          drawerState?.jsonPath || drawerState?.id
+                        }`,
+                }));
+                return;
+              } else {
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [panelItem?.bindTo]: value,
+                }));
+                return;
+              }
+            }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+            disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
+            // charCount={field?.charCount}
+          />
+        </div>
+      );
+    }
+    case "fieldTypeDropdown": {
+      const switchRef = useRef(null);
+      const [showTooltip, setShowTooltip] = useState(false);
+      const type = getTypeAndFormatFromAppType(drawerState, state?.MASTER_DATA?.AppFieldType)?.type;
+      const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData) || type === "template" || type === "dynamic";
+      return (
+        <div
+          ref={switchRef}
+          className="drawer-container-tooltip"
+          onMouseEnter={() => setShowTooltip(true)}
+          onMouseLeave={() => setShowTooltip(false)}
+        >
+          {/* {disableFieldForMandatory(drawerState, panelItem, resourceData) && (
+            <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>
+          )} */}
+          {isDisabled && <TooltipPortal text={t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")} targetRef={switchRef} visible={showTooltip} />}
+          <FieldV1
+            config={{
+              step: "",
+            }}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+            onChange={(value) => {
+              const isIdPopulator = value?.type === "idPopulator";
               setDrawerState((prev) => ({
                 ...prev,
-                [panelItem?.bindTo]: value,
+                type: value?.fieldType,
+                appType: value?.type,
+                ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
               }));
-              return;
-            }
-          }}
-          populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
-          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
-          // charCount={field?.charCount}
-        />
+            }}
+            placeholder={t(panelItem?.innerLabel) || ""}
+            populators={{
+              title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
+              fieldPairClassName: "drawer-toggle-conditional-field",
+              options: (state?.MASTER_DATA?.AppFieldType || [])
+                .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
+                ?.sort((a, b) => a?.order - b?.order),
+              optionsKey: "type",
+            }}
+            type={"dropdown"}
+            value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
+            disabled={type === "template" || type === "dynamic" ? true : disableFieldForMandatory(drawerState, panelItem, resourceData)}
+          />
+        </div>
       );
-    case "fieldTypeDropdown":
+    }
+
+    case "DetailsCard":
+    case "Table": {
+      const switchRef = useRef(null);
+      const [showTooltip, setShowTooltip] = useState(false);
+      const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData);
+      const selectedOptions = drawerState?.[panelItem?.bindTo] || [];
+
+      const nestedOptions =
+        (state?.MASTER_DATA?.DetailsConfig || []).map((category) => ({
+          code: category.entity,
+          name: category.entity,
+          options: (category.displayFields || []).map((field) => ({
+            ...field,
+            code: `${category.entity}.${field.fieldKey}`,
+            name: field.fieldKey,
+          })),
+        })) || [];
+
       return (
-        <FieldV1
-          config={{
-            step: "",
-          }}
-          label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-          onChange={(value) => {
-            setDrawerState((prev) => ({
-              ...prev,
-              type: value?.fieldType,
-              appType: value?.type,
-            }));
-          }}
-          placeholder={t(panelItem?.innerLabel) || ""}
-          populators={{
-            title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
-            fieldPairClassName: "drawer-toggle-conditional-field",
-            options: state?.MASTER_DATA?.AppFieldType,
-            optionsKey: "type",
-          }}
-          type={"dropdown"}
-          value={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-          disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)}
-        />
+        <>
+          <div
+            ref={switchRef}
+            className="drawer-container-tooltip"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            {/* {disableFieldForMandatory(drawerState, panelItem, resourceData) && (
+            <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>
+          )} */}
+            {isDisabled && <TooltipPortal text={t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")} targetRef={switchRef} visible={showTooltip} />}
+            <div style={{ display: "flex" }}>
+              <label>{t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}</label>
+              <span className="mandatory-span">*</span>
+            </div>
+            <MultiSelectDropdown
+              name={panelItem?.label}
+              options={nestedOptions}
+              optionsKey="name"
+              chipsKey="code"
+              type="multiselectdropdown"
+              variant="nestedmultiselect"
+              selectAllLabel={t("SELECT_ALL")}
+              clearLabel={t("CLEAR_ALL")}
+              config={{ isDropdownWithChip: panelItem?.fieldType === "Table" ? false : true }}
+              selected={drawerState?.[panelItem?.bindTo] || []}
+              onSelect={(selectedArray) => {}}
+              onClose={(selectedArray) => {
+                const selected = selectedArray?.map((arr) => arr?.[1]) || [];
+                setDrawerState((prev) => ({
+                  ...prev,
+                  [panelItem?.bindTo]: selected,
+                }));
+              }}
+              disabled={panelItem?.fieldType === "Table"}
+              t={t}
+            />
+
+            {Array.isArray(selectedOptions) &&
+              selectedOptions
+                .filter((opt) => opt && typeof opt.code === "string" && opt.code.includes("."))
+                .map((option) => {
+                  const [entity, fieldKey] = option.code.split(".");
+
+                  return (
+                    <div key={option.code} style={{ marginTop: "16px" }}>
+                      <FieldV1
+                        label={`${t(entity)} - ${t(fieldKey)}`}
+                        value={useCustomT(option.code)} // ✅ Auto populated from localization
+                        type="text"
+                        placeholder={t("ADD_LABEL_LOCALIZATION")}
+                        onChange={(e) => {
+                          const val = e.target.value;
+
+                          // ✅ Directly update localization only
+                          updateLocalization(
+                            option.code,
+                            Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                            val
+                          );
+                        }}
+                        populators={{
+                          fieldPairClassName: "drawer-toggle-conditional-field",
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+          </div>
+        </>
       );
-    // return (
-    //   <Dropdown
-    //     // style={}
-    //     variant={""}
-    //     t={t}
-    //     option={state?.MASTER_DATA?.AppFieldType}
-    //     optionKey={"type"}
-    //     disabled={disableFieldForMandatory(drawerState, panelItem, resourceData)} // todo need to think about it @nabeel & @jagan
-    //     selected={state?.MASTER_DATA?.AppFieldType?.find((i) => i.type === drawerState?.appType)}
-    //     select={(value) => {
-    //       setDrawerState((prev) => ({
-    //         ...prev,
-    //         type: value?.fieldType,
-    //         appType: value?.type,
-    //       }));
-    //     }}
-    //   />
-    // );
+    }
     default:
       return null;
       break;

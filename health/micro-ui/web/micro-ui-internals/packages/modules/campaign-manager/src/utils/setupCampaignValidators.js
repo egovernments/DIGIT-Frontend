@@ -21,7 +21,7 @@
   });
 
   return dateError;
-}
+};
 
  const  validateDeliveryRules=(data, projectType, cycleConfigureData,t,setSummaryErrors)=> {
   let isValid = true;
@@ -114,7 +114,7 @@
   return isValid;
   // ? "Delivery rules are valid"
   // : "Attributes, operators, values, count, or value are not empty in delivery rules or attributes/products length is 0";
-}
+};
 
  const  checkAttributeValidity=(data)=> {
   for (const rule of data?.deliveryRule) {
@@ -134,7 +134,7 @@
             //   attribute.toValue
             // } to ${attribute.fromValue})`;
             return "CAMPAIGN_IN_BETWEEN_ERROR";
-          } else if (attribute?.value === 0 || attribute?.value === "0") {
+          } else if (attribute?.value !== "" && attribute?.value !== undefined && attribute?.value !== null && Number(attribute?.value) === 0) {
             return "CAMPAIGN_VALUE_ZERO_ERROR";
           }
         }
@@ -142,9 +142,22 @@
     }
   }
   return false;
-}
+};
 
- const  validateBoundaryLevel=(data,hierarchyDefinition,lowestHierarchy)=> {
+const hasInvalidMaxCountAttribute = (deliveryRules = []) => {
+  return deliveryRules.some((cycle) =>
+    cycle?.deliveries?.some((delivery) =>
+      delivery?.deliveryRules?.some((rule) => {
+        const attributeCodes = rule?.attributes?.map((attr) => attr?.attribute?.code) || [];
+        const hasMaxCount = attributeCodes.includes("maxCount");
+        const hasMemberCount = attributeCodes.includes("memberCount");
+        return hasMaxCount && !hasMemberCount;
+      })
+    )
+  );
+};
+
+const validateBoundaryLevel = (data, hierarchyDefinition, lowestHierarchy) => {
   // Extracting boundary hierarchy from hierarchy definition
   const boundaryHierarchy = hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy || [];
 
@@ -161,7 +174,7 @@
   const allBoundaryTypesPresent = [...boundaryTypes].every((type) => uniqueDataBoundaryTypes.has(type));
 
   return allBoundaryTypesPresent;
-}
+};
 
  const  recursiveParentFind=(filteredData,lowestHierarchy)=> {
   const parentChildrenMap = {};
@@ -181,7 +194,7 @@
   const extraParent = missingParents?.filter((i) => i?.type !== lowestHierarchy);
 
   return extraParent;
-}
+};
 
 // validating the screen data on clicking next button
 export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,lowestHierarchy,hierarchyType,totalFormData,setFetchUpload,setSummaryErrors}) => {
@@ -222,14 +235,14 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         setShowToast(null);
         return true;
       }
-    case "boundaryType":      
+    case "boundaryType":
       if (formData?.boundaryType?.selectedData) {
-        const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData,hierarchyDefinition,lowestHierarchy);
-        const missedType = recursiveParentFind(formData?.boundaryType?.selectedData,lowestHierarchy);
+        const validateBoundary = validateBoundaryLevel(formData?.boundaryType?.selectedData, hierarchyDefinition, lowestHierarchy);
+        const missedType = recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy);
         if (!validateBoundary) {
           setShowToast({ key: "error", label: t("HCM_CAMPAIGN_ALL_THE_LEVELS_ARE_MANDATORY") });
           return false;
-        } else if (recursiveParentFind(formData?.boundaryType?.selectedData,lowestHierarchy).length > 0) {
+        } else if (recursiveParentFind(formData?.boundaryType?.selectedData, lowestHierarchy).length > 0) {
           setShowToast({
             key: "error",
             label: `${t(`HCM_CAMPAIGN_FOR`)} ${t(`${hierarchyType}_${missedType?.[0]?.type}`?.toUpperCase())} ${t(missedType?.[0]?.code)} ${t(
@@ -292,17 +305,55 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
         return true;
       }
 
+    // case "cycleConfigure":
+    //   const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
+    //   const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
+    //   const cycleData = formData?.cycleConfigure?.cycleData || [];
+
+    //   if (cycleNumber === "" || cycleNumber === 0 || deliveryNumber === "" || deliveryNumber === 0) {
+    //     setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
+    //     return false;
+    //   } else {
+    //     setShowToast(null);
+    //     return true;
+    //   }
+
     case "cycleConfigure":
       const cycleNumber = formData?.cycleConfigure?.cycleConfgureDate?.cycle;
       const deliveryNumber = formData?.cycleConfigure?.cycleConfgureDate?.deliveries;
-      if (cycleNumber === "" || cycleNumber === 0 || deliveryNumber === "" || deliveryNumber === 0) {
+      const cycleData = formData?.cycleConfigure?.cycleData || [];
+
+      // Check if cycle/delivery count is missing or zero
+      if (!cycleNumber || !deliveryNumber) {
         setShowToast({ key: "error", label: "DELIVERY_CYCLE_ERROR" });
         return false;
-      } else {
-        setShowToast(null);
-        return true;
       }
+
+      // Validate if all cycle entries have fromDate and toDate
+      if (cycleData.length < cycleNumber) {
+        setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
+        return false;
+      }
+
+      // 3. Validate required cycles have fromDate and toDate
+      const requiredCycles = cycleData.slice(0, cycleNumber);
+      const invalidCycles = requiredCycles.some((cycle) => !cycle.fromDate || !cycle.toDate);
+
+      if (invalidCycles) {
+        setShowToast({ key: "error", label: "HCM_ALL_CYCLE_DATES_MANDATORY" });
+        return false;
+      }
+
+      setShowToast(null);
+      return true;
+
     case "deliveryRule":
+      const deliveryRules = formData?.deliveryRule;
+      const validateMaxCondition = hasInvalidMaxCountAttribute(deliveryRules);
+      if (validateMaxCondition) {
+        setShowToast({ key: "error", label: "INVALID_USE_OF_MAX_COUNT" });
+        return false; 
+      }
       const isAttributeValid = checkAttributeValidity(formData);
       if (isAttributeValid) {
         setShowToast({ key: "error", label: isAttributeValid });
@@ -312,7 +363,7 @@ export const  handleValidate = ({formData,t,setShowToast,hierarchyDefinition,low
       return;
     case "DeliveryDetailsSummary":
       const cycleConfigureData = totalFormData?.HCM_CAMPAIGN_CYCLE_CONFIGURE;
-      const isCycleError = validateCycleData(cycleConfigureData,t);
+      const isCycleError = validateCycleData(cycleConfigureData, t);
       const deliveryCycleData = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA;
       const isDeliveryError = validateDeliveryRules(
         deliveryCycleData,

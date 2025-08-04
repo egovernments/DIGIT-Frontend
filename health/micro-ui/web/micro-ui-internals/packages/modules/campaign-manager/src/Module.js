@@ -53,16 +53,17 @@ import MultiSelectDropdown from "./components/MultiSelectDropdown";
 import NoResultsFound from "./components/NoResultsFound";
 import UploadDataMappingWrapper from "./components/UploadDataMappingWrapper";
 import DataUploadWrapper from "./components/DataUploadWrapper";
-import DateSelection from "./components/CreateCampaignComponents.js/DateSelection";
-import ViewDetailComponent from "./components/CreateCampaignComponents.js/ViewDetailComponent";
+import DateSelection from "./components/CreateCampaignComponents/DateSelection";
+import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
 //App config import
 import AppPreview from "./components/AppPreview";
-import AppConfigurationParentLayer from "./pages/employee/appConfigurationScreenParent/AppConfigurationParentLayer";
-import FormBuilder from "./pages/employee/appConfigurationScreenParent/FormBuilder";
-import AppConfigurationParentRedesign from "./pages/employee/appConfigurationRedesign/AppConfigurationParentLayer";
-import CycleSelection from "./components/CreateCampaignComponents.js/CycleSelection";
+import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
+import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
+import QRButton from "./components/CreateCampaignComponents/QRButton";
+import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
+import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignNameInfo";
 /**
  * MDMS Module name
  */
@@ -75,7 +76,7 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
 const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
-  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const moduleName = Digit.Utils.campaign.getModuleName();
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -117,12 +118,7 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp
-          BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
-          stateCode={stateCode}
-          userType={userType}
-          hierarchyData={hierarchyData}
-        />
+        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} stateCode={stateCode} userType={userType} hierarchyData={hierarchyData} />
       </TourProvider>
     </ErrorBoundary>
   );
@@ -177,14 +173,15 @@ const componentsToRegister = {
   UploadDataMappingWrapper,
   DataUploadWrapper,
   AppPreview,
-  AppConfigurationParentLayer: AppConfigurationParentLayer,
-  FormBuilder,
-  AppConfigurationParentRedesign,
+  AppConfigurationParentRedesign: AppConfigurationTabLayer,
   DateSelection,
   ViewDetailComponent,
   CycleSelection,
   HCMMyCampaignRowCard,
-  MyCampaignNew
+  MyCampaignNew,
+  QRButton,
+  EqualHeightWrapper,
+  CampaignNameInfo,
 };
 
 const overrideHooks = () => {

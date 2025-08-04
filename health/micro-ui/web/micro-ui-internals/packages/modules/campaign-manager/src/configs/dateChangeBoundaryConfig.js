@@ -43,6 +43,7 @@ export const dateChangeConfig = [
         key: "dateAndCycle",
         validation: {},
         populators: {
+          newDateFormat: true,
           validation: {},
         },
         customProps: {

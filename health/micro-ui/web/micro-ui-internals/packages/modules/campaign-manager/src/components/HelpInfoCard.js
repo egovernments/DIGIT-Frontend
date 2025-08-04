@@ -279,6 +279,8 @@ const RenderContent = ({ content, groupTextBlocks = false }) => {
   return result;
 };
 
+//TODO @bhavya @jagan move this component to ui-component repo 
+
 /**
  * Main wrapper component to show Help Card conditionally based on MDMS config
  */

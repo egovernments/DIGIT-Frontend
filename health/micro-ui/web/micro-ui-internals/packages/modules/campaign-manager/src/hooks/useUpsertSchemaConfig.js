@@ -14,17 +14,17 @@ const upsertSchemaConfig = async (req, tenantId) => {
         },
       },
     });
-
     return response;
   } catch (error) {
     throw new Error(error?.response?.data?.Errors?.[0].description);
   }
 };
 
-const useUpsertSchemaConfig = (tenantId, config = {}) => {
+const useUpsertSchemaConfig = (tenantId) => {
   return useMutation({
-    mutationFn: (reqData) => upsertSchemaConfig(reqData, tenantId),
-    ...config,
+    mutationFn: (reqData) => {
+      return upsertSchemaConfig(reqData, tenantId);
+    },
   });
 };
 

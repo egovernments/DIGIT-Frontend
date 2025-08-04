@@ -397,7 +397,9 @@ const BoundaryRelationCreate = () => {
 
   const goBackToBoundary = () => {
     navigate(`/${window.contextPath}/employee/campaign/boundary/home?defaultHierarchyType=${defaultHierarchyType}&hierarchyType=${hierarchyType}`, {
-      data: state,
+      state: {
+        data: state,
+      },
     });
   };
 
@@ -556,7 +558,12 @@ const BoundaryRelationCreate = () => {
           {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
 
           {showToast && (
-            <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />
+            <Toast
+              label={showToast.label}
+              type={showToast.isError}
+              transitionTime={showToast?.transitionTime || 5000}
+              onClose={() => setShowToast(null)}
+            />
           )}
         </React.Fragment>
       );
@@ -656,7 +663,12 @@ const BoundaryRelationCreate = () => {
             style={{}}
           />
           {showToast && (
-            <Toast label={showToast.label} type={showToast.isError} transitionTime={showToast?.transitionTime} onClose={() => setShowToast(null)} />
+            <Toast
+              label={showToast.label}
+              type={showToast.isError}
+              transitionTime={showToast?.transitionTime || 5000}
+              onClose={() => setShowToast(null)}
+            />
           )}
           {creatingData && <Loader page={true} variant={"PageLoader"} loaderText={t("DATA_SYNC_WITH_SERVER")} />}
         </React.Fragment>

@@ -2,6 +2,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from "react-query";
 
 function transformSchema(data) {
   return Object.keys(data.properties).map((key) => {
@@ -30,6 +31,7 @@ const SchemaBuilder = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleName = searchParams.get("moduleName");
   const masterName = searchParams.get("masterName");
+  const queryClient = useQueryClient();
   const formId = searchParams.get("formId");
   const module = "dummy-localisation";
 

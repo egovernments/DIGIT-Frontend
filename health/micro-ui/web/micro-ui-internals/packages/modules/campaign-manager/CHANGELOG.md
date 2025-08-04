@@ -1,28 +1,38 @@
 # Changelog
-All notable changes to this module will be documented in this file.
 
- 
+## 0.4 - 2025-7-10
+
+#### Admin console
+
+- **Redesigned Campaign Creation Flow**  
+  Improved UI/UX for campaign creation with a more intuitive, streamlined experience.
+
+- **Introduced App Screen Configuration Feature**  
+  Added a new dynamic configuration interface to manage app screens, with support for localization and modular setup.
+
 ## 0.3.1 - 2025-2-11
-### Base Admin console web
- 
-  1. Boundary Assignment through UI for Users and Facilities
-  2. Implementation of Co-Delivery
-  3. Integrated with new components 
- 
+
+#### Admin console , Microplan & Payments
+
+1. Campaign Manager Module CSS
+2. Boundary Manager Module CSS
+3. Microplan Module CSS
+4. Payments Module CSS
+5. Other Core Override CSS
+
 ## 0.3.0 - 2024-12-03
-#### Base Admin console web
-  1. Updating the campaign details
-  2. Configure Checklist
-  3. Manage Boundaries
 
+#### Base Admin console & microplan web
 
-## 0.2.0 - 2024-08-24
-#### Base Admin console web
-  1. Helps in Updating the campaign Dates
-  2. View the timeline porcess of the campaign Creation
+1. Campaign Manager Module CSS
+2. Boundary Manager Module CSS
+3. Microplan Module CSS
+4. Other Core Override CSS
 
+## [0.1.20]
 
-## 0.1.0 - 2024-05-28
-#### Base Admin console web
-  1. Helps in creating the Campaign and configure delivery rules
-  2. Create Data: Validates and creates resource details of type facility,user and boundary.
+- Updated Loader with text styles
+
+## [0.1.1]
+
+- Base CSS

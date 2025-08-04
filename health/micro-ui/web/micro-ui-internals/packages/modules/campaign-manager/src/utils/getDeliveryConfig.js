@@ -109,6 +109,7 @@ const generateConfig = (data) => {
       code: data?.code,
       projectType: data?.code,
       attrAddDisable: data?.attrAddDisable || false,
+      // attrAddDisable : false,
       deliveryAddDisable: data?.deliveryAddDisable || false,
       customAttribute: data?.customAttribute || true,
       productCountHide: data?.productCountHide || false,

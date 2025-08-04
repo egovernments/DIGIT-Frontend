@@ -1,6 +1,7 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
+import React, { createContext, useContext, useEffect, useReducer } from "react";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
 import { Loader } from "@egovernments/digit-ui-components";
+import { useQueryClient } from '@tanstack/react-query';
 
 const initialState = [];
 const AppLocalisationContext = createContext();
@@ -23,7 +24,7 @@ const locReducer = (state = initialState, action) => {
         return [...state, newEntry];
       }
     case "UPDATE_LOCALIZATION":
-      const checkCodeAlreadyPresent = state.some((item) => item.code === action.payload.code);
+      const checkCodeAlreadyPresent = Array.isArray(state) && state?.some((item) => item?.code === action?.payload?.code);
       if (checkCodeAlreadyPresent) {
         return state.map((item) => (item.code === action.payload.code ? { ...item, [action.payload.locale]: action.payload.message } : item));
       } else {
@@ -36,11 +37,12 @@ const locReducer = (state = initialState, action) => {
 };
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-
-function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, showBack, parentDispatch, ...props }) {
+//TODO @nabeel @jagan move this component to ui-component repo & clean up
+function AppLocalisationWrapperDev({ onSubmit, localeModule, screenConfig, back, showBack, parentDispatch, ...props }) {
   if (!localeModule) {
     return <Loader />;
   }
+  const queryClient = useQueryClient();
   const [locState, locDispatch] = useReducer(locReducer, initialState);
   const searchParams = new URLSearchParams(location.search);
   // const localeModule = searchParams.get("localeModule");
@@ -74,18 +76,26 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
   );
 
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
+    queryKey: "FOR_APP_LOCALISATION",
     tenantId: tenantId,
-    locale: enabledModules?.length > 1 ? enabledModules?.map((i) => i.value) : enabledModules?.[0]?.value,
-    module: localeModule ? localeModule : "hcm-dummy-module",
-    isMultipleLocale: enabledModules?.length > 1 ? true : false,
+    locale: enabledModules?.map((i) => i.value),
+    fetchCurrentLocaleOnly: true,
+    module: localeModule,
+    isMultipleLocale: enabledModules?.length > 0 ? true : false,
     config: {
-      staleTime: 0,
       cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         return data;
       },
     },
   });
+
+  useEffect(() => {
+    return () => {
+      queryClient.removeQueries(["SEARCH_APP_LOCALISATION", tenantId, localeModule]);
+    };
+  }, [tenantId, localeModule]);
 
   useEffect(() => {
     if (!isLoading) {
@@ -95,10 +105,11 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
           localisationData: localisationData,
           currentLocale: currentLocale,
           enabledModules: enabledModules,
+          localeModule: localeModule,
         },
       });
     }
-  }, [localisationData, isLoading]);
+  }, [localisationData, isLoading, localeModule]);
 
   if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
 
@@ -115,11 +126,12 @@ function AppLocalisationWrapper({ onSubmit, localeModule, screenConfig, back, sh
         back,
         showBack,
         parentDispatch,
+        localeModule,
       }}
     >
-      <AppConfigurationWrapper screenConfig={screenConfig} localeModule={localeModule} />
+      <AppConfigurationWrapper pageTag={props?.pageTag} screenConfig={screenConfig} localeModule={localeModule} />
     </AppLocalisationContext.Provider>
   );
 }
 
-export default React.memo(AppLocalisationWrapper);
+export default React.memo(AppLocalisationWrapperDev);

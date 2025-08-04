@@ -1,5 +1,5 @@
 import { InboxSearchComposer } from "@egovernments/digit-ui-react-components";
-import { Dropdown, Toast, Button, PopUp } from "@egovernments/digit-ui-components";
+import { Dropdown, Toast, Button, PopUp, Footer } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ const SearchChecklist = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("campaignId");
+  const campaignNumber = searchParams.get("campaignNumber");
   const [showToast, setShowToast] = useState(null);
   const [campaignName, setCampaignName] = useState(searchParams.get("name"));
 
@@ -92,7 +93,7 @@ const SearchChecklist = () => {
   const onStepClick = (step) => {
     setShowToast({ key: "error", label: "CAMPAIGN_CANNOT_CLICK" });
     return;
-    // navigate(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
+    // history.push(`/${window.contextPath}/employee/campaign/setup-campaign?id=${id}&preview=true&action=false&actionBar=true&key=13&summary=true`);
   };
   // useEffect(() => {
   //   setListsOpt(HCM?.HCM?.CHECKLIST_TYPES?.map((item) => ({ list: `HCM_CHECKLIST_TYPE_${item.code}` })));
@@ -134,7 +135,7 @@ const SearchChecklist = () => {
           // className={"campaign-flow-stepper"}
         /> */}
         <TagComponent campaignName={campaignName} />
-        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed" }}>{t("CONFIGURE_CHECKLIST")}</div>
+        <div style={{ fontSize: "2.5rem", fontWeight: "700", fontFamily: "Roboto Condensed", marginTop: "1rem" }}>{t("CONFIGURE_CHECKLIST")}</div>
         <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1rem" }}>
           {/* <Header styles={{ fontSize: "32px", marginBottom: "2rem", marginTop: "2rem" }}>{t("ACTION_LABEL_CONFIGURE_APP")}</Header> */}
           {/* <Button
@@ -235,6 +236,22 @@ const SearchChecklist = () => {
             ></InboxSearchComposer>
           </div>
         </div>
+        <Footer
+          actionFields={[
+            <Button
+              label={t("GO_BACK")}
+              title={t("GO_BACK")}
+              variation="secondary"
+              style={{
+                marginLeft: "2.5rem",
+              }}
+              onClick={() => {
+                navigate(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
+              }}
+              icon={"ArrowBack"}
+            />,
+          ]}
+        />
         {showToast && (
           <Toast
             type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}

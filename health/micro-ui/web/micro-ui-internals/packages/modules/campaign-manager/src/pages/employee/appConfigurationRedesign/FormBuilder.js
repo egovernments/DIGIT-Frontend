@@ -2,6 +2,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useQueryClient } from '@tanstack/react-query';
 
 const FormBuilder = () => {
   const { t } = useTranslation();
@@ -9,6 +10,7 @@ const FormBuilder = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const moduleName = searchParams.get("moduleName");
   const masterName = searchParams.get("masterName");
+  const queryClient = useQueryClient();
   const formId = searchParams.get("formId");
   const module = "dummy-localisation";
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();

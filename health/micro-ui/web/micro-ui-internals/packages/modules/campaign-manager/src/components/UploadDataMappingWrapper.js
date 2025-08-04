@@ -10,20 +10,29 @@ export const useUploadDataMappingContext = () => {
   return useContext(UploadDataMappingContext);
 };
 function UploadDataMappingWrapper({ props: customProps, formData, currentCategories, onSelect }) {
+
+
   const { t } = useTranslation();
   const searchParams = new URLSearchParams(window.location.search);
   const campaignName = customProps?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const { id, draft, key, ...queryParams } = Digit.Hooks.useQueryParams();
+
+
+
   return (
     <Fragment>
       <UploadDataMappingContext.Provider value={{ formData: customProps }}>
-        <div className="card-container1">
-          <TagComponent campaignName={campaignName} />
+        <div className="card-container2">
+
+
+
           <Card className="dataMappingCard">
+            <TagComponent campaignName={campaignName} />
             <div style={{ width: "100%" }}>
-              <UploadDataMapping formData={customProps} currentCategories={currentCategories} onSelect={onSelect} />
+              {<UploadDataMapping formData={customProps} currentCategories={currentCategories} onSelect={onSelect} />}
+
             </div>
           </Card>
         </div>

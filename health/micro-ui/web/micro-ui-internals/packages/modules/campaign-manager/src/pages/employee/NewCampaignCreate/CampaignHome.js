@@ -1,8 +1,8 @@
-import { Card, PopUp, Button, Loader } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, PopUp, Button, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SVG ,HeaderComponent} from "@egovernments/digit-ui-components";
+import { SVG } from "@egovernments/digit-ui-components";
 import { NewWindow } from "@egovernments/digit-ui-svg-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 import { AppHelpContent } from "../../../components/HelpInfoCard";
@@ -15,7 +15,11 @@ const CampaignHome = () => {
   useEffect(() => {
     window.Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_DATA");
     window.Digit.SessionStorage.del("SelectedFeaturesByModule");
+    sessionStorage.removeItem("HCM_CAMPAIGN_NUMBER");
+
   }, []);
+
+  //TODO @bhavya @jagan integrate with a master similar to   "commonUiConfig", "HelpInfo",
 
   const AppHelpConfig = {
     title: "CAMPAIGN_REQUIREMENTS_HEADING",

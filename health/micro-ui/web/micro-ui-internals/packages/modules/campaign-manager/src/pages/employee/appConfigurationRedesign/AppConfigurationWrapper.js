@@ -1,6 +1,6 @@
-import React, { createContext, Fragment, useContext, useEffect, useReducer, useRef, useState } from "react";
+import React, { createContext, Fragment, useContext, useEffect, useMemo, useReducer, useState } from "react";
 import AppFieldScreenWrapper from "./AppFieldScreenWrapper";
-import { Footer, Button, Divider, Loader, PopUp, SidePanel, Dropdown, LabelFieldPair, TextInput, Toast } from "@egovernments/digit-ui-components";
+import { Footer, Button, Loader, PopUp, SidePanel, Toast, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import DrawerFieldComposer from "./DrawerFieldComposer";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
@@ -8,10 +8,8 @@ import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AppPreview from "../../../components/AppPreview";
-import { dummyMaster } from "../../../configs/dummyMaster";
 import { useCustomT } from "./useCustomT";
-import { add } from "lodash";
-// import { dummyMaster } from "../../configs/dummyMaster";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AppConfigContext = createContext();
 
@@ -34,8 +32,10 @@ const reorderConfig = (config, fromIndex, toIndex) => {
   const updatedConfig = [...config]; // Copy array to avoid mutation
   const [movedItem] = updatedConfig.splice(fromIndex, 1); // Remove item
   updatedConfig.splice(toIndex, 0, movedItem); // Insert item at new index
-
-  return updatedConfig;
+  return updatedConfig?.map((item, index) => ({
+    ...item,
+    order: index + 1,
+  }));
 };
 const reducer = (state = initialState, action, updateLocalization) => {
   switch (action.type) {
@@ -128,6 +128,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                     fields: [
                       ...j.fields,
                       {
+                        ...action?.payload?.fieldData,
                         jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
@@ -286,7 +287,8 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
+  const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -295,21 +297,25 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
+  const addFieldDataLabel = useMemo(() => {
+    return addFieldData?.label ? useCustomT(addFieldData?.label) : null;
+  }, [addFieldData]);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
-  // const localeModule = searchParams.get("localeModule");
-  const module = localeModule ? localeModule : "hcm-dummy-module";
   const [showPreview, setShowPreview] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisation(tenantId, module, currentLocale);
+  const [showError, setShowError] = useState(null);
+  const { mutateAsync: localisationMutate } = Digit.Hooks.campaign.useUpsertLocalisationParallel(tenantId, localeModule, currentLocale);
   const [showToast, setShowToast] = useState(null);
+  const [nextButtonDisable, setNextButtonDisable] = useState(null);
+  const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
     [
       { name: fieldMasterName, limit: 100 },
-      { name: "DrawerPanelConfigOne", limit: 100 },
+      { name: "FieldPropertiesPanelConfig", limit: 100 },
+      { name: "DETAILS_RENDERER_CONFIG", limit: 100 },
     ],
     {
       cacheTime: Infinity,
@@ -320,8 +326,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           state: {
             screenConfig: screenConfig,
             ...data?.["HCM-ADMIN-CONSOLE"],
-            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DrawerPanelConfigOne"],
+            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["FieldPropertiesPanelConfig"],
             AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
+            DetailsConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DETAILS_RENDERER_CONFIG"],
             // ...dummyMaster,
           },
         });
@@ -329,21 +336,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     },
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
-  // const isLoadingAppConfigMdmsData = false;
-  // useEffect(() => {
-  //   dispatch({
-  //     type: "MASTER_DATA",
-  //     state: {
-  //       screenConfig: screenConfig,
-  //       ...dummyMaster?.["HCM-ADMIN-CONSOLE"],
-  //       AppFieldType: dummyMaster?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
-  //       // ...dummyMaster,
-  //     },
-  //   });
-  // }, [dummyMaster]);
 
   const openAddFieldPopup = (data) => {
     setPopupData({ ...data, id: crypto.randomUUID() });
+  };
+  const fetchLoc = (key) => {
+    return locState?.find((i) => i.code === key)?.[currentLocale];
   };
 
   useEffect(() => {
@@ -355,71 +353,219 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
     });
   }, [screenConfig]);
 
-  if (isLoadingAppConfigMdmsData) {
-    return <Loader page={true} variant={"PageLoader"} />;
-  }
   const closeToast = () => {
     setShowToast(null);
   };
 
-  function createLocaleArrays() {
+  function createLocaleArrays(fetchCurrentLocaleOnly) {
     const result = {};
+
+    if (!Array.isArray(locState) || !locState[0] || typeof currentLocale !== "string" || !currentLocale.includes("_")) {
+      return result;
+    }
     // Dynamically determine locales
-    const locales = Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
+    const locales = fetchCurrentLocaleOnly
+      ? []
+      : Object.keys(locState[0]).filter((key) => key.includes(currentLocale.slice(currentLocale.indexOf("_"))) && key !== currentLocale);
     locales.unshift(currentLocale);
     locales.forEach((locale) => {
       result[locale] = locState
-        .map((item) => ({
+        ?.filter((item) => typeof item?.code !== "boolean")
+        ?.map((item) => ({
           code: item.code,
-          message: item[locale] || "",
+          message: item[locale] || " ",
           module: localeModule ? localeModule : "hcm-dummy-module",
           locale: locale,
-        }))
-        .filter((item) => item.message !== "");
+        }));
     });
 
     return result;
   }
+  const findConfig = (bindTo, config) => {
+    return config.reduce(
+      (res, item) => res || (item.bindTo === bindTo ? item : Array.isArray(item.conditionalField) ? findConfig(bindTo, item.conditionalField) : null),
+      null
+    );
+  };
+  const validateFromState = (state, drawerPanelConfig, locS, cL) => {
+    const errors = {};
+    const fields = state?.fields;
+    const headerFields = state?.headerFields;
 
-  const handleSubmit = async () => {
-    const localeArrays = createLocaleArrays();
-    for (const locale of Object.keys(localeArrays)) {
-      if (localeArrays[locale].length > 0) {
-        try {
-          setLoading(true);
-          const result = await localisationMutate(localeArrays[locale]);
-        } catch (error) {
-          setLoading(false);
-          setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
-          console.error(`Error sending ${locale} localisation data:`, error);
+    for (let i = 0; i < headerFields.length; i++) {
+      if (headerFields[i]?.jsonPath === "ScreenHeading") {
+        const fieldItem = headerFields[i];
+        const value = (locS || [])?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
+        if (!value || value.trim() === "") {
+          return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")}` };
+        }
+      }
+    }
+    const validateValue = (value, validation, label, a, b) => {
+      if (!validation) return null;
+
+      // required check
+      if (validation.required) {
+        if (
+          value === undefined ||
+          value === null ||
+          (typeof value === "string" && value.trim() === "") ||
+          (Array.isArray(value) && value.length === 0)
+        ) {
+          return validation.message || `${t(`${label || "FIELD"}_REQUIRED_FOR`)} ${a?.label}`;
+        }
+      }
+
+      // pattern check
+      if (validation.pattern && value) {
+        const regex = new RegExp(validation.pattern);
+        if (!regex.test(value)) {
+          return validation.message || `${t(`${label || "Field"}_IS_INVALID`)}`;
+        }
+      }
+
+      return null; // no error
+    };
+    for (let i = 0; i < fields.length; i++) {
+      const fieldObj = fields[i];
+
+      // For each key in field object
+      for (const key in fieldObj) {
+        // Find config matching this key
+        const config = findConfig(key, drawerPanelConfig);
+        if (!config) continue; // no config, skip validation for this key
+
+        // get validation object (could be an array, object, or nested)
+        let validation = config.validation;
+
+        // If validation is an array, find validation matching key or default
+        if (Array.isArray(validation)) {
+          // example: validation array might have { key: "toArray", required: true, message: "..." }
+          // You can adapt this as per your validation array structure
+          const valFromArray = validation.find((v) => v.key === key || !v.key);
+          if (valFromArray) validation = valFromArray;
+          else validation = null;
+        }
+
+        // Validate the field value
+        const value = fieldObj[key];
+
+        const errorMsg = validateValue(fetchLoc(value), validation, config.label, fieldObj, config);
+
+        if (errorMsg) {
+          // Use a unique key to identify error (field index + key)
+          return errorMsg;
         }
       }
     }
 
-    setShowPopUp(false);
-    setLoading(false);
+    if (Object.keys(errors).length > 0) {
+      return {
+        type: "error",
+        errors,
+      };
+    }
 
-    console.info("LOCALISATION_UPSERT_SUCCESS");
-    // setShowToast({ key: "success", label: "LOCALISATION_SUCCESS" });
+    return false;
   };
 
+  const locUpdate = async () => {
+    const localeArrays = createLocaleArrays();
+    let updateCount = 0;
+    let updateSuccess = false;
+    try {
+      setLoading(true);
+      const result = await localisationMutate(localeArrays);
+      updateCount = updateCount + 1;
+      updateSuccess = true;
+      queryClient.removeQueries(`SEARCH_APP_LOCALISATION_FOR_TABLE`);
+      setShowToast({ key: "success", label: "TRANSLATIONS_SAVED_SUCCESSFULLY" });
+    } catch (error) {
+      setLoading(false);
+      setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+      console.error(`Error sending localisation data:`, error);
+    } finally {
+      setShowPopUp(false);
+      setLoading(false);
+    }
+    return;
+  };
+  const handleSubmit = async (finalSubmit, tabChange) => {
+    if (state?.screenData?.[0]?.type === "object") {
+      //skipping template screen validation
+      const errorCheck = validateFromState(
+        state?.screenData?.[0]?.cards?.[0],
+        state?.MASTER_DATA?.FieldPropertiesPanelConfig,
+        locState,
+        currentLocale
+      );
+      if (errorCheck) {
+        setShowToast({ key: "error", label: errorCheck?.value ? errorCheck?.value : errorCheck });
+        return;
+      }
+    }
+    const localeArrays = createLocaleArrays(true);
+    let updateCount = 0;
+    let updateSuccess = false;
+    try {
+      setLoading(true);
+      const result = await localisationMutate(localeArrays);
+      updateCount = updateCount + 1;
+      updateSuccess = true;
+    } catch (error) {
+      setLoading(false);
+      setShowToast({ key: "error", label: "CONFIG_SAVE_FAILED" });
+      console.error(`Error sending localisation data:`, error);
+    }
+    setShowPopUp(false);
+    setLoading(false);
+    if (updateSuccess || !updateCount) {
+      onSubmit(state, finalSubmit, tabChange); // assumes onSubmit is a stable function
+    }
+    console.info("LOCALISATION_UPSERT_SUCCESS");
+  };
+
+  useEffect(() => {
+    const handleStepChange = (e) => {
+      setNextButtonDisable(e.detail);
+    };
+
+    const handleTabChange = async (e) => {
+      // Submit the form here
+      await handleSubmit(false, true); // your submit function
+      // Now notify the caller that submit is done
+      e.detail?.onComplete?.();
+    };
+
+    window.addEventListener("lastButtonDisabled", handleStepChange);
+    window.addEventListener("tabChangeWithSave", handleTabChange);
+
+    return () => {
+      window.removeEventListener("lastButtonDisabled", handleStepChange);
+      window.removeEventListener("tabChangeWithSave", handleTabChange);
+    };
+  }, [state, locState, handleSubmit]);
+
+  const currentPage = parseInt(pageTag.split(" ")[1]);
+
+  if (isLoadingAppConfigMdmsData) {
+    return <Loader page={true} variant={"PageLoader"} />;
+  }
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <div style={{ display: "flex", alignItems: "flex-end", marginRight: "24rem" }}>
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+      <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
           variation="secondary"
           label={t("PREVIOUS")}
           title={t("PREVIOUS")}
           icon="ArrowBack"
-          isDisabled={false}
+          isDisabled={currentPage === 1}
           onClick={() => back()}
         />
-        <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
-        {/* <DndProvider backend={HTML5Backend}>
-          <AppFieldScreenWrapper onSubmit={onSubmit} />
-        </DndProvider> */}
+        <span className="app-config-tag-page"> {pageTag} </span>
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -427,14 +573,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           title={t("NEXT")}
           icon="ArrowForward"
           isSuffix={true}
-          isDisabled={false}
+          isDisabled={nextButtonDisable}
           onClick={async () => {
             await handleSubmit();
-            onSubmit(state);
           }}
         />
       </div>
-
       {true && (
         <SidePanel
           bgActive
@@ -447,27 +591,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           defaultClosedWidth=""
           footer={[
             <div className="app-configure-drawer-footer-container">
-              <Button
-                className="app-configure-drawer-footer-button"
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                icon={"Translate"}
-                label={t("ADD_LOCALISATION")}
-                onClick={() => {
-                  setShowPopUp(true);
-                }}
-              />
-              {/* <Button
-                className="app-configure-drawer-footer-button"
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("PREVIEW")}
-                onClick={() => {
-                  setShowPreview(true);
-                }}
-              /> */}
+              {enabledModules?.length > 1 ? (
+                <Button
+                  className="app-configure-drawer-footer-button"
+                  type={"button"}
+                  size={"medium"}
+                  variation={"secondary"}
+                  icon={"Translate"}
+                  label={t("ADD_LOCALISATION")}
+                  onClick={() => {
+                    setShowPopUp(true);
+                  }}
+                />
+              ) : null}
             </div>,
           ]}
           header={[
@@ -481,12 +617,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           sections={[]}
           styles={{}}
           type="static"
-          // addClose={true}
-          // onClose={() =>
-          // dispatch({
-          // type: "UNSELECT_DRAWER_FIELD",
-          // })
-          // }
         >
           {state?.drawerField ? (
             <>
@@ -504,25 +634,6 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 }
               />
               <DrawerFieldComposer />
-              {/* <Divider /> */}
-              {/* <Button
-                type={"button"}
-                size={"large"}
-                variation={"primary"}
-                label={t("ADD_LOCALISATION")}
-                onClick={() => {
-                  setShowPopUp(true);
-                }}
-              /> */}
-              {/* <Button
-                type={"button"}
-                size={"large"}
-                variation={"secondary"}
-                label={t("PREVIEW")}
-                onClick={() => {
-                  setShowPreview(true);
-                }}
-              /> */}
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
@@ -591,7 +702,16 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                 setShowPopUp(false);
               }}
             />,
-            <Button type={"button"} size={"large"} variation={"primary"} label={t("SUBMIT")} onClick={handleSubmit} />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("SUBMIT")}
+              onClick={() => {
+                locUpdate();
+                setShowPopUp(false);
+              }}
+            />,
           ]}
         >
           <AppLocalisationTable currentScreen={state?.screenData?.[0]?.name} state={state} />
@@ -603,56 +723,70 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           type={"default"}
           heading={t("ADD_FIELD_POP_HEADING")}
           children={[
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("ADD_FIELD_LABEL")}`}</span>
-                <span className="mandatory-span">*</span>
-              </div>
-              <TextInput
-                // style={{ maxWidth: "40rem" }}
-                name="name"
-                value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
-                onChange={(event) => {
-                  updateLocalization(
+            <FieldV1
+              required={true}
+              type={"text"}
+              label={`${t("ADD_FIELD_LABEL")}`}
+              value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
+              config={{
+                step: "",
+              }}
+              onChange={(event) => {
+                updateLocalization(
+                  addFieldData?.label && addFieldData?.label !== true
+                    ? addFieldData?.label
+                    : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
+                  Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
+                  event.target.value
+                );
+                setAddFieldData((prev) => ({
+                  ...prev,
+                  label:
                     addFieldData?.label && addFieldData?.label !== true
                       ? addFieldData?.label
                       : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
-                    Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-                    event.target.value
-                  );
-                  setAddFieldData((prev) => ({
-                    ...prev,
-                    label:
-                      addFieldData?.label && addFieldData?.label !== true
-                        ? addFieldData?.label
-                        : `${popupData?.currentScreen?.parent}_${popupData?.currentScreen?.name}_${popupData?.id}`,
-                  }));
-                }}
-              />
-            </LabelFieldPair>,
-            <LabelFieldPair>
-              <div className="product-label-field">
-                <span>{`${t("ADD_FIELD_TYPE")}`}</span>
-                <span className="mandatory-span">*</span>
-              </div>
-              <Dropdown
-                // style={}
-                variant={""}
-                t={t}
-                option={state?.MASTER_DATA?.AppFieldType}
-                optionKey={"type"}
-                selected={addFieldData?.type}
-                select={(value) => {
-                  setAddFieldData((prev) => ({ ...prev, type: value }));
-                }}
-              />
-            </LabelFieldPair>,
+                }));
+              }}
+              populators={{ fieldPairClassName: "" }}
+              error={showError?.label ? t(showError?.label) : null}
+            />,
+            <FieldV1
+              required={true}
+              label={`${t("ADD_FIELD_TYPE")}`}
+              type={"dropdown"}
+              value={addFieldData?.type}
+              config={{
+                step: "",
+              }}
+              onChange={(value) => {
+                const isIdPopulator = value?.type === "idPopulator";
+                setAddFieldData((prev) => ({
+                  ...prev,
+                  type: value,
+                  ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
+                }));
+              }}
+              populators={{
+                t: t,
+                title: "ADD_FIELD_TYPE",
+                fieldPairClassName: "",
+                options: (state?.MASTER_DATA?.AppFieldType || [])
+                  .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
+                  ?.sort((a, b) => a?.order - b?.order),
+                optionsKey: "type",
+              }}
+              error={showError?.dropdown ? t(showError?.dropdown) : null}
+            />,
           ]}
           onOverlayClick={() => {
+            setShowError(null);
             setPopupData(null);
+            setAddFieldData(null);
           }}
           onClose={() => {
+            setShowError(null);
             setPopupData(null);
+            setAddFieldData(null);
           }}
           equalWidthButtons={"false"}
           footerChildren={[
@@ -662,7 +796,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
               variation={"secondary"}
               label={t("CLOSE")}
               onClick={() => {
+                setShowError(null);
                 setPopupData(null);
+                setAddFieldData(null);
               }}
             />,
             <Button
@@ -671,6 +807,19 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
               variation={"primary"}
               label={t("SUBMIT")}
               onClick={() => {
+                if (!addFieldData) {
+                  setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED", dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                } else if (!addFieldDataLabel?.trim() && !addFieldData?.type) {
+                  setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED", dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                } else if (!addFieldData?.type) {
+                  setShowError({ dropdown: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                } else if (!addFieldDataLabel?.trim()) {
+                  setShowError({ label: "FIELD_TYPE_AND_LABEL_REQUIRED" });
+                  return;
+                }
                 dispatch({
                   type: "ADD_FIELD",
                   payload: {
@@ -678,6 +827,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
                     fieldData: addFieldData,
                   },
                 });
+                setShowError(null);
                 setPopupData(null);
                 setAddFieldData(null);
               }}
@@ -693,10 +843,29 @@ function AppConfigurationWrapper({ screenConfig, localeModule }) {
           onClose={closeToast}
         />
       )}
-      {/* <ActionBar className="app-config-actionBar">
-        {showBack && <Button className="previous-button" variation="secondary" label={t("BACK")} title={t("BACK")} onClick={() => back()} />}
-        <Button className="previous-button" variation="primary" label={t("NEXT")} title={t("NEXT")} onClick={() => onSubmit(state)} />
-      </ActionBar> */}
+      <Footer
+        actionFields={[
+          <Button
+            type={"button"}
+            style={{ marginLeft: "2.5rem", width: "14rem" }}
+            label={t("HCM_BACK")}
+            variation={"secondary"}
+            t={t}
+            onClick={() => {
+              window.history.back();
+            }}
+          ></Button>,
+          <Button
+            type={"button"}
+            label={t("PROCEED_TO_PREVIEW")}
+            variation={"primary"}
+            onClick={() => handleSubmit(true)}
+            style={{ width: "14rem" }}
+            t={t}
+          ></Button>,
+        ]}
+        className={"new-actionbar"}
+      />
     </AppConfigContext.Provider>
   );
 }

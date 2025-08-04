@@ -1,0 +1,15 @@
+name: Trigger Jenkins Build
+
+on:
+  push:
+    branches: [ 'develop','console','master']
+
+jobs:
+  trigger-jenkins:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Jenkins job for every commit
+        run: |
+          curl -v -X POST "https://builds.digit.org/job/builds/job/Digit-Frontend/job/health/job/workbench-ui/buildWithParameters" \
+            --user "${{ secrets.JENKINS_USER }}:${{ secrets.JENKINS_TOKEN }}" \
+            --data-urlencode BRANCH="origin/${{ github.ref_name }}"
