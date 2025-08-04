@@ -19,8 +19,8 @@ import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } fro
  */
 
 const UpdateCampaign = ({ hierarchyData }) => {
-  // const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
-  // Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
+  const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
+  Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
@@ -31,7 +31,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const [isDataCreating, setIsDataCreating] = useState(false);
   const [campaignConfig, setCampaignConfig] = useState(UpdateBoundaryConfig(totalFormData, null, isSubmitting));
   const [shouldUpdate, setShouldUpdate] = useState(false);
-  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_UPDATE_FORM_DATA", {});
+  const [params, setParams] = Digit.Hooks.useSessionStorage("HCM_ADMIN_CONSOLE_UPLOAD_DATA", {});
   const [dataParams, setDataParams] = Digit.Hooks.useSessionStorage("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", {});
   const [showToast, setShowToast] = useState(null);
   const [summaryErrors, setSummaryErrors] = useState({});
@@ -290,6 +290,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
           if (compareIdentical(draftData, payloadData) === false) {
             setIsDataCreating(true);
 
+
+
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 setShowToast({ key: "error", label: error?.message ? error?.message : error });
@@ -360,6 +362,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
           }
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           setIsDataCreating(true);
+
+
 
           await mutate(payloadData, {
             onError: (error, variables) => {
@@ -652,7 +656,50 @@ const UpdateCampaign = ({ hierarchyData }) => {
     }
   }, [showToast]);
 
+  function hasSelectedBoundaryChanged(sessionData, formData) {
+    const sessionSelected = sessionData?.boundaryType?.selectedData || [];
+    const formSelected = formData?.selectedData || [];
+
+    if (sessionSelected.length !== formSelected.length) return true;
+
+    const sortByCode = arr => [...arr].sort((a, b) => a.code.localeCompare(b.code));
+    const sortedSession = sortByCode(sessionSelected);
+    const sortedForm = sortByCode(formSelected);
+
+    for (let i = 0; i < sortedSession.length; i++) {
+      const a = sortedSession[i];
+      const b = sortedForm[i];
+
+      if (
+        a.code !== b.code ||
+        a.name !== b.name ||
+        a.type !== b.type ||
+        a.isRoot !== b.isRoot ||
+        a.includeAllChildren !== b.includeAllChildren ||
+        (a.parent || "") !== (b.parent || "") // handle undefined vs empty string
+      ) {
+        return true; // Something changed
+      }
+    }
+
+    return false; // All matched
+  }
+
   const onSubmit = (formData, cc) => {
+
+    let isChanged = false;
+
+    const sessionBoundary = resourceDatas?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA;
+    const formBoundary = formData?.boundaryType;
+
+    if (sessionBoundary && formBoundary) {
+      isChanged = hasSelectedBoundaryChanged(sessionBoundary, formBoundary);
+    }
+    if (isChanged) {
+
+      Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
+    }
+
 
     setIsSubmitting(true);
     const checkValid = handleValidate(formData);
