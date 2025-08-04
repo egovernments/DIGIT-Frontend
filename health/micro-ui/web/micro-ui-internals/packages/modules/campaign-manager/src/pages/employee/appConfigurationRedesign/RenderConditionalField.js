@@ -22,6 +22,9 @@ export const RenderConditionalField = ({
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
 
+  console.log("cField:", cField);
+  console.log("drawerState:", drawerState);
+
   switch (cField?.type) {
     case "text":
     case "number":
