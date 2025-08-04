@@ -126,6 +126,8 @@ const AppConfigurationTabLayer = () => {
     },
     config: {
       enabled: formId ? true : false,
+      cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         tabStateDispatch({
           key: "SET_TAB",

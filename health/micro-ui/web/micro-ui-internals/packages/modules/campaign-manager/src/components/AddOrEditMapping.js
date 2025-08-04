@@ -112,12 +112,9 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
                 setSelectedBoundary(boundariesInEvent);
               }}
               onSelect={(value) => {
-                const boundariesInEvent = value?.map((event) => event?.[1]);
-                const values = boundariesInEvent?.map((i) => i?.code)?.join(",");
-                const updatedData = { ...newdata, [column.name]: values };
-                setNewData(updatedData);
-                setSelectedBoundary(boundariesInEvent);
-              }}
+                
+              }
+              }
               addCategorySelectAllCheck={true}
               addSelectAllCheck={true}
             />
@@ -125,6 +122,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
           </div>
         );
       } else {
+
         return (
           <div key={column.name} style={{ marginBottom: "1rem" }}>
             <div style={{ display: "flex" }}>
@@ -203,20 +201,7 @@ const AddOrEditMapping = forwardRef(({ schema, dispatch, boundaryHierarchy, allS
             }}
             type={"multiselectdropdown"}
             onSelect={(value) => {
-              const rolesInEvent = value?.map((event) => event?.[1]);
-              const values = rolesInEvent?.map((i) => i?.code)?.join(",");
-              const multiSelectKey = `${column.name}_MULTISELECT_`;
-              const rolesData = rolesInEvent?.map((r, idx) => {
-                return {
-                  [`${column.name}_MULTISELECT_${idx + 1}`]: r?.code
-                }
-              });
-              const rolesObj = Object.assign({}, ...rolesData);
-              // {
-              //   "User Role 1": "DISTRIBUTOR"
-              // }
-              const updatedData = { ...newdata, [column.name]: values, ...rolesObj };
-              setNewData(updatedData);
+              
             }}
             optionsKey="code"
             t={t}

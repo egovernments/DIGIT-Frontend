@@ -86,14 +86,14 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
         pathVar.match("view-details") ||
-        pathVar.match("setup-campaign") ||
-        pathVar.match("app-configuration-redesign") ||
-        pathVar.match("app-modules") ||
-        pathVar.match("app-features") ||
-        pathVar === "update-dates-boundary" ||
-        pathVar === "update-campaign" ||
-        pathVar === "checklist/search" ||
-        pathVar === "upload-screen"
+          pathVar.match("setup-campaign") ||
+          pathVar.match("app-configuration-redesign") ||
+          pathVar.match("app-modules") ||
+          pathVar.match("app-features") ||
+          pathVar === "update-dates-boundary" ||
+          pathVar === "update-campaign" ||
+          pathVar === "checklist/search" ||
+          pathVar === "upload-screen"
           ? true
           : false,
     },
@@ -188,31 +188,31 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
   const UpdateDatesWithBoundaries = Digit?.ComponentRegistryService?.getComponent("UpdateDatesWithBoundaries");
   const AppConfigurationParentRedesign = Digit?.ComponentRegistryService?.getComponent("AppConfigurationParentRedesign");
 
-  // useEffect(() => {
-  //   if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-  
-  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-  //   }
-  //   if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-  
-  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  //     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-  //   }
-  //   return () => {
-  //     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-  
-  //       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  //       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
-  //     }
-  //   };
-  // }, []);
+  useEffect(() => {
+    if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
+
+      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+    }
+    if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
+
+      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+      window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+    }
+    return () => {
+      if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
+
+        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+        window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
+      }
+    };
+  }, []);
 
   return (
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
-        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
+          window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
         <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />

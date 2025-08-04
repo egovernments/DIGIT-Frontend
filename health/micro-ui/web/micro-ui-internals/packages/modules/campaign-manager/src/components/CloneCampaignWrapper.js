@@ -142,7 +142,7 @@ const CloneCampaignWrapper = (props) => {
         setShowProgress(false);
       }
     } catch (err) {
-      setToast({ key: "error", label: `${t(err)}`, type: "error" });
+      setToast({ key: "error", label: `${t(Digit.Utils.locale.getTransformedLocale(err))}`, type: "error" });
       setShowProgress(false);
     }
   };
@@ -188,7 +188,7 @@ const CloneCampaignWrapper = (props) => {
                         name: "campaignName",
                         error: "ES__REQUIRED_NAME_AND_LENGTH",
                         validation: {
-                          pattern: /^(?=.*[A-Za-z]).{1,40}$/,
+                          pattern: /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,29}$)^.*$/u,
                         },
                       }}
                       placeholder={t("HCM_CAMPAIGN_NAME_EXAMPLE")}
