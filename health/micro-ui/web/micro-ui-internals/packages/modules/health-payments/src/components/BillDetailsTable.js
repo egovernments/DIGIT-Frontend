@@ -74,7 +74,7 @@ const BillDetailsTable = ({ ...props }) => {
                                                 wordWrap: "break-word",
                                             }}
                                         >
-                                            {t(row?.additionalDetails?.reasonForFailure)}
+                                            {t(row?.additionalDetails?.errorDetails?.reasonForFailure)}
                                         </div>
                                     }
                                     enterDelay={100}
@@ -113,7 +113,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     const showErrorName =
                         (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") &&
-                        (["NAME_MISMATCH", "MTN_USERINFO_MISSING_NAME", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.reasonForFailure));
+                        (["NAME_MISMATCH", "MTN_USERINFO_MISSING_NAME", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.errorDetails?.reasonForFailure));
 
                     return (
                         <div
@@ -178,7 +178,7 @@ const BillDetailsTable = ({ ...props }) => {
                                                 wordWrap: "break-word",
                                             }}
                                         >
-                                            {t(row?.additionalDetails?.reasonForFailure)}
+                                            {t(row?.additionalDetails?.errorDetails?.reasonForFailure)}
                                         </div>
                                     }
                                     enterDelay={100}
@@ -217,7 +217,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     const showErrorMobileNumber =
                         (row?.status === "VERIFICATION_FAILED" || row?.status === "PENDING_EDIT") &&
-                        (["MTN_ACCOUNT_VALIDATION_FAILED", "MTN_ACCOUNT_INACTIVE", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.reasonForFailure));
+                        (["MTN_ACCOUNT_VALIDATION_FAILED", "MTN_ACCOUNT_INACTIVE", "MTN_USERINFO_FETCH_FAILED"].includes(row?.additionalDetails?.errorDetails?.reasonForFailure));
                     return (
                         <div style={{
                             display: "flex",
@@ -273,7 +273,7 @@ const BillDetailsTable = ({ ...props }) => {
                                                                 whiteSpace: "normal",
                                                                 wordWrap: "break-word",
                                                             }}>
-                                                            {t(row?.additionalDetails?.reasonForFailure)}</div></>}
+                                                            {t(row?.additionalDetails?.errorDetails?.reasonForFailure)}</div></>}
                                                     enterDelay={100}
                                                     header = {t("HCM_AM_DATA_ERROR")}
                                                     leaveDelay={0}
@@ -333,10 +333,11 @@ const BillDetailsTable = ({ ...props }) => {
                     const wage = parseInt(row?.wage) || 0;
                     const days = wage > 0 ? (totalAmount / wage) : 0; //TODO : ADD LOGIC TO CALCULATE DAYS FROM MUSTERROLL
 
-                    console.log("days", days);
+                    console.log("days", row?.additionalDetails?.noOfDaysWorked);
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {(days)}
+                            {/* {(days)} */}
+                            {t(row?.additionalDetails?.noOfDaysWorked) || t("NA")}
                         </div>
                     );
                 },
