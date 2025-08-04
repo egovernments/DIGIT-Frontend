@@ -27,7 +27,7 @@ const useDebounce = (value, delay) => {
     return debouncedValue;
 }
 
-const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,activeLink,browserSession,additionalConfig }) => {
+const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fullConfig,revalidate,type,tabData,activeLink,browserSession,additionalConfig }) => {
     const {apiDetails} = fullConfig
     const { t } = useTranslation();
     const resultsKey = config.resultsJsonPath
@@ -137,6 +137,10 @@ const ResultsTable = ({ tableContainerClass, config,data,isLoading,isFetching,fu
   useEffect(() => {
     setDefaultValues()
   }, [session])
+
+  useEffect(() => {
+        setValue("offset", 0);
+    },[tabData])
 
     const isMobile = window.Digit.Utils.browser.isMobile();
     const [searchQuery, onSearch] = useState("");
