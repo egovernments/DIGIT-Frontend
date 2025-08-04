@@ -395,7 +395,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     for (let i = 0; i < headerFields.length; i++) {
       if (headerFields[i]?.jsonPath === "ScreenHeading") {
         const fieldItem = headerFields[i];
-        const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
+        const value = (locS ||[])?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
         if (!value || value.trim() === "") {
           return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")}` };
         }
