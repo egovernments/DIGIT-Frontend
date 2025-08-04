@@ -142,7 +142,7 @@ const CloneCampaignWrapper = (props) => {
         setShowProgress(false);
       }
     } catch (err) {
-      setToast({ key: "error", label: `${t(err)}`, type: "error" });
+      setToast({ key: "error", label: `${t(Digit.Utils.locale.getTransformedLocale(err))}`, type: "error" });
       setShowProgress(false);
     }
   };
