@@ -58,7 +58,7 @@ export const transformUpdateCreateData = ({ campaignData }) => {
             maxCount = maxMatch[2];
           }
           if ( memberCount !== undefined && maxCount !== undefined) {
-            conditionString = `MIN(ROUND(memberCount/${memberCount}), ${maxCount})`;
+            conditionString = `MIN(CEIL(memberCount/${memberCount}), ${maxCount})`;
           } else {
             conditionString = normalizeCondition(criteria.condition);
           }
