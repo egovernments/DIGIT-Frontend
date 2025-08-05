@@ -25,6 +25,8 @@ import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
+import AppConfigurationTabLayer from "./appConfigurationRedesign/AppConfigurationTabLayer";
+// import AppConfigurationTabLayer from "./appConfigurationRedesign//AppConfigurationTabLayer";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -245,7 +247,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
-          <Route path={`app-configuration-redesign`} element={<AppConfigurationParentRedesign />} />
+          <Route path={`app-configuration-redesign`} element={<AppConfigurationTabLayer />} />
           <Route path={`create-campaign`} element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
           <Route path={`campaign-home`} element={<CampaignHome />} />
           <Route path={`view-details`} element={<CampaignDetails />} />

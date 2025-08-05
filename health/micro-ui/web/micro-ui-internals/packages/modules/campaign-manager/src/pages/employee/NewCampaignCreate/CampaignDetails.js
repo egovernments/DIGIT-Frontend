@@ -133,6 +133,7 @@ function formatIsoDate(dateStr) {
 }
 
 const CampaignDetails = () => {
+  console.log("CampaignDetails component rendered");
   const { t } = useTranslation();
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);

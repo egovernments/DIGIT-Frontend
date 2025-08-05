@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useReducer, useState } from "react";
 import { Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 import AppConfigurationParentRedesign from "./AppConfigurationParentLayer";
 
@@ -93,9 +93,10 @@ const tabDispatcher = (state, action) => {
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
 const AppConfigurationTabLayer = () => {
+  console.log("ksdfjhsfkjsfkjsdfkfjsdkldfjklsdjfklsdjsdlkjskljlsdjfsdkljskljfsljdl")
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
@@ -126,8 +127,8 @@ const AppConfigurationTabLayer = () => {
     },
     config: {
       enabled: formId ? true : false,
-      cacheTime: 0,
-      staleTime: 0,
+      // cacheTime: 0,
+      // staleTime: 0,
       select: (data) => {
         tabStateDispatch({
           key: "SET_TAB",

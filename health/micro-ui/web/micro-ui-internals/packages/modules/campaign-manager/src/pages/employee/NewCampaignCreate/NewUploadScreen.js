@@ -1,7 +1,7 @@
 import { FormComposerV2, Loader, Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import React, { useEffect, useState, Fragment } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { uploadConfig } from "../../../configs/uploadConfig";
 import { transformCreateData } from "../../../utils/transformCreateData";
 
@@ -11,7 +11,7 @@ import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
 
 const NewUploadScreen = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const [totalFormData, setTotalFormData] = useState({});
   const [showToast, setShowToast] = useState(false);
   const [loader, setLoader] = useState(false);
@@ -268,7 +268,7 @@ const NewUploadScreen = () => {
         return;
       }
       setShowToast(null);
-      history.push(
+      navigate(
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     }
@@ -584,7 +584,7 @@ const NewUploadScreen = () => {
     }
 
     if (latestConfig?.form?.[0]?.last) {
-      history.push(
+      navigate(
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     }
@@ -643,7 +643,7 @@ const NewUploadScreen = () => {
 
   const onSecondayActionClick = async () => {
     if (currentKey == 1) {
-      history.push(
+      navigate(
         `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignData?.campaignNumber}&tenantId=${campaignData?.tenantId}`
       );
     } else {
