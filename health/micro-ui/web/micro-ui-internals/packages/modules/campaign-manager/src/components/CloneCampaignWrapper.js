@@ -89,12 +89,16 @@ const CloneCampaignWrapper = (props) => {
   const onNextClick = async () => {
     let hasError = false;
 
+    const nameRegexPattern = /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,29}$)^.*$/u;
     // Name validation
     if (!name?.trim()) {
       setNameError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
       hasError = true;
     } else if (name.length > 30) {
       setNameError({ message: "CAMPAIGN_NAME_GREATER" });
+      hasError = true;
+    } else if (!nameRegexPattern.test(name)) {
+      setNameError({ message: "ES__REQUIRED_NAME_AND_LENGTH" });
       hasError = true;
     } else {
       setNameError(null);
