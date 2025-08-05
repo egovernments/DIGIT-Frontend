@@ -249,72 +249,145 @@ const UpdateCampaign = ({ hierarchyData }) => {
   }
 
   //API CALL
-  useEffect(async () => {
-    if (shouldUpdate === true) {
-      if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
-        return;
-      } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
-        const reqCreate = async () => {
-          let payloadData = { ...draftData };
-          payloadData.hierarchyType = hierarchyType;
-          payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
-          payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
-          payloadData.tenantId = tenantId;
-          payloadData.action = "create";
-          payloadData.parentId = parentId;
-          payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
-          if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            const temp = restructureBoundaryData(
-              totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
-              CampaignData?.CampaignDetails?.[0]?.boundaries
-            );
-            payloadData.boundaries = temp;
-          }
-          // const temp = resourceData(
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+  useEffect(() => {
+    async function reqUpdate() {
+      if (shouldUpdate === true) {
+        if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.skipAPICall && !id) {
+          return;
+        } else if (filteredConfig?.[0]?.form?.[0]?.isLast) {
+          const reqCreate = async () => {
+            let payloadData = { ...draftData };
+            payloadData.hierarchyType = hierarchyType;
+            payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
+            payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
+            payloadData.tenantId = tenantId;
+            payloadData.action = "create";
+            payloadData.parentId = parentId;
+            payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
+            if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
+              const temp = restructureBoundaryData(
+                totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+                CampaignData?.CampaignDetails?.[0]?.boundaries
+              );
+              payloadData.boundaries = temp;
+            }
+            // const temp = resourceData(
+            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
 
-          // );
-          const temp = CampaignData?.CampaignDetails?.[0].resources;
+            // );
+            const temp = CampaignData?.CampaignDetails?.[0].resources;
 
-          payloadData.resources = temp;
-          payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
-          payloadData.additionalDetails = {
-            beneficiaryType:
-              projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(
-                (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
-              )?.beneficiaryType || null,
-            key: currentKey,
-            targetId: dataParams?.boundaryId,
-            facilityId: dataParams?.facilityId,
-            userId: dataParams?.userId,
+            payloadData.resources = temp;
+            payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
+            payloadData.additionalDetails = {
+              beneficiaryType:
+                projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(
+                  (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
+                )?.beneficiaryType || null,
+              key: currentKey,
+              targetId: dataParams?.boundaryId,
+              facilityId: dataParams?.facilityId,
+              userId: dataParams?.userId,
+            };
+            if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
+              payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
+            } else {
+              payloadData.additionalDetails.cycleData = {};
+            }
+            payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
+            if (compareIdentical(draftData, payloadData) === false) {
+              setIsDataCreating(true);
+
+              await updateCampaign(payloadData, {
+                onError: (error, variables) => {
+                  setShowToast({ key: "error", label: error?.message ? error?.message : error });
+                },
+                onSuccess: async (data) => {
+                  draftRefetch();
+                  navigate(
+                    `/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`,
+                    {
+                      state: {
+                        message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
+                        text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
+                        info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
+                        actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
+                        actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
+                      },
+                    }
+                  );
+                  Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
+                },
+                onSettled: () => {
+                  // This will always run after the mutation completes
+                  setIsDataCreating(false);
+                  // Final function logic here
+                },
+              });
+            }
           };
-          if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
-            payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
-          } else {
-            payloadData.additionalDetails.cycleData = {};
-          }
-          payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
-          if (compareIdentical(draftData, payloadData) === false) {
+
+          reqCreate();
+        } else if (!isDraftCreated && !id) {
+          const reqCreate = async () => {
+            let payloadData = {};
+            payloadData.hierarchyType = hierarchyType;
+            payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
+            payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
+            payloadData.tenantId = tenantId;
+            payloadData.action = "draft";
+            payloadData.parentId = parentId;
+            payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
+            if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
+              const temp = restructureBoundaryData(
+                totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+                CampaignData?.CampaignDetails?.[0]?.boundaries
+              );
+              payloadData.boundaries = temp;
+            }
+            // const temp = resourceData(
+            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+            // );
+
+            const temp = CampaignData?.CampaignDetails?.[0].resources;
+
+            payloadData.resources = temp;
+            payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
+            payloadData.additionalDetails = {
+              beneficiaryType:
+                projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(
+                  (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
+                )?.beneficiaryType || null,
+              key: currentKey,
+              targetId: dataParams?.boundaryId,
+              facilityId: dataParams?.facilityId,
+              userId: dataParams?.userId,
+            };
+            if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
+              payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
+            } else {
+              payloadData.additionalDetails.cycleData = {};
+            }
+            payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
             setIsDataCreating(true);
 
-            await updateCampaign(payloadData, {
+            await mutate(payloadData, {
               onError: (error, variables) => {
-                setShowToast({ key: "error", label: error?.message ? error?.message : error });
+                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  setShowToast({ key: "error", label: error?.message ? error?.message : error });
+                }
               },
               onSuccess: async (data) => {
+                updateUrlParams({ id: data?.CampaignDetails?.id });
+                setIsDraftCreated(true);
                 draftRefetch();
-                navigate(`/${window.contextPath}/employee/campaign/response?campaignId=${data?.CampaignDetails?.campaignNumber}&isSuccess=${true}`, {
-                  state: {
-                    message: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE"),
-                    text: t("ES_CAMPAIGN_CREATE_SUCCESS_RESPONSE_TEXT"),
-                    info: t("ES_CAMPAIGN_SUCCESS_INFO_TEXT"),
-                    actionLabel: t("HCM_CAMPAIGN_SUCCESS_RESPONSE_ACTION"),
-                    actionLink: `/${window.contextPath}/employee/campaign/my-campaign-new`,
-                  },
-                });
-                Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
+                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                  setCurrentKey(currentKey + 1);
+                }
               },
               onSettled: () => {
                 // This will always run after the mutation completes
@@ -322,149 +395,82 @@ const UpdateCampaign = ({ hierarchyData }) => {
                 // Final function logic here
               },
             });
-          }
-        };
-
-        reqCreate();
-      } else if (!isDraftCreated && !id) {
-        const reqCreate = async () => {
-          let payloadData = {};
-          payloadData.hierarchyType = hierarchyType;
-          payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
-          payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
-          payloadData.tenantId = tenantId;
-          payloadData.action = "draft";
-          payloadData.parentId = parentId;
-          payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
-          if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            const temp = restructureBoundaryData(
-              totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
-              CampaignData?.CampaignDetails?.[0]?.boundaries
-            );
-            payloadData.boundaries = temp;
-          }
-          // const temp = resourceData(
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          // );
-
-          const temp = CampaignData?.CampaignDetails?.[0].resources;
-
-          payloadData.resources = temp;
-          payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
-          payloadData.additionalDetails = {
-            beneficiaryType:
-              projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(
-                (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
-              )?.beneficiaryType || null,
-            key: currentKey,
-            targetId: dataParams?.boundaryId,
-            facilityId: dataParams?.facilityId,
-            userId: dataParams?.userId,
           };
-          if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
-            payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
-          } else {
-            payloadData.additionalDetails.cycleData = {};
-          }
-          payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
-          setIsDataCreating(true);
 
-          await mutate(payloadData, {
-            onError: (error, variables) => {
-              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setShowToast({ key: "error", label: error?.message ? error?.message : error });
-              }
-            },
-            onSuccess: async (data) => {
-              updateUrlParams({ id: data?.CampaignDetails?.id });
-              setIsDraftCreated(true);
-              draftRefetch();
-              if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                setCurrentKey(currentKey + 1);
-              }
-            },
-            onSettled: () => {
-              // This will always run after the mutation completes
-              setIsDataCreating(false);
-              // Final function logic here
-            },
-          });
-        };
+          reqCreate();
+        } else {
+          const reqCreate = async () => {
+            let payloadData = { ...draftData };
+            payloadData.hierarchyType = hierarchyType;
+            payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
+            payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
+            payloadData.tenantId = tenantId;
+            payloadData.action = "draft";
+            payloadData.parentId = parentId;
+            payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
+            if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
+              const temp = restructureBoundaryData(
+                totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+                CampaignData?.CampaignDetails?.[0]?.boundaries
+              );
+              payloadData.boundaries = temp;
+            }
+            // const temp = resourceData(
+            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+            // );
+            const temp = CampaignData?.CampaignDetails?.[0].resources;
+            payloadData.resources = temp;
+            payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
+            payloadData.additionalDetails = {
+              beneficiaryType:
+                projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(
+                  (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
+                )?.beneficiaryType || null,
+              key: currentKey,
+              targetId: dataParams?.boundaryId,
+              facilityId: dataParams?.facilityId,
+              userId: dataParams?.userId,
+            };
+            if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
+              payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
+            } else {
+              payloadData.additionalDetails.cycleData = {};
+            }
 
-        reqCreate();
-      } else {
-        const reqCreate = async () => {
-          let payloadData = { ...draftData };
-          payloadData.hierarchyType = hierarchyType;
-          payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
-          payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
-          payloadData.tenantId = tenantId;
-          payloadData.action = "draft";
-          payloadData.parentId = parentId;
-          payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
-          if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            const temp = restructureBoundaryData(
-              totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
-              CampaignData?.CampaignDetails?.[0]?.boundaries
-            );
-            payloadData.boundaries = temp;
-          }
-          // const temp = resourceData(
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          // );
-          const temp = CampaignData?.CampaignDetails?.[0].resources;
-          payloadData.resources = temp;
-          payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
-          payloadData.additionalDetails = {
-            beneficiaryType:
-              projectType?.["HCM-PROJECT-TYPES"]?.projectTypes.find(
-                (projectType) => projectType.code === CampaignData?.CampaignDetails?.[0]?.projectType
-              )?.beneficiaryType || null,
-            key: currentKey,
-            targetId: dataParams?.boundaryId,
-            facilityId: dataParams?.facilityId,
-            userId: dataParams?.userId,
+            payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
+            if (!payloadData?.startDate && !payloadData?.endDate) {
+              delete payloadData?.startDate;
+              delete payloadData?.endDate;
+            }
+            if (compareIdentical(draftData, payloadData) === false) {
+              await updateCampaign(payloadData, {
+                onError: (error, variables) => {
+                  console.log(error);
+                  if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                    setShowToast({ key: "error", label: error?.message ? error?.message : error });
+                  }
+                },
+                onSuccess: async (data) => {
+                  updateUrlParams({ id: data?.CampaignDetails?.id });
+                  draftRefetch();
+                  if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
+                    setCurrentKey(currentKey + 1);
+                  }
+                },
+              });
+            } else {
+              setCurrentKey(currentKey + 1);
+            }
           };
-          if (CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData) {
-            payloadData.additionalDetails.cycleData = CampaignData?.CampaignDetails?.[0]?.additionalDetails?.cycleData;
-          } else {
-            payloadData.additionalDetails.cycleData = {};
-          }
 
-          payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
-          if (!payloadData?.startDate && !payloadData?.endDate) {
-            delete payloadData?.startDate;
-            delete payloadData?.endDate;
-          }
-          if (compareIdentical(draftData, payloadData) === false) {
-            await updateCampaign(payloadData, {
-              onError: (error, variables) => {
-                console.log(error);
-                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                  setShowToast({ key: "error", label: error?.message ? error?.message : error });
-                }
-              },
-              onSuccess: async (data) => {
-                updateUrlParams({ id: data?.CampaignDetails?.id });
-                draftRefetch();
-                if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
-                  setCurrentKey(currentKey + 1);
-                }
-              },
-            });
-          } else {
-            setCurrentKey(currentKey + 1);
-          }
-        };
-
-        reqCreate();
+          reqCreate();
+        }
+        setShouldUpdate(false);
       }
-      setShouldUpdate(false);
     }
+    reqUpdate();
   }, [shouldUpdate]);
 
   function isBoundaryDiff(parentBoundaries, childBoundaries) {

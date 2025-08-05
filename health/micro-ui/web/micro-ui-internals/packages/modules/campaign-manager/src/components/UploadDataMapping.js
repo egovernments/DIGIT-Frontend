@@ -558,53 +558,59 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     return { ...newSchema };
   };
 
-  useEffect(async () => {
-    if (convertedSchema && Object.keys(convertedSchema).length > 0) {
-      const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
-      const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
-      const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+  useEffect(() => {
+    async function useeffectuploaddatamapping2() {
+      if (convertedSchema && Object.keys(convertedSchema).length > 0) {
+        const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
+        const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
+        const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
 
-      const filterByUpdateFlag = (schemaProperties) => {
-        return Object.keys(schemaProperties).filter((key) => {
-          return schemaProperties[key].isUpdate !== true;
-        });
-      };
+        const filterByUpdateFlag = (schemaProperties) => {
+          return Object.keys(schemaProperties).filter((key) => {
+            return schemaProperties[key].isUpdate !== true;
+          });
+        };
 
-      const headers = {
-        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
-        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
-        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
-      };
+        const headers = {
+          boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+          facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+          userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
+        };
 
-      const schema = {
-        boundary: newBoundarySchema,
-        facilityWithBoundary: newFacilitySchema,
-        userWithBoundary: newUserSchema,
-      };
+        const schema = {
+          boundary: newBoundarySchema,
+          facilityWithBoundary: newFacilitySchema,
+          userWithBoundary: newUserSchema,
+        };
 
-      setTranslatedSchema(schema);
+        setTranslatedSchema(schema);
+      }
     }
+    useeffectuploaddatamapping2();
   }, [convertedSchema]);
 
-  useEffect(async () => {
-    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code) {
-      const facility = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility")?.[0]
-      );
-      const boundary = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
-        )?.[0]
-      );
-      const user = await convertIntoSchema(SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user")?.[0]);
-      const schema = {
-        boundary: boundary,
-        facilityWithBoundary: facility,
-        userWithBoundary: user,
-      };
+  useEffect(() => {
+    async function useEffectuploaddatamappineuseeffect() {
+      if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code) {
+        const facility = await convertIntoSchema(
+          SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility")?.[0]
+        );
+        const boundary = await convertIntoSchema(
+          SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter(
+            (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+          )?.[0]
+        );
+        const user = await convertIntoSchema(SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user")?.[0]);
+        const schema = {
+          boundary: boundary,
+          facilityWithBoundary: facility,
+          userWithBoundary: user,
+        };
 
-      setConvertedSchema(schema);
+        setConvertedSchema(schema);
+      }
     }
+    useEffectuploaddatamappineuseeffect();
   }, [SchemasAJV, type]);
 
   const validateData = (data) => {

@@ -3,7 +3,7 @@ import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { AlertCard, Toast ,HeaderComponent, Loader } from "@egovernments/digit-ui-components";
+import { AlertCard, Toast, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
 import { callTemplateDownloadByUntilCompleted } from "../utils/pollUtils";
 import { fetchFromMicroplan, searchCampaign, waitForSomeTime } from "../hooks/useFetchFromMicroplan";
 
@@ -194,18 +194,21 @@ const FetchFromMicroplanScreen = () => {
     fetchCampaign();
   }, [currentStep, completed]);
 
-  useEffect(async () => {
-    if (currentStep === steps.length && microplan) {
-      setShowToast({ key: "success", label: t("CMN_ALL_DATA_FETCH_DONE") });
+  useEffect(() => {
+    async function useeffectfetchfrommicrploan() {
+      if (currentStep === steps.length && microplan) {
+        setShowToast({ key: "success", label: t("CMN_ALL_DATA_FETCH_DONE") });
 
-      const navigateTimeout = setTimeout(() => {
-        searchParams?.set("id", data?.updatedCampaignData?.id);
-        searchParams?.set("microName", data?.updatedCampaignData?.campaignName);
-        navigate(`/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`);
-      }, 1500);
+        const navigateTimeout = setTimeout(() => {
+          searchParams?.set("id", data?.updatedCampaignData?.id);
+          searchParams?.set("microName", data?.updatedCampaignData?.campaignName);
+          navigate(`/${window?.contextPath}/employee/campaign/setup-campaign?${searchParams?.toString()}`);
+        }, 1500);
 
-      return () => clearTimeout(navigateTimeout); // Cleanup timeout
+        return () => clearTimeout(navigateTimeout); // Cleanup timeout
+      }
     }
+    useeffectfetchfrommicrploan();
   }, [currentStep, microplan]);
 
   const closeToast = () => {

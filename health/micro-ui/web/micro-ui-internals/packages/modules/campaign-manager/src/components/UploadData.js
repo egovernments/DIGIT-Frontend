@@ -238,81 +238,90 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     }
   }, [uploadedFile]);
 
-  useEffect(async () => {
-    if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
-      const facility = await convertIntoSchema(
-        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
-      );
-      const boundary = await convertIntoSchema(
-        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
-        )?.[0]
-      );
-      const user = await convertIntoSchema(
-        Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
-      );
-      const schema = {
-        boundary: boundary,
-        facilityWithBoundary: facility,
-        userWithBoundary: user,
-      };
+  useEffect(() => {
+    async function useeffectuploaddata1() {
+      if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
+        const facility = await convertIntoSchema(
+          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+        );
+        const boundary = await convertIntoSchema(
+          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+            (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+          )?.[0]
+        );
+        const user = await convertIntoSchema(
+          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+        );
+        const schema = {
+          boundary: boundary,
+          facilityWithBoundary: facility,
+          userWithBoundary: user,
+        };
 
-      setConvertedSchema(schema);
+        setConvertedSchema(schema);
+      }
     }
+    useeffectuploaddata1();
   }, [Schemas, type, uploadedFile]);
 
-  useEffect(async () => {
-    if (convertedSchema && Object.keys(convertedSchema).length > 0) {
-      const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
-      const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
-      const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+  useEffect(() => {
+    async function useeffectuploaddata2() {
+      if (convertedSchema && Object.keys(convertedSchema).length > 0) {
+        const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
+        const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
+        const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
 
-      const filterByUpdateFlag = (schemaProperties) => {
-        return Object.keys(schemaProperties).filter((key) => {
-          // if (parentId) {
-          //   return schemaProperties[key].isUpdate === true;
-          // }
-          return schemaProperties[key].isUpdate !== true;
-        });
-      };
+        const filterByUpdateFlag = (schemaProperties) => {
+          return Object.keys(schemaProperties).filter((key) => {
+            // if (parentId) {
+            //   return schemaProperties[key].isUpdate === true;
+            // }
+            return schemaProperties[key].isUpdate !== true;
+          });
+        };
 
-      const headers = {
-        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
-        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
-        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
-      };
+        const headers = {
+          boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+          facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+          userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
+        };
 
-      const schema = {
-        boundary: newBoundarySchema,
-        facilityWithBoundary: newFacilitySchema,
-        userWithBoundary: newUserSchema,
-      };
+        const schema = {
+          boundary: newBoundarySchema,
+          facilityWithBoundary: newFacilitySchema,
+          userWithBoundary: newUserSchema,
+        };
 
-      setSheetHeaders(headers);
-      setTranslatedSchema(schema);
+        setSheetHeaders(headers);
+        setTranslatedSchema(schema);
+      }
     }
+    useeffectuploaddata2();
   }, [convertedSchema]);
 
-  useEffect(async () => {
-    if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
-      const newReadMeFacility = await translateReadMeInfo(
-        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
-      );
-      const newReadMeUser = await translateReadMeInfo(
-        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
-      );
-      const newReadMeboundary = await translateReadMeInfo(
-        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
-      );
+  useEffect(() => {
+    async function useeffectuploaddata3() {
+      if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
+        const newReadMeFacility = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
+        const newReadMeUser = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
+        const newReadMeboundary = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
 
-      const readMeText = {
-        boundary: newReadMeboundary,
-        facilityWithBoundary: newReadMeFacility,
-        userWithBoundary: newReadMeUser,
-      };
+        const readMeText = {
+          boundary: newReadMeboundary,
+          facilityWithBoundary: newReadMeFacility,
+          userWithBoundary: newReadMeUser,
+        };
 
-      setReadMeInfo(readMeText);
+        setReadMeInfo(readMeText);
+      }
     }
+    useeffectuploaddata3();
   }, [readMe?.[CONSOLE_MDMS_MODULENAME], type]);
 
   useEffect(() => {

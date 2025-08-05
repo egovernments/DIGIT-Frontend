@@ -53,9 +53,9 @@ const BulkUpload = ({ multiple = true, onSubmit, fileData, onFileDelete, onFileD
   const dragDropJSX = (
     <div className="upload-drag-drop-container">
       <UploadIcon />
-      <p className="drag-drop-text">
-        <text className="drag-drop"> {t("WBH_DRAG_DROP")}</text> <text className="browse-text">{t("WBH_BULK_BROWSE_FILES")}</text>
-      </p>
+      <div className="drag-drop-text">
+        <p className="drag-drop"> {t("WBH_DRAG_DROP")}</p> <p className="browse-text">{t("WBH_BULK_BROWSE_FILES")}</p>
+      </div>
     </div>
   );
 
