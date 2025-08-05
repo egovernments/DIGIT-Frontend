@@ -261,13 +261,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
             const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
             payloadData.boundaries = temp;
           }
-          // const temp = resourceData(
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
+          const temp = resourceData(
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
 
-          // );
-          const temp = CampaignData?.CampaignDetails?.[0].resources;
+          );
 
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
@@ -334,13 +333,12 @@ const UpdateCampaign = ({ hierarchyData }) => {
             const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
             payloadData.boundaries = temp;
           }
-          // const temp = resourceData(
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-          //   resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          // );
+          const temp = resourceData(
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+          );
 
-          const temp = CampaignData?.CampaignDetails?.[0].resources;
 
 
           payloadData.resources = temp;
@@ -402,12 +400,11 @@ const UpdateCampaign = ({ hierarchyData }) => {
             const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
             payloadData.boundaries = temp;
           }
-          // const temp = resourceData(
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-          //   totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
-          // );
-          const temp = CampaignData?.CampaignDetails?.[0].resources;
+          const temp = resourceData(
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+          );
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
           payloadData.additionalDetails = {
@@ -656,49 +653,9 @@ const UpdateCampaign = ({ hierarchyData }) => {
     }
   }, [showToast]);
 
-  function hasSelectedBoundaryChanged(sessionData, formData) {
-    const sessionSelected = sessionData?.boundaryType?.selectedData || [];
-    const formSelected = formData?.selectedData || [];
-
-    if (sessionSelected.length !== formSelected.length) return true;
-
-    const sortByCode = arr => [...arr].sort((a, b) => a.code.localeCompare(b.code));
-    const sortedSession = sortByCode(sessionSelected);
-    const sortedForm = sortByCode(formSelected);
-
-    for (let i = 0; i < sortedSession.length; i++) {
-      const a = sortedSession[i];
-      const b = sortedForm[i];
-
-      if (
-        a.code !== b.code ||
-        a.name !== b.name ||
-        a.type !== b.type ||
-        a.isRoot !== b.isRoot ||
-        a.includeAllChildren !== b.includeAllChildren ||
-        (a.parent || "") !== (b.parent || "") // handle undefined vs empty string
-      ) {
-        return true; // Something changed
-      }
-    }
-
-    return false; // All matched
-  }
 
   const onSubmit = (formData, cc) => {
 
-    let isChanged = false;
-
-    const sessionBoundary = resourceDatas?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA;
-    const formBoundary = formData?.boundaryType;
-
-    if (sessionBoundary && formBoundary) {
-      isChanged = hasSelectedBoundaryChanged(sessionBoundary, formBoundary);
-    }
-    if (isChanged) {
-
-      Digit.SessionStorage.del("HCM_ADMIN_CONSOLE_SET_UP");
-    }
 
 
     setIsSubmitting(true);
