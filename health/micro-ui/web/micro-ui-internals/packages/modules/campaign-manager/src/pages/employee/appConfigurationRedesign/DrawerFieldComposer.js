@@ -76,10 +76,7 @@ const whenToShow = (panelItem, drawerState) => {
 };
 
 const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
-  console.log("Panel Item", panelItem);
-  console.log("Drawer State", drawerState);
-  console.log("State:", state)
-;  const { t } = useTranslation();
+  const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === drawerState?.appType)
     ?.localisableProperties?.includes(panelItem?.label);
@@ -180,8 +177,6 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       const switchRef = useRef(null);
       const [showTooltip, setShowTooltip] = useState(false);
       const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData);
-      console.log("isDisabled", isDisabled);
-      console.log("DrawerState:", drawerState);
       return (
         <div
           ref={switchRef}
@@ -388,7 +383,6 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
 };
 
 function DrawerFieldComposer() {
-  console.log("DrawerFieldComposer Component rendered"); 
   const { t } = useTranslation();
   const { locState, updateLocalization, AppScreenLocalisationConfig } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
@@ -426,8 +420,6 @@ function DrawerFieldComposer() {
   }, [drawerState]);
 
   const isFieldVisible = (field) => {
-    console.log("Drawer State:", drawerState);
-    console.log("Panel field:", field);
     // If visibilityEnabledFor is empty, the field is always visible
     if (field?.visibilityEnabledFor?.length === 0) return true;
     return field?.visibilityEnabledFor?.includes(drawerState?.appType); // Check if current drawerState type matches
@@ -475,7 +467,6 @@ function DrawerFieldComposer() {
       )}
       <div style={{ display: "flex", flexDirection: "column", gap: "2rem" }}>
         {currentDrawerState?.map((panelItem, index) => {
-          console.log("Panel Item:", panelItem);  
           if (isFieldVisible(panelItem)) {
             return (
               <div className="drawer-toggle-field-container">
