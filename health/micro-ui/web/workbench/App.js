@@ -6,17 +6,17 @@
  * `DigitUI` component is responsible for rendering the UI based on the provided configuration and
  * modules.
  */
-import React, { Suspense } from "react";
+
+import React, {Suspense} from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-// import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { UICustomizations } from "./Customisations/UICustomizations";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
-import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 import { Loader } from "@egovernments/digit-ui-components";
+// import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+// import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
+// import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+// import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -54,12 +54,12 @@ const initDigitUI = () => {
     commonUiConfig: UICustomizations,
   };
 
-  initHRMSComponents();
-  initUtilitiesComponents();
-  initWorkbenchComponents();
-  initWorkbenchHCMComponents();
+  // initHRMSComponents();
+  // initUtilitiesComponents();
+  // initWorkbenchComponents();
+  // initWorkbenchHCMComponents();
   initCampaignComponents();
-  initPGRComponents();
+  // initPGRComponents();
 };
 
 function App() {
