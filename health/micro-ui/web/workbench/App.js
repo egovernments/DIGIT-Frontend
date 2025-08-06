@@ -7,7 +7,7 @@
  * modules.
  */
 
-import React, {Suspense} from "react";
+import React, {Suspense, useEffect} from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { UICustomizations } from "./Customisations/UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
@@ -39,7 +39,7 @@ const enabledModules = [
   // "PGR",
 ];
 
-React.useEffect(() => {
+useEffect(() => {
   initLibraries().then(() => {
     initDigitUI();
     const initMethods = async () => {
