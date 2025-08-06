@@ -7,7 +7,7 @@
  * modules.
  */
 
-import React, {Suspense, useEffect} from "react";
+import React, {Suspense} from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { UICustomizations } from "./Customisations/UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
@@ -39,22 +39,6 @@ const enabledModules = [
   // "PGR",
 ];
 
-useEffect(() => {
-  initLibraries().then(() => {
-    initDigitUI();
-    const initMethods = async () => {
-      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager");
-      await initCampaignComponents();
-    }
-    initMethods()
-  });
-}, []);
-
-
-const moduleReducers = (initData) => ({
-  initData,
-});
-
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({});
   window.Digit.Customizations = {
@@ -69,6 +53,14 @@ const initDigitUI = () => {
   initCampaignComponents();
   // initPGRComponents();
 };
+
+initLibraries().then(() => {
+  initDigitUI();
+});
+
+const moduleReducers = (initData) => ({
+  initData,
+});
 
 function App() {
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
