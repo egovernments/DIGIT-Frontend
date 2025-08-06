@@ -81,7 +81,7 @@ const updatedConfig = useMemo(() => {
       >
         {
           <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-            {t("HR_HOME_SEARCH_RESULTS_HEADING")}
+            {t("HR_HOME_SEARCH_CAMPAIGNS_HEADING")}
           </HeaderComponent>
         }
       </div>
