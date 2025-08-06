@@ -11,6 +11,7 @@ import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
 import { formatTimestampToDate } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 import BillDetailsTable from "../../components/BillDetailsTable";
+import "./loader_size.css";
 /**
  * @function BillPaymentDetails
  * @description This component is used to view attendance.
@@ -774,14 +775,42 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
               )}
               {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
+                  
                   {
                     (isSelectionDisabledTransfer || isSelectionDisabledVerify) ? (
-                    <InfoCard
-                      variant="default"
-                      style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
-                      label={t(`HCM_AM_INFO`)}
-                      text={t(`HCM_AM_VERIFICATION_PAYMENT_IN_PROGRESS_TEXT_INFO`)}
-                    />
+                    // <InfoCard
+                    // ///
+                    //   variant="default"
+                    //   style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
+                    //   label={t(`HCM_AM_INFO`)}
+                    //   text={t(`HCM_AM_VERIFICATION_PAYMENT_IN_PROGRESS_TEXT_INFO`)}
+                    // />
+                    <div className="label-pair">
+                          <span
+                            style={{
+                              backgroundColor: "#EFF8FF",
+                              color: "#0B4B66",
+                              padding: "0rem 0.5rem",
+                              borderRadius: "4px",
+                              fontWeight: "bold",
+                              display: "inline-flex",
+                              alignItems: "center",
+                              minWidth: "100px",
+                              height: "2.4rem",
+                              textAlign: "left",           //  aligns text to left
+                              justifyContent: "flex-start",//  aligns content to left
+                              gap: "0.3rem",               //  spacing between loader and text
+                            }}
+                          > <div className="small-loader-wrapper">
+                              <div className="scaled-loader">
+                                <div style={{ transform: "scale(0.7)" }}>
+                                <Loader />
+                              </div>
+                              </div>
+                            </div>
+                            {t(`HCM_AM_VERIFICATION_PAYMENT_IN_PROGRESS_TEXT_INFO`)}
+                          </span>
+                        </div>
                   )
                    : billData?.billDetails?.some((item) =>
                       ["VERIFICATION_FAILED", "PENDING_EDIT"].includes(item.status)
