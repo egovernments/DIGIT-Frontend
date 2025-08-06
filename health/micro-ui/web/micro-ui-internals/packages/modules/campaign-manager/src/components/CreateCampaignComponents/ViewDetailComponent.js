@@ -3,7 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , icon , disabled }) => {
+const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , icon , disabled ,isDraftCampaign}) => {
   const { t } = useTranslation();
   const history = useHistory();
 
@@ -19,7 +19,7 @@ const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , 
         <Button
           label={buttonLabel}
           onClick={() => {
-            history.push(`/${window.contextPath}/employee/campaign/${navLink}`);
+            history.push(`/${window.contextPath}/employee/campaign/${navLink}`,{isDraftCampaign : isDraftCampaign});
           }}
           variation={type}
           style={{ width: '19rem' }}
