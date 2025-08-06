@@ -39,9 +39,17 @@ const enabledModules = [
   // "PGR",
 ];
 
-initLibraries().then(() => {
-  initDigitUI();
-});
+React.useEffect(() => {
+  initLibraries().then(() => {
+    initDigitUI();
+    const initMethods = async () => {
+      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager");
+      await initCampaignComponents();
+    }
+    initMethods()
+  });
+}, []);
+
 
 const moduleReducers = (initData) => ({
   initData,
