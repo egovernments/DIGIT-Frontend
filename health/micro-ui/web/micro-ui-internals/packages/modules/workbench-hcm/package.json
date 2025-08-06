@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.0-beta.2",
-    "@egovernments/digit-ui-react-components": "1.8.23",
+    "@egovernments/digit-ui-react-components": "1.8.24",
     "@egovernments/digit-ui-components":"0.0.2-beta.66",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
