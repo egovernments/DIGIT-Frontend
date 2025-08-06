@@ -178,7 +178,7 @@ const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowC
         history.push(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
             rowData?.campaignNumber
-          }&tenantId=${Digit.ULBService.getCurrentTenantId()}`
+          }&tenantId=${Digit.ULBService.getCurrentTenantId()}`, { isDraft: rowData?.status === "drafted" }
         ),
       icon: "Edit",
       variation: "primary",
