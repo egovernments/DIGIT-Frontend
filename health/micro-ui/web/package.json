@@ -79,7 +79,7 @@
     "build:prepare": "./build.sh",
     "build:libraries": "cd micro-ui-internals && yarn install && yarn build",
     "build:prod": "webpack --mode production",
-    "build:webpack": "yarn build:libraries && cd web && yarn build:prod",
+    "build:webpack": "yarn build:libraries && cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules"
   },
   "eslintConfig": {
