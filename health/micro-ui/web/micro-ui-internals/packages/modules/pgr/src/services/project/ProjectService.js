@@ -1,7 +1,7 @@
 export const ProjectService = {
 
   // Context path variable from globalConfigs
-  projectContextPath: window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project",
+  projectContextPath: window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project",
 
   staffSearch: async ({ body, params }) => {
     try {
