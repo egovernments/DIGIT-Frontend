@@ -298,6 +298,7 @@ const ProjectStaffComponent = (props) => {
           <table className="table reports-table sub-work-table">
             <thead>
               <tr>
+                <th key={'sno'}>{t("WBH_SHOW_TASKS")}</th>
                 {columns?.map((column, index) => (
                   <th key={index}>{column?.label}</th>
                 ))}
@@ -306,6 +307,23 @@ const ProjectStaffComponent = (props) => {
             <tbody>
               {mappedProjectStaff?.map((row, rowIndex) => (
                 <tr key={rowIndex}>
+                   <td>
+                    <Button
+                      label={`${t("WBH_SHOW_TASKS")}`}
+                      type="button"
+                      variation="secondary"
+                      onButtonClick={() => {
+                        setDeletionDetails({
+                          task:true,
+                          projectId: row.projectId,
+                          userId: row.userId,
+                          id: row.id,
+                          ...row,
+                        });
+                        setShowModal(true);
+                      }}
+                    />
+                  </td>
                   {columns?.map((column, columnIndex) => (
                     <td key={columnIndex}>
                       {column?.render
@@ -338,24 +356,7 @@ const ProjectStaffComponent = (props) => {
                       }}
                     />
                   </td>
-                  <td>
-                    <Button
-                      label={`${t("WBH_SHOW_TASKS")}`}
-                      type="button"
-                      variation="secondary"
-                      icon={<SVG.Delete width={"28"} height={"28"} />}
-                      onButtonClick={() => {
-                        setDeletionDetails({
-                          task:true,
-                          projectId: row.projectId,
-                          userId: row.userId,
-                          id: row.id,
-                          ...row,
-                        });
-                        setShowModal(true);
-                      }}
-                    />
-                  </td>
+                 
                 </tr>
               ))}
             </tbody>

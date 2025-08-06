@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Header } from "@egovernments/digit-ui-react-components";
+import { Button, Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import {  Loader} from "@egovernments/digit-ui-components";
+import MapView from "./MapView";
 
 
 const TaskComponent = (props) => {
   const { t } = useTranslation();
   const url = getProjectServiceUrl();
+  const [showMapview, setShowMapview] = useState({showMaps: false});
   const requestCriteria = {
     url: `${url}/task/v1/_search`,
     changeQueryName: props.projectId,
@@ -28,7 +30,7 @@ const TaskComponent = (props) => {
       select :(data)=>{
         return data?.Tasks?.map((task) => ({
           ...task,
-          plannedStartDate: task.clientAuditDetails?.createdTime ? new Date(task.clientAuditDetails?.createdTime).toLocaleDateString() : "NA",
+          plannedStartDate: task.clientAuditDetails?.createdTime ? new Date(task.clientAuditDetails?.createdTime)?.toISOString() : "NA",
           resourcesQuantity: task?.resources?.reduce((acc,curr)=>curr?.quantity+acc,0) || "NA",
           latitude: task?.address?.latitude || "NA",
           longitude: task?.address?.longitude || "NA",
@@ -59,13 +61,21 @@ const TaskComponent = (props) => {
   if (isLoading) {
     return  <Loader page={true} variant={"PageLoader"}/>;
   }
+  
 
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
-      <Header className="works-header-view">{t("TASK")}</Header>
-      {projectTask?.length === 0 ? (
+      <Header className="works-header-view">{t("TASK")}</Header> <button className="primary-button" onClick={() => {
+        const updated={showMaps:!showMapview.showMaps};
+        setShowMapview({...updated})}}>{showMapview?.showMaps ? t("VIEW_TABLE") : t("VIEW_MAP")}</button>
+      {projectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
-      ) : (<table className="table reports-table sub-work-table">
+      )}
+      {projectTask?.length > 0 &&  (showMapview?.showMaps==true?<MapView visits={ projectTask?.map(task => ({
+        lat: task?.latitude || 0,
+        lng: task?.longitude || 0,
+        time: task?.plannedStartDate || "NA"
+      }))} />:<table className="table reports-table sub-work-table">
           <thead>
             <tr>
               {columns.map((column, index) => (
@@ -82,8 +92,7 @@ const TaskComponent = (props) => {
               </tr>
             ))}
           </tbody>
-        </table>
-      )}
+        </table> )}
     </div>
   );
 };
