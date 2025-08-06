@@ -373,16 +373,18 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
 
   const [campaignData, dispatchCampaignData] = useReducer(
     campaignDataReducer,
-    generateTabsData(cycleData?.cycleConfgureDate?.cycle, cycleData?.cycleConfgureDate?.deliveries)
+    []
   );
   const [executionCount, setExecutionCount] = useState(0);
 
   useEffect(() => {
-    dispatchCampaignData({
-      type: "GENERATE_CAMPAIGN_DATA",
-      cycle: cycleData?.cycleConfgureDate?.cycle,
-      deliveries: cycleData?.cycleConfgureDate?.deliveries,
-    });
+    if (filteredDeliveryConfig && cycleData?.cycleConfgureDate?.cycle && cycleData?.cycleConfgureDate?.deliveries) {
+      dispatchCampaignData({
+        type: "GENERATE_CAMPAIGN_DATA",
+        cycle: cycleData.cycleConfgureDate.cycle,
+        deliveries: cycleData.cycleConfgureDate.deliveries,
+      });
+    }
   }, [cycleData, filteredDeliveryConfig]);
 
   useEffect(() => {
