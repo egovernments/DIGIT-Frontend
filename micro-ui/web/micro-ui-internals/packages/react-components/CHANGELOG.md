@@ -3,6 +3,9 @@ Here's the `CHANGELOG` file for the specified versions:
 ```markdown
 # Changelog
 
+## [1.8.24]  [6-Aug-2025]
+- Added id attribute in submit bar
+
 ## [1.8.23]  [6-Aug-2025]
 - Added id attribute for accessibility
 

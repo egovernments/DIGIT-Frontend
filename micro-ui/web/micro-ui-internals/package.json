@@ -108,7 +108,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "0.2.0",
-    "@egovernments/digit-ui-react-components": "1.8.23",
+    "@egovernments/digit-ui-react-components": "1.8.24",
     "json-edit-react": "^1.22.6",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
