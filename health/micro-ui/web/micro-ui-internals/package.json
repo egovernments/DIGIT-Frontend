@@ -4,7 +4,7 @@
   "main": "index.js",
   "workspaces": [
     "example",
-    "packages/modules/*"
+    "packages/modules/campaign-manager"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -25,7 +25,7 @@
     "devD:workbench-hcm": "cd packages/modules/workbench-hcm && yarn start",
     "devD:microplan": "cd packages/modules/microplan && yarn start",
     "devD:healthpayments": "cd packages/modules/health-payments && yarn start",
-    "devDD:pgr": "cd packages/modules/pgr && yarn start",
+    "devD:pgr": "cd packages/modules/pgr && yarn start",
     "devD:health-dss": "cd packages/modules/health-dss && yarn start",
     "build": "run-s build:**",
     "buildD:ui-components": "cd packages/ui-components && yarn build",
