@@ -277,10 +277,12 @@ const ProjectStaffComponent = (props) => {
             searchResult={showResult}
             onSubmit={handleProjectStaffSubmit}
             onClose={closeModal}
+            deletionDetails={deletionDetails}
             heading={"WBH_ASSIGN_PROJECT_STAFF"}
             isDisabled={showResult == null} // Set isDisabled based on the condition
           />
         )}
+
         {showPopup && (
           <ConfirmationDialog
             t={t}
@@ -326,12 +328,31 @@ const ProjectStaffComponent = (props) => {
                       icon={<SVG.Delete width={"28"} height={"28"} />}
                       onButtonClick={() => {
                         setDeletionDetails({
+                          task:false,
                           projectId: row.projectId,
                           userId: row.userId,
                           id: row.id,
                           ...row,
                         });
                         setShowPopup(true);
+                      }}
+                    />
+                  </td>
+                  <td>
+                    <Button
+                      label={`${t("WBH_SHOW_TASKS")}`}
+                      type="button"
+                      variation="secondary"
+                      icon={<SVG.Delete width={"28"} height={"28"} />}
+                      onButtonClick={() => {
+                        setDeletionDetails({
+                          task:true,
+                          projectId: row.projectId,
+                          userId: row.userId,
+                          id: row.id,
+                          ...row,
+                        });
+                        setShowModal(true);
                       }}
                     />
                   </td>
