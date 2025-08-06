@@ -2,7 +2,7 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent, Loader,PopUp,Button,Chip } from "@egovernments/digit-ui-components";
+import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent, Loader, PopUp, Button, Chip } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
@@ -78,7 +78,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     },
   };
 
-  const {  data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
     onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
@@ -107,9 +107,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       setBoundaryOptions(sessionData?.boundaryData || {});
     }
     setTimeout(() => setIsLoading(false), 10);
-  }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType , campaignData]);
+  }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType, campaignData]);
 
- useEffect(() => {
+  useEffect(() => {
     if (
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
       props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
@@ -162,6 +162,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
         },
       }
     );
+  };
+
   const checkDataPresent = ({ action }) => {
     if (action === false) {
       setShowPopUp(false);
@@ -189,13 +191,13 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
               <TagComponent campaignName={campaignName} />
               {
                 isDraftCampaign ? (
-                  <div className="digit-tag-container" style={{margin:"0rem"}}>
+                  <div className="digit-tag-container" style={{ margin: "0rem" }}>
                     <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
                   </div>
                 ) : null
               }
             </div>
-            <HeaderComponent className = "select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
+            <HeaderComponent className="select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper
               hierarchyType={hierarchyType}
