@@ -26,8 +26,8 @@
     "buildD:pgr": "cd packages/modules/pgr && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules",
-    "dev:hrms": "cd packages/modules/health-hrms && yarn start",
-    "build:hrms": "cd packages/modules/health-hrms && yarn build"
+    "devD:hrms": "cd packages/modules/health-hrms && yarn start",
+    "buildD:hrms": "cd packages/modules/health-hrms && yarn build"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
