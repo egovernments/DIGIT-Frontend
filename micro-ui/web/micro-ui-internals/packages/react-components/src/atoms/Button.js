@@ -19,11 +19,14 @@ import PropTypes from "prop-types";
 
 const Button = (props) => {
   let className = props?.variation !== "primary" ? `jk-digit-secondary-btn` : `jk-digit-primary-btn`;
+   const fieldId = props?.id||Digit?.Utils?.getFieldIdName?.( props?.label || props?.className || "button")||"NA";
+
   return (
     <button
       className={`${className} ${(props?.className && props?.className) || ""} ${(props?.isDisabled && "jk-digit-disabled-btn") || ""}`}
       type={props.type || "button"}
       form={props.formId}
+      id={fieldId}
       onClick={props.onButtonClick}
       disabled={props?.isDisabled}
       style={props.style ? props.style : null}
