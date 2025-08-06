@@ -1,3 +1,5 @@
+import Urls from "../../services/urls";
+
 export const AssignCampaignInboxConfig = {
     tenantId: "mz",
     moduleName: "HRMS",
@@ -188,7 +190,7 @@ export const AssignCampaignInboxConfig = {
                 tenantId: "mz",
                 apiOperation: "SEARCH"
               },
-              serviceName: "/health-project/v1/_search",
+              serviceName: Urls.hcm.searchProject,
               requestParam: {
                 limit: 10,
                 offset: 0,

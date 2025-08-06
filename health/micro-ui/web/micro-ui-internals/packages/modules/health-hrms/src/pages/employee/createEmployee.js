@@ -304,7 +304,7 @@ const CreateEmployee = ({ editUser = false }) => {
     } else {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOBILE_NUMBER" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
