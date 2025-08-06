@@ -8,6 +8,7 @@ import {
 } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { projectStaffData } from "../configs/ProjectStaffConfig";
+import TaskComponent from "./TaskComponent";
 
 const ProjectStaffModal = ({
   t,
@@ -22,6 +23,7 @@ const ProjectStaffModal = ({
   isDisabled,
   showDepartment,
   showUserName,
+  deletionDetails
 }) => {
   const CloseBtn = (props) => {
     return (
@@ -52,11 +54,17 @@ const ProjectStaffModal = ({
       isDisabled={isDisabled}
     >
       <Card style={{ boxShadow: "none" }}>
+        {deletionDetails?.task ? (
+          <TaskComponent projectId={deletionDetails?.projectId} userId={deletionDetails?.userId} />
+
+        ) : (
+          <span>
         <LabelFieldPair>
           <TextInput name={"name"} placeholder={`${t("WBH_SEARCH_BY_NAME")}`} value={userName} onChange={onChange} />
         </LabelFieldPair>
         <Button label={`${t("WBH_ACTION_SEARCH")}`} type="button" onButtonClick={onSearch} />
         {searchResult&&<ViewComposer data={projectStaffData(searchResult, showDepartment, showUserName)} />}
+        </span>)}
       </Card>
     </Modal>
   );

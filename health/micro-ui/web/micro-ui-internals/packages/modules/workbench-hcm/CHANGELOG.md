@@ -1,6 +1,9 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
+## 0.1.3
+#### Integrated the new component library for accessivility & added task screen
+
 ## 0.1.2
 #### Integrated the new component library 
 
