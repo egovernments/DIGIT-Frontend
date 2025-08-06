@@ -16,7 +16,7 @@ const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
 module.exports = {
   // mode: 'development',
   entry: path.resolve(__dirname, "src/index.js"),
-  devtool: "source-map",
+  devtool: "none",
   module: {
     rules: [
       {

@@ -9,7 +9,7 @@
 
 import React, {Suspense} from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { UICustomizations } from "./Customisations/UICustomizations";
+// import { UICustomizations } from "./Customisations/UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
 import { Loader } from "@egovernments/digit-ui-components";
 // import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
@@ -36,7 +36,7 @@ const enabledModules = [
   "Workbench",
   "HCMWORKBENCH",
   "Campaign",
-  "PGR",
+  // "PGR",
 ];
 
 initLibraries().then(() => {
@@ -50,8 +50,8 @@ const moduleReducers = (initData) => ({
 const initDigitUI = () => {
   window.Digit.ComponentRegistryService.setupRegistry({});
   window.Digit.Customizations = {
-    PGR: {},
-    commonUiConfig: UICustomizations,
+    // PGR: {},
+    // commonUiConfig: UICustomizations,
   };
 
   // initHRMSComponents();
