@@ -101,6 +101,7 @@ export const CreateEmployeeConfig = {
                 error: "CORE_COMMON_MOBILE_ERROR",
                 componentInFront: "+91",
                 validation: {
+                  required: true,
                   minLength: 10,
                   maxLength: 10,
                   min: 6000000000,

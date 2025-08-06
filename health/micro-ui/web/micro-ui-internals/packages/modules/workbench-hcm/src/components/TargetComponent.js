@@ -40,12 +40,11 @@ const TargetComponent = (props) => {
     // { label: t("WBH_ACTIONS"), key: "actions" },
   ];
 
-  // const handleEditButtonClick = (index) => {
-  //   // const updatedTargets = [...props.targets[index]];
-  //   console.log(props.targets[index].isDeleted);
-  //   setFormData(props.targets[index]);
-  //   setShowModal(true);
-  // };
+  const handleEditButtonClick = (index) => {
+    // const updatedTargets = [...props.targets[index]];
+    setFormData(props.targets[index]);
+    setShowModal(true);
+  };
 
   // const handleEditButtonClick = (index) => {
   //   const updatedTarget = { ...props.targets[index], isDeleted: true };

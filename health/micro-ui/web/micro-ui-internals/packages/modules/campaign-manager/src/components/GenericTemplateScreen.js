@@ -42,6 +42,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
           overflowY: "auto",
           //   padding: "1rem",
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
+          overflowX:"hidden"
         }}
       >
         {TemplateRenderer ? (
@@ -54,7 +55,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
                 <div
                   key={index}
                   className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
-                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px", display: "flex", alignItems: "center"}}
                 >
                   <DynamicImageComponent type={field?.type} appType={field?.appType} />
                 </div>

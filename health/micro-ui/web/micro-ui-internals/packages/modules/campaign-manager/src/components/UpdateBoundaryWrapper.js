@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useRef, useEffect, Fragment } from "react";
-import { Card, HeaderComponent, AlertCard } from "@egovernments/digit-ui-components";
+import { Card, HeaderComponent, AlertCard, PopUp, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
@@ -32,6 +32,8 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   );
   const campaignName = searchParams.get("campaignName");
   const [hierarchyType, SetHierarchyType] = useState(props?.props?.hierarchyType);
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [restrictSelection, setRestrictSelection] = useState(null);
   const lowestHierarchy = useMemo(() => {
     return HierarchySchema?.[CONSOLE_MDMS_MODULENAME]?.HierarchySchema?.find((item) => item.hierarchy === hierarchyType)?.lowestHierarchy;
   }, [HierarchySchema, hierarchyType]);
@@ -189,22 +191,46 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   }, [CampaignData]);
 
   useEffect(() => {
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
+  }, [selectedData, boundaryOptions, restrictSelection]);
+
+  useEffect(() => {
     if (props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType) {
       setSelectedData(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData);
       setBoundaryOptions(props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.boundaryData);
     }
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType]);
 
+  useEffect(() => {
+    if (
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
+    ) {
+      setRestrictSelection(true);
+    }
+  }, [props?.props?.sessionData]);
+
   const hierarchyData = Digit.Hooks.campaign.useBoundaryRelationshipSearch({ BOUNDARY_HIERARCHY_TYPE: hierarchyType, tenantId });
 
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
+    setRestrictSelection(value?.restrictSelection);
   };
 
-  useEffect(() => {
-    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions });
-  }, [selectedData, boundaryOptions]);
+  const checkDataPresent = ({ action }) => {
+    if (action === false) {
+      setShowPopUp(false);
+      setRestrictSelection(false);
+      return;
+    }
+    if (action === true) {
+      setShowPopUp(false);
+      setRestrictSelection(true);
+      return;
+    }
+  };
 
   return (
     <>
@@ -225,6 +251,7 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
             }}
             boundaryOptions={boundaryOptions}
             selectedData={selectedData}
+            restrictSelection={restrictSelection}
           />
         )}
       </Card>
@@ -236,6 +263,45 @@ const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
           style={{ margin: "0rem", maxWidth: "100%", marginTop: "1.5rem", marginBottom: "2rem" }}
         />
       </div>
+      {showPopUp && (
+        <PopUp
+          className={"boundaries-pop-module"}
+          type={"default"}
+          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              onClick={() => {
+                checkDataPresent({ action: false });
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              onClick={() => {
+                checkDataPresent({ action: true });
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
+      )}
     </>
   );
 };

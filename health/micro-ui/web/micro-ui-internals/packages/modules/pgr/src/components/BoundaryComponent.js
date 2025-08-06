@@ -8,7 +8,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
   const { data: childrenData, isLoading: isBoundaryLoading } = Digit.Hooks.pgr.useFetchBoundaries({
     tenantId, hierarchyType: hierarchy?.hierarchyType, config: { enabled: !!hierarchy?.hierarchyType } });
 
-  const boundaryHierarchy = hierarchy?.boundaryHierarchy?.map((item) => item.code) || [];
+  const boundaryHierarchy = hierarchy?.boundaryHierarchy?.map((item) => item.boundaryType) || [];
 
 
   // State to manage selected values and dropdown options
@@ -75,7 +75,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
             return (
               <BoundaryDropdown
                 key={key}
-                label={`${t(`${hierarchyType}_${key}`)}`}
+                label={`${t(`${hierarchy?.hierarchyType}_${key}`)}`}
                 data={value[key]}
                 onChange={(selectedValue) => handleSelection(selectedValue)}
                 selected={formData?.locality || formData?.SelectedBoundary ? selectedValues[key] : null}

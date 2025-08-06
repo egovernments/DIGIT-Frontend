@@ -1895,55 +1895,11 @@ export const UICustomizations = {
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const { id } = useParams();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
-      const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
+      const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
       const [toast, setToast] = useState(null);
       const [modalOpen, setModalOpen] = useState(false);
       const [sessionFormData, setSessionFormData] = useState({});
       const [refreshKey, setRefreshKey,] = useState(Date.now());
-      const formConfig = {
-          label: {
-            heading: "ASSIGN_CAMPAIGN_MODAL_TITLE",
-            submit: "CORE_COMMON_SUBMIT",
-            cancel: "CORE_COMMON_CANCEL"
-          },
-          form: [
-            {
-              body: [
-                {
-                  inline: true,
-                  label: "HR_CAMPAIGN_FROM_DATE_LABEL",
-                  isMandatory: true,
-                  key: "startDate",
-                  type: "date",
-                  populators: {
-                    name: "startDate",
-                    required: true,
-                    error: "CORE_COMMON_REQUIRED_ERRMSG",
-                    validation: {
-                      max: new Date().toISOString().split("T")[0]
-                    }
-                  }
-                },
-                {
-                  inline: true,
-                  label: "HR_CAMPAIGN_TO_DATE_LABEL",
-                  isMandatory: false,
-                  key: "endDate",
-                  type: "date",
-                  populators: {
-                    name: "endDate",
-                    required: false,
-                    error: "CORE_COMMON_REQUIRED_ERRMSG",
-                    validation: {
-                      max: new Date().toISOString().split("T")[0]
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        };
 
       const { isLoading: isHRMSSearchLoading, isError, error, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);      // API request criteria for fetching project staff details
       const reqCri = {
@@ -1968,6 +1924,49 @@ export const UICustomizations = {
       // Fetch project staff details using custom API hook
       const { isLoading: isProjectStaffLoading, data: projectStaff, revalidate: revalidateProjectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
 
+            const formConfig = {
+          label: {
+            heading: "ASSIGN_CAMPAIGN_MODAL_TITLE",
+            submit: "CORE_COMMON_SUBMIT",
+            cancel: "CORE_COMMON_CANCEL"
+          },
+          form: [
+            {
+              body: [
+                {
+                  inline: true,
+                  label: "HR_CAMPAIGN_FROM_DATE_LABEL",
+                  isMandatory: true,
+                  key: "startDate",
+                  type: "date",
+                  populators: {
+                    name: "startDate",
+                    required: true,
+                    error: "CORE_COMMON_REQUIRED_ERRMSG",
+                    validation: {
+                      min: new Date().toISOString().split("T")[0]
+                    }
+                  }
+                },
+                {
+                  inline: true,
+                  label: "HR_CAMPAIGN_TO_DATE_LABEL",
+                  isMandatory: false,
+                  key: "endDate",
+                  type: "date",
+                  populators: {
+                    name: "endDate",
+                    required: false,
+                    error: "CORE_COMMON_REQUIRED_ERRMSG",
+                    validation: {
+                      min: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+                    }
+                  }
+                }
+              ]
+            }
+          ]
+        };
       const createStaffMutation = Digit.Hooks.hrms.useHRMSStaffCreate(tenantId);
       const deleteStaffMutation = Digit.Hooks.hrms.useHRMSStaffDelete(tenantId);
 
@@ -2012,6 +2011,7 @@ export const UICustomizations = {
       const handleModalSubmit = async () => {
         const missingFields = validateFormData(sessionFormData, formConfig, t);
         if (missingFields.length > 0) return;
+        else{
         setModalOpen(false);
         const payload = {
           tenantId: tenantId,
@@ -2025,6 +2025,7 @@ export const UICustomizations = {
           : row?.endDate,
         };
         await createStaffService(payload);
+      }
       };
       const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
         if (!_.isEqual(sessionFormData, formData)) {
@@ -2142,7 +2143,7 @@ export const UICustomizations = {
              {toast && (
                     <Toast
                       error={toast.key}
-                      isDleteBtn="true"
+                      isDleteBtn={true}
                       label={t(toast.label)}
                       onClose={handleToastClose}
                       type={toast.type}
