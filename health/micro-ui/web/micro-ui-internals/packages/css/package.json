@@ -48,7 +48,9 @@
     "sass": "^1.26.11"
   },
   "resolutions": {
-    "**/minimatch": "7.4.6"
+    "**/minimatch": "7.4.6",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
   },
   "files": [
     "dist/index.min.css",
