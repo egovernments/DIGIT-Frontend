@@ -11,7 +11,7 @@
   "engines": {
     "node": ">=14"
   },
-  "scripts": {
+ "scripts": {
     "start": "SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
@@ -23,7 +23,7 @@
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules",
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
@@ -47,7 +47,8 @@
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
     "@egovernments/digit-ui-react-components": "1.8.24",
-    "@egovernments/digit-ui-components":"0.2.0",
+    "@egovernments/digit-ui-svg-components": "1.0.21",
+    "@egovernments/digit-ui-components":  "0.2.0-beta.60",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",

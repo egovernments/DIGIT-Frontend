@@ -11,7 +11,7 @@
     "micro-ui-internals/packages/modules/campaign-manager"
   ],
   "homepage": "/console",
-  "dependencies": {
+   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.19",
     "@egovernments/digit-ui-module-workbench": "1.0.26",
     "@egovernments/digit-ui-module-core": "1.8.42",
