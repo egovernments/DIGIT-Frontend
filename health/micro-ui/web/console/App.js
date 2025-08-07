@@ -49,13 +49,12 @@ const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...OverrideUICustomizations });
 };
 
-initLibraries().then(() => {
-  initDigitUI();
-}).catch(handleInitError);
+let initializationError = null;
 
-const moduleReducers = (initData) => ({
-  initData,
-});
+const handleInitError = (error) => {
+  console.error('Failed to initialize libraries:', error);
+  initializationError = error;
+};
 
 const initDigitUI = () => {
 
@@ -76,13 +75,14 @@ const initDigitUI = () => {
     // Consider showing a user-friendly error message
   }
 };
-let initializationError = null;
 
-const handleInitError = (error) => {
-  console.error('Failed to initialize libraries:', error);
-  initializationError = error;
-};
+initLibraries().then(() => {
+  initDigitUI();
+}).catch(handleInitError);
 
+const moduleReducers = (initData) => ({
+  initData,
+});
 
 
 function App() {
