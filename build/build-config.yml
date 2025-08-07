@@ -17,31 +17,36 @@
 # -
 # -
 config:
-
-# frontend
-  - name: builds/Digit-Frontend/health/workbench-ui
+  # frontend
+  - name: builds/Digit-Frontend/digit-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: digit-ui
+
+  - name: builds/Digit-Frontend/health/workbench-ui
+    build:
+      - work-dir: health/micro-ui/
+        dockerfile: health/micro-ui/web/workbench/Dockerfile
         image-name: workbench-ui
 
   - name: builds/Digit-Frontend/sandbox-ui
     build:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/sandbox/Dockerfile
-        image-name: sandbox-ui      
+        image-name: sandbox-ui
 
   - name: builds/Digit-Frontend/storybook-svg
     build:
-    - work-dir: micro-ui/web/micro-ui-internals/packages/svg-components/
-      dockerfile: micro-ui/web/micro-ui-internals/packages/svg-components/docker/Dockerfile
-      image-name: storybook-svg
-      
+      - work-dir: micro-ui/web/micro-ui-internals/packages/svg-components/
+        dockerfile: micro-ui/web/micro-ui-internals/packages/svg-components/docker/Dockerfile
+        image-name: storybook-svg
+
   - name: builds/Digit-Frontend/storybook
     build:
-    - work-dir: micro-ui/web/micro-ui-internals/packages/components-core/
-      dockerfile: micro-ui/web/micro-ui-internals/packages/components-core/docker/Dockerfile
-      image-name: storybook
+      - work-dir: micro-ui/web/micro-ui-internals/packages/components-core/
+        dockerfile: micro-ui/web/micro-ui-internals/packages/components-core/docker/Dockerfile
+        image-name: storybook
 
   - name: builds/Digit-Frontend/digit-ui
     build:
