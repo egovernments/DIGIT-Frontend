@@ -12,7 +12,7 @@ COPY micro-ui .
 RUN cd web \
     && ./install-deps.sh \
     && yarn install \
-    && yarn build:prod
+    && yarn build:webpack
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
