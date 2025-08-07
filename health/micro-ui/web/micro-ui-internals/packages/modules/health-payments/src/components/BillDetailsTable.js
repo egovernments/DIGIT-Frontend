@@ -74,7 +74,9 @@ const BillDetailsTable = ({ ...props }) => {
                                                 wordWrap: "break-word",
                                             }}
                                         >
-                                            {t(row?.additionalDetails?.errorDetails?.reasonForFailure)}
+                                            {row?.totalAmount === 0
+                                                ? t("HCM_AM_AMOUNT_ZERO")
+                                                : t(row?.additionalDetails?.errorDetails?.reasonForFailure)}
                                         </div>
                                     }
                                     enterDelay={100}
