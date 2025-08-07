@@ -161,7 +161,7 @@ module.exports = {
           "/default-data-handler",
           "/facility/v1/_create"
         ],
-        target: "https://unified-dev.digit.org",
+        target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
         secure: false,
       },
