@@ -10,6 +10,7 @@ COPY health/micro-ui .
 
 # Navigate to the web directory to install dependencies and build.
 RUN cd web \
+    && ls
     && ./install-deps.sh \
     && yarn install \
     && yarn build:webpack
