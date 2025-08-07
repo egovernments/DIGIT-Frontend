@@ -39,6 +39,8 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     const showErrorPayments =
                         (row?.status === "PAYMENT_FAILED")
+                    const showErrorNotProcessed =
+                        (row?.status === "PENDING_VERIFICATION" && row?.additionalDetails?.errorDetails?.reasonForFailure === "MTN_SERVICE_EXCEPTION")
                     return (
                         <div className="ellipsis-cell"
                             style={{
@@ -63,7 +65,7 @@ const BillDetailsTable = ({ ...props }) => {
                                {t(row?.userId) || t("NA")}
                             </span>
                             
-                            {showErrorPayments && (
+                            {(showErrorPayments || showErrorNotProcessed) && (
                                 <TooltipWrapper
                                     arrow
                                     content={
@@ -74,9 +76,12 @@ const BillDetailsTable = ({ ...props }) => {
                                                 wordWrap: "break-word",
                                             }}
                                         >
-                                            {row?.totalAmount === 0
-                                                ? t("HCM_AM_AMOUNT_ZERO")
-                                                : t(row?.additionalDetails?.errorDetails?.reasonForFailure)}
+                                            {showErrorPayments
+                                                ? row?.totalAmount === 0
+                                                    ? t("HCM_AM_AMOUNT_ZERO")
+                                                    : t(row?.additionalDetails?.errorDetails?.reasonForFailure)
+                                                : `${t("HCM_AM_REQUEST_NOT_PROCESSED")} ${t("HCM_AM_PLEASE_TRY_AGAIN")}`
+                                                }
                                         </div>
                                     }
                                     enterDelay={100}
