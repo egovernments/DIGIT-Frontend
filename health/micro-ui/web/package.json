@@ -10,7 +10,7 @@
   "workspaces": [
     "micro-ui-internals/packages/modules/campaign-manager"
   ],
-  "homepage": "/workbench-ui",
+  "homepage": "/digit-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.17-rc19.1",
     "@egovernments/digit-ui-module-core": "1.8.35-rc19.2",
