@@ -8,7 +8,8 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals"
+    "micro-ui-internals",
+    "micro-ui-internals/packages/modules/campaign-manager"
     ],
   "homepage": "/digit-ui",
   "husky": {},
