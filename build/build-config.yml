@@ -23,7 +23,7 @@ config:
   - name: builds/Digit-Frontend/digit-ui
     build:
       - work-dir: micro-ui/
-        dockerfile: micro-ui/web/docker/Dockerfile
+        dockerfile: health/micro-ui/web/docker/Dockerfile
         image-name: digit-ui
 
   - name: builds/Digit-Frontend/core-ui
