@@ -6,10 +6,9 @@
  * `DigitUI` component is responsible for rendering the UI based on the provided configuration and
  * modules.
  */
-import React from "react";
+import React, { Suspense } from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import { Loader } from "@egovernments/digit-ui-components";
-import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
@@ -33,6 +32,13 @@ const HCM_MODULE_NAME = "campaign";
 export const OverrideUICustomizations = {
   HCM_MODULE_NAME,
 }
+// Lazy load DigitUI
+const DigitUI = React.lazy(() =>
+  import("@egovernments/digit-ui-module-core").then((mod) => ({
+    default: mod.DigitUI,
+  }))
+);
+
 const setupLibraries = (Library, service, method) => {
   window.Digit = window.Digit || {};
   window.Digit[Library] = window.Digit[Library] || {};
@@ -43,6 +49,9 @@ const updateCustomConfigs = () => {
   setupLibraries("Customizations", "commonUiConfig", { ...window?.Digit?.Customizations?.commonUiConfig, ...OverrideUICustomizations });
 };
 
+initLibraries().then(() => {
+  initDigitUI();
+}).catch(handleInitError);
 
 const moduleReducers = (initData) => ({
   initData,
@@ -73,10 +82,6 @@ const handleInitError = (error) => {
   console.error('Failed to initialize libraries:', error);
   initializationError = error;
 };
-
-initLibraries().then(() => {
-  initDigitUI();
-}).catch(handleInitError);
 
 
 
@@ -111,13 +116,15 @@ function App() {
     );
   }
   return (
-    <DigitUI
-      stateCode={stateCode}
-      enabledModules={enabledModules}
-      moduleReducers={moduleReducers}
-      defaultLanding="employee"
-      allowedUserTypes={["employee"]}
-    />
+    <Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
+      <DigitUI
+        stateCode={stateCode}
+        enabledModules={enabledModules}
+        moduleReducers={moduleReducers}
+        defaultLanding="employee"
+        allowedUserTypes={["employee"]}
+      />
+    </Suspense>
   );
 }
 
