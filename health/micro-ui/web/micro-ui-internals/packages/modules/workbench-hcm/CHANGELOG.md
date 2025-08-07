@@ -1,6 +1,16 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
+## 0.1.5
+#### Integrated the map component to view tasks
+
+## 0.1.4
+#### Integrated the map component to view tasks
+
+
+## 0.1.3
+#### Integrated the new component library for accessivility & added task screen
+
 ## 0.1.2
 #### Integrated the new component library 
 

@@ -10,6 +10,7 @@ import ProjectChildrenComponent from "./components/ProjectChildrenComponent";
 import ProjectStaffComponent from "./components/ProjectStaffComponent";
 import FacilityComponent from "./components/FacilityComponent";
 import RowDetails from "./components/RowDetails";
+import TaskComponent from "./components/TaskComponent";
 
 import TargetComponent from "./components/TargetComponent";
 
@@ -41,6 +42,7 @@ const componentsToRegister = {
   ProjectStaffComponent,
   FacilityComponent,
   RowDetails,
+  TaskComponent,
   TargetComponent,
 };
 
