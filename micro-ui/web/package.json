@@ -11,7 +11,7 @@
     "micro-ui-internals",
     "micro-ui-internals/packages/modules/campaign-manager"
     ],
-  "homepage": "/digit-ui",
+  "homepage": "/workbench-ui",
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"
