@@ -123,7 +123,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       const switchRef = useRef(null);
       const [showTooltip, setShowTooltip] = useState(false);
       const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData);
-
+//TODO:: Filter households popup should be acustom selection componenet
       return (
         <div
           ref={switchRef}

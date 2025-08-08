@@ -1,8 +1,9 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { TextInput, Dropdown, RadioButtons, Button, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+import FiltersRenderer from "../../../components/FiltersRenderer";
 
 export const RenderConditionalField = ({
   cField,
@@ -22,8 +23,6 @@ export const RenderConditionalField = ({
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
 
-  console.log("cField:", cField);
-  console.log("drawerState:", drawerState);
 
   switch (cField?.type) {
     case "text":
@@ -47,9 +46,8 @@ export const RenderConditionalField = ({
               updateLocalization(
                 drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
                   ? drawerState?.[cField.bindTo]
-                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
+                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${drawerState?.jsonPath || drawerState?.id
+                  }`,
                 Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                 value
               );
@@ -58,9 +56,8 @@ export const RenderConditionalField = ({
                 [cField?.bindTo]:
                   drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
                     ? drawerState?.[cField.bindTo]
-                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
-                        drawerState?.jsonPath || drawerState?.id
-                      }`,
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${drawerState?.jsonPath || drawerState?.id
+                    }`,
               }));
               return;
             } else {
@@ -150,18 +147,18 @@ export const RenderConditionalField = ({
                 ...prev,
                 [cField?.bindTo]: prev?.[cField?.bindTo]
                   ? [
-                      ...prev?.[cField?.bindTo],
-                      {
-                        code: crypto.randomUUID(),
-                        name: "",
-                      },
-                    ]
+                    ...prev?.[cField?.bindTo],
+                    {
+                      code: crypto.randomUUID(),
+                      name: "",
+                    },
+                  ]
                   : [
-                      {
-                        code: crypto.randomUUID(),
-                        name: "",
-                      },
-                    ],
+                    {
+                      code: crypto.randomUUID(),
+                      name: "",
+                    },
+                  ],
               }))
             }
           />
@@ -215,6 +212,16 @@ export const RenderConditionalField = ({
             }));
           }}
           optionsKey="code"
+        />
+      );
+    case "filters":
+      return (
+        <FiltersRenderer
+          cField={cField}
+          drawerState={drawerState}
+          setDrawerState={setDrawerState}
+          t={t}
+          disabled={disabled}
         />
       );
     default:
