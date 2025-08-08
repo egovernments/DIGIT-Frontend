@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText } from "@egovernments/digit-ui-components";
+import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText,Chip } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
@@ -267,8 +267,34 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
   const actionTags = getActionTags(rowData);
   const tagElements = getTagElements(rowData);
   const [cloneCampaign, setCloneCampaign] = useState(false);
-
+  const showCancelCampaign = rowData?.status === "creating" || rowData?.status === "drafted";
   const currentTab = tabData?.find((i) => i?.active === true)?.label;
+
+  const Template = {
+    url: "/project-factory/v1/project-type/cancel-campaign",
+    body: {
+      CampaignDetails: {
+        tenantId: Digit.ULBService.getStateId(),
+        campaignId: rowData?.id,
+      }
+    },
+  };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
+
+  const handleCancelClick = async () => {
+    await mutation.mutate(
+      {},
+      {
+        onSuccess: async (result) => {
+          history.push(`/${window?.contextPath}/employee/campaign/my-campaign-new`)
+        },
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          console.error(errorCode);
+        },
+      }
+    );
+  };
 
   return (
     <>
@@ -277,6 +303,13 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         <div className="digit-results-card-heading-tags-wrapper">
           <div className="digit-results-card-heading">{rowData?.campaignName}</div>
           <div className="digit-results-card-tags">
+            {
+              showCancelCampaign ? (
+                <div className="digit-tag-container" style={{ margin: "0rem" }}>
+                  <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+                </div>
+              ) : null
+            }
             {tagElements &&
               Object.entries(tagElements)?.map(([key, tag]) => (
                 <Tag
