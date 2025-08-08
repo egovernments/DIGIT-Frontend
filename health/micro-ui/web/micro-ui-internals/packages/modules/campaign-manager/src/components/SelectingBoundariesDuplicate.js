@@ -177,6 +177,32 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     }
   };
 
+  const Template = {
+    url: "/project-factory/v1/project-type/cancel-campaign",
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        campaignId: queryParams?.id,
+      }
+    },
+  };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
+
+  const handleCancelClick = async () => {
+    await mutation.mutate(
+      {},
+      {
+        onSuccess: async (result) => {
+          history.push(`/${window?.contextPath}/employee/campaign/my-campaign-new`)
+        },
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          console.error(errorCode);
+        },
+      }
+    );
+  };
+
   if (draft && isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
@@ -197,7 +223,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
                 ) : null
               }
             </div>
-            <HeaderComponent className="select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
+            <HeaderComponent className = "select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper
               hierarchyType={hierarchyType}
