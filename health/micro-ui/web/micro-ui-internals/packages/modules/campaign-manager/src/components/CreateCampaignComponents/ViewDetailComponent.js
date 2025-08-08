@@ -3,6 +3,7 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
+
 const ViewDetailComponent = ({ headingName, desc, buttonLabel, navLink , type , icon , disabled,isDraftCampaign }) => {
   const { t } = useTranslation();
   const history = useHistory();
