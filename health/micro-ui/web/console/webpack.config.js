@@ -40,8 +40,8 @@ module.exports = {
     moduleIds: "hashed", // Compatible with Webpack 4.x
     splitChunks: {
       chunks: "all",
-      minSize: 30000,
-      maxSize: 250000,
+      minSize: 60000,
+      maxSize: 600000,
       minChunks: 1,
       maxAsyncRequests: 30,
       maxInitialRequests: 30,
