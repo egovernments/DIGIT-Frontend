@@ -3,6 +3,7 @@ import { TextInput, Dropdown, RadioButtons, Button, FieldV1 } from "@egovernment
 import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+import DependentFieldsWrapper from "./DependentFieldsWrapper";
 
 export const RenderConditionalField = ({
   cField,
@@ -14,6 +15,10 @@ export const RenderConditionalField = ({
   drawerState,
   AppScreenLocalisationConfig,
   disabled,
+  parentState,
+  handleExpressionChange,
+  screenConfig,
+  selectedField
 }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
@@ -214,6 +219,17 @@ export const RenderConditionalField = ({
           optionsKey="code"
         />
       );
+    case "dependencyFieldWrapper":
+      return (
+        <DependentFieldsWrapper
+          currentPage="beneficiaryLocation"
+          t={t}
+          parentState={parentState}
+          onExpressionChange={handleExpressionChange}
+          screenConfig={screenConfig}
+          selectedFieldItem={selectedField}
+        />
+      )
     default:
       return null;
   }
