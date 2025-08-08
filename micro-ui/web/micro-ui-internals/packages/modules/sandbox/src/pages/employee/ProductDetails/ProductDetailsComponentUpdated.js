@@ -363,7 +363,18 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     console.log(`*** LOG ***`,config);
 
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState(module === "Finance" ? "employee" : "citizen");
+    const getInitialActiveTab = (currentModule) => {
+    if (currentModule === "OBPS") {
+        return "stakeholder";
+    }
+    if (currentModule === "Finance") {
+        return "employee";
+    }
+    
+    return "citizen";
+    };
+
+    const [activeTab, setActiveTab] = useState(getInitialActiveTab(module));
     const [employeeWTLink, setEmployeeWTLink] = useState('');
     const [citizenWTLink, setCitizenWTLink] = useState('');
     const [stakeholderWTLink, setStakeholderWTLink] = useState('');
