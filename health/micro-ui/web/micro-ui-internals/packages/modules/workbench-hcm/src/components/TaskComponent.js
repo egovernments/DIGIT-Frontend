@@ -1,22 +1,24 @@
-import React, { useState } from "react";
+import React, { useState , Fragment} from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Header } from "@egovernments/digit-ui-react-components";
+import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import {  Loader} from "@egovernments/digit-ui-components";
+import { Loader, Button, Dropdown } from "@egovernments/digit-ui-components";
 import MapView from "./MapView";
 
 
 const TaskComponent = (props) => {
   const { t } = useTranslation();
   const url = getProjectServiceUrl();
-  const [showMapview, setShowMapview] = useState({showMaps: false});
+  const [showMapview, setShowMapview] = useState({ showMaps: false });
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const requestCriteria = {
     url: `${url}/task/v1/_search`,
-    changeQueryName: props.projectId,
+    changeQueryName: `${props.projectId}-tasks-${page}-${pageSize}`,
     params: {
       tenantId: "mz",
-      offset: 0,
-      limit: 10,
+      offset: page * pageSize,
+      limit: pageSize,
     },
 
     body: {
@@ -63,11 +65,21 @@ const TaskComponent = (props) => {
   }
   
 
+  const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
+
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
-      <Header className="works-header-view">{t("TASK")}</Header> <button className="primary-button" onClick={() => {
-        const updated={showMaps:!showMapview.showMaps};
-        setShowMapview({...updated})}}>{showMapview?.showMaps ? t("VIEW_TABLE") : t("VIEW_MAP")}</button>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+        <Header className="works-header-view">{t("TASK")}</Header>
+        <Button
+          variation="secondary"
+          label={showMapview?.showMaps ? t("VIEW_TABLE") : t("VIEW_MAP")}
+          onClick={() => {
+            const updated = { showMaps: !showMapview.showMaps };
+            setShowMapview({ ...updated });
+          }}
+        />
+      </div>
       {projectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
       )}
@@ -75,7 +87,8 @@ const TaskComponent = (props) => {
         lat: task?.latitude || 0,
         lng: task?.longitude || 0,
         time: task?.plannedStartDate || "NA"
-      }))} />:<table className="table reports-table sub-work-table">
+      }))} />:<>
+        <table className="table reports-table sub-work-table">
           <thead>
             <tr>
               {columns.map((column, index) => (
@@ -92,7 +105,41 @@ const TaskComponent = (props) => {
               </tr>
             ))}
           </tbody>
-        </table> )}
+        </table>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem", gap: "1rem", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
+            <div className="typography caption-l">{t("PAGE")}: {page + 1}</div>
+            <div style={{ minWidth: "10rem" }}>
+              <Dropdown
+                t={t}
+                option={[10, 20, 50, 100].map((n) => ({ code: n, name: `${n}` }))}
+                optionKey="name"
+                selected={[10, 20, 50, 100].map((n) => ({ code: n, name: `${n}` })).find((o) => o.code === pageSize)}
+                select={(opt) => {
+                  if (opt && opt.code) {
+                    setPageSize(opt.code);
+                    setPage(0);
+                  }
+                }}
+              />
+            </div>
+          </div>
+          <div style={{ display: "flex", gap: "0.5rem" }}>
+            <Button
+              variation="secondary"
+              label={t("PREVIOUS")}
+              isDisabled={page === 0}
+              onClick={() => setPage((p) => Math.max(0, p - 1))}
+            />
+            <Button
+              variation="secondary"
+              label={t("NEXT")}
+              isDisabled={isNextDisabled}
+              onClick={() => setPage((p) => p + 1)}
+            />
+          </div>
+        </div>
+      </>) }
     </div>
   );
 };
