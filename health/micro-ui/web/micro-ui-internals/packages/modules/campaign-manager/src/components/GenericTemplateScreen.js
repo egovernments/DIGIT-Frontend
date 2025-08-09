@@ -22,9 +22,10 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
     .filter(
       (field) =>
         !field.hidden &&
-        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton" || field.jsonPath === "qrscanner")
+        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton" || field.jsonPath === "scanner")
     )
     .sort((a, b) => (a.order || 0) - (b.order || 0));
+
 
   return (
     <div
@@ -94,11 +95,11 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
             <div className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}>
             <Button
               key={index}
-              variation={field.jsonPath === "SecondaryButton" ? "secondary" : "primary"}
+              variation={field.jsonPath === "SecondaryButton" || field.jsonPath === "scanner" ? "secondary" : "primary"}
               label={t(field?.label)}
               onClick={() => { }}
               style={{ minWidth: "100%" }}
-              icon={field.icon || null}
+              icon={field.jsonPath === "scanner"  ? "QrCodeScanner" : null}
             />
             </div>
           ))}
