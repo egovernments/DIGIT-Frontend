@@ -30,7 +30,7 @@ const ProjectStaffComponent = (props) => {
     url: `${healthProjecturl}/staff/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },
@@ -66,11 +66,11 @@ const ProjectStaffComponent = (props) => {
   const userRequestCriteria = {
     url: "/user/_search",
     body: {
-      tenantId: "mz",
+      tenantId: tenantId,
       uuid: userIds,
     },
     config: {
-      enable: userIds?.length > 0 ? true : false,
+      enable: userIds&&userIds?.length > 0 ? true : false,
     },
   };
 
@@ -269,7 +269,12 @@ const ProjectStaffComponent = (props) => {
       <Header className="works-header-view">{t("PROJECT_STAFF")}</Header>
 
       <div>
-        <Button label={t("WBH_ADD_PROJECT_STAFF")} type="button" variation={"secondary"} onButtonClick={() => setShowModal(true)} />
+        <Button label={t("WBH_ADD_PROJECT_STAFF")} type="button" variation={"secondary"} onButtonClick={() => {setDeletionDetails({
+                                     ...deletionDetails,
+                                     task: false
+                  });
+                  setShowModal(true);
+                  }} />
         {showModal && (
           <ProjectStaffModal
             t={t}

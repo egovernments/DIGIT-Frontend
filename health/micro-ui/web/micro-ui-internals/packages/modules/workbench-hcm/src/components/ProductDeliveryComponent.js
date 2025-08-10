@@ -8,12 +8,12 @@ import {  Loader} from "@egovernments/digit-ui-components";
 
 const ProductDeliveryComponent = (props) => {
     const { t } = useTranslation();
-    
+    const tenantId = Digit?.ULBService?.getCurrentTenantId();
     const requestCriteria = {
         url: "/product/v1/_search",
         changeQueryName:props.projectId,
         params: {
-            tenantId : "mz",
+            tenantId : tenantId,
             offset: 0,
             limit: 10,
         },

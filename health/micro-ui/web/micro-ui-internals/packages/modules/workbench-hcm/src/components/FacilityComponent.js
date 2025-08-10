@@ -7,11 +7,13 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 const FacilityComponent = (props) => {
   const { t } = useTranslation();
   const url = getProjectServiceUrl();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
+
   const requestCriteria = {
     url: `${url}/facility/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },
@@ -32,7 +34,7 @@ const FacilityComponent = (props) => {
     url: "/facility/v1/_search",
     changeQueryName: projectFacility?.ProjectFacilities?.[0]?.facilityId,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },

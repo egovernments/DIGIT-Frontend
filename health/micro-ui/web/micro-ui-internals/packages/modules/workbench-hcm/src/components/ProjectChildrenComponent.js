@@ -7,13 +7,13 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 
 const ProjectChildrenComponent = (props) => {
   const { t } = useTranslation();
-
   const url = getProjectServiceUrl();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const requestCriteria = {
     url: `${url}/v1/_search`,
-    changeQueryName: props.projectId,
+    changeQueryName: `${props.projectId}-${tenantId}`,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 100,
       includeDescendants: true,
@@ -21,7 +21,7 @@ const ProjectChildrenComponent = (props) => {
     body: {
       Projects: [
         {
-          tenantId: "mz",
+          tenantId: tenantId,
           id: props.projectId,
         },
       ],

@@ -13,11 +13,12 @@ const TaskComponent = (props) => {
   const [showMapview, setShowMapview] = useState({ showMaps: false });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const requestCriteria = {
     url: `${url}/task/v1/_search`,
     changeQueryName: `${props.projectId}-tasks-${page}-${pageSize}`,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: page * pageSize,
       limit: pageSize,
     },

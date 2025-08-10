@@ -9,11 +9,12 @@ const ProjectBeneficiaryComponent = (props) => {
   const { t } = useTranslation();
   const [productIds, setProductIds] = useState([]);
   const url = getProjectServiceUrl();
+  const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const requestCriteria = {
     url: `${url}/resource/v1/_search`,
     changeQueryName: props.projectId,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },
@@ -44,7 +45,7 @@ const ProjectBeneficiaryComponent = (props) => {
   const productVariantRequest = {
     url: "/product/variant/v1/_search",
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },
@@ -72,7 +73,7 @@ const ProjectBeneficiaryComponent = (props) => {
     url: "/product/v1/_search",
     changeQueryName: productIds,
     params: {
-      tenantId: "mz",
+      tenantId: tenantId,
       offset: 0,
       limit: 10,
     },

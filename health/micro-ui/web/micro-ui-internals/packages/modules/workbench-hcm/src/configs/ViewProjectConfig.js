@@ -15,6 +15,11 @@ export const data = (project) => {
             type: "DATA",
             values: [
               {
+                key: "WORKBENCH_CAMPAIGN_NUMBER",
+                isLink: true,
+                to:  `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${project?.Project?.[0]?.referenceID}&tenantId=${project?.Project?.[0]?.tenantId}` ,
+                value: project?.Project?.[0]?.referenceID || "NA",
+              },{
                 key: "WORKBENCH_PROJECT_NUMBER",
                 value: project?.Project?.[0]?.projectNumber || "NA",
               },
@@ -24,7 +29,7 @@ export const data = (project) => {
               },
               {
                 key: "CAMPAIGN_TYPE",
-                value: (project?.Project?.[0]?.projectType && t(`CAMPAIGN_PROJECT_${project?.Project?.[0]?.projectType}`)) || "NA",
+                value: (project?.Project?.[0]?.projectType && t(`${project?.Project?.[0]?.projectType}`)) || "NA",
               },
               {
                 key: "CAMPAIGN_START_DATE",
@@ -48,10 +53,10 @@ export const data = (project) => {
                 key: "WBH_TARGET_NO_LABEL",
                 value: project?.Project?.[0]?.targets?.[0]?.targetNo || "NA",
               },
-              {
-                key: "WORKBENCH_PROJECT_PRIMARY_TOTAL_NO",
-                value: project?.Project?.[0]?.targets?.[0]?.totalNo || "NA",
-              },
+              // {
+              //   key: "WORKBENCH_PROJECT_PRIMARY_TOTAL_NO",
+              //   value: project?.Project?.[0]?.targets?.[0]?.totalNo || "NA",
+              // },
               {
                 key: "WBH_BOUNDARY",
                 value: t(project?.Project?.[0]?.address?.boundary) || "NA",
