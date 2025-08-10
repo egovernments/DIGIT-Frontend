@@ -23,7 +23,6 @@ const enabledModules = [
   "NDSS",
   "Utilities",
   // "HRMS",
-  "Engagement",
   "Workbench",
   "HCMWORKBENCH",
   "Campaign"
