@@ -26,7 +26,7 @@ const CampaignCard = () => {
   let links = [
     {
       label: t("ACTION_TEST_CREATE_CAMPAIGN"),
-      link: `/workbench-ui/employee/campaign/campaign-home`,
+      link: `/${window?.contextPath}/employee/campaign/campaign-home`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
@@ -55,7 +55,7 @@ const CampaignCard = () => {
     },
     {
       label: t("BOUNDARY_MANAGEMENT"),
-      link: `/workbench-ui/employee/campaign/boundary/home`,
+      link: `/${window?.contextPath}/employee/campaign/boundary/home`,
       roles: ROLES.BOUNDARY_MANAGER,
       // count: isLoading?"-":data
     }

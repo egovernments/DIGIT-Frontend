@@ -1,7 +1,7 @@
 name: Digit Admin Console Build workflow
 on:
   push:
-    branches: [ 'develop','console','master']
+    branches: [ 'ondo','console','master']
     paths:
       - 'health/micro-ui/web/micro-ui-internals/**'
   workflow_dispatch:
@@ -61,8 +61,8 @@ jobs:
           docker build -t $IMAGE_NAME_1 -f web/workbench/Dockerfile . &
 
           # microplan ui Docker build
-          IMAGE_NAME_2=core-ui:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
-          docker build -t $IMAGE_NAME_2 -f web/core/Dockerfile . &
+          IMAGE_NAME_2=console:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+          docker build -t $IMAGE_NAME_2 -f web/console/Dockerfile . &
           
           # Wait for both builds to complete
           wait

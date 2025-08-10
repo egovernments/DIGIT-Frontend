@@ -2,7 +2,9 @@ import React, { useState , Fragment} from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import { Loader, Button, Dropdown } from "@egovernments/digit-ui-components";
+import { Loader, Button } from "@egovernments/digit-ui-components";
+import DataTable from "react-data-table-component";
+import { tableCustomStyle } from "./tableCustomStyle";
 import MapView from "./MapView";
 
 
@@ -57,15 +59,24 @@ const TaskComponent = (props) => {
     { label: t("HCM_ADMIN_CONSOLE_RESOURCE_LONG"), key: "longitude" },
     { label: t("HCM_ADMIN_CONSOLE_RESOURCE_LOCATION_ACCURACY"), key: "locationAccuracy" },
     { label: t("HCM_ADMIN_CONSOLE_RESOURCE_CREATED_BY"), key: "createdBy" },
-
   ];
 
+  // DataTable expects columns with name, selector, and sortable properties
+  const tableColumns = columns.map((c) => ({
+    name: c.label,
+    selector: (row) => row?.[c.key] ? row?.[c.key] : "NA",
+    sortable: false,
+  }));
+
+
+  const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
+
+  
   if (isLoading) {
     return  <Loader page={true} variant={"PageLoader"}/>;
   }
   
 
-  const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
 
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
@@ -87,59 +98,26 @@ const TaskComponent = (props) => {
         lat: task?.latitude || 0,
         lng: task?.longitude || 0,
         time: task?.plannedStartDate || "NA"
-      }))} />:<>
-        <table className="table reports-table sub-work-table">
-          <thead>
-            <tr>
-              {columns.map((column, index) => (
-                <th key={index}>{column.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {projectTask?.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column, columnIndex) => (
-                  <td key={columnIndex}>{row[column.key] || "NA"}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem", gap: "1rem", flexWrap: "wrap" }}>
-          <div style={{ display: "flex", alignItems: "center", gap: "0.75rem" }}>
-            <div className="typography caption-l">{t("PAGE")}: {page + 1}</div>
-            <div style={{ minWidth: "10rem" }}>
-              <Dropdown
-                t={t}
-                option={[10, 20, 50, 100].map((n) => ({ code: n, name: `${n}` }))}
-                optionKey="name"
-                selected={[10, 20, 50, 100].map((n) => ({ code: n, name: `${n}` })).find((o) => o.code === pageSize)}
-                select={(opt) => {
-                  if (opt && opt.code) {
-                    setPageSize(opt.code);
-                    setPage(0);
-                  }
-                }}
-              />
-            </div>
-          </div>
-          <div style={{ display: "flex", gap: "0.5rem" }}>
-            <Button
-              variation="secondary"
-              label={t("PREVIOUS")}
-              isDisabled={page === 0}
-              onClick={() => setPage((p) => Math.max(0, p - 1))}
-            />
-            <Button
-              variation="secondary"
-              label={t("NEXT")}
-              isDisabled={isNextDisabled}
-              onClick={() => setPage((p) => p + 1)}
-            />
-          </div>
-        </div>
-      </>) }
+      }))} />:(
+        <DataTable
+          columns={tableColumns}
+          data={projectTask}
+          pagination
+          paginationServer
+          paginationTotalRows={projectTask?.length || 0}
+          paginationPerPage={pageSize}
+          paginationRowsPerPageOptions={[10, 20, 50, 100]}
+          onChangePage={(newPage) => setPage(newPage - 1)}
+          onChangeRowsPerPage={(newPerPage) => {
+            setPageSize(newPerPage);
+            setPage(0);
+          }}
+          customStyles={tableCustomStyle}
+          progressPending={isLoading}
+          progressComponent={<Loader />}
+          noDataComponent={<h1>{t("NO_TASK")}</h1>}
+        />
+      )) }
     </div>
   );
 };
