@@ -377,6 +377,24 @@ const CampaignDetails = () => {
           },
         ],
       },
+
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: {
+              headingName: t("HCM_CHECKLIST_HEADING"),
+              desc: t("HCM_CHECKLIST_DESC"),
+              buttonLabel: t("HCM_CHECKLIST_BUTTON"),
+              navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
+              icon: <ListAltCheck />,
+            },
+          },
+        ],
+      },
       {
         noCardStyle: true,
         sections: [
@@ -393,23 +411,6 @@ const CampaignDetails = () => {
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
               disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
-            },
-          },
-        ],
-      },
-      {
-        noCardStyle: true,
-        sections: [
-          {
-            type: "COMPONENT",
-            component: "ViewDetailComponent",
-            noCardStyle: true,
-            props: {
-              headingName: t("HCM_CHECKLIST_HEADING"),
-              desc: t("HCM_CHECKLIST_DESC"),
-              buttonLabel: t("HCM_CHECKLIST_BUTTON"),
-              navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
-              icon: <ListAltCheck />,
             },
           },
         ],

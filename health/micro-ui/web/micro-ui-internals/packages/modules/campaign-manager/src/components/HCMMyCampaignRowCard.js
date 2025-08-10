@@ -303,13 +303,13 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         <div className="digit-results-card-heading-tags-wrapper">
           <div className="digit-results-card-heading">{rowData?.campaignName}</div>
           <div className="digit-results-card-tags">
-            {
+            {/* {
               showCancelCampaign ? (
                 <div className="digit-tag-container" style={{ margin: "0rem" }}>
                   <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
                 </div>
               ) : null
-            }
+            } */}
             {tagElements &&
               Object.entries(tagElements)?.map(([key, tag]) => (
                 <Tag

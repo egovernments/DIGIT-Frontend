@@ -189,13 +189,13 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           <Card>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <TagComponent campaignName={campaignName} />
-              {
+              {/* {
                 isDraftCampaign ? (
                   <div className="digit-tag-container" style={{margin:"0rem"}}>
                     <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
                   </div>
                 ) : null
-              }
+              } */}
             </div>
             <HeaderComponent className = "select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
