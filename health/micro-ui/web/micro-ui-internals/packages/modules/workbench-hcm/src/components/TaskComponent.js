@@ -2,9 +2,8 @@ import React, { useState , Fragment} from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import { Loader, Button } from "@egovernments/digit-ui-components";
-import DataTable from "react-data-table-component";
-import { tableCustomStyle } from "./tableCustomStyle";
+import { Loader, Button, Dropdown } from "@egovernments/digit-ui-components";
+import ReusableTableWrapper from "./ReusableTableWrapper";
 import MapView from "./MapView";
 
 
@@ -61,22 +60,18 @@ const TaskComponent = (props) => {
     { label: t("HCM_ADMIN_CONSOLE_RESOURCE_CREATED_BY"), key: "createdBy" },
   ];
 
-  // DataTable expects columns with name, selector, and sortable properties
-  const tableColumns = columns.map((c) => ({
-    name: c.label,
-    selector: (row) => row?.[c.key] ? row?.[c.key] : "NA",
-    sortable: false,
-  }));
-
-
   const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
 
-  
-  if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"}/>;
-  }
-  
+  const pageSizeOptions = [
+    { name: "10", code: 10 },
+    { name: "20", code: 20 },
+    { name: "50", code: 50 },
+    { name: "100", code: 100 },
+  ];
 
+  if (isLoading) {
+    return <Loader page={true} variant={"PageLoader"}/>;
+  }
 
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
@@ -94,30 +89,68 @@ const TaskComponent = (props) => {
       {projectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
       )}
-      {projectTask?.length > 0 &&  (showMapview?.showMaps==true?<MapView visits={ projectTask?.map(task => ({
-        lat: task?.latitude || 0,
-        lng: task?.longitude || 0,
-        time: task?.plannedStartDate || "NA"
-      }))} />:(
-        <DataTable
-          columns={tableColumns}
-          data={projectTask}
-          pagination
-          paginationServer
-          paginationTotalRows={projectTask?.length || 0}
-          paginationPerPage={pageSize}
-          paginationRowsPerPageOptions={[10, 20, 50, 100]}
-          onChangePage={(newPage) => setPage(newPage - 1)}
-          onChangeRowsPerPage={(newPerPage) => {
-            setPageSize(newPerPage);
-            setPage(0);
-          }}
-          customStyles={tableCustomStyle}
-          progressPending={isLoading}
-          progressComponent={<Loader />}
-          noDataComponent={<h1>{t("NO_TASK")}</h1>}
-        />
-      )) }
+      {projectTask?.length > 0 && (
+        showMapview?.showMaps ? (
+          <>
+            <MapView 
+              visits={projectTask?.map(task => ({
+                lat: task?.latitude || 0,
+                lng: task?.longitude || 0,
+                time: task?.plannedStartDate || "NA"
+              }))} 
+            />
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                <div className="typography caption-l">{t("PAGE")}: {page + 1}</div>
+                <Dropdown
+                  option={pageSizeOptions}
+                  optionKey="code"
+                  selected={pageSizeOptions.find(opt => opt.code === pageSize)}
+                  select={(option) => {
+                    setPageSize(option.code);
+                    setPage(0); // Reset to first page on page size change
+                  }}
+                  t={t}
+                  className="page-size-dropdown"
+                />
+              </div>
+              <div style={{ display: "flex", gap: "0.5rem" }}>
+                <Button
+                  variation="secondary"
+                  label={t("PREVIOUS")}
+                  isDisabled={page === 0}
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                />
+                <Button
+                  variation="secondary"
+                  label={t("NEXT")}
+                  isDisabled={isNextDisabled}
+                  onClick={() => setPage((p) => p + 1)}
+                />
+              </div>
+            </div>
+          </>
+        ) : (
+          <ReusableTableWrapper
+            data={projectTask}
+            columns={columns}
+            isLoading={false}
+            noDataMessage="NO_TASK"
+            pagination={true}
+            paginationServer={true}
+            paginationTotalRows={projectTask?.length || 0}
+            paginationPerPage={pageSize}
+            paginationRowsPerPageOptions={[10, 20, 50, 100]}
+            onChangePage={(newPage) => setPage(newPage - 1)}
+            onChangeRowsPerPage={(newPerPage) => {
+              setPageSize(newPerPage);
+              setPage(0);
+            }}
+            className=""
+            headerClassName=""
+          />
+        )
+      )}
     </div>
   );
 };

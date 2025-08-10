@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Header, Button, Loader,  SVG } from "@egovernments/digit-ui-react-components";
+import { Button, Loader,  SVG,Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Toast } from "@egovernments/digit-ui-components";
+import ReusableTableWrapper from "./ReusableTableWrapper";
 
 const healthProjecturl = getProjectServiceUrl();
 const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
@@ -98,6 +99,7 @@ const ProjectStaffComponent = (props) => {
   });
 
   const columns = [
+    { label: t("WBH_SHOW_TASKS"), key: "showTasks" },
     { label: t("HCM_PROJECT_STAFF_ID"), key: "id" },
     { label: t("WBH_USERNAME"), key: "userInfo.userName" },
     { label: t("HCM_ADMIN_CONSOLE_USER_NAME"), key: "userInfo.name" },
@@ -106,7 +108,7 @@ const ProjectStaffComponent = (props) => {
     { label: t("HCM_ADMIN_CONSOLE_USER_USAGE"), key: "isDeleted" },
     { label: t("HCM_STAFF_START_DATE"), key: "formattedStartDate" },
     { label: t("HCM_STAFF_END_DATE"), key: "formattedEndDate" },
-    // { label: t("ACTIONS") },
+    { label: t("WBH_DELETE_ACTION"), key: "deleteAction" },
   ];
 
   function getNestedPropertyValue(obj, path) {
@@ -294,78 +296,58 @@ const ProjectStaffComponent = (props) => {
 
         {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"success"}  onClose={() => setShowToast(null)}></Toast>}
 
-        {mappedProjectStaff?.length > 0 ? (
-          <table className="table reports-table sub-work-table">
-            <thead>
-              <tr>
-                <th key={'sno'}>{t("WBH_SHOW_TASKS")}</th>
-                {columns?.map((column, index) => (
-                  <th key={index}>{column?.label}</th>
-                ))}
-              </tr>
-            </thead>
-            <tbody>
-              {mappedProjectStaff?.map((row, rowIndex) => (
-                <tr key={rowIndex}>
-                   <td>
-                    <Button
-                      label={`${t("WBH_SHOW_TASKS")}`}
-                      type="button"
-                      variation="secondary"
-                      onButtonClick={() => {
-                        setDeletionDetails({
-                          task:true,
-                          projectId: row.projectId,
-                          userId: row.userId,
-                          id: row.id,
-                          ...row,
-                        });
-                        setShowModal(true);
-                      }}
-                    />
-                  </td>
-                  {columns?.map((column, columnIndex) => (
-                    <td key={columnIndex}>
-                      {column?.render
-                        ? column?.render(row)
-                        : column?.key === "userInfo.roles"
-                        ? row?.userInfo?.roles
-                            .slice(0, 2)
-                            .map((role) => role.name)
-                            .join(", ") // to show 2 roles
-                        : column?.key.includes(".")
-                        ? getNestedPropertyValue(row, column?.key)
-                        : row[column.key] || "NA"}
-                    </td>
-                  ))}
-                  <td>
-                    <Button
-                      label={`${t("WBH_DELETE_ACTION")}`}
-                      type="button"
-                      variation="secondary"
-                      icon={<SVG.Delete width={"28"} height={"28"} />}
-                      onButtonClick={() => {
-                        setDeletionDetails({
-                          task:false,
-                          projectId: row.projectId,
-                          userId: row.userId,
-                          id: row.id,
-                          ...row,
-                        });
-                        setShowPopup(true);
-                      }}
-                    />
-                  </td>
-                 
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        ) : (
-          <div style={{ textAlign: "center" }}>
-            <h1>{t("NO_PROJECT_STAFF")}</h1>
-          </div>
-        )}
+        <ReusableTableWrapper
+          data={mappedProjectStaff || []}
+          columns={columns}
+          isLoading={isLoading}
+          noDataMessage="NO_PROJECT_STAFF"
+          getNestedValue={(row, key) => {
+            if (key === "userInfo.roles") {
+              return row?.userInfo?.roles
+                ?.slice(0, 2)
+                ?.map((role) => role.name)
+                ?.join(", ") || "NA";
+            }
+            return getNestedPropertyValue(row, key);
+          }}
+          customCellRenderer={{
+            showTasks: (row) => (
+              <Button
+                label={`${t("WBH_SHOW_TASKS")}`}
+                type="button"
+                variation="secondary"
+                onButtonClick={() => {
+                  setDeletionDetails({
+                    task: true,
+                    projectId: row.projectId,
+                    userId: row.userId,
+                    id: row.id,
+                    ...row,
+                  });
+                  setShowModal(true);
+                }}
+              />
+            ),
+            deleteAction: (row) => (
+              <Button
+                label={`${t("WBH_DELETE_ACTION")}`}
+                type="button"
+                variation="secondary"
+                icon={<SVG.Delete width={"28"} height={"28"} />}
+                onButtonClick={() => {
+                  setDeletionDetails({
+                    task: false,
+                    projectId: row.projectId,
+                    userId: row.userId,
+                    id: row.id,
+                    ...row,
+                  });
+                  setShowPopup(true);
+                }}
+              />
+            ),
+          }}
+        />
       </div>
     </div>
   );

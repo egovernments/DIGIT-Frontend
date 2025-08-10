@@ -1,9 +1,10 @@
-import { Button, Header, SVG } from "@egovernments/digit-ui-react-components";
+import { Button, SVG } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import AssignTarget from "./AssignTarget";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Toast } from "@egovernments/digit-ui-components";
+import ReusableTableWrapper from "./ReusableTableWrapper";
 
 
 const TargetComponent = (props) => {
@@ -37,7 +38,7 @@ const TargetComponent = (props) => {
     { label: t("WBH_BENEFICIARY_TYPE"), key: "beneficiaryType" },
     { label: t("WBH_TOTAL_NUMBER"), key: "totalNo" },
     { label: t("WBH_TARGET_NO_LABEL"), key: "targetNo" },
-    // { label: t("WBH_ACTIONS"), key: "actions" },
+    { label: t("WBH_ACTIONS"), key: "actions" },
   ];
 
   const handleEditButtonClick = (index) => {
@@ -115,10 +116,20 @@ const TargetComponent = (props) => {
     }
   };
 
-  return (
-    <div className="override-card">
-      <Header className="works-header-view">{t("WBH_TARGET")}</Header>
+  const customCellRenderer = {
+    actions: (row, key, rowIndex) => (
+      <Button
+        label={`${t("WBH_EDIT_ACTION")}`}
+        type="button"
+        variation="secondary"
+        icon={<SVG.Delete width={"28"} height={"28"} />}
+        onButtonClick={() => handleEditButtonClick(rowIndex)}
+      />
+    ),
+  };
 
+  return (
+    <div>
       {showModal && (
         <AssignTarget
           t={t}
@@ -136,42 +147,16 @@ const TargetComponent = (props) => {
         />
       )}
 
-              {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"info"}  onClose={() => setShowToast(null)}></Toast>}
+      {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"info"}  onClose={() => setShowToast(null)}></Toast>}
       
-      {props?.targets?.length === 0 ? (
-        <h1>{t("WBH_NO_TARGETS_FOUND")}</h1>
-      ) : (
-        <table className="table reports-table sub-work-table">
-          <thead>
-            <tr>
-              {columns.map((column, index) => (
-                <th key={index}>{column.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {props?.targets?.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column, columnIndex) => (
-                  <td key={columnIndex}>
-                    {column.key !== "actions" ? (
-                      row[column.key]
-                    ) : (
-                      <Button
-                        label={`${t("WBH_EDIT_ACTION")}`}
-                        type="button"
-                        variation="secondary"
-                        icon={<SVG.Delete width={"28"} height={"28"} />}
-                        onButtonClick={() => handleEditButtonClick(rowIndex)}
-                      />
-                    )}
-                  </td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
+      <ReusableTableWrapper
+        title="WBH_TARGET"
+        data={props?.targets || []}
+        columns={columns}
+        isLoading={false}
+        noDataMessage="WBH_NO_TARGETS_FOUND"
+        customCellRenderer={customCellRenderer}
+      />
     </div>
   );
 };

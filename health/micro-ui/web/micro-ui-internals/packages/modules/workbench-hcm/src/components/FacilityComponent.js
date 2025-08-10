@@ -1,8 +1,7 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import {  Loader} from "@egovernments/digit-ui-components";
+import ReusableTableWrapper from "./ReusableTableWrapper";
 
 
 const FacilityComponent = (props) => {
@@ -68,36 +67,14 @@ const FacilityComponent = (props) => {
     { label: t("HCM_ADMIN_CONSOLE_FACILITY_TYPE"), key: "usage" },
   ];
 
-  if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"}/>;
-  }
-
   return (
-    <div className="override-card">
-      <Header className="works-header-view">{t("FACILITY")}</Header>
-      {updatedProjectFacility?.length === 0 ? (
-        <h1>{t("NO_FACILITY")}</h1>
-      ) : (
-        <table className="table reports-table sub-work-table">
-          <thead>
-            <tr>
-              {columns.map((column, index) => (
-                <th key={index}>{column.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {updatedProjectFacility?.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column, columnIndex) => (
-                  <td key={columnIndex}>{row[column.key] || "NA"}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <ReusableTableWrapper
+      title="FACILITY"
+      data={updatedProjectFacility || []}
+      columns={columns}
+      isLoading={isLoading}
+      noDataMessage="NO_FACILITY"
+    />
   );
 };
 

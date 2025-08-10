@@ -1,9 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Header } from "@egovernments/digit-ui-react-components";
 import { Link } from "react-router-dom";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import {  Loader} from "@egovernments/digit-ui-components";
+import ReusableTableWrapper from "./ReusableTableWrapper";
 
 
 const ProjectChildrenComponent = (props) => {
@@ -54,71 +53,76 @@ const ProjectChildrenComponent = (props) => {
     descendant.formattedEndDate = Digit.DateUtils.ConvertEpochToDate(descendant.endDate);
   });
 
+  // Flatten descendants for table display
+  const flattenedDescendants = [];
+  projectsArray.forEach((project) => {
+    const descendantsArray = project.descendants || [];
+    descendantsArray.forEach((descendant) => {
+      flattenedDescendants.push(descendant);
+    });
+  });
+
   const columns = [
-    { label: t("DESCENDANTS_PROJECT_NUMBER"), key: "descendants.projectNumber" },
-    { label: t("WBH_BOUNDARY"), key: "descendants.address.boundary" },
-    { label: t("DESCENDANTS_PROJECT_BOUNDARY_TYPE"), key: "descendants.address.boundaryType" },
-    { label: t("CAMPAIGN_START_DATE"), key: "descendants.formattedStartDate" },
-    { label: t("CAMPAIGN_END_DATE"), key: "descendants.formattedEndDate" },
+    { label: t("DESCENDANTS_PROJECT_NUMBER"), key: "projectNumber" },
+    { label: t("WBH_BOUNDARY"), key: "address.boundary" },
+    { label: t("DESCENDANTS_PROJECT_BOUNDARY_TYPE"), key: "address.boundaryType" },
+    { label: t("CAMPAIGN_START_DATE"), key: "formattedStartDate" },
+    { label: t("CAMPAIGN_END_DATE"), key: "formattedEndDate" },
   ];
 
+  const customCellRenderer = {
+    projectNumber: (row) => {
+      if (row.projectNumber) {
+        return (
+          <Link
+            to={{
+              pathname: window.location.pathname,
+              search: `?tenantId=${row.tenantId}&projectNumber=${row.projectNumber}`,
+            }}
+            style={{ color: "#f37f12", textDecoration: "none" }}
+          >
+            {row.projectNumber}
+          </Link>
+        );
+      }
+      return "NA";
+    },
+    "address.boundary": (row) => t(row.address?.boundary) || "NA",
+    "address.boundaryType": (row) => t(row.address?.boundaryType) || "NA",
+  };
+
   if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"}/>;
+    return <ReusableTableWrapper
+      title="PROJECT_CHILDREN"
+      data={[]}
+      columns={columns}
+      isLoading={true}
+      noDataMessage="NO_PROJECT_CHILDREN"
+    />;
   }
+
   if (!projectChildren?.Project[0]?.descendants) {
     return (
-      <div>
-        <Header className="works-header-view">{t("PROJECT_CHILDREN")}</Header>
-        <h1>{t("NO_PROJECT_CHILDREN")}</h1>
-      </div>
-    );
-  } else {
-    return (
-      <div className="override-card">
-        <Header className="works-header-view">{t("PROJECT_CHILDREN")}</Header>
-        <table className="table reports-table sub-work-table">
-          <thead>
-            <tr>
-              {columns.map((column, index) => (
-                <th key={index}>{column.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {projectsArray.map((project, rowIndex) => (
-              <React.Fragment key={rowIndex}>
-                {project.descendants?.map((descendant, descIndex) => (
-                  <tr key={`${rowIndex}-${descIndex}`}>
-                    {columns.map((column, columnIndex) => (
-                      <td key={columnIndex}>
-                        <div>
-                          {column.key.split("descendants.")[1] === "projectNumber" && descendant[column.key.split("descendants.")[1]] ? (
-                            <Link
-                              to={{
-                                pathname: window.location.pathname,
-                                search: `?tenantId=${descendant.tenantId}&projectNumber=${descendant.projectNumber}`,
-                              }}
-                              style={{ color: "#f37f12", textDecoration: "none" }}
-                            >
-                              {descendant[column.key.split("descendants.")[1]]}
-                            </Link>
-                          ) : column.key.includes("address.") ? (
-                            t(descendant.address[column.key.split("address.")[1]]) || "NA"
-                          ) : (
-                            t(descendant[column.key.split("descendants.")[1]]) || "NA"
-                          )}
-                        </div>
-                      </td>
-                    ))}
-                  </tr>
-                ))}
-              </React.Fragment>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <ReusableTableWrapper
+        title="PROJECT_CHILDREN"
+        data={[]}
+        columns={columns}
+        isLoading={false}
+        noDataMessage="NO_PROJECT_CHILDREN"
+      />
     );
   }
+
+  return (
+    <ReusableTableWrapper
+      title="PROJECT_CHILDREN"
+      data={flattenedDescendants}
+      columns={columns}
+      isLoading={false}
+      noDataMessage="NO_PROJECT_CHILDREN"
+      customCellRenderer={customCellRenderer}
+    />
+  );
 };
 
 export default ProjectChildrenComponent;

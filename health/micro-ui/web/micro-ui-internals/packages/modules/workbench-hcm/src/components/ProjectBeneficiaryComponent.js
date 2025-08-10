@@ -1,9 +1,8 @@
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useState, useEffect } from "react";
-import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import {  Loader} from "@egovernments/digit-ui-components";
+import ReusableTableWrapper from "./ReusableTableWrapper";
 
 
 const ProjectBeneficiaryComponent = (props) => {
@@ -156,36 +155,15 @@ const ProjectBeneficiaryComponent = (props) => {
     return value !== undefined ? value?.toString() : "NA";
   };
 
-  if (isLoading) {
-    return  <Loader page={true} variant={"PageLoader"}/>;
-  }
-
   return (
-    <div className="override-card">
-      <Header className="works-header-view">{t("PROJECT_RESOURCE")}</Header>
-      {projectResource?.ProjectResources.length === 0 ? (
-        <h1>{t("NO_PROJECT_RESOURCE")}</h1>
-      ) : (
-        <table className="table reports-table sub-work-table">
-          <thead>
-            <tr>
-              {columns?.map((column, index) => (
-                <th key={index}>{column?.label}</th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {mappedProjectVariant?.map((row, rowIndex) => (
-              <tr key={rowIndex}>
-                {columns.map((column, columnIndex) => (
-                  <td key={columnIndex}>{getDetailFromProductVariant(row, column.key)}</td>
-                ))}
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
+    <ReusableTableWrapper
+      title="PROJECT_RESOURCE"
+      data={mappedProjectVariant || []}
+      columns={columns}
+      isLoading={isLoading}
+      noDataMessage="NO_PROJECT_RESOURCE"
+      getNestedValue={getDetailFromProductVariant}
+    />
   );
 };
 
