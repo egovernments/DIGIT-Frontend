@@ -24,7 +24,7 @@
     "dev:workbench-hcm": "cd packages/modules/workbench-hcm && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
-    "buildD:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
+    "build:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
