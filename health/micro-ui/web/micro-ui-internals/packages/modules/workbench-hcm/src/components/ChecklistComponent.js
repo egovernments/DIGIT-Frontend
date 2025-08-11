@@ -96,7 +96,7 @@ const ChecklistComponent = (props) => {
       id: serviceDef.code || `service-${index}`,
       code: serviceDef.code || "NA",
       description: serviceDef.description || "NA",
-      category: serviceDef.category || "NA",
+      category: serviceDef?.code?.split?.(".")?.[1] || "NA",
       status: serviceDef.isActive ? "Active" : "Inactive",
       createdDate: serviceDef.auditDetails?.createdTime ? new Date(serviceDef.auditDetails.createdTime).toISOString() : "NA",
       createdBy: serviceDef.auditDetails?.createdBy || "NA",
