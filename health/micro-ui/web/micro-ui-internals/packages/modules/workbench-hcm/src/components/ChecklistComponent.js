@@ -90,9 +90,9 @@ const ChecklistComponent = (props) => {
 
   // Transform service definitions data for display
   const transformedData = useMemo(() => {
-    if (!serviceDefinitionsData?.ServiceDefinition) return [];
+    if (!serviceDefinitionsData?.ServiceDefinitions) return [];
     
-    return serviceDefinitionsData.ServiceDefinition.map((serviceDef, index) => ({
+    return serviceDefinitionsData.ServiceDefinitions.map((serviceDef, index) => ({
       id: serviceDef.code || `service-${index}`,
       name: serviceDef.name || "NA",
       code: serviceDef.code || "NA",
