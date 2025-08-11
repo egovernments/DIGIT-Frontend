@@ -27,6 +27,64 @@ import {
 } from "../utils/mappingUtils";
 import { CardSectionHeader, InfoIconOutline, LoaderWithGap, Modal, Header } from "@egovernments/digit-ui-react-components";
 
+// Ensure Leaflet default icons are overridden
+if (typeof L !== 'undefined') {
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCAyNCA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjAuNTQ5IDIgMjcgOC40NTEgMjcgMTdDMjcgMzEuNSAxMiA0MSAxMiA0MUMxMiA0MSAtMyAzMS41IC0zIDE3Qy0zIDguNDUxIDMuNTUxIDIgMTIgMloiIGZpbGw9IiNGNDc3MzgiLz4KPHBhdGggZD0iTTEyIDExQzE0LjIwOTEgMTEgMTYgMTIuNzkwOSAxNiAxNUMxNiAxNy4yMDkxIDE0LjIwOTEgMTkgMTIgMTlDOS43OTA5IDE5IDggMTcuMjA5MSA4IDE1QzggMTIuNzkwOSA5Ljc5MDkgMTEgMTIgMTFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+    iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCAyNCA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjAuNTQ5IDIgMjcgOC40NTEgMjcgMTdDMjcgMzEuNSAxMiA0MSAxMiA0MUMxMiA0MSAtMyAzMS41IC0zIDE3Qy0zIDguNDUxIDMuNTUxIDIgMTIgMloiIGZpbGw9IiNGNDc3MzgiLz4KPHBhdGggZD0iTTEyIDExQzE0LjIwOTEgMTEgMTYgMTIuNzkwOSAxNiAxNUMxNiAxNy4yMDkxIDE0LjIwOTEgMTkgMTIgMTlDOS43OTA5IDE5IDggMTcuMjA5MSA4IDE1QzggMTIuNzkwOSA5Ljc5MDkgMTEgMTIgMTFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+    shadowUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDEiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCA0MSA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAuNSIgY3k9IjIwLjUiIHI9IjE4LjUiIGZpbGw9ImJsYWNrIiBvcGFjaXR5PSIwLjIiLz4KPC9zdmc+Cg=='
+  });
+}
+
+// Add CSS for custom markers
+const markerStyles = `
+  <style>
+    .custom-svg-icon {
+      background: transparent !important;
+      border: none !important;
+    }
+    .custom-svg-icon svg {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+    .leaflet-marker-icon {
+      background: transparent !important;
+    }
+    
+    /* Override all marker icons in the marker pane */
+    .leaflet-pane.leaflet-marker-pane img.leaflet-marker-icon {
+      display: none !important;
+    }
+    
+    /* Force all markers to use our custom styling */
+    .leaflet-marker-icon[src*="marker-icon"] {
+      display: none !important;
+    }
+    
+    /* Hide any default marker images */
+    .leaflet-marker-icon[src*="marker-icon-2x.png"],
+    .leaflet-marker-icon[src*="marker-icon.png"] {
+      display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+    }
+    
+    /* Ensure our custom markers are visible */
+    .leaflet-marker-icon.custom-svg-icon {
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+    }
+    
+    /* Override any remaining default markers */
+    .leaflet-marker-icon:not(.custom-svg-icon) {
+      display: none !important;
+    }
+  </style>
+`;
+
 // Utility function to introduce a delay
 export const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -172,6 +230,35 @@ const MapViewComponent = () => {
     };
 
     let map_i = L.map(id, mapConfig);
+
+    // Add custom marker styles to the map container
+    const mapContainer = document.getElementById(id);
+    if (mapContainer) {
+      mapContainer.insertAdjacentHTML('beforeend', markerStyles);
+    }
+
+    // Function to replace default markers with custom ones
+    const replaceDefaultMarkers = () => {
+      const defaultMarkers = document.querySelectorAll('.leaflet-marker-icon[src*="marker-icon"]');
+      defaultMarkers.forEach(marker => {
+        if (!marker.classList.contains('custom-svg-icon')) {
+          marker.style.display = 'none';
+          marker.style.visibility = 'hidden';
+          marker.style.opacity = '0';
+        }
+      });
+    };
+
+    // Set up a mutation observer to watch for new markers
+    const observer = new MutationObserver(replaceDefaultMarkers);
+    if (mapContainer) {
+      observer.observe(mapContainer, { 
+        childList: true, 
+        subtree: true,
+        attributes: true,
+        attributeFilter: ['src', 'class']
+      });
+    }
 
     // Add the zoom control manually at the bottom left
     L.control

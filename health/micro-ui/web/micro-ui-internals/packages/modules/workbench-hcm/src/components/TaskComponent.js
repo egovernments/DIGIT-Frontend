@@ -2,7 +2,7 @@ import React, { useState , Fragment} from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import { Loader, Button, Dropdown } from "@egovernments/digit-ui-components";
+import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import MapView from "./MapView";
 
@@ -13,7 +13,22 @@ const TaskComponent = (props) => {
   const [showMapview, setShowMapview] = useState({ showMaps: false });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
+
+  // Close dropdown when clicking outside
+  React.useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (isSelectOpen && !event.target.closest('.page-size-select')) {
+        setIsSelectOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isSelectOpen]);
   const requestCriteria = {
     url: `${url}/task/v1/_search`,
     changeQueryName: `${props.projectId}-tasks-${page}-${pageSize}`,
@@ -103,17 +118,70 @@ const TaskComponent = (props) => {
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
                 <div className="typography caption-l">{t("PAGE")}: {page + 1}</div>
-                <Dropdown
-                  option={pageSizeOptions}
-                  optionKey="code"
-                  selected={pageSizeOptions.find(opt => opt.code === pageSize)}
-                  select={(option) => {
-                    setPageSize(option.code);
-                    setPage(0); // Reset to first page on page size change
-                  }}
-                  t={t}
-                  className="page-size-dropdown"
-                />
+                <div className="page-size-select" style={{ position: "relative", display: "inline-block" }}>
+                  <div
+                    style={{
+                      padding: "8px 12px",
+                      border: "1px solid #ccc",
+                      borderRadius: "4px",
+                      backgroundColor: "white",
+                      cursor: "pointer",
+                      minWidth: "80px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      fontSize: "14px"
+                    }}
+                    onClick={() => setIsSelectOpen(!isSelectOpen)}
+                  >
+                    <span>{pageSize}</span>
+                    <span style={{ marginLeft: "8px" }}>▼</span>
+                  </div>
+                  {isSelectOpen && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "100%",
+                        left: 0,
+                        right: 0,
+                        backgroundColor: "white",
+                        border: "1px solid #ccc",
+                        borderRadius: "4px",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+                        zIndex: 1000,
+                        maxHeight: "200px",
+                        overflowY: "auto"
+                      }}
+                    >
+                      {pageSizeOptions.map((option) => (
+                        <div
+                          key={option.code}
+                          style={{
+                            padding: "8px 12px",
+                            cursor: "pointer",
+                            borderBottom: "1px solid #f0f0f0",
+                            fontSize: "14px",
+                            backgroundColor: pageSize === option.code ? "#f0f8ff" : "white",
+                            color: pageSize === option.code ? "#0066cc" : "inherit"
+                          }}
+                          onClick={() => {
+                            setPageSize(option.code);
+                            setPage(0);
+                            setIsSelectOpen(false);
+                          }}
+                          onMouseEnter={(e) => {
+                            e.target.style.backgroundColor = pageSize === option.code ? "#f0f8ff" : "#f5f5f5";
+                          }}
+                          onMouseLeave={(e) => {
+                            e.target.style.backgroundColor = pageSize === option.code ? "#f0f8ff" : "white";
+                          }}
+                        >
+                          {option.name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <Button

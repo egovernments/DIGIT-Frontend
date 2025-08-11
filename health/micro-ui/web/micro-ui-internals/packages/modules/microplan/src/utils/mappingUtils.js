@@ -7,6 +7,25 @@ import { EXCEL, GEOJSON, SHAPEFILE, MapChoroplethGradientColors } from "../confi
 
 const IconCollection = {...DigitSvgs };
 
+// Override Leaflet's default icon to prevent 404 errors
+delete L.Icon.Default.prototype._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCAyNCA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjAuNTQ5IDIgMjcgOC40NTEgMjcgMTdDMjcgMzEuNSAxMiA0MSAxMiA0MUMxMiA0MSAtMyAzMS41IC0zIDE3Qy0zIDguNDUxIDMuNTUxIDIgMTIgMloiIGZpbGw9IiNGNDc3MzgiLz4KPHBhdGggZD0iTTEyIDExQzE0LjIwOTEgMTEgMTYgMTIuNzkwOSAxNiAxNUMxNiAxNy4yMDkxIDE0LjIwOTEgMTkgMTIgMTlDOS43OTA5IDE5IDggMTcuMjA5MSA4IDE1QzggMTIuNzkwOSA5Ljc5MDkgMTEgMTIgMTFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+  iconUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCAyNCA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDJDMjAuNTQ5IDIgMjcgOC40NTEgMjcgMTdDMjcgMzEuNSAxMiA0MSAxMiA0MUMxMiA0MSAtMyAzMS41IC0zIDE3Qy0zIDguNDUxIDMuNTUxIDIgMTIgMloiIGZpbGw9IiNGNDc3MzgiLz4KPHBhdGggZD0iTTEyIDExQzE0LjIwOTEgMTEgMTYgMTIuNzkwOSAxNiAxNUMxNiAxNy4yMDkxIDE0LjIwOTEgMTkgMTIgMTlDOS43OTA5IDE5IDggMTcuMjA5MSA4IDE1QzggMTIuNzkwOSA5Ljc5MDkgMTEgMTIgMTFaIiBmaWxsPSJ3aGl0ZSIvPgo8L3N2Zz4K',
+  shadowUrl: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDEiIGhlaWdodD0iNDEiIHZpZXdCb3g9IjAgMCA0MSA0MSIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAuNSIgY3k9IjIwLjUiIHI9IjE4LjUiIGZpbGw9ImJsYWNrIiBvcGFjaXR5PSIwLjIiLz4KPC9zdmc+Cg=='
+});
+
+// Override the L.marker function to ensure all markers use custom icons
+const originalMarker = L.marker;
+L.marker = function(latlng, options) {
+  // If no icon is specified, use our custom MapMarker
+  if (!options || !options.icon) {
+    options = options || {};
+    options.icon = MapMarker({});
+  }
+  return originalMarker.call(this, latlng, options);
+};
+
 export const generatePreviewUrl = (baseMapUrl, center = [0, 0], zoom = 5) => {
   const lon = Math.floor(((center[1] + 180) / 360) * Math.pow(0, zoom));
   const lat = Math.floor(
@@ -436,16 +455,44 @@ export const addFilterProperties = (filterGeojsons, filterSelections, filterProp
             let temp = item.properties[name];
             if (!filterSelections.includes(temp)) return;
             temp = iconMapping?.find((e) => e?.name == temp)?.icon?.marker;
-            let DynamicIcon = IconCollection?.[temp];
-            if (typeof DynamicIcon === "function") {
+            
+            // Create custom SVG icons based on the marker type instead of using React components
+            let svgHtml;
+            switch (temp) {
+              case "WarehouseMarker":
+                svgHtml = `
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="4" y="8" width="24" height="20" fill="#4A90E2" stroke="#FFFFFF" stroke-width="2"/>
+                    <rect x="8" y="12" width="4" height="4" fill="#FFFFFF"/>
+                    <rect x="20" y="12" width="4" height="4" fill="#FFFFFF"/>
+                    <rect x="8" y="20" width="4" height="4" fill="#FFFFFF"/>
+                    <rect x="20" y="20" width="4" height="4" fill="#FFFFFF"/>
+                  </svg>
+                `;
+                break;
+              case "ChurchMarker":
+                svgHtml = `
+                  <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M16 4L28 16H24V28H8V16H4L16 4Z" fill="#8B4513" stroke="#FFFFFF" stroke-width="2"/>
+                    <rect x="14" y="16" width="4" height="12" fill="#FFFFFF"/>
+                    <circle cx="16" cy="8" r="2" fill="#FFD700"/>
+                  </svg>
+                `;
+                break;
+              default:
+                // Use default marker for unknown types
+                icon = DefaultMapMarker({});
+                newFilterGeojson.push({ ...item, properties: { ...item?.properties, addOn: { ...item?.properties?.addOn, icon: icon } } });
+                return;
+            }
+            
+            if (svgHtml) {
               icon = L.divIcon({
                 className: "custom-svg-icon",
-                html: DynamicIcon({}),
-                iconAnchor: [25, 50],
+                html: svgHtml,
+                iconAnchor: [16, 32],
+                iconSize: [32, 32],
               });
-              newFilterGeojson.push({ ...item, properties: { ...item?.properties, addOn: { ...item?.properties?.addOn, icon: icon } } });
-            } else {
-              icon = DefaultMapMarker({});
               newFilterGeojson.push({ ...item, properties: { ...item?.properties, addOn: { ...item?.properties?.addOn, icon: icon } } });
             }
           }
@@ -484,7 +531,8 @@ export const addGeojsonToMap = (map, geojson, t) => {
         };
       },
       pointToLayer: (feature, latlng) => {
-        if (feature.properties.addOn.icon) {
+        // Always use custom markers, never fall back to default Leaflet markers
+        if (feature.properties.addOn && feature.properties.addOn.icon) {
           let icon = feature.properties.addOn.icon;
           if (icon) {
             return L.marker(latlng, {
@@ -492,8 +540,9 @@ export const addGeojsonToMap = (map, geojson, t) => {
             });
           }
         }
+        // Use our custom MapMarker for all points
         return L.marker(latlng, {
-          icon: MapMarker(feature.properties.addOn),
+          icon: MapMarker(feature.properties.addOn || {}),
         });
       },
       onEachFeature: (feature, layer) => {
@@ -727,17 +776,36 @@ export const removeAllLayers = (map, layer) => {
 };
 // Map-Marker
 export const MapMarker = (style = {}) => {
+  // Create a simple SVG marker as HTML string instead of using React components
+  const svgHtml = `
+    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="16" cy="16" r="12" fill="${style.fill || '#F47738'}" stroke="${style.stroke || '#FFFFFF'}" stroke-width="2"/>
+      <circle cx="16" cy="16" r="6" fill="${style.innerFill || '#FFFFFF'}"/>
+    </svg>
+  `;
+  
   return L.divIcon({
     className: "custom-svg-icon",
-    html: DigitSvgs.Population(style),
-    iconAnchor: [25, 50],
+    html: svgHtml,
+    iconAnchor: [16, 32],
+    iconSize: [32, 32],
   });
 };
+
 export const DefaultMapMarker = (style = {}) => {
+  // Create a default marker as HTML string
+  const svgHtml = `
+    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z" 
+            fill="${style.fill || '#F47738'}"/>
+    </svg>
+  `;
+  
   return L.divIcon({
     className: "custom-svg-icon",
-    html: IconCollection.DefaultMapMarkerSvg(style),
-    iconAnchor: [25, 50],
+    html: svgHtml,
+    iconAnchor: [12, 24],
+    iconSize: [24, 24],
   });
 };
 
