@@ -18,13 +18,13 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
      useEffect(() => {
         const computeTopMargin = () => {
           if (
-            window.screen.availWidth <= 1366 &&
-            window.screen.availHeight <= 768 &&
-            window.devicePixelRatio > 1.0
+            window.screen.availWidth <= 1366 ||
+            (window.screen.availHeight <= 768 &&
+            window.devicePixelRatio > 1.0)
           ) {
             return "-0.1rem";
           }
-          return "-0.5rem";
+          return "-2rem";
         };
     
         setTopMargin(computeTopMargin());
