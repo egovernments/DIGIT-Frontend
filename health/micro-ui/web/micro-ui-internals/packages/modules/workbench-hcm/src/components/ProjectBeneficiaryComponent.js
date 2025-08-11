@@ -94,26 +94,31 @@ const ProjectBeneficiaryComponent = (props) => {
     userMap[productVariant.id] = productVariant;
   });
 
-  const mappedProjectVariant = projectResource?.ProjectResources.map((resource) => {
+  const mappedProjectVariant = projectResource?.ProjectResources?.map((resource) => {
     const productVariantInfo = userMap[resource.resource?.productVariantId];
     const productInfo = product?.Product?.find((p) => p.id === productVariantInfo?.productId);
 
-    if (productVariantInfo && productInfo) {
-      return {
-        ...resource,
-        productVariant: {
-          ...productVariantInfo,
-          product: productInfo,
+    return {
+      ...resource,
+      productVariant: productVariantInfo ? {
+        ...productVariantInfo,
+        product: productInfo || {
+          name: "NA",
+          manufacturer: "NA",
+          type: "NA"
         },
-      };
-    } else {
-      // Handle the case where productVariant or product info is not found for a productVariantId
-      return {
-        ...resource,
-        productVariant: null,
-      };
-    }
-  });
+      } : {
+        productId: "NA",
+        sku: "NA",
+        variation: "NA",
+        product: {
+          name: "NA",
+          manufacturer: "NA", 
+          type: "NA"
+        }
+      },
+    };
+  }) || [];
 
   const isValidTimestamp = (timestamp) => timestamp !== 0 && !isNaN(timestamp);
 
@@ -136,24 +141,34 @@ const ProjectBeneficiaryComponent = (props) => {
   ];
 
   const getDetailFromProductVariant = (row, key) => {
-    const productVariantDetail = row.productVariant || {};
-
     // Helper function to traverse nested keys
     const getValue = (object, nestedKey) => {
       const keys = nestedKey.split(".");
-      return keys.reduce((acc, curr) => acc?.[curr], object);
+      let value = object;
+      for (const key of keys) {
+        value = value?.[key];
+        if (value === undefined || value === null) {
+          return undefined;
+        }
+      }
+      return value;
     };
 
-    // Check if the key is nested
+    // Get the value using the nested key
     const value = getValue(row, key);
 
     // Handle boolean values
     if (typeof value === "boolean") {
-      return value?.toString();
+      return value.toString();
+    }
+
+    // Handle arrays
+    if (Array.isArray(value)) {
+      return value.join(", ");
     }
 
     // Check if the value exists, otherwise return 'NA'
-    return value !== undefined ? value?.toString() : "NA";
+    return value !== undefined && value !== null ? value.toString() : "NA";
   };
 
   return (

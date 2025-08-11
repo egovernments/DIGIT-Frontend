@@ -4,6 +4,7 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
+import UserDetails from "./UserDetails";
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
@@ -119,6 +120,27 @@ const ChecklistComponent = (props) => {
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_LAST_MODIFIED"), key: "lastModified" },
   ];
 
+  // Custom cell renderer for the createdBy column
+  const customCellRenderer = {
+    createdBy: (row) => {
+      const userId = row.createdBy;
+      if (!userId || userId === "NA") {
+        return "NA";
+      }
+      return (
+        <UserDetails 
+          uuid={userId}
+          style={{ 
+            fontSize: "inherit",
+            color: "inherit"
+          }}
+          iconSize="14px"
+          tooltipPosition="top"
+        />
+      );
+    },
+  };
+
 
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"}/>;
@@ -152,6 +174,7 @@ const ChecklistComponent = (props) => {
             }}
             className=""
             headerClassName=""
+            customCellRenderer={customCellRenderer}
           />
         
       )}

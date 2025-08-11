@@ -12,7 +12,6 @@ const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") 
 
 const ProjectStaffComponent = (props) => {
   const { t } = useTranslation();
-  const [userIds, setUserIds] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [userName, setUserName] = useState("");
   const [showToast, setShowToast] = useState(false);
@@ -55,48 +54,69 @@ const ProjectStaffComponent = (props) => {
     row.isDeleted = row.isDeleted == true ? "INACTIVE" : "ACTIVE";
   });
 
-  useEffect(() => {
-    // Extract user IDs and save them in the state
-    if (projectStaff && projectStaff.ProjectStaff.length > 0) {
-      const userIdArray = projectStaff.ProjectStaff.map((row) => row.userId);
-      setUserIds(userIdArray);
-    }
-  }, [projectStaff]);
+  const [userMap, setUserMap] = useState({});
+  const [isUserSearchLoading, setIsUserSearchLoading] = useState(false);
 
-  const userRequestCriteria = {
-    url: "/user/_search",
-    body: {
-      tenantId: tenantId,
-      uuid: userIds,
-    },
-    config: {
-      enable: userIds&&userIds?.length > 0 ? true : false,
-    },
+  // Fetch user details using Digit.CustomService.getResponse
+  const fetchUserDetails = async (userIds) => {
+    if (!userIds || userIds.length === 0) {
+      setUserMap({});
+      return;
+    }
+
+    setIsUserSearchLoading(true);
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: "/user/_search",
+        body: {
+          tenantId: tenantId,
+          uuid: userIds,
+          apiOperation: "SEARCH"
+        },
+      });
+
+      const newUserMap = {};
+      if (res?.user && Array.isArray(res.user)) {
+        res.user.forEach((user) => {
+          newUserMap[user.uuid] = user;
+        });
+      }
+      setUserMap(newUserMap);
+    } catch (error) {
+      console.error("Error fetching user details:", error);
+      setUserMap({});
+    } finally {
+      setIsUserSearchLoading(false);
+    }
   };
 
-  const { isLoading: isUserSearchLoading, data: userInfo } = Digit.Hooks.useCustomAPIHook(userRequestCriteria);
-
-  const userMap = {};
-  userInfo?.user?.forEach((user) => {
-    userMap[user.uuid] = user;
-  });
+  useEffect(() => {
+    // Extract user IDs and fetch user details only if we have staff
+    if (projectStaff && projectStaff.ProjectStaff && projectStaff.ProjectStaff.length > 0) {
+      const userIdArray = projectStaff.ProjectStaff.map((row) => row.userId).filter(Boolean);
+      if (userIdArray.length > 0) {
+        fetchUserDetails(userIdArray);
+      } else {
+        setUserMap({});
+      }
+    } else {
+      setUserMap({});
+    }
+  }, [projectStaff, tenantId]);
 
   // Map userId to userInfo
-  const mappedProjectStaff = projectStaff?.ProjectStaff.map((staff) => {
+  const mappedProjectStaff = projectStaff?.ProjectStaff?.map((staff) => {
     const user = userMap[staff.userId];
-    if (user) {
-      return {
-        ...staff,
-        userInfo: user,
-      };
-    } else {
-      // Handle the case where user info is not found for a userId
-      return {
-        ...staff,
-        userInfo: null,
-      };
-    }
-  });
+    return {
+      ...staff,
+      userInfo: user || {
+        userName: "NA",
+        name: "NA", 
+        mobileNumber: "NA",
+        roles: []
+      },
+    };
+  }) || [];
 
   const columns = [
     { label: t("WBH_SHOW_TASKS"), key: "showTasks" },
@@ -313,7 +333,8 @@ const ProjectStaffComponent = (props) => {
                 ?.map((role) => role.name)
                 ?.join(", ") || "NA";
             }
-            return getNestedPropertyValue(row, key);
+            const value = getNestedPropertyValue(row, key);
+            return value !== undefined && value !== null ? value.toString() : "NA";
           }}
           customCellRenderer={{
             showTasks: (row) => (

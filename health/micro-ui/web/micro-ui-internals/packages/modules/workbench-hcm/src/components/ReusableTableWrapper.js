@@ -32,10 +32,6 @@ const ReusableTableWrapper = ({
   const tableColumns = columns.map((column) => ({
     name: column.label,
     selector: (row) => {
-      if (customCellRenderer && customCellRenderer[column.key]) {
-        return customCellRenderer[column.key](row, column.key);
-      }
-      
       if (getNestedValue) {
         return getNestedValue(row, column.key);
       }
@@ -55,10 +51,15 @@ const ReusableTableWrapper = ({
       // Check if the value exists, otherwise return 'NA'
       return value !== undefined ? value?.toString() : "NA";
     },
+    cell: (row) => {
+      if (customCellRenderer && customCellRenderer[column.key]) {
+        return customCellRenderer[column.key](row, column.key);
+      }
+      return row?.[column?.key]; // Use selector value if no custom cell renderer
+    },
     sortable: column.sortable !== false,
     grow: column.grow,
     width: column.width,
-    cell: column.cell,
   }));
 
   if (isLoading) {
