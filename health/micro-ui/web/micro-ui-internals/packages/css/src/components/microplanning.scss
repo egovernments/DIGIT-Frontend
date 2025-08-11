@@ -173,6 +173,7 @@ $border-color: rgba(214, 213, 212, 1);
     margin-left: 0.3rem;
     display: flex;
     align-items: flex-start;
+    flex-direction: row;
 
     .number {
       min-width: 1.2rem !important;
