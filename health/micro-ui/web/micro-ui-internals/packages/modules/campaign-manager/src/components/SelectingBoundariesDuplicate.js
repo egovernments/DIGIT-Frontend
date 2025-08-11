@@ -2,12 +2,16 @@ import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent, Loader,PopUp,Button } from "@egovernments/digit-ui-components";
+import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent, Loader,Chip } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
+  const location = useLocation();
+  const history = useHistory();
+  const isDraftCampaign = location.state?.isDraftCampaign;
+  const queryParams = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
@@ -147,6 +151,32 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     }
   };
 
+  const Template = {
+    url: "/project-factory/v1/project-type/cancel-campaign",
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        campaignId: queryParams?.id,
+      }
+    },
+  };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
+
+  const handleCancelClick = async () => {
+    await mutation.mutate(
+      {},
+      {
+        onSuccess: async (result) => {
+          history.push(`/${window?.contextPath}/employee/campaign/my-campaign-new`)
+        },
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          console.error(errorCode);
+        },
+      }
+    );
+  };
+
   if (draft && isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
@@ -157,7 +187,16 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
         <div className="card-container-delivery">
           <Card>
-             <TagComponent campaignName={campaignName} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <TagComponent campaignName={campaignName} />
+              {
+                isDraftCampaign ? (
+                  <div className="digit-tag-container" style={{margin:"0rem"}}>
+                    <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+                  </div>
+                ) : null
+              }
+            </div>
             <HeaderComponent className = "select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper

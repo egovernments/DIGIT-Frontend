@@ -2,6 +2,7 @@ import { Button, HeaderComponent, Footer, Loader, Tag, Toast, PopUp } from "@ego
 import { useTranslation } from "react-i18next";
 import React, { Fragment, useState, useEffect, useMemo } from "react";
 import { useHistory } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import { ViewComposer } from "@egovernments/digit-ui-react-components";
 import { OutpatientMed, AdUnits, GlobeLocationPin, Groups, ListAltCheck, UploadCloud, Edit } from "@egovernments/digit-ui-svg-components";
 import { transformUpdateCreateData } from "../../../utils/transformUpdateCreateData";
@@ -143,6 +144,8 @@ function formatIsoDate(dateStr) {
 const CampaignDetails = () => {
   const { t } = useTranslation();
   const history = useHistory();
+  const location = useLocation();
+  const isDraftCampaign = location.state?.isDraft;
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber");
   const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
@@ -322,6 +325,7 @@ const CampaignDetails = () => {
                   : `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.boundaries?.length > 0 || campaignData?.parentId ? "secondary" : "primary",
               icon: <GlobeLocationPin fill={"#c84c0e"} />,
+              isDraftCampaign:isDraftCampaign || campaignData?.status === "drafted" 
             },
           },
         ],
