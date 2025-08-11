@@ -138,32 +138,6 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //   window.dispatchEvent(new Event("checking"));
   // }, [key]);
 
-  const Template = {
-    url: "/project-factory/v1/project-type/cancel-campaign",
-    body: {
-      CampaignDetails: {
-        tenantId: tenantId,
-        campaignId: queryParams?.id,
-      }
-    },
-  };
-  const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
-
-  const handleCancelClick = async () => {
-    await mutation.mutate(
-      {},
-      {
-        onSuccess: async (result) => {
-          history.push(`/${window?.contextPath}/employee/campaign/my-campaign-new`)
-        },
-        onError: (error, result) => {
-          const errorCode = error?.response?.data?.Errors?.[0]?.code;
-          console.error(errorCode);
-        },
-      }
-    );
-  };
-
   const checkDataPresent = ({ action }) => {
     if (action === false) {
       setShowPopUp(false);
