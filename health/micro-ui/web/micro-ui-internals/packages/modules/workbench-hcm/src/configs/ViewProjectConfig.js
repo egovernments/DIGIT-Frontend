@@ -139,6 +139,18 @@ export const data = (project) => {
             props: { projectId: project?.Project?.[0]?.id },
           },
         ],
+      },
+      {
+        navigationKey: "card7",
+        sections: [
+          {
+            navigationKey: "card7",
+
+            type: "COMPONENT",
+            component: "ChecklistComponent",
+            props: { projectId: project?.Project?.[0]?.id, projectName: project?.Project?.[0]?.name },
+          },
+        ],
       }
     ],
     apiResponse: {},
@@ -175,6 +187,10 @@ export const data = (project) => {
           name: "card6",
           active: true,
           code: "TASK_DETAILS",
+        },   {
+          name: "card7",
+          active: true,
+          code: "CHECKLIST_DETAILS",
         },
         
         

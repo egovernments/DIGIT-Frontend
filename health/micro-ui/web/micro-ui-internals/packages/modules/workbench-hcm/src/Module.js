@@ -11,7 +11,7 @@ import ProjectStaffComponent from "./components/ProjectStaffComponent";
 import FacilityComponent from "./components/FacilityComponent";
 import RowDetails from "./components/RowDetails";
 import TaskComponent from "./components/TaskComponent";
-
+import ChecklistComponent from "./components/ChecklistComponent";
 import TargetComponent from "./components/TargetComponent";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
@@ -44,6 +44,7 @@ const componentsToRegister = {
   RowDetails,
   TaskComponent,
   TargetComponent,
+  ChecklistComponent,
 };
 
 const overrideHooks = () => {

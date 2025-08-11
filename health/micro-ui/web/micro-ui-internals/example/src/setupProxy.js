@@ -99,6 +99,7 @@ module.exports = function (app) {
     "/resource-generator",
     "/health-project",
     "/health-service-request",
+    "/service-request",
     "/census-service",
     "/health-attendance/v1/_search",
     "/health-individual/v1/_search",
