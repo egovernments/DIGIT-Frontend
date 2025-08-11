@@ -11,7 +11,7 @@ module.exports = {
       name: "@egovernments/digit-ui-module-campaign-manager",
       type: "umd",
     },
-    globalObject: 'this', // Ensures compatibility in Node and browser environments
+    globalObject: "this", // Ensures compatibility in Node and browser environments
   },
   resolve: {
     extensions: [".js"],
@@ -21,20 +21,20 @@ module.exports = {
   },
   externals: {
     react: {
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react',
-      root: 'React',
+      commonjs: "react",
+      commonjs2: "react",
+      amd: "react",
+      root: "React",
     },
-    'react-dom': {
-      commonjs: 'react-dom',
-      commonjs2: 'react-dom',
-      amd: 'react-dom',
-      root: 'ReactDOM',
+    "react-dom": {
+      commonjs: "react-dom",
+      commonjs2: "react-dom",
+      amd: "react-dom",
+      root: "ReactDOM",
     },
-    'react-i18next': 'react-i18next',
-    'react-router-dom': 'react-router-dom',
-    "@tanstack/react-query": "@tanstack/react-query"
+    "react-i18next": "react-i18next",
+    "react-router-dom": "react-router-dom",
+    "@tanstack/react-query": "@tanstack/react-query",
   },
   module: {
     rules: [
@@ -54,4 +54,19 @@ module.exports = {
       process: "process/browser.js",
     }),
   ],
+  devServer: {
+    static: {
+      directory: path.join(__dirname, "dist"),
+    },
+    hot: true,
+    historyApiFallback: true,
+    watchFiles: {
+      paths: ["src/**/*"], // watch your source files
+      options: {
+        ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
+        poll: 1000,
+        aggregateTimeout: 300,
+      },
+    },
+  },
 };

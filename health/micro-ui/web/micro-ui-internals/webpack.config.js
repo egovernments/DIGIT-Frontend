@@ -1,11 +1,10 @@
-
 const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 module.exports = {
-  mode: "development", 
+  mode: "development",
   entry: path.resolve(__dirname, "example/src/index.js"),
   devtool: "source-map",
   module: {
@@ -17,14 +16,14 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"]
-          }
+            plugins: ["@babel/plugin-proposal-optional-chaining"],
+          },
         },
       },
       {
         test: /\.css$/i,
         use: ["style-loader", "css-loader"],
-      }
+      },
     ],
   },
   output: {
@@ -34,13 +33,13 @@ module.exports = {
   },
   optimization: {
     splitChunks: {
-      chunks: 'all',
+      chunks: "all",
       minSize: 20000,
       maxSize: 50000,
       enforceSizeThreshold: 50000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 30
+      maxInitialRequests: 30,
     },
   },
   plugins: [
@@ -60,6 +59,14 @@ module.exports = {
     compress: true, // Enable compression for better performance
     port: 3000, // Port number for dev server
     hot: true, // Enable Hot Module Replacement (HMR)
-    historyApiFallback: true, 
-  }
+    historyApiFallback: true,
+    watchFiles: {
+      paths: ["**/*"], // watch all project files
+      options: {
+        ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
+        poll: 1000, // check for changes every second
+        aggregateTimeout: 300, // delay rebuild after first change
+      },
+    },
+  },
 };

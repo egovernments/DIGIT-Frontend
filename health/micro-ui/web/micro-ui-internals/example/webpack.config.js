@@ -81,6 +81,14 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: true,
+    watchFiles: {
+      paths: ["**/*"], // watch all project files
+      options: {
+        ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
+        poll: 1000, // check for changes every second
+        aggregateTimeout: 300, // delay rebuild after first change
+      },
+    },
     proxy: [
       {
         context: [
@@ -159,7 +167,7 @@ module.exports = {
           "/billing-service/bill/v2/_fetchbill",
           "/tenant-management",
           "/default-data-handler",
-          "/facility/v1/_create"
+          "/facility/v1/_create",
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
@@ -168,4 +176,3 @@ module.exports = {
     ],
   },
 };
-
