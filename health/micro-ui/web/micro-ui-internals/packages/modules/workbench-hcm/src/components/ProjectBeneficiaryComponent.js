@@ -7,87 +7,138 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 
 const ProjectBeneficiaryComponent = (props) => {
   const { t } = useTranslation();
-  const [productIds, setProductIds] = useState([]);
+  const [projectResource, setProjectResource] = useState(null);
+  const [variantDetails, setVariantDetails] = useState(null);
+  const [product, setProduct] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isVariantLoading, setIsVariantLoading] = useState(false);
+  const [isProductLoading, setIsProductLoading] = useState(false);
+  
   const url = getProjectServiceUrl();
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const requestCriteria = {
-    url: `${url}/resource/v1/_search`,
-    changeQueryName: props.projectId,
-    params: {
-      tenantId: tenantId,
-      offset: 0,
-      limit: 10,
-    },
 
-    body: {
-      ProjectResource: {
-        projectId: [props.projectId],
-      },
-      // apiOperation: "SEARCH"
-    },
-    config: {
-      enabled: props.projectId ? true : false,
-    },
+  // Fetch project resources using Digit.CustomService.getResponse
+  const fetchProjectResources = async () => {
+    if (!props.projectId || !tenantId) {
+      setProjectResource(null);
+      return;
+    }
+
+    setIsLoading(true);
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: `${url}/resource/v1/_search`,
+        body: {
+          ProjectResource: {
+            projectId: [props.projectId],
+          },
+          apiOperation: "SEARCH"
+        },
+      });
+
+      setProjectResource(res);
+    } catch (error) {
+      console.error("Error fetching project resources:", error);
+      setProjectResource(null);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const { isLoading, data: projectResource } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+  // Fetch product variants using Digit.CustomService.getResponse
+  const fetchProductVariants = async (productVariantIds) => {
+    if (!productVariantIds || productVariantIds.length === 0) {
+      setVariantDetails(null);
+      return;
+    }
 
-  const [userIds, setUserIds] = useState([]);
+    setIsVariantLoading(true);
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: "/product/variant/v1/_search",
+        body: {
+          ProductVariant: {
+            id: productVariantIds,
+          },
+          apiOperation: "SEARCH"
+        },
+      });
 
+      setVariantDetails(res);
+    } catch (error) {
+      console.error("Error fetching product variants:", error);
+      setVariantDetails(null);
+    } finally {
+      setIsVariantLoading(false);
+    }
+  };
+
+  // Fetch products using Digit.CustomService.getResponse
+  const fetchProducts = async (productIds) => {
+    if (!productIds || productIds.length === 0) {
+      setProduct(null);
+      return;
+    }
+
+    setIsProductLoading(true);
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: "/product/v1/_search",
+        body: {
+          Product: {
+            id: productIds,
+          },
+          apiOperation: "SEARCH"
+        },
+      });
+
+      setProduct(res);
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      setProduct(null);
+    } finally {
+      setIsProductLoading(false);
+    }
+  };
+
+  // Fetch project resources when component mounts or projectId changes
   useEffect(() => {
-    // Extract productVariantIds and save them in the state
+    fetchProjectResources();
+  }, [props.projectId, tenantId]);
+
+  // Fetch product variants when project resources are loaded
+  useEffect(() => {
     if (projectResource && projectResource?.ProjectResources?.length > 0) {
-      const productVariantIdsArray = projectResource?.ProjectResources.map((row) => row.resource?.productVariantId);
-      setUserIds(productVariantIdsArray);
+      const productVariantIds = projectResource.ProjectResources
+        .map((row) => row.resource?.productVariantId)
+        .filter(Boolean);
+      
+      if (productVariantIds.length > 0) {
+        fetchProductVariants(productVariantIds);
+      } else {
+        setVariantDetails(null);
+      }
+    } else {
+      setVariantDetails(null);
     }
   }, [projectResource]);
 
-  const productVariantRequest = {
-    url: "/product/variant/v1/_search",
-    params: {
-      tenantId: tenantId,
-      offset: 0,
-      limit: 10,
-    },
-    body: {
-      ProductVariant: {
-        id: userIds,
-      },
-    },
-    config: {
-      enabled: userIds.length > 0 ? true : false,
-    },
-  };
-
-  const { isLoading: VariantLoading, data: variantDetails } = Digit.Hooks.useCustomAPIHook(productVariantRequest);
-
+  // Fetch products when variant details are loaded
   useEffect(() => {
-    // Extract product IDs from variantDetails and save them in the state
-    if (variantDetails && variantDetails?.ProductVariant.length > 0) {
-      const ProductIdArray = variantDetails.ProductVariant.map((row) => row.productId);
-      setProductIds(ProductIdArray);
+    if (variantDetails && variantDetails?.ProductVariant?.length > 0) {
+      const productIds = variantDetails.ProductVariant
+        .map((row) => row.productId)
+        .filter(Boolean);
+      
+      if (productIds.length > 0) {
+        fetchProducts(productIds);
+      } else {
+        setProduct(null);
+      }
+    } else {
+      setProduct(null);
     }
   }, [variantDetails]);
-
-  const productRequest = {
-    url: "/product/v1/_search",
-    changeQueryName: productIds,
-    params: {
-      tenantId: tenantId,
-      offset: 0,
-      limit: 10,
-    },
-    body: {
-      Product: {
-        id: productIds,
-      },
-    },
-    config: {
-      enabled: Boolean(productIds?.length),
-    },
-  };
-
-  const { data: product } = Digit.Hooks.useCustomAPIHook(productRequest);
 
   const userMap = {};
   variantDetails?.ProductVariant?.forEach((productVariant) => {
@@ -100,23 +151,14 @@ const ProjectBeneficiaryComponent = (props) => {
 
     return {
       ...resource,
-      productVariant: productVariantInfo ? {
-        ...productVariantInfo,
-        product: productInfo || {
-          name: "NA",
-          manufacturer: "NA",
-          type: "NA"
-        },
-      } : {
-        productId: "NA",
-        sku: "NA",
-        variation: "NA",
-        product: {
-          name: "NA",
-          manufacturer: "NA", 
-          type: "NA"
-        }
-      },
+      productVariantId: resource.resource?.productVariantId || "NA",
+      productId: productVariantInfo?.productId || "NA",
+      sku: productVariantInfo?.sku || "NA",
+      variation: productVariantInfo?.variation || "NA",
+      resourceType: resource.resource?.type || "NA",
+      productName: productInfo?.name || "NA",
+      manufacturer: productInfo?.manufacturer || "NA",
+      productType: productInfo?.type || "NA",
     };
   }) || [];
 
@@ -130,55 +172,23 @@ const ProjectBeneficiaryComponent = (props) => {
 
   const columns = [
     { label: t("PROJECT_RESOURCE_ID"), key: "id" },
-    { label: t("PRODUCT_VARIANT_ID"), key: "resource.productVariantId" },
-    { label: t("PRODUCT_ID"), key: "productVariant.productId" },
-    { label: t("SKU"), key: "productVariant.sku" },
-    { label: t("MASTER_LANDING_SCREEN_PRODUCT_VARIANT"), key: "productVariant.variation" },
-    { label: t("HCM_PRODUCT_TYPE"), key: "resource.type" },
-    { label: t("NAME"), key: "productVariant.product.name" },
-    { label: t("MANUFACTURER"), key: "productVariant.product.manufacturer" },
-    { label: t("PRODUCT_TYPE"), key: "productVariant.product.type" },
+    { label: t("PRODUCT_VARIANT_ID"), key: "productVariantId" },
+    { label: t("PRODUCT_ID"), key: "productId" },
+    { label: t("SKU"), key: "sku" },
+    { label: t("MASTER_LANDING_SCREEN_PRODUCT_VARIANT"), key: "variation" },
+    { label: t("HCM_PRODUCT_TYPE"), key: "resourceType" },
+    { label: t("NAME"), key: "productName" },
+    { label: t("MANUFACTURER"), key: "manufacturer" },
+    { label: t("PRODUCT_TYPE"), key: "productType" },
   ];
-
-  const getDetailFromProductVariant = (row, key) => {
-    // Helper function to traverse nested keys
-    const getValue = (object, nestedKey) => {
-      const keys = nestedKey.split(".");
-      let value = object;
-      for (const key of keys) {
-        value = value?.[key];
-        if (value === undefined || value === null) {
-          return undefined;
-        }
-      }
-      return value;
-    };
-
-    // Get the value using the nested key
-    const value = getValue(row, key);
-
-    // Handle boolean values
-    if (typeof value === "boolean") {
-      return value.toString();
-    }
-
-    // Handle arrays
-    if (Array.isArray(value)) {
-      return value.join(", ");
-    }
-
-    // Check if the value exists, otherwise return 'NA'
-    return value !== undefined && value !== null ? value.toString() : "NA";
-  };
 
   return (
     <ReusableTableWrapper
       title="PROJECT_RESOURCE"
       data={mappedProjectVariant || []}
       columns={columns}
-      isLoading={isLoading}
+      isLoading={isLoading || isVariantLoading || isProductLoading}
       noDataMessage="NO_PROJECT_RESOURCE"
-      getNestedValue={getDetailFromProductVariant}
     />
   );
 };

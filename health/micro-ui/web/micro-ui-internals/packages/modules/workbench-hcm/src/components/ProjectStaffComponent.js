@@ -104,36 +104,31 @@ const ProjectStaffComponent = (props) => {
     }
   }, [projectStaff, tenantId]);
 
-  // Map userId to userInfo
+  // Map userId to userInfo with flattened structure
   const mappedProjectStaff = projectStaff?.ProjectStaff?.map((staff) => {
     const user = userMap[staff.userId];
     return {
       ...staff,
-      userInfo: user || {
-        userName: "NA",
-        name: "NA", 
-        mobileNumber: "NA",
-        roles: []
-      },
+      userName: user?.userName || user?.name || "NA",
+      userMobileNumber: user?.mobileNumber || "NA",
+      userRoles: user?.roles?.slice(0, 2)?.map((role) => role.name)?.join(", ") || "NA",
     };
   }) || [];
 
   const columns = [
     { label: t("WBH_SHOW_TASKS"), key: "showTasks" },
     { label: t("HCM_PROJECT_STAFF_ID"), key: "id" },
-    { label: t("WBH_USERNAME"), key: "userInfo.userName" },
-    { label: t("HCM_ADMIN_CONSOLE_USER_NAME"), key: "userInfo.name" },
-    { label: t("HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER"), key: "userInfo.mobileNumber" },
-    { label: t("HCM_ADMIN_CONSOLE_USER_ROLE"), key: "userInfo.roles" },
+    { label: t("WBH_USERNAME"), key: "userName" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_NAME"), key: "userName" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_PHONE_NUMBER"), key: "userMobileNumber" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_ROLE"), key: "userRoles" },
     { label: t("HCM_ADMIN_CONSOLE_USER_USAGE"), key: "isDeleted" },
     { label: t("HCM_STAFF_START_DATE"), key: "formattedStartDate" },
     { label: t("HCM_STAFF_END_DATE"), key: "formattedEndDate" },
     { label: t("WBH_DELETE_ACTION"), key: "deleteAction" },
   ];
 
-  function getNestedPropertyValue(obj, path) {
-    return path.split(".").reduce((acc, key) => (acc && acc[key] ? acc[key] : "NA"), obj);
-  }
+
 
   const searchCriteria = {
     url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
@@ -326,16 +321,6 @@ const ProjectStaffComponent = (props) => {
           columns={columns}
           isLoading={isLoading}
           noDataMessage="NO_PROJECT_STAFF"
-          getNestedValue={(row, key) => {
-            if (key === "userInfo.roles") {
-              return row?.userInfo?.roles
-                ?.slice(0, 2)
-                ?.map((role) => role.name)
-                ?.join(", ") || "NA";
-            }
-            const value = getNestedPropertyValue(row, key);
-            return value !== undefined && value !== null ? value.toString() : "NA";
-          }}
           customCellRenderer={{
             showTasks: (row) => (
               <Button
