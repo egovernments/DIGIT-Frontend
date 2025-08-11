@@ -330,6 +330,10 @@ const styles = {
 
 export const getTemplateRenderer = (templateName) => {
 
+  if (templateName?.includes('Acknowledgement')) {
+    return responsePanelComponent;
+  }
+
   switch (templateName) {
     case "BeneficiaryAcknowledgement":
     case "HouseholdAcknowledgement":

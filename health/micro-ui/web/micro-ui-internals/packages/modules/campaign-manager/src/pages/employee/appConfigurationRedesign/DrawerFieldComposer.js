@@ -75,7 +75,7 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
+const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig,parentState,handleExpressionChange,screenConfig ,selectedField}) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === drawerState?.appType)
@@ -166,6 +166,10 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                     drawerState={drawerState}
                     AppScreenLocalisationConfig={AppScreenLocalisationConfig}
                     disabled={drawerState?.hidden}
+                    parentState={parentState}
+                    handleExpressionChange={handleExpressionChange}
+                    screenConfig={screenConfig}
+                    selectedField={selectedField}
                   />
                 ))
             : null}
@@ -382,7 +386,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
   }
 };
 
-function DrawerFieldComposer() {
+function DrawerFieldComposer({parentState,screenConfig,selectedField}) {
   const { t } = useTranslation();
   const { locState, updateLocalization, AppScreenLocalisationConfig } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
@@ -404,6 +408,19 @@ function DrawerFieldComposer() {
     const activeTab = tabs?.find((j) => j.active === true)?.parent;
     return state?.MASTER_DATA?.DrawerPanelConfig?.filter((i) => i.tab === activeTab).sort((a, b) => a.order - b.order);
   }, [state?.MASTER_DATA?.drawerField, tabs]);
+
+  const handleExpressionChange = (expressionString) => {
+    if (drawerState.visibilityCondition?.expression !== expressionString) {
+      setDrawerState(prev => ({
+        ...prev,
+        visibilityCondition: {
+          ...prev.visibilityCondition,
+          expression: expressionString
+        }
+      }));
+    }
+  };
+
 
   useEffect(() => {
     if (state?.drawerField) {
@@ -477,6 +494,10 @@ function DrawerFieldComposer() {
                   state={state}
                   updateLocalization={updateLocalization}
                   AppScreenLocalisationConfig={AppScreenLocalisationConfig}
+                  parentState={parentState}
+                  handleExpressionChange={handleExpressionChange}
+                  screenConfig={screenConfig}
+                  selectedField={selectedField}
                 />
               </div>
             );

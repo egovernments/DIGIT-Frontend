@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import FiltersRenderer from "../../../components/FiltersRenderer";
+import DependentFieldsWrapper from "./DependentFieldsWrapper";
 
 export const RenderConditionalField = ({
   cField,
@@ -15,6 +16,10 @@ export const RenderConditionalField = ({
   drawerState,
   AppScreenLocalisationConfig,
   disabled,
+  parentState,
+  handleExpressionChange,
+  screenConfig,
+  selectedField
 }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
@@ -224,6 +229,17 @@ export const RenderConditionalField = ({
           disabled={disabled}
         />
       );
+    case "dependencyFieldWrapper":
+      return (
+        <DependentFieldsWrapper
+          currentPage="beneficiaryLocation"
+          t={t}
+          parentState={parentState}
+          onExpressionChange={handleExpressionChange}
+          screenConfig={screenConfig}
+          selectedFieldItem={selectedField}
+        />
+      )
     default:
       return null;
   }

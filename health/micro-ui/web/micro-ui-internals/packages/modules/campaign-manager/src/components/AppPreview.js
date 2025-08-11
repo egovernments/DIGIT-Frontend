@@ -137,7 +137,7 @@ const getFieldType = (field) => {
       return "text";
     case "number":
       return "number";
-    case "textarea":
+    case "textArea":
       return "textarea";
     case "time":
       return "time";
