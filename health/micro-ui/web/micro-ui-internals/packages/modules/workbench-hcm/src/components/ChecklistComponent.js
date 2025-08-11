@@ -94,11 +94,10 @@ const ChecklistComponent = (props) => {
     
     return serviceDefinitionsData.ServiceDefinitions.map((serviceDef, index) => ({
       id: serviceDef.code || `service-${index}`,
-      name: serviceDef.name || "NA",
       code: serviceDef.code || "NA",
       description: serviceDef.description || "NA",
       category: serviceDef.category || "NA",
-      status: serviceDef.active ? "Active" : "Inactive",
+      status: serviceDef.isActive ? "Active" : "Inactive",
       createdDate: serviceDef.auditDetails?.createdTime ? new Date(serviceDef.auditDetails.createdTime).toISOString() : "NA",
       createdBy: serviceDef.auditDetails?.createdBy || "NA",
       lastModified: serviceDef.auditDetails?.lastModifiedTime ? new Date(serviceDef.auditDetails.lastModifiedTime).toISOString() : "NA",
@@ -113,8 +112,6 @@ const ChecklistComponent = (props) => {
 
   const columns = [
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_CODE"), key: "code" },
-    { label: t("HCM_ADMIN_CONSOLE_SERVICE_NAME"), key: "name" },
-    { label: t("HCM_ADMIN_CONSOLE_SERVICE_DESCRIPTION"), key: "description" },
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_CATEGORY"), key: "category" },
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_STATUS"), key: "status" },
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_CREATED_DATE"), key: "createdDate" },
