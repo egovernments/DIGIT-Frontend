@@ -313,8 +313,7 @@ const AddAttributeField = ({
                 }}
               >
                 {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
-                attribute?.attribute?.valuesSchema ||
-                isNaN(attribute?.value) ? (
+                attribute?.attribute?.valuesSchema ? (
                   <Dropdown
                     className="form-field"
                     selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
