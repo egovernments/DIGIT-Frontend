@@ -614,7 +614,6 @@
 
 
 
-
 .pgr-citizen-wrapper .applications-list-container {
   .key-note-pair {
     max-height: 6rem !important;
@@ -633,5 +632,46 @@
     margin-bottom: 0px !important; 
 
   }
+
+}
+
+.pgr-citizen-wrapper .checkpoint-connect-wrap, .checkpoint {
+  @media (min-width: 400px) {
+    .typography.text-heading-xl, header {
+      font-size: 1rem; } }
+}
+
+.pgr-citizen-wrapper .employee-data-table .row .value, .employee-data-table .row h2 {
+    font-size: 16px;
+    line-height: 6px;
+    }
+
+
+.digit-dropdown-select-wrap .digit-dropdown-select input[type=text], .digit-dropdown-select-wrap .digit-dropdown-select .digit-checkbox-container .input-emp[type=text], .digit-checkbox-container .digit-dropdown-select-wrap .digit-dropdown-select .input-emp[type=text]
+ {
+    position: absolute;
+    z-index: 8 !important;
+    height: 100%;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    width: calc(100% - 1.75rem);
+    background-color: initial;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: .75rem;
+    color: #363636;
+}
+
+
+.pgr-citizen-wrapper .digit-card-component .digit-label-field-pair .digit-field .digit-dropdown-select-wrap .digit-dropdown-select  {
+  position: relative !important;
+  display: block;
+  width: 100%;
+  height: 2.5rem;
+  --bg-opacity: 1;
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  border: .063rem solid #787878;
+  z-index: 0 !important;
 
 }
