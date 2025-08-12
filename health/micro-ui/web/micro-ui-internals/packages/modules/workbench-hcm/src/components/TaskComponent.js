@@ -4,9 +4,10 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
-import MapView from "./MapView";
+// import MapView from "./MapView";
 import UserDetails from "./UserDetails";
-
+// import MapWithShapefile from "./MapWithShapefile";
+import LGABoundariesMap from "./LGABoundariesMap";
 
 const TaskComponent = (props) => {
   const { t } = useTranslation();
@@ -131,7 +132,7 @@ const TaskComponent = (props) => {
       {projectTask?.length > 0 && (
         showMapview?.showMaps ? (
           <>
-            <MapView 
+            <LGABoundariesMap
               visits={projectTask?.map(task => ({
                 lat: task?.latitude || 0,
                 lng: task?.longitude || 0,

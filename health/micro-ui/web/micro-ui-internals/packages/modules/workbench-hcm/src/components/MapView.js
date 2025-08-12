@@ -33,9 +33,10 @@ const createCustomMarker = (style = {}) => {
 const isValidCoord = (v) =>
   v && typeof v.lat === "number" && typeof v.lng === "number";
 
-const MapView = ({ visits = [] }) => {
+const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
+  const boundaryLayerRef = useRef(null); // L.GeoJSON layer for shapefile boundaries
 
   useEffect(() => {
     // Initialize map once
@@ -129,14 +130,79 @@ const MapView = ({ visits = [] }) => {
 
       // layer group to hold visit markers and polyline
       markersRef.current = L.layerGroup().addTo(mapRef.current);
+      
+      // layer group to hold boundary/shapefile data
+      boundaryLayerRef.current = L.layerGroup().addTo(mapRef.current);
     }
 
     const map = mapRef.current;
     const layerGroup = markersRef.current;
+    const boundaryLayer = boundaryLayerRef.current;
 
     // Defensive: ensure layerGroup exists
     if (layerGroup && typeof layerGroup.clearLayers === "function") {
       layerGroup.clearLayers();
+    }
+    
+    // Handle shapefile/GeoJSON boundary data
+    if (boundaryLayer && typeof boundaryLayer.clearLayers === "function") {
+      boundaryLayer.clearLayers();
+      
+      if (shapefileData) {
+        try {
+          // Create GeoJSON layer with custom styling
+          const geoJsonLayer = L.geoJSON(shapefileData, {
+            style: function(feature) {
+              return {
+                color: boundaryStyle.color || '#3388ff',
+                weight: boundaryStyle.weight || 2,
+                opacity: boundaryStyle.opacity || 0.8,
+                fillColor: boundaryStyle.fillColor || '#3388ff',
+                fillOpacity: boundaryStyle.fillOpacity || 0.1,
+                dashArray: boundaryStyle.dashArray || null
+              };
+            },
+            onEachFeature: function(feature, layer) {
+              // Add popup with feature properties if needed
+              if (feature.properties && boundaryStyle.showPopup !== false) {
+                const popupContent = Object.keys(feature.properties)
+                  .map(key => `<b>${key}:</b> ${feature.properties[key]}`)
+                  .join('<br/>');
+                layer.bindPopup(popupContent);
+              }
+              
+              // Add hover effects if enabled
+              if (boundaryStyle.enableHover !== false) {
+                layer.on({
+                  mouseover: function(e) {
+                    const layer = e.target;
+                    layer.setStyle({
+                      weight: (boundaryStyle.weight || 2) + 1,
+                      opacity: 1,
+                      fillOpacity: (boundaryStyle.fillOpacity || 0.1) + 0.1
+                    });
+                  },
+                  mouseout: function(e) {
+                    geoJsonLayer.resetStyle(e.target);
+                  }
+                });
+              }
+            }
+          });
+          
+          geoJsonLayer.addTo(boundaryLayer);
+          
+          // Optionally fit map to boundary bounds
+          if (boundaryStyle.fitBounds !== false && !visits?.length) {
+            const bounds = geoJsonLayer.getBounds();
+            if (bounds.isValid()) {
+              map.fitBounds(bounds, { padding: [50, 50] });
+            }
+          }
+        } catch (err) {
+          console.error("Error rendering shapefile data:", err);
+        }
+      }
     }
 
     // Prepare valid positions
@@ -194,7 +260,7 @@ const MapView = ({ visits = [] }) => {
     */
 
     // keep effect dependencies simple
-  }, [visits]);
+  }, [visits, shapefileData, boundaryStyle]);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

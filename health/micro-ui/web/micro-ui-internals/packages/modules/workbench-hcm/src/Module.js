@@ -13,6 +13,10 @@ import RowDetails from "./components/RowDetails";
 import TaskComponent from "./components/TaskComponent";
 import ChecklistComponent from "./components/ChecklistComponent";
 import TargetComponent from "./components/TargetComponent";
+import MapView from "./components/MapView";
+import MapWithShapefile from "./components/MapWithShapefile";
+import LGABoundariesMap from "./components/LGABoundariesMap";
+import MapViewExample from "./components/MapViewExample";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
@@ -45,6 +49,10 @@ const componentsToRegister = {
   TaskComponent,
   TargetComponent,
   ChecklistComponent,
+  MapView,
+  MapWithShapefile,
+  LGABoundariesMap,
+  MapViewExample,
 };
 
 const overrideHooks = () => {
