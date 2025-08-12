@@ -312,6 +312,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        visibilityCondition: field?.visibilityCondition || {},
       };
     });
 
