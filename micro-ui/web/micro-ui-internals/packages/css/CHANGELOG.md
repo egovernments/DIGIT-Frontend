@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.37] - 04-Aug-2025
+- Removed the margin in employee app wrapper for unified-demo(URBAN).
+
 ## [1.8.36] - 04-Aug-2025
 - Removed right border from `.bannerLogo` on the sandbox language-selection page.
   
