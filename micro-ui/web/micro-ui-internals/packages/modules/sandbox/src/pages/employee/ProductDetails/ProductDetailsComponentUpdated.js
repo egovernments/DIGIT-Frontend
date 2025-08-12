@@ -226,7 +226,7 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
             },
             {
                 id: 'employee',
-                label: t("SB_WALK_THROUHG_EMPLOYEE"),
+                label: module === 'FSM' ? t("FSM_EMPLOYEE_FEATURE_HEADER") : t("SB_WALK_THROUHG_EMPLOYEE"),
                 show: true
             }
         ];
