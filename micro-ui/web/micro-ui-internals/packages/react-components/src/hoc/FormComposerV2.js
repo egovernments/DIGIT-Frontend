@@ -819,9 +819,10 @@ export const FormComposer = (props) => {
           </div>)}
       </React.Fragment>  
   );
+ const fieldId=Digit?.Utils?.getFieldIdName?.(props?.formId || props?.className || "form")||"NA";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={props.formId} className={props.className}>        
+    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={fieldId} className={props.className}>        
               {props?.headerLabel&&<Header className="digit-form-composer-header">{ t(props.headerLabel)}</Header>}
 
       {props?.showMultipleCardsWithoutNavs ? (
@@ -877,13 +878,12 @@ export const FormComposer = (props) => {
         )
       }
       {!props.submitInForm && props.label && (
-        <ActionBar className={props.actionClassName}>
-          
-          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} submitIcon={props?.submitIcon}/>
+        <ActionBar className={props.actionClassName}>  
+          <SubmitBar  id={`${fieldId}-primary`} label={t(props.label)} submit="submit" disabled={isDisabled} submitIcon={props?.submitIcon}/>
           {props.secondaryLabel && props.showSecondaryLabel && (
-            <Button className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
+            <Button  id={`${fieldId}-secondary`} className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
           )}
-          {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={props?.skiplabel || t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
+          {props.onSkip && props.showSkip && <LinkButton  id={`${fieldId}-skip`} style={props?.skipStyle} label={props?.skiplabel || t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}
       {showErrorToast && <Toast type={"error"} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}

@@ -185,11 +185,12 @@ const InboxSearchComposerV2 = ({configs,scrollPosition,browserSession,additional
         // Implement to scroll if scroll persistent is enabled 
         window.scrollTo(0, scrollPosition)
     })
+ const fieldId=Digit?.Utils?.getFieldIdName?.(props?.id || props?.className || "inbox")||"NA";
 
     return (
         <InboxContext.Provider value={{state,dispatch}} >
             {/* <Header className="works-header-search">{t(configs?.label)}</Header> */}
-            <div className="inbox-search-component-wrapper ">
+            <div className="inbox-search-component-wrapper "  id={fieldId}>
             <div className={`sections-parent ${configs?.type}`}>
                 {
                     configs?.sections?.links?.show &&  
