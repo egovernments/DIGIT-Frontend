@@ -109,21 +109,23 @@ import { useRef } from "react";
 // }
 
 const renderCardSectionJSX = (section, cardErrors) => {
+    const fieldId = Digit?.Utils?.getFieldIdName?.( section?.name || section?.type || "card-section")||"NA";
+  
   const { type } = section;
   switch (type) {
     case "DATA":
-      return <RenderDataSection section={section} />;
+      return <RenderDataSection section={section} id={fieldId}/>;
     case "DOCUMENTS":
-      return <RenderDocumentsSection section={section} />;
+      return <RenderDocumentsSection section={section} id={fieldId}/>;
     case "WFHISTORY":
-      return <RenderWfHistorySection section={section} />;
+      return <RenderWfHistorySection section={section} id={fieldId} />;
     case "WFACTIONS":
-      return <RenderWfActions section={section} />;
+      return <RenderWfActions section={section} id={fieldId} />;
     case "COMPONENT":
       const Component = Digit.ComponentRegistryService.getComponent(section.component);
       return (
         <>
-          <div className="view-composer-header-section">
+          <div className="view-composer-header-section" id={fieldId} >
             {section.cardHeader && (
               <CardSubHeader
                 className={cardErrors?.filter((i) => i?.name === section?.name)?.length > 0 ? "error" : ""}

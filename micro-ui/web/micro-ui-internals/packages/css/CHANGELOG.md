@@ -2,6 +2,9 @@
 ## [1.8.37] - [12-Aug-2025]
 -Override citizen side styles CCSD-622,474,458 
 
+## [1.8.36] - 04-Aug-2025
+- Removed right border from `.bannerLogo` on the sandbox language-selection page.
+  
 ## [1.8.31] - [12-June-2025]
 -CSS changes for Forgot Password form
 -Font size changed to make it aligned with carousel

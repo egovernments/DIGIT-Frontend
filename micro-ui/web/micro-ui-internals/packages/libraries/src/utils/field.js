@@ -25,16 +25,16 @@ export const getFieldIdName = (fieldName = "", fieldId = "", screenPrefix = "") 
   by concatenating the last two segments of the URL path (e.g., "/parent/child").
 */
 const getScreenPrefix = (prefix = "") => {
-  const screenPaths = window.location.pathname.split("/");
+  const screenPaths = window.location.pathname
+    .split("/")
+    .filter(Boolean) // removes empty segments
+    .slice(2); // ignores the first segment
 
   return prefix
     ? prefix
-    : `${
-        screenPaths?.[screenPaths?.length - 2] -
-        screenPaths?.[screenPaths?.length - 1]
-      }`;
+    : `${screenPaths.join("-")}`;
 };
-
+  
 /*
   Helper function to generate a random unique string of a given length.
   Default length is 10. The string includes alphanumeric characters.
