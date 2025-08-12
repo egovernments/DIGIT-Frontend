@@ -72,10 +72,15 @@ const MapDrillChart = ({
       filters: { ...filters, campaignId: campaignId },
       aggregationFactors: null,
     };
-    const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+    const { isLoading, data: response, error } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+
+    if (error) {
+          console.error('Chart data fetch failed:', error);
+        return <div>{t("DSS_ERROR_LOADING_DATA")}</div>;
+        }
 
 
-    const onBack = (selectedState ) => {
+    const onBack = () => {
       setselectedState("");
       setdrilldownId("none");
       setTotalCount("");

@@ -247,7 +247,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
                 onMouseLeave={onPieLeave}
               >
                 {response?.responseData?.data?.[0]?.plots.map((entry, index) => (
-                  <Cell key={`cell-`} fill={COLORS[index % COLORS.length]} />
+                  <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                 ))}
                 {response?.responseData?.showLabel && (
                   <>

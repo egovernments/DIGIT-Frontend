@@ -7,7 +7,7 @@ const KibanaCard = (props) => {
   const { t } = useTranslation();
   const { moduleName, pageName, filters } = props;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const isMobile = window.Digit.Utils.browser.isMobile();
+  const isMobile = window.Digit?.Utils?.browser?.isMobile();
   const stateCode = Digit?.ULBService?.getStateId();
 
   return (

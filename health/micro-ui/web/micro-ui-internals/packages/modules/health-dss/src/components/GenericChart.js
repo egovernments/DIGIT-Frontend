@@ -45,7 +45,7 @@ const GenericChart = ({
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (actionRef?.current && !actionRef?.current.contains(event.target)) {
+      if (chart?.current && !chart?.current.contains(event.target)) {
         setDropdownStatus(false);
       }
     };

@@ -1,7 +1,7 @@
 import React from "react";
 
 const ProgressBar = ({ bgcolor, total, completed }) => {
-  const progress = (completed / total) * 100;
+  const progress = total > 0 ? (completed / total) * 100 : 0;
 
   const fillerStyle = {
     backgroundColor: bgcolor,
