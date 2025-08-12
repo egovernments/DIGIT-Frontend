@@ -5,6 +5,7 @@ import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import MapView from "./MapView";
+import UserDetails from "./UserDetails";
 
 
 const TaskComponent = (props) => {
@@ -84,6 +85,28 @@ const TaskComponent = (props) => {
     { name: "50", code: 50 },
     { name: "100", code: 100 },
   ];
+
+  // Custom cell renderer for the createdBy column
+  const customCellRenderer = {
+    createdBy: (row) => {
+      const userId = row?.createdBy;
+      if (!userId || userId === "NA") {
+        return "NA";
+      }
+      return (
+        <UserDetails 
+          uuid={userId}
+          style={{ 
+            fontSize: "inherit",
+            color: "inherit"
+          }}
+          iconSize="14px"
+          tooltipPosition="top"
+        />
+      );
+    },
+  };
+
 
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"}/>;
@@ -216,6 +239,7 @@ const TaskComponent = (props) => {
               setPage(0);
             }}
             className=""
+                        customCellRenderer={customCellRenderer}
             headerClassName=""
           />
         )
