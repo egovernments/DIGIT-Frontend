@@ -10,6 +10,7 @@ import { ResponsiveContainer } from "recharts";
 import { getTitleHeading } from "../../../utils/locale";
 import { subDays, addMinutes } from "date-fns";
 import { getDuration } from "../../../utils/getDuration";
+import { getQueryParam } from "../../../utils/getQueryParam";
 
 export default function HeatMapChart({ chartId, visualizer, initialRange, isNational, showLabel, pageZoom }) {
   const { t } = useTranslation();
@@ -21,8 +22,8 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const { value } = useContext(FilterContext);
   const copyOfValue = Object.assign({}, value);
   const subHeader = t(`SUB_${visualizer?.name}`);
-  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
-  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  const boundaryType =  getQueryParam("boundaryType");
+  const boundaryValue = getQueryParam("boundaryValue");
   const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
 
   const mapData = useRef({});
@@ -37,7 +38,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const projectSelected = Digit.SessionStorage.get("projectSelected");
   const boundaries = projectSelected?.boundaries;
   const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
-  const isLevelOne = boundaryLevelMap?.[boundaryType] === "level-one";
+  const isLevelOne = isLevelOneBoundary(boundaryLevelMap, boundaryType);
   const filterBoundaryValue = filterStack?.value?.filters?.boundaryType;
   const [mapSelector, setMapSelector] = useState(
     !isLevelOne ?

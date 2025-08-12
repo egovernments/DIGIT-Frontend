@@ -7,6 +7,8 @@ import NoData from "../../NoData";
 import GenericChart from "../../GenericChart";
 import FilterContext from "../../FilterContext";
 import { getTitleHeading } from "../../../utils/locale";
+import { getQueryParam } from "../../../utils/getQueryParam";
+import { isLevelOneBoundary } from "../../../utils/isLevelOneBoundary";
 
 const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const { t } = useTranslation();
@@ -19,8 +21,8 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const copyOfValue = Object.assign({}, value);
   const chartId = data.charts.filter((c) => c.chartType === "points")?.[0].id;
   const subHeader = t(`SUB_${chartName}`);
-  const boundaryType = new URLSearchParams(location.search).get("boundaryType");
-  const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");
+  const boundaryType = getQueryParam("boundaryType");
+  const boundaryValue = getQueryParam("boundaryValue");
   const boundaryLevelMap = Digit.SessionStorage.get("levelMap")
   const mapData = useRef({});
   const pointProps = useRef({});
@@ -37,7 +39,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const projectSelected = Digit.SessionStorage.get("projectSelected");
   const boundaries = projectSelected?.boundaries;
   const nationalMap = boundaries?.[0]?.country?.[0]?.toLowerCase() || "national-map";
-  const isLevelOne = boundaryLevelMap?.[boundaryType] === "level-one";
+  const isLevelOne = isLevelOneBoundary(boundaryLevelMap, boundaryType);
   const filterBoundaryValue = filterStack?.value?.filters?.boundaryType;
   const [mapSelector, setMapSelector] = useState(
     !isLevelOne ?
@@ -137,11 +139,18 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       visualizationType: "table",
       queryType: "",
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {...filterStack?.value?.filters, ...filterFeature,campaignId:campaignId
-      },
+      filters: {
+         ...filterStack?.value?.filters,
+        ...(filterFeature ? { [boundaryLevel]: filterFeature } : {}),
+        campaignId: campaignId
+        },
       aggregationFactors: null,
     };
-    const { isLoading:isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+    const { isLoading:isFetchingChart, data: response, error} = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
+    if (error) {
+        console.error("Error fetching chart data:", error);
+        return;
+      }
 
 
     useEffect(() => {
@@ -235,9 +244,12 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
     );
   };
 
-  data?.charts?.forEach((chart) => {
-    chart?.chartType === "points" ? generateMarkers(chart, value, addlFilter, tenantId) : generateTable(chart, value);
-  });
+  useMemo(() => {
+     data?.charts?.forEach((chart) => {
+     chart?.chartType === "points" ? generateMarkers(chart, value, addlFilter, tenantId) : generateTable(chart, value);
+      });
+    }, [data, value, addlFilter, tenantId, chartKey, filterStack]);
+    
   const renderMap = () => {
     if (pointProps.current.isFetchingChart || isLoading) {
       return <Loader className={"digit-center-loader"}/>;

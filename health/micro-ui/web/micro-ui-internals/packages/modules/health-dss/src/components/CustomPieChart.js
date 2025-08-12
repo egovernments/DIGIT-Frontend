@@ -144,7 +144,10 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   };
 
   const renderTooltip = ({ payload, label }) => {
-    const labelValue = Number((payload?.[0]?.value / response?.responseData?.data?.[0]?.headerValue) * 100).toFixed(1);
+    const headerValue = response?.responseData?.data?.[0]?.headerValue;
+    const labelValue = headerValue && headerValue !== 0 
+      ? Number((payload?.[0]?.value / headerValue) * 100).toFixed(1)
+      : "0.0";
     const formattedValue = labelValue;
     return (
       <div
