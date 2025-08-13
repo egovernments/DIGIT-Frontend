@@ -40,7 +40,6 @@ const BoundaryDetailsSummary = (props) => {
     return acc;
   }, {});
 
-
   return (
     <div>
       {Object.keys(groupedByParent)
@@ -49,7 +48,7 @@ const BoundaryDetailsSummary = (props) => {
           <div className="summary-group" key={index}>
             {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
             <div>
-              <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" , margin: "0rem" }}>
+              <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%", margin: "0rem" }}>
                 {groupedByParent[parentKey].slice(0, expandedGroups[parentKey] ? groupedByParent[parentKey].length : 10).map((boundary) => (
                   <Chip key={boundary.code} text={t(boundary.code)} onClick={() => {}} className="multiselectdropdown-tag" hideClose={true} />
                 ))}
@@ -67,14 +66,12 @@ const BoundaryDetailsSummary = (props) => {
           </div>
         ))}
       {/* Show the button if there are more than 2 parent keys */}
-      {Object.keys(groupedByParent).length > 2 && (
-        <Button label={ t("HCM_SHOW_MORE_ALL")} onClick={handleShowAllToggle} variation="link" />
-      )}
+      {Object.keys(groupedByParent).length > 2 && <Button label={t("HCM_SHOW_MORE_ALL")} onClick={handleShowAllToggle} variation="link" />}
       {showPopUp && (
         <PopUp
           // className={"boundaries-pop-module"}
           type={"default"}
-          heading= {t(( props?.hierarchyType + "_" + props?.boundaries?.type).toUpperCase())} 
+          heading={t((props?.hierarchyType + "_" + props?.boundaries?.type).toUpperCase())}
           children={[]}
           onOverlayClick={() => {
             setShowPopUp(false);
@@ -82,7 +79,7 @@ const BoundaryDetailsSummary = (props) => {
           onClose={() => {
             setShowPopUp(false);
           }}
-          equalWidthButtons = {"false"}
+          equalWidthButtons={"false"}
           footerChildren={[
             <Button
               className={"campaign-type-alert-button"}
@@ -97,28 +94,27 @@ const BoundaryDetailsSummary = (props) => {
           ]}
           // sortFooterChildren={true}
         >
-          {Object.keys(groupedByParent)
-            .map((parentKey, index) => (
-              <div className="summary-group" key={index}>
-                {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
-                <div>
-                  <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" }}>
-                    {groupedByParent[parentKey].slice(0, expandedGroups[parentKey] ? groupedByParent[parentKey].length : 10).map((boundary) => (
-                      <Chip key={boundary.code} text={t(boundary.code)} onClick={() => {}} className="multiselectdropdown-tag" hideClose={true} />
-                    ))}
-                    {groupedByParent[parentKey].length > 10 && (
-                      <Button
-                        label={
-                          expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`
-                        }
-                        onClick={() => handleToggle(parentKey)}
-                        variation="link"
-                      />
-                    )}
-                  </div>
+          {Object.keys(groupedByParent).map((parentKey, index) => (
+            <div className="summary-group" key={index}>
+              {parentKey && parentKey !== "undefined" && parentKey.trim() !== "" && <div className="boundary-header">{t(parentKey)}</div>}
+              <div>
+                <div className="digit-tag-container" style={{ display: "flex", maxWidth: "100%" }}>
+                  {groupedByParent[parentKey].slice(0, expandedGroups[parentKey] ? groupedByParent[parentKey].length : 10).map((boundary) => (
+                    <Chip key={boundary.code} text={t(boundary.code)} onClick={() => {}} className="multiselectdropdown-tag" hideClose={true} />
+                  ))}
+                  {groupedByParent[parentKey].length > 10 && (
+                    <Button
+                      label={
+                        expandedGroups[parentKey] ? t("HCM_SHOW_LESS_SELECTED") : `+${groupedByParent[parentKey].length - 10} ${t("HCM_SELECTED")}`
+                      }
+                      onClick={() => handleToggle(parentKey)}
+                      variation="link"
+                    />
+                  )}
                 </div>
               </div>
-            ))}
+            </div>
+          ))}
         </PopUp>
       )}
     </div>

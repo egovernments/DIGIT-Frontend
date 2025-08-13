@@ -20,7 +20,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const [loader, setLoader] = useState(null);
   const skip = searchParams.get("skip");
   const storedInfo = JSON.parse(sessionStorage.getItem("HCM_CAMPAIGN_NUMBER") || "{}");
-  const id = searchParams.get("id");
+  const id = searchParams.get("id") || storedInfo?.id;
   const isDraft = searchParams.get("draft");
   const campaignNumber = searchParams.get("campaignNumber") || storedInfo?.campaignNumber;
   const [currentKey, setCurrentKey] = useState(() => {

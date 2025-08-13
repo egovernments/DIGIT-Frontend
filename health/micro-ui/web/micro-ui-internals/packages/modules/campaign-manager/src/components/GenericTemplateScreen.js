@@ -22,9 +22,10 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
     .filter(
       (field) =>
         !field.hidden &&
-        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton" || field.jsonPath === "qrscanner")
+        (field.jsonPath === "PrimaryButton" || field.jsonPath === "SecondaryButton" || field.jsonPath === "scanner")
     )
     .sort((a, b) => (a.order || 0) - (b.order || 0));
+
 
   return (
     <div
@@ -42,6 +43,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
           overflowY: "auto",
           //   padding: "1rem",
           paddingBottom: buttonFields.length > 0 ? "6rem" : "1rem", // leave space for footer
+          overflowX:"hidden"
         }}
       >
         {TemplateRenderer ? (
@@ -54,7 +56,7 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
                 <div
                   key={index}
                   className={isSelected ? "app-preview-field-pair app-preview-selected" : ""}
-                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px", display: "flex", alignItems: "center", justifyContent: "center" }}
+                  style={{ marginBottom: "16px", width: "100%", marginTop: "4px", display: "flex", alignItems: "center"}}
                 >
                   <DynamicImageComponent type={field?.type} appType={field?.appType} />
                 </div>
@@ -93,11 +95,11 @@ const GenericTemplateScreen = ({ components = [], t, selectedField, templateName
             <div className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}>
             <Button
               key={index}
-              variation={field.jsonPath === "SecondaryButton" ? "secondary" : "primary"}
+              variation={field.jsonPath === "SecondaryButton" || field.jsonPath === "scanner" ? "secondary" : "primary"}
               label={t(field?.label)}
               onClick={() => { }}
               style={{ minWidth: "100%" }}
-              icon={field.icon || null}
+              icon={field.jsonPath === "scanner"  ? "QrCodeScanner" : null}
             />
             </div>
           ))}

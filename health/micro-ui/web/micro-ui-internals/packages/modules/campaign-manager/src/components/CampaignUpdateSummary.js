@@ -299,7 +299,7 @@ const CampaignUpdateSummary = (props) => {
                   type: "COMPONENT",
                   component: "CampaignDocumentsPreview",
                   props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (

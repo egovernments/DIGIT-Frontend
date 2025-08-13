@@ -6,7 +6,7 @@ import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
 //development mode
 import AppPreview from "../../../components/AppPreview";
 
-function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, ...props }) {
+function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, parentState, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -176,18 +176,19 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
   };
 
   // if (process.env.NODE_ENV === "development") {
-    return (
-      //development mode
-      <AppLocalisationWrapperDev
-        onSubmit={onSubmit}
-        back={back}
-        showBack={showBack}
-        screenConfig={screenConfig}
-        parentDispatch={parentDispatch}
-        localeModule={localeModule}
-        pageTag={pageTag}
-      />
-    );
+  //development mode
+  return (
+    <AppLocalisationWrapperDev
+      onSubmit={onSubmit}
+      back={back}
+      showBack={showBack}
+      screenConfig={screenConfig}
+      parentDispatch={parentDispatch}
+      localeModule={localeModule}
+      pageTag={pageTag}
+      parentState={parentState}
+    />
+  );
   // }
   return (
     //production mode
@@ -199,6 +200,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
       parentDispatch={parentDispatch}
       localeModule={localeModule}
       pageTag={pageTag}
+      parentState={parentState}
     >
       <AppPreview />
     </AppLocalisationWrapper>

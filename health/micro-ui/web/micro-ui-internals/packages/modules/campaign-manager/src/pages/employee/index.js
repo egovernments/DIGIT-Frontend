@@ -70,31 +70,45 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
     {
       path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
       content: t("MY_CAMPAIGN"),
+      show: pathVar === "my-campaign-new" || pathVar === "checklist/update" ? true : false,
+    },
+    {
+      path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
+      content: t("CREATE_CAMPAIGN_HOME"),
+      show: pathVar.match("campaign-home") || pathVar.match("create-campaign") ? true : false,
+    },
+    {
+      path: "",
+      content: t("CREATE_CAMPAIGN"),
+      show: pathVar.match("create-campaign") || pathVar === "view-details" ? true : false,
+    },
+    {
+      path: pathVar === "view-details" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
+      content: t("VIEW_DETAILS"),
+      query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
-        pathVar === "my-campaign" ||
-        pathVar === "checklist/create" ||
-        pathVar === "checklist/view" ||
-        pathVar === "checklist/update" ||
-        pathVar === "update-dates-boundary"
+        pathVar.match("view-details") ||
+        pathVar.match("setup-campaign") ||
+        pathVar.match("app-configuration-redesign") ||
+        pathVar.match("app-modules") ||
+        pathVar.match("app-features") ||
+        pathVar === "update-dates-boundary" ||
+        pathVar === "update-campaign" ||
+        pathVar === "checklist/search" ||
+        pathVar === "upload-screen"
           ? true
           : false,
     },
     {
-      path: pathVar === "my-campaign-new" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign-new`,
-      content: t("MY_CAMPAIGN"),
-      show:
-        pathVar === "my-campaign-new" ||
-        pathVar === "checklist/create" ||
-        pathVar === "checklist/view" ||
-        pathVar === "checklist/update" ||
-        pathVar === "update-dates-boundary"
-          ? true
-          : false,
-    },
-    {
-      path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/my-campaign`,
+      path: pathVar === "update-dates-boundary" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
       content: t("UPDATE_DATE_CHANGE"),
       show: pathVar === "update-dates-boundary" ? true : false,
+    },
+    {
+      path: pathVar === "checklist/search" ? "" : `/${window?.contextPath}/employee/campaign/checklist/search`,
+      content: t("ACTION_LABEL_CONFIGURE_APP"),
+      query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&name=${name}&campaignId=${campaignId}&projectType=${projectType}&role=${role}`,
+      show: pathVar === "checklist/search" || pathVar === "checklist/create" || pathVar === "checklist/view" ? true : false,
     },
     {
       path: "",
@@ -127,46 +141,25 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       show: pathVar.match("update-campaign") ? true : false,
     },
     {
-      path: pathVar === "campaign-home" ? "" : `/${window?.contextPath}/employee/campaign/campaign-home`,
-      content: t("CREATE_CAMPAIGN_HOME"),
-      show: pathVar.match("campaign-home") ? true : false,
-    },
-    {
-      path: pathVar === "create-campaign" ? "" : `/${window?.contextPath}/employee/campaign/create-campaign`,
-      content: t("CREATE_CAMPAIGN"),
-      show: pathVar.match("create-campaign") ? true : false,
-    },
-    {
-      path: pathVar === "view-details" ? "" : `/${window?.contextPath}/employee/campaign/view-details`,
-      content: t("VIEW_DETAILS"),
-      query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-      show:
-        pathVar.match("view-details") ||
-        pathVar.match("setup-campaign") ||
-        pathVar.match("app-configuration-redesign") ||
-        pathVar.match("app-modules") ||
-        pathVar.match("app-features") ||
-        pathVar === "checklist/search"
-          ? true
-          : false,
-    },
-    {
       path: pathVar === "setup-campaign" ? "" : `/${window?.contextPath}/employee/campaign/setup-campaign`,
       content: t("CREATE_NEW_CAMPAIGN"),
       show: pathVar === "setup-campaign" ? true : false,
     },
     {
-      path:
-        pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features"
-          ? ""
-          : `/${window?.contextPath}/employee/campaign/app-modules`,
+      path: pathVar === "app-modules" ? "" : `/${window?.contextPath}/employee/campaign/app-modules`,
       content: t("APP_CONFIGURATION"),
-      show: pathVar === "app-modules" || pathVar === "app-configuration-redesign" || pathVar === "app-features" ? true : false,
+      query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}&projectType=${projectType}`,
+      show: pathVar === "app-modules" || pathVar === "app-configuration-redesign" ? true : false,
     },
     {
       path: "",
-      content: t("ACTION_LABEL_CONFIGURE_APP"),
-      show: pathVar === "checklist/search" ? true : false,
+      content: t("APP_FEATURES"),
+      show: pathVar === "app-features" ? true : false,
+    },
+    {
+      path: "",
+      content: t("APP_CONFIGURATION_REDESIGN"),
+      show: pathVar === "app-configuration-redesign" ? true : false,
     },
   ];
 

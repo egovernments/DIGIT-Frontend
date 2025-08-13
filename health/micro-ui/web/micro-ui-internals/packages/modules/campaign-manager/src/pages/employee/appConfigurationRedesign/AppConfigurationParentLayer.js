@@ -37,7 +37,14 @@ const dispatcher = (state, action) => {
 
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
-const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, isPreviousTabAvailable, tabStateDispatch, tabState }) => {
+const AppConfigurationParentRedesign = ({
+  formData = null,
+  revalidateForm,
+  isNextTabAvailable,
+  isPreviousTabAvailable,
+  tabStateDispatch,
+  tabState,
+}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
@@ -208,14 +215,10 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
   }
 
   const submit = async (screenData, finalSubmit, tabChange) => {
-    if (!tabChange && !finalSubmit && stepper?.find((i) => i.active)?.isLast && !isNextTabAvailable) {
-      setShowToast({ key: "error", label: "LAST_PAGE_ERROR" });
-      return;
-    }
     parentDispatch({
       key: "SETBACK",
       data: screenData,
-      isSubmit: stepper?.find((i) => i.active)?.isLast || finalSubmit ? true : false,
+      isSubmit: finalSubmit ? true : false,
     });
     const mergedTemplate = parentState.currentTemplate.map((item) => {
       const updated = screenData.find((d) => d.name === item.name);
@@ -332,7 +335,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
         });
         return;
       }
-    } else if (stepper?.find((i) => i.active)?.isLast || tabChange) {
+    } else if (tabChange) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
         return updated ? updated : item;
@@ -392,28 +395,12 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
           onSuccess: async (data) => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
             setChangeLoader(false);
-            if (tabChange) {
-              return;
-            } else if (isNextTabAvailable && !finalSubmit) {
-              tabStateDispatch({ key: "NEXT_TAB", responseDate: data });
-              setCurrentStep(1);
-              return;
-            } else {
-              setChangeLoader(false);
-              queryClient.invalidateQueries(`APPCONFIG-${campaignNumber}`);
-              navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
-                state: {
-                  message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
-                  preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
-                  actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
-                  actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
-                },
-              });
-              return;
-            }
+            revalidateForm();
+            revalidate();
           },
         }
       );
+      return;
     } else {
       await updateMutate(
         {
@@ -496,6 +483,7 @@ const AppConfigurationParentRedesign = ({ formData = null, isNextTabAvailable, i
               parentDispatch={parentDispatch}
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
+              parentState={parentState}
               pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             />
           </div>

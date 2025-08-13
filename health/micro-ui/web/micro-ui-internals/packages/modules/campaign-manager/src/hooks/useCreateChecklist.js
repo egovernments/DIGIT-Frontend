@@ -3,7 +3,11 @@ import createChecklistService from "./services/createChecklistService";
 
 const useCreateChecklist = (tenantId) => {
   return useMutation({
-    mutationFn: (reqData) => createChecklistService(reqData, tenantId),
+    mutationFn: async (reqData) => {
+      const res = await createChecklistService(reqData, tenantId);
+
+      return res;
+    },
   });
 };
 

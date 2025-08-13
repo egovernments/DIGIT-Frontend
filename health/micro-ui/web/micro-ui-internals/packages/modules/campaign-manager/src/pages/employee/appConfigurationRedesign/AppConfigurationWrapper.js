@@ -287,7 +287,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentState }) {
   const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
@@ -638,7 +638,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                   })
                 }
               />
-              <DrawerFieldComposer />
+              <DrawerFieldComposer parentState={parentState} screenConfig={screenConfig} selectedField={state?.drawerField} />
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>

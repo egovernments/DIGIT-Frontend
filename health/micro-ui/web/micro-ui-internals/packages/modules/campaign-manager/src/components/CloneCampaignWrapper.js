@@ -22,10 +22,7 @@ const CloneCampaignWrapper = (props) => {
   const [toast, setToast] = useState(null);
   const [isValidatingName, setIsValidatingName] = useState(false);
   // derive the minimum end‐date as startDate + 1 day
-  const endMin = startDate
-  ? isoDate(new Date(new Date(startDate).getTime() + 24 * 3600 * 1000))
-  : isoDate(Date.now() + 2 * 24 * 3600 * 1000);
-
+  const endMin = startDate ? isoDate(new Date(new Date(startDate).getTime() + 24 * 3600 * 1000)) : isoDate(Date.now() + 2 * 24 * 3600 * 1000);
 
   const steps = [
     "SEARCHING_CAMPAIGN_DETAILS",
@@ -44,23 +41,23 @@ const CloneCampaignWrapper = (props) => {
   };
 
   function getStartDateEpoch(rawDate) {
-  if (!rawDate) return null;
+    if (!rawDate) return null;
 
-  let dateObj;
+    let dateObj;
 
-  // Case 1: ISO format "2025-07-27T00:00:00.000Z"
-  if (rawDate.includes("T")) {
-    dateObj = new Date(rawDate);
-  } else {
-    // Case 2: "2025-07-27"
-    const [year, month, day] = rawDate.split("-").map(Number);
-    dateObj = new Date(Date.UTC(year, month - 1, day)); // UTC midnight
+    // Case 1: ISO format "2025-07-27T00:00:00.000Z"
+    if (rawDate.includes("T")) {
+      dateObj = new Date(rawDate);
+    } else {
+      // Case 2: "2025-07-27"
+      const [year, month, day] = rawDate.split("-").map(Number);
+      dateObj = new Date(Date.UTC(year, month - 1, day)); // UTC midnight
+    }
+
+    return dateObj.getTime(); // Epoch in milliseconds
   }
 
-  return dateObj.getTime(); // Epoch in milliseconds
-}
-
-  const { mutateAsync: executeFlow, isLoading, error: cloneCampaignError , campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
+  const { mutateAsync: executeFlow, isLoading, error: cloneCampaignError, campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
     tenantId,
     campaignId: props?.campaignId,
     campaignName: name,
@@ -68,7 +65,7 @@ const CloneCampaignWrapper = (props) => {
     endDate: convertDateToEpoch(endDate),
     setStep: useCallback((step) => setCurrentStep(step), []),
   });
- 
+
   const handleToastClose = () => {
     setToast(null);
   };
@@ -89,12 +86,16 @@ const CloneCampaignWrapper = (props) => {
   const onNextClick = async () => {
     let hasError = false;
 
+    const nameRegexPattern = /^(?!.*[ _-]{2})(?=^[^\s_-])(?!.*[\s_-]$)(?=^[\p{L}][\p{L}0-9 _\-\(\)]{4,29}$)^.*$/u;
     // Name validation
     if (!name?.trim()) {
       setNameError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
       hasError = true;
     } else if (name.length > 30) {
       setNameError({ message: "CAMPAIGN_NAME_GREATER" });
+      hasError = true;
+    } else if (!nameRegexPattern.test(name)) {
+      setNameError({ message: "ES__REQUIRED_NAME_AND_LENGTH" });
       hasError = true;
     } else {
       setNameError(null);
@@ -112,10 +113,9 @@ const CloneCampaignWrapper = (props) => {
     if (!endDate) {
       setEndError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
       hasError = true;
-    } else if (startDate && endDate && convertDateToEpoch(endDate) <= convertDateToEpoch(startDate)){
+    } else if (startDate && endDate && convertDateToEpoch(endDate) <= convertDateToEpoch(startDate)) {
       setEndError({ message: "CAMPAIGN_END_DATE_BEFORE_ERROR" });
-    }
-    else{
+    } else {
       setEndError(null);
     }
 
@@ -142,7 +142,7 @@ const CloneCampaignWrapper = (props) => {
         setShowProgress(false);
       }
     } catch (err) {
-      setToast({ key: "error", label: `${t(err)}`, type: "error" });
+      setToast({ key: "error", label: `${t(Digit.Utils.locale.getTransformedLocale(err))}`, type: "error" });
       setShowProgress(false);
     }
   };
@@ -237,7 +237,7 @@ const CloneCampaignWrapper = (props) => {
                         newDateFormat: true,
                         min: endMin,
                         name: "campaignEndDate",
-                        validation: { min: endMin},
+                        validation: { min: endMin },
                       }}
                       value={endDate}
                       onChange={(event) => {

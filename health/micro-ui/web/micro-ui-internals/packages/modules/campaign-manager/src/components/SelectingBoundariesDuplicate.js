@@ -1,12 +1,17 @@
 import React, { useState, useMemo, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Wrapper } from "./SelectingBoundaryComponent";
-import { AlertCard, Stepper, TextBlock, Tag, Card, HeaderComponent, Loader } from "@egovernments/digit-ui-components";
+import { AlertCard, Card, HeaderComponent, Loader, PopUp, Button, Chip } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../Module";
 import TagComponent from "./TagComponent";
 
 const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const { t } = useTranslation();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const isDraftCampaign = location.state?.isDraftCampaign;
+  const queryParams = Digit.Hooks.useQueryParams();
   const tenantId = Digit.ULBService.getStateId();
   const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
@@ -43,6 +48,7 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const [executionCount, setExecutionCount] = useState(0);
   const [currentStep, setCurrentStep] = useState(2);
   const [isLoading, setIsLoading] = useState(true);
+  const [showPopUp, setShowPopUp] = useState(false);
   const currentKey = searchParams.get("key");
   const [key, setKey] = useState(() => {
     const keyParam = searchParams.get("key");
@@ -74,9 +80,9 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
 
   const { data: campaignData, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
-  // useEffect(() => {
-  //   onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions ,  updateBoundary: !restrictSelection});
-  // }, [selectedData, boundaryOptions , restrictSelection]);
+  useEffect(() => {
+    onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
+  }, [selectedData, boundaryOptions, restrictSelection]);
 
   useEffect(() => {
     if (selectedData?.length > 0 || Object.keys(boundaryOptions || {}).length) {
@@ -88,12 +94,12 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     }
   }, [selectedData, boundaryOptions, restrictSelection]);
 
-  // useEffect(() => {
-  //   if (executionCount < 5) {
-  //     onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions , updateBoundary: !restrictSelection});
-  //     setExecutionCount((prevCount) => prevCount + 1);
-  //   }
-  // });
+  useEffect(() => {
+    if (executionCount < 5) {
+      onSelect("boundaryType", { selectedData: selectedData, boundaryData: boundaryOptions, updateBoundary: !restrictSelection });
+      setExecutionCount((prevCount) => prevCount + 1);
+    }
+  });
   useEffect(() => {
     const sessionData = props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType;
     if (sessionData || campaignData?.boundaries) {
@@ -103,15 +109,16 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
     setTimeout(() => setIsLoading(false), 10);
   }, [props?.props?.sessionData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType, campaignData]);
 
-  // useEffect(() => {
-  //   if (
-  //     props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
-  //     props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
-  //     props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
-  //   ) {
-  //     setRestrictSelection(true);
-  //   }
-  // }, [props?.props?.sessionData]);
+  useEffect(() => {
+    if (
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.length > 0 ||
+      props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.length > 0
+    ) {
+      setRestrictSelection(true);
+    }
+  }, [props?.props?.sessionData]);
+
   const handleBoundaryChange = (value) => {
     setBoundaryOptions(value?.boundaryOptions);
     setSelectedData(value?.selectedData);
@@ -131,9 +138,44 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   //   window.dispatchEvent(new Event("checking"));
   // }, [key]);
 
-  if (draft && isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
-  }
+  const checkDataPresent = ({ action }) => {
+    if (action === false) {
+      setShowPopUp(false);
+      setRestrictSelection(false);
+      return;
+    }
+    if (action === true) {
+      setShowPopUp(false);
+      setRestrictSelection(true);
+      return;
+    }
+  };
+
+  const Template = {
+    url: "/project-factory/v1/project-type/cancel-campaign",
+    body: {
+      CampaignDetails: {
+        tenantId: tenantId,
+        campaignId: queryParams?.id,
+      },
+    },
+  };
+  const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
+
+  const handleCancelClick = async () => {
+    await mutation.mutate(
+      {},
+      {
+        onSuccess: async (result) => {
+          navigate(`/${window?.contextPath}/employee/campaign/my-campaign-new`);
+        },
+        onError: (error, result) => {
+          const errorCode = error?.response?.data?.Errors?.[0]?.code;
+          console.error(errorCode);
+        },
+      }
+    );
+  };
 
   if (draft && isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -144,7 +186,14 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
       <div className="container-full">
         <div className="card-container-delivery">
           <Card>
-            <TagComponent campaignName={campaignName} />
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <TagComponent campaignName={campaignName} />
+              {isDraftCampaign ? (
+                <div className="digit-tag-container" style={{ margin: "0rem" }}>
+                  <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+                </div>
+              ) : null}
+            </div>
             <HeaderComponent className="select-boundary">{t(`CAMPAIGN_SELECT_BOUNDARY`)}</HeaderComponent>
             <p className="dates-description">{t(`CAMPAIGN_SELECT_BOUNDARIES_DESCRIPTION`)}</p>
             <Wrapper
@@ -179,6 +228,45 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
           />
         </div>
       </div>
+      {showPopUp && (
+        <PopUp
+          className={"boundaries-pop-module"}
+          type={"default"}
+          heading={t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_HEADER")}
+          children={[
+            <div>
+              <CardText style={{ margin: 0 }}>{t("ES_CAMPAIGN_UPDATE_BOUNDARY_MODAL_TEXT") + " "}</CardText>
+            </div>,
+          ]}
+          onOverlayClick={() => {
+            setShowPopUp(false);
+          }}
+          onClose={() => {
+            setShowPopUp(false);
+          }}
+          footerChildren={[
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"secondary"}
+              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_BACK")}
+              onClick={() => {
+                checkDataPresent({ action: false });
+              }}
+            />,
+            <Button
+              type={"button"}
+              size={"large"}
+              variation={"primary"}
+              label={t("ES_CAMPAIGN_BOUNDARY_MODAL_SUBMIT")}
+              onClick={() => {
+                checkDataPresent({ action: true });
+              }}
+            />,
+          ]}
+          sortFooterChildren={true}
+        ></PopUp>
+      )}
     </>
   );
 };

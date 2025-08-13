@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
-import {  EditIcon,  LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
-import {  Toast, Card, Stepper, TextBlock , Loader ,HeaderComponent } from "@egovernments/digit-ui-components";
+import { ViewComposer } from "@egovernments/digit-ui-react-components";
+import { Toast, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import TagComponent from "./TagComponent";
 
 function mergeObjects(item) {
@@ -351,8 +351,8 @@ const DeliveryDetailsSummary = (props) => {
           </Card>
         </div> */}
         <div className="card-container-delivery">
-        <TagComponent campaignName={campaignName} />  
-          <div style={{ display: "flex", justifyContent: "space-between" , marginTop: "1.5rem" }}>
+          <TagComponent campaignName={campaignName} />
+          <div style={{ display: "flex", justifyContent: "space-between", marginTop: "1.5rem" }}>
             <HeaderComponent className="summary-header">{t("HCM_DELIVERY_DETAILS_SUMMARY")}</HeaderComponent>
           </div>
           <div className="campaign-summary-container">

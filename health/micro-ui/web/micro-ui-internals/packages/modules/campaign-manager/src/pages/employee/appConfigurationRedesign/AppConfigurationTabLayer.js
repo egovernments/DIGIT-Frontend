@@ -9,13 +9,19 @@ const tabDispatcher = (state, action) => {
   switch (action.key) {
     case "SET_TAB": {
       let firstSelectedFound = false;
+      const activeTabConfigName = state?.activeTabConfig?.data?.name || null;
       const sortedData = action?.data?.filter((i) => i?.data?.isSelected)?.sort((a, b) => a?.data?.order - b?.data?.order);
       const temp =
         sortedData
           ?.map((i, c) => {
             const isSelected = i?.data?.isSelected;
             let active = false;
-            if (isSelected && !firstSelectedFound) {
+            if (activeTabConfigName) {
+              if (activeTabConfigName === i?.data?.name) {
+                active = true;
+                firstSelectedFound = true;
+              }
+            } else if (isSelected && !firstSelectedFound) {
               active = true;
               firstSelectedFound = true;
             }
@@ -35,7 +41,7 @@ const tabDispatcher = (state, action) => {
           sortedData
             ?.map((i, c) => ({
               id: i?.id,
-              active: c === 0 ? true : false,
+              active: activeTabConfigName ? (i?.data?.name === activeTabConfigName ? true : false) : c === 0 ? true : false,
               code: i?.data?.name,
               data: i?.data,
               version: i?.data?.version,
@@ -120,8 +126,8 @@ const AppConfigurationTabLayer = () => {
     },
     config: {
       enabled: formId ? true : false,
-      // cacheTime: 0,
-      // staleTime: 0,
+      cacheTime: 0,
+      staleTime: 0,
       select: (data) => {
         return data?.mdms;
       },
@@ -160,7 +166,6 @@ const AppConfigurationTabLayer = () => {
               // setShowPopUp(tab);
               await waitForTabSave(); // Waits for onComplete to be called
               window.dispatchEvent(new Event("resetStep"));
-
               tabStateDispatch({
                 key: "CHANGE_ACTIVE_TAB",
                 tab: tab,
@@ -168,6 +173,8 @@ const AppConfigurationTabLayer = () => {
             }}
           />
           <AppConfigurationParentRedesign
+            revalidateForm={revalidateForm}
+            refetchForm={refetchForm}
             tabState={tabState}
             formData={tabState?.activeTabConfig}
             tabStateDispatch={tabStateDispatch}

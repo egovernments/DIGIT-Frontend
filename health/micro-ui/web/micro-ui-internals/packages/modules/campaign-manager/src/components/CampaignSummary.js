@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
+import { Button, InfoBannerIcon, Toast, PopUp, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -80,7 +80,6 @@ function loopAndReturn(dataa, t) {
   return format;
 }
 
-
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
   const groupedData = {};
@@ -149,7 +148,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const CampaignSummary = (props) => {
   const { t } = useTranslation();
-  const navigate = useNavigate();
+  const history = useHistory();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -180,7 +179,7 @@ const CampaignSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-   navigate(newUrl);
+    history.push(newUrl);
   };
 
   function updateUrlParams(params) {
@@ -505,13 +504,17 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle : cycles?.cycle ? cycles?.cycle
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        : cycles?.cycle
+                        ? cycles?.cycle
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries : cycles?.deliveries ? cycles?.deliveries
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        : cycles?.deliveries
+                        ? cycles?.deliveries
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
@@ -590,7 +593,7 @@ const CampaignSummary = (props) => {
                   type: "COMPONENT",
                   component: "CampaignDocumentsPreview",
                   props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundaryWithTarget"),
+                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
                   },
                   cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
                   cardSecondaryAction: noAction !== "false" && (
@@ -671,7 +674,7 @@ const CampaignSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const closeToast = () => {
     setShowToast(null);
