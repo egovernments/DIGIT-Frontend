@@ -209,6 +209,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        visibilityCondition: field?.visibilityCondition || null,
       }));
 
     return {

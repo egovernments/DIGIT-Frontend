@@ -1,4 +1,4 @@
-import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header, PopUp } from "@egovernments/digit-ui-components";
+import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header, PopUp, SVG } from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState, } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 import RenderSelectionField from "../../components/RenderSelectionField";
@@ -51,7 +51,7 @@ const Filter = (props) => {
   return (
     <div className="digit-search-action">
       <FilterIcon onClick={() => setShowPopUp(true)} />
-      <span className="digit-search-text">{props.t(props.field.label) || "LABEL"}</span>
+      <span className="digit-search-text" style={{color: "#C84C0E"}}>{props.t(props.field.label) || "LABEL"}</span>
 
       {showPopUp && (
         <PopUp
@@ -70,9 +70,11 @@ const Filter = (props) => {
           ]}
           sortFooterChildren={true}
         >
-          <div style={{   width: "100%",            // Take full popup width
-              padding: "1rem",
-              boxSizing: "border-box" }}>
+          <div style={{
+            width: "100%",            // Take full popup width
+            padding: "1rem",
+            boxSizing: "border-box"
+          }}>
             <RenderSelectionField
               field={props.field}
               t={props.t}
@@ -187,7 +189,7 @@ const HouseHoldDetailsCard = (props) => {
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex", alignItems: "center", minWidth: "100vh" , paddingBottom: "1rem"
+              display: "flex", alignItems: "center", minWidth: "100vh", paddingBottom: "1rem"
             }}
             key={index}
             inline={true}
@@ -267,7 +269,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center", // horizontally center the buttons
     gap: "8px",
-    marginTop: "10px",  
+    marginTop: "10px",
   },
   card: {
     overflowX: "hidden",
@@ -336,6 +338,8 @@ export const getTemplateRenderer = (templateName) => {
   switch (templateName) {
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
+    case "complaintInbox":
+      return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
 
@@ -389,7 +393,7 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           alignment="flex-end"
         />
 
-        {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard}/>}
+        {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard} />}
 
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
@@ -601,6 +605,86 @@ const Table = ({ field, t }) => {
     />
   );
 };
+
+
+/**
+ * SimpleSearchFilterRow
+ * A minimal row with: [ Search icon + label ] | [ Filter ] | [ Sort icon ]
+ *
+ * Uses your existing <Filter />, <SVG.Search />, and <SVG.Sort /> components.
+ */
+const SimpleSearchFilterRow = ({
+  components = [], t
+  // t,
+  // label = "Search",
+  // primaryColor = "currentColor",
+  // size = "20px",
+  // onSearchClick,
+  // onSortClick,
+  // // Pass anything your <Filter /> needs via this prop
+  // filterProps = {},
+}) => {
+  const formatMap = {};
+  components.forEach((item) => {
+    formatMap[item.jsonPath] = item;
+  });
+
+  const searchIcon = formatMap["searchComplaints"] || { label: "", hidden: true };
+  const filter = formatMap["filter"] || {};
+  const sortIcon = formatMap["sortComplaints"] || {};
+
+  const cellStyle = {
+    minWidth: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: "0.375rem", // tighter gap between icon and label
+    color: "inherit",
+  };
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))", // equal widths
+        columnGap: "0.5rem", // smaller overall gap
+        rowGap: "0.5rem",
+        alignItems: "center",
+        width: "100%" //allow responsive wrap
+      }}
+    >
+      {/* Left: Search icon + label */}
+      <div
+        style={cellStyle}
+      >
+        {/* Use currentColor so it won't disappear on white backgrounds */}
+        <SVG.Search width={"20px"} height={"20px"} fill={"#C84C0E"} />
+        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
+          {t?.(searchIcon?.label || "")}
+        </span>
+      </div>
+
+      {/* Middle: Filter (full-width inside its cell) */}
+      <div style={{ minWidth: 0 }}>
+        <div style={{ width: "100%" }}>
+          <Filter field={filter} t={t} />
+        </div>
+      </div>
+
+      {/* Right: Sort icon + label (optional) */}
+      <div
+        style={cellStyle}
+      >
+        <SVG.ArrowDownward width={"20px"} height={"20px"} fill={"#C84C0E"} />
+        {sortIcon?.label ? (
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" , color: "#C84C0E"}}>
+            {t?.(sortIcon?.label || "")}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 
 // Register all components
 registerComponent("searchBar", SearchBar);
