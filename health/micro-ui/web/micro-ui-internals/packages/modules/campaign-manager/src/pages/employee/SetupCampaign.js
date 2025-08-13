@@ -27,7 +27,6 @@ import { CONSOLE_MDMS_MODULENAME } from "../../Module";
  */
 
 const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
-  console.log("i am running");
   const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
   Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
 

@@ -93,7 +93,6 @@ const tabDispatcher = (state, action) => {
 const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
 const AppConfigurationTabLayer = () => {
-  console.log("ksdfjhsfkjsfkjsdfkfjsdkldfjklsdjfklsdjsdlkjskljlsdjfsdkljskljfsljdl")
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -103,16 +102,10 @@ const AppConfigurationTabLayer = () => {
   const campaignNumber = searchParams.get("campaignNumber");
   const variant = searchParams.get("variant");
   const formId = searchParams.get("formId");
-  const [numberTabs, setNumberTabs] = useState([]);
-  const [currentScreen, setCurrentScreen] = useState({});
   const [tabState, tabStateDispatch] = useReducer(tabDispatcher, {});
+  const numberTabs = tabState?.numberTabs || [];
+  const currentScreen = numberTabs?.find((i) => i.active);
   const [showPopUp, setShowPopUp] = useState(null);
-  useEffect(() => {
-    if (tabState?.actualData?.length > 0) {
-      setNumberTabs(tabState?.numberTabs);
-      setCurrentScreen(tabState?.numberTabs?.find((i) => i.active === true));
-    }
-  }, [tabState]);
   const reqCriteriaTab = {
     url: `/${mdms_context_path}/v2/_search`,
     changeQueryName: `APPCONFIG-${campaignNumber}`,
@@ -130,16 +123,21 @@ const AppConfigurationTabLayer = () => {
       // cacheTime: 0,
       // staleTime: 0,
       select: (data) => {
-        tabStateDispatch({
-          key: "SET_TAB",
-          data: data?.mdms,
-        });
         return data?.mdms;
       },
     },
   };
 
   const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
+
+  useEffect(() => {
+    if (!isTabLoading && tabData) {
+      tabStateDispatch({
+        key: "SET_TAB",
+        data: tabData,
+      });
+    }
+  }, [tabData, isTabLoading]);
 
   if (isTabLoading) return <Loader />;
   const waitForTabSave = () => {
@@ -182,4 +180,4 @@ const AppConfigurationTabLayer = () => {
   );
 };
 
-export default AppConfigurationTabLayer;
+export default React.memo(AppConfigurationTabLayer);

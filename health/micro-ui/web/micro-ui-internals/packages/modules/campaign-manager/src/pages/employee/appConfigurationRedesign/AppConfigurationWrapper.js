@@ -321,21 +321,26 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
       cacheTime: Infinity,
       staleTime: Infinity,
       select: (data) => {
-        dispatch({
-          type: "MASTER_DATA",
-          state: {
-            screenConfig: screenConfig,
-            ...data?.["HCM-ADMIN-CONSOLE"],
-            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["FieldPropertiesPanelConfig"],
-            AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
-            DetailsConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DETAILS_RENDERER_CONFIG"],
-            // ...dummyMaster,
-          },
-        });
+        return data?.["HCM-ADMIN-CONSOLE"];
       },
     },
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
+  useEffect(() => {
+    if (!isLoadingAppConfigMdmsData && AppConfigMdmsData && screenConfig && fieldMasterName) {
+      dispatch({
+        type: "MASTER_DATA",
+        state: {
+          screenConfig: screenConfig,
+          ...AppConfigMdmsData,
+          DrawerPanelConfig: AppConfigMdmsData?.["FieldPropertiesPanelConfig"],
+          AppFieldType: AppConfigMdmsData?.[fieldMasterName],
+          DetailsConfig: AppConfigMdmsData?.["DETAILS_RENDERER_CONFIG"],
+          // ...dummyMaster,
+        },
+      });
+    }
+  }, [isLoadingAppConfigMdmsData, AppConfigMdmsData, screenConfig, fieldMasterName]);
 
   const openAddFieldPopup = (data) => {
     setPopupData({ ...data, id: crypto.randomUUID() });

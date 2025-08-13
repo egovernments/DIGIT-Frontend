@@ -24,7 +24,7 @@
     "@egovernments/digit-ui-react-components": "1.8.21-rc19.2",
     "@egovernments/digit-ui-svg-components": "1.0.21-rc19.01",
     "@egovernments/digit-ui-components": "0.2.0-beta.40-rc19.2",
-    "react-data-table-component": "7.6.2",
+    "react-data-table-component": "7.7.0",
     "styled-components": "5.0.0",
     "@rjsf/core": "5.10.0",
     "@rjsf/utils": "5.10.0",
