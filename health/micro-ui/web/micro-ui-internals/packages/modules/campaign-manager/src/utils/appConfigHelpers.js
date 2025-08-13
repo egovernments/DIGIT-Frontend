@@ -209,7 +209,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
-        visibilityCondition: field?.visibilityCondition || null,
+        visibilityCondition: field?.visibilityCondition || {},
+        autoFillCondition: field?.autoFillCondition || {},
       }));
 
     return {
@@ -314,6 +315,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
         visibilityCondition: field?.visibilityCondition || {},
+        autoFillCondition: field?.autoFillCondition || {},
       };
     });
 
