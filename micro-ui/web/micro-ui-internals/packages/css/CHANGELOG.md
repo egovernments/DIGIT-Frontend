@@ -1,4 +1,8 @@
 # Changelog
+
+## [1.8.38] - [14-Aug-2025]
+-Removed the login extra space in the sandbox
+
 ## [1.8.37] - [12-Aug-2025]
 -Override citizen side styles CCSD-622,474,458 
 
