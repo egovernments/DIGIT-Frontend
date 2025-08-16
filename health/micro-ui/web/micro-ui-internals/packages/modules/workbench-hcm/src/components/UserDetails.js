@@ -13,7 +13,7 @@ const UserDetails = ({
 }) => {
   const { t } = useTranslation();
   const [isLoading, setIsLoading] = useState(false);
-  const [userName, setUserName] = useState(null);
+  const [userResponse, setuserResponse] = useState(null);
   const [showTooltip, setShowTooltip] = useState(false);
   const [error, setError] = useState(null);
   const tooltipRef = useRef(null);
@@ -74,7 +74,7 @@ const UserDetails = ({
           emailId: user.emailId || "NA"
         };
         
-        setUserName(userData);
+        setuserResponse(userData);
         setCachedUser(uuid, userData);
       } else {
         setError("User not found");
@@ -94,7 +94,7 @@ const UserDetails = ({
     // Check cache first
     const cachedUser = getCachedUser(uuid);
     if (cachedUser) {
-      setUserName(cachedUser);
+      setuserResponse(cachedUser);
       setShowTooltip(true);
       return;
     }
@@ -232,7 +232,7 @@ const UserDetails = ({
         )}
       </button>
 
-      {showTooltip && (userName || error) && (
+      {showTooltip && (userResponse || error) && (
         <div
           ref={tooltipRef}
           style={getTooltipPosition()}
@@ -241,17 +241,24 @@ const UserDetails = ({
             <div style={{ color: "#ff6b6b" }}>
               {error}
             </div>
-          ) : userName ? (
+          ) : userResponse ? (
             <div>
               <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
-                {userName.name}
+                {userResponse.name}
               </div>
+            {userResponse?.mobileNumber&&  <div style={{ fontSize: "11px", opacity: 0.8 }}>
+                Mobile: {userResponse.mobileNumber}
+              </div>}
+            {userResponse?.emailId && (
               <div style={{ fontSize: "11px", opacity: 0.8 }}>
-                Mobile: {userName.mobileNumber}
+                Email: {userResponse.emailId}
               </div>
+            )}
+             {userResponse?.roles && (
               <div style={{ fontSize: "11px", opacity: 0.8 }}>
-                Email: {userName.emailId}
+                Roles: {userResponse?.roles.map(ele=>ele.name).join(", ")}
               </div>
+            )}
             </div>
           ) : null}
         </div>
