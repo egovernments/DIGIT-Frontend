@@ -118,7 +118,10 @@ const ProjectChildrenComponent = (props) => {
       title="PROJECT_CHILDREN"
       data={flattenedDescendants}
       columns={columns}
+      manualPagination={true}
       isLoading={false}
+       paginationTotalRows={flattenedDescendants.length}
+       paginationPerPage={15}
       noDataMessage="NO_PROJECT_CHILDREN"
       customCellRenderer={customCellRenderer}
     />

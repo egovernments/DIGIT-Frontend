@@ -27,7 +27,7 @@ const ProjectBeneficiaryComponent = (props) => {
     setIsLoading(true);
     try {
       const res = await Digit.CustomService.getResponse({
-        url: `${url}/resource/v1/_search`,
+        url: `${url}/resource/v1/_search?offset=0&tenantId=${tenantId}&limit=10`,
         body: {
           ProjectResource: {
             projectId: [props.projectId],

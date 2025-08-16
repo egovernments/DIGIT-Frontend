@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { Loader } from "@egovernments/digit-ui-components";
@@ -25,8 +25,49 @@ const ReusableTableWrapper = ({
   customStyles = null,
   className = "override-card",
   headerClassName = "works-header-view",
+  manualPagination = false,
 }) => {
   const { t } = useTranslation();
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage, setPerPage] = useState(paginationPerPage);
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [data]);
+
+  useEffect(() => {
+    setPerPage(paginationPerPage);
+  }, [paginationPerPage]);
+
+  const paginatedData = useMemo(() => {
+    if (!manualPagination || !pagination || !data) {
+      return data;
+    }
+    
+    const startIndex = (currentPage - 1) * perPage;
+    const endIndex = startIndex + perPage;
+    return data.slice(startIndex, endIndex);
+  }, [data, currentPage, perPage, manualPagination, pagination]);
+
+  const handlePageChange = (page) => {
+    if (manualPagination) {
+      setCurrentPage(page);
+    }
+    if (onChangePage) {
+      onChangePage(page);
+    }
+  };
+
+  const handlePerRowsChange = (newPerPage, page) => {
+    if (manualPagination) {
+      setPerPage(newPerPage);
+      setCurrentPage(page);
+    }
+    if (onChangeRowsPerPage) {
+      onChangeRowsPerPage(newPerPage, page);
+    }
+  };
 
   // Convert columns to DataTable format
   const tableColumns = columns.map((column) => ({
@@ -78,14 +119,14 @@ const ReusableTableWrapper = ({
       ) : (
         <DataTable
           columns={tableColumns}
-          data={data}
+          data={manualPagination ? paginatedData : data}
           pagination={pagination}
-          paginationServer={paginationServer}
-          paginationTotalRows={paginationTotalRows || data.length}
-          paginationPerPage={paginationPerPage}
+          paginationServer={manualPagination || paginationServer}
+          paginationTotalRows={manualPagination ? (data?.length || 0) : (paginationTotalRows || data.length)}
+          paginationPerPage={perPage}
           paginationRowsPerPageOptions={paginationRowsPerPageOptions}
-          onChangePage={onChangePage}
-          onChangeRowsPerPage={onChangeRowsPerPage}
+          onChangePage={handlePageChange}
+          onChangeRowsPerPage={handlePerRowsChange}
           customStyles={customStyles || tableCustomStyle}
           progressPending={isLoading}
           progressComponent={progressComponent || <Loader />}
