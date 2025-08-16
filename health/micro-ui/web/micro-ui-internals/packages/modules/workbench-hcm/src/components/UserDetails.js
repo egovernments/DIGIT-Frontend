@@ -71,7 +71,8 @@ const UserDetails = ({
         const userData = {
           name: user.name || "Unknown User",
           mobileNumber: user.mobileNumber || "NA",
-          emailId: user.emailId || "NA"
+          emailId: user.emailId || "NA",
+          roles: user?.roles.map(ele => ele?.name).join(", ") || "NA"
         };
         
         setuserResponse(userData);
@@ -249,14 +250,14 @@ const UserDetails = ({
             {userResponse?.mobileNumber&&  <div style={{ fontSize: "11px", opacity: 0.8 }}>
                 Mobile: {userResponse.mobileNumber}
               </div>}
-            {userResponse?.emailId && (
+            {userResponse?.emailId !='NA' && (
               <div style={{ fontSize: "11px", opacity: 0.8 }}>
                 Email: {userResponse.emailId}
               </div>
             )}
              {userResponse?.roles && (
               <div style={{ fontSize: "11px", opacity: 0.8 }}>
-                Roles: {userResponse?.roles.map(ele=>ele.name).join(", ")}
+                Roles: {userResponse?.roles|| "NA"}
               </div>
             )}
             </div>

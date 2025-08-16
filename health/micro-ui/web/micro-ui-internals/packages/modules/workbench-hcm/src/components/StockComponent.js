@@ -4,6 +4,7 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
+import UserDetails from "./UserDetails";
 
 const StockComponent = (props) => {
   const { t } = useTranslation();
@@ -82,6 +83,8 @@ const StockComponent = (props) => {
     { label: t("WBH_WAY_BILL_NUMBER"), key: "wayBillNumber" },
     { label: t("WBH_SENDER_TYPE"), key: "senderType" },
     { label: t("WBH_RECEIVER_TYPE"), key: "receiverType" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_ID"), key: "createdBy" },
+
     { label: t("WBH_EXPIRE_DATE"), key: "expireDate" },
     { label: t("WBH_TRANSACTION_DATE"), key: "transactionDate" },
     { label: t("WBH_DISTRIBUTOR_NAME"), key: "distributorName" },
@@ -134,6 +137,23 @@ const StockComponent = (props) => {
     },
     receiverType: (row) => {
       return t(`WBH_RECEIVER_TYPE_${row.receiverType}`);
+    },
+    createdBy: (row) => {
+      const userId = row?.createdBy;
+      if (!userId || userId === "NA") {
+        return "NA";
+      }
+      return (
+        <UserDetails 
+          uuid={userId}
+          style={{ 
+            fontSize: "inherit",
+            color: "inherit"
+          }}
+          iconSize="14px"
+          tooltipPosition="top"
+        />
+      );
     },
   };
 
