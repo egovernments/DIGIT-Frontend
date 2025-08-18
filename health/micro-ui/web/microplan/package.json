@@ -9,8 +9,7 @@
   },
   "workspaces": [
     "micro-ui-internals/packages/modules/microplan",
-    "micro-ui-internals/packages/modules/campaign-manager",
-    "micro-ui-internals/packages/modules/health-dss"
+    "micro-ui-internals/packages/modules/campaign-manager"
   ],
   "homepage": "/microplan-ui",
   "dependencies": {
