@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { LatLngBounds } from "leaflet";
 import { Loader,Chip } from "@egovernments/digit-ui-components";
@@ -139,18 +139,11 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       visualizationType: "table",
       queryType: "",
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {
-         ...filterStack?.value?.filters,
-        ...filterFeature,
-        campaignId: campaignId
-        },
+      filters: {...filterStack?.value?.filters, ...filterFeature,campaignId:campaignId
+      },
       aggregationFactors: null,
     };
-    const { isLoading:isFetchingChart, data: response, error} = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
-    if (error) {
-        console.error("Error fetching chart data:", error);
-        return;
-      }
+    const { isLoading:isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
 
 
     useEffect(() => {
@@ -244,12 +237,9 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
     );
   };
 
-  useMemo(() => {
-     data?.charts?.forEach((chart) => {
-     chart?.chartType === "points" ? generateMarkers(chart, value, addlFilter, tenantId) : generateTable(chart, value);
-      });
-    }, [data, value, addlFilter, tenantId, chartKey, filterStack]);
-    
+  data?.charts?.forEach((chart) => {
+    chart?.chartType === "points" ? generateMarkers(chart, value, addlFilter, tenantId) : generateTable(chart, value);
+  });
   const renderMap = () => {
     if (pointProps.current.isFetchingChart || isLoading) {
       return <Loader className={"digit-center-loader"}/>;

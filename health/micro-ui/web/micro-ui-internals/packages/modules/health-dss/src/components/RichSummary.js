@@ -116,7 +116,7 @@ const Chart = ({ data, showDivider }) => {
         </div>
       ) : (
         <div style={{ width: "80%", margin: "auto" }}>
-          <CircularProgressBar data={chartData} />
+          <CircularProgressBar data={chartData} t={t} />
         </div>
       )}
       <div className={`tooltip`}>
