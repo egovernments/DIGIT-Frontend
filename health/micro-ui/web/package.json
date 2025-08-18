@@ -10,7 +10,8 @@
   "workspaces": [
     "micro-ui-internals/packages/modules/campaign-manager",
     "micro-ui-internals/packages/modules/health-hrms",
-    "micro-ui-internals/packages/modules/pgr"
+    "micro-ui-internals/packages/modules/pgr",
+    "micro-ui-internals/packages/modules/health-dss"
   ],
   "homepage": "/workbench-ui",
   "dependencies": {
