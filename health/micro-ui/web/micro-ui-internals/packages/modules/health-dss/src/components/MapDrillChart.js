@@ -55,7 +55,7 @@ const MapDrillChart = ({
       filters.state = selectedState;
     }
   
-    filters = {...filters, projectTypeId: projectTypeId};
+    filters = {...filters};
   
     const { startDate, endDate, interval, } = getInitialRange();
     const requestDate = {

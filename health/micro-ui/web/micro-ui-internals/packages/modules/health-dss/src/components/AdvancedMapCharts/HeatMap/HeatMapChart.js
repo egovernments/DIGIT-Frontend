@@ -11,6 +11,7 @@ import { getTitleHeading } from "../../../utils/locale";
 import { subDays, addMinutes } from "date-fns";
 import { getDuration } from "../../../utils/getDuration";
 import { getQueryParam } from "../../../utils/getQueryParam";
+import { isLevelOneBoundary } from "../../../utils/isLevelOneBoundary";
 
 export default function HeatMapChart({ chartId, visualizer, initialRange, isNational, showLabel, pageZoom }) {
   const { t } = useTranslation();

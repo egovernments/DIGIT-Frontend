@@ -18,7 +18,6 @@ const ViewDashboard = ({ stateCode }) => {
   const [loaderText, setLoaderText] = useState(t("LOADING"));
 
   // campaign search call
-  debugger;
   const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
@@ -35,9 +34,6 @@ const ViewDashboard = ({ stateCode }) => {
 
   const hierarchyType = campaignData?.[0]?.hierarchyType || "";
 
-  if(hierarchyType){
-    console.log("999 hierarchyType", hierarchyType);
-  }
 
   // boundary hierarchy definition search call
   const reqCriteriaForBoundaryDefinitionSearch = {
@@ -59,8 +55,6 @@ const ViewDashboard = ({ stateCode }) => {
     },
   };
 
-  console.log("999 boundary definition search criteria", reqCriteriaForBoundaryDefinitionSearch);
-  // debugger;
   const { isLoading: hierarchyLoading, data: hierarchyDefinition } = Digit.Hooks.useCustomAPIHook(reqCriteriaForBoundaryDefinitionSearch);
 
   const processBoundaryHierarchy = (hierarchyDefinition) => {
@@ -101,7 +95,6 @@ const ViewDashboard = ({ stateCode }) => {
   const levelLinked = levelMap?.[boundaryType];
 
   // MDMS call : to get dashboard config id fro specific hierarchyType
-  // debugger;
   const { data: mdmsData, isLoading: isMDMSLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
     "hcm-dashboard",
@@ -110,17 +103,14 @@ const ViewDashboard = ({ stateCode }) => {
     { schemaCode: "hcm-dashboard.dashboardProjectConfig" }
   );
 
-  console.log("999 mdmsData", mdmsData, isMDMSLoading);
 
   const getDashboardId = (mdmsData, projectType, levelLinked) => {
-    debugger;
     const dashboardConfigs = mdmsData?.MdmsRes?.["hcm-dashboard"]?.dashboardProjectConfig;
     if (!Array.isArray(dashboardConfigs)) return null;
 
     // Try to find matching campaignType first
     let campaignConfig = dashboardConfigs.find((cfg) => cfg.campaignType === projectType);
 
-    console.log(dashboardConfigs, "999 dashboardConfigs");
     // Fallback to "FALLBACK-CAMPAIGNTYPE" if not found
     if (!campaignConfig) {
       campaignConfig = dashboardConfigs.find((cfg) => cfg.campaignType === "FALLBACK-CAMPAIGNTYPE");
@@ -132,7 +122,6 @@ const ViewDashboard = ({ stateCode }) => {
   };
   const selectedDashboard = getDashboardId(mdmsData, project?.projectType, levelLinked);
   const dashboardId = selectedDashboard?.dashboardId;
-  console.log("999 selectedDashboard", selectedDashboard,"dashboardId", dashboardId);
 
   // Dashboard analytics call to get the dashoard data for specific dashboard id
   const dashboardReqCriteria = {
@@ -153,7 +142,6 @@ const ViewDashboard = ({ stateCode }) => {
       },
     },
   };
-  debugger;
   const { isLoading: isDashboardLoading, data: dashboardDataResponse } = Digit.Hooks.useCustomAPIHook(dashboardReqCriteria);
 
 
@@ -181,7 +169,6 @@ const ViewDashboard = ({ stateCode }) => {
 
   // Dynamic loader text based on current API
   useEffect(() => {
-    // debugger;
     if (campaignSearchLoading) setLoaderText(t("FETCHING_CAMPAIGN_DETAILS"));
     else if (hierarchyLoading) setLoaderText(t("FETCHING_HIERARCHY"));
     else if (isMDMSLoading) setLoaderText(t("LOADING_DASHBOARD_CONFIGURATION"));
@@ -189,25 +176,6 @@ const ViewDashboard = ({ stateCode }) => {
     else if (boundaryDataLoading) setLoaderText(t("FETCHING_BOUNDARIES"));
   }, [campaignSearchLoading, hierarchyLoading, isMDMSLoading, isDashboardLoading, boundaryDataLoading, t]);
 
-  if (dashboardDataResponse && dashboardReqCriteria) {
-    console.log("999 dashboardDataResponse", dashboardDataResponse, dashboardReqCriteria, isDashboardLoading );
-  }
-  
-  if (boundaryData) {  // Note: 'boudaryData' looks like a typo
-    console.log("999 boundaryData", boundaryData,reqCriteriaForBoundaryReleationshipSearch,boundaryDataLoading);
-  }
-  
-  if (campaignData && reqCriteriaForBoundaryDefinitionSearch) {
-    console.log("999 campaignData", campaignData, reqCriteriaForBoundaryDefinitionSearch,campaignSearchLoading);
-  }
-  
-  if (mdmsData) {
-    console.log("999 mdmsdata", mdmsData, isMDMSLoading);
-  }
-  
-  if (hierarchyDefinition && reqCriteriaForBoundaryReleationshipSearch) {
-    console.log("999 hierarchyDefinition", hierarchyDefinition,reqCriteriaForBoundaryDefinitionSearch , hierarchyLoading);
-  }
   
 
   useEffect(() => {
