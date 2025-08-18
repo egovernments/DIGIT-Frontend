@@ -18,22 +18,19 @@ RUN node -e "console.log('Heap limit (MB):', v8.getHeapStatistics().heap_size_li
 # Print a marker log (optional debug message)
 RUN node -e "console.log('core only')"
 
+# ---- FIX: Install main deps before health-dss ----
+RUN yarn config set network-timeout 600000
+RUN yarn install --ignore-scripts
+
 # Move into health-dss and run install script
 WORKDIR /app/web/health-dss
 RUN chmod +x ./install-deps.sh
 RUN ./install-deps.sh
 
-# Return to main directory for install/build
+# Return to main directory for build
 WORKDIR /app/web
-
-# Increase timeout before install (recommended for GitHub Actions)
-RUN yarn config set network-timeout 600000
-
-# Install dependencies
-RUN yarn install
-
-# Build the project
 RUN yarn build:webpack
+# ---- END FIX ----
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
