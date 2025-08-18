@@ -2,6 +2,12 @@ FROM node:14-alpine3.16 AS build
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
+ARG GIT_COMMIT=unknown
+ARG GIT_BRANCH=unknown
+
+ENV GIT_COMMIT=$GIT_COMMIT
+ENV GIT_BRANCH=$GIT_BRANCH
+
 WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 ENV YARN_DEBUG=true
