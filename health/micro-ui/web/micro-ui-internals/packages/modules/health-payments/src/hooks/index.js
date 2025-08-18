@@ -3,11 +3,13 @@ import useAttendanceBoundarySearch from "./attendance/attendance_boundary";
 import useProjectSearch from "./project/useProjectSearch";
 import usePaymentsInitialization from "./project/usePaymentsInitialization";
 import useAttendanceBoundaryRegisterSearch from "./attendance/attendance_register_search";
+import useDeleteAttendeeFromRegister from "./attendance/delete_attendee_register";
 const payments = {
   useProjectSearch,
   usePaymentsInitialization,
   useAttendanceBoundarySearch,
-  useAttendanceBoundaryRegisterSearch
+  useAttendanceBoundaryRegisterSearch,
+  useDeleteAttendeeFromRegister,
 };
 
 const Hooks = {

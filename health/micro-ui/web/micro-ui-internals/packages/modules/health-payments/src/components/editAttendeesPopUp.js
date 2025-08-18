@@ -3,9 +3,11 @@ import { useTranslation } from "react-i18next";
 import { PopUp, Timeline, Loader, TextInput, Button } from '@egovernments/digit-ui-components';
 import { useEffect } from "react";
 import EditAttendanceManagementTable from "./EditAttendanceManagementTable";
+import { useHistory } from "react-router-dom";
 
 
 const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
+    const history = useHistory();
     // context path variables
     const attendanceContextPath =
         window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") ||
@@ -160,7 +162,9 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
                                 className="custom-class"
 
                                 label={t(`Register New User`)}
-                                onClick={() => { }}
+                                onClick={() => {
+                                     history.push(`/${window?.contextPath}/employee/hrms/create`);
+                                 }}
 
                                 size=""
                                 style={{}}

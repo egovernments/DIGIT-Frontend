@@ -488,13 +488,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
               className="custom-class"
               icon="Edit"
               iconFill=""
-              label={t(`Edit`)}
+              label={t(`Edit Register`)}
               onClick={handleDeEnrollClick}
               options={[]}
               optionsKey=""
               size=""
               style={{}}
-              title={t(`Edit`)}
+              title={t(`Edit Register`)}
               variation="secondary"
             />
             </div>
@@ -532,7 +532,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           <EditAttendeePopUp
             onClose={onDeEnrollClose}
             businessId={registerNumber}
-            heading={`${t("EDIT")}`}
+            heading={`${t("Edit Attendance Register")}`}
           />
         )}
         
