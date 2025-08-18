@@ -133,7 +133,7 @@ const EmployeeApp = ({
           />}
           <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
 
-            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
+            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper sandbox-module"} digit-home-app-wrapper` : ""}>
               {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
               <ErrorBoundary initData={initData}>
                 <AppModules
