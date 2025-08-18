@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { LatLngBounds } from "leaflet";
 import { Loader,Chip } from "@egovernments/digit-ui-components";
@@ -141,7 +141,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
       filters: {
          ...filterStack?.value?.filters,
-        ...(filterFeature ? { [boundaryLevel]: filterFeature } : {}),
+        ...filterFeature,
         campaignId: campaignId
         },
       aggregationFactors: null,
