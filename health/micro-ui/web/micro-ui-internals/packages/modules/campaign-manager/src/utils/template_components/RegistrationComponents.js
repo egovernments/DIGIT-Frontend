@@ -338,7 +338,7 @@ export const getTemplateRenderer = (templateName) => {
   switch (templateName) {
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
-    case "complaintInbox":
+    case "ComplaintsInbox":
       return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
@@ -632,6 +632,7 @@ const SimpleSearchFilterRow = ({
   const searchIcon = formatMap["searchComplaints"] || { label: "", hidden: true };
   const filter = formatMap["filter"] || {};
   const sortIcon = formatMap["sortComplaints"] || {};
+
 
   const cellStyle = {
     minWidth: 0,
