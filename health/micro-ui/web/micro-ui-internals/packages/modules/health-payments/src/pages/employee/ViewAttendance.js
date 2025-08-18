@@ -10,6 +10,8 @@ import _ from "lodash";
 import { formatTimestampToDate } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 
+import EditAttendeePopUp from "../../components/editAttendeesPopUp";
+
 /**
  * @function ViewAttendance
  * @description This component is used to view attendance.
@@ -50,6 +52,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [loading, setLoading] = useState(false);
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
+
+  // INFO:: de-enroll attendee
+  const [showDeEnrollPopup, setShowDeEnrollPopup] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
 
@@ -432,6 +437,16 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setShowCommentLogPopup(false);
   };
 
+  // INFO:: To de-enroll , add new attendee 
+  const handleDeEnrollClick = () => {
+    setShowDeEnrollPopup(true);
+  };
+
+  const onDeEnrollClose = () => {
+    setShowDeEnrollPopup(false);
+  };
+  // 
+
   const renderLabelPair = (heading, text) => (
     <div className="label-pair">
       <span className="view-label-heading">{t(heading)}</span>
@@ -467,6 +482,22 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>
         <Card className="bottom-gap-card-payment">
+          <div className="card-heading" >
+            <h2 className="card-heading-title"></h2>
+          <Button
+              className="custom-class"
+              icon="Edit"
+              iconFill=""
+              label={t(`Edit`)}
+              onClick={handleDeEnrollClick}
+              options={[]}
+              optionsKey=""
+              size=""
+              style={{}}
+              title={t(`Edit`)}
+              variation="secondary"
+            />
+            </div>
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
         {showLogs && <Card >
@@ -495,6 +526,16 @@ const ViewAttendance = ({ editAttendance = false }) => {
             heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
           />
         )}
+
+        {/* To DeEnroll Attendee*/}
+         {showDeEnrollPopup && (
+          <EditAttendeePopUp
+            onClose={onDeEnrollClose}
+            businessId={registerNumber}
+            heading={`${t("EDIT")}`}
+          />
+        )}
+        
       </div>
 
       {/* Alert Pop-Up for edit */}
