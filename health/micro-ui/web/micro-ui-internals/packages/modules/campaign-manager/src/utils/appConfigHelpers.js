@@ -329,7 +329,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       order: index + 1,
       properties,
       navigateTo: section?.navigateTo || {},
-      conditionalNavigateTo: section?.conditionalNavigateTo || {},
+      conditionalNavigateTo: section?.conditionalNavigateTo || [],
 
     };
   });
