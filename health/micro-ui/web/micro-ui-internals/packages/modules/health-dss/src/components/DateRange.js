@@ -65,7 +65,7 @@ const DateRange = ({ values, onFilterChange, t }) => {
       const title = `${format(startDate, "MMM d, yyyy")} - ${format(startDate, "MMM d, yyyy")}`;
       onFilterChange({ range: { startDate, endDate, interval, title }, requestDate: { startDate, endDate, interval, title } });
     }
-  }, [selectionRange, isModalOpen]);
+  }, [selectionRange, isModalOpen,  onFilterChange]);
 
   const staticRanges = useMemo(() => {
     return createStaticRanges([

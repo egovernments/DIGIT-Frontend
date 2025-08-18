@@ -7,8 +7,9 @@ const COLORS = ["#0BABDE", "#D6D5D4"];
 import Icon from "./Icon";
 
 const CircularProgressBar = ({ t, data }) => {
-  const displayData = [{ name: "COVERAGE", value: data.headerValue ? data.headerValue : 100 }];
-  const endAngle = 90 * (1 - (4 * data.headerValue) / 100);
+  const headerValue = data?.headerValue ?? 0;
+  const displayData = [{ name: "COVERAGE", value: headerValue || 100 }];
+  const endAngle = 90 * (1 - (4 * headerValue) / 100);
   const percentageValue = Digit.Utils.dss.formatter(data?.headerValue, "percentage", "", true, t).replace(" ", "");
   return (
     <ResponsiveContainer width="100%" height={90}>
