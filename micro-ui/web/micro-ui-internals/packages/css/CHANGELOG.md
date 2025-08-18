@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.39] - [18-Aug-2025]
+-Employee app wrapper classname css added  margin fixed for sandbox
+
 ## [1.8.38] - [14-Aug-2025]
 -Removed the login extra space in the sandbox
 

@@ -1,4 +1,8 @@
 # Changelog 
+
+## [1.8.45]  [18-Aug-2025]
+- Employee app wrapper margin fixed for sandbox  
+
 ## [1.8.44]  [15-July-2025]
 - Citizen login page continue button added 
 

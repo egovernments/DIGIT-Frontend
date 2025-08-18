@@ -550,6 +550,11 @@ digit-card-text.center {
   text-align: center;
 }
 
+.employee-app-wrapper .sandbox-module {
+  min-height: calc(100vh - 4em);
+  margin: -70px;
+}
+
 .pgr-citizen-wrapper {
   .applications-list-container {
     .card {
