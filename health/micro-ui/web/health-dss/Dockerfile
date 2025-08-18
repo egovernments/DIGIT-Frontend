@@ -37,7 +37,7 @@ RUN yarn build:webpack
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/d
+ENV WORK_DIR=/var/web/microplan-ui
 
 RUN mkdir -p ${WORK_DIR}
 
