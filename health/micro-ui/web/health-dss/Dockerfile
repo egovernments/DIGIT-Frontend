@@ -6,6 +6,12 @@ RUN apk add --no-cache python2 make g++ \
     && ln -sf /usr/bin/python2 /usr/bin/python
     
 ARG WORK_DIR
+ARG GIT_COMMIT=unknown
+ARG GIT_BRANCH=unknown
+
+ENV GIT_COMMIT=$GIT_COMMIT
+ENV GIT_BRANCH=$GIT_BRANCH
+
 WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=4792"
 ENV YARN_DEBUG=true
@@ -41,7 +47,7 @@ RUN yarn build:webpack
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/dashboard-ui
+ENV WORK_DIR=/var/web/health-dss
 
 RUN mkdir -p ${WORK_DIR}
 
