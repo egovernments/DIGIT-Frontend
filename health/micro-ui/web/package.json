@@ -1,3 +1,4 @@
+
 {
   "name": "micro-ui",
   "version": "1.0.0",
@@ -12,7 +13,7 @@
     "micro-ui-internals/packages/modules/health-hrms",
     "micro-ui-internals/packages/modules/pgr"
   ],
-  "homepage": "/workbench-ui",
+  "homepage": "/dashboard-ui",
   "dependencies": {
     "@egovernments/digit-ui-module-health-hrms":"0.0.1",
     "@egovernments/digit-ui-libraries": "1.8.17",
