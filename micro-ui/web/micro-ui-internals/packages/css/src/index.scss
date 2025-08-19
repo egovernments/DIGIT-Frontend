@@ -689,6 +689,12 @@ input[type="number"] {
   margin: 70px;
 }
 
+.employee-app-wrapper.sandbox {
+     min-height: calc(100vh - 4em);
+    margin: -2px;
+   }
+   
+
 .ws-custom-wrapper {
   .submit {
     display: flex !important;
