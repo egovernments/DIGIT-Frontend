@@ -2,7 +2,7 @@ export const ProjectService = {
   staffSearch: async ({ body, params }) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: "/project/staff/v1/_search",
+        url: window.globalConfigs?.getConfig("PROJECT_SEARCH_API") || `/project/staff/v1/_search`,
         useCache: false,
         method: "POST",
         userService: true,
