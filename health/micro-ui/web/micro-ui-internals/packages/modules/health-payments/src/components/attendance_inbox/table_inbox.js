@@ -84,10 +84,37 @@ const CustomInboxTable = ({
           <span className="link" >
             <Button
               label={t(`${row.id}`)}
-              onClick={() =>
-                history.push(
-                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
-                )
+              onClick={() => {
+                const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+                const endDate = existingPaymentInbox?.selectedProject?.endDate;
+                // history.push(
+                //   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                // )
+                debugger
+                if (endDate) {
+                  debugger
+                  const currentDate = Date.now(); // current time in epoch
+
+                  if (!(currentDate <= endDate)) {
+                    // Allowed → Navigate
+                    history.push(
+                      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                    );
+                  } else {
+                    // Expired → handle case
+                    history.push(
+                      `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+                    );
+                  }
+                } else {
+                  // No endDate → fallback navigation or error
+                  console.warn("No endDate found in session storage");
+                  history.push(
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                  );
+                }
+
+              }
               }
               title={t(`${row.id}`)}
               variation="link"

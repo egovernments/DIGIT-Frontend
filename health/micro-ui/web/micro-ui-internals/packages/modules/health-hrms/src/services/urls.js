@@ -47,7 +47,7 @@ const Urls = {
 
 
   attendee:{
-    deenrollAttendee:`/attendance/attendee/v1/_delete`
+    deenrollAttendee:`/health-attendance/attendee/v1/_delete`
   }
 };
 

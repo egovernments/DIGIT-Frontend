@@ -482,7 +482,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
           {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
         </Card>
         <Card className="bottom-gap-card-payment">
-          <div className="card-heading" >
+          {/*  INFO:: commenting it as it is handled in edit register screen
+          {<div className="card-heading" >
             <h2 className="card-heading-title"></h2>
           <Button
               className="custom-class"
@@ -497,7 +498,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               title={t(`Edit Register`)}
               variation="secondary"
             />
-            </div>
+            </div>} */}
           <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
         </Card>
         {showLogs && <Card >

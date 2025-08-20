@@ -50,7 +50,7 @@ deEnrollment_attendee: async ({body, params}) => {
     try {
       
         const response = await Digit.CustomService.getResponse({
-          url: "/attendance/attendee/v1/_delete",
+          url: "/health-attendance/attendee/v1/_delete",
           useCache: false,
           method: "POST",
           userService: true,

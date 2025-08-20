@@ -9,7 +9,7 @@ import AttendeeService from "../services/attendance/attendee_service/attendeeSer
 import { useAttendanceSummary } from "../utils/update_attendance_summary";
 
 
-const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
+const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
     const history = useHistory();
     // context path variables
     const attendanceContextPath =
@@ -31,6 +31,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
     const [individualIds, setIndividualIds] = useState([]);
 
     const [searchQuery, setSearchQuery] = useState("");
+    const [flag,setFlag]=useState(false);
 
     // -------- 1. Attendance Register API --------
     const AttendancereqCri = {
@@ -43,6 +44,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
             enabled: !!businessId,
             select: (data) => data,
         },
+         changeQueryName: flag ? "attendanceSearch_refresh" : "attendanceSearch"
     };
 
     const { isLoading: isAttendanceLoading, data: AttendanceData } =
@@ -152,17 +154,8 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
 
 
     const disableUser = async (value) => {
-debugger;
-        const attendee = {
-            registerId: businessId,
-            individualId: value,
-            enrollmentDate: null,
-            denrollmentDate: new Date(Date.now() - (1 * 60 * 1000 + 30 * 1000)).getTime(),
-            tenantId: String(tenantId)
-        };
- const result = await AttendeeService.delete(tenantId, null, { attendees: [attendee] });
-   console.log(attendee);
-        debugger
+
+        setFlag(!flag);
 
     }
 
@@ -190,6 +183,7 @@ debugger;
                             setAttendanceSummary={setAttendanceSummary}
                             disableUser={disableUser}
                             registerId={businessId}
+                            registerNumber={registerId}
                         />
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
                             <div>{labels[0]}</div>

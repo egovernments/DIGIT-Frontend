@@ -38,6 +38,9 @@ const EditAttendanceManagementTable = ({ ...props }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [toast, setToast] = useState({ show: false, label: "", type: "" });
+
+  const [selectedRowId, setSelectedRowId] = useState(null);
 
   const [openAlertPopUp, setOpenAlertPopUp] = useState(false);
 
@@ -112,6 +115,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
                 iconFill=""
                 label={t(`Disabe User`)}
                 onClick={() => {
+                  setSelectedRowId(row?.[0]);
                   setOpenAlertPopUp(true);
                   // handleDaysWorkedChange(row?.[0])
                 }}
@@ -135,7 +139,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
   const handleDaysWorkedChange = async (value) => {
 
     const attendee = {
-      registerId: props.registerId,
+      registerId: props.registerNumber,
       individualId: value,
       enrollmentDate: null,
       denrollmentDate: new Date(Date.now() - (1 * 60 * 1000 + 30 * 1000)).getTime(),
@@ -144,12 +148,20 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     await updateMapping({ "attendees": [attendee] },
       {
         onError: async (error) => {
-          debugger
+          
           console.log("hello", error)
+          setShowToast(
+            { key: "error", label: t(`HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE`), transitionTime: 3000 }
+          );
+
 
         },
         onSuccess: async (responseData) => {
-          console.log("hello")
+
+          console.log("responseData", responseData);
+          
+          setShowToast({ key: "success", label: t(`Successfully disabled`), transitionTime: 3000 });
+          props.disableUser("asd");
         },
       }
     )
@@ -201,7 +213,9 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
           setOpenAlertPopUp(false);
-          handleDaysWorkedChange(row?.[0]);
+          if (selectedRowId) {
+            handleDaysWorkedChange(selectedRowId); // use stored row.[0]
+          }
         }}
       />}
     </>
