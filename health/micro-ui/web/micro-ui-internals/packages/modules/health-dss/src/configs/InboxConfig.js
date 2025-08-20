@@ -8,7 +8,7 @@ export const InboxConfig = {
       label: "ALL_CAMPAIGNS",
       type: "search",
       apiDetails: {
-        serviceName: `/health-project/staff/v1/_search`,
+        serviceName: `/project/staff/v1/_search`,
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
@@ -104,7 +104,7 @@ export const InboxConfig = {
       label: "PAST_CAMPAIGNS",
       type: "search",
       apiDetails: {
-        serviceName: `/health-project/staff/v1/_search`,
+        serviceName: `/project/staff/v1/_search`,
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
@@ -200,7 +200,7 @@ export const InboxConfig = {
       label: "LIVE_CAMPAIGNS",
       type: "search",
       apiDetails: {
-        serviceName: `/health-project/staff/v1/_search`,
+        serviceName: `/project/staff/v1/_search`,
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
