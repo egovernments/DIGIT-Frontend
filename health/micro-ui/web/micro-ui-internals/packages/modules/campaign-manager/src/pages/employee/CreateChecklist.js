@@ -41,6 +41,7 @@ const CreateChecklist = () => {
   const [submitting, setSubmitting] = useState(false);
   const [loading_new, setLoading_New] = useState(true);
   let locale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
+  const enabledModules = Digit?.SessionStorage.get("initData")?.languages;
   const { mutateAsync } = Digit.Hooks.campaign.useCreateChecklist(tenantId);
   const navigate = useNavigate();
   const [serviceCode, setServiceCode] = useState(null);
@@ -492,7 +493,7 @@ const CreateChecklist = () => {
     };
   };
 
-  const onSubmit = async (formData, flag = 0, preview = null, translations) => {
+  const onSubmit = async (formData, flag = 0, preview = null, translations = []) => {
     let payload;
     if (flag === 1) {
       payload = payloadData(preview);
@@ -629,8 +630,12 @@ const CreateChecklist = () => {
                     const { local: generatedLocal } = generateCodes(processed);
                     const currentLocalisationData = getFilteredLocaleEntries(processed, generatedLocal);
                     setLocalisationData(currentLocalisationData);
-                    setShowLocalisationPopup(true);
-                    setShowPopUp(false);
+                    if (enabledModules > 1) {
+                      setShowLocalisationPopup(true);
+                      setShowPopUp(false);
+                    } else {
+                      onSubmit(null, 1, tempFormData, []);
+                    }
                   }}
                 />,
               ]}

@@ -623,8 +623,9 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     }
     // Phone Number conversion
     const phoneNumberKey = Schemas?.find((i) => i.description === "Phone Number")?.name;
-    if (data[phoneNumberKey] !== undefined) {
-      data[phoneNumberKey] = Number(data[phoneNumberKey]);
+    const isValidPhone = /^0\d{10}$/.test(data[phoneNumberKey]);
+    if (data[phoneNumberKey] !== undefined && isValidPhone) {
+      data[phoneNumberKey] = data[phoneNumberKey];
     }
 
     // Capacity conversion
