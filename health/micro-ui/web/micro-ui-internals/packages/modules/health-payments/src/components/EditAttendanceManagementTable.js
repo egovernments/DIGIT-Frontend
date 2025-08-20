@@ -7,6 +7,9 @@ import DataTable, { TableProps } from "react-data-table-component";
 import { tableCustomStyle, editAttendeetableCustomStyle } from "./table_inbox_custom_style";
 import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
+import AttendeeService from "../services/attendance/attendee_service/attendeeService";
+
+import AlertPopUp from "./alertPopUp";
 
 
 /**
@@ -26,6 +29,7 @@ import { getCustomPaginationOptions } from "../utils";
 
 
 const EditAttendanceManagementTable = ({ ...props }) => {
+
   const { t } = useTranslation();
   const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
@@ -33,6 +37,11 @@ const EditAttendanceManagementTable = ({ ...props }) => {
   // Local state for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+
+  const [openAlertPopUp, setOpenAlertPopUp] = useState(false);
+
+  const { mutate: updateMapping } = Digit.Hooks.payments.useDeleteAttendeeFromRegister(tenantId);
 
   // Sliced data based on pagination
   const paginatedData = props.data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
@@ -102,7 +111,10 @@ const EditAttendanceManagementTable = ({ ...props }) => {
                 icon="Edit"
                 iconFill=""
                 label={t(`Disabe User`)}
-                onClick={() => { }}
+                onClick={() => {
+                  setOpenAlertPopUp(true);
+                  // handleDaysWorkedChange(row?.[0])
+                }}
                 options={[]}
                 optionsKey=""
                 size=""
@@ -120,46 +132,30 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     },
   ];
 
-  //   const handleDaysWorkedChange = (workerId, value) => {
+  const handleDaysWorkedChange = async (value) => {
 
-  //     if (value?.target) {
-  //       value = value?.target?.value;
-  //     }
+    const attendee = {
+      registerId: props.registerId,
+      individualId: value,
+      enrollmentDate: null,
+      denrollmentDate: new Date(Date.now() - (1 * 60 * 1000 + 30 * 1000)).getTime(),
+      tenantId: String(tenantId)
+    };
+    await updateMapping({ "attendees": [attendee] },
+      {
+        onError: async (error) => {
+          debugger
+          console.log("hello", error)
 
-  //     // Remove leading zeros from the value
-  //     value = value === 0 ? value : String(value).replace(/^0+/, "");
-
-  //     // Find the worker whose attendance is being updated
-  //     const worker = props.data.find((worker) => worker[2] === workerId);
-
-  //     if (!worker) return; // If worker is not found, exit early
-
-  //     const previousValue = worker[4]; // Previous value for daysWorked
+        },
+        onSuccess: async (responseData) => {
+          console.log("hello")
+        },
+      }
+    )
 
 
-  //     // Check if both current value and previous value are 0
-  //     if (value === 0 && previousValue === 0) {
-  //       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_CAN_NOT_BE_LESS_THAN_ZERO"), transitionTime: 3000 });
-  //       return;
-  //     }
-
-  //     if (value > props.duration) {
-  //       setShowToast({ key: "error", label: t("HCM_AM_ATTENDANCE_CAN_NOT_EXCEED_EVENT_DURATION_ERROR"), transitionTime: 3000 });
-  //       return;
-  //     }
-
-  //     // Clear the toast if the input is valid
-  //     setShowToast(null);
-
-  //     // Update the data directly using the parent's setState
-  //     const updatedData = props.data.map((worker) => {
-  //       if (worker[2] === workerId) {
-  //         return [worker[0], worker[1], worker[2], worker[3], value || 0]; // Update the daysWorked value
-  //       }
-  //       return worker; // Keep other rows unchanged
-  //     });
-  //     props.setAttendanceSummary(updatedData);
-  //   };
+  };
 
   return (
     <>
@@ -194,6 +190,20 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           onClose={() => setShowToast(null)}
         />
       )}
+
+      {openAlertPopUp && <AlertPopUp
+        onClose={() => {
+          setOpenAlertPopUp(false);
+        }}
+        alertHeading={t(`HCM_AM_BILL_GENERATION_ALERT_HEADING`)}
+        alertMessage={t(`HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION`)}
+        submitLabel={t(`HCM_AM_GENERATE_BILL`)}
+        cancelLabel={t(`HCM_AM_CANCEL`)}
+        onPrimaryAction={() => {
+          setOpenAlertPopUp(false);
+          handleDaysWorkedChange(row?.[0]);
+        }}
+      />}
     </>
   );
 };

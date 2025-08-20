@@ -1,10 +1,7 @@
-import AttendanceService from "../../services/attendance/attendanceService";
-import { useQuery } from "react-query";
-const useDeleteAttendeeFromRegister = ({data, params, config = {}}) => {
-  return useQuery(["DELETE_ATTENDEE_REGISTER",data,config.queryKey], () => AttendanceService.deEnrollment_attendee({
-    body: data,
-    params,
-  }), { ...config });
+import AttendanceService from "../../services/attendance/attendee_service/attendeeService";
+import { useQuery,useMutation } from "react-query";
+const useDeleteAttendeeFromRegister = ({ tenantId, config = {}}) => {
+  return useMutation((data) => AttendanceService.delete(data, tenantId));
 };
 
 export default useDeleteAttendeeFromRegister;

@@ -4,6 +4,9 @@ import { PopUp, Timeline, Loader, TextInput, Button } from '@egovernments/digit-
 import { useEffect } from "react";
 import EditAttendanceManagementTable from "./EditAttendanceManagementTable";
 import { useHistory } from "react-router-dom";
+import AttendeeService from "../services/attendance/attendee_service/attendeeService";
+
+import { useAttendanceSummary } from "../utils/update_attendance_summary";
 
 
 const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
@@ -18,6 +21,11 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
 
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
+
+    const labels = ["Not finding the user?", "Find user and assign to register"];
+    const maxLabelLength = Math.max(...labels.map(label => label.length));
+    const labelWidth = `${maxLabelLength * 8}px`;
+
 
     const [attendanceSummary, setAttendanceSummary] = useState([]);
     const [individualIds, setIndividualIds] = useState([]);
@@ -124,14 +132,41 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
         }
     }, [AllIndividualsData, AttendanceData, t]);
 
+    // const { attendanceSummary, isLoading } = useAttendanceSummary({
+    //   businessId,
+    //   tenantId,
+    //   t,
+    // });
+
+    //if (isLoading) return <Loader />;
 
     // ✅ Filter attendanceSummary based on search query
+
     const filteredData = searchQuery.length >= 3 ?
         attendanceSummary.filter(
             (row) =>
                 row[1].toLowerCase().includes(searchQuery.toLowerCase()) || // Name
                 row[2].toLowerCase().includes(searchQuery.toLowerCase())    // ID
         ) : attendanceSummary;
+
+
+
+    const disableUser = async (value) => {
+debugger;
+        const attendee = {
+            registerId: businessId,
+            individualId: value,
+            enrollmentDate: null,
+            denrollmentDate: new Date(Date.now() - (1 * 60 * 1000 + 30 * 1000)).getTime(),
+            tenantId: String(tenantId)
+        };
+ const result = await AttendeeService.delete(tenantId, null, { attendees: [attendee] });
+   console.log(attendee);
+        debugger
+
+    }
+
+
 
     // -------- Render --------
     return (
@@ -153,29 +188,19 @@ const EditAttendeePopUp = ({ onClose, businessId, heading }) => {
                         <EditAttendanceManagementTable
                             data={searchQuery != "" ? filteredData : attendanceSummary}
                             setAttendanceSummary={setAttendanceSummary}
+                            disableUser={disableUser}
+                            registerId={businessId}
                         />
-                        <div style={{ display: "flex", flexDirection: "row", justifyItems: "center", gap: "5px", }}>
-                            <div>
-                                Not finding the user?
-                            </div>
-                            <Button
-                                className="custom-class"
+                        <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
+                            <div>{labels[0]}</div>
+                            <Button label={t("Register New User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
 
-                                label={t(`Register New User`)}
-                                onClick={() => {
-                                     history.push(`/${window?.contextPath}/employee/hrms/create`);
-                                 }}
-
-                                size=""
-                                style={{}}
-                                title={t(`Register New User`)}
-                                variation="link"
-                            />
+                            <div>{labels[1]}</div>
+                            <Button label={t("Search User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
                         </div>
 
-
                     </div>
-                ),
+                )
             ]}
             footerChildren={[
                 <Button

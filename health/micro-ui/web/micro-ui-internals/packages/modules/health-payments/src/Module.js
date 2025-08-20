@@ -1,5 +1,5 @@
 import { Loader } from "@egovernments/digit-ui-react-components";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
@@ -9,8 +9,11 @@ import BoundaryComponent from "./components/BoundaryComponent";
 import AttendanceInboxComponent from "./components/attendance_inbox/attendance_inbox";
 import InboxSearchLinkHeader from "./components/InboxSearchLinkHeader";
 import SearchResultsPlaceholder from "./components/SearchResultsPlaceholder";
+// import HierarchySelection from "./components/HierachySelection"; 
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
+  // const [hierarchySelected, setHierarchySelected] = useState(null);
+
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -29,6 +32,16 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
     tenantId: tenantId,
   });
 
+  // const { data: hierarchies,
+  //   isLoading : isHierarchyLoading,
+  //    } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({tenantId});
+
+  //    Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
+
+  // useEffect(() => {
+  //     Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
+  //   }, []);
+
   const { isLoading: isMDMSLoading, data: mdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     "HCM",
@@ -43,6 +56,17 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
 
 
   Digit.SessionStorage.set("paymentsConfig", paymentsConfig);
+
+  // if (!hierarchySelected) {
+  //   return (
+  //     <HierarchySelection
+  //       onHierarchyChosen={(hier) => {
+  //         Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
+  //         setHierarchySelected(hier);
+  //       }}
+  //     />
+  //   );
+  // }
 
   if (isLoading || isPaymentsModuleInitializing || isMDMSLoading) {
     return <Loader />;
@@ -62,6 +86,7 @@ const componentsToRegister = {
   AttendanceInboxComponent,
   InboxSearchLinkHeader,
   SearchResultsPlaceholder,
+  // HierarchySelection,
 };
 
 export const initPaymentComponents = () => {
