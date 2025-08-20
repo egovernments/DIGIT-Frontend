@@ -5,7 +5,7 @@ import { Loader, Button, TextInput, Toast, Tag } from "@egovernments/digit-ui-co
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable, { TableProps } from "react-data-table-component";
 import { tableCustomStyle, editAttendeetableCustomStyle } from "./table_inbox_custom_style";
-import { defaultPaginationValues, defaultRowsPerPage } from "../utils/constants";
+import { defaultPaginationValues, defaultRowsPerPage,defaultPaginationValuesForEditAttendee ,defaultRowsPerPageForEditAttendee} from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
 import AttendeeService from "../services/attendance/attendee_service/attendeeService";
 
@@ -36,7 +36,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
   const [showToast, setShowToast] = useState(null);
   // Local state for pagination
   const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPage);
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPageForEditAttendee);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [toast, setToast] = useState({ show: false, label: "", type: "" });
 
@@ -184,9 +184,9 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handlePerRowsChange}
         paginationTotalRows={props?.data.length}
-        paginationPerPage={rowsPerPage}
+        paginationPerPage={defaultRowsPerPageForEditAttendee}
         sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-        paginationRowsPerPageOptions={defaultPaginationValues}
+        paginationRowsPerPageOptions={defaultPaginationValuesForEditAttendee}
         fixedHeader={true}
         fixedHeaderScrollHeight={"70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
