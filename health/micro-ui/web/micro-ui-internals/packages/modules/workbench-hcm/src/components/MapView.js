@@ -217,10 +217,10 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
 
         const lat = Number(v.lat);
         const lng = Number(v.lng);
-        const time = v && v.time ? String(v.time) : "Unknown time";
+        const time = v && v.time ? String(new Date(v.time).toGMTString()) : "Unknown time";
 
         L.marker([lat, lng], { icon: createCustomMarker() })
-          .bindPopup(`<b>Visit ${i + 1}</b><br/>Time: ${time}`)
+          .bindPopup(`<b>Visit ${i + 1}</b><br/>Time: ${time}<br/> Bednets Delivered: ${v.quantity || "N/A"} <br/> `)
           .addTo(layerGroup);
       });
 
@@ -272,7 +272,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
             const hasCoords = isValidCoord(v);
             const lat = hasCoords ? Number(v.lat).toFixed(6) : "N/A";
             const lng = hasCoords ? Number(v.lng).toFixed(6) : "N/A";
-            const time = v && v.time ? String(v.time) : "Unknown time";
+            const time = v && v.time ? String(new Date(v.time).toGMTString()) : "Unknown time";
 
             return (
               <li key={i} style={{ marginBottom: "0.5rem" }}>

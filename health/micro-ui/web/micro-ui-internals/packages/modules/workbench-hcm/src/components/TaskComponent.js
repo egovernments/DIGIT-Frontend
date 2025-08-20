@@ -136,7 +136,8 @@ const TaskComponent = (props) => {
               visits={projectTask?.map(task => ({
                 lat: task?.latitude || 0,
                 lng: task?.longitude || 0,
-                time: task?.plannedStartDate || "NA"
+                time: task?.plannedStartDate || "NA",
+                quantity: task?.resourcesQuantity
               }))} 
             />
             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
