@@ -22,7 +22,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    const labels = ["Not finding the user?", "Find user and assign to register"];
+    const labels = ["HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL", "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER"];
     const maxLabelLength = Math.max(...labels.map(label => label.length));
     const labelWidth = `${maxLabelLength * 8}px`;
 
@@ -102,13 +102,16 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
 
                     const id = individualEntry.individualId || 0;
 
-                    return [id, userName, userId, userRole, noOfDaysWorked];
+                    const tag= individualEntry?.tag ||"NA";
+
+                    return [id, userName, userId, userRole, tag, noOfDaysWorked];
                 } else {
                     return [
                         "N/A",
                         "Unknown",
                         "N/A",
                         "Unassigned",
+                        "N/A",
                         individualEntry?.denrollmentDate == null ? true : false,
                     ];
                 }
@@ -177,19 +180,20 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
                         flexDirection: "column",
                         gap: "16px", // same as Tailwind gap-4
                     }} >
-                        <TextInput type="search" name="title" placeholder="Search by Name/ ID Number" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
+                        <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         <EditAttendanceManagementTable
                             data={searchQuery != "" ? filteredData : attendanceSummary}
                             setAttendanceSummary={setAttendanceSummary}
                             disableUser={disableUser}
                             registerId={businessId}
                             registerNumber={registerId}
+                            editAction={true}
                         />
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
-                            <div>{labels[0]}</div>
+                            <div>{t(labels[0])}</div>
                             <Button label={t("Register New User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
 
-                            <div>{labels[1]}</div>
+                            <div>{t(labels[1])}</div>
                             <Button label={t("Search User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
                         </div>
 
@@ -201,7 +205,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
                     type={"button"}
                     size={"large"}
                     variation={"primary"}
-                    label={t("Save & Close")}
+                    label={t("HCM_AM_SAVE_AND_CLOSE")}
                     onClick={() => {
 
                     }}

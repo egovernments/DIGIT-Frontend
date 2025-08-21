@@ -90,9 +90,9 @@ const CustomInboxTable = ({
                 // history.push(
                 //   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
                 // )
-                debugger
+
                 if (endDate) {
-                  debugger
+
                   const currentDate = Date.now(); // current time in epoch
 
                   if (!(currentDate <= endDate)) {

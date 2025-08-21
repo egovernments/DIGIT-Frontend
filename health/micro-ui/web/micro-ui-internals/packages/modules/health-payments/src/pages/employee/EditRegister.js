@@ -11,6 +11,7 @@ import { formatTimestampToDate } from "../../utils";
 import CommentPopUp from "../../components/commentPopUp";
 
 import EditAttendeePopUp from "../../components/editAttendeesPopUp";
+import EditAttendanceManagementTable from "../../components/EditAttendanceManagementTable";
 
 /**
  * @function ViewAttendance
@@ -152,13 +153,14 @@ const EditRegister = ({ editAttendance = false }) => {
                 const userId = matchingIndividual?.userDetails?.username || t("NA");
                 const userRole =
                     t(matchingIndividual.skills?.[0]?.type) || t("NA");
-                const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
+                // const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
+                const tag=individualEntry?.tag ||"N/A";
                 const id = individualEntry.individualId || 0;
 
-                return [id, userName, userId, userRole, noOfDaysWorked];
+                return [id, userName, userId, userRole, tag];
             } else {
                 // Handle cases where no match is found in individualsData
-                return ["N/A", "Unknown", "N/A", "Unassigned", individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0];
+                return ["N/A", "Unknown", "N/A", "Unassigned", "N/A"];
             }
         });
 
@@ -167,13 +169,13 @@ const EditRegister = ({ editAttendance = false }) => {
             const nameB = b[1].toLowerCase();
             return nameA.localeCompare(nameB);
         });
-        
+
         return sortedData;
     }
 
     // Populate attendanceSummary when AttendanceData changes
     useEffect(() => {
-        
+
         if (AttendanceData?.attendanceRegister?.length > 0 &&
             AllIndividualsData?.Individual?.length > 0) {
             const summary = getUserAttendanceSummary(
@@ -248,7 +250,7 @@ const EditRegister = ({ editAttendance = false }) => {
         <React.Fragment>
             <div style={{ marginBottom: "2.5rem" }}>
                 <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-                    {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
+                    {t('HCM_AM_VIEW_REGISTER')}
                 </Header>
                 <Card type="primary" className="bottom-gap-card-payment">
                     {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
@@ -270,17 +272,17 @@ const EditRegister = ({ editAttendance = false }) => {
                             className="custom-class"
                             icon="Edit"
                             iconFill=""
-                            label={t(`Edit Register`)}
+                            label={t(`HCM_AM_EDIT_REGISTER`)}
                             onClick={handleDeEnrollClick}
                             options={[]}
                             optionsKey=""
                             size=""
                             style={{}}
-                            title={t(`Edit Register`)}
+                            title={t(`HCM_AM_EDIT_REGISTER`)}
                             variation="secondary"
                         />
                     </div>
-                    <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
+                    <EditAttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />
                 </Card>
 
 
@@ -292,7 +294,7 @@ const EditRegister = ({ editAttendance = false }) => {
                         onClose={onDeEnrollClose}
                         businessId={registerNumber}
                         registerId={registerId}
-                        heading={`${t("Edit Attendance Register")}`}
+                        heading={`${t("HCM_AM_ATTENDANCE_EDIT_REGISTER")}`}
                     />
                 )}
 

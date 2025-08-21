@@ -5,7 +5,7 @@ import { Loader, Button, TextInput, Toast, Tag } from "@egovernments/digit-ui-co
 import { CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable, { TableProps } from "react-data-table-component";
 import { tableCustomStyle, editAttendeetableCustomStyle } from "./table_inbox_custom_style";
-import { defaultPaginationValues, defaultRowsPerPage,defaultPaginationValuesForEditAttendee ,defaultRowsPerPageForEditAttendee} from "../utils/constants";
+import { defaultPaginationValues, defaultRowsPerPage, defaultPaginationValuesForEditAttendee, defaultRowsPerPageForEditAttendee } from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
 import AttendeeService from "../services/attendance/attendee_service/attendeeService";
 
@@ -14,7 +14,7 @@ import AlertPopUp from "./alertPopUp";
 
 /**
  * A React component for displaying a paginated table of frontline workers
- * with editable columns for days worked and their roles.
+ * with editable columns for disabling the user from register.
  *
  * @param {object} props The props object contains the data to be displayed,
  * the onEditAttendanceChange function to be called when the user updates
@@ -58,7 +58,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     setCurrentPage(1);
   }
 
-  const columns = [
+  let columns = [
     {
       name: (
         <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
@@ -104,37 +104,88 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     },
 
     {
-      name: t("Action"),
+      name: (
+        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+          {t("HCM_AM_TAG_LABEL")}
+        </div>
+      ),
       selector: (row) => {
         return (
-          <div className="ellipsis-cell" title={t(row?.[4] || "0")}>
-            {row?.[4] == false ? <Tag label={t("Disabled")} type="error" stroke={false} /> :
-              <Button
-                className="custom-class"
-                icon="Edit"
-                iconFill=""
-                label={t(`Disabe User`)}
-                onClick={() => {
-                  setSelectedRowId(row?.[0]);
-                  setOpenAlertPopUp(true);
-                  // handleDaysWorkedChange(row?.[0])
-                }}
-                options={[]}
-                optionsKey=""
-                size=""
-                style={{}}
-                title={t(`Disabe User`)}
-                variation="secondary"
-              />
-            }
+          <div className="ellipsis-cell" title={t(row?.[4]) || t("NA")}>
+            {t(row?.[4]) || t("NA")}
           </div>
         );
       },
-      style: {
-        justifyContent: "flex-end",
-      },
     },
+
+    // {
+    //   name: t("HCM_AM_ACTION"),
+    //   selector: (row) => {
+    //     return (
+    //       <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
+    //         {row?.[5] == false ? <Tag label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")} type="error" stroke={false} /> :
+    //           <Button
+    //             className="custom-class"
+    //             icon="Edit"
+    //             iconFill=""
+    //             label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+    //             onClick={() => {
+    //               setSelectedRowId(row?.[0]);
+    //               setOpenAlertPopUp(true);
+    //               // handleDaysWorkedChange(row?.[0])
+    //             }}
+    //             options={[]}
+    //             optionsKey=""
+    //             size=""
+    //             style={{}}
+    //             title={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+    //             variation="secondary"
+    //           />
+    //         }
+    //       </div>
+    //     );
+    //   },
+    //   style: {
+    //     justifyContent: "flex-end",
+    //   },
+    // },
   ];
+
+  if (props.editAction) {
+    columns.push(
+      {
+        name: t("HCM_AM_ACTION"),
+        selector: (row) => {
+          return (
+            <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
+              {row?.[5] == false ? <Tag label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")} type="error" stroke={false} /> :
+                <Button
+                  className="custom-class"
+                  icon="Edit"
+                  iconFill=""
+                  label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+                  onClick={() => {
+                    setSelectedRowId(row?.[0]);
+                    setOpenAlertPopUp(true);
+                    // handleDaysWorkedChange(row?.[0])
+                  }}
+                  options={[]}
+                  optionsKey=""
+                  size=""
+                  style={{}}
+                  title={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+                  variation="secondary"
+                />
+              }
+            </div>
+          );
+        },
+        style: {
+          justifyContent: "flex-end",
+        },
+      },
+    )
+  }
 
   const handleDaysWorkedChange = async (value) => {
 
@@ -148,10 +199,10 @@ const EditAttendanceManagementTable = ({ ...props }) => {
     await updateMapping({ "attendees": [attendee] },
       {
         onError: async (error) => {
-          
+
           console.log("hello", error)
           setShowToast(
-            { key: "error", label: t(`HCM_AM_MUSTOROLE_GENERATION_INPROGRESS_INFO_MESSAGE`), transitionTime: 3000 }
+            { key: "error", label: t(`HCM_AM_ERROR_MESSAGE`), transitionTime: 3000 }
           );
 
 
@@ -159,9 +210,9 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         onSuccess: async (responseData) => {
 
           console.log("responseData", responseData);
-          
-          setShowToast({ key: "success", label: t(`Successfully disabled`), transitionTime: 3000 });
-          props.disableUser("asd");
+
+          setShowToast({ key: "success", label: t(`HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE`), transitionTime: 3000 });
+          props.disableUser("");
         },
       }
     )
@@ -207,9 +258,9 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         onClose={() => {
           setOpenAlertPopUp(false);
         }}
-        alertHeading={t(`HCM_AM_BILL_GENERATION_ALERT_HEADING`)}
-        alertMessage={t(`HCM_AM_BILL_GENERATION_ALERT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_GENERATE_BILL`)}
+        alertHeading={t(`HCM_AM_WARNING`)}
+        alertMessage={t(`HCM_AM_NOT_RE_ENABLED_DESCRIPTION`)}
+        submitLabel={t(`HCM_AM_YES_DISABLE_USER`)}
         cancelLabel={t(`HCM_AM_CANCEL`)}
         onPrimaryAction={() => {
           setOpenAlertPopUp(false);

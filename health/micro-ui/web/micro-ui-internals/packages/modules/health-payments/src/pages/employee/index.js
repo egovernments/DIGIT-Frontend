@@ -44,7 +44,8 @@ const ProjectBreadCrumb = ({ location }) => {
       content: fromCampaignSupervisor ? t("HCM_AM_BREADCRUMBS_GENERATE_BILLS") : t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_REGISTER"
     },
     {
       internalLink: `/${window?.contextPath}/employee`,
