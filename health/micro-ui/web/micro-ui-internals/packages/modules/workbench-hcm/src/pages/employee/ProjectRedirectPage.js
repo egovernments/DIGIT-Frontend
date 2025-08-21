@@ -17,24 +17,23 @@ import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
  * 4. If multiple projects: Show accordion list for selection
  * 5. On selection: Redirect to redirectUrl with selected projectId
  */
+
+
 const ProjectRedirectPage = () => {
   const { t } = useTranslation();
   const location = useLocation();
-  const history = useHistory();
   const url = getProjectServiceUrl();
-  
+  const history = useHistory();
+  const defaultTenantId = Digit.ULBService.getCurrentTenantId();
+  const defaultUserId = Digit?.UserService?.getUser()?.info?.uuid;
+  const { redirectUrl: encodedRedirectUrl } = Digit.Hooks.useQueryParams();
+   let { tenantId=defaultTenantId, userId=defaultUserId, } = Digit.Hooks.useQueryParams();
   // State management
   const [projects, setProjects] = useState([]);
   const [redirecting, setRedirecting] = useState(false);
   const [selectedProjectId, setSelectedProjectId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
-  
-  // Extract query parameters
-  const searchParams = new URLSearchParams(location.search);
-  const userId = searchParams.get('userId');
-  const tenantId = searchParams.get('tenantId');
-  const encodedRedirectUrl = searchParams.get('redirectUrl');
   
   // Decode the redirect URL
   const redirectUrl = encodedRedirectUrl ? decodeURIComponent(encodedRedirectUrl) : null;
@@ -54,26 +53,22 @@ const ProjectRedirectPage = () => {
 
     try {
       // First, fetch project staff data
-      console.log("Fetching project staff for userId:", userId, "tenantId:", tenantId);
       
       const staffResponse = await Digit.CustomService.getResponse({
         url: `${url}/staff/v1/_search?offset=0&tenantId=${tenantId}&limit=10`,
         body: {
           ProjectStaff: {
-            userId: [userId],
+            staffId: [userId],
             tenantId: tenantId
           },
           apiOperation: "SEARCH"
         }
       });
 
-      console.log("Staff API response:", staffResponse);
       
       const projectStaffData = staffResponse?.ProjectStaff || [];
-      console.log("Project staff data:", projectStaffData);
       
       if (projectStaffData.length === 0) {
-        console.log("No project staff found for user:", userId);
         setError(t("HCM_NO_PROJECTS_FOUND"));
         setIsLoading(false);
         return;
@@ -81,10 +76,7 @@ const ProjectRedirectPage = () => {
 
       // Extract unique project IDs
       const uniqueProjectIds = [...new Set(projectStaffData.map(staff => staff.projectId))];
-      console.log("Unique project IDs:", uniqueProjectIds);
-
-      // Fetch project details
-      console.log("Fetching project details for IDs:", uniqueProjectIds);
+      
       
       const projectResponse = await Digit.CustomService.getResponse({
         url: `${url}/v1/_search?offset=0&tenantId=${tenantId}&limit=100`,
@@ -97,25 +89,19 @@ const ProjectRedirectPage = () => {
         }
       });
 
-      console.log("Project API response:", projectResponse);
       
       const projectDetails = projectResponse?.Project || [];
-      console.log("Project details:", projectDetails);
       
       if (projectDetails.length === 0) {
-        console.log("No project details found for IDs:", uniqueProjectIds);
         setError(t("HCM_NO_PROJECTS_FOUND"));
         setIsLoading(false);
         return;
       }
 
       // Auto-redirect if only one project
-      console.log("Found", projectDetails.length, "projects");
       if (projectDetails.length === 1 && !redirecting) {
-        console.log("Auto-redirecting to single project:", projectDetails[0]);
         handleProjectSelection(projectDetails[0]);
       } else {
-        console.log("Setting projects for selection:", projectDetails);
         setProjects(projectDetails);
         setIsLoading(false);
       }
@@ -134,12 +120,6 @@ const ProjectRedirectPage = () => {
     }
   }, [hasValidParams, fetchUserProjects]); // Use the memoized function
 
-  // Log when projects are updated
-  useEffect(() => {
-    if (projects.length > 0) {
-      console.log("Projects successfully loaded:", projects.length, "projects");
-    }
-  }, [projects]);
 
   // Handle project selection and redirect
   const handleProjectSelection = (selectedProject) => {
@@ -147,15 +127,14 @@ const ProjectRedirectPage = () => {
     setSelectedProjectId(selectedProject.id);
     
     try {
-      const redirectUrlObj = new URL(redirectUrl);
-      redirectUrlObj.searchParams.set('projectId', selectedProject.id);
-      redirectUrlObj.searchParams.set('tenantId', tenantId);
-      
       // Add small delay for better UX
       setTimeout(() => {
-        window.location.href = redirectUrlObj.toString();
+        history.push({
+          pathname: redirectUrl, // e.g. "/dashboard"
+          search: `?projectId=${selectedProject.id}&tenantId=${tenantId}`,
+        });
       }, 500);
-      
+
     } catch (err) {
       console.error('Error constructing redirect URL:', err);
       setRedirecting(false);
@@ -205,16 +184,6 @@ const ProjectRedirectPage = () => {
       </div>
     )
   }));
-
-  // Debug logging for render state
-  console.log("Render state:", {
-    isLoading,
-    error,
-    hasValidParams,
-    projectsCount: projects.length,
-    redirecting,
-    accordionData
-  });
 
   // Error conditions - only show error if there's actually an error message
   const hasError = error && !isLoading;
