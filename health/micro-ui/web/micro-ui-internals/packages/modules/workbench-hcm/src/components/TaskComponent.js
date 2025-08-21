@@ -15,22 +15,8 @@ const TaskComponent = (props) => {
   const [showMapview, setShowMapview] = useState({ showMaps: false });
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
-  const [isSelectOpen, setIsSelectOpen] = useState(false);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
-  // Close dropdown when clicking outside
-  React.useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isSelectOpen && !event.target.closest('.page-size-select')) {
-        setIsSelectOpen(false);
-      }
-    };
-
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isSelectOpen]);
   const requestCriteria = {
     url: `${url}/task/v1/_search`,
     changeQueryName: `${props.projectId}-tasks-${page}-${pageSize}`,
@@ -80,13 +66,6 @@ const TaskComponent = (props) => {
 
   const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
 
-  const pageSizeOptions = [
-    { name: "10", code: 10 },
-    { name: "20", code: 20 },
-    { name: "50", code: 50 },
-    { name: "100", code: 100 },
-  ];
-
   // Custom cell renderer for the createdBy column
   const customCellRenderer = {
     createdBy: (row) => {
@@ -131,99 +110,23 @@ const TaskComponent = (props) => {
       )}
       {projectTask?.length > 0 && (
         showMapview?.showMaps ? (
-          <>
-            <BoundariesMapWrapper
-              visits={projectTask?.map(task => ({
-                lat: task?.latitude || 0,
-                lng: task?.longitude || 0,
-                time: task?.plannedStartDate || "NA",
-                quantity: task?.resourcesQuantity
-              }))} 
-            />
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "1rem" }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                <div className="typography caption-l">{t("PAGE")}: {page + 1}</div>
-                <div className="page-size-select" style={{ position: "relative", display: "inline-block" }}>
-                  <div
-                    style={{
-                      padding: "8px 12px",
-                      border: "1px solid #ccc",
-                      borderRadius: "4px",
-                      backgroundColor: "white",
-                      cursor: "pointer",
-                      minWidth: "80px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                      alignItems: "center",
-                      fontSize: "14px"
-                    }}
-                    onClick={() => setIsSelectOpen(!isSelectOpen)}
-                  >
-                    <span>{pageSize}</span>
-                    <span style={{ marginLeft: "8px" }}>▼</span>
-                  </div>
-                  {isSelectOpen && (
-                    <div
-                      style={{
-                        position: "absolute",
-                        top: "100%",
-                        left: 0,
-                        right: 0,
-                        backgroundColor: "white",
-                        border: "1px solid #ccc",
-                        borderRadius: "4px",
-                        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
-                        zIndex: 1000,
-                        maxHeight: "200px",
-                        overflowY: "auto"
-                      }}
-                    >
-                      {pageSizeOptions.map((option) => (
-                        <div
-                          key={option.code}
-                          style={{
-                            padding: "8px 12px",
-                            cursor: "pointer",
-                            borderBottom: "1px solid #f0f0f0",
-                            fontSize: "14px",
-                            backgroundColor: pageSize === option.code ? "#f0f8ff" : "white",
-                            color: pageSize === option.code ? "#0066cc" : "inherit"
-                          }}
-                          onClick={() => {
-                            setPageSize(option.code);
-                            setPage(0);
-                            setIsSelectOpen(false);
-                          }}
-                          onMouseEnter={(e) => {
-                            e.target.style.backgroundColor = pageSize === option.code ? "#f0f8ff" : "#f5f5f5";
-                          }}
-                          onMouseLeave={(e) => {
-                            e.target.style.backgroundColor = pageSize === option.code ? "#f0f8ff" : "white";
-                          }}
-                        >
-                          {option.name}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <Button
-                  variation="secondary"
-                  label={t("PREVIOUS")}
-                  isDisabled={page === 0}
-                  onClick={() => setPage((p) => Math.max(0, p - 1))}
-                />
-                <Button
-                  variation="secondary"
-                  label={t("NEXT")}
-                  isDisabled={isNextDisabled}
-                  onClick={() => setPage((p) => p + 1)}
-                />
-              </div>
-            </div>
-          </>
+          <BoundariesMapWrapper
+            visits={projectTask?.map(task => ({
+              lat: task?.latitude || 0,
+              lng: task?.longitude || 0,
+              time: task?.plannedStartDate || "NA",
+              quantity: task?.resourcesQuantity
+            }))} 
+            totalCount={projectTask?.length || 0}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={(newPage) => setPage(newPage)}
+            onPageSizeChange={(newPageSize) => {
+              setPageSize(newPageSize);
+              setPage(0);
+            }}
+            isNextDisabled={isNextDisabled}
+          />
         ) : (
           <ReusableTableWrapper
             data={projectTask}
