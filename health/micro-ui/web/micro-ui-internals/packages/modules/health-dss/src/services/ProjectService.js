@@ -2,7 +2,7 @@ export const ProjectService = {
   staffSearch: async ({ body, params }) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: "/health-project/staff/v1/_search",
+        url: `${window.globalConfigs?.getConfig("PROJECT_SERVICE")}/staff/v1/_search` || "/project/staff/v1/_search",
         useCache: false,
         method: "POST",
         userService: true,
@@ -20,7 +20,7 @@ export const ProjectService = {
   projectSearch: async ({ body, params }) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: `/health-project/v1/_search`,
+        url: `${window.globalConfigs?.getConfig("PROJECT_SERVICE")}/v1/_search` || "/project/v1/_search",
         useCache: false,
         method: "POST",
         userService: true,
