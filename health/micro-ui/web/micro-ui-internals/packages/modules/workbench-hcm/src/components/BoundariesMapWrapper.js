@@ -17,7 +17,7 @@ const BoundariesMapWrapper = ({
   isNextDisabled = false
 }) => {
   const { t } = useTranslation();
-  const [boundaryType, setBoundaryType] = useState("LGA"); // "LGA" or "WARD"
+  const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA" or "WARD"
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
   const toggleBoundaryType = () => {

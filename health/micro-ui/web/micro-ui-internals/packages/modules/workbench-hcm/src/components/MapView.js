@@ -43,7 +43,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
     if (!mapRef.current) {
       const initialCenter = isValidCoord(visits[0]) ? [visits[0].lat, visits[0].lng] : [0, 0];
 
-      // Add custom marker styles
+      // Add custom marker styles and layer control styles
       const markerStyles = `
         <style>
           .custom-svg-icon {
@@ -88,6 +88,46 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
           .leaflet-marker-icon:not(.custom-svg-icon) {
             display: none !important;
           }
+
+          /* Layer control styling */
+          .leaflet-control-layers {
+            background: rgba(255, 255, 255, 0.95) !important;
+            border-radius: 8px !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            padding: 8px 12px !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+            font-size: 14px !important;
+            min-width: 140px !important;
+            margin-top: 10px !important;
+            margin-right: 10px !important;
+          }
+          
+          .leaflet-control-layers-base label {
+            font-weight: 500 !important;
+            color: #495057 !important;
+            padding: 4px 0 !important;
+            display: flex !important;
+            align-items: center !important;
+            cursor: pointer !important;
+          }
+          
+          .leaflet-control-layers input[type="radio"] {
+            margin-right: 8px !important;
+            accent-color: #4CAF50 !important;
+          }
+          
+          .leaflet-control-layers-base label:hover {
+            background-color: rgba(76, 175, 80, 0.1) !important;
+            border-radius: 4px !important;
+            padding-left: 4px !important;
+            padding-right: 4px !important;
+          }
+          
+          .leaflet-control-layers-separator {
+            border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
+            margin: 8px -12px !important;
+          }
         </style>
       `;
 
@@ -123,9 +163,41 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
         zoom: 13,
       });
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      // Define base layers
+      const openStreetMap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
         maxZoom: 19,
+      });
+
+      const satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        maxZoom: 19,
+      });
+
+      const hybridLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+        maxZoom: 19,
+      });
+
+      const hybridLabels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
+        attribution: '',
+        maxZoom: 19,
+      });
+
+      // Add default layer (OpenStreetMap)
+      openStreetMap.addTo(mapRef.current);
+
+      // Define base layers for layer control
+      const baseLayers = {
+        "Street Map": openStreetMap,
+        "Satellite": satelliteLayer,
+        "Hybrid": L.layerGroup([satelliteLayer, hybridLabels])
+      };
+
+      // Add layer control
+      L.control.layers(baseLayers, null, {
+        position: 'topright',
+        collapsed: false
       }).addTo(mapRef.current);
 
       // layer group to hold visit markers and polyline

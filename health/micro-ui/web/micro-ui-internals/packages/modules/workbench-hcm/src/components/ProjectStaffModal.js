@@ -44,6 +44,8 @@ const ProjectStaffModal = ({
 
   return (
     <Modal
+      className="project-staff-modal"
+      popupStyles={{ maxWidth: "800px", width: "70%" }}
       formId="modal-action"
       headerBarMain={<Heading t={t} heading={t(heading)} />}
       headerBarEnd={<CloseBtn onClick={onClose} />}
