@@ -4,8 +4,8 @@ export const ProjectService = {
       const response = await Digit.CustomService.getResponse({
         url:
           window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-            ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/, "")}/staff/v1/_search`
-            : "/project/staff/v1/_search",
+            ? `/${window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")}/staff/v1/_search`
+            : "/health-project/staff/v1/_search",
         useCache: false,
         method: "POST",
         userService: true,
@@ -25,8 +25,8 @@ export const ProjectService = {
       const response = await Digit.CustomService.getResponse({
         url:
           window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-            ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/, "")}/v1/_search`
-            : "/project/v1/_search",
+            ? `/${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH"))}/v1/_search`
+            : "/health-project/v1/_search",
         useCache: false,
         method: "POST",
         userService: true,

@@ -10,7 +10,7 @@ export const InboxConfig = {
       apiDetails: {
         serviceName:
            window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-             ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
+             ? `/${window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")}/staff/v1/_search`
              : "/project/staff/v1/_search",
         requestParam: {},
         requestBody: {
@@ -109,8 +109,8 @@ export const InboxConfig = {
       apiDetails: {
         serviceName:
            window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-             ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
-             : "/project/staff/v1/_search",
+             ? `/${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
+             : "/health-project/staff/v1/_search",
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
@@ -208,8 +208,8 @@ export const InboxConfig = {
       apiDetails: {
         serviceName:
            window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-             ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
-             : "/project/staff/v1/_search",
+             ? `/${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
+             : "/health-project/staff/v1/_search",
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
