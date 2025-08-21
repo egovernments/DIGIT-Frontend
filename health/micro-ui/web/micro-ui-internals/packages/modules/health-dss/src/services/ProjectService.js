@@ -4,7 +4,7 @@ export const ProjectService = {
       const response = await Digit.CustomService.getResponse({
         url:
           window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-            ? `/${window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")}/staff/v1/_search`
+            ? `/${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH"))}/staff/v1/_search`
             : "/health-project/staff/v1/_search",
         useCache: false,
         method: "POST",
