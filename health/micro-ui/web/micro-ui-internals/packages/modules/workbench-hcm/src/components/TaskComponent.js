@@ -7,7 +7,7 @@ import ReusableTableWrapper from "./ReusableTableWrapper";
 // import MapView from "./MapView";
 import UserDetails from "./UserDetails";
 // import MapWithShapefile from "./MapWithShapefile";
-import LGABoundariesMap from "./LGABoundariesMap";
+import BoundariesMapWrapper from "./BoundariesMapWrapper";
 
 const TaskComponent = (props) => {
   const { t } = useTranslation();
@@ -132,7 +132,7 @@ const TaskComponent = (props) => {
       {projectTask?.length > 0 && (
         showMapview?.showMaps ? (
           <>
-            <LGABoundariesMap
+            <BoundariesMapWrapper
               visits={projectTask?.map(task => ({
                 lat: task?.latitude || 0,
                 lng: task?.longitude || 0,
