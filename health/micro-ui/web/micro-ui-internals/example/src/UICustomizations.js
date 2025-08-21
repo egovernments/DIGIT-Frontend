@@ -1552,6 +1552,35 @@ export const UICustomizations = {
       }
     },
   },
+  IframeInterfaceConfig: {
+    addAdditionalFilters: (url, filters) => {
+      const { boundaryType, campaignId } = filters || {};
+      const boundaryValue = filters?.[boundaryType];
+      let filter = "";
+      if (boundaryType && boundaryValue && campaignId) {
+        filter = `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}'))),(query:(match_phrase:(Data.campaignId.keyword:'${campaignId}')))`;
+      } else {
+        filter = boundaryType && boundaryValue
+          ? `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}')))`
+          : campaignId
+          ? `(query:(match_phrase:(Data.campaignId.keyword:'${campaignId}')))`
+          : null;
+      }
+      // Extract existing _g values for refreshInterval and time
+      const gParamMatch = /_g=\((.*?)\)/.exec(url);
+      let gParamContent = gParamMatch && gParamMatch[1] ? gParamMatch[1] : "";
+
+      if (filter) {
+        // Integrate the new filter with existing _g content
+        const updatedGParam = `filters:!(${filter}),${gParamContent}`;
+        const updatedUrl = url.replace(/_g=\((.*?)\)/, `_g=(${updatedGParam})`).replace(/ /g, "%20");
+        return updatedUrl;
+      } else {
+        // No filter to add, keep original URL
+        return url;
+      }
+    },
+  },
   MyMicroplanSearchConfigExample: {
     test: "yes",
   },
