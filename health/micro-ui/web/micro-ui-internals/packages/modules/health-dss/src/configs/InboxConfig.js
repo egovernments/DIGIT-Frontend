@@ -10,8 +10,8 @@ export const InboxConfig = {
       apiDetails: {
         serviceName:
            window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
-             ? `/${window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")}/staff/v1/_search`
-             : "/project/staff/v1/_search",
+             ? `/${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH"))}/staff/v1/_search`
+             : "/health-project/staff/v1/_search",
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
