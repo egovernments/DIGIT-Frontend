@@ -338,7 +338,7 @@ const ProjectRedirectPage = () => {
         border: '1px solid #dee2e6'
       }}>
         <p style={{ margin: 0, fontSize: '0.9rem', color: '#6c757d' }}>
-          {t("HCM_PROJECTS_FOUND_COUNT", { count: projects.length, userId: userId })}
+          {t("HCM_PROJECTS_FOUND_COUNT")} {projects.length}
         </p>
       </div>
     </div>

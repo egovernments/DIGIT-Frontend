@@ -170,6 +170,16 @@ export const data = (project) => {
     horizontalNav: {
       showNav: true,
       configNavItems: [
+         {
+          name: "card6",
+          active: true,
+          code: "TASK_DETAILS",
+        },   
+           {
+          name: "card5",
+          active: true,
+          code: "USER_DETAILS",
+        },
         {
           name: "card1",
           active: true,
@@ -185,20 +195,12 @@ export const data = (project) => {
           active: true,
           code: "CAMPAIGN_PRODUCT_LABEL",
         },
-        {
-          name: "card5",
-          active: true,
-          code: "USER_DETAILS",
-        },
+     
 
         {
           name: "card4",
           active: true,
           code: "FACILITY_DETAILS",
-        },    {
-          name: "card6",
-          active: true,
-          code: "TASK_DETAILS",
         },   {
           name: "card7",
           active: true,
@@ -212,7 +214,7 @@ export const data = (project) => {
         
         
       ],
-      activeByDefault: "card1",
+      activeByDefault: "card6",
     },
   };
 };
