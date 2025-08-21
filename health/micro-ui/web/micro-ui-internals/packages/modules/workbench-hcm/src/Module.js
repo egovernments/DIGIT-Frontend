@@ -18,6 +18,7 @@ import MapWithShapefile from "./components/MapWithShapefile";
 import LGABoundariesMap from "./components/LGABoundariesMap";
 import MapViewExample from "./components/MapViewExample";
 import StockComponent from "./components/StockComponent";
+import ProjectRedirectPage from "./pages/employee/ProjectRedirectPage";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
@@ -55,6 +56,7 @@ const componentsToRegister = {
   LGABoundariesMap,
   MapViewExample,
   StockComponent,
+  ProjectRedirectPage,
 };
 
 const overrideHooks = () => {

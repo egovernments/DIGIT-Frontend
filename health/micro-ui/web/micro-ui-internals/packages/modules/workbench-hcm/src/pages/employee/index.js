@@ -3,6 +3,7 @@ import { Switch, useLocation, useParams, useRouteMatch } from "react-router-dom"
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import ViewProject from "./ViewProject";
+import ProjectRedirectPage from "./ProjectRedirectPage";
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
 
@@ -135,6 +136,7 @@ const App = ({ path }) => {
       </div>
       <Switch>
         <AppContainer className="workbench">
+          <PrivateRoute path={`${path}/project-redirect`} component={() => <ProjectRedirectPage />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
