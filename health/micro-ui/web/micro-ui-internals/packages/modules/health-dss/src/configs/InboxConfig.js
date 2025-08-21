@@ -8,7 +8,10 @@ export const InboxConfig = {
       label: "ALL_CAMPAIGNS",
       type: "search",
       apiDetails: {
-        serviceName: `${window.globalConfigs?.getConfig("PROJECT_SERVICE")}/staff/v1/_search` || "/project/staff/v1/_search",
+        serviceName:
+           window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
+             ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
+             : "/project/staff/v1/_search",
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
@@ -104,7 +107,10 @@ export const InboxConfig = {
       label: "PAST_CAMPAIGNS",
       type: "search",
       apiDetails: {
-        serviceName: `${window.globalConfigs?.getConfig("PROJECT_SERVICE")}/staff/v1/_search` || "/project/staff/v1/_search",
+        serviceName:
+           window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
+             ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
+             : "/project/staff/v1/_search",
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
@@ -200,7 +206,10 @@ export const InboxConfig = {
       label: "LIVE_CAMPAIGNS",
       type: "search",
       apiDetails: {
-        serviceName: `${window.globalConfigs?.getConfig("PROJECT_SERVICE")}/staff/v1/_search` || "/project/staff/v1/_search",
+        serviceName:
+           window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH")
+             ? `${String(window.globalConfigs.getConfig("PROJECT_SERVICE_PATH")).replace(/\/+$/,"")}/staff/v1/_search`
+             : "/project/staff/v1/_search",
         requestParam: {},
         requestBody: {
           ProjectStaff: {},
