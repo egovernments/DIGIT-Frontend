@@ -29,11 +29,18 @@ const ChangeCity = (prop) => {
     Digit.SessionStorage.set("Employee.tenantId", city?.value);
     Digit.UserService.setUser(loggedInData);
     setDropDownData(city);
-    if (window.location.href.includes(`/${window?.contextPath}/employee/`)) {
+    if (typeof window !== 'undefined' && window.location?.href?.includes(`/${window?.contextPath}/employee/`)) {
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
       navigate(redirectPath, { replace: true });
     }
-    window.location.reload();
+    // Safe reload with error handling
+    try {
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.warn('Failed to reload page:', error);
+    }
   };
 
   useEffect(() => {
