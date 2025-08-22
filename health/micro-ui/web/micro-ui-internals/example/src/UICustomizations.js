@@ -1,14 +1,25 @@
 import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
-import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward, Modal,CloseSvg, Close, } from "@egovernments/digit-ui-react-components";
+import {
+  DeleteIconv2,
+  DownloadIcon,
+  FileIcon,
+  Button,
+  Card,
+  CardSubHeader,
+  EditIcon,
+  ArrowForward,
+  Modal,
+  CloseSvg,
+  Close,
+} from "@egovernments/digit-ui-react-components";
 import { Button as ButtonNew, Dropdown, Toast, Tag, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
-
 
 const wrapTextStyle = {
   maxWidth: "15rem",
@@ -31,15 +42,15 @@ const renderText = (value, t) => {
       </div>
     );
   }
-}
+};
 
-const getMDMSUrl = (v2=false) => {
-  if(v2){
+const getMDMSUrl = (v2 = false) => {
+  if (v2) {
     let url = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || window.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
     return `/${url}`;
   }
-    let url = window.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") ||  "egov-mdms-service";
-    return `/${url}`;
+  let url = window.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
+  return `/${url}`;
 };
 
 const businessServiceMap = {
@@ -50,13 +61,13 @@ const inboxModuleNameMap = {
   "muster-roll-approval": "muster-roll-service",
 };
 
-const convertDateToEpoch= (dateString) => {
+const convertDateToEpoch = (dateString) => {
   // Create a Date object from the input date string
   const date = new Date(dateString);
 
   // Convert the date to epoch time (seconds)
   return Math.floor(date.getTime());
-}
+};
 
 function filterUniqueByKey(arr, key) {
   const uniqueValues = new Set();
@@ -344,8 +355,9 @@ export const UICustomizations = {
         return (
           <span className="link">
             <Link
-              to={`/${window.contextPath
-                }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
+              to={`/${
+                window.contextPath
+              }/employee/attendencemgmt/view-attendance?tenantId=${Digit.ULBService.getCurrentTenantId()}&musterRollNumber=${value}`}
             >
               {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
             </Link>
@@ -805,172 +817,178 @@ export const UICustomizations = {
       }
     },
   },
-   MicroplanSearchConfig: {
-      preProcess: (data, additionalDetails) => {
-        const { name, status } = data?.state?.searchForm || {};
-        data.body.PlanConfigurationSearchCriteria = {};
-        data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
-        // data.body.PlanConfigurationSearchCriteria.limit = 10
-        data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
-        data.body.PlanConfigurationSearchCriteria.name = name;
-        data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
-        data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
-        // delete data.body.PlanConfigurationSearchCriteria.pagination
-        data.body.PlanConfigurationSearchCriteria.status = status?.status;
-        data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
-        cleanObject(data.body.PlanConfigurationSearchCriteria);
-  
-        const dic = {
-          0: null,
-          1: ["DRAFT"],
-          2: ["EXECUTION_TO_BE_DONE"],
-          3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
-          4: ["RESOURCE_ESTIMATIONS_APPROVED"],
-        };
-        const url = Digit.Hooks.useQueryParams();
-  
-        const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
-        data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
-        cleanObject(data.body.PlanConfigurationSearchCriteria);
-        return data;
-      },
-      additionalCustomizations: (row, key, column, value, t, searchResult) => {
-        const [showToast, setShowToast] = useState(false);
-        const tenantId = Digit.ULBService.getCurrentTenantId();
-        const microplanId = row?.id;
+  MicroplanSearchConfig: {
+    preProcess: (data, additionalDetails) => {
+      const { name, status } = data?.state?.searchForm || {};
+      data.body.PlanConfigurationSearchCriteria = {};
+      data.body.PlanConfigurationSearchCriteria.limit = data?.state?.tableForm?.limit;
+      // data.body.PlanConfigurationSearchCriteria.limit = 10
+      data.body.PlanConfigurationSearchCriteria.offset = data?.state?.tableForm?.offset;
+      data.body.PlanConfigurationSearchCriteria.name = name;
+      data.body.PlanConfigurationSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.PlanConfigurationSearchCriteria.userUuid = Digit.UserService.getUser().info.uuid;
+      // delete data.body.PlanConfigurationSearchCriteria.pagination
+      data.body.PlanConfigurationSearchCriteria.status = status?.status;
+      data.body.PlanConfigurationSearchCriteria.name = data?.state?.searchForm?.microplanName;
+      cleanObject(data.body.PlanConfigurationSearchCriteria);
 
-        const { data: rootEstimationApprover } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
-          tenantId: tenantId,
-          body: {
-            PlanEmployeeAssignmentSearchCriteria: {
-              tenantId: tenantId,
-              planConfigurationId: microplanId,
-              role: ["ROOT_PLAN_ESTIMATION_APPROVER"],
-              active: true,
-            },
-          },
-          config: {
-            enabled: true,
-          },
-        });
+      const dic = {
+        0: null,
+        1: ["DRAFT"],
+        2: ["EXECUTION_TO_BE_DONE"],
+        3: ["CENSUS_DATA_APPROVAL_IN_PROGRESS", "CENSUS_DATA_APPROVED", "RESOURCE_ESTIMATION_IN_PROGRESS"],
+        4: ["RESOURCE_ESTIMATIONS_APPROVED"],
+      };
+      const url = Digit.Hooks.useQueryParams();
 
-        const { data: rootPopulationApprover } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
-          tenantId,
-          body: {
-            PlanEmployeeAssignmentSearchCriteria: {
-              tenantId,
-              planConfigurationId: microplanId,
-              role: ["ROOT_POPULATION_DATA_APPROVER"],
-              active: true,
-            },
-          },
-          config: { enabled: true },
-        });
+      const tabId = url.tabId || "0"; // Default to '0' if tabId is undefined
+      data.body.PlanConfigurationSearchCriteria.status = dic[String(tabId)];
+      cleanObject(data.body.PlanConfigurationSearchCriteria);
+      return data;
+    },
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      const [showToast, setShowToast] = useState(false);
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      const microplanId = row?.id;
 
-        const { data: rootFacilityMapper } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
-          tenantId,
-          body: {
-            PlanEmployeeAssignmentSearchCriteria: {
-              tenantId,
-              planConfigurationId: microplanId,
-              role: ["ROOT_FACILITY_CATCHMENT_MAPPER"],
-              active: true,
-            },
+      const { data: rootEstimationApprover } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+        tenantId: tenantId,
+        body: {
+          PlanEmployeeAssignmentSearchCriteria: {
+            tenantId: tenantId,
+            planConfigurationId: microplanId,
+            role: ["ROOT_PLAN_ESTIMATION_APPROVER"],
+            active: true,
           },
-          config: { enabled: true },
-        });
-        
-        switch (key) {
-          case "ACTIONS":
-            // TODO : Replace dummy file id with real file id when API is ready
-            const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df"
-            const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
-            const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
-            let options = [];
-  
-            if (row?.status == "DRAFT") {
-              options = [
-                { code: "1", name: "MP_ACTIONS_EDIT_SETUP" },
-                { code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },
-                { code: "3", name: "MP_ACTIONS_FREEZE_MICROPLAN" },
-              ];
-            } else {
-              options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
+        },
+        config: {
+          enabled: true,
+        },
+      });
+
+      const { data: rootPopulationApprover } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+        tenantId,
+        body: {
+          PlanEmployeeAssignmentSearchCriteria: {
+            tenantId,
+            planConfigurationId: microplanId,
+            role: ["ROOT_POPULATION_DATA_APPROVER"],
+            active: true,
+          },
+        },
+        config: { enabled: true },
+      });
+
+      const { data: rootFacilityMapper } = Digit.Hooks.microplanv1.usePlanSearchEmployeeWithTagging({
+        tenantId,
+        body: {
+          PlanEmployeeAssignmentSearchCriteria: {
+            tenantId,
+            planConfigurationId: microplanId,
+            role: ["ROOT_FACILITY_CATCHMENT_MAPPER"],
+            active: true,
+          },
+        },
+        config: { enabled: true },
+      });
+
+      switch (key) {
+        case "ACTIONS":
+          // TODO : Replace dummy file id with real file id when API is ready
+          const dummyFile = "c22a7676-d5d7-49b6-bcdb-83e9519f58df";
+          const microplanFileId = row?.campaignDetails?.additionalDetails?.microplanFileId || dummyFile;
+          const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
+          let options = [];
+
+          if (row?.status == "DRAFT") {
+            options = [
+              { code: "1", name: "MP_ACTIONS_EDIT_SETUP" },
+              { code: "2", name: "MP_ACTIONS_DOWNLOAD_DRAFT" },
+              { code: "3", name: "MP_ACTIONS_FREEZE_MICROPLAN" },
+            ];
+          } else {
+            options = [{ code: "1", name: "MP_ACTIONS_VIEW_SUMMARY" }];
+          }
+
+          const handleDownload = ({ type }) => {
+            const template = type === "Estimations" ? "Estimations" : "DraftComplete";
+            const fileId = row?.files.find((item) => item.templateIdentifier === template)?.filestoreId;
+            if (!fileId) {
+              setShowToast({ label: t("NO_DRAFT_FILE_FOUND") });
+              return;
             }
-  
-            const handleDownload = ({type}) => {
-              
-              const template = type === "Estimations" ? "Estimations" : "DraftComplete";
-              const fileId = row?.files.find((item) => item.templateIdentifier === template)?.filestoreId;
-              if (!fileId) {
-                setShowToast({ label: t("NO_DRAFT_FILE_FOUND") });
-                return;
-              }
-              const campaignName = row?.name || "";
-              const customName = type === "Estimations" ? campaignName : `${campaignName}_DRAFT`;
-              Digit.Utils.campaign.downloadExcelWithCustomName({
-                fileStoreId: fileId,
-                customName: customName,
-              });
-            };
-  
-            const onActionSelect = async (e,row) => {
-              if (e.name === "MP_ACTIONS_EDIT_SETUP") {
-                const key = parseInt(row?.additionalDetails?.key);
-                const resolvedKey = key === 8 ? 7 : key === 10 ? 11 : key || 2;
-                const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
-                window.location.href = url;
-              }
-              if (e.name === "MP_ACTIONS_DOWNLOAD_DRAFT") {
-                if (row?.status == "DRAFT" && row?.assumptions.length > 0 && row?.operations.length > 0) {
-                  handleDownload({ type: "Draft" });
-                } else {
-                  setShowToast({ label: t("PLEASE_UPDATE_THE_SETUP_INFORMATION_BEFORE_DOWNLOADING_DRAFT") });
-                }
-              }
-              if (e.name === "MP_ACTIONS_FREEZE_MICROPLAN") {
-                if (
-                  row?.status == "DRAFT" &&
-                  row?.assumptions.length > 0 &&
-                  row?.operations.length > 0 &&
-                  rootEstimationApprover?.data?.length > 0 &&
-                  rootPopulationApprover?.data?.length > 0 &&
-                  rootFacilityMapper?.data?.length > 0
-                ) {
-                  const triggeredFromMain = "OPEN_MICROPLANS";
-                  const response = await Digit.Hooks.microplanv1.useCompleteSetUpFlow({
-                    tenantId,
-                    microplanId,
-                    triggeredFrom: triggeredFromMain,
-                  });
-                  if (response && !response?.isError) {
-                    window.history.pushState(response?.state, "", response?.redirectTo);
-                    window.dispatchEvent(new PopStateEvent("popstate", { state: response?.state }));
-                  }
-                  if (response && response?.isError) {
-                    console.error(`ERR_FAILED_TO_COMPLETE_SETUP`);
-                  }
-                } else {
-                  setShowToast({ label:t("PLEASE_FINISH_THE_DRAFT_BEFORE_FREEZING") });
-                }
-              }
-              if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
-                window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
-                  row.campaignDetails.id
-                }&setup-completed=true`;
-              }
-            };
-  
-            const handleToast = () => {
-              setShowToast(false);
-            };
+            const campaignName = row?.name || "";
+            const customName = type === "Estimations" ? campaignName : `${campaignName}_DRAFT`;
+            Digit.Utils.campaign.downloadExcelWithCustomName({
+              fileStoreId: fileId,
+              customName: customName,
+            });
+          };
 
-            return (
-              <>
+          const onActionSelect = async (e, row) => {
+            if (e.name === "MP_ACTIONS_EDIT_SETUP") {
+              const key = parseInt(row?.additionalDetails?.key);
+              const resolvedKey = key === 8 ? 7 : key === 10 ? 11 : key || 2;
+              const url = `/${window.contextPath}/employee/microplan/setup-microplan?key=${resolvedKey}&microplanId=${row.id}&campaignId=${row.campaignDetails.id}`;
+              window.location.href = url;
+            }
+            if (e.name === "MP_ACTIONS_DOWNLOAD_DRAFT") {
+              if (row?.status == "DRAFT" && row?.assumptions.length > 0 && row?.operations.length > 0) {
+                handleDownload({ type: "Draft" });
+              } else {
+                setShowToast({ label: t("PLEASE_UPDATE_THE_SETUP_INFORMATION_BEFORE_DOWNLOADING_DRAFT") });
+              }
+            }
+            if (e.name === "MP_ACTIONS_FREEZE_MICROPLAN") {
+              if (
+                row?.status == "DRAFT" &&
+                row?.assumptions.length > 0 &&
+                row?.operations.length > 0 &&
+                rootEstimationApprover?.data?.length > 0 &&
+                rootPopulationApprover?.data?.length > 0 &&
+                rootFacilityMapper?.data?.length > 0
+              ) {
+                const triggeredFromMain = "OPEN_MICROPLANS";
+                const response = await Digit.Hooks.microplanv1.useCompleteSetUpFlow({
+                  tenantId,
+                  microplanId,
+                  triggeredFrom: triggeredFromMain,
+                });
+                if (response && !response?.isError) {
+                  window.history.pushState(response?.state, "", response?.redirectTo);
+                  window.dispatchEvent(new PopStateEvent("popstate", { state: response?.state }));
+                }
+                if (response && response?.isError) {
+                  console.error(`ERR_FAILED_TO_COMPLETE_SETUP`);
+                }
+              } else {
+                setShowToast({ label: t("PLEASE_FINISH_THE_DRAFT_BEFORE_FREEZING") });
+              }
+            }
+            if (e.name == "MP_ACTIONS_VIEW_SUMMARY") {
+              window.location.href = `/${window.contextPath}/employee/microplan/setup-microplan?key=${11}&microplanId=${row.id}&campaignId=${
+                row.campaignDetails.id
+              }&setup-completed=true`;
+            }
+          };
+
+          const handleToast = () => {
+            setShowToast(false);
+          };
+
+          return (
+            <>
               <div>
                 {microplanFileId && row?.status == "RESOURCE_ESTIMATIONS_APPROVED" ? (
                   <div>
-                    <ButtonNew style={{ width: "20rem" }} icon="DownloadIcon" onClick={()=>handleDownload({type:"Estimations"})} label={t("WBH_DOWNLOAD_MICROPLAN")} title={t("WBH_DOWNLOAD_MICROPLAN")} isDisabled={!EstimationsfileId} />
+                    <ButtonNew
+                      style={{ width: "20rem" }}
+                      icon="DownloadIcon"
+                      onClick={() => handleDownload({ type: "Estimations" })}
+                      label={t("WBH_DOWNLOAD_MICROPLAN")}
+                      title={t("WBH_DOWNLOAD_MICROPLAN")}
+                      isDisabled={!EstimationsfileId}
+                    />
                   </div>
                 ) : (
                   <div className={"action-button-open-microplan"}>
@@ -992,80 +1010,80 @@ export const UICustomizations = {
                 )}
               </div>
               {showToast && <Toast type={showToast?.type || "warning"} label={showToast?.label} onClose={handleToast} />}
-              </>
+            </>
+          );
+
+        case "NAME_OF_MICROPLAN":
+          if (value && value !== "NA") {
+            return (
+              <div
+                style={{
+                  maxWidth: "15rem", // Set the desired maximum width
+                  wordWrap: "break-word", // Allows breaking within words
+                  whiteSpace: "normal", // Ensures text wraps normally
+                  overflowWrap: "break-word", // Break long words at the edge
+                }}
+              >
+                <p>{t(value)}</p>
+              </div>
             );
-  
-          case "NAME_OF_MICROPLAN":
-            if (value && value !== "NA") {
-              return (
-                <div
-                  style={{
-                    maxWidth: "15rem", // Set the desired maximum width
-                    wordWrap: "break-word", // Allows breaking within words
-                    whiteSpace: "normal", // Ensures text wraps normally
-                    overflowWrap: "break-word", // Break long words at the edge
-                  }}
-                >
-                  <p>{t(value)}</p>
-                </div>
-              );
-            } else {
-              return (
-                <div>
-                  <p>{t("NA")}</p>
-                </div>
-              );
-            }
-  
-          case "MICROPLAN_STATUS":
-            if (value && value != "NA") {
-              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
-            } else {
-              return (
-                <div>
-                  <p>{t("NA")}</p>
-                </div>
-              );
-            }
-  
-          case "CAMPAIGN_DISEASE":
-            if (value && value != "NA") {
-              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>;
-            } else {
-              return (
-                <div>
-                  <p>{t("NA")}</p>
-                </div>
-              );
-            }
-  
-          case "CAMPAIGN_TYPE":
-            if (value && value != "NA") {
-              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
-            } else {
-              return (
-                <div>
-                  <p>{t("NA")}</p>
-                </div>
-              );
-            }
-  
-          case "DISTIRBUTION_STRATEGY":
-            if (value && value != "NA") {
-              return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>;
-            } else {
-              return (
-                <div>
-                  <p>{t("NA")}</p>
-                </div>
-              );
-            }
-  
-          default:
-            return null; // Handle any unexpected keys here if needed
-        }
-      },
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "MICROPLAN_STATUS":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_STATUS_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "CAMPAIGN_DISEASE":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISEASE_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "CAMPAIGN_TYPE":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_TYPE_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        case "DISTIRBUTION_STRATEGY":
+          if (value && value != "NA") {
+            return <p>{t(Digit.Utils.locale.getTransformedLocale("MICROPLAN_DISTRIBUTION_" + value))}</p>;
+          } else {
+            return (
+              <div>
+                <p>{t("NA")}</p>
+              </div>
+            );
+          }
+
+        default:
+          return null; // Handle any unexpected keys here if needed
+      }
     },
+  },
   MyMicroplanSearchConfig: {
     preProcess: (data, additionalDetails) => {
       const { name, status } = data?.state?.searchForm || {};
@@ -1105,19 +1123,18 @@ export const UICustomizations = {
       const roles = rolesCodes.map((item) => item.code);
       const hasRequiredRole = roles.some((role) => role === "ROOT_POPULATION_DATA_APPROVER" || role === "POPULATION_DATA_APPROVER");
       const EstimationsfileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
-      const handleFileDownload=()=>{
+      const handleFileDownload = () => {
         const fileId = row?.files.find((item) => item.templateIdentifier === "Estimations")?.filestoreId;
         if (!fileId) {
           console.error("Estimation template file not found");
-              return;
-            }
+          return;
+        }
         const campaignName = row?.name || "";
         Digit.Utils.campaign.downloadExcelWithCustomName({
           fileStoreId: fileId,
-          customName: campaignName
+          customName: campaignName,
         });
-
-      }
+      };
       switch (key) {
         case "ACTIONS":
           const onActionSelect = (key, row) => {
@@ -1146,10 +1163,10 @@ export const UICustomizations = {
                 const navEvent2 = new PopStateEvent("popstate");
                 window.dispatchEvent(navEvent2);
                 break;
-                case "DOWNLOAD":
-                  handleFileDownload();
-                  break;
-                
+              case "DOWNLOAD":
+                handleFileDownload();
+                break;
+
               default:
                 console.log(value);
                 break;
@@ -1185,44 +1202,44 @@ export const UICustomizations = {
               icon={"ArrowForward"}
               type="button"
               isSuffix={true}
-              style={{width:"290px"}}
+              style={{ width: "290px" }}
               isDisabled={!hasRequiredRole}
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("START", row)}
             />
           ) : row.status === "RESOURCE_ESTIMATIONS_APPROVED" ? (
             <ButtonNew
-            isSearchable={false}
-            title={t("MP_ACTIONS_FOR_MICROPLANS")}
-            label={t("MP_ACTIONS_FOR_MICROPLANS")}
-            isDisabled={!EstimationsfileId}
-            onClick={() => {}}
-            variation="primary"
-            onOptionSelect={(option) => onOptionSelect(option)} 
-            options={[
-              {
-                code: t("WBH_DOWNLOAD_MICROPLAN"),
-                name: t("WBH_DOWNLOAD_MICROPLAN"),
-                icon: "FileDownload"
-              },
-              {
-                code: t("VIEW_AUDIT_LOGS"),
-                name: t("VIEW_AUDIT_LOGS")
-              },
-            ]}
-            optionsKey="name"
-            showBottom={true}
-            style={{ width: "290px" }}
-            type="actionButton"
-            className="my-microplans-action-button"
-          />
+              isSearchable={false}
+              title={t("MP_ACTIONS_FOR_MICROPLANS")}
+              label={t("MP_ACTIONS_FOR_MICROPLANS")}
+              isDisabled={!EstimationsfileId}
+              onClick={() => {}}
+              variation="primary"
+              onOptionSelect={(option) => onOptionSelect(option)}
+              options={[
+                {
+                  code: t("WBH_DOWNLOAD_MICROPLAN"),
+                  name: t("WBH_DOWNLOAD_MICROPLAN"),
+                  icon: "FileDownload",
+                },
+                {
+                  code: t("VIEW_AUDIT_LOGS"),
+                  name: t("VIEW_AUDIT_LOGS"),
+                },
+              ]}
+              optionsKey="name"
+              showBottom={true}
+              style={{ width: "290px" }}
+              type="actionButton"
+              className="my-microplans-action-button"
+            />
           ) : (
             <ButtonNew
               label={t("WBH_EDIT")}
               title={t("WBH_EDIT")}
               variation="primary"
               icon={"Edit"}
-              style={{width:"290px"}}
+              style={{ width: "290px" }}
               type="button"
               // className="dm-workbench-download-template-btn dm-hover"
               onClick={(e) => onActionSelect("EDIT", row)}
@@ -1438,26 +1455,24 @@ export const UICustomizations = {
     preProcess: (data) => {
       return data;
     },
-    getFacilitySearchRequest: ( prop) => {
+    getFacilitySearchRequest: (prop) => {
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const {campaignId} = Digit.Hooks.useQueryParams();
+      const { campaignId } = Digit.Hooks.useQueryParams();
       return {
         url: `/project-factory/v1/project-type/search`,
-        params: {  },
+        params: {},
         body: {
           CampaignDetails: {
-            "tenantId": tenantId,
-            "ids": [
-              campaignId
-            ]
-        }
+            tenantId: tenantId,
+            ids: [campaignId],
+          },
         },
         changeQueryName: `boundarySearchForPlanFacility`,
         config: {
           enabled: true,
           select: (data) => {
             const result = data?.CampaignDetails?.[0]?.boundaries?.filter((item) => item.type == prop.lowestHierarchy) || [];
-            return result
+            return result;
           },
         },
       };
@@ -1479,10 +1494,12 @@ export const UICustomizations = {
         case "MICROPLAN_FACILITY_SERVINGPOPULATION":
           return row?.additionalDetails?.servingPopulation;
         case "MICROPLAN_FACILITY_RESIDINGVILLAGE":
-          return <div style={{ display: "flex", gap: ".5rem" }}>
-            {t(row?.residingBoundary)}
-            <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
-          </div>
+          return (
+            <div style={{ display: "flex", gap: ".5rem" }}>
+              {t(row?.residingBoundary)}
+              <VillageHierarchyTooltipWrapper boundaryCode={row?.residingBoundary} />
+            </div>
+          );
         case "MICROPLAN_FACILITY_ASSIGNED_VILLAGES":
           const assignedVillages = row?.serviceBoundaries;
           return assignedVillages ? assignedVillages.length : null;
@@ -1497,7 +1514,9 @@ export const UICustomizations = {
                 isSuffix
                 title={t(key)}
                 label={t(key)}
-                onClick={() => {setShowPopup(true);}}
+                onClick={() => {
+                  setShowPopup(true);
+                }}
                 // removed this because due to popup crashing on dev
                 // onClick={() => console.log("temp action")}
                 options={[]}
@@ -1511,7 +1530,7 @@ export const UICustomizations = {
                   detail={row}
                   onClose={() => {
                     setShowPopup(false);
-                    setRefreshKey(prev => prev + 1);
+                    setRefreshKey((prev) => prev + 1);
                     window.dispatchEvent(new Event("refreshKeyUpdated"));
                   }}
                 />
@@ -1583,23 +1602,22 @@ export const UICustomizations = {
 
         data.body.inbox.moduleSearchCriteria.fromDate = fromDate;
         data.body.inbox.moduleSearchCriteria.toDate = toDate;
-      }
-      else{
+      } else {
         delete data.body.inbox.moduleSearchCriteria.fromDate;
         delete data.body.inbox.moduleSearchCriteria.toDate;
       }
 
       // Always delete the full range object if it exists
       delete data.body.inbox.moduleSearchCriteria.range;
-    
+
       const assignee = _.clone(data.body.inbox.moduleSearchCriteria.assignedToMe);
       delete data.body.inbox.moduleSearchCriteria.assignedToMe;
       delete data.body.inbox.moduleSearchCriteria.assignee;
-    
+
       if (assignee?.code === "ASSIGNED_TO_ME" || data?.state?.filterForm?.assignedToMe?.code === "ASSIGNED_TO_ME") {
         data.body.inbox.moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
       }
-    
+
       // --- Handle serviceCode ---
       let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
       serviceCodes = serviceCodes?.serviceCode;
@@ -1620,43 +1638,41 @@ export const UICustomizations = {
           localityArray = [rawLocality.code];
         }
       }
-      
+
       if (localityArray.length > 0) {
         delete data.body.inbox.moduleSearchCriteria.locality;
         data.body.inbox.moduleSearchCriteria.area = localityArray;
       } else {
         delete data.body.inbox.moduleSearchCriteria.area;
       }
-    
+
       // --- Handle status from state.filterForm ---
       const rawStatuses = _.clone(data?.state?.filterForm?.status || {});
       const statuses = Object.keys(rawStatuses).filter((key) => rawStatuses[key] === true);
-    
+
       if (statuses.length > 0) {
         data.body.inbox.moduleSearchCriteria.status = statuses;
       } else {
         delete data.body.inbox.moduleSearchCriteria.status;
       }
-    
+
       return data;
     },
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       switch (key) {
         case "CS_COMMON_COMPLAINT_NO":
           return (
-            <div style={{display:"grid"}}>
-            <span className="link" style={{display:"grid"}}>
-            <Link
-              to={ `/${window.contextPath}/employee/pgr/complaint-details/${value}`}
-            >
-              {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
-            </Link>
-          </span>
-          <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
-          </div>
+            <div style={{ display: "grid" }}>
+              <span className="link" style={{ display: "grid" }}>
+                <Link to={`/${window.contextPath}/employee/pgr/complaint-details/${value}`}>
+                  {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                </Link>
+              </span>
+              <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
+            </div>
           );
 
-          case "WF_INBOX_HEADER_LOCALITY":
+        case "WF_INBOX_HEADER_LOCALITY":
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
@@ -1803,105 +1819,142 @@ export const UICustomizations = {
   },
 
   HRMSInboxConfig: {
-      preProcess: (data) => {
-        // filterForm
-        // params
-  
-        if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
-          const updatedParams = {}; // Temporary object to store updates
-  
-          if (data.state.filterForm.roles?.code) {
-            updatedParams.roles = data.state.filterForm.roles.code;
-          }
-  
-          if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
-            updatedParams.isActive = data.state.filterForm.isActive.code;
-          }
-  
-          // Update `data.params` only if `updatedParams` has values
-          if (Object.keys(updatedParams).length > 0) {
-            data.params = { ...data.params, ...updatedParams };
-          }
+    preProcess: (data) => {
+      // filterForm
+      // params
+
+      if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+        const updatedParams = {}; // Temporary object to store updates
+
+        if (data.state.filterForm.roles?.code) {
+          updatedParams.roles = data.state.filterForm.roles.code;
         }
-  
-        return data;
-      },
-  
-      additionalCustomizations: (row, key, column, value, t, searchResult) => {
-        switch (key) {
-          case "HR_EMP_ID_LABEL":
-            return (
-              <span className="link">
-                <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
-              </span>
-            );
-            
-          case "HR_EMP_NAME_LABEL":
-            return value ? `${value}` : t("ES_COMMON_NA");
-  
-          case "HR_ROLE_NO_LABEL":
-            return value?.length > 0 ? value?.length : t("ES_COMMON_NA");
-  
-          case "HR_DESG_LABEL":
-            return value ? t(`${value.designation}`) : t("ES_COMMON_NA");
-  
-          case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
-            return value ? t(`${value.department}`) : t("ES_COMMON_NA");
-  
-          case "HR_JURIDICTIONS_LABEL":
-            return value?.length > 0 ? (
-              value?.map((j) => t(j?.boundary)).join(",")
-            ) : (
-              t("ES_COMMON_NA")
-            );
-          default:
-            return t("ES_COMMON_NA");
+
+        if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+          updatedParams.isActive = data.state.filterForm.isActive.code;
         }
-      },
+
+        // Update `data.params` only if `updatedParams` has values
+        if (Object.keys(updatedParams).length > 0) {
+          data.params = { ...data.params, ...updatedParams };
+        }
+      }
+
+      return data;
+    },
+
+    additionalCustomizations: (row, key, column, value, t, searchResult) => {
+      switch (key) {
+        case "HR_EMP_ID_LABEL":
+          return (
+            <span className="link">
+              <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
+            </span>
+          );
+
+        case "HR_EMP_NAME_LABEL":
+          return value ? `${value}` : t("ES_COMMON_NA");
+
+        case "HR_ROLE_NO_LABEL":
+          return value?.length > 0 ? value?.length : t("ES_COMMON_NA");
+
+        case "HR_DESG_LABEL":
+          return value ? t(`${value.designation}`) : t("ES_COMMON_NA");
+
+        case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
+          return value ? t(`${value.department}`) : t("ES_COMMON_NA");
+
+        case "HR_JURIDICTIONS_LABEL":
+          return value?.length > 0 ? value?.map((j) => t(j?.boundary)).join(",") : t("ES_COMMON_NA");
+        default:
+          return t("ES_COMMON_NA");
+      }
+    },
   },
   AssignCampaignInboxConfig: {
     preProcess: (data) => {
       const formState = data?.state?.searchForm || {};
-    
+
       const sharedFields = {};
       if (formState.projectType?.code) sharedFields.projectType = formState.projectType.code;
       if (formState.name?.trim()) sharedFields.name = formState.name.trim();
       if (formState.projectNumber?.trim()) sharedFields.projectNumber = formState.projectNumber.trim();
       if (formState.startDate) sharedFields.startDate = new Date(formState.startDate).getTime();
       if (formState.endDate) sharedFields.endDate = new Date(formState.endDate).getTime();
-    
+
       // 🟢 Reset to all original Projects from config when filters are cleared
-     // ✅ Convert object to array
+      // ✅ Convert object to array
       const allProjects = Object.values(data?.body?.jurisdictionProjects || {});
 
-    
       let filteredProjects = [...allProjects];
-    
+
       if (formState.boundary?.code) {
-        filteredProjects = filteredProjects.filter(
-          (p) => p?.address?.boundary === formState.boundary.code
-        );
+        filteredProjects = filteredProjects.filter((p) => p?.address?.boundary === formState.boundary.code);
       }
-    
+
       // Enrich filtered projects
       data.body.Projects = filteredProjects.map((p) => ({
         ...p,
         ...sharedFields,
       }));
-    
+
       return data;
     },
-    
+
     additionalCustomizations: (row, key, column, value, t, searchResult) => {
       const { id } = useParams();
       const tenantId = Digit.ULBService.getCurrentTenantId();
-      const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
+      const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
+      const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
       const [toast, setToast] = useState(null);
       const [modalOpen, setModalOpen] = useState(false);
       const [sessionFormData, setSessionFormData] = useState({});
-      const [refreshKey, setRefreshKey,] = useState(Date.now());
+      const [refreshKey, setRefreshKey] = useState(Date.now());
+      const formConfig = {
+        label: {
+          heading: "ASSIGN_CAMPAIGN_MODAL_TITLE",
+          submit: "CORE_COMMON_SUBMIT",
+          cancel: "CORE_COMMON_CANCEL",
+        },
+        form: [
+          {
+            body: [
+              {
+                inline: true,
+                label: "HR_CAMPAIGN_FROM_DATE_LABEL",
+                isMandatory: true,
+                key: "startDate",
+                type: "date",
+                populators: {
+                  name: "startDate",
+                  required: true,
+                  error: "CORE_COMMON_REQUIRED_ERRMSG",
+                  validation: {
+                    max: new Date().toISOString().split("T")[0],
+                  },
+                },
+              },
+              {
+                inline: true,
+                label: "HR_CAMPAIGN_TO_DATE_LABEL",
+                isMandatory: false,
+                key: "endDate",
+                type: "date",
+                populators: {
+                  name: "endDate",
+                  required: false,
+                  error: "CORE_COMMON_REQUIRED_ERRMSG",
+                  validation: {
+                    max: new Date().toISOString().split("T")[0],
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      };
 
-      const { isLoading: isHRMSSearchLoading, isError, error, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);      // API request criteria for fetching project staff details
+      const { isLoading: isHRMSSearchLoading, isError, error, data: hrmsData } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId); // API request criteria for fetching project staff details
       const reqCri = {
         url: `/${projectContextPath}/staff/v1/_search`,
         params: {
@@ -1924,66 +1977,23 @@ export const UICustomizations = {
       // Fetch project staff details using custom API hook
       const { isLoading: isProjectStaffLoading, data: projectStaff, revalidate: revalidateProjectStaff } = Digit.Hooks.useCustomAPIHook(reqCri);
 
-            const formConfig = {
-          label: {
-            heading: "ASSIGN_CAMPAIGN_MODAL_TITLE",
-            submit: "CORE_COMMON_SUBMIT",
-            cancel: "CORE_COMMON_CANCEL"
-          },
-          form: [
-            {
-              body: [
-                {
-                  inline: true,
-                  label: "HR_CAMPAIGN_FROM_DATE_LABEL",
-                  isMandatory: true,
-                  key: "startDate",
-                  type: "date",
-                  populators: {
-                    name: "startDate",
-                    required: true,
-                    error: "CORE_COMMON_REQUIRED_ERRMSG",
-                    validation: {
-                      min: new Date().toISOString().split("T")[0]
-                    }
-                  }
-                },
-                {
-                  inline: true,
-                  label: "HR_CAMPAIGN_TO_DATE_LABEL",
-                  isMandatory: false,
-                  key: "endDate",
-                  type: "date",
-                  populators: {
-                    name: "endDate",
-                    required: false,
-                    error: "CORE_COMMON_REQUIRED_ERRMSG",
-                    validation: {
-                      min: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-                    }
-                  }
-                }
-              ]
-            }
-          ]
-        };
       const createStaffMutation = Digit.Hooks.hrms.useHRMSStaffCreate(tenantId);
       const deleteStaffMutation = Digit.Hooks.hrms.useHRMSStaffDelete(tenantId);
 
       const validateFormData = (formData, config, t) => {
         const missingFields = [];
-      
+
         config?.form?.forEach((section) => {
           section.body?.forEach((field) => {
             const key = field.key;
             const isRequired = field.isMandatory || field.populators?.required;
-      
+
             if (isRequired && !formData[key]) {
               missingFields.push(t(field.label)); // Push the translated label
             }
           });
         });
-      
+
         return missingFields;
       };
 
@@ -2011,27 +2021,21 @@ export const UICustomizations = {
       const handleModalSubmit = async () => {
         const missingFields = validateFormData(sessionFormData, formConfig, t);
         if (missingFields.length > 0) return;
-        else{
         setModalOpen(false);
         const payload = {
           tenantId: tenantId,
           userId: hrmsData.Employees[0]?.user?.userServiceUuid,
           projectId: row?.id,
-          startDate: sessionFormData?.startDate
-            ? convertDateToEpoch(sessionFormData?.startDate)
-            : row?.startDate,
-          endDate: sessionFormData?.endDate
-          ? convertDateToEpoch(sessionFormData?.endDate)
-          : row?.endDate,
+          startDate: sessionFormData?.startDate ? convertDateToEpoch(sessionFormData?.startDate) : row?.startDate,
+          endDate: sessionFormData?.endDate ? convertDateToEpoch(sessionFormData?.endDate) : row?.endDate,
         };
         await createStaffService(payload);
-      }
       };
       const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
         if (!_.isEqual(sessionFormData, formData)) {
           setSessionFormData({ ...sessionFormData, ...formData });
         }
-      }
+      };
       const createStaffService = async (payload) => {
         try {
           await createStaffMutation.mutateAsync(
@@ -2056,7 +2060,6 @@ export const UICustomizations = {
           setToast({ key: true, label: `${id} ${t("FAILED_TO_ASSIGN_CAMPAIGN")}`, type: "error" });
         }
       };
-      
 
       switch (key) {
         case "CAMPAIGN_START_DATE":
@@ -2079,7 +2082,6 @@ export const UICustomizations = {
         case "PROJECT_TYPE":
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
         case "ASSIGNMENT":
-
           if (isHRMSSearchLoading || isProjectStaffLoading) {
             return <Loader />;
           }
@@ -2087,68 +2089,63 @@ export const UICustomizations = {
           return (
             // <span style={{color: "#F18F5E", cursor: "pointer"}}>{t(`ASSIGN`)}</span>
             <>
-            <Button
-              key={refreshKey}
-              variation={projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id) ? "secondary" : "primary"}
-              label={projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id) ? t("UNASSIGN") : t("ASSIGN")}
-              style={{ minWidth: "10rem" }}
-              onButtonClick={() => {
-                if (projectStaff && projectStaff?.length > 0 && projectStaff?.some(item => item.projectId === row?.id)) {
-                  deleteStaffMutation.mutateAsync(
-                    {
-                      projectStaff: projectStaff?.find(item => item.projectId === row?.id),
-                    },
-                    {
-                      onSuccess: async (res) => {
-                        setToast({ key: false, label: `${id} ${t("UNASSIGNED_SUCCESSFULLY")}`, type: "success" });
-                        setRefreshKey(Date.now());
-                        await revalidateProjectStaff();
-                      },
-                      onError: async (error) => {
-                        setToast({ key: true, label: `${id} ${t("FAILED_TO_UNASSIGN_CAMPAIGN")}`, type: "error" });
-                        setRefreshKey(Date.now());
-                        await revalidateProjectStaff();
-                      },
-                    }
-                  );
-                  return;
+              <Button
+                key={refreshKey}
+                variation={
+                  projectStaff && projectStaff?.length > 0 && projectStaff?.some((item) => item.projectId === row?.id) ? "secondary" : "primary"
                 }
-                else{
-                setModalOpen(true);
+                label={
+                  projectStaff && projectStaff?.length > 0 && projectStaff?.some((item) => item.projectId === row?.id) ? t("UNASSIGN") : t("ASSIGN")
                 }
-              }}
-            />
-            {modalOpen && (
-            <Modal
-                popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height: "fit-content" }}
-                headerBarMain={<Heading t={t} heading={t(formConfig.label.heading)} />}
-                headerBarEnd={<CloseBtn onClick={() => setModalOpen(false)} />}
-                actionSaveLabel={t(formConfig.label.submit)}
-                actionCancelLabel={t(formConfig.label.cancel)}
-                actionCancelOnSubmit={() => setModalOpen(false)}
-                actionSaveOnSubmit={handleModalSubmit}
-                formId="modal-action"
-            >
-              <FormComposerV2
-                config={formConfig.form}
-                defaultValues={sessionFormData}
-                noBoxShadow
-                inline
-                childrenAtTheBottom
-                formId="modal-action"
-                onFormValueChange={onFormValueChange}
-                />
-            </Modal>
-            )}
-             {toast && (
-                    <Toast
-                      error={toast.key}
-                      isDleteBtn={true}
-                      label={t(toast.label)}
-                      onClose={handleToastClose}
-                      type={toast.type}
-                    />
-                  )}
+                style={{ minWidth: "10rem" }}
+                onButtonClick={() => {
+                  if (projectStaff && projectStaff?.length > 0 && projectStaff?.some((item) => item.projectId === row?.id)) {
+                    deleteStaffMutation.mutateAsync(
+                      {
+                        projectStaff: projectStaff?.find((item) => item.projectId === row?.id),
+                      },
+                      {
+                        onSuccess: async (res) => {
+                          setToast({ key: false, label: `${id} ${t("UNASSIGNED_SUCCESSFULLY")}`, type: "success" });
+                          setRefreshKey(Date.now());
+                          await revalidateProjectStaff();
+                        },
+                        onError: async (error) => {
+                          setToast({ key: true, label: `${id} ${t("FAILED_TO_UNASSIGN_CAMPAIGN")}`, type: "error" });
+                          setRefreshKey(Date.now());
+                          await revalidateProjectStaff();
+                        },
+                      }
+                    );
+                    return;
+                  } else {
+                    setModalOpen(true);
+                  }
+                }}
+              />
+              {modalOpen && (
+                <Modal
+                  popupStyles={{ width: "48.438rem", borderRadius: "0.25rem", height: "fit-content" }}
+                  headerBarMain={<Heading t={t} heading={t(formConfig.label.heading)} />}
+                  headerBarEnd={<CloseBtn onClick={() => setModalOpen(false)} />}
+                  actionSaveLabel={t(formConfig.label.submit)}
+                  actionCancelLabel={t(formConfig.label.cancel)}
+                  actionCancelOnSubmit={() => setModalOpen(false)}
+                  actionSaveOnSubmit={handleModalSubmit}
+                  formId="modal-action"
+                >
+                  <FormComposerV2
+                    config={formConfig.form}
+                    defaultValues={sessionFormData}
+                    noBoxShadow
+                    inline
+                    childrenAtTheBottom
+                    formId="modal-action"
+                    onFormValueChange={onFormValueChange}
+                  />
+                </Modal>
+              )}
+              {toast && <Toast error={toast.key} isDleteBtn="true" label={t(toast.label)} onClose={handleToastClose} type={toast.type} />}
             </>
           );
 

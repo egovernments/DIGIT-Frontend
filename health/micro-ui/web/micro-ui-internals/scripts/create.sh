@@ -1,3 +1,3 @@
 #!/bin/bash
 
-./scripts/run.sh campaign
+./scripts/run.sh core utilities

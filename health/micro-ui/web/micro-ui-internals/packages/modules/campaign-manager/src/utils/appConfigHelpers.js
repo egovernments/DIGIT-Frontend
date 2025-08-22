@@ -291,7 +291,6 @@ function addToArrayFields(field) {
 // Update reverseRestructure to use getTypeAndFormatFromAppType
 export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
-    debugger;
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
       const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
       const toArrayFields = addToArrayFields(field, fieldTypeMasterData); // TODO @nabeel @jagan right now this works for only validation array, we should think to expose to change the main config dynamically

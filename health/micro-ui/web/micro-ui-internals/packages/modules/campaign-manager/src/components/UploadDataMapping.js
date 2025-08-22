@@ -1,4 +1,16 @@
-import { Button, CardLabel, CardText, Chip, Dropdown, LabelFieldPair, Loader, PopUp, Switch, Toast, CardHeader } from "@egovernments/digit-ui-components";
+import {
+  Button,
+  CardLabel,
+  CardText,
+  Chip,
+  Dropdown,
+  LabelFieldPair,
+  Loader,
+  PopUp,
+  Switch,
+  Toast,
+  CardHeader,
+} from "@egovernments/digit-ui-components";
 import React, { Fragment, useEffect, useReducer, useState, useRef } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
@@ -47,18 +59,18 @@ const reducer = (state, action) => {
         data: updatedData,
         filteredData: state?.filter
           ? updatedData?.filter((i) =>
-            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          )
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+                : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+            )
           : updatedData,
         currentData: getPageData(
           state?.filter
             ? updatedData?.filter((i) =>
-              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-            )
+                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                  ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+                  : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+              )
             : updatedData,
           state.currentPage,
           state.rowsPerPage
@@ -68,10 +80,10 @@ const reducer = (state, action) => {
         // arrayBuffer: state.arrayBuffer, // Keep existing arrayBuffer
         totalRows: state?.filter
           ? updatedData?.filter((i) =>
-            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          )?.length
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+                : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+            )?.length
           : updatedData.length, // Use the new array length directly
         updated: true,
       };
@@ -82,18 +94,18 @@ const reducer = (state, action) => {
         data: editedData,
         filteredData: state?.filter
           ? editedData?.filter((i) =>
-            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          )
-          : editedData,
-        currentData: getPageData(
-          state?.filter
-            ? editedData?.filter((i) =>
               action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
                 ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
                 : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
             )
+          : editedData,
+        currentData: getPageData(
+          state?.filter
+            ? editedData?.filter((i) =>
+                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                  ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                  : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+              )
             : editedData,
           state.currentPage,
           state.rowsPerPage
@@ -102,10 +114,10 @@ const reducer = (state, action) => {
         workbook: state.workbook,
         totalRows: state?.filter
           ? editedData?.filter((i) =>
-            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          )?.length
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action.t(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
+                : i?.[action.t(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
+            )?.length
           : editedData.length,
         updated: true,
       };
@@ -137,49 +149,48 @@ const reducer = (state, action) => {
       const temp =
         action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
           ? state?.data?.map((item) => {
-            const numberLoc = (action?.schemas?.find((i) => i.description === "Phone Number")?.name);
-            const BoundaryLoc = (action?.schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
-            if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
-              return {
-                ...item,
-                [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
-              };
-            }
-            return item;
-          })
+              const numberLoc = action?.schemas?.find((i) => i.description === "Phone Number")?.name;
+              const BoundaryLoc = action?.schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name;
+              if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
+                return {
+                  ...item,
+                  [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
+                };
+              }
+              return item;
+            })
           : state?.data?.map((item) => {
-            const BoundaryLoc = (action?.schemas?.find((i) => i.description === "Boundary Code")?.name);
-            const facilityCode = item?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
-            const facilityName = item?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
-            // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
-            //   return {
-            //     ...item,
-            //     [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
-            //   };
-            // }
-            // Check facility code first, if not present then check facility name
-            if (
-              (facilityCode && facilityCode === action?.payload?.row?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
-              (!facilityCode &&
-                facilityName === action?.payload?.row?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
-            ) {
-              return {
-                ...item,
-                [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
-              };
-            }
-            return item;
-          });
+              const BoundaryLoc = action?.schemas?.find((i) => i.description === "Boundary Code")?.name;
+              const facilityCode = item?.["HCM_ADMIN_CONSOLE_FACILITY_CODE"];
+              const facilityName = item?.[action?.schemas?.find((i) => i.description === "Facility Name")?.name];
+              // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              //   return {
+              //     ...item,
+              //     [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
+              //   };
+              // }
+              // Check facility code first, if not present then check facility name
+              if (
+                (facilityCode && facilityCode === action?.payload?.row?.["HCM_ADMIN_CONSOLE_FACILITY_CODE"]) ||
+                (!facilityCode && facilityName === action?.payload?.row?.[action?.schemas?.find((i) => i.description === "Facility Name")?.name])
+              ) {
+                return {
+                  ...item,
+                  [BoundaryLoc]: action?.payload?.selectedBoundary?.map((i) => i?.code)?.join(","),
+                };
+              }
+              return item;
+            });
       return {
         ...state,
         data: temp,
         currentData: getPageData(
           state?.filter
             ? temp?.filter((i) =>
-              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-            )
+                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                  ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+                  : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+              )
             : temp,
           state.currentPage,
           state.rowsPerPage
@@ -190,49 +201,48 @@ const reducer = (state, action) => {
       const temp1 =
         action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
           ? state?.data?.map((item) => {
-            const numberLoc = (action?.schemas?.find((i) => i.description === "Phone Number")?.name);
-            const ActiveLoc = (action?.schemas?.find((i) => i.description === "User Usage")?.name);
-            if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
-              return {
-                ...item,
-                [ActiveLoc]: action?.payload?.selectedStatus?.code,
-              };
-            }
-            return item;
-          })
+              const numberLoc = action?.schemas?.find((i) => i.description === "Phone Number")?.name;
+              const ActiveLoc = action?.schemas?.find((i) => i.description === "User Usage")?.name;
+              if (item?.[numberLoc] === action?.payload?.row?.[numberLoc]) {
+                return {
+                  ...item,
+                  [ActiveLoc]: action?.payload?.selectedStatus?.code,
+                };
+              }
+              return item;
+            })
           : state?.data?.map((item) => {
-            const ActiveLoc = (action?.schemas?.find((i) => i.description === "Facility usage")?.name);
-            const facilityCode = item?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")];
-            const facilityName = item?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)];
-            // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
-            //   return {
-            //     ...item,
-            //     [ActiveLoc]: action?.payload?.selectedStatus?.code,
-            //   };
-            // }
-            // return item;
-            if (
-              (facilityCode && facilityCode === action?.payload?.row?.[("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) ||
-              (!facilityCode &&
-                facilityName === action?.payload?.row?.[(action?.schemas?.find((i) => i.description === "Facility Name")?.name)])
-            ) {
-              return {
-                ...item,
-                [ActiveLoc]: action?.payload?.selectedStatus?.code,
-              };
-            }
-            return item;
-          });
+              const ActiveLoc = action?.schemas?.find((i) => i.description === "Facility usage")?.name;
+              const facilityCode = item?.["HCM_ADMIN_CONSOLE_FACILITY_CODE"];
+              const facilityName = item?.[action?.schemas?.find((i) => i.description === "Facility Name")?.name];
+              // if (item?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")] === action?.payload?.row?.[action.t("HCM_ADMIN_CONSOLE_FACILITY_CODE")]) {
+              //   return {
+              //     ...item,
+              //     [ActiveLoc]: action?.payload?.selectedStatus?.code,
+              //   };
+              // }
+              // return item;
+              if (
+                (facilityCode && facilityCode === action?.payload?.row?.["HCM_ADMIN_CONSOLE_FACILITY_CODE"]) ||
+                (!facilityCode && facilityName === action?.payload?.row?.[action?.schemas?.find((i) => i.description === "Facility Name")?.name])
+              ) {
+                return {
+                  ...item,
+                  [ActiveLoc]: action?.payload?.selectedStatus?.code,
+                };
+              }
+              return item;
+            });
       return {
         ...state,
         data: temp1,
         currentData: getPageData(
           state?.filter
             ? temp1?.filter((i) =>
-              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-                ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-                : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-            )
+                action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                  ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+                  : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+              )
             : temp1,
           state.currentPage,
           state.rowsPerPage
@@ -242,10 +252,10 @@ const reducer = (state, action) => {
     case "FILTER_BY_ACTIVE":
       const tempFilter = action.payload?.filter
         ? state.data?.filter((i) =>
-          action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-            ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-            : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-        )
+            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+              ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+              : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+          )
         : state.data;
       const tempActive = getPageData(tempFilter, 1, state.rowsPerPage);
       return {
@@ -255,10 +265,10 @@ const reducer = (state, action) => {
         filteredData: tempFilter,
         totalRows: action.payload?.filter
           ? state.data?.filter((i) =>
-            action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
-              ? i?.[(action?.schemas?.find((i) => i.description === "User Usage")?.name)] === "Active"
-              : i?.[(action?.schemas?.find((i) => i.description === "Facility usage")?.name)] === "Active"
-          )?.length
+              action?.currentCategories === "HCM_UPLOAD_USER_MAPPING"
+                ? i?.[action?.schemas?.find((i) => i.description === "User Usage")?.name] === "Active"
+                : i?.[action?.schemas?.find((i) => i.description === "Facility usage")?.name] === "Active"
+            )?.length
           : state.data?.length,
         filter: action?.payload?.filter,
       };
@@ -351,7 +361,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       cacheTime: 0,
       staleTime: 0,
       select: (data) => {
-
         const currentSchema = data?.["HCM-ADMIN-CONSOLE"]?.schemas?.filter((i) => i?.title === schemaFilter);
         const result = Object.values(currentSchema?.[0]?.properties)?.flatMap((arr) => arr?.map((item) => item));
         return result;
@@ -457,21 +466,15 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   }, [lowestHierarchy]);
 
   const getFileStoreId = () => {
-
-
     //switch (formData?.name) {
     switch (formData?.config?.[0]?.body?.[0]?.key) {
-
       case "uploadFacilityMapping":
-
         return sessionData?.["HCM_CAMPAIGN_UPLOAD_FACILITY_DATA"]?.uploadFacility?.uploadedFile?.[0]?.filestoreId;
         break;
       case "uploadUserMapping":
-
         return sessionData?.["HCM_CAMPAIGN_UPLOAD_USER_DATA"]?.uploadUser?.uploadedFile?.[0]?.filestoreId;
         break;
       default:
-
         return null;
         break;
     }
@@ -543,11 +546,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
 
     // Translate properties keys and their 'name' fields
     Object.keys(schema?.properties).forEach((key) => {
-      const translatedKey = (key);
-      const translatedProperty = { ...schema.properties[key], name: (schema.properties[key].name) };
+      const translatedKey = key;
+      const translatedProperty = { ...schema.properties[key], name: schema.properties[key].name };
       newProp[translatedKey] = translatedProperty;
     });
-    const newRequired = schema?.required.map((e) => (e));
+    const newRequired = schema?.required.map((e) => e);
 
     newSchema.properties = newProp;
     newSchema.required = newRequired;
@@ -555,61 +558,63 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
     return { ...newSchema };
   };
 
-  useEffect(async () => {
-    if (convertedSchema && Object.keys(convertedSchema).length > 0) {
-      const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
-      const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
-      const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
+  useEffect(() => {
+    async function useeffectuploaddatamapping2() {
+      if (convertedSchema && Object.keys(convertedSchema).length > 0) {
+        const newFacilitySchema = await translateSchema(convertedSchema?.facilityWithBoundary);
+        const newBoundarySchema = await translateSchema(convertedSchema?.boundary);
+        const newUserSchema = await translateSchema(convertedSchema?.userWithBoundary);
 
-      const filterByUpdateFlag = (schemaProperties) => {
-        return Object.keys(schemaProperties).filter((key) => {
-          return schemaProperties[key].isUpdate !== true;
-        });
-      };
+        const filterByUpdateFlag = (schemaProperties) => {
+          return Object.keys(schemaProperties).filter((key) => {
+            return schemaProperties[key].isUpdate !== true;
+          });
+        };
 
-      const headers = {
-        boundary: filterByUpdateFlag(newBoundarySchema?.properties),
-        facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
-        userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
-      };
+        const headers = {
+          boundary: filterByUpdateFlag(newBoundarySchema?.properties),
+          facilityWithBoundary: filterByUpdateFlag(newFacilitySchema?.properties),
+          userWithBoundary: filterByUpdateFlag(newUserSchema?.properties),
+        };
 
-      const schema = {
-        boundary: newBoundarySchema,
-        facilityWithBoundary: newFacilitySchema,
-        userWithBoundary: newUserSchema,
-      };
+        const schema = {
+          boundary: newBoundarySchema,
+          facilityWithBoundary: newFacilitySchema,
+          userWithBoundary: newUserSchema,
+        };
 
-
-      setTranslatedSchema(schema);
+        setTranslatedSchema(schema);
+      }
     }
+    useeffectuploaddatamapping2();
   }, [convertedSchema]);
 
-  useEffect(async () => {
-    if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code)) {
-      const facility = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility")?.[0]
-      );
-      const boundary = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter(
-          (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code)
-        )?.[0]
-      );
-      const user = await convertIntoSchema(
-        SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user")?.[0]
-      );
-      const schema = {
-        boundary: boundary,
-        facilityWithBoundary: facility,
-        userWithBoundary: user,
-      };
+  useEffect(() => {
+    async function useEffectuploaddatamappineuseeffect() {
+      if (SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas && totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code) {
+        const facility = await convertIntoSchema(
+          SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "facility")?.[0]
+        );
+        const boundary = await convertIntoSchema(
+          SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter(
+            (item) => item.title === "boundaryWithTarget" && item.campaignType === totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code
+          )?.[0]
+        );
+        const user = await convertIntoSchema(SchemasAJV?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.schemas?.filter((item) => item.title === "user")?.[0]);
+        const schema = {
+          boundary: boundary,
+          facilityWithBoundary: facility,
+          userWithBoundary: user,
+        };
 
-      setConvertedSchema(schema);
+        setConvertedSchema(schema);
+      }
     }
+    useEffectuploaddatamappineuseeffect();
   }, [SchemasAJV, type]);
 
   const validateData = (data) => {
-
-    const roleKey = "HCM_ADMIN_CONSOLE_USER_ROLE"
+    const roleKey = "HCM_ADMIN_CONSOLE_USER_ROLE";
     const roles = data[roleKey];
     // Role max limit validation (if it's an array)
     if (typeof roles === "string" && roles.split(",").length > 5) {
@@ -617,31 +622,30 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
       return;
     }
     // Phone Number conversion
-    const phoneNumberKey = (Schemas?.find((i) => i.description === "Phone Number")?.name);
-    if (data[phoneNumberKey] !== undefined) {
-      data[phoneNumberKey] = Number(data[phoneNumberKey]);
+    const phoneNumberKey = Schemas?.find((i) => i.description === "Phone Number")?.name;
+    const isValidPhone = /^0\d{10}$/.test(data[phoneNumberKey]);
+    if (data[phoneNumberKey] !== undefined && isValidPhone) {
+      data[phoneNumberKey] = data[phoneNumberKey];
     }
 
     // Capacity conversion
-    const capacityKey = (Schemas?.find((i) => i.description === "Capacity")?.name);
+    const capacityKey = Schemas?.find((i) => i.description === "Capacity")?.name;
     if (data[capacityKey] !== undefined) {
-
       data[capacityKey] = Number(data[capacityKey]);
     }
-
 
     const ajv = new Ajv({ strict: false }); // Initialize Ajv
     let validate = ajv.compile(translatedSchema[type]);
 
     const errors = []; // Array to hold validation errors
 
-    const boundaryCodeFac = (Schemas?.find((i) => i.description === "Boundary Code")?.name);
+    const boundaryCodeFac = Schemas?.find((i) => i.description === "Boundary Code")?.name;
     if (data[boundaryCodeFac]?.trim()?.length === 0) {
       setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
       return;
     }
 
-    const boundaryCode = (Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name);
+    const boundaryCode = Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name;
     if (data[boundaryCode]?.trim()?.length === 0) {
       setShowToast({ label: t("HCM_MAPPING_NO_BOUNDARY_ERROR"), isError: "error" });
       return;
@@ -659,13 +663,11 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         .map(({ index, errors }) => {
           const formattedErrors = errors
             .map((error) => {
-
               let instancePath = error.instancePath || ""; // Assign an empty string if dataPath is not available
               if (error.instancePath === "/Phone Number (Mandatory)") {
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")}  ${t("HCM_DATA_SHOULD_BE_10_DIGIT")}`;
               }
               if (instancePath.startsWith("/")) {
-
                 instancePath = instancePath.slice(1);
               }
               if (error.keyword === "required") {
@@ -673,7 +675,6 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(missingProperty)} ${t("HCM_DATA_SHOULD_NOT_BE_EMPTY")}`;
               }
               if (error.keyword === "type" && error.message === "must be string") {
-
                 return `${t("HCM_DATA_AT_ROW")} ${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t("HCM_IS_INVALID")}`;
               }
               let formattedError = `${t("HCM_IN_COLUMN")} ${t(instancePath)} ${t(error.message)}`;
@@ -714,38 +715,31 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
         const userName = childData?.HCM_ADMIN_CONSOLE_USER_NAME;
         const facilityName = childData?.HCM_ADMIN_CONSOLE_FACILITY_NAME;
 
-
-        // Validation logic for username 
+        // Validation logic for username
         if (userName !== undefined) {
-
           if (typeof userName === "string") {
             const hasAlphabet = /[a-zA-Z]/.test(userName);
             if (!hasAlphabet) {
               setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
               return false;
             }
-          }
-          else {
+          } else {
             setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_USER_NAME_TYPE_ERROR"), isError: "error" });
             return false;
           }
-
         }
         // for validation facility name
         if (facilityName !== undefined) {
-
           if (typeof facilityName === "string") {
             const hasAlphabet = /[a-zA-Z]/.test(facilityName);
             if (!hasAlphabet) {
               setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
               return false;
             }
-          }
-          else {
+          } else {
             setShowToast({ label: t("HCM_CAMPAIGN_CONSOLE_FACILITY_NAME_TYPE_ERROR"), isError: "error" });
             return false;
           }
-
         }
 
         if (validationResult.isValid) {
@@ -799,326 +793,323 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
   const columns =
     currentCategories === "HCM_UPLOAD_USER_MAPPING"
       ? [
-        {
-          name: t("NAME_OF_PERSON"),
-          selector: (row) => {
-            return row?.[(Schemas?.find((i) => i.description === "User Name")?.name)] || t("NA");
+          {
+            name: t("NAME_OF_PERSON"),
+            selector: (row) => {
+              return row?.[Schemas?.find((i) => i.description === "User Name")?.name] || t("NA");
+            },
+            sortable: true,
           },
-          sortable: true,
-        },
-        {
-          name: t("PHONE_NUMBER"),
-          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Phone Number")?.name)] || t("NA"),
-          sortable: true,
-        },
-        {
-          name: t("ROLE"),
-          selector: (row) => row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA"),
-          sortable: true,
-          cell: (row) => {
-
-            const baseName = Schemas?.find(i => i.description === "User Role")?.name;
-            if (!baseName) return t("NA");
-
-            // 1. grab only the keys that start with `${baseName}_MULTISELECT_`
-            // 2. filter out any null/undefined values
-            // 3. map to the actual values
-            const values = Object
-              .keys(row)
-              .filter(key => key.startsWith(`${baseName}_MULTISELECT_`) && row[key] != null)
-              .map(key => t(row[key]));
-            return (
-              <div
-                title={row?.[(Schemas?.find((i) => i.description === "User Role")?.name)] || t("NA")}
-                style={{
-                  whiteSpace: "nowrap",
-                  overflow: "hidden",
-                  textOverflow: "ellipsis",
-                  maxWidth: "150px",
-                }}
-              >
-                {values?.join(",") || t("NA")}
-              </div>
-            )
-          }
-        },
-        {
-          name: t("EMPLOYEMENT_TYPE"),
-          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Employement Type")?.name)] || t("NA"),
-          sortable: true,
-
-        },
-        {
-          name: t("ACTIVE_STATUS"),
-          cell: (row) => {
-            // row?.["Active / Inactive"] || t("NA")
-            const a = [
-              {
-                code: "Active",
-              },
-              {
-                code: "Inactive",
-              },
-            ];
-            return (
-              <Dropdown
-                className="roleTableCell"
-                selected={a?.find((item) => item?.code === row?.[(Schemas?.find((i) => i.description === "User Usage")?.name)]) || null}
-                isMandatory={true}
-                option={a}
-                select={(value) => {
-                  dispatch({
-                    type: "UPDATE_STATUS",
-                    currentCategories: currentCategories,
-                    schemas: Schemas,
-                    t: t,
-                    payload: {
-                      row: row,
-                      selectedStatus: value,
-                    },
-                  });
-                }}
-                optionKey="code"
-                t={t}
-              />
-            );
+          {
+            name: t("PHONE_NUMBER"),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Phone Number")?.name] || t("NA"),
+            sortable: true,
           },
-        },
-        {
-          name: t("BOUNDARY"),
-          cell: (row) => {
-            const listOfBoundaries = row?.[(Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name)]?.split(",") || [];
-            return (
-              <div>
-                <div>
-                  {listOfBoundaries.slice(0, 2).map((item, index) => (
-                    <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
-                  ))}
-                  {listOfBoundaries?.length > 2 && (
-                    <Button
-                      label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
-                      onClick={() => setChipPopUpRowId(listOfBoundaries)}
-                      variation="link"
-                      style={{
-                        height: "2rem",
-                        minWidth: "4.188rem",
-                        minHeight: "2rem",
-                        padding: "0.5rem",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                      textStyles={{
-                        height: "auto",
-                        fontSize: "0.875rem",
-                        fontWeight: "400",
-                        width: "100%",
-                        lineHeight: "16px",
-                        color: "#C84C0E",
-                      }}
-                    />
-                  )}
+          {
+            name: t("ROLE"),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "User Role")?.name] || t("NA"),
+            sortable: true,
+            cell: (row) => {
+              const baseName = Schemas?.find((i) => i.description === "User Role")?.name;
+              if (!baseName) return t("NA");
+
+              // 1. grab only the keys that start with `${baseName}_MULTISELECT_`
+              // 2. filter out any null/undefined values
+              // 3. map to the actual values
+              const values = Object.keys(row)
+                .filter((key) => key.startsWith(`${baseName}_MULTISELECT_`) && row[key] != null)
+                .map((key) => t(row[key]));
+              return (
+                <div
+                  title={row?.[Schemas?.find((i) => i.description === "User Role")?.name] || t("NA")}
+                  style={{
+                    whiteSpace: "nowrap",
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    maxWidth: "150px",
+                  }}
+                >
+                  {values?.join(",") || t("NA")}
                 </div>
+              );
+            },
+          },
+          {
+            name: t("EMPLOYEMENT_TYPE"),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Employement Type")?.name] || t("NA"),
+            sortable: true,
+          },
+          {
+            name: t("ACTIVE_STATUS"),
+            cell: (row) => {
+              // row?.["Active / Inactive"] || t("NA")
+              const a = [
+                {
+                  code: "Active",
+                },
+                {
+                  code: "Inactive",
+                },
+              ];
+              return (
+                <Dropdown
+                  className="roleTableCell"
+                  selected={a?.find((item) => item?.code === row?.[Schemas?.find((i) => i.description === "User Usage")?.name]) || null}
+                  isMandatory={true}
+                  option={a}
+                  select={(value) => {
+                    dispatch({
+                      type: "UPDATE_STATUS",
+                      currentCategories: currentCategories,
+                      schemas: Schemas,
+                      t: t,
+                      payload: {
+                        row: row,
+                        selectedStatus: value,
+                      },
+                    });
+                  }}
+                  optionKey="code"
+                  t={t}
+                />
+              );
+            },
+          },
+          {
+            name: t("BOUNDARY"),
+            cell: (row) => {
+              const listOfBoundaries = row?.[Schemas?.find((i) => i.description === "Boundary Code (Mandatory)")?.name]?.split(",") || [];
+              return (
+                <div>
+                  <div>
+                    {listOfBoundaries.slice(0, 2).map((item, index) => (
+                      <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                    ))}
+                    {listOfBoundaries?.length > 2 && (
+                      <Button
+                        label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        onClick={() => setChipPopUpRowId(listOfBoundaries)}
+                        variation="link"
+                        style={{
+                          height: "2rem",
+                          minWidth: "4.188rem",
+                          minHeight: "2rem",
+                          padding: "0.5rem",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        textStyles={{
+                          height: "auto",
+                          fontSize: "0.875rem",
+                          fontWeight: "400",
+                          width: "100%",
+                          lineHeight: "16px",
+                          color: "#C84C0E",
+                        }}
+                      />
+                    )}
+                  </div>
+                  <Button
+                    type={"button"}
+                    size={"small"}
+                    isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
+                    variation="link"
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    onClick={() => {
+                      setShowPopUp(row);
+                    }}
+                  />
+                </div>
+              );
+            },
+          },
+          {
+            name: t("MAPPING_EDIT"),
+            cell: (row) => {
+              return (
                 <Button
                   type={"button"}
                   size={"small"}
-                  isDisabled={row?.[t(Schemas?.find((i) => i.description === "User Usage")?.name)] === "Inactive" ? true : false}
-                  variation="link"
-                  label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  icon={"Edit"}
+                  // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  label={t("MAPPING_EDIT")}
                   onClick={() => {
-                    setShowPopUp(row);
+                    setShowEditPopUp(row);
                   }}
                 />
-              </div>
-            );
+              );
+            },
           },
-        },
-        {
-          name: t("MAPPING_EDIT"),
-          cell: (row) => {
-            return (
-              <Button
-                type={"button"}
-                size={"small"}
-                isDisabled={row?.editable ? false : true}
-                variation={"primary"}
-                icon={"Edit"}
-                // label={listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
-                label={t("MAPPING_EDIT")}
-                onClick={() => {
-                  setShowEditPopUp(row);
-                }}
-              />
-            );
+          {
+            name: t("MAPPING_DELETE"),
+            cell: (row) => {
+              return (
+                <Button
+                  type={"button"}
+                  size={"small"}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  icon={"Delete"}
+                  label={t("MAPPING_DELETE")}
+                  onClick={() => {
+                    dispatch({
+                      type: "DELETE_DATA",
+                      payload: row,
+                      schemas: Schemas,
+                      t: t,
+                    });
+                  }}
+                />
+              );
+            },
           },
-        },
-        {
-          name: t("MAPPING_DELETE"),
-          cell: (row) => {
-            return (
-              <Button
-                type={"button"}
-                size={"small"}
-                isDisabled={row?.editable ? false : true}
-                variation={"primary"}
-                icon={"Delete"}
-                label={t("MAPPING_DELETE")}
-                onClick={() => {
-                  dispatch({
-                    type: "DELETE_DATA",
-                    payload: row,
-                    schemas: Schemas,
-                    t: t,
-                  });
-                }}
-              />
-            );
-          },
-        },
-      ]
+        ]
       : [
-        {
-          name: t("FACILITY_NAME"),
-          selector: (row) => {
-            return row?.[(Schemas?.find((i) => i.description === "Facility Name")?.name)] || t("NA");
+          {
+            name: t("FACILITY_NAME"),
+            selector: (row) => {
+              return row?.[Schemas?.find((i) => i.description === "Facility Name")?.name] || t("NA");
+            },
+            sortable: true,
           },
-          sortable: true,
-        },
-        {
-          name: t("FACILITY_TYPE"),
-          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Facility type")?.name)] || t("NA"),
-          sortable: true,
-        },
-        {
-          name: t("FACILITY_STATUS"),
-          selector: (row) => row?.[(Schemas?.find((i) => i.description === "Facility status")?.name)] || t("NA"),
-          sortable: true,
-        },
-        {
-          name: t("FACILITY_USAGE"),
-          cell: (row) => {
-            // row?.["Facility Usage"] || t("NA"),
-            const b = [
-              {
-                code: "Active",
-              },
-              {
-                code: "Inactive",
-              },
-            ];
-            return (
-              <Dropdown
-                className="roleTableCell"
-                selected={b?.find((item) => item?.code === row?.[(Schemas?.find((i) => i.description === "Facility usage")?.name)]) || null}
-                isMandatory={true}
-                option={b}
-                select={(value) => {
-                  dispatch({
-                    type: "UPDATE_STATUS",
-                    t: t,
-                    currentCategories: currentCategories,
-                    schemas: Schemas,
-                    payload: {
-                      row: row,
-                      selectedStatus: value,
-                    },
-                  });
-                }}
-                optionKey="code"
-                t={t}
-              />
-            );
+          {
+            name: t("FACILITY_TYPE"),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Facility type")?.name] || t("NA"),
+            sortable: true,
           },
-        },
-        {
-          name: t("BOUNDARY"),
-          cell: (row) => {
-            const listOfBoundaries = row?.[(Schemas?.find((i) => i.description === "Boundary Code")?.name)]?.split(",") || [];
-            return (
-              <div>
+          {
+            name: t("FACILITY_STATUS"),
+            selector: (row) => row?.[Schemas?.find((i) => i.description === "Facility status")?.name] || t("NA"),
+            sortable: true,
+          },
+          {
+            name: t("FACILITY_USAGE"),
+            cell: (row) => {
+              // row?.["Facility Usage"] || t("NA"),
+              const b = [
+                {
+                  code: "Active",
+                },
+                {
+                  code: "Inactive",
+                },
+              ];
+              return (
+                <Dropdown
+                  className="roleTableCell"
+                  selected={b?.find((item) => item?.code === row?.[Schemas?.find((i) => i.description === "Facility usage")?.name]) || null}
+                  isMandatory={true}
+                  option={b}
+                  select={(value) => {
+                    dispatch({
+                      type: "UPDATE_STATUS",
+                      t: t,
+                      currentCategories: currentCategories,
+                      schemas: Schemas,
+                      payload: {
+                        row: row,
+                        selectedStatus: value,
+                      },
+                    });
+                  }}
+                  optionKey="code"
+                  t={t}
+                />
+              );
+            },
+          },
+          {
+            name: t("BOUNDARY"),
+            cell: (row) => {
+              const listOfBoundaries = row?.[Schemas?.find((i) => i.description === "Boundary Code")?.name]?.split(",") || [];
+              return (
                 <div>
-                  {listOfBoundaries.slice(0, 2).map((item, index) => (
-                    <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
-                  ))}
-                  {listOfBoundaries?.length > 2 && (
-                    <Button
-                      label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
-                      onClick={() => setChipPopUpRowId(listOfBoundaries)}
-                      variation="link"
-                      style={{
-                        height: "2rem",
-                        minWidth: "4.188rem",
-                        minHeight: "2rem",
-                        padding: "0.5rem",
-                        justifyContent: "center",
-                        alignItems: "center",
-                      }}
-                      textStyles={{
-                        height: "auto",
-                        fontSize: "0.875rem",
-                        fontWeight: "400",
-                        width: "100%",
-                        lineHeight: "16px",
-                        color: "#C84C0E",
-                      }}
-                    />
-                  )}
+                  <div>
+                    {listOfBoundaries.slice(0, 2).map((item, index) => (
+                      <Chip className="" error="" extraStyles={{}} iconReq="" hideClose={true} text={t(item)} />
+                    ))}
+                    {listOfBoundaries?.length > 2 && (
+                      <Button
+                        label={`+${listOfBoundaries?.length - 2} ${t("ES_MORE")}`}
+                        onClick={() => setChipPopUpRowId(listOfBoundaries)}
+                        variation="link"
+                        style={{
+                          height: "2rem",
+                          minWidth: "4.188rem",
+                          minHeight: "2rem",
+                          padding: "0.5rem",
+                          justifyContent: "center",
+                          alignItems: "center",
+                        }}
+                        textStyles={{
+                          height: "auto",
+                          fontSize: "0.875rem",
+                          fontWeight: "400",
+                          width: "100%",
+                          lineHeight: "16px",
+                          color: "#C84C0E",
+                        }}
+                      />
+                    )}
+                  </div>
+                  <Button
+                    type={"button"}
+                    size={"small"}
+                    isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
+                    variation={"link"}
+                    label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                    onClick={() => {
+                      setShowPopUp(row);
+                    }}
+                  />
                 </div>
+              );
+            },
+          },
+          {
+            name: t("MAPPING_EDIT"),
+            cell: (row) => {
+              return (
                 <Button
                   type={"button"}
                   size={"small"}
-                  isDisabled={row?.[t(Schemas?.find((i) => i.description === "Facility usage")?.name)] === "Inactive" ? true : false}
-                  variation={"link"}
-                  label={Array.isArray(listOfBoundaries) && listOfBoundaries?.length > 0 ? t("CHANGE_BOUNDARY") : t("ADD _BOUNDARY")}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  label={t("MAPPING_EDIT")}
+                  icon={"Edit"}
                   onClick={() => {
-                    setShowPopUp(row);
+                    setShowEditPopUp(row);
                   }}
                 />
-              </div>
-            );
+              );
+            },
           },
-        },
-        {
-          name: t("MAPPING_EDIT"),
-          cell: (row) => {
-            return (
-              <Button
-                type={"button"}
-                size={"small"}
-                isDisabled={row?.editable ? false : true}
-                variation={"primary"}
-                label={t("MAPPING_EDIT")}
-                icon={"Edit"}
-                onClick={() => {
-                  setShowEditPopUp(row);
-                }}
-              />
-            );
+          {
+            name: t("MAPPING_DELETE"),
+            cell: (row) => {
+              return (
+                <Button
+                  type={"button"}
+                  size={"small"}
+                  isDisabled={row?.editable ? false : true}
+                  variation={"primary"}
+                  label={t("MAPPING_DELETE")}
+                  icon={"Delete"}
+                  onClick={() => {
+                    dispatch({
+                      type: "DELETE_DATA",
+                      payload: row,
+                      schemas: Schemas,
+                      t: t,
+                    });
+                  }}
+                />
+              );
+            },
           },
-        },
-        {
-          name: t("MAPPING_DELETE"),
-          cell: (row) => {
-            return (
-              <Button
-                type={"button"}
-                size={"small"}
-                isDisabled={row?.editable ? false : true}
-                variation={"primary"}
-                label={t("MAPPING_DELETE")}
-                icon={"Delete"}
-                onClick={() => {
-                  dispatch({
-                    type: "DELETE_DATA",
-                    payload: row,
-                    schemas: Schemas,
-                    t: t,
-                  });
-                }}
-              />
-            );
-          },
-        },
-      ];
+        ];
   return (
     <Fragment>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
@@ -1379,16 +1370,19 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
           equalWidthButtons={true}
           children={[
             <div>
-
               <LabelFieldPair key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
-                <CardLabel style={{
-                  marginBottom: "0.4rem",
-                  width: "19rem",
-                  flexShrink: 0,
-                  display: "flex",
-                  wordBreak: "break-word",
-                  whiteSpace: "normal",
-                }}>{t("CHOOSE_BOUNDARY_LEVEL")}</CardLabel>
+                <CardLabel
+                  style={{
+                    marginBottom: "0.4rem",
+                    width: "19rem",
+                    flexShrink: 0,
+                    display: "flex",
+                    wordBreak: "break-word",
+                    whiteSpace: "normal",
+                  }}
+                >
+                  {t("CHOOSE_BOUNDARY_LEVEL")}
+                </CardLabel>
                 <Dropdown
                   className="mappingPopUp"
                   selected={selectedLevel}
@@ -1403,21 +1397,28 @@ function UploadDataMapping({ formData, onSelect, currentCategories }) {
                   t={t}
                 />
               </LabelFieldPair>
-              <LabelFieldPair className={"multiselect-label-field"} key={1} style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}>
-                <CardLabel style={{
-                  marginBottom: "0.4rem",
-                  width: "19rem",
-                  flexShrink: 0,
-                  display: "flex",
-                  wordBreak: "break-word",
-                  whiteSpace: "normal",
-                }}>{t("CHOOSE_BOUNDARY")}</CardLabel>
+              <LabelFieldPair
+                className={"multiselect-label-field"}
+                key={1}
+                style={{ display: "flex", alignItems: "center", gap: "1rem", width: "100%" }}
+              >
+                <CardLabel
+                  style={{
+                    marginBottom: "0.4rem",
+                    width: "19rem",
+                    flexShrink: 0,
+                    display: "flex",
+                    wordBreak: "break-word",
+                    whiteSpace: "normal",
+                  }}
+                >
+                  {t("CHOOSE_BOUNDARY")}
+                </CardLabel>
                 <MultiSelectDropdown
                   variant="nestedmultiselect"
                   props={{
                     className: "data-mapping-dropdown",
                     style: { width: "100%" },
-
                   }}
                   t={t}
                   options={

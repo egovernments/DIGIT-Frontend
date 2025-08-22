@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Switch, useLocation } from "react-router-dom";
-import { useHistory } from "react-router-dom";
+import { Routes, useLocation, Route } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { PrivateRoute, AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
+import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
 import SetupCampaign from "./SetupCampaign";
 import ConfigureApp from "./ConfigureApp";
 import { CreateChecklist } from "./CreateChecklist";
@@ -25,6 +25,8 @@ import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
+import AppConfigurationTabLayer from "./appConfigurationRedesign/AppConfigurationTabLayer";
+// import AppConfigurationTabLayer from "./appConfigurationRedesign//AppConfigurationTabLayer";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -37,7 +39,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
 
   const search = useLocation().search;
   const queryParams = new URLSearchParams(search);
-  const history = useHistory();
+  const navigate = useNavigate();
   const url = Digit.Hooks.useQueryParams();
   const campaignNumber = url?.campaignNumber;
   const campaignId = url?.campaignId;
@@ -86,14 +88,14 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
         pathVar.match("view-details") ||
-          pathVar.match("setup-campaign") ||
-          pathVar.match("app-configuration-redesign") ||
-          pathVar.match("app-modules") ||
-          pathVar.match("app-features") ||
-          pathVar === "update-dates-boundary" ||
-          pathVar === "update-campaign" ||
-          pathVar === "checklist/search" ||
-          pathVar === "upload-screen"
+        pathVar.match("setup-campaign") ||
+        pathVar.match("app-configuration-redesign") ||
+        pathVar.match("app-modules") ||
+        pathVar.match("app-features") ||
+        pathVar === "update-dates-boundary" ||
+        pathVar === "update-campaign" ||
+        pathVar === "checklist/search" ||
+        pathVar === "upload-screen"
           ? true
           : false,
     },
@@ -169,7 +171,7 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
  * corresponding components based on the path provided.
  * @returns The `App` component is returning a JSX structure that includes a `div` with a className of
  * "wbh-header-container" containing a `CampaignBreadCrumb` component and a `Switch` component. Inside
- * the `Switch` component, there are several `PrivateRoute` components with different paths and
+ * the `Switch` component, there are several `Route` components with different paths and
  * corresponding components such as `UploadBoundaryData`, `CycleConfiguration`, `DeliveryRule`, `
  */
 const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: propsHierarchyData }) => {
@@ -190,18 +192,15 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
 
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     }
     if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     }
     return () => {
       if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-
         window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
         window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
       }
@@ -212,12 +211,46 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
-          window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
+        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
         <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
       </div>
-      <Switch>
+      <AppContainer className="campaign">
+        <Routes>
+          <Route path={`create-campaign/upload-boundary-data`} element={<UploadBoundaryData />} />
+          <Route path={`create-campaign/cycle-configure`} element={<CycleConfiguration />} />
+          <Route path={`create-campaign/delivery-details`} element={<DeliveryRule />} />
+          <Route path={`setup-campaign`} element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+          <Route path={`my-campaign`} element={<MyCampaign />} />
+          <Route path={`my-campaign-new`} element={<MyCampaignNew />} />
+          <Route path={`fetch-from-microplan`} element={<FetchFromMicroplan />} />
+          <Route path={`preview`} element={<CampaignSummary />} />
+          <Route path={`response`} element={<Response />} />
+          <Route path={`add-product`} element={<AddProduct />} />
+          <Route path={`configure-app`} element={<ConfigureApp />} />
+          <Route path={`update-dates-boundary`} element={<UpdateDatesWithBoundaries />} />
+          <Route path={`checklist/create`} element={<CreateChecklist />} />
+          <Route path={`checklist/search`} element={<SearchChecklist />} />
+          <Route path={`checklist/view`} element={<ViewChecklist />} />
+          <Route path={`checklist/update`} element={<UpdateChecklist />} />
+          <Route path={`boundary/home`} element={<BoundaryHome />} />
+          <Route path={`boundary/create`} element={<BoundaryRelationCreate />} />
+          <Route path={`boundary/view-all-hierarchy`} element={<ViewBoundary />} />
+          <Route path={`boundary/data`} element={<ViewHierarchy />} />
+          <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
+          <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
+          <Route path={`app-configuration-redesign`} element={<AppConfigurationTabLayer />} />
+          <Route path={`create-campaign`} element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+          <Route path={`campaign-home`} element={<CampaignHome />} />
+          <Route path={`view-details`} element={<CampaignDetails />} />
+          <Route path={`app-modules`} element={<AppModule />} />
+          <Route path={`app-features`} element={<AppFeatures />} />
+          <Route path={`upload-screen`} element={<NewUploadScreen />} />
+          {/* <HelpInfoCard appPath={path} location={location} /> */}
+        </Routes>
+      </AppContainer>
+      {/* <Switch>
         <AppContainer className="campaign">
           <PrivateRoute path={`${path}/create-campaign/upload-boundary-data`} component={() => <UploadBoundaryData />} />
           <PrivateRoute path={`${path}/create-campaign/cycle-configure`} component={() => <CycleConfiguration />} />
@@ -256,7 +289,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/upload-screen`} component={() => <NewUploadScreen />} />
           <HelpInfoCard appPath={path} location={location} />
         </AppContainer>
-      </Switch>
+      </Switch> */}
     </React.Fragment>
   );
 };

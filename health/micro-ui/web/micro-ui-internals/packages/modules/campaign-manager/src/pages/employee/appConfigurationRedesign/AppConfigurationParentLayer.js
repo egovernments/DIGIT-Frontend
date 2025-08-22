@@ -2,10 +2,10 @@ import React, { useEffect, useReducer, useState, Fragment } from "react";
 import { Loader, Tag, TextBlock, Toast } from "@egovernments/digit-ui-components";
 import { Header } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ImpelComponentWrapper from "./ImpelComponentWrapper";
 import { restructure, reverseRestructure } from "../../../utils/appConfigHelpers";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const dispatcher = (state, action) => {
   switch (action.key) {
@@ -48,7 +48,7 @@ const AppConfigurationParentRedesign = ({
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
-  const history = useHistory();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
@@ -136,7 +136,7 @@ const AppConfigurationParentRedesign = ({
     },
   };
 
-  const { isLoading: isCacheLoading, data: cacheData, refetch: refetchCache, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
+  const { isLoading: isCacheLoading, data: cacheData, refetch: refetchCache } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
 
@@ -316,11 +316,15 @@ const AppConfigurationParentRedesign = ({
         // All updates succeeded
         setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
         setChangeLoader(false);
-        history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
-          message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
-          preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
-          actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
-          actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+        queryClient.invalidateQueries(`APPCONFIG-${campaignNumber}`);
+
+        navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
+          state: {
+            message: "APP_CONFIGURATION_SUCCESS_RESPONSE",
+            preText: "APP_CONFIGURATION_SUCCESS_RESPONSE_PRE_TEXT",
+            actionLabel: "APP_CONFIG_RESPONSE_ACTION_BUTTON",
+            actionLink: `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
+          },
         });
         return;
       } catch (error) {

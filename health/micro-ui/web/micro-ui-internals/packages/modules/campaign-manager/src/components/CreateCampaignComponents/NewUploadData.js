@@ -40,8 +40,8 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   const parentId = searchParams.get("parentId");
   const [showExitWarning, setShowExitWarning] = useState(false);
   const campaignName = props?.props?.sessionData?.HCM_CAMPAIGN_NAME?.campaignName || searchParams.get("campaignName");
-  const [uploadLoader , setUploadLoader] = useState(false);
-   const [showUploadToast, setShowUploadToast] = useState(null);
+  const [uploadLoader, setUploadLoader] = useState(false);
+  const [showUploadToast, setShowUploadToast] = useState(null);
   // const { data: Schemas, isLoading: isThisLoading } = Digit.Hooks.useCustomMDMS(
   //   tenantId,
   //   CONSOLE_MDMS_MODULENAME,
@@ -289,26 +289,29 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
   //   }
   // }, [convertedSchema]);
 
-  useEffect(async () => {
-    if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
-      const newReadMeFacility = await translateReadMeInfo(
-        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
-      );
-      const newReadMeUser = await translateReadMeInfo(
-        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
-      );
-      const newReadMeboundary = await translateReadMeInfo(
-        readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
-      );
+  useEffect(() => {
+    async function fetchReadMeInfo() {
+      if (readMe?.[CONSOLE_MDMS_MODULENAME]) {
+        const newReadMeFacility = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
+        const newReadMeUser = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
+        const newReadMeboundary = await translateReadMeInfo(
+          readMe?.[CONSOLE_MDMS_MODULENAME]?.ReadMeConfig?.filter((item) => item.type === type)?.[0]?.texts
+        );
 
-      const readMeText = {
-        boundary: newReadMeboundary,
-        facility: newReadMeFacility,
-        user: newReadMeUser,
-      };
+        const readMeText = {
+          boundary: newReadMeboundary,
+          facility: newReadMeFacility,
+          user: newReadMeUser,
+        };
 
-      setReadMeInfo(readMeText);
+        setReadMeInfo(readMeText);
+      }
     }
+    fetchReadMeInfo();
   }, [readMe?.[CONSOLE_MDMS_MODULENAME], type]);
 
   useEffect(() => {
@@ -883,50 +886,47 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
       setShowToast({ key: "error", label: t("HCM_ERROR_MORE_THAN_ONE_FILE") });
       return;
     }
-    try{
-    setFileName(file?.[0]?.name);
-    setUploadLoader(true);
-    const module = "HCM-ADMIN-CONSOLE-CLIENT";
-    const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
-     if (!fileStoreIds || fileStoreIds.length === 0) {
-      setUploadLoader(false);
-      setShowToast({key: "error" , label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED")})
+    try {
+      setFileName(file?.[0]?.name);
+      setUploadLoader(true);
+      const module = "HCM-ADMIN-CONSOLE-CLIENT";
+      const { data: { files: fileStoreIds } = {} } = await Digit.UploadServices.MultipleFilesStorage(module, file, tenantId);
+      if (!fileStoreIds || fileStoreIds.length === 0) {
+        setUploadLoader(false);
+        setShowToast({ key: "error", label: t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED") });
         throw new Error(t("HCM_CONSOLE_ERROR_FILE_UPLOAD_FAILED"));
       }
-    const filesArray = [fileStoreIds?.[0]?.fileStoreId];
-    const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
-    if (!fileUrl || fileUrl.length === 0) {
-       setUploadLoader(false);
+      const filesArray = [fileStoreIds?.[0]?.fileStoreId];
+      const { data: { fileStoreIds: fileUrl } = {} } = await Digit.UploadServices.Filefetch(filesArray, tenantId);
+      if (!fileUrl || fileUrl.length === 0) {
+        setUploadLoader(false);
         throw new Error(t("HCM_CONSOLE_ERROR_FILE_FETCH_FAILED"));
       }
-    const fileData = fileUrl
-      .map((i) => {
-        const urlParts = i?.url?.split("/");
-        const fileName = file?.[0]?.name;
-        const id = fileUrl?.[0]?.id;
-        // const fileType = type === "facility" ? "facility" : type === "userWithBoundary" ? "user" : type;
-        const fileType = type;
-        return {
-          // ...i,
-          filestoreId: id,
-          resourceId: resourceId,
-          filename: fileName,
-          type: fileType,
-        };
-      })
-      .map(({ id, ...rest }) => rest);
-       setUploadLoader(false);
-    setUploadedFile(fileData);
-    setErrorsType(0);
-    // const validate = await validateExcel(file[0]);
+      const fileData = fileUrl
+        .map((i) => {
+          const urlParts = i?.url?.split("/");
+          const fileName = file?.[0]?.name;
+          const id = fileUrl?.[0]?.id;
+          // const fileType = type === "facility" ? "facility" : type === "userWithBoundary" ? "user" : type;
+          const fileType = type;
+          return {
+            // ...i,
+            filestoreId: id,
+            resourceId: resourceId,
+            filename: fileName,
+            type: fileType,
+          };
+        })
+        .map(({ id, ...rest }) => rest);
+      setUploadLoader(false);
+      setUploadedFile(fileData);
+      setErrorsType(0);
+      // const validate = await validateExcel(file[0]);
+    } catch (error) {
+      setShowUploadToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD") });
+    } finally {
+      setUploadLoader(false);
     }
-    catch(error){
-     setShowUploadToast({ key: "error", label: t("HCM_ERROR_FILE_UPLOAD") });
-    
-    }
-    finally {
-    setUploadLoader(false);
-  }
   };
 
   const onFileDelete = (file, index) => {
@@ -1217,9 +1217,9 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
         {uploadLoader && <Loader page={true} variant={"OverlayLoader"} loaderText={t("CAMPAIGN_UPLOADING_FILE")} />}
         <div className={parentId ? "card-container2" : "card-container1"}>
           <Card>
-             <div style={{display: "flex" , justifyContent: "space-between" }}>
-            <TagComponent campaignName={campaignName} />
-             <Button
+            <div style={{ display: "flex", justifyContent: "space-between" }}>
+              <TagComponent campaignName={campaignName} />
+              <Button
                 label={getDownloadLabel()}
                 variation="secondary"
                 icon={"FileDownload"}
@@ -1227,12 +1227,11 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
                 className="campaign-download-template-btn"
                 onClick={downloadTemplate}
               />
-              </div>
+            </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
                 {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facility" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
-             
             </div>
             {uploadedFile.length === 0 && (
               <div className="info-text">
@@ -1341,9 +1340,17 @@ const NewUploadData = ({ formData, onSelect, ...props }) => {
             }}
           ></PopUp>
         )}
-        {showUploadToast  && (
+        {showUploadToast && (
           <Toast
-            type={showUploadToast?.key === "error" ? "error" : showUploadToast?.key === "info" ? "info" : showUploadToast?.key === "warning" ? "warning" : "success"}
+            type={
+              showUploadToast?.key === "error"
+                ? "error"
+                : showUploadToast?.key === "info"
+                ? "info"
+                : showUploadToast?.key === "warning"
+                ? "warning"
+                : "success"
+            }
             // error={showToast.key === "error" ? true : false}
             // warning={showToast.key === "warning" ? true : false}
             // info={showToast.key === "info" ? true : false}

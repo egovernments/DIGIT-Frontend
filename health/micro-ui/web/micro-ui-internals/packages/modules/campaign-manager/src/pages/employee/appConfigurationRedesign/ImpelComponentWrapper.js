@@ -6,7 +6,7 @@ import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
 //development mode
 import AppPreview from "../../../components/AppPreview";
 
-function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, parentState,...props }) {
+function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, parentState, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -149,7 +149,6 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
             array: "array",
             text: "string",
             number: "number",
-            button: "button"
           };
 
           schema.properties[key] = {
@@ -176,40 +175,36 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     submit(restructuredData, finalSubmit, tabChange);
   };
 
-  // Remove this for production
-
   // if (process.env.NODE_ENV === "development") {
-    return (
-      //development mode
-      <AppLocalisationWrapperDev
-        onSubmit={onSubmit}
-        back={back}
-        showBack={showBack}
-        screenConfig={screenConfig}
-        parentDispatch={parentDispatch}
-        localeModule={localeModule}
-        pageTag={pageTag}
-        parentState={parentState}
-      />
-    );
+  //development mode
+  return (
+    <AppLocalisationWrapperDev
+      onSubmit={onSubmit}
+      back={back}
+      showBack={showBack}
+      screenConfig={screenConfig}
+      parentDispatch={parentDispatch}
+      localeModule={localeModule}
+      pageTag={pageTag}
+      parentState={parentState}
+    />
+  );
   // }
-
-  // [TODO: ]Publish the changes to digit-components and uncomment this once published
-  // return (
-  //   //production mode
-  //   <AppLocalisationWrapper
-  //     onSubmit={onSubmit}
-  //     back={back}
-  //     showBack={showBack}
-  //     screenConfig={screenConfig}
-  //     parentDispatch={parentDispatch}
-  //     localeModule={localeModule}
-  //     pageTag={pageTag}
-  //     parentState={parentState}
-  //   >
-  //     <AppPreview />
-  //   </AppLocalisationWrapper>
-  // );
+  return (
+    //production mode
+    <AppLocalisationWrapper
+      onSubmit={onSubmit}
+      back={back}
+      showBack={showBack}
+      screenConfig={screenConfig}
+      parentDispatch={parentDispatch}
+      localeModule={localeModule}
+      pageTag={pageTag}
+      parentState={parentState}
+    >
+      <AppPreview />
+    </AppLocalisationWrapper>
+  );
 }
 
 export default React.memo(ImpelComponentWrapper);

@@ -1,27 +1,26 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Toast , Loader,HeaderComponent ,Button} from "@egovernments/digit-ui-components";
+import { Toast, Loader, HeaderComponent, Button } from "@egovernments/digit-ui-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import NoResultsFound from "./NoResultsFound";
 import TagComponent from "./TagComponent";
 
-
 // Define the function that groups boundary data based on hierarchy
 function boundaryDataGrp(boundaryData, hierarchyDefinition) {
-  if (!hierarchyDefinition) return []; 
+  if (!hierarchyDefinition) return [];
 
   const groupedData = {};
 
   // Function to order the boundary types based on parent-child relationship
   function getOrderedBoundaryTypes(hierarchy) {
     const result = [];
-    let currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(item => item.parentBoundaryType === null);
+    let currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find((item) => item.parentBoundaryType === null);
     while (currentItem) {
-        result.push(currentItem.boundaryType);
-        currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find(item => item.parentBoundaryType === currentItem.boundaryType);
+      result.push(currentItem.boundaryType);
+      currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy.find((item) => item.parentBoundaryType === currentItem.boundaryType);
     }
     return result;
   }
@@ -30,20 +29,21 @@ function boundaryDataGrp(boundaryData, hierarchyDefinition) {
   const orderedBoundaryTypes = getOrderedBoundaryTypes(hierarchyDefinition);
 
   boundaryData.forEach((item) => {
-    const { type } = item; 
+    const { type } = item;
     if (!groupedData[type]) {
       groupedData[type] = [];
     }
     groupedData[type].push(item);
   });
-  const result = orderedBoundaryTypes.map((type) => ({
-    type,
-    boundaries: groupedData[type] || [], 
-  })).filter(entry => entry.boundaries.length > 0);
+  const result = orderedBoundaryTypes
+    .map((type) => ({
+      type,
+      boundaries: groupedData[type] || [],
+    }))
+    .filter((entry) => entry.boundaries.length > 0);
 
   return result;
 }
-
 
 const fetchResourceFile = async (tenantId, resourceIdArr) => {
   const res = await Digit.CustomService.getResponse({
@@ -84,7 +84,7 @@ const fetchcd = async (tenantId, projectId) => {
 };
 const CampaignUpdateSummary = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
@@ -111,7 +111,7 @@ const CampaignUpdateSummary = (props) => {
       urlParams.set("activeCycle", activeCycle);
     }
     const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    history.push(newUrl);
+    navigate(newUrl);
   };
 
   function updateUrlParams(params) {
@@ -121,7 +121,6 @@ const CampaignUpdateSummary = (props) => {
     });
     window.history.replaceState({}, "", url);
   }
-
 
   // useEffect(() => {
   //   if (props?.props?.summaryErrors) {
@@ -174,13 +173,13 @@ const CampaignUpdateSummary = (props) => {
 
   function getOrderedBoundaryTypes(hierarchy) {
     const result = [];
-    let currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(item => item.parentBoundaryType === null);
+    let currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((item) => item.parentBoundaryType === null);
     while (currentItem) {
-        result.push(currentItem.boundaryType);
-        currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find(item => item.parentBoundaryType === currentItem.boundaryType);
+      result.push(currentItem.boundaryType);
+      currentItem = hierarchy?.BoundaryHierarchy?.[0]?.boundaryHierarchy?.find((item) => item.parentBoundaryType === currentItem.boundaryType);
     }
     return result;
-}
+  }
 
   const { isLoading, data, error, refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -205,57 +204,53 @@ const CampaignUpdateSummary = (props) => {
         };
         ss();
         const target = data?.[0]?.deliveryRules;
-        const boundaryData = boundaryDataGrp(data?.[0]?.boundaries ,hierarchyDefinition );
+        const boundaryData = boundaryDataGrp(data?.[0]?.boundaries, hierarchyDefinition);
         const hierarchyType = data?.[0]?.hierarchyType;
-        
+
         return {
           cards: [
-            ...(
-              boundaryData.length > 0 
-                ? boundaryData.map((item, index) => ({
+            ...(boundaryData.length > 0
+              ? boundaryData.map((item, index) => ({
+                  navigationKey: "card1",
+                  name: `HIERARCHY_${index + 1}`,
+                  sections: [
+                    {
+                      name: `HIERARCHY_${index + 1}`,
+                      type: "COMPONENT",
+                      cardHeader: {
+                        value: hierarchyType ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` : t("To Be Updated"),
+                        inlineStyles: { color: "#0B4B66" },
+                      },
+                      component: "BoundaryDetailsSummary",
+                      cardSecondaryAction: noAction !== "false" && (
+                        <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                          <span>{t(`CAMPAIGN_EDIT`)}</span>
+                          <EditIcon />
+                        </div>
+                      ),
+                      props: {
+                        boundaries: item,
+                        hierarchyType: hierarchyType,
+                      },
+                    },
+                  ],
+                }))
+              : [
+                  {
                     navigationKey: "card1",
-                    name: `HIERARCHY_${index + 1}`,
+                    name: "HIERARCHY_1",
                     sections: [
                       {
-                        name: `HIERARCHY_${index + 1}`,
+                        name: "NoResults",
                         type: "COMPONENT",
-                        cardHeader: { 
-                          value: hierarchyType 
-                              ? `${t((hierarchyType + "_" + item?.type).toUpperCase())}` 
-                              : t("To Be Updated"), 
-                          inlineStyles: { color: "#0B4B66" } 
-                        },
-                        component: "BoundaryDetailsSummary",
-                        cardSecondaryAction: noAction !== "false" && (
-                          <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                            <span>{t(`CAMPAIGN_EDIT`)}</span>
-                            <EditIcon />
-                          </div>
-                        ),
+                        component: "NoResultsFound",
                         props: {
-                          boundaries: item,
-                          hierarchyType: hierarchyType
+                          text: Digit.Utils.locale.getTransformedLocale(`NO_RESULTS`),
                         },
                       },
                     ],
-                  }))
-                : [
-                    {
-                      navigationKey: "card1",
-                      name: "HIERARCHY_1",
-                      sections: [
-                        {
-                          name: "NoResults",
-                          type: "COMPONENT",
-                          component: "NoResultsFound",
-                          props: {
-                            text: Digit.Utils.locale.getTransformedLocale(`NO_RESULTS`)
-                          }
-                        }
-                      ]
-                    }
-                  ]
-            ),
+                  },
+                ]),
             {
               navigationKey: "card2",
               sections: [
@@ -366,7 +361,7 @@ const CampaignUpdateSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const closeToast = () => {
     setShowToast(null);
@@ -417,11 +412,10 @@ const CampaignUpdateSummary = (props) => {
 
   const updatedObject = { ...data };
 
-
   return (
     <>
-      <TagComponent campaignName={campaignName} />        
-      <div style={{ display: "flex", justifyContent: "space-between" , marginBottom:"-1.5rem" , marginTop: "1.5rem" }}>
+      <TagComponent campaignName={campaignName} />
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "-1.5rem", marginTop: "1.5rem" }}>
         <HeaderComponent className="summary-header">{t("ES_TQM_SUMMARY_HEADING")}</HeaderComponent>
       </div>
       <div className="campaign-summary-container">

@@ -2,13 +2,13 @@ import React, { Fragment, useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair, ActionBar, ArrowForward } from "@egovernments/digit-ui-react-components";
 import { FieldV1, Stepper, Card, HeaderComponent, Button, PopUp, Toast, Loader } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { ProgressBar } from "./ProgressBar";
 import { min } from "lodash";
 
 const CloneCampaignWrapper = (props) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [name, setName] = useState(`${props?.campaignName}-copy`);
   const isoDate = (d) => new Date(d).toISOString().split("T")[0];
@@ -22,10 +22,7 @@ const CloneCampaignWrapper = (props) => {
   const [toast, setToast] = useState(null);
   const [isValidatingName, setIsValidatingName] = useState(false);
   // derive the minimum end‐date as startDate + 1 day
-  const endMin = startDate
-  ? isoDate(new Date(new Date(startDate).getTime() + 24 * 3600 * 1000))
-  : isoDate(Date.now() + 2 * 24 * 3600 * 1000);
-
+  const endMin = startDate ? isoDate(new Date(new Date(startDate).getTime() + 24 * 3600 * 1000)) : isoDate(Date.now() + 2 * 24 * 3600 * 1000);
 
   const steps = [
     "SEARCHING_CAMPAIGN_DETAILS",
@@ -44,23 +41,23 @@ const CloneCampaignWrapper = (props) => {
   };
 
   function getStartDateEpoch(rawDate) {
-  if (!rawDate) return null;
+    if (!rawDate) return null;
 
-  let dateObj;
+    let dateObj;
 
-  // Case 1: ISO format "2025-07-27T00:00:00.000Z"
-  if (rawDate.includes("T")) {
-    dateObj = new Date(rawDate);
-  } else {
-    // Case 2: "2025-07-27"
-    const [year, month, day] = rawDate.split("-").map(Number);
-    dateObj = new Date(Date.UTC(year, month - 1, day)); // UTC midnight
+    // Case 1: ISO format "2025-07-27T00:00:00.000Z"
+    if (rawDate.includes("T")) {
+      dateObj = new Date(rawDate);
+    } else {
+      // Case 2: "2025-07-27"
+      const [year, month, day] = rawDate.split("-").map(Number);
+      dateObj = new Date(Date.UTC(year, month - 1, day)); // UTC midnight
+    }
+
+    return dateObj.getTime(); // Epoch in milliseconds
   }
 
-  return dateObj.getTime(); // Epoch in milliseconds
-}
-
-  const { mutateAsync: executeFlow, isLoading, error: cloneCampaignError , campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
+  const { mutateAsync: executeFlow, isLoading, error: cloneCampaignError, campaignDetailsLoading } = Digit.Hooks.campaign.useCloneCampaign({
     tenantId,
     campaignId: props?.campaignId,
     campaignName: name,
@@ -68,7 +65,7 @@ const CloneCampaignWrapper = (props) => {
     endDate: convertDateToEpoch(endDate),
     setStep: useCallback((step) => setCurrentStep(step), []),
   });
- 
+
   const handleToastClose = () => {
     setToast(null);
   };
@@ -116,10 +113,9 @@ const CloneCampaignWrapper = (props) => {
     if (!endDate) {
       setEndError({ message: "CAMPAIGN_FIELD_ERROR_MANDATORY" });
       hasError = true;
-    } else if (startDate && endDate && convertDateToEpoch(endDate) <= convertDateToEpoch(startDate)){
+    } else if (startDate && endDate && convertDateToEpoch(endDate) <= convertDateToEpoch(startDate)) {
       setEndError({ message: "CAMPAIGN_END_DATE_BEFORE_ERROR" });
-    }
-    else{
+    } else {
       setEndError(null);
     }
 
@@ -140,7 +136,7 @@ const CloneCampaignWrapper = (props) => {
       const res = await executeFlow();
       if (res?.success && res?.CampaignDetails?.campaignNumber && !cloneCampaignError) {
         setToast({ key: "success", label: `${res?.CampaignDetails?.campaignNumber} ${t("CAMPAIGN_CREATED_SUCCESSFULLY")}`, type: "success" });
-        history.push(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
+        navigate(`/workbench-ui/employee/campaign/view-details?tenantId=${tenantId}&campaignNumber=${res.CampaignDetails.campaignNumber}`);
       } else {
         setToast({ key: "error", label: `${t("FAILED_TO_CREATE_COPY_CAMPAIGN")}`, type: "error" });
         setShowProgress(false);
@@ -241,7 +237,7 @@ const CloneCampaignWrapper = (props) => {
                         newDateFormat: true,
                         min: endMin,
                         name: "campaignEndDate",
-                        validation: { min: endMin},
+                        validation: { min: endMin },
                       }}
                       value={endDate}
                       onChange={(event) => {

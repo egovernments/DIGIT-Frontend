@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useReducer, useState } from "react";
 import { Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { AppConfigTab } from "../NewCampaignCreate/AppFeatures";
 import AppConfigurationParentRedesign from "./AppConfigurationParentLayer";
 
@@ -101,23 +101,17 @@ const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH
 const AppConfigurationTabLayer = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const searchParams = new URLSearchParams(location.search);
   const masterName = searchParams.get("masterName");
   const campaignNumber = searchParams.get("campaignNumber");
   const variant = searchParams.get("variant");
   const formId = searchParams.get("formId");
-  const [numberTabs, setNumberTabs] = useState([]);
-  const [currentScreen, setCurrentScreen] = useState({});
   const [tabState, tabStateDispatch] = useReducer(tabDispatcher, {});
+  const numberTabs = tabState?.numberTabs || [];
+  const currentScreen = numberTabs?.find((i) => i.active);
   const [showPopUp, setShowPopUp] = useState(null);
-  useEffect(() => {
-    if (tabState?.actualData?.length > 0) {
-      setNumberTabs(tabState?.numberTabs);
-      setCurrentScreen(tabState?.numberTabs?.find((i) => i.active === true));
-    }
-  }, [tabState]);
   const reqCriteriaTab = {
     url: `/${mdms_context_path}/v2/_search`,
     changeQueryName: `APPCONFIG-${campaignNumber}`,
@@ -135,16 +129,21 @@ const AppConfigurationTabLayer = () => {
       cacheTime: 0,
       staleTime: 0,
       select: (data) => {
-        tabStateDispatch({
-          key: "SET_TAB",
-          data: data?.mdms,
-        });
         return data?.mdms;
       },
     },
   };
 
-  const { isLoading: isTabLoading, data: tabData, refetch: refetchForm, revalidate: revalidateForm } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
+  const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
+
+  useEffect(() => {
+    if (!isTabLoading && tabData) {
+      tabStateDispatch({
+        key: "SET_TAB",
+        data: tabData,
+      });
+    }
+  }, [tabData, isTabLoading]);
 
   if (isTabLoading) return <Loader />;
   const waitForTabSave = () => {
@@ -188,4 +187,4 @@ const AppConfigurationTabLayer = () => {
   );
 };
 
-export default AppConfigurationTabLayer;
+export default React.memo(AppConfigurationTabLayer);

@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useReducer } from "react";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
 import { Loader } from "@egovernments/digit-ui-components";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from '@tanstack/react-query';
 
 const initialState = [];
 const AppLocalisationContext = createContext();
@@ -38,7 +38,7 @@ const locReducer = (state = initialState, action) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 //TODO @nabeel @jagan move this component to ui-component repo & clean up
-function AppLocalisationWrapperDev({ onSubmit, localeModule, screenConfig, back, showBack, parentDispatch, parentState,...props }) {
+function AppLocalisationWrapperDev({ onSubmit, localeModule, screenConfig, back, showBack, parentDispatch, parentState, ...props }) {
   if (!localeModule) {
     return <Loader />;
   }
@@ -129,7 +129,7 @@ function AppLocalisationWrapperDev({ onSubmit, localeModule, screenConfig, back,
         localeModule,
       }}
     >
-      <AppConfigurationWrapper pageTag={props?.pageTag} screenConfig={screenConfig} localeModule={localeModule} parentState={parentState}/>
+      <AppConfigurationWrapper pageTag={props?.pageTag} screenConfig={screenConfig} localeModule={localeModule} parentState={parentState} />
     </AppLocalisationContext.Provider>
   );
 }

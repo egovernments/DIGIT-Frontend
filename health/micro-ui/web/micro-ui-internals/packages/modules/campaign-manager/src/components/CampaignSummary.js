@@ -1,8 +1,8 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { EditIcon, ViewComposer } from "@egovernments/digit-ui-react-components";
-import { Button, InfoBannerIcon, Toast, PopUp, Loader,HeaderComponent } from "@egovernments/digit-ui-components";
+import { Button, InfoBannerIcon, Toast, PopUp, Loader, HeaderComponent } from "@egovernments/digit-ui-components";
 import { DownloadIcon } from "@egovernments/digit-ui-react-components";
 import { PRIMARY_COLOR, downloadExcelWithCustomName } from "../utils";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
@@ -79,7 +79,6 @@ function loopAndReturn(dataa, t) {
   });
   return format;
 }
-
 
 function boundaryDataGrp(boundaryData) {
   // Create an empty object to hold grouped data by type
@@ -505,13 +504,17 @@ const CampaignSummary = (props) => {
                     {
                       key: "CAMPAIGN_NO_OF_CYCLES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle : cycles?.cycle ? cycles?.cycle
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.cycle
+                        : cycles?.cycle
+                        ? cycles?.cycle
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                     {
                       key: "CAMPAIGN_NO_OF_DELIVERIES",
                       value: data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
-                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries : cycles?.deliveries ? cycles?.deliveries
+                        ? data?.[0]?.additionalDetails?.cycleData?.cycleConfgureDate?.deliveries
+                        : cycles?.deliveries
+                        ? cycles?.deliveries
                         : t("CAMPAIGN_SUMMARY_NA"),
                     },
                   ],
@@ -671,7 +674,7 @@ const CampaignSummary = (props) => {
   });
 
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
   const closeToast = () => {
     setShowToast(null);

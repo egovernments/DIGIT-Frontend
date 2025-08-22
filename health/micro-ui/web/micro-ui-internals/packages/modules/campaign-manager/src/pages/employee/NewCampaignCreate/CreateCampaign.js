@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import React, { useState, useEffect, useMemo  , useRef} from "react";
-import { useHistory } from "react-router-dom";
+import React, { useState, useEffect, useMemo, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import { CampaignCreateConfig } from "../../../configs/CampaignCreateConfig";
 import { Stepper, Toast, Button, Footer, Loader, FormComposerV2, PopUp, CardText } from "@egovernments/digit-ui-components";
 import { CONSOLE_MDMS_MODULENAME } from "../../../Module";
@@ -8,7 +8,7 @@ import { transformCreateData } from "../../../utils/transformCreateData";
 import { handleCreateValidate } from "../../../utils/handleCreateValidate";
 const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(null);
   const [totalFormData, setTotalFormData] = useState({});
@@ -183,7 +183,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
           });
           setTimeout(() => {
             const baseUrl = `/${window.contextPath}/employee/campaign/view-details?campaignNumber=${result?.CampaignDetails?.campaignNumber}&tenantId=${result?.CampaignDetails?.tenantId}`;
-            history.push(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
+            navigate(isDraft === "true" ? `${baseUrl}&draft=true` : baseUrl);
             setLoader(false);
           }, 2000);
         },
@@ -329,7 +329,7 @@ const CreateCampaign = ({ hierarchyType, hierarchyData }) => {
         onSecondayActionClick={onSecondayActionClick}
         isDisabled={isDataCreating}
         label={filteredCreateConfig?.[0]?.form?.[0]?.last === true ? t("HCM_SUBMIT") : t("HCM_NEXT")}
-        noBreakLine = {true}
+        noBreakLine={true}
         // secondaryActionIcon={"ArrowBack"}
         // primaryActionIconAsSuffix={true}
         // primaryActionIcon={"ArrowDirection"}

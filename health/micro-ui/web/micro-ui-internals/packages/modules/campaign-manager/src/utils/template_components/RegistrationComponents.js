@@ -1,14 +1,11 @@
-import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header, PopUp, SVG, SelectionTag } from "@egovernments/digit-ui-components";
-import React, { useEffect, useMemo, useState, } from "react";
+import { ResultsDataTable, Button, Switch, FieldV1, CustomSVG, SummaryCardFieldPair, PanelCard, PopUp, SVG } from "@egovernments/digit-ui-components";
+import React, { useEffect, useMemo, useState } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 import RenderSelectionField from "../../components/RenderSelectionField";
-import { useCustomT } from "../../pages/employee/appConfigurationRedesign/useCustomT";
-
-
 
 const responsePanelComponent = ({ components, t }) => {
-  const titleField = components.find(f => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
-  const descField = components.find(f => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
+  const titleField = components.find((f) => f.jsonPath === "AcknowledgementTitle" && !f.hidden);
+  const descField = components.find((f) => f.jsonPath === "AcknowledgementDescription" && !f.hidden);
 
   const message = titleField ? t(titleField?.label) : "";
   const description = descField ? t(descField?.label) : "";
@@ -28,69 +25,58 @@ const SearchBar = (props) => (
   <div style={{ width: "100%" }}>
     <FieldV1
       style={{ width: "100vh" }}
-      onChange={function noRefCheck() { }}
+      onChange={function noRefCheck() {}}
       placeholder={props.t(props.field?.label) || "LABEL"}
       type="search"
       populators={{
-        fieldPairClassName: `app-preview-field-pair`
-      }
-      }
+        fieldPairClassName: `app-preview-field-pair`,
+      }}
     />
   </div>
 );
 
-
 const FilterIcon = (props) => (
   <svg onClick={props?.onClick} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path d="M0.250666 1.61C2.27067 4.2 6.00067 9 6.00067 9V15C6.00067 15.55 6.45067 16 7.00067 16H9.00067C9.55067 16 10.0007 15.55 10.0007 15V9C10.0007 9 13.7207 4.2 15.7407 1.61C16.2507 0.95 15.7807 0 14.9507 0H1.04067C0.210666 0 -0.259334 0.95 0.250666 1.61Z" fill="#C84C0E" />
+    <path
+      d="M0.250666 1.61C2.27067 4.2 6.00067 9 6.00067 9V15C6.00067 15.55 6.45067 16 7.00067 16H9.00067C9.55067 16 10.0007 15.55 10.0007 15V9C10.0007 9 13.7207 4.2 15.7407 1.61C16.2507 0.95 15.7807 0 14.9507 0H1.04067C0.210666 0 -0.259334 0.95 0.250666 1.61Z"
+      fill="#C84C0E"
+    />
   </svg>
-
 );
 const Filter = (props) => {
   const [showPopUp, setShowPopUp] = useState(false);
-  const labelText   = props.t(props.field.label) || "LABEL";
-  const headingText = props.t("SELECT_FILTER");
 
   return (
     <div className="digit-search-action">
       <FilterIcon onClick={() => setShowPopUp(true)} />
-      <span className="digit-search-text" style={{ color: "#C84C0E" }}>{labelText}</span>
+      <span className="digit-search-text" style={{ color: "#C84C0E" }}>
+        {props.t(props.field.label) || "LABEL"}
+      </span>
 
       {showPopUp && (
         <PopUp
           className={"custom-popup-filter"}
           type={"default"}
-          heading={headingText}
+          heading={props.t("SELECT_FILTER")}
           onClose={() => setShowPopUp(false)}
           style={{
-            width: "100%",          // Full width popup
-            maxWidth: "100%",       // Prevents shrinking
+            width: "100%", // Full width popup
+            maxWidth: "100%", // Prevents shrinking
             height: "auto",
             margin: 0,
-            padding: 0
+            padding: 0,
           }}
-          footerChildren={[
-          ]}
+          footerChildren={[]}
           sortFooterChildren={true}
         >
-          <div style={{
-            width: "100%",            // Take full popup width
-            padding: "1rem",
-            boxSizing: "border-box"
-          }}>
-            <SelectionTag
-              // schemaCode={null}                // no MDMS
-              withContainer
-              options={(props.field?.dropdownOptions || []).filter(
-                (opt) => (Object.prototype.hasOwnProperty.call(opt, "active") ? opt.active : true)
-              )}
-              optionsKey="code"                // show label from `name`
-              // selected={props.value || []}     // pass your current selection (array)
-              onSelectionChanged={(next) => {  // bubble up to parent
-              }}
-              // populators={{ t: props.t }}      // let the component use your translator
-              errorMessage=""                  // set if you need validation text
-            />
+          <div
+            style={{
+              width: "100%", // Take full popup width
+              padding: "1rem",
+              boxSizing: "border-box",
+            }}
+          >
+            <RenderSelectionField field={props.field} t={props.t} />
           </div>
         </PopUp>
       )}
@@ -98,17 +84,7 @@ const Filter = (props) => {
   );
 };
 
-
-const Toggle = (props) => (
-  <Switch
-    label={props.t(props.field?.label) || "LABEL"}
-    onToggle={null}
-    isCheckedInitially={true}
-    shapeOnOff
-  />
-);
-
-
+const Toggle = (props) => <Switch label={props.t(props.field?.label) || "LABEL"} onToggle={null} isCheckedInitially={true} shapeOnOff />;
 
 // household
 
@@ -122,8 +98,6 @@ const EditIcon = () => (
 );
 
 const TextButton = (props) => {
-
-
   if (props.hidden) return null;
 
   const outerStyle = {
@@ -169,45 +143,44 @@ const TextButton = (props) => {
         className="digit-search-action"
         onClick={props.onClick}
       >
-        {props.addMember ? <CustomSVG.AddFilled width={"16px"} height={"16px"} fill={"#F47738"} /> : <EditIcon />
-
-        }
-        <span className="digit-search-text">{(props?.label || "EDIT_LABEL")}</span>
+        {props.addMember ? <CustomSVG.AddFilled width={"16px"} height={"16px"} fill={"#F47738"} /> : <EditIcon />}
+        <span className="digit-search-text">{props?.label || "EDIT_LABEL"}</span>
       </div>
     </div>
   );
 };
 
-
-
 // household member card
 
 const HouseHoldDetailsCard = (props) => {
-  const householdDetails = props.beneficiaryDetails ? props.beneficiaryDetails : [
-    //TODO: Need this to be moved to config @Pitabsh, @ram
-    // { label: "HOUSEHOLD_HEAD", value: "Value" },
-    // { label: "ADMINSTRATIVE_AREA", value: "value" },
-    // { label: "MEMBER_COUNT", value: 5 },
+  const householdDetails = props.beneficiaryDetails
+    ? props.beneficiaryDetails
+    : [
+        //TODO: Need this to be moved to config @Pitabsh, @ram
+        // { label: "HOUSEHOLD_HEAD", value: "Value" },
+        // { label: "ADMINSTRATIVE_AREA", value: "value" },
+        // { label: "MEMBER_COUNT", value: 5 },
 
-    { label: "HouseHold Head", value: "Rohit" },
-    { label: "Adminstrative Area", value: "Boundary A" },
-    { label: "Member Count", value: 5 },
-  ];
+        { label: "HouseHold Head", value: "Rohit" },
+        { label: "Adminstrative Area", value: "Boundary A" },
+        { label: "Member Count", value: 5 },
+      ];
   return (
     <div>
       {householdDetails.map((pair, index) => (
-        <div key={index}
-        >
+        <div key={index}>
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex", alignItems: "center", minWidth: "100vh", paddingBottom: "1rem"
+              display: "flex",
+              alignItems: "center",
+              minWidth: "100vh",
+              paddingBottom: "1rem",
             }}
             key={index}
             inline={true}
             label={props.t(pair?.label || "LABEL")}
-            value={(pair?.value) || "VALUE"}
-
+            value={pair?.value || "VALUE"}
           />
         </div>
       ))}
@@ -216,17 +189,24 @@ const HouseHoldDetailsCard = (props) => {
 };
 
 const HouseholdOverViewMemberCard = (props) => {
-  const attributes = props.attributes || [{ label: "Gender", value: "Male" },
-  { label: "Age", value: "30 years" },
-  { label: "Relationship", value: "Father" },
-  { label: "Status", value: "Verified" }];
+  const attributes = props.attributes || [
+    { label: "Gender", value: "Male" },
+    { label: "Age", value: "30 years" },
+    { label: "Relationship", value: "Father" },
+    { label: "Status", value: "Verified" },
+  ];
   return (
     <div style={{ ...styles.card, overflowX: "hidden" }}>
       <div style={styles.header}>
         <div style={styles.name}>
           <strong>{props.name}</strong>
         </div>
-        <TextButton alignment={"flex-end"} label={props.t(props.editIndividual?.label || "")} hidden={props.editIndividual?.hidden} onClick={() => console.log("Edit Individual")} />
+        <TextButton
+          alignment={"flex-end"}
+          label={props.t(props.editIndividual?.label || "")}
+          hidden={props.editIndividual?.hidden}
+          onClick={() => console.log("Edit Individual")}
+        />
       </div>
 
       {/* Dynamically Render Attributes */}
@@ -239,12 +219,10 @@ const HouseholdOverViewMemberCard = (props) => {
         ))}
       </div>
 
-
       {/* Two Center Buttons */}
 
-
       <div style={styles.buttonGroup}>
-        {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && (!(props.primaryBtn?.hidden)) && (
+        {props.primaryBtn && Object.keys(props.primaryBtn).length > 0 && !props.primaryBtn?.hidden && (
           <Button
             // className={`${selectedField?.jsonPath === field.jsonPath ? "app-preview-field-pair app-preview-selected" : ""}`}
             key={0}
@@ -252,11 +230,11 @@ const HouseholdOverViewMemberCard = (props) => {
             label={props.t(props.primaryBtn?.label || "LABEL")}
             title={props.t(props.primaryBtn?.label || "LABEL")}
             style={{ minWidth: "100%" }}
-            onClick={() => { }}
+            onClick={() => {}}
           />
         )}
 
-        {props.secondaryBtn && Object.keys(props.secondaryBtn).length > 0 && (!(props.secondaryBtn?.hidden)) && (
+        {props.secondaryBtn && Object.keys(props.secondaryBtn).length > 0 && !props.secondaryBtn?.hidden && (
           <Button
             className={`app-preview-action-button `}
             key={1}
@@ -264,13 +242,10 @@ const HouseholdOverViewMemberCard = (props) => {
             label={props.t(props.secondaryBtn?.label) || "LABEL"}
             title={props.t(props.secondaryBtn?.label) || "LABEL"}
             style={{ minWidth: "100%" }}
-            onClick={() => { }}
+            onClick={() => {}}
           />
         )}
       </div>
-
-
-
     </div>
   );
 };
@@ -340,17 +315,15 @@ const styles = {
   },
 };
 
-
-
 export const getTemplateRenderer = (templateName) => {
-  if (templateName?.includes('Acknowledgement')) {
+  if (templateName?.includes("Acknowledgement")) {
     return responsePanelComponent;
   }
 
   switch (templateName) {
     case "HouseholdOverview":
       return HouseHoldOverviewSection;
-    case "ComplaintsInbox":
+    case "complaintInbox":
       return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
@@ -360,11 +333,7 @@ export const getTemplateRenderer = (templateName) => {
   }
 };
 
-
-
 export const HouseHoldOverviewSection = ({ components = [], t }) => {
-
-
   const formatMap = {};
   components.forEach((item) => {
     formatMap[item.jsonPath] = item;
@@ -387,51 +356,30 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
         `}
       </style>
       <div
-
         className="no-x-scroll"
         style={{
-          overflowY: 'auto',
-          overflowX: 'hidden',
-          scrollbarWidth: 'thin',
-          msOverflowStyle: 'auto',
-          whiteSpace: 'nowrap'
+          overflowY: "auto",
+          overflowX: "hidden",
+          scrollbarWidth: "thin",
+          msOverflowStyle: "auto",
+          whiteSpace: "nowrap",
         }}
-
       >
-        <TextButton
-          label={t(editHousehold?.label || "LABEL")}
-          onClick={() => { }}
-          hidden={editHousehold.hidden}
-          alignment="flex-end"
-        />
+        <TextButton label={t(editHousehold?.label || "LABEL")} onClick={() => {}} hidden={editHousehold.hidden} alignment="flex-end" />
 
         {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard} />}
 
-        <HouseholdOverViewMemberCard
-          name="Joseph Sergio"
-          editIndividual={editIndividual}
-          primaryBtn={primaryBtn}
-          secondaryBtn={secondaryBtn}
-          t={t}
-        />
+        <HouseholdOverViewMemberCard name="Joseph Sergio" editIndividual={editIndividual} primaryBtn={primaryBtn} secondaryBtn={secondaryBtn} t={t} />
 
         {addMember && (
           <div style={{ marginTop: "16px" }}>
-            <TextButton
-              addMember={true}
-              alignment="center"
-              hidden={addMember?.hidden}
-              label={t(addMember?.label || "")}
-              onClick={() => { }}
-            />
+            <TextButton addMember={true} alignment="center" hidden={addMember?.hidden} label={t(addMember?.label || "")} onClick={() => {}} />
           </div>
         )}
       </div>
     </div>
   );
 };
-
-
 
 const injectTableStyles = () => {
   const styleId = "dose-table-override-style";
@@ -499,13 +447,11 @@ const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = 
       sortable: false,
       minWidth: "200px",
     }));
-  }, [columns, t]); // 
+  }, [columns, t]); //
 
   return (
     <div style={{ width: "100%" }}>
-      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
-        {finalTableHeading}
-      </h1>
+      <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>{finalTableHeading}</h1>
 
       <div
         className="digit-card-component override-padding"
@@ -518,7 +464,7 @@ const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = 
           data={data}
           columns={formattedColumns}
           showCheckBox={false}
-          onSelectedRowsChange={() => { }}
+          onSelectedRowsChange={() => {}}
           progressPending={false}
           isPaginationRequired={false}
           showTableTitle={false}
@@ -542,25 +488,20 @@ const BeneficiaryTableWrapper = ({ columns = [], data = [], finalTableHeading = 
 
 export default BeneficiaryTableWrapper;
 
-
-
 // Independent wrapper for DetailsCard
 const DetailsCardSection = ({ field, t }) => {
-
-  const heading = t
-    ? t(field?.label || "BENEFICIARY_DETAILS_TITLE")
-    : field?.label || "";
+  const heading = t ? t(field?.label || "BENEFICIARY_DETAILS_TITLE") : field?.label || "";
 
   const beneficiaryDetails =
     field?.dropDownOptions?.map((item) => ({
       label: item.code,
-      value: "****"
+      value: "****",
     })) || [];
 
   if (!beneficiaryDetails.length) return null;
 
   return (
-    <div >
+    <div>
       <style>
         {`
           .no-x-scroll::-webkit-scrollbar:horizontal {
@@ -569,12 +510,8 @@ const DetailsCardSection = ({ field, t }) => {
         `}
       </style>
 
-      <div
-        className="no-x-scroll"
-      >
-        <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>
-          {heading}
-        </h1>
+      <div className="no-x-scroll">
+        <h1 style={{ fontWeight: "bold", marginBottom: "0.5rem", fontSize: "25px" }}>{heading}</h1>
         <HouseHoldDetailsCard t={t} beneficiaryDetails={beneficiaryDetails} />
       </div>
     </div>
@@ -589,11 +526,10 @@ const Table = ({ field, t }) => {
 
   const columns =
     field?.dropDownOptions?.map((item) => {
-
       return {
         ...item,
         name: item.name,
-        code: item.code
+        code: item.code,
       };
     }) || [];
 
@@ -604,20 +540,12 @@ const Table = ({ field, t }) => {
     {
       DOSENO: "Dose 1",
       STATUS: "Administered",
-      COMPLETED_ON: "14 June 2024"
-    }
+      COMPLETED_ON: "14 June 2024",
+    },
   ];
 
-  return (
-    <BeneficiaryTableWrapper
-      finalTableHeading={finalTableHeading}
-      columns={columns}
-      data={data}
-      t={t}
-    />
-  );
+  return <BeneficiaryTableWrapper finalTableHeading={finalTableHeading} columns={columns} data={data} t={t} />;
 };
-
 
 /**
  * SimpleSearchFilterRow
@@ -626,7 +554,8 @@ const Table = ({ field, t }) => {
  * Uses your existing <Filter />, <SVG.Search />, and <SVG.Sort /> components.
  */
 const SimpleSearchFilterRow = ({
-  components = [], t
+  components = [],
+  t,
   // t,
   // label = "Search",
   // primaryColor = "currentColor",
@@ -645,7 +574,6 @@ const SimpleSearchFilterRow = ({
   const filter = formatMap["filter"] || {};
   const sortIcon = formatMap["sortComplaints"] || {};
 
-
   const cellStyle = {
     minWidth: 0,
     display: "flex",
@@ -662,18 +590,14 @@ const SimpleSearchFilterRow = ({
         columnGap: "0.5rem", // smaller overall gap
         rowGap: "0.5rem",
         alignItems: "center",
-        width: "100%" //allow responsive wrap
+        width: "100%", //allow responsive wrap
       }}
     >
       {/* Left: Search icon + label */}
-      <div
-        style={cellStyle}
-      >
+      <div style={cellStyle}>
         {/* Use currentColor so it won't disappear on white backgrounds */}
         <SVG.Search width={"20px"} height={"20px"} fill={"#C84C0E"} />
-        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
-          {t?.(searchIcon?.label || "")}
-        </span>
+        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>{t?.(searchIcon?.label || "")}</span>
       </div>
 
       {/* Middle: Filter (full-width inside its cell) */}
@@ -684,20 +608,15 @@ const SimpleSearchFilterRow = ({
       </div>
 
       {/* Right: Sort icon + label (optional) */}
-      <div
-        style={cellStyle}
-      >
+      <div style={cellStyle}>
         <SVG.ArrowDownward width={"20px"} height={"20px"} fill={"#C84C0E"} />
         {sortIcon?.label ? (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
-            {t?.(sortIcon?.label || "")}
-          </span>
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>{t?.(sortIcon?.label || "")}</span>
         ) : null}
       </div>
     </div>
   );
-}
-
+};
 
 // Register all components
 registerComponent("searchBar", SearchBar);
@@ -706,5 +625,3 @@ registerComponent("searchByProximity", Toggle);
 registerComponent("searchByID", Toggle);
 registerComponent("DetailsCard", DetailsCardSection);
 registerComponent("Table", Table);
-
-

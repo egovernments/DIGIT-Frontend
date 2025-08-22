@@ -9,7 +9,7 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import AppPreview from "../../../components/AppPreview";
 import { useCustomT } from "./useCustomT";
-import { useQueryClient } from "react-query";
+import { useQueryClient } from "@tanstack/react-query";
 
 const AppConfigContext = createContext();
 
@@ -287,8 +287,8 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentState }) {
-    const queryClient = useQueryClient();
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentState }) {
+  const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -297,10 +297,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
-  const ct = (key) => useCustomT(key);  // call the hook once at top level
   const addFieldDataLabel = useMemo(() => {
-    return addFieldData?.label ? ct(addFieldData?.label) : null;
-  }, [addFieldData, ct]);
+    return addFieldData?.label ? useCustomT(addFieldData?.label) : null;
+  }, [addFieldData]);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   const [showPreview, setShowPreview] = useState(null);
@@ -322,21 +321,26 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
       cacheTime: Infinity,
       staleTime: Infinity,
       select: (data) => {
-        dispatch({
-          type: "MASTER_DATA",
-          state: {
-            screenConfig: screenConfig,
-            ...data?.["HCM-ADMIN-CONSOLE"],
-            DrawerPanelConfig: data?.["HCM-ADMIN-CONSOLE"]?.["FieldPropertiesPanelConfig"],
-            AppFieldType: data?.["HCM-ADMIN-CONSOLE"]?.[fieldMasterName],
-            DetailsConfig: data?.["HCM-ADMIN-CONSOLE"]?.["DETAILS_RENDERER_CONFIG"],
-            // ...dummyMaster,
-          },
-        });
+        return data?.["HCM-ADMIN-CONSOLE"];
       },
     },
     { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
   );
+  useEffect(() => {
+    if (!isLoadingAppConfigMdmsData && AppConfigMdmsData && screenConfig && fieldMasterName) {
+      dispatch({
+        type: "MASTER_DATA",
+        state: {
+          screenConfig: screenConfig,
+          ...AppConfigMdmsData,
+          DrawerPanelConfig: AppConfigMdmsData?.["FieldPropertiesPanelConfig"],
+          AppFieldType: AppConfigMdmsData?.[fieldMasterName],
+          DetailsConfig: AppConfigMdmsData?.["DETAILS_RENDERER_CONFIG"],
+          // ...dummyMaster,
+        },
+      });
+    }
+  }, [isLoadingAppConfigMdmsData, AppConfigMdmsData, screenConfig, fieldMasterName]);
 
   const openAddFieldPopup = (data) => {
     setPopupData({ ...data, id: crypto.randomUUID() });
@@ -396,7 +400,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
     for (let i = 0; i < headerFields.length; i++) {
       if (headerFields[i]?.jsonPath === "ScreenHeading") {
         const fieldItem = headerFields[i];
-        const value = (locS ||[])?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
+        const value = (locS || [])?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
         if (!value || value.trim() === "") {
           return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")}` };
         }
@@ -555,7 +559,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={ct} />
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
       <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
@@ -634,7 +638,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
                   })
                 }
               />
-              <DrawerFieldComposer parentState={parentState} screenConfig={screenConfig} selectedField={state?.drawerField}/>
+              <DrawerFieldComposer parentState={parentState} screenConfig={screenConfig} selectedField={state?.drawerField} />
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
@@ -728,7 +732,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
               required={true}
               type={"text"}
               label={`${t("ADD_FIELD_LABEL")}`}
-              value={addFieldData?.label ? ct(addFieldData?.label) : ""}
+              value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
               config={{
                 step: "",
               }}
