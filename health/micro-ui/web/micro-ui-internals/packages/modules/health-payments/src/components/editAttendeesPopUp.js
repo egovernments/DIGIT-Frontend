@@ -222,6 +222,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading, registerId }) => {
         />
         {
             searchUserpopUp && <SearchUserPopUp
+            registerId={registerId}
                 onClose={closeActionBarPopUp}
                 heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
             />

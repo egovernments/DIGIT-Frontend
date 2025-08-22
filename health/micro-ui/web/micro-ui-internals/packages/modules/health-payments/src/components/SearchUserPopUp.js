@@ -23,7 +23,7 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
         "health-individual";
 
     const { t } = useTranslation();
-    
+
 
     const labels = ["HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL", "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER"];
     const maxLabelLength = Math.max(...labels.map(label => label.length));
@@ -72,10 +72,10 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
         //   tenantId: String(tenantId)
         // };
 
-        
+
         const attendee = {
-            registerId: businessId,
-            individualId: selectedUser["uuid"],
+            registerId: registerId,
+            individualId: selectedUser["id"],
             enrollmentDate: new Date().getTime(),
             tenantId: selectedUser["tenantId"],
             additionalDetails: {
