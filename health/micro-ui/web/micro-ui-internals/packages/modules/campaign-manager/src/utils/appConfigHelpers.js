@@ -209,8 +209,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
-        visibilityCondition: field?.visibilityCondition || {},
-        autoFillCondition: field?.autoFillCondition || {},
+        visibilityCondition: field?.visibilityCondition,
+        autoFillCondition: field?.autoFillCondition,
       }));
 
     return {
@@ -253,7 +253,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         enableSectionAddition: false,
         allowCommentsAdditionAt: ["body"],
       },
-      navigateTo: page?.navigateTo || {},
+      navigateTo: page?.navigateTo,
+      conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
   });
@@ -314,8 +315,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
-        visibilityCondition: field?.visibilityCondition || {},
-        autoFillCondition: field?.autoFillCondition || {},
+        visibilityCondition: field?.visibilityCondition,
+        autoFillCondition: field?.autoFillCondition,
       };
     });
 
@@ -327,7 +328,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       actionLabel: section?.actionLabel || "",
       order: index + 1,
       properties,
-      navigateTo: section?.navigateTo || {},
+      navigateTo: section?.navigateTo,
+      conditionalNavigateTo: section?.conditionalNavigateTo,
     };
   });
 };
