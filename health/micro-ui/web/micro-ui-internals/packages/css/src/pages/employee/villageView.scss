@@ -1,0 +1,87 @@
+@import url("../../index.scss");
+
+/* VillageView.css */
+
+.village-header {
+    @extend .typography.heading-xl;
+    color: theme(digitv2.lightTheme.text-primary);
+    margin-bottom: 1.5rem;
+}
+
+
+.card-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.card-heading-title {
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.primary-2);
+    margin: 0rem;
+}
+
+.label-pair {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.label-heading {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 20%;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.label-text {
+    @extend .typography.body-l;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 80%;
+}
+
+.edit-label-field-pair {
+    display: flex;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.edit-label {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 40%;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.edit-value {
+    width: 60%;
+    text-align: start;
+}
+
+.middle-child {
+    margin-bottom: 1.5rem;
+}
+
+.comment-label {
+    margin-bottom: .25rem;
+    @extend .typography.label;
+    color: theme(digitv2.lightTheme.text-primary);
+}
+
+.comment-label .required {
+    color: theme(digitv2.alert.error);
+}
+
+.security-question-label {
+    margin-bottom: 1.5rem;
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.text-primary);
+}
+
+.questions-divider {
+    margin-bottom: 1rem;
+}

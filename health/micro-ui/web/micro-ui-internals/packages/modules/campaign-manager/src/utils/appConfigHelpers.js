@@ -204,13 +204,14 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         pattern: field?.validations?.find((i) => i?.type === "pattern"),
         RegexPattern: field?.validations?.find((i) => i?.type === "pattern") ? true : false,
         MdmsDropdown: field?.schemaCode ? true : false,
+        dropDownOptions: field?.enums,
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
         visibilityCondition: field?.visibilityCondition || {},
-        autoFillCondition: field?.autoFillCondition || {},
+        autoFillCondition: field?.autoFillCondition || [],
       }));
 
     return {
@@ -253,7 +254,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         enableSectionAddition: false,
         allowCommentsAdditionAt: ["body"],
       },
-      navigateTo: page?.navigateTo || {},
+      navigateTo: page?.navigateTo,
+      conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
   });
@@ -315,7 +317,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
         visibilityCondition: field?.visibilityCondition || {},
-        autoFillCondition: field?.autoFillCondition || {},
+        autoFillCondition: field?.autoFillCondition || [],
       };
     });
 
@@ -327,7 +329,9 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       actionLabel: section?.actionLabel || "",
       order: index + 1,
       properties,
-      navigateTo: section?.navigateTo || {},
+      navigateTo: section?.navigateTo,
+      conditionalNavigateTo: section?.conditionalNavigateTo,
+
     };
   });
 };
