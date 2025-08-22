@@ -3,8 +3,7 @@ import { PersistantStorage } from "./Utils/Storage";
 const defaultApiCachingSettings = [
   {
     serviceName: "localization",
-    cacheTimeInSecs: 0,
-    // cacheTimeInSecs: 86400,
+    cacheTimeInSecs: 3600, // Cache for 1 hour to reduce token dependency
   },
   {
     serviceName: "access/v1/actions",
