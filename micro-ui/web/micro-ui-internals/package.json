@@ -92,7 +92,7 @@
     "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-components": "0.2.0-beta.40-rc19.01",
     "@egovernments/digit-ui-libraries": "1.8.17-rc19.01",
-    "@egovernments/digit-ui-module-core": "1.8.35-rc19.01",
+    "@egovernments/digit-ui-module-core": "1.8.36-rc-test-01",
     "@egovernments/digit-ui-react-components": "1.8.21-rc19.01",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",

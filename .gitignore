@@ -3,3 +3,8 @@ accelerators/frontend/micro-ui-internals/node_modules/*
 .idea
 index.lock
 utilities/project-factory/
+/micro-frontends
+/micro-frontends
+/health/micro-ui/web
+micro-ui/web/micro-ui-internals/packages/modules/core/CLAUDE.md
+micro-ui/web/micro-ui-internals/CLAUDE.md
