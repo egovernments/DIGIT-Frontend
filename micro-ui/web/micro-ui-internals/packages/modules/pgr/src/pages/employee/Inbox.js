@@ -12,8 +12,10 @@ const Inbox = () => {
   const [pageOffset, setPageOffset] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [totalRecords, setTotalRecords] = useState(0);
-  const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [{ code: uuid }] } }, search: "", sort: {} });
+  // const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [{ code: uuid }] } }, search: "", sort: {} });
 
+   const [searchParams, setSearchParams] = useState({ filters: { wfFilters: { assignee: [] } }, search: "", sort: {} });
+   
   useEffect(() => {
     (async () => {
       const applicationStatus = searchParams?.filters?.pgrfilters?.applicationStatus?.map(e => e.code).join(",")
