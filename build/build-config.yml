@@ -69,11 +69,6 @@ config:
       dockerfile: health/micro-ui/web/core/Dockerfile
       image-name: core-ui
     
-  - name: builds/Digit-Frontend/health/dashboard-ui
-    build:
-    - work-dir: health/micro-ui/
-      dockerfile: health/micro-ui/web/health-dss/Dockerfile
-      image-name: dashboard-ui   
 
  # Others       
   - name: builds/Digit-Frontend/storybook-svg

@@ -15,7 +15,6 @@ on:
           - sandbox-ui
           - microplan-ui
           - console
-          - dashboard-ui
           - payments-ui
           - storybook-svg
           - storybook
