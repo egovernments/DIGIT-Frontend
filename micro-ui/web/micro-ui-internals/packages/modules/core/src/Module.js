@@ -6,14 +6,18 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
 import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp, DigitAppWrapper } from "./App";
-import SelectOtp from "./pages/citizen/Login/SelectOtp";
-import ChangeCity from "./components/ChangeCity";
-import ChangeLanguage from "./components/ChangeLanguage";
 import { useState, useMemo, useCallback } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
+
+// Keep critical landing page components in main bundle for faster initial load
+import ChangeLanguage from "./components/ChangeLanguage";
 import PrivacyComponent from "./components/PrivacyComponent";
-import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
+
+// Lazy load less frequently used components 
+const SelectOtp = React.lazy(() => import("./pages/citizen/Login/SelectOtp"));
+const ChangeCity = React.lazy(() => import("./components/ChangeCity"));
+const OtpComponent = React.lazy(() => import("./pages/employee/Otp/OtpCustomComponent"));
 
 // Create QueryClient instance outside component to prevent recreation
 const createQueryClient = () => new QueryClient({

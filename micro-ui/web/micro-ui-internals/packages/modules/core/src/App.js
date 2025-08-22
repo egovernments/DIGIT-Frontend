@@ -1,13 +1,19 @@
-import React, { useEffect } from "react";
+import React, { useEffect, Suspense } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
-import CitizenApp from "./pages/citizen";
-import EmployeeApp from "./pages/employee";
-import SignUp from "./pages/employee/SignUp";
-import Otp from "./pages/employee/Otp";
-import ViewUrl from "./pages/employee/ViewUrl";
+import { Loader } from "@egovernments/digit-ui-components";
 import CustomErrorComponent from "./components/CustomErrorComponent";
-import DummyLoaderScreen from "./components/DummyLoader";
+import LazyErrorBoundary from "./components/LazyErrorBoundary";
 import { Navigate } from "react-router-dom";
+
+// Keep login/home pages in main bundle for faster initial load, lazy load admin pages
+import SignUp from "./pages/employee/SignUp";
+
+// Lazy load heavy/less frequently used components for better performance  
+const CitizenApp = React.lazy(() => import("./pages/citizen"));
+const EmployeeApp = React.lazy(() => import("./pages/employee")); 
+const Otp = React.lazy(() => import("./pages/employee/Otp"));
+const ViewUrl = React.lazy(() => import("./pages/employee/ViewUrl"));
+const DummyLoaderScreen = React.lazy(() => import("./components/DummyLoader"));
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes = ["citizen", "employee"] }) => {
   const navigate = useNavigate();
@@ -73,18 +79,22 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   };
 
   return (
-    <Routes>
-      {allowedUserTypes?.includes("employee") && (
-        <Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />
-      )}
-      {allowedUserTypes?.includes("citizen") && (
-        <Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />
-      )}
-      {allowedUserTypes?.includes("employee") && (
-        <Route path={`/${window?.contextPath}/no-top-bar/employee`} element={<EmployeeApp {...commonProps} noTopBar />} />
-      )}
-      <Route path="*" element={<Navigate to={`/${window?.contextPath}/${defaultLanding}`} />} />
-    </Routes>
+    <LazyErrorBoundary>
+      <Suspense fallback={<Loader page={true} variant="PageLoader" />}>
+        <Routes>
+          {allowedUserTypes?.includes("employee") && (
+            <Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />
+          )}
+          {allowedUserTypes?.includes("citizen") && (
+            <Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />
+          )}
+          {allowedUserTypes?.includes("employee") && (
+            <Route path={`/${window?.contextPath}/no-top-bar/employee`} element={<EmployeeApp {...commonProps} noTopBar />} />
+          )}
+          <Route path="*" element={<Navigate to={`/${window?.contextPath}/${defaultLanding}`} />} />
+        </Routes>
+      </Suspense>
+    </LazyErrorBoundary>
   );
 };
 
@@ -106,31 +116,35 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
         isUserProfile ? { padding: 0, paddingTop: CITIZEN ? "0" : mobileView && !CITIZEN ? "3rem" : "80px", marginLeft: CITIZEN || mobileView ? "0" : "40px" } : { "--banner-url": `url(${stateInfo?.bannerUrl})`, padding: "0px" }
       }
     >
-      <Routes>
-        <Route path={`/${window?.globalPath}/user/invalid-url`} element={<CustomErrorComponent />} />
-        <Route path={`/${window?.globalPath}/user/sign-up`} element={<SignUp stateCode={stateCode} />} />
-        <Route path={`/${window?.globalPath}/user/otp`} element={<Otp />} />
-        <Route path={`/${window?.globalPath}/user/setup`} element={<DummyLoaderScreen />} />
-        <Route path={`/${window?.globalPath}/user/url`} element={<ViewUrl />} />
-        {window?.globalPath !== window?.contextPath && (
-          <Route
-            path={`/${window?.contextPath}/*`}
-            element={
-              <DigitApp
-                stateCode={stateCode}
-                modules={modules}
-                appTenants={appTenants}
-                logoUrl={logoUrl}
-                logoUrlWhite={logoUrlWhite}
-                initData={initData}
-                defaultLanding={defaultLanding}
-                allowedUserTypes={allowedUserTypes}
+      <LazyErrorBoundary>
+        <Suspense fallback={<Loader page={true} variant="PageLoader" />}>
+          <Routes>
+            <Route path={`/${window?.globalPath}/user/invalid-url`} element={<CustomErrorComponent />} />
+            <Route path={`/${window?.globalPath}/user/sign-up`} element={<SignUp stateCode={stateCode} />} />
+            <Route path={`/${window?.globalPath}/user/otp`} element={<Otp />} />
+            <Route path={`/${window?.globalPath}/user/setup`} element={<DummyLoaderScreen />} />
+            <Route path={`/${window?.globalPath}/user/url`} element={<ViewUrl />} />
+            {window?.globalPath !== window?.contextPath && (
+              <Route
+                path={`/${window?.contextPath}/*`}
+                element={
+                  <DigitApp
+                    stateCode={stateCode}
+                    modules={modules}
+                    appTenants={appTenants}
+                    logoUrl={logoUrl}
+                    logoUrlWhite={logoUrlWhite}
+                    initData={initData}
+                    defaultLanding={defaultLanding}
+                    allowedUserTypes={allowedUserTypes}
+                  />
+                }
               />
-            }
-          />
-        )}
-        <Route path="*" element={<Navigate to={`/${window?.globalPath}/user/sign-up`} />} />
-      </Routes>
+            )}
+            <Route path="*" element={<Navigate to={`/${window?.globalPath}/user/sign-up`} />} />
+          </Routes>
+        </Suspense>
+      </LazyErrorBoundary>
     </div>
   );
 };

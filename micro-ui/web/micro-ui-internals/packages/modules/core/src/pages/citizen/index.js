@@ -1,9 +1,10 @@
-import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
-import React from "react";
+import { BackLink, CitizenHomeCard, CitizenInfoLabel, Loader } from "@egovernments/digit-ui-components";
+import React, { Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Routes, Route, useNavigate, useLocation } from "react-router-dom"; // Updated imports for v6
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import ErrorComponent from "../../components/ErrorComponent";
+import LazyErrorBoundary from "../../components/LazyErrorBoundary";
 import { AppHome, processLinkData } from "../../components/Home";
 import TopBarSideBar from "../../components/TopBarSideBar";
 import StaticCitizenSideBar from "../../components/TopBarSideBar/SideBar/StaticCitizenSideBar";
@@ -11,12 +12,14 @@ import FAQsSection from "./FAQs/FAQs";
 import CitizenHome from "./Home";
 import LanguageSelection from "./Home/LanguageSelection";
 import LocationSelection from "./Home/LocationSelection";
-import UserProfile from "./Home/UserProfile";
 import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
-import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
 import ImageComponent from "../../components/ImageComponent";
+
+// Lazy load heavy components for better performance
+const UserProfile = React.lazy(() => import("./Home/UserProfile"));
+const StaticDynamicCard = React.lazy(() => import("./StaticDynamicComponent/StaticDynamicCard"));
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -129,7 +132,11 @@ const Home = ({
               {/* If Links component expects router props, ensure it's v6 compatible or pass navigate/location */}
               {/* <Links key={index} matchPath={`/digit-ui/citizen/${code.toLowerCase()}`} userType={"citizen"} /> */}
             </div>
-            <StaticDynamicCard moduleCode={code?.toUpperCase()} />
+            <LazyErrorBoundary>
+              <Suspense fallback={<Loader page={true} variant="PageLoader" />}>
+                <StaticDynamicCard moduleCode={code?.toUpperCase()} />
+              </Suspense>
+            </LazyErrorBoundary>
           </div>
         } />
         <Route path={`${code.toLowerCase()}-faq`} element={<FAQsSection module={code?.toUpperCase()} />} />
@@ -192,7 +199,16 @@ const Home = ({
 
           <Route path="register/*" element={<Login stateCode={stateCode} isUserRegistered={false} />} /> {/* Use /* if Login has nested routes */}
 
-          <Route path="user/profile" element={<UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />} />
+          <Route 
+            path="user/profile" 
+            element={
+              <LazyErrorBoundary>
+                <Suspense fallback={<Loader page={true} variant="PageLoader" />}>
+                  <UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />
+                </Suspense>
+              </LazyErrorBoundary>
+            } 
+          />
 
           <Route path="Audit" element={<Search />} />
 
