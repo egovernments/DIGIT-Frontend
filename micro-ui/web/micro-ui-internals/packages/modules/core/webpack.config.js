@@ -94,9 +94,6 @@ module.exports = {
               ]
             ],
             plugins: [
-              // Modern JS features
-              "@babel/plugin-transform-optional-chaining",
-              "@babel/plugin-transform-nullish-coalescing-operator",
               // Remove console logs in production
               ...(isProduction ? [["transform-remove-console", { "exclude": ["error", "warn"] }]] : [])
             ]

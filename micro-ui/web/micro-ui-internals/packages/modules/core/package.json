@@ -21,20 +21,20 @@
     "deploy": "gh-pages -d example/build"
   },
   "peerDependencies": {
+    "@tanstack/react-query": "^5.62.16",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router-dom": "6.25.1",
-    "@tanstack/react-query": "^5.62.16"
+    "react-router-dom": "6.25.1"
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "0.2.0-stable",
     "@egovernments/digit-ui-react-components": "1.8.22-stable",
     "react-i18next": "15.0.0",
     "react-redux": "7.2.8",
+    "react-responsive": "10.0.1",
     "react-tooltip": "4.1.2",
     "redux": "5.0.0",
-    "redux-thunk": "2.4.1",
-    "react-responsive":"10.0.1"
+    "redux-thunk": "2.4.1"
   },
   "sideEffects": false,
   "browserslist": {
@@ -58,26 +58,24 @@
     "core"
   ],
   "devDependencies": {
-    "sass": "^1.83.4",
-    "sass-loader": "^16.0.4",
     "@babel/core": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-react": "^7.23.3",
-    "@babel/plugin-transform-optional-chaining": "^7.23.3",
-    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.3",
-    "babel-plugin-transform-remove-console": "^6.9.4",
+    "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9.1.3",
-    "css-loader": "^6.8.1",
-    "style-loader": "^3.3.3",
-    "webpack-dev-server": "^4.15.1",
+    "babel-plugin-transform-remove-console": "^6.9.4",
     "core-js": "^3.33.0",
     "cross-env": "7.0.3",
+    "css-loader": "^6.8.1",
     "lint-staged": "12.3.7",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4",
     "react": "19.0.0",
     "react-dom": "19.0.0",
     "react-router-dom": "6.25.1",
-    "@tanstack/react-query": "^5.62.16"
+    "sass": "^1.83.4",
+    "sass-loader": "^16.0.4",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
   }
 }
