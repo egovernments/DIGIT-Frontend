@@ -75,7 +75,18 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig,parentState,handleExpressionChange,screenConfig ,selectedField}) => {
+const RenderField = ({
+  state,
+  panelItem,
+  drawerState,
+  setDrawerState,
+  updateLocalization,
+  AppScreenLocalisationConfig,
+  parentState,
+  handleExpressionChange,
+  screenConfig,
+  selectedField,
+}) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === drawerState?.appType)
@@ -123,7 +134,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
       const switchRef = useRef(null);
       const [showTooltip, setShowTooltip] = useState(false);
       const isDisabled = disableFieldForMandatory(drawerState, panelItem, resourceData);
-//TODO:: Filter households popup should be acustom selection componenet
+      //TODO:: Filter households popup should be acustom selection componenet
       return (
         <div
           ref={switchRef}
@@ -386,7 +397,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
   }
 };
 
-function DrawerFieldComposer({parentState,screenConfig,selectedField}) {
+function DrawerFieldComposer({ parentState, screenConfig, selectedField }) {
   const { t } = useTranslation();
   const { locState, updateLocalization, AppScreenLocalisationConfig } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
@@ -411,16 +422,15 @@ function DrawerFieldComposer({parentState,screenConfig,selectedField}) {
 
   const handleExpressionChange = (expressionString) => {
     if (drawerState.visibilityCondition?.expression !== expressionString) {
-      setDrawerState(prev => ({
+      setDrawerState((prev) => ({
         ...prev,
         visibilityCondition: {
           ...prev.visibilityCondition,
-          expression: expressionString
-        }
+          expression: expressionString,
+        },
       }));
     }
   };
-
 
   useEffect(() => {
     if (state?.drawerField) {
