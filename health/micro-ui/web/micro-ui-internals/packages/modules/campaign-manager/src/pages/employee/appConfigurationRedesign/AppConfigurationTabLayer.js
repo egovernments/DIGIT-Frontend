@@ -134,7 +134,7 @@ const AppConfigurationTabLayer = () => {
     },
   };
 
-  const { isLoading: isTabLoading, data: tabData } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
+  const { isLoading: isTabLoading, data: tabData, refetch: refetchForm, revalidate: revalidateForm } = Digit.Hooks.useCustomAPIHook(reqCriteriaTab);
 
   useEffect(() => {
     if (!isTabLoading && tabData) {
