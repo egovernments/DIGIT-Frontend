@@ -153,7 +153,7 @@ module.exports = {
     ],
   },
   // Source maps configuration
-  devtool: isProduction ? 'external-source-map' : 'inline-source-map',
+  devtool: isProduction ? 'source-map' : 'eval-source-map',
   
   // Development server configuration
   devServer: isDevelopment ? {
