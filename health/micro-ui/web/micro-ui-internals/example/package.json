@@ -16,9 +16,9 @@
   },
   "devDependencies": {
     "@egovernments/digit-ui-libraries": "1.8.17-rc19.01",
-    "@egovernments/digit-ui-module-core": "1.8.35-rc19.02",
-    "@egovernments/digit-ui-components": "0.2.0-beta.40-rc19.02",
-    "@egovernments/digit-ui-react-components": "1.8.21-rc19.02",
+    "@egovernments/digit-ui-module-core": "1.8.36-rc-test-02",
+    "@egovernments/digit-ui-components": "0.2.0-rc-test-04",
+     "@egovernments/digit-ui-react-components": "1.8.22-rc-test-04",
     "@egovernments/digit-ui-module-workbench": "1.0.19-test.2",
     "@egovernments/digit-ui-module-campaign-manager": "0.4.0",
     "http-proxy-middleware": "^1.0.5",
