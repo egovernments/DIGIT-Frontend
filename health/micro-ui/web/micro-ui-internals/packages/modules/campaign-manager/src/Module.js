@@ -124,9 +124,14 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   );
 });
 
-const componentsToRegister = {
+// Critical components that need to be loaded immediately
+const criticalComponents = {
   CampaignModule: CampaignModule,
   CampaignCard: CampaignCard,
+};
+
+// Non-critical components that can be loaded later
+const nonCriticalComponents = {
   UploadData,
   DeliveryRule: DeliverySetup,
   CycleConfiguration: CycleConfiguration,
@@ -184,6 +189,12 @@ const componentsToRegister = {
   CampaignNameInfo,
 };
 
+// All components combined (for backward compatibility)
+const componentsToRegister = {
+  ...criticalComponents,
+  ...nonCriticalComponents,
+};
+
 const overrideHooks = () => {
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
@@ -226,16 +237,48 @@ const updateCustomConfigs = () => {
   // setupLibraries("Utils", "parsingUtils", { ...window?.Digit?.Utils?.parsingUtils, ...parsingUtils });
 };
 
+// Memoized registration to prevent duplicate calls
+const registeredComponents = new Set();
+
 /**
- * The `initCampaignComponents` function initializes campaign components by overriding hooks, updating
+ * Initialize critical campaign components immediately
+ */
+const initCriticalCampaignComponents = () => {
+  Object.entries(criticalComponents).forEach(([key, value]) => {
+    if (!registeredComponents.has(key)) {
+      Digit.ComponentRegistryService.setComponent(key, value);
+      registeredComponents.add(key);
+    }
+  });
+};
+
+/**
+ * Initialize non-critical campaign components when needed
+ */
+const initNonCriticalCampaignComponents = () => {
+  overrideHooks();
+  updateCustomConfigs();
+  Object.entries(nonCriticalComponents).forEach(([key, value]) => {
+    if (!registeredComponents.has(key)) {
+      Digit.ComponentRegistryService.setComponent(key, value);
+      registeredComponents.add(key);
+    }
+  });
+};
+
+/**
+ * The `initCampaignComponents` function initializes all campaign components by overriding hooks, updating
  * custom configurations, and registering components.
  */
 const initCampaignComponents = () => {
   overrideHooks();
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
-    Digit.ComponentRegistryService.setComponent(key, value);
+    if (!registeredComponents.has(key)) {
+      Digit.ComponentRegistryService.setComponent(key, value);
+      registeredComponents.add(key);
+    }
   });
 };
 
-export { initCampaignComponents };
+export { initCampaignComponents, initCriticalCampaignComponents, initNonCriticalCampaignComponents };

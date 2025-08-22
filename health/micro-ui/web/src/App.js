@@ -1,6 +1,7 @@
 import React, {Suspense} from "react";
 import {initGlobalConfigs} from "./globalConfig"; // adjust if needed
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+import { Loader } from "@egovernments/digit-ui-components";
 
 const App = () => {
   initGlobalConfigs();
@@ -14,25 +15,54 @@ const DigitAppWrapper = () => {
 
   React.useEffect(() => {
     const loadApp = async () => {
-      await initLibraries();
+      try {
+        await initLibraries();
 
-      const module = await import("@egovernments/digit-ui-module-core");
-      const DigitUI = module?.DigitUI || module?.default;
+        // Phase 1: Initialize critical components immediately
+        const coreModule = await import("@egovernments/digit-ui-module-core");
+        if (coreModule.initCriticalComponents) {
+          coreModule.initCriticalComponents();
+          console.log("✅ Critical components ready for immediate use");
+        }
 
-      setDigitUIComponent(() => DigitUI);
-      setLoading(false);
+        // Phase 2: Initialize remaining components when needed
+        if (coreModule.initCoreComponents) {
+          coreModule.initCoreComponents();
+          console.log("✅ All core components registered");
+        }
+
+        // Phase 1: Initialize critical campaign components
+        const campaignModule = await import("@egovernments/digit-ui-module-campaign-manager");
+        if (campaignModule.initCriticalCampaignComponents) {
+          campaignModule.initCriticalCampaignComponents();
+          console.log("✅ Critical campaign components ready");
+        }
+
+        // Phase 2: Initialize remaining campaign components
+        if (campaignModule.initNonCriticalCampaignComponents) {
+          campaignModule.initNonCriticalCampaignComponents();
+          console.log("✅ All campaign components registered");
+        }
+
+        const DigitUI = coreModule?.DigitUI || coreModule?.default;
+        setDigitUIComponent(() => DigitUI);
+        setLoading(false);
+      } catch (error) {
+        console.error("❌ Component initialization failed:", error);
+        setLoading(false); // Continue with partial functionality
+      }
     };
 
     loadApp();
   }, []);
 
   if (loading || !DigitUIComponent) {
-    return <div>Loading App...</div>;
+    return <div><Loader page={true} variant={"PageLoader"} /></div>;
   }
 
   return (
     <DigitUIComponent
-      stateCode="pb"
+      stateCode="mz"
       enabledModules={[]}
       defaultLanding="employee"
       moduleReducers={{}}

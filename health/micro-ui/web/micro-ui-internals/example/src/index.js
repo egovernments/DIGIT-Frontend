@@ -6,7 +6,13 @@ import "./index.css"
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
-const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
+const DigitUILazy = lazy(() => 
+  import("@egovernments/digit-ui-module-core").then((module) => ({ 
+    default: module.DigitUI,
+    initCoreComponents: module.initCoreComponents,
+    initCriticalComponents: module.initCriticalComponents
+  }))
+);
 
 
 const enabledModules = ["Workbench", "Campaign"];
@@ -55,11 +61,42 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
-      const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
-      initCampaignComponents();
-      initWorkbenchComponents();
-      setIsReady(true);
+      try {
+        // Phase 1: Initialize critical components immediately
+        const coreModule = await import("@egovernments/digit-ui-module-core");
+        if (coreModule.initCriticalComponents) {
+          coreModule.initCriticalComponents();
+          console.log("✅ Critical components ready for immediate use");
+        }
+
+        // Phase 2: Initialize remaining components when needed
+        if (coreModule.initCoreComponents) {
+          coreModule.initCoreComponents();
+          console.log("✅ All core components registered");
+        }
+
+        // Initialize critical campaign components first
+        const {initCriticalCampaignComponents, initNonCriticalCampaignComponents} = await import("@egovernments/digit-ui-module-campaign-manager")
+        if (initCriticalCampaignComponents) {
+          initCriticalCampaignComponents();
+          console.log("✅ Critical campaign components ready");
+        }
+
+        // Initialize module-specific components
+        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+        initWorkbenchComponents();
+
+        // Initialize non-critical campaign components
+        if (initNonCriticalCampaignComponents) {
+          initNonCriticalCampaignComponents();
+          console.log("✅ All campaign components registered");
+        }
+        
+        setIsReady(true);
+      } catch (error) {
+        console.error("❌ Component initialization failed:", error);
+        setIsReady(true); // Continue with partial functionality
+      }
     });
   }, []);
 
@@ -73,7 +110,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div><Loader page={true} variant={"PageLoader"} /></div>}>
       {window.Digit && (
         <DigitUILazy stateCode={stateCode} enabledModules={enabledModules} allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
       )}
