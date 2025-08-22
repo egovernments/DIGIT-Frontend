@@ -12,12 +12,16 @@ const App = () => {
 const DigitAppWrapper = () => {
   const [DigitUIComponent, setDigitUIComponent] = React.useState(null);
   const [loading, setLoading] = React.useState(true);
+  const [loadingStage, setLoadingStage] = React.useState("Initializing...");
 
   React.useEffect(() => {
     const loadApp = async () => {
+      const startTime = performance.now();
       try {
+        setLoadingStage("Loading core libraries...");
         await initLibraries();
 
+        setLoadingStage("Initializing critical components...");
         // Phase 1: Initialize critical components immediately
         const coreModule = await import("@egovernments/digit-ui-module-core");
         if (coreModule.initCriticalComponents) {
@@ -31,6 +35,7 @@ const DigitAppWrapper = () => {
           console.log("✅ All core components registered");
         }
 
+        setLoadingStage("Loading campaign components...");
         // Phase 1: Initialize critical campaign components
         const campaignModule = await import("@egovernments/digit-ui-module-campaign-manager");
         if (campaignModule.initCriticalCampaignComponents) {
@@ -38,17 +43,25 @@ const DigitAppWrapper = () => {
           console.log("✅ Critical campaign components ready");
         }
 
-        // Phase 2: Initialize remaining campaign components
-        if (campaignModule.initNonCriticalCampaignComponents) {
-          campaignModule.initNonCriticalCampaignComponents();
-          console.log("✅ All campaign components registered");
-        }
+        setLoadingStage("Finalizing setup...");
+        // Phase 2: Initialize remaining campaign components (progressive loading)
+        setTimeout(() => {
+          if (campaignModule.initNonCriticalCampaignComponents) {
+            campaignModule.initNonCriticalCampaignComponents();
+            console.log("✅ All campaign components registered");
+          }
+        }, 100); // Non-blocking initialization
 
         const DigitUI = coreModule?.DigitUI || coreModule?.default;
         setDigitUIComponent(() => DigitUI);
+        
+        const loadTime = performance.now() - startTime;
+        console.log(`🚀 App initialization completed in ${loadTime.toFixed(2)}ms`);
         setLoading(false);
       } catch (error) {
         console.error("❌ Component initialization failed:", error);
+        const errorTime = performance.now() - startTime;
+        console.log(`⚠️ App initialization failed after ${errorTime.toFixed(2)}ms`);
         setLoading(false); // Continue with partial functionality
       }
     };
@@ -57,7 +70,25 @@ const DigitAppWrapper = () => {
   }, []);
 
   if (loading || !DigitUIComponent) {
-    return <div><Loader page={true} variant={"PageLoader"} /></div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        height: '100vh',
+        gap: '16px'
+      }}>
+        <Loader page={true} variant={"PageLoader"} />
+        <div style={{ 
+          color: '#666', 
+          fontSize: '14px',
+          textAlign: 'center'
+        }}>
+          {loadingStage}
+        </div>
+      </div>
+    );
   }
 
   return (
