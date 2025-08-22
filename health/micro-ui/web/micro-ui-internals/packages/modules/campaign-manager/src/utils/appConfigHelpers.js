@@ -204,6 +204,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         pattern: field?.validations?.find((i) => i?.type === "pattern"),
         RegexPattern: field?.validations?.find((i) => i?.type === "pattern") ? true : false,
         MdmsDropdown: field?.schemaCode ? true : false,
+        dropDownOptions: field?.enums,
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
         includeInForm: field?.includeInForm === false ? false : true,
@@ -253,7 +254,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         enableSectionAddition: false,
         allowCommentsAdditionAt: ["body"],
       },
-      navigateTo: page?.navigateTo || {},
+      navigateTo: page?.navigateTo,
       conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
@@ -290,6 +291,7 @@ function addToArrayFields(field) {
 // Update reverseRestructure to use getTypeAndFormatFromAppType
 export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
   return updatedData.map((section, index) => {
+    debugger;
     const properties = section.cards?.[0]?.fields.map((field, fieldIndex) => {
       const typeAndFormat = getTypeAndFormatFromAppType(field, fieldTypeMasterData);
       const toArrayFields = addToArrayFields(field, fieldTypeMasterData); // TODO @nabeel @jagan right now this works for only validation array, we should think to expose to change the main config dynamically
@@ -328,8 +330,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       actionLabel: section?.actionLabel || "",
       order: index + 1,
       properties,
-      navigateTo: section?.navigateTo || {},
-      conditionalNavigateTo: section?.conditionalNavigateTo || [],
+      navigateTo: section?.navigateTo,
+      conditionalNavigateTo: section?.conditionalNavigateTo,
 
     };
   });

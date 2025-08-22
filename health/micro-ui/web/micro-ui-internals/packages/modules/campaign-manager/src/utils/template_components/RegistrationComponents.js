@@ -1,7 +1,8 @@
-import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header, PopUp, SVG } from "@egovernments/digit-ui-components";
+import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header, PopUp, SVG, SelectionTag } from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState, } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 import RenderSelectionField from "../../components/RenderSelectionField";
+import { useCustomT } from "../../pages/employee/appConfigurationRedesign/useCustomT";
 
 
 
@@ -47,17 +48,19 @@ const FilterIcon = (props) => (
 );
 const Filter = (props) => {
   const [showPopUp, setShowPopUp] = useState(false);
+  const labelText   = props.t(props.field.label) || "LABEL";
+  const headingText = props.t("SELECT_FILTER");
 
   return (
     <div className="digit-search-action">
       <FilterIcon onClick={() => setShowPopUp(true)} />
-      <span className="digit-search-text" style={{color: "#C84C0E"}}>{props.t(props.field.label) || "LABEL"}</span>
+      <span className="digit-search-text" style={{ color: "#C84C0E" }}>{labelText}</span>
 
       {showPopUp && (
         <PopUp
           className={"custom-popup-filter"}
           type={"default"}
-          heading={props.t("SELECT_FILTER")}
+          heading={headingText}
           onClose={() => setShowPopUp(false)}
           style={{
             width: "100%",          // Full width popup
@@ -75,9 +78,18 @@ const Filter = (props) => {
             padding: "1rem",
             boxSizing: "border-box"
           }}>
-            <RenderSelectionField
-              field={props.field}
-              t={props.t}
+            <SelectionTag
+              // schemaCode={null}                // no MDMS
+              withContainer
+              options={(props.field?.dropdownOptions || []).filter(
+                (opt) => (Object.prototype.hasOwnProperty.call(opt, "active") ? opt.active : true)
+              )}
+              optionsKey="code"                // show label from `name`
+              // selected={props.value || []}     // pass your current selection (array)
+              onSelectionChanged={(next) => {  // bubble up to parent
+              }}
+              // populators={{ t: props.t }}      // let the component use your translator
+              errorMessage=""                  // set if you need validation text
             />
           </div>
         </PopUp>
@@ -677,7 +689,7 @@ const SimpleSearchFilterRow = ({
       >
         <SVG.ArrowDownward width={"20px"} height={"20px"} fill={"#C84C0E"} />
         {sortIcon?.label ? (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" , color: "#C84C0E"}}>
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
             {t?.(sortIcon?.label || "")}
           </span>
         ) : null}

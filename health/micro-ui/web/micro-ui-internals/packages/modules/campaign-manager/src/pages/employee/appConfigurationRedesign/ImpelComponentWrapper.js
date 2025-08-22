@@ -2,7 +2,7 @@ import React, { Fragment, useEffect, useState } from "react";
 // import { dummyMaster } from "../../../configs/dummyMaster";
 //production mode
 import { AppLocalisationWrapper, Loader, useCustomT } from "@egovernments/digit-ui-components";
-// import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
+import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
 //development mode
 import AppPreview from "../../../components/AppPreview";
 
@@ -149,6 +149,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
             array: "array",
             text: "string",
             number: "number",
+            button: "button"
           };
 
           schema.properties[key] = {
@@ -175,36 +176,40 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     submit(restructuredData, finalSubmit, tabChange);
   };
 
+  // Remove this for production
+
   // if (process.env.NODE_ENV === "development") {
-  //   return (
-  //     //development mode
-  //     <AppLocalisationWrapperDev
-  //       onSubmit={onSubmit}
-  //       back={back}
-  //       showBack={showBack}
-  //       screenConfig={screenConfig}
-  //       parentDispatch={parentDispatch}
-  //       localeModule={localeModule}
-  //       pageTag={pageTag}
-  //       parentState={parentState}
-  //     />
-  //   );
+    return (
+      //development mode
+      <AppLocalisationWrapperDev
+        onSubmit={onSubmit}
+        back={back}
+        showBack={showBack}
+        screenConfig={screenConfig}
+        parentDispatch={parentDispatch}
+        localeModule={localeModule}
+        pageTag={pageTag}
+        parentState={parentState}
+      />
+    );
   // }
-  return (
-    //production mode
-    <AppLocalisationWrapper
-      onSubmit={onSubmit}
-      back={back}
-      showBack={showBack}
-      screenConfig={screenConfig}
-      parentDispatch={parentDispatch}
-      localeModule={localeModule}
-      pageTag={pageTag}
-      parentState={parentState}
-    >
-      <AppPreview />
-    </AppLocalisationWrapper>
-  );
+
+  // [TODO: ]Publish the changes to digit-components and uncomment this once published
+  // return (
+  //   //production mode
+  //   <AppLocalisationWrapper
+  //     onSubmit={onSubmit}
+  //     back={back}
+  //     showBack={showBack}
+  //     screenConfig={screenConfig}
+  //     parentDispatch={parentDispatch}
+  //     localeModule={localeModule}
+  //     pageTag={pageTag}
+  //     parentState={parentState}
+  //   >
+  //     <AppPreview />
+  //   </AppLocalisationWrapper>
+  // );
 }
 
 export default React.memo(ImpelComponentWrapper);

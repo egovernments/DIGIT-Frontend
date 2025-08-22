@@ -297,9 +297,10 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
   const [showPopUp, setShowPopUp] = useState(false);
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
+  const ct = (key) => useCustomT(key);  // call the hook once at top level
   const addFieldDataLabel = useMemo(() => {
-    return addFieldData?.label ? useCustomT(addFieldData?.label) : null;
-  }, [addFieldData]);
+    return addFieldData?.label ? ct(addFieldData?.label) : null;
+  }, [addFieldData, ct]);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
   const [showPreview, setShowPreview] = useState(null);
@@ -554,7 +555,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={ct} />
       <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
@@ -727,7 +728,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentSta
               required={true}
               type={"text"}
               label={`${t("ADD_FIELD_LABEL")}`}
-              value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
+              value={addFieldData?.label ? ct(addFieldData?.label) : ""}
               config={{
                 step: "",
               }}

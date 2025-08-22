@@ -20,19 +20,20 @@ const MdmsDropdown = ({
   select = () => {},
   rest,
 }) => {
-  if (!moduleName || !masterName) return null;
   const { isLoading, data } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     moduleName,
     [{ name: masterName }],
     {
-      enabled: moduleName && masterName,
+      enabled: !!moduleName && !!masterName,
       select: (data) => {
         return data?.[moduleName]?.[masterName]?.filter((item) => item.active);
       },
     },
     { schemaCode: "MDMSDROPDOWNLIST" } //mdmsv2
   );
+
+  if (!moduleName || !masterName) return null;
 
   if (isLoading) return <div>Loading...</div>;
   return (

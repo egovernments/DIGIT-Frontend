@@ -2,14 +2,23 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Dropdown, Switch, Loader } from "@egovernments/digit-ui-components";
 
 const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) => {
-  const [localSelectedSchema, setLocalSelectedSchema] = useState(null);
+
+  const [localSelectedSchema, setLocalSelectedSchema] = useState(drawerState?.schemaCode ? {
+    masterName: drawerState?.schemaCode?.split('.')?.[1],
+    moduleName: drawerState?.schemaCode?.split('.')?.[0],
+    schemaCode: drawerState?.schemaCode,
+}: null);
   const [localActiveOptions, setLocalActiveOptions] = useState([]); // codes
 
   // --- 1) Always auto-select a master (prefer saved, else first option)
   useEffect(() => {
     if (localSelectedSchema) return;
 
-    const saved = drawerState?.selectedSchema;
+    const saved = drawerState?.schemaCode ? {
+      masterName: drawerState?.schemaCode?.split('.')?.[1],
+      moduleName: drawerState?.schemaCode?.split('.')?.[0],
+      schemaCode: drawerState?.schemaCode,
+  } : null ;
     const fallback = Array.isArray(cField?.mdmsOptions) && cField.mdmsOptions.length > 0
       ? cField.mdmsOptions[0]
       : null;
@@ -47,9 +56,9 @@ const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) =
     if (!localSelectedSchema) return;
     if (mdmsOptions.length === 0) return;
 
-    if (Array.isArray(drawerState?.enums) && drawerState.enums.length > 0) {
+    if (Array.isArray(drawerState?.dropDownOptions) && drawerState.dropDownOptions.length > 0) {
       // hydrate from drawerState
-      const codes = drawerState.enums.map(e => e.code);
+      const codes = drawerState.dropDownOptions.map(e => e.code);
       setLocalActiveOptions(codes);
     } else {
       // default from MDMS active flags
@@ -59,7 +68,7 @@ const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) =
       const activeObjects = mdmsOptions.filter(o => defaultCodes.includes(o.code));
       setDrawerState(prev => ({
         ...prev,
-        enums: activeObjects,
+        dropDownOptions: activeObjects,
         selectedSchema: localSelectedSchema,
         schemaCode: localSelectedSchema.schemaCode,   // <- requested
       }));
@@ -77,7 +86,7 @@ const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) =
       const activeObjects = mdmsOptions.filter(item => nextCodes.includes(item.code));
       setDrawerState(prevState => ({
         ...prevState,
-        enums: activeObjects,
+        dropDownOptions: activeObjects,
         selectedSchema: localSelectedSchema,
         schemaCode: localSelectedSchema?.schemaCode,  // <- keep schemaCode in sync
       }));
@@ -102,7 +111,7 @@ const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) =
             ...prev,
             selectedSchema: value,
             schemaCode: value?.schemaCode,        // <- requested
-            enums: [],                            // reset enums for new master
+            dropDownOptions: [],                            // reset enums for new master
           }));
         }}
       />

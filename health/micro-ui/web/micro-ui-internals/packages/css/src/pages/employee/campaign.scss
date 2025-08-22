@@ -92,6 +92,52 @@
   margin-top: -1rem;
   margin-bottom: -1rem;
 }
+.popup-portal-overlay {
+  position: fixed !important;
+  inset: 0 !important; 
+  z-index: 9999 !important;
+  display: grid !important;
+  place-items: center !important; 
+  background: rgba(0,0,0,0.4); 
+  }
+
+.digit-popup--fullscreen .digit-popup-content,
+.digit-popup--fullscreen .digit-popup-wrapper,
+.digit-popup--fullscreen .digit-popup-container {
+flex: 1 1 auto !important;
+overflow: auto !important;
+min-height: 0; 
+}
+
+.digit-popup--centered {
+  max-width: unquote("min(720px, 92vw)") !important;
+  width: auto !important;
+  margin: 2rem auto !important;  /* <-- centers horizontally, adds space from top */
+  position: absolute !important;
+  top: auto !important;          /* <-- reset */
+  transform: none !important;    /* <-- reset */
+}
+
+.popup-portal-center {
+  position: fixed !important;
+  inset: 0 !important; 
+  z-index: 9999 !important;
+  display: grid !important;
+  place-items: center !important; 
+  background: rgba(0,0,0,0.4);
+}
+  
+  // Keep the dialog readable and prevent clipping /
+  .popup-portal-center :where(.digit-popup, .digit-popup-wrapper, .digit-popup-container) {
+  max-height: 85vh !important;
+  overflow: auto !important;
+  box-sizing: border-box !important;
+  max-width: unquote("min(720px, 92vw)") !important;
+  width: auto !important;
+  }
+  .body--popup-open {
+    overflow: hidden;
+    }
 
 .digit-popup-wrapper {
   &.popUpClass {
