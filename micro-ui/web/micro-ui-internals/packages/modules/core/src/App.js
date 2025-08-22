@@ -1,4 +1,4 @@
-import React, { useEffect, Suspense } from "react";
+import React, { useEffect, Suspense, useMemo } from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-components";
 import CustomErrorComponent from "./components/CustomErrorComponent";
@@ -15,19 +15,26 @@ const Otp = React.lazy(() => import("./pages/employee/Otp"));
 const ViewUrl = React.lazy(() => import("./pages/employee/ViewUrl"));
 const DummyLoaderScreen = React.lazy(() => import("./components/DummyLoader"));
 
-export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes = ["citizen", "employee"] }) => {
+export const DigitApp = React.memo(({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes = ["citizen", "employee"] }) => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const innerWidth = window.innerWidth;
-  const cityDetails = Digit.ULBService.getCurrentUlb();
-  const userDetails = Digit.UserService.getUser();
+  
+  // Memoize expensive calculations
+  const innerWidth = useMemo(() => {
+    return typeof window !== 'undefined' ? window.innerWidth : 1024;
+  }, []);
+  
+  const cityDetails = useMemo(() => Digit.ULBService.getCurrentUlb(), []);
+  const userDetails = useMemo(() => Digit.UserService.getUser(), []);
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
 
-  const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
-  let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
-
-  if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
+  // Memoize user permissions to prevent recalculation
+  const DSO = useMemo(() => Digit.UserService.hasAccess(["FSM_DSO"]), []);
+  const CITIZEN = useMemo(() => {
+    if (typeof window === 'undefined') return true;
+    return userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee");
+  }, [userDetails?.info?.type]);
 
   useEffect(() => {
     if (!pathname?.includes("application-details")) {
@@ -96,18 +103,29 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
       </Suspense>
     </LazyErrorBoundary>
   );
-};
+});
 
-export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen" ,allowedUserTypes}) => {
-  // const globalPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "digit-ui";
+export const DigitAppWrapper = React.memo(({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes }) => {
   const { data: storeData } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
-  const userScreensExempted = ["user/error"];
-  const isUserProfile = userScreensExempted.some((url) => location?.pathname?.includes(url));
-  const userDetails = Digit.UserService.getUser();
-  let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
-  const innerWidth = window.innerWidth;
-  const mobileView = innerWidth <= 640;
+  
+  // Memoize expensive calculations
+  const userScreensExempted = useMemo(() => ["user/error"], []);
+  const isUserProfile = useMemo(() => 
+    userScreensExempted.some((url) => location?.pathname?.includes(url)), 
+    [userScreensExempted]
+  );
+  
+  const userDetails = useMemo(() => Digit.UserService.getUser(), []);
+  const CITIZEN = useMemo(() => {
+    if (typeof window === 'undefined') return true;
+    return userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee");
+  }, [userDetails?.info?.type]);
+  
+  const innerWidth = useMemo(() => {
+    return typeof window !== 'undefined' ? window.innerWidth : 1024;
+  }, []);
+  const mobileView = useMemo(() => innerWidth <= 640, [innerWidth]);
 
   return (
     <div
@@ -147,4 +165,4 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
       </LazyErrorBoundary>
     </div>
   );
-};
+});

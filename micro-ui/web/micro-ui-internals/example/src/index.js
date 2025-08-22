@@ -3,9 +3,19 @@ import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+
+// Import optimized component initialization methods
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
-const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
+
+// Lazy load DigitUI with optimized initialization methods
+const DigitUILazy = lazy(() => 
+  import("@egovernments/digit-ui-module-core").then((module) => ({ 
+    default: module.DigitUI,
+    initCoreComponents: module.initCoreComponents,
+    initCriticalComponents: module.initCriticalComponents
+  }))
+);
 
 
 const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities","Campaign"];
@@ -48,27 +58,96 @@ const initDigitUI = () => {
 
 const MainApp = ({ stateCode, enabledModules }) => {
   const [isReady, setIsReady] = useState(false);
+  const [coreReady, setCoreReady] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
+  // Phase 1: Initialize libraries and critical core components
   useEffect(() => {
-    initLibraries().then(async () => {
-      setIsReady(true);
-    });
+    const initializeCriticalComponents = async () => {
+      try {
+        // Initialize libraries first
+        await initLibraries();
+        
+        // Initialize critical components immediately for faster initial load
+        const coreModule = await import("@egovernments/digit-ui-module-core");
+        if (coreModule.initCriticalComponents) {
+          coreModule.initCriticalComponents();
+          console.log("✅ Critical core components initialized");
+        }
+        
+        setIsReady(true);
+      } catch (error) {
+        console.error("❌ Failed to initialize critical components:", error);
+        setIsReady(true); // Continue anyway
+      }
+    };
+
+    initializeCriticalComponents();
   }, []);
 
+  // Phase 2: Initialize remaining core components and user tokens
   useEffect(() => {
-    initTokens(stateCode);
-    setLoaded(true);
+    if (isReady) {
+      const initializeRemainingComponents = async () => {
+        try {
+          // Initialize user tokens
+          initTokens(stateCode);
+          
+          // Initialize remaining core components (lazy loaded)
+          const coreModule = await import("@egovernments/digit-ui-module-core");
+          if (coreModule.initCoreComponents) {
+            coreModule.initCoreComponents();
+            console.log("✅ All core components initialized");
+          }
+          
+          setCoreReady(true);
+          setLoaded(true);
+        } catch (error) {
+          console.error("❌ Failed to initialize core components:", error);
+          setLoaded(true); // Continue anyway
+        }
+      };
+
+      initializeRemainingComponents();
+    }
   }, [stateCode, isReady]);
 
   if (!loaded) {
-    return <div>Loading...</div>;
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        flexDirection: 'column',
+        gap: '1rem'
+      }}>
+        <div>Loading DIGIT UI...</div>
+        {isReady && <div style={{ fontSize: '0.8rem', color: '#666' }}>
+          Initializing components...
+        </div>}
+      </div>
+    );
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      {window.Digit && (
-        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
+    <Suspense fallback={
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh' 
+      }}>
+        Loading Application...
+      </div>
+    }>
+      {window.Digit && coreReady && (
+        <DigitUILazy 
+          stateCode={stateCode} 
+          enabledModules={enabledModules}   
+          allowedUserTypes={["employee", "citizen"]} 
+          defaultLanding="employee" 
+        />
       )}
     </Suspense>
   );

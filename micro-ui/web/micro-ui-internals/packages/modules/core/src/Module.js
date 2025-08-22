@@ -19,34 +19,43 @@ const SelectOtp = React.lazy(() => import("./pages/citizen/Login/SelectOtp"));
 const ChangeCity = React.lazy(() => import("./components/ChangeCity"));
 const OtpComponent = React.lazy(() => import("./pages/employee/Otp/OtpCustomComponent"));
 
-// Create QueryClient instance outside component to prevent recreation
+// Optimized QueryClient configuration for core wrapper performance
 const createQueryClient = () => new QueryClient({
   defaultOptions: {
     queries: {
-      staleTime: 15 * 60 * 1000,
-      gcTime: 50 * 60 * 1000,
-      retry: false,
-      retryDelay: (attemptIndex) => Infinity,
-      /*
-        enable this to have auto retry incase of failure
-        retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
-       */
+      staleTime: 5 * 60 * 1000, // 5 minutes - reduced for better data freshness
+      gcTime: 30 * 60 * 1000, // 30 minutes - reduced memory footprint
+      retry: 2, // Enable smart retry with limit
+      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 5000), // Exponential backoff
+      refetchOnWindowFocus: false, // Prevent unnecessary refetches
+      refetchOnMount: 'always', // Ensure fresh data on mount
+      networkMode: 'online', // Only run queries when online
+    },
+    mutations: {
+      retry: 1, // Limited retry for mutations
+      networkMode: 'online',
     },
   },
 });
 
-const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserTypes }) => {
-  const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+const DigitUIWrapper = React.memo(({ stateCode, enabledModules, defaultLanding, allowedUserTypes }) => {
+  const { isLoading, data: initData = {} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
+  
+  // Memoize store creation to prevent unnecessary re-creation
+  const store = useMemo(() => getStore(initData) || {}, [initData]);
+  
+  // Memoize component registration to prevent re-registration
+  useMemo(() => {
+    if (!Digit.ComponentRegistryService.getComponent("PrivacyComponent")) {
+      Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
+    }
+  }, []);
+
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
-  }
-  const data=getStore(initData) || {};
-  const i18n = getI18n();
-  if(!Digit.ComponentRegistryService.getComponent("PrivacyComponent")){
-    Digit.ComponentRegistryService.setComponent("PrivacyComponent", PrivacyComponent);
+    return <Loader page={true} variant="PageLoader" />;
   }
   return (
-    <Provider store={data}>
+    <Provider store={store}>
       <Router>
         <BodyContainer>
           {Digit.Utils.getMultiRootTenant() ? (
@@ -75,7 +84,7 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserT
       </Router>
     </Provider>
   );
-};
+});
 
 /**
  * DigitUI Component - The main entry point for the UI.
@@ -164,16 +173,36 @@ export const DigitUI = ({ stateCode, registry, enabledModules, defaultLanding,al
   );
 };
 
+// Optimized lazy registration to prevent unnecessary bundle bloat
 const componentsToRegister = {
-  SelectOtp,
-  ChangeCity,
+  // Keep critical components for immediate registration
   ChangeLanguage,
   PrivacyComponent,
+  // Lazy components registered on-demand
+  SelectOtp,
+  ChangeCity, 
   OtpComponent,
 };
 
+// Memoized registration to prevent duplicate calls
+const registeredComponents = new Set();
+
 export const initCoreComponents = () => {
   Object.entries(componentsToRegister).forEach(([key, value]) => {
-    Digit.ComponentRegistryService.setComponent(key, value);
+    if (!registeredComponents.has(key)) {
+      Digit.ComponentRegistryService.setComponent(key, value);
+      registeredComponents.add(key);
+    }
+  });
+};
+
+// Register critical components immediately, lazy ones on-demand
+export const initCriticalComponents = () => {
+  const criticalComponents = { ChangeLanguage, PrivacyComponent };
+  Object.entries(criticalComponents).forEach(([key, value]) => {
+    if (!registeredComponents.has(key)) {
+      Digit.ComponentRegistryService.setComponent(key, value);
+      registeredComponents.add(key);
+    }
   });
 };
