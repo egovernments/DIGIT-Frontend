@@ -19,7 +19,7 @@ export const RenderConditionalField = ({
   parentState,
   handleExpressionChange,
   screenConfig,
-  selectedField
+  selectedField,
 }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
@@ -27,7 +27,6 @@ export const RenderConditionalField = ({
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
-
 
   switch (cField?.type) {
     case "text":
@@ -51,8 +50,9 @@ export const RenderConditionalField = ({
               updateLocalization(
                 drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
                   ? drawerState?.[cField.bindTo]
-                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${drawerState?.jsonPath || drawerState?.id
-                  }`,
+                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
+                      drawerState?.jsonPath || drawerState?.id
+                    }`,
                 Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                 value
               );
@@ -61,8 +61,9 @@ export const RenderConditionalField = ({
                 [cField?.bindTo]:
                   drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
                     ? drawerState?.[cField.bindTo]
-                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${drawerState?.jsonPath || drawerState?.id
-                    }`,
+                    : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
+                        drawerState?.jsonPath || drawerState?.id
+                      }`,
               }));
               return;
             } else {
@@ -152,18 +153,18 @@ export const RenderConditionalField = ({
                 ...prev,
                 [cField?.bindTo]: prev?.[cField?.bindTo]
                   ? [
-                    ...prev?.[cField?.bindTo],
-                    {
-                      code: crypto.randomUUID(),
-                      name: "",
-                    },
-                  ]
+                      ...prev?.[cField?.bindTo],
+                      {
+                        code: crypto.randomUUID(),
+                        name: "",
+                      },
+                    ]
                   : [
-                    {
-                      code: crypto.randomUUID(),
-                      name: "",
-                    },
-                  ],
+                      {
+                        code: crypto.randomUUID(),
+                        name: "",
+                      },
+                    ],
               }))
             }
           />
@@ -220,15 +221,7 @@ export const RenderConditionalField = ({
         />
       );
     case "filters":
-      return (
-        <FiltersRenderer
-          cField={cField}
-          drawerState={drawerState}
-          setDrawerState={setDrawerState}
-          t={t}
-          disabled={disabled}
-        />
-      );
+      return <FiltersRenderer cField={cField} drawerState={drawerState} setDrawerState={setDrawerState} t={t} disabled={disabled} />;
     case "dependencyFieldWrapper":
       return (
         <DependentFieldsWrapper
@@ -239,7 +232,7 @@ export const RenderConditionalField = ({
           screenConfig={screenConfig}
           selectedFieldItem={selectedField}
         />
-      )
+      );
     default:
       return null;
   }

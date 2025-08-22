@@ -385,7 +385,6 @@ const CreateEmployee = ({ editUser = false }) => {
 
         {showToast && (
           <Toast
-            type={showToast?.key ? "error" : "success"}
             error={showToast.key}
             isDleteBtn="true"
             label={t(showToast.label)}
