@@ -11,6 +11,7 @@ import BillInbox from "./bill_inbox";
 import MyBills from "./my_bills";
 import ProjectSelect from "./project_selection";
 import EditRegister from "./EditRegister";
+import InboxAttendeesSearch from "./AttendeeSearchAssign";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -64,6 +65,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
+        
+        <PrivateRoute path={`${path}/attendee-inbox`} component={() => <InboxAttendeesSearch />} />
          <PrivateRoute path={`${path}/edit-register`} component={() => <EditRegister />} />
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
         <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttendance={true} />} />

@@ -1,25 +1,26 @@
-import Urls from "../../../../../health-hrms/src/services/urls";
+import Urls from "../../urls";
 import { Request } from "@egovernments/digit-ui-libraries";
 const AttendeeService = {
-//   search: (tenantId, filters, searchParams) =>
-//     Request({
-//       url: Urls.hrms.search,
-//       useCache: false,
-//       method: "POST",
-//       auth: true,
-//       userService: true,
-//       params: { tenantId, ...filters, ...searchParams },
-//     }),
-//   create: (data, tenantId) =>
-//     Request({
-//       data: data,
-//       url: Urls.hrms.create,
-//       useCache: false,
-//       method: "POST",
-//       auth: true,
-//       userService: true,
-//       params: { tenantId },
-//     }),
+  search: (tenantId, filters, searchParams,data) =>
+    Request({
+      url: Urls.attendee.search,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      data:data,
+      params: { tenantId, ...filters, ...searchParams },
+    }),
+  create: (data, tenantId) =>
+    Request({
+      data: data,
+      url: Urls.attendee.enrollAttendee,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: { tenantId },
+    }),
 //   update: (data, tenantId) =>
 //     Request({
 //       data: data,

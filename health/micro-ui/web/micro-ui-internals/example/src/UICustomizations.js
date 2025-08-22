@@ -2609,4 +2609,63 @@ export const UICustomizations = {
       return "TQM_VIEW_TEST_DETAILS";
     },
   },
+
+// for attendee search
+  AttendeeSearchInboxConfig: {
+      preProcess: (data) => {
+        // filterForm
+        // params
+  
+        if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+          const updatedParams = {}; // Temporary object to store updates
+  
+          if (data.state.filterForm.roles?.code) {
+            updatedParams.roles = data.state.filterForm.roles.code;
+          }
+  
+          if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+            updatedParams.isActive = data.state.filterForm.isActive.code;
+          }
+  
+          // Update `data.params` only if `updatedParams` has values
+          if (Object.keys(updatedParams).length > 0) {
+            data.params = { ...data.params, ...updatedParams };
+          }
+        }
+  
+        return data;
+      },
+  
+      additionalCustomizations: (row, key, column, value, t, searchResult) => {
+        switch (key) {
+          case "HR_EMP_ID_LABEL":
+            return (
+              <span className="link">
+                <Link to={`/${window.contextPath}/employee/hrms/details/${value}`}>{value}</Link>
+              </span>
+            );
+            
+          case "HR_EMP_NAME_LABEL":
+            return value ? `${value}` : t("ES_COMMON_NA");
+  
+          case "HR_ROLE_NO_LABEL":
+            return value?.length > 0 ? value?.length : t("ES_COMMON_NA");
+  
+          case "HR_DESG_LABEL":
+            return value ? t(`${value.designation}`) : t("ES_COMMON_NA");
+  
+          case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
+            return value ? t(`${value.department}`) : t("ES_COMMON_NA");
+  
+          case "HR_JURIDICTIONS_LABEL":
+            return value?.length > 0 ? (
+              value?.map((j) => t(j?.boundary)).join(",")
+            ) : (
+              t("ES_COMMON_NA")
+            );
+          default:
+            return t("ES_COMMON_NA");
+        }
+      },
+  },
 };

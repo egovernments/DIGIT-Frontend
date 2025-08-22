@@ -1,74 +1,111 @@
-export const AttendanceService = {
-    
+import AttendeeService from "./attendee_service/attendeeService";
 
-    attendance_boundary_Search: async ({body, params}) => {
-      try {
-          const response = await Digit.CustomService.getResponse({
-            url: "/boundary-service/boundary-relationships/_search",
-            useCache: false,
-            method: "POST",
-            userService: true,
-            body,
-            params,
-          });
-         
-          return response.TenantBoundary;
-        } catch (error) {
-          if (error?.response?.data?.Errors) {
-            throw new Error(error.response.data.Errors[0].message);
-          }
-          throw new Error("An unknown error occurred");
-        }
+
+export const AttendanceService = {
+
+
+  attendance_boundary_Search: async ({ body, params }) => {
+    try {
+      const response = await Digit.CustomService.getResponse({
+        url: "/boundary-service/boundary-relationships/_search",
+        useCache: false,
+        method: "POST",
+        userService: true,
+        body,
+        params,
+      });
+
+      return response.TenantBoundary;
+    } catch (error) {
+      if (error?.response?.data?.Errors) {
+        throw new Error(error.response.data.Errors[0].message);
+      }
+      throw new Error("An unknown error occurred");
+    }
   },
-   
+
   //health-attendance/v1/_search
 
-  attendance_registers_Search: async ({body, params}) => {
+  attendance_registers_Search: async ({ body, params }) => {
     try {
-      
-        const response = await Digit.CustomService.getResponse({
-          url: "/health-attendance/v1/_search",
-          useCache: false,
-          method: "POST",
-          userService: true,
-          body,
-          params,
-        });
-       
-        return response;
-      } catch (error) {
-        if (error?.response?.data?.Errors) {
-          throw new Error(error.response.data.Errors[0].message);
-        }
-        throw new Error("An unknown error occurred");
+
+      const response = await Digit.CustomService.getResponse({
+        url: "/health-attendance/v1/_search",
+        useCache: false,
+        method: "POST",
+        userService: true,
+        body,
+        params,
+      });
+
+      return response;
+    } catch (error) {
+      if (error?.response?.data?.Errors) {
+        throw new Error(error.response.data.Errors[0].message);
       }
-},
+      throw new Error("An unknown error occurred");
+    }
+  },
 
-//INFO:: 
+  //INFO:: 
 
-deEnrollment_attendee: async ({body, params}) => {
+  deEnrollment_attendee: async ({ body, params }) => {
     try {
-      
-        const response = await Digit.CustomService.getResponse({
-          url: "/health-attendance/attendee/v1/_delete",
-          useCache: false,
-          method: "POST",
-          userService: true,
-          body,
-          params,
-        });
-       
-        return response;
-      } catch (error) {
-        if (error?.response?.data?.Errors) {
-          throw new Error(error.response.data.Errors[0].message);
-        }
-        throw new Error("An unknown error occurred");
+
+      const response = await Digit.CustomService.getResponse({
+        url: "/health-attendance/attendee/v1/_delete",
+        useCache: false,
+        method: "POST",
+        userService: true,
+        body,
+        params,
+      });
+
+      return response;
+    } catch (error) {
+      if (error?.response?.data?.Errors) {
+        throw new Error(error.response.data.Errors[0].message);
       }
+      throw new Error("An unknown error occurred");
+    }
+
+  },
+
+
+  searchIndividual: async ({ name, locallity, tenantId }) => {
+    try {
+
+      //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
+      const result = await AttendeeService.search(tenantId, null, { limit: 10, offset: 1 }, {
+
+        "Individual": {
+
+          "name": {
+            "givenName": name
+            // "givenName": "Ava Taylor"
+          },
+
+          //  "mobileNumber": null,
+
+          "locality": {
+            "id": null,
+            "tenantId": null,
+            "code": locallity || "NEWTEST00222_MO_11_06_PLEEBO",
+            "geometry": null,
+            "auditDetails": null,
+            "additionalDetails": null
+          }
+        }
+
+      });
+
+      return result.Individual;
+    } catch (error) {
+      throw error; // throw on error
+    }
+  }
+
 }
 
 
-}
-
-  
-  export default AttendanceService;
+export default AttendanceService;
