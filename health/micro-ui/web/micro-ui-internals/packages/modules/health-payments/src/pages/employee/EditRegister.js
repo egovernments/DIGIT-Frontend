@@ -154,7 +154,7 @@ const EditRegister = ({ editAttendance = false }) => {
                 const userRole =
                     t(matchingIndividual.skills?.[0]?.type) || t("NA");
                 // const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
-                const tag=individualEntry?.tag ||"N/A";
+                const tag = individualEntry?.tag || "N/A";
                 const id = individualEntry.individualId || 0;
 
                 return [id, userName, userId, userRole, tag];

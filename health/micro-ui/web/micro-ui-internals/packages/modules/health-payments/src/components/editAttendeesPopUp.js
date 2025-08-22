@@ -8,8 +8,10 @@ import AttendeeService from "../services/attendance/attendee_service/attendeeSer
 
 import { useAttendanceSummary } from "../utils/update_attendance_summary";
 
+import SearchUserPopUp from "./SearchUserPopUp";
 
-const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
+
+const EditAttendeePopUp = ({ onClose, businessId, heading, registerId }) => {
     const history = useHistory();
     // context path variables
     const attendanceContextPath =
@@ -31,7 +33,10 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
     const [individualIds, setIndividualIds] = useState([]);
 
     const [searchQuery, setSearchQuery] = useState("");
-    const [flag,setFlag]=useState(false);
+    const [flag, setFlag] = useState(false);
+
+
+    const [searchUserpopUp, setSearchUserpopUp] = useState(false);
 
     // -------- 1. Attendance Register API --------
     const AttendancereqCri = {
@@ -44,7 +49,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
             enabled: !!businessId,
             select: (data) => data,
         },
-         changeQueryName: flag ? "attendanceSearch_refresh" : "attendanceSearch"
+        changeQueryName: flag ? "attendanceSearch_refresh" : "attendanceSearch"
     };
 
     const { isLoading: isAttendanceLoading, data: AttendanceData } =
@@ -102,7 +107,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
 
                     const id = individualEntry.individualId || 0;
 
-                    const tag= individualEntry?.tag ||"NA";
+                    const tag = individualEntry?.tag || "NA";
 
                     return [id, userName, userId, userRole, tag, noOfDaysWorked];
                 } else {
@@ -163,9 +168,13 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
     }
 
 
+    const closeActionBarPopUp = () => {
+        setSearchUserpopUp(false);
+    };
+
 
     // -------- Render --------
-    return (
+    return (<React.Fragment>
         <PopUp
             style={{ minWidth: "1000px" }}
             onClose={onClose}
@@ -194,7 +203,7 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
                             <Button label={t("Register New User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
 
                             <div>{t(labels[1])}</div>
-                            <Button label={t("Search User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
+                            <Button label={t("Search User")} variation="link" onClick={() => setSearchUserpopUp(true)} />
                         </div>
 
                     </div>
@@ -206,13 +215,20 @@ const EditAttendeePopUp = ({ onClose, businessId, heading ,registerId}) => {
                     size={"large"}
                     variation={"primary"}
                     label={t("HCM_AM_SAVE_AND_CLOSE")}
-                    onClick={() => {
-
-                    }}
+                    onClick={() => onClose}
                 />,
             ]}
             sortFooterChildren={true}
         />
+        {
+            searchUserpopUp && <SearchUserPopUp
+                onClose={closeActionBarPopUp}
+                heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
+            />
+        }
+
+
+    </React.Fragment>
     );
 };
 
