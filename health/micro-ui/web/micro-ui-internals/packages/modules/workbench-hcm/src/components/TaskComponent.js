@@ -14,7 +14,7 @@ const TaskComponent = (props) => {
   const url = getProjectServiceUrl();
   const [showMapview, setShowMapview] = useState({ showMaps: false });
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(props?.userId?1000:100);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
   const requestCriteria = {
@@ -126,6 +126,7 @@ const TaskComponent = (props) => {
               setPage(0);
             }}
             isNextDisabled={isNextDisabled}
+            showConnectingLines={props?.userId ? true : false}
           />
         ) : (
           <ReusableTableWrapper

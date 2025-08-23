@@ -33,7 +33,7 @@ const createCustomMarker = (style = {}) => {
 const isValidCoord = (v) =>
   v && typeof v.lat === "number" && typeof v.lng === "number";
 
-const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
+const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
   const boundaryLayerRef = useRef(null); // L.GeoJSON layer for shapefile boundaries
@@ -328,8 +328,8 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
           .addTo(layerGroup);
       });
 
-      // Add polyline if more than 1 point
-      if (positions.length > 1 && typeof L.polyline === "function") {
+      // Add polyline if more than 1 point and showConnectingLines is true
+      if (showConnectingLines && positions.length > 1 && typeof L.polyline === "function") {
         L.polyline(positions, { color: "blue" }).addTo(layerGroup);
       }
 
@@ -364,7 +364,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
     */
 
     // keep effect dependencies simple
-  }, [visits, shapefileData, boundaryStyle]);
+  }, [visits, shapefileData, boundaryStyle, showConnectingLines]);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

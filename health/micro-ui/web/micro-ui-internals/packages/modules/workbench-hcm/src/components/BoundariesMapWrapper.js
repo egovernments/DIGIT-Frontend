@@ -14,7 +14,8 @@ const BoundariesMapWrapper = ({
   pageSize = 10,
   onPageChange,
   onPageSizeChange,
-  isNextDisabled = false
+  isNextDisabled = false,
+  showConnectingLines = false
 }) => {
   const { t } = useTranslation();
   const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA" or "WARD"
@@ -237,9 +238,9 @@ const BoundariesMapWrapper = ({
       {/* Map Component */}
       <div style={{ flex: 1 }}>
         {boundaryType === "LGA" ? (
-          <LGABoundariesMap visits={visits} />
+          <LGABoundariesMap visits={visits} showConnectingLines={showConnectingLines} />
         ) : (
-          <WardBoundariesMap visits={visits} />
+          <WardBoundariesMap visits={visits} showConnectingLines={showConnectingLines} />
         )}
       </div>
     </div>

@@ -4,7 +4,7 @@ import MapView from "./MapView";
 /**
  * Component to display Ward Boundaries from S3
  */
-const WardBoundariesMap = ({ visits = [] }) => {
+const WardBoundariesMap = ({ visits = [], showConnectingLines = false }) => {
   const [boundaryData, setBoundaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -143,6 +143,7 @@ const WardBoundariesMap = ({ visits = [] }) => {
           visits={visits}
           shapefileData={boundaryData}
           boundaryStyle={wardBoundaryStyle}
+          showConnectingLines={showConnectingLines}
         />
       </div>
     </div>
