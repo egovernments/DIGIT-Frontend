@@ -1,0 +1,38 @@
+{
+  "name": "core-new-example-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Example app to test the new core module",
+  "scripts": {
+    "start": "webpack serve --mode development --config webpack.config.js --open",
+    "build": "webpack --mode production"
+  },
+  "dependencies": {
+    "@egovernments/digit-ui-components": "0.3.0-beta-1",
+    "@egovernments/digit-ui-libraries-new": "file:../packages/libraries-new",
+    "@egovernments/digit-ui-module-core-new": "file:../packages/modules/core-new",
+    "@egovernments/digit-ui-module-workbench-new": "file:../packages/modules/workbench-new",
+    "@egovernments/digit-ui-svg-components": "1.1.0-beta-1",
+    "@tanstack/react-query": "^5.62.16",
+    "axios": "^1.6.0",
+    "core-js": "^3.33.0",
+    "i18next": "^23.2.3",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-i18next": "15.0.0",
+    "react-router-dom": "6.25.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "babel-loader": "^9.1.3",
+    "css-loader": "^6.8.1",
+    "dotenv": "^17.2.1",
+    "html-webpack-plugin": "^5.5.3",
+    "style-loader": "^3.3.3",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1"
+  }
+}

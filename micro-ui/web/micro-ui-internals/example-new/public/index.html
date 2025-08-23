@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Core New Module - Example App</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+        'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+        sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    #root {
+      min-height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+  
+  <script>
+    // Global configuration similar to other example apps
+    window.contextPath = "";
+    window.globalConfigs = {
+      getConfig: function(key) {
+        const configs = {
+          "STATE_LEVEL_TENANT_ID": "mz",
+          "GMAPS_API_KEY": "AIzaSyCslxyiD1nuQuoshbu_E3WkIV8J2SUA6KI",
+          "ENABLE_SINGLEINSTANCE": false,
+          "DIGIT_FOOTER_BW": "https://unified-dev.digit.org/egov-dev-assets/mseva-white-logo.png",
+          "DIGIT_FOOTER": "https://unified-dev.digit.org/egov-dev-assets/digit-footer.png",
+          "DIGIT_HOME_URL": "https://www.digit.org",
+          "S3BUCKET": "works-qa-asset",
+          "CONTEXT_PATH": "sandbox-ui",
+          "UICONFIG_MODULENAME": "commonUiConfig",
+          "LOCALE_REGION": "MZ",
+          "LOCALE_DEFAULT": "en",
+          "MDMS_V1_CONTEXT_PATH": "egov-mdms-service",
+          "MDMS_V2_CONTEXT_PATH": "mdms-v2",
+          "INVALIDROLES": []
+        };
+        return configs[key];
+      }
+    };
+  </script>
+  
+  <!-- Load external global config if available -->
+  <script src="<%=REACT_APP_GLOBAL%>"></script>
+</body>
+</html>

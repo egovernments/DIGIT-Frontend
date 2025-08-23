@@ -1,0 +1,179 @@
+/* Login container with carousel layout */
+.login-container {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+/* Carousel section (70% width) */
+.carousel-container {
+  position: relative;
+  width: 70%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.carousel-slide {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.5s ease-in-out;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.carousel-slide.active {
+  opacity: 1;
+}
+
+.carousel-content {
+  text-align: center;
+  color: white;
+  background: rgba(0, 0, 0, 0.3);
+  padding: 2rem;
+  border-radius: 8px;
+  max-width: 500px;
+}
+
+.carousel-content h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.carousel-content p {
+  font-size: 1.2rem;
+  line-height: 1.6;
+}
+
+/* Carousel controls */
+.carousel-controls {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.carousel-nav {
+  background: rgba(255, 255, 255, 0.2);
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.carousel-nav:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.carousel-indicators {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.indicator.active {
+  background: white;
+  border-color: white;
+}
+
+.indicator:hover {
+  background: rgba(255, 255, 255, 0.7);
+}
+
+/* Login form section (30% width) */
+.login-form-container {
+  width: 30%;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background: white;
+  overflow-y: auto;
+}
+
+/* Footer styles */
+.EmployeeLoginFooter {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+.employee-login-home-footer {
+  margin-top: 2rem;
+  text-align: center;
+}
+
+/* Form styles */
+.login-form-wrapper .digit-card {
+  box-shadow: none;
+  border: none;
+  padding: 0;
+}
+
+.loginCardClassName {
+  box-shadow: none;
+  border: none;
+}
+
+.loginCardSubHeaderClassName {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.buttonClassName {
+  width: 100%;
+  margin-top: 1rem;
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+  }
+  
+  .carousel-container {
+    width: 100%;
+    height: 40%;
+  }
+  
+  .login-form-container {
+    width: 100%;
+    height: 60%;
+    padding: 1rem;
+  }
+  
+  .carousel-content h2 {
+    font-size: 2rem;
+  }
+  
+  .carousel-content p {
+    font-size: 1rem;
+  }
+}

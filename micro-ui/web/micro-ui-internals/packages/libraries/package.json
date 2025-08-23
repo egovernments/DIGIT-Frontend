@@ -1,0 +1,88 @@
+{
+  "name": "@egovernments/digit-ui-libraries",
+  "version": "1.9.0-beta-1",
+  "main": "build/main.js",
+  "module": "build/main.js",
+  "source": "src/index.js",
+  "license": "MIT",
+  "files": [
+    "build"
+  ],
+  "scripts": {
+    "start": "webpack serve --mode=development --open --hot",
+    "start:prod": "webpack serve --mode=production --open",
+    "prepublish": "yarn build",
+    "example": "cd example && npm run start",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --config webpack.config.js",
+    "build:dev": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=development --config webpack.config.js",
+    "build:analyze": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --analyze --config webpack.config.js",
+    "prepare": "yarn build",
+    "predeploy": "cd example && yarn install && yarn run build"
+  },
+  "peerDependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-router-dom": "6.25.1",
+    "@tanstack/react-query": "^5.62.16",
+    "react-redux": "^9.2.0",
+    "redux": "^5.0.0"
+  },
+  "devDependencies": {
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "sass": "^1.83.4",
+    "sass-loader": "^16.0.4",
+    "@babel/core": "^7.26.0",
+    "@babel/preset-env": "^7.26.0",
+    "@babel/preset-react": "^7.26.0",
+    "@babel/plugin-transform-optional-chaining": "^7.26.0",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.26.0",
+    "babel-loader": "^9.2.1",
+    "core-js": "^3.39.0",
+    "cross-env": "^7.0.3",
+    "lint-staged": "^15.3.0",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0",
+    "style-loader": "^4.0.0",
+    "css-loader": "^7.1.2",
+    "@tanstack/react-query": "^5.62.16",
+    "react-router-dom": "6.25.1"
+  },
+  "dependencies": {
+    "axios": "0.27.2",
+    "date-fns": "3.6.0",
+    "jsonpath": "^1.1.1",
+    "lodash": "^4.17.21",
+    "prop-types": "^15.8.1",
+    "i18next": "23.2.3",
+    "i18next-react-postprocessor": "3.0.7",
+    "react-i18next": "15.0.0"
+  },
+  "optionalDependencies": {
+    "dom-to-image": "2.6.0",
+    "html2canvas": "1.4.1",
+    "pdfmake": "0.1.72",
+    "xlsx": "0.17.5"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "author": "JaganKumar <jagan.kumar@egov.org.in>",
+  "keywords": [
+    "digit",
+    "egov",
+    "dpg",
+    "digit-ui",
+    "libraries"
+  ]
+}

@@ -1,0 +1,143 @@
+/* Employee Language Selection Styles */
+.language-selection-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: #f5f5f5;
+  padding: 20px;
+}
+
+.language-selection-card {
+  max-width: 500px;
+  width: 100%;
+  padding: 32px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background: white;
+}
+
+.card-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.logo-container {
+  margin-bottom: 16px;
+}
+
+.state-logo {
+  height: 64px;
+  max-width: 200px;
+  object-fit: contain;
+}
+
+.state-name {
+  font-size: 24px;
+  font-weight: 600;
+  color: #333;
+  margin: 0;
+}
+
+.language-selection-content {
+  margin-bottom: 32px;
+}
+
+.selection-title {
+  font-size: 20px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.language-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.language-button {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 4px;
+  font-size: 16px;
+  transition: all 0.2s ease;
+}
+
+.language-button.selected {
+  font-weight: 600;
+}
+
+.language-submit-bar {
+  margin-top: 24px;
+}
+
+.footer-section {
+  margin-top: 32px;
+  text-align: center;
+}
+
+.footer-logo {
+  height: 24px;
+  cursor: pointer;
+  opacity: 0.7;
+  transition: opacity 0.2s ease;
+}
+
+.footer-logo:hover {
+  opacity: 1;
+}
+
+/* Citizen Language Selection Styles */
+.citizen-language-selection {
+  min-height: 100vh;
+  background-color: #f5f5f5;
+}
+
+.citizen-language-selection-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin: 24px 0;
+}
+
+.language-selection-content {
+  padding: 16px;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .language-selection-wrapper {
+    padding: 12px;
+  }
+  
+  .language-selection-card {
+    padding: 24px 20px;
+    margin: 0;
+  }
+  
+  .state-name {
+    font-size: 20px;
+  }
+  
+  .selection-title {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 480px) {
+  .language-selection-card {
+    padding: 20px 16px;
+  }
+  
+  .state-logo {
+    height: 48px;
+  }
+  
+  .language-button {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+}

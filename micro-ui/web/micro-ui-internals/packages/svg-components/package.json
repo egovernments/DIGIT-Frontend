@@ -1,0 +1,68 @@
+{
+  "name": "@egovernments/digit-ui-svg-components",
+  "version": "1.1.0-beta-1",
+  "license": "MIT",
+  "main": "build/main.js",
+  "module": "build/main.js",
+  "source": "src/index.js",
+  "engines": {
+    "node": ">=18"
+  },
+  "homepage": "https://unified-dev.digit.org/storybook-svg/",
+  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "scripts": {
+    "start": "webpack serve --mode=development --open --hot",
+    "start:prod": "webpack serve --mode=production --open",
+    "example": "cd example && npm run start",
+    "build": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --config webpack.config.js",
+    "build:dev": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=development --config webpack.config.js",
+    "build:analyze": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --analyze --config webpack.config.js",
+    "prepare": "yarn build",
+    "predeploy": "cd example && yarn install && yarn run build"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.3",
+    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-react": "^7.23.3",
+    "@babel/plugin-transform-optional-chaining": "^7.23.4",
+    "@babel/plugin-transform-nullish-coalescing-operator": "^7.23.4",
+    "babel-plugin-transform-remove-console": "^6.9.4",
+    "babel-loader": "^8.0.0",
+    "core-js": "^3.38.1",
+    "cross-env": "7.0.3",
+    "lint-staged": "12.3.7",
+    "webpack": "^5.97.1",
+    "webpack-cli": "^4.10.0",
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "files": [
+    "build"
+  ],
+  "dependencies": {
+    "prop-types": "15.8.1"
+  },
+  "peerDependencies": {
+    "react": "19.0.0",
+    "react-dom": "19.0.0"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "keywords": [
+    "digit",
+    "core",
+    "svg",
+    "components",
+    "dpg"
+  ]
+}

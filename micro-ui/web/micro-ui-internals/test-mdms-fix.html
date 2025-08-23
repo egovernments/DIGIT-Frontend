@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>MDMS Fix Test</title>
+</head>
+<body>
+    <h1>MDMS Request Format Test</h1>
+    <div id="results"></div>
+
+    <script>
+        // Simulate the parseSchemas and getDefaultMastersForModule functions
+        function getDefaultMastersForModule(moduleName) {
+            const moduleDefaults = {
+                'common-masters': ['Department', 'Designation', 'StateInfo', 'uiHomePage'],
+                'tenant': ['tenants', 'citymodule'],
+                'egov-location': ['boundary-data', 'TenantBoundary', 'cityhierarchy'],
+                'ACCESSCONTROL-ROLES': ['roles'],
+                'ACCESSCONTROL-ACTIONS-TEST': ['actions-test'],
+                'workflow': ['BusinessService', 'ProcessInstances'],
+                'BillingService': ['BusinessService', 'TaxHeadMaster', 'TaxPeriod']
+            };
+            return moduleDefaults[moduleName] || [];
+        }
+
+        function parseSchemas(schemas) {
+            const moduleMap = new Map();
+            
+            schemas.forEach(schema => {
+                if (typeof schema === 'string' && schema.includes('.')) {
+                    const [moduleName, masterName] = schema.split('.');
+                    if (!moduleMap.has(moduleName)) {
+                        moduleMap.set(moduleName, []);
+                    }
+                    moduleMap.get(moduleName).push({ name: masterName });
+                }
+            });
+            
+            return Array.from(moduleMap.entries()).map(([moduleName, masterDetails]) => ({
+                moduleName,
+                masterDetails
+            }));
+        }
+
+        // Test cases
+        const testCases = [
+            {
+                name: "Legacy modules array only",
+                modules: ['egov-location', 'common-masters'],
+                schemas: []
+            },
+            {
+                name: "Schema format only", 
+                modules: [],
+                schemas: ['ACCESSCONTROL-ROLES.roles', 'common-masters.Department', 'tenant.tenants']
+            },
+            {
+                name: "Mixed legacy and schemas",
+                modules: ['egov-location'],
+                schemas: ['ACCESSCONTROL-ROLES.roles', 'workflow.BusinessService']
+            }
+        ];
+
+        let resultsHTML = '';
+
+        testCases.forEach((testCase, index) => {
+            resultsHTML += `<h2>Test Case ${index + 1}: ${testCase.name}</h2>`;
+            
+            let moduleDetails = [];
+            
+            // Parse schemas if provided
+            if (testCase.schemas.length > 0) {
+                moduleDetails = parseSchemas(testCase.schemas);
+            }
+            
+            // Handle legacy modules array
+            if (testCase.modules.length > 0) {
+                const legacyModuleDetails = testCase.modules.map(module => {
+                    const moduleDetail = { moduleName: module };
+                    
+                    // For legacy modules without specific masters, provide default masters
+                    const defaultMasters = getDefaultMastersForModule(module);
+                    if (defaultMasters.length > 0) {
+                        moduleDetail.masterDetails = defaultMasters.map(name => ({ name }));
+                    } else {
+                        // If no default masters known, try some common ones
+                        moduleDetail.masterDetails = [
+                            { name: module.split('-').pop() }, // e.g., 'egov-location' -> 'location'
+                            { name: 'masters' },
+                            { name: 'config' }
+                        ];
+                    }
+                    
+                    return moduleDetail;
+                });
+                
+                moduleDetails = [...moduleDetails, ...legacyModuleDetails];
+            }
+
+            const requestBody = {
+                MdmsCriteria: {
+                    tenantId: "mz",
+                    moduleDetails: moduleDetails
+                }
+            };
+
+            resultsHTML += `<h3>Input:</h3>`;
+            resultsHTML += `<pre>modules: ${JSON.stringify(testCase.modules, null, 2)}</pre>`;
+            resultsHTML += `<pre>schemas: ${JSON.stringify(testCase.schemas, null, 2)}</pre>`;
+            
+            resultsHTML += `<h3>Generated MDMS Request:</h3>`;
+            resultsHTML += `<pre style="background: #f5f5f5; padding: 10px; border-radius: 4px;">${JSON.stringify(requestBody, null, 2)}</pre>`;
+            resultsHTML += `<hr>`;
+        });
+
+        document.getElementById('results').innerHTML = resultsHTML;
+    </script>
+</body>
+</html>
