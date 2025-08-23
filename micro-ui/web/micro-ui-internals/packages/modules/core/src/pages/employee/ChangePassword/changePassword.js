@@ -1,4 +1,4 @@
-import { CardSubHeader, FormComposer,CardText} from "@egovernments/digit-ui-react-components";
+import { CustomFormComposer, CardSubHeader, CardText } from "../../../custom-components";
 import { BackLink,Toast} from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
@@ -110,7 +110,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
       <div className="employeeBackbuttonAlign">
         <BackLink variant="primary" style={{ borderBottom: "none" }} />
       </div>
-      <FormComposer
+      <CustomFormComposer
         onSubmit={onChangePassword}
         noBoxShadow
         inline
@@ -142,7 +142,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
             {t("CORE_OTP_RESEND")}
           </div>
         </div> */}
-      </FormComposer>
+      </CustomFormComposer>
       {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
         <ImageComponent

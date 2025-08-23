@@ -1,4 +1,4 @@
-import { Hamburger, TopBar as TopBarComponent } from "@egovernments/digit-ui-react-components";
+import { Hamburger, TopBar as TopBarComponent } from "../../custom-components";
 import { Dropdown } from "@egovernments/digit-ui-components";
 import React,{Fragment} from "react";
 import {useNavigate, useLocation } from "react-router-dom";

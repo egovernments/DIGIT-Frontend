@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { CardText, CardLabelError, Toast, CardLabel } from "@egovernments/digit-ui-components";
-import { OTPInput } from "@egovernments/digit-ui-react-components";
+import { OTPInput } from "../../../custom-components";
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
 import useInterval from "../../../hooks/useInterval";

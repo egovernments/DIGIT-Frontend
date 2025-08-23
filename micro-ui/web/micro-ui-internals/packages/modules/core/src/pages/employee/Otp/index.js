@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { BackLink, CardLabel, Loader, Toast } from "@egovernments/digit-ui-components";
-import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2 } from "../../../custom-components";
 import { useTranslation } from "react-i18next";
 import { useNavigate, useLocation } from "react-router-dom"; // Updated imports for v6
 import Background from "../../../components/Background";

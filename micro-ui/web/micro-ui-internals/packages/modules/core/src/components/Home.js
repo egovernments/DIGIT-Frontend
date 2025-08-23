@@ -1,8 +1,7 @@
 import {
   CitizenHomeCard,
-  CitizenInfoLabel,
-  Loader,
-} from "@egovernments/digit-ui-react-components";
+} from "@egovernments/digit-ui-components";
+import { CustomCitizenInfoLabel, CustomLoader } from "../custom-components";
 
 import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
 
@@ -91,7 +90,7 @@ const CitizenHome = ({
   const moduleArray = [paymentModule, ...moduleArr];
   const { t } = useTranslation();
   if (isLoading) {
-    return <Loader />;
+    return <CustomLoader page />;
   }
 
   return (
@@ -122,7 +121,7 @@ const CitizenHome = ({
                     Info={
                       code === "OBPS"
                         ? () => (
-                          <CitizenInfoLabel
+                          <CustomCitizenInfoLabel
                             style={{ margin: "0px", padding: "10px" }}
                             info={t("CS_FILE_APPLICATION_INFO_LABEL")}
                             text={t(

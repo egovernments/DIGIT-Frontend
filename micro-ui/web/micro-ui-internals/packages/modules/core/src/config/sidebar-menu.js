@@ -1,5 +1,5 @@
 import React from "react";
-import { LanguageIcon, LogoutIcon, AddressBookIcon, LocationIcon } from "@egovernments/digit-ui-react-components";
+import { LanguageIcon, LogoutIcon, AddressBookIcon, LocationIcon } from "../../custom-components";
 import ChangeLanguage from "../components/ChangeLanguage";
 
 const SideBarMenu = (t, closeSidebar, redirectToLoginPage, isEmployee) => [

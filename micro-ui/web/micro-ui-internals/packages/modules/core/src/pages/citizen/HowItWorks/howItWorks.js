@@ -6,7 +6,7 @@ import {
   DownloadImgIcon,
   PDFSvg,
 } from "@egovernments/digit-ui-components";
-import { CustomButton } from "@egovernments/digit-ui-react-components";
+import { CustomButton } from "../../../custom-components";
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
 
