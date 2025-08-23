@@ -4,16 +4,50 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader } from "@egovernments/digit-ui-components";
 import BoundariesMapWrapper from "./BoundariesMapWrapper";
-
+const  API_KEY="VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==";
 const MapComponent = (props) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(10000); // Large page size to fetch all data
   const [isLoading, setIsLoading] = useState(false);
-  const [projectTask, setProjectTask] = useState([]);
   const [projectName, setProjectName] = useState(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
+
+  // Default sample data for testing and fallback - Nigerian locations
+  const rawData = [
+    "7.3722818,5.2476953,3,Adebayo Olatunji,6,Ita-Ogbolu,dist_user_01",
+    "7.3719899,5.248334,2,Folasade Ogunleye,4,Ita-Ogbolu,dist_user_02",
+    "7.3733355,5.2477185,3,Olumide Akinwale,7,Ita-Ogbolu,dist_user_03",
+    "7.371291,5.2483847,2,Abiodun Adegoke,3,Ita-Ogbolu,dist_user_01",
+    "7.3712591,5.2488249,3,Yetunde Ajayi,8,Ita-Ogbolu,dist_user_02",
+    "7.3732285,5.2491957,3,Kehinde Fadeyi,5,Ita-Ogbolu,dist_user_03",
+    "7.3724202,5.2491548,2,Samuel Omoregie,4,Ita-Ogbolu,dist_user_01",
+    "7.3714463,5.24907,1,Modupe Alade,2,Ita-Ogbolu,dist_user_02"
+  ];
+
+  const defaultData = rawData.map((row, index) => {
+    const [lat, lng, resourcesCount, createdBy, memberCount, administrativeArea, userId] = row.split(',');
+    const baseDate = new Date();
+    
+    return {
+      id: `task-${userId}-${index + 1}`,
+      plannedStartDate: new Date(baseDate.getTime() - (index * 12 * 60 * 60 * 1000)).toISOString(), // Stagger by 12 hours
+      resourcesQuantity: parseInt(resourcesCount) * 50, // Scale up resources
+      latitude: parseFloat(lat),
+      longitude: parseFloat(lng),
+      createdBy: createdBy,
+      resourcesCount: parseInt(resourcesCount),
+      locationAccuracy: parseInt(resourcesCount) >= 3 ? "High" : parseInt(resourcesCount) >= 2 ? "Medium" : "Low",
+      productName: "ITN Nets",
+      memberCount: parseInt(memberCount),
+      administrativeArea: administrativeArea,
+      quantity: parseInt(resourcesCount) * 50,
+      userId: userId
+    };
+  });
+
+  const [projectTask, setProjectTask] = useState(defaultData);
 
   // First get project details to extract project name
   const projectUrl = getProjectServiceUrl();
@@ -53,10 +87,10 @@ const MapComponent = (props) => {
           'content-type': 'application/json',
           'kbn-build-number': '68312',
           'kbn-version': '8.11.3',
-          'origin': 'https://health-demo.digit.org',
+          'origin': window.location.origin,
           'pragma': 'no-cache',
           'priority': 'u=1, i',
-          'referer': 'https://health-demo.digit.org/digit-ui/employee/dss/dashboard/provincial-health-dashboard-llin?province=Cabo%20Delgado%20Bloco1&projectTypeId=dbd45c31-de9e-4e62-a9b6-abb818928fd1',
+          'referer': `${window.location.origin}/digit-ui/employee/dss/dashboard/provincial-health-dashboard-llin?province=Cabo%20Delgado%20Bloco1&projectTypeId=dbd45c31-de9e-4e62-a9b6-abb818928fd1`,
           'sec-ch-ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
           'sec-ch-ua-mobile': '?0',
           'sec-ch-ua-platform': '"macOS"',
@@ -71,7 +105,7 @@ const MapComponent = (props) => {
         body: JSON.stringify({
           "providerType": "anonymous",
           "providerName": "anonymous1",
-          "currentURL": "https://health-demo.digit.org/kibana/login"
+          "currentURL": `${window.location.origin}kibana/login`
         })
       });
 
@@ -127,7 +161,7 @@ const MapComponent = (props) => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'ApiKey VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==',
+          'Authorization': 'ApiKey ',
           'kbn-xsrf': 'true'
         },
         credentials: 'include',
@@ -147,7 +181,7 @@ const MapComponent = (props) => {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'Authorization': 'ApiKey VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==',
+              'Authorization': `ApiKey ${API_KEY}`,
               'kbn-xsrf': 'true'
             },
             credentials: 'include',
@@ -196,8 +230,8 @@ const MapComponent = (props) => {
             id: hit._id || `task-${index}`,
             plannedStartDate: source['@timestamp'] ? new Date(source['@timestamp']).toISOString() : "NA",
             resourcesQuantity: source.quantity || "NA",
-            latitude: geoPoint?.[0] || "NA",
-            longitude: geoPoint?.[1] || "NA",
+            latitude: geoPoint?.[1] || "NA",
+            longitude: geoPoint?.[0] || "NA",
             createdBy: source.userName || "NA",
             resourcesCount: 1, // Default to 1 per hit
             locationAccuracy: "NA",
@@ -214,7 +248,8 @@ const MapComponent = (props) => {
       }
     } catch (error) {
       console.error('Error fetching Elasticsearch data:', error);
-      setProjectTask([]);
+      console.log('Using default sample data as fallback');
+      setProjectTask(defaultData);
     } finally {
       setIsLoading(false);
     }
@@ -247,6 +282,19 @@ const MapComponent = (props) => {
       </div>
       {projectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
+      )}
+      {projectTask === defaultData && (
+        <div style={{ 
+          padding: "10px", 
+          backgroundColor: "#f0f8ff", 
+          border: "1px solid #d1ecf1", 
+          borderRadius: "4px", 
+          marginBottom: "10px",
+          fontSize: "14px",
+          color: "#0c5460"
+        }}>
+          <strong>Note:</strong> Showing sample data. Real data will be loaded once project is configured.
+        </div>
       )}
       {projectTask?.length > 0 && (
         <BoundariesMapWrapper

@@ -169,14 +169,45 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
         maxZoom: 19,
       });
 
-      const satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+      // High-resolution satellite layer from Google (higher quality)
+      const satelliteLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+        attribution: 'Imagery &copy; Google',
+        maxZoom: 20,
+      });
+
+      // Alternative: Bing satellite imagery (good quality backup)
+      const bingSatelliteLayer = L.tileLayer("https://ecn.t3.tiles.virtualearth.net/tiles/a{q}.jpeg?g=1", {
+        attribution: '&copy; <a href="https://www.bing.com/maps/">Microsoft Bing Maps</a>',
+        maxZoom: 19,
+        subdomains: '0123',
+        tms: false,
+        // Custom tile loading for Bing quadkey system
+        getTileUrl: function(coords) {
+          const quadkey = this._coordsToQuadKey(coords);
+          return `https://ecn.t3.tiles.virtualearth.net/tiles/a${quadkey}.jpeg?g=1`;
+        },
+        _coordsToQuadKey: function(coords) {
+          let quadkey = "";
+          for (let i = coords.z; i > 0; i--) {
+            let digit = 0;
+            const mask = 1 << (i - 1);
+            if ((coords.x & mask) !== 0) digit += 1;
+            if ((coords.y & mask) !== 0) digit += 2;
+            quadkey += digit.toString();
+          }
+          return quadkey;
+        }
+      });
+
+      // ESRI World Imagery (fallback option, updated URL)
+      const esriSatelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
         attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
         maxZoom: 19,
       });
 
-      const hybridLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-        maxZoom: 19,
+      const hybridLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
+        attribution: 'Imagery &copy; Google, Map data &copy; Google',
+        maxZoom: 20,
       });
 
       const hybridLabels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
@@ -190,8 +221,9 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {} }) => {
       // Define base layers for layer control
       const baseLayers = {
         "Street Map": openStreetMap,
-        "Satellite": satelliteLayer,
-        "Hybrid": L.layerGroup([satelliteLayer, hybridLabels])
+        "Satellite (Google)": satelliteLayer,
+        "Satellite (ESRI)": esriSatelliteLayer,
+        "Hybrid (Google)": hybridLayer,
       };
 
       // Add layer control
