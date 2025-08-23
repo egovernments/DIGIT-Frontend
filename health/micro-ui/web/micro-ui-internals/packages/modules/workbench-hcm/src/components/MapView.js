@@ -323,8 +323,16 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
         const lng = Number(v.lng);
         const time = v && v.time ? String(new Date(v.time).toGMTString()) : "Unknown time";
 
+        // Use custom popup content if provided, otherwise use default
+        let popupContent;
+        if (customPopupContent && typeof customPopupContent === 'function') {
+          popupContent = customPopupContent(v, i);
+        } else {
+          popupContent = `<b>Visit ${i + 1}</b><br/>Time: ${time}<br/> Bednets Delivered: ${v.quantity || "N/A"} <br/> `;
+        }
+
         L.marker([lat, lng], { icon: createCustomMarker() })
-          .bindPopup(`<b>Visit ${i + 1}</b><br/>Time: ${time}<br/> Bednets Delivered: ${v.quantity || "N/A"} <br/> `)
+          .bindPopup(popupContent)
           .addTo(layerGroup);
       });
 
@@ -364,7 +372,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
     */
 
     // keep effect dependencies simple
-  }, [visits, shapefileData, boundaryStyle, showConnectingLines]);
+  }, [visits, shapefileData, boundaryStyle, showConnectingLines, customPopupContent]);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

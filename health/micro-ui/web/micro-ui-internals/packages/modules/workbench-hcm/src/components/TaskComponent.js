@@ -66,6 +66,41 @@ const TaskComponent = (props) => {
 
   const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
 
+  // Custom popup content function for map markers
+  const getTaskPopupContent = (task, index) => {
+    const taskNumber = index + 1;
+    const time = task.time !== "NA" ? new Date(task.time).toLocaleDateString() : "N/A";
+    const taskId = task.id || "N/A";
+    const status = task.status || "N/A";
+    const resourceCount = task.resourcesCount || "N/A";
+    const resourceQuantity = task.resourcesQuantity || "N/A";
+    
+    return `
+      <div style="min-width: 200px;">
+        <h4 style="margin: 0 0 8px 0; color: #2563eb; font-size: 14px;">
+          <b>Task ${taskNumber}</b>
+        </h4>
+        <div style="font-size: 12px; line-height: 1.4;">
+          <div style="margin-bottom: 4px;">
+            <b>Task ID:</b> ${taskId}
+          </div>
+          <div style="margin-bottom: 4px;">
+            <b>Status:</b> <span style="color: ${status === 'COMPLETED' ? '#16a34a' : status === 'IN_PROGRESS' ? '#ca8a04' : '#6b7280'};">${status}</span>
+          </div>
+          <div style="margin-bottom: 4px;">
+            <b>Resources:</b> ${resourceCount} items (${resourceQuantity} total)
+          </div>
+          <div style="margin-bottom: 4px;">
+            <b>Planned Date:</b> ${time}
+          </div>
+          <div style="margin-bottom: 4px;">
+            <b>Location:</b> ${task.lat?.toFixed(6) || 'N/A'}, ${task.lng?.toFixed(6) || 'N/A'}
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
   // Custom cell renderer for the createdBy column
   const customCellRenderer = {
     createdBy: (row) => {
@@ -115,7 +150,11 @@ const TaskComponent = (props) => {
               lat: task?.latitude || 0,
               lng: task?.longitude || 0,
               time: task?.plannedStartDate || "NA",
-              quantity: task?.resourcesQuantity
+              quantity: task?.resourcesQuantity,
+              id: task?.id,
+              status: task?.status,
+              resourcesCount: task?.resourcesCount,
+              resourcesQuantity: task?.resourcesQuantity
             }))} 
             totalCount={projectTask?.length || 0}
             page={page}
@@ -127,6 +166,7 @@ const TaskComponent = (props) => {
             }}
             isNextDisabled={isNextDisabled}
             showConnectingLines={props?.userId ? true : false}
+            customPopupContent={getTaskPopupContent}
           />
         ) : (
           <ReusableTableWrapper

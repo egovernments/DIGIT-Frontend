@@ -271,6 +271,64 @@ const MapComponent = (props) => {
 
   const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
 
+  // Custom popup content function for map markers showing all available data
+  const getMapPopupContent = (dataPoint, index) => {
+    const pointNumber = index + 1;
+    const time = dataPoint.time !== "NA" && dataPoint.time ? new Date(dataPoint.time).toLocaleString() : "N/A";
+    
+    // Get all available data fields from the dataPoint
+    const fields = [
+      { label: "Point ID", value: dataPoint.id, important: true },
+      { label: "Product Name", value: dataPoint.productName },
+      { label: "Quantity Delivered", value: dataPoint.quantity || dataPoint.resourcesQuantity },
+      { label: "Member Count", value: dataPoint.memberCount },
+      { label: "Administrative Area", value: dataPoint.administrativeArea },
+      { label: "Created By", value: dataPoint.createdBy },
+      { label: "User ID", value: dataPoint.userId },
+      { label: "Resources Count", value: dataPoint.resourcesCount },
+      { label: "Location Accuracy", value: dataPoint.locationAccuracy },
+      { label: "Coordinates", value: `${dataPoint.lat?.toFixed(6) || 'N/A'}, ${dataPoint.lng?.toFixed(6) || 'N/A'}` },
+      { label: "Timestamp", value: time }
+    ];
+
+    // Filter out undefined/null/N/A values and build HTML
+    const validFields = fields.filter(field => 
+      field.value && 
+      field.value !== "NA" && 
+      field.value !== "N/A" && 
+      field.value !== null && 
+      field.value !== undefined
+    );
+    
+    const fieldsHtml = validFields.map(field => {
+      const valueColor = field.important ? '#2563eb' : '#374151';
+      const valueWeight = field.important ? 'bold' : 'normal';
+      
+      return `
+        <div style="margin-bottom: 4px; display: flex; align-items: flex-start;">
+          <span style="font-weight: 600; color: #6b7280; min-width: 140px; display: inline-block;">${field.label}:</span>
+          <span style="color: ${valueColor}; font-weight: ${valueWeight}; margin-left: 8px; flex: 1;">${field.value}</span>
+        </div>
+      `;
+    }).join('');
+    
+    return `
+      <div style="min-width: 280px; max-width: 350px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; margin: -8px -8px 12px -8px; border-radius: 6px 6px 0 0;">
+          <h4 style="margin: 0; font-size: 16px; font-weight: 600;">
+            📍 Data Point ${pointNumber}
+          </h4>
+        </div>
+        <div style="font-size: 13px; line-height: 1.5; color: #374151;">
+          ${fieldsHtml}
+        </div>
+        <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; text-align: center;">
+          ${validFields.length} data fields available
+        </div>
+      </div>
+    `;
+  };
+
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
@@ -302,7 +360,16 @@ const MapComponent = (props) => {
             lat: task?.latitude || 0,
             lng: task?.longitude || 0,
             time: task?.plannedStartDate || "NA",
-            quantity: task?.resourcesQuantity
+            quantity: task?.resourcesQuantity,
+            id: task?.id,
+            productName: task?.productName,
+            memberCount: task?.memberCount,
+            administrativeArea: task?.administrativeArea,
+            createdBy: task?.createdBy,
+            userId: task?.userId,
+            resourcesCount: task?.resourcesCount,
+            locationAccuracy: task?.locationAccuracy,
+            resourcesQuantity: task?.resourcesQuantity
           }))}
           totalCount={projectTask?.length || 0}
           page={page}
@@ -313,6 +380,7 @@ const MapComponent = (props) => {
             setPage(0);
           }}
           isNextDisabled={isNextDisabled}
+          customPopupContent={getMapPopupContent}
         />
       )}
     </div>

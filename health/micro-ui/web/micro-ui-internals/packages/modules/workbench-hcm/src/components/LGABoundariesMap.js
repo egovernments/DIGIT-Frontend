@@ -4,7 +4,7 @@ import MapView from "./MapView";
 /**
  * Component to display LGA Boundaries from S3
  */
-const LGABoundariesMap = ({ visits = [], showConnectingLines = false }) => {
+const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null }) => {
   const [boundaryData, setBoundaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -139,6 +139,7 @@ const LGABoundariesMap = ({ visits = [], showConnectingLines = false }) => {
           shapefileData={boundaryData}
           boundaryStyle={lgaBoundaryStyle}
           showConnectingLines={showConnectingLines}
+          customPopupContent={customPopupContent}
         />
       </div>
     </div>
