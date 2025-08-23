@@ -15,25 +15,34 @@ if (typeof L !== 'undefined') {
 
 // Custom marker function
 const createCustomMarker = (style = {}) => {
+  const size = style.size || 32;
+  const center = size / 2;
+  const outerRadius = (size * 0.75) / 2;
+  const innerRadius = (size * 0.375) / 2;
+  
+  // Build inner circle only if innerFill is provided and not null
+  const innerCircle = style.innerFill !== null ? 
+    `<circle cx="${center}" cy="${center}" r="${innerRadius}" fill="${style.innerFill || '#FFFFFF'}"/>` : '';
+  
   const svgHtml = `
-    <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="16" cy="16" r="12" fill="${style.fill || '#F47738'}" stroke="${style.stroke || '#FFFFFF'}" stroke-width="2"/>
-      <circle cx="16" cy="16" r="6" fill="${style.innerFill || '#FFFFFF'}"/>
+    <svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <circle cx="${center}" cy="${center}" r="${outerRadius}" fill="${style.fill || '#F47738'}" stroke="${style.stroke || '#FFFFFF'}" stroke-width="2"/>
+      ${innerCircle}
     </svg>
   `;
 
   return L.divIcon({
     className: "custom-svg-icon",
     html: svgHtml,
-    iconAnchor: [16, 32],
-    iconSize: [32, 32],
+    iconAnchor: [center, size],
+    iconSize: [size, size],
   });
 };
 
 const isValidCoord = (v) =>
   v && typeof v.lat === "number" && typeof v.lng === "number";
 
-const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null }) => {
+const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
   const boundaryLayerRef = useRef(null); // L.GeoJSON layer for shapefile boundaries
@@ -331,7 +340,10 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
           popupContent = `<b>Visit ${i + 1}</b><br/>Time: ${time}<br/> Bednets Delivered: ${v.quantity || "N/A"} <br/> `;
         }
 
-        L.marker([lat, lng], { icon: createCustomMarker() })
+        // Use custom marker style if provided, otherwise use default
+        const markerIcon = customMarkerStyle ? createCustomMarker(customMarkerStyle) : createCustomMarker();
+        
+        L.marker([lat, lng], { icon: markerIcon })
           .bindPopup(popupContent)
           .addTo(layerGroup);
       });
@@ -372,7 +384,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
     */
 
     // keep effect dependencies simple
-  }, [visits, shapefileData, boundaryStyle, showConnectingLines, customPopupContent]);
+  }, [visits, shapefileData, boundaryStyle, showConnectingLines, customPopupContent, customMarkerStyle]);
 
   return (
     <div style={{ display: "flex", height: "100vh" }}>

@@ -451,6 +451,14 @@ const MapComponent = (props) => {
 
   const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
 
+  // Dark green marker style for MapComponent - no inner circle, smaller, darker
+  const greenMarkerStyle = {
+    fill: '#15803D',        // Green-700 - darker green
+    stroke: '#FFFFFF',      // White border
+    innerFill: null,        // No inner circle
+    size: 18                // Even smaller for dense data
+  };
+
   // Custom popup content function for map markers showing all available data
   const getMapPopupContent = (dataPoint, index) => {
     const pointNumber = index + 1;
@@ -631,6 +639,7 @@ const MapComponent = (props) => {
           }}
           isNextDisabled={isNextDisabled}
           customPopupContent={getMapPopupContent}
+          customMarkerStyle={greenMarkerStyle}
         />
       )}
     </div>

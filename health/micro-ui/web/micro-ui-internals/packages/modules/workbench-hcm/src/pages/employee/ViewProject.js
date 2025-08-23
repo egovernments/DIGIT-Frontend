@@ -231,11 +231,11 @@ const ViewProject = () => {
         />
       )}
 
-      <ActionBar>
+      {/* <ActionBar>
         {displayMenu ? <Menu localeKeyPrefix={"WBH_ASSIGN_CAMPAIGN"} options={ACTIONS} t={t} onSelect={onActionSelect} /> : null}
 
         <SubmitBar label={t("ES_COMMON_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
-      </ActionBar>
+      </ActionBar> */}
                     {showToast && <Toast label={showToast.label} type={showToast?.isError?"error":"info"}  onClose={() => setShowToast(null)}></Toast>}
     </React.Fragment>
   );
