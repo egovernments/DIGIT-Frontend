@@ -40,11 +40,11 @@ function AppLocalisationWrapper({ onSubmit, screenConfig, back, showBack, parent
       payload: { code, locale, message },
     });
   };
-
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const enabledModules = ["en_IN", "pt_IN", "fr_IN"];
   const currentLocale = Digit?.SessionStorage.get("initData")?.selectedLanguage || "en_IN";
   const { data: localisationData, isLoading } = Digit.Hooks.campaign.useSearchLocalisation({
-    tenantId: "dev",
+    tenantId: tenantId,
     locale: enabledModules,
     module: "hcm-dummy-module",
     isMultipleLocale: enabledModules?.length > 1 ? true : false,
