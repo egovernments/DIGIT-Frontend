@@ -1,6 +1,5 @@
 const path = require("path");
 const webpack = require("webpack");
-const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const CompressionPlugin = require("compression-webpack-plugin");
 // const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // enable when needed
 
@@ -14,7 +13,7 @@ module.exports = {
   entry: "./src/Module.js",
 
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "main.js", // fixed for library consumers
     path: path.resolve(__dirname, "dist"),
     library: {
       name: "@egovernments/digit-ui-module-workbench",
@@ -27,6 +26,7 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
   },
+
   optimization: {
     usedExports: true,
     sideEffects: true, // safer than false
@@ -55,11 +55,9 @@ module.exports = {
     "redux-thunk": "redux-thunk",
     // DIGIT UI cross-dependencies
     "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
-    "@egovernments/digit-ui-react-components":
-      "@egovernments/digit-ui-react-components",
+    "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",
     "@egovernments/digit-ui-libraries": "@egovernments/digit-ui-libraries",
-    "@egovernments/digit-ui-svg-components":
-      "@egovernments/digit-ui-svg-components",
+    "@egovernments/digit-ui-svg-components": "@egovernments/digit-ui-svg-components",
   },
 
   module: {
@@ -88,50 +86,9 @@ module.exports = {
                 },
               ],
             ],
-            plugins: [
-              ...(isProduction
-                ? [["transform-remove-console", { exclude: ["error", "warn"] }]]
-                : []),
-            ],
+            plugins: [...(isProduction ? [["transform-remove-console", { exclude: ["error", "warn"] }]] : [])],
           },
         },
-      },
-      {
-        test: /\.css$/,
-        use: [
-          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
-          {
-            loader: "css-loader",
-            options: {
-              importLoaders: 1,
-              modules: {
-                auto: true,
-                localIdentName: isDevelopment
-                  ? "[name]__[local]--[hash:base64:5]"
-                  : "[hash:base64:5]",
-              },
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(scss|sass)$/,
-        use: [
-          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
-          {
-            loader: "css-loader",
-            options: {
-              importLoaders: 2,
-              modules: {
-                auto: true,
-                localIdentName: isDevelopment
-                  ? "[name]__[local]--[hash:base64:5]"
-                  : "[hash:base64:5]",
-              },
-            },
-          },
-          "sass-loader",
-        ],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
@@ -155,32 +112,33 @@ module.exports = {
     ],
   },
 
-  devtool: isProduction
-    ? "hidden-source-map"
-    : "cheap-module-source-map", // faster rebuilds in dev
+  devtool: isProduction ? "hidden-source-map" : "cheap-module-source-map", // faster rebuilds in dev
 
   devServer: isDevelopment
     ? {
-        port: 3006,
+        static: {
+          directory: path.join(__dirname, "dist"),
+        },
         hot: true,
-        open: false,
         historyApiFallback: true,
-        compress: true,
+        watchFiles: {
+          paths: ["src/**/*"], // watch your source files
+          options: {
+            ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
+            poll: 1000,
+            aggregateTimeout: 300,
+          },
+        },
       }
     : undefined,
 
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "development"
-      ),
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
     }),
     ...(isDevelopment ? [new webpack.HotModuleReplacementPlugin()] : []),
     ...(isProduction
       ? [
-          new MiniCssExtractPlugin({
-            filename: "[name].[contenthash].css",
-          }),
           new CompressionPlugin({
             algorithm: "brotliCompress", // or gzip
             test: /\.(js|css|html|svg)$/,
