@@ -39,10 +39,23 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
 
         try {
 
+            const locallity = Digit.SessionStorage.get("selectedBoundary")?.code || null;
+            
+            if (locallity === null) {
+                setShowToast(
+                    { key: "error", label: t(`Locality is not selected`), transitionTime: 3000 }
+                );
+                return;
+            }
 
+            if (/^\d+$/.test(name)) {
+                console.log("it is nummeric");
+            } else {
+                console.log("it is not nummeric");
+            }
 
             const result = await AttendanceService.searchIndividual(
-                { name, undefined, tenantId }
+                { name, locallity, tenantId }
             );
 
             setSearchedIndividual(result)
@@ -138,7 +151,7 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
                             <div>{t(labels[0])}</div>
                             <Button label={t("Register New User")} variation="link" onClick={() => {
-
+                                history.push(`/${window?.contextPath}/employee/payments/attendee-inbox`)
                             }} />
 
 

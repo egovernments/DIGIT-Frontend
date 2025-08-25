@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { InboxSearchComposer, HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
+import {InboxSearchComposer,  HeaderComponent, Toast, Loader } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import inboxAttendeeSearchConfig from "../../config/AttendeeInboxConfig";
+// import {  InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 
 const InboxAttendeesSearch = () => {
   const { t } = useTranslation();
@@ -23,7 +24,7 @@ const InboxAttendeesSearch = () => {
 
   
 //   // const config = mdmsData ? mdmsData : inboxSearchConfig(); [TODO: Use this once MDMS is updated with the new config]
-//   const config = inboxAttendeeSearchConfig();
+   const config = inboxAttendeeSearchConfig();
 
   return (
     <div style={{ marginBottom: "80px" }}>
