@@ -27,18 +27,13 @@ module.exports = {
   resolve: {
     extensions: [".js", ".jsx"],
   },
-
   optimization: {
     usedExports: true,
     sideEffects: true, // safer than false
     concatenateModules: isProduction,
     minimize: isProduction,
-    runtimeChunk: isProduction ? "single" : false,
-    splitChunks: isProduction
-      ? {
-          chunks: "async", // allow async splitting for large imports
-        }
-      : false,
+    runtimeChunk: false, // Disable runtime chunk for library builds
+    splitChunks: false, // Disable code splitting for library builds
   },
 
   performance: {
