@@ -101,8 +101,8 @@ module.exports = {
     new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       inject: true,
-      template: "public/index.html",
-      templateParameters:isProduction?undefined: {
+      template: isProduction?"public/prod-index.html":"public/index.html",
+      templateParameters:isProduction?{}: {
         REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
       },
     }),

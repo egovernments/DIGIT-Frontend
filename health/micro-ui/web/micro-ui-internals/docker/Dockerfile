@@ -12,10 +12,10 @@ RUN yarn install \
     && yarn build:prod
 
 FROM nginx:mainline-alpine
-#FROM ghcr.io/egovernments/nginx:mainline-alpine
+
 ENV WORK_DIR=/var/web/workbench-ui
 
 RUN mkdir -p ${WORK_DIR}
 
-COPY --from=build /app/web/build ${WORK_DIR}/
-COPY --from=build /app/web/docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/example/build ${WORK_DIR}/
+COPY --from=build /app/docker/nginx.conf /etc/nginx/conf.d/default.conf

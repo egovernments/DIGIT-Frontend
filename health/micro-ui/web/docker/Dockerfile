@@ -5,7 +5,7 @@ ARG WORK_DIR
 WORKDIR /app
 
 # Copy the entire micro-ui directory into the container.
-COPY health/micro-ui .
+COPY health/micro-ui/web/micro-ui-internals .
 
 # Navigate to the web directory to install dependencies and build.
 RUN cd web \
@@ -20,4 +20,4 @@ ENV WORK_DIR=/var/web/workbench-ui
 RUN mkdir -p ${WORK_DIR}
 
 COPY --from=build /app/web/build ${WORK_DIR}/
-COPY --from=build /app/web/docker/nginx.conf /etc/nginx/conf.d/default.conf
+COPY --from=build /app/web/docker/nginx.conf /etc/nginx/conf.d/default.conf 

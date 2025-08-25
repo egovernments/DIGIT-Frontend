@@ -2,6 +2,7 @@
   "name": "egovernments",
   "version": "1.0.0",
   "main": "index.js",
+  "homepage": "/workbench-ui",
   "workspaces": [
     "example",
     "packages/modules/campaign-manager"
@@ -19,6 +20,7 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
+    "build:prod": "yarn build:campaign && yarn build:example",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "build:example": "cd example && yarn build",
     "dev:example": "cd example && yarn start",
