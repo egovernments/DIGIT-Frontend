@@ -98,7 +98,18 @@ const EmployeeSideBar = () => {
       }
       else{
         updatedUrl = hostUrl + url;
-        window.location.href = updatedUrl;
+        try {
+          if (typeof window !== 'undefined') {
+            window.location.href = updatedUrl;
+          }
+        } catch (error) {
+          console.warn('Navigation failed, attempting fallback:', error);
+          try {
+            window.location.replace(updatedUrl);
+          } catch (fallbackError) {
+            console.error('All navigation methods failed:', fallbackError);
+          }
+        }
       }
     } else {
       navigate(url);
