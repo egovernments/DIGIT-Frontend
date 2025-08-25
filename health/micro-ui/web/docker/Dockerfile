@@ -6,7 +6,7 @@ ARG WORK_DIR
 WORKDIR /app
 
 # Copy the entire micro-ui directory into the container.
-COPY micro-ui .
+COPY health/micro-ui .
 
 # Navigate to the web directory to install dependencies and build.
 RUN cd web \
