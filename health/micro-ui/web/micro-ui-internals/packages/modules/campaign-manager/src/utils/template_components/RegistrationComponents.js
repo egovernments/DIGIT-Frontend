@@ -323,7 +323,7 @@ export const getTemplateRenderer = (templateName) => {
   switch (templateName?.toUpperCase()) {
     case "HOUSEHOLDOVERVIEW":
       return HouseHoldOverviewSection;
-    case "CCOMPLAINTSINBOX":
+    case "COMPLAINTSINBOX":
       return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
