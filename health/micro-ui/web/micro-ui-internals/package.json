@@ -98,7 +98,7 @@
     "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-components": "0.1.0-rc-optim-01",
     "@egovernments/digit-ui-libraries": "0.1.0-rc-optim-01",
-    "@egovernments/digit-ui-module-core": "0.1.0-rc-optim-02",
+    "@egovernments/digit-ui-module-core": "0.1.0-rc-optim-04",
     "@egovernments/digit-ui-react-components": "0.1.0-rc-optim-01",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
