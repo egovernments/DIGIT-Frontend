@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { EditIcon, LoaderWithGap, ViewComposer } from "@egovernments/digit-ui-react-components";
@@ -98,17 +98,21 @@ const DataUploadSummary = (props) => {
   });
   const [currentStep, setCurrentStep] = useState(1);
   const baseKey = 9;
-  const handleRedirect = (step, activeCycle) => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const id = urlParams.get("id");
-    urlParams.set("key", step);
-    urlParams.set("preview", false);
-    if (activeCycle) {
-      urlParams.set("activeCycle", activeCycle);
-    }
-    const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
-    navigate(newUrl);
-  };
+
+  const handleRedirect = useCallback(
+    (step, activeCycle) => {
+      const urlParams = new URLSearchParams(window.location.search);
+      const id = urlParams.get("id");
+      urlParams.set("key", step);
+      urlParams.set("preview", false);
+      if (activeCycle) {
+        urlParams.set("activeCycle", activeCycle);
+      }
+      const newUrl = `${window.location.pathname}?${urlParams.toString()}`;
+      navigate(newUrl);
+    },
+    [navigate]
+  );
 
   const campaignName = props?.props?.campaignData?.campaignName;
 
@@ -117,18 +121,18 @@ const DataUploadSummary = (props) => {
     setCurrentStep(currentKey - baseKey + 1);
   }, [currentKey]);
 
-  function updateUrlParams(params) {
+  const updateUrlParams = useCallback((params) => {
     const url = new URL(window.location.href);
     Object.entries(params).forEach(([key, value]) => {
       url.searchParams.set(key, value);
     });
     window.history.replaceState({}, "", url);
-  }
+  }, []);
 
   useEffect(() => {
     updateUrlParams({ key: key });
     window.dispatchEvent(new Event("checking"));
-  }, [key]);
+  }, [key, updateUrlParams]);
 
   useEffect(() => {
     if (props?.props?.summaryErrors) {
@@ -144,7 +148,7 @@ const DataUploadSummary = (props) => {
         setSummaryErrors(props?.props?.summaryErrors);
       }
     }
-  }, [props?.props?.summaryErrors]);
+  }, [props?.props?.summaryErrors, handleRedirect]);
 
   const { isLoading, data, error, refetch, isFetching } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
@@ -152,101 +156,114 @@ const DataUploadSummary = (props) => {
       ids: [id],
     },
     config: {
-      select: (data) => {
-        const resourceIdArr = [];
-        data?.[0]?.resources?.map((i) => {
-          if (i?.createResourceId && i?.type === "user") {
-            resourceIdArr.push(i?.createResourceId);
-          }
-        });
-        let processid;
-        setprojectId(data?.[0]?.projectId);
+      select: useCallback(
+        (data) => {
+          const resourceIdArr = [];
+          data?.[0]?.resources?.map((i) => {
+            if (i?.createResourceId && i?.type === "user") {
+              resourceIdArr.push(i?.createResourceId);
+            }
+          });
+          let processid;
 
-        const ss = async () => {
-          let temp = await fetchResourceFile(tenantId, resourceIdArr);
-          processid = temp;
-          return;
-        };
-        ss();
-        const target = data?.[0]?.deliveryRules;
-        return {
-          cards: [
-            {
-              name: "facility",
-              errorName: "facility",
-              sections: [
-                {
-                  name: "facility",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
+          const fetchResources = async () => {
+            try {
+              let temp = await fetchResourceFile(tenantId, resourceIdArr);
+              processid = temp;
+            } catch (error) {
+              console.error("Error fetching resource file:", error);
+            }
+          };
+
+          if (resourceIdArr.length > 0) {
+            fetchResources();
+          }
+          const target = data?.[0]?.deliveryRules;
+          return {
+            cards: [
+              {
+                name: "facility",
+                errorName: "facility",
+                sections: [
+                  {
+                    name: "facility",
+                    type: "COMPONENT",
+                    component: "CampaignDocumentsPreview",
+                    props: {
+                      documents: data?.[0]?.resources?.filter((i) => i.type === "facility"),
+                    },
+                    cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardSecondaryAction: noAction !== "false" && (
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
+                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <EditIcon />
+                      </div>
+                    ),
                   },
-                  cardHeader: { value: t("FACILITY_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(1)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            {
-              name: "user",
-              errorName: "user",
-              sections: [
-                {
-                  name: "user",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
+                ],
+              },
+              {
+                name: "user",
+                errorName: "user",
+                sections: [
+                  {
+                    name: "user",
+                    type: "COMPONENT",
+                    component: "CampaignDocumentsPreview",
+                    props: {
+                      documents: data?.[0]?.resources?.filter((i) => i.type === "user"),
+                    },
+                    cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardSecondaryAction: noAction !== "false" && (
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
+                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <EditIcon />
+                      </div>
+                    ),
                   },
-                  cardHeader: { value: t("USER_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(3)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-            {
-              name: "target",
-              errorName: "target",
-              sections: [
-                {
-                  name: "target",
-                  type: "COMPONENT",
-                  component: "CampaignDocumentsPreview",
-                  props: {
-                    documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
+                ],
+              },
+              {
+                name: "target",
+                errorName: "target",
+                sections: [
+                  {
+                    name: "target",
+                    type: "COMPONENT",
+                    component: "CampaignDocumentsPreview",
+                    props: {
+                      documents: data?.[0]?.resources?.filter((i) => i?.type === "boundary"),
+                    },
+                    cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
+                    cardSecondaryAction: noAction !== "false" && (
+                      <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
+                        <span>{t(`CAMPAIGN_EDIT`)}</span>
+                        <EditIcon />
+                      </div>
+                    ),
                   },
-                  cardHeader: { value: t("TARGET_DETAILS"), inlineStyles: { marginTop: 0, fontSize: "1.5rem" } },
-                  cardSecondaryAction: noAction !== "false" && (
-                    <div className="campaign-preview-edit-container" onClick={() => handleRedirect(5)}>
-                      <span>{t(`CAMPAIGN_EDIT`)}</span>
-                      <EditIcon />
-                    </div>
-                  ),
-                },
-              ],
-            },
-          ],
-          error: data?.[0]?.additionalDetails?.error,
-          data: data?.[0],
-          status: data?.[0]?.status,
-          userGenerationSuccess: resourceIdArr,
-        };
-      },
+                ],
+              },
+            ],
+            error: data?.[0]?.additionalDetails?.error,
+            data: data?.[0],
+            status: data?.[0]?.status,
+            userGenerationSuccess: resourceIdArr,
+          };
+        },
+        [tenantId, t, noAction, handleRedirect]
+      ),
       enabled: id ? true : false,
       staleTime: 0,
       cacheTime: 0,
     },
   });
 
+  useEffect(() => {
+    if (data?.data?.[0]?.projectId) {
+      setprojectId(data.data[0].projectId);
+    }
+  }, [data]);
   const closeToast = () => {
     setShowToast(null);
   };
@@ -273,7 +290,7 @@ const DataUploadSummary = (props) => {
 
   const updatedObject = { ...data };
 
-  const onStepClick = (currentStep) => {
+  const onStepClick = useCallback((currentStep) => {
     setCurrentStep(currentStep + 1);
     if (currentStep === 0) {
       setKey(10);
@@ -282,7 +299,8 @@ const DataUploadSummary = (props) => {
     } else if (currentStep === 3) {
       setKey(12);
     } else setKey(13);
-  };
+  }, []);
+
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
