@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "0.1.0-rc-optim-03",
+  "version": "0.1.0-rc-optim-04",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -17,14 +17,15 @@
     "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze",
     "prepare": "yarn build",
     "publish:components": "npm publish --tag core-webpack-v0.1",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
+    "predeploy": "cd example && yarn install && yarn run build"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.62.16",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-router-dom": "6.25.1"
+    "react-router-dom": "6.25.1",
+    "react-i18next": "15.0.0",    
+    "styled-components": "5.x"  
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "0.1.0-rc-optim-01",
@@ -38,7 +39,6 @@
     "react-date-range": "1.4.0",
     "react-drag-drop-files": "^2.3.10",
     "react-hook-form": "6.15.8",
-    "react-i18next": "15.0.0",
     "react-select": "5.7.4",
     "xlsx": "0.17.5",
     "react-tooltip": "4.1.2",

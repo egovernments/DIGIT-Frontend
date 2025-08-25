@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-core",
-  "version": "0.1.0-rc-optim-03",
+  "version": "0.1.0-rc-optim-04",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -17,8 +17,7 @@
     "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze",
     "prepare": "yarn build",
     "publish:components": "npm publish --tag core-webpack-v0.1",
-    "predeploy": "cd example && yarn install && yarn run build",
-    "deploy": "gh-pages -d example/build"
+    "predeploy": "cd example && yarn install && yarn run build"
   },
   "peerDependencies": {
     "@tanstack/react-query": "^5.62.16",
