@@ -78,7 +78,7 @@
     "build": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true build",
     "build:prepare": "./build.sh",
     "build:libraries": "cd micro-ui-internals && yarn build",
-    "build:prod": "webpack --mode development",
+    "build:prod": "NODE_ENV=production webpack --config webpack.config.js",
     "build:webpack": "yarn build:libraries && cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules && cd micro-ui-internals && yarn clean"
   },
