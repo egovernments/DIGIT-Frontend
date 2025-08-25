@@ -287,7 +287,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag,parentState }) {
     const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
@@ -395,7 +395,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
     for (let i = 0; i < headerFields.length; i++) {
       if (headerFields[i]?.jsonPath === "ScreenHeading") {
         const fieldItem = headerFields[i];
-        const value = locS?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
+        const value = (locS ||[])?.find((i) => i?.code === fieldItem?.value)?.[cL] || null;
         if (!value || value.trim() === "") {
           return { type: "error", value: `${t("HEADER_FIELD_EMPTY_ERROR")}` };
         }
@@ -633,7 +633,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                   })
                 }
               />
-              <DrawerFieldComposer />
+              <DrawerFieldComposer parentState={parentState} screenConfig={screenConfig} selectedField={state?.drawerField}/>
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>

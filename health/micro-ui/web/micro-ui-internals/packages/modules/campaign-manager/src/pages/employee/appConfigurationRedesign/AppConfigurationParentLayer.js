@@ -479,6 +479,7 @@ const AppConfigurationParentRedesign = ({
               parentDispatch={parentDispatch}
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
+              parentState={parentState}
               pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             />
           </div>

@@ -6,8 +6,8 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   // Try to find a matching field type from master data
   const matched = fieldTypeMasterData.find((item) => {
     // Match type and format from metadata and fieldName in case of type : dynamic and format : custom
-    if(item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom"){
-      return item?.metadata?.type === field.type && item?.metadata?.format === field.format  && item?.type === field?.fieldName
+    if (item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom") {
+      return item?.metadata?.type === field.type && item?.metadata?.format === field.format && item?.type === field?.fieldName;
     }
     // Match both type and format from metadata
     return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
@@ -112,24 +112,54 @@ export const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => 
 //   return result;
 // };
 
-function flattenValidationsToField(validationsArray) {
+// function flattenValidationsToField(validationsArray) {
+//   const result = {};
+
+//   if (!Array.isArray(validationsArray)) return {};
+
+//   for (const rule of validationsArray) {
+//     if (!rule || typeof rule !== "object") continue;
+//     const { type, value, message } = rule;
+
+//     if (!type || value === undefined || value === null) continue;
+
+//     result[`toArray.${type}`] = value;
+//     if (message !== undefined && message !== null) {
+//       result[`toArray.${type}.message`] = message;
+//     }
+//   }
+
+//   return result;
+// }
+
+// / new function for scale up
+function flattenValidationsToField2(validationsArray, groupKey = "validation") {
   const result = {};
-
-  if (!Array.isArray(validationsArray)) return {};
-
+  if (!Array.isArray(validationsArray)) return result;
   for (const rule of validationsArray) {
     if (!rule || typeof rule !== "object") continue;
     const { type, value, message } = rule;
-
     if (!type || value === undefined || value === null) continue;
-
-    result[`toArray.${type}`] = value;
+    if (!result[groupKey]) result[groupKey] = {};
+    result[groupKey][type] = value;
     if (message !== undefined && message !== null) {
-      result[`toArray.${type}.message`] = message;
+      result[groupKey][`${type}.message`] = message;
     }
   }
 
   return result;
+}
+function flattenConfigArrays(configObj) {
+  const result = {};
+  for (const key in configObj) {
+    const value = configObj[key];
+    // Handle array of {type, value} objects (like validations)
+    if (Array.isArray(value) && value.every((v) => typeof v === "object" && v.type)) {
+      const flattened = flattenValidationsToField2(value, key);
+      Object.assign(result, flattened); // Only merged part (e.g., { validations: { ... } })
+    }
+  }
+  return result; // :white_check_mark: Only changed keys
 }
 
 const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
@@ -151,7 +181,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
       ?.sort((a, b) => a.order - b.order)
       ?.map((field, index) => ({
         ...getTypeAndMetaData(field, fieldTypeMasterData),
-        ...flattenValidationsToField(field?.validations || []),
+        ...flattenConfigArrays(field),
+        // ...flattenValidationsToField(field?.validations || []),
         label: field?.label || "",
         value: field?.value || "",
         defaultValue: field?.value ? true : false,
@@ -178,6 +209,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        visibilityCondition: field?.visibilityCondition || {},
+        autoFillCondition: field?.autoFillCondition || [],
       }));
 
     return {
@@ -221,6 +254,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         allowCommentsAdditionAt: ["body"],
       },
       navigateTo: page?.navigateTo || {},
+      conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
   });
@@ -281,6 +315,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        visibilityCondition: field?.visibilityCondition || {},
+        autoFillCondition: field?.autoFillCondition || [],
       };
     });
 
@@ -293,6 +329,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       order: index + 1,
       properties,
       navigateTo: section?.navigateTo || {},
+      conditionalNavigateTo: section?.conditionalNavigateTo || [],
     };
   });
 };

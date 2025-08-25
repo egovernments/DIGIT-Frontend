@@ -1,6 +1,7 @@
-import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header } from "@egovernments/digit-ui-components";
-import React, { useEffect, useMemo } from "react";
+import { ResultsDataTable, TableMolecule, Button, Switch, FieldV1, RoundedLabel, CustomSVG, SummaryCardFieldPair, PanelCard, Header, PopUp, SVG } from "@egovernments/digit-ui-components";
+import React, { useEffect, useMemo, useState, } from "react";
 import { registerComponent } from "./RegistrationRegistry";
+import RenderSelectionField from "../../components/RenderSelectionField";
 
 
 
@@ -38,18 +39,52 @@ const SearchBar = (props) => (
 );
 
 
-const FilterIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+const FilterIcon = (props) => (
+  <svg onClick={props?.onClick} width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
     <path d="M0.250666 1.61C2.27067 4.2 6.00067 9 6.00067 9V15C6.00067 15.55 6.45067 16 7.00067 16H9.00067C9.55067 16 10.0007 15.55 10.0007 15V9C10.0007 9 13.7207 4.2 15.7407 1.61C16.2507 0.95 15.7807 0 14.9507 0H1.04067C0.210666 0 -0.259334 0.95 0.250666 1.61Z" fill="#C84C0E" />
   </svg>
 
 );
-const Filter = (props) => (
-  <div className="digit-search-action">
-    {/* <RoundedLabel count={props.filterCount}></RoundedLabel> */}
-    <FilterIcon /> <span className="digit-search-text">{props.t(props.field.label) || "LABEL"}</span>
-  </div>
-);
+const Filter = (props) => {
+  const [showPopUp, setShowPopUp] = useState(false);
+
+  return (
+    <div className="digit-search-action">
+      <FilterIcon onClick={() => setShowPopUp(true)} />
+      <span className="digit-search-text" style={{ color: "#C84C0E" }}>{props.t(props.field.label) || "LABEL"}</span>
+
+      {showPopUp && (
+        <PopUp
+          className={"custom-popup-filter"}
+          type={"default"}
+          heading={props.t("SELECT_FILTER")}
+          onClose={() => setShowPopUp(false)}
+          style={{
+            width: "100%",          // Full width popup
+            maxWidth: "100%",       // Prevents shrinking
+            height: "auto",
+            margin: 0,
+            padding: 0
+          }}
+          footerChildren={[
+          ]}
+          sortFooterChildren={true}
+        >
+          <div style={{
+            width: "100%",            // Take full popup width
+            padding: "1rem",
+            boxSizing: "border-box"
+          }}>
+            <RenderSelectionField
+              field={props.field}
+              t={props.t}
+            />
+          </div>
+        </PopUp>
+      )}
+    </div>
+  );
+};
 
 
 const Toggle = (props) => (
@@ -154,7 +189,7 @@ const HouseHoldDetailsCard = (props) => {
           <SummaryCardFieldPair
             style={{
               overflowX: "hidden",
-              display: "flex", alignItems: "center", minWidth: "100vh" , paddingBottom: "1rem"
+              display: "flex", alignItems: "center", minWidth: "100vh", paddingBottom: "1rem"
             }}
             key={index}
             inline={true}
@@ -234,7 +269,7 @@ const styles = {
     flexDirection: "column",
     alignItems: "center", // horizontally center the buttons
     gap: "8px",
-    marginTop: "10px",  
+    marginTop: "10px",
   },
   card: {
     overflowX: "hidden",
@@ -296,15 +331,15 @@ const styles = {
 
 
 export const getTemplateRenderer = (templateName) => {
+  if (templateName?.toUpperCase()?.includes("ACKNOWLEDGEMENT")) {
+    return responsePanelComponent;
+  }
 
-  switch (templateName) {
-    case "BeneficiaryAcknowledgement":
-    case "HouseholdAcknowledgement":
-      return responsePanelComponent;
-
-    case "HouseholdOverview":
+  switch (templateName?.toUpperCase()) {
+    case "HOUSEHOLDOVERVIEW":
       return HouseHoldOverviewSection;
-
+    case "COMPLAINTSINBOX":
+      return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
 
@@ -358,7 +393,7 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
           alignment="flex-end"
         />
 
-        {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard}/>}
+        {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard} />}
 
         <HouseholdOverViewMemberCard
           name="Joseph Sergio"
@@ -570,6 +605,87 @@ const Table = ({ field, t }) => {
     />
   );
 };
+
+
+/**
+ * SimpleSearchFilterRow
+ * A minimal row with: [ Search icon + label ] | [ Filter ] | [ Sort icon ]
+ *
+ * Uses your existing <Filter />, <SVG.Search />, and <SVG.Sort /> components.
+ */
+const SimpleSearchFilterRow = ({
+  components = [], t
+  // t,
+  // label = "Search",
+  // primaryColor = "currentColor",
+  // size = "20px",
+  // onSearchClick,
+  // onSortClick,
+  // // Pass anything your <Filter /> needs via this prop
+  // filterProps = {},
+}) => {
+  const formatMap = {};
+  components.forEach((item) => {
+    formatMap[item.jsonPath] = item;
+  });
+
+  const searchIcon = formatMap["searchComplaints"] || { label: "", hidden: true };
+  const filter = formatMap["filter"] || {};
+  const sortIcon = formatMap["sortComplaints"] || {};
+
+
+  const cellStyle = {
+    minWidth: 0,
+    display: "flex",
+    alignItems: "center",
+    gap: "0.375rem", // tighter gap between icon and label
+    color: "inherit",
+  };
+
+  return (
+    <div
+      style={{
+        display: "grid",
+        gridTemplateColumns: "repeat(3, minmax(0, 1fr))", // equal widths
+        columnGap: "0.5rem", // smaller overall gap
+        rowGap: "0.5rem",
+        alignItems: "center",
+        width: "100%" //allow responsive wrap
+      }}
+    >
+      {/* Left: Search icon + label */}
+      <div
+        style={cellStyle}
+      >
+        {/* Use currentColor so it won't disappear on white backgrounds */}
+        <SVG.Search width={"20px"} height={"20px"} fill={"#C84C0E"} />
+        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
+          {t?.(searchIcon?.label || "")}
+        </span>
+      </div>
+
+      {/* Middle: Filter (full-width inside its cell) */}
+      <div style={{ minWidth: 0 }}>
+        <div style={{ width: "100%" }}>
+          <Filter field={filter} t={t} />
+        </div>
+      </div>
+
+      {/* Right: Sort icon + label (optional) */}
+      <div
+        style={cellStyle}
+      >
+        <SVG.ArrowDownward width={"20px"} height={"20px"} fill={"#C84C0E"} />
+        {sortIcon?.label ? (
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
+            {t?.(sortIcon?.label || "")}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
 
 // Register all components
 registerComponent("searchBar", SearchBar);
