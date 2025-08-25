@@ -401,7 +401,7 @@ const CreateChecklist = () => {
       tenantId: tenantId,
       code: idCodeMap[item.id],
       dataType: String(item?.type?.code),
-      values: labelsArray,
+      values: String(item?.type?.code) === "SingleValueList" || String(item?.type?.code) === "MultiValueList" ? labelsArray : null,
       required: item?.isRequired,
       isActive: item?.isActive,
       reGex: item?.isRegex ? item?.regex?.regex : null,
