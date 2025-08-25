@@ -168,7 +168,8 @@ module.exports = {
           "/tenant-management",
           "/default-data-handler",
           "/facility/v1/_create",
-          "/service-request/"
+          "/service-request/",
+          "/product/"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
