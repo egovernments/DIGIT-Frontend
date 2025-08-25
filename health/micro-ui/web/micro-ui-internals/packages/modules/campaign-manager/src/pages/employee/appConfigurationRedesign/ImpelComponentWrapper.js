@@ -1,7 +1,8 @@
 import React, { Fragment, useEffect, useState } from "react";
 // import { dummyMaster } from "../../../configs/dummyMaster";
 //production mode
-import { AppLocalisationWrapper, Loader, useCustomT } from "@egovernments/digit-ui-components";
+// import { AppLocalisationWrapper, Loader, useCustomT } from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
 //development mode
 import AppPreview from "../../../components/AppPreview";
@@ -190,21 +191,21 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
     />
   );
   // }
-  return (
-    //production mode
-    <AppLocalisationWrapper
-      onSubmit={onSubmit}
-      back={back}
-      showBack={showBack}
-      screenConfig={screenConfig}
-      parentDispatch={parentDispatch}
-      localeModule={localeModule}
-      pageTag={pageTag}
-      parentState={parentState}
-    >
-      <AppPreview />
-    </AppLocalisationWrapper>
-  );
+  // return (
+  //   //production mode
+  //   <AppLocalisationWrapper
+  //     onSubmit={onSubmit}
+  //     back={back}
+  //     showBack={showBack}
+  //     screenConfig={screenConfig}
+  //     parentDispatch={parentDispatch}
+  //     localeModule={localeModule}
+  //     pageTag={pageTag}
+  //     parentState={parentState}
+  //   >
+  //     <AppPreview />
+  //   </AppLocalisationWrapper>
+  // );
 }
 
 export default React.memo(ImpelComponentWrapper);
