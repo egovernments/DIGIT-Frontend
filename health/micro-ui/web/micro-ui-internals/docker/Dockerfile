@@ -5,13 +5,11 @@ ARG WORK_DIR
 WORKDIR /app
 
 # Copy the entire micro-ui directory into the container.
-COPY health/micro-ui .
+COPY health/micro-ui/web/micro-ui-internals .
 
 # Navigate to the web directory to install dependencies and build.
-RUN cd web \
-    && ./install-deps.sh \
-    && yarn install \
-    && yarn build
+RUN yarn install \
+    && yarn build:prod
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine

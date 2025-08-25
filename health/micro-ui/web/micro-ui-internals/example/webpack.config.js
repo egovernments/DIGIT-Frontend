@@ -13,9 +13,10 @@ const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
   acc[`process.env.${key}`] = JSON.stringify(val);
   return acc;
 }, {});
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  mode: "development",
+  mode: isProduction ? 'production' : 'development',
   entry: path.resolve(__dirname, "src/index.js"),
   devtool: "source-map",
   module: {
@@ -39,12 +40,12 @@ module.exports = {
   },
   output: {
     filename: "[name].[contenthash:8].bundle.js",
-    chunkFilename: "[name].[contenthash:8].chunk.js",
-    path: path.resolve(__dirname, "build"),
-    publicPath: "/",
-    clean: true, // Clean the output directory before emit
+        chunkFilename: "[name].[contenthash:8].chunk.js",
+        path: path.resolve(__dirname, "build"),
+        clean: true, // Clean the output directory before emit
+    publicPath: "/workbench-ui/",
   },
-  optimization: {
+ optimization: {
     splitChunks: {
       chunks: "all",
       minSize: 20000,
@@ -101,7 +102,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      templateParameters: {
+      templateParameters:isProduction?undefined: {
         REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
       },
     }),
@@ -110,7 +111,7 @@ module.exports = {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true,
-    alias: {
+      alias: {
       // Fix case sensitivity issues with React
       "React": path.resolve(__dirname, "../node_modules/react"),
       "react": path.resolve(__dirname, "../node_modules/react"),
@@ -127,7 +128,7 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: true,
-    watchFiles: {
+        watchFiles:isProduction?undefined: {
       paths: ["**/*"], // watch all project files
       options: {
         ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
@@ -213,8 +214,7 @@ module.exports = {
           "/billing-service/bill/v2/_fetchbill",
           "/tenant-management",
           "/default-data-handler",
-          "/facility/v1/_create",
-          "/service-request/"
+          "/facility/v1/_create"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
@@ -223,3 +223,4 @@ module.exports = {
     ],
   },
 };
+
