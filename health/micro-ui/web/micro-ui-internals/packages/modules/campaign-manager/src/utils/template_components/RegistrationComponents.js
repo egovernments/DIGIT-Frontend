@@ -316,14 +316,14 @@ const styles = {
 };
 
 export const getTemplateRenderer = (templateName) => {
-  if (templateName?.includes("Acknowledgement")) {
+  if (templateName?.toUpperCase()?.includes("ACKNOWLEDGEMENT")) {
     return responsePanelComponent;
   }
 
-  switch (templateName) {
-    case "HouseholdOverview":
+  switch (templateName?.toUpperCase()) {
+    case "HOUSEHOLDOVERVIEW":
       return HouseHoldOverviewSection;
-    case "complaintInbox":
+    case "CCOMPLAINTSINBOX":
       return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
