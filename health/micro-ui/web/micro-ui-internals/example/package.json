@@ -16,10 +16,10 @@
   },
   "devDependencies": {
     "@egovernments/digit-ui-libraries": "0.1.0-rc-optim-01",
-    "@egovernments/digit-ui-module-core": "0.1.0-rc-optim-04",
+    "@egovernments/digit-ui-module-core": "0.1.0-rc-optim-06",
     "@egovernments/digit-ui-components": "0.2.0-beta.40-rc19.02",
     "@egovernments/digit-ui-react-components": "0.1.0-rc-optim-01",
-    "@egovernments/digit-ui-module-workbench": "0.1.0-rc-optim-04",
+    "@egovernments/digit-ui-module-workbench": "0.1.0-rc-optim-06",
     "@egovernments/digit-ui-module-campaign-manager": "0.4.0",
     "http-proxy-middleware": "^1.0.5",
     "react-i18next": "15.0.0",
