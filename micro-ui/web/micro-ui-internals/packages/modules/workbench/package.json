@@ -1,5 +1,5 @@
 {
-  "name": "@egovernments/digit-ui-module-core",
+  "name": "@egovernments/digit-ui-module-workbench",
   "version": "0.1.0-rc-optim-02",
   "license": "MIT",
   "main": "dist/main.js",
