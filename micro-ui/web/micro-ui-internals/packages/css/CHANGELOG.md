@@ -1,8 +1,14 @@
 # Changelog
 
+## [1.8.40] - [25-Aug-2025]
+
+- Toast error message width issue in Property Tax module(sandbox)
+  
 ## [1.8.39] - [19-Aug-2025]
 
 - Removed extra margin on employee pages in the sandbox
+
+
 
 ## [1.8.38] - [14-Aug-2025]
 -Removed the login extra space in the sandbox
