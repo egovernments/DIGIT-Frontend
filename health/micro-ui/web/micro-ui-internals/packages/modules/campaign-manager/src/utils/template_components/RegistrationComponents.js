@@ -51,7 +51,7 @@ const Filter = (props) => {
   return (
     <div className="digit-search-action">
       <FilterIcon onClick={() => setShowPopUp(true)} />
-      <span className="digit-search-text" style={{color: "#C84C0E"}}>{props.t(props.field.label) || "LABEL"}</span>
+      <span className="digit-search-text" style={{ color: "#C84C0E" }}>{props.t(props.field.label) || "LABEL"}</span>
 
       {showPopUp && (
         <PopUp
@@ -331,14 +331,14 @@ const styles = {
 
 
 export const getTemplateRenderer = (templateName) => {
-  if (templateName?.includes('Acknowledgement')) {
+  if (templateName?.toUpperCase()?.includes("ACKNOWLEDGEMENT")) {
     return responsePanelComponent;
   }
 
-  switch (templateName) {
-    case "HouseholdOverview":
+  switch (templateName?.toUpperCase()) {
+    case "HOUSEHOLDOVERVIEW":
       return HouseHoldOverviewSection;
-    case "ComplaintsInbox":
+    case "COMPLAINTSINBOX":
       return SimpleSearchFilterRow;
 
     // case "AnotherTemplate": return anotherRenderer;
@@ -677,7 +677,7 @@ const SimpleSearchFilterRow = ({
       >
         <SVG.ArrowDownward width={"20px"} height={"20px"} fill={"#C84C0E"} />
         {sortIcon?.label ? (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" , color: "#C84C0E"}}>
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
             {t?.(sortIcon?.label || "")}
           </span>
         ) : null}
