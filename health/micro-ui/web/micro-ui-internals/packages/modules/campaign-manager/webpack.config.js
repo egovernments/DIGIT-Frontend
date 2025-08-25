@@ -13,7 +13,7 @@ module.exports = {
   entry: "./src/Module.js",
 
   output: {
-    filename: "[name].[contenthash].js",
+    filename: "main.js", // fixed for library consumers
     path: path.resolve(__dirname, "dist"),
     library: {
       name: "@egovernments/digit-ui-module-campaign-manager",
@@ -59,11 +59,9 @@ module.exports = {
     "redux-thunk": "redux-thunk",
     // DIGIT UI cross-dependencies
     "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
-    "@egovernments/digit-ui-react-components":
-      "@egovernments/digit-ui-react-components",
+    "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",
     "@egovernments/digit-ui-libraries": "@egovernments/digit-ui-libraries",
-    "@egovernments/digit-ui-svg-components":
-      "@egovernments/digit-ui-svg-components",
+    "@egovernments/digit-ui-svg-components": "@egovernments/digit-ui-svg-components",
   },
 
   module: {
@@ -92,11 +90,7 @@ module.exports = {
                 },
               ],
             ],
-            plugins: [
-              ...(isProduction
-                ? [["transform-remove-console", { exclude: ["error", "warn"] }]]
-                : []),
-            ],
+            plugins: [...(isProduction ? [["transform-remove-console", { exclude: ["error", "warn"] }]] : [])],
           },
         },
       },
@@ -122,33 +116,29 @@ module.exports = {
     ],
   },
 
-  devtool: isProduction
-    ? "hidden-source-map"
-    : "cheap-module-source-map", // faster rebuilds in dev
+  devtool: isProduction ? "hidden-source-map" : "cheap-module-source-map", // faster rebuilds in dev
 
   devServer: isDevelopment
     ? {
-    static: {
-      directory: path.join(__dirname, "dist"),
-    },
-    hot: true,
-    historyApiFallback: true,
-    watchFiles: {
-      paths: ["src/**/*"], // watch your source files
-      options: {
-        ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
-        poll: 1000,
-        aggregateTimeout: 300,
-      },
-    }
-  }
+        static: {
+          directory: path.join(__dirname, "dist"),
+        },
+        hot: true,
+        historyApiFallback: true,
+        watchFiles: {
+          paths: ["src/**/*"], // watch your source files
+          options: {
+            ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
+            poll: 1000,
+            aggregateTimeout: 300,
+          },
+        },
+      }
     : undefined,
 
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(
-        process.env.NODE_ENV || "development"
-      ),
+      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV || "development"),
     }),
     ...(isDevelopment ? [new webpack.HotModuleReplacementPlugin()] : []),
     ...(isProduction
