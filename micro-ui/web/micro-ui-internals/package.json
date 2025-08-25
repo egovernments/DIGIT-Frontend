@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "example"
+    "example",
+    "micro-ui-internals/packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
