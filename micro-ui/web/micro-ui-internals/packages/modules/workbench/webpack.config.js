@@ -1,68 +1,72 @@
 const path = require("path");
 const webpack = require("webpack");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const CompressionPlugin = require("compression-webpack-plugin");
+// const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer"); // enable when needed
 
 // Environment-based configuration
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 const isDevelopment = !isProduction;
 
 module.exports = {
-  mode: isProduction ? 'production' : 'development',
+  mode: isProduction ? "production" : "development",
+
   entry: "./src/Module.js",
+
   output: {
-    filename: "main.js",
+    filename: "[name].[contenthash].js",
     path: path.resolve(__dirname, "dist"),
     library: {
       name: "@egovernments/digit-ui-module-workbench",
       type: "umd",
     },
-    globalObject: 'this',
+    globalObject: "this",
     clean: true,
   },
+
   resolve: {
     extensions: [".js", ".jsx"],
   },
-  // Production optimizations
+
   optimization: {
     usedExports: true,
-    sideEffects: false,
+    sideEffects: true, // safer than false
     concatenateModules: isProduction,
     minimize: isProduction,
-    // Performance budget for core module
-    splitChunks: false, // Single bundle for UMD
+    runtimeChunk: isProduction ? "single" : false,
+    splitChunks: isProduction
+      ? {
+          chunks: "async", // allow async splitting for large imports
+        }
+      : false,
   },
-  // Performance monitoring
+
   performance: {
-    maxAssetSize: 100000, // 100KB for workbench module
+    maxAssetSize: 100000, // raise a bit since React 19 is heavier
     maxEntrypointSize: 100000,
-    hints: isProduction ? 'warning' : false,
+    hints: isProduction ? "warning" : false,
   },
+
   externals: {
     // Core React ecosystem
-    react: {
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react',
-      root: 'React',
-    },
-    'react-dom': {
-      commonjs: 'react-dom',
-      commonjs2: 'react-dom',
-      amd: 'react-dom',
-      root: 'ReactDOM',
-    },
-    'react-router-dom': 'react-router-dom',
-    'react-i18next': 'react-i18next',
+    react: "React",
+    "react-dom": "ReactDOM",
+    "react-router-dom": "react-router-dom",
+    "react-i18next": "react-i18next",
     "@tanstack/react-query": "@tanstack/react-query",
     // Redux ecosystem
-    'react-redux': 'react-redux',
-    'redux': 'redux',
-    'redux-thunk': 'redux-thunk',
+    "react-redux": "react-redux",
+    redux: "redux",
+    "redux-thunk": "redux-thunk",
     // DIGIT UI cross-dependencies
-    '@egovernments/digit-ui-components': '@egovernments/digit-ui-components',
-    '@egovernments/digit-ui-react-components': '@egovernments/digit-ui-react-components',
-    '@egovernments/digit-ui-libraries': '@egovernments/digit-ui-libraries',
-    '@egovernments/digit-ui-svg-components': '@egovernments/digit-ui-svg-components',
+    "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
+    "@egovernments/digit-ui-react-components":
+      "@egovernments/digit-ui-react-components",
+    "@egovernments/digit-ui-libraries": "@egovernments/digit-ui-libraries",
+    "@egovernments/digit-ui-svg-components":
+      "@egovernments/digit-ui-svg-components",
   },
+
   module: {
     rules: [
       {
@@ -71,108 +75,130 @@ module.exports = {
         use: {
           loader: "babel-loader",
           options: {
-            // Enable caching for faster rebuilds
             cacheDirectory: true,
             cacheCompression: false,
             presets: [
               [
                 "@babel/preset-env",
                 {
-                  // Modern browser targets
-                  targets: "> 1%, last 2 versions, not ie <= 8",
-                  useBuiltIns: "usage",
-                  corejs: 3,
-                  modules: false, // Let webpack handle modules
-                }
+                  // Modern browser targets (React 19 requires modern browsers)
+                  targets: { esmodules: true },
+                  modules: false,
+                },
               ],
               [
                 "@babel/preset-react",
                 {
-                  // Modern JSX transform (React 17+ feature)
-                  runtime: "automatic"
-                }
-              ]
+                  runtime: "automatic", // React 17+ JSX transform
+                },
+              ],
             ],
             plugins: [
-              // Remove console logs in production
-              ...(isProduction ? [["transform-remove-console", { "exclude": ["error", "warn"] }]] : [])
-            ]
+              ...(isProduction
+                ? [["transform-remove-console", { exclude: ["error", "warn"] }]]
+                : []),
+            ],
           },
         },
       },
       {
         test: /\.css$/,
         use: [
-          'style-loader',
+          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               importLoaders: 1,
               modules: {
                 auto: true,
-                localIdentName: isDevelopment ? '[name]__[local]--[hash:base64:5]' : '[hash:base64:5]'
-              }
-            }
-          }
+                localIdentName: isDevelopment
+                  ? "[name]__[local]--[hash:base64:5]"
+                  : "[hash:base64:5]",
+              },
+            },
+          },
         ],
       },
       {
         test: /\.(scss|sass)$/,
         use: [
-          'style-loader',
+          isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
               importLoaders: 2,
               modules: {
                 auto: true,
-                localIdentName: isDevelopment ? '[name]__[local]--[hash:base64:5]' : '[hash:base64:5]'
-              }
-            }
+                localIdentName: isDevelopment
+                  ? "[name]__[local]--[hash:base64:5]"
+                  : "[hash:base64:5]",
+              },
+            },
           },
-          'sass-loader'
+          "sass-loader",
         ],
       },
       {
         test: /\.(png|jpe?g|gif|svg)$/,
-        type: 'asset/resource',
+        type: "asset",
+        parser: {
+          dataUrlCondition: {
+            maxSize: 10 * 1024, // inline small images
+          },
+        },
         generator: {
-          filename: 'images/[name].[hash][ext]'
-        }
+          filename: "images/[name].[hash][ext]",
+        },
       },
       {
         test: /\.(woff|woff2|eot|ttf|otf)$/,
-        type: 'asset/resource',
+        type: "asset/resource",
         generator: {
-          filename: 'fonts/[name].[hash][ext]'
-        }
-      }
+          filename: "fonts/[name].[hash][ext]",
+        },
+      },
     ],
   },
-  // Source maps configuration
-  devtool: isProduction ? 'source-map' : 'eval-source-map',
-  
-  // Development server configuration
-  devServer: isDevelopment ? {
-    port: 3006,
-    hot: true,
-    open: false,
-    historyApiFallback: true,
-    compress: true,
-  } : undefined,
-  
+
+  devtool: isProduction
+    ? "hidden-source-map"
+    : "cheap-module-source-map", // faster rebuilds in dev
+
+  devServer: isDevelopment
+    ? {
+        port: 3006,
+        hot: true,
+        open: false,
+        historyApiFallback: true,
+        compress: true,
+      }
+    : undefined,
+
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
+      "process.env.NODE_ENV": JSON.stringify(
+        process.env.NODE_ENV || "development"
+      ),
     }),
-    ...(isDevelopment ? [new webpack.HotModuleReplacementPlugin()] : [])
+    ...(isDevelopment ? [new webpack.HotModuleReplacementPlugin()] : []),
+    ...(isProduction
+      ? [
+          new MiniCssExtractPlugin({
+            filename: "[name].[contenthash].css",
+          }),
+          new CompressionPlugin({
+            algorithm: "brotliCompress", // or gzip
+            test: /\.(js|css|html|svg)$/,
+          }),
+          // new BundleAnalyzerPlugin(), // enable when debugging bundle size
+        ]
+      : []),
   ],
-  
-  // Build statistics
+
   stats: {
     errorDetails: true,
     children: false,
     modules: false,
     entrypoints: false,
-  }
+  },
 };
