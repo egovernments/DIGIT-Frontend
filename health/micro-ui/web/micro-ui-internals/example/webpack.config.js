@@ -70,7 +70,7 @@ module.exports = {
           enforce: true,
         },
         digitUI: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui/,
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-(libraries|components|react-components|module-core)[\\/]/,
           name: 'digit-ui',
           chunks: 'all',
           priority: 15,
