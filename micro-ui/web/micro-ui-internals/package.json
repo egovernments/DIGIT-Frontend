@@ -4,7 +4,7 @@
   "main": "index.js",
   "workspaces": [
     "example",
-    "micro-ui-internals/packages/modules/*"
+    "packages/modules/*"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
