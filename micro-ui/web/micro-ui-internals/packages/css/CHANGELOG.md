@@ -1,5 +1,8 @@
 # Changelog
+## [1.8.41] - [26-Aug-2025]
 
+-  toast success h2 CSS issue fixed
+  
 ## [1.8.40] - [25-Aug-2025]
 
 - Toast error message width issue in Property Tax module(sandbox)
