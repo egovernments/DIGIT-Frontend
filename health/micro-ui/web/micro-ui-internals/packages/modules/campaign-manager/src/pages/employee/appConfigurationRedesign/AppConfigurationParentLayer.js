@@ -67,16 +67,6 @@ const AppConfigurationParentRedesign = ({
   const [changeLoader, setChangeLoader] = useState(false);
 
   useEffect(() => {
-    if (currentStep === parentState?.currentTemplate?.length) {
-      const event = new CustomEvent("lastButtonDisabled", { detail: true });
-      window.dispatchEvent(event);
-    } else {
-      const event = new CustomEvent("lastButtonDisabled", { detail: false });
-      window.dispatchEvent(event);
-    }
-  }, [currentStep, parentState]);
-
-  useEffect(() => {
     const handleResetStep = () => {
       setCurrentStep(1);
     };
@@ -167,6 +157,7 @@ const AppConfigurationParentRedesign = ({
       formId &&
       AppConfigMdmsData?.[fieldTypeMaster]?.length > 0
     ) {
+
       const fieldTypeMasterData = AppConfigMdmsData?.[fieldTypeMaster] || [];
       const temp = restructure(formData?.data?.pages, fieldTypeMasterData, formData?.data);
       parentDispatch({
@@ -187,19 +178,86 @@ const AppConfigurationParentRedesign = ({
     );
   }, [parentState?.currentTemplate]);
 
+  const currentTabPages = React.useMemo(() => {
+    const activeParent = numberTabs.find((j) => j.active)?.parent;
+    return (parentState?.currentTemplate || [])
+      .filter((i) => i.parent === activeParent)
+      .sort((a, b) => Number(a.order) - Number(b.order));
+  }, [parentState?.currentTemplate, numberTabs]);
+
+  useEffect(() => {
+  const last = currentTabPages.length
+    ? Number(currentTabPages[currentTabPages.length - 1].order)
+    : null;
+
+  const isLast = last != null && Math.abs(Number(currentStep) - last) < 1e-6;
+
+  window.dispatchEvent(new CustomEvent("lastButtonDisabled", { detail: isLast }));
+}, [currentStep, currentTabPages]);
+
+
+  // Build the ordered list of valid steps once.
+  // 👉 Replace p.step / p.order / p.name with whatever your source-of-truth field is.
+  const availableSteps = React.useMemo(() => {
+    const raw = (parentState?.steps
+      ?? parentState?.stepOrder
+      ?? (parentState?.currentTemplate || []).map((p) => p?.step ?? p?.order ?? p?.name)
+    );
+
+    return (raw || [])
+      .map((x) => parseFloat(String(x)))
+      .filter((n) => Number.isFinite(n))
+      .sort((a, b) => a - b);
+  }, [parentState]);
+
+  const round1 = (n) => Number(n.toFixed(1));
+
+  const nextStepFrom = (current) => {
+    const cur = Number(current);
+
+    // Prefer the next known step from the canonical list
+    if (availableSteps.length) {
+      const next = availableSteps.find((s) => s > cur + 1e-9);
+      if (next != null) return round1(next);
+    }
+
+    // Fallbacks if no canonical "next" exists:
+    //  - if we're on an integer, try the nearest .1
+    //  - otherwise jump to next integer
+    const frac10 = Math.round((cur - Math.floor(cur)) * 10);
+    if (frac10 === 0) return round1(cur + 0.1);
+    return Math.floor(cur) + 1;
+  };
+
+  const prevStepFrom = (current) => {
+    const cur = Number(current);
+    let prev = null;
+    for (const s of availableSteps) {
+      if (s < cur - 1e-9) prev = s; else break;
+    }
+    return prev != null ? round1(prev) : cur;
+  };
+
   useEffect(() => {
     setStepper(
-      (parentState?.currentTemplate || [])
-        ?.filter((i) => i.parent === numberTabs.find((j) => j.active)?.parent)
-        .sort((a, b) => a.order - b.order)
-        ?.map((k, j, t) => ({
-          name: k.name,
-          isLast: j === t.length - 1 ? true : false,
-          isFirst: j === 0 ? true : false,
-          active: j === currentStep - 1 ? true : false,
-        }))
+      currentTabPages.map((k, j, t) => ({
+        name: k.name,
+        isLast: j === t.length - 1,
+        isFirst: j === 0,
+        // active by exact order match (works for 4.1, 4.2, …)
+        active: Number(k.order) === Number(currentStep),
+      }))
     );
-  }, [parentState?.currentTemplate, numberTabs, currentStep]);
+  }, [currentTabPages, currentStep]);
+
+  const mainPagesCount = React.useMemo(() => {
+    const ints = new Set();
+    for (const p of currentTabPages) {
+      const n = parseFloat(String(p?.order ?? p?.step ?? p?.name));
+      if (Number.isFinite(n)) ints.add(Math.floor(n));
+    }
+    return ints.size;
+  }, [currentTabPages]);
 
   useEffect(() => {
     if (variant === "app" && parentState?.currentTemplate?.length > 0 && currentStep && numberTabs?.length > 0) {
@@ -210,11 +268,13 @@ const AppConfigurationParentRedesign = ({
     }
   }, [parentState?.currentTemplate, currentStep, numberTabs]);
 
+
   if (isCacheLoading || isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
   const submit = async (screenData, finalSubmit, tabChange) => {
+
     parentDispatch({
       key: "SETBACK",
       data: screenData,
@@ -233,15 +293,15 @@ const AppConfigurationParentRedesign = ({
       const reverseFormat =
         cacheData && cacheData?.filteredCache?.data?.data
           ? {
-              ...parentState?.actualTemplate?.actualTemplate,
-              version: parentState?.actualTemplate?.version + 1,
-              pages: reverseData,
-            }
+            ...parentState?.actualTemplate?.actualTemplate,
+            version: parentState?.actualTemplate?.version + 1,
+            pages: reverseData,
+          }
           : {
-              ...parentState?.actualTemplate,
-              version: parentState?.actualTemplate?.version + 1,
-              pages: reverseData,
-            };
+            ...parentState?.actualTemplate,
+            version: parentState?.actualTemplate?.version + 1,
+            pages: reverseData,
+          };
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
@@ -344,15 +404,15 @@ const AppConfigurationParentRedesign = ({
       const reverseFormat =
         cacheData && cacheData?.filteredCache?.data?.data
           ? {
-              ...parentState?.actualTemplate?.actualTemplate,
-              version: parentState?.actualTemplate?.version + 1,
-              pages: reverseData,
-            }
+            ...parentState?.actualTemplate?.actualTemplate,
+            version: parentState?.actualTemplate?.version + 1,
+            pages: reverseData,
+          }
           : {
-              ...parentState?.actualTemplate,
-              version: parentState?.actualTemplate?.version + 1,
-              pages: reverseData,
-            };
+            ...parentState?.actualTemplate,
+            version: parentState?.actualTemplate?.version + 1,
+            pages: reverseData,
+          };
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
@@ -430,21 +490,22 @@ const AppConfigurationParentRedesign = ({
           },
         }
       );
-      setCurrentStep((prev) => prev + 1);
+      setCurrentStep((prev) => nextStepFrom(prev));
     }
   };
 
   const back = () => {
-    if (stepper?.find((i) => i.active)?.isFirst && isPreviousTabAvailable) {
-      tabStateDispatch({ key: "PREVIOUS_TAB" });
-      setCurrentStep(1);
-      return;
-    } else if (stepper?.find((i) => i.active)?.isFirst && !isPreviousTabAvailable) {
-      setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
-    } else {
-      setCurrentStep((prev) => prev - 1);
-    }
-  };
+  const activeStep = stepper?.find((i) => i.active);
+  if (activeStep?.isFirst && isPreviousTabAvailable) {
+    tabStateDispatch({ key: "PREVIOUS_TAB" });
+    setCurrentStep(availableSteps[0] ?? 1);
+    return;
+  } else if (activeStep?.isFirst && !isPreviousTabAvailable) {
+    setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
+  } else {
+    setCurrentStep((prev) => prevStepFrom(prev));
+  }
+};
   if (changeLoader) {
     return <Loader className="loader-center" page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")} />;
   }
@@ -484,7 +545,7 @@ const AppConfigurationParentRedesign = ({
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
               parentState={parentState}
-              pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
+              pageTag={`${t("CMN_PAGE")} ${currentStep} / ${mainPagesCount}`}
             />
           </div>
         </div>
