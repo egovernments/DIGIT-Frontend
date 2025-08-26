@@ -20,7 +20,7 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
-    "build:prod": "yarn build:campaign && yarn build:example",
+    "build:prod": "NODE_ENV=production yarn build:campaign",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "dev:example": "cd example && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
