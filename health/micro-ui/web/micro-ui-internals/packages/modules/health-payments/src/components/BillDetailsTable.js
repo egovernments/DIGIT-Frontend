@@ -23,6 +23,7 @@ const BillDetailsTable = ({ ...props }) => {
     const [editingRowIndex, setEditingRowIndex] = useState(null);
     const [initialFieldValue, setInitialFieldValue] = useState("");
     const [tableData, setTableData] = useState(props?.data || []);
+    const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
 
     useEffect(() => {
         setTableData(props?.data || []);
@@ -77,11 +78,9 @@ const BillDetailsTable = ({ ...props }) => {
                                             }}
                                         >
                                             {showErrorPayments
-                                                ? row?.totalAmount === 0
-                                                    ? t("HCM_AM_AMOUNT_ZERO")
-                                                    : t(row?.additionalDetails?.errorDetails?.reasonForFailure)
+                                                ? t(row?.additionalDetails?.errorDetails?.reasonForFailure)
                                                 : `${t("HCM_AM_REQUEST_NOT_PROCESSED")} ${t("HCM_AM_PLEASE_TRY_AGAIN")}`
-                                                }
+                                            }
                                         </div>
                                     }
                                     enterDelay={100}
@@ -361,7 +360,8 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {t(row?.wage) || t("NA")}
+                            {/* {t(row?.wage) || t("NA")} */}
+                            {row?.wage ? `${row.wage} ${workerRatesData?.currency}` : t("NA")}
                         </div>
                     );
                 },
@@ -378,7 +378,7 @@ const BillDetailsTable = ({ ...props }) => {
                 selector: (row) => {
                     return (
                         <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {row?.totalAmount ? `${row.totalAmount} USD` : t("NA")}
+                            {row?.totalAmount ? `${row.totalAmount} ${workerRatesData?.currency}` : t("NA")}
                         </div>
                     );
                 },

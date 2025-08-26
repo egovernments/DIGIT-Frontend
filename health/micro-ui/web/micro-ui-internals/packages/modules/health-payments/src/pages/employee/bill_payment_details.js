@@ -44,6 +44,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const [isSelectionDisabledVerify, setIsSelectionDisabledVerify] = useState(false);
   const [showGeneratePaymentAction, setShowGeneratePaymentAction] = useState(false);
   const [clearSelectedRows, setClearSelectedRows] = useState(false);
+  const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
   const [limitAndOffset, setLimitAndOffset] = useState({
     limit: rowsPerPage,
     offset: (currentPage - 1) * rowsPerPage,
@@ -67,7 +68,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
   const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
-  const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+  // const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
@@ -111,33 +112,35 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   }
 
 
-  const reqMdmsCriteria = {
-    url: `/${mdms_context_path}/v1/_search`,
-    body: {
-      MdmsCriteria: {
-        tenantId: tenantId,
-        moduleDetails: [
-          {
-            "moduleName": "HCM",
-            "masterDetails": [
-              {
-                "name": "WORKER_RATES"
-              }
-            ]
-          }
-        ]
-      }
-    },
-    config: {
-      enabled: billData ? true : false,
-      select: (mdmsData) => {
-        const referenceCampaignId = billData?.referenceId?.split(".")?.[0];
-        return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
-      },
-    }
-  };
-  const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
-  console.log("workerRatesData", workerRatesData);
+  // const reqMdmsCriteria = {
+  //   url: `/${mdms_context_path}/v1/_search`,
+  //   body: {
+  //     MdmsCriteria: {
+  //       tenantId: tenantId,
+  //       moduleDetails: [
+  //         {
+  //           "moduleName": "HCM",
+  //           "masterDetails": [
+  //             {
+  //               "name": "WORKER_RATES"
+  //             }
+  //           ]
+  //         }
+  //       ]
+  //     }
+  //   },
+  //   config: {
+  //     enabled: billData ? true : false,
+  //     select: (mdmsData) => {
+  //       const referenceCampaignId = billData?.referenceId?.split(".")?.[0];
+  //       return mdmsData.MdmsRes.HCM.WORKER_RATES.filter((item) => item.campaignId === referenceCampaignId)?.[0]
+  //     },
+  //   }
+  // };
+  // const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+  // console.log("workerRatesData", workerRatesData);
+
+  
 
   const allIndividualReqCriteria = {
     url: `/${individualContextPath}/v1/_search`,
@@ -180,7 +183,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
         givenName: individual?.name?.givenName,
         mobileNumber: individual?.mobileNumber,
         userId: individual?.userDetails?.username,
-        wage: wage + " " + workerRatesData?.currency,
+        wage: wage,
       };
     });
   }
@@ -715,7 +718,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
     setTabCounts(counts);
     }
-  }, [AllIndividualsData, billData, workerRatesData, activeLink]);
+  }, [AllIndividualsData, billData, activeLink]);
 
   const renderLabelPair = (heading, text, style) => (
     <div className="label-pair">
