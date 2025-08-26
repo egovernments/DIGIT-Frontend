@@ -223,17 +223,16 @@ export const RenderConditionalField = ({
     case "filters":
       return <FiltersRenderer cField={cField} drawerState={drawerState} setDrawerState={setDrawerState} t={t} disabled={disabled} />;
 
-      //[TODO:: Uncomment this for dependency fields ]
-    // case "dependencyFieldWrapper":
-    //   return (
-    //     <DependentFieldsWrapper
-    //       t={t}
-    //       parentState={parentState}
-    //       onExpressionChange={handleExpressionChange}
-    //       screenConfig={screenConfig}
-    //       selectedFieldItem={selectedField}
-    //     />
-    //   );
+    case "dependencyFieldWrapper":
+      return (
+        <DependentFieldsWrapper
+          t={t}
+          parentState={parentState}
+          onExpressionChange={handleExpressionChange}
+          screenConfig={screenConfig}
+          selectedFieldItem={selectedField}
+        />
+      );
     default:
       return null;
   }
