@@ -21,28 +21,42 @@ const DummyLoaderScreen = () => {
     "SANDBOX_GUIDE_ALL_SETUP_DONE",
   ];
   useEffect(() => {
-    const stepInterval = setInterval(() => {
-      if (currentStep < steps.length) {
-        setCurrentStep((prev) => prev + 1);
-      }
-    }, 2000); // 1 second delay for each step
+    // Clear any existing intervals/timeouts on cleanup
+    let stepInterval;
+    let navigateTimeout;
 
-    if (currentStep === steps.length) {
-      clearInterval(stepInterval); // Clear the interval to stop further updates
-      const navigateTimeout = setTimeout(() => {
+    if (currentStep < steps.length) {
+      stepInterval = setInterval(() => {
+        setCurrentStep((prev) => {
+          // Use functional update to avoid stale closure
+          if (prev < steps.length - 1) {
+            return prev + 1;
+          }
+          return prev;
+        });
+      }, 2000);
+    } else if (currentStep === steps.length) {
+      // Navigate after all steps are complete
+      navigateTimeout = setTimeout(() => {
+        // Add safety check for window object
+        const globalPath = typeof window !== 'undefined' ? window?.globalPath : '';
         navigate({
-          pathname: `/${window?.globalPath}/user/url`,
+          pathname: `/${globalPath}/user/url`,
           state: { tenant: tenant },
         });
       }, 1000);
-
-      return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
 
+    // Cleanup function - always clear both timers
     return () => {
-      clearInterval(stepInterval);
+      if (stepInterval) {
+        clearInterval(stepInterval);
+      }
+      if (navigateTimeout) {
+        clearTimeout(navigateTimeout);
+      }
     };
-  }, [currentStep]);
+  }, [currentStep, steps.length, navigate, tenant]);
 
   return (
     <div className="sandbox-loader-screen">

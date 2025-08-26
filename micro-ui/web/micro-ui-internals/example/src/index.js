@@ -52,6 +52,13 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
+      // Temporarily disabled for debugging
+      try {
+        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");
+        initWorkbenchComponents();
+      } catch (error) {
+        console.warn("Workbench module failed to load:", error);
+      }
       setIsReady(true);
     });
   }, []);

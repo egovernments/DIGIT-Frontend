@@ -9,11 +9,27 @@ import { DigitApp, DigitAppWrapper } from "./App";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
 import ChangeCity from "./components/ChangeCity";
 import ChangeLanguage from "./components/ChangeLanguage";
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
+
+// Create QueryClient instance outside component to prevent recreation
+const createQueryClient = () => new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 15 * 60 * 1000,
+      gcTime: 50 * 60 * 1000,
+      retry: false,
+      retryDelay: (attemptIndex) => Infinity,
+      /*
+        enable this to have auto retry incase of failure
+        retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
+       */
+    },
+  },
+});
 
 const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserTypes }) => {
   const { isLoading, data: initData={} } = Digit.Hooks.useInitStore(stateCode, enabledModules);
@@ -81,67 +97,60 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserT
  * />
  */
 export const DigitUI = ({ stateCode, registry, enabledModules, defaultLanding,allowedUserTypes }) => {
-  const [privacy, setPrivacy] = useState(Digit.Utils.getPrivacyObject() || {});
+  // Memoize initial privacy state to prevent unnecessary re-renders
+  const initialPrivacy = useMemo(() => Digit.Utils.getPrivacyObject() || {}, []);
+  const [privacy, setPrivacy] = useState(initialPrivacy);
+  
   const userType = Digit.UserService.getType();
-  const queryClient = new QueryClient({
-    defaultOptions: {
-      queries: {
-        staleTime: 15 * 60 * 1000,
-        gcTime: 50 * 60 * 1000,
-        retry: false,
-        retryDelay: (attemptIndex) => Infinity,
-        /*
-          enable this to have auto retry incase of failure
-          retryDelay: attemptIndex => Math.min(1000 * 3 ** attemptIndex, 60000)
-         */
-      },
-    },
-  });
+  
+  // Use memoized QueryClient to prevent recreation on every render
+  const queryClient = useMemo(() => createQueryClient(), []);
 
   const ComponentProvider = Digit.Contexts.ComponentProvider;
   const PrivacyProvider = Digit.Contexts.PrivacyProvider;
 
   const DSO = Digit.UserService.hasAccess(["FSM_DSO"]);
 
+  // Memoize privacy context methods to prevent unnecessary re-renders
+  const resetPrivacy = useCallback((_data) => {
+    Digit.Utils.setPrivacyObject({});
+    setPrivacy({});
+  }, []);
+
+  const getPrivacy = useCallback(() => {
+    const privacyObj = Digit.Utils.getPrivacyObject();
+    setPrivacy(privacyObj);
+    return privacyObj;
+  }, []);
+
+  const updatePrivacyDescoped = useCallback((_data) => {
+    const privacyObj = Digit.Utils.getAllPrivacyObject();
+    // Safely access pathname with fallback
+    const pathname = typeof window !== 'undefined' ? window.location.pathname : '';
+    const newObj = { ...privacyObj, [pathname]: _data };
+    Digit.Utils.setPrivacyObject({ ...newObj });
+    setPrivacy(privacyObj?.[pathname] || {});
+  }, []);
+
+  const updatePrivacy = useCallback((uuid, fieldName) => {
+    setPrivacy(Digit.Utils.updatePrivacy(uuid, fieldName) || {});
+  }, []);
+
+  // Memoize privacy context value to prevent unnecessary re-renders
+  const privacyContextValue = useMemo(() => ({
+    privacy: typeof window !== 'undefined' ? privacy?.[window.location.pathname] : privacy,
+    resetPrivacy,
+    getPrivacy,
+    updatePrivacyDescoped,
+    updatePrivacy,
+  }), [privacy, resetPrivacy, getPrivacy, updatePrivacyDescoped, updatePrivacy]);
+
   return (
     <div>
       <ErrorBoundary>
         <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
-            <PrivacyProvider.Provider
-              value={{
-                privacy: privacy?.[window.location.pathname],
-                resetPrivacy: (_data) => {
-                  Digit.Utils.setPrivacyObject({});
-                  setPrivacy({});
-                },
-                getPrivacy: () => {
-                  const privacyObj = Digit.Utils.getPrivacyObject();
-                  setPrivacy(privacyObj);
-                  return privacyObj;
-                },
-                /*  Descoped method to update privacy object  */
-                updatePrivacyDescoped: (_data) => {
-                  const privacyObj = Digit.Utils.getAllPrivacyObject();
-                  const newObj = { ...privacyObj, [window.location.pathname]: _data };
-                  Digit.Utils.setPrivacyObject({ ...newObj });
-                  setPrivacy(privacyObj?.[window.location.pathname] || {});
-                },
-                /**
-                 * Main Method to update the privacy object anywhere in the application
-                 *
-                 * @author jagankumar-egov
-                 *
-                 * Feature :: Privacy
-                 *
-                 * @example
-                 *    const { privacy , updatePrivacy } = Digit.Hooks.usePrivacyContext();
-                 */
-                updatePrivacy: (uuid, fieldName) => {
-                  setPrivacy(Digit.Utils.updatePrivacy(uuid, fieldName) || {});
-                },
-              }}
-            >
+            <PrivacyProvider.Provider value={privacyContextValue}>
               <DigitUIWrapper stateCode={stateCode} enabledModules={enabledModules} defaultLanding={defaultLanding}  allowedUserTypes={allowedUserTypes} />
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>

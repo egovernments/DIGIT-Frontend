@@ -140,11 +140,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   };
 
   React.useEffect(() => {
-    window.addEventListener("resize", () => setWindowWidth(window.innerWidth));
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener("resize", () => setWindowWidth(window.innerWidth));
+      window.removeEventListener("resize", handleResize);
     };
-  });
+  }, []);
 
   useEffect(() => {
     setLoading(true);
