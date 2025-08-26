@@ -1,7 +1,7 @@
 # Changelog
 
 #### [1.0.16]  [26-Aug-2025]
-- Added iframe support and updated demo path handling based on KibanaDemoPath
+- Added iframe support and updated demo path handling based on KibanaMapsDomain
 
 ## [1.0.14]  [4-Mar-2025]
 - DUCE-253 : Intergrated with react json editor for citizen form composer
