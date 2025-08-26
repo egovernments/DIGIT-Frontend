@@ -4,7 +4,8 @@
   "main": "index.js",
   "workspaces": [
     "example",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/css"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -19,6 +20,7 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
+    "build:css": "cd packages/css && yarn build",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:svg-components": "cd packages/svg-components && yarn build",
     "buildD:libraries": "cd packages/libraries && yarn build",
@@ -28,6 +30,7 @@
     "buildD:workbench": "cd packages/modules/workbench && yarn build",
     "buildD:assignment": "cd packages/modules/assignment && yarn build",
     "dev:example": "cd example && yarn start",
+    "dev:css": "cd packages/css && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "clean": "run-s clean:**",
     "clean-nm": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:assignment && yarn clean:sample && yarn clean:example && yarn clean:workbench",
