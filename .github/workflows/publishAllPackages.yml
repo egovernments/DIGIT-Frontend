@@ -2,7 +2,7 @@ name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'optim' ]
+    branches: [ 'develop-react19' ]
     paths:
       - 'micro-ui/web/micro-ui-internals/**'
 
