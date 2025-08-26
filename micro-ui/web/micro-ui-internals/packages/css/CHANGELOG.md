@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.41] - [26-Aug-2025]
+
+- Removed the extra margin below in inbox search of ws module
+
 ## [1.8.40] - [25-Aug-2025]
 
 - Toast error message width issue in Property Tax module(sandbox)
