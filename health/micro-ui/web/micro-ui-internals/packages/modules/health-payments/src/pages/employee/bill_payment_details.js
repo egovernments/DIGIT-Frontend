@@ -264,7 +264,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${expenseContextPath}/v1/bill/details/status/_update`,
   });
-  const updateBillDetailWorkflow = async (bill, selectedRows, wfAction, assignee) => {
+  const updateBillDetailWorkflow = async (bill, selectedRows, wfAction) => {
     try {
       await updateBillDetailMutation.mutateAsync(
         {
@@ -275,7 +275,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
             },
             workflow: {
               action: wfAction,
-              assignes: assignee ? [assignee.value] : null
+              // assignes: assignee ? [assignee.value] : null
               //TODO: Add comments too
             },
           },
@@ -991,7 +991,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     }}
                     onClick={() => {
                       // triggerSearchHrmsUsers();
-                      setOpenSendForEditPopUp(true);
+                      // setOpenSendForEditPopUp(true);
+                      updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
                       // updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
                     }}
                     optionsKey="name"
@@ -1071,7 +1072,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                       bottom: "40px",
                     }}
                     onClick={() => {
-                      setOpenSendForEditPopUp(true);
+                      // setOpenSendForEditPopUp(true);
+                      updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
                     }}
                     optionsKey="name"
                     size=""
