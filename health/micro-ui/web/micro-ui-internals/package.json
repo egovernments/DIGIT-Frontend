@@ -22,7 +22,6 @@
     "build": "run-s build:**",
     "build:prod": "yarn build:campaign && yarn build:example",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
-    "build:example": "cd example && yarn build",
     "dev:example": "cd example && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "clean": "run-s clean:**",
