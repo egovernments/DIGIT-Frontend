@@ -17,6 +17,7 @@ const MyBills = (props) => {
 
     // context path variables
     const expenseContextPath = window?.globalConfigs?.getConfig("EXPENSE_CONTEXT_PATH") || "health-expense";
+    const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 
     // State Variables
     const [tableData, setTableData] = useState([]);
@@ -58,6 +59,35 @@ const MyBills = (props) => {
 
     const { isLoading: isBillLoading, data: BillData, refetch: refetchBill, isFetching } = Digit.Hooks.useCustomAPIHook(BillSearchCri);
 
+    const reqMdmsCriteria = {
+    url: `/${mdms_context_path}/v1/_search`,
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        moduleDetails: [
+          {
+            "moduleName": "HCM",
+            "masterDetails": [
+              {
+                "name": "WORKER_RATES"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    config: {
+      enabled: BillData?.bills?.length > 0 ? true : false,
+      select: (mdmsData) => {
+        const referenceCampaignId = BillData?.bills?.[0]?.referenceId?.split(".")?.[0];
+        return mdmsData?.MdmsRes?.HCM?.WORKER_RATES?.find(
+    (item) => item.campaignId === referenceCampaignId);
+      },
+    }
+  };
+    const { isLoading1, data: workerRatesData, isFetching1 } = Digit.Hooks.useCustomAPIHook(reqMdmsCriteria);
+    console.log("workerRatesData", workerRatesData);
+    Digit.SessionStorage.set("workerRatesData", workerRatesData);
 
     const handlePageChange = (page, totalRows) => {
         setCurrentPage(page);
@@ -103,7 +133,7 @@ const MyBills = (props) => {
     };
 
 
-    if (isBillLoading) {
+    if (isBillLoading || isFetching1 || isLoading1) {
         return <LoaderScreen />
     }
     const totalAmount = getTotalAmount(props?.selectedBills);
@@ -123,7 +153,7 @@ const MyBills = (props) => {
                         <React.Fragment>
                             {selectedCount > 0 && (
                                 <div style={{ margin: '1rem 0', fontWeight: 'bold', color: '#0B4B66' }}>
-                                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS")} {totalAmount}
+                                    {selectedCount} {t("HCM_AM_BILLS_SELECTED")} | {t("PDF_STATIC_LABEL_BILL_TOTAL_AMOUNT_TO_PROCESS")} {totalAmount} {workerRatesData?.currency}
                                 </div>
                             )}
                             <MyBillsTable
