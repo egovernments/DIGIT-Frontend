@@ -296,7 +296,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       return {
         ...typeAndFormat,
         label: field?.label || "",
-        order: fieldIndex + 1,
+        order: field?.order,
         value: field?.value || "",
         hidden: false, // can't be derived from updatedData unless explicitly added
         // required: field.Mandatory || false,
