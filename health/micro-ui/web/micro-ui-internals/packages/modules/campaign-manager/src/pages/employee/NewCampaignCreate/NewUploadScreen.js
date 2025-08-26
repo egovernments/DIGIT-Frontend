@@ -161,6 +161,17 @@ const NewUploadScreen = () => {
   //   return payload;
   // };
 
+  const innerKeyByOuter = {
+    HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: "uploadFacility",
+    HCM_CAMPAIGN_UPLOAD_USER_DATA: "uploadUser",
+    HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: "uploadBoundary",
+  };
+
+  const typeByOuter = {
+    HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: "facility",
+    HCM_CAMPAIGN_UPLOAD_USER_DATA: "user",
+    HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: "boundary",
+  };
   const restructureData = (params, apiResources, formData) => {
     const payload = {
       resources: [],
@@ -171,32 +182,22 @@ const NewUploadScreen = () => {
       deliveryRules: campaignData?.deliveryRules,
     };
 
-    const mappings = {
-      HCM_CAMPAIGN_UPLOAD_FACILITY_DATA: "facility",
-      HCM_CAMPAIGN_UPLOAD_USER_DATA: "user",
-      HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: "boundary",
-    };
+    Object.entries(innerKeyByOuter).forEach(([outer, inner]) => {
+      // prefer params (persisted), then nested form slice, then flat convenience key
+      const fromParams = params?.[outer]?.[inner];
+      const fromFormNested = formData?.[outer]?.[inner];
+      const fromFormFlat = formData?.[inner];
+      const section = fromParams ?? fromFormNested ?? fromFormFlat;
 
-    Object.entries(mappings).forEach(([key, type]) => {
-      const paramSection = params?.[key];
-      const innerKey = paramSection ? Object.keys(paramSection)[0] : null;
-
-      // Try to get data from formData first (if innerKey is known)
-      const formDataSection = innerKey ? formData?.[innerKey] : null;
-
-      // If no innerKey from params, try to infer from formData directly
-      const fallbackInnerKey = Object.keys(formData || {}).find((k) => formData[k]?.uploadedFile?.[0]?.type === type);
-      const fallbackFormDataSection = formData?.[fallbackInnerKey];
-
-      const data = formDataSection || fallbackFormDataSection || (innerKey && paramSection?.[innerKey]);
-
-      if (Array.isArray(data?.uploadedFile)) {
-        data.uploadedFile.forEach((file) => {
-          payload.resources.push({
-            type,
-            filename: file.filename,
-            filestoreId: file.filestoreId,
-          });
+      if (Array.isArray(section?.uploadedFile)) {
+        section.uploadedFile.forEach((file) => {
+          if (file?.filestoreId) {
+            payload.resources.push({
+              type: typeByOuter[outer],
+              filename: file.filename,
+              filestoreId: file.filestoreId,
+            });
+          }
         });
       }
     });
@@ -205,7 +206,6 @@ const NewUploadScreen = () => {
   };
 
   const onSubmit = async (formData) => {
-
     const key = Object.keys(formData)?.[0];
     const name = filteredConfig?.[0]?.form?.[0]?.name;
     const type = filteredConfig?.[0]?.form?.[0]?.body?.[0]?.customProps?.type;
