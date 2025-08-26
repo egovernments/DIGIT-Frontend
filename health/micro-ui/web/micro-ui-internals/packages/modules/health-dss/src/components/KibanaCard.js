@@ -9,7 +9,7 @@ const KibanaCard = (props) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const isMobile = window.Digit?.Utils?.browser?.isMobile();
   const stateCode = Digit?.ULBService?.getStateId();
-  const kibanaDemoPath=window?.globalConfigs?.getConfig("KIBANA_DEMO_PATH");
+  const kibanaMapsDomain=window?.globalConfigs?.getConfig("KIBANA_MAPS_DOMAIN");
 
   return (
     <Card className="digit-kibana-card chart-item">
@@ -20,7 +20,7 @@ const KibanaCard = (props) => {
         pageName={pageName}
         stateCode={stateCode}
         filters={filters}
-        kibanaDemoPath={kibanaDemoPath}
+        kibanaMapsDomain={kibanaMapsDomain}
       />
     </Card>
   );
