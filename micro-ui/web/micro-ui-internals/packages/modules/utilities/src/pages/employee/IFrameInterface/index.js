@@ -9,7 +9,7 @@ import { Loader } from "@egovernments/digit-ui-components";
 
 // moduleName, pageName will be passed as props as defined in the uiCommonConstants to fetch URL.
 const IFrameInterface = (props) => {
-  const { stateCode, moduleName, pageName, filters, kibanaDemoPath } = props;
+  const { stateCode, moduleName, pageName, filters, kibanaMapsDomain } = props;
   const location = useLocation();
   const iframeRef = useRef(null);
   const localStorageKey = 'Employee.token';
@@ -166,7 +166,7 @@ const IFrameInterface = (props) => {
     }
 
     const isOrign = pageObject?.["isOrigin"] || false;
-    const domain = isOrign ? (kibanaDemoPath? kibanaDemoPath: (process.env.NODE_ENV === "development") ? "https://unified-dev.digit.org" : document.location.origin) : pageObject?.["domain"];
+    const domain = isOrign ? (kibanaMapsDomain? kibanaMapsDomain: (process.env.NODE_ENV === "development") ? "https://unified-dev.digit.org" : document.location.origin) : pageObject?.["domain"];
     //checking if overwrite time is true then update the url as per filter time else return the url
     const contextPath = pageObject?.["routePath"] 
       ? (pageObject?.["overwriteTimeFilter"] && filters?.range?.startDate && filters?.range?.endDate 
