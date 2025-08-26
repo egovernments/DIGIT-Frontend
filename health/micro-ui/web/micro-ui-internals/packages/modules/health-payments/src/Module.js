@@ -10,6 +10,7 @@ import AttendanceInboxComponent from "./components/attendance_inbox/attendance_i
 import InboxSearchLinkHeader from "./components/InboxSearchLinkHeader";
 import SearchResultsPlaceholder from "./components/SearchResultsPlaceholder";
 // import HierarchySelection from "./components/HierachySelection"; 
+import AttendeeBoundaryComponent from "./components/SearchAttendeeBoundary";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   // const [hierarchySelected, setHierarchySelected] = useState(null);
@@ -87,6 +88,7 @@ const componentsToRegister = {
   InboxSearchLinkHeader,
   SearchResultsPlaceholder,
   // HierarchySelection,
+  AttendeeBoundaryComponent,
 };
 
 export const initPaymentComponents = () => {

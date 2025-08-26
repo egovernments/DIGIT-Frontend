@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button, ActionBar, Dropdown, Toast } from "@egovernments/digit-ui-components";
+import { Card, Header, Button,  Dropdown, Toast } from "@egovernments/digit-ui-components";
+import { ActionBar } from "@egovernments/digit-ui-react-components";
 
 /**
  * This component is used to select a project and aggregation level for the generate bill or registers inbox feature.
@@ -98,13 +99,15 @@ const ProjectSelect = () => {
         }
     };
 
+    
+
     return (
         <React.Fragment>
             <div style={{ marginBottom: "2.5rem" }}>
                 <Card type="primary" className="bottom-gap-card-payment" style={{ gap: "1.5rem" }}>
-                    <Header className="pop-inbox-header">
+                    {/* {<Header className="pop-inbox-header">
                         {billScreen ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_HEADING") : t("HCM_AM_CHOOSE_PROJECT_TO_VIEW_REGISTERS")}
-                    </Header>
+                    </Header>} */}
                     <div className="label-pair">
                         {billScreen ? t("HCM_AM_PROJECT_AND_BILL_AGGREGATION_DESCRIPTION") : t("HCM_AM_PROJECT_CHOOSE_DESCRIPTION")}
                     </div>
@@ -114,14 +117,14 @@ const ProjectSelect = () => {
                             <span className="required" style={{ color: "#b91900" }}> *</span>
                         </div>
                         <div className="label-text">
-                            <Dropdown
+                            {<Dropdown
                                 t={t}
                                 option={project}
                                 name={"code"}
                                 optionKey={"name"}
                                 selected={selectedProject}
                                 select={handleProjectSelect}
-                            />
+                            />}
                         </div>
                     </div>
                     {billScreen && selectedProject && (
@@ -130,7 +133,7 @@ const ProjectSelect = () => {
                                 {t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")}
                                 <span className="required" style={{ color: "#b91900" }}> *</span>
                             </div>
-                            <div className="label-text">
+                            {<div className="label-text">
                                 <Dropdown
                                     t={t}
                                     option={filteredAggregationOptions}
@@ -139,13 +142,13 @@ const ProjectSelect = () => {
                                     selected={selectedLevel}
                                     select={handleAggregationLevelChange}
                                 />
-                            </div>
+                            </div>}
                         </div>
                     )}
                 </Card>
             </div>
-            <ActionBar
-                actionFields={[
+            {<ActionBar className="mc_back">
+               
                     <Button
                         icon="ArrowBack"
                         label={t("HCM_AM_BACK_LABEL")}
@@ -163,8 +166,8 @@ const ProjectSelect = () => {
                         type="button"
                         variation="primary"
                     />
-                ]}
-            />
+                
+            </ActionBar>}
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}

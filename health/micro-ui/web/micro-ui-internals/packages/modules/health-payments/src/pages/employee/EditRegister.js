@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
+// import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
+import { Divider, Button, PopUp, Card,  Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent,Loader } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -243,15 +243,15 @@ const EditRegister = ({ editAttendance = false }) => {
     // }
 
     if (loading || isAttendanceLoading || isIndividualsLoading || isAllIndividualsLoading) {
-        return <LoaderScreen />
+        return <Loader />
     }
 
     return (
         <React.Fragment>
             <div style={{ marginBottom: "2.5rem" }}>
-                <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
+                {/* {<Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
                     {t('HCM_AM_VIEW_REGISTER')}
-                </Header>
+                </Header>} */}
                 <Card type="primary" className="bottom-gap-card-payment">
                     {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
                     {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(project?.[0]?.name || 'NA'))}
@@ -282,7 +282,7 @@ const EditRegister = ({ editAttendance = false }) => {
                             variation="secondary"
                         />
                     </div>
-                    <EditAttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />
+                   { <EditAttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />}
                 </Card>
 
 
@@ -301,7 +301,7 @@ const EditRegister = ({ editAttendance = false }) => {
             </div>
 
             {/* Alert Pop-Up for edit */}
-            {openEditAlertPopUp && <AlertPopUp
+            {/* {openEditAlertPopUp && <AlertPopUp
                 onClose={closeActionBarPopUp}
                 alertHeading={t(`HCM_AM_ALERT_HEADING`)}
                 alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
@@ -310,10 +310,10 @@ const EditRegister = ({ editAttendance = false }) => {
                 onPrimaryAction={() => {
                     history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
                 }}
-            />}
+            />} */}
 
             {/* Alert Pop-Up for approve */}
-            {openApproveAlertPopUp && <AlertPopUp
+            {/* {openApproveAlertPopUp && <AlertPopUp
                 onClose={() => {
                     setOpenApproveAlertPopUp(false);
                 }}
@@ -324,10 +324,10 @@ const EditRegister = ({ editAttendance = false }) => {
                 onPrimaryAction={() => {
 
                 }}
-            />}
+            />} */}
 
             {/* approve comment pop-up*/}
-            {openApproveCommentPopUp && <ApproveCommentPopUp
+            {/* {openApproveCommentPopUp && <ApproveCommentPopUp
                 onClose={() => {
                     setOpenApproveCommentPopUp(false);
                 }}
@@ -336,7 +336,7 @@ const EditRegister = ({ editAttendance = false }) => {
                     setOpenApproveCommentPopUp(false);
                     setOpenApproveAlertPopUp(true);
                 }}
-            />}
+            />} */}
 
             {/* action bar for bill generation*/}
             {/* { <ActionBar

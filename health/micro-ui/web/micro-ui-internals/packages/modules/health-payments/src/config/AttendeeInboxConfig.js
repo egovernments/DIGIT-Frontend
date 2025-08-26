@@ -1,4 +1,6 @@
 import Urls from "../services/urls";
+import BoundaryComponent from "../components/BoundaryComponent";
+import React from "react";
 
 /**
  * config for HRMS Inbox screen:
@@ -9,6 +11,10 @@ import Urls from "../services/urls";
  */
 
 const inboxAttendeeSearchConfig = () => {
+
+
+
+
   return {
     type: "inbox", // Defines the type of configuration (search functionality)
     label: "Search Employee", // Label for the search functionality
@@ -19,58 +25,29 @@ const inboxAttendeeSearchConfig = () => {
           type: "filter",
           headerStyle: null,
           primaryLabel: "HRMS_APPLY_FILTERS",
-          secondaryLabel: "HRMS_CLEAR_FILTER",
-          minReqFields: 1,
+          //secondaryLabel: "HRMS_CLEAR_FILTER",
+          formClassName: "filter",
+          minReqFields: 0,
           defaultValues: {
-            roles: [],
 
-            isActive: {
-              code: true,
-              name: "HR_ACTIVATE_HEAD",
-            },
           },
           fields: [
+
+
             {
               label: "HR_COMMON_TABLE_COL_ROLE",
-              type: "dropdown",
               isMandatory: false,
+              key: "AttendeeBoundaryComponent",
+              type: "component",
               disable: false,
-              populators: {
-                isDropdownWithChip: true,
-                name: "roles",
-                optionsKey: "name",
-                error: "Error!",
-                required: false,
+              component: "AttendeeBoundaryComponent",
 
-                mdmsConfig: {
-                  masterName: "roles",
-                  moduleName: "ACCESSCONTROL-ROLES",
-                  localePrefix: "ACCESSCONTROL_ROLES_ROLES",
-                },
-              },
-            },
-            {
-              label: "HR_EMP_STATUS_LABEL",
-              type: "radio",
-              isMandatory: false,
-              disable: false,
-              addDivider: true,
               populators: {
-                alignVertical: true,
-                name: "isActive",
-                options: [
-                  {
-                    code: false,
-                    name: "HR_DEACTIVATE_HEAD",
-                  },
-                  {
-                    code: true,
-                    name: "HR_ACTIVATE_HEAD",
-                  },
-                ],
-                optionsKey: "name",
+                name: "AttendeeBoundaryComponent",
+
               },
             },
+
           ],
         },
         label: "ES_COMMON_FILTERS",
@@ -235,6 +212,7 @@ const inboxAttendeeSearchConfig = () => {
       minParametersForFilterForm: 0, // No minimum required fields for filter
       minParametersForSearchForm: 0, // No minimum required fields for search
     },
+    component: BoundaryComponent,
 
     persistFormData: true, // Keeps form data persisted between searches
     additionalSections: {}, // No additional sections

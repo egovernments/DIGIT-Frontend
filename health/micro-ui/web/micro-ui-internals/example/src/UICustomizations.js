@@ -2613,9 +2613,11 @@ export const UICustomizations = {
 // for attendee search
   AttendeeSearchInboxConfig: {
       preProcess: (data) => {
+
+        debugger;
         // filterForm
         // params
-  
+         console.log(data)
         if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
           const updatedParams = {}; // Temporary object to store updates
   
