@@ -112,10 +112,10 @@ module.exports = {
     preferRelative: true,
       alias: {
       // Fix case sensitivity issues with React
-      "React": path.resolve(__dirname, "../node_modules/react"),
-      "react": path.resolve(__dirname, "../node_modules/react"),
-      "ReactDOM": path.resolve(__dirname, "../node_modules/react-dom"),
-      "react-dom": path.resolve(__dirname, "../node_modules/react-dom"),
+      "React": path.resolve(__dirname, "node_modules/react"),
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "ReactDOM": path.resolve(__dirname, "node_modules/react-dom"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
     },
     fallback: {
       process: require.resolve("process/browser"),
