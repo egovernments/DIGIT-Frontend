@@ -23,7 +23,8 @@ const BillDetailsTable = ({ ...props }) => {
     const [editingRowIndex, setEditingRowIndex] = useState(null);
     const [initialFieldValue, setInitialFieldValue] = useState("");
     const [tableData, setTableData] = useState(props?.data || []);
-    const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
+    // const workerRatesData = Digit?.SessionStorage.get("workerRatesData");
+    const workerRatesData = props?.workerRatesData;
 
     useEffect(() => {
         setTableData(props?.data || []);

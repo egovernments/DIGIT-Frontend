@@ -374,15 +374,21 @@ const getAvailableActions = (status) => {
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_PENDING_VERIFICATION")}
+                        {props?.editBill ? t("HCM_AM_PENDING_FOR_EDIT") : t("HCM_AM_PENDING_VERIFICATION")}
                     </div>
                 ),
                 selector: (row) => {
-                    const pendingCount = row?.billDetails?.filter((detail) => detail?.status === "PENDING_VERIFICATION" || 
-                    detail?.status ==="VERIFICATION_FAILED" || detail?.status ==="PENDING_EDIT" || detail?.status ==="EDITED")?.length || 0;
+                    const count = props?.editBill
+                        ? row?.billDetails?.filter((detail) => detail?.status === "PENDING_EDIT")?.length || 0
+                        : row?.billDetails?.filter(
+                            (detail) =>
+                                detail?.status === "PENDING_VERIFICATION" ||
+                                detail?.status === "VERIFICATION_FAILED" || detail?.status === "PENDING_EDIT" || detail?.status === "EDITED")?.length || 0;
+                    // const pendingCount = row?.billDetails?.filter((detail) => detail?.status === "PENDING_VERIFICATION" || 
+                    // detail?.status ==="VERIFICATION_FAILED" || detail?.status ==="PENDING_EDIT" || detail?.status ==="EDITED")?.length || 0;
                     return (
                         <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>
-                             {t(pendingCount)}
+                             {t(count)}
                         </div>
                     );
                 },
@@ -390,7 +396,8 @@ const getAvailableActions = (status) => {
                             justifyContent: "flex-end",
                         },
             },
-            {
+
+            !props?.editBill && {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                         {t("HCM_AM_VERIFIED")}
@@ -409,7 +416,7 @@ const getAvailableActions = (status) => {
                             justifyContent: "flex-end",
                         },
             },
-            {
+           !props?.editBill && {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                         {t("HCM_AM_PAID")}
@@ -420,6 +427,24 @@ const getAvailableActions = (status) => {
                     return (
                         <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>
                              {t(paidCount)}
+                        </div>
+                    );
+                },
+                style: {
+                            justifyContent: "flex-end",
+                        },
+            },
+            props?.editBill && {
+                name: (
+                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                        {t("HCM_AM_EDITED")}
+                    </div>
+                ),
+               selector: (row) => {
+                    const editedCount = row?.billDetails?.filter((detail) => detail?.status === "EDITED")?.length || 0;
+                    return (
+                        <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>
+                             {t(editedCount)}
                         </div>
                     );
                 },
@@ -564,7 +589,7 @@ const getAvailableActions = (status) => {
         ];
 
         return baseColumns;
-    }, [props.data, t, inProgressBillsTransfer, inProgressBillsVerify]);
+    }, [props.data, t, inProgressBillsTransfer, inProgressBillsVerify, props?.edit]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
