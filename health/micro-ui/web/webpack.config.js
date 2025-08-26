@@ -2,6 +2,7 @@ const path = require("path");
 const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const TerserPlugin = require("terser-webpack-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
@@ -15,9 +16,9 @@ const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
 }, {});
 
 module.exports = {
-  mode: "development",
+  mode: process.env.NODE_ENV === "production" ? "production" : "development",
   entry: path.resolve(__dirname, "src/index.js"),
-  devtool: "source-map",
+  devtool: process.env.NODE_ENV === "production" ? false : "source-map",
   module: {
     rules: [
       {
@@ -38,19 +39,74 @@ module.exports = {
     ],
   },
   output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "build"),
+    filename: "[name].[contenthash:8].bundle.js",
+        chunkFilename: "[name].[contenthash:8].chunk.js",
+        path: path.resolve(__dirname, "build"),
+        clean: true, // Clean the output directory before emit
     publicPath: "/workbench-ui/",
   },
-  optimization: {
+ optimization: {
+    minimize: process.env.NODE_ENV === "production",
+    minimizer: [
+      new TerserPlugin({
+        terserOptions: {
+          compress: {
+            drop_console: process.env.NODE_ENV === "production",
+            drop_debugger: true,
+            pure_funcs: process.env.NODE_ENV === "production" ? ["console.log", "console.info"] : [],
+          },
+          mangle: true,
+        },
+      }),
+    ],
+    usedExports: true,
+    sideEffects: false,
     splitChunks: {
       chunks: "all",
       minSize: 20000,
-      maxSize: 50000,
-      enforceSizeThreshold: 50000,
+      maxSize: 150000, // Reduced for better caching
+      enforceSizeThreshold: 150000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 30,
+      maxInitialRequests: 8, // Reduced to limit initial requests
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+          maxSize: 150000,
+        },
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+          priority: 20,
+          enforce: true,
+          maxSize: 150000,
+        },
+        digitUI: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui/,
+          name: 'digit-ui',
+          chunks: 'all',
+          priority: 15,
+          maxSize: 150000,
+        },
+        campaign: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-campaign-manager[\\/]/,
+          name: 'campaign-module',
+          chunks: 'async', // Load campaign module asynchronously
+          priority: 5,
+          maxSize: 150000,
+        },
+        workbench: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
+          name: 'workbench-module',
+          chunks: 'async', // Load workbench module asynchronously
+          priority: 5,
+          maxSize: 150000,
+        },
+      },
     },
   },
   plugins: [
@@ -58,7 +114,7 @@ module.exports = {
       process: "process/browser",
     }),
     new webpack.DefinePlugin(envKeys), // <-- Add this
-    new CleanWebpackPlugin(),
+    // new CleanWebpackPlugin(),
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
@@ -71,6 +127,15 @@ module.exports = {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true,
+      alias: {
+      // Fix case sensitivity issues with React
+      "React": path.resolve(__dirname, "node_modules/react"),
+      "react": path.resolve(__dirname, "node_modules/react"),
+      "ReactDOM": path.resolve(__dirname, "node_modules/react-dom"),
+      "react-dom": path.resolve(__dirname, "node_modules/react-dom"),
+      // Tree shake lodash
+      "lodash": "lodash-es",
+    },
     fallback: {
       process: require.resolve("process/browser"),
     },
