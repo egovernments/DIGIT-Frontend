@@ -1,4 +1,10 @@
 
+
+
+## [2.0.0-rc19-01] [26-Aug-2025]
+### 🔧 Critical Memory Leak & Stability Fixes
+
+
 ## [1.0.19-test.2]  [18-Jun-2025]
 -React19 compatible as per latest workbench from develop
 
