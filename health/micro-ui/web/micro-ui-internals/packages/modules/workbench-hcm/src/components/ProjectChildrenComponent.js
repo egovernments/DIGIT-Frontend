@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { TextInput, DatePicker } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
 
 
 const ProjectChildrenComponent = (props) => {
@@ -21,6 +22,9 @@ const ProjectChildrenComponent = (props) => {
     endDateFrom: null,
     endDateTo: null,
   });
+  
+  // State to control filter visibility
+  const [showFilters, setShowFilters] = useState(false);
   const requestCriteria = {
     url: `${url}/v1/_search`,
     changeQueryName: `${props.projectId}-${tenantId}`,
@@ -82,14 +86,26 @@ const ProjectChildrenComponent = (props) => {
         return false;
       }
 
-      // Boundary filter
-      if (filters.boundary && (!row.address?.boundary?.toLowerCase().includes(filters.boundary.toLowerCase()) || !t(row.address?.boundary)?.toLowerCase().includes(filters.boundary.toLowerCase()) )) {
-        return false;
+      // Boundary filter - search in both raw code and translated value
+      if (filters.boundary) {
+        const rawBoundary = row.address?.boundary?.toLowerCase() || "";
+        const translatedBoundary = t(row.address?.boundary)?.toLowerCase() || "";
+        const searchTerm = filters.boundary.toLowerCase();
+        
+        if (!rawBoundary.includes(searchTerm) && !translatedBoundary.includes(searchTerm)) {
+          return false;
+        }
       }
 
-      // Boundary Type filter
-      if (filters.boundaryType && !row.address?.boundaryType?.toLowerCase().includes(filters.boundaryType.toLowerCase())) {
-        return false;
+      // Boundary Type filter - search in both raw code and translated value
+      if (filters.boundaryType) {
+        const rawBoundaryType = row.address?.boundaryType?.toLowerCase() || "";
+        const translatedBoundaryType = t(row.address?.boundaryType)?.toLowerCase() || "";
+        const searchTerm = filters.boundaryType.toLowerCase();
+        
+        if (!rawBoundaryType.includes(searchTerm) && !translatedBoundaryType.includes(searchTerm)) {
+          return false;
+        }
       }
 
       // Start Date filter
@@ -191,15 +207,49 @@ const ProjectChildrenComponent = (props) => {
 
   return (
     <div>
-      {/* Filter Section */}
-      <div style={{ 
-        padding: "16px", 
-        backgroundColor: "#f5f5f5", 
-        borderRadius: "8px", 
-        marginBottom: "16px",
-        border: "1px solid #e0e0e0"
-      }}>
-        <h3 style={{ marginBottom: "16px", color: "#333" }}>{t("FILTER_OPTIONS")}</h3>
+      {/* CSS for animation */}
+      <style>{`
+        @keyframes slideDown {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+      `}</style>
+      
+      {/* Advanced Filter Toggle Button */}
+      <div style={{ marginBottom: "16px" }}>
+        <Button
+          variation="primary"
+          label={showFilters ? t("HIDE_ADVANCED_FILTERS") : t("SHOW_ADVANCED_FILTERS")}
+          onClick={() => setShowFilters(!showFilters)}
+          style={{
+            padding: "0.5rem 1rem",
+            fontSize: "0.9rem"
+          }}
+        />
+        {filteredData.length < flattenedDescendants.length && (
+          <span style={{ marginLeft: "16px", color: "#666", fontSize: "14px" }}>
+            {t("FILTERS_APPLIED")}: {t("SHOWING")} {filteredData.length} {t("OF")} {flattenedDescendants.length} {t("RECORDS")}
+          </span>
+        )}
+      </div>
+
+      {/* Filter Section - Only shown when showFilters is true */}
+      {showFilters && (
+        <div style={{ 
+          padding: "16px", 
+          backgroundColor: "#f5f5f5", 
+          borderRadius: "8px", 
+          marginBottom: "16px",
+          border: "1px solid #e0e0e0",
+          animation: "slideDown 0.3s ease-in-out"
+        }}>
+          <h3 style={{ marginBottom: "16px", color: "#333" }}>{t("FILTER_OPTIONS")}</h3>
         
         <div style={{ 
           display: "grid", 
@@ -279,27 +329,22 @@ const ProjectChildrenComponent = (props) => {
           </div>
         </div>
 
-        <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
-          <button 
-            onClick={clearFilters}
-            style={{
-              padding: "8px 16px",
-              backgroundColor: "#f37f12",
-              color: "white",
-              border: "none",
-              borderRadius: "4px",
-              cursor: "pointer",
-              fontSize: "14px",
-              fontWeight: "500"
-            }}
-          >
-            {t("CLEAR_FILTERS")}
-          </button>
-          <span style={{ color: "#666", fontSize: "14px" }}>
-            {t("SHOWING")} {filteredData.length} {t("OF")} {flattenedDescendants.length} {t("RECORDS")}
-          </span>
+          <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
+            <Button
+              variation="secondary"
+              label={t("CLEAR_FILTERS")}
+              onClick={() => clearFilters()}
+              style={{
+                padding: "0.4rem 0.8rem",
+                fontSize: "0.85rem"
+              }}
+            />
+            <span style={{ color: "#666", fontSize: "14px" }}>
+              {t("SHOWING")} {filteredData.length} {t("OF")} {flattenedDescendants.length} {t("RECORDS")}
+            </span>
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Table */}
       <ReusableTableWrapper
