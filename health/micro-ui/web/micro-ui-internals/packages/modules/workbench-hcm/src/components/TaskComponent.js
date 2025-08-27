@@ -17,9 +17,30 @@ const TaskComponent = (props) => {
   const [pageSize, setPageSize] = useState(props?.userId?1000:100);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
+  // Date filter state
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Helper function to get start and end of selected date
+  const getDateRange = (dateString) => {
+    if (!dateString) return {};
+    
+    const date = new Date(dateString);
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return {
+      createdFrom: startOfDay.getTime(),
+      createdTo: endOfDay.getTime()
+    };
+  };
+
   const requestCriteria = {
     url: `${url}/task/v1/_search`,
-    changeQueryName: `${props.projectId}-tasks-${page}-${pageSize}`,
+    changeQueryName: `${props.projectId}-tasks-${page}-${pageSize}-${selectedDate || 'all'}`,
     params: {
       tenantId: tenantId,
       offset: page * pageSize,
@@ -30,6 +51,7 @@ const TaskComponent = (props) => {
       Task: {
         projectId: [props.projectId],
         createdBy: props?.userId,
+        ...getDateRange(selectedDate),
       },
     },
     config: {
@@ -65,6 +87,17 @@ const TaskComponent = (props) => {
   ];
 
   const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
+
+  // Date filter handlers
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+    setPage(0); // Reset to first page when filter changes
+  };
+
+  const clearDateFilter = () => {
+    setSelectedDate("");
+    setPage(0);
+  };
 
   // Custom popup content function for map markers
   const getTaskPopupContent = (task, index) => {
@@ -131,15 +164,77 @@ const TaskComponent = (props) => {
     <div className="override-card" style={{ overflow: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("TASK")}</Header>
-        <Button
-          variation="secondary"
-          label={showMapview?.showMaps ? t("VIEW_TABLE") : t("VIEW_MAP")}
-          onClick={() => {
-            const updated = { showMaps: !showMapview.showMaps };
-            setShowMapview({ ...updated });
-          }}
-        />
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          {/* <Button
+            variation="outline"
+            label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
+            onClick={() => setShowFilters(!showFilters)}
+            style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+          /> */}
+          <Button
+            variation="secondary"
+            label={showMapview?.showMaps ? t("VIEW_TABLE") : t("VIEW_MAP")}
+            onClick={() => {
+              const updated = { showMaps: !showMapview.showMaps };
+              setShowMapview({ ...updated });
+            }}
+          />
+        </div>
       </div>
+
+      {/* Date Filter Section */}
+      {showFilters && (
+        <div style={{ 
+          padding: "16px", 
+          backgroundColor: "#f5f5f5", 
+          borderRadius: "8px", 
+          marginBottom: "16px",
+          border: "1px solid #e0e0e0"
+        }}>
+          <h4 style={{ marginBottom: "12px", color: "#333" }}>{t("FILTER_BY_DATE")}</h4>
+          
+          <div style={{ 
+            display: "flex", 
+            alignItems: "center",
+            gap: "16px",
+            flexWrap: "wrap"
+          }}>
+            <div style={{ minWidth: "250px" }}>
+              <label style={{ marginBottom: "8px", color: "#555", display: "block" }}>
+                {t("SELECT_DATE")}
+              </label>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={handleDateChange}
+                style={{
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  width: "100%",
+                  maxWidth: "200px"
+                }}
+              />
+            </div>
+            
+            <div style={{ display: "flex", gap: "12px", alignItems: "flex-end" }}>
+              <Button 
+                variation="secondary"
+                label={t("CLEAR_FILTER")}
+                onClick={clearDateFilter}
+                isDisabled={!selectedDate}
+                style={{ padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
+              />
+              {selectedDate && (
+                <span style={{ color: "#666", fontSize: "14px", alignSelf: "center" }}>
+                  {t("FILTERING_BY")}: {new Date(selectedDate).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       {projectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
       )}

@@ -1,9 +1,10 @@
-import React, { useState, useMemo } from "react";
+import React, { useState ,useMemo, Fragment} from "react";
+
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
-import { TextInput, DatePicker } from "@egovernments/digit-ui-react-components";
+import { TextInput } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 
 
@@ -17,10 +18,10 @@ const ProjectChildrenComponent = (props) => {
     projectNumber: "",
     boundary: "",
     boundaryType: "",
-    startDateFrom: null,
-    startDateTo: null,
-    endDateFrom: null,
-    endDateTo: null,
+    startDateFrom: "",
+    startDateTo: "",
+    endDateFrom: "",
+    endDateTo: "",
   });
   
   // State to control filter visibility
@@ -111,22 +112,34 @@ const ProjectChildrenComponent = (props) => {
       // Start Date filter
       if (filters.startDateFrom || filters.startDateTo) {
         const rowStartDate = row.startDate;
-        if (filters.startDateFrom && rowStartDate < filters.startDateFrom) {
-          return false;
+        if (filters.startDateFrom) {
+          const filterDateFrom = new Date(filters.startDateFrom).getTime();
+          if (rowStartDate < filterDateFrom) {
+            return false;
+          }
         }
-        if (filters.startDateTo && rowStartDate > filters.startDateTo) {
-          return false;
+        if (filters.startDateTo) {
+          const filterDateTo = new Date(filters.startDateTo).getTime();
+          if (rowStartDate > filterDateTo) {
+            return false;
+          }
         }
       }
 
       // End Date filter
       if (filters.endDateFrom || filters.endDateTo) {
         const rowEndDate = row.endDate;
-        if (filters.endDateFrom && rowEndDate < filters.endDateFrom) {
-          return false;
+        if (filters.endDateFrom) {
+          const filterDateFrom = new Date(filters.endDateFrom).getTime();
+          if (rowEndDate < filterDateFrom) {
+            return false;
+          }
         }
-        if (filters.endDateTo && rowEndDate > filters.endDateTo) {
-          return false;
+        if (filters.endDateTo) {
+          const filterDateTo = new Date(filters.endDateTo).getTime();
+          if (rowEndDate > filterDateTo) {
+            return false;
+          }
         }
       }
 
@@ -147,10 +160,10 @@ const ProjectChildrenComponent = (props) => {
       projectNumber: "",
       boundary: "",
       boundaryType: "",
-      startDateFrom: null,
-      startDateTo: null,
-      endDateFrom: null,
-      endDateTo: null,
+      startDateFrom: "",
+      startDateTo: "",
+      endDateFrom: "",
+      endDateTo: "",
     });
   };
 
@@ -292,9 +305,17 @@ const ProjectChildrenComponent = (props) => {
             <label style={{ display: "block", marginBottom: "8px", color: "#555" }}>
               {t("START_DATE_FROM")}
             </label>
-            <DatePicker
-              date={filters.startDateFrom ? new Date(filters.startDateFrom) : null}
-              onDateChange={(date) => handleFilterChange("startDateFrom", date ? date.getTime() : null)}
+            <input
+              type="date"
+              value={filters.startDateFrom}
+              onChange={(e) => handleFilterChange("startDateFrom", e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                fontSize: "14px",
+                width: "100%"
+              }}
             />
           </div>
           
@@ -302,9 +323,17 @@ const ProjectChildrenComponent = (props) => {
             <label style={{ display: "block", marginBottom: "8px", color: "#555" }}>
               {t("START_DATE_TO")}
             </label>
-            <DatePicker
-              date={filters.startDateTo ? new Date(filters.startDateTo) : null}
-              onDateChange={(date) => handleFilterChange("startDateTo", date ? date.getTime() : null)}
+            <input
+              type="date"
+              value={filters.startDateTo}
+              onChange={(e) => handleFilterChange("startDateTo", e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                fontSize: "14px",
+                width: "100%"
+              }}
             />
           </div>
           
@@ -312,9 +341,17 @@ const ProjectChildrenComponent = (props) => {
             <label style={{ display: "block", marginBottom: "8px", color: "#555" }}>
               {t("END_DATE_FROM")}
             </label>
-            <DatePicker
-              date={filters.endDateFrom ? new Date(filters.endDateFrom) : null}
-              onDateChange={(date) => handleFilterChange("endDateFrom", date ? date.getTime() : null)}
+            <input
+              type="date"
+              value={filters.endDateFrom}
+              onChange={(e) => handleFilterChange("endDateFrom", e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                fontSize: "14px",
+                width: "100%"
+              }}
             />
           </div>
           
@@ -322,9 +359,17 @@ const ProjectChildrenComponent = (props) => {
             <label style={{ display: "block", marginBottom: "8px", color: "#555" }}>
               {t("END_DATE_TO")}
             </label>
-            <DatePicker
-              date={filters.endDateTo ? new Date(filters.endDateTo) : null}
-              onDateChange={(date) => handleFilterChange("endDateTo", date ? date.getTime() : null)}
+            <input
+              type="date"
+              value={filters.endDateTo}
+              onChange={(e) => handleFilterChange("endDateTo", e.target.value)}
+              style={{
+                padding: "8px 12px",
+                border: "1px solid #ccc",
+                borderRadius: "4px",
+                fontSize: "14px",
+                width: "100%"
+              }}
             />
           </div>
         </div>

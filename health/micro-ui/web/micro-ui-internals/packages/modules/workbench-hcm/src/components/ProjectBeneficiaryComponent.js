@@ -1,4 +1,4 @@
-import React ,{ useState,useEffect ,Fragment} from "react";
+import React, { useState ,useEffect, Fragment} from "react";
 
 import { useTranslation } from "react-i18next";
 import { Button, Loader, SVG, Header } from "@egovernments/digit-ui-react-components";
