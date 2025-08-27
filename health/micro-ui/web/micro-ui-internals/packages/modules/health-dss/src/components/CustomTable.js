@@ -481,7 +481,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
     return <Loader className={"digit-center-loader"} />;
   }
   return (
-    <div style={{ width: "fit-content" ,maxWidth:"100%"}}>
+    <div style={{maxWidth:"100%"}}>
       {/* Filters stack */}
       {filterStack?.length > 1 && (
         <div className="digit-tag-container customTable">
