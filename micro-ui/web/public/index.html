@@ -14,10 +14,91 @@
   <title>DIGIT</title>
   <script src="https://unpkg.com/xlsx/dist/xlsx.full.min.js"></script>
   <!-- <script src="https://s3.ap-south-1.amazonaws.com/egov-dev-assets/globalConfigs.js"></script> -->
+  <!-- Matomo -->
+  <script>
+    var _paq = window._paq = window._paq || [];
+    /* tracker methods like "setCustomDimension" should be called before "trackPageView" */
+    _paq.push(["setExcludedQueryParams", ["account", "accountnum", "address", "address1", "address2", "address3", "addressline1", "addressline2", "adres", "adresse", "age", "alter", "auth", "authpw", "bic", "billingaddress", "billingaddress1", "billingaddress2", "calle", "cardnumber", "cc", "ccc", "cccsc", "cccvc", "cccvv", "ccexpiry", "ccexpmonth", "ccexpyear", "ccname", "ccnumber", "cctype", "cell", "cellphone", "city", "clientid", "clientsecret", "company", "consumerkey", "consumersecret", "contrasenya", "contrase\u00f1a", "creditcard", "creditcardnumber", "cvc", "cvv", "dateofbirth", "debitcard", "direcci\u00f3n", "dob", "domain", "ebost", "email", "emailaddress", "emailadresse", "epos", "epost", "eposta", "exp", "familyname", "firma", "firstname", "formlogin", "fullname", "gender", "geschlecht", "gst", "gstnumber", "handynummer", "has\u0142o", "heslo", "iban", "ibanaccountnum", "ibanaccountnumber", "id", "identifier", "indirizzo", "kartakredytowa", "kennwort", "keyconsumerkey", "keyconsumersecret", "konto", "kontonr", "kontonummer", "kredietkaart", "kreditkarte", "kreditkort", "lastname", "login", "mail", "mobiili", "mobile", "mobilne", "nachname", "name", "nickname", "osoite", "parole", "pass", "passord", "password", "passwort", "pasword", "paswort", "paword", "phone", "pin", "plz", "postalcode", "postcode", "postleitzahl", "privatekey", "publickey", "pw", "pwd", "pword", "pwrd", "rue", "secret", "secretq", "secretquestion", "shippingaddress", "shippingaddress1", "shippingaddress2", "socialsec", "socialsecuritynumber", "socsec", "sokak", "ssn", "steuernummer", "strasse", "street", "surname", "swift", "tax", "taxnumber", "tel", "telefon", "telefonnr", "telefonnummer", "telefono", "telephone", "token", "token_auth", "tokenauth", "t\u00e9l\u00e9phone", "ulica", "user", "username", "vat", "vatnumber", "via", "vorname", "wachtwoord", "wagwoord", "webhooksecret", "website", "zip", "zipcode"]]);
+    _paq.push(['trackPageView']);
+    _paq.push(['enableLinkTracking']);
+    (function () {
+      var u = "https://unified-demo.digit.org/matomo/";
+      _paq.push(['setTrackerUrl', u + 'matomo.php']);
+      _paq.push(['setSiteId', '1']);
+      // Adding a second tracker
+      _paq.push(['addTracker', 'https://digit-analytics.matomo.cloud/matomo.php', '2']);
+      var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
+      g.async = true; g.src = u + 'matomo.js';
+      s.parentNode.insertBefore(g, s);
+    })();
+    (function () {
+      let lastUrl = location.href;
+
+      function trackUrlChange() {
+        const url = location.href;
+        if (url !== lastUrl) {
+          lastUrl = url;
+          _paq.push(['setCustomUrl', url]);
+          _paq.push(['trackPageView']);
+        }
+      }
+
+      // Wrap pushState
+      history.pushState = (function (original) {
+        return function pushState() {
+          const result = original.apply(this, arguments);
+          trackUrlChange();
+          return result;
+        };
+      })(history.pushState);
+
+      // Wrap replaceState
+      history.replaceState = (function (original) {
+        return function replaceState() {
+          const result = original.apply(this, arguments);
+          trackUrlChange();
+          return result;
+        };
+      })(history.replaceState);
+
+      // Listen for back/forward
+      window.addEventListener('popstate', trackUrlChange);
+    })();
+
+    // Track clicks on buttons & links
+    (function () {
+      document.addEventListener("click", function (e) {
+        const selector = `
+                      button,
+                      input[type="button"],
+                      input[type="submit"],
+                      input[type="actionButton"],
+                      [role="button"],
+                      a[href]:not([href^="mailto:"]):not([href^="tel:"]):not([href^="#"]):not([href^="javascript:"])
+                    `;
+        const target = e.target.closest(selector);
+        if (target) {
+          const elementType = target.tagName.toLowerCase();
+          const text = target.innerText.trim() || target.value || 'Unnamed';
+          const id = target.id || 'no-id';
+          const classes = target.className || 'no-class';
+          const href = target.getAttribute('href') || '';
+
+          _paq.push([
+            'trackEvent',
+            'UI Interaction',            // Category
+            `${elementType} click`,      // Action
+            `Text: ${text}, ID: ${id}, Class: ${classes}, Href: ${href}`
+          ]);
+        }
+      });
+    })();
+  </script>
+  <!-- End Matomo Code -->
 </head>
 
 <style>
-   .digit-header-content.label .info-icon .infotext {
+  .digit-header-content.label .info-icon .infotext {
     position: absolute;
     text-align: center;
     font-family: Roboto;
@@ -34,8 +115,7 @@
     left: 50%;
     margin-left: -10.3rem;
     border-radius: .375rem;
-}
-
+  }
 </style>
 
 <body>
