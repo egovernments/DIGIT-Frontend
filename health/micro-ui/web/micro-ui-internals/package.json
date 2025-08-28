@@ -2,7 +2,7 @@
   "name": "egovernments",
   "version": "1.0.0",
   "main": "index.js",
-  "homepage": "/workbench-ui",
+  "homepage": "workbench-ui",
   "workspaces": [
     "example",
     "packages/modules/campaign-manager",
