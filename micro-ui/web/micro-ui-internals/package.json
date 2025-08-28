@@ -13,7 +13,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build:core start:example-only",
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build:core build:workbench start:example-only",
     "start:example-only": "cd example && yarn start",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
@@ -97,7 +97,7 @@
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
     "compression-webpack-plugin": "^11.1.0",
-    "cross-env": "^7.0.3",
+    "cross-env": "^10.0.0",
     "css-loader": "5.2.6",
     "http-proxy-middleware": "1.3.1",
     "lodash": "4.17.21",
