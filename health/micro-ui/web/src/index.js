@@ -2,9 +2,6 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { Loader } from "@egovernments/digit-ui-components";
-
-
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
@@ -53,7 +50,11 @@ const MainApp = ({ stateCode, enabledModules }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    initLibraries().then(() => {
+    initLibraries().then(async () => {
+      const {initWorkbenchComponents}=await import("@egovernments/digit-ui-module-workbench")
+      const {initCampaignComponents}=await import("@egovernments/digit-ui-module-campaign-manager")
+      initWorkbenchComponents();
+      initCampaignComponents()
       setIsReady(true);
     });
   }, []);
@@ -61,39 +62,14 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initTokens(stateCode);
     setLoaded(true);
-  }, [stateCode]);
-
-  // Load modules lazily only when needed
-  useEffect(() => {
-    if (isReady && loaded) {
-      // Load modules in the background after initial render
-      setTimeout(async () => {
-        if (enabledModules.includes("Campaign")) {
-          try {
-            const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
-            initCampaignComponents();
-          } catch (error) {
-            console.warn("Campaign module not available:", error.message);
-          }
-        }
-        if (enabledModules.includes("Workbench")) {
-          try {
-            const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
-            initWorkbenchComponents();
-          } catch (error) {
-            console.warn("Workbench module not available:", error.message);
-          }
-        }
-      }, 100); // Small delay to allow initial render
-    }
-  }, [isReady, loaded, enabledModules]);
+  }, [stateCode, isReady]);
 
   if (!loaded) {
-    return <Loader page={true} variant={"PageLoader"} />;
+    return <div>Loading...</div>;
   }
 
   return (
-    <Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
+    <Suspense fallback={<div>Loading...</div>}>
       {window.Digit && (
         <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
       )}

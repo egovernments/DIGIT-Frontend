@@ -13,10 +13,9 @@ const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
   acc[`process.env.${key}`] = JSON.stringify(val);
   return acc;
 }, {});
-const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  mode: isProduction ? 'production' : 'development',
+  mode: "development",
   entry: path.resolve(__dirname, "src/index.js"),
   devtool: "source-map",
   module: {
@@ -39,58 +38,19 @@ module.exports = {
     ],
   },
   output: {
-    filename: "[name].[contenthash:8].bundle.js",
-        chunkFilename: "[name].[contenthash:8].chunk.js",
-        path: path.resolve(__dirname, "build"),
-        clean: true, // Clean the output directory before emit
-    publicPath: "/workbench-ui/",
+    filename: "[name].bundle.js",
+    path: path.resolve(__dirname, "build"),
+    publicPath: "/",
   },
- optimization: {
+  optimization: {
     splitChunks: {
       chunks: "all",
       minSize: 20000,
-      maxSize: 244000, // Increased to handle large modules better
-      enforceSizeThreshold: 244000,
+      maxSize: 50000,
+      enforceSizeThreshold: 50000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 10, // Reduced to limit initial requests
-      cacheGroups: {
-        vendor: {
-          test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
-          priority: 10,
-          maxSize: 244000,
-        },
-        react: {
-          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-          name: 'react',
-          chunks: 'all',
-          priority: 20,
-          enforce: true,
-        },
-        digitUI: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-(libraries|components|react-components|module-core)[\\/]/,
-          name: 'digit-ui',
-          chunks: 'all',
-          priority: 15,
-          maxSize: 244000,
-        },
-        campaign: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-campaign-manager[\\/]/,
-          name: 'campaign-module',
-          chunks: 'async', // Load campaign module asynchronously
-          priority: 5,
-          maxSize: 244000,
-        },
-        workbench: {
-          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
-          name: 'workbench-module',
-          chunks: 'async', // Load workbench module asynchronously
-          priority: 5,
-          maxSize: 244000,
-        },
-      },
+      maxInitialRequests: 30,
     },
   },
   plugins: [
@@ -102,7 +62,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      templateParameters:isProduction?{}: {
+      templateParameters: {
         REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
       },
     }),
@@ -111,13 +71,6 @@ module.exports = {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true,
-      alias: {
-      // Fix case sensitivity issues with React
-      "React": path.resolve(__dirname, "../node_modules/react"),
-      "react": path.resolve(__dirname, "../node_modules/react"),
-      "ReactDOM": path.resolve(__dirname, "../node_modules/react-dom"),
-      "react-dom": path.resolve(__dirname, "../node_modules/react-dom"),
-    },
     fallback: {
       process: require.resolve("process/browser"),
     },
@@ -128,7 +81,7 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: true,
-        watchFiles:isProduction?undefined: {
+    watchFiles: {
       paths: ["**/*"], // watch all project files
       options: {
         ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
@@ -226,4 +179,3 @@ module.exports = {
     ],
   },
 };
-
