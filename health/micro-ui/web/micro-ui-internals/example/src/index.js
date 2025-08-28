@@ -1,7 +1,8 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
-import "./index.css"
+// import "./index.css"
+import '@egovernments/digit-ui-health-css/dist/index.css';
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 window.Digit = window.Digit || {};
