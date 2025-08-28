@@ -5,7 +5,8 @@
   "homepage": "/workbench-ui",
   "workspaces": [
     "example",
-    "packages/modules/campaign-manager"
+    "packages/modules/campaign-manager",
+    "packages/css"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -20,11 +21,11 @@
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
-    "buildD:css": "cd packages/css && yarn build",
+    "build:css": "cd packages/css && yarn build",
     "build:prod": "NODE_ENV=production yarn build:campaign",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "dev:example": "cd example && yarn start",
-    "devD:css": "cd packages/css && yarn start",
+    "dev:css": "cd packages/css && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "clean": "run-s clean:**",
     "clean-nm": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:assignment && yarn clean:sample && yarn clean:example && yarn clean:workbench",
