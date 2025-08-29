@@ -50,13 +50,13 @@ function DependentFieldsWrapper({
     ];
 
     const PARSE_OPERATORS = useMemo(
-        () => ["!==", ">=", "<=", "==", ">", "<"].sort((a, b) => b.length - a.length),
+        () => ["!=", ">=", "<=", "==", ">", "<"].sort((a, b) => b.length - a.length),
         []
     );
 
     const ALL_OPERATOR_OPTIONS = [
         { code: "==", name: t("EQUALS_TO") || "equals to" },
-        { code: "!==", name: t("NOT_EQUALS_TO") || "not equals to" },
+        { code: "!=", name: t("NOT_EQUALS_TO") || "not equals to" },
         { code: ">=", name: t("GREATER_THAN_OR_EQUALS_TO") || "greater than or equals to" },
         { code: "<=", name: t("LESS_THAN_OR_EQUALS_TO") || "less than or equals to" },
         { code: ">", name: t("GREATER_THAN") || "greater than" },
@@ -102,6 +102,8 @@ function DependentFieldsWrapper({
         const field = pageObj?.fields?.find((f) => f.jsonPath === fieldCode);
         return { pageObj, field };
     };
+    const looksLikeLabelKey = (s = "") => /_label$/i.test(String(s).trim());
+
 
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
@@ -112,7 +114,7 @@ function DependentFieldsWrapper({
 
     const getOperatorOptions = (field) => {
         if (!field || isStringLike(field))
-            return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!==");
+            return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         return ALL_OPERATOR_OPTIONS;
     };
 
@@ -170,10 +172,10 @@ function DependentFieldsWrapper({
 
     const serializeSingle = (c) => {
         if (!c?.selectedPage?.code || !c?.selectedField?.code || !c?.comparisonType?.code || c?.fieldValue === "")
-          return "";
+            return "";
         return `${c.selectedPage.code}.${c.selectedField.code}${c.comparisonType.code}${c.fieldValue}`;
-      };
-      
+    };
+
 
     // flat conditions: joiner lives on items with index > 0
     const serializeAll = (conds) => {
@@ -255,7 +257,7 @@ function DependentFieldsWrapper({
         // strip any stray parens from value too
         valueText = `${valueText}`.replace(/[()]/g, "");
 
-        return `${fieldLabel} ${op} ${valueText}`.trim();
+        return `${t(fieldLabel)} ${op} ${valueText}`.trim();
     };
 
     // ---------- popup helpers ----------
@@ -321,7 +323,7 @@ function DependentFieldsWrapper({
                     <p style={{ opacity: 0.7, margin: 0 }}>{noLogicAddedLabel}</p>
                 ) : (
                     conditions.map((c, idx) => {
-                        const label = stripParens(formatConditionLabel(c) || incompleteExprLabel);
+                        const label = formatConditionLabel(c) || incompleteExprLabel;
                         return (
                             <React.Fragment key={`out-cond-${idx}`}>
                                 {idx > 0 && (
@@ -403,8 +405,8 @@ function DependentFieldsWrapper({
 
                                         // Pick full object from operatorOptions by comparing code
                                         const selectedOperator = cond?.comparisonType?.code
-                                        ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
-                                        : undefined;
+                                            ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
+                                            : undefined;
 
 
                                         return (
