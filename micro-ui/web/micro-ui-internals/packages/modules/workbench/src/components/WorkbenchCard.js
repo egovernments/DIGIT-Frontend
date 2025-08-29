@@ -26,6 +26,11 @@ const WorkbenchCard = () => {
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
     },
+    {
+      label: t("demo"),
+      link: `/${window?.contextPath}/employee/workbench/demo`,
+      roles: ROLES.LOCALISATION,
+    },
     // {
     //   label: t("ACTION_TEST_UPLOAD_BOUNDARY"),
     //   link: `/${window?.contextPath}/employee/workbench/upload-boundary`,

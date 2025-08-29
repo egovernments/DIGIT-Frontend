@@ -25,6 +25,7 @@ function sortByKey(arr, key) {
 
 
 const MDMSManageMaster = () => {
+  // debugger
   let Config = _.clone(Configg)
   const { t } = useTranslation();
   const navigate = useNavigate();

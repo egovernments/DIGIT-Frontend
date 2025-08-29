@@ -142,6 +142,8 @@ const App = ({ path }) => {
           <Route path="sidebar-items" element={<PrivateRoute element={<SidebarItems />} />} />
           <Route path="sidebar-manage" element={<PrivateRoute element={<SidebarAddEditItems />} />} />
           <Route path="manage-schema" element={<PrivateRoute element={<MDMSManager />} />} />
+                    <Route path="demo" element={<PrivateRoute element={<div>hi</div>} />} />
+
         </Routes>
       </AppContainer>
     </React.Fragment>
