@@ -1329,3 +1329,12 @@ tbody {
 .digit-topbar-logo {
   height: fit-content !important;
 }
+.digit-text-input-field.search {
+  .input-container.search {
+    width: 100%;
+    .digit-cursor-pointer {
+      position: absolute;
+      right: 0;
+    }
+  }
+}
