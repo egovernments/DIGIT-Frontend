@@ -937,7 +937,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       )}
 
 
-      {openSendForEditPopUp && <SendForEditPopUp
+      {/* {openSendForEditPopUp && <SendForEditPopUp
         isEditTrue={editBillDetails}
         dropdownOptions={hrmsUsersData ? hrmsUsersData.map((emp) => ({
           title: emp?.user?.name,
@@ -951,6 +951,19 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
           setOpenSendForEditPopUp(false);
           updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT", selectedUser);
           // setOpenApproveAlertPopUp(true);
+        }}
+      />} */}
+        {openSendForEditPopUp && <AlertPopUp
+        onClose={() => {
+          setOpenSendForEditPopUp(false);
+        }}
+        alertHeading={t(`HCM_AM_SEND_FOR_EDIT`)}
+        alertMessage={t(`HCM_AM_ALERT_SEND_FOR_EDIT_DESCRIPTION`)}
+        submitLabel={t(`HCM_AM_APPROVE`)}
+        cancelLabel={t(`HCM_AM_CANCEL`)}
+        onPrimaryAction={() => {
+          updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
+          setOpenSendForEditPopUp(false);
         }}
       />}
       {/* action bar for bill generation*/}
@@ -991,9 +1004,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     }}
                     onClick={() => {
                       // triggerSearchHrmsUsers();
-                      // setOpenSendForEditPopUp(true);
-                      updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
-                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_BACK_FOR_EDIT");
+                      setOpenSendForEditPopUp(true);
+                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
                     }}
                     optionsKey="name"
                     size=""
@@ -1072,8 +1084,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                       bottom: "40px",
                     }}
                     onClick={() => {
-                      // setOpenSendForEditPopUp(true);
-                      updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
+                      setOpenSendForEditPopUp(true);
+                      // updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT");
                     }}
                     optionsKey="name"
                     size=""
