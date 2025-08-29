@@ -2,6 +2,7 @@
 import React, { useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { createVisitPopup } from "./MapPointsPopup";
 
 // Override Leaflet's default icon to prevent 404 errors
 if (typeof L !== 'undefined') {
@@ -189,156 +190,9 @@ const formatPropertyValue = (key, value) => {
   return String(value);
 };
 
-// Enhanced popup content function for MapView task markers
+// Enhanced popup content function using common MapPointsPopup component
 const createEnhancedTaskPopup = (dataPoint, index) => {
-  // Debug logging to understand the data structure
-  console.log("🔍 MapView popup data received:", dataPoint, "Index:", index);
-  
-  const pointNumber = index + 1;
-  
-  // Get basic information with fallbacks
-  const taskId = dataPoint.id || "N/A";
-  const taskType = dataPoint.productName || dataPoint.product || "Task";
-  const location = dataPoint.administrativeArea || dataPoint.location || "Unknown Location";
-  const quantity = dataPoint.quantity || dataPoint.resourcesQuantity || 0;
-  const memberCount = dataPoint.memberCount || 0;
-  const deliveredBy = dataPoint.createdBy || dataPoint.userId || dataPoint.user || "Unknown User";
-  
-  // Format time
-  let deliveryTime = "N/A";
-  if (dataPoint.time && dataPoint.time !== "NA") {
-    try {
-      deliveryTime = new Date(dataPoint.time).toLocaleString();
-    } catch (e) {
-      deliveryTime = dataPoint.time;
-    }
-  }
-  
-  // Get coordinates
-  const lat = dataPoint.lat || dataPoint.latitude || 0;
-  const lng = dataPoint.lng || dataPoint.longitude || 0;
-  const coords = `${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`;
-  
-  // Determine status and color
-  const isCompleted = quantity > 0;
-  const statusColor = isCompleted ? "#10b981" : "#ef4444";
-  const statusText = isCompleted ? "COMPLETED" : "PENDING";
-  const statusIcon = isCompleted ? "✅" : "⏳";
-  
-  // Build enhanced popup HTML
-  return `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 300px; max-width: 380px;">
-      
-      <!-- Header -->
-      <div style="background: linear-gradient(135deg, ${statusColor} 0%, ${isCompleted ? '#059669' : '#dc2626'} 100%); color: white; padding: 16px; margin: -9px -9px 16px -9px; border-radius: 8px 8px 0 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
-        <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <h3 style="margin: 0; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
-              <span style="font-size: 22px;">${statusIcon}</span>
-              Task #${pointNumber}
-            </h3>
-            <p style="margin: 2px 0 0 0; font-size: 14px; opacity: 0.9;">
-              ${taskType} • ${location}
-            </p>
-          </div>
-          <div style="background: rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
-            ${statusText}
-          </div>
-        </div>
-      </div>
-
-      <!-- Main Content -->
-      <div style="padding: 0 12px;">
-        
-        <!-- Delivery Stats -->
-        ${quantity > 0 ? `
-          <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 8px; padding: 16px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
-            <div style="display: flex; justify-content: space-around; text-align: center;">
-              <div>
-                <div style="font-size: 24px; font-weight: 800; color: ${statusColor}; margin-bottom: 4px;">
-                  ${quantity.toLocaleString()}
-                </div>
-                <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
-                  Units Delivered
-                </div>
-              </div>
-              ${memberCount > 0 ? `
-                <div style="border-left: 2px solid #e2e8f0; padding-left: 16px;">
-                  <div style="font-size: 24px; font-weight: 800; color: #7c3aed; margin-bottom: 4px;">
-                    ${memberCount}
-                  </div>
-                  <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
-                    People Served
-                  </div>
-                </div>
-              ` : ''}
-            </div>
-          </div>
-        ` : `
-          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center;">
-            <div style="color: #dc2626; font-weight: 600; font-size: 14px;">
-              ⚠️ No deliveries recorded for this task
-            </div>
-          </div>
-        `}
-
-        <!-- Information Grid -->
-        <div style="space-y: 12px;">
-          
-          <!-- Task Details -->
-          <div style="margin-bottom: 16px;">
-            <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid ${statusColor}; padding-bottom: 4px;">
-              📋 Task Information
-            </h4>
-            <div style="space-y: 6px;">
-              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
-                <span style="font-weight: 600; color: #6b7280;">Task ID:</span>
-                <span style="color: #374151; font-weight: 500; font-family: monospace;">${taskId}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
-                <span style="font-weight: 600; color: #6b7280;">Product:</span>
-                <span style="color: #374151; font-weight: 500;">${taskType}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
-                <span style="font-weight: 600; color: #6b7280;">Delivered By:</span>
-                <span style="color: #374151; font-weight: 500;">${deliveredBy}</span>
-              </div>
-              <div style="display: flex; justify-content: space-between; padding: 6px 0;">
-                <span style="font-weight: 600; color: #6b7280;">Delivery Time:</span>
-                <span style="color: #374151; font-weight: 500; font-size: 12px;">${deliveryTime}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Location Details -->
-          <div style="margin-bottom: 12px;">
-            <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #7c3aed; padding-bottom: 4px;">
-              📍 Location Information
-            </h4>
-            <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 6px; padding: 10px;">
-              <div style="margin-bottom: 6px;">
-                <span style="font-weight: 600; color: #6b46c1;">Area:</span>
-                <span style="color: #374151; margin-left: 8px; font-weight: 500;">${location}</span>
-              </div>
-              <div style="font-size: 12px; color: #6b7280; font-family: monospace;">
-                <span style="font-weight: 600;">Coordinates:</span> ${coords}
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-
-      <!-- Footer -->
-      <div style="background: #f8fafc; padding: 8px 16px; margin: 12px -9px -9px -9px; border-radius: 0 0 8px 8px; border-top: 1px solid #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b;">
-          <span>📅 ${new Date().toLocaleDateString()}</span>
-          <span style="font-weight: 600;">Point #${pointNumber}</span>
-        </div>
-      </div>
-
-    </div>
-  `;
+  return createVisitPopup(dataPoint, index);
 };
 
 const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null }) => {

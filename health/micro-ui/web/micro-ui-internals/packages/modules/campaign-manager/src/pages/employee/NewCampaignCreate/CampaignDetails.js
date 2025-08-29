@@ -603,15 +603,14 @@ const CampaignDetails = () => {
               />,
             ]
             : [
-              <span>
-              {<Button
+              
+              Digit.UserService.hasAccess("CAMPAIGN_ADMIN")&&<Button
               icon="CloudDownload"
               label={t("HCM_CAMPAIGN_MANAGE")}  
               onClick={() =>   history.push(`/${window.contextPath}/employee/hcmworkbench/campaign-view?tenantId=${campaignData?.tenantId}&projectId=${campaignData?.projectId}`)}
               type="button"
               variation="secondary"
-            />}
-            </span>,
+            />,
               <Button
                 icon="CloudDownload"
                 label={t("HCM_DOWNLOAD_CREDENTIALS")}
