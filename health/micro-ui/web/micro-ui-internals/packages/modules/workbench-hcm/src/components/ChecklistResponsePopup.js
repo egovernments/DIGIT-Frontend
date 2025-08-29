@@ -133,7 +133,7 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
           </div>
           <div style="margin-bottom: 8px;">
             <span style="font-weight: 600; color: #555;">Boundary:</span>
-            <span style="color: #333; margin-left: 8px;">${dataPoint.boundaryCode || "NA"}</span>
+            <span style="color: #333; margin-left: 8px;">${t(dataPoint.boundaryCode) || "NA"}</span>
           </div>
           <div style="margin-bottom: 8px;">
             <span style="font-weight: 600; color: #555;">Location:</span>
