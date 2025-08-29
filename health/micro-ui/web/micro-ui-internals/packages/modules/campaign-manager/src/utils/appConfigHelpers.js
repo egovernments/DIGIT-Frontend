@@ -207,6 +207,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         pattern: field?.validations?.find((i) => i?.type === "pattern"),
         RegexPattern: field?.validations?.find((i) => i?.type === "pattern") ? true : false,
         MdmsDropdown: field?.schemaCode ? true : false,
+        schemaCode: field?.schemaCode || "",
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
         includeInForm: field?.includeInForm === false ? false : true,

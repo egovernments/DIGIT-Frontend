@@ -47,7 +47,7 @@ const Filter = (props) => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   return (
-    <div className="digit-search-action">
+    <div className="digit-search-action" style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
       <FilterIcon onClick={() => setShowPopUp(true)} />
       <span className="digit-search-text" style={{ color: "#C84C0E" }}>
         {props.t(props.field.label) || "LABEL"}
