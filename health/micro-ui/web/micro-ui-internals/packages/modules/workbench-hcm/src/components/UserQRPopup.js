@@ -1,6 +1,5 @@
 import React from "react";
 import QRCode from "react-qr-code";
-import { PopUp } from "@egovernments/digit-ui-components";
 
 const UserQRPopup = ({ userName, userId, isOpen, onClose }) => {
   if (!isOpen) return null;
@@ -8,7 +7,18 @@ const UserQRPopup = ({ userName, userId, isOpen, onClose }) => {
   const qrValue = `${userName}||${userId}`;
 
   return (
-    <PopUp>
+    <div style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000
+    }} onClick={onClose}>
       <div style={{
         display: "flex",
         flexDirection: "column",
@@ -19,9 +29,9 @@ const UserQRPopup = ({ userName, userId, isOpen, onClose }) => {
         maxWidth: "400px",
         margin: "0 auto",
         position: "relative"
-      }}>
+      }} onClick={(e) => e.stopPropagation()}>
         <button
-          onClick={()=>onClose}
+          onClick={onClose}
           style={{
             position: "absolute",
             top: "12px",
@@ -87,7 +97,7 @@ const UserQRPopup = ({ userName, userId, isOpen, onClose }) => {
           </div>
         </div>
       </div>
-    </PopUp>
+    </div>
   );
 };
 
