@@ -2,6 +2,7 @@ import React, { Fragment, useState, useEffect } from "react";
 import { Dropdown, Switch, Loader } from "@egovernments/digit-ui-components";
 
 const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) => {
+  console.log("Rendering FiltersRenderer for field: ", cField, drawerState);
 
   const [localSelectedSchema, setLocalSelectedSchema] = useState(drawerState?.schemaCode ? {
     masterName: drawerState?.schemaCode?.split('.')?.[1],
