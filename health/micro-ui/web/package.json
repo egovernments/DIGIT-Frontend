@@ -9,7 +9,8 @@
   },
   "workspaces": [
     "micro-ui-internals",
-    "micro-ui-internals/packages/modules/campaign-manager"
+    "micro-ui-internals/packages/modules/campaign-manager",
+    "micro-ui-internals/packages/css"
     ],
   "homepage": "/workbench-ui",
   "husky": {},

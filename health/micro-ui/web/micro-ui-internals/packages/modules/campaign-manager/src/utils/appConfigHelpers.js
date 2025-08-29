@@ -6,8 +6,8 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   // Try to find a matching field type from master data
   const matched = fieldTypeMasterData.find((item) => {
     // Match type and format from metadata and fieldName in case of type : dynamic and format : custom
-    if(item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom"){
-      return item?.metadata?.type === field.type && item?.metadata?.format === field.format  && item?.type === field?.fieldName
+    if (item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom") {
+      return item?.metadata?.type === field.type && item?.metadata?.format === field.format && item?.type === field?.fieldName;
     }
     // Match both type and format from metadata
     return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
@@ -112,25 +112,25 @@ export const getTypeAndFormatFromAppType = (field, fieldTypeMasterData = []) => 
 //   return result;
 // };
 
-// function flattenValidationsToField(validationsArray) {
-//   const result = {};
+function flattenValidationsToField(validationsArray) {
+  const result = {};
 
-//   if (!Array.isArray(validationsArray)) return {};
+  if (!Array.isArray(validationsArray)) return {};
 
-//   for (const rule of validationsArray) {
-//     if (!rule || typeof rule !== "object") continue;
-//     const { type, value, message } = rule;
+  for (const rule of validationsArray) {
+    if (!rule || typeof rule !== "object") continue;
+    const { type, value, message } = rule;
 
-//     if (!type || value === undefined || value === null) continue;
+    if (!type || value === undefined || value === null) continue;
 
-//     result[`toArray.${type}`] = value;
-//     if (message !== undefined && message !== null) {
-//       result[`toArray.${type}.message`] = message;
-//     }
-//   }
+    result[`toArray.${type}`] = value;
+    if (message !== undefined && message !== null) {
+      result[`toArray.${type}.message`] = message;
+    }
+  }
 
-//   return result;
-// }
+  return result;
+}
 
 // / new function for scale up
 function flattenValidationsToField2(validationsArray, groupKey = "validation") {
@@ -152,6 +152,9 @@ function flattenValidationsToField2(validationsArray, groupKey = "validation") {
 function flattenConfigArrays(configObj) {
   const result = {};
   for (const key in configObj) {
+    if (key === "validations") {
+      continue;
+    }
     const value = configObj[key];
     // Handle array of {type, value} objects (like validations)
     if (Array.isArray(value) && value.every((v) => typeof v === "object" && v.type)) {
@@ -182,7 +185,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
       ?.map((field, index) => ({
         ...getTypeAndMetaData(field, fieldTypeMasterData),
         ...flattenConfigArrays(field),
-        // ...flattenValidationsToField(field?.validations || []),
+        ...flattenValidationsToField(field?.validations || []),
         label: field?.label || "",
         value: field?.value || "",
         defaultValue: field?.value ? true : false,

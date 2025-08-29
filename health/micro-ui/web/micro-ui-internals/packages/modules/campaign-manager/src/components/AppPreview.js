@@ -232,6 +232,8 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                       placeholder={t(field?.innerLabel) || ""}
                       populators={{
                         t: field?.isMdms ? null : t,
+                        prefix: field?.prefixText,
+                        suffix: field?.suffixText,
                         title: field?.label,
                         fieldPairClassName: `app-preview-field-pair ${
                           selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
