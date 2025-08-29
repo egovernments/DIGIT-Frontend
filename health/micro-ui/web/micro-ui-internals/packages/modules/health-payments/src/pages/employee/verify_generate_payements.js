@@ -50,7 +50,12 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
             billCriteria: {
                 tenantId: tenantId,
                 referenceIds: project?.map(p => p?.id) || [], 
-                ...(billID ? { billNumbers: [billID] } : {billNumbers: selectedBillIds}),
+                ...(billID
+                    ? { billNumbers: [billID] }
+                    : editBills
+                        ? {}
+                        : (selectedBillIds?.length ? { billNumbers: selectedBillIds } : {})
+                ),
                 status: billStatus? billStatus : null,
                 pagination: {
                     limit: limitAndOffset.limit,
@@ -60,9 +65,26 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
         },
         config: {
             enabled: project ? true : false,
-            select: (data) => {
-                return data;
-            },
+            // select: (data) => {
+            //     return data;
+            // },
+             select: (data) => {
+                 if (editBills) {
+                     const filteredBills = data?.bills.filter(bill =>
+                         bill.billDetails?.some(detail => detail.status === "PENDING_EDIT" || detail.status === "EDITED")
+                     ) || [];
+
+                     return {
+                         ...data,
+                         bills: filteredBills,
+                         pagination: {
+                             ...data.pagination,
+                             totalCount: filteredBills.length
+                         }
+                     };
+        }
+        return data; // if editBills is false, return all bills as-is
+    },
         },
     };
 
