@@ -34,6 +34,7 @@
     "react-is": "19.1.1",
     "react-query": "3.6.1",
     "react-router-dom": "5.3.0",
+     "react-qr-code": "1.1.1",
     "react-select": "5.7.4",
     "styled-components": "6.1.19",
     "xlsx": "0.17.5"

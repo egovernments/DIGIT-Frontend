@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from "react";
-import { PopUp, Loader } from "@egovernments/digit-ui-components";
+import React, { useState, useEffect, Fragment } from "react";
+import { Loader, Button, Header } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
+import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { useTranslation } from "react-i18next";
 
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
@@ -11,6 +12,9 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
   const [isLoading, setIsLoading] = useState(false);
   const [responseData, setResponseData] = useState(null);
   const [error, setError] = useState(null);
+  const [showMapview, setShowMapview] = useState(false);
+  const [page, setPage] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
   useEffect(() => {
@@ -84,23 +88,85 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
   if (!isOpen) return null;
 
   const columns = [
-        { label: t("CREATED_BY"), key: "createdBy" },
+    { label: t("CREATED_BY"), key: "createdBy" },
     { label: t("COORDINATES"), key: "coordinates" },
     { label: t("BOUNDARY_CODE"), key: "boundaryCode" },
-
     { label: t("ATTRIBUTES"), key: "attributes" },
-        { label: t("CLIENT_ID"), key: "clientId" },
+    { label: t("CLIENT_ID"), key: "clientId" },
     { label: t("CREATED_TIME"), key: "createdTime" }
   ];
 
+  // Prepare map data from responseData
+  const mapData = responseData?.filter(item => {
+    const coords = item.coordinates;
+    return coords && coords !== "NA" && coords !== "null, null";
+  }).map((item, index) => {
+    const [lat, lng] = item.coordinates.split(", ").map(coord => parseFloat(coord));
+    return {
+      lat: lat,
+      lng: lng,
+      id: item.id,
+      clientId: item.clientId,
+      attributes: item.attributes,
+      boundaryCode: item.boundaryCode,
+      createdBy: item.createdBy,
+      createdTime: item.createdTime,
+      time: item.createdTime
+    };
+  }) || [];
+
+  // Custom popup content for map markers
+  const getChecklistPopupContent = (dataPoint, index) => {
+    return `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 250px;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 12px; margin: -10px -10px 10px -10px; border-radius: 4px 4px 0 0;">
+          <h3 style="margin: 0; font-size: 16px; font-weight: 600;">Checklist Response #${index + 1}</h3>
+        </div>
+        <div style="padding: 4px 0;">
+          <div style="margin-bottom: 8px;">
+            <span style="font-weight: 600; color: #555;">Client ID:</span>
+            <span style="color: #333; margin-left: 8px;">${dataPoint.clientId || "NA"}</span>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <span style="font-weight: 600; color: #555;">Attributes:</span>
+            <span style="color: #333; margin-left: 8px;">${dataPoint.attributes || "NA"}</span>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <span style="font-weight: 600; color: #555;">Boundary:</span>
+            <span style="color: #333; margin-left: 8px;">${dataPoint.boundaryCode || "NA"}</span>
+          </div>
+          <div style="margin-bottom: 8px;">
+            <span style="font-weight: 600; color: #555;">Location:</span>
+            <span style="color: #333; margin-left: 8px;">${dataPoint.lat?.toFixed(6)}, ${dataPoint.lng?.toFixed(6)}</span>
+          </div>
+          <div style="margin-bottom: 4px;">
+            <span style="font-weight: 600; color: #555;">Submitted:</span>
+            <span style="color: #333; margin-left: 8px;">${dataPoint.createdTime || "NA"}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  };
+
   return (
-    <PopUp>
+    <div style={{
+      position: "fixed",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: "rgba(0, 0, 0, 0.5)",
+      display: isOpen ? "flex" : "none",
+      alignItems: "center",
+      justifyContent: "center",
+      zIndex: 1000
+    }}>
       <div style={{
         backgroundColor: "white",
         borderRadius: "8px",
         width: "90vw",
         maxWidth: "1200px",
-        maxHeight: "90vh",
+        height: "85vh",
         overflow: "hidden",
         display: "flex",
         flexDirection: "column",
@@ -108,55 +174,44 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
       }}>
         {/* Header */}
         <div style={{
-          padding: "20px 24px",
+          padding: "16px 20px",
           borderBottom: "1px solid #e0e0e0",
           display: "flex",
           justifyContent: "space-between",
-          alignItems: "center",
-          backgroundColor: "#f5f5f5"
+          alignItems: "center"
         }}>
-          <div>
-            <h2 style={{
-              margin: 0,
-              fontSize: "20px",
-              fontWeight: "600",
-              color: "#333"
-            }}>
-              {t("CHECKLIST_RESPONSES")}
-            </h2>
-            <p style={{
-              margin: "4px 0 0 0",
-              fontSize: "14px",
-              color: "#666"
-            }}>
-              {serviceCode ? `Service: ${serviceCode}` : `Service Definition ID: ${serviceDefId}`}
-            </p>
+          <Header className="works-header-view">
+            {t("CHECKLIST_RESPONSES")} - {serviceCode || serviceDefId}
+          </Header>
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            {responseData && responseData.length > 0 && mapData.length > 0 && (
+              <Button
+                variation="secondary"
+                label={showMapview ? t("VIEW_TABLE") : t("VIEW_MAP")}
+                onClick={() => setShowMapview(!showMapview)}
+              />
+            )}
+            <button
+              onClick={onClose}
+              style={{
+                background: "none",
+                border: "none",
+                fontSize: "24px",
+                cursor: "pointer",
+                padding: "4px 8px",
+                borderRadius: "4px",
+                color: "#666"
+              }}
+            >
+              ×
+            </button>
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              background: "none",
-              border: "none",
-              fontSize: "24px",
-              cursor: "pointer",
-              padding: "4px 8px",
-              borderRadius: "4px",
-              color: "#666",
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center"
-            }}
-            onMouseEnter={(e) => e.target.style.backgroundColor = "#e0e0e0"}
-            onMouseLeave={(e) => e.target.style.backgroundColor = "transparent"}
-          >
-            ×
-          </button>
         </div>
 
         {/* Content */}
         <div style={{
           flex: 1,
-          padding: "24px",
+          padding: showMapview ? "0" : "24px",
           overflowY: "auto"
         }}>
           {isLoading ? (
@@ -166,7 +221,7 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
               alignItems: "center",
               minHeight: "300px"
             }}>
-              <Loader />
+              <Loader page={true} variant={"PageLoader"} />
             </div>
           ) : error ? (
             <div style={{
@@ -180,53 +235,67 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
               <p style={{ fontSize: "14px", color: "#666" }}>
                 {error}
               </p>
-              <button
+              <Button
+                label={t("RETRY")}
                 onClick={fetchChecklistResponses}
-                style={{
-                  marginTop: "16px",
-                  padding: "8px 16px",
-                  backgroundColor: "#1976d2",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                  fontSize: "14px"
-                }}
-              >
-                {t("RETRY")}
-              </button>
+                variation="primary"
+                style={{ marginTop: "16px" }}
+              />
             </div>
           ) : responseData && responseData.length > 0 ? (
-            <ReusableTableWrapper
-              data={responseData}
-              columns={columns}
-              isLoading={false}
-              noDataMessage="NO_RESPONSES_FOUND"
-              pagination={true}
-              paginationServer={false}
-              paginationTotalRows={responseData.length}
-              paginationPerPage={10}
-              paginationRowsPerPageOptions={[10, 20, 50]}
-              customCellRenderer={{
-                createdBy: (row) => {
-                  const userId = row.createdBy;
-                  if (!userId || userId === "NA") {
-                    return "NA";
-                  }
-                  return (
-                    <UserDetails
-                      uuid={userId}
-                      style={{
-                        fontSize: "inherit",
-                        color: "inherit",
-                      }}
-                      iconSize="14px"
-                      tooltipPosition="top"
-                    />
-                  );
-                },
-              }}
-            />
+            showMapview && mapData.length > 0 ? (
+              <BoundariesMapWrapper
+                visits={mapData}
+                totalCount={mapData.length}
+                page={page}
+                pageSize={pageSize}
+                onPageChange={(newPage) => setPage(newPage)}
+                onPageSizeChange={(newPageSize) => {
+                  setPageSize(newPageSize);
+                  setPage(0);
+                }}
+                isNextDisabled={mapData.length <= pageSize}
+                showConnectingLines={false}
+                customPopupContent={getChecklistPopupContent}
+                customMarkerStyle={{
+                  fill: '#764ba2',
+                  stroke: '#FFFFFF',
+                  innerFill: '#FFFFFF',
+                  size: 24
+                }}
+              />
+            ) : (
+              <ReusableTableWrapper
+                data={responseData}
+                columns={columns}
+                isLoading={false}
+                noDataMessage="NO_RESPONSES_FOUND"
+                pagination={true}
+                paginationServer={false}
+                paginationTotalRows={responseData.length}
+                paginationPerPage={10}
+                paginationRowsPerPageOptions={[10, 20, 50]}
+                customCellRenderer={{
+                  createdBy: (row) => {
+                    const userId = row.createdBy;
+                    if (!userId || userId === "NA") {
+                      return "NA";
+                    }
+                    return (
+                      <UserDetails
+                        uuid={userId}
+                        style={{
+                          fontSize: "inherit",
+                          color: "inherit",
+                        }}
+                        iconSize="14px"
+                        tooltipPosition="top"
+                      />
+                    );
+                  },
+                }}
+              />
+            )
           ) : (
             <div style={{
               padding: "40px",
@@ -244,9 +313,9 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
         </div>
 
         {/* Footer with summary */}
-        {responseData && responseData.length > 0 && (
+        {responseData && responseData.length > 0 && !showMapview && (
           <div style={{
-            padding: "16px 24px",
+            padding: "12px 20px",
             borderTop: "1px solid #e0e0e0",
             backgroundColor: "#f9f9f9",
             display: "flex",
@@ -255,6 +324,7 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
           }}>
             <div style={{ fontSize: "14px", color: "#666" }}>
               {t("TOTAL_RESPONSES")}: <strong>{responseData.length}</strong>
+              {mapData.length > 0 && ` | ${t("WITH_COORDINATES")}: ${mapData.length}`}
             </div>
             <div style={{ fontSize: "14px", color: "#666" }}>
               {t("SERVICE_DEF_ID")}: <strong>{serviceDefId}</strong>
@@ -262,7 +332,7 @@ const ChecklistResponsePopup = ({ isOpen, onClose, serviceDefId, serviceCode }) 
           </div>
         )}
       </div>
-    </PopUp>
+    </div>
   );
 };
 
