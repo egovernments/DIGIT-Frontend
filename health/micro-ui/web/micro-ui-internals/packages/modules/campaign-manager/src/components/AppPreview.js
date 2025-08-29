@@ -241,7 +241,7 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                             : selectedField?.id && selectedField?.id === field?.id
                             ? `app-preview-selected`
                             : ``
-                        }`,
+                        } ${field?.["toArray.required"] && getFieldType(field) !== "custom" ? `required` : ``}`,
                         mdmsConfig: field?.isMdms
                           ? {
                               moduleName: field?.schemaCode?.split(".")[0],
@@ -255,7 +255,6 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                             ? renderField(field, t)
                             : null,
                       }}
-                      required={getFieldType(field) === "custom" ? null : field?.["toArray.required"]}
                       type={getFieldType(field) === "button" || getFieldType(field) === "select" ? "custom" : getFieldType(field) || "text"}
                       value={field?.value === true ? "" : field?.value || ""}
                       disabled={field?.readOnly || false}

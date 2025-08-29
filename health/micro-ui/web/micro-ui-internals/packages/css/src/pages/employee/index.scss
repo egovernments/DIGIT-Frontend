@@ -1075,7 +1075,12 @@ tbody {
   flex-direction: column;
   padding: 0.5rem;
   .digit-header-content.label {
-    width: 70%;
+    width: 100%;
+    .label-container {
+      label {
+        white-space: pre-wrap;
+      }
+    }
   }
   .digit-field {
     width: 100%;
@@ -1125,7 +1130,16 @@ tbody {
     color: #d4351c;
   }
 }
-
+.app-preview-field-pair.required {
+  .digit-header-content.label {
+    .label-container {
+      label::after {
+        content: " *";
+        color: #d4351c;
+      }
+    }
+  }
+}
 .app-preview-field-button {
   width: 100%;
 }
@@ -1311,4 +1325,7 @@ tbody {
 .drawer-container-tooltip:hover .onhover-tooltip-text {
   visibility: visible;
   opacity: 1;
+}
+.digit-topbar-logo {
+  height: fit-content !important;
 }
