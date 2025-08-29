@@ -5,6 +5,7 @@ import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
+import ChecklistResponsePopup from "./ChecklistResponsePopup";
 const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_REQUEST_CONTEXT_PATH") || "health-service-request";
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
@@ -14,6 +15,8 @@ const ChecklistComponent = (props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [showResponsePopup, setShowResponsePopup] = useState(false);
+  const [selectedServiceDef, setSelectedServiceDef] = useState(null);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
   // Close dropdown when clicking outside
@@ -170,8 +173,37 @@ const ChecklistComponent = (props) => {
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_LAST_MODIFIED"), key: "lastModified" },
   ];
 
-  // Custom cell renderer for the createdBy column
+  // Handle service code click
+  const handleServiceCodeClick = (row) => {
+    // Find the original service definition to get the ID
+    const serviceDef = serviceDefinitionsData?.ServiceDefinitions?.find(
+      def => def.code === row.code
+    );
+    
+    if (serviceDef) {
+      setSelectedServiceDef({
+        id: serviceDef.id,
+        code: serviceDef.code
+      });
+      setShowResponsePopup(true);
+    }
+  };
+
+  // Custom cell renderer for the createdBy column and code column
   const customCellRenderer = {
+    code: (row) => (
+      <span
+        onClick={() => handleServiceCodeClick(row)}
+        style={{
+          cursor: "pointer",
+          color: "#1976d2",
+          textDecoration: "underline",
+          fontWeight: "500"
+        }}
+      >
+        {row.code}
+      </span>
+    ),
     createdBy: (row) => {
       const userId = row.createdBy;
       if (!userId || userId === "NA") {
@@ -235,6 +267,18 @@ const ChecklistComponent = (props) => {
           className=""
           headerClassName=""
           customCellRenderer={customCellRenderer}
+        />
+      )}
+      
+      {showResponsePopup && selectedServiceDef && (
+        <ChecklistResponsePopup
+          isOpen={showResponsePopup}
+          onClose={() => {
+            setShowResponsePopup(false);
+            setSelectedServiceDef(null);
+          }}
+          serviceDefId={selectedServiceDef.id}
+          serviceCode={selectedServiceDef.code}
         />
       )}
     </div>

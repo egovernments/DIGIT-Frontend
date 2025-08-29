@@ -7,6 +7,7 @@ import ProjectStaffModal from "./ProjectStaffModal";
 import ConfirmationDialog from "./ConfirmationDialog";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
+import UserQRPopup from "./UserQRPopup";
 
 const ProjectStaffComponent = (props) => {
   const { t } = useTranslation();
@@ -17,6 +18,8 @@ const ProjectStaffComponent = (props) => {
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [showPopup, setShowPopup] = useState(false);
+  const [showQRPopup, setShowQRPopup] = useState(false);
+  const [selectedUser, setSelectedUser] = useState(null);
   const [deletionDetails, setDeletionDetails] = useState({
     projectId: null,
     userId: null,
@@ -126,6 +129,16 @@ const ProjectStaffComponent = (props) => {
   const closeModal = () => {
     setShowModal(false);
     setShowPopup(false);
+  };
+
+  const closeQRPopup = () => {
+    setShowQRPopup(false);
+    setSelectedUser(null);
+  };
+
+  const handleUsernameClick = (user) => {
+    setSelectedUser(user);
+    setShowQRPopup(true);
   };
 
   const handleStaffAdded = () => {
@@ -240,6 +253,15 @@ const ProjectStaffComponent = (props) => {
           />
         )}
 
+        {showQRPopup && selectedUser && (
+          <UserQRPopup
+            userName={selectedUser.userName}
+            userId={selectedUser.userId}
+            isOpen={showQRPopup}
+            onClose={closeQRPopup}
+          />
+        )}
+
         <ReusableTableWrapper
           data={mappedProjectStaff || []}
           columns={columns}
@@ -262,6 +284,19 @@ const ProjectStaffComponent = (props) => {
                   setShowModal(true);
                 }}
               />
+            ),
+            userName: (row) => (
+              <span
+                onClick={() => handleUsernameClick(row)}
+                style={{
+                  cursor: "pointer",
+                  color: "#1976d2",
+                  textDecoration: "underline",
+                  fontWeight: "500"
+                }}
+              >
+                {row.userName}
+              </span>
             ),
             deleteAction: (row) => (
               <Button
