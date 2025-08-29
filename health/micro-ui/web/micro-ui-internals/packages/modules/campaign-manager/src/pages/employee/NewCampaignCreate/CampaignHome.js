@@ -137,6 +137,11 @@ const CampaignHome = () => {
       <p className="name-description">{t(`HCM_CREATE_CAMPAIGN_DESCRIPTION`)}</p>
       <div className={"containerStyle"}>
         <div
+          tabIndex={0}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" || e.key === " ") {
+              setShowPopUp(true);
+            }}}
           className={"cardStyle"}
           onClick={() => {
             setShowPopUp(true);

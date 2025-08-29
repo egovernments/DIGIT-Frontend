@@ -22,7 +22,7 @@
     "start:script": "./scripts/create.sh",
     "build": "run-s build:**",
     "build:css": "cd packages/css && yarn build",
-    "build:prod": "NODE_ENV=production yarn build:campaign",
+    "buildd:prod": "NODE_ENV=production yarn build:campaign",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "dev:example": "cd example && yarn start",
     "dev:css": "cd packages/css && yarn start",
