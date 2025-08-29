@@ -52,11 +52,11 @@ const ChecklistComponent = (props) => {
 
   // Fetch roles from MDMS
   const reqRoles = {
-    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v1/_search`,
     body: {
       MdmsCriteria: {
         tenantId,
-        schemaCode: `${CONSOLE_MDMS_MODULENAME}.rolesForChecklist`,
+        schemaCode: `${CONSOLE_MDMS_MODULENAME}.ChecklistTemplates`,
         isActive: true,
       },
     },

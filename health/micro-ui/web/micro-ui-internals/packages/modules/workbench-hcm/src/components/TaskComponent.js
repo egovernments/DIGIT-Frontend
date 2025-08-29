@@ -64,7 +64,7 @@ const TaskComponent = (props) => {
           latitude: task?.address?.latitude || "NA",
           longitude: task?.address?.longitude || "NA",
           createdBy: task?.clientAuditDetails?.createdBy || "NA",
-          resourcesCount: task?.resources?.length || "NA",
+          // resourcesCount: task?.resources?.length || "NA",
           locationAccuracy: task?.address?.locationAccuracy || "NA",
         }));
       }
@@ -76,7 +76,6 @@ const TaskComponent = (props) => {
 
   const columns = [
     { label: t("HCM_ADMIN_CONSOLE_TASKCODE"), key: "id" },
-    { label: t("HCM_ADMIN_CONSOLE_RESOURCE_COUNT"), key: "resourcesCount" },
     { label: t("HCM_ADMIN_CONSOLE_RESOURCE_QUANTITY"), key: "resourcesQuantity" },
     { label: t("HCM_ADMIN_CONSOLE_DELIVERYDATE"), key: "plannedStartDate" },
     { label: t("HCM_ADMIN_CONSOLE_RESOURCE_status"), key: "status" },
@@ -99,37 +98,155 @@ const TaskComponent = (props) => {
     setPage(0);
   };
 
-  // Custom popup content function for map markers
+  // Enhanced popup content function for task markers with professional UX
   const getTaskPopupContent = (task, index) => {
+    // Debug logging to understand the data structure    
     const taskNumber = index + 1;
-    const time = task.time !== "NA" ? new Date(task.time).toLocaleDateString() : "N/A";
-    const taskId = task.id || "N/A";
-    const status = task.status || "N/A";
-    const resourceCount = task.resourcesCount || "N/A";
-    const resourceQuantity = task.resourcesQuantity || "N/A";
     
+    // Get basic information with robust fallbacks
+    const taskId = task.id || "N/A";
+    const status = task.status || "UNKNOWN";
+    const resourceQuantity = task.resourcesQuantity || task.quantity || 0;
+    
+    // Format time properly
+    let deliveryTime = "N/A";
+    if (task.time && task.time !== "NA") {
+      try {
+        deliveryTime = new Date(task.time).toLocaleDateString() + ' ' + new Date(task.time).toLocaleTimeString();
+      } catch (e) {
+        deliveryTime = new Date(task.time).toLocaleDateString();
+      }
+    }
+    
+    // Get coordinates
+    const lat = task.lat || task.latitude || 0;
+    const lng = task.lng || task.longitude || 0;
+    const coords = `${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`;
+    
+    // Determine status styling and info
+    const getStatusInfo = (status) => {
+      switch (status.toUpperCase()) {
+        case 'COMPLETED':
+        case 'ADMINISTRATION_SUCCESS':
+          return { color: "#10b981", text: "COMPLETED", icon: "✅", bgGradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)" };
+        case 'IN_PROGRESS':
+        case 'INPROGRESS':
+          return { color: "#f59e0b", text: "IN PROGRESS", icon: "🔄", bgGradient: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)" };
+        case 'PENDING':
+          return { color: "#ef4444", text: "PENDING", icon: "⏳", bgGradient: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)" };
+        case 'FAILED':
+        case 'ADMINISTRATION_FAILED':
+          return { color: "#dc2626", text: "FAILED", icon: "❌", bgGradient: "linear-gradient(135deg, #dc2626 0%, #b91c1c 100%)" };
+        default:
+          return { color: "#6b7280", text: status.toUpperCase(), icon: "❓", bgGradient: "linear-gradient(135deg, #6b7280 0%, #4b5563 100%)" };
+      }
+    };
+    
+    const statusInfo = getStatusInfo(status);
+    const isCompleted = status.toUpperCase().includes('SUCCESS') || status.toUpperCase() === 'COMPLETED';
+    
+    // Build enhanced popup HTML
     return `
-      <div style="min-width: 200px;">
-        <h4 style="margin: 0 0 8px 0; color: #2563eb; font-size: 14px;">
-          <b>Task ${taskNumber}</b>
-        </h4>
-        <div style="font-size: 12px; line-height: 1.4;">
-          <div style="margin-bottom: 4px;">
-            <b>Task ID:</b> ${taskId}
-          </div>
-          <div style="margin-bottom: 4px;">
-            <b>Status:</b> <span style="color: ${status === 'COMPLETED' ? '#16a34a' : status === 'IN_PROGRESS' ? '#ca8a04' : '#6b7280'};">${status}</span>
-          </div>
-          <div style="margin-bottom: 4px;">
-            <b>Resources:</b> ${resourceCount} items (${resourceQuantity} total)
-          </div>
-          <div style="margin-bottom: 4px;">
-            <b>Planned Date:</b> ${time}
-          </div>
-          <div style="margin-bottom: 4px;">
-            <b>Location:</b> ${task.lat?.toFixed(6) || 'N/A'}, ${task.lng?.toFixed(6) || 'N/A'}
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 320px; max-width: 400px;">
+        
+        <!-- Header -->
+        <div style="background: ${statusInfo.bgGradient}; color: white; padding: 18px; margin: -9px -9px 18px -9px; border-radius: 8px 8px 0 0; box-shadow: 0 3px 10px rgba(0,0,0,0.2);">
+          <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="margin: 0; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
+                <span style="font-size: 24px;">${statusInfo.icon}</span>
+                Task #${taskNumber}
+              </h3>
+              <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9; font-family: monospace; letter-spacing: 0.5px;">
+                ID: ${taskId}
+              </p>
+            </div>
+            <div style="background: rgba(255,255,255,0.25); padding: 8px 14px; border-radius: 25px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; text-align: center;">
+              ${statusInfo.text}
+            </div>
           </div>
         </div>
+
+        <!-- Main Content -->
+        <div style="padding: 0 14px;">
+          
+          <!-- Resource Stats -->
+          ${resourceQuantity > 0 ? `
+            <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 10px; padding: 18px; margin-bottom: 18px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
+              <h4 style="margin: 0 0 12px 0; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">📊 Resource Summary</h4>
+              <div style="text-align: center;">
+                <div style="font-size: 32px; font-weight: 900; color: #7c3aed; margin-bottom: 8px; line-height: 1;">
+                  ${resourceQuantity.toLocaleString()}
+                </div>
+                <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+                  Total Quantity
+                </div>
+              </div>
+            </div>
+          ` : `
+            <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px; margin-bottom: 18px; text-align: center;">
+              <div style="color: #dc2626; font-weight: 600; font-size: 14px;">
+                ⚠️ No resource information available
+              </div>
+            </div>
+          `}
+
+          <!-- Task Information -->
+          <div style="margin-bottom: 18px;">
+            <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid ${statusInfo.color}; padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+              📋 Task Details
+            </h4>
+            <div style="background: #fefefe; border: 1px solid #f3f4f6; border-radius: 8px; padding: 12px;">
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
+                <span style="font-weight: 600; color: #6b7280; font-size: 13px;">Task ID:</span>
+                <span style="color: #374151; font-weight: 600; font-family: monospace; font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${taskId}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
+                <span style="font-weight: 600; color: #6b7280; font-size: 13px;">Status:</span>
+                <span style="color: ${statusInfo.color}; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px;">
+                  ${statusInfo.icon} ${statusInfo.text}
+                </span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
+                <span style="font-weight: 600; color: #6b7280; font-size: 13px;">Resource Quantity:</span>
+                <span style="color: #374151; font-weight: 600; font-size: 13px;">${resourceQuantity} total</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+                <span style="font-weight: 600; color: #6b7280; font-size: 13px;">Planned Date:</span>
+                <span style="color: #374151; font-weight: 500; font-size: 12px;">${deliveryTime}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Information -->
+          <div style="margin-bottom: 12px;">
+            <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #7c3aed; padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+              📍 Location Details
+            </h4>
+            <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 12px;">
+              <div style="font-size: 13px; color: #6b46c1; font-weight: 600; margin-bottom: 6px;">
+                📍 Coordinates:
+              </div>
+              <div style="font-size: 13px; color: #4b5563; font-family: monospace; background: white; padding: 8px; border-radius: 4px; border: 1px solid #e5e7eb;">
+                ${coords}
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Footer -->
+        <div style="background: #f8fafc; padding: 10px 16px; margin: 14px -9px -9px -9px; border-radius: 0 0 8px 8px; border-top: 1px solid #e2e8f0;">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b;">
+            <span style="display: flex; align-items: center; gap: 4px;">
+              📅 ${new Date().toLocaleDateString()}
+            </span>
+            <span style="font-weight: 600; background: ${statusInfo.color}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px;">
+              Point #${taskNumber}
+            </span>
+          </div>
+        </div>
+
       </div>
     `;
   };

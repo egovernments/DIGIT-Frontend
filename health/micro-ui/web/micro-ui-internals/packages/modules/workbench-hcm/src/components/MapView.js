@@ -42,6 +42,305 @@ const createCustomMarker = (style = {}) => {
 const isValidCoord = (v) =>
   v && typeof v.lat === "number" && typeof v.lng === "number";
 
+// Custom popup formatter for boundary shapes (wards, LGAs, etc.)
+const createCustomBoundaryPopup = (properties) => {
+  if (!properties) return "No data available";
+
+  // Define priority fields and their display names
+  const priorityFields = [
+    { key: 'wardname', label: '🏘️ Ward Name', priority: 1 },
+    { key: 'wardcode', label: '🏷️ Ward Code', priority: 1 },
+    { key: 'lganame', label: '🏛️ LGA Name', priority: 2 },
+    { key: 'lgacode', label: '📋 LGA Code', priority: 2 },
+    { key: 'statename', label: '🌍 State', priority: 2 },
+    { key: 'statecode', label: '🏴 State Code', priority: 2 },
+    { key: 'status', label: '📊 Status', priority: 3 },
+    { key: 'urban', label: '🏙️ Urban Area', priority: 3 },
+    { key: 'source', label: '📚 Data Source', priority: 4 },
+    { key: 'Shape__Area', label: '📏 Area (sq units)', priority: 4 },
+    { key: 'Shape__Length', label: '📐 Perimeter', priority: 4 }
+  ];
+
+  // Extract and format fields
+  const formattedFields = [];
+  const processedKeys = new Set();
+
+  // First, process priority fields
+  priorityFields.forEach(fieldDef => {
+    const value = properties[fieldDef.key];
+    if (value !== undefined && value !== null && value !== '') {
+      formattedFields.push({
+        ...fieldDef,
+        value: formatPropertyValue(fieldDef.key, value)
+      });
+      processedKeys.add(fieldDef.key);
+    }
+  });
+
+  // Then, process any remaining fields that weren't in the priority list
+  Object.keys(properties).forEach(key => {
+    if (!processedKeys.has(key) && properties[key] !== undefined && properties[key] !== null && properties[key] !== '') {
+      // Skip technical fields that are not useful to display
+      const skipFields = ['globalid', 'FID', 'OBJECTID', 'timestamp', 'editor', 'amapcode'];
+      if (!skipFields.some(skipField => key.toLowerCase().includes(skipField.toLowerCase()))) {
+        formattedFields.push({
+          key,
+          label: formatFieldLabel(key),
+          value: formatPropertyValue(key, properties[key]),
+          priority: 5
+        });
+      }
+    }
+  });
+
+  // Sort by priority and create HTML
+  formattedFields.sort((a, b) => a.priority - b.priority);
+
+  // Group fields by priority for better visual organization
+  const priorityGroups = {
+    1: formattedFields.filter(f => f.priority === 1),
+    2: formattedFields.filter(f => f.priority === 2),
+    3: formattedFields.filter(f => f.priority === 3),
+    4: formattedFields.filter(f => f.priority >= 4)
+  };
+
+  let htmlContent = `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 280px;">
+      <div style="background: linear-gradient(135deg, #7B1FA2 0%, #9C27B0 100%); color: white; padding: 14px; margin: -9px -9px 14px -9px; border-radius: 8px 8px 0 0; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+        <h3 style="margin: 0; font-size: 18px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+          <span style="font-size: 20px;">📍</span>
+          ${properties.wardname || properties.name || properties.WARDNAME || 'Boundary Information'}
+        </h3>
+        ${properties.lganame ? `<p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9;">${properties.lganame}, ${properties.statename || ''}</p>` : ''}
+      </div>
+  `;
+
+  // Add priority groups with visual separation
+  Object.keys(priorityGroups).forEach((priority, index) => {
+    const fields = priorityGroups[priority];
+    if (fields.length === 0) return;
+
+    if (index > 0 && priorityGroups[Object.keys(priorityGroups)[index-1]].length > 0) {
+      htmlContent += `<div style="border-top: 1px solid #e5e7eb; margin: 12px -9px 12px -9px;"></div>`;
+    }
+
+    fields.forEach(field => {
+      const isImportant = field.priority <= 2;
+      htmlContent += `
+        <div style="margin-bottom: 8px; display: flex; align-items: flex-start; gap: 8px;">
+          <span style="font-weight: 600; color: ${isImportant ? '#7B1FA2' : '#6b7280'}; min-width: 120px; display: inline-block; font-size: ${isImportant ? '14px' : '13px'};">
+            ${field.label}:
+          </span>
+          <span style="color: #374151; font-weight: ${isImportant ? '600' : 'normal'}; flex: 1; font-size: ${isImportant ? '14px' : '13px'}; word-break: break-word;">
+            ${field.value}
+          </span>
+        </div>
+      `;
+    });
+  });
+
+  htmlContent += `
+      <div style="margin-top: 14px; padding-top: 10px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; text-align: center; font-style: italic;">
+        ${formattedFields.length} data field${formattedFields.length !== 1 ? 's' : ''} available
+      </div>
+    </div>
+  `;
+
+  return htmlContent;
+};
+
+// Helper function to format field labels
+const formatFieldLabel = (key) => {
+  // Convert camelCase or snake_case to readable labels
+  return key
+    .replace(/([A-Z])/g, ' $1') // camelCase
+    .replace(/_/g, ' ') // snake_case
+    .replace(/\b\w/g, l => l.toUpperCase()) // capitalize words
+    .trim();
+};
+
+// Helper function to format property values
+const formatPropertyValue = (key, value) => {
+  if (value === null || value === undefined) return 'N/A';
+  
+  // Format specific field types
+  if (key.toLowerCase().includes('area') && typeof value === 'number') {
+    return value.toFixed(6) + ' sq units';
+  }
+  
+  if (key.toLowerCase().includes('length') && typeof value === 'number') {
+    return value.toFixed(3) + ' units';
+  }
+  
+  if (key.toLowerCase().includes('timestamp') || key.toLowerCase().includes('date')) {
+    try {
+      const date = new Date(value);
+      return date.toLocaleDateString() + ' ' + date.toLocaleTimeString();
+    } catch (e) {
+      return value;
+    }
+  }
+
+  // Format yes/no values
+  if (key.toLowerCase().includes('urban')) {
+    return value.toLowerCase() === 'yes' ? '✅ Yes' : value.toLowerCase() === 'no' ? '❌ No' : value;
+  }
+
+  return String(value);
+};
+
+// Enhanced popup content function for MapView task markers
+const createEnhancedTaskPopup = (dataPoint, index) => {
+  // Debug logging to understand the data structure
+  console.log("🔍 MapView popup data received:", dataPoint, "Index:", index);
+  
+  const pointNumber = index + 1;
+  
+  // Get basic information with fallbacks
+  const taskId = dataPoint.id || "N/A";
+  const taskType = dataPoint.productName || dataPoint.product || "Task";
+  const location = dataPoint.administrativeArea || dataPoint.location || "Unknown Location";
+  const quantity = dataPoint.quantity || dataPoint.resourcesQuantity || 0;
+  const memberCount = dataPoint.memberCount || 0;
+  const deliveredBy = dataPoint.createdBy || dataPoint.userId || dataPoint.user || "Unknown User";
+  
+  // Format time
+  let deliveryTime = "N/A";
+  if (dataPoint.time && dataPoint.time !== "NA") {
+    try {
+      deliveryTime = new Date(dataPoint.time).toLocaleString();
+    } catch (e) {
+      deliveryTime = dataPoint.time;
+    }
+  }
+  
+  // Get coordinates
+  const lat = dataPoint.lat || dataPoint.latitude || 0;
+  const lng = dataPoint.lng || dataPoint.longitude || 0;
+  const coords = `${Number(lat).toFixed(6)}, ${Number(lng).toFixed(6)}`;
+  
+  // Determine status and color
+  const isCompleted = quantity > 0;
+  const statusColor = isCompleted ? "#10b981" : "#ef4444";
+  const statusText = isCompleted ? "COMPLETED" : "PENDING";
+  const statusIcon = isCompleted ? "✅" : "⏳";
+  
+  // Build enhanced popup HTML
+  return `
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 300px; max-width: 380px;">
+      
+      <!-- Header -->
+      <div style="background: linear-gradient(135deg, ${statusColor} 0%, ${isCompleted ? '#059669' : '#dc2626'} 100%); color: white; padding: 16px; margin: -9px -9px 16px -9px; border-radius: 8px 8px 0 0; box-shadow: 0 2px 8px rgba(0,0,0,0.15);">
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+          <div>
+            <h3 style="margin: 0; font-size: 18px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+              <span style="font-size: 22px;">${statusIcon}</span>
+              Task #${pointNumber}
+            </h3>
+            <p style="margin: 2px 0 0 0; font-size: 14px; opacity: 0.9;">
+              ${taskType} • ${location}
+            </p>
+          </div>
+          <div style="background: rgba(255,255,255,0.25); padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px;">
+            ${statusText}
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div style="padding: 0 12px;">
+        
+        <!-- Delivery Stats -->
+        ${quantity > 0 ? `
+          <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 8px; padding: 16px; margin-bottom: 16px; border: 1px solid #e2e8f0;">
+            <div style="display: flex; justify-content: space-around; text-align: center;">
+              <div>
+                <div style="font-size: 24px; font-weight: 800; color: ${statusColor}; margin-bottom: 4px;">
+                  ${quantity.toLocaleString()}
+                </div>
+                <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+                  Units Delivered
+                </div>
+              </div>
+              ${memberCount > 0 ? `
+                <div style="border-left: 2px solid #e2e8f0; padding-left: 16px;">
+                  <div style="font-size: 24px; font-weight: 800; color: #7c3aed; margin-bottom: 4px;">
+                    ${memberCount}
+                  </div>
+                  <div style="font-size: 11px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
+                    People Served
+                  </div>
+                </div>
+              ` : ''}
+            </div>
+          </div>
+        ` : `
+          <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 12px; margin-bottom: 16px; text-align: center;">
+            <div style="color: #dc2626; font-weight: 600; font-size: 14px;">
+              ⚠️ No deliveries recorded for this task
+            </div>
+          </div>
+        `}
+
+        <!-- Information Grid -->
+        <div style="space-y: 12px;">
+          
+          <!-- Task Details -->
+          <div style="margin-bottom: 16px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid ${statusColor}; padding-bottom: 4px;">
+              📋 Task Information
+            </h4>
+            <div style="space-y: 6px;">
+              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
+                <span style="font-weight: 600; color: #6b7280;">Task ID:</span>
+                <span style="color: #374151; font-weight: 500; font-family: monospace;">${taskId}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
+                <span style="font-weight: 600; color: #6b7280;">Product:</span>
+                <span style="color: #374151; font-weight: 500;">${taskType}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 6px 0; border-bottom: 1px solid #f3f4f6;">
+                <span style="font-weight: 600; color: #6b7280;">Delivered By:</span>
+                <span style="color: #374151; font-weight: 500;">${deliveredBy}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; padding: 6px 0;">
+                <span style="font-weight: 600; color: #6b7280;">Delivery Time:</span>
+                <span style="color: #374151; font-weight: 500; font-size: 12px;">${deliveryTime}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Location Details -->
+          <div style="margin-bottom: 12px;">
+            <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #7c3aed; padding-bottom: 4px;">
+              📍 Location Information
+            </h4>
+            <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 6px; padding: 10px;">
+              <div style="margin-bottom: 6px;">
+                <span style="font-weight: 600; color: #6b46c1;">Area:</span>
+                <span style="color: #374151; margin-left: 8px; font-weight: 500;">${location}</span>
+              </div>
+              <div style="font-size: 12px; color: #6b7280; font-family: monospace;">
+                <span style="font-weight: 600;">Coordinates:</span> ${coords}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div style="background: #f8fafc; padding: 8px 16px; margin: 12px -9px -9px -9px; border-radius: 0 0 8px 8px; border-top: 1px solid #e2e8f0;">
+        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b;">
+          <span>📅 ${new Date().toLocaleDateString()}</span>
+          <span style="font-weight: 600;">Point #${pointNumber}</span>
+        </div>
+      </div>
+
+    </div>
+  `;
+};
+
 const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
@@ -136,6 +435,163 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
           .leaflet-control-layers-separator {
             border-top: 1px solid rgba(0, 0, 0, 0.1) !important;
             margin: 8px -12px !important;
+          }
+
+          /* Custom Boundary Popup Styles */
+          .leaflet-popup.custom-boundary-popup .leaflet-popup-content-wrapper {
+            border-radius: 8px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid rgba(123, 31, 162, 0.2) !important;
+            padding: 0 !important;
+            background: white !important;
+          }
+          
+          .leaflet-popup.custom-boundary-popup .leaflet-popup-content {
+            margin: 0 !important;
+            line-height: 1.5 !important;
+          }
+          
+          .leaflet-popup.custom-boundary-popup .leaflet-popup-tip {
+            background: white !important;
+            border: 1px solid rgba(123, 31, 162, 0.2) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+          }
+
+          .leaflet-popup.custom-boundary-popup .leaflet-popup-close-button {
+            color: #7B1FA2 !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            padding: 8px !important;
+            background: rgba(255, 255, 255, 0.9) !important;
+            border-radius: 50% !important;
+            width: 26px !important;
+            height: 26px !important;
+            text-align: center !important;
+            line-height: 10px !important;
+            right: 8px !important;
+            top: 8px !important;
+          }
+
+          .leaflet-popup.custom-boundary-popup .leaflet-popup-close-button:hover {
+            background: rgba(123, 31, 162, 0.1) !important;
+            color: #4A148C !important;
+          }
+
+          /* Enhanced Task Marker Popup Styles */
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-content-wrapper {
+            border-radius: 8px !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            padding: 0 !important;
+            background: white !important;
+            max-width: 400px !important;
+            min-width: 320px !important;
+            overflow: hidden !important;
+          }
+          
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-content {
+            margin: 0 !important;
+            line-height: 1.5 !important;
+            width: auto !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          }
+          
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-tip {
+            background: white !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          }
+
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-close-button {
+            color: #ffffff !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            padding: 6px !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            border-radius: 50% !important;
+            width: 28px !important;
+            height: 28px !important;
+            text-align: center !important;
+            line-height: 16px !important;
+            right: 12px !important;
+            top: 12px !important;
+            transition: all 0.3s ease !important;
+            z-index: 1000 !important;
+          }
+
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-close-button:hover {
+            background: rgba(0, 0, 0, 0.5) !important;
+            color: #ffffff !important;
+            transform: scale(1.1) !important;
+          }
+
+          /* Additional fallback styles for all task popups */
+          .leaflet-popup-content-wrapper {
+            border-radius: 8px !important;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            padding: 0 !important;
+            background: white !important;
+          }
+          
+          .leaflet-popup-content {
+            margin: 0 !important;
+            line-height: 1.5 !important;
+            width: auto !important;
+          }
+          
+          .leaflet-popup-tip {
+            background: white !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+          }
+
+          /* Default Enhanced Popup Styles for MapView */
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-content-wrapper {
+            border-radius: 8px !important;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.2) !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            padding: 0 !important;
+            background: white !important;
+            max-width: 400px !important;
+            min-width: 320px !important;
+            overflow: hidden !important;
+          }
+          
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-content {
+            margin: 0 !important;
+            line-height: 1.5 !important;
+            width: auto !important;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif !important;
+          }
+          
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-tip {
+            background: white !important;
+            border: 1px solid rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+          }
+
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-close-button {
+            color: #ffffff !important;
+            font-size: 18px !important;
+            font-weight: bold !important;
+            padding: 6px !important;
+            background: rgba(0, 0, 0, 0.3) !important;
+            border-radius: 50% !important;
+            width: 28px !important;
+            height: 28px !important;
+            text-align: center !important;
+            line-height: 16px !important;
+            right: 12px !important;
+            top: 12px !important;
+            transition: all 0.3s ease !important;
+            z-index: 1000 !important;
+          }
+
+          .leaflet-popup.enhanced-task-popup .leaflet-popup-close-button:hover {
+            background: rgba(0, 0, 0, 0.5) !important;
+            color: #ffffff !important;
+            transform: scale(1.1) !important;
           }
         </style>
       `;
@@ -278,10 +734,11 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
             onEachFeature: function(feature, layer) {
               // Add popup with feature properties if needed
               if (feature.properties && boundaryStyle.showPopup !== false) {
-                const popupContent = Object.keys(feature.properties)
-                  .map(key => `<b>${key}:</b> ${feature.properties[key]}`)
-                  .join('<br/>');
-                layer.bindPopup(popupContent);
+                const popupContent = createCustomBoundaryPopup(feature.properties);
+                layer.bindPopup(popupContent, {
+                  maxWidth: 350,
+                  className: 'custom-boundary-popup'
+                });
               }
               
               // Add hover effects if enabled
@@ -332,19 +789,24 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
         const lng = Number(v.lng);
         const time = v && v.time ? String(new Date(v.time).toGMTString()) : "Unknown time";
 
-        // Use custom popup content if provided, otherwise use default
+        // Use custom popup content if provided, otherwise use enhanced popup
         let popupContent;
         if (customPopupContent && typeof customPopupContent === 'function') {
           popupContent = customPopupContent(v, i);
         } else {
-          popupContent = `<b>Visit ${i + 1}</b><br/>Time: ${time}<br/> Bednets Delivered: ${v.quantity || "N/A"} <br/> `;
+          // Use enhanced popup as default
+          popupContent = createEnhancedTaskPopup(v, i);
         }
 
         // Use custom marker style if provided, otherwise use default
         const markerIcon = customMarkerStyle ? createCustomMarker(customMarkerStyle) : createCustomMarker();
         
         L.marker([lat, lng], { icon: markerIcon })
-          .bindPopup(popupContent)
+          .bindPopup(popupContent, {
+            maxWidth: 400,
+            minWidth: 320,
+            className: customPopupContent ? 'custom-task-popup' : 'enhanced-task-popup'
+          })
           .addTo(layerGroup);
       });
 
