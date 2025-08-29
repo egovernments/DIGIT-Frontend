@@ -603,22 +603,32 @@ const CampaignDetails = () => {
               />,
             ]
             : [
-              
-              Digit.UserService.hasAccess("CAMPAIGN_ADMIN")&&<Button
-              icon="CloudDownload"
-              label={t("HCM_CAMPAIGN_MANAGE")}  
-              onClick={() =>   history.push(`/${window.contextPath}/employee/hcmworkbench/campaign-view?tenantId=${campaignData?.tenantId}&projectId=${campaignData?.projectId}`)}
-              type="button"
-              variation="secondary"
-            />,
+              ...(!Digit.UserService.hasAccess("CAMPAIGN_ADMIN") ? [
+                <Button
+                  key="campaign-manage"
+                  icon="CloudDownload"
+                  label={t("HCM_CAMPAIGN_MANAGE")}  
+                  onClick={() => history.push(`/${window.contextPath}/employee/hcmworkbench/campaign-view?tenantId=${campaignData?.tenantId}&projectId=${campaignData?.projectId}`)}
+                  type="button"
+                  variation="secondary"
+                />
+              ] : []),
               <Button
+                key="download-credentials"
                 icon="CloudDownload"
                 label={t("HCM_DOWNLOAD_CREDENTIALS")}
                 onClick={() => onDownloadCredentails(campaignData)}
                 type="button"
                 variation="primary"
               />,
-              <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
+              <Button 
+                key="download-app"
+                icon="CloudDownload" 
+                label={t("HCM_DOWNLOAD_APP")} 
+                onClick={onDownloadApp} 
+                type="button" 
+                variation="primary" 
+              />,
             ]
         }
         maxActionFieldsAllowed={5}

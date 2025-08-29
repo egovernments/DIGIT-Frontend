@@ -9,7 +9,6 @@ const SERVICE_REQUEST_CONTEXT_PATH = window?.globalConfigs?.getConfig("SERVICE_R
 
 const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
 const ChecklistComponent = (props) => {
-  
   const { t } = useTranslation();
   const url = getProjectServiceUrl();
   const [page, setPage] = useState(0);
@@ -20,14 +19,14 @@ const ChecklistComponent = (props) => {
   // Close dropdown when clicking outside
   React.useEffect(() => {
     const handleClickOutside = (event) => {
-      if (isSelectOpen && !event.target.closest('.page-size-select')) {
+      if (isSelectOpen && !event.target.closest(".page-size-select")) {
         setIsSelectOpen(false);
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, [isSelectOpen]);
   // Use projectName from props
@@ -56,19 +55,58 @@ const ChecklistComponent = (props) => {
     body: {
       MdmsCriteria: {
         tenantId,
-        schemaCode: `${CONSOLE_MDMS_MODULENAME}.ChecklistTemplates`,
-        isActive: true,
+        moduleDetails: [
+          {
+            moduleName: "HCM-ADMIN-CONSOLE",
+            masterDetails: [
+              {
+                name: "rolesForChecklist",
+                filter: "[?(@.code)].code",
+              },
+            ],
+          },
+          {
+            moduleName: "HCM",
+            masterDetails: [
+              {
+                name: "CHECKLIST_TYPES",
+                filter: "[?(@.type=='DEFAULT')].code",
+              },
+            ],
+          },
+        ],
       },
     },
   };
-
   const { data: roleData, isLoading: isRolesLoading, error: rolesError } = Digit.Hooks.useCustomAPIHook(reqRoles);
 
-  // Generate service codes based on campaign, checklist, and role data
+  // Generate service codes in name.type.role format based on roleData structure
   const serviceCodes = useMemo(() => {
-    return checklistCodesData?.mdms?.flatMap(checklist =>
-      roleData?.mdms?.map(role => `${campaignName}.${checklist?.data?.code}.${role?.data?.code}`)
-    ).filter(Boolean) || [];
+    if (!roleData?.MdmsRes || !checklistCodesData?.mdms) {
+      return [];
+    }
+
+    const codes = [];
+
+    // Extract data from roleData structure: "HCM-ADMIN-CONSOLE" -> "rolesForChecklist" and "HCM" -> "CHECKLIST_TYPES"
+    const rolesForChecklist = roleData?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.rolesForChecklist || [];
+    const checklistTypes = roleData?.MdmsRes?.HCM?.CHECKLIST_TYPES || [];
+
+    // Generate codes in name.type.role format
+    checklistTypes.forEach((checklistType) => {
+      rolesForChecklist.forEach((role) => {
+        const checklistCode = checklistType?.code || checklistType;
+        const roleCode = role?.code || role;
+
+        if (campaignName && checklistCode && roleCode) {
+          // Format: name.type.role
+          const generatedCode = `${campaignName}.${checklistCode}.${roleCode}`;
+          codes.push(generatedCode);
+        }
+      });
+    });
+
+    return codes;
   }, [checklistCodesData, roleData, campaignName]);
 
   // Fetch service definitions based on generated service codes
@@ -82,18 +120,32 @@ const ChecklistComponent = (props) => {
       includeDeleted: true,
     },
     config: {
-      enabled: !!serviceCodes.length && !!campaignName && !!checklistCodesData?.mdms?.length && !!roleData?.mdms?.length,
+      enabled: (() => {
+        const hasServiceCodes = serviceCodes.length > 0;
+        const hasCampaignName = !!campaignName;
+        const hasRoleData = !!roleData?.MdmsRes;
+        const hasChecklistData = !!checklistCodesData?.mdms?.length;
+
+        const shouldFetch = hasServiceCodes && hasCampaignName && hasRoleData && hasChecklistData;
+
+        return shouldFetch;
+      })(),
     },
   };
 
   // Prepare request to fetch service definitions for cloning
-  const { isLoading: isServiceDefsLoading, data: serviceDefinitionsData } = Digit.Hooks.useCustomAPIHook(serviceDefinitionFetchReq);
+  const { isLoading: isServiceDefsLoading, data: serviceDefinitionsData, error: serviceDefError } = Digit.Hooks.useCustomAPIHook(
+    serviceDefinitionFetchReq
+  );
 
   // Transform service definitions data for display
   const transformedData = useMemo(() => {
-    if (!serviceDefinitionsData?.ServiceDefinitions) return [];
-    
-    return serviceDefinitionsData.ServiceDefinitions.map((serviceDef, index) => ({
+    if (!serviceDefinitionsData?.ServiceDefinitions) {
+      console.log("⚠️ No service definitions to transform");
+      return [];
+    }
+
+    const transformed = serviceDefinitionsData.ServiceDefinitions.map((serviceDef, index) => ({
       id: serviceDef.code || `service-${index}`,
       code: serviceDef.code || "NA",
       description: serviceDef.description || "NA",
@@ -102,14 +154,12 @@ const ChecklistComponent = (props) => {
       createdDate: serviceDef.auditDetails?.createdTime ? new Date(serviceDef.auditDetails.createdTime).toISOString() : "NA",
       createdBy: serviceDef.auditDetails?.createdBy || "NA",
       lastModified: serviceDef.auditDetails?.lastModifiedTime ? new Date(serviceDef.auditDetails.lastModifiedTime).toISOString() : "NA",
-      latitude: "NA", // Service definitions don't have location data
-      longitude: "NA",
-      locationAccuracy: "NA",
+      lastModifiedBy: serviceDef.auditDetails?.lastModifiedBy || "NA",
     }));
+    return transformed;
   }, [serviceDefinitionsData]);
 
   const isLoading = isChecklistCodesLoading || isRolesLoading || isServiceDefsLoading;
-
 
   const columns = [
     { label: t("HCM_ADMIN_CONSOLE_SERVICE_CODE"), key: "code" },
@@ -128,11 +178,11 @@ const ChecklistComponent = (props) => {
         return "NA";
       }
       return (
-        <UserDetails 
+        <UserDetails
           uuid={userId}
-          style={{ 
+          style={{
             fontSize: "inherit",
-            color: "inherit"
+            color: "inherit",
           }}
           iconSize="14px"
           tooltipPosition="top"
@@ -141,42 +191,51 @@ const ChecklistComponent = (props) => {
     },
   };
 
-
   if (isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("CHECKLIST")}</Header>
-
       </div>
-      {transformedData?.length === 0 && (
-        <h1>{t("NO_CHECKLIST")}</h1>
+
+      {transformedData?.length === 0 && !isLoading && (
+        <div>
+          <h1>{t("NO_CHECKLIST")}</h1>
+          {serviceCodes.length > 0 && (
+            <div style={{ padding: "16px", backgroundColor: "#fff3cd", border: "1px solid #ffeaa7", borderRadius: "6px", marginTop: "16px" }}>
+              <p style={{ margin: 0, color: "#856404" }}>
+                <strong>ℹ️ Generated {serviceCodes.length} service codes but no service definitions found.</strong>
+                <br />
+                Service codes: {serviceCodes.slice(0, 5).join(", ")}
+                {serviceCodes.length > 5 ? "..." : ""}
+              </p>
+            </div>
+          )}
+        </div>
       )}
       {transformedData?.length > 0 && (
-        
-          <ReusableTableWrapper
-            data={transformedData}
-            columns={columns}
-            isLoading={false}
-            noDataMessage="NO_CHECKLIST"
-            pagination={true}
-            paginationServer={true}
-            paginationTotalRows={transformedData?.length || 0}
-            paginationPerPage={pageSize}
-            paginationRowsPerPageOptions={[10, 20, 50, 100]}
-            onChangePage={(newPage) => setPage(newPage - 1)}
-            onChangeRowsPerPage={(newPerPage) => {
-              setPageSize(newPerPage);
-              setPage(0);
-            }}
-            className=""
-            headerClassName=""
-            customCellRenderer={customCellRenderer}
-          />
-        
+        <ReusableTableWrapper
+          data={transformedData}
+          columns={columns}
+          isLoading={false}
+          noDataMessage="NO_CHECKLIST"
+          pagination={true}
+          paginationServer={true}
+          paginationTotalRows={transformedData?.length || 0}
+          paginationPerPage={pageSize}
+          paginationRowsPerPageOptions={[10, 20, 50, 100]}
+          onChangePage={(newPage) => setPage(newPage - 1)}
+          onChangeRowsPerPage={(newPerPage) => {
+            setPageSize(newPerPage);
+            setPage(0);
+          }}
+          className=""
+          headerClassName=""
+          customCellRenderer={customCellRenderer}
+        />
       )}
     </div>
   );

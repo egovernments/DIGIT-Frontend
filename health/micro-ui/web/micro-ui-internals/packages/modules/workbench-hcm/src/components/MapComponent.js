@@ -325,7 +325,6 @@ const MapComponent = (props) => {
         case 'FETCH_START':
           setIsLoading(true);
           setLoadingProgress({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
-          console.log('Starting data fetch for:', payload.projectName);
           break;
         case 'FETCH_PROGRESS':
           setLoadingProgress(payload);
@@ -399,7 +398,6 @@ const MapComponent = (props) => {
   const fetchDataWithWorker = useCallback((projectName) => {
     if (!projectName || !isVisible || hasDataBeenFetched) return;
     
-    console.log('Fetching data for visible component:', projectName);
     
     // First authenticate if needed
     if (!isAuthenticated) {

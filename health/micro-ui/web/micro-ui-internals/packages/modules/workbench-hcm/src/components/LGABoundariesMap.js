@@ -27,13 +27,7 @@ const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopu
         const data = await response.json();
         setBoundaryData(data);
         
-        // Log some info about the loaded data
-        console.log("LGA Boundaries loaded:", {
-          type: data.type,
-          featuresCount: data.features?.length,
-          firstFeatureProperties: data.features?.[0]?.properties
-        });
-        
+
       } catch (err) {
         console.error("Error loading LGA boundaries:", err);
         setError(err.message);

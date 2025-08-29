@@ -32,13 +32,6 @@ const WardBoundariesMap = ({ visits = [], showConnectingLines = false, customPop
         const data = await response.json();
         setBoundaryData(data);
         
-        // Log some info about the loaded data
-        console.log("Ward Boundaries loaded:", {
-          type: data.type,
-          featuresCount: data.features?.length,
-          firstFeatureProperties: data.features?.[0]?.properties
-        });
-        
       } catch (err) {
         console.error("Error loading Ward boundaries:", err);
         setError(err.message);
