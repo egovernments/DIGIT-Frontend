@@ -313,9 +313,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
     [
-      { name: fieldMasterName, limit: 100 },
-      { name: "FieldPropertiesPanelConfig", limit: 100 },
-      { name: "DETAILS_RENDERER_CONFIG", limit: 100 },
+      { name: fieldMasterName, limit: 1000 },
+      { name: "FieldPropertiesPanelConfig", limit: 1000 },
+      { name: "DETAILS_RENDERER_CONFIG", limit: 1000 },
     ],
     {
       cacheTime: Infinity,

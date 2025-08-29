@@ -90,7 +90,7 @@ const AppConfigurationParentRedesign = ({
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: fieldTypeMaster, limit: 100 }],
+    [{ name: fieldTypeMaster, limit: 1000 }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,

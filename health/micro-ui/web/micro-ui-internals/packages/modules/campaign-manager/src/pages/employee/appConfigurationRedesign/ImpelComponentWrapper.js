@@ -14,7 +14,7 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: fieldMasterName, limit: 100 }],
+    [{ name: fieldMasterName, limit: 1000 }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,

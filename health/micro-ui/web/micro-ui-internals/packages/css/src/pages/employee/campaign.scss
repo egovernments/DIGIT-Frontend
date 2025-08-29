@@ -326,6 +326,9 @@
   box-shadow: none;
   border-style: none;
   padding: 1rem;
+  .digit-card-header {
+    font-size: 2rem;
+  }
 }
 .mobile-bezel-outerWrapper {
   transform: scale(0.8);
