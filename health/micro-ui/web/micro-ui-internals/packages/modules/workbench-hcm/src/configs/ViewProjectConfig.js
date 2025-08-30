@@ -175,6 +175,18 @@ export const data = (project) => {
             props: { projectId: project?.Project?.[0]?.id },
           },
         ],
+      },
+      {
+        navigationKey: "card10",
+        sections: [
+          {
+            navigationKey: "card10",
+
+            type: "COMPONENT",
+            component: "DeliveryCyclesComponent",
+            props: { projectId: project?.Project?.[0]?.id },
+          },
+        ],
       }
     ],
     apiResponse: {},
@@ -227,6 +239,11 @@ export const data = (project) => {
           name: "card9",
           active: true,
           code: "MAP_VIEW",
+        },
+        {
+          name: "card10",
+          active: true,
+          code: "DELIVERY_CYCLES",
         },
         
         

@@ -20,6 +20,7 @@ import MapViewExample from "./components/MapViewExample";
 import StockComponent from "./components/StockComponent";
 import MapComponent from "./components/MapComponent";
 import ProjectRedirectPage from "./pages/employee/ProjectRedirectPage";
+import DeliveryCyclesComponent from "./components/DeliveryCyclesComponent";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
@@ -59,6 +60,7 @@ const componentsToRegister = {
   StockComponent,
   MapComponent,
   ProjectRedirectPage,
+  DeliveryCyclesComponent,
 };
 
 const overrideHooks = () => {
