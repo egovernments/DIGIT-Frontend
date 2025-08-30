@@ -1,5 +1,8 @@
 const mdmsV1Path = window?.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
 const mdmsV2Path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+const boundarySearchPath = window?.globalConfigs?.getConfig("BOUNDARY_CONTEXT") || "boundary-service/boundary-relationships/_search?";
+const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "hierarchyType=ADMIN";
+
 const Urls = {
   MDMS_V2:`/${mdmsV2Path}/v1/_search`,
   MDMS: `/${mdmsV1Path}/v1/_search`,
@@ -7,9 +10,9 @@ const Urls = {
   WorkFlowProcessSearch: `/egov-workflow-v2/egov-wf/process/_search`,
   localization: `/localization/messages/v1/_search`,
   location: {
-    localities: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=ADMIN&boundaryType=Locality`,
-    wards: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=ADMIN&boundaryType=Ward`,
-    revenue_localities: `/egov-location/location/v11/boundarys/_search?hierarchyTypeCode=REVENUE&boundaryType=Locality`,
+    localities: `/${boundarySearchPath}includeChildren=true&${hierarchyType}&boundaryType=locality`,
+    wards: `/${boundarySearchPath}includeChildren=true&${hierarchyType}&boundaryType=Ward&includeParents=true`,
+    revenue_localities: `/boundary-service/boundary-relationships/_search?hierarchyType=REVENUE&boundaryType=locality`,
   },
 
   pgr_search: `/pgr-services/v2/request/_search`,
