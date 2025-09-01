@@ -176,18 +176,18 @@ export const data = (project) => {
           },
         ],
       },
-      {
-        navigationKey: "card10",
-        sections: [
-          {
-            navigationKey: "card10",
+      // {
+      //   navigationKey: "card10",
+      //   sections: [
+      //     {
+      //       navigationKey: "card10",
 
-            type: "COMPONENT",
-            component: "DeliveryCyclesComponent",
-            props: { projectId: project?.Project?.[0]?.id },
-          },
-        ],
-      }
+      //       type: "COMPONENT",
+      //       component: "DeliveryCyclesComponent",
+      //       props: { projectId: project?.Project?.[0]?.id },
+      //     },
+      //   ],
+      // }
     ],
     apiResponse: {},
     additionalDetails: {},
@@ -240,11 +240,11 @@ export const data = (project) => {
           active: true,
           code: "MAP_VIEW",
         },
-        {
-          name: "card10",
-          active: true,
-          code: "DELIVERY_CYCLES",
-        },
+        // {
+        //   name: "card10",
+        //   active: true,
+        //   code: "DELIVERY_CYCLES",
+        // },
         
         
       ],
