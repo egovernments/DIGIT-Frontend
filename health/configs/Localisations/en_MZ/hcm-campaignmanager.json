@@ -1,0 +1,182 @@
+[
+        {
+            "code": "SEARCH_COMPLAINTS",
+            "message": "Search complaints",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SEARCH_COMPLAINTS_DESC",
+            "message": "Search complaints involve gathering feedback or concerns from users.",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "RAINMAKER-PGR.ServiceDefs",
+            "message": "Complaints type",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "HCM.REFERRAL_REASONS",
+            "message": "Referral reasons",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+                 {
+            "code": "NotEnoughStock",
+            "message": "Not Enough Stock",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "SyncNotWorking",
+            "message": "Sync Not Working",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "TechnicalIssues",
+            "message": "Technical Issues",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "UserAccountIssues",
+            "message": "User Account Issues",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "DataIssues",
+            "message": "Data Issues",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "SecurityIssues",
+            "message": "Security Issues",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "PerformanceIssue",
+            "message": "Performance Issues",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "Other",
+            "message": "Other",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "HCM.SEARCH_HOUSEHOLD_FILTERS",
+            "message": "Household Filters",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "HFREFERALFLOW",
+            "message": "Referral",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "HCM_MODULE_DESCRIPTION_BEDNETS_HFREFERALFLOW",
+            "message": "Referral is the process of directing a person, client, or case to another individual, professional, or organization for further assistance, services, or expertise.",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "FIELD_DRAWER_LABEL_DEPENDENCYFIELDWRAPPER",
+            "message": "Dependent field",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "FIELD_DRAWER_LABEL_PREFIXTEXT",
+            "message": "Prefix",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "FIELD_DRAWER_LABEL_SUFFIXTEXT",
+            "message": "Suffix",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "FIELD_DRAWER_LABEL_FILTER",
+            "message": "Filter",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "YES",
+            "message": "Yes",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "NO",
+            "message": "No",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "FIELD_DRAWER_LABEL_PROXIMITYRADIUS",
+            "message": "Proximity radius (in meter)",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "FIELD_DRAWER_LABEL_ISGS1BARCODE",
+            "message": "Is GS1 barcode",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "FIELD_DRAWER_LABEL_SCANLIMIT",
+            "message": "Maximum number of scans",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "APPCONFIG_NUMBER_SCAN_LIMIT",
+            "message": "Scan limit",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+          {
+            "code": "CAMPAIGN_CYCLE_CONFIGURE_HEADING_BEDNETS",
+            "message": "Configure cycles and deliveries for Bednets type campaign.",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+             {  "code": "CAMPAIGN_DELIVERY_TAB_SUB_TEXT_BEDNETS",
+            "message": "Configure delivery rules for bednets type campaign.",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "CAMPAIGN_PROJECT_BEDNETS",
+            "message": "Bednets type campaign",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "FIELD_DRAWER_LABEL_SCANNERREGEXPATTERN",
+            "message": "Scanner regex pattern",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "EDIT_DISPLAY_LOGIC",
+            "message": "Edit Display Logic",
+            "module": "hcm-campaignmanager",
+            "locale": "en_MZ"
+        }
+        
+    ]

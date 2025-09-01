@@ -1,0 +1,194 @@
+[
+        {
+            "id": "dce01ca2-b43f-42d5-803c-df36a4beee68",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Not Enough Stock",
+            "data": {
+                "code": "NotEnoughStock",
+                "name": "Not Enough Stock",
+                "order": 1,
+                "active": true,
+                "keywords": "not, enough, stock",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "WAREHOUSE",
+                "serviceCode": "NotEnoughStock"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441742020,
+                "lastModifiedTime": 1755494495471
+            }
+        },
+        {
+            "id": "784c570f-4890-4060-8e7c-3a68ffefa20b",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Sync Not Working",
+            "data": {
+                "code": "SyncNotWorking",
+                "name": "Sync Not Working",
+                "order": 1,
+                "active": true,
+                "keywords": "sync, not, working",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "TECH",
+                "serviceCode": "SyncNotWorking"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441728126,
+                "lastModifiedTime": 1755494535792
+            }
+        },
+        {
+            "id": "00a1a927-9f24-4765-8ddf-38a9ff1bfe36",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Technical Issues",
+            "data": {
+                "code": "TechnicalIssues",
+                "name": "Technical Issues",
+                "order": 1,
+                "active": true,
+                "keywords": "technical, tech",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "eGov",
+                "serviceCode": "TechnicalIssues"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441716590,
+                "lastModifiedTime": 1755494585759
+            }
+        },
+        {
+            "id": "901094be-f87b-49e4-b5e3-ec42b2e16031",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "User Account Issues",
+            "data": {
+                "code": "UserAccountIssues",
+                "name": "User Account Issues",
+                "order": 1,
+                "active": true,
+                "keywords": "user, account",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "eGov",
+                "serviceCode": "UserAccountIssues"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441706826,
+                "lastModifiedTime": 1755494632495
+            }
+        },
+        {
+            "id": "8ddb35ac-facd-4f00-8e52-e555ff803989",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Data Issues",
+            "data": {
+                "code": "DataIssues",
+                "name": "Data Issues",
+                "order": 1,
+                "active": true,
+                "keywords": "data",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "eGov",
+                "serviceCode": "DataIssues"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441695336,
+                "lastModifiedTime": 1755494667301
+            }
+        },
+        {
+            "id": "d3bd3bcb-a3c7-4d0d-81bb-cb0e2cf1aefe",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Security Issues",
+            "data": {
+                "code": "SecurityIssues",
+                "name": "Security Issues",
+                "order": 1,
+                "active": true,
+                "keywords": "security",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "eGov",
+                "serviceCode": "SecurityIssues"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441685368,
+                "lastModifiedTime": 1755494697224
+            }
+        },
+        {
+            "id": "084af96d-6e47-41a8-9b15-db07f2ca69c7",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Performance Issue",
+            "data": {
+                "code": "PerformanceIssue",
+                "name": "Performance Issue",
+                "order": 1,
+                "active": true,
+                "keywords": "performance",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "eGov",
+                "serviceCode": "PerformanceIssue"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441674755,
+                "lastModifiedTime": 1755494742251
+            }
+        },
+        {
+            "id": "c286a639-f3b2-4c67-b6e7-d5f58399cef0",
+            "tenantId": "mz",
+            "schemaCode": "RAINMAKER-PGR.ServiceDefs",
+            "uniqueIdentifier": "Other",
+            "data": {
+                "code": "Other",
+                "name": "Other",
+                "order": 1,
+                "active": true,
+                "keywords": "other",
+                "menuPath": "Sync",
+                "slaHours": 336,
+                "department": "OTHER",
+                "serviceCode": "Other"
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "db842ca9-25c5-4419-a72f-459443d38feb",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1720441663454,
+                "lastModifiedTime": 1755494778305
+            }
+        }
+    ]

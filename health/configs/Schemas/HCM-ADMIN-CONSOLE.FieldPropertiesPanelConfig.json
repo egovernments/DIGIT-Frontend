@@ -1,0 +1,107 @@
+{
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+        "description": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+        "definition":{
+                "type": "object",
+                "title": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "tab",
+                    "label",
+                    "order",
+                    "fieldType"
+                ],
+                "x-unique": [
+                    "label"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string"
+                    },
+                    "tab": {
+                        "type": "string"
+                    },
+                    "label": {
+                        "type": "string"
+                    },
+                    "order": {
+                        "type": "number"
+                    },
+                    "bindTo": {
+                        "type": "string"
+                    },
+                    "tabOrder": {
+                        "type": "number"
+                    },
+                    "fieldType": {
+                        "type": "string"
+                    },
+                    "defaultValue": {
+                        "type": "boolean"
+                    },
+                    "conditionalField": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "type",
+                                "bindTo"
+                            ],
+                            "properties": {
+                                "type": {
+                                    "type": "string"
+                                },
+                                "label": {
+                                    "type": "string"
+                                },
+                                "bindTo": {
+                                    "type": "string"
+                                },
+                                "options": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "required": [
+                                            "code",
+                                            "pattern",
+                                            "description"
+                                        ],
+                                        "properties": {
+                                            "code": {
+                                                "type": "string"
+                                            },
+                                            "pattern": {
+                                                "type": "string"
+                                            },
+                                            "description": {
+                                                "type": "string"
+                                            }
+                                        }
+                                    }
+                                },
+                                "jsonPath": {
+                                    "type": "string"
+                                },
+                                "condition": {
+                                    "type": "boolean"
+                                }
+                            }
+                        }
+                    },
+                    "showFieldOnToggle": {
+                        "type": "boolean"
+                    },
+                    "disableForRequired": {
+                        "type": "boolean"
+                    },
+                    "visibilityEnabledFor": {
+                        "type": "array",
+                        "items": {
+                            "type": "string"
+                        }
+                    }
+                }
+            },
+        "isActive": true
+    }

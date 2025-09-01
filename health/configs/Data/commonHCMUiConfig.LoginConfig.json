@@ -1,0 +1,95 @@
+{
+                "texts": {
+                    "header": "CORE_COMMON_LOGIN",
+                    "submitButtonLabel": "CORE_COMMON_CONTINUE",
+                    "secondaryButtonLabel": "CORE_COMMON_FORGOT_PASSWORD"
+                },
+                "title": "login",
+                "inputs": [
+                    {
+                        "key": "username",
+                        "type": "text",
+                        "label": "CORE_LOGIN_USERNAME",
+                        "populators": {
+                            "name": "username",
+                            "error": "ERR_USERNAME_REQUIRED",
+                            "validation": {
+                                "required": true
+                            }
+                        },
+                        "isMandatory": true
+                    },
+                    {
+                        "key": "password",
+                        "type": "password",
+                        "label": "CORE_LOGIN_PASSWORD",
+                        "populators": {
+                            "name": "password",
+                            "error": "ERR_PASSWORD_REQUIRED",
+                            "validation": {
+                                "required": true
+                            }
+                        },
+                        "isMandatory": true
+                    },
+                    {
+                        "key": "check",
+                        "type": "component",
+                        "disable": false,
+                        "component": "PrivacyComponent",
+                        "populators": {
+                            "name": "check"
+                        },
+                        "customProps": {
+                            "module": "HCM"
+                        },
+                        "isMandatory": true,
+                        "withoutLabel": true
+                    }
+                ],
+                "bannerImages": [
+                    {
+                        "id": 1,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/Pageone.png",
+                        "title": "CORE_HCM_TITLE_ONE",
+                        "description": "CORE_HCM_DESCRIPTION_ONE"
+                    },
+                    {
+                        "id": 2,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/Pagetwo.png",
+                        "title": "CORE_HCM_TITLE_SEVEN",
+                        "description": "CORE_HCM_DESCRIPTION_SEVEN"
+                    },
+                    {
+                        "id": 3,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/Pagethree.png",
+                        "title": "CORE_HCM_TITLE_TWO",
+                        "description": "CORE_HCM_DESCRIPTION_TWO"
+                    },
+                    {
+                        "id": 4,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/pagefour.jpeg",
+                        "title": "CORE_HCM_TITLE_THREE",
+                        "description": "CORE_HCM_DESCRIPTION_THREE"
+                    },
+                    {
+                        "id": 5,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/Pageone.png",
+                        "title": "CORE_HCM_TITLE_FOUR",
+                        "description": "CORE_HCM_DESCRIPTION_FOUR"
+                    },
+                    {
+                        "id": 6,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/pagefive.jpeg",
+                        "title": "CORE_HCM_TITLE_FIVE",
+                        "description": "CORE_HCM_DESCRIPTION_FIVE"
+                    },
+                    {
+                        "id": 7,
+                        "image": "https://egov-dev-assets.s3.ap-south-1.amazonaws.com/hcm/banner/Pagetwo.png",
+                        "title": "CORE_HCM_TITLE_SIX",
+                        "description": "CORE_HCM_DESCRIPTION_SIX"
+                    }
+                ]
+            }
+        }
