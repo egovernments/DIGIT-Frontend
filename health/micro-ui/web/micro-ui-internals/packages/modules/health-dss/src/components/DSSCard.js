@@ -6,7 +6,7 @@ const DSSCard = () => {
   const { t } = useTranslation();
 
   const ROLES = {
-    HEALTH_DSS: ["NATIONAL_SUPERVISOR, DASHBOARD_VIEWER"],
+    HEALTH_DSS: ["NATIONAL_SUPERVISOR", "DASHBOARD_VIEWER"],
   };
 
   const generateLink = (labelKey, pathSuffix) => {
