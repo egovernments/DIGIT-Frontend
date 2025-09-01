@@ -3,6 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-components";
 import LGABoundariesMap from "./LGABoundariesMap";
 import WardBoundariesMap from "./WardBoundariesMap";
+import SettlementBoundariesMap from "./SettlementBoundariesMap";
 
 /**
  * Wrapper component that allows toggling between LGA and Ward boundaries with pagination
@@ -20,11 +21,11 @@ const BoundariesMapWrapper = ({
   customMarkerStyle = null
 }) => {
   const { t } = useTranslation();
-  const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA" or "WARD"
+  const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA", "WARD", or "SETTLEMENT"
   const [isSelectOpen, setIsSelectOpen] = useState(false);
 
-  const toggleBoundaryType = () => {
-    setBoundaryType(prev => prev === "LGA" ? "WARD" : "LGA");
+  const handleBoundaryTypeChange = (type) => {
+    setBoundaryType(type);
   };
 
   // Close dropdown when clicking outside
@@ -62,7 +63,9 @@ const BoundariesMapWrapper = ({
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <h3 style={{ margin: 0, color: '#495057' }}>
-            {boundaryType === "LGA" ? "LGA Boundaries" : "Ward Boundaries"}
+            {boundaryType === "LGA" ? "LGA Boundaries" : 
+             boundaryType === "WARD" ? "Ward Boundaries" : 
+             "Settlement Boundaries"}
           </h3>
           <span style={{ 
             fontSize: '0.9rem', 
@@ -71,57 +74,47 @@ const BoundariesMapWrapper = ({
           }}>
             {boundaryType === "LGA" 
               ? "Showing Local Government Areas" 
-              : "Showing Ward Boundaries"
+              : boundaryType === "WARD"
+              ? "Showing Ward Boundaries"
+              : "Showing Settlement Areas"
             }
           </span>
         </div>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
-          {/* Boundary Toggle Switch */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-            <span style={{ 
-              fontSize: '0.9rem', 
-              color: boundaryType === "LGA" ? '#2E7D32' : '#6c757d',
-              fontWeight: boundaryType === "LGA" ? 'bold' : 'normal'
-            }}>
-              LGA
-            </span>
-            
-            <div 
-              onClick={toggleBoundaryType}
-              style={{
-                width: '50px',
-                height: '24px',
-                backgroundColor: boundaryType === "LGA" ? '#4CAF50' : '#7B1FA2',
-                borderRadius: '12px',
-                position: 'relative',
-                cursor: 'pointer',
-                transition: 'background-color 0.3s ease',
-                border: '2px solid transparent'
-              }}
-            >
-              <div
-                style={{
-                  width: '18px',
-                  height: '18px',
-                  backgroundColor: 'white',
-                  borderRadius: '50%',
-                  position: 'absolute',
-                  top: '1px',
-                  left: boundaryType === "LGA" ? '2px' : '28px',
-                  transition: 'left 0.3s ease',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.2)'
+          {/* Boundary Type Radio Buttons */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+            {[
+              { value: "LGA", label: "LGA", color: "#2E7D32" },
+              { value: "WARD", label: "Ward", color: "#7B1FA2" },
+              { value: "SETTLEMENT", label: "Settlement", color: "#AD1457" }
+            ].map(({ value, label, color }) => (
+              <label 
+                key={value}
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '0.5rem',
+                  cursor: 'pointer',
+                  fontSize: '0.9rem',
+                  fontWeight: boundaryType === value ? 'bold' : 'normal',
+                  color: boundaryType === value ? color : '#6c757d'
                 }}
-              />
-            </div>
-            
-            <span style={{ 
-              fontSize: '0.9rem', 
-              color: boundaryType === "WARD" ? '#7B1FA2' : '#6c757d',
-              fontWeight: boundaryType === "WARD" ? 'bold' : 'normal'
-            }}>
-              Ward
-            </span>
+              >
+                <input
+                  type="radio"
+                  name="boundaryType"
+                  value={value}
+                  checked={boundaryType === value}
+                  onChange={(e) => handleBoundaryTypeChange(e.target.value)}
+                  style={{
+                    accentColor: color,
+                    transform: 'scale(1.1)'
+                  }}
+                />
+                {t(label)}
+              </label>
+            ))}
           </div>
 
           {/* Pagination Controls */}
@@ -246,8 +239,15 @@ const BoundariesMapWrapper = ({
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
           />
-        ) : (
+        ) : boundaryType === "WARD" ? (
           <WardBoundariesMap 
+            visits={visits} 
+            showConnectingLines={showConnectingLines} 
+            customPopupContent={customPopupContent}
+            customMarkerStyle={customMarkerStyle}
+          />
+        ) : (
+          <SettlementBoundariesMap 
             visits={visits} 
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}

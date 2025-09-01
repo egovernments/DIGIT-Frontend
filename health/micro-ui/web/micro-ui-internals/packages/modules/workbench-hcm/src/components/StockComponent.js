@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
 
@@ -13,9 +13,30 @@ const StockComponent = (props) => {
   const [pageSize, setPageSize] = useState(10);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
 
+  // Date filter state
+  const [selectedDate, setSelectedDate] = useState("");
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Helper function to get start and end of selected date
+  const getDateRange = (dateString) => {
+    if (!dateString) return {};
+    
+    const date = new Date(dateString);
+    const startOfDay = new Date(date);
+    startOfDay.setHours(0, 0, 0, 0);
+    
+    const endOfDay = new Date(date);
+    endOfDay.setHours(23, 59, 59, 999);
+    
+    return {
+      fromDate: startOfDay.getTime(),
+      toDate: endOfDay.getTime()
+    };
+  };
+
   const requestCriteria = {
     url: `/stock/v1/_search`,
-    changeQueryName: `${props.projectId}-stock-${page}-${pageSize}`,
+    changeQueryName: `${props.projectId}-stock-${page}-${pageSize}-${selectedDate || 'all'}`,
     params: {
       tenantId: tenantId,
       offset: page * pageSize,
@@ -24,6 +45,7 @@ const StockComponent = (props) => {
     body: {
       Stock: {
         referenceId: props.projectId,
+        ...getDateRange(selectedDate),
       },
     },
     config: {
@@ -159,13 +181,86 @@ const StockComponent = (props) => {
 
   const isNextDisabled = Array.isArray(stockData) ? stockData.length < pageSize : true;
 
+  // Date filter handlers
+  const handleDateChange = (event) => {
+    setSelectedDate(event.target.value);
+    setPage(0); // Reset to first page when filter changes
+  };
+
+  const clearDateFilter = () => {
+    setSelectedDate("");
+    setPage(0);
+  };
+
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
     <div className="override-card" style={{ overflow: "auto" }}>
-      <Header className="works-header-view">{t("WBH_STOCK_DETAILS")}</Header>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+        <Header className="works-header-view">{t("WBH_STOCK_DETAILS")}</Header>
+        {/* <Button
+          variation="outline"
+          label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
+          onClick={() => setShowFilters(!showFilters)}
+          style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+        /> */}
+      </div>
+
+      {/* Date Filter Section */}
+      {showFilters && (
+        <div style={{ 
+          padding: "16px", 
+          backgroundColor: "#f5f5f5", 
+          borderRadius: "8px", 
+          marginBottom: "16px",
+          border: "1px solid #e0e0e0"
+        }}>
+          <h4 style={{ marginBottom: "12px", color: "#333" }}>{t("FILTER_BY_DATE")}</h4>
+          
+          <div style={{ 
+            display: "flex", 
+            alignItems: "center",
+            gap: "16px",
+            flexWrap: "wrap"
+          }}>
+            <div style={{ minWidth: "250px" }}>
+              <label style={{ marginBottom: "8px", color: "#555", display: "block" }}>
+                {t("SELECT_DATE")}
+              </label>
+              <input
+                type="date"
+                value={selectedDate}
+                onChange={handleDateChange}
+                style={{
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  width: "100%",
+                  maxWidth: "200px"
+                }}
+              />
+            </div>
+            
+            <div style={{ display: "flex", gap: "12px", alignItems: "flex-end" }}>
+              <Button 
+                variation="secondary"
+                label={t("CLEAR_FILTER")}
+                onClick={clearDateFilter}
+                isDisabled={!selectedDate}
+                style={{ padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
+              />
+              {selectedDate && (
+                <span style={{ color: "#666", fontSize: "14px", alignSelf: "center" }}>
+                  {t("FILTERING_BY")}: {new Date(selectedDate).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
       
       {(!stockData || stockData.length === 0) ? (
         <h1>{t("WBH_NO_STOCK_FOUND")}</h1>

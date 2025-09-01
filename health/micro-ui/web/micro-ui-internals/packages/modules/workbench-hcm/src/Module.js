@@ -16,6 +16,8 @@ import TargetComponent from "./components/TargetComponent";
 import MapView from "./components/MapView";
 import MapWithShapefile from "./components/MapWithShapefile";
 import LGABoundariesMap from "./components/LGABoundariesMap";
+import WardBoundariesMap from "./components/WardBoundariesMap";
+import SettlementBoundariesMap from "./components/SettlementBoundariesMap";
 import MapViewExample from "./components/MapViewExample";
 import StockComponent from "./components/StockComponent";
 import MapComponent from "./components/MapComponent";
@@ -56,6 +58,8 @@ const componentsToRegister = {
   MapView,
   MapWithShapefile,
   LGABoundariesMap,
+  WardBoundariesMap,
+  SettlementBoundariesMap,
   MapViewExample,
   StockComponent,
   MapComponent,

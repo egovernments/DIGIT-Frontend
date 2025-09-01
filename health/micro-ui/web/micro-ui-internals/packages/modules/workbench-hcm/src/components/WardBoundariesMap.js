@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MapView from "./MapView";
+import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 
 /**
  * Component to display Ward Boundaries from S3
@@ -15,7 +16,7 @@ const WardBoundariesMap = ({ visits = [], showConnectingLines = false, customPop
   "https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/geojson/Ward_Boundaries.json";` is a
   commented-out declaration of a constant variable named `WARD_BOUNDARIES_URL` that holds the URL
   pointing to a GeoJSON file containing Ward Boundaries data. */
-  const WARD_BOUNDARIES_URL = "https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/geojson/Ondo_Ward_Boundaries.geojson";
+  const WARD_BOUNDARIES_URL = getGeoJsonUrl("ward")||  "https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/geojson/Ondo_Ward_Boundaries.geojson";
 
   useEffect(() => {
     const fetchBoundaries = async () => {

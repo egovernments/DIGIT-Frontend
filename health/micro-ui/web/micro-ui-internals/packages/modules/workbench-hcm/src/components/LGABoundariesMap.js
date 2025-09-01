@@ -11,7 +11,7 @@ const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopu
 
   // LGA Boundaries GeoJSON URL
   // const LGA_BOUNDARIES_URL = "https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/geojson/LGA_Boundaries.geojson";
-  const LGA_BOUNDARIES_URL = "https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/geojson/Ondo_LGA_Boundaries.geojson";
+  const LGA_BOUNDARIES_URL =  getGeoJsonUrl("lga")|| "https://hcm-demo-assets.s3.ap-south-1.amazonaws.com/geojson/Ondo_LGA_Boundaries.geojson";
   useEffect(() => {
     const fetchBoundaries = async () => {
       try {
