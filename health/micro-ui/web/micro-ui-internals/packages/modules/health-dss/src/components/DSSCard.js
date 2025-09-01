@@ -5,6 +5,10 @@ import { useTranslation } from "react-i18next";
 const DSSCard = () => {
   const { t } = useTranslation();
 
+  const ROLES = {
+    HEALTH_DSS: ["NATIONAL_SUPERVISOR, DASHBOARD_VIEWER"],
+  };
+
   const generateLink = (labelKey, pathSuffix) => {
     return {
       label: t(labelKey),
@@ -15,6 +19,10 @@ const DSSCard = () => {
   let links = [
     generateLink("ACTION_TEST_MY_CAMPAIGNS","my-campaigns"),
   ];
+ 
+  if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
+    return null;
+  }
 
   const propsForModuleCard = {
     Icon: "Dashboard",
