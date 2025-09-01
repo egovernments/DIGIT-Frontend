@@ -4,10 +4,7 @@ run-name: Build ${{ github.event.inputs.pipeline_name || 'workbench-ui' }}
 on:
   push:
     branches:
-      - nabeelmd-eGov-patch-1
-  pull_request:
-    branches:
-      - nabeelmd-eGov-patch-1
+      - console
   workflow_dispatch:
     inputs:
       pipeline_name:
