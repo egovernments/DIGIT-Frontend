@@ -1,0 +1,22 @@
+ {
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.AppLink",
+        "description": "HCM-ADMIN-CONSOLE.AppLink",
+        "definition": {
+                "type": "object",
+                "title": "Generated schema for Root",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "appLink"
+                ],
+                "x-unique": [
+                    "appLink"
+                ],
+                "properties": {
+                    "appLink": {
+                        "type": "string"
+                    }
+                }
+            },
+        "isActive": true
+    }

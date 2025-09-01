@@ -1,0 +1,9 @@
+[
+  {
+    "projectType": "Bednet",
+    "allowedModule": [
+      "DELIVERYFLOW",
+      "REGISTRATIONFLOW"
+    ]
+  }
+]

@@ -1,0 +1,72 @@
+:{
+        "tenantId": "{{tenantId}}",
+        "code": "HCM-ADMIN-CONSOLE.FieldTypeMappingConfig",
+        "description": "HCM-ADMIN-CONSOLE.FieldTypeMappingConfig",
+        "definition": {
+                "type": "object",
+                "title": "HCM-ADMIN-CONSOLE.FieldTypeMappingConfig",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "type",
+                    "metadata",
+                    "fieldType",
+                    "attributeToRename"
+                ],
+                "x-unique": [
+                    "type"
+                ],
+                "properties": {
+                    "type": {
+                        "type": "string"
+                    },
+                    "metadata": {
+                        "type": "object",
+                        "required": [
+                            "type",
+                            "format"
+                        ],
+                        "properties": {
+                            "type": {
+                                "type": "string"
+                            },
+                            "format": {
+                                "type": "string"
+                            }
+                        }
+                    },
+                    "fieldType": {
+                        "type": "string"
+                    },
+                    "attributeToRename": {
+                        "type": "object",
+                        "properties": {
+                            "endDate": {
+                                "type": "string"
+                            },
+                            "helpText": {
+                                "type": "string"
+                            },
+                            "maxLength": {
+                                "type": "string"
+                            },
+                            "minLength": {
+                                "type": "string"
+                            },
+                            "startDate": {
+                                "type": "string"
+                            },
+                            "schemaCode": {
+                                "type": "string"
+                            },
+                            "dropDownOptions": {
+                                "type": "string"
+                            },
+                            "appAdministrativeArea": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                }
+            },
+        "isActive": true
+    }

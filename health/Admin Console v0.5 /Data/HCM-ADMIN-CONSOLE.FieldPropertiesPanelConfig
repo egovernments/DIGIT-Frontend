@@ -1,0 +1,1188 @@
+ [
+        {
+            "id": "454b29b4-0e09-46a7-b450-2f40c9b2011d",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "ScannerRegexPattern",
+            "data": {
+                "id": "scannerRegex",
+                "tab": "validation",
+                "label": "ScannerRegexPattern",
+                "order": 2,
+                "bindTo": "toArray.pattern",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_CUSTOM_PATTERN",
+                        "bindTo": "toArray.pattern"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.pattern.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "scanner"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1756449251876,
+                "lastModifiedTime": 1756449251876
+            }
+        },
+        {
+            "id": "2be1a04d-624c-4f68-accb-65994c9f9539",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "isGS1Barcode",
+            "data": {
+                "tab": "validation",
+                "label": "isGS1Barcode",
+                "order": 1,
+                "bindTo": "toArray.scannerType",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "scanner"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756199170588,
+                "lastModifiedTime": 1756199170588
+            }
+        },
+        {
+            "id": "26cc93bc-6231-4c79-8d66-6cc147aac5c1",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "scanLimit",
+            "data": {
+                "tab": "validation",
+                "label": "scanLimit",
+                "order": 5,
+                "bindTo": "toArray.scanLimit",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_NUMBER_SCAN_LIMIT",
+                        "bindTo": "toArray.scanLimit",
+                        "options": [],
+                        "validation": {
+                            "pattern": "^(0|[1-9]\\d*)$"
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.scanLimit.message",
+                        "options": []
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "scanner"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756199157537,
+                "lastModifiedTime": 1756199157537
+            }
+        },
+        {
+            "id": "c4e35bb1-f29c-4a00-aeed-244371af102d",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "proximityRadius",
+            "data": {
+                "tab": "validation",
+                "label": "proximityRadius",
+                "order": 2,
+                "bindTo": "toArray.proximityRadius",
+                "tabOrder": 2,
+                "fieldType": "number",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "searchByProximity"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1756199144737,
+                "lastModifiedTime": 1756386692622
+            }
+        },
+        {
+            "id": "c9c5c11c-acd0-4eea-bb28-f51d862706fb",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "prefixText",
+            "data": {
+                "tab": "content",
+                "label": "prefixText",
+                "order": 4,
+                "bindTo": "prefixText",
+                "tabOrder": 1,
+                "fieldType": "text",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "mobileNumber"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756199122720,
+                "lastModifiedTime": 1756201804136
+            }
+        },
+        {
+            "id": "38dda350-21a2-4833-9b04-2d0174945f50",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "suffixText",
+            "data": {
+                "tab": "content",
+                "label": "suffixText",
+                "order": 5,
+                "bindTo": "suffixText",
+                "tabOrder": 1,
+                "fieldType": "text",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "mobileNumber"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756199110032,
+                "lastModifiedTime": 1756201831829
+            }
+        },
+        {
+            "id": "31cd2496-9ad2-41ee-acc1-df6abe3d6e93",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "filter",
+            "data": {
+                "tab": "validation",
+                "label": "filter",
+                "order": 7,
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "filters",
+                        "label": "APPCONFIG_SELECT_SCHEMA",
+                        "bindTo": "enums",
+                        "jsonPath": "enums",
+                        "condition": true,
+                        "mdmsOptions": [
+                            {
+                                "masterName": "SEARCH_HOUSEHOLD_FILTERS",
+                                "moduleName": "HCM",
+                                "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                            },
+                            {
+                                "masterName": "ServiceDefs",
+                                "moduleName": "RAINMAKER-PGR",
+                                "schemaCode": "RAINMAKER-PGR.ServiceDefs"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "options",
+                        "bindTo": "dropDownOptions",
+                        "condition": false
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "filter"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1756199092006,
+                "lastModifiedTime": 1756386665777
+            }
+        },
+        {
+            "id": "9639da9b-49e2-493d-9ff9-9aab4f08d595",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "dependencyFieldWrapper",
+            "data": {
+                "tab": "validation",
+                "label": "dependencyFieldWrapper",
+                "order": 13,
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "dependencyFieldWrapper",
+                        "bindTo": "visibilityCondition.expression"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "checkbox",
+                    "numeric",
+                    "dob",
+                    "date",
+                    "select",
+                    "dropdown",
+                    "mobileNumber",
+                    "number",
+                    "textArea",
+                    "text",
+                    "latLng",
+                    "radio",
+                    "administrativeArea",
+                    "custom"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1756199072728,
+                "lastModifiedTime": 1756378551862
+            }
+        },
+        {
+            "id": "b74c3bf7-7431-4d58-924a-d882f65a539e",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "Details Keys",
+            "data": {
+                "tab": "content",
+                "label": "Details Keys",
+                "order": 11,
+                "bindTo": "dropDownOptions",
+                "tabOrder": 1,
+                "fieldType": "DetailsCard",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "DetailsCard",
+                        "bindTo": "dropDownOptions"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "DetailsCard"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750682139398,
+                "lastModifiedTime": 1751343753061
+            }
+        },
+        {
+            "id": "b19a3b80-2a2f-469c-96b9-4fa84f44ced6",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "tableHeaders",
+            "data": {
+                "tab": "content",
+                "label": "tableHeaders",
+                "order": 12,
+                "bindTo": "dropDownOptions",
+                "tabOrder": 1,
+                "fieldType": "Table",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "Table",
+                        "bindTo": "dropDownOptions"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "Table"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750682138738,
+                "lastModifiedTime": 1751343784076
+            }
+        },
+        {
+            "id": "402119d7-b817-4ca4-ac76-fbfbb5f8193b",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "maxAge",
+            "data": {
+                "tab": "validation",
+                "label": "maxAge",
+                "order": 11,
+                "bindTo": "toArray.maxAge",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_MAX_AGE",
+                        "bindTo": "toArray.maxAge"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.maxAge.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "dob"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "createdTime": 1750153526346,
+                "lastModifiedTime": 1750153526346
+            }
+        },
+        {
+            "id": "9c3dbe52-b0f9-421c-86c6-a649b752883c",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "minAge",
+            "data": {
+                "tab": "validation",
+                "label": "minAge",
+                "order": 10,
+                "bindTo": "toArray.minAge",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_MIN_AGE",
+                        "bindTo": "toArray.minAge"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.minAge.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "dob"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "createdTime": 1750153526250,
+                "lastModifiedTime": 1750153526250
+            }
+        },
+        {
+            "id": "21af2199-55e3-4c92-9739-cc45165df41c",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "maxLength",
+            "data": {
+                "tab": "validation",
+                "label": "maxLength",
+                "order": 6,
+                "bindTo": "toArray.maxLength",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_MAX_LENGTH",
+                        "bindTo": "toArray.maxLength"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.maxLength.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "number",
+                    "mobileNumber"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153526167,
+                "lastModifiedTime": 1751967832451
+            }
+        },
+        {
+            "id": "e054797b-280b-4083-9948-04f57636f446",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "minLength",
+            "data": {
+                "tab": "validation",
+                "label": "minLength",
+                "order": 5,
+                "bindTo": "toArray.minLength",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_MIN_LENGTH",
+                        "bindTo": "toArray.minLength"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.minLength.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "number",
+                    "mobileNumber"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153526092,
+                "lastModifiedTime": 1751967795992
+            }
+        },
+        {
+            "id": "a98c915a-74a8-4d80-9890-546f78e7271d",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "fieldType",
+            "data": {
+                "tab": "content",
+                "label": "fieldType",
+                "order": 1,
+                "tabOrder": 1,
+                "fieldType": "fieldTypeDropdown",
+                "disableForRequired": true,
+                "visibilityEnabledFor": []
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "createdTime": 1750153526015,
+                "lastModifiedTime": 1750153526015
+            }
+        },
+        {
+            "id": "0a586754-ad7c-4cc9-867b-0d0811038071",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "defaultValue",
+            "data": {
+                "id": "defaultValue",
+                "tab": "validation",
+                "label": "defaultValue",
+                "order": 2,
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_DEFAULT_VALUE",
+                        "bindTo": "value"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "number",
+                    "numeric"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "createdTime": 1750153525341,
+                "lastModifiedTime": 1750153525341
+            }
+        },
+        {
+            "id": "baa7bad7-9081-4eae-9445-112b2a61bd18",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "errorMessage",
+            "data": {
+                "id": "errorMessage",
+                "tab": "validation",
+                "label": "errorMessage",
+                "order": 9,
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "bindTo": "errorMessage"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "number"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153525240,
+                "lastModifiedTime": 1751344472351
+            }
+        },
+        {
+            "id": "045d4135-32ab-4387-adff-4f1edc309094",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "RegexPattern",
+            "data": {
+                "id": "regex",
+                "tab": "validation",
+                "label": "RegexPattern",
+                "order": 1,
+                "bindTo": "toArray.pattern",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "conditionalField": [
+                    {
+                        "type": "radioOptions",
+                        "label": "APPCONFIG_PATTERN",
+                        "bindTo": "toArray.pattern",
+                        "options": [
+                            {
+                                "code": "CHARACTERONLY",
+                                "pattern": "^[a-zA-Z]+$",
+                                "description": "Alphabets only (uppercase and lowercase)"
+                            },
+                            {
+                                "code": "NUMBERONLY",
+                                "pattern": "^\\d+$",
+                                "description": "Numbers only (0-9)"
+                            },
+                            {
+                                "code": "ALPHANUMERICONLY",
+                                "pattern": "^[a-zA-Z0-9]+$",
+                                "description": "Letters and numbers only (no special characters)"
+                            }
+                        ],
+                        "jsonPath": "pattern"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_CUSTOM_PATTERN",
+                        "bindTo": "toArray.pattern"
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.pattern.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+                "createdTime": 1750153525162,
+                "lastModifiedTime": 1756449235792
+            }
+        },
+        {
+            "id": "aa9916f1-68d1-410a-900c-d3fe83655fb2",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "Mandatory",
+            "data": {
+                "tab": "content",
+                "label": "Mandatory",
+                "order": 3,
+                "bindTo": "toArray.required",
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.required.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "disableForRequired": true,
+                "visibilityEnabledFor": [
+                    "checkbox",
+                    "numeric",
+                    "dob",
+                    "date",
+                    "select",
+                    "dropdown",
+                    "mobileNumber",
+                    "number",
+                    "textArea",
+                    "text",
+                    "latLng",
+                    "administrativeArea",
+                    ""
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153525093,
+                "lastModifiedTime": 1751344408845
+            }
+        },
+        {
+            "id": "9acd132a-1658-4ee7-8265-264535e2ed1a",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "label",
+            "data": {
+                "tab": "content",
+                "label": "label",
+                "order": 2,
+                "bindTo": "label",
+                "tabOrder": 1,
+                "fieldType": "text",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "checkbox",
+                    "numeric",
+                    "scanner",
+                    "dob",
+                    "date",
+                    "select",
+                    "dropdown",
+                    "mobileNumber",
+                    "number",
+                    "textArea",
+                    "text",
+                    "filter",
+                    "searchByProximity",
+                    "searchBar",
+                    "qrscanner",
+                    "BeneficiaryRegistrationButton",
+                    "latLng",
+                    "administrativeArea",
+                    "editHousehold",
+                    "editIndividual",
+                    "addMember",
+                    "IndividualDeliverySecondaryButton",
+                    "IndividualDeliveryPrimaryButton",
+                    "SecondaryButton",
+                    "AcknowledgementTitle",
+                    "AcknowledgementDescription",
+                    "PrimaryButton",
+                    "idPopulator",
+                    "radio",
+                    "searchByID",
+                    "searchComplaints",
+                    "sortComplaints"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153525014,
+                "lastModifiedTime": 1755856602283
+            }
+        },
+        {
+            "id": "869562a4-9073-422b-8f7b-658c81c3de71",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "helpText",
+            "data": {
+                "tab": "content",
+                "label": "helpText",
+                "order": 4,
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "bindTo": "helpText"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "date",
+                    "dob",
+                    "number",
+                    "administrativeArea",
+                    "latLng",
+                    "dropdown",
+                    "numeric"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153524336,
+                "lastModifiedTime": 1752039478376
+            }
+        },
+        {
+            "id": "5c78ba0a-3e4f-4585-9897-8c68f05670d8",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "innerLabel",
+            "data": {
+                "tab": "content",
+                "label": "innerLabel",
+                "order": 5,
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "bindTo": "innerLabel"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "number"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153524231,
+                "lastModifiedTime": 1751344270614
+            }
+        },
+        {
+            "id": "7ca16b4e-1cab-48b4-9de3-d1e40c149014",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "min",
+            "data": {
+                "tab": "validation",
+                "label": "min",
+                "order": 3,
+                "bindTo": "toArray.min",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_MIN_NUMBER",
+                        "bindTo": "toArray.min",
+                        "validation": {
+                            "pattern": "^(0|[1-9]\\d*)$"
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.min.message"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "numeric",
+                    "number"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153524106,
+                "lastModifiedTime": 1751969889566
+            }
+        },
+        {
+            "id": "1298b4cc-6656-4d43-9509-f893c5cc4ce9",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "max",
+            "data": {
+                "tab": "validation",
+                "label": "max",
+                "order": 4,
+                "bindTo": "toArray.max",
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "number",
+                        "label": "APPCONFIG_NUMBER_MAX",
+                        "bindTo": "toArray.max",
+                        "options": [],
+                        "validation": {
+                            "pattern": "^(0|[1-9]\\d*)$"
+                        }
+                    },
+                    {
+                        "type": "text",
+                        "label": "APPCONFIG_ERRORMESSAGE",
+                        "bindTo": "toArray.max.message",
+                        "options": []
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "numeric",
+                    "number"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153524021,
+                "lastModifiedTime": 1751969938880
+            }
+        },
+        {
+            "id": "3c08f474-7b2f-4912-90a4-d4393f7696dd",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "startDate",
+            "data": {
+                "tab": "validation",
+                "label": "startDate",
+                "order": 7,
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "date",
+                        "bindTo": "startDate"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "date",
+                    "dob"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153523950,
+                "lastModifiedTime": 1751344057537
+            }
+        },
+        {
+            "id": "2c308a4d-6d76-4b7e-bb0d-6fc0dd6f9bb5",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "endDate",
+            "data": {
+                "tab": "validation",
+                "label": "endDate",
+                "order": 8,
+                "tabOrder": 2,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "date",
+                        "bindTo": "endDate"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "date",
+                    "dob"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153523269,
+                "lastModifiedTime": 1751344022151
+            }
+        },
+        {
+            "id": "14753205-272c-4ddf-a871-bb2de160a619",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "isMdms",
+            "data": {
+                "tab": "content",
+                "label": "isMdms",
+                "order": 7,
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "MdmsDropdown",
+                        "label": "APPCONFIG_SELECT_SCHEMA",
+                        "bindTo": "schemaCode",
+                        "jsonPath": "schemaCode",
+                        "condition": true,
+                        "mdmsOptions": [
+                            {
+                                "masterName": "GenderType",
+                                "moduleName": "common-masters",
+                                "schemaCode": "common-masters.GenderType"
+                            },
+                            {
+                                "masterName": "HOUSE_STRUCTURE_TYPES",
+                                "moduleName": "HCM",
+                                "schemaCode": "HCM.HOUSE_STRUCTURE_TYPES"
+                            },
+                            {
+                                "masterName": "ID_TYPE_OPTIONS_POPULATOR",
+                                "moduleName": "HCM",
+                                "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR"
+                            },
+                            {
+                                "masterName": "DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                                "moduleName": "HCM",
+                                "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR"
+                            },
+                            {
+                                "masterName": "ServiceDefs",
+                                "moduleName": "RAINMAKER-PGR",
+                                "schemaCode": "RAINMAKER-PGR.ServiceDefs"
+                            },
+                            {
+                                "masterName": "REFERRAL_REASONS",
+                                "moduleName": "HCM",
+                                "schemaCode": "HCM.REFERRAL_REASONS"
+                            },
+                            {
+                                "masterName": "SEARCH_HOUSEHOLD_FILTERS",
+                                "moduleName": "HCM",
+                                "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                            }
+                        ]
+                    },
+                    {
+                        "type": "options",
+                        "bindTo": "dropDownOptions",
+                        "condition": false
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "dropdown",
+                    "radio",
+                    "select",
+                    "searchableDropdown"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153523169,
+                "lastModifiedTime": 1755494387770
+            }
+        },
+        {
+            "id": "c8f9fa81-ae9b-427f-9b6e-02fbeff190d2",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "tooltip",
+            "data": {
+                "tab": "content",
+                "label": "tooltip",
+                "order": 6,
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [
+                    {
+                        "type": "text",
+                        "bindTo": "tooltip"
+                    }
+                ],
+                "showFieldOnToggle": true,
+                "visibilityEnabledFor": [
+                    "text",
+                    "number",
+                    "dob",
+                    "dropdown",
+                    "mobileNumber"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153523080,
+                "lastModifiedTime": 1751986668180
+            }
+        },
+        {
+            "id": "5b83ad55-bfcb-4dfe-bbb9-608fded60c75",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "readOnly",
+            "data": {
+                "tab": "content",
+                "label": "readOnly",
+                "order": 8,
+                "bindTo": "readOnly",
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "disableForRequired": true,
+                "visibilityEnabledFor": [
+                    "numeric",
+                    "dob",
+                    "date",
+                    "select",
+                    "mobileNumber",
+                    "number",
+                    "textArea",
+                    "text",
+                    "latLng",
+                    "administrativeArea"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153523003,
+                "lastModifiedTime": 1752039504878
+            }
+        },
+        {
+            "id": "05b5d947-cf08-43c3-a46e-0432a5e18dee",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "systemDate",
+            "data": {
+                "tab": "content",
+                "label": "systemDate",
+                "order": 9,
+                "bindTo": "systemDate",
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "disableForRequired": true,
+                "visibilityEnabledFor": [
+                    "date"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153522922,
+                "lastModifiedTime": 1751343867279
+            }
+        },
+        {
+            "id": "88a473fe-5c2a-4c21-a372-fc6d9bf0d48f",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.FieldPropertiesPanelConfig",
+            "uniqueIdentifier": "isMultiSelect",
+            "data": {
+                "tab": "content",
+                "label": "isMultiSelect",
+                "order": 10,
+                "bindTo": "isMultiSelect",
+                "tabOrder": 1,
+                "fieldType": "toggle",
+                "defaultValue": false,
+                "conditionalField": [],
+                "showFieldOnToggle": true,
+                "disableForRequired": true,
+                "visibilityEnabledFor": [
+                    "select"
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "6cb73e04-9dcb-4dd7-8ceb-e6f836c7c4e7",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1750153522241,
+                "lastModifiedTime": 1751984505126
+            }
+        }
+    ]
