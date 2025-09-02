@@ -36,12 +36,12 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
   }, []);
 
   const settlementBoundaryStyle = {
-    color: '#AD1457',           // Darker pink/magenta outline
+    color: '#D84315',           // Deep orange/rust outline (built-up areas)
     weight: 3,                  // Thicker border
     opacity: 1,                 // Full opacity
-    fillColor: '#E91E63',       // Darker pink fill
-    fillOpacity: 0.8,           // Much more visible background
-    dashArray: '8, 4',          // More prominent dashed pattern
+    fillColor: '#FF8A65',       // Orange fill (residential/settlement)
+    fillOpacity: 0.7,           // Strong visibility
+    dashArray: '10, 5',         // Prominent dashed pattern
   };
 
   const boundaryPopupContent = (feature) => {
@@ -109,16 +109,33 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
   }
 
   return (
-    <MapView
-      visits={visits}
-      boundaryData={boundaryData}
-      boundaryStyle={settlementBoundaryStyle}
-      boundaryPopupContent={boundaryPopupContent}
-      showConnectingLines={showConnectingLines}
-      customPopupContent={customPopupContent}
-      customMarkerStyle={customMarkerStyle}
-      mapType="settlement"
-    />
+    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <div style={{
+        padding: '1rem',
+        backgroundColor: '#FCE4EC',
+        borderBottom: '2px solid #E91E63'
+      }}>
+        <h2 style={{ margin: 0, color: '#AD1457' }}>Settlement Boundaries Map</h2>
+        {boundaryData?.features && (
+          <p style={{ margin: '0.5rem 0 0 0', color: '#666' }}>
+            Showing {boundaryData.features.length} Settlements
+          </p>
+        )}
+      </div>
+      
+      <div style={{ flex: 1 }}>
+        <MapView
+          visits={visits}
+          shapefileData={boundaryData}
+          boundaryStyle={settlementBoundaryStyle}
+          boundaryPopupContent={boundaryPopupContent}
+          showConnectingLines={showConnectingLines}
+          customPopupContent={customPopupContent}
+          customMarkerStyle={customMarkerStyle}
+          mapType="settlement"
+        />
+      </div>
+    </div>
   );
 };
 

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import MapView from "./MapView";
+import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 
 /**
  * Component to display LGA Boundaries from S3

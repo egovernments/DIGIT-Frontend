@@ -15,7 +15,7 @@
 export const createMapPointPopup = (dataPoint, index, options = {}) => {
   // Debug logging to understand the data structure
   if (options.debug) {
-    console.log("🔍 MapPointsPopup data received:", dataPoint, "Index:", index, "Options:", options);
+    // console.log("🔍 MapPointsPopup data received:", dataPoint, "Index:", index, "Options:", options);
   }
   
   const pointNumber = index + 1;
