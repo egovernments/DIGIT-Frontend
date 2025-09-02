@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 const DSSCard = () => {
   const { t } = useTranslation();
+  const userInfo = Digit.UserService.getUser();
+  const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);
 
   const ROLES = {
     HEALTH_DSS: ["NATIONAL_SUPERVISOR", "DASHBOARD_VIEWER"],
@@ -20,7 +22,7 @@ const DSSCard = () => {
     generateLink("ACTION_TEST_MY_CAMPAIGNS","my-campaigns"),
   ];
  
-  if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
+  if (!userRoles?.some((role) => ROLES.HEALTH_DSS.includes(role))) {
     return null;
   }
 
