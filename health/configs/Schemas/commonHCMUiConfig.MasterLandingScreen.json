@@ -1,0 +1,58 @@
+  {
+
+            "tenantId": "mz",
+            "code": "commonHCMUiConfig.MasterLandingScreen",
+            "description": "Master Landing Screen",
+            "definition": {
+                "type": "object",
+                "title": "Generated schema for Root",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "screen",
+                    "links"
+                ],
+                "x-unique": [
+                    "screen"
+                ],
+                "properties": {
+                    "links": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "url",
+                                "code",
+                                "icon",
+                                "order",
+                                "roles"
+                            ],
+                            "properties": {
+                                "url": {
+                                    "type": "string"
+                                },
+                                "code": {
+                                    "type": "string"
+                                },
+                                "icon": {
+                                    "type": "string"
+                                },
+                                "order": {
+                                    "type": "string"
+                                },
+                                "roles": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "string"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "screen": {
+                        "type": "string"
+                    }
+                }
+            },
+            "isActive": true,
+
+        }

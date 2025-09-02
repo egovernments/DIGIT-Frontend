@@ -1,0 +1,686 @@
+[
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYACKNOWLEDGEMENT_SCREEN_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYACKNOWLEDGEMENT_SCREEN_HEADING",
+            "message": " ",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_DESCRIPTION",
+            "message": "Data has been recorded successfully. Background sync will start soon",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_PRIMARY_LABEL",
+            "message": "View Beneficiary Details",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_SECONDARY_LABEL",
+            "message": "Go Back",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARY_BENEFICIARYACKNOWLEDGEMENT_TITLE",
+            "message": "Data recorded successfully!",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_FILTER_LABEL",
+            "message": "Filter",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_ACTION_BUTTON_LABEL_1",
+            "message": "Submit",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_DESCRIPTION",
+            "message": "Please provide the beneficiary's current address and location details.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_SCREEN_HEADING",
+            "message": "Beneficiary Location",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1",
+            "message": "Address line 1",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine1_helpText",
+            "message": "Provide the primary street address or house number.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2",
+            "message": "Address line 2",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_addressLine2_helpText",
+            "message": "Additional address information, like block or apartment name.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea",
+            "message": "Administrative area",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_helpText",
+            "message": "Enter the region or ward name where the beneficiary resides.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark",
+            "message": "Landmark",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_landmark_helpText",
+            "message": "Mention a nearby landmark to help locate the address.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong",
+            "message": "Lat/Long",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_helpText",
+            "message": "Provide latitude and longitude of the address, if available.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode",
+            "message": "Pincode",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_pincode_helpText",
+            "message": "Enter the area postal code (PIN Code)",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_typeOfAddress",
+            "message": "Type of address",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_QR_LABEL",
+            "message": "Scan QR Code",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL",
+            "message": "Register New Household",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR",
+            "message": "Search by Household Head",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_PROXIMITY",
+            "message": "Search Near By Households",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_DESCRIPTION",
+            "message": " ",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_SCREEN_HEADING",
+            "message": "Search Beneficiary",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_HEADING",
+            "message": "Household Overview",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "BENEFICIARYLOCATION_CORRESPONDENCE",
+            "message": "Correspondence",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "BENEFICIARYLOCATION_OTHER",
+            "message": "Other",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "BENEFICIARYLOCATION_PERMANENT",
+            "message": "Permanent",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_EDIT_HOUSEHOLD",
+            "message": "Edit Household",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_EDIT_INDIVIDUAL",
+            "message": "Edit Individual",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_ADD_MEMBER",
+            "message": "Add Member",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL",
+            "message": "Record Data",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_SCREEN_DESCRIPTION",
+            "message": "Overview of beneficiary ",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Task",
+            "message": "Task",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Task.status",
+            "message": "Status",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "status",
+            "message": "Administration status",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Task.createdTime",
+            "message": "Completed on",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "createdTime",
+            "message": "Completed on",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Task.cycleIndex",
+            "message": "Delivery Cycle",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "cycleIndex",
+            "message": "Delivery Cycle",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Task.deliveryComment",
+            "message": "Delivery Comment",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Task.doseIndex",
+            "message": "Delivery",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "doseIndex",
+            "message": "Delivery",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "deliveryComment",
+            "message": "Delivery comments",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Household",
+            "message": "Household",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Household.memberCount",
+            "message": "Number of members",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual",
+            "message": "Individual",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.name",
+            "message": "Name",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.gender",
+            "message": "Gender",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.identifierId",
+            "message": "ID number",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.identifierType",
+            "message": "ID type",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.mobileNumber",
+            "message": "Mobile number",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Household.childrenCount",
+            "message": "Number of children",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "childrenCount",
+            "message": "Number of children",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "mobileNumber",
+            "message": "Mobile Number",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "identifierType",
+            "message": "ID Type",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "identifierId",
+            "message": "ID number",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "gender",
+            "message": "Gender",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "name",
+            "message": "Name",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "locality",
+            "message": "Locality",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "memberCount",
+            "message": "Number of members",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "RECORD_DELIVERY_PRIMARY_LABEL",
+            "message": "Record Data",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "resourceCard",
+            "message": "Card",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "dateOfBirth",
+            "message": "Date of Birth",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Household.locality",
+            "message": "Locality",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.dateOfBirth",
+            "message": "Date of Birth",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "pregnantWomenCount",
+            "message": "Number of pregnant women",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Individual.locality",
+            "message": "Locality",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "Household.pregnantWomenCount",
+            "message": "Number of pregnant women",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_HEADING",
+            "message": "Household Details",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration",
+            "message": "Date of registration",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount",
+            "message": "Total household members",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_SCREEN_DESCRIPTION",
+            "message": "Enter family size, registration date, and demographics.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_HEADING",
+            "message": "Beneficiary Details",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_tooltip",
+            "message": "Name should match official identity documents.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual",
+            "message": "Full name",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_helpText",
+            "message": "Enter the full legal name of the individual.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily",
+            "message": "Is head of family?",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_identifiers",
+            "message": "ID populator",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker",
+            "message": "Date of birth",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_helpText",
+            "message": "Select the date of birth from the calendar.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_dobPicker_tooltip",
+            "message": "Used for age-based program eligibility.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_gender",
+            "message": "Gender",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone",
+            "message": "Mobile number",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_tooltip",
+            "message": "Will be used for communication and OTP-based verification.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_helpText",
+            "message": "Enter a valid mobile number.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_scanner",
+            "message": "QR Scan",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_ACTION_BUTTON_LABEL_1",
+            "message": "Save Beneficiary",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_SCREEN_DESCRIPTION",
+            "message": "Enter details of each individual in the household.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_childrenCount",
+            "message": "Number of children",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_pregnantWomenCount",
+            "message": "Number of pregnant women",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_ACTION_BUTTON_LABEL_1",
+            "message": "Save Household Details",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BAR_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_REGISTRATION_LABEL_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_administrativeArea_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYLOCATION_label_latlong_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_dateOfRegistration_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_mandatory_message",
+            "message": "Please fill the required field",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_min_message",
+            "message": "Total household members cannot be less than 1",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDDETAILS_label_memberCount_max_message",
+            "message": "Total household members cannot be more than 10",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_min_message",
+            "message": "Size must be 2 to 200 characters",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_nameOfIndividual_max_message",
+            "message": "Size must be 2 to 200 characters",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_isHeadOfFamily_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_HOUSEHOLDOVERVIEW_DELIVERY_DETAILS_LABEL_mandatory_message",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_SEARCHBENEFICIARY_BY_ID_SEARCH",
+            "message": "Search by ID",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+         {
+            "code": "REGISTRATIONFLOW_beneficiaryLocation_71b53895",
+            "message": "Required field cannot be empty",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "APPONE_REGISTRATION_BENEFICIARYDETAILS_label_phone_regex",
+            "message": "Only numbers allowed.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        },
+        {
+            "code": "SCANLIMIT_vALIDATION_MESSAGE",
+            "message": "Only 1 scan is allowed.",
+            "module": "hcm-base-registrationflow-bednets",
+            "locale": "en_MZ"
+        }
+    ]
