@@ -21,7 +21,6 @@ const Map = ({
   setBoundaryLevel,
 }) => {
   const { t } = useTranslation();
-  console.log("999 mapData", mapData);
   const [geoJSONData, setGeoJSONData] = useState(null);
   const [mapStyle, setMapStyle] = useState({});
   const [zoom, setZoom] = useState({
@@ -40,7 +39,6 @@ const Map = ({
     if (!mapData || Object.keys(mapData).length === 0) return;
 
     const { center, zoomLevels, geoJSON, fontSize } = mapData;
-    console.log("999 zoomLevels", zoomLevels);
 
     if (isMobile) {
       setMapStyle({ fontSize: fontSize?.mobile });
@@ -65,7 +63,6 @@ const Map = ({
     setGeoJSONData(geoJSON);
   }, [mapData, chartData, isMobile]);
 
-  console.log("999 zoom", zoom);
 
   const ZoomButtons = () => {
     const button = (label) => {
