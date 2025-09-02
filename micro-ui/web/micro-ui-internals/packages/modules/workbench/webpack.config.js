@@ -44,8 +44,18 @@ module.exports = {
 
   externals: {
     // Core React ecosystem
-    react: "React",
-    "react-dom": "ReactDOM",
+    react: {
+      commonjs: 'react',
+      commonjs2: 'react',
+      amd: 'react',
+      root: 'React',
+    },
+    'react-dom': {
+      commonjs: 'react-dom',
+      commonjs2: 'react-dom',
+      amd: 'react-dom',
+      root: 'ReactDOM',
+    },
     "react-router-dom": "react-router-dom",
     "react-i18next": "react-i18next",
     "@tanstack/react-query": "@tanstack/react-query",
