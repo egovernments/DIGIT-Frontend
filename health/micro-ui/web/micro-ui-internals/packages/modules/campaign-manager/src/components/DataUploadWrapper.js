@@ -10,9 +10,9 @@ function DataUploadWrapper({ formData, props, onSelect }) {
   const { parentId, key: currentKey, ...queryParams } = Digit.Hooks.useQueryParams();
   const categories = [
     "HCM_UPLOAD_FACILITY",
-    "HCM_UPLOAD_FACILITY_MAPPING",
+    // "HCM_UPLOAD_FACILITY_MAPPING",
     "HCM_UPLOAD_USER",
-    "HCM_UPLOAD_USER_MAPPING",
+    // "HCM_UPLOAD_USER_MAPPING",
     "HCM_UPLOAD_TARGET",
     "HCM_SUMMARY",
   ];
