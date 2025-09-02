@@ -48,7 +48,7 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
     const properties = feature?.properties || {};
     return `
       <div style="padding: 8px; min-width: 200px;">
-        <h4 style="margin: 0 0 8px 0; color: #AD1457; font-size: 14px; font-weight: bold;">
+        <h4 style="margin: 0 0 8px 0; color: #D84315; font-size: 14px; font-weight: bold;">
           Settlement Boundary
         </h4>
         <div style="font-size: 12px; line-height: 1.4;">
@@ -70,12 +70,12 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
         flexDirection: 'column',
         gap: '1rem'
       }}>
-        <div style={{ fontSize: '1.1rem', color: '#AD1457' }}>Loading Settlement Boundaries...</div>
+        <div style={{ fontSize: '1.1rem', color: '#D84315' }}>Loading Settlement Boundaries...</div>
         <div style={{
           width: '40px',
           height: '40px',
           border: '3px solid #f3f3f3',
-          borderTop: '3px solid #AD1457',
+          borderTop: '3px solid #D84315',
           borderRadius: '50%',
           animation: 'spin 1s linear infinite'
         }}></div>
@@ -112,10 +112,10 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
     <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
       <div style={{
         padding: '1rem',
-        backgroundColor: '#FCE4EC',
-        borderBottom: '2px solid #E91E63'
+        backgroundColor: '#FFF3E0',
+        borderBottom: '2px solid #FF8A65'
       }}>
-        <h2 style={{ margin: 0, color: '#AD1457' }}>Settlement Boundaries Map</h2>
+        <h2 style={{ margin: 0, color: '#D84315' }}>Settlement Boundaries Map</h2>
         {boundaryData?.features && (
           <p style={{ margin: '0.5rem 0 0 0', color: '#666' }}>
             Showing {boundaryData.features.length} Settlements

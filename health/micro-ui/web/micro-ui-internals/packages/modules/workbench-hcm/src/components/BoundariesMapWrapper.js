@@ -87,7 +87,7 @@ const BoundariesMapWrapper = ({
             {[
               { value: "LGA", label: "LGA", color: "#2E7D32" },
               { value: "WARD", label: "Ward", color: "#7B1FA2" },
-              { value: "SETTLEMENT", label: "Settlement", color: "#AD1457" }
+              { value: "SETTLEMENT", label: "Settlement", color: "#D84315" }
             ].map(({ value, label, color }) => (
               <label 
                 key={value}

@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
-import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+import getProjectServiceUrl, { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
 
@@ -82,7 +82,7 @@ const MapComponent = (props) => {
     // Create worker inline using Blob to avoid import.meta.url issues
     const workerScript = `
       // Web Worker for Elasticsearch data fetching
-      const API_KEY = "VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==";
+      const API_KEY = "${getKibanaDetails('token')||"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw=="}";
 
       // Worker message handler
       self.onmessage = async function(e) {
@@ -125,26 +125,21 @@ const MapComponent = (props) => {
               'accept-language': 'en-US,en;q=0.9',
               'cache-control': 'no-cache',
               'content-type': 'application/json',
-              'kbn-build-number': '68312',
-              'kbn-version': '8.11.3',
+              
               'origin': origin,
               'pragma': 'no-cache',
               'priority': 'u=1, i',
               'referer': origin + '/digit-ui/employee/dss/dashboard/provincial-health-dashboard-llin?province=Cabo%20Delgado%20Bloco1&projectTypeId=dbd45c31-de9e-4e62-a9b6-abb818928fd1',
-              'sec-ch-ua': '"Not;A=Brand";v="99", "Google Chrome";v="139", "Chromium";v="139"',
-              'sec-ch-ua-mobile': '?0',
-              'sec-ch-ua-platform': '"macOS"',
               'sec-fetch-dest': 'empty',
               'sec-fetch-mode': 'cors',
               'sec-fetch-site': 'same-origin',
-              'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/139.0.0.0 Safari/537.36',
               'x-elastic-internal-origin': 'Kibana',
               'x-kbn-context': '{"type":"application","name":"security_login","url":"/kibana/login"}'
             },
             credentials: 'include',
             body: JSON.stringify({
-              "providerType": "anonymous",
-              "providerName": "anonymous1",
+              "providerType": "${getKibanaDetails('username')||"anonymous"}",
+              "providerName": "${getKibanaDetails('password')||"anonymous1"}",
               "currentURL": origin + "kibana/login"
             })
           });
