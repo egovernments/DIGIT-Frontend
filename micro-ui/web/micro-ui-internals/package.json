@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "example",
-    "packages/modules/*"
+
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -84,7 +83,9 @@
     "vite": "^6.1.0",
     "webpack": "^5.97.1",
     "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0"
+    "webpack-dev-server": "^5.2.0",
+    "semver": "^7.5.4",
+    "rimraf": "^5.0.1"
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
