@@ -1,5 +1,8 @@
 
 
+## [2.0.0-rc19-02] [02-Sept-2025]
+-Webpack and package.json changes
+-MDMSManageMaster and MDMSSearchv2 chages for solving infinite loop issue
 
 ## [2.0.0-rc19-01] [26-Aug-2025]
 ### 🔧 Critical Memory Leak & Stability Fixes

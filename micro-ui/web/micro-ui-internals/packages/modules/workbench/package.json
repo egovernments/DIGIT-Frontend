@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-workbench",
-  "version": "2.0.0-rc19-01",
+  "version": "2.0.0-rc19-02",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
