@@ -54,7 +54,7 @@ const Map = ({
     }
 
     setZoom({
-      current: zoomLevels?.minZoom,
+      current: zoomLevels?.default || zoomLevels?.minZoom,
       min: zoomLevels?.minZoom,
       max: zoomLevels?.maxZoom,
       coordinates: center,
@@ -62,6 +62,7 @@ const Map = ({
 
     setGeoJSONData(geoJSON);
   }, [mapData, chartData, isMobile]);
+
 
   const ZoomButtons = () => {
     const button = (label) => {
