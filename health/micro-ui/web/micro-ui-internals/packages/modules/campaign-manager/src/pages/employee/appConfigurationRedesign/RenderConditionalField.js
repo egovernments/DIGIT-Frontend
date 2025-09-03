@@ -223,7 +223,7 @@ export const RenderConditionalField = ({
             // charCount={field?.charCount}
             disabled={disabled}
           />
-          {displayError(cField, drawerState)}
+          {currentError ? <ErrorComponent error={currentError} /> : null}
         </span>
       );
     case "options":
