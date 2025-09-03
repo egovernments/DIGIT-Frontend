@@ -3,6 +3,7 @@ import { useRouteMatch } from "react-router-dom";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import HCMWORKBENCHCard from "./components/HCMWORKBENCHCard";
+import { ProjectHierarchyProvider, useProjectHierarchy } from "./contexts/ProjectHierarchyContext";
 import App from "./pages/employee";
 import {  Loader} from "@egovernments/digit-ui-components";
 import ProjectBeneficiaryComponent from "./components/ProjectBeneficiaryComponent";
@@ -40,7 +41,11 @@ const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
     return   <Loader page={true} variant={"PageLoader"}/>;
   }
   if (userType === "employee") {
-    return <App path={path} url={url} />;
+    return (
+      <ProjectHierarchyProvider>
+        <App path={path} url={url} />
+      </ProjectHierarchyProvider>
+    );
   } else return null;
 };
 
@@ -65,6 +70,8 @@ const componentsToRegister = {
   MapComponent,
   ProjectRedirectPage,
   DeliveryCyclesComponent,
+  ProjectHierarchyProvider,
+  useProjectHierarchy,
 };
 
 const overrideHooks = () => {

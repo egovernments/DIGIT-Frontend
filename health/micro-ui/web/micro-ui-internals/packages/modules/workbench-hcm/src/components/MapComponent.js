@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
+import { Button } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl, { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
@@ -18,6 +19,15 @@ const MapComponent = (props) => {
   const componentRef = useRef(null);
   const workerRef = useRef(null);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
+  
+  // Filter states
+  const [showFilters, setShowFilters] = useState(false);
+  const [boundaryNameFilter, setBoundaryNameFilter] = useState("");
+  const [deliveryDateFilter, setDeliveryDateFilter] = useState({
+    startDate: "",
+    endDate: ""
+  });
+  const [availableBoundaries, setAvailableBoundaries] = useState([]);
 
   // Default sample data for testing and fallback - Nigerian locations
   const rawData = [
@@ -53,6 +63,54 @@ const MapComponent = (props) => {
   });
 
   const [projectTask, setProjectTask] = useState(defaultData);
+  const [filteredProjectTask, setFilteredProjectTask] = useState(defaultData);
+  
+  // Apply filters to project tasks
+  useEffect(() => {
+    let filtered = [...projectTask];
+    
+    // Filter by boundary name
+    if (boundaryNameFilter) {
+      filtered = filtered.filter(task => 
+        task.administrativeArea && 
+        task.administrativeArea.toLowerCase().includes(boundaryNameFilter.toLowerCase())
+      );
+    }
+    
+    // Filter by delivery date range
+    if (deliveryDateFilter.startDate || deliveryDateFilter.endDate) {
+      filtered = filtered.filter(task => {
+        if (!task.plannedStartDate || task.plannedStartDate === "NA") return false;
+        
+        const taskDate = new Date(task.plannedStartDate);
+        
+        if (deliveryDateFilter.startDate) {
+          const startDate = new Date(deliveryDateFilter.startDate);
+          startDate.setHours(0, 0, 0, 0);
+          if (taskDate < startDate) return false;
+        }
+        
+        if (deliveryDateFilter.endDate) {
+          const endDate = new Date(deliveryDateFilter.endDate);
+          endDate.setHours(23, 59, 59, 999);
+          if (taskDate > endDate) return false;
+        }
+        
+        return true;
+      });
+    }
+    
+    setFilteredProjectTask(filtered);
+  }, [projectTask, boundaryNameFilter, deliveryDateFilter]);
+  
+  // Extract unique boundaries from tasks
+  useEffect(() => {
+    const boundaries = [...new Set(projectTask
+      .map(task => task.administrativeArea)
+      .filter(area => area && area !== "NA")
+    )].sort();
+    setAvailableBoundaries(boundaries);
+  }, [projectTask]);
 
   // Intersection Observer for visibility detection
   useEffect(() => {
@@ -443,7 +501,27 @@ const MapComponent = (props) => {
     }
   }, [projectName, isVisible, fetchDataWithWorker, hasDataBeenFetched]);
 
-  const isNextDisabled = Array.isArray(projectTask) ? projectTask.length < pageSize : true;
+  const isNextDisabled = Array.isArray(filteredProjectTask) ? filteredProjectTask.length < pageSize : true;
+  
+  // Filter handlers
+  const handleBoundaryFilterChange = (event) => {
+    setBoundaryNameFilter(event.target.value);
+  };
+  
+  const handleDateFilterChange = (field, value) => {
+    setDeliveryDateFilter(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+  
+  const clearFilters = () => {
+    setBoundaryNameFilter("");
+    setDeliveryDateFilter({
+      startDate: "",
+      endDate: ""
+    });
+  };
 
   // Dark green marker style for MapComponent - no inner circle, smaller, darker
   const greenMarkerStyle = {
@@ -463,7 +541,166 @@ const MapComponent = (props) => {
     <div ref={componentRef} className="override-card" style={{ overflow: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("MAP_VIEW")}</Header>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <Button
+            variation="outline"
+            label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
+            onClick={() => setShowFilters(!showFilters)}
+            style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+          />
+          {filteredProjectTask?.length !== projectTask?.length && (
+            <span style={{ 
+              fontSize: "0.85rem", 
+              color: "#666",
+              padding: "0.25rem 0.5rem",
+              backgroundColor: "#f0f0f0",
+              borderRadius: "4px"
+            }}>
+              {filteredProjectTask?.length} of {projectTask?.length} points
+            </span>
+          )}
+        </div>
       </div>
+      
+      {/* Filter Section */}
+      {showFilters && (
+        <div style={{ 
+          padding: "16px", 
+          backgroundColor: "#f5f5f5", 
+          borderRadius: "8px", 
+          marginBottom: "16px",
+          border: "1px solid #e0e0e0"
+        }}>
+          <h4 style={{ marginBottom: "12px", color: "#333" }}>{t("FILTER_OPTIONS")}</h4>
+          
+          <div style={{ 
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr 1fr auto",
+            gap: "16px",
+            alignItems: "end"
+          }}>
+            {/* Boundary Name Filter */}
+            <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px"
+              }}>
+                {t("BOUNDARY_NAME")}
+              </label>
+              <select
+                value={boundaryNameFilter}
+                onChange={handleBoundaryFilterChange}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  backgroundColor: "white"
+                }}
+              >
+                <option value="">{t("ALL_BOUNDARIES")}</option>
+                {availableBoundaries.map(boundary => (
+                  <option key={boundary} value={boundary}>
+                    {boundary}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Start Date Filter */}
+            <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px"
+              }}>
+                {t("DELIVERY_START_DATE")}
+              </label>
+              <input
+                type="date"
+                value={deliveryDateFilter.startDate}
+                onChange={(e) => handleDateFilterChange('startDate', e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px"
+                }}
+              />
+            </div>
+            
+            {/* End Date Filter */}
+            <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px"
+              }}>
+                {t("DELIVERY_END_DATE")}
+              </label>
+              <input
+                type="date"
+                value={deliveryDateFilter.endDate}
+                onChange={(e) => handleDateFilterChange('endDate', e.target.value)}
+                min={deliveryDateFilter.startDate}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px"
+                }}
+              />
+            </div>
+            
+            {/* Clear Button */}
+            <div>
+              <Button 
+                variation="secondary"
+                label={t("CLEAR_FILTERS")}
+                onClick={clearFilters}
+                isDisabled={!boundaryNameFilter && !deliveryDateFilter.startDate && !deliveryDateFilter.endDate}
+                style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
+              />
+            </div>
+          </div>
+          
+          {/* Active Filters Display */}
+          {(boundaryNameFilter || deliveryDateFilter.startDate || deliveryDateFilter.endDate) && (
+            <div style={{ 
+              marginTop: "12px", 
+              padding: "8px",
+              backgroundColor: "#e3f2fd",
+              borderRadius: "4px",
+              fontSize: "14px",
+              color: "#1976d2"
+            }}>
+              <strong>{t("ACTIVE_FILTERS")}:</strong>
+              {boundaryNameFilter && (
+                <span style={{ marginLeft: "8px" }}>
+                  Boundary: {boundaryNameFilter}
+                </span>
+              )}
+              {deliveryDateFilter.startDate && (
+                <span style={{ marginLeft: "8px" }}>
+                  From: {new Date(deliveryDateFilter.startDate).toLocaleDateString()}
+                </span>
+              )}
+              {deliveryDateFilter.endDate && (
+                <span style={{ marginLeft: "8px" }}>
+                  To: {new Date(deliveryDateFilter.endDate).toLocaleDateString()}
+                </span>
+              )}
+            </div>
+          )}
+        </div>
+      )}
       
       {/* Loading Progress Indicator */}
       {isLoading && (
@@ -537,7 +774,7 @@ const MapComponent = (props) => {
           ⏳ Map data will load when this component becomes visible
         </div>
       )}
-      {projectTask?.length === 0 && (
+      {filteredProjectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
       )}
       {projectTask === defaultData && (
@@ -553,9 +790,9 @@ const MapComponent = (props) => {
           <strong>Note:</strong> Showing sample data. Real data will be loaded once project is configured.
         </div>
       )}
-      {projectTask?.length > 0 && (
+      {filteredProjectTask?.length > 0 && (
         <BoundariesMapWrapper
-          visits={projectTask?.map(task => ({
+          visits={filteredProjectTask?.map(task => ({
             lat: task?.latitude || 0,
             lng: task?.longitude || 0,
             time: task?.plannedStartDate || "NA",
@@ -570,7 +807,7 @@ const MapComponent = (props) => {
             locationAccuracy: task?.locationAccuracy,
             resourcesQuantity: task?.resourcesQuantity
           }))}
-          totalCount={projectTask?.length || 0}
+          totalCount={filteredProjectTask?.length || 0}
           page={page}
           pageSize={pageSize}
           onPageChange={(newPage) => setPage(newPage)}

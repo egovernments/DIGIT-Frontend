@@ -1,9 +1,10 @@
-import React, { useState , Fragment} from "react";
+import React, { useState , Fragment, useEffect} from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
+import { useProjectHierarchy } from "../contexts/ProjectHierarchyContext";
 // import MapView from "./MapView";
 import UserDetails from "./UserDetails";
 // import MapWithShapefile from "./MapWithShapefile";
@@ -17,6 +18,12 @@ const TaskComponent = (props) => {
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(props?.userId?1000:100);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
+  
+  // Use the project hierarchy context (optional - for caching only)
+  const { 
+    getFromCache, 
+    addToCache
+  } = useProjectHierarchy();
 
   // Date filter state
   const [selectedDate, setSelectedDate] = useState("");
@@ -73,6 +80,14 @@ const TaskComponent = (props) => {
   };
 
   const { isLoading, data: projectTask } = Digit.Hooks.useCustomAPIHook(requestCriteria);
+  
+  // Cache task data when loaded (optional)
+  useEffect(() => {
+    if (projectTask && projectTask.length > 0) {
+      // Cache the task data for 5 minutes
+      addToCache(`tasks-${props.projectId}-${page}-${pageSize}`, projectTask, 300000);
+    }
+  }, [projectTask, props.projectId, page, pageSize, addToCache]);
 
 
   const columns = [

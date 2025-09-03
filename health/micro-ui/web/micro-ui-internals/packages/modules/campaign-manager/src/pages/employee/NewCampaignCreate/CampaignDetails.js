@@ -603,7 +603,7 @@ const CampaignDetails = () => {
               />,
             ]
             : [
-              ...(Digit.UserService.hasAccess("CAMPAIGN_ADMIN") ? [
+              ...(!Digit.UserService.hasAccess("CAMPAIGN_ADMIN") ? [
                 <Button
                   key="campaign-manage"
                   icon="CloudDownload"
