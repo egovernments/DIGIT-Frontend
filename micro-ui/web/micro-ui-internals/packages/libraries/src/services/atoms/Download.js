@@ -2,6 +2,8 @@ import ReactDOM from "react-dom";
 import html2canvas from "html2canvas";
 import XLSX from "xlsx";
 import domtoimage from "dom-to-image";
+import jsPDF from "jspdf";
+import pdfMake from 'pdfmake/build/pdfmake';
 
 const changeClasses=(class1,class2)=>{
   var elements = document.getElementsByClassName(class1)
@@ -197,6 +199,34 @@ const Download = {
           pdf.save(`${fileName}.pdf`);
         }
       });
+  },
+  PDFMAIN2: (node, fileName, share, resolve = null) => {
+    const element = ReactDOM.findDOMNode(node.current);
+    return html2canvas(element, {
+      scrollY: -window.scrollY,
+      scrollX: 0,
+      useCORS: true,
+      scale: 1.5,
+      windowWidth: element.offsetWidth,
+      windowHeight: element.offsetHeight,
+    }).then(async (canvas) => {
+      const jpegImage = canvas.toDataURL("image/jpeg");
+      var docDefinition = {
+          content: [{
+              image: jpegImage,
+              width: 500,
+          }]
+      };
+      const pdf = pdfMake.createPdf(docDefinition);
+      if(share) {
+        await pdf.getBlob((blob) => {
+          resolve(new File([blob], `${fileName}.pdf`, { type: "application/pdf" }))
+        });
+        return;
+      }
+    
+      return pdf.download(`${fileName}.pdf`);
+    });  
   },
   IndividualChartImage: (node, fileName, share, resolve = null) => {
     const saveAs = (uri, filename) => {
