@@ -1,6 +1,13 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
+
+## 0.1.7
+#### stable module for publish
+
+## 0.1.6
+#### Integrated the map component & stabilised
+
 ## 0.1.5
 #### Integrated the map component to view tasks
 
