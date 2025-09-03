@@ -13,7 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const AppConfigContext = createContext();
 
-const initialState = {};
+const initialState = { errorMap: {} };
 
 export const useAppConfigContext = () => {
   return useContext(AppConfigContext);
@@ -280,6 +280,29 @@ const reducer = (state = initialState, action, updateLocalization) => {
           },
         ],
       };
+    case "SET_FIELD_ERROR": {
+      const { key, error } = action.payload || {};
+      const prevError = state && state.errorMap ? state.errorMap[key] : null;
+      const nextError = error == null ? null : error;
+      if (prevError === nextError) return state; // avoid unnecessary rerenders
+      return {
+        ...state,
+        errorMap: {
+          ...state.errorMap,
+          [key]: nextError,
+        },
+      };
+    }
+    case "CLEAR_FIELD_ERROR": {
+      const { key } = action.payload || {};
+      if (!state?.errorMap || !Object.prototype.hasOwnProperty.call(state.errorMap, key)) return state;
+      const { [key]: _omit, ...rest } = state.errorMap;
+      return { ...state, errorMap: rest };
+    }
+    case "CLEAR_ALL_ERRORS": {
+      if (!state?.errorMap || Object.keys(state.errorMap).length === 0) return state;
+      return { ...state, errorMap: {} };
+    }
     default:
       return state;
   }
@@ -496,6 +519,11 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return;
   };
   const handleSubmit = async (finalSubmit, tabChange) => {
+    const hasErrors = Boolean(state?.errorMap && Object.keys(state.errorMap).length > 0);
+    if (hasErrors) {
+      setShowToast({ key: "error", label: "PLEASE_FIX_ERRORS_BEFORE_CONTINUING" });
+      return;
+    }
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
       const errorCheck = validateFromState(
@@ -557,7 +585,15 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return <Loader page={true} variant={"PageLoader"} />;
   }
   return (
-    <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
+    <AppConfigContext.Provider
+      value={{
+        state,
+        dispatch,
+        openAddFieldPopup,
+        setFieldError: (key, error) => dispatch({ type: "SET_FIELD_ERROR", payload: { key, error } }),
+        clearFieldError: (key) => dispatch({ type: "CLEAR_FIELD_ERROR", payload: { key } }),
+      }}
+    >
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
       <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
       <div className="appConfig-flex-action">
@@ -632,6 +668,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
                 title={t("BACK")}
                 icon="ArrowBack"
                 size="small"
+                isDisabled={Boolean(
+                  state?.drawerField &&
+                    Object.keys(state?.errorMap || {}).some((key) =>
+                      key.startsWith(`${state.drawerField?.jsonPath || state.drawerField?.id || "field"}::`)
+                    )
+                )}
                 onClick={() =>
                   dispatch({
                     type: "UNSELECT_DRAWER_FIELD",
