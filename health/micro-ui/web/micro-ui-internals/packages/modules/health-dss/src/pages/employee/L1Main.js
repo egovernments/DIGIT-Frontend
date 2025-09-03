@@ -384,7 +384,7 @@ const L1Main = () => {
         break;
       case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
-          return Digit.Download.PDF(fullPageRef, t(dashboardConfig?.[0]?.name));
+          return Digit.Download.PDFMAIN(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
         break;
       case "ES_DSS_SHARE_PDF_EMAIL":
