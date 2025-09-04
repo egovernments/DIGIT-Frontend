@@ -75,9 +75,9 @@ const getDefaultRules = (key) => {
 };
 
 const ErrorComponent = ({ error }) => <span style={{ color: "red" }}>{error}</span>;
-const computeError = (field, currentField) => {
+const computeError = (field, currentField, t) => {
   let error = "";
-  const attr = field.bindTo;
+  const attr = t(field.label);
   const valueStr = currentField?.[attr];
 
   // 1. Pattern Validation
@@ -95,7 +95,7 @@ const computeError = (field, currentField) => {
   }
 
   // 2. Generic Rule Support (e.g. defined in config)
-  const rules = field?.validation?.rules || getDefaultRules(field.bindTo?.split(".")?.[1]);
+  const rules = field?.validation?.rules || getDefaultRules(field.bindTo?.split(".")?.[1] ? field.bindTo?.split(".")?.[1] : field.bindTo);
   if (field?.type == "number") {
     const value = Number(valueStr);
 
@@ -132,7 +132,6 @@ const computeError = (field, currentField) => {
   }
   return "";
 };
-
 export const RenderConditionalField = ({
   cField,
   cIndex,
@@ -163,6 +162,11 @@ export const RenderConditionalField = ({
   const currentError = appState?.errorMap?.[errorKey] || "";
 
   const evaluatedError = useMemo(() => computeError(cField, drawerState), [cField, drawerState]);
+
+  // Only show error if field has content (not empty)
+  const fieldValue = typeof drawerState?.[cField?.bindTo] === "boolean" ? null : drawerState?.[cField?.bindTo];
+  const hasContent = fieldValue !== undefined && fieldValue !== null && fieldValue !== "";
+  const shouldShowError = hasContent && evaluatedError && evaluatedError !== "";
 
   useEffect(() => {
     if (evaluatedError && evaluatedError !== currentError) {
@@ -223,7 +227,7 @@ export const RenderConditionalField = ({
             // charCount={field?.charCount}
             disabled={disabled}
           />
-          {currentError ? <ErrorComponent error={currentError} /> : null}
+          {shouldShowError ? <ErrorComponent error={currentError} /> : null}
         </span>
       );
     case "options":

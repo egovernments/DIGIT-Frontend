@@ -521,7 +521,27 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
   const handleSubmit = async (finalSubmit, tabChange) => {
     const hasErrors = Boolean(state?.errorMap && Object.keys(state.errorMap).length > 0);
     if (hasErrors) {
-      setShowToast({ key: "error", label: "PLEASE_FIX_ERRORS_BEFORE_CONTINUING" });
+      // Try to include field labels in the error toast for better clarity
+      const errorKeys = Object.keys(state.errorMap || {});
+      const errorFieldIds = errorKeys.map((k) => (k || "").split("::")[0]);
+
+      // Collect all fields from current screen data
+      const allFields = (state?.screenData || []).flatMap((screen) => (screen?.cards || []).flatMap((card) => card?.fields || []));
+
+      // Find the first field with an error to get its translated label
+      const firstErrorField = errorFieldIds
+        .map((id) => allFields.find((f) => (f?.jsonPath && f.jsonPath === id) || (f?.id && f.id === id)))
+        .filter(Boolean)[0];
+
+      if (firstErrorField?.label) {
+        const translatedLabel = locState?.find((i) => i.code === firstErrorField.label)?.[currentLocale];
+        setShowToast({
+          key: "error",
+          label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")} ${translatedLabel ? translatedLabel : ""}`,
+        });
+      } else {
+        setShowToast({ key: "error", label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") });
+      }
       return;
     }
     if (state?.screenData?.[0]?.type === "object") {
