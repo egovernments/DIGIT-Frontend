@@ -19,6 +19,8 @@ import React from "react";
 import { useTranslation } from "react-i18next";
 import { Switch } from "react-router-dom";
 import { useLocation } from "react-router-dom";
+import AbhaHomePage from "./AbhaHome";
+import AbhaHelpDeskConsole from "./AbhaHome";
 
 const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
   const { t } = useTranslation(); // Hook for translations
@@ -91,6 +93,11 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute
           path={`${path}/inbox-v2`}
           component={() => <PGRSearchInbox />}
+        />
+
+        <PrivateRoute
+          path={`${path}/abha-home`}
+          component={() => <AbhaHelpDeskConsole />}
         />
 
       </AppContainer>

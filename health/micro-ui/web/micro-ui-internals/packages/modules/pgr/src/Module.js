@@ -40,26 +40,26 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
   let user = Digit?.SessionStorage.get("User");
 
 
-  if (isLoading  || isHierarchyLoading) {
+  if (isLoading || isHierarchyLoading) {
     return <Loader />;
-  } 
-  if (!hierarchySelected) {
-    return (
-      <HierarchySelection
-        onHierarchyChosen={(hier) => {
-          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
-          setHierarchySelected(hier);
-        }}
-      />
-    );
   }
-  else {
-    return (
-      <ProviderContext>
-        <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
-      </ProviderContext>
-    );
-  }
+  // if (!hierarchySelected) {
+  //   return (
+  //     <HierarchySelection
+  //       onHierarchyChosen={(hier) => {
+  //         Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
+  //         setHierarchySelected(hier);
+  //       }}
+  //     />
+  //   );
+  // }
+  // else {
+  return (
+    <ProviderContext>
+      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
+    </ProviderContext>
+  );
+  // }
 };
 
 const componentsToRegister = {

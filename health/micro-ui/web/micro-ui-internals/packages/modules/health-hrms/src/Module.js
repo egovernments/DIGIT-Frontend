@@ -19,14 +19,17 @@ import { Loader } from "@egovernments/digit-ui-components";
 import HierarchySelection from "./pages/employee/HierarchySelection";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const modulePrefix = "hcm";
   const [hierarchySelected, setHierarchySelected] = useState(null);
 
 
+  console.log("heeeeeeeeeeeeeeeeee");
+
+
   const { data: hierarchies,
-    isLoading : isHierarchyLoading,
-     } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({tenantId});
+    isLoading: isHierarchyLoading,
+  } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({ tenantId });
 
   const moduleCode = ["HR",];
   const language = Digit.StoreData.getCurrentLanguage();
@@ -34,35 +37,39 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
   useEffect(() => {
     Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
   }, []);
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode : moduleCode, language, modulePrefix });
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode: moduleCode, language, modulePrefix });
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
-  
+
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
     return null;
   }
 
   if (isLoading || isHierarchyLoading) {
-      return <Loader />;
-    } 
-
-  if (!hierarchySelected) {
-    return (
-      <HierarchySelection
-        onHierarchyChosen={(hier) => {
-          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
-          setHierarchySelected(hier);
-        }}
-      />
-    );
+    return <Loader />;
   }
-    
+
+  // if (!hierarchySelected) {
+  //   return (
+  //     <HierarchySelection
+  //       onHierarchyChosen={(hier) => {
+  //         Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
+  //         setHierarchySelected(hier);
+  //       }}
+  //     />
+  //   );
+  // }
+
+
+
   else {
-  if (userType === "employee") {
-    return <EmployeeApp path={path} url={url} />;
-  } 
-}
+
+    if (userType === "employee") {
+      console.log(path, url, "path,url");
+      return <EmployeeApp path={path} url={url} />;
+    }
+  }
 };
 
 const componentsToRegister = {
