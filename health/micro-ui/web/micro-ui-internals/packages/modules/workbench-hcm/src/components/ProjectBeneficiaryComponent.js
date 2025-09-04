@@ -76,6 +76,11 @@ const ProjectBeneficiaryComponent = (props) => {
           },
           apiOperation: "SEARCH"
         },
+          params: {
+      tenantId: tenantId,
+      limit: 100,
+      offset: 0,
+    },
       });
 
       setVariantDetails(res);
@@ -104,6 +109,11 @@ const ProjectBeneficiaryComponent = (props) => {
           },
           apiOperation: "SEARCH"
         },
+         params: {
+      tenantId: tenantId,
+      limit: 100,
+      offset: 0,
+    },
       });
 
       setProduct(res);

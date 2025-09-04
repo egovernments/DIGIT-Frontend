@@ -5,6 +5,7 @@ import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
+import StockCreateModal from "./StockCreateModal";
 
 const StockComponent = (props) => {
   const { t } = useTranslation();
@@ -16,6 +17,9 @@ const StockComponent = (props) => {
   // Date filter state
   const [selectedDate, setSelectedDate] = useState("");
   const [showFilters, setShowFilters] = useState(false);
+  
+  // Modal state
+  const [showCreateModal, setShowCreateModal] = useState(false);
 
   // Helper function to get start and end of selected date
   const getDateRange = (dateString) => {
@@ -200,12 +204,20 @@ const StockComponent = (props) => {
     <div className="override-card" style={{ overflow: "auto" }}>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("WBH_STOCK_DETAILS")}</Header>
-        {/* <Button
-          variation="outline"
-          label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
-          onClick={() => setShowFilters(!showFilters)}
-          style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-        /> */}
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <Button
+            variation="primary"
+            label={t("WBH_CREATE_STOCK")}
+            onClick={() => setShowCreateModal(true)}
+            style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+          />
+          {/* <Button
+            variation="outline"
+            label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
+            onClick={() => setShowFilters(!showFilters)}
+            style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+          /> */}
+        </div>
       </div>
 
       {/* Date Filter Section */}
@@ -283,6 +295,19 @@ const StockComponent = (props) => {
           customCellRenderer={customCellRenderer}
           className=""
           headerClassName=""
+        />
+      )}
+      
+      {/* Stock Creation Modal */}
+      {showCreateModal && (
+        <StockCreateModal
+          onClose={() => setShowCreateModal(false)}
+          projectId={props.projectId}
+          tenantId={tenantId}
+          onSuccess={() => {
+            // Refresh the stock data after successful creation
+            window.location.reload(); // Simple refresh for now
+          }}
         />
       )}
     </div>

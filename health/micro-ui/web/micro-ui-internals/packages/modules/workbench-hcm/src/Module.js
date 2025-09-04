@@ -21,6 +21,7 @@ import WardBoundariesMap from "./components/WardBoundariesMap";
 import SettlementBoundariesMap from "./components/SettlementBoundariesMap";
 import MapViewExample from "./components/MapViewExample";
 import StockComponent from "./components/StockComponent";
+import StockCreateModal from "./components/StockCreateModal";
 import MapComponent from "./components/MapComponent";
 import ProjectRedirectPage from "./pages/employee/ProjectRedirectPage";
 import DeliveryCyclesComponent from "./components/DeliveryCyclesComponent";
@@ -67,6 +68,7 @@ const componentsToRegister = {
   SettlementBoundariesMap,
   MapViewExample,
   StockComponent,
+  StockCreateModal,
   MapComponent,
   ProjectRedirectPage,
   DeliveryCyclesComponent,
