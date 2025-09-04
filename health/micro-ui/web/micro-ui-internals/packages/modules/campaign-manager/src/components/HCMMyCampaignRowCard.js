@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText,Chip } from "@egovernments/digit-ui-components";
+import { Tag, Button, Card, SummaryCardFieldPair, Divider, PopUp, CardText, Chip } from "@egovernments/digit-ui-components";
 import { calculateDurationInDays } from "../utils/calculateDurationInDays";
 import { downloadExcelWithCustomName } from "../utils";
 import { useHistory } from "react-router-dom";
@@ -178,7 +178,8 @@ const getActionButtons = (rowData, tabData, history, setShowErrorPopUp, setShowC
         history.push(
           `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${
             rowData?.campaignNumber
-          }&tenantId=${Digit.ULBService.getCurrentTenantId()}`, { isDraft: rowData?.status === "drafted" }
+          }&tenantId=${Digit.ULBService.getCurrentTenantId()}`,
+          { isDraft: rowData?.status === "drafted" }
         ),
       icon: "Edit",
       variation: "primary",
@@ -276,7 +277,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       CampaignDetails: {
         tenantId: Digit.ULBService.getStateId(),
         campaignId: rowData?.id,
-      }
+      },
     },
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(Template);
@@ -286,7 +287,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
       {},
       {
         onSuccess: async (result) => {
-          history.push(`/${window?.contextPath}/employee/campaign/my-campaign-new`)
+          history.push(`/${window?.contextPath}/employee/campaign/my-campaign-new`);
         },
         onError: (error, result) => {
           const errorCode = error?.response?.data?.Errors?.[0]?.code;
@@ -303,13 +304,11 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
         <div className="digit-results-card-heading-tags-wrapper">
           <div className="digit-results-card-heading">{rowData?.campaignName}</div>
           <div className="digit-results-card-tags">
-            {
-              showCancelCampaign ? (
-                <div className="digit-tag-container" style={{ margin: "0rem" }}>
-                  <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
-                </div>
-              ) : null
-            }
+            {showCancelCampaign ? (
+              <div className="digit-tag-container" style={{ margin: "0rem" }}>
+                <Chip text={`${t(`CANCEL_CAMPAIGN`)}`} onClick={handleCancelClick} hideClose={false} />
+              </div>
+            ) : null}
             {tagElements &&
               Object.entries(tagElements)?.map(([key, tag]) => (
                 <Tag

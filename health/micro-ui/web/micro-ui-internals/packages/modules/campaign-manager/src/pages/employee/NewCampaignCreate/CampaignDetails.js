@@ -13,10 +13,7 @@ import { convertEpochToNewDateFormat } from "../../../utils/convertEpochToNewDat
 import QRButton from "../../../components/CreateCampaignComponents/QRButton";
 export const HCMCONSOLE_APPCONFIG_MODULENAME = "FormConfig";
 
-
 function transformCampaignData(inputObj = {}) {
-
-
   const deliveryRule = inputObj.deliveryRules?.[0] || {};
   const deliveryResources = deliveryRule.resources || [];
 
@@ -25,8 +22,7 @@ function transformCampaignData(inputObj = {}) {
   const configure = inputObj.additionalDetails?.cycleData?.cycleConfgureDate || {};
 
   // Extract resource by type
-  const resourceByType = (type) =>
-    inputObj.resources?.filter((r) => r.type === type) || [];
+  const resourceByType = (type) => inputObj.resources?.filter((r) => r.type === type) || [];
 
   const boundaryFiles = resourceByType("boundary");
   const facilityFiles = resourceByType("facility");
@@ -34,47 +30,45 @@ function transformCampaignData(inputObj = {}) {
 
   const deliveryRulesData = Array.isArray(inputObj.deliveryRules)
     ? inputObj.deliveryRules.map((rule) => ({
-      id: rule.id || "",
-      code: rule.code || "",
-      name: rule.name || "",
-      group: rule.group || "",
-      validMinAge: rule.validMinAge,
-      validMaxAge: rule.validMaxAge,
-      deliveryAddDisable: rule.deliveryAddDisable,
-      IsCycleDisable: rule.IsCycleDisable,
-      beneficiaryType: rule.beneficiaryType,
-      productCountHide: rule.productCountHide,
-      eligibilityCriteria: rule.eligibilityCriteria || [],
-      taskProcedure: rule.taskProcedure || [],
-      dashboardUrls: rule.dashboardUrls || {},
-      cycles: rule.cycles?.map((cycle) => ({
-        id: cycle.id,
-        startDate: Digit.DateUtils.ConvertEpochToDate(cycle.startDate)
-          ?.split("/")
-          ?.reverse()
-          ?.join("-") || "",
-        endDate: Digit.DateUtils.ConvertEpochToDate(cycle.endDate)
-          ?.split("/")
-          ?.reverse()
-          ?.join("-") || "",
-        mandatoryWaitSinceLastCycleInDays: cycle.mandatoryWaitSinceLastCycleInDays,
-        deliveries: cycle.deliveries?.map((delivery) => ({
-          id: delivery.id,
-          deliveryStrategy: delivery.deliveryStrategy,
-          mandatoryWaitSinceLastDeliveryInDays: delivery.mandatoryWaitSinceLastDeliveryInDays,
-          doseCriteria: delivery.doseCriteria?.map((criteria) => ({
-            condition: criteria.condition,
-            ProductVariants: criteria.ProductVariants || [],
+        id: rule.id || "",
+        code: rule.code || "",
+        name: rule.name || "",
+        group: rule.group || "",
+        validMinAge: rule.validMinAge,
+        validMaxAge: rule.validMaxAge,
+        deliveryAddDisable: rule.deliveryAddDisable,
+        IsCycleDisable: rule.IsCycleDisable,
+        beneficiaryType: rule.beneficiaryType,
+        productCountHide: rule.productCountHide,
+        eligibilityCriteria: rule.eligibilityCriteria || [],
+        taskProcedure: rule.taskProcedure || [],
+        dashboardUrls: rule.dashboardUrls || {},
+        cycles:
+          rule.cycles?.map((cycle) => ({
+            id: cycle.id,
+            startDate: Digit.DateUtils.ConvertEpochToDate(cycle.startDate)?.split("/")?.reverse()?.join("-") || "",
+            endDate: Digit.DateUtils.ConvertEpochToDate(cycle.endDate)?.split("/")?.reverse()?.join("-") || "",
+            mandatoryWaitSinceLastCycleInDays: cycle.mandatoryWaitSinceLastCycleInDays,
+            deliveries:
+              cycle.deliveries?.map((delivery) => ({
+                id: delivery.id,
+                deliveryStrategy: delivery.deliveryStrategy,
+                mandatoryWaitSinceLastDeliveryInDays: delivery.mandatoryWaitSinceLastDeliveryInDays,
+                doseCriteria:
+                  delivery.doseCriteria?.map((criteria) => ({
+                    condition: criteria.condition,
+                    ProductVariants: criteria.ProductVariants || [],
+                  })) || [],
+              })) || [],
           })) || [],
-        })) || [],
-      })) || [],
-      resources: rule.resources?.map((r) => ({
-        name: r?.name || '',
-        productVariantId: r?.productVariantId || null,
-        isBaseUnitVariant: r?.isBaseUnitVariant || false,
-        quantity: r?.quantity
-      })) || [],
-    }))
+        resources:
+          rule.resources?.map((r) => ({
+            name: r?.name || "",
+            productVariantId: r?.productVariantId || null,
+            isBaseUnitVariant: r?.isBaseUnitVariant || false,
+            quantity: r?.quantity,
+          })) || [],
+      }))
     : [];
 
   return {
@@ -82,36 +76,36 @@ function transformCampaignData(inputObj = {}) {
       projectType: {
         ...deliveryRule,
         resources: Array.isArray(deliveryResources)
-          ? deliveryResources.map(r => ({
-            name: r?.name || '',
-            productVariantId: r?.productVariantId || null,
-            isBaseUnitVariant: r?.isBaseUnitVariant || false
-          }))
-          : []
-      }
+          ? deliveryResources.map((r) => ({
+              name: r?.name || "",
+              productVariantId: r?.productVariantId || null,
+              isBaseUnitVariant: r?.isBaseUnitVariant || false,
+            }))
+          : [],
+      },
     },
     HCM_CAMPAIGN_NAME: {
-      campaignName: inputObj?.campaignName || ''
+      campaignName: inputObj?.campaignName || "",
     },
     HCM_CAMPAIGN_DATE: {
       campaignDates: {
         startDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.startDate)?.split("/")?.reverse()?.join("-"),
-        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.endDate)?.split("/")?.reverse()?.join("-")
-      }
+        endDate: Digit.DateUtils.ConvertEpochToDate(inputObj?.endDate)?.split("/")?.reverse()?.join("-"),
+      },
     },
     HCM_CAMPAIGN_CYCLE_CONFIGURE: {
       cycleConfigure: {
         cycleConfgureDate: configure,
-        cycleData: cycleDataArray
-      }
+        cycleData: cycleDataArray,
+      },
     },
     HCM_CAMPAIGN_DELIVERY_DATA: {
-      deliveryRule: deliveryRulesData
+      deliveryRule: deliveryRulesData,
     },
     HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA: {
       boundaryType: {
-        selectedData: inputObj?.boundaries || []
-      }
+        selectedData: inputObj?.boundaries || [],
+      },
     },
     HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA: {
       uploadBoundary: {
@@ -135,11 +129,9 @@ function transformCampaignData(inputObj = {}) {
 }
 
 function formatIsoDate(dateStr) {
-  if (!dateStr || typeof dateStr !== 'string') return '';
-  return dateStr.split('T')[0]; // returns "YYYY-MM-DD"
+  if (!dateStr || typeof dateStr !== "string") return "";
+  return dateStr.split("T")[0]; // returns "YYYY-MM-DD"
 }
-
-
 
 const CampaignDetails = () => {
   const { t } = useTranslation();
@@ -155,7 +147,6 @@ const CampaignDetails = () => {
   const tenantId = searchParams.get("tenantId") || Digit.ULBService.getCurrentTenantId();
   const url = getMDMSUrl(true);
   const moduleName = Digit.Utils.campaign.getModuleName();
-
 
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyTypeLoading } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -187,8 +178,8 @@ const CampaignDetails = () => {
         },
       },
       config: {
-        enabled: !!BOUNDARY_HIERARCHY_TYPE
-      }
+        enabled: !!BOUNDARY_HIERARCHY_TYPE,
+      },
     };
   }, [tenantId, BOUNDARY_HIERARCHY_TYPE]);
 
@@ -206,7 +197,8 @@ const CampaignDetails = () => {
       CampaignDetails: {
         tenantId: tenantId,
         campaignNumber: campaignNumber,
-        isOverrideDatesFromProject: true
+        isOverrideDatesFromProject: true,
+        ...(isDraftCampaign && { status: ["drafted"] }),
       },
     },
     config: {
@@ -244,7 +236,7 @@ const CampaignDetails = () => {
     const cycleConfgureDate = {
       cycle: cycles.length,
       deliveries: cycles?.[0]?.deliveries?.length || 0,
-      isDisable: cycleConfig?.IsCycleDisable !== undefined ? cycleConfig.IsCycleDisable : false
+      isDisable: cycleConfig?.IsCycleDisable !== undefined ? cycleConfig.IsCycleDisable : false,
     };
 
     const campaignSessionData = {
@@ -275,7 +267,6 @@ const CampaignDetails = () => {
     Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_UPLOAD_ID", hierarchyData);
     Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", tranformedManagerUploadData);
   }, [campaignData, BOUNDARY_HIERARCHY_TYPE, hierarchyDefinition?.BoundaryHierarchy?.[0]?.boundaryHierarchy]);
-
 
   const { data: modulesData } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -317,15 +308,15 @@ const CampaignDetails = () => {
                 campaignData?.status === "created" || campaignData?.parentId
                   ? t("HCM_UPDATE_BOUNDARIES")
                   : campaignData?.boundaries?.length > 0
-                    ? t("HCM_EDIT_BOUNDARY_BUTTON")
-                    : t("HCM_SELECT_BOUNDARY_BUTTON"),
+                  ? t("HCM_EDIT_BOUNDARY_BUTTON")
+                  : t("HCM_SELECT_BOUNDARY_BUTTON"),
               navLink:
                 campaignData?.status === "created" || campaignData?.parentId
-                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}`
+                  ? `update-campaign?key=1&parentId=${campaignData?.id}&campaignName=${campaignData?.campaignName}&campaignNumber=${campaignData?.campaignNumber}&isDraftCampaign=${isDraftCampaign}`
                   : `setup-campaign?key=5&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
               type: campaignData?.boundaries?.length > 0 || campaignData?.parentId ? "secondary" : "primary",
               icon: <GlobeLocationPin fill={"#c84c0e"} />,
-              isDraftCampaign:isDraftCampaign || campaignData?.status === "drafted" 
+              isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
             },
           },
         ],
@@ -344,14 +335,15 @@ const CampaignDetails = () => {
                 campaignData?.status === "created" || campaignData?.parentId
                   ? t("HCM_EDIT_DELIVERY_DATES")
                   : campaignData?.deliveryRules?.[0]?.cycles?.length > 0
-                    ? t("HCM_EDIT_DELIVERY_BUTTON")
-                    : t("HCM_DELIVERY_BUTTON"),
+                  ? t("HCM_EDIT_DELIVERY_BUTTON")
+                  : t("HCM_DELIVERY_BUTTON"),
               navLink:
                 campaignData?.status === "created" || campaignData?.parentId
                   ? `update-dates-boundary?id=${campaignData?.id}&campaignName=${campaignData?.campaignName}&projectId=${campaignData?.projectId}&campaignNumber=${campaignData?.campaignNumber}`
                   : `setup-campaign?key=7&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true&projectType=${campaignData?.projectType}`,
               type: campaignData?.deliveryRules?.[0]?.cycles?.length > 0 ? "secondary" : "primary",
               icon: <OutpatientMed />,
+              isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
             },
           },
         ],
@@ -373,6 +365,7 @@ const CampaignDetails = () => {
               navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
               disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),
+              isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
             },
           },
         ],
@@ -393,6 +386,7 @@ const CampaignDetails = () => {
               type: campaignData?.resources?.length > 0 ? "secondary" : "primary",
               icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
               disabled: campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" || campaignData?.parentId,
+              isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
             },
           },
         ],
@@ -410,6 +404,7 @@ const CampaignDetails = () => {
               buttonLabel: t("HCM_CHECKLIST_BUTTON"),
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
               icon: <ListAltCheck />,
+              isDraftCampaign: isDraftCampaign || campaignData?.status === "drafted",
             },
           },
         ],
@@ -447,7 +442,6 @@ const CampaignDetails = () => {
     return campaignS <= first && campaignE >= last;
   };
 
-
   const onsubmit = async () => {
     const valideDates = validateCampaignDates(campaignData?.deliveryRules?.[0]?.cycles, campaignData);
     if (!valideDates) {
@@ -483,7 +477,6 @@ const CampaignDetails = () => {
   };
 
   const onDownloadCredentails = async (data) => {
-
     try {
       const tenantId = Digit.ULBService.getCurrentTenantId();
       const responseTemp = await Digit.CustomService.getResponse({
@@ -492,7 +485,7 @@ const CampaignDetails = () => {
           tenantId: tenantId,
           campaignId: campaignData?.id,
           type: "userCredential",
-          hierarchyType: campaignData?.hierarchyType
+          hierarchyType: campaignData?.hierarchyType,
         },
       });
 
@@ -586,31 +579,31 @@ const CampaignDetails = () => {
         actionFields={
           campaignData?.status !== "created" && !campaignData?.parentId
             ? [
-              <Button
-                icon="CheckCircleOutline"
-                label={t("HCM_CREATE_CAMPAIGN")}
-                onClick={onsubmit}
-                isDisabled={
-                  campaignData?.boundaries?.length === 0 ||
-                  campaignData?.deliveryRules?.length === 0 ||
-                  campaignData?.resources?.length === 0 ||
-                  // modulesData?.length === 0
-                  !hasVersionGreaterThanOne
-                }
-                type="button"
-                variation="primary"
-              />,
-            ]
+                <Button
+                  icon="CheckCircleOutline"
+                  label={t("HCM_CREATE_CAMPAIGN")}
+                  onClick={onsubmit}
+                  isDisabled={
+                    campaignData?.boundaries?.length === 0 ||
+                    campaignData?.deliveryRules?.length === 0 ||
+                    campaignData?.resources?.length === 0 ||
+                    // modulesData?.length === 0
+                    !hasVersionGreaterThanOne
+                  }
+                  type="button"
+                  variation="primary"
+                />,
+              ]
             : [
-              <Button
-                icon="CloudDownload"
-                label={t("HCM_DOWNLOAD_CREDENTIALS")}
-                onClick={() => onDownloadCredentails(campaignData)}
-                type="button"
-                variation="primary"
-              />,
-              <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
-            ]
+                <Button
+                  icon="CloudDownload"
+                  label={t("HCM_DOWNLOAD_CREDENTIALS")}
+                  onClick={() => onDownloadCredentails(campaignData)}
+                  type="button"
+                  variation="primary"
+                />,
+                <Button icon="CloudDownload" label={t("HCM_DOWNLOAD_APP")} onClick={onDownloadApp} type="button" variation="primary" />,
+              ]
         }
         maxActionFieldsAllowed={5}
         setactionFieldsToRight={true}
