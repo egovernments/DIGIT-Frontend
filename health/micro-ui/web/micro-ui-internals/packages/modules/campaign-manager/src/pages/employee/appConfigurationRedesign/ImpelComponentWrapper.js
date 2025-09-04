@@ -22,7 +22,8 @@ function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, 
         return data?.[MODULE_CONSTANTS]?.[fieldMasterName];
       },
     },
-    { schemaCode: "APP_FIELD_TYPE_FETCH_IMPE" } //mdmsv2
+    { schemaCode: "APP_FIELD_TYPE_FETCH_IMPE" } ,
+    true //mdmsv2
   );
 
   if (isLoadingAppConfigMdmsData) return <Loader page={true} variant={"PageLoader"} />;

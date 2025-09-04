@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
     Dropdown,
     Card,
@@ -10,6 +10,7 @@ import {
     SVG
 } from "@egovernments/digit-ui-components";
 import ReactDOM from "react-dom";
+import { useCustomT } from "./useCustomT";
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
@@ -17,14 +18,66 @@ function BodyPortal({ children }) {
     return ReactDOM.createPortal(children, document.body);
 }
 
+
+function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
+  const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
+  const [module = "", master = ""] = (schemaCode || "").split(".");
+
+  const { isLoading, data: list = [] } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    module,
+    [{ name: master }],
+    {
+      cacheTime: Infinity,
+      staleTime: Infinity,
+      select: (data) => data?.[module]?.[master] || [],
+    },
+    { schemaCode: "DROPDOWN_MASTER_DATA" },
+    true //mdmsv2
+  );
+
+  const options = React.useMemo(
+    () =>
+      Array.isArray(list)
+        ? list.map((it) => ({ code: it.code, name: it.name }))
+        : [],
+    [list]
+  );
+
+  // IMPORTANT: normalize the selected value to an option object
+  const selectedOption = React.useMemo(() => {
+    if (!value) return undefined;
+    const match = options.find((o) => String(o.code) === String(value));
+    // If the code isn't in options yet (or ever), keep a shallow object so Dropdown can show it
+    return match || { code: value, name: value };
+  }, [options, value]);
+
+  return (
+    <Dropdown
+      option={options}
+      optionKey="code"
+      name={`mdms-${module}-${master}`}
+      t={t}                           // pass custom translator if names are i18n keys
+      select={(e) => onChange(e.code)}
+      disabled={isLoading || !module || !master}
+      selected={selectedOption}       // <-- object, not just the string code
+    />
+  );
+}
+
+
 function DependentFieldsWrapper({
     t,
     parentState,
+    currentState,
     onExpressionChange,
     screenConfig,
     selectedFieldItem,
 }) {
-    // ---------- labels (resolve once) ----------
+
+    const useT = useCustomT();
+
+    // ---------- labels ----------
     const displayLogicLabel = t("DISPLAY_LOGIC") || "Display Logic";
     const noLogicAddedLabel = t("NO_LOGIC_ADDED") || "No logic added yet.";
     const addDisplayLogicLabel = t("ADD_DISPLAY_LOGIC") || "Add Display Logic";
@@ -69,53 +122,84 @@ function DependentFieldsWrapper({
     // pages up to current; exclude template pages
     const pageOptions = useMemo(() => {
         const withoutTemplates = currentTemplate.filter((p) => p?.type !== "template");
-        const idx = withoutTemplates.find((p) => p.name === currentPage)
-            ? withoutTemplates.findIndex((p) => p.name === currentPage)
-            : -1;
+        const idx = withoutTemplates.findIndex((p) => p.name === currentPage);
         const upto = idx === -1 ? withoutTemplates : withoutTemplates.slice(0, idx + 1);
         return upto.map((p) => ({ code: p.name, name: p.name, type: p.type }));
     }, [currentTemplate, currentPage]);
 
     // find page object by name
     const getPageObj = (pageCode) =>
-        currentTemplate.find((p) => p.name === pageCode)?.cards?.[0];
+        pageCode === currentPage
+            ? currentState?.screenData?.[0]?.cards?.[0]
+            : currentTemplate.find((p) => p.name === pageCode)?.cards?.[0];
 
     const getFieldOptions = (pageCode) => {
         const pageObj = getPageObj(pageCode);
         if (!pageObj?.fields) return [];
         return pageObj.fields
             .filter((f) => f?.type !== "template")
-            .filter((f) => pageCode !== currentPage || f.order < selectedFieldItem?.order)
+            .filter(
+                (f) =>
+                    pageCode !== currentPage ||
+                    f?.order < (selectedFieldItem?.order || pageObj.fields.length)
+            )
             .map((f) => ({
                 code: f.jsonPath,
                 name: f.jsonPath,
-                label: f.label,            // <-- keep label
+                label: f.label,
                 format: f.format,
                 type: f.type || f.datatype || f.format || "string",
                 enums: f.dropDownOptions || [],
             }));
     };
 
-    // direct field meta lookup (for translating outside the popup)
+    // direct field meta lookup
     const getFieldMeta = (pageCode, fieldCode) => {
         const pageObj = getPageObj(pageCode);
         const field = pageObj?.fields?.find((f) => f.jsonPath === fieldCode);
         return { pageObj, field };
     };
-    const looksLikeLabelKey = (s = "") => /_label$/i.test(String(s).trim());
-
 
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        if (fmt === "dropdown") return true;
+        if (fmt === "dropdown" || fmt === "radio") return true;
         return ["string", "text", "textinput"].includes(tpe);
+    };
+
+    // NEW: numeric detection (treat number/numeric/integer as numeric)
+    const isNumericField = (field) => {
+        const tpe = (field?.type || "").toLowerCase();
+        const fmt = (field?.format || "").toLowerCase();
+        const numericTags = ["number", "numeric", "integer"];
+        return numericTags.includes(tpe) || numericTags.includes(fmt);
+    };
+
+    // NEW: sanitize to optional leading +/-, then digits only (allow empty/"+"/"-" while typing)
+    const sanitizeIntegerInput = (raw) => {
+        const s = String(raw ?? "");
+        if (s === "" || s === "+" || s === "-") return s;
+        if (/^[+-]?\d+$/.test(s)) return s;
+        const sign = s[0] === "+" || s[0] === "-" ? s[0] : "";
+        const digits = s.replace(/[^0-9]/g, "");
+        return sign + digits;
     };
 
     const getOperatorOptions = (field) => {
         if (!field || isStringLike(field))
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         return ALL_OPERATOR_OPTIONS;
+    };
+
+    // ---------- normalization helpers (so EDIT shows selected) ----------
+    const findPageOptionByCode = (code) =>
+        pageOptions.find((p) => p.code === code) || (code ? { code, name: code } : {});
+    const findFieldOptionByCode = (pageCode, fieldCode) => {
+        const opts = getFieldOptions(pageCode);
+        return (
+            opts.find((f) => f.code === fieldCode) ||
+            (fieldCode ? { code: fieldCode, name: fieldCode, label: fieldCode } : {})
+        );
     };
 
     // parse "page.fieldOPvalue"
@@ -157,10 +241,20 @@ function DependentFieldsWrapper({
             let nextOp = null;
             let nextIdx = -1;
             if (hasAnd && hasOr) {
-                if (andPos < orPos) { nextOp = "&&"; nextIdx = andPos; }
-                else { nextOp = "||"; nextIdx = orPos; }
-            } else if (hasAnd) { nextOp = "&&"; nextIdx = andPos; }
-            else { nextOp = "||"; nextIdx = orPos; }
+                if (andPos < orPos) {
+                    nextOp = "&&";
+                    nextIdx = andPos;
+                } else {
+                    nextOp = "||";
+                    nextIdx = orPos;
+                }
+            } else if (hasAnd) {
+                nextOp = "&&";
+                nextIdx = andPos;
+            } else {
+                nextOp = "||";
+                nextIdx = orPos;
+            }
 
             const before = expr.slice(i, nextIdx).trim();
             if (before) tokens.push({ type: "cond", value: before });
@@ -171,13 +265,16 @@ function DependentFieldsWrapper({
     };
 
     const serializeSingle = (c) => {
-        if (!c?.selectedPage?.code || !c?.selectedField?.code || !c?.comparisonType?.code || c?.fieldValue === "")
+        if (
+            !c?.selectedPage?.code ||
+            !c?.selectedField?.code ||
+            !c?.comparisonType?.code ||
+            c?.fieldValue === ""
+        )
             return "";
         return `${c.selectedPage.code}.${c.selectedField.code}${c.comparisonType.code}${c.fieldValue}`;
     };
 
-
-    // flat conditions: joiner lives on items with index > 0
     const serializeAll = (conds) => {
         const out = [];
         conds.forEach((c, i) => {
@@ -194,7 +291,7 @@ function DependentFieldsWrapper({
         selectedField: {},
         comparisonType: {},
         fieldValue: "",
-        joiner: { code: "&&", name: "AND" }, // default joiner for newly added condition
+        joiner: { code: "&&", name: "AND" },
     });
 
     // ---------- state (seed from existing expression if present) ----------
@@ -204,18 +301,23 @@ function DependentFieldsWrapper({
         const tokens = tokenize(raw);
         if (!tokens.length) return [initialEmptyCondition()];
 
-        // rebuild condition array with joiners
         const conds = [];
         let pendingJoin = "&&";
         tokens.forEach((t) => {
             if (t.type === "op") {
-                pendingJoin = t.value; // '&&' or '||'
+                pendingJoin = t.value;
             } else {
                 const base = parseSingle(t.value);
                 conds.push(
                     conds.length === 0
                         ? { ...base, joiner: { code: "&&", name: "AND" } }
-                        : { ...base, joiner: { code: pendingJoin, name: pendingJoin === "||" ? "OR" : "AND" } }
+                        : {
+                            ...base,
+                            joiner: {
+                                code: pendingJoin,
+                                name: pendingJoin === "||" ? "OR" : "AND",
+                            },
+                        }
                 );
             }
         });
@@ -229,37 +331,6 @@ function DependentFieldsWrapper({
         onExpressionChange?.(serializeAll(conditions));
     }, [conditions, onExpressionChange]);
 
-    // ---------- outside helpers ----------
-    const stripParens = (s = "") => s.replace(/[()]/g, "");
-
-    /** Build a translated, human label for a condition:
-     *  "<Field Label> <op> <displayValue>"
-     *  - field label comes from field.label → t(field.label)
-     *  - enum value resolves to its name (→ t(enum.name))
-     *  - falls back to raw codes if metadata missing
-     */
-    const formatConditionLabel = (c) => {
-        if (!c?.selectedPage?.code || !c?.selectedField?.code) return incompleteExprLabel;
-
-        const { field } = getFieldMeta(c.selectedPage.code, c.selectedField.code);
-        const fieldLabel =
-            field?.label ? (t(field.label) || field.label) : `${c.selectedPage.code}.${c.selectedField.code}`;
-
-        const op = c?.comparisonType?.code || "";
-
-        // value: if dropdown, show translated enum name; else raw
-        let valueText = c?.fieldValue || "";
-        if (field?.format === "dropdown" && Array.isArray(field.dropDownOptions)) {
-            const found = field.dropDownOptions.find((en) => `${en.code}` === `${c.fieldValue}`);
-            if (found) valueText = t(found.name) || found.name || c.fieldValue;
-        }
-
-        // strip any stray parens from value too
-        valueText = `${valueText}`.replace(/[()]/g, "");
-
-        return `${t(fieldLabel)} ${op} ${valueText}`.trim();
-    };
-
     // ---------- popup helpers ----------
     const openPopup = () => setShowPopUp(true);
     const closePopup = () => setShowPopUp(false);
@@ -269,7 +340,7 @@ function DependentFieldsWrapper({
     };
 
     const changeJoiner = (index, joinCode) => {
-        if (index <= 0) return; // first item doesn't expose a joiner
+        if (index <= 0) return;
         setConditions((prev) =>
             prev.map((c, i) =>
                 i === index
@@ -280,20 +351,34 @@ function DependentFieldsWrapper({
     };
 
     const addCondition = () => {
-        setConditions((prev) => [...prev, initialEmptyCondition()]); // default joiner AND
+        setConditions((prev) => [...prev, initialEmptyCondition()]);
     };
 
     const removeCondition = (index) => {
         setConditions((prev) => {
             const next = prev.filter((_, i) => i !== index);
             if (!next.length) return [initialEmptyCondition()];
-            // ensure first item has harmless joiner label
             next[0] = { ...next[0], joiner: { code: "&&", name: "AND" } };
             return next;
         });
     };
 
-    // ---------- derived ----------
+    const formatConditionLabel = (c) => {
+        if (!c?.selectedPage?.code || !c?.selectedField?.code) return incompleteExprLabel;
+        const { field } = getFieldMeta(c.selectedPage.code, c.selectedField.code);
+        const fieldLabel = field?.label
+            ? t(field.label) || field.label
+            : `${c.selectedPage.code}.${c.selectedField.code}`;
+        const op = c?.comparisonType?.code || "";
+        let valueText = c?.fieldValue || "";
+        // if ((field?.format === "dropdown" || field?.format === "radio") && Array.isArray(field.dropDownOptions)) {
+        //     const found = field.dropDownOptions.find((en) => `${en.code}` === `${c.fieldValue}`);
+        //     if (found) valueText = t(found.name) || found.name || c.fieldValue;
+        // }
+        valueText = `${valueText}`.replace(/[()]/g, "");
+        return `${useT(fieldLabel)} ${t(op)} ${(field?.format === "dropdown" || field?.format === "radio") ? useT(valueText) : valueText}`.trim();
+    };
+
     const hasExisting =
         (selectedFieldItem?.visibilityCondition?.expression || "").trim().length > 0 ||
         conditions.some((c) => serializeSingle(c));
@@ -308,7 +393,7 @@ function DependentFieldsWrapper({
                 <h3 style={{ margin: 0 }}>{displayLogicLabel}</h3>
             </div>
 
-            {/* Expression breakdown (translated tags) */}
+            {/* Expression breakdown */}
             <div
                 style={{
                     display: "flex",
@@ -356,7 +441,6 @@ function DependentFieldsWrapper({
                                         className={"version-tag"}
                                         labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                     />
-
                                     <div
                                         role="button"
                                         title={removeConditionLabel}
@@ -402,12 +486,10 @@ function DependentFieldsWrapper({
                                             (f) => f.code === cond?.selectedField?.code
                                         );
                                         const operatorOptions = getOperatorOptions(selectedFieldObj);
-
-                                        // Pick full object from operatorOptions by comparing code
                                         const selectedOperator = cond?.comparisonType?.code
                                             ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
                                             : undefined;
-
+                                        const numericValue = isNumericField(selectedFieldObj);
 
                                         return (
                                             <div
@@ -438,7 +520,7 @@ function DependentFieldsWrapper({
                                                     </div>
                                                 )}
 
-                                                {/* Single ROW that wraps: Page | Field | Operator | Value | Delete */}
+                                                {/* Row: Page | Field | Operator | Value | Delete */}
                                                 <div
                                                     style={{
                                                         display: "flex",
@@ -447,6 +529,7 @@ function DependentFieldsWrapper({
                                                         alignItems: "flex-end",
                                                     }}
                                                 >
+                                                    {/* Page */}
                                                     <div style={{ minWidth: 220, flex: "1 1 240px" }}>
                                                         <LabelFieldPair vertical removeMargin>
                                                             <p style={{ margin: 0 }}>{selectPageLabel}</p>
@@ -464,21 +547,26 @@ function DependentFieldsWrapper({
                                                                             comparisonType: {},
                                                                         })
                                                                     }
-                                                                    selected={cond.selectedPage}
+                                                                    selected={
+                                                                        cond?.selectedPage?.code
+                                                                            ? findPageOptionByCode(cond.selectedPage.code)
+                                                                            : cond.selectedPage
+                                                                    }
                                                                 />
                                                             </div>
                                                         </LabelFieldPair>
                                                     </div>
 
+                                                    {/* Field */}
                                                     <div style={{ minWidth: 260, flex: "1 1 280px" }}>
                                                         <LabelFieldPair vertical removeMargin>
                                                             <p style={{ margin: 0 }}>{selectFieldLabel}</p>
                                                             <div className="digit-field" style={{ width: "100%" }}>
                                                                 <Dropdown
                                                                     option={fieldOptions}
-                                                                    optionKey="code"
+                                                                    optionKey="label"
                                                                     name={`field-${idx}`}
-                                                                    t={t}
+                                                                    t={useT}
                                                                     select={(e) => {
                                                                         const nextOps = getOperatorOptions(e);
                                                                         const canKeep =
@@ -490,13 +578,21 @@ function DependentFieldsWrapper({
                                                                             comparisonType: canKeep ? cond.comparisonType : {},
                                                                         });
                                                                     }}
-                                                                    selected={cond.selectedField}
+                                                                    selected={
+                                                                        cond?.selectedField?.code
+                                                                            ? findFieldOptionByCode(
+                                                                                cond?.selectedPage?.code,
+                                                                                cond.selectedField.code
+                                                                            )
+                                                                            : cond.selectedField
+                                                                    }
                                                                     disabled={!cond?.selectedPage?.code}
                                                                 />
                                                             </div>
                                                         </LabelFieldPair>
                                                     </div>
 
+                                                    {/* Operator */}
                                                     <div style={{ minWidth: 220, flex: "0 1 220px" }}>
                                                         <LabelFieldPair vertical removeMargin>
                                                             <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
@@ -514,39 +610,80 @@ function DependentFieldsWrapper({
                                                         </LabelFieldPair>
                                                     </div>
 
+                                                    {/* Value */}
                                                     <div style={{ minWidth: 220, flex: "0 1 220px" }}>
                                                         <LabelFieldPair vertical removeMargin>
                                                             <p style={{ margin: 0 }}>{selectValueLabel}</p>
                                                             <div className="digit-field" style={{ width: "100%" }}>
-                                                                {selectedFieldObj && selectedFieldObj.format === "dropdown" ? (
-                                                                    <Dropdown
-                                                                        option={(selectedFieldObj.enums || []).map((en) => ({
-                                                                            code: en.code,
-                                                                            name: en.name,
-                                                                        }))}
-                                                                        optionKey="code"
-                                                                        name={`val-${idx}`}
-                                                                        t={t}
-                                                                        select={(e) => updateCond(idx, { fieldValue: e.code })}
-                                                                        disabled={!cond?.selectedField?.code}
-                                                                        selected={cond.fieldValue}
-                                                                    />
-                                                                ) : (
-                                                                    <TextInput
-                                                                        type="text"
-                                                                        populators={{ name: `text-${idx}` }}
-                                                                        placeholder={enterValueLabel}
-                                                                        value={cond.fieldValue}
-                                                                        onChange={(event) =>
-                                                                            updateCond(idx, { fieldValue: event.target.value })
+                                                                {(() => {
+                                                                    const isSelect =
+                                                                        selectedFieldObj &&
+                                                                        (selectedFieldObj.format === "dropdown" || selectedFieldObj.format === "radio");
+
+                                                                    if (isSelect) {
+                                                                        // 1) If enums exist on the field, use them
+                                                                        if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
+                                                                            return (
+                                                                                <Dropdown
+                                                                                    option={selectedFieldObj.enums.map((en) => ({ code: en.code, name: en.name }))}
+                                                                                    optionKey="code"
+                                                                                    name={`val-${idx}`}
+                                                                                    t={useT} // translate option names if they are i18n keys
+                                                                                    select={(e) => updateCond(idx, { fieldValue: e.code })}
+                                                                                    disabled={!cond?.selectedField?.code}
+                                                                                    selected={cond.fieldValue}
+                                                                                />
+                                                                            );
                                                                         }
-                                                                        disabled={!cond?.selectedField?.code}
-                                                                    />
-                                                                )}
+
+                                                                        // 2) Else if we have schemaCode, fetch options from MDMS
+                                                                        if (selectedFieldObj.schemaCode) {
+                                                                            return (
+                                                                                <MdmsValueDropdown
+                                                                                    schemaCode={selectedFieldObj.schemaCode}
+                                                                                    value={cond.fieldValue}
+                                                                                    onChange={(code) => updateCond(idx, { fieldValue: code })}
+                                                                                    t={useT}
+                                                                                />
+                                                                            );
+                                                                        }
+
+                                                                        // 3) Fallback: no enums and no schema -> plain text
+                                                                        return (
+                                                                            <TextInput
+                                                                                type="text"
+                                                                                populators={{ name: `text-${idx}` }}
+                                                                                placeholder={enterValueLabel}
+                                                                                value={cond.fieldValue}
+                                                                                onChange={(event) => updateCond(idx, { fieldValue: event.target.value })}
+                                                                                disabled={!cond?.selectedField?.code}
+                                                                            />
+                                                                        );
+                                                                    }
+
+                                                                    // Non-select fields keep your numeric/text handling
+                                                                    const numericValue = isNumericField(selectedFieldObj);
+                                                                    return (
+                                                                        <TextInput
+                                                                            type="text"
+                                                                            populators={{ name: `text-${idx}` }}
+                                                                            placeholder={numericValue ? t("ENTER_INTEGER_VALUE") || enterValueLabel : enterValueLabel}
+                                                                            value={cond.fieldValue}
+                                                                            onChange={(event) => {
+                                                                                const raw = event.target.value;
+                                                                                const next = numericValue ? sanitizeIntegerInput(raw) : raw;
+                                                                                updateCond(idx, { fieldValue: next });
+                                                                            }}
+                                                                            disabled={!cond?.selectedField?.code}
+                                                                        />
+                                                                    );
+                                                                })()}
+
                                                             </div>
                                                         </LabelFieldPair>
                                                     </div>
 
+                                                    {/* Delete */}
                                                     <div
                                                         style={{
                                                             marginLeft: "auto",
@@ -580,7 +717,7 @@ function DependentFieldsWrapper({
                                             style={{ minWidth: "auto" }}
                                         />
                                     </div>
-                                </div>
+                                </div>,
                             ]}
                             onOverlayClick={closePopup}
                             onClose={closePopup}

@@ -88,6 +88,8 @@ const RenderField = ({
   selectedField,
 }) => {
   const { t } = useTranslation();
+    const useT = useCustomT();
+  
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === drawerState?.appType)
     ?.localisableProperties?.includes(panelItem?.label);
@@ -208,7 +210,7 @@ const RenderField = ({
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
             value={
               isLocalisable
-                ? useCustomT(drawerState?.[panelItem?.bindTo])
+                ? useT(drawerState?.[panelItem?.bindTo])
                 : drawerState?.[panelItem?.bindTo] === true
                 ? ""
                 : drawerState?.[panelItem?.bindTo]
@@ -367,7 +369,7 @@ const RenderField = ({
                     <div key={option.code} style={{ marginTop: "16px" }}>
                       <FieldV1
                         label={`${t(entity)} - ${t(fieldKey)}`}
-                        value={useCustomT(option.code)} // ✅ Auto populated from localization
+                        value={useT(option.code)} // ✅ Auto populated from localization
                         type="text"
                         placeholder={t("ADD_LABEL_LOCALIZATION")}
                         onChange={(e) => {
