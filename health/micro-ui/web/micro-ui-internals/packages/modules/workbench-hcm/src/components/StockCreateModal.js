@@ -5,11 +5,14 @@ import {
   CloseSvg,
   Card,
   LabelFieldPair,
-  Dropdown
+  Dropdown,
+  Button
 } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
+
+const HRMS_CONTEXT_PATH = window?.globalConfigs?.getConfig("HRMS_CONTEXT_PATH") || "egov-hrms";
 
 const StockCreateModal = ({
   onClose,
@@ -35,7 +38,9 @@ const StockCreateModal = ({
     transactionReason: "",
     wayBillNumber: "",
     senderType: "",
-    receiverType: ""
+    receiverType: "",
+    senderId: "",
+    receiverId: ""
   });
   
   const [showToast, setShowToast] = useState(null);
@@ -43,9 +48,18 @@ const StockCreateModal = ({
   const [errors, setErrors] = useState({});
   
   // Project resource mapping state
-  const [projectResources, setProjectResources] = useState([]);
   const [availableProducts, setAvailableProducts] = useState([]);
   const [isLoadingProducts, setIsLoadingProducts] = useState(true);
+
+  // Facilities and staff state
+  const [projectFacilities, setProjectFacilities] = useState([]);
+  const [isLoadingFacilities, setIsLoadingFacilities] = useState(false);
+  const [senderStaffSearch, setSenderStaffSearch] = useState("");
+  const [receiverStaffSearch, setReceiverStaffSearch] = useState("");
+  const [senderStaffResult, setSenderStaffResult] = useState(null);
+  const [receiverStaffResult, setReceiverStaffResult] = useState(null);
+  const [isSearchingSenderStaff, setIsSearchingSenderStaff] = useState(false);
+  const [isSearchingReceiverStaff, setIsSearchingReceiverStaff] = useState(false);
 
   // Dropdown options
   const transactionTypes = [
@@ -89,8 +103,6 @@ const StockCreateModal = ({
         });
 
         if (res?.ProjectResources?.length > 0) {
-          setProjectResources(res.ProjectResources);
-          
           // Extract product variant IDs and fetch product details
           const productVariantIds = res.ProjectResources
             .filter(resource => resource.resource?.productVariantId)
@@ -156,8 +168,129 @@ const StockCreateModal = ({
 
     if (projectId && tenantId) {
       fetchProjectResources();
+      fetchProjectFacilities();
     }
   }, [projectId, tenantId, url, t]);
+
+  // Fetch project facilities
+  const fetchProjectFacilities = async () => {
+    if (!projectId || !tenantId) return;
+    
+    setIsLoadingFacilities(true);
+    try {
+      const res = await Digit.CustomService.getResponse({
+        url: `${url}/facility/v1/_search`,
+        body: {
+          ProjectFacility: {
+            projectId: [projectId],
+          },
+          apiOperation: "SEARCH"
+        },
+        params: {
+          tenantId: tenantId,
+          limit: 100,
+          offset: 0,
+        },
+      });
+
+      if (res?.ProjectFacilities?.length > 0) {
+        // Transform facilities into dropdown format
+        const facilities = res.ProjectFacilities.map(facility => ({
+          label: facility?.facilityId || facility?.id || 'Unnamed Facility',
+          value: facility?.facilityId,
+          facilityData: facility
+        }));
+        setProjectFacilities(facilities);
+      }
+    } catch (error) {
+      console.error("Error fetching project facilities:", error);
+      setShowToast({ 
+        label: t("WBH_FAILED_TO_LOAD_FACILITIES"), 
+        isError: true 
+      });
+      setTimeout(() => setShowToast(null), 5000);
+    } finally {
+      setIsLoadingFacilities(false);
+    }
+  };
+
+  // Staff search functionality
+  const staffSearchCriteria = {
+    url: `/${HRMS_CONTEXT_PATH}/employees/_search`,
+    config: { enable: true },
+  };
+
+  const staffSearchMutation = Digit.Hooks.useCustomAPIMutationHook(staffSearchCriteria);
+
+  const searchStaff = async (userName, isForSender = true) => {
+    if (!userName.trim()) {
+      setShowToast({ label: "WBH_PLEASE_ENTER_USERNAME", isError: true });
+      setTimeout(() => setShowToast(null), 5000);
+      return;
+    }
+
+    if (isForSender) {
+      setIsSearchingSenderStaff(true);
+    } else {
+      setIsSearchingReceiverStaff(true);
+    }
+
+    try {
+      await staffSearchMutation.mutate(
+        {
+          params: {
+            codes: userName.trim(),
+            tenantId,
+          },
+          body: {},
+        },
+        {
+          onSuccess: (data) => {
+            if (data?.Employees && data?.Employees?.length > 0) {
+              const employee = data.Employees[0];
+              if (isForSender) {
+                setSenderStaffResult(employee);
+                handleInputChange("senderId", employee.user?.userServiceUuid);
+              } else {
+                setReceiverStaffResult(employee);
+                handleInputChange("receiverId", employee.user?.userServiceUuid);
+              }
+            } else {
+              if (isForSender) {
+                setSenderStaffResult(null);
+                handleInputChange("senderId", "");
+              } else {
+                setReceiverStaffResult(null);
+                handleInputChange("receiverId", "");
+              }
+              setShowToast({ label: "WBH_USER_NOT_FOUND", isError: true });
+              setTimeout(() => setShowToast(null), 5000);
+            }
+          },
+          onError: () => {
+            if (isForSender) {
+              setSenderStaffResult(null);
+              setIsSearchingSenderStaff(false);
+            } else {
+              setReceiverStaffResult(null);
+              setIsSearchingReceiverStaff(false);
+            }
+            setShowToast({ label: "WBH_USER_SEARCH_FAILED", isError: true });
+            setTimeout(() => setShowToast(null), 5000);
+          }
+        }
+      );
+    } catch (error) {
+      setShowToast({ label: "WBH_USER_SEARCH_FAILED", isError: true });
+      setTimeout(() => setShowToast(null), 5000);
+    } finally {
+      if (isForSender) {
+        setIsSearchingSenderStaff(false);
+      } else {
+        setIsSearchingReceiverStaff(false);
+      }
+    }
+  };
 
   // Handle input changes
   const handleInputChange = (field, value) => {
@@ -176,6 +309,18 @@ const StockCreateModal = ({
           variation: selectedProduct.variation || ''
         };
       }
+    }
+
+    // Clear related fields when sender/receiver type changes
+    if (field === 'senderType') {
+      newFormData.senderId = "";
+      setSenderStaffSearch("");
+      setSenderStaffResult(null);
+    }
+    if (field === 'receiverType') {
+      newFormData.receiverId = "";
+      setReceiverStaffSearch("");
+      setReceiverStaffResult(null);
     }
     
     setFormData(newFormData);
@@ -259,6 +404,8 @@ const StockCreateModal = ({
           wayBillNumber: formData.wayBillNumber,
           senderType: formData.senderType,
           receiverType: formData.receiverType,
+          senderId: formData.senderId || null,
+          receiverId: formData.receiverId || null,
           additionalFields
         }
       ]
@@ -474,6 +621,130 @@ const StockCreateModal = ({
                 </div>
               </LabelFieldPair>
             </div>
+
+            {/* Dynamic Sender Selection */}
+            {formData.senderType && (
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginTop: "1rem" }}>
+                <div>
+                  <h4 style={{ marginBottom: "0.5rem", color: "#555" }}>{t("WBH_SENDER_DETAILS")}</h4>
+                  {formData.senderType === "WAREHOUSE" || formData.senderType === "FACILITY" ? (
+                    <LabelFieldPair>
+                      <div className="field">
+                        {isLoadingFacilities ? (
+                          <div style={{ padding: "8px 12px", color: "#666" }}>
+                            {t("WBH_LOADING_FACILITIES")}...
+                          </div>
+                        ) : projectFacilities.length > 0 ? (
+                          <Dropdown
+                            t={t}
+                            option={projectFacilities}
+                            selected={projectFacilities.find(f => f.value === formData.senderId)}
+                            optionKey="label"
+                            select={(value) => handleInputChange("senderId", value.value)}
+                            placeholder={t("WBH_SELECT_FACILITY")}
+                          />
+                        ) : (
+                          <div style={{ padding: "8px 12px", color: "#999", border: "1px solid #ccc", borderRadius: "4px" }}>
+                            {t("WBH_NO_FACILITIES_AVAILABLE")}
+                          </div>
+                        )}
+                      </div>
+                    </LabelFieldPair>
+                  ) :( formData.senderType === "FIELD_TEAM"|| formData.senderType === "DISTRIBUTOR") ? (
+                    <div>
+                      <LabelFieldPair>
+                        <div className="field">
+                          <TextInput
+                            name="senderStaffSearch"
+                            placeholder={t("WBH_SEARCH_STAFF_USERNAME")}
+                            value={senderStaffSearch}
+                            onChange={(e) => setSenderStaffSearch(e.target.value)}
+                            disabled={isSearchingSenderStaff}
+                          />
+                        </div>
+                      </LabelFieldPair>
+                      <Button 
+                        label={t("WBH_SEARCH_STAFF")} 
+                        type="button" 
+                        variation="secondary"
+                        onButtonClick={() => searchStaff(senderStaffSearch, true)}
+                        isDisabled={isSearchingSenderStaff || !senderStaffSearch.trim()}
+                        style={{ marginTop: "0.5rem", padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
+                      />
+                      {senderStaffResult && (
+                        <div style={{ marginTop: "0.5rem", padding: "8px", backgroundColor: "#f0f8ff", borderRadius: "4px" }}>
+                          <strong>{senderStaffResult.user?.name || senderStaffResult.code}</strong>
+                          <div style={{ fontSize: "0.85rem", color: "#666" }}>
+                            {senderStaffResult.assignments?.[0]?.designation || 'No designation'}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  ) : null}
+                </div>
+
+                {/* Dynamic Receiver Selection */}
+                {formData.receiverType && (
+                  <div>
+                    <h4 style={{ marginBottom: "0.5rem", color: "#555" }}>{t("WBH_RECEIVER_DETAILS")}</h4>
+                    {formData.receiverType === "WAREHOUSE" || formData.receiverType === "FACILITY" ? (
+                      <LabelFieldPair>
+                        <div className="field">
+                          {isLoadingFacilities ? (
+                            <div style={{ padding: "8px 12px", color: "#666" }}>
+                              {t("WBH_LOADING_FACILITIES")}...
+                            </div>
+                          ) : projectFacilities.length > 0 ? (
+                            <Dropdown
+                              t={t}
+                              option={projectFacilities}
+                              selected={projectFacilities.find(f => f.value === formData.receiverId)}
+                              optionKey="label"
+                              select={(value) => handleInputChange("receiverId", value.value)}
+                              placeholder={t("WBH_SELECT_FACILITY")}
+                            />
+                          ) : (
+                            <div style={{ padding: "8px 12px", color: "#999", border: "1px solid #ccc", borderRadius: "4px" }}>
+                              {t("WBH_NO_FACILITIES_AVAILABLE")}
+                            </div>
+                          )}
+                        </div>
+                      </LabelFieldPair>
+                    ) : formData.receiverType === "FIELD_TEAM" ? (
+                      <div>
+                        <LabelFieldPair>
+                          <div className="field">
+                            <TextInput
+                              name="receiverStaffSearch"
+                              placeholder={t("WBH_SEARCH_STAFF_USERNAME")}
+                              value={receiverStaffSearch}
+                              onChange={(e) => setReceiverStaffSearch(e.target.value)}
+                              disabled={isSearchingReceiverStaff}
+                            />
+                          </div>
+                        </LabelFieldPair>
+                        <Button 
+                          label={t("WBH_SEARCH_STAFF")} 
+                          type="button" 
+                          variation="secondary"
+                          onButtonClick={() => searchStaff(receiverStaffSearch, false)}
+                          isDisabled={isSearchingReceiverStaff || !receiverStaffSearch.trim()}
+                          style={{ marginTop: "0.5rem", padding: "0.4rem 0.8rem", fontSize: "0.85rem" }}
+                        />
+                        {receiverStaffResult && (
+                          <div style={{ marginTop: "0.5rem", padding: "8px", backgroundColor: "#f0f8ff", borderRadius: "4px" }}>
+                            <strong>{receiverStaffResult.user?.name || receiverStaffResult.code}</strong>
+                            <div style={{ fontSize: "0.85rem", color: "#666" }}>
+                              {receiverStaffResult.assignments?.[0]?.designation || 'No designation'}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    ) : null}
+                  </div>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Additional Information */}
