@@ -4,7 +4,7 @@ import React from "react";
 import { getI18n } from "react-i18next";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Provider } from "react-redux";
-import { BrowserRouter as Router } from "react-router-dom";
+// import { BrowserRouter as Router } from "react-router-dom";
 import { DigitApp, DigitAppWrapper } from "./App";
 import SelectOtp from "./pages/citizen/Login/SelectOtp";
 import ChangeCity from "./components/ChangeCity";
@@ -43,7 +43,6 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserT
   }
   return (
     <Provider store={data}>
-      <Router>
         <BodyContainer>
           {Digit.Utils.getMultiRootTenant() ? (
             <DigitAppWrapper
@@ -68,7 +67,6 @@ const DigitUIWrapper = ({ stateCode, enabledModules, defaultLanding,allowedUserT
             />
           )}
         </BodyContainer>
-      </Router>
     </Provider>
   );
 };
@@ -147,7 +145,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, defaultLanding,al
 
   return (
     <div>
-      <ErrorBoundary>
+      {/* <ErrorBoundary> */}
         <QueryClientProvider client={queryClient}>
           <ComponentProvider.Provider value={registry}>
             <PrivacyProvider.Provider value={privacyContextValue}>
@@ -155,7 +153,7 @@ export const DigitUI = ({ stateCode, registry, enabledModules, defaultLanding,al
             </PrivacyProvider.Provider>
           </ComponentProvider.Provider>
         </QueryClientProvider>
-      </ErrorBoundary>
+      {/* </ErrorBoundary> */}
     </div>
   );
 };

@@ -13,9 +13,10 @@ const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
   acc[`process.env.${key}`] = JSON.stringify(val);
   return acc;
 }, {});
+const isProduction = process.env.NODE_ENV === 'production';
 
 module.exports = {
-  mode: "development",
+  mode: isProduction ? 'production' : 'development',
   entry: path.resolve(__dirname, "src/index.js"),
   devtool: "source-map",
   module: {
@@ -27,7 +28,7 @@ module.exports = {
           loader: "babel-loader",
           options: {
             presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: []
+            plugins: ["@babel/plugin-proposal-optional-chaining"],
           },
         },
       },
@@ -38,19 +39,58 @@ module.exports = {
     ],
   },
   output: {
-    filename: "[name].bundle.js",
+    filename: "[name].[contenthash:8].bundle.js",
+    chunkFilename: "[name].[contenthash:8].chunk.js",
     path: path.resolve(__dirname, "build"),
-    publicPath: "/",
+    clean: true, // Clean the output directory before emit
+    publicPath: "/workbench-ui/",
   },
   optimization: {
     splitChunks: {
       chunks: "all",
       minSize: 20000,
-      maxSize: 50000,
-      enforceSizeThreshold: 50000,
+      maxSize: 244000, // Increased to handle large modules better
+      enforceSizeThreshold: 244000,
       minChunks: 1,
       maxAsyncRequests: 30,
-      maxInitialRequests: 30,
+      maxInitialRequests: 10, // Reduced to limit initial requests
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          chunks: 'all',
+          priority: 10,
+          maxSize: 244000,
+        },
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+          name: 'react',
+          chunks: 'all',
+          priority: 20,
+          enforce: true,
+        },
+        digitUI: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-(libraries|components|react-components|module-core)[\\/]/,
+          name: 'digit-ui',
+          chunks: 'all',
+          priority: 15,
+          maxSize: 244000,
+        },
+        campaign: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-campaign-manager[\\/]/,
+          name: 'campaign-module',
+          chunks: 'async', // Load campaign module asynchronously
+          priority: 5,
+          maxSize: 244000,
+        },
+        workbench: {
+          test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
+          name: 'workbench-module',
+          chunks: 'async', // Load workbench module asynchronously
+          priority: 5,
+          maxSize: 244000,
+        },
+      },
     },
   },
   plugins: [
@@ -62,7 +102,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      templateParameters: {
+      templateParameters: isProduction ? {} : {
         REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
       },
     }),
@@ -71,23 +111,44 @@ module.exports = {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true,
+    alias: {
+      // Fix case sensitivity issues with React
+      "React": path.resolve(__dirname, "../node_modules/react"),
+      "react": path.resolve(__dirname, "../node_modules/react"),
+      "ReactDOM": path.resolve(__dirname, "../node_modules/react-dom"),
+      "react-dom": path.resolve(__dirname, "../node_modules/react-dom"),
+    },
     fallback: {
       process: require.resolve("process/browser"),
     },
   },
   devServer: {
-    static: path.join(__dirname, "dist"),
+    static: path.join(__dirname, "build"),
     compress: true,
     port: 3000,
     hot: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '/workbench-ui/index.html',
+      rewrites: [
+        { from: /^\/workbench-ui/, to: '/workbench-ui/index.html' }
+      ]
+    },
+    watchFiles: isProduction ? undefined : {
+      paths: ["**/*"], // watch all project files
+      options: {
+        ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
+        poll: 1000, // check for changes every second
+        aggregateTimeout: 300, // delay rebuild after first change
+      },
+    },
     proxy: [
       {
-        context: ["/egov-mdms-service",
+        context: [
           "/access/v1/actions/mdms",
           "/tenant-management",
           "/user-otp",
           "/egov-mdms-service",
+          "/plan-service",
           "/mdms-v2",
           "/egov-idgen",
           "/egov-location",
@@ -158,7 +219,10 @@ module.exports = {
           "/billing-service/bill/v2/_fetchbill",
           "/tenant-management",
           "/default-data-handler",
-          "/facility/v1/_create"
+          "/facility/v1/_create",
+          "/service-request/",
+          "/product/",
+          "/health-service-request/"
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,

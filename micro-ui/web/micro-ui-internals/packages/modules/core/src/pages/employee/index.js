@@ -135,7 +135,7 @@ const EmployeeApp = ({
             )}
             <div className={!noTopBar ? `main ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
               <div className="employee-app-wrapper digit-home-app-wrapper">
-                <ErrorBoundary initData={initData}>
+                {/* <ErrorBoundary initData={initData}> */}
                   <AppModules
                     stateCode={stateCode}
                     userType="employee"
@@ -143,7 +143,7 @@ const EmployeeApp = ({
                     appTenants={appTenants}
                     additionalComponent={additionalComponent}
                   />
-                </ErrorBoundary>
+                {/* </ErrorBoundary> */}
               </div>
               <div className="employee-home-footer">
                 <ImageComponent

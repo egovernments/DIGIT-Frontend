@@ -1,6 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
+import { BrowserRouter } from "react-router-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 window.Digit = window.Digit || {};
@@ -8,7 +9,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["assignment", "HRMS", "Workbench", "Utilities","Campaign"];
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -43,7 +44,11 @@ const initDigitUI = () => {
   const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "mz";
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
-  root.render(<MainApp stateCode={stateCode} enabledModules={enabledModules} />);
+  root.render(<>
+  <BrowserRouter>
+    <MainApp stateCode={stateCode} enabledModules={enabledModules} />
+  </BrowserRouter>
+  </>);
 };
 
 const MainApp = ({ stateCode, enabledModules }) => {
@@ -52,13 +57,10 @@ const MainApp = ({ stateCode, enabledModules }) => {
 
   useEffect(() => {
     initLibraries().then(async () => {
-      // Temporarily disabled for debugging
-      try {
-        const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench");
-        initWorkbenchComponents();
-      } catch (error) {
-        console.warn("Workbench module failed to load:", error);
-      }
+      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
+      // const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+      initCampaignComponents();
+      // initWorkbenchComponents();
       setIsReady(true);
     });
   }, []);
@@ -75,7 +77,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   return (
     <Suspense fallback={<div>Loading...</div>}>
       {window.Digit && (
-        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules}   allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
+        <DigitUILazy stateCode={stateCode} enabledModules={enabledModules} allowedUserTypes={["employee", "citizen"]} defaultLanding="employee" />
       )}
     </Suspense>
   );

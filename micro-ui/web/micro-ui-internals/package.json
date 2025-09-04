@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-
+    "packages/modules/core",
+    "packages/modules/campaign-manager",
+    "example"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -26,8 +28,9 @@
     "buildD:react-components": "cd packages/react-components && yarn build",
     "build:core": "cd packages/modules/core && yarn build",
     "buildDev:core": "cd packages/modules/core && yarn build:dev",
+    "buildDev:campaign": "cd packages/modules/campaign-manager && yarn build:dev",
     "build:workbench": "cd packages/modules/workbench && yarn build",
-    "buildDev:workbench": "cd packages/modules/workbench && yarn build:dev",
+    "buildDevd:workbench": "cd packages/modules/workbench && yarn build:dev",
     "dev:example": "cd example && yarn start",
     "clean": "run-s clean:**",
     "clean-nm": "rm -rf node_modules && yarn clean:ui-components && yarn clean:react-components && yarn clean:libraries && yarn clean:core && yarn clean:example && yarn clean:workbench",
@@ -49,7 +52,7 @@
     "clean:WebyarnLock": "cd ../ && rm -rf yarn.lock",
     "clean:Web": "cd ../ && rm -rf node_modules",
     "clean:mui": "rm -rf node_modules",
-    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' + -o -name 'yarn.lock' -type f -exec rm -f '{}' +"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",
@@ -80,12 +83,12 @@
     "lint-staged": "12.3.7",
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2",
+    "rimraf": "^5.0.1",
+    "semver": "^7.5.4",
     "vite": "^6.1.0",
     "webpack": "^5.97.1",
-    "webpack-cli": "^6.0.1",
-    "webpack-dev-server": "^5.2.0",
-    "semver": "^7.5.4",
-    "rimraf": "^5.0.1"
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^5.2.0"
   },
   "dependencies": {
     "@babel/core": "^7.26.10",
@@ -101,6 +104,7 @@
     "@egovernments/digit-ui-react-components": "2.0.0-rc19-01",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "compression-webpack-plugin": "^11.1.0",
     "cross-env": "^7.0.3",
     "css-loader": "5.2.6",

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "private": true,
-  "homepage": "digit-ui",
+  "homepage": "/workbench-ui",
   "scripts": {
     "start": "webpack serve --config webpack.config.js --mode development",
     "start:old": "react-scripts start"
@@ -18,8 +18,8 @@
     "@egovernments/digit-ui-components": "2.0.0-rc19-01",
     "@egovernments/digit-ui-libraries": "2.0.0-rc19-01",
     "@egovernments/digit-ui-module-core": "2.0.0-rc19-01",
-    "@egovernments/digit-ui-module-workbench": "2.0.0-rc19-01",
     "@egovernments/digit-ui-react-components": "2.0.0-rc19-01",
+    "@egovernments/digit-ui-module-campaign-manager": "0.4.0",
     "http-proxy-middleware": "^1.0.5",
     "react-i18next": "15.0.0",
     "react-router-dom": "6.25.1",
