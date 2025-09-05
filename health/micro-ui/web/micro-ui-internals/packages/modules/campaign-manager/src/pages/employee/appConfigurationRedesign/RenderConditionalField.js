@@ -22,6 +22,7 @@ export const RenderConditionalField = ({
   selectedField,
 }) => {
   const { t } = useTranslation();
+  const useT = useCustomT();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === (drawerState?.appType || drawerState?.type))
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
@@ -39,7 +40,7 @@ export const RenderConditionalField = ({
           label={cField?.label}
           withoutLabel={Boolean(!cField?.label)}
           value={
-            isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
+            isLocalisable ? useT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
           }
           config={{
             step: "",
@@ -91,7 +92,7 @@ export const RenderConditionalField = ({
                 className=""
                 type={"text"}
                 name="title"
-                value={useCustomT(item?.name)}
+                value={useT(item?.name)}
                 onChange={(event) => {
                   setDrawerState((prev) => ({
                     ...prev,
@@ -227,6 +228,7 @@ export const RenderConditionalField = ({
       return (
         <DependentFieldsWrapper
           t={t}
+          currentState={state}
           parentState={parentState}
           onExpressionChange={handleExpressionChange}
           screenConfig={screenConfig}
