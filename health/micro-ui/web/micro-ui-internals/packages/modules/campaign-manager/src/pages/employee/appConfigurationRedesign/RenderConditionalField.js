@@ -184,31 +184,18 @@ export const RenderConditionalField = ({
     case "time":
       return (
         <span>
-        <FieldV1
-          type={cField?.type}
-          label={cField?.label}
-          withoutLabel={Boolean(!cField?.label)}
-          value={
-            isLocalisable ? useT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
-          }
-          config={{
-            step: "",
-          }}
-          onChange={(event) => {
-            const value = event.target.value;
-            if (isLocalisable) {
-              updateLocalization(
-                drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
-                  ? drawerState?.[cField.bindTo]
-                  : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
-                      drawerState?.jsonPath || drawerState?.id
-                    }`,
-                Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
-                value
-              );
-              setDrawerState((prev) => ({
-                ...prev,
-                [cField?.bindTo]:
+          <FieldV1
+            type={cField?.type}
+            label={cField?.label}
+            withoutLabel={Boolean(!cField?.label)}
+            value={isLocalisable ? useT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]}
+            config={{
+              step: "",
+            }}
+            onChange={(event) => {
+              const value = event.target.value;
+              if (isLocalisable) {
+                updateLocalization(
                   drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
                     ? drawerState?.[cField.bindTo]
                     : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${cField.bindTo}_${
