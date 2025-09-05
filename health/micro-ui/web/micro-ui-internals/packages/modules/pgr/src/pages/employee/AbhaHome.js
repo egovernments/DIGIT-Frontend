@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocation, useHistory } from "react-router-dom";
 import {
-    Loader,
     Card,
     LabelFieldPair,
     Button,
@@ -11,17 +11,20 @@ import {
     ActionBar,
     Header,
     Dropdown,
+    Loader,
     Tag,
     Stepper,
     Footer,
+    PopUp,
 } from "@egovernments/digit-ui-components";
 import { set } from "lodash";
 
 const AbhaHelpDeskConsole = () => {
     const { t } = useTranslation();
-
+    const history = useHistory();
     const [activeTab, setActiveTab] = useState("download"); // enroll | verify | download | check
     const [data, setData] = useState(null);
+    const [showPopUp, setShowPopUp] = useState(false);
     const [abhaData, setAbhaData] = useState(null);
     const [aadhaarNumber, setAadhaarNumber] = useState("");
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -105,6 +108,7 @@ const AbhaHelpDeskConsole = () => {
 
                     },
                     onError: (error) => {
+                        setShowPopUp(true);
                         setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
                     }
                 }
@@ -120,7 +124,6 @@ const AbhaHelpDeskConsole = () => {
     });
 
     const downloadFiles = async () => {
-        console.log(downloadOption, "downloadOption");
         try {
             await mutation3.mutateAsync(
                 {
@@ -129,35 +132,39 @@ const AbhaHelpDeskConsole = () => {
                         card_type: downloadOption?.code === "PNG" ? "getPngCard" : "getCard",
                         token: abhaData?.token,
                         refresh_token: abhaData?.refreshToken,
-                        test: {
-                            tenantId: tenantId,
-                        }
-                    }
+                        test: { tenantId },
+                    },
                 },
                 {
                     onSuccess: (data) => {
-                        console.log("data", data);
-                        // setAbhaData(data);
-                        // setCurrentStep(3);
-                        setToast({ key: "success", label: t("success"), type: "success" });
+                        const file = new Blob([data], { type: downloadOption?.code === "PNG" ? "image/png" : "application/pdf" });
+                        const fileURL = window.URL.createObjectURL(file);
 
+                        const link = document.createElement("a");
+                        link.href = fileURL;
+                        link.download = downloadOption?.code === "PNG" ? "card.png" : "card.pdf";
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+
+                        setToast({ key: "success", label: t("success"), type: "success" });
                     },
                     onError: (error) => {
                         setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
-                    }
+                    },
                 }
             );
         } catch (error) {
             setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
         }
-    }
+    };
 
 
     const mutation3 = Digit.Hooks.useCustomAPIMutationHook({
         url: "/hcm-abha/api/abha/card/fetch-v2",
     });
 
-    if (loading || mutation.loading || mutation2.loading) return <Loader />;
+    if (loading || mutation.isLoading || mutation2.isLoading || mutation3.isLoading) return <Loader page={true} variant={"PageLoader"} />;;
 
     const steps = [
         t("Send Aadhaar OTP"),
@@ -170,7 +177,7 @@ const AbhaHelpDeskConsole = () => {
     return (
         <React.Fragment  >
             <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
-                {t("CHECK ABHA ENROLLMENT")}
+                {t("ABHA HELP-DESK CONSOLE")}
             </HeaderComponent>
             {/* Page Header */}
             <div style={{ marginBottom: "1.5rem" }}>
@@ -194,7 +201,7 @@ const AbhaHelpDeskConsole = () => {
                 </div>
 
                 <Stepper
-                    customSteps={["SEND OTP", "VARIFY OTP", "DOWNLOAD CARD"]}
+                    customSteps={["SEND OTP", "VERIFY OTP", "DOWNLOAD CARD"]}
                     currentStep={currentStep}
                     onStepClick={(currentStep) => { }}
                     direction={"horizontal"}
@@ -281,6 +288,43 @@ const AbhaHelpDeskConsole = () => {
 
 
             </Card>
+
+            {showPopUp && (
+                <PopUp
+                    className='accessibility-pop-up'
+                    onClose={() => setShowPopUp(false)}
+                    heading={t(`ENROLL CITIZEN FOR ABHA?`)}
+                    description={t(`NO ABHA RECORD WAS FOUND FOR THE ENTERED AADHAAR. DO YOU WANT TO START ENROLLMENT PROCESS NOW?`)}
+                    children={[
+                    ]}
+                    onOverlayClick={() => setShowPopUp(false)}
+                    footerChildren={[
+                        <Button
+                            className={"campaign-type-alert-button"}
+                            type={"button"}
+                            size={"large"}
+                            variation={"secondary"}
+                            label={t(`CANCEL`)}
+                            onClick={() => setShowPopUp(false)}
+                            // style={{ width: "160px" }}
+                            title={t(`CANCEL`)}
+                        />,
+                        <Button
+                            className={"campaign-type-alert-button"}
+                            type={"button"}
+                            size={"large"}
+                            variation={"primary"}
+                            title={t(`START ENROLLMENT`)}
+                            label={t(`START ENROLLMENT`)}
+                            // style={{ width: "160px" }}
+                            onClick={() => {
+                                history.push(`/${window.contextPath}/employee/pgr/abha-enroll`);
+                            }} // Calls save function on click
+                        //   isDisabled={!isChanged() || mutation.isLoading || disableEditing} // Disable if no changes are made or during API call
+                        />,
+                    ]}
+                />
+            )}
 
             <Footer
                 actionFields={[

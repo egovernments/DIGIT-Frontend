@@ -115,6 +115,7 @@ module.exports = function (app) {
     "/hcm-abha/api/abha/login/profile/request-otp",
     "/hcm-abha/api/abha/login/profile/verify-otp",
     "/hcm-abha/api/abha/card/fetch-v2",
+    "/hcm-abha/api/abha/create/verify-aadhaar-otp-v2",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
