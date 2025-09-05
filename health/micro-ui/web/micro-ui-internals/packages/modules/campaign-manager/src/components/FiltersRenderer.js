@@ -46,7 +46,8 @@ const FiltersRenderer = ({ cField, drawerState, setDrawerState, t, disabled }) =
       select: (data) =>
         data?.[localSelectedSchema?.moduleName]?.[localSelectedSchema.masterName] || [],
     },
-    { schemaCode: "FILTERSDROPDOWNLIST" }
+    { schemaCode: "FILTERSDROPDOWNLIST" },
+    true //mdmsv2
   );
 
   // --- 3) Prefill active toggles:
