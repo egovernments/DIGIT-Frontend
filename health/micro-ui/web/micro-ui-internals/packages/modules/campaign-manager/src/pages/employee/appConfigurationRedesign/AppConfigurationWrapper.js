@@ -13,7 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const AppConfigContext = createContext();
 
-const initialState = {};
+const initialState = { errorMap: {} };
 
 export const useAppConfigContext = () => {
   return useContext(AppConfigContext);
@@ -281,6 +281,29 @@ const reducer = (state = initialState, action, updateLocalization) => {
           },
         ],
       };
+    case "SET_FIELD_ERROR": {
+      const { key, error } = action.payload || {};
+      const prevError = state && state.errorMap ? state.errorMap[key] : null;
+      const nextError = error == null ? null : error;
+      if (prevError === nextError) return state; // avoid unnecessary rerenders
+      return {
+        ...state,
+        errorMap: {
+          ...state.errorMap,
+          [key]: nextError,
+        },
+      };
+    }
+    case "CLEAR_FIELD_ERROR": {
+      const { key } = action.payload || {};
+      if (!state?.errorMap || !Object.prototype.hasOwnProperty.call(state.errorMap, key)) return state;
+      const { [key]: _omit, ...rest } = state.errorMap;
+      return { ...state, errorMap: rest };
+    }
+    case "CLEAR_ALL_ERRORS": {
+      if (!state?.errorMap || Object.keys(state.errorMap).length === 0) return state;
+      return { ...state, errorMap: {} };
+    }
     case "PATCH_PAGE_CONDITIONAL_NAV": {
       const { pageName, data } = action; // data is the array from onConditionalNavigateChange
 
@@ -523,6 +546,31 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return;
   };
   const handleSubmit = async (finalSubmit, tabChange) => {
+    const hasErrors = Boolean(state?.errorMap && Object.keys(state.errorMap).length > 0);
+    if (hasErrors) {
+      // Try to include field labels in the error toast for better clarity
+      const errorKeys = Object.keys(state.errorMap || {});
+      const errorFieldIds = errorKeys.map((k) => (k || "").split("::")[0]);
+
+      // Collect all fields from current screen data
+      const allFields = (state?.screenData || []).flatMap((screen) => (screen?.cards || []).flatMap((card) => card?.fields || []));
+
+      // Find the first field with an error to get its translated label
+      const firstErrorField = errorFieldIds
+        .map((id) => allFields.find((f) => (f?.jsonPath && f.jsonPath === id) || (f?.id && f.id === id)))
+        .filter(Boolean)[0];
+
+      if (firstErrorField?.label) {
+        const translatedLabel = locState?.find((i) => i.code === firstErrorField.label)?.[currentLocale];
+        setShowToast({
+          key: "error",
+          label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")} ${translatedLabel ? translatedLabel : ""}`,
+        });
+      } else {
+        setShowToast({ key: "error", label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") });
+      }
+      return;
+    }
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
       const errorCheck = validateFromState(
@@ -584,7 +632,15 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return <Loader page={true} variant={"PageLoader"} />;
   }
   return (
-    <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
+    <AppConfigContext.Provider
+      value={{
+        state,
+        dispatch,
+        openAddFieldPopup,
+        setFieldError: (key, error) => dispatch({ type: "SET_FIELD_ERROR", payload: { key, error } }),
+        clearFieldError: (key) => dispatch({ type: "CLEAR_FIELD_ERROR", payload: { key } }),
+      }}
+    >
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
       <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useT} />
       <div className="appConfig-flex-action">
@@ -659,6 +715,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
                 title={t("BACK")}
                 icon="ArrowBack"
                 size="small"
+                isDisabled={Boolean(
+                  state?.drawerField &&
+                    Object.keys(state?.errorMap || {}).some((key) =>
+                      key.startsWith(`${state.drawerField?.jsonPath || state.drawerField?.id || "field"}::`)
+                    )
+                )}
                 onClick={() =>
                   dispatch({
                     type: "UNSELECT_DRAWER_FIELD",
