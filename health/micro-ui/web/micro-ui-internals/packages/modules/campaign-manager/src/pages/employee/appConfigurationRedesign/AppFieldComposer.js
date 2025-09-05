@@ -114,7 +114,8 @@ const MdmsDropdown = ({
         return data?.[moduleName]?.[masterName]?.filter((item) => item.active);
       },
     },
-    { schemaCode: "MDMSDROPDOWNLIST" } //mdmsv2
+    { schemaCode: "MDMSDROPDOWNLIST" } ,
+    true //mdmsv2
   );
 
   if (isLoading) return <div>Loading...</div>;

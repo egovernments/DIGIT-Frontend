@@ -13,7 +13,7 @@ import { useQueryClient } from "@tanstack/react-query";
 
 const AppConfigContext = createContext();
 
-const initialState = {};
+const initialState = { errorMap: {} };
 
 export const useAppConfigContext = () => {
   return useContext(AppConfigContext);
@@ -129,6 +129,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                       ...j.fields,
                       {
                         ...action?.payload?.fieldData,
+                        order: j.fields.length + 1,
                         jsonPath: `${item?.name}_${j?.header}_newField${nextCounter}`,
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
@@ -280,6 +281,53 @@ const reducer = (state = initialState, action, updateLocalization) => {
           },
         ],
       };
+    case "SET_FIELD_ERROR": {
+      const { key, error } = action.payload || {};
+      const prevError = state && state.errorMap ? state.errorMap[key] : null;
+      const nextError = error == null ? null : error;
+      if (prevError === nextError) return state; // avoid unnecessary rerenders
+      return {
+        ...state,
+        errorMap: {
+          ...state.errorMap,
+          [key]: nextError,
+        },
+      };
+    }
+    case "CLEAR_FIELD_ERROR": {
+      const { key } = action.payload || {};
+      if (!state?.errorMap || !Object.prototype.hasOwnProperty.call(state.errorMap, key)) return state;
+      const { [key]: _omit, ...rest } = state.errorMap;
+      return { ...state, errorMap: rest };
+    }
+    case "CLEAR_ALL_ERRORS": {
+      if (!state?.errorMap || Object.keys(state.errorMap).length === 0) return state;
+      return { ...state, errorMap: {} };
+    }
+    case "PATCH_PAGE_CONDITIONAL_NAV": {
+      const { pageName, data } = action; // data is the array from onConditionalNavigateChange
+
+      const patchArray = (arr) => {
+        if (!Array.isArray(arr) || arr.length === 0) return arr;
+
+        // If pageName is provided, try to patch by name
+        if (pageName) {
+          const idx = arr.findIndex((p) => p?.name === pageName);
+          if (idx !== -1) {
+            return arr.map((p, i) => (i === idx ? { ...p, conditionalNavigateTo: data } : p));
+          }
+        }
+
+        // Fallback: patch the first page (your “current page is first” invariant)
+        return [{ ...arr[0], conditionalNavigateTo: data }, ...arr.slice(1)];
+      };
+
+      return {
+        ...state,
+        screenConfig: patchArray(state.screenConfig),
+        screenData: patchArray(state.screenData),
+      };
+    }
     default:
       return state;
   }
@@ -288,6 +336,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
 function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentState }) {
+  const useT = useCustomT();
   const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
@@ -298,7 +347,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
   const addFieldDataLabel = useMemo(() => {
-    return addFieldData?.label ? useCustomT(addFieldData?.label) : null;
+    return addFieldData?.label ? useT(addFieldData?.label) : null;
   }, [addFieldData]);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -324,7 +373,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
         return data?.["HCM-ADMIN-CONSOLE"];
       },
     },
-    { schemaCode: "BASE_APP_MASTER_DATA" } //mdmsv2
+    { schemaCode: "BASE_APP_MASTER_DATA" } ,
+    true //mdmsv2
   );
   useEffect(() => {
     if (!isLoadingAppConfigMdmsData && AppConfigMdmsData && screenConfig && fieldMasterName) {
@@ -496,6 +546,31 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return;
   };
   const handleSubmit = async (finalSubmit, tabChange) => {
+    const hasErrors = Boolean(state?.errorMap && Object.keys(state.errorMap).length > 0);
+    if (hasErrors) {
+      // Try to include field labels in the error toast for better clarity
+      const errorKeys = Object.keys(state.errorMap || {});
+      const errorFieldIds = errorKeys.map((k) => (k || "").split("::")[0]);
+
+      // Collect all fields from current screen data
+      const allFields = (state?.screenData || []).flatMap((screen) => (screen?.cards || []).flatMap((card) => card?.fields || []));
+
+      // Find the first field with an error to get its translated label
+      const firstErrorField = errorFieldIds
+        .map((id) => allFields.find((f) => (f?.jsonPath && f.jsonPath === id) || (f?.id && f.id === id)))
+        .filter(Boolean)[0];
+
+      if (firstErrorField?.label) {
+        const translatedLabel = locState?.find((i) => i.code === firstErrorField.label)?.[currentLocale];
+        setShowToast({
+          key: "error",
+          label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")} ${translatedLabel ? translatedLabel : ""}`,
+        });
+      } else {
+        setShowToast({ key: "error", label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") });
+      }
+      return;
+    }
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
       const errorCheck = validateFromState(
@@ -557,9 +632,17 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return <Loader page={true} variant={"PageLoader"} />;
   }
   return (
-    <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
+    <AppConfigContext.Provider
+      value={{
+        state,
+        dispatch,
+        openAddFieldPopup,
+        setFieldError: (key, error) => dispatch({ type: "SET_FIELD_ERROR", payload: { key, error } }),
+        clearFieldError: (key) => dispatch({ type: "CLEAR_FIELD_ERROR", payload: { key } }),
+      }}
+    >
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useT} />
       <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
@@ -632,6 +715,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
                 title={t("BACK")}
                 icon="ArrowBack"
                 size="small"
+                isDisabled={Boolean(
+                  state?.drawerField &&
+                    Object.keys(state?.errorMap || {}).some((key) =>
+                      key.startsWith(`${state.drawerField?.jsonPath || state.drawerField?.id || "field"}::`)
+                    )
+                )}
                 onClick={() =>
                   dispatch({
                     type: "UNSELECT_DRAWER_FIELD",
@@ -642,7 +731,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
-              <AppFieldScreenWrapper />
+              <AppFieldScreenWrapper parentState={parentState}/>
             </DndProvider>
           )}
         </SidePanel>
@@ -732,7 +821,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
               required={true}
               type={"text"}
               label={`${t("ADD_FIELD_LABEL")}`}
-              value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
+              value={addFieldData?.label ? useT(addFieldData?.label) : ""}
               config={{
                 step: "",
               }}
