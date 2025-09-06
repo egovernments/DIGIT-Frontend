@@ -19,11 +19,11 @@ const TaskComponent = (props) => {
   const [pageSize, setPageSize] = useState(props?.userId?1000:100);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   
-  // Use the project hierarchy context (optional - for caching only)
-  const { 
-    getFromCache, 
-    addToCache
-  } = useProjectHierarchy();
+  // // Use the project hierarchy context (optional - for caching only)
+  // const { 
+  //   getFromCache, 
+  //   addToCache
+  // } = useProjectHierarchy();
 
   // Date filter state
   const [selectedDate, setSelectedDate] = useState("");
@@ -85,7 +85,7 @@ const TaskComponent = (props) => {
   useEffect(() => {
     if (projectTask && projectTask.length > 0) {
       // Cache the task data for 5 minutes
-      addToCache(`tasks-${props.projectId}-${page}-${pageSize}`, projectTask, 300000);
+      // addToCache(`tasks-${props.projectId}-${page}-${pageSize}`, projectTask, 300000);
     }
   }, [projectTask, props.projectId, page, pageSize, addToCache]);
 

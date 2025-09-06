@@ -1,0 +1,269 @@
+/* Campaign Status Screen Styles */
+
+.campaign-status-container {
+  padding: 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.campaign-status-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.campaign-info {
+  flex: 1;
+  min-width: 250px;
+}
+
+.campaign-actions {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+/* Progress Circle Styles */
+.progress-circle {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  background: conic-gradient(#4CAF50 0deg var(--progress-deg), #e0e0e0 var(--progress-deg) 360deg);
+}
+
+.progress-inner {
+  width: 70px;
+  height: 70px;
+  background-color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+}
+
+/* Summary Card Styles */
+.summary-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.summary-card {
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+  transition: box-shadow 0.2s ease;
+}
+
+.summary-card:hover {
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.summary-card-header {
+  display: flex;
+  align-items: center;
+  color: #333;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.summary-card-header svg {
+  margin-right: 0.5rem;
+  opacity: 0.7;
+}
+
+.summary-stats {
+  font-size: 0.9rem;
+  color: #666;
+}
+
+.summary-stats div {
+  margin-bottom: 0.25rem;
+}
+
+.summary-stats strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Process List Styles */
+.process-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.process-item {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: white;
+  transition: all 0.2s ease;
+  border-left: 4px solid var(--status-color);
+}
+
+.process-item:hover {
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  transform: translateY(-1px);
+}
+
+.process-icon {
+  margin-right: 1rem;
+  min-width: 24px;
+}
+
+.process-content {
+  flex: 1;
+}
+
+.process-title {
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.process-subtitle {
+  font-size: 0.85rem;
+  color: #666;
+  font-family: monospace;
+}
+
+.process-status {
+  padding: 0.25rem 0.75rem;
+  border-radius: 12px;
+  font-size: 0.8rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Status Colors */
+.status-completed {
+  background-color: #4CAF50;
+  color: white;
+}
+
+.status-pending {
+  background-color: #FF9800;
+  color: white;
+}
+
+.status-failed {
+  background-color: #F44336;
+  color: white;
+}
+
+.status-in-progress {
+  background-color: #2196F3;
+  color: white;
+}
+
+/* Navigation Buttons */
+.navigation-buttons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+}
+
+/* Animation for rotating refresh icon */
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.rotating {
+  animation: rotate 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .campaign-status-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .campaign-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+  
+  .summary-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .process-item {
+    flex-direction: column;
+    align-items: flex-start;
+    text-align: left;
+  }
+  
+  .process-icon {
+    margin-right: 0;
+    margin-bottom: 0.5rem;
+  }
+  
+  .navigation-buttons {
+    flex-direction: column-reverse;
+  }
+  
+  .navigation-buttons button {
+    width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  .campaign-status-container {
+    padding: 0.5rem;
+  }
+  
+  .progress-circle {
+    width: 80px;
+    height: 80px;
+  }
+  
+  .progress-inner {
+    width: 56px;
+    height: 56px;
+    font-size: 1rem;
+  }
+}
+
+/* Loading states */
+.loading-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+}
+
+/* Toast positioning */
+.toast-container {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+}

@@ -6,6 +6,7 @@ import ViewProject from "./ViewProject";
 import ProjectRedirectPage from "./ProjectRedirectPage";
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
+import CampaignStatus from "./CampaignStatus";
 
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
@@ -139,6 +140,8 @@ const App = ({ path }) => {
           <PrivateRoute path={`${path}/project-redirect`} component={() => <ProjectRedirectPage />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
+                    <PrivateRoute path={`${path}/status`} component={() => <CampaignStatus />} />
+
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
         </AppContainer>
       </Switch>

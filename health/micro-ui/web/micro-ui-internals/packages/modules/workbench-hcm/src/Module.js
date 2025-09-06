@@ -25,6 +25,8 @@ import StockCreateModal from "./components/StockCreateModal";
 import MapComponent from "./components/MapComponent";
 import ProjectRedirectPage from "./pages/employee/ProjectRedirectPage";
 import DeliveryCyclesComponent from "./components/DeliveryCyclesComponent";
+import CampaignStatusScreen from "./components/CampaignStatusScreen";
+import CampaignStatus from "./pages/employee/CampaignStatus";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
@@ -43,9 +45,9 @@ const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   }
   if (userType === "employee") {
     return (
-      <ProjectHierarchyProvider>
+      // <ProjectHierarchyProvider>
         <App path={path} url={url} />
-      </ProjectHierarchyProvider>
+      // </ProjectHierarchyProvider>
     );
   } else return null;
 };
@@ -72,6 +74,8 @@ const componentsToRegister = {
   MapComponent,
   ProjectRedirectPage,
   DeliveryCyclesComponent,
+  CampaignStatusScreen,
+  CampaignStatus,
   ProjectHierarchyProvider,
   useProjectHierarchy,
 };

@@ -104,6 +104,7 @@ module.exports = function (app) {
     "/health-attendance/v1/_search",
     "/health-individual/v1/_search",
     "/health-muster-roll",
+    "/project-factory/v1/project-type/status",
     "/health-expense/bill/v1/_search",
     "/health-expense-calculator/v1/_calculate",
     "/filestore/v1/files/id",
