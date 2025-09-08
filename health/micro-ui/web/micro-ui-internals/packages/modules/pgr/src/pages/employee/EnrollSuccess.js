@@ -27,7 +27,7 @@ const EnrollSuccess = () => {
                 footerChildren={[
                     <Button label={t(`Varify Abha Enrollment`)} onClick={
                         () => {
-                            history.push(`/${window.contextPath}/employee/pgr/abha-home`);
+                            history.push(`/${window.contextPath}/employee/pgr/abha-validation`);
                         }
                     } variation="teritiary" icon="ArrowForward" isSuffix />
                 ]}

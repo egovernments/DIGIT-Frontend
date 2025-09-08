@@ -23,6 +23,7 @@ import AbhaHomePage from "./AbhaHome";
 import AbhaHelpDeskConsole from "./AbhaHome";
 import AbhaEnrollPage from "./AbhaEnroll";
 import EnrollSuccess from "./EnrollSuccess";
+import AbhaValidation from "./AbhaValidation";
 
 const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
   const { t } = useTranslation(); // Hook for translations
@@ -110,6 +111,11 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute
           path={`${path}/enroll-success`}
           component={() => <EnrollSuccess />}
+        />
+
+        <PrivateRoute
+          path={`${path}/abha-validation`}
+          component={() => <AbhaValidation />}
         />
 
       </AppContainer>

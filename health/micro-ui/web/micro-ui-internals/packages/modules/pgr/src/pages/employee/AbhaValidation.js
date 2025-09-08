@@ -19,7 +19,7 @@ import {
 } from "@egovernments/digit-ui-components";
 import { set } from "lodash";
 
-const AbhaHelpDeskConsole = () => {
+const AbhaValidation = () => {
     const { t } = useTranslation();
     const history = useHistory();
     const [activeTab, setActiveTab] = useState("download"); // enroll | verify | download | check
@@ -53,9 +53,9 @@ const AbhaHelpDeskConsole = () => {
             await mutation.mutateAsync(
                 {
                     body: {
-                        loginHint: "aadhaar",
+                        loginHint: "abha-number",
                         value: aadhaarNumber,
-                        otpSystem: "aadhaar",
+                        otpSystem: "abdm",
                         test: {
                             tenantId: tenantId,
                         }
@@ -95,8 +95,8 @@ const AbhaHelpDeskConsole = () => {
                         loginHint: "aadhaar",
                         test: {
                             tenantId: tenantId,
-                        },
-                        userDownload: true
+                        }
+
                     }
                 },
                 {
@@ -118,6 +118,28 @@ const AbhaHelpDeskConsole = () => {
         }
     }
 
+    const downloadFile = (data, fileName, type = "application/pdf") => {
+        // Convert string -> byte array
+        const byteNumbers = new Array(data.length);
+        for (let i = 0; i < data.length; i++) {
+            byteNumbers[i] = data.charCodeAt(i) & 0xff; // keep only last 8 bits
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+
+        // Create blob
+        const blob = new Blob([byteArray], { type });
+
+        // Trigger download
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = fileName;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    };
+
 
     const mutation2 = Digit.Hooks.useCustomAPIMutationHook({
         url: "/hcm-abha/api/abha/login/profile/verify-otp",
@@ -134,7 +156,7 @@ const AbhaHelpDeskConsole = () => {
                         refresh_token: abhaData?.refreshToken,
                         test: { tenantId },
                     },
-                    config: { userDownload: true },
+                    options: { userDownload: true },
                 },
                 {
                     onSuccess: (res) => {
@@ -167,7 +189,7 @@ const AbhaHelpDeskConsole = () => {
 
     const mutation3 = Digit.Hooks.useCustomAPIMutationHook({
         url: "/hcm-abha/api/abha/card/fetch-v2",
-        config: { userDownload: true },
+        options: { userDownload: true },
     });
 
     if (loading || mutation.isLoading || mutation2.isLoading || mutation3.isLoading) return <Loader page={true} variant={"PageLoader"} />;
@@ -197,7 +219,7 @@ const AbhaHelpDeskConsole = () => {
             <Card style={{ padding: "20px", marginBottom: "20px" }}>
                 {/* Tabs */}
                 <HeaderComponent style={{ color: "#f39c12" }}>
-                    {t("Aadhar Discovery")}
+                    {t("Aabha Discovery")}
                 </HeaderComponent>
 
                 <div style={{ display: "flex", gap: "24px", marginBottom: "1.5rem" }}>
@@ -217,7 +239,7 @@ const AbhaHelpDeskConsole = () => {
                     {currentStep === 1 && (
                         <div style={{ display: "flex" }}>
                             <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                {t("AADHAR NUMBER")}
+                                {t("ABHA NUMBER")}
                             </div>
                             <TextInput
                                 style={{ alignItems: "center" }}
@@ -364,4 +386,4 @@ const AbhaHelpDeskConsole = () => {
     );
 };
 
-export default AbhaHelpDeskConsole;
+export default AbhaValidation;
