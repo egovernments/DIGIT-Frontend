@@ -7,6 +7,7 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 import { getTitleHeading } from "../utils/locale";
 import { getDuration } from "../utils/getDuration";
+import roundedValue from "../utils/roundedValue";
 
 const barColors = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE", "#6E8459", "#D4351C", "#0CF7E4", "#F80BF4", "#22F80B"];
 
@@ -223,6 +224,7 @@ const CustomHorizontalBarChart = ({
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
       var value = payload[0].payload[Object.keys(payload[0].payload)[hoverBarId + 1]];
+      value= roundedValue(value);
       let hoverItem;
       if (payload.length > 1) {
         hoverItem = renderLegend(payload[hoverBarId]?.dataKey);
