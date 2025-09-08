@@ -705,7 +705,7 @@
                 "lastModifiedTime": 1750763011576
             }
         },
-         {
+        {
                 "title": "user-microplan-ingestion",
                 "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
@@ -723,6 +723,19 @@
                             "orderNumber": 4,
                             "errorMessage": "Employment Type is missing or invalid.",
                             "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Active",
+                                "Inactive"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_USER_USAGE",
+                            "color": "#93c47d",
+                            "uniqueKey": "userUsage",
+                            "isRequired": true,
+                            "description": "User Usage",
+                            "orderNumber": 5,
+                            "errorMessage": "User usage is missing or invalid."
                         }
                     ],
                     "numberProperties": [
@@ -775,7 +788,7 @@
                             "freezeColumnIfFilled": true
                         },
                         {
-                            "name": "HCM_ADMIN_CONSOLE_NAME_OF_USER",
+                            "name": "HCM_ADMIN_CONSOLE_USER_NAME",
                             "type": "string",
                             "color": "#93c47d",
                             "maxLength": 128,
@@ -788,7 +801,18 @@
                             "freezeColumnIfFilled": true
                         },
                         {
-                            "name": "HCM_ADMIN_CONSOLE_USERNAME",
+                            "name": "UserService Uuids",
+                            "type": "string",
+                            "color": "#ffff00",
+                            "isUpdate": true,
+                            "uniqueKey": "userServiceUuids",
+                            "hideColumn": true,
+                            "description": "uuid",
+                            "orderNumber": 11,
+                            "freezeColumn": true
+                        },
+                        {
+                            "name": "UserName",
                             "type": "string",
                             "color": "#93c47d",
                             "pattern": "^[a-zA-Z][a-zA-Z0-9._-]{2,29}$",
@@ -802,7 +826,7 @@
                             "freezeColumnIfFilled": true
                         },
                         {
-                            "name": "HCM_ADMIN_CONSOLE_USERPASSWORD",
+                            "name": "Password",
                             "type": "string",
                             "color": "#ffff00",
                             "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[!@#$%^&*()_+\\-=\\[\\]{};':\"\\\\|,.<>/?]).{8,}$",
@@ -821,86 +845,60 @@
                 "title": "facility-microplan-ingestion",
                 "$schema": "http://json-schema.org/draft-07/schema#",
                 "properties": {
+                    "enumProperties": [
+                        {
+                            "enum": [
+                                "Warehouse",
+                                "Health Facility",
+                                "Storing Resource"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_TYPE",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityType",
+                            "isRequired": true,
+                            "description": "Facility type",
+                            "orderNumber": 3,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Temporary",
+                                "Permanent"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_STATUS",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityStatus",
+                            "isRequired": true,
+                            "description": "Facility status",
+                            "orderNumber": 4,
+                            "freezeColumnIfFilled": true
+                        },
+                        {
+                            "enum": [
+                                "Active",
+                                "Inactive"
+                            ],
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_USAGE",
+                            "color": "#93c47d",
+                            "uniqueKey": "facilityUsage",
+                            "isRequired": true,
+                            "description": "Facility usage",
+                            "orderNumber": 7
+                        }
+                    ],
                     "numberProperties": [
                         {
-                            "name": "FACILITY_PLAN_TARGET_SPAQ_RECEIVE",
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY",
                             "type": "number",
                             "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
+                            "maximum": 100000000,
+                            "minimum": 1,
+                            "uniqueKey": "facilityCapacity",
                             "isRequired": true,
-                            "description": "Enter the target nets that the facility should receive before the campaign (SPAQ)",
-                            "orderNumber": 2
-                        },
-                        {
-                            "name": "FACILITY_PLAN_TARGET_SPAQ1_RECEIVE",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "Enter the target nets that the facility should receive before the campaign (SPAQ1)",
-                            "orderNumber": 3
-                        },
-                        {
-                            "name": "FACILITY_PLAN_TARGET_SPAQ2_RECEIVE",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "Enter the target nets that the facility should receive before the campaign (SPAQ2)",
-                            "orderNumber": 4
-                        },
-                        {
-                            "name": "FACILITY_PLAN_CHILDREN_3_11_TARGET_POP",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "Children 3-11 months Target Population",
-                            "orderNumber": 5
-                        },
-                        {
-                            "name": "FACILITY_PLAN_CHILDREN_12_59_TARGET_POP",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "Children 12-59 months Target Population",
-                            "orderNumber": 6
-                        },
-                        {
-                            "name": "FACILITY_PLAN_TOTAL_TARGET_POP_SMC",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "Total Target Population [SMC]",
-                            "orderNumber": 7
-                        },
-                        {
-                            "name": "FACILITY_PLAN_CDD_TEAMS",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "CDD teams",
-                            "orderNumber": 8
-                        },
-                        {
-                            "name": "FACILITY_PLAN_CDD_SUPERVISORS",
-                            "type": "number",
-                            "color": "#93c47d",
-                            "maximum": 1000000,
-                            "minimum": 0,
-                            "isRequired": true,
-                            "description": "CDD supervisors",
-                            "orderNumber": 9
+                            "description": "Capacity",
+                            "orderNumber": 5,
+                            "errorMessage": "HCM_ADMIN_CONSOLE_FACILITY_CAPACITY_ERROR",
+                            "freezeColumnIfFilled": true
                         }
                     ],
                     "stringProperties": [
@@ -911,10 +909,23 @@
                             "isUnique": true,
                             "maxLength": 2000,
                             "minLength": 1,
+                            "uniqueKey": "facilityName",
                             "isRequired": true,
                             "description": "Facility Name",
-                            "orderNumber": 1,
+                            "orderNumber": 2,
                             "freezeColumnIfFilled": true
+                        },
+                        {
+                            "name": "HCM_ADMIN_CONSOLE_FACILITY_CODE",
+                            "type": "string",
+                            "color": "#93c47d",
+                            "isUnique": true,
+                            "maxLength": 2000,
+                            "minLength": 1,
+                            "uniqueKey": "facilityCode",
+                            "hideColumn": true,
+                            "description": "Facility Code",
+                            "orderNumber": 1
                         }
                     ]
                 }
