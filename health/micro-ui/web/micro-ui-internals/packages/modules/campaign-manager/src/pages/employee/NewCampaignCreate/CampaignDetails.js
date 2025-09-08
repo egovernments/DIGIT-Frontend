@@ -137,8 +137,8 @@ const CampaignDetails = () => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
-  const isDraftCampaign = location.state?.isDraft;
   const searchParams = new URLSearchParams(location.search);
+  const isDraftCampaign = searchParams.get("isDraftCampaign") === "true";
   const campaignNumber = searchParams.get("campaignNumber");
   const AppConfigSchema = HCMCONSOLE_APPCONFIG_MODULENAME;
   const [showToast, setShowToast] = useState(null);

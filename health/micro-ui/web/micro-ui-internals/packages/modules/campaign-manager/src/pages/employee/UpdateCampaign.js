@@ -125,7 +125,7 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
-      ids: [id],
+      ids: id ? [id] : [parentId],
       ...(isDraftCampaign && { status: ["drafted"] }),
     },
     config: {
@@ -275,9 +275,9 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
             payloadData.boundaries = temp;
           }
           const temp = resourceData(
-            resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
             totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
 
           payloadData.resources = temp;
@@ -300,7 +300,6 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           if (compareIdentical(draftData, payloadData) === false) {
             setIsDataCreating(true);
-
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 setShowToast({ key: "error", label: error?.message ? error?.message : error });
