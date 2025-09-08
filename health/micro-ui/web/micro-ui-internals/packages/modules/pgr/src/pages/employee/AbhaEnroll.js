@@ -50,20 +50,19 @@ const AbhaEnrollPage = () => {
                 {
                     onSuccess: (data) => {
                         setLoading(false);
-                        console.log("data", data);
                         setData(data);
                         setCurrentStep(2);
-                        setToast({ key: "success", label: t("success"), type: "success" });
+                        setShowToast({ key: "success", label: t(data?.message), transitionTime: 3000 });
                     },
                     onError: (error) => {
                         setLoading(false);
-                        setShowToast({ key: "error", label: t(error?.error || ""), transitionTime: 3000 });
+                        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
                     },
                 }
             );
         } catch (error) {
             setLoading(false);
-            setShowToast({ key: "error", label: t(error?.error || "Error"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
         }
     };
 
@@ -97,24 +96,20 @@ const AbhaEnrollPage = () => {
                             pathname: `/${window.contextPath}/employee/pgr/enroll-success`,
                             state: {
                                 message: "ABHA_ENROLLMENT_SUCCESSFUL",
-                                info: `Abha Number: ${data?.abhaNumber}${data?.individualId && data?.individualId !== false
-                                    ? `, Individual Id: ${data.individualId}`
-                                    : ""
-                                    }`,
+                                info: `Abha Number : ${data?.abhaNumber}, IndividualId : ${data?.individualId}`
                             }
-
                         });
                     },
                     onError: (error) => {
                         setLoading(false);
                         setShowPopUp(true);
-                        setShowToast({ key: "error", label: t(error?.error || ""), transitionTime: 3000 });
+                        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
                     },
                 }
             );
         } catch (error) {
             setLoading(false);
-            setShowToast({ key: "error", label: t(error?.error || "Error"), transitionTime: 3000 });
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
         }
     };
 
@@ -209,7 +204,7 @@ const AbhaEnrollPage = () => {
                                     name="mobile"
                                     onChange={(e) => { setMobileNumber(e.target.value) }}
                                     label={t("MOBILE_NUMBER")}
-                                    placeholder={t("ENTER MOBILE NUMBER")}
+                                    placeholder={t("ENTER MOBILE NUMBER REGISTERED WITH AADHAAR")}
                                 />
                             </div>
                         </>

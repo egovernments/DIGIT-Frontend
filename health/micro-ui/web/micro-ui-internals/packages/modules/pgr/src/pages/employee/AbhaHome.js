@@ -33,20 +33,8 @@ const AbhaHelpDeskConsole = () => {
     const [downloadOption, setDownloadOption] = useState(null);
     const [otpSent, setOtpSent] = useState(false);
     const [loading, setLoading] = useState(false);
-    const [toast, setToast] = useState({ show: false, label: "", type: "" });
+    const [showToast, setShowToast] = useState(null);
 
-    useEffect(() => {
-        if (toast?.show) {
-            const timer = setTimeout(() => {
-                setToast({ show: false, label: "", type: "" });
-            }, 3000);
-            return () => clearTimeout(timer);
-        }
-    }, [toast?.show]);
-
-    const handleToastClose = () => {
-        setToast({ show: false, label: "", type: "" });
-    };
 
     const fetchOtp = async () => {
         try {
@@ -63,19 +51,18 @@ const AbhaHelpDeskConsole = () => {
                 },
                 {
                     onSuccess: (data) => {
-                        console.log("data", data);
+                        console.log("dddddddddddd", data);
+                        setShowToast({ key: "success", label: t(data?.message || ""), transitionTime: 3000 });
                         setData(data);
                         setCurrentStep(2);
-                        setToast({ key: "success", label: t("success"), type: "success" });
-
                     },
                     onError: (error) => {
-                        setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                        setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
                     }
                 }
             );
         } catch (error) {
-            setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
         }
     }
 
@@ -101,20 +88,23 @@ const AbhaHelpDeskConsole = () => {
                 },
                 {
                     onSuccess: (data) => {
-                        console.log("data", data);
                         setAbhaData(data);
                         setCurrentStep(3);
-                        setToast({ key: "success", label: t("success"), type: "success" });
+                        setShowToast({ key: "success", label: t(data?.message), transitionTime: 3000 });
 
                     },
                     onError: (error) => {
-                        setShowPopUp(true);
-                        setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+                        console.log("error", error);
+                        if (error?.response?.data?.Errors?.[0]?.code === "ABDM-1114") {
+                            setShowPopUp(true);
+                        } else {
+                            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
+                        }
                     }
                 }
             );
         } catch (error) {
-            setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
         }
     }
 
@@ -125,42 +115,31 @@ const AbhaHelpDeskConsole = () => {
 
     const downloadFiles = async () => {
         try {
-            await mutation3.mutateAsync(
-                {
-                    body: {
-                        abha_number: abhaData?.accounts?.[0]?.ABHANumber,
-                        card_type: downloadOption?.code === "PNG" ? "getPngCard" : "getCard",
-                        token: abhaData?.token,
-                        refresh_token: abhaData?.refreshToken,
-                        test: { tenantId },
-                    },
-                    config: { userDownload: true },
+            const res = await Digit.CustomService.getResponse({
+                url: `/hcm-abha/api/abha/card/fetch-v2`,
+                body: {
+                    abha_number: abhaData?.accounts?.[0]?.ABHANumber,
+                    card_type: downloadOption?.code === "PNG" ? "getPngCard" : "getCard",
+                    token: abhaData?.token,
+                    refresh_token: abhaData?.refreshToken,
+                    test: { tenantId },
                 },
-                {
-                    onSuccess: (res) => {
+                userDownload: true
+            });
+            console.log("res", res);
+            // res.data will be ArrayBuffer here
+            const blob = new Blob([res?.data], {
+                type: downloadOption?.code === "PNG" ? "image/png" : "application/pdf",
+            });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = downloadOption?.code === "PNG" ? "card.png" : "card.pdf";
+            link.click();
+            window.URL.revokeObjectURL(url);
 
-                        console.log("res", res);
-                        // res.data will be ArrayBuffer here
-                        const blob = new Blob([res], {
-                            type: downloadOption?.code === "PNG" ? "image/png" : "application/pdf",
-                        });
-
-                        const url = window.URL.createObjectURL(blob);
-                        const link = document.createElement("a");
-                        link.href = url;
-                        link.download = downloadOption?.code === "PNG" ? "card.png" : "card.pdf";
-                        link.click();
-                        window.URL.revokeObjectURL(url);
-
-                        setToast({ key: "success", label: t("success"), type: "success" });
-                    },
-                    onError: (error) => {
-                        setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
-                    },
-                }
-            );
         } catch (error) {
-            setToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.code) });
+            setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
         }
     };
 
@@ -332,14 +311,36 @@ const AbhaHelpDeskConsole = () => {
                 />
             )}
 
-            <Footer
+            {currentStep === 2 ? <Footer
+                actionFields={[
+                    <Button
+                        style={{ margin: "1rem 0", minWidth: "16rem", alignItems: "center" }}
+                        variation="secondary"
+                        label={t("Resend OTP")}
+                        title={t("Resend OTP")}
+                        onClick={fetchOtp}
+                    />,
+                    <Button
+                        style={{ margin: "1rem 0", minWidth: "16rem", alignItems: "center" }}
+                        variation="primary"
+                        label={t("VERIFY_OTP")}
+                        title={t("SEND_OTP")}
+                        onClick={varifyOTP}
+                    />
+                ]}
+                className=""
+                maxActionFieldsAllowed={5}
+                setactionFieldsToRight
+                sortActionFields
+                style={{}}
+            /> : <Footer
                 actionFields={[
                     <Button
                         style={{ margin: "1rem 0", minWidth: "16rem", alignItems: "center" }}
                         variation="primary"
-                        label={currentStep === 1 ? t("SEND_OTP") : currentStep === 2 ? t("VERIFY_OTP") : t("DOWNLOAD_CARD")}
+                        label={currentStep === 1 ? t("SEND_OTP") : t("DOWNLOAD_CARD")}
                         title={t("SEND_OTP")}
-                        onClick={currentStep === 1 ? fetchOtp : currentStep == 2 ? varifyOTP : downloadFiles}
+                        onClick={currentStep === 1 ? fetchOtp : downloadFiles}
                         isDisabled={(!aadhaarNumber || aadhaarNumber.length !== 12) && currentStep === 1}
                     />
                 ]}
@@ -348,16 +349,18 @@ const AbhaHelpDeskConsole = () => {
                 setactionFieldsToRight
                 sortActionFields
                 style={{}}
-            />
+            />}
 
 
 
-            {toast.show && (
+            {showToast && (
                 <Toast
-                    type={toast.type}
-                    label={toast.label}
-                    isDleteBtn={true}
-                    onClose={handleToastClose}
+                    style={{ zIndex: 10001 }}
+                    label={showToast.label}
+                    type={showToast.key}
+                    // error={showToast.key === "error"}
+                    transitionTime={showToast.transitionTime}
+                    onClose={() => setShowToast(null)}
                 />
             )}
         </React.Fragment>
