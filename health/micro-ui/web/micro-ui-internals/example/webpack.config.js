@@ -127,7 +127,12 @@ module.exports = {
     compress: true,
     port: 3000,
     hot: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '/workbench-ui/index.html',
+      rewrites: [
+        { from: /^\/workbench-ui/, to: '/workbench-ui/index.html' }
+      ]
+    },
         watchFiles:isProduction?undefined: {
       paths: ["**/*"], // watch all project files
       options: {

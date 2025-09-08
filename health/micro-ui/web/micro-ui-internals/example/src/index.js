@@ -1,8 +1,7 @@
 import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
-// import "./index.css"
-import '@egovernments/digit-ui-health-css/dist/index.css';
+// import { BrowserRouter } from "react-router-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 window.Digit = window.Digit || {};
@@ -10,7 +9,7 @@ window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
 
 
-const enabledModules = ["Workbench", "Campaign"];
+const enabledModules = ["assignment", "Workbench", "Utilities", "Campaign"];
 
 const initTokens = (stateCode) => {
   const userType = window.sessionStorage.getItem("userType") || process.env.REACT_APP_USER_TYPE || "CITIZEN";
@@ -46,7 +45,9 @@ const initDigitUI = () => {
 
   const root = ReactDOM.createRoot(document.getElementById("root"));
   root.render(<>
+
     <MainApp stateCode={stateCode} enabledModules={enabledModules} />
+
   </>);
 };
 
@@ -55,7 +56,11 @@ const MainApp = ({ stateCode, enabledModules }) => {
   const [loaded, setLoaded] = useState(false);
 
   useEffect(() => {
-    initLibraries().then(() => {
+    initLibraries().then(async () => {
+      const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
+      // const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+      initCampaignComponents();
+      // initWorkbenchComponents();
       setIsReady(true);
     });
   }, []);
@@ -63,28 +68,7 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initTokens(stateCode);
     setLoaded(true);
-  }, [stateCode]);
-
-  // Load modules lazily only when needed
-  useEffect(() => {
-    if (isReady && loaded) {
-      // Load modules in the background after initial render
-      setTimeout(async () => {
-        if (enabledModules.includes("Campaign")) {
-          const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
-          initCampaignComponents();
-        }
-        if (enabledModules.includes("Workbench")) {
-          try {
-            const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
-            initWorkbenchComponents();
-          } catch (error) {
-            console.warn("Workbench module not available:", error.message);
-          }
-        }
-      }, 100); // Small delay to allow initial render
-    }
-  }, [isReady, loaded, enabledModules]);
+  }, [stateCode, isReady]);
 
   if (!loaded) {
     return <div>Loading...</div>;
