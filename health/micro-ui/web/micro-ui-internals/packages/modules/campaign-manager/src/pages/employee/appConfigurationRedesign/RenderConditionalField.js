@@ -162,7 +162,7 @@ export const RenderConditionalField = ({
   ]);
   const currentError = appState?.errorMap?.[errorKey] || "";
 
-  const evaluatedError = useMemo(() => computeError(cField, drawerState), [cField, drawerState]);
+  const evaluatedError = useMemo(() => computeError(cField, drawerState, t), [cField, drawerState]);
 
   // Only show error if field has content (not empty)
   const fieldValue = typeof drawerState?.[cField?.bindTo] === "boolean" ? null : drawerState?.[cField?.bindTo];

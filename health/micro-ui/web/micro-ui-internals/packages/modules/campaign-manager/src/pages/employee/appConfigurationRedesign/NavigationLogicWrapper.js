@@ -8,86 +8,66 @@ import {
     PopUp,
     Tag,
     SVG,
+    CheckBox,
 } from "@egovernments/digit-ui-components";
 import ReactDOM from "react-dom";
 import { useCustomT } from "./useCustomT";
 
-
 function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
-  const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
-  const [module = "", master = ""] = (schemaCode || "").split(".");
+    const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
+    const [module = "", master = ""] = (schemaCode || "").split(".");
 
-  const { isLoading, data: list = [] } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    module,
-    [{ name: master }],
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      select: (data) => data?.[module]?.[master] || [],
-    },
-    { schemaCode: "DROPDOWN_MASTER_DATA" },
-    true //mdmsv2
-  );
+    const { isLoading, data: list = [] } = Digit.Hooks.useCustomMDMS(
+        tenantId,
+        module,
+        [{ name: master }],
+        {
+            cacheTime: Infinity,
+            staleTime: Infinity,
+            select: (data) => data?.[module]?.[master] || [],
+        },
+        { schemaCode: "DROPDOWN_MASTER_DATA" },
+        true // mdmsv2
+    );
 
-  const options = React.useMemo(
-    () =>
-      Array.isArray(list)
-        ? list.map((it) => ({ code: it.code, name: it.name }))
-        : [],
-    [list]
-  );
+    const options = React.useMemo(
+        () => (Array.isArray(list) ? list.map((it) => ({ code: it.code, name: it.name })) : []),
+        [list]
+    );
 
-  // IMPORTANT: normalize the selected value to an option object
-  const selectedOption = React.useMemo(() => {
-    if (!value) return undefined;
-    const match = options.find((o) => String(o.code) === String(value));
-    // If the code isn't in options yet (or ever), keep a shallow object so Dropdown can show it
-    return match || { code: value, name: value };
-  }, [options, value]);
+    const selectedOption = React.useMemo(() => {
+        if (!value) return undefined;
+        const match = options.find((o) => String(o.code) === String(value));
+        return match || { code: value, name: value };
+    }, [options, value]);
 
-  return (
-    <Dropdown
-      option={options}
-      optionKey="code"
-      name={`mdms-${module}-${master}`}
-      t={t}                           // pass custom translator if names are i18n keys
-      select={(e) => onChange(e.code)}
-      disabled={isLoading || !module || !master}
-      selected={selectedOption}       // <-- object, not just the string code
-    />
-  );
+    return (
+        <Dropdown
+            option={options}
+            optionKey="code"
+            name={`mdms-${module}-${master}`}
+            t={t}
+            select={(e) => onChange(e.code)}
+            disabled={isLoading || !module || !master}
+            selected={selectedOption}
+        />
+    );
 }
-
 
 /** Portal so the popup escapes side panels and fills the viewport layer */
 function BodyPortal({ children }) {
-    if (typeof document === "undefined") return null; // SSR guard
+    if (typeof document === "undefined") return null;
     return ReactDOM.createPortal(children, document.body);
 }
 
-/**
- * NavigationLogicWrapper (page-level, single-rule editor, submit-only)
- *
- * Emits on Submit:
- *   conditionalNavigateTo: [
- *     { condition: "<currentPage>.<jsonPath><op><value>", navigateTo: { name: "<page>", type: "form" } }
- *   ]
- *
- * Props:
- * - t
- * - parentState  // provides currentTemplate (array of pages)
- * - currentState // { name, cards: [{ fields: [...] }], conditionalNavigateTo?: [...] }
- * - onConditionalNavigateChange(array)
- */
 function NavigationLogicWrapper({
     t,
     parentState,
     currentState,
     onConditionalNavigateChange,
 }) {
-
     const customT = useCustomT();
+
     // ----- labels -----
     const navLogicTitle = t("NAVIGATION_LOGIC") || "Navigation Logic";
     const addRuleLabel = t("HCM_ADD_RULE") || "Add Logic";
@@ -107,6 +87,9 @@ function NavigationLogicWrapper({
     const andText = t("AND") || "And";
     const orText = t("OR") || "Or";
     const incompleteExprLabel = t("INCOMPLETE_EXPRESSION") || "(incomplete)";
+    const completeAllMsg =
+        t("PLEASE_COMPLETE_ALL_CONDITIONS") ||
+        "Please complete all conditions and select a target page before confirming.";
 
     // ----- constants / helpers -----
     const LOGICALS = [
@@ -146,46 +129,68 @@ function NavigationLogicWrapper({
                 format: f.format,
                 type: f.type || f.datatype || f.format || "string",
                 enums: f.dropDownOptions || [],
-                schemaCode: f.schemaCode
+                schemaCode: f.schemaCode,
             }));
     }, [currentPageObj]);
 
-    // Target page dropdown: ALL pages (no hard type check)
+    // Target page dropdown: ALL pages
     const allPageOptions = useMemo(() => {
         const seen = new Set();
         const list = [];
-        if (currentPage) {
-            seen.add(currentPage);
-            list.push({ code: currentPage, name: currentPage });
-        }
-        for (const p of currentTemplate) {
-            if (p?.name && !seen.has(p.name)) {
-                seen.add(p.name);
-                list.push({ code: p.name, name: p.name });
-            }
-        }
-        return list;
-    }, [currentTemplate, currentPage]);
 
-    const getFieldMeta = (fieldCode) => {
-        const field = currentPageObj?.fields?.find((f) => f.jsonPath === fieldCode);
-        return field || null;
-    };
+        const add = (p) => {
+            if (!p?.name || seen.has(p.name)) return;
+            seen.add(p.name);
+            list.push({ code: p.name, name: p.name, type: p.type }); // <-- keep page type
+        };
+
+        // Prefer the template object for the current page (so we get its type)
+        const currFromTemplate = currentTemplate.find((p) => p?.name === currentPage);
+        add(currFromTemplate || { name: currentPage, type: currentState?.type || "object" });
+
+        currentTemplate.forEach(add);
+        return list;
+    }, [currentTemplate, currentPage, currentState?.type]);
+
+
+    const getFieldMeta = (fieldCode) =>
+        currentPageObj?.fields?.find((f) => f.jsonPath === fieldCode) || null;
 
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        if (fmt === "dropdown" || fmt === "radio") return true;
-        return ["string", "text", "textinput"].includes(tpe);
+        if (fmt === "dropdown" || fmt === "radio" || tpe === "selection") return true;
+        return ["string", "text", "textinput", "textarea"].includes(tpe);
+    };
+
+    const isCheckboxField = (field) => {
+        const tpe = (field?.type || "").toLowerCase();
+        return tpe === "checkbox";
     };
 
     const isNumericLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        return ["number", "numeric", "integer"].includes(tpe) || ["number", "numeric", "integer"].includes(fmt);
+        return (
+            ["number", "numeric", "integer"].includes(tpe) ||
+            ["number", "numeric", "integer"].includes(fmt)
+        );
+    };
+
+    const sanitizeIntegerInput = (raw) => {
+        const s = String(raw ?? "");
+        if (s === "" || s === "+" || s === "-") return s;
+        if (/^[+-]?\d+$/.test(s)) return s;
+        const sign = s[0] === "+" || s[0] === "-" ? s[0] : "";
+        const digits = s.replace(/[^0-9]/g, "");
+        return sign + digits;
     };
 
     const getOperatorOptions = (field) => {
+        if (isCheckboxField(field)) {
+            // restrict to equality operators for checkbox
+            return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
+        }
         if (!field || isStringLike(field))
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         return ALL_OPERATOR_OPTIONS;
@@ -199,7 +204,7 @@ function NavigationLogicWrapper({
                 const left = expression.slice(0, i);
                 const right = expression.slice(i + operator.length);
                 const parts = (left || "").split(".").map((s) => (s || "").trim());
-                const fieldCode = parts.length > 1 ? parts.slice(1).join(".") : parts[0]; // drop any page prefix
+                const fieldCode = parts.length > 1 ? parts.slice(1).join(".") : parts[0]; // drop page prefix
                 return {
                     selectedField: fieldCode ? { code: fieldCode, name: fieldCode } : {},
                     comparisonType: { code: operator, name: operator },
@@ -227,10 +232,20 @@ function NavigationLogicWrapper({
             let nextOp;
             let nextIdx;
             if (hasAnd && hasOr) {
-                if (andPos < orPos) { nextOp = "&&"; nextIdx = andPos; }
-                else { nextOp = "||"; nextIdx = orPos; }
-            } else if (hasAnd) { nextOp = "&&"; nextIdx = andPos; }
-            else { nextOp = "||"; nextIdx = orPos; }
+                if (andPos < orPos) {
+                    nextOp = "&&";
+                    nextIdx = andPos;
+                } else {
+                    nextOp = "||";
+                    nextIdx = orPos;
+                }
+            } else if (hasAnd) {
+                nextOp = "&&";
+                nextIdx = andPos;
+            } else {
+                nextOp = "||";
+                nextIdx = orPos;
+            }
             const before = expr.slice(i, nextIdx).trim();
             if (before) tokens.push({ type: "cond", value: before });
             tokens.push({ type: "op", value: nextOp });
@@ -265,15 +280,16 @@ function NavigationLogicWrapper({
 
     const initialEmptyRule = () => ({
         conds: [initialEmptyCondition()],
-        targetPage: {}, // {code, name}
-        targetType: "form",
+        targetPage: {},
     });
 
     // ---------- normalization helpers ----------
     const findFieldOptionByCode = (code) =>
         currentPageFieldOptions.find((f) => f.code === code) || (code ? { code, name: code, label: code } : {});
     const findPageOptionByCode = (code) =>
-        allPageOptions.find((p) => p.code === code) || (code ? { code, name: code } : {});
+        allPageOptions.find((p) => p.code === code) ||
+        (code ? { code, name: code, type: currentTemplate.find((p) => p?.name === code)?.type } : {});
+
     const normalizeRule = (r) => {
         const conds = (r?.conds || []).map((c, idx) => {
             const normalizedField = c?.selectedField?.code ? findFieldOptionByCode(c.selectedField.code) : {};
@@ -288,11 +304,10 @@ function NavigationLogicWrapper({
             ...r,
             conds: conds.length ? conds : [initialEmptyCondition()],
             targetPage: name ? findPageOptionByCode(name) : {},
-            targetType: r?.targetType || "form",
         };
     };
 
-    // ----- seed & syncing (no live emits) -----
+    // ----- seed & syncing -----
     const makeRulesFromExisting = () => {
         const existing = existingConditional;
         if (!existing.length) return [];
@@ -321,14 +336,15 @@ function NavigationLogicWrapper({
             return {
                 conds,
                 targetPage: name ? { code: name, name } : {},
-                targetType: r?.navigateTo?.type || "form",
             };
         });
         return seeded.map(normalizeRule);
     };
 
     const [rules, setRules] = useState(() => makeRulesFromExisting());
-    const [editorIndex, setEditorIndex] = useState(null); // which rule is being edited
+    const [editorIndex, setEditorIndex] = useState(null);
+    const [globalFormError, setGlobalFormError] = useState("");
+
     const showPopUp = editorIndex !== null;
 
     useEffect(() => {
@@ -341,6 +357,7 @@ function NavigationLogicWrapper({
 
     const openEditor = (idx) => {
         setRules((prev) => prev.map((r, i) => (i === idx ? normalizeRule(r) : r)));
+        setGlobalFormError("");
         setEditorIndex(idx);
     };
 
@@ -355,6 +372,7 @@ function NavigationLogicWrapper({
 
     const discardAndCloseEditor = () => {
         setRules(makeRulesFromExisting());
+        setGlobalFormError("");
         setEditorIndex(null);
     };
 
@@ -364,7 +382,7 @@ function NavigationLogicWrapper({
     const deleteRuleFromList = (idx) =>
         setRules((prev) => prev.filter((_, i) => i !== idx));
 
-    // ----- condition operations (within a single rule) -----
+    // ----- condition operations -----
     const updateCond = (ruleIdx, condIdx, patch) =>
         setRules((prev) =>
             prev.map((r, i) =>
@@ -381,7 +399,6 @@ function NavigationLogicWrapper({
                     ? r
                     : {
                         ...r,
-                        "condition": "referralDetails.referralReason!= '' || referralDetails.referralType!= null",
                         conds: r.conds.map((c, j) =>
                             j === condIdx
                                 ? { ...c, joiner: { code: joinCode, name: joinCode === "||" ? "OR" : "AND" } }
@@ -407,21 +424,56 @@ function NavigationLogicWrapper({
             })
         );
 
+    // ----- validation -----
+    const isCondComplete = (c) =>
+        Boolean(c?.selectedField?.code) &&
+        Boolean(c?.comparisonType?.code) &&
+        String(c?.fieldValue ?? "").trim() !== "";
+
+    const isRuleComplete = (r) =>
+        r?.conds?.every(isCondComplete) &&
+        Boolean(r?.targetPage?.code || r?.targetPage?.name);
+
+    const canSubmit = showPopUp && editorIndex !== null ? isRuleComplete(rules[editorIndex]) : false;
+
+    // Auto-clear global error when form becomes valid
+    useEffect(() => {
+        if (!showPopUp || editorIndex === null) return;
+        if (globalFormError && isRuleComplete(rules[editorIndex])) {
+            setGlobalFormError("");
+        }
+    }, [rules, showPopUp, editorIndex, globalFormError]);
+
     // ----- payload builder & submit -----
     const buildPayload = (rs) =>
         rs
-            .map((r) => ({
-                condition: serializeAll(r.conds),
-                navigateTo: {
-                    name: r.targetPage?.code || r.targetPage?.name || "",
-                    type: r.targetType || "form",
-                },
-            }))
+            .map((r) => {
+                const name = r.targetPage?.code || r.targetPage?.name || "";
+                // find the page to get its type
+                const page =
+                    allPageOptions.find((p) => p.code === name) ||
+                    currentTemplate.find((p) => p?.name === name);
+
+                const navigateType = page?.type === "template" ? "template" : "form";
+
+                return {
+                    condition: serializeAll(r.conds),
+                    navigateTo: {
+                        name,
+                        type: navigateType,
+                    },
+                };
+            })
             .filter((r) => r.condition && r.navigateTo.name);
 
+
     const submitAndClose = () => {
+        if (!canSubmit) {
+            setGlobalFormError(completeAllMsg);
+            return;
+        }
         const next = buildPayload(rules);
-        onConditionalNavigateChange?.(next); // emit only on Submit
+        onConditionalNavigateChange?.(next);
         setEditorIndex(null);
     };
 
@@ -433,7 +485,10 @@ function NavigationLogicWrapper({
         const op = c?.comparisonType?.code || "";
         let valueText = c?.fieldValue || "";
         valueText = `${valueText}`.replace(/[()]/g, "");
-        return `${customT(fieldLabel)} ${t(op)} ${(field?.format === "dropdown" || field?.format === "radio") ? customT(valueText) : valueText}`.trim();
+        return `${customT(fieldLabel)} ${t(op)} ${field?.format === "dropdown" || field?.format === "radio" || field?.type === "selection" || field?.type === "checkbox"
+            ? customT(valueText)
+            : valueText
+            }`.trim();
     };
 
     const formatRuleSummary = (rule) => {
@@ -456,14 +511,13 @@ function NavigationLogicWrapper({
                 <h3 style={{ margin: 0 }}>{navLogicTitle}</h3>
             </div>
 
-            {/* Rules list with actions BELOW the tag, right-aligned */}
+            {/* Rules list */}
             <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "0.75rem" }}>
                 {rules.length === 0 ? (
                     <p style={{ opacity: 0.7, margin: 0 }}>{noRulesYet}</p>
                 ) : (
                     rules.map((r, idx) => (
                         <div key={`rule-preview-${idx}`} style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                            {/* Tag row (unchanged) */}
                             <Tag
                                 label={formatRuleSummary(r)}
                                 showIcon={false}
@@ -472,9 +526,7 @@ function NavigationLogicWrapper({
                                 className={"version-tag"}
                                 labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
                             />
-                            {/* Actions row BELOW, right aligned */}
                             <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.75rem" }}>
-                                {/* Edit */}
                                 <div
                                     role="button"
                                     title={editLabel}
@@ -488,7 +540,6 @@ function NavigationLogicWrapper({
                                         <Button variation="secondary" label={editLabel} onClick={() => openEditor(idx)} />
                                     )}
                                 </div>
-                                {/* Delete (local; commit on Submit) */}
                                 <div
                                     role="button"
                                     title={deleteRuleLabel}
@@ -504,7 +555,7 @@ function NavigationLogicWrapper({
                 )}
             </div>
 
-            {/* Add Logic button (outside the popup) */}
+            {/* Add Logic button */}
             <div>
                 <Button
                     variation="secondary"
@@ -515,7 +566,7 @@ function NavigationLogicWrapper({
                 />
             </div>
 
-            {/* Single-rule editor popup (Submit commits; Cancel discards) */}
+            {/* Single-rule editor popup */}
             {showPopUp && editorIndex !== null && rules[editorIndex] && (
                 <BodyPortal>
                     <div className="popup-portal-overlay">
@@ -540,18 +591,17 @@ function NavigationLogicWrapper({
                                                     gap: "0.75rem",
                                                 }}
                                             >
-                                                {/* Conditions (allow multiple conditions inside a rule) */}
+                                                {/* Conditions */}
                                                 {rule.conds.map((cond, idx) => {
                                                     const selectedFieldObj = cond?.selectedField?.code
                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
                                                         : undefined;
+
                                                     const operatorOptions = getOperatorOptions(selectedFieldObj);
                                                     const selectedOperator = cond?.comparisonType?.code
                                                         ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
                                                         : undefined;
 
-                                                    // numeric regex guard
-                                                    const numericRegex = /^[+-]?\d*$/;
                                                     const numericField = isNumericLike(selectedFieldObj);
 
                                                     return (
@@ -583,7 +633,7 @@ function NavigationLogicWrapper({
                                                             )}
 
                                                             <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
-                                                                {/* Field (from current page) */}
+                                                                {/* Field */}
                                                                 <div style={{ minWidth: 260, flex: "1 1 280px" }}>
                                                                     <LabelFieldPair vertical removeMargin>
                                                                         <p style={{ margin: 0 }}>{selectFieldLabel}</p>
@@ -598,10 +648,18 @@ function NavigationLogicWrapper({
                                                                                     const canKeep =
                                                                                         cond?.comparisonType?.code &&
                                                                                         nextOps.some((o) => o.code === cond.comparisonType.code);
+
+                                                                                    const isCk = isCheckboxField(e);
                                                                                     updateCond(editorIndex, idx, {
                                                                                         selectedField: e,
-                                                                                        fieldValue: "",
-                                                                                        comparisonType: canKeep ? cond.comparisonType : {},
+                                                                                        fieldValue: isCk
+                                                                                            ? (["true", "false"].includes(String(cond.fieldValue).toLowerCase())
+                                                                                                ? cond.fieldValue
+                                                                                                : "false")
+                                                                                            : "",
+                                                                                        comparisonType: canKeep
+                                                                                            ? cond.comparisonType
+                                                                                            : (isCk ? { code: "==", name: t("EQUALS_TO") || "equals to" } : {}),
                                                                                     });
                                                                                 }}
                                                                                 selected={
@@ -638,39 +696,69 @@ function NavigationLogicWrapper({
                                                                         <p style={{ margin: 0 }}>{selectValueLabel}</p>
                                                                         <div className="digit-field" style={{ width: "100%" }}>
                                                                             {(() => {
+                                                                                // Checkbox value as boolean using CheckBox
+                                                                                if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
+                                                                                    const boolVal = String(cond.fieldValue).toLowerCase() === "true";
+                                                                                    return (
+                                                                                        <CheckBox
+                                                                                            mainClassName={"app-config-checkbox-main"}
+                                                                                            labelClassName={"app-config-checkbox-label"}
+                                                                                            onChange={(v) => {
+                                                                                                const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
+                                                                                                updateCond(editorIndex, idx, { fieldValue: checked ? "true" : "false" });
+                                                                                            }}
+                                                                                            value={boolVal}
+                                                                                            label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
+                                                                                            isLabelFirst={false}
+                                                                                            disabled={!cond?.selectedField?.code}
+                                                                                        />
+                                                                                    );
+                                                                                }
+
                                                                                 const isSelect =
                                                                                     selectedFieldObj &&
-                                                                                    (selectedFieldObj.format === "dropdown" || selectedFieldObj.format === "radio");
+                                                                                    (selectedFieldObj.format === "dropdown" ||
+                                                                                        selectedFieldObj.format === "radio" ||
+                                                                                        selectedFieldObj.type === "selection");
 
                                                                                 if (isSelect) {
-                                                                                    // 1) If enums exist, use them
+                                                                                    // 1) inline enums
                                                                                     if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
+                                                                                        const enumOptions = selectedFieldObj.enums.map((en) => ({
+                                                                                            code: String(en.code),
+                                                                                            name: en.name,
+                                                                                        }));
+                                                                                        const selectedEnum =
+                                                                                            enumOptions.find((o) => String(o.code) === String(cond.fieldValue)) ||
+                                                                                            (cond.fieldValue
+                                                                                                ? { code: String(cond.fieldValue), name: String(cond.fieldValue) }
+                                                                                                : undefined);
                                                                                         return (
                                                                                             <Dropdown
-                                                                                                option={selectedFieldObj.enums.map((en) => ({ code: en.code, name: en.name }))}
+                                                                                                option={enumOptions}
                                                                                                 optionKey="code"
                                                                                                 name={`val-${editorIndex}-${idx}`}
-                                                                                                t={customT} // pass custom translator if names are translation keys
+                                                                                                t={customT}
                                                                                                 select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
                                                                                                 disabled={!cond?.selectedField?.code}
-                                                                                                selected={cond.fieldValue}
+                                                                                                selected={selectedEnum}
                                                                                             />
                                                                                         );
                                                                                     }
 
-                                                                                    // 2) Else if we have schemaCode, fetch from MDMS
+                                                                                    // 2) MDMS schema
                                                                                     if (selectedFieldObj.schemaCode) {
                                                                                         return (
                                                                                             <MdmsValueDropdown
                                                                                                 schemaCode={selectedFieldObj.schemaCode}
                                                                                                 value={cond.fieldValue}
                                                                                                 onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
-                                                                                                t={t} // use your custom translator for MDMS names if needed
+                                                                                                t={customT}
                                                                                             />
                                                                                         );
                                                                                     }
 
-                                                                                    // 3) Fallback: no enums and no schema -> plain text input
+                                                                                    // 3) fallback text
                                                                                     return (
                                                                                         <TextInput
                                                                                             type="text"
@@ -683,28 +771,35 @@ function NavigationLogicWrapper({
                                                                                     );
                                                                                 }
 
-                                                                                // Non-select fields: keep your numeric/text guard
+                                                                                // Non-select numeric/text
+                                                                                if (numericField) {
+                                                                                    return (
+                                                                                        <TextInput
+                                                                                            type="text"
+                                                                                            populators={{ name: `text-${editorIndex}-${idx}` }}
+                                                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                                                            value={cond.fieldValue}
+                                                                                            onChange={(event) =>
+                                                                                                updateCond(editorIndex, idx, {
+                                                                                                    fieldValue: sanitizeIntegerInput(event.target.value),
+                                                                                                })
+                                                                                            }
+                                                                                            disabled={!cond?.selectedField?.code}
+                                                                                        />
+                                                                                    );
+                                                                                }
+
                                                                                 return (
                                                                                     <TextInput
                                                                                         type="text"
                                                                                         populators={{ name: `text-${editorIndex}-${idx}` }}
                                                                                         placeholder={enterValueLabel}
                                                                                         value={cond.fieldValue}
-                                                                                        onChange={(event) => {
-                                                                                            const v = event.target.value;
-                                                                                            if (numericField) {
-                                                                                                if (numericRegex.test(v)) {
-                                                                                                    updateCond(editorIndex, idx, { fieldValue: v });
-                                                                                                }
-                                                                                            } else {
-                                                                                                updateCond(editorIndex, idx, { fieldValue: v });
-                                                                                            }
-                                                                                        }}
+                                                                                        onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
                                                                                         disabled={!cond?.selectedField?.code}
                                                                                     />
                                                                                 );
                                                                             })()}
-
                                                                         </div>
                                                                     </LabelFieldPair>
                                                                 </div>
@@ -744,7 +839,7 @@ function NavigationLogicWrapper({
                                                     />
                                                 </div>
 
-                                                {/* Target page (ALL pages) */}
+                                                {/* Target page */}
                                                 <div style={{ minWidth: 260 }}>
                                                     <LabelFieldPair vertical removeMargin>
                                                         <p style={{ margin: 0 }}>{targetPageLabel}</p>
@@ -757,9 +852,8 @@ function NavigationLogicWrapper({
                                                                 select={(e) => updateRule(editorIndex, { targetPage: e })}
                                                                 selected={
                                                                     rules[editorIndex]?.targetPage?.code
-                                                                        ? allPageOptions.find(
-                                                                            (p) => p.code === rules[editorIndex].targetPage.code
-                                                                        ) || rules[editorIndex].targetPage
+                                                                        ? allPageOptions.find((p) => p.code === rules[editorIndex].targetPage.code) ||
+                                                                        rules[editorIndex].targetPage
                                                                         : rules[editorIndex].targetPage
                                                                 }
                                                             />
@@ -767,7 +861,32 @@ function NavigationLogicWrapper({
                                                     </LabelFieldPair>
                                                 </div>
 
-                                                {/* No delete in popup */}
+                                                {/* Global error (dismissible) */}
+                                                {globalFormError ? (
+                                                    <div
+                                                        style={{
+                                                            border: "1px solid #FCA5A5",
+                                                            background: "#FEF2F2",
+                                                            color: "#B91C1C",
+                                                            borderRadius: 6,
+                                                            padding: "0.5rem 0.75rem",
+                                                            display: "flex",
+                                                            alignItems: "center",
+                                                            justifyContent: "space-between",
+                                                            gap: "0.75rem",
+                                                        }}
+                                                    >
+                                                        <span>{globalFormError}</span>
+                                                        <SVG.Close
+                                                            width={"1.1rem"}
+                                                            height={"1.1rem"}
+                                                            fill={"#7F1D1D"}
+                                                            onClick={() => setGlobalFormError("")}
+                                                            tabIndex={0}
+                                                            style={{ cursor: "pointer" }}
+                                                        />
+                                                    </div>
+                                                ) : null}
                                             </div>
                                         );
                                     })()}
@@ -790,6 +909,7 @@ function NavigationLogicWrapper({
                                     type={"button"}
                                     size={"large"}
                                     variation={"primary"}
+                                    disabled={!canSubmit}
                                     label={submitLabel}
                                     onClick={submitAndClose}
                                 />,
