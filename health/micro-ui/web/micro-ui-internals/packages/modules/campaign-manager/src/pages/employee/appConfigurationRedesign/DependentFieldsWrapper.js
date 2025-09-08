@@ -7,7 +7,8 @@ import {
     Button,
     PopUp,
     Tag,
-    SVG
+    SVG,
+    CheckBox,
 } from "@egovernments/digit-ui-components";
 import ReactDOM from "react-dom";
 import { useCustomT } from "./useCustomT";
@@ -18,53 +19,47 @@ function BodyPortal({ children }) {
     return ReactDOM.createPortal(children, document.body);
 }
 
-
 function MdmsValueDropdown({ schemaCode, value, onChange, t }) {
-  const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
-  const [module = "", master = ""] = (schemaCode || "").split(".");
+    const tenantId = Digit?.ULBService?.getCurrentTenantId?.();
+    const [module = "", master = ""] = (schemaCode || "").split(".");
 
-  const { isLoading, data: list = [] } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    module,
-    [{ name: master }],
-    {
-      cacheTime: Infinity,
-      staleTime: Infinity,
-      select: (data) => data?.[module]?.[master] || [],
-    },
-    { schemaCode: "DROPDOWN_MASTER_DATA" },
-    true //mdmsv2
-  );
+    const { isLoading, data: list = [] } = Digit.Hooks.useCustomMDMS(
+        tenantId,
+        module,
+        [{ name: master }],
+        {
+            cacheTime: Infinity,
+            staleTime: Infinity,
+            select: (data) => data?.[module]?.[master] || [],
+        },
+        { schemaCode: "DROPDOWN_MASTER_DATA" },
+        true // mdmsv2
+    );
 
-  const options = React.useMemo(
-    () =>
-      Array.isArray(list)
-        ? list.map((it) => ({ code: it.code, name: it.name }))
-        : [],
-    [list]
-  );
+    const options = React.useMemo(
+        () => (Array.isArray(list) ? list.map((it) => ({ code: it.code, name: it.name })) : []),
+        [list]
+    );
 
-  // IMPORTANT: normalize the selected value to an option object
-  const selectedOption = React.useMemo(() => {
-    if (!value) return undefined;
-    const match = options.find((o) => String(o.code) === String(value));
-    // If the code isn't in options yet (or ever), keep a shallow object so Dropdown can show it
-    return match || { code: value, name: value };
-  }, [options, value]);
+    // normalize the selected value to an option object
+    const selectedOption = React.useMemo(() => {
+        if (!value) return undefined;
+        const match = options.find((o) => String(o.code) === String(value));
+        return match || { code: value, name: value };
+    }, [options, value]);
 
-  return (
-    <Dropdown
-      option={options}
-      optionKey="code"
-      name={`mdms-${module}-${master}`}
-      t={t}                           // pass custom translator if names are i18n keys
-      select={(e) => onChange(e.code)}
-      disabled={isLoading || !module || !master}
-      selected={selectedOption}       // <-- object, not just the string code
-    />
-  );
+    return (
+        <Dropdown
+            option={options}
+            optionKey="code"
+            name={`mdms-${module}-${master}`}
+            t={t}
+            select={(e) => onChange(e.code)}
+            disabled={isLoading || !module || !master}
+            selected={selectedOption}
+        />
+    );
 }
-
 
 function DependentFieldsWrapper({
     t,
@@ -74,7 +69,6 @@ function DependentFieldsWrapper({
     screenConfig,
     selectedFieldItem,
 }) {
-
     const useT = useCustomT();
 
     // ---------- labels ----------
@@ -95,6 +89,7 @@ function DependentFieldsWrapper({
     const andText = t("AND") || "And";
     const orText = t("OR") || "Or";
     const incompleteExprLabel = t("INCOMPLETE_EXPRESSION") || "(incomplete)";
+    const completeAllMsg = t("PLEASE_COMPLETE_ALL_CONDITIONS") || "Please complete all conditions before confirming.";
 
     // ---------- constants & helpers ----------
     const LOGICALS = [
@@ -119,13 +114,43 @@ function DependentFieldsWrapper({
     const currentPage = screenConfig?.[0]?.name;
     const currentTemplate = parentState?.currentTemplate || [];
 
-    // pages up to current; exclude template pages
+    // Extracts a numeric order from page.order (preferred) or from the leading "N" or "N.M" in page.name
+    const parsePageOrder = (p) => {
+        const raw = p?.order ?? p?.pageOrder;
+        const n = Number(raw);
+        if (!Number.isNaN(n)) return n;
+        const match = String(p?.name ?? "").match(/^(\d+(?:\.\d+)?)/);
+        return match ? Number(match[1]) : NaN;
+    };
+
+    // Figure out if the current page is a decimal order (sub-flow)
+    const currPageObj = (parentState?.currentTemplate || []).find((p) => p?.name === screenConfig?.[0]?.name);
+    const currOrder = parsePageOrder(currPageObj || {});
+    const currIsDecimal = Number.isFinite(currOrder) && !Number.isInteger(currOrder);
+
+
     const pageOptions = useMemo(() => {
-        const withoutTemplates = currentTemplate.filter((p) => p?.type !== "template");
-        const idx = withoutTemplates.findIndex((p) => p.name === currentPage);
+        const withoutTemplates =
+            (parentState?.currentTemplate || []).filter((p) => p?.type !== "template");
+
+        const idx = withoutTemplates.findIndex((p) => p?.name === currentPage);
         const upto = idx === -1 ? withoutTemplates : withoutTemplates.slice(0, idx + 1);
-        return upto.map((p) => ({ code: p.name, name: p.name, type: p.type }));
-    }, [currentTemplate, currentPage]);
+
+        // If current page is a sub-flow (e.g., 4.3), include current page
+        // but exclude earlier sub-flow pages (e.g., 4.1, 4.2, 2.1, …)
+        const filtered = currIsDecimal
+            ? upto.filter((p) => {
+                if (p?.name === currentPage) return true; // always keep current page
+                const ord = parsePageOrder(p);
+                // keep only pages with integer order or no detectable number
+                return Number.isNaN(ord) || Number.isInteger(ord);
+            })
+            : upto;
+
+        return filtered.map((p) => ({ code: p.name, name: p.name, type: p.type }));
+    }, [parentState?.currentTemplate, currentPage, currIsDecimal]);
+
+
 
     // find page object by name
     const getPageObj = (pageCode) =>
@@ -140,15 +165,15 @@ function DependentFieldsWrapper({
             .filter((f) => f?.type !== "template")
             .filter(
                 (f) =>
-                    pageCode !== currentPage ||
-                    f?.order < (selectedFieldItem?.order || pageObj.fields.length)
+                    pageCode !== currentPage || f?.order < (selectedFieldItem?.order || pageObj.fields.length)
             )
             .map((f) => ({
                 code: f.jsonPath,
                 name: f.jsonPath,
                 label: f.label,
                 format: f.format,
-                type: f.type || f.datatype || f.format || "string",
+                type: f.type || f.format || "string",
+                schemaCode: f.schemaCode,
                 enums: f.dropDownOptions || [],
             }));
     };
@@ -163,11 +188,16 @@ function DependentFieldsWrapper({
     const isStringLike = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
-        if (fmt === "dropdown" || fmt === "radio") return true;
-        return ["string", "text", "textinput"].includes(tpe);
+        if (fmt === "dropdown" || fmt === "radio" || tpe === "selection") return true;
+        return ["string", "text", "textinput", "textarea"].includes(tpe);
     };
 
-    // NEW: numeric detection (treat number/numeric/integer as numeric)
+    const isCheckboxField = (field) => {
+        const tpe = (field?.type || "").toLowerCase();
+        return tpe === "checkbox";
+    };
+
+    // numeric detection
     const isNumericField = (field) => {
         const tpe = (field?.type || "").toLowerCase();
         const fmt = (field?.format || "").toLowerCase();
@@ -175,7 +205,7 @@ function DependentFieldsWrapper({
         return numericTags.includes(tpe) || numericTags.includes(fmt);
     };
 
-    // NEW: sanitize to optional leading +/-, then digits only (allow empty/"+"/"-" while typing)
+    // integer-only sanitizer
     const sanitizeIntegerInput = (raw) => {
         const s = String(raw ?? "");
         if (s === "" || s === "+" || s === "-") return s;
@@ -186,44 +216,45 @@ function DependentFieldsWrapper({
     };
 
     const getOperatorOptions = (field) => {
+        if (isCheckboxField(field)) {
+            return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
+        }
         if (!field || isStringLike(field))
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
         return ALL_OPERATOR_OPTIONS;
     };
 
-    // ---------- normalization helpers (so EDIT shows selected) ----------
-    const findPageOptionByCode = (code) =>
-        pageOptions.find((p) => p.code === code) || (code ? { code, name: code } : {});
-    const findFieldOptionByCode = (pageCode, fieldCode) => {
-        const opts = getFieldOptions(pageCode);
-        return (
-            opts.find((f) => f.code === fieldCode) ||
-            (fieldCode ? { code: fieldCode, name: fieldCode, label: fieldCode } : {})
-        );
+    // ---------- parsing / serialization ----------
+    const serializeSingle = (c) => {
+        if (
+            !c?.selectedPage?.code ||
+            !c?.selectedField?.code ||
+            !c?.comparisonType?.code ||
+            c?.fieldValue === ""
+        )
+            return "";
+        return `${c.selectedPage.code}.${c.selectedField.code}${c.comparisonType.code}${c.fieldValue}`;
     };
 
-    // parse "page.fieldOPvalue"
-    const parseSingle = (expression = "") => {
-        for (const operator of PARSE_OPERATORS) {
-            const i = expression.indexOf(operator);
-            if (i !== -1) {
-                const left = expression.slice(0, i);
-                const right = expression.slice(i + operator.length);
-                const [pageCode = "", fieldCode = ""] = (left || "")
-                    .split(".")
-                    .map((s) => (s || "").trim());
-                return {
-                    selectedPage: pageCode ? { code: pageCode, name: pageCode } : {},
-                    selectedField: fieldCode ? { code: fieldCode, name: fieldCode } : {},
-                    comparisonType: { code: operator, name: operator },
-                    fieldValue: (right || "").trim(),
-                };
-            }
-        }
-        return { selectedPage: {}, selectedField: {}, comparisonType: {}, fieldValue: "" };
+    const serializeAll = (conds) => {
+        const out = [];
+        conds.forEach((c, i) => {
+            const seg = serializeSingle(c);
+            if (!seg) return;
+            if (i > 0) out.push(c.joiner?.code || "&&");
+            out.push(seg);
+        });
+        return out.join(" ");
     };
 
-    // tokenize preserving AND/OR
+    const initialEmptyCondition = () => ({
+        selectedPage: {},
+        selectedField: {},
+        comparisonType: {},
+        fieldValue: "",
+        joiner: { code: "&&", name: "AND" },
+    });
+
     const tokenize = (expr = "") => {
         if (!expr) return [];
         const tokens = [];
@@ -255,7 +286,6 @@ function DependentFieldsWrapper({
                 nextOp = "||";
                 nextIdx = orPos;
             }
-
             const before = expr.slice(i, nextIdx).trim();
             if (before) tokens.push({ type: "cond", value: before });
             tokens.push({ type: "op", value: nextOp });
@@ -264,43 +294,30 @@ function DependentFieldsWrapper({
         return tokens;
     };
 
-    const serializeSingle = (c) => {
-        if (
-            !c?.selectedPage?.code ||
-            !c?.selectedField?.code ||
-            !c?.comparisonType?.code ||
-            c?.fieldValue === ""
-        )
-            return "";
-        return `${c.selectedPage.code}.${c.selectedField.code}${c.comparisonType.code}${c.fieldValue}`;
+    const parseSingle = (expression = "") => {
+        for (const operator of PARSE_OPERATORS) {
+            const i = expression.indexOf(operator);
+            if (i !== -1) {
+                const left = expression.slice(0, i);
+                const right = expression.slice(i + operator.length);
+                const [pageCode = "", fieldCode = ""] = (left || "")
+                    .split(".")
+                    .map((s) => (s || "").trim());
+                return {
+                    selectedPage: pageCode ? { code: pageCode, name: pageCode } : {},
+                    selectedField: fieldCode ? { code: fieldCode, name: fieldCode } : {},
+                    comparisonType: { code: operator, name: operator },
+                    fieldValue: (right || "").trim(),
+                };
+            }
+        }
+        return { selectedPage: {}, selectedField: {}, comparisonType: {}, fieldValue: "" };
     };
 
-    const serializeAll = (conds) => {
-        const out = [];
-        conds.forEach((c, i) => {
-            const seg = serializeSingle(c);
-            if (!seg) return;
-            if (i > 0) out.push(c.joiner?.code || "&&");
-            out.push(seg);
-        });
-        return out.join(" ");
-    };
-
-    const initialEmptyCondition = () => ({
-        selectedPage: {},
-        selectedField: {},
-        comparisonType: {},
-        fieldValue: "",
-        joiner: { code: "&&", name: "AND" },
-    });
-
-    // ---------- state (seed from existing expression if present) ----------
-    const [conditions, setConditions] = useState(() => {
-        const raw = selectedFieldItem?.visibilityCondition?.expression || "";
-        if (!raw) return [initialEmptyCondition()];
+    const buildConditionsFromExpression = (raw = "") => {
+        if (!raw?.trim()) return [initialEmptyCondition()];
         const tokens = tokenize(raw);
         if (!tokens.length) return [initialEmptyCondition()];
-
         const conds = [];
         let pendingJoin = "&&";
         tokens.forEach((t) => {
@@ -313,27 +330,57 @@ function DependentFieldsWrapper({
                         ? { ...base, joiner: { code: "&&", name: "AND" } }
                         : {
                             ...base,
-                            joiner: {
-                                code: pendingJoin,
-                                name: pendingJoin === "||" ? "OR" : "AND",
-                            },
+                            joiner: { code: pendingJoin, name: pendingJoin === "||" ? "OR" : "AND" },
                         }
                 );
             }
         });
         return conds.length ? conds : [initialEmptyCondition()];
-    });
+    };
 
+    // ---------- state ----------
+    // committed (saved) expression — used for outside summary and to notify parent
+    const [committedExpression, setCommittedExpression] = useState(
+        selectedFieldItem?.visibilityCondition?.expression?.trim() || ""
+    );
+
+    // draft conditions for the popup editor
+    const [conditions, setConditions] = useState(() =>
+        buildConditionsFromExpression(committedExpression)
+    );
+
+    // popup + errors
     const [showPopUp, setShowPopUp] = useState(false);
+    const [globalFormError, setGlobalFormError] = useState("");
 
-    // Emit combined expression when conditions change
+    // condition completeness
+    const isConditionComplete = (c) =>
+        Boolean(c?.selectedPage?.code) &&
+        Boolean(c?.selectedField?.code) &&
+        Boolean(c?.comparisonType?.code) &&
+        String(c?.fieldValue ?? "").trim() !== "";
+
+    // overall validity
+    const allComplete = conditions.every(isConditionComplete);
+
     useEffect(() => {
-        onExpressionChange?.(serializeAll(conditions));
-    }, [conditions, onExpressionChange]);
+        if (globalFormError && allComplete) setGlobalFormError("");
+    }, [allComplete, globalFormError]);
+
 
     // ---------- popup helpers ----------
-    const openPopup = () => setShowPopUp(true);
-    const closePopup = () => setShowPopUp(false);
+    const openPopup = () => {
+        // seed draft from last committed expression whenever opening
+        setConditions(buildConditionsFromExpression(committedExpression));
+        setGlobalFormError("");
+        setShowPopUp(true);
+    };
+    const closePopup = () => {
+        // discard draft changes on close
+        setConditions(buildConditionsFromExpression(committedExpression));
+        setGlobalFormError("");
+        setShowPopUp(false);
+    };
 
     const updateCond = (index, patch) => {
         setConditions((prev) => prev.map((c, i) => (i === index ? { ...c, ...patch } : c)));
@@ -363,6 +410,17 @@ function DependentFieldsWrapper({
         });
     };
 
+    // ---------- summary pill text ----------
+    const findPageOptionByCode = (code) =>
+        pageOptions.find((p) => p.code === code) || (code ? { code, name: code } : {});
+    const findFieldOptionByCode = (pageCode, fieldCode) => {
+        const opts = getFieldOptions(pageCode);
+        return (
+            opts.find((f) => f.code === fieldCode) ||
+            (fieldCode ? { code: fieldCode, name: fieldCode, label: fieldCode } : {})
+        );
+    };
+
     const formatConditionLabel = (c) => {
         if (!c?.selectedPage?.code || !c?.selectedField?.code) return incompleteExprLabel;
         const { field } = getFieldMeta(c.selectedPage.code, c.selectedField.code);
@@ -371,17 +429,15 @@ function DependentFieldsWrapper({
             : `${c.selectedPage.code}.${c.selectedField.code}`;
         const op = c?.comparisonType?.code || "";
         let valueText = c?.fieldValue || "";
-        // if ((field?.format === "dropdown" || field?.format === "radio") && Array.isArray(field.dropDownOptions)) {
-        //     const found = field.dropDownOptions.find((en) => `${en.code}` === `${c.fieldValue}`);
-        //     if (found) valueText = t(found.name) || found.name || c.fieldValue;
-        // }
         valueText = `${valueText}`.replace(/[()]/g, "");
-        return `${useT(fieldLabel)} ${t(op)} ${(field?.format === "dropdown" || field?.format === "radio") ? useT(valueText) : valueText}`.trim();
+        return `${useT(fieldLabel)} ${t(op)} ${field?.format === "dropdown" || field?.format === "radio" || field?.type === "selection" || field?.type === "checkbox"
+            ? useT(valueText)
+            : valueText
+            }`.trim();
     };
 
-    const hasExisting =
-        (selectedFieldItem?.visibilityCondition?.expression || "").trim().length > 0 ||
-        conditions.some((c) => serializeSingle(c));
+    // UI button label/icon based on committed expression
+    const hasExisting = committedExpression.trim().length > 0;
     const primaryButtonLabel = hasExisting ? editDisplayLogicLabel : addDisplayLogicLabel;
     const primaryIcon = hasExisting ? "Edit" : "Add";
 
@@ -393,7 +449,7 @@ function DependentFieldsWrapper({
                 <h3 style={{ margin: 0 }}>{displayLogicLabel}</h3>
             </div>
 
-            {/* Expression breakdown */}
+            {/* Expression breakdown (committed only; never show incomplete) */}
             <div
                 style={{
                     display: "flex",
@@ -404,10 +460,13 @@ function DependentFieldsWrapper({
                     marginBottom: "0.75rem",
                 }}
             >
-                {conditions.filter((c) => serializeSingle(c)).length === 0 ? (
-                    <p style={{ opacity: 0.7, margin: 0 }}>{noLogicAddedLabel}</p>
-                ) : (
-                    conditions.map((c, idx) => {
+                {(() => {
+                    const committedConds = buildConditionsFromExpression(committedExpression);
+                    const completeConds = committedConds.filter(isConditionComplete);
+                    if (completeConds.length === 0) {
+                        return <p style={{ opacity: 0.7, margin: 0 }}>{noLogicAddedLabel}</p>;
+                    }
+                    return completeConds.map((c, idx) => {
                         const label = formatConditionLabel(c) || incompleteExprLabel;
                         return (
                             <React.Fragment key={`out-cond-${idx}`}>
@@ -441,20 +500,11 @@ function DependentFieldsWrapper({
                                         className={"version-tag"}
                                         labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
                                     />
-                                    <div
-                                        role="button"
-                                        title={removeConditionLabel}
-                                        aria-label={removeConditionLabel}
-                                        onClick={() => removeCondition(idx)}
-                                        style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
-                                    >
-                                        <SVG.Delete fill={"#C84C0E"} width={"1rem"} height={"1rem"} />
-                                    </div>
                                 </div>
                             </React.Fragment>
                         );
-                    })
-                )}
+                    });
+                })()}
             </div>
 
             {/* Add/Edit button */}
@@ -479,17 +529,12 @@ function DependentFieldsWrapper({
                             children={[
                                 <div key="builder" style={{ display: "grid", gap: "1rem" }}>
                                     {conditions.map((cond, idx) => {
-                                        const fieldOptions = cond?.selectedPage?.code
-                                            ? getFieldOptions(cond.selectedPage.code)
-                                            : [];
-                                        const selectedFieldObj = fieldOptions.find(
-                                            (f) => f.code === cond?.selectedField?.code
-                                        );
+                                        const fieldOptions = cond?.selectedPage?.code ? getFieldOptions(cond.selectedPage.code) : [];
+                                        const selectedFieldObj = fieldOptions.find((f) => f.code === cond?.selectedField?.code);
                                         const operatorOptions = getOperatorOptions(selectedFieldObj);
                                         const selectedOperator = cond?.comparisonType?.code
                                             ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
                                             : undefined;
-                                        const numericValue = isNumericField(selectedFieldObj);
 
                                         return (
                                             <div
@@ -572,18 +617,23 @@ function DependentFieldsWrapper({
                                                                         const canKeep =
                                                                             cond?.comparisonType?.code &&
                                                                             nextOps.some((o) => o.code === cond.comparisonType.code);
+
+                                                                        const isCk = isCheckboxField(e);
                                                                         updateCond(idx, {
                                                                             selectedField: e,
-                                                                            fieldValue: "",
-                                                                            comparisonType: canKeep ? cond.comparisonType : {},
+                                                                            fieldValue: isCk
+                                                                                ? (["true", "false"].includes(String(cond.fieldValue).toLowerCase())
+                                                                                    ? cond.fieldValue
+                                                                                    : "false")
+                                                                                : "",
+                                                                            comparisonType: canKeep
+                                                                                ? cond.comparisonType
+                                                                                : (isCk ? { code: "==", name: t("EQUALS_TO") || "equals to" } : {}),
                                                                         });
                                                                     }}
                                                                     selected={
                                                                         cond?.selectedField?.code
-                                                                            ? findFieldOptionByCode(
-                                                                                cond?.selectedPage?.code,
-                                                                                cond.selectedField.code
-                                                                            )
+                                                                            ? findFieldOptionByCode(cond?.selectedPage?.code, cond.selectedField.code)
                                                                             : cond.selectedField
                                                                     }
                                                                     disabled={!cond?.selectedPage?.code}
@@ -616,27 +666,57 @@ function DependentFieldsWrapper({
                                                             <p style={{ margin: 0 }}>{selectValueLabel}</p>
                                                             <div className="digit-field" style={{ width: "100%" }}>
                                                                 {(() => {
+                                                                    // Checkbox as boolean value control
+                                                                    if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
+                                                                        const boolVal = String(cond.fieldValue).toLowerCase() === "true";
+                                                                        return (
+                                                                            <CheckBox
+                                                                                mainClassName={"app-config-checkbox-main"}
+                                                                                labelClassName={"app-config-checkbox-label"}
+                                                                                onChange={(v) => {
+                                                                                    const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
+                                                                                    updateCond(idx, { fieldValue: checked ? "true" : "false" });
+                                                                                }}
+                                                                                value={boolVal}
+                                                                                label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
+                                                                                isLabelFirst={false}
+                                                                                disabled={!cond?.selectedField?.code}
+                                                                            />
+                                                                        );
+                                                                    }
+
                                                                     const isSelect =
                                                                         selectedFieldObj &&
-                                                                        (selectedFieldObj.format === "dropdown" || selectedFieldObj.format === "radio");
+                                                                        (selectedFieldObj.format === "dropdown" ||
+                                                                            selectedFieldObj.format === "radio" ||
+                                                                            selectedFieldObj.type === "selection");
 
                                                                     if (isSelect) {
-                                                                        // 1) If enums exist on the field, use them
+                                                                        // 1) inline enums
                                                                         if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
+                                                                            const enumOptions = selectedFieldObj.enums.map((en) => ({
+                                                                                code: String(en.code),
+                                                                                name: en.name,
+                                                                            }));
+                                                                            const selectedEnum =
+                                                                                enumOptions.find((o) => String(o.code) === String(cond.fieldValue)) ||
+                                                                                (cond.fieldValue
+                                                                                    ? { code: String(cond.fieldValue), name: String(cond.fieldValue) }
+                                                                                    : undefined);
                                                                             return (
                                                                                 <Dropdown
-                                                                                    option={selectedFieldObj.enums.map((en) => ({ code: en.code, name: en.name }))}
+                                                                                    option={enumOptions}
                                                                                     optionKey="code"
                                                                                     name={`val-${idx}`}
-                                                                                    t={useT} // translate option names if they are i18n keys
+                                                                                    t={useT}
                                                                                     select={(e) => updateCond(idx, { fieldValue: e.code })}
                                                                                     disabled={!cond?.selectedField?.code}
-                                                                                    selected={cond.fieldValue}
+                                                                                    selected={selectedEnum}
                                                                                 />
                                                                             );
                                                                         }
 
-                                                                        // 2) Else if we have schemaCode, fetch options from MDMS
+                                                                        // 2) MDMS schema
                                                                         if (selectedFieldObj.schemaCode) {
                                                                             return (
                                                                                 <MdmsValueDropdown
@@ -648,7 +728,7 @@ function DependentFieldsWrapper({
                                                                             );
                                                                         }
 
-                                                                        // 3) Fallback: no enums and no schema -> plain text
+                                                                        // 3) fallback text
                                                                         return (
                                                                             <TextInput
                                                                                 type="text"
@@ -661,7 +741,7 @@ function DependentFieldsWrapper({
                                                                         );
                                                                     }
 
-                                                                    // Non-select fields keep your numeric/text handling
+                                                                    // Non-select numeric/text
                                                                     const numericValue = isNumericField(selectedFieldObj);
                                                                     return (
                                                                         <TextInput
@@ -678,7 +758,6 @@ function DependentFieldsWrapper({
                                                                         />
                                                                     );
                                                                 })()}
-
                                                             </div>
                                                         </LabelFieldPair>
                                                     </div>
@@ -717,6 +796,34 @@ function DependentFieldsWrapper({
                                             style={{ minWidth: "auto" }}
                                         />
                                     </div>
+
+                                    {/* Global error (only if attempting to submit) */}
+                                    {globalFormError ? (
+                                        <div
+                                            style={{
+                                                border: "1px solid #FCA5A5",
+                                                background: "#FEF2F2",
+                                                color: "#B91C1C",
+                                                borderRadius: 6,
+                                                padding: "0.5rem 0.75rem",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                gap: "0.75rem",
+                                            }}
+                                        >
+                                            <span>{globalFormError}</span>
+                                            <SVG.Close
+                                                width={"1.1rem"}
+                                                height={"1.1rem"}
+                                                fill={"#7F1D1D"}
+                                                onClick={() => setGlobalFormError("")}
+                                                tabIndex={0}
+                                                style={{ cursor: "pointer" }}
+                                            />
+
+                                        </div>
+                                    ) : null}
                                 </div>,
                             ]}
                             onOverlayClick={closePopup}
@@ -736,8 +843,18 @@ function DependentFieldsWrapper({
                                     type={"button"}
                                     size={"large"}
                                     variation={"primary"}
+                                    disabled={!allComplete}
                                     label={submitLabel}
-                                    onClick={closePopup}
+                                    onClick={() => {
+                                        if (!allComplete) {
+                                            setGlobalFormError(completeAllMsg);
+                                            return;
+                                        }
+                                        const expr = serializeAll(conditions);
+                                        setCommittedExpression(expr);
+                                        onExpressionChange?.(expr); // commit only on submit
+                                        setShowPopUp(false);
+                                    }}
                                 />,
                             ]}
                         />
