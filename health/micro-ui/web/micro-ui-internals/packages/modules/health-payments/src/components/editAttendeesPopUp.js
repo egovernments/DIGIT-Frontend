@@ -11,7 +11,7 @@ import { useAttendanceSummary } from "../utils/update_attendance_summary";
 import SearchUserPopUp from "./SearchUserPopUp";
 
 
-const EditAttendeePopUp = ({ onClose, businessId, heading, registerId }) => {
+const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, registerId }) => {
     const history = useHistory();
     // context path variables
     const attendanceContextPath =
@@ -222,7 +222,8 @@ const EditAttendeePopUp = ({ onClose, businessId, heading, registerId }) => {
         />
         {
             searchUserpopUp && <SearchUserPopUp
-            registerId={registerId}
+                registerId={registerId}
+                boundaryCode={boundaryCode}
                 onClose={closeActionBarPopUp}
                 heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
             />

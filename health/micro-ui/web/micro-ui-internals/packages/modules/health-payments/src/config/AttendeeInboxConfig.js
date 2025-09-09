@@ -10,10 +10,7 @@ import React from "react";
  * @link section: Provides navigation to the Create User screen.
  */
 
-const inboxAttendeeSearchConfig = () => {
-
-
-
+const inboxAttendeeSearchConfig = (boundarycode) => {
 
   return {
     type: "inbox", // Defines the type of configuration (search functionality)
@@ -59,7 +56,7 @@ const inboxAttendeeSearchConfig = () => {
           links: [
             {
               text: "HR_COMMON_CREATE_EMPLOYEE_HEADER",
-              url: "/employee/hrms/create",
+              url: `/employee/hrms/create?boundarycode=${boundarycode}`,
               roles: ["SYSTEM_ADMINISTRATOR", "HRMS_ADMIN"],
               hyperlink: true,
             },
@@ -149,40 +146,41 @@ const inboxAttendeeSearchConfig = () => {
         uiConfig: {
           columns: [
             // Defines columns for search result table
+
             {
-              label: "HR_EMP_ID_LABEL",
-              jsonPath: "code", // Maps data from API response
+              label: "HR_EMP_NAME_LABEL",
+              jsonPath: "name.givenName",
               additionalCustomization: true,
             },
             {
-              label: "HR_EMP_NAME_LABEL",
-              jsonPath: "user.name",
+              label: "HR_EMP_MOBILE_LABEL",
+              jsonPath: "mobileNumber", // Maps data from API response
               additionalCustomization: true,
             },
             {
               label: "HR_ROLE_NO_LABEL",
-              jsonPath: "user.roles",
+              jsonPath: "userDetails.roles",
               additionalCustomization: true,
             },
             {
               label: "HR_JURIDICTIONS_LABEL",
-              jsonPath: "jurisdictions",
+              jsonPath: "address[0].locality.code",
               additionalCustomization: true,
             },
             {
-              label: "HR_DESG_LABEL",
-              jsonPath: "assignments[0]",
+              label: "ASSIGNMENT",
+              //jsonPath: "assignments[0]",
               additionalCustomization: true,
             },
-            {
-              label: "HR_EMPLOYMENT_DEPARTMENT_LABEL",
-              jsonPath: "assignments[0]",
-              additionalCustomization: true,
-            },
+            // {
+            //   label: "HR_EMPLOYMENT_DEPARTMENT_LABEL",
+            //   jsonPath: "assignments[0]",
+            //   additionalCustomization: true,
+            // },
           ],
           rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
           tableClassName: "pqm-table", // Table styles
-          resultsJsonPath: "Employees", // API response path for results
+          resultsJsonPath: "Individual", // API response path for results
           enableColumnSort: false, // Enables sorting on columns
           enableGlobalSearch: false, // Disables global search
           isPaginationRequired: true, // enables pagination
@@ -194,16 +192,16 @@ const inboxAttendeeSearchConfig = () => {
       masterName: "commonUiConfig", // Master data module for UI config
       moduleName: "AttendeeSearchInboxConfig", // Configuration module name
       requestBody: {}, // Request body (empty for now)
-      serviceName: Urls.hrms.search, // API endpoint for search
+      serviceName: "/health-individual/v1/_search", // API endpoint for search
       requestParam: {
         // Default request parameters for API call
         limit: 10,
-        names: "",
-        roles: "",
+        // names: "",
+        // roles: "",
         offset: 0,
-        sortBy: "lastModifiedTime",
+        //sortBy: "lastModifiedTime",
         tenantId: "dev",
-        sortOrder: "DESC",
+        // sortOrder: "DESC",
         //   includeUnassigned:true
       },
       tableFormJsonPath: "requestParam", // JSON path for table form data
@@ -212,7 +210,7 @@ const inboxAttendeeSearchConfig = () => {
       minParametersForFilterForm: 0, // No minimum required fields for filter
       minParametersForSearchForm: 0, // No minimum required fields for search
     },
-    component: BoundaryComponent,
+    //component: BoundaryComponent,
 
     persistFormData: true, // Keeps form data persisted between searches
     additionalSections: {}, // No additional sections

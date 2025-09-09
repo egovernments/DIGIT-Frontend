@@ -76,7 +76,7 @@ export const AttendanceService = {
     try {
 
       //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
-      const result = await AttendeeService.search(tenantId, null, { limit: 10, offset: 1 }, {
+      const result = await AttendeeService.search(tenantId, null, { limit: 10, offset: 0 }, {
 
         "Individual": {
 
@@ -90,7 +90,7 @@ export const AttendanceService = {
           "locality": {
             "id": null,
             "tenantId": null,
-            "code": locallity || "NEWTEST00222_MO_11_06_PLEEBO",
+            "code": locallity,
             "geometry": null,
             "auditDetails": null,
             "additionalDetails": null

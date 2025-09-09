@@ -9,7 +9,7 @@ import SelectableList from "./SelectableList";
 
 
 
-const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
+const SearchUserPopUp = ({ boundaryCode,onClose, businessId, heading, registerId }) => {
 
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const { mutate: createMapping } = Digit.Hooks.payments.useCreateAttendeeFromRegister(tenantId);
@@ -40,7 +40,7 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
         try {
 
             const locallity = Digit.SessionStorage.get("selectedBoundary")?.code || null;
-            
+
             if (locallity === null) {
                 setShowToast(
                     { key: "error", label: t(`Locality is not selected`), transitionTime: 3000 }
@@ -91,13 +91,14 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
             individualId: selectedUser["id"],
             enrollmentDate: new Date().getTime(),
             tenantId: selectedUser["tenantId"],
-            additionalDetails: {
-                individualName: selectedUser["name"],
-                individualID: selectedUser["individualCode"],
-                individualGaurdianName: selectedUser["individualGaurdianName"],
-                identifierId: selectedUser["aadhaar"],
-                gender: selectedUser["gender"]
-            }
+            tag: "Team 1",
+            // additionalDetails: {
+            //     individualName: selectedUser["name"],
+            //     individualID: selectedUser["individualCode"],
+            //     individualGaurdianName: selectedUser["individualGaurdianName"],
+            //     identifierId: selectedUser["aadhaar"],
+            //     gender: selectedUser["gender"]
+            // }
         };
 
 
@@ -110,14 +111,14 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
                         { key: "error", label: t(`HCM_AM_ERROR_MESSAGE`), transitionTime: 3000 }
                     );
 
-
                 },
                 onSuccess: async (responseData) => {
 
-                    console.log("responseData", responseData);
-
-                    setShowToast({ key: "success", label: t(`HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE`), transitionTime: 3000 });
+                    setShowToast({ key: "success", label: `${t(`HCM_AM_NEW_EMPLOYEE`)} (${"name"}) ${t(`HCM_AM_ENROLLED`)}`, transitionTime: 3000 });
                     props.disableUser("");
+                    setSearchedIndividual([]);
+
+
                 },
             }
         )
@@ -151,7 +152,7 @@ const SearchUserPopUp = ({ onClose, businessId, heading, registerId }) => {
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
                             <div>{t(labels[0])}</div>
                             <Button label={t("Register New User")} variation="link" onClick={() => {
-                                history.push(`/${window?.contextPath}/employee/payments/attendee-inbox`)
+                                history.push(`/${window?.contextPath}/employee/payments/attendee-inbox?registerId=${registerId}&boundaryCode=${boundaryCode}`)
                             }} />
 
 

@@ -294,6 +294,7 @@ const EditRegister = ({ editAttendance = false }) => {
                         onClose={onDeEnrollClose}
                         businessId={registerNumber}
                         registerId={registerId}
+                        boundaryCode={boundaryCode}
                         heading={`${t("HCM_AM_ATTENDANCE_EDIT_REGISTER")}`}
                     />
                 )}

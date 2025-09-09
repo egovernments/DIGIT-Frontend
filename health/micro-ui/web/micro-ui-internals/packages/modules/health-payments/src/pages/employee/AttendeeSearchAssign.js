@@ -6,6 +6,7 @@ import inboxAttendeeSearchConfig from "../../config/AttendeeInboxConfig";
 
 const InboxAttendeesSearch = () => {
   const { t } = useTranslation();
+  const {  boundaryCode } = Digit.Hooks.useQueryParams();
 
 //   const isMobile = window.Digit.Utils.browser.isMobile();
 //   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -27,7 +28,7 @@ const InboxAttendeesSearch = () => {
 
 
 
-   const config = inboxAttendeeSearchConfig();
+   const config = inboxAttendeeSearchConfig(boundaryCode);
 
   return (
     <div style={{ marginBottom: "80px" }}>

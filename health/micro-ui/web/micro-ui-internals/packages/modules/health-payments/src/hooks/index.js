@@ -5,6 +5,7 @@ import usePaymentsInitialization from "./project/usePaymentsInitialization";
 import useAttendanceBoundaryRegisterSearch from "./attendance/attendance_register_search";
 import useDeleteAttendeeFromRegister from "./attendance/delete_attendee_register";
 import useCreateAttendeeFromRegister from "./attendance/create_attendee_register";
+import useSearchIndividualForRegister from "./attendance/search_individual";
 
 const payments = {
   useProjectSearch,
@@ -12,7 +13,8 @@ const payments = {
   useAttendanceBoundarySearch,
   useAttendanceBoundaryRegisterSearch,
   useDeleteAttendeeFromRegister,
-  useCreateAttendeeFromRegister
+  useCreateAttendeeFromRegister,
+  useSearchIndividualForRegister
 };
 
 const Hooks = {
