@@ -396,7 +396,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   } else {
                     setIsLoading(false);
                     setIsSelectionDisabledVerify(true);
-                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME"), transitionTime: 3000 });
+                    setShowToast({ key: "info", label: t("HCM_AM_PLEASE_CHECK_AFTER_SOME_TIME"), transitionTime: 3000 });
                   }
                 } else {
                   setIsLoading(false);
@@ -484,8 +484,8 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                   setIsLoading(false);
                   setIsSelectionDisabledTransfer(false);
                   setShowToast({
-                    key: "success",
-                    label: t("HCM_AM_PAYMENT_GENERATION_DONE"),
+                    key: "info",
+                    label: t("HCM_AM_PAYMENT_GENERATION_COMPLETED"),
                     transitionTime: 5000,
                   });
                   refetchBill();
@@ -499,7 +499,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                     setTimeout(pollStatus, POLLING_INTERVAL);
                   } else {
                     setIsLoading(false);
-                    setShowToast({ key: "info", label: t("HCM_AM_TASK_POLL_TIMEOUT_PLEASE_CHECK_IN_SOME_TIME"), transitionTime: 3000 });
+                    setShowToast({ key: "info", label: t("HCM_AM_PLEASE_CHECK_AFTER_SOME_TIME"), transitionTime: 3000 });
                   }
                 } else {
                   setIsLoading(false);
@@ -780,14 +780,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                 <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                   
                   {
-                    (isSelectionDisabledTransfer || isSelectionDisabledVerify) ? (
-                    // <InfoCard
-                    // ///
-                    //   variant="default"
-                    //   style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "90px" }}
-                    //   label={t(`HCM_AM_INFO`)}
-                    //   text={t(`HCM_AM_VERIFICATION_PAYMENT_IN_PROGRESS_TEXT_INFO`)}
-                    // />
+                    //this condition tells either transfer or verification is in progress
+                    //not showing the loader for Editor
+                    ((isSelectionDisabledTransfer || isSelectionDisabledVerify) && !editBillDetails) ? (                    
                     <div className="label-pair">
                           <span
                             style={{
@@ -811,7 +806,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
                               </div>
                               </div>
                             </div>
-                            {t(`HCM_AM_VERIFICATION_PAYMENT_IN_PROGRESS_TEXT_INFO`)}
+                           {isSelectionDisabledTransfer
+    ? t("HCM_AM_PAYMENT_IN_PROGRESS_TEXT_INFO")  
+      : t("HCM_AM_VERIFICATION_IN_PROGRESS_TEXT_INFO")}
                           </span>
                         </div>
                   )

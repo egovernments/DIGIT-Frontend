@@ -79,7 +79,11 @@ const BillDetailsTable = ({ ...props }) => {
                                             }}
                                         >
                                             {showErrorPayments
-                                                ? t(row?.additionalDetails?.errorDetails?.reasonForFailure)
+                                                ? (row?.additionalDetails?.responseMessage
+                                                    ? t(row.additionalDetails.responseMessage)
+                                                    : row?.additionalDetails?.errorDetails?.reasonForFailure
+                                                        ? t(row.additionalDetails.errorDetails.reasonForFailure)
+                                                        : `${t("HCM_AM_REQUEST_NOT_PROCESSED")} ${t("HCM_AM_PLEASE_TRY_AGAIN")}`)
                                                 : `${t("HCM_AM_REQUEST_NOT_PROCESSED")} ${t("HCM_AM_PLEASE_TRY_AGAIN")}`
                                             }
                                         </div>
