@@ -58,9 +58,9 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initLibraries().then(async () => {
       const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
-      // const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
+      const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
       initCampaignComponents();
-      // initWorkbenchComponents();
+      initWorkbenchComponents();
       setIsReady(true);
     });
   }, []);
