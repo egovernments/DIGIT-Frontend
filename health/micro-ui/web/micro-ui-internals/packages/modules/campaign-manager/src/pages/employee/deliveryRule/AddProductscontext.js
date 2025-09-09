@@ -179,11 +179,11 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           <Link
             to={{
               pathname: `/${window.contextPath}/employee/campaign/add-product`,
-              state: {
-                campaignId: id,
-                urlParams: window?.location?.search,
-                projectType: filteredDeliveryConfig?.projectType,
-              },
+            }}
+            state={{
+              campaignId: id,
+              urlParams: window?.location?.search,
+              projectType: filteredDeliveryConfig?.projectType,
             }}
           >
             {t("ES_CAMPAIGN_ADD_PRODUCT_LINK")}
