@@ -95,8 +95,13 @@ const AbhaEnrollPage = () => {
                         history.push({
                             pathname: `/${window.contextPath}/employee/pgr/enroll-success`,
                             state: {
-                                message: "ABHA_ENROLLMENT_SUCCESSFUL",
-                                info: `Abha Number : ${data?.abhaNumber}, IndividualId : ${data?.individualId}`
+                                message: "ABHA Enrollment Successful",
+                                description: "Citizen has been successfully enrolled into ABHA system.",
+                                // info: `Abha Number : ${data?.abhaNumber}, IndividualId : ${data?.individualId}`,
+                                responses: [
+                                    `ABHA Number: ${data?.abhaNumber}`,
+                                    `Patient ID: ${data?.individualId}`
+                                ]
                             }
                         });
                     },
@@ -124,29 +129,30 @@ const AbhaEnrollPage = () => {
             <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
                 {t("ABHA HELP-DESK CONSOLE")}
             </HeaderComponent>
-            {/* Page Header */}
-            <div style={{ marginBottom: "1.5rem" }}>
-                <p style={{ color: "#f39c12" }}>
-                    {t("WHETHER CITIZEN IS ENROLLED FOR ABHA OR NOT")}
-                </p>
-            </div>
+            <p style={{ fontSize: "20px", color: "#787878", marginTop: "0", marginBottom: "1.5rem" }}>
+                {t("Enroll a citizen into the ABHA (Ayushman Bharat Health Account) system by verifying Aadhaar and linking a mobile number.")}
+            </p>
 
 
 
             <Card style={{ padding: "20px", marginBottom: "20px" }}>
                 {/* Tabs */}
-                <HeaderComponent style={{ color: "#f39c12" }}>
-                    {t("Aadhar Discovery")}
+                <HeaderComponent >
+                    {t("Aadhaar Verification for Enrollment")}
                 </HeaderComponent>
+
+                <p style={{ fontSize: "20px", color: "#787878", marginTop: "0", marginBottom: "1.5rem" }}>
+                    {t("Please enter the Aadhaar number to send an OTP. Once verified, link the registered mobile number to create a new ABHA ID.")}
+                </p>
 
                 <div style={{ display: "flex", gap: "24px", marginBottom: "1.5rem" }}>
                     <Tag label={'Enroll'} className={"campaign-tag"} />
-                    <Tag label={'Varify'} />
+                    <Tag label={'Verify'} />
                     <Tag label={'Download'} />
                 </div>
 
                 <Stepper
-                    customSteps={["SEND AADHAR OTP", "VERIFY AND ENROLL"]}
+                    customSteps={["Send Aadhar OTP", "Verify and Enroll"]}
                     currentStep={currentStep}
                     onStepClick={(currentStep) => { }}
                     direction={"horizontal"}
@@ -156,7 +162,7 @@ const AbhaEnrollPage = () => {
                     {currentStep === 1 && (
                         <div style={{ display: "flex" }}>
                             <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                {t("AADHAR NUMBER")}
+                                {t("Aadhar Number")}
                             </div>
                             <TextInput
                                 style={{ alignItems: "center" }}
@@ -165,25 +171,13 @@ const AbhaEnrollPage = () => {
                                 onChange={(e) => setAadhaarNumber(e.target.value)}
                                 disabled={false}
                                 label={t("AADHAR NUMBER")}
-                                placeholder={t("ENTER_VALID_AADHAAR")}
+                                placeholder={t("Enter valid 12 digit Aadhar Number")}
                             />
                         </div>
                     )}
 
                     {currentStep === 2 && (
                         <>
-                            <div style={{ display: "flex" }}>
-                                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                    {t("Transaction Id")}
-                                </div>
-                                <TextInput
-                                    name="otp"
-                                    value={data?.txnId}
-                                    onChange={(e) => { }}
-                                    label={t("ENTER_OTP")}
-                                    placeholder={t("")}
-                                />
-                            </div>
 
                             <div style={{ display: "flex" }}>
                                 <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
@@ -193,7 +187,7 @@ const AbhaEnrollPage = () => {
                                     name="mobile"
                                     onChange={(e) => { setValidOTP(e.target.value) }}
                                     label={t("MOBILE_NUMBER")}
-                                    placeholder={t("ENTER VALID OTP RECIEVED ON MOBILE")}
+                                    placeholder={t("Enter OTP received on Aadhaar linked mobile number")}
                                 />
                             </div>
                             <div style={{ display: "flex" }}>
@@ -204,7 +198,7 @@ const AbhaEnrollPage = () => {
                                     name="mobile"
                                     onChange={(e) => { setMobileNumber(e.target.value) }}
                                     label={t("MOBILE_NUMBER")}
-                                    placeholder={t("ENTER MOBILE NUMBER REGISTERED WITH AADHAAR")}
+                                    placeholder={t("Enter Mobile Number to link with Aadhaar")}
                                 />
                             </div>
                         </>
@@ -222,7 +216,7 @@ const AbhaEnrollPage = () => {
                         type={"button"}
                         size={"large"}
                         variation={"primary"}
-                        label={currentStep === 1 ? t("SEND_OTP") : t("VARIFY AND ENROLL")}
+                        label={currentStep === 1 ? t("Send OTP") : t("Verify and Enroll")}
                         title={t("SEND_OTP")}
                         onClick={fetchOtp}
                         isDisabled={(!aadhaarNumber || aadhaarNumber.length !== 12) && currentStep === 1}
@@ -246,7 +240,7 @@ const AbhaEnrollPage = () => {
                         type={"button"}
                         size={"large"}
                         variation={"primary"}
-                        label={currentStep === 1 ? t("SEND_OTP") : t("VARIFY AND ENROLL")}
+                        label={currentStep === 1 ? t("send OTP") : t("Verify and Enroll")}
                         title={t("SEND_OTP")}
                         onClick={varifyAndEnroll}
                         isDisabled={(!aadhaarNumber || aadhaarNumber.length !== 12) && currentStep === 1}

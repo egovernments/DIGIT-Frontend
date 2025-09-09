@@ -22,7 +22,6 @@ import { set } from "lodash";
 const AbhaHelpDeskConsole = () => {
     const { t } = useTranslation();
     const history = useHistory();
-    const [activeTab, setActiveTab] = useState("download"); // enroll | verify | download | check
     const [data, setData] = useState(null);
     const [showPopUp, setShowPopUp] = useState(false);
     const [abhaData, setAbhaData] = useState(null);
@@ -31,7 +30,6 @@ const AbhaHelpDeskConsole = () => {
     const [validOTP, setValidOTP] = useState("");
     const [currentStep, setCurrentStep] = useState(1);
     const [downloadOption, setDownloadOption] = useState(null);
-    const [otpSent, setOtpSent] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showToast, setShowToast] = useState(null);
 
@@ -159,15 +157,17 @@ const AbhaHelpDeskConsole = () => {
         t("Download Card"),
     ];
 
+
     return (
         <React.Fragment  >
-            <HeaderComponent className="digit-inbox-search-composer-header" styles={{ marginBottom: "1.5rem" }}>
+
+            <HeaderComponent className="digit-inbox-search-composer-header" >
                 {t("ABHA HELP-DESK CONSOLE")}
             </HeaderComponent>
             {/* Page Header */}
-            <div style={{ marginBottom: "1.5rem" }}>
-                <p style={{ color: "#f39c12" }}>
-                    {t("WHETHER CITIZEN IS ENROLLED FOR ABHA OR NOT")}
+            <div >
+                <p style={{ fontSize: "20px", color: "#787878" }}>
+                    {t("Check if the citizen is already enrolled in the ABHA (Ayushman Bharat Health Account) system using their Aadhaar number.")}
                 </p>
             </div>
 
@@ -175,18 +175,23 @@ const AbhaHelpDeskConsole = () => {
 
             <Card style={{ padding: "20px", marginBottom: "20px" }}>
                 {/* Tabs */}
-                <HeaderComponent style={{ color: "#f39c12" }}>
-                    {t("Aadhar Discovery")}
+                <HeaderComponent style={{ color: "#f39c12", marginBottom: "1rem" }}>
+                    {t("Aadhaar-Based Enrollment Check")}
                 </HeaderComponent>
 
+                <p style={{ fontSize: "20px", color: "#787878", marginTop: "0", marginBottom: "1.5rem" }}>
+                    {t("Enter the Aadhaar number below to verify enrollment in the ABHA system. This information is required to avoid duplicate enrollment and ensure smooth health service access.")}
+                </p>
+
+
                 <div style={{ display: "flex", gap: "24px", marginBottom: "1.5rem" }}>
-                    <Tag label={'Search'} className={"campaign-tag"} />
-                    <Tag label={'Varify'} />
+                    <Tag label={'Search'} />
+                    <Tag label={'Verify'} />
                     <Tag label={'Download'} />
                 </div>
 
                 <Stepper
-                    customSteps={["SEND OTP", "VERIFY OTP", "DOWNLOAD CARD"]}
+                    customSteps={["Send OTP", "Verify OTP", "Download card"]}
                     currentStep={currentStep}
                     onStepClick={(currentStep) => { }}
                     direction={"horizontal"}
@@ -196,7 +201,7 @@ const AbhaHelpDeskConsole = () => {
                     {currentStep === 1 && (
                         <div style={{ display: "flex" }}>
                             <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                {t("AADHAR NUMBER")}
+                                {t("Aadhaar Number")}
                             </div>
                             <TextInput
                                 style={{ alignItems: "center" }}
@@ -204,46 +209,31 @@ const AbhaHelpDeskConsole = () => {
                                 value={aadhaarNumber || ""}
                                 onChange={(e) => setAadhaarNumber(e.target.value)}
                                 disabled={false}
-                                label={t("AADHAR NUMBER")}
-                                placeholder={t("ENTER_VALID_AADHAAR")}
+                                label={t("Aadhaar Number")}
+                                placeholder={t("Please enter valid Aadhaar Number")}
                             />
                         </div>
                     )}
 
                     {currentStep === 2 && (
-                        <>
-                            <div style={{ display: "flex" }}>
-                                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                    {t("Login Id")}
-                                </div>
-                                <TextInput
-                                    name="otp"
-                                    value={data?.txnId}
-                                    onChange={(e) => { }}
-                                    label={t("ENTER_OTP")}
-                                    placeholder={t("")}
-                                />
+                        <div style={{ display: "flex" }}>
+                            <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
+                                {t("Enter OTP")}
                             </div>
-
-                            <div style={{ display: "flex" }}>
-                                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                    {t("Enter OTP")}
-                                </div>
-                                <TextInput
-                                    name="mobile"
-                                    onChange={(e) => { setValidOTP(e.target.value) }}
-                                    label={t("MOBILE_NUMBER")}
-                                    placeholder={t("ENTER VALID OTP RECIEVED ON MOBILE")}
-                                />
-                            </div>
-                        </>
+                            <TextInput
+                                name="mobile"
+                                onChange={(e) => { setValidOTP(e.target.value) }}
+                                label={t("MOBILE_NUMBER")}
+                                placeholder={t("Enter OTP received on Aadhaar linked mobile number")}
+                            />
+                        </div>
                     )}
 
                     {currentStep === 3 && (
                         <>
                             <div style={{ display: "flex" }}>
                                 <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                    {t("Abha Number")}
+                                    {t("ABHA Number")}
                                 </div>
                                 <TextInput
                                     name="otp"
@@ -255,8 +245,8 @@ const AbhaHelpDeskConsole = () => {
                             </div>
 
                             <div style={{ display: "flex" }}>
-                                <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                    {t("Download Option")}
+                                <div style={{ width: "20.5%", fontWeight: "500", marginTop: "0.7rem" }}>
+                                    {t("Download")}
                                 </div>
                                 <Dropdown
                                     option={[{ name: "PDF", code: "PDF" }, { name: "PNG", code: "PNG" }]}
@@ -278,8 +268,8 @@ const AbhaHelpDeskConsole = () => {
                 <PopUp
                     className='accessibility-pop-up'
                     onClose={() => setShowPopUp(false)}
-                    heading={t(`ENROLL CITIZEN FOR ABHA?`)}
-                    description={t(`NO ABHA RECORD WAS FOUND FOR THE ENTERED AADHAAR. DO YOU WANT TO START ENROLLMENT PROCESS NOW?`)}
+                    heading={t(`Enroll citizen in ABHA system?`)}
+                    description={t(`No ABHA account found for the provided Aadhaar number. Would you like to proceed with enrollment?`)}
                     children={[
                     ]}
                     onOverlayClick={() => setShowPopUp(false)}
@@ -289,7 +279,7 @@ const AbhaHelpDeskConsole = () => {
                             type={"button"}
                             size={"large"}
                             variation={"secondary"}
-                            label={t(`CANCEL`)}
+                            label={t(`Cancel`)}
                             onClick={() => setShowPopUp(false)}
                             // style={{ width: "160px" }}
                             title={t(`CANCEL`)}
@@ -299,8 +289,8 @@ const AbhaHelpDeskConsole = () => {
                             type={"button"}
                             size={"large"}
                             variation={"primary"}
-                            title={t(`START ENROLLMENT`)}
-                            label={t(`START ENROLLMENT`)}
+                            title={t(`Start enrollment`)}
+                            label={t(`Start Enrollment`)}
                             // style={{ width: "160px" }}
                             onClick={() => {
                                 history.push(`/${window.contextPath}/employee/pgr/abha-enroll`);
@@ -323,8 +313,8 @@ const AbhaHelpDeskConsole = () => {
                     <Button
                         style={{ margin: "1rem 0", minWidth: "16rem", alignItems: "center" }}
                         variation="primary"
-                        label={t("VERIFY_OTP")}
-                        title={t("SEND_OTP")}
+                        label={t("Verify OTP")}
+                        title={t("Verify OTP")}
                         onClick={varifyOTP}
                     />
                 ]}
@@ -338,7 +328,7 @@ const AbhaHelpDeskConsole = () => {
                     <Button
                         style={{ margin: "1rem 0", minWidth: "16rem", alignItems: "center" }}
                         variation="primary"
-                        label={currentStep === 1 ? t("SEND_OTP") : t("DOWNLOAD_CARD")}
+                        label={currentStep === 1 ? t("Send OTP") : t("Download card")}
                         title={t("SEND_OTP")}
                         onClick={currentStep === 1 ? fetchOtp : downloadFiles}
                         isDisabled={(!aadhaarNumber || aadhaarNumber.length !== 12) && currentStep === 1}

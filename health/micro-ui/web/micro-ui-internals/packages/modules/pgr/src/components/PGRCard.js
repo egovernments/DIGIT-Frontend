@@ -36,7 +36,7 @@ const PGRCard = () => {
   let links = [
     generateLink("ACTION_TEST_CREATE_COMPLAINT", "create-complaint"),
     generateLink("ACTION_TEST_SEARCH_COMPLAINT", "inbox-v2"),
-    generateLink("ABHA_INTEGRATION", "abha-home"),
+    generateLink("ABHA Enrollment", "abha-home"),
   ];
   const hasRequiredRoles = (link) => {
     if (!link?.roles?.length) return true;

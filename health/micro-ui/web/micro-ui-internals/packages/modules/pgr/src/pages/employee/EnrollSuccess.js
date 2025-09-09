@@ -25,9 +25,9 @@ const EnrollSuccess = () => {
                 customIcon=""
                 description={t(state?.description)}
                 footerChildren={[
-                    <Button label={t(`Varify Abha Enrollment`)} onClick={
+                    <Button label={t(`Verify ABHA Enrollment`)} onClick={
                         () => {
-                            history.push(`/${window.contextPath}/employee/pgr/abha-validation`);
+                            history.push(`/${window.contextPath}/employee/pgr/abha-home`);
                         }
                     } variation="teritiary" icon="ArrowForward" isSuffix />
                 ]}
@@ -36,7 +36,7 @@ const EnrollSuccess = () => {
                 info={t(state?.info)}
                 maxFooterButtonsAllowed={5}
                 message={t(state?.message)}
-                multipleResponses={[]}
+                multipleResponses={state?.responses?.length > 1 ? state?.responses : []}
                 props={{}}
                 response={t(state?.fileName ? state?.fileName : state?.responseId ? state?.responseId : "")}
                 sortFooterButtons
