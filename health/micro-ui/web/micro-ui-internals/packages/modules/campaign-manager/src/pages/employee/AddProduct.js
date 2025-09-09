@@ -125,13 +125,15 @@ function AddProduct() {
             setShowToast({ key: "error", label: error, isError: true });
           },
           onSuccess: async (data) => {
-            navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=${true}`, {
-              message: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
-              preText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
-              boldText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_BOLD_TEXT",
-              postText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_POST_TEXT",
-              actionLabel: "ES_PRODUCT_RESPONSE_ACTION",
-              actionLink: `/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`,
+            navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
+              state: {
+                message: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
+                preText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_PRE_TEXT",
+                boldText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_BOLD_TEXT",
+                postText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_POST_TEXT",
+                actionLabel: "ES_PRODUCT_RESPONSE_ACTION",
+                actionLink: `/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`,
+              },
             });
           },
         });
