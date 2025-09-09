@@ -64,10 +64,6 @@ module.exports = {
     redux: "redux",
     "redux-thunk": "redux-thunk",
     // DIGIT UI cross-dependencies
-    "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
-    "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",
-    "@egovernments/digit-ui-libraries": "@egovernments/digit-ui-libraries",
-    "@egovernments/digit-ui-svg-components": "@egovernments/digit-ui-svg-components",
   },
 
   module: {
