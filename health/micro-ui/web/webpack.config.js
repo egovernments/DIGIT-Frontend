@@ -118,9 +118,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      templateParameters: {
-        REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
-      },
+      // templateParameters: {
+      //   REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+      // },
     }),
   ],
   resolve: {
