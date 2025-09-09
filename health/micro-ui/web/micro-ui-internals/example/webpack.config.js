@@ -40,12 +40,12 @@ module.exports = {
   },
   output: {
     filename: "[name].[contenthash:8].bundle.js",
-        chunkFilename: "[name].[contenthash:8].chunk.js",
-        path: path.resolve(__dirname, "build"),
-        clean: true, // Clean the output directory before emit
+    chunkFilename: "[name].[contenthash:8].chunk.js",
+    path: path.resolve(__dirname, "build"),
+    clean: true, // Clean the output directory before emit
     publicPath: "/workbench-ui/",
   },
- optimization: {
+  optimization: {
     splitChunks: {
       chunks: "all",
       minSize: 20000,
@@ -102,7 +102,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      templateParameters:isProduction?{}: {
+      templateParameters: isProduction ? {} : {
         REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
       },
     }),
@@ -111,7 +111,7 @@ module.exports = {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true,
-      alias: {
+    alias: {
       // Fix case sensitivity issues with React
       "React": path.resolve(__dirname, "../node_modules/react"),
       "react": path.resolve(__dirname, "../node_modules/react"),
@@ -123,12 +123,17 @@ module.exports = {
     },
   },
   devServer: {
-    static: path.join(__dirname, "dist"),
+    static: path.join(__dirname, "build"),
     compress: true,
     port: 3000,
     hot: true,
-    historyApiFallback: true,
-        watchFiles:isProduction?undefined: {
+    historyApiFallback: {
+      index: '/workbench-ui/index.html',
+      rewrites: [
+        { from: /^\/workbench-ui/, to: '/workbench-ui/index.html' }
+      ]
+    },
+    watchFiles: isProduction ? undefined : {
       paths: ["**/*"], // watch all project files
       options: {
         ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
