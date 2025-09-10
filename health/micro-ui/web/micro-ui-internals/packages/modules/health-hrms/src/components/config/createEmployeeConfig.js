@@ -301,6 +301,18 @@ export const CreateEmployeeConfig = {
                 name: "Jurisdictions",
               },
             },
+            // INFO:: testing
+
+            {
+              type: "component",
+              isMandatory: true,
+              component: "UserAssignment",
+              key: "UserAssignment",
+              withoutLabel: true,
+              populators: {
+                name: "UserAssignment",
+              },
+            },
           ],
         },
       ],

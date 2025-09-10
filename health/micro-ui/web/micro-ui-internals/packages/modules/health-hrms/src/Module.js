@@ -17,6 +17,7 @@ import Jurisdictions from "./components/pageComponents/Jurisdictions";
 import BreadCrumbs from "./components/pageComponents/BreadCrumb";
 import { Loader } from "@egovernments/digit-ui-components";
 import HierarchySelection from "./pages/employee/HierarchySelection";
+import UserAssignment from "./components/pageComponents/UserAssigment";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
    const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -78,6 +79,7 @@ const componentsToRegister = {
   HRCreateEmployee: CreateEmployeePage,
   BreadCrumbs,
   HierarchySelection,
+  UserAssignment,
 };
 
 export const initHRMSComponents = () => {

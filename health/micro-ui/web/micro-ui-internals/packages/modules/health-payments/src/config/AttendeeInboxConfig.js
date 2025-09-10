@@ -195,7 +195,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
       serviceName: "/health-individual/v1/_search", // API endpoint for search
       requestParam: {
         // Default request parameters for API call
-        limit: 10,
+        // limit: 10,
         // names: "",
         // roles: "",
         offset: 0,

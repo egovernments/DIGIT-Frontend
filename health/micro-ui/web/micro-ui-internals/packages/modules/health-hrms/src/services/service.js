@@ -13,7 +13,7 @@ import HrmsService from "./hrms/HRMSService";
  */
 export const checkIfUserExistWithPhoneNumber = async (data, tenantId) => {
   try {
-    
+
     //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
     const result = await HrmsService.search(tenantId, null, { phone: data?.SelectEmployeePhoneNumber });
 
@@ -72,6 +72,7 @@ export const formPayloadToCreateUser = (data, tenantId) => {
       isCurrentAssignment: true,
       department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
       designation: data?.SelectEmployeeDesignation?.code || "undefined",
+      reportingTo: data?.UserAssignment?.code || "undefined"
     },
   ];
 
@@ -88,8 +89,8 @@ export const formPayloadToCreateUser = (data, tenantId) => {
         mobileNumber: data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
           ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
           : (data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-              ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-              : data?.SelectEmployeePhoneNumber) || null,
+            ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
+            : data?.SelectEmployeePhoneNumber) || null,
         name: data?.SelectEmployeeName,
         correspondenceAddress: data?.SelectEmployeeCorrespondenceAddress || null,
         emailId: data?.SelectEmployeeEmailId ? data?.SelectEmployeeEmailId : null,
@@ -146,8 +147,8 @@ export const formPayloadToUpdateUser = (data, userExisting, tenantId) => {
   requestdata.user.mobileNumber = data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.INDIA_COUNTRY_CODE)
     ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.INDIA_COUNTRY_CODE.length)
     : (data?.SelectEmployeePhoneNumber?.startsWith(HRMS_CONSTANTS.MOZ_COUNTRY_CODE)
-        ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
-        : data?.SelectEmployeePhoneNumber) || null;
+      ? data?.SelectEmployeePhoneNumber?.substring(HRMS_CONSTANTS.MOZ_COUNTRY_CODE.length)
+      : data?.SelectEmployeePhoneNumber) || null;
 
   requestdata.user.name = data?.SelectEmployeeName;
   requestdata.user.correspondenceAddress = data?.SelectEmployeeCorrespondenceAddress || null;
@@ -269,19 +270,19 @@ export const editDefaultAssignmentValue = (data, tenantId) => {
     CampaignsAssignment:
       data.length > 0
         ? data?.map((ele, index) => ({
-            key: index,
-            fromDate: ele.startDate ? convertEpochToDate(ele.startDate) : "",
-            toDate: ele.endDate ? convertEpochToDate(ele.endDate) : "",
-            selectedProject: { id: ele.projectId },
-          }))
+          key: index,
+          fromDate: ele.startDate ? convertEpochToDate(ele.startDate) : "",
+          toDate: ele.endDate ? convertEpochToDate(ele.endDate) : "",
+          selectedProject: { id: ele.projectId },
+        }))
         : [
-            {
-              key: 0,
-              fromDate: "",
-              toDate: "",
-              selectedProject: { id: "" },
-            },
-          ],
+          {
+            key: 0,
+            fromDate: "",
+            toDate: "",
+            selectedProject: { id: "" },
+          },
+        ],
   };
 
   return defaultValues;

@@ -73,6 +73,8 @@ const CreateEmployee = ({ editUser = false }) => {
   };
 
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
+
+    
     if (isEdit) {
       if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
         setPhoneNumber(formData?.SelectEmployeePhoneNumber);
@@ -317,8 +319,8 @@ const CreateEmployee = ({ editUser = false }) => {
     setShowModal(false);
   };
 
-  // const fConfig = mdmsData ? mdmsData : newConfig;
-  const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+   const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+  //const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
 
   const updatedConfig = useMemo(
     () =>

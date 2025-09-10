@@ -2618,37 +2618,93 @@ export const UICustomizations = {
       // filterForm
       // params
       console.log(data)
-      // if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
-      //   const updatedParams = {}; // Temporary object to store updates
+      if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
+        const updatedParams = {}; // Temporary object to store updates
 
-      //   if (data.state.filterForm.roles?.code) {
-      //     updatedParams.roles = data.state.filterForm.roles.code;
-      //   }
+        if (data.state.filterForm.roles?.code) {
+          updatedParams.roles = data.state.filterForm.roles.code;
+        }
 
-      //   if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
-      //     updatedParams.isActive = data.state.filterForm.isActive.code;
-      //   }
+        if (typeof data.state.filterForm.isActive === "object" && "code" in data.state.filterForm.isActive) {
+          updatedParams.isActive = data.state.filterForm.isActive.code;
+        }
 
-      //   // Update `data.params` only if `updatedParams` has values
-      //   if (Object.keys(updatedParams).length > 0) {
-      //     data.params = { ...data.params, ...updatedParams };
-      //   }
-      // }
+        // Update `data.params` only if `updatedParams` has values
+        if (Object.keys(updatedParams).length > 0) {
+          data.params = { ...data.params, ...updatedParams };
+        }
+      }
+      data.params.limit = data.state.tableForm.limit;
+      data.params.offset = data.state.tableForm.offset;
 
+      // data.body.Individual = {
+      //   mobileNumber: data.state.searchForm.phone,
+      //   name: {
+      //     givenName: data.state.searchForm.names
+      //   },
+      //   username: data.state.searchForm.codes,
+      //   locality: {
+      //     id: null,
+      //     tenantId: null,
+      //     code: data.state.filterForm.AttendeeBoundaryComponent || Digit?.SessionStorage.get("selectedBoundary")?.code,
+      //     geometry: null,
+      //     auditDetails: null,
+      //     additionalDetails: null,
+      //   },
+      //   // boundaryCode: data.state.filterForm.AttendeeBoundaryComponent
+      // };
 
-      data.body.Individual = {
-        locality: {
+      
+         //  debugger
+      const { phone, names, codes } = data.state.searchForm;
+      const boundaryCode = data.state.filterForm.AttendeeBoundaryComponent
+        || Digit?.SessionStorage.get("selectedBoundary")?.code;
+
+      const Individual = {};
+
+      // Add mobileNumber if not empty
+      if (phone && phone.trim() !== "") {
+        Individual.mobileNumber = phone;
+      }
+
+      // Add name if not empty
+      if (names && names.trim() !== "") {
+        Individual.name = { givenName: names };
+      }
+
+      // Add username if not empty
+      if (codes && codes.trim() !== "") {
+        Individual.username = codes;
+      }
+
+      // Always add locality (since it has structure, but you can also check boundaryCode if required)
+      if (boundaryCode && boundaryCode.trim() !== "") {
+        Individual.locality = {
           id: null,
           tenantId: null,
-          code: data.state.filterForm.AttendeeBoundaryComponent,
+          code: boundaryCode,
           geometry: null,
           auditDetails: null,
           additionalDetails: null,
-        },
-        // boundaryCode: data.state.filterForm.AttendeeBoundaryComponent
-      };
+        };
+      }
+
+      // Assign back to data.body
+      data.body.Individual = Individual;
 
 
+      // if (data.state.searchForm.hasOwnProperty("codes")) {
+      //   delete data.state.searchForm.codes;
+      // }
+
+      // if (data.state.searchForm.hasOwnProperty("AttendeeBoundaryComponent")) {
+      //   delete data.state.searchForm.AttendeeBoundaryComponent;
+      // }
+      //  if (data.state.searchForm.hasOwnProperty("names")) {
+      //   delete data.state.searchForm.names;
+      // }
+
+      console.log("payload", data)
       return data;
     },
 
