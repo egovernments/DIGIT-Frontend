@@ -47,7 +47,7 @@ const CreateEmployee = ({ editUser = false }) => {
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
   const { isLoading: isHRMSSearchLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
-  const { data: mdmsData, isLoading:  isHRMSConfigLoading} = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CreateEmployeeConfig"], {
+  const { data: mdmsData, isLoading: isHRMSConfigLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CreateEmployeeConfig"], {
     select: (data) => {
       return data?.["egov-hrms"]?.CreateEmployeeConfig?.[0];
     },
@@ -55,12 +55,12 @@ const CreateEmployee = ({ editUser = false }) => {
     enable: false,
   });
 
-  
+
   // Validate phone number based on config
   const validatePhoneNumber = (value, config) => {
     const { minLength, maxLength, min, max } = config?.populators?.validation || {};
     const stringValue = String(value || "");
-  
+
     if (
       (minLength && stringValue.length < minLength) ||
       (maxLength && stringValue.length > maxLength) ||
@@ -73,8 +73,8 @@ const CreateEmployee = ({ editUser = false }) => {
   };
 
   const onFormValueChange = (setValue = true, formData, formState, reset, setError, clearErrors) => {
+    debugger
 
-    
     if (isEdit) {
       if (phoneNumber !== formData?.SelectEmployeePhoneNumber) {
         setPhoneNumber(formData?.SelectEmployeePhoneNumber);
@@ -146,31 +146,31 @@ const CreateEmployee = ({ editUser = false }) => {
       }
     }
 
-     // Validate mobile number
-     const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
-     .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
+    // Validate mobile number
+    const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
+      .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
 
-   if (EmployeeContactNumber && !validatePhoneNumber(EmployeeContactNumber, contactFieldConfig)) {
-     if (!formState.errors.SelectEmployeePhoneNumber) {
-       setError("SelectEmployeePhoneNumber", {
-         type: "custom",
-         message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
-       },);
-     }
-   } else if (formState.errors.SelectEmployeePhoneNumber) {
-     clearErrors("SelectEmployeePhoneNumber");
-   }
+    if (EmployeeContactNumber && !validatePhoneNumber(EmployeeContactNumber, contactFieldConfig)) {
+      if (!formState.errors.SelectEmployeePhoneNumber) {
+        setError("SelectEmployeePhoneNumber", {
+          type: "custom",
+          message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
+        },);
+      }
+    } else if (formState.errors.SelectEmployeePhoneNumber) {
+      clearErrors("SelectEmployeePhoneNumber");
+    }
 
     if (
       formData?.SelectEmployeeName &&
       formData?.SelectEmployeeType?.code &&
       formData?.SelectEmployeeId && formData?.SelectEmployeePhoneNumber &&
-      formData?.gender && formData?.SelectDateofBirthEmployment && 
+      formData?.gender && formData?.SelectDateofBirthEmployment &&
       formData?.SelectDateofEmployment &&
       formData?.SelectEmployeeDepartment &&
       formData?.SelectEmployeeDesignation &&
       formData?.RolesAssigned &&
-      (isEdit || formData?.Jurisdictions) 
+      (isEdit || formData?.Jurisdictions)
     ) {
       setSubmitValve(true);
     } else {
@@ -319,7 +319,7 @@ const CreateEmployee = ({ editUser = false }) => {
     setShowModal(false);
   };
 
-   const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+  const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
   //const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
 
   const updatedConfig = useMemo(
@@ -330,13 +330,13 @@ const CreateEmployee = ({ editUser = false }) => {
         {
           updateDependent: [
             {
-             key : "SelectDateofBirthEmployment",
-             value : [formattedDate]
-           },
-           {
-            key : "SelectDateofEmployment",
-            value : [new Date().toISOString().split("T")[0]]
-          }
+              key: "SelectDateofBirthEmployment",
+              value: [formattedDate]
+            },
+            {
+              key: "SelectDateofEmployment",
+              value: [new Date().toISOString().split("T")[0]]
+            }
 
           ],
         }
@@ -346,11 +346,11 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const config = isEdit
     ? updatedConfig?.form?.map((section) => ({
-        ...section,
-        body: section.body.filter(
-          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
-        ),
-      }))
+      ...section,
+      body: section.body.filter(
+        (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
+      ),
+    }))
     : updatedConfig?.form;
 
   if (isHRMSSearchLoading || isHRMSConfigLoading) {

@@ -8,10 +8,12 @@ import {
     LabelFieldPair,
     Button,
     Toast,
-    CardLabel
+    CardLabel, TextInput,
 } from "@egovernments/digit-ui-components";
 
-const UserAssignment = ({t, config, onSelect, formData,}) => {
+import SearchUserToReport from "./SearchUserToReport";
+
+const UserAssignment = ({ t, config, onSelect, formData, }) => {
 
 
     const [selectedHierarchy, setSelectedHierarchy] = useState(null);
@@ -20,64 +22,80 @@ const UserAssignment = ({t, config, onSelect, formData,}) => {
     const boundaryCode = Digit?.SessionStorage.get("selectedBoundary")?.code;
     //const { t } = useTranslation();
     const tenantId = Digit.ULBService.getStateId();
+    const [searchQuery, setSearchQuery] = useState("");
 
-    const reqCri = {
-        url: `/health-individual/v1/_search`,
-        params: {
-            tenantId: tenantId,
-            limit: 4,
-            offset: 0,
-        },
-        body: {
-            Individual: {
-                roleCodes: ["PROXIMITY_SUPERVISOR"],
-                locality: {
-                    id: null,
-                    tenantId: null,
-                    code: boundaryCode,
-                    geometry: null,
-                    auditDetails: null,
-                    additionalDetails: null
-                }
-            }
-        },
-        config: {
-            enabled: true,
-            select: (data) => {
+    const [open, setOpen] = useState(false);
 
-                console.log("data", data);
-                return data.Individual;
-            },
-        },
-    };
-    // Fetch project staff details using custom API hook
-    const { isLoading: isIndividualsLoading, data: individualData } = Digit.Hooks.useCustomAPIHook(reqCri);
+    // const reqCri = {
+    //     url: `/health-individual/v1/_search`,
+    //     params: {
+    //         tenantId: tenantId,
+    //         limit: 4,
+    //         offset: 0,
+    //     },
+    //     body: {
+    //         Individual: {
+    //             roleCodes: ["PROXIMITY_SUPERVISOR"],
+    //             locality: {
+    //                 id: null,
+    //                 tenantId: null,
+    //                 code: boundaryCode,
+    //                 geometry: null,
+    //                 auditDetails: null,
+    //                 additionalDetails: null
+    //             }
+    //         }
+    //     },
+    //     config: {
+    //         enabled: true,
+    //         select: (data) => {
 
-    console.log("assignTo", individualData);
+    //             console.log("data", data);
+    //             return data.Individual;
+    //         },
+    //     },
+    // };
+    // // Fetch project staff details using custom API hook
+    // const { isLoading: isIndividualsLoading, data: individualData } = Digit.Hooks.useCustomAPIHook(reqCri);
 
-
-    useEffect(() => {
-        if (!individualData) return; // wait until data is available
-
-        const result = individualData.map(item => ({
-            code: item.id,
-            name: item.name?.givenName || null
-        }));
-        setOptions(result);
-    }, [individualData]);
+    // console.log("assignTo", individualData);
 
 
-    if (isIndividualsLoading) {
-        return <Loader />
+    // useEffect(() => {
+    //     if (!individualData) return; // wait until data is available
+
+    //     const result = individualData.map(item => ({
+    //         code: item.id,
+    //         name: item.name?.givenName || null
+    //     }));
+    //     setOptions(result);
+    // }, [individualData]);
+
+
+    // if (isIndividualsLoading) {
+    //     return <Loader />
+    // }
+
+
+    const seletctedValue = (value) => {
+        setSearchQuery(value?.name);
+        onSelect(config.key, value?.id);
     }
 
-    return (
+    return (<div>
         <LabelFieldPair>
             <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
                 {t("HCM_AM_REPORTING_TO")}
             </CardLabel>
-            <div style={{ width: "100%" }}>
-                <Dropdown
+            <div style={{ width: "100%" }}
+                onClick={() => {
+                    setOpen(true)
+                }}
+
+            >
+
+
+                {/* {<Dropdown
                     style={{ width: "40rem" }}
                     t={t}
                     option={options}
@@ -85,12 +103,25 @@ const UserAssignment = ({t, config, onSelect, formData,}) => {
                     selected={selectedHierarchy}
                     select={(value) => {
                         setSelectedHierarchy(value)
-                         onSelect(config.key, value);
+                        onSelect(config.key, value);
                     }}
                 // select={(value) => onHierarchySelect(value)}
-                />
+                />} */}
+
+                <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
         </LabelFieldPair>
+
+        {
+            open && <SearchUserToReport
+
+                boundaryCode={boundaryCode}
+                onClose={() => { setOpen(false) }}
+                heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
+                onSubmit={seletctedValue}
+            />
+        }
+    </div>
     )
 
 

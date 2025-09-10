@@ -2679,14 +2679,15 @@ export const UICustomizations = {
 
       // Always add locality (since it has structure, but you can also check boundaryCode if required)
       if (boundaryCode && boundaryCode.trim() !== "") {
-        Individual.locality = {
-          id: null,
-          tenantId: null,
-          code: boundaryCode,
-          geometry: null,
-          auditDetails: null,
-          additionalDetails: null,
-        };
+        // Individual.locality = {
+        //   id: null,
+        //   tenantId: null,
+        //   code: boundaryCode,
+        //   geometry: null,
+        //   auditDetails: null,
+        //   additionalDetails: null,
+        // };
+        Individual.boundaryCode=boundaryCode
       }
 
       // Assign back to data.body

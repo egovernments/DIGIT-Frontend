@@ -72,7 +72,7 @@ export const formPayloadToCreateUser = (data, tenantId) => {
       isCurrentAssignment: true,
       department: data?.SelectEmployeeDepartment?.code || HRMS_CONSTANTS.DEFAULT_DEPARTMENT,
       designation: data?.SelectEmployeeDesignation?.code || "undefined",
-      reportingTo: data?.UserAssignment?.code || "undefined"
+      reportingTo: data?.UserAssignment || "undefined"
     },
   ];
 
