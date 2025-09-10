@@ -2664,7 +2664,7 @@ export const UICustomizations = {
 
       // Add mobileNumber if not empty
       if (phone && phone.trim() !== "") {
-        Individual.mobileNumber = phone;
+        Individual.mobileNumber = [phone];
       }
 
       // Add name if not empty
@@ -2674,7 +2674,7 @@ export const UICustomizations = {
 
       // Add username if not empty
       if (codes && codes.trim() !== "") {
-        Individual.username = codes;
+        Individual.username = [codes];
       }
 
       // Always add locality (since it has structure, but you can also check boundaryCode if required)

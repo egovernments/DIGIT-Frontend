@@ -178,6 +178,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             //   additionalCustomization: true,
             // },
           ],
+          totalCountJsonPath:"TotalCount",
           rowClassName: "table-row-mdms table-row-mdms-hover", // Table row styles
           tableClassName: "pqm-table", // Table styles
           resultsJsonPath: "Individual", // API response path for results

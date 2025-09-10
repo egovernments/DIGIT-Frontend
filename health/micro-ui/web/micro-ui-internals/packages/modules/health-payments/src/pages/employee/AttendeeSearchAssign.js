@@ -6,33 +6,33 @@ import inboxAttendeeSearchConfig from "../../config/AttendeeInboxConfig";
 
 const InboxAttendeesSearch = () => {
   const { t } = useTranslation();
-  const {  boundaryCode } = Digit.Hooks.useQueryParams();
+  const { boundaryCode } = Digit.Hooks.useQueryParams();
 
-//   const isMobile = window.Digit.Utils.browser.isMobile();
-//   const tenantId = Digit.ULBService.getCurrentTenantId();
+  //   const isMobile = window.Digit.Utils.browser.isMobile();
+  //   const tenantId = Digit.ULBService.getCurrentTenantId();
 
-// //   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["InboxConfig"], {
-// //     select: (data) => {
-// //       return data?.["egov-hrms"]?.InboxConfig?.[0];
-// //     },
-// //     retry: false,
-// //     enable: false,
-// //   });
+  // //   const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["InboxConfig"], {
+  // //     select: (data) => {
+  // //       return data?.["egov-hrms"]?.InboxConfig?.[0];
+  // //     },
+  // //     retry: false,
+  // //     enable: false,
+  // //   });
 
-// //   if (isLoading) {
-// //     return <Loader />;
-// //   }
-
-  
-//   // const config = mdmsData ? mdmsData : inboxSearchConfig(); [TODO: Use this once MDMS is updated with the new config]
+  // //   if (isLoading) {
+  // //     return <Loader />;
+  // //   }
 
 
+  //   // const config = mdmsData ? mdmsData : inboxSearchConfig(); [TODO: Use this once MDMS is updated with the new config]
 
-   const config = inboxAttendeeSearchConfig(boundaryCode);
+
+
+  const config = inboxAttendeeSearchConfig(boundaryCode);
 
   return (
     <div style={{ marginBottom: "80px" }}>
-     { <div
+      {/* { <div
         // style={
         //   isMobile
         //     ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" }
@@ -46,18 +46,18 @@ const InboxAttendeesSearch = () => {
         }
 
         {t("HR_HOME_SEARCH_RESULTS_HEADING")}
-      </div>}
+      </div>} */}
       <div className="digit-inbox-search-wrapper">
         {<InboxSearchComposer
           configs={config}
-          //   browserSession={SelectCampaignSession}
-          //   additionalConfig={{
-          //     resultsTable: {
-          //       onClickRow,
-          //     },
-          //   }}
+        //   browserSession={SelectCampaignSession}
+        //   additionalConfig={{
+        //     resultsTable: {
+        //       onClickRow,
+        //     },
+        //   }}
         />}
-        
+
       </div>
     </div>
   );
