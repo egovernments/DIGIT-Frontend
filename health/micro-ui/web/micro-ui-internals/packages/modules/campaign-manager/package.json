@@ -28,7 +28,7 @@
   },
   "dependencies": {
      "@cyntler/react-doc-viewer": "1.10.3",
-    "@egovernments/digit-ui-react-components": "2.0.0-rc19-01",
+    "@egovernments/digit-ui-react-components": "2.0.0-rc19-01-test",
     "@egovernments/digit-ui-svg-components": "2.0.0-rc19-01",
     "@egovernments/digit-ui-components": "2.0.0-rc19-01",
     "react-data-table-component": "7.7.0",

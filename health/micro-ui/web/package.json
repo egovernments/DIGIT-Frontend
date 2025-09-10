@@ -10,7 +10,8 @@
   "workspaces": [
     "micro-ui-internals",
     "micro-ui-internals/packages/modules/campaign-manager",
-    "micro-ui-internals/packages/css"
+    "micro-ui-internals/packages/css",
+    "micro-ui-internals/packages/react-components"
     ],
   "homepage": "/workbench-ui",
   "husky": {},
@@ -40,7 +41,7 @@
     "@babel/preset-react": "^7.26.3",
     "@egovernments/digit-ui-libraries": "2.0.0-rc19-01",
     "@egovernments/digit-ui-module-core": "2.0.0-rc19-01",
-    "@egovernments/digit-ui-react-components": "2.0.0-rc19-01",
+    "@egovernments/digit-ui-react-components": "2.0.0-rc19-01-test",
     "@egovernments/digit-ui-svg-components": "2.0.0-rc19-01",
     "@egovernments/digit-ui-components": "2.0.0-rc19-01",
     "@egovernments/digit-ui-module-workbench": "2.0.0-rc19-03",
