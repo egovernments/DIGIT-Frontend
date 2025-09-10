@@ -32,7 +32,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
 
 
             {
-              label: "HR_COMMON_TABLE_COL_ROLE",
+              label: "HCM_AM_COMMON_TABLE_COL_FILTER",
               isMandatory: false,
               key: "AttendeeBoundaryComponent",
               type: "component",

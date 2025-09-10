@@ -74,7 +74,7 @@ const UserAssignment = ({t, config, onSelect, formData,}) => {
     return (
         <LabelFieldPair>
             <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-                {t("Assign To")}
+                {t("HCM_AM_REPORTING_TO")}
             </CardLabel>
             <div style={{ width: "100%" }}>
                 <Dropdown

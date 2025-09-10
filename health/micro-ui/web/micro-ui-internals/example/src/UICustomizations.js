@@ -2,7 +2,7 @@ import _ from "lodash";
 import { useLocation, useHistory, Link, useParams } from "react-router-dom";
 import React, { useState, Fragment } from "react";
 import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, EditIcon, ArrowForward, Modal, CloseSvg, Close, } from "@egovernments/digit-ui-react-components";
-import { Button as ButtonNew, Dropdown, Toast, Tag, Loader, FormComposerV2 } from "@egovernments/digit-ui-components";
+import { Button as ButtonNew, Dropdown, Toast, Tag, Loader, FormComposerV2, PopUp, TextInput } from "@egovernments/digit-ui-components";
 import { useNavigate } from "react-router-dom";
 
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
@@ -2654,8 +2654,8 @@ export const UICustomizations = {
       //   // boundaryCode: data.state.filterForm.AttendeeBoundaryComponent
       // };
 
-      
-         //  debugger
+
+      //  debugger
       const { phone, names, codes } = data.state.searchForm;
       const boundaryCode = data.state.filterForm.AttendeeBoundaryComponent
         || Digit?.SessionStorage.get("selectedBoundary")?.code;
@@ -2712,6 +2712,9 @@ export const UICustomizations = {
 
       const tenantId = Digit.ULBService.getCurrentTenantId();
 
+      const [openPopUp, setOpenPopUp] = useState(false);
+      const [isTag, setIsTag] = useState(false);
+
       const [toast, setToast] = useState(null);
       const [modalOpen, setModalOpen] = useState(false);
       const [sessionFormData, setSessionFormData] = useState({});
@@ -2721,32 +2724,44 @@ export const UICustomizations = {
       const { mutate: createMapping } = Digit.Hooks.payments.useCreateAttendeeFromRegister(tenantId);
       const { registerNumber, boundaryCode, registerId } = Digit.Hooks.useQueryParams();
 
+      const [tag, setTag] = useState("");
+
       const handleToastClose = () => {
         setToast(null);
       };
 
       const handleCreate = async (id) => {
-
-
-
         setSelectedId(id);
         setLoading(true);
 
 
         await createMapping({
-          "attendees": [{
-            registerId: registerId,
-            individualId: row.id,
-            enrollmentDate: new Date().getTime(),
-            tenantId: row.tenantId,
-            tag: "Team 1"
-          }]
+          "attendees": [
+            tag == "" ?
+              {
+                registerId: registerId,
+                individualId: row.id,
+                enrollmentDate: new Date().getTime(),
+                tenantId: row.tenantId,
+
+              } : {
+                registerId: registerId,
+                individualId: row.id,
+                enrollmentDate: new Date().getTime(),
+                tenantId: row.tenantId,
+                tag: tag
+              }]
         },
           {
             onError: async (error) => {
 
               setLoading(false);
               setSelectedId(null);
+              setTag("");
+
+              setIsTag(false);
+              setOpenPopUp(false);
+
 
               const errorMessage = error?.response?.data?.Errors?.[0]?.message
               setToast(
@@ -2758,9 +2773,12 @@ export const UICustomizations = {
 
             },
             onSuccess: async (responseData) => {
-
+              setTag("");
               setLoading(false);
               setSelectedId(null);
+              setIsTag(false);
+              setOpenPopUp(false);
+
 
               setToast({ key: "success", label: `${t(`HCM_AM_NEW_EMPLOYEE`)} (${row.name.givenName || ""}) ${t(`HCM_AM_ENROLLED`)}`, transitionTime: 3000 });
 
@@ -2806,7 +2824,9 @@ export const UICustomizations = {
             style={{ minWidth: "10rem" }}
             onButtonClick={() => {
 
-              handleCreate(row.id);
+              // handleCreate(row.id);
+
+              setOpenPopUp(true);
               return;
 
 
@@ -2821,6 +2841,60 @@ export const UICustomizations = {
                 type={toast.type}
               />
             )}
+            {
+              openPopUp && <PopUp
+                style={{ minWidth: "500px" }}
+                onClose={() => {
+                  setTag("");
+                  setIsTag(false);
+                  setOpenPopUp(false);
+                }}
+                heading={t("Action Needed: Tag Code")}
+                onOverlayClick={() => {
+                  setTag("");
+                  setIsTag(false);
+                  setOpenPopUp(false);
+                }}
+                children={[
+                  !isTag ?
+                    <div>Do you want to fill in the Tag Code? If yes, press Enter Tag. Otherwise, Assign it.</div>
+                    : <div>
+                      <span>Tag Code</span>
+                      <TextInput type="text" name="title" placeholder={t("Enter Tag Name")} value={tag} onChange={(e) => setTag(e.target.value)} />
+                    </div>
+
+                ]}
+                footerChildren={[
+                  <ButtonNew
+                    type={"button"}
+                    size={"large"}
+                    variation={"primary"}
+                    label={t(isTag ? "HCM_AM_CLOSE_BT" : "HCM_AM_ENTER_TAG")}
+                    onClick={() => {
+                      if (isTag) {
+                        setTag("");
+                        setOpenPopUp(false);
+                        setIsTag(false);
+                      } else {
+                        setIsTag(true);
+                      }
+                      return;
+                    }}
+                  />,
+                  <ButtonNew
+                    type={"button"}
+                    size={"large"}
+                    variation={"primary"}
+                    label={t("Assign")}
+                    onClick={() => {
+                      handleCreate(row.id);
+                      return;
+                    }}
+                  />,
+                ]}
+                sortFooterChildren={true}
+              />
+            }
           </>
         default:
           return t("ES_COMMON_NA");
