@@ -336,7 +336,7 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
           payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
-          payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.parentId;
+          payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.id;
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             const temp = restructureBoundaryData(
