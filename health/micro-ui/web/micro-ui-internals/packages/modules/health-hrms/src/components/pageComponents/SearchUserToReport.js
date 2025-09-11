@@ -94,7 +94,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
         <PopUp
             style={{ width: "500px" }}
             onClose={onClose}
-            heading={t("heading")}
+            heading={t("HCM_AM_SEARCH_USER")}
             onOverlayClick={onClose}
             children={[
                 (

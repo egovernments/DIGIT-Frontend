@@ -319,8 +319,47 @@ const CreateEmployee = ({ editUser = false }) => {
     setShowModal(false);
   };
 
-  const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+  //const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
   //const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+
+
+  // Original config assignment
+const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+
+// Define your new component to be injected
+const userAssignmentComponent = {
+  type: "component",
+  isMandatory: true,
+  component: "UserAssignment",
+  key: "UserAssignment",
+  withoutLabel: true,
+  populators: {
+    name: "UserAssignment",
+  },
+};
+
+// Find the section where you want to insert (HR_NEW_EMPLOYEE_FORM_HEADER)
+const newEmployeeFormSection = fConfig?.form?.find(
+  (section) => section.head === "HR_NEW_EMPLOYEE_FORM_HEADER"
+);
+
+if (newEmployeeFormSection) {
+  const body = newEmployeeFormSection.body;
+
+  // Check if UserAssignment already exists
+  const alreadyExists = body.some((field) => field.key === "UserAssignment");
+
+  if (!alreadyExists) {
+    // Find index of RolesAssigned field
+    const index = body.findIndex((field) => field.key === "RolesAssigned");
+
+    if (index !== -1) {
+      // Insert UserAssignment right after RolesAssigned
+      body.splice(index + 1, 0, userAssignmentComponent);
+    }
+  }
+}
+
 
   const updatedConfig = useMemo(
     () =>

@@ -291,6 +291,18 @@ export const CreateEmployeeConfig = {
                 },
               },
             },
+            // // INFO:: testing
+
+            // {
+            //   type: "component",
+            //   isMandatory: true,
+            //   component: "UserAssignment",
+            //   key: "UserAssignment",
+            //   withoutLabel: true,
+            //   populators: {
+            //     name: "UserAssignment",
+            //   },
+            // },
             {
               type: "component",
               isMandatory: true,
@@ -301,18 +313,7 @@ export const CreateEmployeeConfig = {
                 name: "Jurisdictions",
               },
             },
-            // INFO:: testing
-
-            {
-              type: "component",
-              isMandatory: true,
-              component: "UserAssignment",
-              key: "UserAssignment",
-              withoutLabel: true,
-              populators: {
-                name: "UserAssignment",
-              },
-            },
+            
           ],
         },
       ],
