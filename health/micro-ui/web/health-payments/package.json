@@ -8,7 +8,8 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/modules/health-payments"
+    "micro-ui-internals/packages/modules/health-payments",
+    "micro-ui-internals/packages/modules/health-hrms"
   ],
   "homepage": "/payments-ui",
   "dependencies": {
