@@ -27,6 +27,7 @@
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
     "build:health-payments": "cd packages/modules/health-payments && yarn build",
+    "build:health-hrms": "cd packages/modules/health-hrms && yarn build",
     "build:microplan": "cd packages/modules/microplan && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
