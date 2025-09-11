@@ -102,9 +102,9 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      templateParameters:isProduction?{}: {
-        REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
-      },
+      // templateParameters:isProduction?{}: {
+      //   REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+      // },
     }),
   ],
   resolve: {
@@ -127,7 +127,12 @@ module.exports = {
     compress: true,
     port: 3000,
     hot: true,
-    historyApiFallback: true,
+    historyApiFallback: {
+      index: '/workbench-ui/index.html',
+      rewrites: [
+        { from: /^\/workbench-ui/, to: '/workbench-ui/index.html' }
+      ]
+    },
         watchFiles:isProduction?undefined: {
       paths: ["**/*"], // watch all project files
       options: {
