@@ -32,7 +32,8 @@ const InboxAttendeesSearch = () => {
 
   return (
     <div style={{ marginBottom: "80px" }}>
-      {/* { <div
+      {/*
+       { <div
         // style={
         //   isMobile
         //     ? { marginLeft: "-12px", fontFamily: "calibri", color: "#FF0000" }
