@@ -199,11 +199,17 @@ const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, register
                             editAction={true}
                         />
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
-                            <div>{t(labels[0])}</div>
-                            <Button label={t("Register New User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />
+                            {/* {<div>{t(labels[0])}</div>
+                            <Button label={t("Register New User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />} */}
 
                             <div>{t(labels[1])}</div>
-                            <Button label={t("Search User")} variation="link" onClick={() => setSearchUserpopUp(true)} />
+                            <Button label={t("HCM_AM_SEARCH_USER")} variation="link" onClick={() => {
+                                
+                               // INFO: commenting for demo
+                                //setSearchUserpopUp(true)
+
+                                history.push(`/${window?.contextPath}/employee/payments/attendee-inbox?registerId=${registerId}&boundaryCode=${boundaryCode}`)
+                                }} />
                         </div>
 
                     </div>
@@ -215,7 +221,7 @@ const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, register
                     size={"large"}
                     variation={"primary"}
                     label={t("HCM_AM_SAVE_AND_CLOSE")}
-                    onClick={() => onClose}
+                    onClick={ onClose}
                 />,
             ]}
             sortFooterChildren={true}

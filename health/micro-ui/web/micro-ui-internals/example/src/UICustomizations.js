@@ -2793,13 +2793,13 @@ export const UICustomizations = {
       }
 
       switch (key) {
-        case "HR_EMP_MOBILE_LABEL":
+        case "HCM_HR_EMP_MOBILE_LABEL":
           return value ? `${value}` : t("ES_COMMON_NA");
 
-        case "HR_EMP_NAME_LABEL":
+        case "HCM_HR_EMP_NAME_LABEL":
           return value ? `${value}` : t("ES_COMMON_NA");
 
-        case "HR_ROLE_NO_LABEL":
+        case "HCM_HR_ROLE_NO_LABEL":
           return value?.length > 0 ? value?.length : t("ES_COMMON_NA");
 
         case "HR_DESG_LABEL":
@@ -2808,11 +2808,11 @@ export const UICustomizations = {
         case "HR_EMPLOYMENT_DEPARTMENT_LABEL":
           return value ? t(`${value.department}`) : t("ES_COMMON_NA");
 
-        case "HR_JURIDICTIONS_LABEL":
+        case "HCM_HR_JURIDICTIONS_LABEL":
           return value ? t(value) : (
             t("ES_COMMON_NA")
           );
-        case "ASSIGNMENT":
+        case "HCM_ASSIGNMENT":
 
           if (loading && (row.id === selectedId)) {
             return <Loader />;

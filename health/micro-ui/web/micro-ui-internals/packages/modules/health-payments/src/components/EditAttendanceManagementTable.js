@@ -200,7 +200,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       {
         onError: async (error) => {
 
-          console.log("hello", error)
+         
           setShowToast(
             { key: "error", label: t(`HCM_AM_ERROR_MESSAGE`), transitionTime: 3000 }
           );
@@ -208,8 +208,6 @@ const EditAttendanceManagementTable = ({ ...props }) => {
 
         },
         onSuccess: async (responseData) => {
-
-          console.log("responseData", responseData);
 
           setShowToast({ key: "success", label: t(`HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE`), transitionTime: 3000 });
           props.disableUser("");

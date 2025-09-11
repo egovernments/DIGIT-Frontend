@@ -21,7 +21,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
         uiConfig: {
           type: "filter",
           headerStyle: null,
-          primaryLabel: "HRMS_APPLY_FILTERS",
+          primaryLabel: "HCM_AM_APPLY_PAYMENT_FILTER",
           //secondaryLabel: "HRMS_CLEAR_FILTER",
           formClassName: "filter",
           minReqFields: 0,
@@ -81,7 +81,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
           fields: [
             {
               type: "text", // Input type (text field)
-              label: "HR_NAME_LABEL", // Field label
+              label: "HCM_AM_HR_NAME_LABEL", // Field label
               disable: false, // Field is enabled
               populators: {
                 name: "names", // Field name for form data
@@ -92,7 +92,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             },
             {
               type: "text",
-              label: "HR_USERNAME_LABEL",
+              label: "HCM_AM_HR_USER_NAME_LABEL",
               disable: false,
               populators: {
                 name: "codes",
@@ -103,7 +103,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             },
             {
               type: "number",
-              label: "HR_MOB_NO_LABEL",
+              label: "HCM_AM_HR_USER_PHONE_LABEL",
               disable: false,
               populators: {
                 name: "phone",
@@ -148,27 +148,27 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             // Defines columns for search result table
 
             {
-              label: "HR_EMP_NAME_LABEL",
+              label: "HCM_HR_EMP_NAME_LABEL",
               jsonPath: "name.givenName",
               additionalCustomization: true,
             },
             {
-              label: "HR_EMP_MOBILE_LABEL",
+              label: "HCM_HR_EMP_MOBILE_LABEL",
               jsonPath: "mobileNumber", // Maps data from API response
               additionalCustomization: true,
             },
             {
-              label: "HR_ROLE_NO_LABEL",
+              label: "HCM_HR_ROLE_NO_LABEL",
               jsonPath: "userDetails.roles",
               additionalCustomization: true,
             },
             {
-              label: "HR_JURIDICTIONS_LABEL",
+              label: "HCM_HR_JURIDICTIONS_LABEL",
               jsonPath: "address[0].locality.code",
               additionalCustomization: true,
             },
             {
-              label: "ASSIGNMENT",
+              label: "HCM_ASSIGNMENT",
               //jsonPath: "assignments[0]",
               additionalCustomization: true,
             },
