@@ -8,7 +8,6 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals",
     "micro-ui-internals/packages/modules/campaign-manager",
     "micro-ui-internals/packages/css",
     "micro-ui-internals/packages/react-components"
