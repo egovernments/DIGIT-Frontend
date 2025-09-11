@@ -398,6 +398,7 @@ const CampaignDetails = () => {
               headingName: t("HCM_CHECKLIST_HEADING"),
               desc: t("HCM_CHECKLIST_DESC"),
               buttonLabel: t("HCM_CHECKLIST_BUTTON"),
+              type: "primary",
               navLink: `checklist/search?name=${campaignData?.campaignName}&campaignId=${campaignData?.id}&projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}`,
               icon: <ListAltCheck />,
             },
