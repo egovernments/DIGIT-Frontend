@@ -484,10 +484,15 @@ const getAvailableActions = (status) => {
         {t(status)}
       </span>
     );
-  }
+  },
             },
             {
-                name: t("HCM_AM_BILL_ACTIONS"),
+                name: (
+                    <div style={{ borderRight: "2px solid #787878",width: "100%",textAlign: "start" }}>
+                        {t("HCM_AM_BILL_ACTIONS")}
+                    </div>
+                )
+                ,
                 selector: (row, index) => {
                     const reportDetails = row?.additionalDetails?.reportDetails;
                     const billId = row?.billNumber;
@@ -584,7 +589,6 @@ const getAvailableActions = (status) => {
                             )
                     );
                 },
-                width: "300px",
             },
         ];
 

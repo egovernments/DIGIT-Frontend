@@ -114,6 +114,7 @@ const BillDetailsTable = ({ ...props }) => {
                     );
                 },
                 allowOverflow: true,
+                minWidth: "220px",
             },
             {
                 name: (
@@ -218,6 +219,7 @@ const BillDetailsTable = ({ ...props }) => {
                     );
                 },
                 allowOverflow: true,
+                minWidth: "220px",
             },
             {
                 name: (
@@ -315,6 +317,7 @@ const BillDetailsTable = ({ ...props }) => {
                     );
                 },
                 allowOverflow: true,
+                minWidth: "220px",
             },
             {
                 name: (
