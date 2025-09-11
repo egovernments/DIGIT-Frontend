@@ -12,6 +12,7 @@
   ],
   "homepage": "/payments-ui",
   "dependencies": {
+    "@egovernments/digit-ui-module-health-hrms":"0.0.1",
     "@egovernments/digit-ui-libraries": "1.8.8",
     "@egovernments/digit-ui-module-core": "1.8.15",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.23",
