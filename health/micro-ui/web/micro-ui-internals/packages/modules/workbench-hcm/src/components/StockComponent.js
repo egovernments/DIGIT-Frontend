@@ -5,6 +5,7 @@ import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import UserDetails from "./UserDetails";
+import FacilityDetails from "./FacilityDetails";
 import StockCreateModal from "./StockCreateModal";
 
 const StockComponent = (props) => {
@@ -98,22 +99,24 @@ const StockComponent = (props) => {
   const columns = [
     { label: t("WBH_STOCK_ID"), key: "id", width: "150px" },
     { label: t("WBH_PRODUCT_NAME"), key: "productName" },
-    { label: t("WBH_VARIATION"), key: "variation" },
-    { label: t("WBH_MATERIAL_NOTE_NUMBER"), key: "materialNoteNumber" },
-    { label: t("WBH_BATCH_NUMBER"), key: "batchNumber", width: "100px" },
+        { label: t("WBH_SENDER_ID"), key: "senderId", width: "150px" },
+    { label: t("WBH_RECEIVER_ID"), key: "receiverId", width: "150px" },
     { label: t("WBH_QUANTITY_SENT"), key: "quantitySent", width: "100px" },
     { label: t("WBH_QUANTITY_RECEIVED"), key: "quantityReceived", width: "100px" },
     { label: t("WBH_QUANTITY"), key: "quantity", width: "100px" },
+    { label: t("WBH_MATERIAL_NOTE_NUMBER"), key: "materialNoteNumber" },
+    { label: t("WBH_BATCH_NUMBER"), key: "batchNumber", width: "100px" },
     { label: t("WBH_TRANSACTION_TYPE"), key: "transactionType" },
     { label: t("WBH_TRANSACTION_REASON"), key: "transactionReason" },
     { label: t("WBH_WAY_BILL_NUMBER"), key: "wayBillNumber" },
-    { label: t("WBH_SENDER_TYPE"), key: "senderType" },
-    { label: t("WBH_RECEIVER_TYPE"), key: "receiverType" },
+    // { label: t("WBH_SENDER_TYPE"), key: "senderType" },
+    // { label: t("WBH_RECEIVER_TYPE"), key: "receiverType" },
     { label: t("HCM_ADMIN_CONSOLE_USER_ID"), key: "createdBy" },
-
-    { label: t("WBH_EXPIRE_DATE"), key: "expireDate" },
     { label: t("WBH_TRANSACTION_DATE"), key: "transactionDate" },
     { label: t("WBH_DISTRIBUTOR_NAME"), key: "distributorName" },
+    { label: t("WBH_VARIATION"), key: "variation" },
+        { label: t("WBH_EXPIRE_DATE"), key: "expireDate" },
+
   ];
 
   const customCellRenderer = {
@@ -155,6 +158,131 @@ const StockComponent = (props) => {
       return (
         <span style={{ color, fontWeight: "500" }}>
           {qtyReceived}
+        </span>
+      );
+    },
+    senderType: (row) => {
+      return t(`WBH_SENDER_TYPE_${row.senderType}`);
+    },
+    senderId: (row) => {
+      const senderId = row?.senderId;
+      const senderType = row?.senderType;
+      
+      if (!senderId || senderId === "NA") {
+        return <span style={{ color: "#999", fontStyle: "italic" }}>NA</span>;
+      }
+      
+      // Check if sender is a facility (warehouse, health facility, etc.)
+      const isFacility = senderType && (
+        senderType.includes("WAREHOUSE") || 
+        senderType.includes("FACILITY") ||
+        senderType.includes("CLINIC") ||
+        senderType.includes("HOSPITAL") ||
+        senderType.includes("PHC") ||
+        senderType.includes("CHC") ||
+        senderType.includes("DISTRIBUTION")
+      );
+      
+      if (isFacility) {
+        return (
+          <FacilityDetails 
+            facilityId={senderId}
+            tooltipPosition="top"
+            showIcon={true}
+            iconSize="14px"
+          />
+        );
+      }
+      
+      // Check if it's a user ID (UUID format)
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(senderId);
+      if (isUUID) {
+        return (
+          <UserDetails 
+            uuid={senderId}
+            style={{ 
+              fontSize: "inherit",
+              color: "inherit"
+            }}
+            iconSize="14px"
+            tooltipPosition="top"
+          />
+        );
+      }
+      
+      // Default display for other types
+      return (
+        <span style={{ 
+          fontFamily: "monospace", 
+          fontSize: "12px",
+          color: "#2196F3",
+          backgroundColor: "#E3F2FD",
+          padding: "2px 6px",
+          borderRadius: "4px",
+          border: "1px solid #BBDEFB"
+        }}>
+          {senderId}
+        </span>
+      );
+    },
+    receiverId: (row) => {
+      const receiverId = row?.receiverId;
+      const receiverType = row?.receiverType;
+      
+      if (!receiverId || receiverId === "NA") {
+        return <span style={{ color: "#999", fontStyle: "italic" }}>NA</span>;
+      }
+      
+      // Check if receiver is a facility
+      const isFacility = receiverType && (
+        receiverType.includes("WAREHOUSE") || 
+        receiverType.includes("FACILITY") ||
+        receiverType.includes("CLINIC") ||
+        receiverType.includes("HOSPITAL") ||
+        receiverType.includes("PHC") ||
+        receiverType.includes("CHC") ||
+        receiverType.includes("DISTRIBUTION")
+      );
+      
+      if (isFacility) {
+        return (
+          <FacilityDetails 
+            facilityId={receiverId}
+            tooltipPosition="top"
+            showIcon={true}
+            iconSize="14px"
+          />
+        );
+      }
+      
+      // Check if it's a user ID (UUID format)
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(receiverId);
+      if (isUUID) {
+        return (
+          <UserDetails 
+            uuid={receiverId}
+            style={{ 
+              fontSize: "inherit",
+              color: "inherit"
+            }}
+            iconSize="14px"
+            tooltipPosition="top"
+          />
+        );
+      }
+      
+      // Default display for other types
+      return (
+        <span style={{ 
+          fontFamily: "monospace", 
+          fontSize: "12px",
+          color: "#4CAF50",
+          backgroundColor: "#E8F5E8",
+          padding: "2px 6px",
+          borderRadius: "4px",
+          border: "1px solid #C8E6C9"
+        }}>
+          {receiverId}
         </span>
       );
     },

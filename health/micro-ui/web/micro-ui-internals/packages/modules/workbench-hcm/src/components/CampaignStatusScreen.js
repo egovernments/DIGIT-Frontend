@@ -19,146 +19,65 @@ const CampaignStatusScreen = () => {
   const { tenantId, campaignNumber } = Digit.Hooks.useQueryParams();
   
   // State management
-  const [campaignStatus, setCampaignStatus] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [isRevalidating, setIsRevalidating] = useState(false);
   const [showToast, setShowToast] = useState(null);
   const [lastUpdated, setLastUpdated] = useState(null);
 
-  // API configuration
-  const statusApiCriteria = {
+  // Use custom API hook for fetching campaign status
+  const { data, isLoading, error, refetch } = Digit.Hooks.useCustomAPIHook({
     url: "/project-factory/v1/project-type/status",
-    config: { enable: false }, // We'll trigger manually
-  };
-
-  const statusMutation = Digit.Hooks.useCustomAPIMutationHook(statusApiCriteria);
-
-  // Fetch campaign status
-  const fetchCampaignStatus = async (isRevalidation = false) => {
-    if (!tenantId || !campaignNumber) {
-      setShowToast({
-        label: t("WBH_MISSING_PARAMETERS"),
-        isError: true
-      });
-      setTimeout(() => setShowToast(null), 5000);
-      return;
-    }
-
-    // Prevent double-clicking during operation
-    if ((isRevalidation && isRevalidating) || (!isRevalidation && isLoading)) {
-      return;
-    }
-
-    if (isRevalidation) {
-      setIsRevalidating(true);
-    } else {
-      setIsLoading(true);
-    }
-
-    // Create abort controller for timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => {
-      controller.abort();
-    }, 30000); // 30 second timeout
-
-    try {
-      await statusMutation.mutate(
-        {
-          body: {
-            CampaignDetails: {
-              campaignNumber,
-              tenantId
-            }
-          }
-        },
-        {
-          onSuccess: (response) => {
-            clearTimeout(timeoutId);
-            // Check if response has the expected structure
-            if (response?.CampaignStatus) {
-              setCampaignStatus(response.CampaignStatus);
-              setLastUpdated(new Date());
-              if (isRevalidation) {
-                setShowToast({
-                  label: t("WBH_STATUS_UPDATED_SUCCESSFULLY"),
-                  isError: false
-                });
-                setTimeout(() => setShowToast(null), 3000);
-              }
-            } else {
-              // Handle unexpected response structure
-              console.error("Invalid response structure:", response);
-              setShowToast({
-                label: t("WBH_INVALID_RESPONSE_FORMAT"),
-                isError: true
-              });
-              setTimeout(() => setShowToast(null), 5000);
-              // Don't clear loading states here, they'll be cleared in finally block
-            }
-          },
-          onError: (error) => {
-            clearTimeout(timeoutId);
-            console.error("Error fetching campaign status:", error);
-            // Provide more specific error messages based on error type
-            const errorMessage = error?.response?.data?.Errors?.[0]?.message || 
-                               error?.message || 
-                               t("WBH_FAILED_TO_FETCH_STATUS");
-            
-            setShowToast({
-              label: errorMessage,
-              isError: true
-            });
-            setTimeout(() => setShowToast(null), 5000);
-            
-            // Keep existing data if it's a revalidation failure
-            if (!isRevalidation) {
-              setCampaignStatus(null);
-            }
-          }
-        }
-      );
-    } catch (error) {
-      clearTimeout(timeoutId);
-      console.error("Error in campaign status fetch:", error);
-      
-      // Determine error type and show appropriate message
-      let errorMessage = t("WBH_STATUS_FETCH_ERROR");
-      
-      if (error.name === 'AbortError') {
-        errorMessage = t("WBH_REQUEST_TIMEOUT");
-      } else if (error.name === 'NetworkError' || !navigator.onLine) {
-        errorMessage = t("WBH_NETWORK_ERROR");
-      } else if (error?.response?.status === 404) {
-        errorMessage = t("WBH_CAMPAIGN_NOT_FOUND");
-      } else if (error?.response?.status === 403) {
-        errorMessage = t("WBH_ACCESS_DENIED");
-      } else if (error?.response?.status >= 500) {
-        errorMessage = t("WBH_SERVER_ERROR");
+    params: {},
+    body: {
+      CampaignDetails: {
+        campaignNumber,
+        tenantId
       }
+    },
+    config: {
+      enabled: !!(tenantId && campaignNumber),
+      select: (data) => data?.CampaignStatus
+    }
+  });
+
+  // Update lastUpdated when data changes
+  useEffect(() => {
+    if (data) {
+      setLastUpdated(new Date());
+    }
+  }, [data]);
+
+  // Handle error display
+  useEffect(() => {
+    if (error) {
+      const errorMessage = error?.response?.data?.Errors?.[0]?.message || 
+                         error?.message || 
+                         t("WBH_FAILED_TO_FETCH_STATUS");
       
       setShowToast({
         label: errorMessage,
         isError: true
       });
       setTimeout(() => setShowToast(null), 5000);
-      
-      // Only clear existing data on initial load failure, not revalidation
-      if (!isRevalidation) {
-        setCampaignStatus(null);
-      }
-    } finally {
-      clearTimeout(timeoutId); // Ensure timeout is always cleared
-      setIsLoading(false);
-      setIsRevalidating(false);
+    }
+  }, [error]);
+
+  // Handle refresh
+  const handleRefresh = async () => {
+    try {
+      await refetch();
+      setShowToast({
+        label: t("WBH_STATUS_UPDATED_SUCCESSFULLY"),
+        isError: false
+      });
+      setTimeout(() => setShowToast(null), 3000);
+    } catch (err) {
+      console.error("Error refreshing campaign status:", err);
+      setShowToast({
+        label: t("WBH_FAILED_TO_REFRESH_STATUS"),
+        isError: true
+      });
+      setTimeout(() => setShowToast(null), 5000);
     }
   };
-
-  // Load data on component mount
-  useEffect(() => {
-    if (tenantId && campaignNumber) {
-      fetchCampaignStatus();
-    }
-  }, [tenantId, campaignNumber]);
 
   // Get status color and icon
   const getStatusInfo = (status) => {
@@ -178,10 +97,10 @@ const CampaignStatusScreen = () => {
 
   // Calculate overall progress (excluding CAMPAIGN_USER_CRED_GENERATION_PROCESS)
   const calculateOverallProgress = () => {
-    if (!campaignStatus?.processes) return 0;
+    if (!data?.processes) return 0;
     
     // Filter out the credential generation process
-    const filteredProcesses = campaignStatus.processes.filter(
+    const filteredProcesses = data.processes.filter(
       p => p.processname !== 'CAMPAIGN_USER_CRED_GENERATION_PROCESS'
     );
     
@@ -192,9 +111,9 @@ const CampaignStatusScreen = () => {
 
   // Filter processes to exclude credential generation process
   const getFilteredProcesses = () => {
-    if (!campaignStatus?.processes) return [];
+    if (!data?.processes) return [];
     
-    return campaignStatus.processes.filter(
+    return data.processes.filter(
       p => p.processname !== 'CAMPAIGN_USER_CRED_GENERATION_PROCESS'
     );
   };
@@ -208,7 +127,7 @@ const CampaignStatusScreen = () => {
     return <Loader page={true} variant="PageLoader" />;
   }
 
-  if (!campaignStatus) {
+  if (!data) {
     return (
       <div className="override-card" style={{ textAlign: 'center', padding: '2rem' }}>
         <Header className="works-header-view">{t("WBH_CAMPAIGN_STATUS")}</Header>
@@ -216,7 +135,7 @@ const CampaignStatusScreen = () => {
           <h3>{t("WBH_NO_STATUS_DATA_AVAILABLE")}</h3>
           <Button
             label={t("WBH_FETCH_STATUS")}
-            onButtonClick={() => fetchCampaignStatus()}
+            onButtonClick={() => refetch()}
             variation="primary"
             style={{ marginTop: '1rem' }}
           />
@@ -241,7 +160,7 @@ const CampaignStatusScreen = () => {
         <div>
           <Header className="works-header-view">{t("WBH_CAMPAIGN_STATUS")}</Header>
           <div style={{ marginTop: '0.5rem', color: '#666', fontSize: '0.9rem' }}>
-            <strong>{t("WBH_CAMPAIGN_NUMBER")}: </strong>{campaignStatus?.campaignNumber}
+            <strong>{t("WBH_CAMPAIGN_NUMBER")}: </strong>{data?.campaignNumber}
           </div>
           <div style={{ color: '#666', fontSize: '0.9rem' }}>
             <strong>{t("WBH_TENANT_ID")}: </strong>{tenantId}
@@ -254,11 +173,10 @@ const CampaignStatusScreen = () => {
         </div>
         
         <Button
-          label={isRevalidating ? t("WBH_REVALIDATING") : t("WBH_REVALIDATE_STATUS")}
-          onButtonClick={() => fetchCampaignStatus(true)}
+          label={t("WBH_REFRESH_STATUS")}
+          onButtonClick={handleRefresh}
           variation="secondary"
-          isDisabled={isRevalidating}
-          icon={isRevalidating ? <SVG.Sync className="rotating" width="16" height="16" /> : <SVG.Refresh width="16" height="16" />}
+          icon={<SVG.Refresh width="16" height="16" />}
           style={{ minWidth: '160px' }}
         />
       </div>
@@ -311,80 +229,36 @@ const CampaignStatusScreen = () => {
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', 
           gap: '1rem' 
         }}>
-          {/* Facility Summary */}
-          {campaignStatus?.summary?.facility && (
-            <div style={{ 
-              padding: '1rem', 
-              border: '1px solid #e0e0e0', 
-              borderRadius: '8px',
-              backgroundColor: '#f8f9fa'
-            }}>
-              {/* <h4 style={{ color: '#333', marginBottom: '0.5rem' }}>
-                <SVG.Home width="16" height="16" style={{ marginRight: '0.5rem' }} />
-                {t("WBH_FACILITIES")}
-              </h4> */}
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>{t("WBH_MAPPED")}: <strong>{campaignStatus?.summary?.facility?.mapped}</strong></div>
-                <div>{t("WBH_COMPLETED")}: <strong>{campaignStatus?.summary?.facility?.completed}</strong></div>
-              </div>
-            </div>
-          )}
 
-          {/* Resource Summary */}
-          {campaignStatus.summary.resource && (
-            <div style={{ 
-              padding: '1rem', 
-              border: '1px solid #e0e0e0', 
-              borderRadius: '8px',
-              backgroundColor: '#f8f9fa'
-            }}>
-              {/* <h4 style={{ color: '#333', marginBottom: '0.5rem' }}>
-                <SVG.Inventory width="16" height="16" style={{ marginRight: '0.5rem' }} />
-                {t("WBH_RESOURCES")}
-              </h4> */}
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>{t("WBH_MAPPED")}: <strong>{campaignStatus?.summary?.resource?.mapped}</strong></div>
-                <div>{t("WBH_TO_BE_MAPPED")}: <strong>{campaignStatus?.summary?.resource?.toBeMapped}</strong></div>
-              </div>
+        {Object.keys(data?.summary || {}).length === 0 && (
+            <div style={{ color: '#666', fontStyle: 'italic' }}>
+              {t("WBH_NO_SUMMARY_DATA_AVAILABLE")}
             </div>
           )}
-
-          {/* User Summary */}
-          {campaignStatus?.summary?.user && (
-            <div style={{ 
-              padding: '1rem', 
-              border: '1px solid #e0e0e0', 
-              borderRadius: '8px',
-              backgroundColor: '#f8f9fa'
-            }}>
-              {/* <h4 style={{ color: '#333', marginBottom: '0.5rem' }}>
-                <SVG.Person width="16" height="16" style={{ marginRight: '0.5rem' }} />
-                {t("WBH_USERS")}
-              </h4> */}
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>{t("WBH_MAPPED")}: <strong>{campaignStatus?.summary?.user?.mapped}</strong></div>
-                <div>{t("WBH_COMPLETED")}: <strong>{campaignStatus?.summary?.user?.completed}</strong></div>
+          {Object.keys(data?.summary || {}).map(key=> {
+            if(!data?.summary[key] || Object.keys(data?.summary[key] || {}).length === 0) return null;
+            return (
+              <div key={key} style={{ 
+                padding: '1rem', 
+                border: '1px solid #e0e0e0', 
+                borderRadius: '8px',
+                backgroundColor: '#f8f9fa'
+              }}>
+                <h4 style={{ color: '#333', marginBottom: '0.5rem', textTransform: 'capitalize' }}>
+                  <SVG.Person width="16" height="16" style={{ marginRight: '0.5rem' }} />
+                  {t(`WBH_${key.toUpperCase()}S`)}
+                </h4>
+                <div style={{ fontSize: '0.9rem', color: '#666' }}>
+                  {Object.keys(data?.summary[key] || {}).map(subKey => (
+                    <div key={subKey}>
+                      {t(`WBH_${subKey.toUpperCase()}`)}: <strong>{data?.summary[key][subKey]}</strong>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-          )}
-
-          {/* Boundary Summary */}
-          {campaignStatus?.summary?.boundary && (
-            <div style={{ 
-              padding: '1rem', 
-              border: '1px solid #e0e0e0', 
-              borderRadius: '8px',
-              backgroundColor: '#f8f9fa'
-            }}>
-              {/* <h4 style={{ color: '#333', marginBottom: '0.5rem' }}>
-                <SVG.LocationOn width="16" height="16" style={{ marginRight: '0.5rem' }} />
-                {t("WBH_BOUNDARIES")}
-              </h4> */}
-              <div style={{ fontSize: '0.9rem', color: '#666' }}>
-                <div>{t("WBH_COMPLETED")}: <strong>{campaignStatus?.summary?.boundary?.completed}</strong></div>
-              </div>
-            </div>
-          )}
+            );
+          })}
+          
         </div>
       </Card>
 

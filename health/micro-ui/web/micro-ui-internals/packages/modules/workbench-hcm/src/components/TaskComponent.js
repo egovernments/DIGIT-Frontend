@@ -82,12 +82,12 @@ const TaskComponent = (props) => {
   const { isLoading, data: projectTask } = Digit.Hooks.useCustomAPIHook(requestCriteria);
   
   // Cache task data when loaded (optional)
-  useEffect(() => {
-    if (projectTask && projectTask.length > 0) {
-      // Cache the task data for 5 minutes
-      // addToCache(`tasks-${props.projectId}-${page}-${pageSize}`, projectTask, 300000);
-    }
-  }, [projectTask, props.projectId, page, pageSize, addToCache]);
+  // useEffect(() => {
+  //   if (projectTask && projectTask.length > 0) {
+  //     // Cache the task data for 5 minutes
+  //     // addToCache(`tasks-${props.projectId}-${page}-${pageSize}`, projectTask, 300000);
+  //   }
+  // }, [projectTask, props.projectId, page, pageSize, addToCache]);
 
 
   const columns = [

@@ -72,6 +72,7 @@ const UserDetails = ({
           name: user.name || "Unknown User",
           mobileNumber: user.mobileNumber || "NA",
           emailId: user.emailId || "NA",
+          userName: user?.userName || "NA",
           roles: user?.roles.map(ele => ele?.name).join(", ") || "NA"
         };
         
@@ -247,6 +248,9 @@ const UserDetails = ({
               <div style={{ fontWeight: "bold", marginBottom: "4px" }}>
                 {userResponse.name}
               </div>
+               {userResponse?.userName &&  <div style={{ fontSize: "11px", opacity: 0.8 }}>
+                User Name: {userResponse.userName}
+              </div>}
             {userResponse?.mobileNumber&&  <div style={{ fontSize: "11px", opacity: 0.8 }}>
                 Mobile: {userResponse.mobileNumber}
               </div>}
