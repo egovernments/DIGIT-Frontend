@@ -723,8 +723,9 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
   const renderLabelPair = (heading, text, style) => (
     <div className="label-pair">
       <span className="view-label-heading">{t(heading)}</span>
-      <span className="view-label-text" style={style}>{text} </span>
-    </div>
+      <span className="view-label-text" style={style}>
+      {typeof text === "string" ? t(text) : text}
+    </span>    </div>
   );
 
 
