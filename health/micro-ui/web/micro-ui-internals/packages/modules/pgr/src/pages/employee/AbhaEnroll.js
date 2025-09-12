@@ -16,6 +16,7 @@ import {
     Loader,
     Footer,
     PopUp,
+    AlertCard
 } from "@egovernments/digit-ui-components";
 import { set } from "lodash";
 import { use } from "react";
@@ -192,15 +193,22 @@ const AbhaEnrollPage = () => {
                             </div>
                             <div style={{ display: "flex" }}>
                                 <div style={{ width: "26%", fontWeight: "500", marginTop: "0.7rem" }}>
-                                    {t("Enter Mobile Number")}
+                                    {t("Enter Aadhar linked Mobile Number")}
                                 </div>
                                 <TextInput
                                     name="mobile"
                                     onChange={(e) => { setMobileNumber(e.target.value) }}
                                     label={t("MOBILE_NUMBER")}
-                                    placeholder={t("Enter Mobile Number to link with Aadhaar")}
+                                    placeholder={t("Enter Mobile Number linked with Aadhaar")}
                                 />
                             </div>
+                            <AlertCard
+                                populators={{
+                                    name: "infocard",
+                                }}
+                                variant="default"
+                                text={t('The mobile number becomes the citizen’s primary channel for login, consent, and health record notifications in ABDM.')}
+                            />
                         </>
                     )}
 
