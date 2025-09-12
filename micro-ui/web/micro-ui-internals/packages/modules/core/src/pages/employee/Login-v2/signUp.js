@@ -36,7 +36,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onLogin = async (data) => {
-    const inputEmail = data.email;
+    const inputEmail = (data?.email || "").toLowerCase();
     const tenantId = data.accountName;
     await mutation.mutate(
       {
@@ -45,7 +45,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         },
         body: {
           otp: {
-            userName: data.email,
+            userName: inputEmail,
             type: "login",
             tenantId: tenantId,
             userType: "EMPLOYEE",

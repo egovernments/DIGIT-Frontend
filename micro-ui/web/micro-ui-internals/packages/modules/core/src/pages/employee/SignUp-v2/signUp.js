@@ -26,12 +26,13 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onLogin = async (data) => {
+    const normalizedEmail = (data?.email || "").toLowerCase();
     await mutation.mutate(
       {
         body: {
           tenant: {
             name: data.accountName,
-            email: data.email,
+            email: normalizedEmail,
           },
         },
         config: {
