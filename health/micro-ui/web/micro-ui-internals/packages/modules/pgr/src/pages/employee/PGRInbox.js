@@ -56,7 +56,9 @@ const PGRSearchInbox = () => {
   );
 
   // Fallback to static config if MDMS is not available
-  const configs = mdmsData || PGRSearchInboxConfig();
+  const configs = PGRSearchInboxConfig();
+
+  console.log("999 PGRSearchInbox configs", configs);
 
   // Fetch the list of service definitions (e.g., complaint types) for current tenant
   const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
@@ -110,7 +112,7 @@ const PGRSearchInbox = () => {
             className="digit-inbox-search-composer-header"
             styles={{ marginBottom: "1.5rem" }}
           >
-            {t("PGR_SEARCH_RESULTS_HEADING")}
+            {t("PGR_SEARCH_RESULTS_HEADINGD")}
           </HeaderComponent>
         }
       </div>

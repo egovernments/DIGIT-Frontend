@@ -4,7 +4,7 @@ const mdmsPath = window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-
 const boundarySearchPath = window?.globalConfigs?.getConfig("BOUNDARY_CONTEXT") || "boundary-service/boundary-relationships/_search?";
 const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
 const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "project";
-const pgrContextPath = window?.globalConfigs?.getConfig("PGR_SERVICE_PATH") || "pgr-services";
+const pgrContextPath = window?.globalConfigs?.getConfig("PGR_SERVICE_PATH") || "health-pgr-services";
 
 
 const Urls = {
