@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-rc19-02"] [27-Jun-2025]
+-Added new logic for language selection page
+
 ## [1.8.35-rc19.02] [27-Jun-2025]
 -Accessibility features implemented
 -New HOC component withAutoFocusMain.js added for targeted keyboard focus

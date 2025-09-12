@@ -2,7 +2,7 @@ import { Button, Card, SubmitBar, Loader } from "@egovernments/digit-ui-componen
 import { CustomButton } from "@egovernments/digit-ui-react-components";
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import ImageComponent from "../../../components/ImageComponent";
 const defaultLanguage = { label: "English", value: Digit.Utils.getDefaultLanguage() };
@@ -22,11 +22,18 @@ const LanguageSelection = () => {
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
 
+  const hasMultipleLanguages = languages?.length > 1;
+
   const handleSubmit = (event) => {
     navigate(`/${window?.contextPath}/employee/user/login`);
   };
 
   if (isLoading) return <Loader />;
+
+  if (!hasMultipleLanguages) {
+    return <Navigate to={`/${window?.contextPath}/employee/user/login`} replace />;
+  }
+
   return (
     <Background>
       <Card className={"bannerCard removeBottomMargin languageSelection"}>
