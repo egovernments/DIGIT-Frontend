@@ -3,8 +3,8 @@ import ResultsTable from "./ResultsTable"
 import reducer, { initialInboxState } from "./InboxSearchComposerReducer";
 import InboxSearchLinks from "../atoms/InboxSearchLinks";
 import { InboxContext } from "./InboxSearchComposerContext";
-import SearchComponent from "../atoms/SearchComponent";
-import PopUp from "../atoms/PopUp";
+import {SearchComponent} from "@egovernments/digit-ui-components";
+import {PopUp} from "@egovernments/digit-ui-components";
 import SearchAction from "../molecules/SearchAction";
 import FilterAction from "../molecules/FilterAction";
 import MobileSearchComponent from "./MobileView/MobileSearchComponent";

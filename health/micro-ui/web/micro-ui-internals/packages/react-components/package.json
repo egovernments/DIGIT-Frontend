@@ -11,7 +11,7 @@
   "scripts": {
     "example": "cd example && npm run start",
     "build": "cross-env NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --config webpack.config.js",
-    "build:dev": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=development --config webpack.config.js",
+    "build:dev": "cross-env NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=development --config webpack.config.js",
     "build:analyze": "NODE_OPTIONS='--openssl-legacy-provider' webpack --mode=production --analyze --config webpack.config.js",
     "start": "webpack serve --mode=development --open --hot",
     "start:prod": "webpack serve --mode=production --open",

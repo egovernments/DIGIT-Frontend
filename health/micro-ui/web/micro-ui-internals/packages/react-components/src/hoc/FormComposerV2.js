@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState, Fragment, useCallback } from "react";
 import { useForm, Controller } from "react-hook-form";
 import BreakLine from "../atoms/BreakLine";
-import Card from "../atoms/Card";
+import {Card} from "@egovernments/digit-ui-components";
 import CardLabel from "../atoms/CardLabel";
 import CardText from "../atoms/CardText";
 // import CardLabelError from "../atoms/CardLabelError";
@@ -10,9 +10,9 @@ import CardSectionHeader from "../atoms/CardSectionHeader";
 import CardLabelDesc from "../atoms/CardLabelDesc";
 import CardLabelError from "../atoms/CardLabelError";
 import TextArea from "../atoms/TextArea";
-import TextInput from "../atoms/TextInput";
+import {TextInput} from "@egovernments/digit-ui-components";
 import ActionBar from "../atoms/ActionBar";
-import SubmitBar from "../atoms/SubmitBar";
+import {SubmitBar} from "@egovernments/digit-ui-components";
 import LabelFieldPair from "../atoms/LabelFieldPair";
 import LinkButton from "../atoms/LinkButton";
 
@@ -21,10 +21,10 @@ import MobileNumber from "../atoms/MobileNumber";
 import _ from "lodash";
 import CustomDropdown from "../molecules/CustomDropdown";
 import MultiUploadWrapper from "../molecules/MultiUploadWrapper";
-import HorizontalNav  from "../atoms/HorizontalNav"
+import {HorizontalNav}  from "@egovernments/digit-ui-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import UploadFileComposer from "./UploadFileComposer";
-import CheckBox from "../atoms/CheckBox";
+import {CheckBox} from "@egovernments/digit-ui-components";
 import MultiSelectDropdown from '../atoms/MultiSelectDropdown';
 import Paragraph from "../atoms/Paragraph";
 import InputTextAmount from "../atoms/InputTextAmount";

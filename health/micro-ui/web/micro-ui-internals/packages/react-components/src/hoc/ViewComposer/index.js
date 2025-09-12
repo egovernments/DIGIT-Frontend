@@ -1,10 +1,10 @@
 import React, { Fragment, useState } from "react";
-import Card from "../../atoms/Card";
-import { Loader } from "../../atoms/Loader";
+import {Card} from "@egovernments/digit-ui-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import { RenderDataSection, RenderDocumentsSection, RenderWfActions, RenderWfHistorySection } from "./renderUtils";
-import HorizontalNav from "../../atoms/HorizontalNav";
+import {HorizontalNav} from "@egovernments/digit-ui-components";
 import CardSubHeader from "../../atoms/CardSubHeader";
-import { SVG } from "../../atoms/SVG";
+import { SVG } from "@egovernments/digit-ui-components";
 import { useRef } from "react";
 
 // format of data expected by this component
