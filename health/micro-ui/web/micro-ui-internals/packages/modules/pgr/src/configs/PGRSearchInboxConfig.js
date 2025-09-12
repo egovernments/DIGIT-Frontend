@@ -11,7 +11,7 @@ import Urls from "../utils/urls";
 
 const PGRSearchInboxConfig = () => {
   return {
-    label: "CS_COMMON_INBOX",
+    label: "CS_COMMON_INBOXX",
     type: 'inbox',
     apiDetails: {
         serviceName: Urls.pgr.inboxSearch,
@@ -106,7 +106,7 @@ const PGRSearchInboxConfig = () => {
               },
               {
                 label: "WF_INBOX_HEADER_CURRENT_OWNER",
-                jsonPath: "ProcessInstance.assignes",
+                jsonPath: "ProcessInstance.assigner.name",
                 additionalCustomization: true,
                 key: "assignee",
               },
@@ -134,7 +134,7 @@ const PGRSearchInboxConfig = () => {
                 hyperlink: true,
               },
                 ],
-                label: "CS_COMMON_HOME_COMPLAINTS",
+                label: "CS_COMMON_HOME_COMPLAINTSS",
                 logoIcon: {
                     component: "ReceiptInboxIcon",
                     customClass: "inbox-search-icon--projects"
@@ -152,9 +152,18 @@ const PGRSearchInboxConfig = () => {
                 secondaryLabel: 'ES_CLEAR_ALL',
                 minReqFields: 0,
                 defaultValues: {
-                    locality: null,
-                    assignee: { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" }
-                },
+                    assignedToMe: { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" },
+                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.locality && { 
+                      locality: window.Digit.SessionStorage.get("filtersForInbox").locality 
+                    }),
+                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.serviceCode && { 
+                      serviceCode: window.Digit.SessionStorage.get("filtersForInbox").serviceCode 
+                    }),
+                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.status && { 
+                      status: window.Digit.SessionStorage.get("filtersForInbox").status 
+                    })
+                  },
+                  
                 fields: [
                     {
                         label: "",
