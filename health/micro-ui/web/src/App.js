@@ -37,6 +37,7 @@ const enabledModules = [
   "HCMWORKBENCH",
   "Campaign",
   "PGR",
+  "Payments"
 ];
 
 initLibraries().then(() => {

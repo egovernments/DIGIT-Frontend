@@ -13,6 +13,8 @@ import SearchResultsPlaceholder from "./components/SearchResultsPlaceholder";
 import AttendeeBoundaryComponent from "./components/SearchAttendeeBoundary";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
+
+  console.log("I'm payments module");
   // const [hierarchySelected, setHierarchySelected] = useState(null);
 
   const { path, url } = useRouteMatch();

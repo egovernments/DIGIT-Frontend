@@ -29,7 +29,7 @@
     "dev:healthhrms": "cd packages/modules/health-hrms && yarn start",
     "dev:pgr": "cd packages/modules/pgr && yarn start",
     "build": "run-p build:**",
-    "build:css": "cd packages/css && yarn prepublish",
+    "buildd:css": "cd packages/css && yarn prepublish",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcmmicroplan": "cd packages/modules/hcm-microplanning && yarn build",
     "buildD:workbench-hcm": "cd packages/modules/workbench-hcm && yarn build",
