@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Loader, Header } from "@egovernments/digit-ui-components";
 import { CustomAccordion, CustomAccordionList } from "../../components/CustomAccordion";
 import getProjectServiceUrl from "../../utils/getProjectServiceUrl";
+import { Button ,SVG} from "@egovernments/digit-ui-react-components";
 
 /**
  * ProjectRedirectPage - Redirects users based on their assigned projects
@@ -147,40 +148,47 @@ const ProjectRedirectPage = () => {
     content: (
       <div style={{ padding: '1rem 0' }}>
         <div style={{ marginBottom: '0.5rem' }}>
-          <strong>{t("HCM_PROJECT_ID")}:</strong> {project.projectNumber || project.id}
+          <strong>{t("WORKBENCH_PROJECT_NUMBER")}:</strong> {project.projectNumber || project.id}
         </div>
-        {project.description && (
+       {project?.address?.boundaryType && (
           <div style={{ marginBottom: '0.5rem' }}>
-            <strong>{t("HCM_PROJECT_DESCRIPTION")}:</strong> {project.description}
+            <strong>{t("WORKBENCH_PROJECT_BOUNDARY_TYPE")}:</strong> {t(project?.address?.boundaryType) || "NA"}
+          </div>
+        )}
+        {project?.address?.boundary && (
+          <div style={{ marginBottom: '0.5rem' }}>
+            <strong>{t("WBH_BOUNDARY")}:</strong> {t(project?.address?.boundary) || "NA"}
+          </div>
+        )}
+     {project.description && (
+          <div style={{ marginBottom: '0.5rem' }}>
+            <strong>{t("WORKBENCH_PROJECT_DESCRIPTION")}:</strong> {project.description}
           </div>
         )}
         {project.startDate && (
           <div style={{ marginBottom: '0.5rem' }}>
-            <strong>{t("HCM_START_DATE")}:</strong> {new Date(project.startDate).toLocaleDateString()}
+            <strong>{t("CAMPAIGN_START_DATE")}:</strong> {new Date(project.startDate).toLocaleDateString()}
           </div>
         )}
         {project.endDate && (
           <div style={{ marginBottom: '1rem' }}>
-            <strong>{t("HCM_END_DATE")}:</strong> {new Date(project.endDate).toLocaleDateString()}
+            <strong>{t("CAMPAIGN_END_DATE")}:</strong> {new Date(project.endDate).toLocaleDateString()}
           </div>
         )}
-        <button
-          onClick={() => handleProjectSelection(project)}
+      
+      <Button
+        label= {selectedProjectId === project.id ? t("HCM_REDIRECTING") : t("HCM_SELECT_PROJECT")}
+        type="button"
+        variation="primary"
+                  onButtonClick={() => handleProjectSelection(project)}
           disabled={redirecting || selectedProjectId === project.id}
-          style={{
-            backgroundColor: '#4CAF50',
-            color: 'white',
-            border: 'none',
-            borderRadius: '4px',
-            padding: '0.5rem 1rem',
-            cursor: (redirecting || selectedProjectId === project.id) ? 'not-allowed' : 'pointer',
-            fontSize: '0.9rem',
-            fontWeight: '500',
-            opacity: (redirecting || selectedProjectId === project.id) ? 0.6 : 1
-          }}
-        >
-          {selectedProjectId === project.id ? t("HCM_REDIRECTING") : t("HCM_SELECT_PROJECT")}
-        </button>
+
+        style={{
+                      cursor: (redirecting || selectedProjectId === project.id) ? 'not-allowed' : 'pointer',
+                                  opacity: (redirecting || selectedProjectId === project.id) ? 0.6 : 1
+        }}
+        icon={<SVG.ArrowForward width={"28"} height={"28"} />}
+      />
       </div>
     )
   }));
