@@ -705,7 +705,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
   return (
     <div style={{ display: "flex", height: "100vh" }}>
       <div id="map" style={{ flex: 2, minHeight: "100%" }}></div>
-      <div style={{ flex: 1, padding: "1rem", overflowY: "auto", background: "#fafafa" }}>
+      {/* <div style={{ flex: 1, padding: "1rem", overflowY: "auto", background: "#fafafa" }}>
         <h3>Visits</h3>
         <ul style={{ listStyle: "none", padding: 0 }}>
           {(visits || []).map((v, i) => {
@@ -723,7 +723,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
             );
           })}
         </ul>
-      </div>
+      </div> */}
     </div>
   );
 };
