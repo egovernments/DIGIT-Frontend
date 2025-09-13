@@ -109,7 +109,7 @@ async function fetchElasticsearchData({ projectName, page, pageSize, origin, bat
         ],
         "query": {
           "term": {
-            "Data.projectName.keyword": projectName
+            [`Data.${getKibanaDetails('value')}.keyword`]: projectName
           }
         },
         "from": batchOffset,

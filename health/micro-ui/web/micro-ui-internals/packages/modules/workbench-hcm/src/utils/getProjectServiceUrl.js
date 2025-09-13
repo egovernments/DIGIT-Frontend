@@ -18,7 +18,9 @@ const defaultKibanaDetails = {
   username:"anonymous",
   password:"anonymous1",
   projectTaskIndex:"project-task-index-v1",
-  token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw=="
+  token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
+  key:"name",
+  value:"projectName"
 };
 export const getKibanaDetails = (key="username") => {
   // Access the globalConfigs object and retrieve the PROJECT_SEERVICE_PATH configuration.

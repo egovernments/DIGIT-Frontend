@@ -159,8 +159,6 @@ const MapComponent = (props) => {
         case 'AUTHENTICATION_REQUIRED':
           setIsAuthenticated(false);
           // Retry authentication with Kibana config
-          const username = getKibanaDetails('BasicUsername');
-          const password = getKibanaDetails('BasicPassword');
           const kibanaConfig = {
             kibanaPath: getKibanaDetails('kibanaPath'),
             projectTaskIndex: getKibanaDetails('projectTaskIndex'),
@@ -309,7 +307,7 @@ const MapComponent = (props) => {
   // Extract project name from project data
   useEffect(() => {
     if (project?.Project?.[0]?.name) {
-      setProjectName(project.Project[0].name);
+      setProjectName(project.Project[0]?.[getKibanaDetails('key')] || project.Project[0]?.name);
     }
   }, [project]);
 
