@@ -136,14 +136,14 @@ export const createMapPointPopup = (dataPoint, index, options = {}) => {
   // Task Information Section
   const taskFields = [];
   
-  if (taskId !== "N/A") {
-    taskFields.push(`
-      <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
-        <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.taskIdLabel || 'Task ID'}:</span>
-        <span style="color: #374151; font-weight: 600; font-family: monospace; font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${taskId}</span>
-      </div>
-    `);
-  }
+  // if (taskId !== "N/A") {
+  //   taskFields.push(`
+  //     <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
+  //       <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.taskIdLabel || 'Task ID'}:</span>
+  //       <span style="color: #374151; font-weight: 600; font-family: monospace; font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${taskId}</span>
+  //     </div>
+  //   `);
+  // }
   
   taskFields.push(`
     <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
