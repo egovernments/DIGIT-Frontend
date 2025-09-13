@@ -14,7 +14,7 @@ export const getGeoJsonUrl = (boundaryType="ward") => {
 };
 
 const defaultKibanaDetails = {
-  kibanaPath:"/kibana",
+  kibanaPath:"kibana",
   username:"anonymous",
   password:"anonymous1",
   projectTaskIndex:"project-task-index-v1",

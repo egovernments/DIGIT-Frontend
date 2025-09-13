@@ -138,9 +138,16 @@ const MapComponent = (props) => {
   // Initialize Web Worker
   useEffect(() => {
     // Create worker inline using Blob to avoid import.meta.url issues
+const username = getKibanaDetails('BasicUsername');
+const password = getKibanaDetails('BasicPassword');
+const auth = btoa(`${username}:${password}`); // base64 encode
+
+const API_TOKEN = getKibanaDetails('token');
+const AUTH_KEY= getKibanaDetails('sendBasicAuthHeader')?`Basic ${auth}`:`ApiKey ${API_TOKEN}`;
+
     const workerScript = `
       // Web Worker for Elasticsearch data fetching
-      const API_KEY = "${getKibanaDetails('token')}";
+      const API_KEY = "${AUTH_KEY}";
 
       // Worker message handler
       self.onmessage = async function(e) {
