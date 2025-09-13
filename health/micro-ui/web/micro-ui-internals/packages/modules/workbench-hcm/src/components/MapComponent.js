@@ -269,7 +269,7 @@ const AUTH_KEY= getKibanaDetails('sendBasicAuthHeader')?`Basic ${auth}`:`ApiKey 
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'ApiKey ' + API_KEY,
+                'Authorization':  API_KEY,
                 'kbn-xsrf': 'true'
               },
               credentials: 'include',
