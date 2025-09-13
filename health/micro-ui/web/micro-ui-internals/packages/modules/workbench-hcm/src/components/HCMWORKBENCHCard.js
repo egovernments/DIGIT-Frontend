@@ -29,7 +29,7 @@ const HCMWORKBENCHCard = () => {
     },
     {
       label: t("MANAGE_CAMPAIGN"),
-      link: `/${window?.contextPath}/employee/hcmworkbench/project-redirect?redirectUrl=campaign-view`,
+      link: `/${window?.contextPath}/employee/hcmworkbench/project-redirect?redirectUrl=campaign`,
       roles: ROLES.HCM,
     },
     // {

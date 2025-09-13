@@ -68,6 +68,7 @@ const ProjectChildrenComponent = (props) => {
   Object.values(descendantsObject).forEach((descendant) => {
     descendant.formattedStartDate = Digit.DateUtils.ConvertEpochToDate(descendant.startDate);
     descendant.formattedEndDate = Digit.DateUtils.ConvertEpochToDate(descendant.endDate);
+    descendant.targetNumber = descendant?.targets?.[1]?.targetNo || "NA";
   });
 
   // Flatten descendants for table display
@@ -173,6 +174,7 @@ const ProjectChildrenComponent = (props) => {
     { label: t("DESCENDANTS_PROJECT_BOUNDARY_TYPE"), key: "address.boundaryType" },
     { label: t("CAMPAIGN_START_DATE"), key: "formattedStartDate" },
     { label: t("CAMPAIGN_END_DATE"), key: "formattedEndDate" },
+    { label: t("WBH_TARGET_NO_LABEL"), key: "targetNumber" },
   ];
 
   const customCellRenderer = {
