@@ -543,11 +543,12 @@ const MapComponent = (props) => {
         <Header className="works-header-view">{t("MAP_VIEW")}</Header>
         <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <Button
-            variation="outline"
+            variation={showFilters ? "secondary" : "primary"}
             label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
             onClick={() => setShowFilters(!showFilters)}
             style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
           />
+                
           {filteredProjectTask?.length !== projectTask?.length && (
             <span style={{ 
               fontSize: "0.85rem", 

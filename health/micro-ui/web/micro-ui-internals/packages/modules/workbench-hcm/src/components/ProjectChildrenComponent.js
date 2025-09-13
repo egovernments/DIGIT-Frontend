@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import getProjectServiceUrl from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
-import { TextInput } from "@egovernments/digit-ui-react-components";
+import { Header, TextInput } from "@egovernments/digit-ui-react-components";
 import { Button } from "@egovernments/digit-ui-components";
 
 
@@ -233,9 +233,12 @@ const ProjectChildrenComponent = (props) => {
           }
         }
       `}</style>
-      
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+
+              <Header className="works-header-view">{t("PROJECT_CHILDREN")}</Header>
       {/* Advanced Filter Toggle Button */}
-      <div style={{ marginBottom: "16px" }}>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+
         <Button
           variation="primary"
           label={showFilters ? t("HIDE_ADVANCED_FILTERS") : t("SHOW_ADVANCED_FILTERS")}
@@ -250,6 +253,7 @@ const ProjectChildrenComponent = (props) => {
             {t("FILTERS_APPLIED")}: {t("SHOWING")} {filteredData.length} {t("OF")} {flattenedDescendants.length} {t("RECORDS")}
           </span>
         )}
+      </div>
       </div>
 
       {/* Filter Section - Only shown when showFilters is true */}
@@ -393,7 +397,6 @@ const ProjectChildrenComponent = (props) => {
 
       {/* Table */}
       <ReusableTableWrapper
-        title="PROJECT_CHILDREN"
         data={filteredData}
         columns={columns}
         manualPagination={true}

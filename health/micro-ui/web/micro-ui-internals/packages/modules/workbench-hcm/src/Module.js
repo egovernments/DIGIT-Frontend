@@ -30,7 +30,7 @@ import CampaignStatus from "./pages/employee/CampaignStatus";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
-  const moduleCode = ["campaign-settings"];
+  const moduleCode = ["campaign-settings","campaignmanager","boundary-ADMIN","boundary-admin"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({

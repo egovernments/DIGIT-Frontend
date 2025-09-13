@@ -144,7 +144,7 @@ const ProjectRedirectPage = () => {
 
   // Prepare accordion data for multiple projects
   const accordionData = projects.map(project => ({
-    title: project.name || project.projectNumber || `${t("HCM_PROJECT")} ${project.id}`,
+    title: (project?.name && `${project.name}- ${t(project?.address?.boundary)}`) || project.projectNumber || `${t("HCM_PROJECT")} ${project.id}`,
     content: (
       <div style={{ padding: '1rem 0' }}>
         <div style={{ marginBottom: '0.5rem' }}>
