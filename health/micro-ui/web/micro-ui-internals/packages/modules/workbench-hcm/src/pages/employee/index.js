@@ -7,6 +7,7 @@ import ProjectRedirectPage from "./ProjectRedirectPage";
 import MasterComponent from "../../components/MasterComponent";
 import HelpScreen from "../../components/HelpScreen";
 import CampaignStatus from "./CampaignStatus";
+import ViewCampaign from "./ViewCampaign";
 
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
@@ -14,10 +15,6 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
 
   const urlParts = location.pathname.split("/");
   const screenValue = urlParts[urlParts.length - 1];
-
-
- 
-
 
   const masterContent = () => {
     switch (true) {
@@ -35,7 +32,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const isShow = location.pathname.includes("/hcmworkbench/master");
 
   const isShow2 = [
-    "/hcmworkbench/campaign",
+    "/hcmworkbench/campaig",
     "/hcmworkbench/boundary",
     "/hcmworkbench/facility",
     "/project-landing-screen",
@@ -139,9 +136,9 @@ const App = ({ path }) => {
         <AppContainer className="workbench">
           <PrivateRoute path={`${path}/project-redirect`} component={() => <ProjectRedirectPage />} />
           <PrivateRoute path={`${path}/campaign-view`} component={() => <ViewProject />} />
+          <PrivateRoute path={`${path}/campaign`} component={() => <ViewCampaign />} />
           <PrivateRoute path={`${path}/master/:screen`} component={() => <MasterComponent />} />
-                    <PrivateRoute path={`${path}/status`} component={() => <CampaignStatus />} />
-
+          <PrivateRoute path={`${path}/status`} component={() => <CampaignStatus />} />
           <PrivateRoute path={`${path}/help-screen/:screen`} component={() => <HelpScreen />} />
         </AppContainer>
       </Switch>

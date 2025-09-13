@@ -13,12 +13,18 @@ export const getGeoJsonUrl = (boundaryType="ward") => {
   return urls?.[boundaryType];
 };
 
-
+const defaultKibanaDetails = {
+  kibanaPath:"/kibana",
+  username:"anonymous",
+  password:"anonymous1",
+  projectTaskIndex:"project-task-index-v1",
+  token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw=="
+};
 export const getKibanaDetails = (key="username") => {
   // Access the globalConfigs object and retrieve the PROJECT_SEERVICE_PATH configuration.
   // If not defined, fallback to default URL `/health-project`.
-  let urls = window.globalConfigs?.getConfig("KIBANA") || {};
-  return urls?.[key];
+  let details = window.globalConfigs?.getConfig("KIBANA") && {...defaultKibanaDetails, ...window.globalConfigs?.getConfig("KIBANA")} || defaultKibanaDetails;
+  return details?.[key];
 };
 
 

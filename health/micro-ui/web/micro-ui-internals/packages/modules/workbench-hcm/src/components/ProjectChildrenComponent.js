@@ -295,7 +295,7 @@ const ProjectChildrenComponent = (props) => {
           />
         </div>
 
-        <div style={{ 
+        {/* <div style={{ 
           display: "grid", 
           gridTemplateColumns: "repeat(auto-fit, minmax(250px, 1fr))", 
           gap: "16px",
@@ -372,7 +372,7 @@ const ProjectChildrenComponent = (props) => {
               }}
             />
           </div>
-        </div>
+        </div> */}
 
           <div style={{ display: "flex", gap: "16px", alignItems: "center" }}>
             <Button

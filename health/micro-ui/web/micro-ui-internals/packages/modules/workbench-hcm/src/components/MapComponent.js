@@ -140,7 +140,7 @@ const MapComponent = (props) => {
     // Create worker inline using Blob to avoid import.meta.url issues
     const workerScript = `
       // Web Worker for Elasticsearch data fetching
-      const API_KEY = "${getKibanaDetails('token')||"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw=="}";
+      const API_KEY = "${getKibanaDetails('token')}";
 
       // Worker message handler
       self.onmessage = async function(e) {
@@ -176,7 +176,7 @@ const MapComponent = (props) => {
             type: 'AUTHENTICATION_START'
           });
 
-          const loginResponse = await fetch(origin + '/kibana/internal/security/login', {
+          const loginResponse = await fetch(origin + '/${getKibanaDetails('kibanaPath')}/internal/security/login', {
             method: 'POST',
             headers: {
               'accept': '*/*',
@@ -192,12 +192,12 @@ const MapComponent = (props) => {
               'sec-fetch-mode': 'cors',
               'sec-fetch-site': 'same-origin',
               'x-elastic-internal-origin': 'Kibana',
-              'x-kbn-context': '{"type":"application","name":"security_login","url":"/kibana/login"}'
+              'x-kbn-context': '{"type":"application","name":"security_login","url":"/${getKibanaDetails('kibanaPath')}/login"}'
             },
             credentials: 'include',
             body: JSON.stringify({
-              "providerType": "${getKibanaDetails('username')||"anonymous"}",
-              "providerName": "${getKibanaDetails('password')||"anonymous1"}",
+              "providerType": "${getKibanaDetails('username')}",
+              "providerName": "${getKibanaDetails('password')}",
               "currentURL": origin + "kibana/login"
             })
           });
@@ -257,7 +257,7 @@ const MapComponent = (props) => {
               "size": currentBatchSize
             };
 
-            const response = await fetch(origin + '/kibana/api/console/proxy?path=%2Fproject-task-index-v1%2F_search&method=POST', {
+            const response = await fetch(origin + '/${getKibanaDetails('kibanaPath')}/api/console/proxy?path=%2F${getKibanaDetails('projectTaskIndex')}%2F_search&method=POST', {
               method: 'POST',
               headers: {
                 'Content-Type': 'application/json',
