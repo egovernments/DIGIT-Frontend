@@ -5,6 +5,7 @@ import { Button } from "@egovernments/digit-ui-components";
 import getProjectServiceUrl, { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
+import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 
 const MapComponent = (props) => {
   const { t } = useTranslation();
@@ -137,8 +138,9 @@ const MapComponent = (props) => {
 
   // Initialize Web Worker
   useEffect(() => {
-    // Import worker script
-    const workerUrl = new URL('../workers/elasticsearchWorker.js', import.meta.url);
+    // Create worker from string to avoid build issues
+    const blob = new Blob([elasticsearchWorkerString], { type: 'application/javascript' });
+    const workerUrl = URL.createObjectURL(blob);
     workerRef.current = new Worker(workerUrl);
 
     workerRef.current.onmessage = (e) => {
@@ -163,7 +165,8 @@ const MapComponent = (props) => {
             kibanaPath: getKibanaDetails('kibanaPath'),
             projectTaskIndex: getKibanaDetails('projectTaskIndex'),
             username: getKibanaDetails('username'),
-            password: getKibanaDetails('password')
+            password: getKibanaDetails('password'),
+            queryField: getKibanaDetails('value') || 'projectName'
           };
           workerRef.current?.postMessage({
             type: 'AUTHENTICATE_KIBANA',
@@ -215,6 +218,7 @@ const MapComponent = (props) => {
 
     return () => {
       workerRef.current?.terminate();
+      URL.revokeObjectURL(workerUrl);
     };
   }, []);
 
@@ -259,7 +263,8 @@ const MapComponent = (props) => {
       kibanaPath: getKibanaDetails('kibanaPath'),
       projectTaskIndex: getKibanaDetails('projectTaskIndex'),
       username: getKibanaDetails('username'),
-      password: getKibanaDetails('password')
+      password: getKibanaDetails('password'),
+      queryField: getKibanaDetails('value') || 'projectName'
     };
     
     // First authenticate if needed

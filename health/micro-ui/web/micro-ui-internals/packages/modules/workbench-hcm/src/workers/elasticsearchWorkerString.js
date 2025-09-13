@@ -1,5 +1,6 @@
+// Web Worker for Elasticsearch data fetching - as a string export for build compatibility
+export const elasticsearchWorkerString = `
 // Web Worker for Elasticsearch data fetching
-// This worker handles authentication and data fetching from Kibana/Elasticsearch
 
 // Worker message handler
 self.onmessage = async function(e) {
@@ -97,6 +98,7 @@ async function fetchElasticsearchData({ projectName, page, pageSize, origin, bat
 
       if (currentBatchSize <= 0) break;
 
+      const queryField = kibanaConfig.queryField || 'projectName';
       const elasticsearchQuery = {
         "_source": [
           "Data.geoPoint",
@@ -109,7 +111,7 @@ async function fetchElasticsearchData({ projectName, page, pageSize, origin, bat
         ],
         "query": {
           "term": {
-            [`Data.${kibanaConfig.queryField || 'projectName'}.keyword`]: projectName
+            ["Data." + queryField + ".keyword"]: projectName
           }
         },
         "from": batchOffset,
@@ -209,3 +211,4 @@ self.onerror = function(error) {
     lineno: error.lineno
   });
 };
+`;
