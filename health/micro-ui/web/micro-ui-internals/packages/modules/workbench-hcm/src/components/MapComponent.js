@@ -192,13 +192,14 @@ const MapComponent = (props) => {
               'sec-fetch-mode': 'cors',
               'sec-fetch-site': 'same-origin',
               'x-elastic-internal-origin': 'Kibana',
+              'kbn-xsrf': 'true',
               'x-kbn-context': '{"type":"application","name":"security_login","url":"/${getKibanaDetails('kibanaPath')}/login"}'
             },
             credentials: 'include',
             body: JSON.stringify({
               "providerType": "${getKibanaDetails('username')}",
               "providerName": "${getKibanaDetails('password')}",
-              "currentURL": origin + "kibana/login"
+              "currentURL": origin + "/${getKibanaDetails('kibanaPath')}/login"
             })
           });
 
