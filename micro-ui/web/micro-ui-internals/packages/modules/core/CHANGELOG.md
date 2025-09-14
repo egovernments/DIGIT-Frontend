@@ -1,4 +1,8 @@
 # Changelog 
+
+## [1.8.46]  [13-Sep-2025]
+- Added new logic for language selection page
+
 ## [1.8.44]  [15-July-2025]
 - Citizen login page continue button added 
 
