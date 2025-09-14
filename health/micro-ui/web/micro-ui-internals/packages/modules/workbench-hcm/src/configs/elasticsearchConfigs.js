@@ -99,7 +99,7 @@ export const projectStaffConfig = {
     createdBy: { queryType: 'term' }
   },
   sort: [
-    { "createdTime": { "order": "desc" } }
+    // { "createdTime": { "order": "desc" } }
   ],
   additionalFilters: null
 };
