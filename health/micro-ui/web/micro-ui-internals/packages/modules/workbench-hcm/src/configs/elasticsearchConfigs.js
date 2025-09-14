@@ -42,21 +42,21 @@ export const projectTaskConfig = {
 export const projectStaffConfig = {
   index: 'od-project-staff-index-v1',
   queryField: 'projectId',
-  dataPrefix: null, // Direct access to _source
+  dataPrefix: 'Data', // Use Data prefix for source fields
   sourceFields: [
-    "id",
-    "userId",
-    "userName",
-    "nameOfUser",
-    "role",
-    "projectType",
-    "projectTypeId",
-    "localityCode",
-    "boundaryHierarchy",
-    "isDeleted",
-    "createdBy",
-    "createdTime",
-    "projectId"
+    "Data.id",
+    "Data.userId",
+    "Data.userName",
+    "Data.nameOfUser",
+    "Data.role",
+    "Data.projectType",
+    "Data.projectTypeId",
+    "Data.localityCode",
+    "Data.boundaryHierarchy",
+    "Data.isDeleted",
+    "Data.createdBy",
+    "Data.createdTime",
+    "Data.projectId"
   ],
   // Custom field mappings based on actual data structure
   fieldMappings: {
@@ -88,7 +88,7 @@ export const projectStaffConfig = {
     projectTypeId: { queryType: 'term' },
     localityCode: { queryType: 'term' },
     isDeleted: { queryType: 'term' },
-    // Boundary hierarchy fields
+    // Boundary hierarchy fields (these will be prefixed with Data. automatically)
     'boundaryHierarchy.country': { queryType: 'term' },
     'boundaryHierarchy.state': { queryType: 'term' },
     'boundaryHierarchy.lga': { queryType: 'term' },

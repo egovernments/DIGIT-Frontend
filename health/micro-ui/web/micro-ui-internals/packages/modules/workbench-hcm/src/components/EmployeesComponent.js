@@ -163,24 +163,27 @@ const EmployeesComponent = (props) => {
           console.log(`Progress: ${payload.progress.toFixed(1)}% - ${payload.dataReceived} records loaded`);
           break;
         case 'FETCH_SUCCESS':
-          const processedData = payload.data.map((item, index) => ({
-            ...item,
-            employeeId: item.id || `EMP-${index + 1}`,
-            employeeName: item.nameOfUser || "NA",
-            userName: item.userName || "NA",
-            userId: item.userId || "NA",
-            role: item.role || "NA",
-            projectType: item.projectType || "NA",
-            localityCode: item.localityCode || "NA",
-            status: item.isDeleted === false ? "ACTIVE" : "INACTIVE",
-            country: item.boundaryHierarchy?.country || "NA",
-            state: item.boundaryHierarchy?.state || "NA",
-            lga: item.boundaryHierarchy?.lga || "NA",
-            ward: item.boundaryHierarchy?.ward || "NA",
-            healthFacility: item.boundaryHierarchy?.healthFacility || "NA",
-            createdTime: item.createdTime ? Digit.DateUtils.ConvertEpochToDate(item.createdTime) : "NA",
-            createdBy: item.createdBy || "NA"
-          }));
+          const processedData = payload.data.map((item, index) => {
+            // Handle Data prefix - the worker automatically maps fields using fieldMappings
+            return {
+              ...item,
+              employeeId: item.employeeId || item.id || `EMP-${index + 1}`,
+              employeeName: item.employeeName || item.nameOfUser || "NA",
+              userName: item.userName || "NA",
+              userId: item.userId || "NA",
+              role: item.role || "NA",
+              projectType: item.projectType || "NA",
+              localityCode: item.localityCode || "NA",
+              status: (item.status !== undefined ? item.status : item.isDeleted) === false ? "ACTIVE" : "INACTIVE",
+              country: item.country || item.boundaryHierarchy?.country || "NA",
+              state: item.state || item.boundaryHierarchy?.state || "NA",
+              lga: item.lga || item.boundaryHierarchy?.lga || "NA",
+              ward: item.ward || item.boundaryHierarchy?.ward || "NA",
+              healthFacility: item.healthFacility || item.boundaryHierarchy?.healthFacility || "NA",
+              createdTime: item.createdTime ? (typeof item.createdTime === 'number' ? Digit.DateUtils.ConvertEpochToDate(item.createdTime) : item.createdTime) : "NA",
+              createdBy: item.createdBy || "NA"
+            };
+          });
           setEmployeeData(processedData.length > 0 ? processedData : defaultData);
           setHasDataBeenFetched(true);
           setIsLoading(false);
