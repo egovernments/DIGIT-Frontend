@@ -64,6 +64,7 @@ export const data = (project) => {
           },
         ],
       },
+      
       // {
       //   navigationKey: "card2",
       //   sections: [
@@ -147,7 +148,18 @@ export const data = (project) => {
           },
         ],
       },
-     
+      {
+        navigationKey: "card10",
+        sections: [
+          {
+            navigationKey: "card10",
+
+            type: "COMPONENT",
+            component: "EmployeesComponent",
+            props: { projectId: project?.Project?.[0]?.id },
+          },
+        ],
+      }, 
     ],
     apiResponse: {},
     additionalDetails: {},
@@ -199,6 +211,11 @@ export const data = (project) => {
           name: "card9",
           active: true,
           code: "MAP_VIEW",
+        },
+         {
+          name: "card10",
+          active: true,
+          code: "EMPLOYEES",
         },
         // {
         //   name: "card10",

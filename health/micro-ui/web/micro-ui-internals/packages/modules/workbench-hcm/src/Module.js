@@ -23,6 +23,7 @@ import MapViewExample from "./components/MapViewExample";
 import StockComponent from "./components/StockComponent";
 import StockCreateModal from "./components/StockCreateModal";
 import MapComponent from "./components/MapComponent";
+import EmployeesComponent from "./components/EmployeesComponent";
 import ProjectRedirectPage from "./pages/employee/ProjectRedirectPage";
 import DeliveryCyclesComponent from "./components/DeliveryCyclesComponent";
 import CampaignStatusScreen from "./components/CampaignStatusScreen";
@@ -72,6 +73,7 @@ const componentsToRegister = {
   StockComponent,
   StockCreateModal,
   MapComponent,
+  EmployeesComponent,
   ProjectRedirectPage,
   DeliveryCyclesComponent,
   CampaignStatusScreen,

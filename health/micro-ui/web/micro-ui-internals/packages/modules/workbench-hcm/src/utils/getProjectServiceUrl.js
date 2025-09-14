@@ -18,6 +18,8 @@ const defaultKibanaDetails = {
   username:"anonymous",
   password:"anonymous1",
   projectTaskIndex:"project-task-index-v1",
+    projectStaffIndex:"od-project-staff-index-v1",
+  // projectTaskIndex:"project-task-index-v2", --- IGNORE ---
   token:"VVRaZjE1Z0J0UjN1MDZQak9jNC06V25NZUEybWxUOTZ4QzM5dnItNDJsdw==",
   key:"name",
   value:"projectName"

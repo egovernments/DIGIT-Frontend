@@ -2,6 +2,23 @@
 export const elasticsearchWorkerString = `
 // Web Worker for Elasticsearch data fetching
 
+// Helper function to get nested values from objects
+function getNestedValue(obj, path) {
+  if (!path) return obj;
+  
+  const keys = path.split('.');
+  let value = obj;
+  
+  for (let i = 0; i < keys.length; i++) {
+    if (value === null || value === undefined) {
+      return undefined;
+    }
+    value = value[keys[i]];
+  }
+  
+  return value;
+}
+
 // Worker message handler
 self.onmessage = async function(e) {
   const { type, payload } = e.data;
@@ -78,7 +95,7 @@ async function authenticateKibana({ origin, kibanaConfig }) {
 }
 
 // Fetch data from Elasticsearch with progressive loading
-async function fetchElasticsearchData({ projectName, page, pageSize, origin, batchSize, kibanaConfig, authKey }) {
+async function fetchElasticsearchData({ projectName, queryParams, page, pageSize, origin, batchSize, kibanaConfig, authKey }) {
   batchSize = batchSize || 1000;
   
   try {
@@ -98,9 +115,21 @@ async function fetchElasticsearchData({ projectName, page, pageSize, origin, bat
 
       if (currentBatchSize <= 0) break;
 
-      const queryField = kibanaConfig.queryField || 'projectName';
-      const elasticsearchQuery = {
-        "_source": [
+      // Build dynamic Elasticsearch query
+      let elasticsearchQuery;
+      
+      if (kibanaConfig.customQuery) {
+        // Use custom query if provided
+        elasticsearchQuery = typeof kibanaConfig.customQuery === 'function' 
+          ? kibanaConfig.customQuery(projectName, queryParams, batchOffset, currentBatchSize)
+          : kibanaConfig.customQuery;
+        
+        // Ensure from and size are set
+        elasticsearchQuery.from = elasticsearchQuery.from || batchOffset;
+        elasticsearchQuery.size = elasticsearchQuery.size || currentBatchSize;
+      } else {
+        // Default query structure with dynamic source fields
+        const sourceFields = kibanaConfig.sourceFields || [
           "Data.geoPoint",
           "Data.@timestamp", 
           "Data.productName",
@@ -108,15 +137,116 @@ async function fetchElasticsearchData({ projectName, page, pageSize, origin, bat
           "Data.administrativeArea",
           "Data.quantity",
           "Data.userName"
-        ],
-        "query": {
-          "term": {
-            ["Data." + queryField + ".keyword"]: projectName
+        ];
+        
+        // Build query conditions array to support multiple parameters
+        let queryConditions = [];
+        
+        // Handle multiple query parameters
+        if (queryParams && typeof queryParams === 'object') {
+          Object.keys(queryParams).forEach(function(field) {
+            const value = queryParams[field];
+            if (value !== null && value !== undefined && value !== '') {
+              const dataPrefix = kibanaConfig.dataPrefix || 'Data';
+              const queryPath = dataPrefix ? dataPrefix + '.' + field : field;
+              
+              // Determine query type for this field
+              const fieldConfig = kibanaConfig.fieldConfigs && kibanaConfig.fieldConfigs[field];
+              const queryType = fieldConfig ? fieldConfig.queryType : (kibanaConfig.queryType || 'term');
+              
+              if (queryType === 'match') {
+                queryConditions.push({
+                  "match": {
+                    [queryPath]: value
+                  }
+                });
+              } else if (queryType === 'range') {
+                queryConditions.push({
+                  "range": {
+                    [queryPath]: value  // value should be an object like { "gte": "2024-01-01" }
+                  }
+                });
+              } else if (queryType === 'terms') {
+                queryConditions.push({
+                  "terms": {
+                    [queryPath + '.keyword']: Array.isArray(value) ? value : [value]
+                  }
+                });
+              } else if (queryType === 'wildcard') {
+                queryConditions.push({
+                  "wildcard": {
+                    [queryPath + '.keyword']: value
+                  }
+                });
+              } else {
+                // Default term query
+                queryConditions.push({
+                  "term": {
+                    [queryPath + '.keyword']: value
+                  }
+                });
+              }
+            }
+          });
+        } else if (projectName) {
+          // Fallback to single projectName query for backward compatibility
+          const queryField = kibanaConfig.queryField || 'projectName';
+          const queryPath = kibanaConfig.dataPrefix ? kibanaConfig.dataPrefix + '.' + queryField : 'Data.' + queryField;
+          
+          queryConditions.push(
+            kibanaConfig.queryType === 'match' ? {
+              "match": {
+                [queryPath]: projectName
+              }
+            } : {
+              "term": {
+                [queryPath + '.keyword']: projectName
+              }
+            }
+          );
+        }
+        
+        // Build the final query
+        let finalQuery;
+        if (queryConditions.length === 0) {
+          finalQuery = { "match_all": {} };
+        } else if (queryConditions.length === 1) {
+          finalQuery = queryConditions[0];
+        } else {
+          finalQuery = {
+            "bool": {
+              "must": queryConditions
+            }
+          };
+        }
+        
+        elasticsearchQuery = {
+          "_source": sourceFields,
+          "query": finalQuery,
+          "from": batchOffset,
+          "size": currentBatchSize
+        };
+        
+        // Add any additional query parameters
+        if (kibanaConfig.additionalFilters) {
+          if (elasticsearchQuery.query.bool) {
+            elasticsearchQuery.query.bool.must = elasticsearchQuery.query.bool.must.concat(kibanaConfig.additionalFilters);
+          } else {
+            elasticsearchQuery.query = {
+              "bool": {
+                "must": [
+                  elasticsearchQuery.query
+                ].concat(kibanaConfig.additionalFilters)
+              }
+            };
           }
-        },
-        "from": batchOffset,
-        "size": currentBatchSize
-      };
+        }
+        
+        // Add sorting if specified
+        if (kibanaConfig.sort) {
+          elasticsearchQuery.sort = kibanaConfig.sort;
+        }
+      }
 
       const response = await fetch(
         origin + '/' + kibanaConfig.kibanaPath + '/api/console/proxy?path=%2F' + 
@@ -143,25 +273,59 @@ async function fetchElasticsearchData({ projectName, page, pageSize, origin, bat
       const data = await response.json();
       
       if (data && data.hits && data.hits.hits) {
-        const batchData = data.hits.hits.map(function(hit, index) {
-          const source = hit._source && hit._source.Data ? hit._source.Data : {};
-          const geoPoint = source.geoPoint || {};
-          
-          return {
-            id: hit._id || ('task-' + (batchOffset + index)),
-            plannedStartDate: source['@timestamp'] ? new Date(source['@timestamp']).toISOString() : "NA",
-            resourcesQuantity: source.quantity || "NA",
-            latitude: geoPoint[1] || geoPoint.lat || "NA",
-            longitude: geoPoint[0] || geoPoint.lon || "NA",
-            createdBy: source.userName || "NA",
-            resourcesCount: 1,
-            locationAccuracy: "NA",
-            productName: source.productName || "NA",
-            memberCount: source.memberCount || "NA",
-            administrativeArea: source.administrativeArea || "NA",
-            quantity: source.quantity || "NA"
-          };
-        });
+        let batchData;
+        
+        if (kibanaConfig.dataParser) {
+          // Use custom data parser if provided (note: functions can't be passed to workers, so this would need serialization)
+          batchData = data.hits.hits.map(function(hit, index) {
+            // Custom parsing would need to be serialized/deserialized
+            return hit;
+          });
+        } else {
+          // Default data parsing
+          batchData = data.hits.hits.map(function(hit, index) {
+            // Support different data structures
+            const dataPrefix = kibanaConfig.dataPrefix || 'Data';
+            const source = hit._source && hit._source[dataPrefix] ? hit._source[dataPrefix] : hit._source || {};
+            
+            // Map fields based on configuration or use defaults
+            if (kibanaConfig.fieldMappings) {
+              const mapped = { id: hit._id || ('record-' + (batchOffset + index)) };
+              
+              Object.keys(kibanaConfig.fieldMappings).forEach(function(targetField) {
+                const sourceField = kibanaConfig.fieldMappings[targetField];
+                const value = getNestedValue(source, sourceField);
+                mapped[targetField] = value !== undefined ? value : "NA";
+              });
+              
+              return mapped;
+            } else {
+              // Default mapping for backwards compatibility
+              const geoPoint = source.geoPoint || {};
+              
+              return {
+                id: hit._id || ('task-' + (batchOffset + index)),
+                plannedStartDate: source['@timestamp'] ? new Date(source['@timestamp']).toISOString() : "NA",
+                resourcesQuantity: source.quantity || "NA",
+                latitude: geoPoint[1] || geoPoint.lat || "NA",
+                longitude: geoPoint[0] || geoPoint.lon || "NA",
+                createdBy: source.userName || "NA",
+                resourcesCount: 1,
+                locationAccuracy: "NA",
+                productName: source.productName || "NA",
+                memberCount: source.memberCount || "NA",
+                administrativeArea: source.administrativeArea || "NA",
+                quantity: source.quantity || "NA",
+                userId: source.userId || "NA",
+                startDate: source.startDate || null,
+                endDate: source.endDate || null,
+                isDeleted: source.isDeleted || false,
+                channel: source.channel || null,
+                additionalDetails: source.additionalDetails || {}
+              };
+            }
+          });
+        }
 
         allData = allData.concat(batchData);
         processedBatches++;

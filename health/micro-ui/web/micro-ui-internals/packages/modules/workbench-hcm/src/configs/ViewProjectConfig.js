@@ -1,10 +1,8 @@
 import { useTranslation } from "react-i18next";
-import React from "react";
 
 export const data = (project) => {
   const { t } = useTranslation();
   const ancestor = project?.Project?.[0]?.ancestors;
-  const lastAncestor = ancestor?.length > 0 ? ancestor[ancestor?.length - 1] : { projectNumber: "NA" };
   const isLink = ancestor?.length > 0 ? true : false;
 
   return {
@@ -176,11 +174,23 @@ export const data = (project) => {
           },
         ],
       },
+      {
+        navigationKey: "card10",
+        sections: [
+          {
+            navigationKey: "card10",
+
+            type: "COMPONENT",
+            component: "EmployeesComponent",
+            props: { projectId: project?.Project?.[0]?.id },
+          },
+        ],
+      },
       // {
-      //   navigationKey: "card10",
+      //   navigationKey: "card11",
       //   sections: [
       //     {
-      //       navigationKey: "card10",
+      //       navigationKey: "card11",
 
       //       type: "COMPONENT",
       //       component: "DeliveryCyclesComponent",
@@ -240,8 +250,13 @@ export const data = (project) => {
           active: true,
           code: "MAP_VIEW",
         },
+        {
+          name: "card10",
+          active: true,
+          code: "EMPLOYEES",
+        },
         // {
-        //   name: "card10",
+        //   name: "card11",
         //   active: true,
         //   code: "DELIVERY_CYCLES",
         // },

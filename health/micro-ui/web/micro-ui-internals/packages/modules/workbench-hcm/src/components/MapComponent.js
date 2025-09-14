@@ -32,14 +32,7 @@ const MapComponent = (props) => {
 
   // Default sample data for testing and fallback - Nigerian locations
   const rawData = [
-    "7.3722818,5.2476953,3,Adebayo Olatunji,6,Ita-Ogbolu,dist_user_01",
-    "7.3719899,5.248334,2,Folasade Ogunleye,4,Ita-Ogbolu,dist_user_02",
-    "7.3733355,5.2477185,3,Olumide Akinwale,7,Ita-Ogbolu,dist_user_03",
-    "7.371291,5.2483847,2,Abiodun Adegoke,3,Ita-Ogbolu,dist_user_01",
-    "7.3712591,5.2488249,3,Yetunde Ajayi,8,Ita-Ogbolu,dist_user_02",
-    "7.3732285,5.2491957,3,Kehinde Fadeyi,5,Ita-Ogbolu,dist_user_03",
-    "7.3724202,5.2491548,2,Samuel Omoregie,4,Ita-Ogbolu,dist_user_01",
-    "7.3714463,5.24907,1,Modupe Alade,2,Ita-Ogbolu,dist_user_02"
+    "7.3722818,5.2476953,3,Adebayo Olatunji,6,NA,NA_user1",
   ];
 
   const defaultData = rawData.map((row, index) => {
@@ -226,7 +219,7 @@ const MapComponent = (props) => {
   const projectUrl = getProjectServiceUrl();
   const projectRequestCriteria = {
     url: `${projectUrl}/v1/_search`,
-    changeQueryName: props.projectId,
+    changeQueryName: props?.projectId,
     params: {
       tenantId,
       offset: 0,
@@ -236,13 +229,14 @@ const MapComponent = (props) => {
       Projects: [
         {
           tenantId,
-          id: props.projectId,
+          id: props?.projectId,
         },
       ],
       apiOperation: "SEARCH",
     },
+    changeQueryName: `CMP-PJT-${props?.projectId}`,
     config: {
-      enabled: props.projectId ? true : false,
+      enabled: props?.projectId ? true : false,
     },
   };
 
@@ -360,10 +354,10 @@ const MapComponent = (props) => {
 
 
   return (
-    <div ref={componentRef} className="override-card" style={{ overflow: "auto" }}>
+    <div ref={componentRef} className="override-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("MAP_VIEW")}</Header>
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <Button
             variation={showFilters ? "secondary" : "primary"}
             label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
@@ -382,7 +376,7 @@ const MapComponent = (props) => {
               {filteredProjectTask?.length} of {projectTask?.length} points
             </span>
           )}
-        </div>
+        </div> */}
       </div>
       
       {/* Filter Section */}

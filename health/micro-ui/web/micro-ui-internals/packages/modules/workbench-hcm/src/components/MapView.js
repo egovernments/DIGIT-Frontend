@@ -546,10 +546,19 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
       };
 
       // Add layer control
-      L.control.layers(baseLayers, null, {
-        position: 'topright',
-        collapsed: false
-      }).addTo(mapRef.current);
+     L.control.layers(baseLayers, null, {
+      position: 'bottomleft',   // move to bottom left
+      collapsed: true,          // collapsed by default
+    }).addTo(mapRef.current);
+
+const layersControl = document.querySelector('.leaflet-control-layers');
+if (layersControl) {
+  const label = document.createElement('div');
+  label.innerText = 'Layers';
+  label.style.fontWeight = 'bold';
+  label.style.textAlign = 'center';
+  layersControl.prepend(label);
+}
 
       // layer group to hold visit markers and polyline
       markersRef.current = L.layerGroup().addTo(mapRef.current);
@@ -703,7 +712,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
   }, [visits, shapefileData, boundaryStyle, showConnectingLines, customPopupContent, customMarkerStyle]);
 
   return (
-    <div style={{ display: "flex", height: "100vh" }}>
+    <div style={{ display: "flex", height: "100%" }}>
       <div id="map" style={{ flex: 2, minHeight: "100%" }}></div>
       {/* <div style={{ flex: 1, padding: "1rem", overflowY: "auto", background: "#fafafa" }}>
         <h3>Visits</h3>
