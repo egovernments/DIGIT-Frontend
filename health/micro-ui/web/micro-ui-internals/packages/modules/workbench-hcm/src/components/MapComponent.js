@@ -260,6 +260,12 @@ const MapComponent = (props) => {
       password: getKibanaDetails('password'),
       queryField: getKibanaDetails('value') || 'projectName'
     };
+
+    // Build query parameters - include userName filter if provided
+    const queryParams = {};
+    if (props.userName) {
+      queryParams.userName = props.userName;
+    }
     
     // First authenticate if needed
     if (!isAuthenticated) {
@@ -277,6 +283,7 @@ const MapComponent = (props) => {
           type: 'FETCH_ELASTICSEARCH_DATA',
           payload: {
             projectName,
+            queryParams,
             page,
             pageSize,
             origin: window.location.origin,
@@ -292,6 +299,7 @@ const MapComponent = (props) => {
         type: 'FETCH_ELASTICSEARCH_DATA',
         payload: {
           projectName,
+          queryParams,
           page,
           pageSize,
           origin: window.location.origin,
@@ -301,7 +309,7 @@ const MapComponent = (props) => {
         }
       });
     }
-  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize]);
+  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, props.userName]);
 
   // Extract project name from project data
   useEffect(() => {
@@ -309,6 +317,14 @@ const MapComponent = (props) => {
       setProjectName(project.Project[0]?.[getKibanaDetails('key')] || project.Project[0]?.name);
     }
   }, [project]);
+
+  // Reset data fetching state when userName prop changes
+  useEffect(() => {
+    if (props.userName) {
+      setHasDataBeenFetched(false);
+      setProjectTask(defaultData);
+    }
+  }, [props.userName]);
 
   // Fetch elasticsearch data when component becomes visible and project name is available
   useEffect(() => {
@@ -356,7 +372,22 @@ const MapComponent = (props) => {
   return (
     <div ref={componentRef} className="override-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-        <Header className="works-header-view">{t("MAP_VIEW")}</Header>
+        <div>
+          <Header className="works-header-view">{t("MAP_VIEW")}</Header>
+          {props.userName && (
+            <div style={{ 
+              fontSize: "0.85rem", 
+              color: "#666",
+              marginTop: "0.25rem",
+              padding: "0.25rem 0.5rem",
+              backgroundColor: "#e3f2fd",
+              borderRadius: "4px",
+              border: "1px solid #bbdefb"
+            }}>
+              {t("FILTERED_BY_USER")}: {props.userName}
+            </div>
+          )}
+        </div>
         {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <Button
             variation={showFilters ? "secondary" : "primary"}

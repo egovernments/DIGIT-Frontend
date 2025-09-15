@@ -1,11 +1,12 @@
 import React,{ useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, Button } from "@egovernments/digit-ui-react-components";
+import { Header, Loader, Button, Modal, ModalHeader, ModalBody } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 import { projectStaffConfig } from "../configs/elasticsearchConfigs";
+import MapComponent from "./MapComponent";
 
 const EmployeesComponent = (props) => {
   const { t } = useTranslation();
@@ -29,6 +30,10 @@ const EmployeesComponent = (props) => {
   const [availableLGAs, setAvailableLGAs] = useState([]);
   const [availableRoles, setAvailableRoles] = useState([]);
   const [availableProjectTypes, setAvailableProjectTypes] = useState([]);
+  
+  // Map popup state
+  const [showMapPopup, setShowMapPopup] = useState(false);
+  const [selectedEmployee, setSelectedEmployee] = useState(null);
 
   const defaultData = [
     {
@@ -294,6 +299,18 @@ const EmployeesComponent = (props) => {
     setStatusFilter("");
   };
 
+  // Handler for opening map popup
+  const handleViewMap = (employee) => {
+    setSelectedEmployee(employee);
+    setShowMapPopup(true);
+  };
+
+  // Handler for closing map popup
+  const handleCloseMapPopup = () => {
+    setShowMapPopup(false);
+    setSelectedEmployee(null);
+  };
+
   const columns = [
     { label: t("EMPLOYEE_ID"), key: "employeeId" },
     { label: t("EMPLOYEE_NAME"), key: "employeeName" },
@@ -307,6 +324,7 @@ const EmployeesComponent = (props) => {
     { label: t("LOCALITY_CODE"), key: "localityCode" },
     { label: t("CREATED_TIME"), key: "createdTime" },
     { label: t("STATUS"), key: "status" },
+    { label: t("VIEW_MAP"), key: "viewMap" },
   ];
 
   if (isLoading) {
@@ -618,9 +636,80 @@ const EmployeesComponent = (props) => {
             }}>
               {row.deliveryCount}
             </span>
+          ),
+          viewMap: (row) => (
+            <Button
+              label={t("VIEW_MAP")}
+              type="button"
+              variation="outline-primary"
+              size="small"
+              onButtonClick={() => handleViewMap(row)}
+              style={{ 
+                padding: "4px 8px", 
+                fontSize: "12px",
+                minWidth: "auto"
+              }}
+            />
           )
         }}
       />
+      
+      {/* Map Popup Modal */}
+      {showMapPopup && selectedEmployee && (
+        <Modal>
+          <ModalHeader>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+              <h2 style={{ margin: 0 }}>
+                {t("MAP_VIEW")} - {selectedEmployee.employeeName}
+              </h2>
+              <Button
+                label={t("CLOSE")}
+                variation="secondary"
+                onButtonClick={handleCloseMapPopup}
+                style={{ marginLeft: 'auto' }}
+              />
+            </div>
+          </ModalHeader>
+          <ModalBody>
+            <div style={{ 
+              padding: "1rem",
+              minHeight: "500px",
+              maxHeight: "80vh",
+              overflow: "auto"
+            }}>
+              <div style={{ 
+                marginBottom: "1rem", 
+                padding: "1rem", 
+                backgroundColor: "#f8f9fa", 
+                borderRadius: "8px",
+                border: "1px solid #dee2e6"
+              }}>
+                <h4 style={{ marginBottom: "0.5rem", color: "#495057" }}>
+                  {t("EMPLOYEE_DETAILS")}
+                </h4>
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+                  gap: "0.5rem",
+                  fontSize: "14px"
+                }}>
+                  <div><strong>{t("NAME")}:</strong> {selectedEmployee.employeeName}</div>
+                  <div><strong>{t("USER_NAME")}:</strong> {selectedEmployee.userName}</div>
+                  <div><strong>{t("ROLE")}:</strong> {selectedEmployee.role}</div>
+                  <div><strong>{t("PROJECT_TYPE")}:</strong> {selectedEmployee.projectType}</div>
+                  <div><strong>{t("STATE")}:</strong> {selectedEmployee.state}</div>
+                  <div><strong>{t("LGA")}:</strong> {selectedEmployee.lga}</div>
+                  <div><strong>{t("WARD")}:</strong> {selectedEmployee.ward}</div>
+                  <div><strong>{t("HEALTH_FACILITY")}:</strong> {selectedEmployee.healthFacility}</div>
+                  <div><strong>{t("STATUS")}:</strong> {selectedEmployee.status}</div>
+                </div>
+              </div>
+              
+              <MapComponent projectId={props.projectId} userName={selectedEmployee.userName} />
+            </div>
+          </ModalBody>
+        </Modal>
+      )}
     </div>
   );
 };
