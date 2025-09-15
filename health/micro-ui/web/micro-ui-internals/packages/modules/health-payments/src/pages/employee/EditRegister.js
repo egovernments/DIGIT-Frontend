@@ -1,8 +1,8 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef,Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, Card,  Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent,Loader } from "@egovernments/digit-ui-components";
+import { Divider, Button, PopUp, Card, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent, Loader } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -14,12 +14,14 @@ import EditAttendeePopUp from "../../components/editAttendeesPopUp";
 import EditAttendanceManagementTable from "../../components/EditAttendanceManagementTable";
 
 /**
- * @function ViewAttendance
+ * @function  Edit-Register
  * @description This component is used to view attendance.
  * @param {boolean} editAttendance - Whether attendance is editable or not.
  * @returns {ReactFragment} A React Fragment containing the attendance details.
  */
 const EditRegister = ({ editAttendance = false }) => {
+    const [showMore, setShowMore] = useState(false);
+
     const location = useLocation();
     const { t } = useTranslation();
     const history = useHistory();
@@ -257,12 +259,59 @@ const EditRegister = ({ editAttendance = false }) => {
                     {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(project?.[0]?.name || 'NA'))}
                     {renderLabelPair('HCM_AM_PROJECT_TYPE', t(project?.[0]?.projectType || 'NA'))}
                     {renderLabelPair('HCM_AM_BOUNDARY_CODE', t(boundaryCode || 'NA'))}
-                    {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER', individualsData?.Individual?.[0]?.name?.givenName)}
+                    {/* { {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER', individualsData?.Individual?.[0]?.name?.givenName)}
                     {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER', individualsData?.Individual?.[0]?.mobileNumber)}
                     {renderLabelPair('HCM_AM_NO_OF_ATTENDEE', AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
                     {renderLabelPair('HCM_AM_CAMPAIGN_START_DATE', formatTimestampToDate(project?.[0]?.startDate))}
                     {renderLabelPair('HCM_AM_CAMPAIGN_END_DATE', formatTimestampToDate(project?.[0]?.endDate))}
-                    {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}
+                    {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}} */}
+
+
+                    {/* ✅ Show more details only when expanded */}
+                    {showMore && (
+                        <Fragment>
+                            {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER', individualsData?.Individual?.[0]?.name?.givenName)}
+                            {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER', individualsData?.Individual?.[0]?.mobileNumber)}
+                            {renderLabelPair('HCM_AM_NO_OF_ATTENDEE', AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
+                            {renderLabelPair('HCM_AM_CAMPAIGN_START_DATE', formatTimestampToDate(project?.[0]?.startDate))}
+                            {renderLabelPair('HCM_AM_CAMPAIGN_END_DATE', formatTimestampToDate(project?.[0]?.endDate))}
+                            {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}
+                        </Fragment>
+                    )}
+
+
+                    { <div className="label-pair">
+                        <span className="view-label-heading">
+                            <Button
+                                className="custom-class"
+                                icon=""
+                                iconFill=""
+                                label={showMore ? t("HCM_AM_VIEW_LESS") : t("HCM_AM_VIEW_MORE")}
+                                onClick={() => setShowMore((prev) => !prev)}
+                                options={[]}
+                                optionsKey=""
+                                showBottom
+                                style={{
+                                    whiteSpace: 'nowrap',
+                                    width: 'auto'
+                                }}
+                                title=""
+                                variation="link"
+                            />
+                        </span>
+                        <span className="view-label-text">
+
+                        </span>
+                    </div>}
+                    {/* ✅ Toggle button */}
+                    {/* {<div style={{ marginTop: "0.5rem" }}>
+                        <Button
+                            variation="link"
+                            label={showMore ? t("VIEW_LESS") : t("VIEW_MORE")}
+                            onClick={() => setShowMore((prev) => !prev)}
+                        />
+                    </div>} */}
+
                     {/* {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))} */}
                 </Card>
                 <Card className="bottom-gap-card-payment">
@@ -282,7 +331,7 @@ const EditRegister = ({ editAttendance = false }) => {
                             variation="secondary"
                         />
                     </div>
-                   { <EditAttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />}
+                    {<EditAttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />}
                 </Card>
 
 
@@ -327,84 +376,9 @@ const EditRegister = ({ editAttendance = false }) => {
                 }}
             />} */}
 
-            {/* approve comment pop-up*/}
-            {/* {openApproveCommentPopUp && <ApproveCommentPopUp
-                onClose={() => {
-                    setOpenApproveCommentPopUp(false);
-                }}
-                onSubmit={(comment) => {
-                    setComment(comment);
-                    setOpenApproveCommentPopUp(false);
-                    setOpenApproveAlertPopUp(true);
-                }}
-            />} */}
+           
 
-            {/* action bar for bill generation*/}
-            {/* { <ActionBar
-                actionFields={[
-                    disabledAction ? (
-                        <Button
-                            label={t(`HCM_AM_GO_BACK`)}
-                            title={t(`HCM_AM_GO_BACK`)}
-                            onClick={() => {
-                                fromCampaignSupervisor ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, { fromViewScreen: true }) :
-                                    history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-                            }}
-                            type="button"
-                            style={{ minWidth: "14rem" }}
-                            variation="primary"
-                        />
-                    ) : editAttendance ? (
-                        <Button
-                            label={t(`HCM_AM_SUBMIT_LABEL`)}
-                            title={t(`HCM_AM_SUBMIT_LABEL`)}
-                            onClick={() => {
-
-                            }}
-                            style={{ minWidth: "14rem" }}
-                            type="button"
-                            variation="primary"
-                            isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-                        />
-                    ) : (
-                        <Button
-                            className="custom-class"
-                            iconFill=""
-                            label={t(`HCM_AM_ACTIONS`)}
-                            menuStyles={{
-                                bottom: "40px",
-                            }}
-                            onOptionSelect={(value) => {
-                                if (value.code === "EDIT_ATTENDANCE") {
-                                    setOpenEditAlertPopUp(true);
-                                } else if (value.code === "APPROVE") {
-                                    setOpenApproveCommentPopUp(true);
-                                }
-                            }}
-                            options={[
-                                {
-                                    code: "EDIT_ATTENDANCE",
-                                    name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`),
-                                },
-                                {
-                                    code: "APPROVE",
-                                    name: t(`HCM_AM_ACTIONS_APPROVE`),
-                                },
-                            ]}
-                            optionsKey="name"
-                            size=""
-                            style={{ minWidth: "14rem" }}
-                            title=""
-                            type="actionButton"
-                        />
-                    ),
-                ]}
-                className=""
-                maxActionFieldsAllowed={5}
-                setactionFieldsToRight
-                sortActionFields
-                style={{}}
-            />} */}
+            
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}

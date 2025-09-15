@@ -2655,7 +2655,7 @@ export const UICustomizations = {
       // };
 
 
-      //  debugger
+    
       const { phone, names, codes } = data.state.searchForm;
       const boundaryCode = data.state.filterForm.AttendeeBoundaryComponent
         || Digit?.SessionStorage.get("selectedBoundary")?.code;
@@ -2821,7 +2821,7 @@ export const UICustomizations = {
           return <> <Button
             key={refreshKey}
             variation={"primary"}
-            label={t("ASSIGN")}
+            label={t("HCM_AM_ASSIGN_BT")}
             style={{ minWidth: "10rem" }}
             onButtonClick={() => {
 
@@ -2850,7 +2850,7 @@ export const UICustomizations = {
                   setIsTag(false);
                   setOpenPopUp(false);
                 }}
-                heading={t("Action Needed: Tag Code")}
+                heading={t("HCM_AM_ACTION_NEEDED_TEAM_CODE")}
                 onOverlayClick={() => {
                   setTag("");
                   setIsTag(false);
@@ -2858,10 +2858,10 @@ export const UICustomizations = {
                 }}
                 children={[
                   !isTag ?
-                    <div>Do you want to fill in the Tag Code? If yes, press Enter Tag. Otherwise, Assign it.</div>
+                    <div>{t("HCM_AM_INFO_TAG_CODE_MSG")}</div>
                     : <div>
-                      <span>Tag Code</span>
-                      <TextInput type="text" name="title" placeholder={t("Enter Tag Name")} value={tag} onChange={(e) => setTag(e.target.value)} />
+                      <span>{t("HCM_AM_TAG_LABEL")}</span>
+                      <TextInput type="text" name="title" placeholder={t("HCM_AM_ENTER_TEAM_CODE")} value={tag} onChange={(e) => setTag(e.target.value)} />
                     </div>
 
                 ]}
@@ -2886,7 +2886,7 @@ export const UICustomizations = {
                     type={"button"}
                     size={"large"}
                     variation={"primary"}
-                    label={t("Assign")}
+                    label={t("HCM_AM_ASSIGN_BT")}
                     onClick={() => {
                       handleCreate(row.id);
                       return;

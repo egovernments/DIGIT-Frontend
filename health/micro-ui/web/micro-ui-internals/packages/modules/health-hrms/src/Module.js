@@ -22,14 +22,15 @@ import SearchUserToReport from "./components/pageComponents/SearchUserToReport";
 import SelectableList from "./components/pageComponents/SelectableList";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-   const tenantId = Digit.ULBService.getCurrentTenantId();
+  console.log("I'm HRMS module");
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const modulePrefix = "hcm";
   const [hierarchySelected, setHierarchySelected] = useState(null);
 
 
   const { data: hierarchies,
-    isLoading : isHierarchyLoading,
-     } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({tenantId});
+    isLoading: isHierarchyLoading,
+  } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({ tenantId });
 
   const moduleCode = ["HR",];
   const language = Digit.StoreData.getCurrentLanguage();
@@ -37,18 +38,18 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
   useEffect(() => {
     Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
   }, []);
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode : moduleCode, language, modulePrefix });
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode: moduleCode, language, modulePrefix });
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
-  
+
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
     return null;
   }
 
   if (isLoading || isHierarchyLoading) {
-      return <Loader />;
-    } 
+    return <Loader />;
+  }
 
   if (!hierarchySelected) {
     return (
@@ -60,12 +61,12 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
       />
     );
   }
-    
+
   else {
-  if (userType === "employee") {
-    return <EmployeeApp path={path} url={url} />;
-  } 
-}
+    if (userType === "employee") {
+      return <EmployeeApp path={path} url={url} />;
+    }
+  }
 };
 
 const componentsToRegister = {

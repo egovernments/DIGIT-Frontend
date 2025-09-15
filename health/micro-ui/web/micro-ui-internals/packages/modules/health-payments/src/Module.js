@@ -1,5 +1,5 @@
 import { Loader } from "@egovernments/digit-ui-react-components";
-import React, { useState ,useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
 import PaymentsCard from "./components/PaymentsCard";
@@ -14,7 +14,7 @@ import AttendeeBoundaryComponent from "./components/SearchAttendeeBoundary";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   // const [hierarchySelected, setHierarchySelected] = useState(null);
-
+  console.log("I'm payments module");
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
