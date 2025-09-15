@@ -148,35 +148,35 @@ export const RenderConditionalField = ({
   selectedField,
 }) => {
   const { t } = useTranslation();
-  const { state: appState, setFieldError, clearFieldError } = useAppConfigContext();
+  // const { state: appState, setFieldError, clearFieldError } = useAppConfigContext();
   const useT = useCustomT();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === (drawerState?.appType || drawerState?.type))
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
-  const errorKey = useMemo(() => `${drawerState?.jsonPath || drawerState?.id || "field"}::${cField?.bindTo || "bind"}`, [
-    drawerState?.jsonPath,
-    drawerState?.id,
-    cField?.bindTo,
-  ]);
-  const currentError = appState?.errorMap?.[errorKey] || "";
+  // const errorKey = useMemo(() => `${drawerState?.jsonPath || drawerState?.id || "field"}::${cField?.bindTo || "bind"}`, [
+  //   drawerState?.jsonPath,
+  //   drawerState?.id,
+  //   cField?.bindTo,
+  // ]);
+  // const currentError = appState?.errorMap?.[errorKey] || "";
 
-  const evaluatedError = useMemo(() => computeError(cField, drawerState, t), [cField, drawerState]);
+  // const evaluatedError = useMemo(() => computeError(cField, drawerState, t), [cField, drawerState]);
 
   // Only show error if field has content (not empty)
   const fieldValue = typeof drawerState?.[cField?.bindTo] === "boolean" ? null : drawerState?.[cField?.bindTo];
-  const hasContent = fieldValue !== undefined && fieldValue !== null && fieldValue !== "";
-  const shouldShowError = hasContent && evaluatedError && evaluatedError !== "";
+  // const hasContent = fieldValue !== undefined && fieldValue !== null && fieldValue !== "";
+  // const shouldShowError = hasContent && evaluatedError && evaluatedError !== "";
 
-  useEffect(() => {
-    if (evaluatedError && evaluatedError !== currentError) {
-      setFieldError(errorKey, evaluatedError);
-    } else if (!evaluatedError && currentError) {
-      clearFieldError(errorKey);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [evaluatedError, errorKey]);
+  // useEffect(() => {
+  //   if (evaluatedError && evaluatedError !== currentError) {
+  //     setFieldError(errorKey, evaluatedError);
+  //   } else if (!evaluatedError && currentError) {
+  //     clearFieldError(errorKey);
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [evaluatedError, errorKey]);
   switch (cField?.type) {
     case "text":
     case "number":
@@ -226,7 +226,7 @@ export const RenderConditionalField = ({
             // charCount={field?.charCount}
             disabled={disabled}
           />
-          {shouldShowError ? <ErrorComponent error={currentError} /> : null}
+          {/* {shouldShowError ? <ErrorComponent error={currentError} /> : null} */}
         </span>
       );
     case "options":

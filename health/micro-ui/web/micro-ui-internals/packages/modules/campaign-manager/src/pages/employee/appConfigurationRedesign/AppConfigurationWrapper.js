@@ -373,7 +373,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
         return data?.["HCM-ADMIN-CONSOLE"];
       },
     },
-    { schemaCode: "BASE_APP_MASTER_DATA" } ,
+    { schemaCode: "BASE_APP_MASTER_DATA" },
     true //mdmsv2
   );
   useEffect(() => {
@@ -546,31 +546,31 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return;
   };
   const handleSubmit = async (finalSubmit, tabChange) => {
-    const hasErrors = Boolean(state?.errorMap && Object.keys(state.errorMap).length > 0);
-    if (hasErrors) {
-      // Try to include field labels in the error toast for better clarity
-      const errorKeys = Object.keys(state.errorMap || {});
-      const errorFieldIds = errorKeys.map((k) => (k || "").split("::")[0]);
+    // const hasErrors = Boolean(state?.errorMap && Object.keys(state.errorMap).length > 0);
+    // if (hasErrors) {
+    //   // Try to include field labels in the error toast for better clarity
+    //   const errorKeys = Object.keys(state.errorMap || {});
+    //   const errorFieldIds = errorKeys.map((k) => (k || "").split("::")[0]);
 
-      // Collect all fields from current screen data
-      const allFields = (state?.screenData || []).flatMap((screen) => (screen?.cards || []).flatMap((card) => card?.fields || []));
+    //   // Collect all fields from current screen data
+    //   const allFields = (state?.screenData || []).flatMap((screen) => (screen?.cards || []).flatMap((card) => card?.fields || []));
 
-      // Find the first field with an error to get its translated label
-      const firstErrorField = errorFieldIds
-        .map((id) => allFields.find((f) => (f?.jsonPath && f.jsonPath === id) || (f?.id && f.id === id)))
-        .filter(Boolean)[0];
+    //   // Find the first field with an error to get its translated label
+    //   const firstErrorField = errorFieldIds
+    //     .map((id) => allFields.find((f) => (f?.jsonPath && f.jsonPath === id) || (f?.id && f.id === id)))
+    //     .filter(Boolean)[0];
 
-      if (firstErrorField?.label) {
-        const translatedLabel = locState?.find((i) => i.code === firstErrorField.label)?.[currentLocale];
-        setShowToast({
-          key: "error",
-          label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")} ${translatedLabel ? translatedLabel : ""}`,
-        });
-      } else {
-        setShowToast({ key: "error", label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") });
-      }
-      return;
-    }
+    //   if (firstErrorField?.label) {
+    //     const translatedLabel = locState?.find((i) => i.code === firstErrorField.label)?.[currentLocale];
+    //     setShowToast({
+    //       key: "error",
+    //       label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")} ${translatedLabel ? translatedLabel : ""}`,
+    //     });
+    //   } else {
+    //     setShowToast({ key: "error", label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") });
+    //   }
+    //   return;
+    // }
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
       const errorCheck = validateFromState(
@@ -637,8 +637,8 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
         state,
         dispatch,
         openAddFieldPopup,
-        setFieldError: (key, error) => dispatch({ type: "SET_FIELD_ERROR", payload: { key, error } }),
-        clearFieldError: (key) => dispatch({ type: "CLEAR_FIELD_ERROR", payload: { key } }),
+        // setFieldError: (key, error) => dispatch({ type: "SET_FIELD_ERROR", payload: { key, error } }),
+        // clearFieldError: (key) => dispatch({ type: "CLEAR_FIELD_ERROR", payload: { key } }),
       }}
     >
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
@@ -715,12 +715,12 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
                 title={t("BACK")}
                 icon="ArrowBack"
                 size="small"
-                isDisabled={Boolean(
-                  state?.drawerField &&
-                    Object.keys(state?.errorMap || {}).some((key) =>
-                      key.startsWith(`${state.drawerField?.jsonPath || state.drawerField?.id || "field"}::`)
-                    )
-                )}
+                // isDisabled={Boolean(
+                //   state?.drawerField &&
+                //     Object.keys(state?.errorMap || {}).some((key) =>
+                //       key.startsWith(`${state.drawerField?.jsonPath || state.drawerField?.id || "field"}::`)
+                //     )
+                // )}
                 onClick={() =>
                   dispatch({
                     type: "UNSELECT_DRAWER_FIELD",
@@ -731,7 +731,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
-              <AppFieldScreenWrapper parentState={parentState}/>
+              <AppFieldScreenWrapper parentState={parentState} />
             </DndProvider>
           )}
         </SidePanel>
