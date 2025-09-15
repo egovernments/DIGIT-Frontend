@@ -549,18 +549,18 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
 
       // Add layer control
      L.control.layers(baseLayers, null, {
-      position: 'bottomleft',   // move to bottom left
-      collapsed: true,          // collapsed by default
+      position: 'topright',   // move to bottom left
+      collapsed: false,          // collapsed by default
     }).addTo(mapRef.current);
 
-const layersControl = document.querySelector('.leaflet-control-layers');
-if (layersControl) {
-  const label = document.createElement('div');
-  label.innerText = 'Layers';
-  label.style.fontWeight = 'bold';
-  label.style.textAlign = 'center';
-  layersControl.prepend(label);
-}
+// const layersControl = document.querySelector('.leaflet-control-layers');
+// if (layersControl) {
+//   const label = document.createElement('div');
+//   label.innerText = 'Layers';
+//   label.style.fontWeight = 'bold';
+//   label.style.textAlign = 'center';
+//   layersControl.prepend(label);
+// }
 
       // layer group to hold visit markers and polyline
       markersRef.current = L.layerGroup().addTo(mapRef.current);
