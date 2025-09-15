@@ -53,24 +53,16 @@ const AddAttributeField = ({
   const [val, setVal] = useState("");
   const [showAttribute, setShowAttribute] = useState(null);
   const [showOperator, setShowOperator] = useState(null);
-  const [addedOption, setAddedOption] = useState(null);
   const [dropdownOption, setDropdownOption] = useState(null);
   const { t } = useTranslation();
 
-  useEffect(() => {
-    setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
-  }, [delivery, deliveryRules]);
 
-  // const schemaCode = useMemo(() => {
-  //   const code = showAttribute?.valuesSchema;
-  //   return code;
-  // }, [showAttribute]);
+  const addedOption = useMemo(
+    () => (delivery?.attributes || []).map(i => i?.attribute?.code).filter(Boolean),
+    [delivery?.attributes]
+  );
 
-  const schemaCode = useMemo(() => {
-    const code = showAttribute?.valuesSchema;
-    // fetchStructureConfig(code);
-    return code;
-  }, [showAttribute]);
+  const schemaCode = useMemo(() => showAttribute?.valuesSchema, [showAttribute]);
 
   // const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
   //   tenantId,
@@ -95,21 +87,17 @@ const AddAttributeField = ({
   // }, [showAttribute, structureConfig, attributeConfig]);
 
   useEffect(() => {
-    if (schemaCode) {
-      const fetchData = async () => {
-        try {
-          const fetch = await fetchStructureConfig(schemaCode);
-          if (fetch?.length > 0) {
-            setDropdownOption(fetch);
-          } else setDropdownOption([]);
-        } catch (error) {
-          console.error("Error fetching structure config:", error);
-          setDropdownOption([]);
-        }
-      };
-
-      fetchData();
-    }
+    let alive = true;
+    (async () => {
+      if (!schemaCode) { if (alive) setDropdownOption([]); return; }
+      try {
+        const list = await fetchStructureConfig(schemaCode);
+        if (alive) setDropdownOption(Array.isArray(list) ? list : []);
+      } catch {
+        if (alive) setDropdownOption([]);
+      }
+    })();
+    return () => { alive = false; };
   }, [schemaCode, tenantId]);
 
   const fetchStructureConfig = async (schemaCode) => {
@@ -137,101 +125,55 @@ const AddAttributeField = ({
     return data?.MdmsRes?.[moduleName]?.[schemaName];
   };
 
+  const setRuleAttr = (updater) => {
+    setDeliveryRules(prev =>
+      prev.map(rule => {
+        if (rule.ruleKey !== deliveryRuleIndex) return rule;
+        const attrs = rule.attributes.map(a => a.key === attribute.key ? updater(a) : a);
+        return { ...rule, attributes: attrs };
+      })
+    );
+  };
+
+  const sanitizeNum = (raw) => {
+    let v = String(raw ?? "").replace(/[^\d.]/g, "");
+    v = (v.match(/^\d*\.?\d{0,2}/)?.[0]) || "";
+    if ([" ", "e", "E"].some(f => v.includes(f))) return "";
+    return v;
+  };
+
   const selectValue = (e) => {
-    let val = e.target.value;
-    val = val.replace(/[^\d.]/g, "");
-    val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    // if (val.startsWith("-")) {
-    //   val = val.slice(1); // Remove the negative sign
-    // }
-    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
-      val = val.slice(0, -1);
-      return;
-    }
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).value = val;
-      }
-      return item;
-    });
-    setDeliveryRules(updatedData);
+    const v = sanitizeNum(e.target.value);
+    if (v === "" && e.target.value) return; // ignore invalid keystroke
+    setRuleAttr(a => ({ ...a, value: v }));
   };
 
   const selectDropdownValue = (value) => {
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).value = value?.code;
-      }
-      return item;
-    });
-    setDeliveryRules(updatedData);
+    setRuleAttr(a => ({ ...a, value: value?.code }));
   };
 
   const selectToFromValue = (e, range) => {
-    let val = e.target.value;
-    val = val.replace(/[^\d.]/g, "");
-    val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    // if (val.startsWith("-")) {
-    //   val = val.slice(1); // Remove the negative sign
-    // }
-
-    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
-      val = val.slice(0, -1);
-      return;
-    }
-    if (range === "to") {
-      const updatedData = deliveryRules.map((item, index) => {
-        if (item.ruleKey === deliveryRuleIndex) {
-          item.attributes.find((i) => i.key === attribute.key).toValue = val;
-        }
-        return item;
-      });
-      setDeliveryRules(updatedData);
-    } else {
-      const updatedData = deliveryRules.map((item, index) => {
-        if (item.ruleKey === deliveryRuleIndex) {
-          item.attributes.find((i) => i.key === attribute.key).fromValue = val;
-        }
-        return item;
-      });
-      setDeliveryRules(updatedData);
-    }
+    const v = sanitizeNum(e.target.value);
+    if (v === "" && e.target.value) return;
+    setRuleAttr(a => range === "to" ? ({ ...a, toValue: v }) : ({ ...a, fromValue: v }));
   };
 
   const selectAttribute = (value) => {
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).attribute = value;
-        item.attributes.find((i) => i.key === attribute.key).value = "";
-        item.attributes.find((i) => i.key === attribute.key).toValue = "";
-        item.attributes.find((i) => i.key === attribute.key).fromValue = "";
-        const defaultOperator = value.allowedOperators?.[0] || null;
-        if (defaultOperator) {
-          item.attributes.find((i) => i.key === attribute.key).operator = {
-            code: defaultOperator,
-          };
-        }
-      }
-      return item;
-    });
     setShowAttribute(value);
-    setDeliveryRules(updatedData);
+    const defaultOp = value?.allowedOperators?.[0];
+    setRuleAttr(a => ({
+      ...a,
+      attribute: value,
+      value: "",
+      toValue: "",
+      fromValue: "",
+      ...(defaultOp ? { operator: { code: defaultOp } } : {})
+    }));
   };
 
   const selectOperator = (value) => {
-    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
-    const updatedData = deliveryRules.map((item, index) => {
-      if (item.ruleKey === deliveryRuleIndex) {
-        item.attributes.find((i) => i.key === attribute.key).operator = value;
-        delete item.attributes.find((i) => i.key === attribute.key).toValue;
-        delete item.attributes.find((i) => i.key === attribute.key).fromValue;
-      }
-      return item;
-    });
     setShowOperator(value);
-    setDeliveryRules(updatedData);
+    setRuleAttr(a => ({ ...a, operator: value, toValue: undefined, fromValue: undefined }));
   };
 
   try {
@@ -244,7 +186,7 @@ const AddAttributeField = ({
             </CardLabel>
             <Dropdown
               className="form-field"
-              showToolTip = {true}
+              showToolTip={true}
               selected={attributeConfig?.find((item) => item?.code === attribute?.attribute?.code)}
               disable={false}
               isMandatory={true}
@@ -264,7 +206,7 @@ const AddAttributeField = ({
               // disable={attribute?.attribute?.code === "Gender" ? true : false}
               isMandatory={true}
               option={operatorConfig}
-              showToolTip = {true}
+              showToolTip={true}
               select={(value) => selectOperator(value)}
               optionKey="code"
               t={t}
@@ -313,8 +255,8 @@ const AddAttributeField = ({
                 }}
               >
                 {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
-                attribute?.attribute?.valuesSchema ||
-                isNaN(attribute?.value) ? (
+                  attribute?.attribute?.valuesSchema ||
+                  isNaN(attribute?.value) ? (
                   <Dropdown
                     className="form-field"
                     selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
@@ -348,7 +290,7 @@ const AddAttributeField = ({
   }
 };
 
-const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
+const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -387,9 +329,9 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       prev.map((item, index) =>
         index + 1 === deliveryRuleIndex
           ? {
-              ...item,
-              attributes: [...item.attributes, { key: item.attributes.length + 1, attribute: "", operator: "", value: "" }],
-            }
+            ...item,
+            attributes: [...item.attributes, { key: item.attributes.length + 1, attribute: "", operator: "", value: "" }],
+          }
           : item
       )
     );
@@ -419,12 +361,20 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
 
+  useEffect(() => {
+    if (Array.isArray(delivery?.attributes) && delivery.attributes.length === 0) {
+      setDeliveryRules(prev =>
+        prev.map(rule =>
+          rule.ruleKey === delivery.ruleKey
+            ? { ...rule, attributes: [{ key: 1, attribute: null, operator: null, value: "" }] }
+            : rule
+        )
+      );
+    }
+  }, [delivery?.ruleKey, delivery?.attributes?.length]);
+
   if (operatorConfigLoading || commonAttributesLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
-  }
-
-  if (Array.isArray(delivery?.attributes) && delivery.attributes.length === 0) {
-    delivery.attributes = [{ key: 1, attribute: null, operator: null, value: "" }];
   }
 
   return (
@@ -438,7 +388,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
           setDeliveryRules={setDeliveryRules}
           attribute={item}
           setAttributes={setAttributes}
-          key={index}
+          key={`${item}-${index}`}
           index={index}
           onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
           attributeConfig={attributeConfig}
@@ -460,7 +410,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
   );
 };
 
-const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index, key, delivery, onDelete }) => {
+const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index, delivery, onDelete }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(null);
@@ -586,7 +536,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           deliveryRules={deliveryRules}
           setDeliveryRules={setDeliveryRules}
           index={index}
-          key={key}
+          key={delivery.ruleKey}
         />
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
@@ -640,33 +590,62 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   );
 };
 
-const AddDeliveryRuleWrapper = ({}) => {
+const AddDeliveryRuleWrapper = ({ }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [targetedData, setTargetedData] = useState(campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true));
   const [deliveryRules, setDeliveryRules] = useState(targetedData?.deliveryRules);
   const { t } = useTranslation();
+  // derive the active delivery once
+  const currentTarget = useMemo(
+    () => campaignData?.find(i => i?.active)?.deliveries?.find(d => d?.active),
+    [campaignData]
+  );
+  const contextRules = currentTarget?.deliveryRules;
+
+  // pull only when content differs
+  useEffect(() => {
+    setTargetedData(prev => (isEqual(prev, currentTarget) ? prev : currentTarget));
+    setDeliveryRules(prev => (isEqual(prev, contextRules) ? prev : contextRules));
+  }, [currentTarget, contextRules]);
+
+  // push only when content truly differs from context
+  const rulesHash = useMemo(() => JSON.stringify(deliveryRules ?? []), [deliveryRules]);
+  const lastPushed = useRef(null);
 
   useEffect(() => {
-    const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
-    const tt = dd?.deliveryRules;
-    setTargetedData(dd);
-    // Only update if deliveryRules actually changed
-    setDeliveryRules((prev) => {
-      if (!isEqual(prev, tt)) {
-        return tt;
-      }
-      return prev; // no change
-    });
-  }, [campaignData]);
+    if (!deliveryRules) return;
+    if (rulesHash !== lastPushed.current && !isEqual(deliveryRules, contextRules)) {
+      dispatchCampaignData({
+        type: "UPDATE_CAMPAIGN_DATA",
+        payload: { currentDeliveryRules: deliveryRules },
+      });
+      lastPushed.current = rulesHash;
+    }
+  }, [rulesHash, deliveryRules, contextRules, dispatchCampaignData]);
 
-  useEffect(() => {
-    dispatchCampaignData({
-      type: "UPDATE_CAMPAIGN_DATA",
-      payload: {
-        currentDeliveryRules: deliveryRules,
-      },
-    });
-  }, [deliveryRules]);
+
+  ///OLDER APPROACH - may cause loops
+  // useEffect(() => {
+  //   const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
+  //   const tt = dd?.deliveryRules;
+  //   setTargetedData(dd);
+  //   // Only update if deliveryRules actually changed
+  //   setDeliveryRules((prev) => {
+  //     if (!isEqual(prev, tt)) {
+  //       return tt;
+  //     }
+  //     return prev; // no change
+  //   });
+  // }, [campaignData]);
+
+  // useEffect(() => {
+  //   dispatchCampaignData({
+  //     type: "UPDATE_CAMPAIGN_DATA",
+  //     payload: {
+  //       currentDeliveryRules: deliveryRules,
+  //     },
+  //   });
+  // }, [deliveryRules]);
 
   const addMoreDelivery = () => {
     dispatchCampaignData({
@@ -697,31 +676,31 @@ const AddDeliveryRuleWrapper = ({}) => {
           deliveryRules={deliveryRules}
           delivery={item}
           setDeliveryRules={setDeliveryRules}
-          key={index}
+          key={`${item.ruleKey}-${index}`}
           index={index}
           onDelete={() => deleteDeliveryRule(item)}
         />
       ))}
       {filteredDeliveryConfig?.projectType === "IRS-mz"
         ? selectedStructureCodes?.length < 4 && (
-            <Button
-              variation="secondary"
-              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-              className={"add-rule-btn hover"}
-              icon="AddIcon"
-              onClick={addMoreDelivery}
-            />
-          )
+          <Button
+            variation="secondary"
+            label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+            className={"add-rule-btn hover"}
+            icon="AddIcon"
+            onClick={addMoreDelivery}
+          />
+        )
         : !filteredDeliveryConfig?.deliveryAddDisable &&
-          deliveryRules?.length < 5 && (
-            <Button
-              variation="secondary"
-              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-              className={"add-rule-btn hover"}
-              icon="AddIcon"
-              onClick={addMoreDelivery}
-            />
-          )}
+        deliveryRules?.length < 5 && (
+          <Button
+            variation="secondary"
+            label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+            className={"add-rule-btn hover"}
+            icon="AddIcon"
+            onClick={addMoreDelivery}
+          />
+        )}
     </>
   );
 };
