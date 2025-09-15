@@ -16,7 +16,7 @@ function toCamelCase(str) {
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
-const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = "OD_01_ONDO", ...props }) => {
+const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = "OD_01_ONDO", dataReady = false, ...props }) => {
   console.log("EmployeesComponent props:",  props ,boundaryType,boundaryCode  );
   
   const { t } = useTranslation();
@@ -28,6 +28,8 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
   const [hasDataBeenFetched, setHasDataBeenFetched] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const workerRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const currentRequestIdRef = useRef(null);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   
   const [showFilters, setShowFilters] = useState(false);
@@ -205,11 +207,22 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
           setIsLoading(true);
           setLoadingProgress({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
           break;
+        case 'FETCH_CANCELLED':
+          console.log('Request was cancelled:', payload?.requestId);
+          setIsLoading(false);
+          // Don't update data or show errors for cancelled requests
+          break;
         case 'FETCH_PROGRESS':
           setLoadingProgress(payload);
           console.log(`Progress: ${payload.progress.toFixed(1)}% - ${payload.dataReceived} records loaded`);
           break;
         case 'FETCH_SUCCESS':
+          // Only process if this is the current request
+          if (payload.requestId && currentRequestIdRef.current !== payload.requestId) {
+            console.log('Ignoring stale response:', payload.requestId);
+            return;
+          }
+          
           const processedData = payload.data.map((item, index) => {
             // Handle Data prefix - the worker automatically maps fields using fieldMappings
             return {
@@ -245,6 +258,12 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
           console.log(`Data fetch completed: ${payload.data.length} records loaded`);
           break;
         case 'FETCH_ERROR':
+          // Only process error if this is the current request
+          if (payload?.requestId && currentRequestIdRef.current !== payload.requestId) {
+            console.log('Ignoring stale error response:', payload.requestId);
+            return;
+          }
+          
           console.error('Elasticsearch fetch error:', error);
           setEmployeeData(defaultData);
           setHasDataBeenFetched(true);
@@ -270,6 +289,10 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
     };
 
     return () => {
+      // Cancel any pending requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       workerRef.current?.terminate();
       URL.revokeObjectURL(workerUrl);
     };
@@ -277,7 +300,18 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
 
 
   const fetchDataWithWorker = useCallback(() => {
-    if (hasDataBeenFetched) return;
+    if (hasDataBeenFetched || !dataReady) return;
+    
+    // Cancel previous request if it exists
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      console.log('Cancelled previous employee fetch request');
+    }
+    
+    // Create new request ID and abort controller
+    const requestId = Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+    currentRequestIdRef.current = requestId;
+    abortControllerRef.current = new AbortController();
     
     const username = getKibanaDetails('BasicUsername');
     const password = getKibanaDetails('BasicPassword');
@@ -306,11 +340,17 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
         type: 'AUTHENTICATE_KIBANA',
         payload: { 
           origin: window.location.origin,
-          kibanaConfig
+          kibanaConfig,
+          requestId
         }
       });
       
       setTimeout(() => {
+        // Check if request was cancelled before sending
+        if (abortControllerRef.current?.signal.aborted) {
+          return;
+        }
+        
         workerRef.current?.postMessage({
           type: 'FETCH_ELASTICSEARCH_DATA',
           payload: {
@@ -322,11 +362,17 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
             origin: window.location.origin,
             batchSize: 500, // Batch size of 500
             kibanaConfig,
-            authKey: AUTH_KEY
+            authKey: AUTH_KEY,
+            requestId
           }
         });
       }, 1000);
     } else {
+      // Check if request was cancelled before sending
+      if (abortControllerRef.current?.signal.aborted) {
+        return;
+      }
+      
       workerRef.current?.postMessage({
         type: 'FETCH_ELASTICSEARCH_DATA',
         payload: {
@@ -338,11 +384,31 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
           origin: window.location.origin,
           batchSize: 500, // Batch size of 500
           kibanaConfig,
-          authKey: AUTH_KEY
+          authKey: AUTH_KEY,
+          requestId
         }
       });
     }
-  }, [hasDataBeenFetched, isAuthenticated, page, pageSize, boundaryType, boundaryCode]);
+  }, [hasDataBeenFetched, isAuthenticated, page, pageSize, boundaryType, boundaryCode, dataReady]);
+
+  // Reset data fetching state when dataReady changes from false to true
+  useEffect(() => {
+    if (dataReady && hasDataBeenFetched) {
+      setHasDataBeenFetched(false);
+      setEmployeeData(defaultData);
+    }
+  }, [dataReady]);
+  
+  // Cancel requests when boundary parameters change
+  useEffect(() => {
+    if (abortControllerRef.current && hasDataBeenFetched) {
+      console.log('Boundary parameters changed, cancelling previous request');
+      abortControllerRef.current.abort();
+      setHasDataBeenFetched(false);
+      setEmployeeData(defaultData);
+      setIsLoading(false);
+    }
+  }, [boundaryType, boundaryCode]);
 
   useEffect(() => {
     // Use boundary-based filtering for staff data

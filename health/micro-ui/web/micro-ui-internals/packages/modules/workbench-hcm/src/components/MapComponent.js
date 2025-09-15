@@ -15,7 +15,7 @@ function toCamelCase(str) {
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
-const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader = false, boundaryType = "state", boundaryCode = "OD_01_ONDO", ...props }) => {
+const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader = false, boundaryType = "state", boundaryCode = "OD_01_ONDO", dataReady = false, ...props }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10000); // Large page size to fetch all data
@@ -27,6 +27,8 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
   const [hasDataBeenFetched, setHasDataBeenFetched] = useState(false);
   const componentRef = useRef(null);
   const workerRef = useRef(null);
+  const abortControllerRef = useRef(null);
+  const currentRequestIdRef = useRef(null);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   
   // Filter states
@@ -302,11 +304,22 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           setIsLoading(true);
           setLoadingProgress({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
           break;
+        case 'FETCH_CANCELLED':
+          console.log('Map request was cancelled:', payload?.requestId);
+          setIsLoading(false);
+          // Don't update data or show errors for cancelled requests
+          break;
         case 'FETCH_PROGRESS':
           setLoadingProgress(payload);
           console.log(`Progress: ${payload.progress.toFixed(1)}% - ${payload.dataReceived} records loaded`);
           break;
         case 'FETCH_SUCCESS':
+          // Only process if this is the current request
+          if (payload.requestId && currentRequestIdRef.current !== payload.requestId) {
+            console.log('Ignoring stale map response:', payload.requestId);
+            return;
+          }
+          
           setProjectTask(payload.data.length > 0 ? payload.data : defaultData);
           setHasDataBeenFetched(true);
           setIsLoading(false);
@@ -321,6 +334,12 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           console.log(`Data fetch completed: ${payload.data.length} records loaded`);
           break;
         case 'FETCH_ERROR':
+          // Only process error if this is the current request
+          if (payload?.requestId && currentRequestIdRef.current !== payload.requestId) {
+            console.log('Ignoring stale map error response:', payload.requestId);
+            return;
+          }
+          
           console.error('Elasticsearch fetch error:', error);
           setProjectTask(defaultData);
           setHasDataBeenFetched(true);
@@ -346,6 +365,10 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     };
 
     return () => {
+      // Cancel any pending requests
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
       workerRef.current?.terminate();
       URL.revokeObjectURL(workerUrl);
     };
@@ -355,7 +378,18 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
 
   // Fetch data using web worker when component is visible
   const fetchDataWithWorker = useCallback(() => {
-    if (!isVisible || hasDataBeenFetched) return;
+    if (!isVisible || hasDataBeenFetched || !dataReady) return;
+    
+    // Cancel previous request if it exists
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      console.log('Cancelled previous map fetch request');
+    }
+    
+    // Create new request ID and abort controller
+    const requestId = Date.now() + '-map-' + Math.random().toString(36).substr(2, 9);
+    currentRequestIdRef.current = requestId;
+    abortControllerRef.current = new AbortController();
     
     // Prepare Kibana configuration
     const username = getKibanaDetails('BasicUsername');
@@ -432,12 +466,18 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         type: 'AUTHENTICATE_KIBANA',
         payload: { 
           origin: window.location.origin,
-          kibanaConfig
+          kibanaConfig,
+          requestId
         }
       });
       
       // Wait a bit for authentication, then proceed
       setTimeout(() => {
+        // Check if request was cancelled before sending
+        if (abortControllerRef.current?.signal.aborted) {
+          return;
+        }
+        
         workerRef.current?.postMessage({
           type: 'FETCH_ELASTICSEARCH_DATA',
           payload: {
@@ -449,11 +489,17 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
             origin: window.location.origin,
             batchSize: 1000, // Process in smaller batches
             kibanaConfig,
-            authKey: AUTH_KEY
+            authKey: AUTH_KEY,
+            requestId
           }
         });
       }, 1000);
     } else {
+      // Check if request was cancelled before sending
+      if (abortControllerRef.current?.signal.aborted) {
+        return;
+      }
+      
       // Directly fetch data if already authenticated
       workerRef.current?.postMessage({
         type: 'FETCH_ELASTICSEARCH_DATA',
@@ -466,11 +512,12 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           origin: window.location.origin,
           batchSize: 1000, // Process in smaller batches
           kibanaConfig,
-          authKey: AUTH_KEY
+          authKey: AUTH_KEY,
+          requestId
         }
       });
     }
-  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, userName, boundaryType, boundaryCode]);
+  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, userName, boundaryType, boundaryCode, dataReady]);
 
   // Removed project name extraction - using boundary-based filtering now
 
@@ -481,6 +528,25 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
       setProjectTask(defaultData);
     }
   }, [userName]);
+
+  // Reset data fetching state when dataReady changes from false to true
+  useEffect(() => {
+    if (dataReady && hasDataBeenFetched) {
+      setHasDataBeenFetched(false);
+      setProjectTask(defaultData);
+    }
+  }, [dataReady]);
+  
+  // Cancel requests when boundary parameters change
+  useEffect(() => {
+    if (abortControllerRef.current && hasDataBeenFetched) {
+      console.log('Map boundary parameters changed, cancelling previous request');
+      abortControllerRef.current.abort();
+      setHasDataBeenFetched(false);
+      setProjectTask(defaultData);
+      setIsLoading(false);
+    }
+  }, [boundaryType, boundaryCode, userName]);
 
   // Fetch elasticsearch data when component becomes visible
   useEffect(() => {

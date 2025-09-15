@@ -2,6 +2,10 @@
 export const elasticsearchWorkerString = `
 // Web Worker for Elasticsearch data fetching
 
+// Global variables for request management
+let currentRequestId = null;
+let isCancelled = false;
+
 // Helper function to get nested values from objects
 function getNestedValue(obj, path) {
   if (!path) return obj;
@@ -229,6 +233,15 @@ self.onmessage = async function(e) {
       case 'FETCH_ELASTICSEARCH_DATA':
         await fetchElasticsearchData(payload);
         break;
+      case 'CANCEL_REQUEST':
+        if (payload.requestId && currentRequestId === payload.requestId) {
+          isCancelled = true;
+          postMessage({
+            type: 'FETCH_CANCELLED',
+            payload: { requestId: payload.requestId }
+          });
+        }
+        break;
       default:
         postMessage({
           type: 'ERROR',
@@ -245,8 +258,14 @@ self.onmessage = async function(e) {
 };
 
 // Authenticate with Kibana
-async function authenticateKibana({ origin, kibanaConfig }) {
+async function authenticateKibana({ origin, kibanaConfig, requestId }) {
   try {
+    // Set current request ID if provided
+    if (requestId) {
+      currentRequestId = requestId;
+      isCancelled = false;
+    }
+    
     postMessage({
       type: 'AUTHENTICATION_START'
     });
@@ -293,13 +312,28 @@ async function authenticateKibana({ origin, kibanaConfig }) {
 }
 
 // Fetch data from Elasticsearch with smart chunking strategy
-async function fetchElasticsearchData({ projectName, queryParams, page, pageSize, origin, batchSize, kibanaConfig, authKey }) {
+async function fetchElasticsearchData({ projectName, queryParams, page, pageSize, origin, batchSize, kibanaConfig, authKey, requestId }) {
   batchSize = batchSize || 1000;
   
   try {
+    // Set current request ID and reset cancelled flag
+    if (requestId) {
+      currentRequestId = requestId;
+      isCancelled = false;
+    }
+    
+    // Check if request was cancelled before starting
+    if (isCancelled) {
+      postMessage({
+        type: 'FETCH_CANCELLED',
+        payload: { requestId: requestId }
+      });
+      return;
+    }
+    
     postMessage({
       type: 'FETCH_START',
-      payload: { projectName: projectName, page: page, pageSize: pageSize }
+      payload: { projectName: projectName, page: page, pageSize: pageSize, requestId: requestId }
     });
 
     // SMART CHUNKING STRATEGY: First query with 100 records to get total count
@@ -314,6 +348,15 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
       size: 100, 
       kibanaConfig
     });
+
+    // Check if cancelled before count query
+    if (isCancelled) {
+      postMessage({
+        type: 'FETCH_CANCELLED',
+        payload: { requestId: requestId }
+      });
+      return;
+    }
 
     // Execute initial count query
     const countResponse = await fetch(
@@ -333,7 +376,8 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
 
     if (countResponse.status === 401 || countResponse.status === 403) {
       postMessage({
-        type: 'AUTHENTICATION_REQUIRED'
+        type: 'AUTHENTICATION_REQUIRED',
+        payload: { requestId: requestId }
       });
       return;
     }
@@ -356,6 +400,15 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
     let allData = [];
     let processedBatches = 0;
 
+    // Check if cancelled before processing results
+    if (isCancelled) {
+      postMessage({
+        type: 'FETCH_CANCELLED',
+        payload: { requestId: requestId }
+      });
+      return;
+    }
+
     // If we have <= 100 records, use the count query result
     if (totalRecordsAvailable <= 100 && countData.hits.hits) {
       allData = parseElasticsearchHits(countData.hits.hits, 0, kibanaConfig);
@@ -367,12 +420,22 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
           batchesCompleted: 1,
           totalBatches: 1,
           dataReceived: allData.length,
-          progress: 100
+          progress: 100,
+          requestId: requestId
         }
       });
     } else {
       // Process in optimal chunks
       for (let batch = 0; batch < totalBatches; batch++) {
+        // Check if cancelled before each batch
+        if (isCancelled) {
+          postMessage({
+            type: 'FETCH_CANCELLED',
+            payload: { requestId: requestId }
+          });
+          return;
+        }
+        
         const batchOffset = page * effectivePageSize + (batch * optimalChunkSize);
         const currentBatchSize = Math.min(optimalChunkSize, effectivePageSize - (batch * optimalChunkSize));
 
@@ -404,7 +467,8 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
 
       if (response.status === 401 || response.status === 403) {
         postMessage({
-          type: 'AUTHENTICATION_REQUIRED'
+          type: 'AUTHENTICATION_REQUIRED',
+          payload: { requestId: requestId }
         });
         return;
       }
@@ -423,7 +487,8 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
               batchesCompleted: processedBatches,
               totalBatches: totalBatches,
               dataReceived: allData.length,
-              progress: (processedBatches / totalBatches) * 100
+              progress: (processedBatches / totalBatches) * 100,
+              requestId: requestId
             }
           });
 
@@ -435,6 +500,15 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
       }
     }
 
+    // Final check before sending success
+    if (isCancelled) {
+      postMessage({
+        type: 'FETCH_CANCELLED',
+        payload: { requestId: requestId }
+      });
+      return;
+    }
+
     postMessage({
       type: 'FETCH_SUCCESS',
       payload: {
@@ -443,16 +517,21 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
         totalRecordsAvailable: totalRecordsAvailable,
         batchesProcessed: processedBatches,
         chunkSize: optimalChunkSize,
-        smartChunking: totalRecordsAvailable > 100
+        smartChunking: totalRecordsAvailable > 100,
+        requestId: requestId
       }
     });
 
   } catch (error) {
-    postMessage({
-      type: 'FETCH_ERROR',
-      error: error.message,
-      stack: error.stack
-    });
+    // Don't send error if request was cancelled
+    if (!isCancelled) {
+      postMessage({
+        type: 'FETCH_ERROR',
+        error: error.message,
+        stack: error.stack,
+        payload: { requestId: requestId }
+      });
+    }
   }
 }
 

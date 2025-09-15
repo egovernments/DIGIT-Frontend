@@ -144,7 +144,12 @@ export const data = (project) => {
 
             type: "COMPONENT",
             component: "MapComponent",
-            props: { projectId: project?.Project?.[0]?.id,boundaryType:project?.Project?.[0]?.address?.boundaryType ,boundaryCode:project?.Project?.[0]?.address?.boundary },
+            props: { 
+              projectId: project?.Project?.[0]?.id,
+              boundaryType: project?.Project?.[0]?.address?.boundaryType,
+              boundaryCode: project?.Project?.[0]?.address?.boundary,
+              dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
+            },
           },
         ],
       },
@@ -159,7 +164,8 @@ export const data = (project) => {
             props: { 
               projectId: project?.Project?.[0]?.id,
               boundaryType: project?.Project?.[0]?.address?.boundaryType || "state",
-              boundaryCode: project?.Project?.[0]?.address?.boundary || "OD_01_ONDO"
+              boundaryCode: project?.Project?.[0]?.address?.boundary || "OD_01_ONDO",
+              dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
             },
           },
         ],
