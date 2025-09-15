@@ -90,6 +90,7 @@ function NavigationLogicWrapper({
     const completeAllMsg =
         t("PLEASE_COMPLETE_ALL_CONDITIONS") ||
         "Please complete all conditions and select a target page before confirming.";
+    const logicLabel = t("HCM_LOGIC") || "Logic";
 
     // ----- constants / helpers -----
     const LOGICALS = [
@@ -121,37 +122,42 @@ function NavigationLogicWrapper({
     const currentPageFieldOptions = useMemo(() => {
         const fields = currentPageObj?.fields || [];
         return fields
-            .filter((f) => f?.type !== "template")
+            .filter((f) => f?.type !== "template" && f?.includeInForm !== false)
             .map((f) => ({
                 code: f.jsonPath,
                 name: f.jsonPath,
                 label: f.label,
-                format: f.format,
+                format: f.format || f.appType,
                 type: f.type || f.datatype || f.format || "string",
                 enums: f.dropDownOptions || [],
                 schemaCode: f.schemaCode,
             }));
     }, [currentPageObj]);
 
-    // Target page dropdown: ALL pages
-    const allPageOptions = useMemo(() => {
-        const seen = new Set();
-        const list = [];
+    // ---- date helpers ----
+    const isDobLike = (field) => {
+        const tpe = (field?.type || "").toLowerCase();
+        const fmt = (field?.format || "").toLowerCase();
+        return tpe === "datepicker" && fmt === "dob";
+    };
+    const isDatePickerNotDob = (field) => {
+        const tpe = (field?.type || "").toLowerCase();
+        const fmt = (field?.format || "").toLowerCase();
+        return tpe === "datepicker" && fmt !== "dob";
+    };
 
-        const add = (p) => {
-            if (!p?.name || seen.has(p.name)) return;
-            seen.add(p.name);
-            list.push({ code: p.name, name: p.name, type: p.type }); // <-- keep page type
-        };
-
-        // Prefer the template object for the current page (so we get its type)
-        const currFromTemplate = currentTemplate.find((p) => p?.name === currentPage);
-        add(currFromTemplate || { name: currentPage, type: currentState?.type || "object" });
-
-        currentTemplate.forEach(add);
-        return list;
-    }, [currentTemplate, currentPage, currentState?.type]);
-
+    const toDDMMYYYY = (iso) => {
+        if (!iso) return "";
+        const [y, m, d] = String(iso).split("-");
+        if (!y || !m || !d) return "";
+        return `${d.padStart(2, "0")}/${m.padStart(2, "0")}/${y}`;
+    };
+    const toISOFromDDMMYYYY = (ddmmyyyy) => {
+        if (!ddmmyyyy) return "";
+        const [d, m, y] = String(ddmmyyyy).split("/");
+        if (!y || !m || !d) return "";
+        return `${y}-${m.padStart(2, "0")}-${d.padStart(2, "0")}`;
+    };
 
     const getFieldMeta = (fieldCode) =>
         currentPageObj?.fields?.find((f) => f.jsonPath === fieldCode) || null;
@@ -188,8 +194,10 @@ function NavigationLogicWrapper({
 
     const getOperatorOptions = (field) => {
         if (isCheckboxField(field)) {
-            // restrict to equality operators for checkbox
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
+        }
+        if (isDobLike(field) || isDatePickerNotDob(field) || isNumericLike(field)) {
+            return ALL_OPERATOR_OPTIONS;
         }
         if (!field || isStringLike(field))
             return ALL_OPERATOR_OPTIONS.filter((o) => o.code === "==" || o.code === "!=");
@@ -201,10 +209,19 @@ function NavigationLogicWrapper({
         for (const operator of PARSE_OPERATORS) {
             const i = expression.indexOf(operator);
             if (i !== -1) {
-                const left = expression.slice(0, i);
-                const right = expression.slice(i + operator.length);
-                const parts = (left || "").split(".").map((s) => (s || "").trim());
-                const fieldCode = parts.length > 1 ? parts.slice(1).join(".") : parts[0]; // drop page prefix
+                const left = expression.slice(0, i).trim();
+                const right = expression.slice(i + operator.length).trim();
+
+                // handle calculateAgeInMonths(<page>.<field>)
+                let leftPath = left;
+                const ageFn = "calculateAgeInMonths(";
+                if (left.startsWith(ageFn) && left.endsWith(")")) {
+                    leftPath = left.slice(ageFn.length, -1);
+                }
+
+                const parts = (leftPath || "").split(".").map((s) => (s || "").trim());
+                const fieldCode = parts.length > 1 ? parts.slice(1).join(".") : parts[0];
+
                 return {
                     selectedField: fieldCode ? { code: fieldCode, name: fieldCode } : {},
                     comparisonType: { code: operator, name: operator },
@@ -256,7 +273,23 @@ function NavigationLogicWrapper({
 
     const serializeSingle = (c) => {
         if (!currentPage) return "";
-        if (!c?.selectedField?.code || !c?.comparisonType?.code || c?.fieldValue === "") return "";
+        const field = getFieldMeta(c?.selectedField?.code);
+        if (!c?.selectedField?.code || !c?.comparisonType?.code) return "";
+
+        if (field && isDobLike(field)) {
+            const months = String(c?.fieldValue ?? "").trim();
+            if (months === "") return "";
+            const left = `calculateAgeInMonths(${currentPage}.${c.selectedField.code})`;
+            return `${left}${c.comparisonType.code}${months}`;
+        }
+
+        if (field && isDatePickerNotDob(field)) {
+            const ddmmyyyy = String(c?.fieldValue ?? "").trim();
+            if (ddmmyyyy === "") return "";
+            return `${currentPage}.${c.selectedField.code}${c.comparisonType.code}${ddmmyyyy}`;
+        }
+
+        if (c?.fieldValue === "") return "";
         return `${currentPage}.${c.selectedField.code}${c.comparisonType.code}${c.fieldValue}`;
     };
 
@@ -284,6 +317,21 @@ function NavigationLogicWrapper({
     });
 
     // ---------- normalization helpers ----------
+    const allPageOptions = useMemo(() => {
+        const seen = new Set();
+        const list = [];
+        const exclude = new Set([currentPage]); // don't include current page
+        const add = (p) => {
+            if (!p?.name) return;
+            if (exclude.has(p.name)) return;
+            if (seen.has(p.name)) return;
+            seen.add(p.name);
+            list.push({ code: p.name, name: p.name, type: p.type });
+        };
+        currentTemplate.forEach(add);
+        return list;
+    }, [currentTemplate, currentPage]);
+
     const findFieldOptionByCode = (code) =>
         currentPageFieldOptions.find((f) => f.code === code) || (code ? { code, name: code, label: code } : {});
     const findPageOptionByCode = (code) =>
@@ -344,6 +392,7 @@ function NavigationLogicWrapper({
     const [rules, setRules] = useState(() => makeRulesFromExisting());
     const [editorIndex, setEditorIndex] = useState(null);
     const [globalFormError, setGlobalFormError] = useState("");
+    const [validationStarted, setValidationStarted] = useState(false);
 
     const showPopUp = editorIndex !== null;
 
@@ -355,13 +404,24 @@ function NavigationLogicWrapper({
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [JSON.stringify(existingConditional), showPopUp]);
 
+    // clear errors when popup closes
+    useEffect(() => {
+        if (!showPopUp) {
+            if (globalFormError) setGlobalFormError("");
+            if (validationStarted) setValidationStarted(false);
+        }
+    }, [showPopUp, globalFormError, validationStarted]);
+
     const openEditor = (idx) => {
         setRules((prev) => prev.map((r, i) => (i === idx ? normalizeRule(r) : r)));
         setGlobalFormError("");
+        setValidationStarted(false);
         setEditorIndex(idx);
     };
 
     const addRule = () => {
+        setGlobalFormError("");
+        setValidationStarted(false);
         setRules((prev) => {
             const next = [...prev, initialEmptyRule()];
             const normalized = next.map((r, i) => (i === next.length - 1 ? normalizeRule(r) : r));
@@ -373,6 +433,7 @@ function NavigationLogicWrapper({
     const discardAndCloseEditor = () => {
         setRules(makeRulesFromExisting());
         setGlobalFormError("");
+        setValidationStarted(false);
         setEditorIndex(null);
     };
 
@@ -380,7 +441,15 @@ function NavigationLogicWrapper({
         setRules((prev) => prev.map((r, i) => (i === idx ? { ...r, ...patch } : r)));
 
     const deleteRuleFromList = (idx) =>
-        setRules((prev) => prev.filter((_, i) => i !== idx));
+        setRules((prev) => {
+            const next = prev.filter((_, i) => i !== idx);
+            if (editorIndex !== null) {
+                if (idx === editorIndex) setEditorIndex(null);
+                else if (idx < editorIndex) setEditorIndex(editorIndex - 1);
+            }
+            syncParent(next);
+            return next;
+        });
 
     // ----- condition operations -----
     const updateCond = (ruleIdx, condIdx, patch) =>
@@ -409,20 +478,23 @@ function NavigationLogicWrapper({
         );
 
     const addCondition = (ruleIdx) =>
+        setValidationStarted(true) ||
         setRules((prev) =>
             prev.map((r, i) => (i === ruleIdx ? { ...r, conds: [...r.conds, initialEmptyCondition()] } : r))
         );
 
     const removeCondition = (ruleIdx, condIdx) =>
-        setRules((prev) =>
-            prev.map((r, i) => {
+        setRules((prev) => {
+            const next = prev.map((r, i) => {
                 if (i !== ruleIdx) return r;
                 const nextConds = r.conds.filter((_, j) => j !== condIdx);
                 if (!nextConds.length) nextConds.push(initialEmptyCondition());
                 nextConds[0] = { ...nextConds[0], joiner: { code: "&&", name: "AND" } };
                 return { ...r, conds: nextConds };
-            })
-        );
+            });
+            syncParent(next);
+            return next;
+        });
 
     // ----- validation -----
     const isCondComplete = (c) =>
@@ -436,7 +508,6 @@ function NavigationLogicWrapper({
 
     const canSubmit = showPopUp && editorIndex !== null ? isRuleComplete(rules[editorIndex]) : false;
 
-    // Auto-clear global error when form becomes valid
     useEffect(() => {
         if (!showPopUp || editorIndex === null) return;
         if (globalFormError && isRuleComplete(rules[editorIndex])) {
@@ -449,11 +520,9 @@ function NavigationLogicWrapper({
         rs
             .map((r) => {
                 const name = r.targetPage?.code || r.targetPage?.name || "";
-                // find the page to get its type
                 const page =
                     allPageOptions.find((p) => p.code === name) ||
                     currentTemplate.find((p) => p?.name === name);
-
                 const navigateType = page?.type === "template" ? "template" : "form";
 
                 return {
@@ -466,14 +535,22 @@ function NavigationLogicWrapper({
             })
             .filter((r) => r.condition && r.navigateTo.name);
 
+    const syncParent = (nextRules) => {
+        const payload = buildPayload(nextRules);
+        onConditionalNavigateChange?.(payload);
+    };
 
     const submitAndClose = () => {
-        if (!canSubmit) {
+        setValidationStarted(true);
+        const isValid = editorIndex !== null && isRuleComplete(rules[editorIndex]);
+        if (!isValid) {
             setGlobalFormError(completeAllMsg);
             return;
         }
         const next = buildPayload(rules);
         onConditionalNavigateChange?.(next);
+        setGlobalFormError("");
+        setValidationStarted(false);
         setEditorIndex(null);
     };
 
@@ -485,23 +562,90 @@ function NavigationLogicWrapper({
         const op = c?.comparisonType?.code || "";
         let valueText = c?.fieldValue || "";
         valueText = `${valueText}`.replace(/[()]/g, "");
-        return `${customT(fieldLabel)} ${t(op)} ${field?.format === "dropdown" || field?.format === "radio" || field?.type === "selection" || field?.type === "checkbox"
-            ? customT(valueText)
-            : valueText
-            }`.trim();
+        return `${customT(fieldLabel)} ${t(op)} ${
+            field?.format === "dropdown" ||
+            field?.format === "radio" ||
+            field?.type === "selection" ||
+            field?.type === "checkbox"
+                ? customT(valueText)
+                : valueText
+        }`.trim();
     };
 
-    const formatRuleSummary = (rule) => {
-        const segs = [];
-        rule.conds.forEach((c, idx) => {
-            const lbl = formatConditionLabel(c);
-            if (idx > 0) segs.push(c.joiner?.code === "||" ? orText : andText);
-            segs.push(lbl);
-        });
-        const condText = segs.join(" ");
-        const goTo = t(rule.targetPage?.name || rule.targetPage?.code || "HCM_UNSET");
-        return `${condText || incompleteExprLabel} → ${t("HCM_NAVIGATE_TO") || "navigate to"} ${goTo}`;
-    };
+    const formatRuleSummary = (_rule, idx) => `${logicLabel} ${idx + 1}`;
+
+    // ---- small UI helpers to render the outside list with OR separators ----
+    const JoinerRow = () => (
+        <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+            <span
+                style={{
+                    background: "#ffffffff",
+                    color: "#C84C0E",
+                    borderRadius: 4,
+                    padding: "0.1rem 0.5rem",
+                    border: "1px solid #C84C0E",
+                    fontSize: "0.75rem",
+                    fontWeight: 600,
+                }}
+            >
+                {orText.toUpperCase()}
+            </span>
+        </div>
+    );
+
+    const RuleRow = ({ idx }) => (
+        <div
+            style={{
+                display: "grid",
+                gridTemplateColumns: "1fr auto",
+                alignItems: "center",
+                gap: "0.75rem",
+            }}
+        >
+            <Tag
+                label={formatRuleSummary(rules[idx], idx)}
+                showIcon={false}
+                stroke={true}
+                style={{
+                    background: "#FFFFFF",
+                    border: "1px solid #C84C0E",
+                    borderRadius: 8,
+                    height: "fit-content",
+                    padding: "0.25rem 0.5rem",
+                    width: "100%",
+                    maxWidth: "100%",
+                }}
+                className={"version-tag"}
+                labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
+            />
+
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "0.75rem", whiteSpace: "nowrap" }}>
+                <div
+                    role="button"
+                    title={editLabel}
+                    aria-label={editLabel}
+                    onClick={() => openEditor(idx)}
+                    style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+                >
+                    {SVG?.Edit ? (
+                        <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
+                    ) : (
+                        <Button variation="secondary" label={editLabel} onClick={() => openEditor(idx)} />
+                    )}
+                </div>
+
+                <div
+                    role="button"
+                    title={deleteRuleLabel}
+                    aria-label={deleteRuleLabel}
+                    onClick={() => deleteRuleFromList(idx)}
+                    style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
+                >
+                    <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
+                </div>
+            </div>
+        </div>
+    );
 
     // ----- UI -----
     return (
@@ -511,47 +655,20 @@ function NavigationLogicWrapper({
                 <h3 style={{ margin: 0 }}>{navLogicTitle}</h3>
             </div>
 
-            {/* Rules list */}
-            <div style={{ display: "flex", flexDirection: "column", gap: "0.75rem", marginBottom: "0.75rem" }}>
+            {/* Rules list separated by centered OR */}
+            <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem", marginBottom: "0.75rem" }}>
                 {rules.length === 0 ? (
                     <p style={{ opacity: 0.7, margin: 0 }}>{noRulesYet}</p>
                 ) : (
-                    rules.map((r, idx) => (
-                        <div key={`rule-preview-${idx}`} style={{ display: "flex", flexDirection: "column", gap: "0.35rem" }}>
-                            <Tag
-                                label={formatRuleSummary(r)}
-                                showIcon={false}
-                                stroke={true}
-                                style={{ background: "#EFF8FF", height: "fit-content", maxWidth: "100%" }}
-                                className={"version-tag"}
-                                labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
-                            />
-                            <div style={{ display: "flex", justifyContent: "flex-end", alignItems: "center", gap: "0.75rem" }}>
-                                <div
-                                    role="button"
-                                    title={editLabel}
-                                    aria-label={editLabel}
-                                    onClick={() => openEditor(idx)}
-                                    style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
-                                >
-                                    {SVG?.Edit ? (
-                                        <SVG.Edit fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                                    ) : (
-                                        <Button variation="secondary" label={editLabel} onClick={() => openEditor(idx)} />
-                                    )}
-                                </div>
-                                <div
-                                    role="button"
-                                    title={deleteRuleLabel}
-                                    aria-label={deleteRuleLabel}
-                                    onClick={() => deleteRuleFromList(idx)}
-                                    style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
-                                >
-                                    <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                                </div>
-                            </div>
-                        </div>
-                    ))
+                    <>
+                        <RuleRow idx={0} />
+                        {rules.slice(1).map((_, i) => (
+                            <React.Fragment key={`rule-with-or-${i + 1}`}>
+                                <JoinerRow />
+                                <RuleRow idx={i + 1} />
+                            </React.Fragment>
+                        ))}
+                    </>
                 )}
             </div>
 
@@ -562,7 +679,7 @@ function NavigationLogicWrapper({
                     label={addRuleLabel}
                     onClick={addRule}
                     icon="Add"
-                    style={{ width: "fit-content" }}
+                    style={{ width: "100%" }}
                 />
             </div>
 
@@ -577,324 +694,384 @@ function NavigationLogicWrapper({
                             children={[
                                 <div key="single-rule-editor" style={{ display: "grid", gap: "1rem" }}>
                                     {(() => {
-                                        const rule = rules[editorIndex];
+        const rule = rules[editorIndex];
 
-                                        return (
-                                            <div
-                                                key={`rule-card-${editorIndex}`}
-                                                style={{
-                                                    background: "#FAFAFA",
-                                                    border: "1px solid #F5D8C6",
-                                                    borderRadius: 8,
-                                                    padding: "0.75rem",
-                                                    display: "grid",
-                                                    gap: "0.75rem",
+        return (
+            <div
+                key={`rule-card-${editorIndex}`}
+                style={{
+                    background: "#FAFAFA",
+                    border: "1px solid #F5D8C6",
+                    borderRadius: 8,
+                    padding: "0.75rem",
+                    display: "grid",
+                    gap: "0.75rem",
+                }}
+            >
+                {/* Conditions */}
+                {rule.conds.map((cond, idx) => {
+                    const selectedFieldObj = cond?.selectedField?.code
+                        ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
+                        : undefined;
+
+                    const operatorOptions = getOperatorOptions(selectedFieldObj);
+                    const selectedOperator = cond?.comparisonType?.code
+                        ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
+                        : undefined;
+
+                    const numericField = isNumericLike(selectedFieldObj);
+
+                    return (
+                        <div
+                            key={`cond-row-${editorIndex}-${idx}`}
+                            style={{
+                                background: "#FFF",
+                                border: "1px dashed #EAC5AD",
+                                borderRadius: 8,
+                                padding: "0.75rem",
+                                display: "grid",
+                                gap: "0.5rem",
+                            }}
+                        >
+                            {idx > 0 && (
+                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
+                                    <span style={{ fontWeight: 600 }}>{joinWithLabel}</span>
+                                    <div style={{ width: 160, maxWidth: "100%" }}>
+                                        <Dropdown
+                                            option={LOGICALS}
+                                            optionKey="name"
+                                            name={`joiner-${editorIndex}-${idx}`}
+                                            t={t}
+                                            select={(e) => changeJoiner(editorIndex, idx, e.code)}
+                                            selected={cond.joiner}
+                                        />
+                                    </div>
+                                </div>
+                            )}
+
+                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
+                                {/* Field */}
+                                <div style={{ minWidth: 260, flex: "1 1 280px" }}>
+                                    <LabelFieldPair vertical removeMargin>
+                                        <p style={{ margin: 0 }}>{selectFieldLabel}</p>
+                                        <div className="digit-field" style={{ width: "100%" }}>
+                                            <Dropdown
+                                                option={currentPageFieldOptions}
+                                                optionKey="label"
+                                                name={`field-${editorIndex}-${idx}`}
+                                                t={customT}
+                                                select={(e) => {
+                                                    const nextOps = getOperatorOptions(e);
+                                                    const canKeep =
+                                                        cond?.comparisonType?.code &&
+                                                        nextOps.some((o) => o.code === cond.comparisonType.code);
+
+                                                    const isCk = isCheckboxField(e);
+                                                    updateCond(editorIndex, idx, {
+                                                        selectedField: e,
+                                                        fieldValue: isCk
+                                                            ? (["true", "false"].includes(String(cond.fieldValue).toLowerCase())
+                                                                ? cond.fieldValue
+                                                                : "false")
+                                                            : "",
+                                                        comparisonType: canKeep
+                                                            ? cond.comparisonType
+                                                            : (isCk ? nextOps.find((o) => o.code === "==") : {}),
+                                                    });
                                                 }}
-                                            >
-                                                {/* Conditions */}
-                                                {rule.conds.map((cond, idx) => {
-                                                    const selectedFieldObj = cond?.selectedField?.code
+                                                selected={
+                                                    cond?.selectedField?.code
                                                         ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
-                                                        : undefined;
+                                                        : cond.selectedField
+                                                }
+                                            />
+                                        </div>
+                                    </LabelFieldPair>
+                                </div>
 
-                                                    const operatorOptions = getOperatorOptions(selectedFieldObj);
-                                                    const selectedOperator = cond?.comparisonType?.code
-                                                        ? operatorOptions.find((o) => o.code === cond.comparisonType.code)
-                                                        : undefined;
+                                {/* Operator */}
+                                <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                    <LabelFieldPair vertical removeMargin>
+                                        <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
+                                        <div className="digit-field" style={{ width: "100%" }}>
+                                            <Dropdown
+                                                option={operatorOptions}
+                                                optionKey="name"
+                                                name={`op-${editorIndex}-${idx}`}
+                                                t={t}
+                                                select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
+                                                disabled={!cond?.selectedField?.code}
+                                                selected={selectedOperator}
+                                            />
+                                        </div>
+                                    </LabelFieldPair>
+                                </div>
 
-                                                    const numericField = isNumericLike(selectedFieldObj);
+                                {/* Value */}
+                                <div style={{ minWidth: 220, flex: "0 1 220px" }}>
+                                    <LabelFieldPair vertical removeMargin>
+                                        <p style={{ margin: 0 }}>{selectValueLabel}</p>
+                                        <div className="digit-field" style={{ width: "100%" }}>
+                                            {(() => {
+                                                if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
+                                                    const boolVal = String(cond.fieldValue).toLowerCase() === "true";
+                                                    return (
+                                                        <CheckBox
+                                                            mainClassName={"app-config-checkbox-main"}
+                                                            labelClassName={"app-config-checkbox-label"}
+                                                            onChange={(v) => {
+                                                                const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
+                                                                updateCond(editorIndex, idx, { fieldValue: checked ? "true" : "false" });
+                                                            }}
+                                                            value={boolVal}
+                                                            label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
+                                                            isLabelFirst={false}
+                                                            disabled={!cond?.selectedField?.code}
+                                                        />
+                                                    );
+                                                }
+
+                                                if (selectedFieldObj && isDobLike(selectedFieldObj)) {
+                                                    return (
+                                                        <TextInput
+                                                            type="text"
+                                                            populators={{ name: `months-${editorIndex}-${idx}` }}
+                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                            value={cond.fieldValue}
+                                                            onChange={(event) =>
+                                                                updateCond(editorIndex, idx, {
+                                                                    fieldValue: sanitizeIntegerInput(event.target.value),
+                                                                })
+                                                            }
+                                                            disabled={!cond?.selectedField?.code}
+                                                        />
+                                                    );
+                                                }
+
+                                                if (selectedFieldObj && isDatePickerNotDob(selectedFieldObj)) {
+                                                    const iso = toISOFromDDMMYYYY(cond.fieldValue);
+                                                    return (
+                                                        <TextInput
+                                                            type="date"
+                                                            className="appConfigLabelField-Input"
+                                                            name={""}
+                                                            value={iso}
+                                                            onChange={(event) =>
+                                                                updateCond(editorIndex, idx, {
+                                                                    fieldValue: toDDMMYYYY(event?.target?.value),
+                                                                })
+                                                            }
+                                                        />
+                                                    );
+                                                }
+
+                                                const isSelect =
+                                                    selectedFieldObj &&
+                                                    (selectedFieldObj.format === "dropdown" ||
+                                                        selectedFieldObj.format === "radio" ||
+                                                        selectedFieldObj.type === "selection");
+
+                                                if (isSelect) {
+                                                    if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
+                                                        const enumOptions = selectedFieldObj.enums.map((en) => ({
+                                                            code: String(en.code),
+                                                            name: en.name,
+                                                        }));
+                                                        const selectedEnum =
+                                                            enumOptions.find((o) => String(o.code) === String(cond.fieldValue)) ||
+                                                            (cond.fieldValue
+                                                                ? { code: String(cond.fieldValue), name: String(cond.fieldValue) }
+                                                                : undefined);
+                                                        return (
+                                                            <Dropdown
+                                                                option={enumOptions}
+                                                                optionKey="code"
+                                                                name={`val-${editorIndex}-${idx}`}
+                                                                t={customT}
+                                                                select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
+                                                                disabled={!cond?.selectedField?.code}
+                                                                selected={selectedEnum}
+                                                            />
+                                                        );
+                                                    }
+
+                                                    if (selectedFieldObj.schemaCode) {
+                                                        return (
+                                                            <MdmsValueDropdown
+                                                                schemaCode={selectedFieldObj.schemaCode}
+                                                                value={cond.fieldValue}
+                                                                onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
+                                                                t={customT}
+                                                            />
+                                                        );
+                                                    }
 
                                                     return (
-                                                        <div
-                                                            key={`cond-row-${editorIndex}-${idx}`}
-                                                            style={{
-                                                                background: "#FFF",
-                                                                border: "1px dashed #EAC5AD",
-                                                                borderRadius: 8,
-                                                                padding: "0.75rem",
-                                                                display: "grid",
-                                                                gap: "0.5rem",
-                                                            }}
-                                                        >
-                                                            {idx > 0 && (
-                                                                <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-                                                                    <span style={{ fontWeight: 600 }}>{joinWithLabel}</span>
-                                                                    <div style={{ width: 160, maxWidth: "100%" }}>
-                                                                        <Dropdown
-                                                                            option={LOGICALS}
-                                                                            optionKey="name"
-                                                                            name={`joiner-${editorIndex}-${idx}`}
-                                                                            t={t}
-                                                                            select={(e) => changeJoiner(editorIndex, idx, e.code)}
-                                                                            selected={cond.joiner}
-                                                                        />
-                                                                    </div>
-                                                                </div>
-                                                            )}
-
-                                                            <div style={{ display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
-                                                                {/* Field */}
-                                                                <div style={{ minWidth: 260, flex: "1 1 280px" }}>
-                                                                    <LabelFieldPair vertical removeMargin>
-                                                                        <p style={{ margin: 0 }}>{selectFieldLabel}</p>
-                                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                                            <Dropdown
-                                                                                option={currentPageFieldOptions}
-                                                                                optionKey="label"
-                                                                                name={`field-${editorIndex}-${idx}`}
-                                                                                t={customT}
-                                                                                select={(e) => {
-                                                                                    const nextOps = getOperatorOptions(e);
-                                                                                    const canKeep =
-                                                                                        cond?.comparisonType?.code &&
-                                                                                        nextOps.some((o) => o.code === cond.comparisonType.code);
-
-                                                                                    const isCk = isCheckboxField(e);
-                                                                                    updateCond(editorIndex, idx, {
-                                                                                        selectedField: e,
-                                                                                        fieldValue: isCk
-                                                                                            ? (["true", "false"].includes(String(cond.fieldValue).toLowerCase())
-                                                                                                ? cond.fieldValue
-                                                                                                : "false")
-                                                                                            : "",
-                                                                                        comparisonType: canKeep
-                                                                                            ? cond.comparisonType
-                                                                                            : (isCk ? { code: "==", name: t("EQUALS_TO") || "equals to" } : {}),
-                                                                                    });
-                                                                                }}
-                                                                                selected={
-                                                                                    cond?.selectedField?.code
-                                                                                        ? currentPageFieldOptions.find((f) => f.code === cond.selectedField.code)
-                                                                                        : cond.selectedField
-                                                                                }
-                                                                            />
-                                                                        </div>
-                                                                    </LabelFieldPair>
-                                                                </div>
-
-                                                                {/* Operator */}
-                                                                <div style={{ minWidth: 220, flex: "0 1 220px" }}>
-                                                                    <LabelFieldPair vertical removeMargin>
-                                                                        <p style={{ margin: 0 }}>{comparisonTypeLabel}</p>
-                                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                                            <Dropdown
-                                                                                option={operatorOptions}
-                                                                                optionKey="name"
-                                                                                name={`op-${editorIndex}-${idx}`}
-                                                                                t={t}
-                                                                                select={(e) => updateCond(editorIndex, idx, { comparisonType: e })}
-                                                                                disabled={!cond?.selectedField?.code}
-                                                                                selected={selectedOperator}
-                                                                            />
-                                                                        </div>
-                                                                    </LabelFieldPair>
-                                                                </div>
-
-                                                                {/* Value */}
-                                                                <div style={{ minWidth: 220, flex: "0 1 220px" }}>
-                                                                    <LabelFieldPair vertical removeMargin>
-                                                                        <p style={{ margin: 0 }}>{selectValueLabel}</p>
-                                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                                            {(() => {
-                                                                                // Checkbox value as boolean using CheckBox
-                                                                                if (selectedFieldObj && isCheckboxField(selectedFieldObj)) {
-                                                                                    const boolVal = String(cond.fieldValue).toLowerCase() === "true";
-                                                                                    return (
-                                                                                        <CheckBox
-                                                                                            mainClassName={"app-config-checkbox-main"}
-                                                                                            labelClassName={"app-config-checkbox-label"}
-                                                                                            onChange={(v) => {
-                                                                                                const checked = typeof v === "boolean" ? v : !!v?.target?.checked;
-                                                                                                updateCond(editorIndex, idx, { fieldValue: checked ? "true" : "false" });
-                                                                                            }}
-                                                                                            value={boolVal}
-                                                                                            label={t(selectedFieldObj?.label) || selectedFieldObj?.label || ""}
-                                                                                            isLabelFirst={false}
-                                                                                            disabled={!cond?.selectedField?.code}
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                const isSelect =
-                                                                                    selectedFieldObj &&
-                                                                                    (selectedFieldObj.format === "dropdown" ||
-                                                                                        selectedFieldObj.format === "radio" ||
-                                                                                        selectedFieldObj.type === "selection");
-
-                                                                                if (isSelect) {
-                                                                                    // 1) inline enums
-                                                                                    if (Array.isArray(selectedFieldObj.enums) && selectedFieldObj.enums.length > 0) {
-                                                                                        const enumOptions = selectedFieldObj.enums.map((en) => ({
-                                                                                            code: String(en.code),
-                                                                                            name: en.name,
-                                                                                        }));
-                                                                                        const selectedEnum =
-                                                                                            enumOptions.find((o) => String(o.code) === String(cond.fieldValue)) ||
-                                                                                            (cond.fieldValue
-                                                                                                ? { code: String(cond.fieldValue), name: String(cond.fieldValue) }
-                                                                                                : undefined);
-                                                                                        return (
-                                                                                            <Dropdown
-                                                                                                option={enumOptions}
-                                                                                                optionKey="code"
-                                                                                                name={`val-${editorIndex}-${idx}`}
-                                                                                                t={customT}
-                                                                                                select={(e) => updateCond(editorIndex, idx, { fieldValue: e.code })}
-                                                                                                disabled={!cond?.selectedField?.code}
-                                                                                                selected={selectedEnum}
-                                                                                            />
-                                                                                        );
-                                                                                    }
-
-                                                                                    // 2) MDMS schema
-                                                                                    if (selectedFieldObj.schemaCode) {
-                                                                                        return (
-                                                                                            <MdmsValueDropdown
-                                                                                                schemaCode={selectedFieldObj.schemaCode}
-                                                                                                value={cond.fieldValue}
-                                                                                                onChange={(code) => updateCond(editorIndex, idx, { fieldValue: code })}
-                                                                                                t={customT}
-                                                                                            />
-                                                                                        );
-                                                                                    }
-
-                                                                                    // 3) fallback text
-                                                                                    return (
-                                                                                        <TextInput
-                                                                                            type="text"
-                                                                                            populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                            placeholder={enterValueLabel}
-                                                                                            value={cond.fieldValue}
-                                                                                            onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
-                                                                                            disabled={!cond?.selectedField?.code}
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                // Non-select numeric/text
-                                                                                if (numericField) {
-                                                                                    return (
-                                                                                        <TextInput
-                                                                                            type="text"
-                                                                                            populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
-                                                                                            value={cond.fieldValue}
-                                                                                            onChange={(event) =>
-                                                                                                updateCond(editorIndex, idx, {
-                                                                                                    fieldValue: sanitizeIntegerInput(event.target.value),
-                                                                                                })
-                                                                                            }
-                                                                                            disabled={!cond?.selectedField?.code}
-                                                                                        />
-                                                                                    );
-                                                                                }
-
-                                                                                return (
-                                                                                    <TextInput
-                                                                                        type="text"
-                                                                                        populators={{ name: `text-${editorIndex}-${idx}` }}
-                                                                                        placeholder={enterValueLabel}
-                                                                                        value={cond.fieldValue}
-                                                                                        onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
-                                                                                        disabled={!cond?.selectedField?.code}
-                                                                                    />
-                                                                                );
-                                                                            })()}
-                                                                        </div>
-                                                                    </LabelFieldPair>
-                                                                </div>
-
-                                                                {/* Remove condition */}
-                                                                <div
-                                                                    style={{
-                                                                        marginLeft: "auto",
-                                                                        display: "flex",
-                                                                        alignItems: "center",
-                                                                        gap: "0.25rem",
-                                                                        cursor: "pointer",
-                                                                    }}
-                                                                    onClick={() => removeCondition(editorIndex, idx)}
-                                                                    title={removeConditionLabel}
-                                                                    aria-label={removeConditionLabel}
-                                                                    role="button"
-                                                                >
-                                                                    <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
-                                                                    <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
-                                                                        {removeConditionLabel}
-                                                                    </span>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    );
-                                                })}
-
-                                                {/* Add condition */}
-                                                <div>
-                                                    <Button
-                                                        variation="secondary"
-                                                        label={addConditionLabel}
-                                                        icon="Add"
-                                                        onClick={() => addCondition(editorIndex)}
-                                                        style={{ minWidth: "auto" }}
-                                                    />
-                                                </div>
-
-                                                {/* Target page */}
-                                                <div style={{ minWidth: 260 }}>
-                                                    <LabelFieldPair vertical removeMargin>
-                                                        <p style={{ margin: 0 }}>{targetPageLabel}</p>
-                                                        <div className="digit-field" style={{ width: "100%" }}>
-                                                            <Dropdown
-                                                                option={allPageOptions}
-                                                                optionKey="code"
-                                                                name={`target-${editorIndex}`}
-                                                                t={t}
-                                                                select={(e) => updateRule(editorIndex, { targetPage: e })}
-                                                                selected={
-                                                                    rules[editorIndex]?.targetPage?.code
-                                                                        ? allPageOptions.find((p) => p.code === rules[editorIndex].targetPage.code) ||
-                                                                        rules[editorIndex].targetPage
-                                                                        : rules[editorIndex].targetPage
-                                                                }
-                                                            />
-                                                        </div>
-                                                    </LabelFieldPair>
-                                                </div>
-
-                                                {/* Global error (dismissible) */}
-                                                {globalFormError ? (
-                                                    <div
-                                                        style={{
-                                                            border: "1px solid #FCA5A5",
-                                                            background: "#FEF2F2",
-                                                            color: "#B91C1C",
-                                                            borderRadius: 6,
-                                                            padding: "0.5rem 0.75rem",
-                                                            display: "flex",
-                                                            alignItems: "center",
-                                                            justifyContent: "space-between",
-                                                            gap: "0.75rem",
-                                                        }}
-                                                    >
-                                                        <span>{globalFormError}</span>
-                                                        <SVG.Close
-                                                            width={"1.1rem"}
-                                                            height={"1.1rem"}
-                                                            fill={"#7F1D1D"}
-                                                            onClick={() => setGlobalFormError("")}
-                                                            tabIndex={0}
-                                                            style={{ cursor: "pointer" }}
+                                                        <TextInput
+                                                            type="text"
+                                                            populators={{ name: `text-${editorIndex}-${idx}` }}
+                                                            placeholder={enterValueLabel}
+                                                            value={cond.fieldValue}
+                                                            onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
+                                                            disabled={!cond?.selectedField?.code}
                                                         />
-                                                    </div>
-                                                ) : null}
-                                            </div>
-                                        );
-                                    })()}
+                                                    );
+                                                }
+
+                                                if (numericField) {
+                                                    return (
+                                                        <TextInput
+                                                            type="text"
+                                                            populators={{ name: `text-${editorIndex}-${idx}` }}
+                                                            placeholder={t("ENTER_INTEGER_VALUE") || enterValueLabel}
+                                                            value={cond.fieldValue}
+                                                            onChange={(event) =>
+                                                                updateCond(editorIndex, idx, {
+                                                                    fieldValue: sanitizeIntegerInput(event.target.value),
+                                                                })
+                                                            }
+                                                            disabled={!cond?.selectedField?.code}
+                                                        />
+                                                    );
+                                                }
+
+                                                return (
+                                                    <TextInput
+                                                        type="text"
+                                                        populators={{ name: `text-${editorIndex}-${idx}` }}
+                                                        placeholder={enterValueLabel}
+                                                        value={cond.fieldValue}
+                                                        onChange={(event) => updateCond(editorIndex, idx, { fieldValue: event.target.value })}
+                                                        disabled={!cond?.selectedField?.code}
+                                                    />
+                                                );
+                                            })()}
+                                        </div>
+                                    </LabelFieldPair>
+                                </div>
+
+                                {/* Remove condition */}
+                                <div
+                                    style={{
+                                        marginLeft: "auto",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        gap: "0.25rem",
+                                        cursor: "pointer",
+                                    }}
+                                    onClick={() => removeCondition(editorIndex, idx)}
+                                    title={removeConditionLabel}
+                                    aria-label={removeConditionLabel}
+                                    role="button"
+                                >
+                                    <SVG.Delete fill={"#C84C0E"} width={"1.25rem"} height={"1.25rem"} />
+                                    <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
+                                        {removeConditionLabel}
+                                    </span>
+                                </div>
+                            </div>
+
+                            {/* Per-condition error */}
+                            {validationStarted && !isCondComplete(cond) && (
+                                <div
+                                    style={{
+                                        border: "1px solid #FCA5A5",
+                                        background: "#FEF2F2",
+                                        color: "#B91C1C",
+                                        borderRadius: 6,
+                                        padding: "0.5rem 0.75rem",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        gap: "0.75rem",
+                                    }}
+                                >
+                                    <span>{completeAllMsg}</span>
+                                    <SVG.Close
+                                        width={"1.1rem"}
+                                        height={"1.1rem"}
+                                        fill={"#7F1D1D"}
+                                        onClick={() => {
+                                            setValidationStarted(false);
+                                            setGlobalFormError(null)
+                                        }}
+                                        tabIndex={0}
+                                        style={{ cursor: "pointer" }}
+                                    />
+                                </div>
+                            )}
+                        </div>
+                    );
+                })}
+
+                {/* Add condition */}
+                <div>
+                    <Button
+                        variation="secondary"
+                        label={addConditionLabel}
+                        icon="Add"
+                        onClick={() => addCondition(editorIndex)}
+                        style={{ minWidth: "auto" }}
+                    />
+                </div>
+
+                {/* Target page */}
+                <div style={{ minWidth: 260 }}>
+                    <LabelFieldPair vertical removeMargin>
+                        <p style={{ margin: 0 }}>{targetPageLabel}</p>
+                        <div className="digit-field" style={{ width: "100%" }}>
+                            <Dropdown
+                                option={allPageOptions}
+                                optionKey="code"
+                                name={`target-${editorIndex}`}
+                                optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
+                                t={t}
+                                select={(e) => updateRule(editorIndex, { targetPage: e })}
+                                selected={
+                                    rules[editorIndex]?.targetPage?.code
+                                        ? allPageOptions.find((p) => p.code === rules[editorIndex].targetPage.code) ||
+                                          rules[editorIndex].targetPage
+                                        : rules[editorIndex].targetPage
+                                }
+                            />
+                        </div>
+                    </LabelFieldPair>
+                </div>
+
+                {/* GLOBAL ERROR (shows when Submit clicked with missing target page or incomplete conditions) */}
+                {globalFormError ? (
+                    <div
+                        style={{
+                            border: "1px solid #FCA5A5",
+                            background: "#FEF2F2",
+                            color: "#B91C1C",
+                            borderRadius: 6,
+                            padding: "0.5rem 0.75rem",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "space-between",
+                            gap: "0.75rem",
+                        }}
+                    >
+                        <span>{globalFormError}</span>
+                        <SVG.Close
+                            width={"1.1rem"}
+                            height={"1.1rem"}
+                            fill={"#7F1D1D"}
+                            onClick={() => setGlobalFormError("")}
+                            tabIndex={0}
+                            style={{ cursor: "pointer" }}
+                        />
+                    </div>
+                ) : null}
+            </div>
+        );
+    })()}
                                 </div>,
                             ]}
                             onOverlayClick={discardAndCloseEditor}
                             onClose={discardAndCloseEditor}
-                            equalWidthButtons={"false"}
+                            equalWidthButtons={false}
                             footerChildren={[
                                 <Button
                                     key="close"
@@ -909,7 +1086,6 @@ function NavigationLogicWrapper({
                                     type={"button"}
                                     size={"large"}
                                     variation={"primary"}
-                                    disabled={!canSubmit}
                                     label={submitLabel}
                                     onClick={submitAndClose}
                                 />,
