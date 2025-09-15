@@ -56,6 +56,7 @@ const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   HCMWORKBENCHModule,
   HCMWORKBENCHCard,
+  WorkbenchCard:null,
   ProjectBeneficiaryComponent,
   ProjectChildrenComponent,
   ProjectStaffComponent,
