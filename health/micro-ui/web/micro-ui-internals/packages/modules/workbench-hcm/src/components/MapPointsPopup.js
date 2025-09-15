@@ -50,10 +50,10 @@ export const createMapPointPopup = (dataPoint, index, options = {}) => {
     const statusUpper = status.toString().toUpperCase();
     
     switch (true) {
-      case statusUpper.includes('COMPLETED') || statusUpper.includes('SUCCESS'):
+      case statusUpper.includes('ADMINISTRATION_SUCCESS') || statusUpper.includes('COMPLETED')|| statusUpper.includes('SUCCESS'):
         return { 
           color: "#10b981", 
-          text: "COMPLETED", 
+          text: "Administration Success", 
           icon: "✅", 
           bgGradient: "linear-gradient(135deg, #10b981 0%, #059669 100%)" 
         };
@@ -91,140 +91,157 @@ export const createMapPointPopup = (dataPoint, index, options = {}) => {
   const statusInfo = getStatusInfo(status);
   const isCompleted = quantity > 0 || statusInfo.text === "COMPLETED";
   
+  // Generate unique IDs for accordion sections
+  const uniqueId = `popup-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+  const deliveryAccordionId = `${uniqueId}-delivery`;
+  const locationAccordionId = `${uniqueId}-location`;
+  
   // Build sections based on available data and options
   const sections = [];
   
-  // Resource Stats Section (if quantity or memberCount is available)
-  if (quantity > 0 || memberCount > 0) {
-    sections.push(`
-      <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 10px; padding: 18px; margin-bottom: 18px; border: 1px solid #e2e8f0; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <h4 style="margin: 0 0 12px 0; font-size: 12px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 1px;">📊 ${options.resourceTitle || 'Resource Summary'}</h4>
-        <div style="display: flex; justify-content: space-around; text-align: center;">
-          ${quantity > 0 ? `
-            <div>
-              <div style="font-size: 32px; font-weight: 900; color: #7c3aed; margin-bottom: 8px; line-height: 1;">
-                ${quantity.toLocaleString()}
-              </div>
-              <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
-                ${options.quantityLabel || 'Total Quantity'}
-              </div>
-            </div>
-          ` : ''}
-          ${memberCount > 0 ? `
-            <div ${quantity > 0 ? 'style="border-left: 2px solid #e2e8f0; padding-left: 18px;"' : ''}>
-              <div style="font-size: 32px; font-weight: 900; color: #10b981; margin-bottom: 8px; line-height: 1;">
-                ${memberCount.toLocaleString()}
-              </div>
-              <div style="font-size: 12px; color: #64748b; text-transform: uppercase; font-weight: 600; letter-spacing: 0.5px;">
-                ${options.memberLabel || 'People Served'}
-              </div>
-            </div>
-          ` : ''}
-        </div>
-      </div>
-    `);
-  } else {
-    sections.push(`
-      <div style="background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; padding: 14px; margin-bottom: 18px; text-align: center;">
-        <div style="color: #dc2626; font-weight: 600; font-size: 14px;">
-          ⚠️ ${options.noDataMessage || 'No resource information available'}
-        </div>
-      </div>
-    `);
-  }
-  
-  // Task Information Section
-  const taskFields = [];
-  
-  // if (taskId !== "N/A") {
-  //   taskFields.push(`
-  //     <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
-  //       <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.taskIdLabel || 'Task ID'}:</span>
-  //       <span style="color: #374151; font-weight: 600; font-family: monospace; font-size: 12px; background: #f3f4f6; padding: 2px 6px; border-radius: 4px;">${taskId}</span>
-  //     </div>
-  //   `);
-  // }
-  
-  taskFields.push(`
-    <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
-      <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.statusLabel || 'Status'}:</span>
-      <span style="color: ${statusInfo.color}; font-weight: 700; font-size: 13px; display: flex; align-items: center; gap: 4px;">
-        ${statusInfo.icon} ${statusInfo.text}
-      </span>
-    </div>
-  `);
-  
-  if (taskType !== "Task") {
-    taskFields.push(`
-      <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
-        <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.productLabel || 'Product'}:</span>
-        <span style="color: #374151; font-weight: 600; font-size: 13px;">${taskType}</span>
-      </div>
-    `);
-  }
-  
-  if (quantity > 0) {
-    taskFields.push(`
-      <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
-        <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.quantityLabel || 'Resource Quantity'}:</span>
-        <span style="color: #374151; font-weight: 600; font-size: 13px;">${quantity} total</span>
-      </div>
-    `);
-  }
-  
-  if (deliveredBy !== "Unknown User") {
-    taskFields.push(`
-      <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f9fafb;">
-        <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.deliveredByLabel || 'Delivered By'}:</span>
-        <span style="color: #374151; font-weight: 600; font-size: 13px;">${deliveredBy}</span>
-      </div>
-    `);
-  }
-  
-  if (deliveryTime !== "N/A") {
-    taskFields.push(`
-      <div style="display: flex; justify-content: space-between; padding: 8px 0;">
-        <span style="font-weight: 600; color: #6b7280; font-size: 13px;">${options.timeLabel || 'Delivery Time'}:</span>
-        <span style="color: #374151; font-weight: 500; font-size: 12px;">${deliveryTime}</span>
-      </div>
-    `);
-  }
-  
-  // Remove the last border-bottom from the last task field
-  if (taskFields.length > 0) {
-    taskFields[taskFields.length - 1] = taskFields[taskFields.length - 1].replace('border-bottom: 1px solid #f9fafb;', '');
-  }
-  
+  // Basic Summary Section (always visible)
   sections.push(`
-    <div style="margin-bottom: 18px;">
-      <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid ${statusInfo.color}; padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-        📋 ${options.taskSectionTitle || 'Task Information'}
-      </h4>
-      <div style="background: #fefefe; border: 1px solid #f3f4f6; border-radius: 8px; padding: 12px;">
-        ${taskFields.join('')}
+    <div style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%); border-radius: 10px; padding: 14px; margin-bottom: 12px; border: 1px solid #e2e8f0;">
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <div style="font-size: 14px; font-weight: 700; color: #374151; margin-bottom: 4px;">
+            ${taskType}
+          </div>
+          <div style="font-size: 12px; color: #6b7280;">
+            ${location}
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="display: inline-block; padding: 4px 8px; border-radius: 6px; font-size: 12px; font-weight: 700; background: ${statusInfo.color}15; color: ${statusInfo.color};">
+            ${statusInfo.icon} ${statusInfo.text}
+          </span>
+        </div>
       </div>
     </div>
   `);
   
-  // Location Information Section
+  // Inline accordion functions that will work in popup context
+  const createToggleFunction = (contentId, arrowId) => {
+    return `
+      (function() {
+        const content = document.getElementById('${contentId}');
+        const arrow = document.getElementById('${arrowId}');
+        if (content && arrow) {
+          if (content.style.display === 'none' || content.style.display === '') {
+            content.style.display = 'block';
+            content.style.maxHeight = '300px';
+            arrow.innerHTML = '▼';
+            arrow.style.transform = 'none';
+          } else {
+            content.style.display = 'none';
+            content.style.maxHeight = '0';
+            arrow.innerHTML = '▶';
+            arrow.style.transform = 'none';
+          }
+        }
+      })();
+    `;
+  };
+
+  // Delivery Information Accordion (if there's delivery data)
+  if (quantity > 0 || memberCount > 0 || deliveredBy !== "Unknown User" || deliveryTime !== "N/A") {
+    const deliveryFields = [];
+    
+    if (quantity > 0) {
+      deliveryFields.push(`
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+          <span style="font-weight: 600; color: #6b7280; font-size: 12px;">📦 ${options.quantityLabel || 'Quantity'}:</span>
+          <span style="color: #374151; font-weight: 700; font-size: 13px;">${quantity.toLocaleString()}</span>
+        </div>
+      `);
+    }
+    
+    if (memberCount > 0) {
+      deliveryFields.push(`
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+          <span style="font-weight: 600; color: #6b7280; font-size: 12px;">👥 ${options.memberLabel || 'People Served'}:</span>
+          <span style="color: #374151; font-weight: 700; font-size: 13px;">${memberCount.toLocaleString()}</span>
+        </div>
+      `);
+    }
+    
+    if (deliveredBy !== "Unknown User") {
+      deliveryFields.push(`
+        <div style="display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #f3f4f6;">
+          <span style="font-weight: 600; color: #6b7280; font-size: 12px;">🚚 ${options.deliveredByLabel || 'Delivered By'}:</span>
+          <span style="color: #374151; font-weight: 600; font-size: 12px;">${deliveredBy}</span>
+        </div>
+      `);
+    }
+    
+    if (deliveryTime !== "N/A") {
+      deliveryFields.push(`
+        <div style="display: flex; justify-content: space-between; padding: 8px 0;">
+          <span style="font-weight: 600; color: #6b7280; font-size: 12px;">⏰ ${options.timeLabel || 'Time'}:</span>
+          <span style="color: #374151; font-size: 11px;">${deliveryTime}</span>
+        </div>
+      `);
+    }
+    
+    if (deliveryFields.length > 0) {
+      deliveryFields[deliveryFields.length - 1] = deliveryFields[deliveryFields.length - 1].replace('border-bottom: 1px solid #f3f4f6;', '');
+    }
+    
+    sections.push(`
+      <div style="margin-bottom: 8px;">
+        <div 
+          onclick="${createToggleFunction(deliveryAccordionId, `${deliveryAccordionId}-arrow`)}"
+          style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.2s;"
+          onmouseover="this.style.background='#f1f5f9'"
+          onmouseout="this.style.background='#f9fafb'"
+        >
+          <span style="font-weight: 600; color: #374151; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            📋 Delivery Details
+          </span>
+          <span id="${deliveryAccordionId}-arrow" style="color: #6b7280; font-size: 12px; transition: transform 0.2s;">
+            ▶
+          </span>
+        </div>
+        <div id="${deliveryAccordionId}" style="display: none; overflow: hidden;">
+          <div style="background: white; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 12px 14px;">
+            ${deliveryFields.join('')}
+          </div>
+        </div>
+      </div>
+    `);
+  }
+  
+  // Location Information Accordion
   if (location !== "Unknown Location" || (lat !== 0 || lng !== 0)) {
     sections.push(`
-      <div style="margin-bottom: 12px;">
-        <h4 style="margin: 0 0 10px 0; font-size: 14px; font-weight: 700; color: #374151; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 3px solid #7c3aed; padding-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-          📍 ${options.locationSectionTitle || 'Location Information'}
-        </h4>
-        <div style="background: #faf5ff; border: 1px solid #e9d5ff; border-radius: 8px; padding: 12px;">
-          ${location !== "Unknown Location" ? `
-            <div style="margin-bottom: 8px;">
-              <span style="font-weight: 600; color: #6b46c1;">${options.areaLabel || 'Area'}:</span>
-              <span style="color: #374151; margin-left: 8px; font-weight: 500;">${location}</span>
+      <div style="margin-bottom: 8px;">
+        <div 
+          onclick="${createToggleFunction(locationAccordionId, `${locationAccordionId}-arrow`)}"
+          style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: background-color 0.2s;"
+          onmouseover="this.style.background='#f1f5f9'"
+          onmouseout="this.style.background='#f9fafb'"
+        >
+          <span style="font-weight: 600; color: #374151; font-size: 13px; display: flex; align-items: center; gap: 6px;">
+            📍 Location Details
+          </span>
+          <span id="${locationAccordionId}-arrow" style="color: #6b7280; font-size: 12px; transition: transform 0.2s;">
+            ▶
+          </span>
+        </div>
+        <div id="${locationAccordionId}" style="display: none; overflow: hidden;">
+          <div style="background: white; border: 1px solid #e5e7eb; border-top: none; border-radius: 0 0 8px 8px; padding: 12px 14px;">
+            ${location !== "Unknown Location" ? `
+              <div style="margin-bottom: 10px;">
+                <span style="font-weight: 600; color: #6b7280; font-size: 12px;">📌 Area:</span>
+                <span style="color: #374151; margin-left: 8px; font-weight: 500; font-size: 12px;">${location}</span>
+              </div>
+            ` : ''}
+            <div style="font-size: 12px; color: #6b7280; font-weight: 600; margin-bottom: 6px;">
+              🗺️ GPS Coordinates:
             </div>
-          ` : ''}
-          <div style="font-size: 13px; color: #6b46c1; font-weight: 600; margin-bottom: 6px;">
-            📍 ${options.coordinatesLabel || 'Coordinates'}:
-          </div>
-          <div style="font-size: 13px; color: #4b5563; font-family: monospace; background: white; padding: 8px; border-radius: 4px; border: 1px solid #e5e7eb;">
-            ${coords}
+            <div style="font-size: 12px; color: #4b5563; font-family: monospace; background: #f9fafb; padding: 8px; border-radius: 4px; border: 1px solid #e5e7eb;">
+              ${coords}
+            </div>
           </div>
         </div>
       </div>
@@ -233,36 +250,27 @@ export const createMapPointPopup = (dataPoint, index, options = {}) => {
   
   // Build the complete popup HTML
   return `
-    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 320px; max-width: 400px;">
+    <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; min-width: 280px; max-width: 350px;">
       
-      <!-- Header -->
-      <div style="background: ${statusInfo.bgGradient}; color: white; padding: 18px; margin: -9px -9px 18px -9px; border-radius: 8px 8px 0 0; box-shadow: 0 3px 10px rgba(0,0,0,0.2);">
+      <!-- Compact Header -->
+      <div style="background: linear-gradient(135deg, #1e293b 0%, #334155 100%); color: white; padding: 10px 14px; margin: -9px -9px 12px -9px; border-radius: 8px 8px 0 0;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <h3 style="margin: 0; font-size: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px;">
-              <span style="font-size: 24px;">${statusInfo.icon}</span>
-              ${options.titlePrefix || 'Task'} #${pointNumber}
-            </h3>
-           
-          </div>
+          <h3 style="margin: 0; font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 6px;">
+            ${options.titlePrefix || 'Point'} #${pointNumber}
+          </h3>
 
         </div>
       </div>
 
       <!-- Main Content -->
-      <div style="padding: 0 14px;">
+      <div style="padding: 0 10px;">
         ${sections.join('')}
       </div>
 
-      <!-- Footer -->
-      <div style="background: #f8fafc; padding: 10px 16px; margin: 14px -9px -9px -9px; border-radius: 0 0 8px 8px; border-top: 1px solid #e2e8f0;">
-        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 11px; color: #64748b;">
-          <span style="display: flex; align-items: center; gap: 4px;">
-            📅 ${new Date().toLocaleDateString()}
-          </span>
-          <span style="font-weight: 600; background: ${statusInfo.color}; color: white; padding: 2px 8px; border-radius: 12px; font-size: 10px;">
-            Point #${pointNumber}
-          </span>
+      <!-- Minimal Footer -->
+      <div style="margin-top: 8px; padding: 8px 10px; border-top: 1px solid #e5e7eb;">
+        <div style="text-align: center; font-size: 10px; color: #9ca3af;">
+          Click sections to expand details
         </div>
       </div>
 

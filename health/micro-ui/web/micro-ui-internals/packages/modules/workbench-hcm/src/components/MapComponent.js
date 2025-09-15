@@ -189,6 +189,13 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           setHasDataBeenFetched(true);
           setIsLoading(false);
           setLoadingProgress({ progress: 100, batchesCompleted: payload.batchesProcessed, totalBatches: payload.batchesProcessed, dataReceived: payload.data.length });
+          
+          // Log smart chunking results
+          if (payload.smartChunking) {
+            console.log(`Smart chunking used: ${payload.totalRecordsAvailable} total records available, fetched ${payload.data.length} records using chunk size ${payload.chunkSize}`);
+          } else {
+            console.log(`Small dataset: ${payload.data.length} records loaded directly from initial query`);
+          }
           console.log(`Data fetch completed: ${payload.data.length} records loaded`);
           break;
         case 'FETCH_ERROR':
@@ -651,6 +658,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
               quantity: task?.resourcesQuantity,
               id: task?.id,
               productName: task?.productName,
+              status: task?.status || "NA",
               memberCount: task?.memberCount,
               administrativeArea: task?.administrativeArea,
               createdBy: task?.createdBy,
