@@ -50,7 +50,7 @@ const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopu
     dashArray: null,            // Solid line
     showPopup: true,            // Show LGA info on click
     enableHover: true,          // Highlight on hover
-    fitBounds: true             // Fit map to show all LGAs
+    fitBounds: false            // Don't auto-fit to maintain Ondo State view
   };
 
   if (loading) {

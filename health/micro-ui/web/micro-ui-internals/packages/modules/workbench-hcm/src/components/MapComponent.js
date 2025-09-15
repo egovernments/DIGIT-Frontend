@@ -7,7 +7,7 @@ import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 
-const MapComponent = ({ projectId, userName, mapContainerId = "map", ...props }) => {
+const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader = false, ...props }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10000); // Large page size to fetch all data
@@ -30,9 +30,9 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", ...props })
   });
   const [availableBoundaries, setAvailableBoundaries] = useState([]);
 
-  // Default sample data for testing and fallback - Nigerian locations
+  // Default sample data for testing and fallback - Ondo State locations
   const rawData = [
-    "7.3722818,5.2476953,3,Adebayo Olatunji,6,NA,NA_user1",
+    "7.0896,5.1211,3,Adebayo Olatunji,6,Akure,NA_user1", // Akure, Ondo State capital
   ];
 
   const defaultData = rawData.map((row, index) => {
@@ -370,45 +370,63 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", ...props })
 
 
   return (
-    <div ref={componentRef} className="override-card">
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
-        <div>
-          <Header className="works-header-view">{t("MAP_VIEW")}</Header>
-          {userName && (
-            <div style={{ 
-              fontSize: "0.85rem", 
-              color: "#666",
-              marginTop: "0.25rem",
-              padding: "0.25rem 0.5rem",
-              backgroundColor: "#e3f2fd",
-              borderRadius: "4px",
-              border: "1px solid #bbdefb"
-            }}>
-              {t("FILTERED_BY_USER")}: {userName}
-            </div>
-          )}
+    <div ref={componentRef} className="override-card" style={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+      {!hideHeader && (
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
+          <div>
+            <Header className="works-header-view">{t("MAP_VIEW")}</Header>
+            {userName && (
+              <div style={{ 
+                fontSize: "0.85rem", 
+                color: "#666",
+                marginTop: "0.25rem",
+                padding: "0.25rem 0.5rem",
+                backgroundColor: "#e3f2fd",
+                borderRadius: "4px",
+                border: "1px solid #bbdefb"
+              }}>
+                {t("FILTERED_BY_USER")}: {userName}
+              </div>
+            )}
+          </div>
+          {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+            <Button
+              variation={showFilters ? "secondary" : "primary"}
+              label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
+              onClick={() => setShowFilters(!showFilters)}
+              style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
+            />
+                  
+            {filteredProjectTask?.length !== projectTask?.length && (
+              <span style={{ 
+                fontSize: "0.85rem", 
+                color: "#666",
+                padding: "0.25rem 0.5rem",
+                backgroundColor: "#f0f0f0",
+                borderRadius: "4px"
+              }}>
+                {filteredProjectTask?.length} of {projectTask?.length} points
+              </span>
+            )}
+          </div> */}
         </div>
-        {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-          <Button
-            variation={showFilters ? "secondary" : "primary"}
-            label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
-            onClick={() => setShowFilters(!showFilters)}
-            style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-          />
-                
-          {filteredProjectTask?.length !== projectTask?.length && (
-            <span style={{ 
-              fontSize: "0.85rem", 
-              color: "#666",
-              padding: "0.25rem 0.5rem",
-              backgroundColor: "#f0f0f0",
-              borderRadius: "4px"
-            }}>
-              {filteredProjectTask?.length} of {projectTask?.length} points
-            </span>
-          )}
-        </div> */}
-      </div>
+      )}
+      
+      {/* Show user filter info when header is hidden (modal context) */}
+      {hideHeader && userName && (
+        <div style={{ 
+          fontSize: "0.85rem", 
+          color: "#666",
+          marginBottom: "0.75rem",
+          padding: "0.5rem",
+          backgroundColor: "#e3f2fd",
+          borderRadius: "4px",
+          border: "1px solid #bbdefb",
+          display: "inline-block"
+        }}>
+          {t("FILTERED_BY_USER")}: <strong>{userName}</strong>
+        </div>
+      )}
       
       {/* Filter Section */}
       {showFilters && (
@@ -639,35 +657,38 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", ...props })
         </div>
       )}
       {filteredProjectTask?.length > 0 && (
-        <BoundariesMapWrapper
-          visits={filteredProjectTask?.map(task => ({
-            lat: task?.latitude || 0,
-            lng: task?.longitude || 0,
-            time: task?.plannedStartDate || "NA",
-            quantity: task?.resourcesQuantity,
-            id: task?.id,
-            productName: task?.productName,
-            memberCount: task?.memberCount,
-            administrativeArea: task?.administrativeArea,
-            createdBy: task?.createdBy,
-            userId: task?.userId,
-            resourcesCount: task?.resourcesCount,
-            locationAccuracy: task?.locationAccuracy,
-            resourcesQuantity: task?.resourcesQuantity
-          }))}
-          totalCount={filteredProjectTask?.length || 0}
-          page={page}
-          pageSize={pageSize}
-          onPageChange={(newPage) => setPage(newPage)}
-          onPageSizeChange={(newPageSize) => {
-            setPageSize(newPageSize);
-            setPage(0);
-          }}
-          isNextDisabled={isNextDisabled}
-          customPopupContent={getMapPopupContent}
-          customMarkerStyle={greenMarkerStyle}
-          mapContainerId={mapContainerId}
-        />
+        <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
+          <BoundariesMapWrapper
+            visits={filteredProjectTask?.map(task => ({
+              lat: task?.latitude || 0,
+              lng: task?.longitude || 0,
+              time: task?.plannedStartDate || "NA",
+              quantity: task?.resourcesQuantity,
+              id: task?.id,
+              productName: task?.productName,
+              memberCount: task?.memberCount,
+              administrativeArea: task?.administrativeArea,
+              createdBy: task?.createdBy,
+              userId: task?.userId,
+              resourcesCount: task?.resourcesCount,
+              locationAccuracy: task?.locationAccuracy,
+              resourcesQuantity: task?.resourcesQuantity
+            }))}
+            totalCount={filteredProjectTask?.length || 0}
+            page={page}
+            pageSize={pageSize}
+            onPageChange={(newPage) => setPage(newPage)}
+            onPageSizeChange={(newPageSize) => {
+              setPageSize(newPageSize);
+              setPage(0);
+            }}
+            isNextDisabled={isNextDisabled}
+            customPopupContent={getMapPopupContent}
+            customMarkerStyle={greenMarkerStyle}
+            mapContainerId={mapContainerId}
+            isInModal={hideHeader}
+          />
+        </div>
       )}
     </div>
   );

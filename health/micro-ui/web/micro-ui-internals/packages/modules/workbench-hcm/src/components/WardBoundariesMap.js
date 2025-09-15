@@ -54,7 +54,7 @@ const WardBoundariesMap = ({ visits = [], showConnectingLines = false, customPop
     dashArray: null,            // Solid line
     showPopup: true,            // Show Ward info on click
     enableHover: true,          // Highlight on hover
-    fitBounds: true             // Fit map to show all Wards
+    fitBounds: false            // Don't auto-fit to maintain Ondo State view
   };
 
   if (loading) {

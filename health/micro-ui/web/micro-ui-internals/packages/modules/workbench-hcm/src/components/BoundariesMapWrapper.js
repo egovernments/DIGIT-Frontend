@@ -19,7 +19,8 @@ const BoundariesMapWrapper = ({
   showConnectingLines = false,
   customPopupContent = null,
   customMarkerStyle = null,
-  mapContainerId = "map"
+  mapContainerId = "map",
+  isInModal = false
 }) => {
   const { t } = useTranslation();
   const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA", "WARD", or "SETTLEMENT"
@@ -51,16 +52,17 @@ const BoundariesMapWrapper = ({
   ];
 
   return (
-    <div style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+    <div style={{ height: isInModal ? '100%' : '100vh', display: 'flex', flexDirection: 'column' }}>
       {/* Toggle Controls */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: '1rem',
+        padding: isInModal ? '0.75rem' : '1rem',
         backgroundColor: '#f8f9fa',
         borderBottom: '1px solid #dee2e6',
-        boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+        boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+        flexShrink: 0
       }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
           <h3 style={{ margin: 0, color: '#495057' }}>
@@ -118,8 +120,9 @@ const BoundariesMapWrapper = ({
             ))}
           </div>
 
-          {/* Pagination Controls */}
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          {/* Pagination Controls - Hide in modal */}
+          {!isInModal && (
+            <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
             {/* Page Info and Size Selector */}
             <div style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
               <div style={{ 
@@ -228,6 +231,7 @@ const BoundariesMapWrapper = ({
               />
             </div>
           </div>
+          )}
         </div>
       </div>
       

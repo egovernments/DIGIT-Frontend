@@ -40,14 +40,14 @@ const EmployeesComponent = (props) => {
       id: "task-dist_user_01-1",
       plannedStartDate: new Date().toISOString(),
       resourcesQuantity: 150,
-      latitude: 7.3722818,
-      longitude: 5.2476953,
+      latitude: 7.0896,  // Akure, Ondo State capital
+      longitude: 5.1211,
       createdBy: "Adebayo Olatunji",
       resourcesCount: 3,
       locationAccuracy: "High",
       productName: "ITN Nets",
       memberCount: 6,
-      administrativeArea: "Ita-Ogbolu",
+      administrativeArea: "Akure",
       quantity: 150,
       userId: "dist_user_01"
     }
@@ -178,7 +178,7 @@ const EmployeesComponent = (props) => {
               userId: item.userId || "NA",
               role: item.role || "NA",
               projectType: item.projectType || "NA",
-              localityCode: item.localityCode || "NA",
+              localityCode: (item?.localityCode&&t(item.localityCode)) || "NA",
               status: (item.status !== undefined ? item.status : item.isDeleted) === false ? "ACTIVE" : "INACTIVE",
               country: item.country || item.boundaryHierarchy?.country || "NA",
               state: item.state || item.boundaryHierarchy?.state || "NA",
@@ -335,7 +335,7 @@ const EmployeesComponent = (props) => {
     { label: t("EMPLOYEE_NAME"), key: "employeeName" },
     { label: t("USER_NAME"), key: "userName" },
     { label: t("ROLE"), key: "role" },
-    { label: t("PROJECT_TYPE"), key: "projectType" },
+    // { label: t("PROJECT_TYPE"), key: "projectType" },
     // { label: t("STATE"), key: "state" },
     // { label: t("LGA"), key: "lga" },
     // { label: t("WARD"), key: "ward" },
@@ -354,7 +354,7 @@ const EmployeesComponent = (props) => {
     <div className="override-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("EMPLOYEES")}</Header>
-        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <Button
             variation={showFilters ? "secondary" : "primary"}
             label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
@@ -386,7 +386,7 @@ const EmployeesComponent = (props) => {
               Max limit reached (4000)
             </span>
           )}
-        </div>
+        </div> */}
       </div>
       
       {showFilters && (
@@ -690,7 +690,7 @@ const EmployeesComponent = (props) => {
       {showMapPopup && selectedEmployee && (
         <Modal
           className="employee-map-modal"
-          popupStyles={{ maxWidth: "800px", width: "70%" }}
+          popupStyles={{ maxWidth: "90%", width: "90%", height: "85vh" }}
           formId="modal-action"
           headerBarMain={<Heading t={t} heading={`${t("MAP_VIEW")} - ${selectedEmployee.employeeName}`} />}
           headerBarEnd={<CloseBtn onClick={handleCloseMapPopup} />}
@@ -699,18 +699,20 @@ const EmployeesComponent = (props) => {
           actionCancelOnSubmit={handleCloseMapPopup}
           hideSubmit={true}
         >
-          <Card style={{ boxShadow: "none" }}>
+          <Card style={{ boxShadow: "none", height: "100%" }}>
             <div style={{ 
-              minHeight: "500px",
-              maxHeight: "80vh",
-              overflow: "auto"
+              display: "flex",
+              flexDirection: "column",
+              height: "calc(100% - 2rem)",
+              overflow: "visible"
             }}>
               <div style={{ 
                 marginBottom: "1rem", 
                 padding: "1rem", 
                 backgroundColor: "#f8f9fa", 
                 borderRadius: "8px",
-                border: "1px solid #dee2e6"
+                border: "1px solid #dee2e6",
+                flexShrink: 0
               }}>
                 <h4 style={{ marginBottom: "0.5rem", color: "#495057" }}>
                   {t("EMPLOYEE_DETAILS")}
@@ -725,19 +727,18 @@ const EmployeesComponent = (props) => {
                   <div><strong>{t("USER_NAME")}:</strong> {selectedEmployee.userName}</div>
                   <div><strong>{t("ROLE")}:</strong> {selectedEmployee.role}</div>
                   <div><strong>{t("PROJECT_TYPE")}:</strong> {selectedEmployee.projectType}</div>
-                  <div><strong>{t("STATE")}:</strong> {selectedEmployee.state}</div>
-                  <div><strong>{t("LGA")}:</strong> {selectedEmployee.lga}</div>
-                  <div><strong>{t("WARD")}:</strong> {selectedEmployee.ward}</div>
-                  <div><strong>{t("HEALTH_FACILITY")}:</strong> {selectedEmployee.healthFacility}</div>
                   <div><strong>{t("STATUS")}:</strong> {selectedEmployee.status}</div>
                 </div>
               </div>
               
-              <MapComponentWrapper 
-                projectId={props.projectId} 
-                userName={selectedEmployee.userName}
-                key={`map-${selectedEmployee.employeeId}`}
-              />
+              <div style={{ flex: 1, overflow: "visible", position: "relative", minHeight: "400px" }}>
+                <MapComponentWrapper 
+                  projectId={props.projectId} 
+                  userName={selectedEmployee.userName}
+                  key={`map-${selectedEmployee.employeeId}`}
+                  hideHeader={true}
+                />
+              </div>
             </div>
           </Card>
         </Modal>

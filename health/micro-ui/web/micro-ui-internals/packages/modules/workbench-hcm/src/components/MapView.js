@@ -203,7 +203,9 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
   useEffect(() => {
     // Initialize map once
     if (!mapRef.current) {
-      const initialCenter = isValidCoord(visits[0]) ? [visits[0].lat, visits[0].lng] : [0, 0];
+      // Default to Ondo State, Nigeria coordinates
+      const ONDO_STATE_CENTER = [7.25, 5.2];
+      const initialCenter = isValidCoord(visits[0]) ? [visits[0].lat, visits[0].lng] : ONDO_STATE_CENTER;
 
       // Add custom marker styles and layer control styles
       const markerStyles = `
@@ -479,7 +481,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
 
       mapRef.current = L.map(mapContainerId, {
         center: initialCenter,
-        zoom: 13,
+        zoom: 8, // State-level zoom for Ondo State
       });
 
       // Define base layers
