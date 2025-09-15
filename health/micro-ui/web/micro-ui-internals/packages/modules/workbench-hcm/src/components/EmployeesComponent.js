@@ -1,14 +1,24 @@
 import React,{ useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, Button, Modal, Card, Close, CloseSvg } from "@egovernments/digit-ui-react-components";
+import { Header, Loader, Modal, Card, Close, CloseSvg } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 import { projectStaffConfig } from "../configs/elasticsearchConfigs";
 import MapComponentWrapper from "./MapComponentWrapper";
+import { Button } from "@egovernments/digit-ui-components";
 
-const EmployeesComponent = (props) => {
+// Function to convert boundary type to camelCase
+function toCamelCase(str) {
+  return str
+    .toLowerCase()
+    .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+}
+
+const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = "OD_01_ONDO", ...props }) => {
+  console.log("EmployeesComponent props:",  props ,boundaryType,boundaryCode  );
+  
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(4000); // Maximum 4000 records
@@ -26,10 +36,13 @@ const EmployeesComponent = (props) => {
   const [roleFilter, setRoleFilter] = useState("");
   const [projectTypeFilter, setProjectTypeFilter] = useState("");
   const [statusFilter, setStatusFilter] = useState("");
+  const [nameFilter, setNameFilter] = useState("");
+  const [boundaryFilter, setBoundaryFilter] = useState("");
   const [availableStates, setAvailableStates] = useState([]);
   const [availableLGAs, setAvailableLGAs] = useState([]);
   const [availableRoles, setAvailableRoles] = useState([]);
   const [availableProjectTypes, setAvailableProjectTypes] = useState([]);
+  const [availableBoundaries, setAvailableBoundaries] = useState([]);
   
   // Map popup state
   const [showMapPopup, setShowMapPopup] = useState(false);
@@ -93,8 +106,27 @@ const EmployeesComponent = (props) => {
       );
     }
     
+    if (nameFilter) {
+      filtered = filtered.filter(emp => 
+        (emp.employeeName && 
+         emp.employeeName.toLowerCase().includes(nameFilter.toLowerCase())) ||
+        (emp.userName && 
+         emp.userName.toLowerCase().includes(nameFilter.toLowerCase()))
+      );
+    }
+    
+    if (boundaryFilter) {
+      filtered = filtered.filter(emp => 
+        (emp.ward && emp.ward.toLowerCase().includes(boundaryFilter.toLowerCase())) ||
+        (emp.lga && emp.lga.toLowerCase().includes(boundaryFilter.toLowerCase())) ||
+        (emp.state && emp.state.toLowerCase().includes(boundaryFilter.toLowerCase())) ||
+        (emp.healthFacility && emp.healthFacility.toLowerCase().includes(boundaryFilter.toLowerCase())) ||
+        (emp.localityCode && emp.localityCode.toLowerCase().includes(boundaryFilter.toLowerCase()))
+      );
+    }
+    
     setFilteredEmployeeData(filtered);
-  }, [employeeData, stateFilter, lgaFilter, roleFilter, projectTypeFilter, statusFilter]);
+  }, [employeeData, stateFilter, lgaFilter, roleFilter, projectTypeFilter, statusFilter, nameFilter, boundaryFilter]);
   
   useEffect(() => {
     const states = [...new Set(employeeData
@@ -120,6 +152,16 @@ const EmployeesComponent = (props) => {
       .filter(type => type && type !== "NA")
     )].sort();
     setAvailableProjectTypes(projectTypes);
+    
+    // Extract unique boundary values (ward, lga, state, health facility, locality)
+    const boundaries = [...new Set([
+      ...employeeData.map(emp => emp.ward).filter(val => val && val !== "NA"),
+      ...employeeData.map(emp => emp.lga).filter(val => val && val !== "NA"),
+      ...employeeData.map(emp => emp.state).filter(val => val && val !== "NA"),
+      ...employeeData.map(emp => emp.healthFacility).filter(val => val && val !== "NA"),
+      ...employeeData.map(emp => emp.localityCode).filter(val => val && val !== "NA")
+    ])].sort();
+    setAvailableBoundaries(boundaries);
   }, [employeeData]);
 
   useEffect(() => {
@@ -176,7 +218,7 @@ const EmployeesComponent = (props) => {
               employeeName: item.employeeName || item.nameOfUser || "NA",
               userName: item.userName || "NA",
               userId: item.userId || "NA",
-              role: item.role || "NA",
+              role:  (item?.role&&t(item.role))|| "NA",
               projectType: item.projectType || "NA",
               localityCode: (item?.localityCode&&t(item.localityCode)) || "NA",
               status: (item.status !== undefined ? item.status : item.isDeleted) === false ? "ACTIVE" : "INACTIVE",
@@ -227,8 +269,8 @@ const EmployeesComponent = (props) => {
   }, []);
 
 
-  const fetchDataWithWorker = useCallback((projectName) => {
-    if (!projectName || hasDataBeenFetched) return;
+  const fetchDataWithWorker = useCallback(() => {
+    if (hasDataBeenFetched) return;
     
     const username = getKibanaDetails('BasicUsername');
     const password = getKibanaDetails('BasicPassword');
@@ -244,6 +286,13 @@ const EmployeesComponent = (props) => {
       password: getKibanaDetails('password'),
       ...projectStaffConfig
     };
+
+    // Build query parameters - boundary-based filtering with flat structure
+    // Use toCamelCase to properly sanitize boundary type
+    const sanitizedBoundaryType = toCamelCase(boundaryType);
+    const boundaryField = `boundaryHierarchyCode.${sanitizedBoundaryType}`;
+    const queryParams = {};
+    queryParams[boundaryField] = boundaryCode;
     
     if (!isAuthenticated) {
       workerRef.current?.postMessage({
@@ -258,7 +307,9 @@ const EmployeesComponent = (props) => {
         workerRef.current?.postMessage({
           type: 'FETCH_ELASTICSEARCH_DATA',
           payload: {
-            projectName: props?.projectId, // Use projectId instead of projectName for staff index
+            boundaryType,
+            boundaryCode,
+            queryParams,
             page,
             pageSize,
             origin: window.location.origin,
@@ -272,7 +323,9 @@ const EmployeesComponent = (props) => {
       workerRef.current?.postMessage({
         type: 'FETCH_ELASTICSEARCH_DATA',
         payload: {
-          projectName: props?.projectId, // Use projectId instead of projectName for staff index
+          boundaryType,
+          boundaryCode,
+          queryParams,
           page,
           pageSize,
           origin: window.location.origin,
@@ -282,14 +335,14 @@ const EmployeesComponent = (props) => {
         }
       });
     }
-  }, [hasDataBeenFetched, isAuthenticated, page, pageSize, props.projectId]);
+  }, [hasDataBeenFetched, isAuthenticated, page, pageSize, boundaryType, boundaryCode]);
 
   useEffect(() => {
-    // For staff index, we use projectId directly instead of projectName
-    if (props.projectId && !hasDataBeenFetched) {
-      fetchDataWithWorker(props.projectId);
+    // Use boundary-based filtering for staff data
+    if (!hasDataBeenFetched) {
+      fetchDataWithWorker();
     }
-  }, [props.projectId, fetchDataWithWorker, hasDataBeenFetched]);
+  }, [fetchDataWithWorker, hasDataBeenFetched]);
 
   const clearFilters = () => {
     setStateFilter("");
@@ -297,6 +350,8 @@ const EmployeesComponent = (props) => {
     setRoleFilter("");
     setProjectTypeFilter("");
     setStatusFilter("");
+    setNameFilter("");
+    setBoundaryFilter("");
   };
 
   // Handler for opening map popup
@@ -354,7 +409,7 @@ const EmployeesComponent = (props) => {
     <div className="override-card">
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <Header className="works-header-view">{t("EMPLOYEES")}</Header>
-        {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
           <Button
             variation={showFilters ? "secondary" : "primary"}
             label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
@@ -386,7 +441,7 @@ const EmployeesComponent = (props) => {
               Max limit reached (4000)
             </span>
           )}
-        </div> */}
+        </div>
       </div>
       
       {showFilters && (
@@ -401,11 +456,11 @@ const EmployeesComponent = (props) => {
           
           <div style={{ 
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr 1fr 1fr auto",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr)) auto",
             gap: "16px",
             alignItems: "end"
           }}>
-            <div>
+            {/* <div>
               <label style={{ 
                 display: "block",
                 marginBottom: "8px", 
@@ -433,7 +488,7 @@ const EmployeesComponent = (props) => {
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
             
             <div>
               <label style={{ 
@@ -495,35 +550,7 @@ const EmployeesComponent = (props) => {
               </select>
             </div>
             
-            <div>
-              <label style={{ 
-                display: "block",
-                marginBottom: "8px", 
-                color: "#555",
-                fontSize: "14px"
-              }}>
-                {t("PROJECT_TYPE")}
-              </label>
-              <select
-                value={projectTypeFilter}
-                onChange={(e) => setProjectTypeFilter(e.target.value)}
-                style={{
-                  width: "100%",
-                  padding: "8px 12px",
-                  border: "1px solid #ccc",
-                  borderRadius: "4px",
-                  fontSize: "14px",
-                  backgroundColor: "white"
-                }}
-              >
-                <option value="">{t("ALL_PROJECT_TYPES")}</option>
-                {availableProjectTypes.map(type => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-            </div>
+   
             
             <div>
               <label style={{ 
@@ -553,11 +580,38 @@ const EmployeesComponent = (props) => {
             </div>
             
             <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px"
+              }}>
+                {t("NAME")}
+              </label>
+              <input
+                type="text"
+                value={nameFilter}
+                onChange={(e) => setNameFilter(e.target.value)}
+                placeholder={t("SEARCH_BY_NAME")}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  backgroundColor: "white"
+                }}
+              />
+            </div>
+            
+  
+            
+            <div>
               <Button 
                 variation="secondary"
                 label={t("CLEAR_FILTERS")}
                 onClick={clearFilters}
-                isDisabled={!stateFilter && !lgaFilter && !roleFilter && !projectTypeFilter && !statusFilter}
+                isDisabled={!stateFilter && !lgaFilter && !roleFilter && !projectTypeFilter && !statusFilter && !nameFilter && !boundaryFilter}
                 style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
               />
             </div>
@@ -673,9 +727,9 @@ const EmployeesComponent = (props) => {
             <Button
               label={t("VIEW_MAP")}
               type="button"
-              variation="outline-primary"
+              variation="primary"
               size="small"
-              onButtonClick={() => handleViewMap(row)}
+              onClick={() => handleViewMap(row)}
               style={{ 
                 padding: "4px 8px", 
                 fontSize: "12px",
@@ -725,7 +779,7 @@ const EmployeesComponent = (props) => {
                 }}>
                   <div><strong>{t("NAME")}:</strong> {selectedEmployee.employeeName}</div>
                   <div><strong>{t("USER_NAME")}:</strong> {selectedEmployee.userName}</div>
-                  <div><strong>{t("ROLE")}:</strong> {selectedEmployee.role}</div>
+                  <div><strong>{t("ROLE")}:</strong> {t(selectedEmployee.role)}</div>
                   <div><strong>{t("PROJECT_TYPE")}:</strong> {selectedEmployee.projectType}</div>
                   <div><strong>{t("STATUS")}:</strong> {selectedEmployee.status}</div>
                 </div>
@@ -733,10 +787,12 @@ const EmployeesComponent = (props) => {
               
               <div style={{ flex: 1, overflow: "visible", position: "relative", minHeight: "400px" }}>
                 <MapComponentWrapper 
-                  projectId={props.projectId} 
+                  projectId={projectId} 
                   userName={selectedEmployee.userName}
                   key={`map-${selectedEmployee.employeeId}`}
                   hideHeader={true}
+                  boundaryType={boundaryType}
+                  boundaryCode={boundaryCode}
                 />
               </div>
             </div>

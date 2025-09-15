@@ -7,13 +7,20 @@ import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 
-const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader = false, ...props }) => {
+// Function to convert boundary type to camelCase
+function toCamelCase(str) {
+  return str
+    .toLowerCase()
+    .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+}
+
+const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader = false, boundaryType = "state", boundaryCode = "OD_01_ONDO", ...props }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10000); // Large page size to fetch all data
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
-  const [projectName, setProjectName] = useState(null);
+  // Removed projectName state - using boundary-based filtering
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const [hasDataBeenFetched, setHasDataBeenFetched] = useState(false);
@@ -215,36 +222,11 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     };
   }, []);
 
-  // First get project details to extract project name
-  const projectUrl = getProjectServiceUrl();
-  const projectRequestCriteria = {
-    url: `${projectUrl}/v1/_search`,
-    changeQueryName: projectId,
-    params: {
-      tenantId,
-      offset: 0,
-      limit: 100,
-    },
-    body: {
-      Projects: [
-        {
-          tenantId,
-          id: projectId,
-        },
-      ],
-      apiOperation: "SEARCH",
-    },
-    changeQueryName: `CMP-PJT-${projectId}`,
-    config: {
-      enabled: projectId ? true : false,
-    },
-  };
-
-  const { data: project } = Digit.Hooks.useCustomAPIHook(projectRequestCriteria);
+  // Removed project API call - using boundary-based filtering directly
 
   // Fetch data using web worker when component is visible
-  const fetchDataWithWorker = useCallback((projectName) => {
-    if (!projectName || !isVisible || hasDataBeenFetched) return;
+  const fetchDataWithWorker = useCallback(() => {
+    if (!isVisible || hasDataBeenFetched) return;
     
     // Prepare Kibana configuration
     const username = getKibanaDetails('BasicUsername');
@@ -261,8 +243,14 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
       queryField: getKibanaDetails('value') || 'projectName'
     };
 
-    // Build query parameters - include userName filter if provided
+    // Build query parameters - boundary-based filtering with correct term structure
+    // Use toCamelCase to properly sanitize boundary type
+    const sanitizedBoundaryType = toCamelCase(boundaryType);
+    const boundaryField = `boundaryHierarchyCode.${sanitizedBoundaryType}`;
     const queryParams = {};
+    queryParams[boundaryField] = boundaryCode;
+    
+    // Add userName filter if provided
     if (userName) {
       queryParams.userName = userName;
     }
@@ -282,7 +270,8 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         workerRef.current?.postMessage({
           type: 'FETCH_ELASTICSEARCH_DATA',
           payload: {
-            projectName,
+            boundaryType,
+            boundaryCode,
             queryParams,
             page,
             pageSize,
@@ -298,7 +287,8 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
       workerRef.current?.postMessage({
         type: 'FETCH_ELASTICSEARCH_DATA',
         payload: {
-          projectName,
+          boundaryType,
+          boundaryCode,
           queryParams,
           page,
           pageSize,
@@ -309,14 +299,9 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         }
       });
     }
-  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, userName]);
+  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, userName, boundaryType, boundaryCode]);
 
-  // Extract project name from project data
-  useEffect(() => {
-    if (project?.Project?.[0]?.name) {
-      setProjectName(project.Project[0]?.[getKibanaDetails('key')] || project.Project[0]?.name);
-    }
-  }, [project]);
+  // Removed project name extraction - using boundary-based filtering now
 
   // Reset data fetching state when userName prop changes
   useEffect(() => {
@@ -326,12 +311,12 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     }
   }, [userName]);
 
-  // Fetch elasticsearch data when component becomes visible and project name is available
+  // Fetch elasticsearch data when component becomes visible
   useEffect(() => {
-    if (projectName && isVisible && !hasDataBeenFetched) {
-      fetchDataWithWorker(projectName);
+    if (isVisible && !hasDataBeenFetched) {
+      fetchDataWithWorker();
     }
-  }, [projectName, isVisible, fetchDataWithWorker, hasDataBeenFetched]);
+  }, [isVisible, fetchDataWithWorker, hasDataBeenFetched]);
 
   const isNextDisabled = Array.isArray(filteredProjectTask) ? filteredProjectTask.length < pageSize : true;
   

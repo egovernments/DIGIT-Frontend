@@ -144,7 +144,7 @@ export const data = (project) => {
 
             type: "COMPONENT",
             component: "MapComponent",
-            props: { projectId: project?.Project?.[0]?.id },
+            props: { projectId: project?.Project?.[0]?.id,boundaryType:project?.Project?.[0]?.address?.boundaryType ,boundaryCode:project?.Project?.[0]?.address?.boundary },
           },
         ],
       },
@@ -156,7 +156,11 @@ export const data = (project) => {
 
             type: "COMPONENT",
             component: "EmployeesComponent",
-            props: { projectId: project?.Project?.[0]?.id,boundaryType:project?.Project?.[0]?.address?.boundaryType ,boundary:project?.Project?.[0]?.address?.boundary },
+            props: { 
+              projectId: project?.Project?.[0]?.id,
+              boundaryType: project?.Project?.[0]?.address?.boundaryType || "state",
+              boundaryCode: project?.Project?.[0]?.address?.boundary || "OD_01_ONDO"
+            },
           },
         ],
       }, 
