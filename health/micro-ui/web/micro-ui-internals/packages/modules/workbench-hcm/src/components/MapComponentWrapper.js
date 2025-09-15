@@ -5,12 +5,12 @@ import MapComponent from "./MapComponent";
  * Wrapper component for MapComponent that handles proper cleanup
  * to prevent "Map container is already initialized" errors
  */
-const MapComponentWrapper = ({ projectId, userName, hideHeader = false, boundaryType = "state", boundaryCode = "OD_01_ONDO", key }) => {
-  const [mapKey, setMapKey] = useState(Date.now());
+const MapComponentWrapper = ({ projectId, userName, hideHeader = false, boundaryType = "state", boundaryCode = "OD_01_ONDO", dataReady = true, key }) => {
+  const [mapKey, setMapKey] = useState(() => `${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
 
   // Force remount when props change
   useEffect(() => {
-    setMapKey(Date.now());
+    setMapKey(`${Date.now()}-${Math.random().toString(36).substr(2, 9)}`);
   }, [projectId, userName, boundaryType, boundaryCode]);
 
   // Use a unique container ID to avoid conflicts
@@ -25,6 +25,7 @@ const MapComponentWrapper = ({ projectId, userName, hideHeader = false, boundary
         hideHeader={hideHeader}
         boundaryType={boundaryType}
         boundaryCode={boundaryCode}
+        dataReady={dataReady}
       />
     </div>
   );

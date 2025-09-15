@@ -866,6 +866,7 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
                   hideHeader={true}
                   boundaryType={boundaryType}
                   boundaryCode={boundaryCode}
+                  dataReady={true}
                 />
               </div>
             </div>

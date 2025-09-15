@@ -6,7 +6,7 @@ import getProjectServiceUrl, { getKibanaDetails } from "../utils/getProjectServi
 import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
-import { projectStaffConfig } from "../configs/elasticsearchConfigs";
+import { projectTaskConfig } from "../configs/elasticsearchConfigs";
 
 // Function to convert boundary type to camelCase
 function toCamelCase(str) {
@@ -75,8 +75,8 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     };
   });
 
-  const [projectTask, setProjectTask] = useState(defaultData);
-  const [filteredProjectTask, setFilteredProjectTask] = useState(defaultData);
+  const [projectTask, setProjectTask] = useState([]);
+  const [filteredProjectTask, setFilteredProjectTask] = useState([]);
   
   // Apply filters to project tasks
   useEffect(() => {
@@ -198,6 +198,12 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
 
   // Intersection Observer for visibility detection
   useEffect(() => {
+    // If hideHeader is true (popup mode), consider it always visible
+    if (hideHeader) {
+      setIsVisible(true);
+      return;
+    }
+    
     const observer = new IntersectionObserver(
       ([entry]) => {
         setIsVisible(entry.isIntersecting);
@@ -217,7 +223,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         observer.unobserve(componentRef.current);
       }
     };
-  }, []);
+  }, [hideHeader]);
 
   // Initialize Web Worker
   useEffect(() => {
@@ -246,51 +252,10 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           // Retry authentication with Kibana config
           const kibanaConfig = {
             kibanaPath: getKibanaDetails('kibanaPath'),
-            projectTaskIndex: getKibanaDetails('projectTaskIndex'),
+            projectTaskIndex: projectTaskConfig.index,
             username: getKibanaDetails('username'),
             password: getKibanaDetails('password'),
-            queryField: getKibanaDetails('value') || 'projectName',
-            dataPrefix: 'Data',
-            // Include boundary hierarchy fields in source
-            sourceFields: [
-              "Data.geoPoint",
-              "Data.@timestamp", 
-              "Data.productName",
-              "Data.memberCount",
-              "Data.additionalDetails.administrativeArea",
-              "Data.quantity",
-              "Data.userName",
-              "Data.status",
-              "Data.userId",
-              "Data.boundaryHierarchy",
-              "Data.boundaryHierarchy.country",
-              "Data.boundaryHierarchy.state", 
-              "Data.boundaryHierarchy.lga",
-              "Data.boundaryHierarchy.ward",
-              "Data.boundaryHierarchy.healthFacility"
-            ],
-            // Add field mappings to properly extract boundary data
-            fieldMappings: {
-              id: 'id',
-              plannedStartDate: '@timestamp',
-              resourcesQuantity: 'quantity',
-              latitude: 'geoPoint.1',  // geoPoint is [lon, lat] format
-              longitude: 'geoPoint.0',
-              createdBy: 'userName',
-              resourcesCount: 'resourcesCount',
-              locationAccuracy: 'locationAccuracy',
-              productName: 'productName',
-              memberCount: 'memberCount',
-              administrativeArea: 'additionalDetails.administrativeArea',
-              quantity: 'quantity',
-              status: 'status',
-              userId: 'userId',
-              country: 'boundaryHierarchy.country',
-              state: 'boundaryHierarchy.state',
-              lga: 'boundaryHierarchy.lga',
-              ward: 'boundaryHierarchy.ward',
-              healthFacility: 'boundaryHierarchy.healthFacility'
-            }
+            ...projectTaskConfig
           };
           workerRef.current?.postMessage({
             type: 'AUTHENTICATE_KIBANA',
@@ -398,54 +363,13 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     const API_TOKEN = getKibanaDetails('token');
     const AUTH_KEY = getKibanaDetails('sendBasicAuthHeader') ? `Basic ${auth}` : `ApiKey ${API_TOKEN}`;
     
-    // MapComponent config with boundary hierarchy fields
+    // Use the dynamic configuration for project tasks
     const kibanaConfig = {
       kibanaPath: getKibanaDetails('kibanaPath'),
-      projectTaskIndex: getKibanaDetails('projectTaskIndex'),
+      projectTaskIndex: projectTaskConfig.index,
       username: getKibanaDetails('username'),
       password: getKibanaDetails('password'),
-      queryField: getKibanaDetails('value') || 'projectName',
-      dataPrefix: 'Data',
-      // Include boundary hierarchy fields in source
-      sourceFields: [
-        "Data.geoPoint",
-        "Data.@timestamp", 
-        "Data.productName",
-        "Data.memberCount",
-        "Data.additionalDetails.administrativeArea",
-        "Data.quantity",
-        "Data.userName",
-        "Data.status",
-        "Data.userId",
-        "Data.boundaryHierarchy",
-        "Data.boundaryHierarchy.country",
-        "Data.boundaryHierarchy.state", 
-        "Data.boundaryHierarchy.lga",
-        "Data.boundaryHierarchy.ward",
-        "Data.boundaryHierarchy.healthFacility"
-      ],
-      // Add field mappings to properly extract boundary data
-      fieldMappings: {
-        id: 'id',
-        plannedStartDate: '@timestamp',
-        resourcesQuantity: 'quantity',
-        latitude: 'geoPoint.1',  // geoPoint is [lon, lat] format
-        longitude: 'geoPoint.0',
-        createdBy: 'userName',
-        resourcesCount: 'resourcesCount',
-        locationAccuracy: 'locationAccuracy',
-        productName: 'productName',
-        memberCount: 'memberCount',
-        administrativeArea: 'additionalDetails.administrativeArea',
-        quantity: 'quantity',
-        status: 'status',
-        userId: 'userId',
-        country: 'boundaryHierarchy.country',
-        state: 'boundaryHierarchy.state',
-        lga: 'boundaryHierarchy.lga',
-        ward: 'boundaryHierarchy.ward',
-        healthFacility: 'boundaryHierarchy.healthFacility'
-      }
+      ...projectTaskConfig
     };
 
     // Build query parameters - boundary-based filtering with correct term structure
@@ -1030,8 +954,9 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         </div>
       )}
       
+      
       {/* Visibility Status Indicator (for debugging) */}
-      {!isVisible && !hasDataBeenFetched && (
+      {!isLoading && !isVisible && !hasDataBeenFetched && (
         <div style={{
           padding: "12px",
           backgroundColor: "#fff3cd",
@@ -1044,10 +969,12 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           ⏳ Map data will load when this component becomes visible
         </div>
       )}
-      {filteredProjectTask?.length === 0 && (
+      
+      {!isLoading && hasDataBeenFetched && filteredProjectTask?.length === 0 && (
         <h1>{t("NO_TASK")}</h1>
       )}
-      {projectTask === defaultData && (
+      
+      {!isLoading && !hasDataBeenFetched && projectTask.length === 0 && (
         <div style={{ 
           padding: "10px", 
           backgroundColor: "#f0f8ff", 
@@ -1060,7 +987,8 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
           <strong>Note:</strong> Showing sample data. Real data will be loaded once project is configured.
         </div>
       )}
-      {filteredProjectTask?.length > 0 && (
+      
+      {!isLoading && filteredProjectTask?.length > 0 && (
         <div style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
           <BoundariesMapWrapper
             visits={filteredProjectTask?.map(task => ({

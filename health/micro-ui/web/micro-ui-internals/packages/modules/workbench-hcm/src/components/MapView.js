@@ -698,17 +698,19 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
       }
     }, 100);
 
-    // Optional cleanup: remove map entirely on unmount to free resources
-    // Uncomment if you prefer full teardown on unmount
-    /*
+    // Cleanup: remove map entirely on unmount to free resources and prevent conflicts
     return () => {
-      if (map && typeof map.remove === "function") {
-        map.remove();
+      if (mapRef.current && typeof mapRef.current.remove === "function") {
+        mapRef.current.remove();
         mapRef.current = null;
+      }
+      if (markersRef.current) {
         markersRef.current = null;
       }
+      if (boundaryLayerRef.current) {
+        boundaryLayerRef.current = null;
+      }
     };
-    */
 
     // keep effect dependencies simple
   }, [visits, shapefileData, boundaryStyle, showConnectingLines, customPopupContent, customMarkerStyle]);

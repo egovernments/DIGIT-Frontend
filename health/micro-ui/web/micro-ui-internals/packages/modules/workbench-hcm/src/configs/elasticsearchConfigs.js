@@ -3,9 +3,11 @@
  * These configurations can be used with the elasticsearchWorker for dynamic queries
  */
 
+import { getKibanaDetails } from "../utils/getProjectServiceUrl";
+
 // Configuration for Project Task data (Map Component)
 export const projectTaskConfig = {
-  index: 'od-project-task-index-v1',
+  index: getKibanaDetails('projectTaskIndex') || 'project-task-index-v1',
   queryField: 'projectName',
   dataPrefix: 'Data',
   sourceFields: [
@@ -41,7 +43,7 @@ export const projectTaskConfig = {
 
 // Configuration for Project Staff/Employees data
 export const projectStaffConfig = {
-  index: 'od-project-staff-index-v1',
+  index: getKibanaDetails('projectStaffIndex') || 'project-staff-index-v1',
   queryField: 'projectId',
   dataPrefix: 'Data', // Use Data prefix for source fields
   sourceFields: [
