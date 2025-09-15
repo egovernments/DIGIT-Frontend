@@ -826,13 +826,14 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
           actionCancelOnSubmit={handleCloseMapPopup}
           hideSubmit={true}
         >
-          <Card style={{ boxShadow: "none", height: "100%" }}>
+          <Card style={{ boxShadow: "none", height: "100%", overflow: "hidden" }}>
             <div style={{ 
               display: "flex",
               flexDirection: "column",
-              height: "calc(100% - 2rem)",
-              overflow: "visible"
+              height: "100%",
+              overflow: "hidden"
             }}>
+              {/* Employee Details Section */}
               <div style={{ 
                 marginBottom: "1rem", 
                 padding: "1rem", 
@@ -841,14 +842,14 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
                 border: "1px solid #dee2e6",
                 flexShrink: 0
               }}>
-                <h4 style={{ marginBottom: "0.5rem", color: "#495057" }}>
+                <h4 style={{ marginBottom: "0.5rem", color: "#495057", fontSize: "1rem" }}>
                   {t("EMPLOYEE_DETAILS")}
                 </h4>
                 <div style={{ 
                   display: "grid", 
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
+                  gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", 
                   gap: "0.5rem",
-                  fontSize: "14px"
+                  fontSize: "13px"
                 }}>
                   <div><strong>{t("NAME")}:</strong> {selectedEmployee.employeeName}</div>
                   <div><strong>{t("USER_NAME")}:</strong> {selectedEmployee.userName}</div>
@@ -858,7 +859,15 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
                 </div>
               </div>
               
-              <div style={{ flex: 1, overflow: "visible", position: "relative", minHeight: "400px" }}>
+              {/* Map Section */}
+              <div style={{ 
+                flex: 1, 
+                overflow: "hidden", 
+                position: "relative",
+                minHeight: "450px",
+                borderRadius: "8px",
+                border: "1px solid #dee2e6"
+              }}>
                 <MapComponentWrapper 
                   projectId={projectId} 
                   userName={selectedEmployee.userName}

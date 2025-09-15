@@ -1015,6 +1015,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
               setPageSize(newPageSize);
               setPage(0);
             }}
+            showConnectingLines={userName ? true : false}
             isNextDisabled={isNextDisabled}
             customPopupContent={getMapPopupContent}
             customMarkerStyle={greenMarkerStyle}
