@@ -22,11 +22,11 @@ const HCMWORKBENCHCard = () => {
     //   link: `/${window?.contextPath}/employee/hcmworkbench/help-screen/basic-setup`,
     //   roles: ROLES.HCM,
     // },
-    {
-      label: t("WORKBENCH_MASTER"),
-      link: `/${window?.contextPath}/employee/hcmworkbench/master/master-landing-screen`,
-      roles: ROLES.HCM,
-    },
+    // {
+    //   label: t("WORKBENCH_MASTER"),
+    //   link: `/${window?.contextPath}/employee/hcmworkbench/master/master-landing-screen`,
+    //   roles: ROLES.HCM,
+    // },
     {
       label: t("MANAGE_CAMPAIGN"),
       link: `/${window?.contextPath}/employee/hcmworkbench/project-redirect?redirectUrl=campaign`,

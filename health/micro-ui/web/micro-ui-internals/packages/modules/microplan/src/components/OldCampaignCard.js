@@ -6,7 +6,7 @@ const ROLES = {
   CAMPAIGN_MANAGER:["CAMPAIGN_MANAGER","MICROPLAN_CAMPAIGN_INTEGRATOR"],
   BOUNDARY_MANAGER:["BOUNDARY_MANAGER"],
   CAMPAIGN_MANAGER_ONLY:["CAMPAIGN_MANAGER"],
-  NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
+  // NATIONAL_SUPERVISOR:["NATIONAL_SUPERVISOR"]
 };
 
 /* @nipun delete this card once migrated  */
@@ -41,18 +41,18 @@ const CampaignCard = () => {
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?userId=${userId}&status=${microplanStatus}`,
       roles: ROLES.BOUNDARY_MANAGER,
     },
-    {
-      label: t("NATIONAL_DASHBOARD"),
-      link: "/digit-ui/employee/utilities/iframe/elastic/national",
-      roles: ROLES.NATIONAL_SUPERVISOR,
-      // count: isLoading?"-":data
-    },
-    {
-      label: t("NDSS_DASHBOARD"),
-      link: "/digit-ui/employee/dss/landing/national-health-dashboard",
-      roles: ROLES.NATIONAL_SUPERVISOR,
-      // count: isLoading?"-":data
-    },
+    // {
+    //   label: t("NATIONAL_DASHBOARD"),
+    //   link: "/digit-ui/employee/utilities/iframe/elastic/national",
+    //   roles: ROLES.NATIONAL_SUPERVISOR,
+    //   // count: isLoading?"-":data
+    // },
+    // {
+    //   label: t("NDSS_DASHBOARD"),
+    //   link: "/digit-ui/employee/dss/landing/national-health-dashboard",
+    //   roles: ROLES.NATIONAL_SUPERVISOR,
+    //   // count: isLoading?"-":data
+    // },
     {
       label: t("BOUNDARY_MANAGEMENT"),
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,

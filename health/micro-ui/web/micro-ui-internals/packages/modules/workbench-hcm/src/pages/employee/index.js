@@ -32,7 +32,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const isShow = location.pathname.includes("/hcmworkbench/master");
 
   const isShow2 = [
-    "/hcmworkbench/campaig",
+    // "/hcmworkbench/campaig",
     "/hcmworkbench/boundary",
     "/hcmworkbench/facility",
     "/project-landing-screen",
@@ -111,7 +111,7 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
       show: location.pathname.includes("/hcmworkbench/campaign-view") ? true : false, 
     },
     {
-      path: `/${window?.contextPath}/employee/hcmworkbench/campaign`,
+      // path: `/${window?.contextPath}/employee/hcmworkbench/campaign`,
       content: t("WORKBENCH_CREATE_CAMPAIGN"),
       show: location.pathname.includes("/hcmworkbench/campaign") && !(location.pathname.includes("/hcmworkbench/campaign-view")) ? true : false,
     },

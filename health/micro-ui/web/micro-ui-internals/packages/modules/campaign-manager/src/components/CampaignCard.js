@@ -8,7 +8,7 @@ const ROLES = {
   BOUNDARY_MANAGER: ["BOUNDARY_MANAGER"],
   MICROPLAN_INTEGRATOR: ["MICROPLAN_CAMPAIGN_INTEGRATOR"],
   CAMPAIGN_MANAGER_ONLY: ["CAMPAIGN_MANAGER"],
-  NATIONAL_SUPERVISOR: ["NATIONAL_SUPERVISOR"],
+  // NATIONAL_SUPERVISOR: ["NATIONAL_SUPERVISOR"],
 };
 
 /**
@@ -60,12 +60,12 @@ const CampaignCard = () => {
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,
       roles: ROLES.BOUNDARY_MANAGER,
     },
-    {
-      label: t("NATIONAL_DASHBOARD"),
-      link: "/digit-ui/employee",
-      roles: ROLES.NATIONAL_SUPERVISOR,
-      // count: isLoading?"-":data
-    },
+    // {
+    //   label: t("NATIONAL_DASHBOARD"),
+    //   link: "/digit-ui/employee",
+    //   roles: ROLES.NATIONAL_SUPERVISOR,
+    //   // count: isLoading?"-":data
+    // },
     {
       label: t("BOUNDARY_MANAGEMENT"),
       link: `/${window?.contextPath}/employee/campaign/boundary/home`,
