@@ -13,10 +13,10 @@ const envKeys = Object.entries(envFile).reduce((acc, [key, val]) => {
   acc[`process.env.${key}`] = JSON.stringify(val);
   return acc;
 }, {});
-const isProduction = process.env.NODE_ENV === 'production';
+const isProduction = process.env.NODE_ENV === "production";
 
 module.exports = {
-  mode: isProduction ? 'production' : 'development',
+  mode: isProduction ? "production" : "development",
   entry: path.resolve(__dirname, "src/index.js"),
   devtool: "source-map",
   module: {
@@ -40,12 +40,12 @@ module.exports = {
   },
   output: {
     filename: "[name].[contenthash:8].bundle.js",
-        chunkFilename: "[name].[contenthash:8].chunk.js",
-        path: path.resolve(__dirname, "build"),
-        clean: true, // Clean the output directory before emit
+    chunkFilename: "[name].[contenthash:8].chunk.js",
+    path: path.resolve(__dirname, "build"),
+    clean: true, // Clean the output directory before emit
     publicPath: "/workbench-ui/",
   },
- optimization: {
+  optimization: {
     splitChunks: {
       chunks: "all",
       minSize: 20000,
@@ -57,36 +57,36 @@ module.exports = {
       cacheGroups: {
         vendor: {
           test: /[\\/]node_modules[\\/]/,
-          name: 'vendors',
-          chunks: 'all',
+          name: "vendors",
+          chunks: "all",
           priority: 10,
           maxSize: 244000,
         },
         react: {
           test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
-          name: 'react',
-          chunks: 'all',
+          name: "react",
+          chunks: "all",
           priority: 20,
           enforce: true,
         },
         digitUI: {
           test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-(libraries|components|react-components|module-core)[\\/]/,
-          name: 'digit-ui',
-          chunks: 'all',
+          name: "digit-ui",
+          chunks: "all",
           priority: 15,
           maxSize: 244000,
         },
         campaign: {
           test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-campaign-manager[\\/]/,
-          name: 'campaign-module',
-          chunks: 'async', // Load campaign module asynchronously
+          name: "campaign-module",
+          chunks: "async", // Load campaign module asynchronously
           priority: 5,
           maxSize: 244000,
         },
         workbench: {
           test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
-          name: 'workbench-module',
-          chunks: 'async', // Load workbench module asynchronously
+          name: "workbench-module",
+          chunks: "async", // Load workbench module asynchronously
           priority: 5,
           maxSize: 244000,
         },
@@ -102,20 +102,22 @@ module.exports = {
     new HtmlWebpackPlugin({
       inject: true,
       template: "public/index.html",
-      // templateParameters:isProduction?{}: {
-      //   REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
-      // },
+      templateParameters: isProduction
+        ? {}
+        : {
+            REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+          },
     }),
   ],
   resolve: {
     modules: [path.resolve(__dirname, "src"), "node_modules"],
     extensions: [".js", ".jsx", ".ts", ".tsx"],
     preferRelative: true,
-      alias: {
+    alias: {
       // Fix case sensitivity issues with React
-      "React": path.resolve(__dirname, "../node_modules/react"),
-      "react": path.resolve(__dirname, "../node_modules/react"),
-      "ReactDOM": path.resolve(__dirname, "../node_modules/react-dom"),
+      React: path.resolve(__dirname, "../node_modules/react"),
+      react: path.resolve(__dirname, "../node_modules/react"),
+      ReactDOM: path.resolve(__dirname, "../node_modules/react-dom"),
       "react-dom": path.resolve(__dirname, "../node_modules/react-dom"),
     },
     fallback: {
@@ -128,19 +130,19 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: {
-      index: '/workbench-ui/index.html',
-      rewrites: [
-        { from: /^\/workbench-ui/, to: '/workbench-ui/index.html' }
-      ]
+      index: "/workbench-ui/index.html",
+      rewrites: [{ from: /^\/workbench-ui/, to: "/workbench-ui/index.html" }],
     },
-        watchFiles:isProduction?undefined: {
-      paths: ["**/*"], // watch all project files
-      options: {
-        ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
-        poll: 1000, // check for changes every second
-        aggregateTimeout: 300, // delay rebuild after first change
-      },
-    },
+    watchFiles: isProduction
+      ? undefined
+      : {
+          paths: ["**/*"], // watch all project files
+          options: {
+            ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
+            poll: 1000, // check for changes every second
+            aggregateTimeout: 300, // delay rebuild after first change
+          },
+        },
     proxy: [
       {
         context: [
@@ -222,7 +224,7 @@ module.exports = {
           "/facility/v1/_create",
           "/service-request/",
           "/product/",
-          "/health-service-request/"
+          "/health-service-request/",
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,
@@ -231,4 +233,3 @@ module.exports = {
     ],
   },
 };
-
