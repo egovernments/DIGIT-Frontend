@@ -20,8 +20,8 @@ export const data = (project) => {
               },
               {
                 key: "WORKBENCH_CAMPAIGN_NUMBER",
-                isLink: true,
-                to:  `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${project?.Project?.[0]?.referenceID}&tenantId=${project?.Project?.[0]?.tenantId}` ,
+                // isLink: true,
+                // to:  `/${window?.contextPath}/employee/campaign/view-details?campaignNumber=${project?.Project?.[0]?.referenceID}&tenantId=${project?.Project?.[0]?.tenantId}` ,
                 value: project?.Project?.[0]?.referenceID || "NA",
               },{
                 key: "WORKBENCH_PROJECT_NUMBER",
