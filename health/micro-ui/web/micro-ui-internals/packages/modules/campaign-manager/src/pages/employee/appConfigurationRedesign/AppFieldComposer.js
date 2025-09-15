@@ -72,9 +72,14 @@ const DeleteFieldControl = ({ isDelete, onDelete }) => {
 
 // Main component to display a panel field with label, tag, visibility toggle, and delete option
 const PanelFieldDisplay = ({ t, label, appType, config, onToggle, isDelete, onDelete }) => {
+
+  const expr = config?.visibilityCondition?.expression;
+  const isDependent =
+    typeof expr === "string" && expr.trim().length > 0;
   return (
     <>
       <div className="appConfigLabelField-label-container">
+        {isDependent && <Tag icon="" label={t("DEPENDENT_FIELD_TAG")} className="app-config-field-tag" labelStyle={{}} showIcon={false} style={{}} />}
         <div className="appConfigLabelField-label">
           <span>{label}</span>
         </div>
