@@ -114,6 +114,7 @@ module.exports = function (app) {
     "/health-hrms/employees",
     "/stock/v1/_search",
     "/inbox/v2/_search",
+    "/kibana",
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
