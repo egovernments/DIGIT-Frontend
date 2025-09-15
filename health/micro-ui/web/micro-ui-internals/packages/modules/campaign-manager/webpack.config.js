@@ -86,7 +86,7 @@ module.exports = {
                 },
               ],
             ],
-            plugins: [...(isProduction ? [["transform-remove-console", { exclude: ["error", "warn"] }]] : [])],
+            plugins: [],
           },
         },
       },
