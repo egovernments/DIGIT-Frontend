@@ -195,7 +195,7 @@ const createEnhancedTaskPopup = (dataPoint, index) => {
   return createVisitPopup(dataPoint, index);
 };
 
-const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null }) => {
+const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map" }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
   const boundaryLayerRef = useRef(null); // L.GeoJSON layer for shapefile boundaries
@@ -477,7 +477,7 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
         });
       }
 
-      mapRef.current = L.map("map", {
+      mapRef.current = L.map(mapContainerId, {
         center: initialCenter,
         zoom: 13,
       });
@@ -713,7 +713,7 @@ if (layersControl) {
 
   return (
     <div style={{ display: "flex", height: "100%" }}>
-      <div id="map" style={{ flex: 2, minHeight: "100%" }}></div>
+      <div id={mapContainerId} style={{ flex: 2, minHeight: "100%" }}></div>
       {/* <div style={{ flex: 1, padding: "1rem", overflowY: "auto", background: "#fafafa" }}>
         <h3>Visits</h3>
         <ul style={{ listStyle: "none", padding: 0 }}>

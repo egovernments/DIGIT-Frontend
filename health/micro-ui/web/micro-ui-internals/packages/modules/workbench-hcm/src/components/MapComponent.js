@@ -7,7 +7,7 @@ import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 
-const MapComponent = (props) => {
+const MapComponent = ({ projectId, userName, mapContainerId = "map", ...props }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10000); // Large page size to fetch all data
@@ -219,7 +219,7 @@ const MapComponent = (props) => {
   const projectUrl = getProjectServiceUrl();
   const projectRequestCriteria = {
     url: `${projectUrl}/v1/_search`,
-    changeQueryName: props?.projectId,
+    changeQueryName: projectId,
     params: {
       tenantId,
       offset: 0,
@@ -229,14 +229,14 @@ const MapComponent = (props) => {
       Projects: [
         {
           tenantId,
-          id: props?.projectId,
+          id: projectId,
         },
       ],
       apiOperation: "SEARCH",
     },
-    changeQueryName: `CMP-PJT-${props?.projectId}`,
+    changeQueryName: `CMP-PJT-${projectId}`,
     config: {
-      enabled: props?.projectId ? true : false,
+      enabled: projectId ? true : false,
     },
   };
 
@@ -263,8 +263,8 @@ const MapComponent = (props) => {
 
     // Build query parameters - include userName filter if provided
     const queryParams = {};
-    if (props.userName) {
-      queryParams.userName = props.userName;
+    if (userName) {
+      queryParams.userName = userName;
     }
     
     // First authenticate if needed
@@ -309,7 +309,7 @@ const MapComponent = (props) => {
         }
       });
     }
-  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, props.userName]);
+  }, [isVisible, hasDataBeenFetched, isAuthenticated, page, pageSize, userName]);
 
   // Extract project name from project data
   useEffect(() => {
@@ -320,11 +320,11 @@ const MapComponent = (props) => {
 
   // Reset data fetching state when userName prop changes
   useEffect(() => {
-    if (props.userName) {
+    if (userName) {
       setHasDataBeenFetched(false);
       setProjectTask(defaultData);
     }
-  }, [props.userName]);
+  }, [userName]);
 
   // Fetch elasticsearch data when component becomes visible and project name is available
   useEffect(() => {
@@ -374,7 +374,7 @@ const MapComponent = (props) => {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.75rem" }}>
         <div>
           <Header className="works-header-view">{t("MAP_VIEW")}</Header>
-          {props.userName && (
+          {userName && (
             <div style={{ 
               fontSize: "0.85rem", 
               color: "#666",
@@ -384,7 +384,7 @@ const MapComponent = (props) => {
               borderRadius: "4px",
               border: "1px solid #bbdefb"
             }}>
-              {t("FILTERED_BY_USER")}: {props.userName}
+              {t("FILTERED_BY_USER")}: {userName}
             </div>
           )}
         </div>
@@ -666,6 +666,7 @@ const MapComponent = (props) => {
           isNextDisabled={isNextDisabled}
           customPopupContent={getMapPopupContent}
           customMarkerStyle={greenMarkerStyle}
+          mapContainerId={mapContainerId}
         />
       )}
     </div>

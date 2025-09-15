@@ -5,7 +5,7 @@ import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 /**
  * Component to display Ward Boundaries from S3
  */
-const WardBoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null }) => {
+const WardBoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map" }) => {
   const [boundaryData, setBoundaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -140,6 +140,7 @@ const WardBoundariesMap = ({ visits = [], showConnectingLines = false, customPop
           showConnectingLines={showConnectingLines}
           customPopupContent={customPopupContent}
           customMarkerStyle={customMarkerStyle}
+          mapContainerId={mapContainerId}
         />
       </div>
     </div>

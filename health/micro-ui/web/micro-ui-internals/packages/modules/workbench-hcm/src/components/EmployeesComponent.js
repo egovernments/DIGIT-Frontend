@@ -6,12 +6,12 @@ import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 import { projectStaffConfig } from "../configs/elasticsearchConfigs";
-import MapComponent from "./MapComponent";
+import MapComponentWrapper from "./MapComponentWrapper";
 
 const EmployeesComponent = (props) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10000);
+  const [pageSize, setPageSize] = useState(4000); // Maximum 4000 records
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -262,7 +262,7 @@ const EmployeesComponent = (props) => {
             page,
             pageSize,
             origin: window.location.origin,
-            batchSize: 1000,
+            batchSize: 500, // Batch size of 500
             kibanaConfig,
             authKey: AUTH_KEY
           }
@@ -276,7 +276,7 @@ const EmployeesComponent = (props) => {
           page,
           pageSize,
           origin: window.location.origin,
-          batchSize: 1000,
+          batchSize: 500, // Batch size of 500
           kibanaConfig,
           authKey: AUTH_KEY
         }
@@ -371,6 +371,19 @@ const EmployeesComponent = (props) => {
               borderRadius: "4px"
             }}>
               {filteredEmployeeData?.length} of {employeeData?.length} employees
+            </span>
+          )}
+          
+          {hasDataBeenFetched && employeeData?.length >= 4000 && (
+            <span style={{ 
+              fontSize: "0.75rem", 
+              color: "#ff6b35",
+              padding: "0.25rem 0.5rem",
+              backgroundColor: "#fff3e0",
+              borderRadius: "4px",
+              border: "1px solid #ffcc80"
+            }}>
+              Max limit reached (4000)
             </span>
           )}
         </div>
@@ -570,7 +583,7 @@ const EmployeesComponent = (props) => {
               animation: "spin 1s linear infinite"
             }}></div>
             <span style={{ fontWeight: "600", color: "#1976d2" }}>
-              Loading employee data...
+              Loading employee data (max 4000 records)...
             </span>
           </div>
           
@@ -594,7 +607,7 @@ const EmployeesComponent = (props) => {
               </div>
               <div style={{ fontSize: "12px", color: "#666", display: "flex", justifyContent: "space-between" }}>
                 <span>{loadingProgress.progress.toFixed(1)}% complete</span>
-                <span>{loadingProgress.dataReceived} records loaded</span>
+                <span>{loadingProgress.dataReceived} of max 4000 records (batch size: 500)</span>
               </div>
             </div>
           )}
@@ -720,7 +733,11 @@ const EmployeesComponent = (props) => {
                 </div>
               </div>
               
-              <MapComponent projectId={props.projectId} userName={selectedEmployee.userName} />
+              <MapComponentWrapper 
+                projectId={props.projectId} 
+                userName={selectedEmployee.userName}
+                key={`map-${selectedEmployee.employeeId}`}
+              />
             </div>
           </Card>
         </Modal>

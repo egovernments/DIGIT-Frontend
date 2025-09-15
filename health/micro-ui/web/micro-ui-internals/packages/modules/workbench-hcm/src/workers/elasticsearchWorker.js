@@ -74,7 +74,7 @@ async function authenticateKibana({ origin, kibanaConfig }) {
       body: JSON.stringify({
         "providerType": kibanaConfig.username,
         "providerName": kibanaConfig.password,
-        "currentURL": origin + "/" + kibanaConfig.kibanaPath + "/login"
+        "currentURL": `https://ondo-hcm.digit.org` + "/" + kibanaConfig.kibanaPath + "/login"
       })
     });
 

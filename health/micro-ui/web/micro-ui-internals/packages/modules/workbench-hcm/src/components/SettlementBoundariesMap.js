@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import MapView from "./MapView";
 import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 
-const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null }) => {
+const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map" }) => {
   const [boundaryData, setBoundaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -133,6 +133,7 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
           customPopupContent={customPopupContent}
           customMarkerStyle={customMarkerStyle}
           mapType="settlement"
+          mapContainerId={mapContainerId}
         />
       </div>
     </div>

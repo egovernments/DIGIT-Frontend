@@ -18,7 +18,8 @@ const BoundariesMapWrapper = ({
   isNextDisabled = false,
   showConnectingLines = false,
   customPopupContent = null,
-  customMarkerStyle = null
+  customMarkerStyle = null,
+  mapContainerId = "map"
 }) => {
   const { t } = useTranslation();
   const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA", "WARD", or "SETTLEMENT"
@@ -238,6 +239,7 @@ const BoundariesMapWrapper = ({
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
+            mapContainerId={mapContainerId}
           />
         ) : boundaryType === "WARD" ? (
           <WardBoundariesMap 
@@ -245,6 +247,7 @@ const BoundariesMapWrapper = ({
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
+            mapContainerId={mapContainerId}
           />
         ) : (
           <SettlementBoundariesMap 
@@ -252,6 +255,7 @@ const BoundariesMapWrapper = ({
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
+            mapContainerId={mapContainerId}
           />
         )}
       </div>
