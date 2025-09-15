@@ -20,11 +20,13 @@ const BoundariesMapWrapper = ({
   customPopupContent = null,
   customMarkerStyle = null,
   mapContainerId = "map",
-  isInModal = false
+  isInModal = false,
+  showBaseLayer = true
 }) => {
   const { t } = useTranslation();
   const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA", "WARD", or "SETTLEMENT"
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [showBaseLayers, setShowBaseLayers] = useState(showBaseLayer);
 
   const handleBoundaryTypeChange = (type) => {
     setBoundaryType(type);
@@ -53,7 +55,6 @@ const BoundariesMapWrapper = ({
 
   return (
     <div style={{ height: isInModal ? '100%' : '100vh', display: 'flex', flexDirection: 'column' }}>
-      {/* Toggle Controls */}
       <div style={{
         display: 'flex',
         justifyContent: 'space-between',
@@ -86,39 +87,76 @@ const BoundariesMapWrapper = ({
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '2rem' }}>
           {/* Boundary Type Radio Buttons */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            {[
-              { value: "LGA", label: "LGA", color: "#2E7D32" },
-              { value: "WARD", label: "Ward", color: "#7B1FA2" },
-              { value: "SETTLEMENT", label: "Settlement", color: "#D84315" }
-            ].map(({ value, label, color }) => (
-              <label 
-                key={value}
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '0.5rem',
-                  cursor: 'pointer',
-                  fontSize: '0.9rem',
-                  fontWeight: boundaryType === value ? 'bold' : 'normal',
-                  color: boundaryType === value ? color : '#6c757d'
-                }}
-              >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
+              {[
+                { value: "LGA", label: "LGA", color: "#2E7D32" },
+                { value: "WARD", label: "Ward", color: "#7B1FA2" },
+                { value: "SETTLEMENT", label: "Settlement", color: "#D84315" }
+              ].map(({ value, label, color }) => (
+                <label 
+                  key={value}
+                  style={{ 
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    gap: '0.5rem',
+                    cursor: 'pointer',
+                    fontSize: '0.9rem',
+                    fontWeight: boundaryType === value ? 'bold' : 'normal',
+                    color: boundaryType === value ? color : '#6c757d'
+                  }}
+                >
+                  <input
+                    type="radio"
+                    name="boundaryType"
+                    value={value}
+                    checked={boundaryType === value}
+                    onChange={(e) => handleBoundaryTypeChange(e.target.value)}
+                    style={{
+                      accentColor: color,
+                      transform: 'scale(1.1)'
+                    }}
+                  />
+                  {t(label)}
+                </label>
+              ))}
+            </div>
+            
+            {/* Base Layer Toggle - Hide in modal */}
+            {!isInModal && (
+              <div style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '0.5rem',
+                padding: '0.5rem 0.75rem',
+                backgroundColor: showBaseLayers ? '#e3f2fd' : '#ffebee',
+                borderRadius: '6px',
+                border: `1px solid ${showBaseLayers ? '#2196f3' : '#f44336'}`
+              }}>
                 <input
-                  type="radio"
-                  name="boundaryType"
-                  value={value}
-                  checked={boundaryType === value}
-                  onChange={(e) => handleBoundaryTypeChange(e.target.value)}
+                  type="checkbox"
+                  id="baseLayerToggle"
+                  checked={showBaseLayers}
+                  onChange={(e) => setShowBaseLayers(e.target.checked)}
                   style={{
-                    accentColor: color,
-                    transform: 'scale(1.1)'
+                    accentColor: showBaseLayers ? '#2196f3' : '#f44336',
+                    transform: 'scale(1.2)'
                   }}
                 />
-                {t(label)}
-              </label>
-            ))}
-          </div>
+                <label 
+                  htmlFor="baseLayerToggle"
+                  style={{ 
+                    fontSize: '0.85rem',
+                    fontWeight: '500',
+                    color: showBaseLayers ? '#1976d2' : '#d32f2f',
+                    cursor: 'pointer',
+                    userSelect: 'none'
+                  }}
+                >
+                  {showBaseLayers ? '🗺️ Base Map' : '🏗️ Shape Only'}
+                </label>
+              </div>
+            )}
+        </div>
 
           {/* Pagination Controls - Hide in modal */}
           {!isInModal && (
@@ -233,9 +271,7 @@ const BoundariesMapWrapper = ({
           </div>
           )}
         </div>
-      </div>
       
-      {/* Map Component */}
       <div style={{ flex: 1 }}>
         {boundaryType === "LGA" ? (
           <LGABoundariesMap 
@@ -244,6 +280,7 @@ const BoundariesMapWrapper = ({
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
             mapContainerId={mapContainerId}
+            showBaseLayer={showBaseLayers}
           />
         ) : boundaryType === "WARD" ? (
           <WardBoundariesMap 
@@ -252,6 +289,7 @@ const BoundariesMapWrapper = ({
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
             mapContainerId={mapContainerId}
+            showBaseLayer={showBaseLayers}
           />
         ) : (
           <SettlementBoundariesMap 
@@ -260,6 +298,7 @@ const BoundariesMapWrapper = ({
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
             mapContainerId={mapContainerId}
+            showBaseLayer={showBaseLayers}
           />
         )}
       </div>

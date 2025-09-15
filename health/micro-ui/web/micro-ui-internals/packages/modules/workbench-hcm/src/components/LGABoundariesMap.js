@@ -5,7 +5,7 @@ import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 /**
  * Component to display LGA Boundaries from S3
  */
-const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map" }) => {
+const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map", showBaseLayer = true }) => {
   const [boundaryData, setBoundaryData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -137,6 +137,7 @@ const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopu
           customPopupContent={customPopupContent}
           customMarkerStyle={customMarkerStyle}
           mapContainerId={mapContainerId}
+          showBaseLayer={showBaseLayer}
         />
       </div>
     </div>

@@ -195,7 +195,7 @@ const createEnhancedTaskPopup = (dataPoint, index) => {
   return createVisitPopup(dataPoint, index);
 };
 
-const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map" }) => {
+const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map", showBaseLayer = true }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
   const boundaryLayerRef = useRef(null); // L.GeoJSON layer for shapefile boundaries
@@ -482,85 +482,88 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
       mapRef.current = L.map(mapContainerId, {
         center: initialCenter,
         zoom: 8, // State-level zoom for Ondo State
+        zoomControl: true,
+        attributionControl: showBaseLayer, // Hide attribution when no base layer
       });
 
-      // Define base layers
-      const openStreetMap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
-        maxZoom: 19,
-      });
-
-      // High-resolution satellite layer from Google (higher quality)
-      const satelliteLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
-        attribution: 'Imagery &copy; Google',
-        maxZoom: 20,
-      });
-
-      // Alternative: Bing satellite imagery (good quality backup)
-      const bingSatelliteLayer = L.tileLayer("https://ecn.t3.tiles.virtualearth.net/tiles/a{q}.jpeg?g=1", {
-        attribution: '&copy; <a href="https://www.bing.com/maps/">Microsoft Bing Maps</a>',
-        maxZoom: 19,
-        subdomains: '0123',
-        tms: false,
-        // Custom tile loading for Bing quadkey system
-        getTileUrl: function(coords) {
-          const quadkey = this._coordsToQuadKey(coords);
-          return `https://ecn.t3.tiles.virtualearth.net/tiles/a${quadkey}.jpeg?g=1`;
-        },
-        _coordsToQuadKey: function(coords) {
-          let quadkey = "";
-          for (let i = coords.z; i > 0; i--) {
-            let digit = 0;
-            const mask = 1 << (i - 1);
-            if ((coords.x & mask) !== 0) digit += 1;
-            if ((coords.y & mask) !== 0) digit += 2;
-            quadkey += digit.toString();
-          }
-          return quadkey;
+      // Apply clean background style when no base layer is used
+      if (!showBaseLayer) {
+        const mapContainer = document.getElementById(mapContainerId);
+        if (mapContainer) {
+          mapContainer.style.backgroundColor = '#f8f9fa'; // Light gray background
         }
-      });
+      }
 
-      // ESRI World Imagery (fallback option, updated URL)
-      const esriSatelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
-        attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
-        maxZoom: 19,
-      });
+      // Define base layers only if showBaseLayer is true
+      if (showBaseLayer) {
+        const openStreetMap = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>',
+          maxZoom: 19,
+        });
 
-      const hybridLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
-        attribution: 'Imagery &copy; Google, Map data &copy; Google',
-        maxZoom: 20,
-      });
+        // High-resolution satellite layer from Google (higher quality)
+        const satelliteLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}", {
+          attribution: 'Imagery &copy; Google',
+          maxZoom: 20,
+        });
 
-      const hybridLabels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
-        attribution: '',
-        maxZoom: 19,
-      });
+        // Alternative: Bing satellite imagery (good quality backup)
+        const bingSatelliteLayer = L.tileLayer("https://ecn.t3.tiles.virtualearth.net/tiles/a{q}.jpeg?g=1", {
+          attribution: '&copy; <a href="https://www.bing.com/maps/">Microsoft Bing Maps</a>',
+          maxZoom: 19,
+          subdomains: '0123',
+          tms: false,
+          // Custom tile loading for Bing quadkey system
+          getTileUrl: function(coords) {
+            const quadkey = this._coordsToQuadKey(coords);
+            return `https://ecn.t3.tiles.virtualearth.net/tiles/a${quadkey}.jpeg?g=1`;
+          },
+          _coordsToQuadKey: function(coords) {
+            let quadkey = "";
+            for (let i = coords.z; i > 0; i--) {
+              let digit = 0;
+              const mask = 1 << (i - 1);
+              if ((coords.x & mask) !== 0) digit += 1;
+              if ((coords.y & mask) !== 0) digit += 2;
+              quadkey += digit.toString();
+            }
+            return quadkey;
+          }
+        });
 
-      // Add default layer (OpenStreetMap)
-      openStreetMap.addTo(mapRef.current);
+        // ESRI World Imagery (fallback option, updated URL)
+        const esriSatelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+          attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community',
+          maxZoom: 19,
+        });
 
-      // Define base layers for layer control
-      const baseLayers = {
-        "Street Map": openStreetMap,
-        "Satellite (Google)": satelliteLayer,
-        "Satellite (ESRI)": esriSatelliteLayer,
-        "Hybrid (Google)": hybridLayer,
-      };
+        const hybridLayer = L.tileLayer("https://mt1.google.com/vt/lyrs=y&x={x}&y={y}&z={z}", {
+          attribution: 'Imagery &copy; Google, Map data &copy; Google',
+          maxZoom: 20,
+        });
 
-      // Add layer control
-     L.control.layers(baseLayers, null, {
-      position: 'topright',   // move to bottom left
-      collapsed: false,          // collapsed by default
-    }).addTo(mapRef.current);
+        const hybridLabels = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/Reference/World_Boundaries_and_Places/MapServer/tile/{z}/{y}/{x}", {
+          attribution: '',
+          maxZoom: 19,
+        });
 
-// const layersControl = document.querySelector('.leaflet-control-layers');
-// if (layersControl) {
-//   const label = document.createElement('div');
-//   label.innerText = 'Layers';
-//   label.style.fontWeight = 'bold';
-//   label.style.textAlign = 'center';
-//   layersControl.prepend(label);
-// }
+        // Add default layer (OpenStreetMap)
+        openStreetMap.addTo(mapRef.current);
+
+        // Define base layers for layer control
+        const baseLayers = {
+          "Street Map": openStreetMap,
+          "Satellite (Google)": satelliteLayer,
+          "Satellite (ESRI)": esriSatelliteLayer,
+          "Hybrid (Google)": hybridLayer,
+        };
+
+        // Add layer control
+        L.control.layers(baseLayers, null, {
+          position: 'topright',
+          collapsed: false,
+        }).addTo(mapRef.current);
+      }
 
       // layer group to hold visit markers and polyline
       markersRef.current = L.layerGroup().addTo(mapRef.current);
