@@ -55,7 +55,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
       createdBy: createdBy,
       resourcesCount: parseInt(resourcesCount),
       locationAccuracy: parseInt(resourcesCount) >= 3 ? "High" : parseInt(resourcesCount) >= 2 ? "Medium" : "Low",
-      productName: "ITN Nets",
+      productName: "ITN",
       memberCount: parseInt(memberCount),
       administrativeArea: administrativeArea,
       quantity: parseInt(resourcesCount) * 50,

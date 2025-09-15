@@ -134,8 +134,9 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
           "Data.@timestamp", 
           "Data.productName",
           "Data.memberCount",
-          "Data.administrativeArea",
+          "Data.additionalDetails.administrativeArea",
           "Data.quantity",
+          "Data.status",
           "Data.userName"
         ];
         
@@ -314,8 +315,9 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
                 locationAccuracy: "NA",
                 productName: source.productName || "NA",
                 memberCount: source.memberCount || "NA",
-                administrativeArea: source.administrativeArea || "NA",
+                administrativeArea: source.additionalDetails.administrativeArea || "NA",
                 quantity: source.quantity || "NA",
+                status: source.status || "NA",
                 userId: source.userId || "NA",
                 startDate: source.startDate || null,
                 endDate: source.endDate || null,

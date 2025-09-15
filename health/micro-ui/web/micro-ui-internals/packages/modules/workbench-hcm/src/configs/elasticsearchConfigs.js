@@ -13,9 +13,10 @@ export const projectTaskConfig = {
     "Data.@timestamp", 
     "Data.productName",
     "Data.memberCount",
-    "Data.administrativeArea",
+    "Data.additionalDetails.administrativeArea",
     "Data.quantity",
     "Data.userName",
+    "Data.status",
     "Data.userId"
   ],
   // Field mappings for standardized output

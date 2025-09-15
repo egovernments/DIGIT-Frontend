@@ -243,13 +243,9 @@ export const createMapPointPopup = (dataPoint, index, options = {}) => {
               <span style="font-size: 24px;">${statusInfo.icon}</span>
               ${options.titlePrefix || 'Task'} #${pointNumber}
             </h3>
-            <p style="margin: 4px 0 0 0; font-size: 13px; opacity: 0.9; font-family: monospace; letter-spacing: 0.5px;">
-              ${taskId !== "N/A" ? `ID: ${taskId}` : `${taskType} • ${location}`}
-            </p>
+           
           </div>
-          <div style="background: rgba(255,255,255,0.25); padding: 8px 14px; border-radius: 25px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.8px; text-align: center;">
-            ${statusInfo.text}
-          </div>
+
         </div>
       </div>
 
