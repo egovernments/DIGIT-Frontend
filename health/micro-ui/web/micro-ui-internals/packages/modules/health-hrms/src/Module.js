@@ -20,6 +20,7 @@ import HierarchySelection from "./pages/employee/HierarchySelection";
 import UserAssignment from "./components/pageComponents/UserAssigment";
 import SearchUserToReport from "./components/pageComponents/SearchUserToReport";
 import SelectableList from "./components/pageComponents/SelectableList";
+import HRMSCard from "./components/HRMSCard";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
   console.log("I'm HRMS module");
@@ -72,7 +73,7 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   EmployeeDetailScreen,
   InboxSearch,
-
+  HRMSCard,
   ActionPopUp,
   BoundaryComponent,
   ResponseScreen,
