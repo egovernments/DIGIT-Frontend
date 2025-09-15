@@ -101,5 +101,98 @@
         "beneficiaryType": "HOUSEHOLD"
       }
     ]
-  }
+  },
+    {
+            "id": "bdc98af4-ace6-4580-ba35-bfb0da261953",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.targetConfigs",
+            "uniqueIdentifier": "Oncho",
+            "data": {
+                "campaignType": "Oncho",
+                "beneficiaries": [
+                    {
+                        "columns": [
+                            "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_1",
+                            "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_2"
+                        ],
+                        "beneficiaryType": "INDIVIDUAL"
+                    },
+                    {
+                        "columns": [
+                            "HCM_ADMIN_CONSOLE_TARGET_ONCHO_COLUMN_3"
+                        ],
+                        "beneficiaryType": "HOUSEHOLD"
+                    }
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1757832242237,
+                "lastModifiedTime": 1757832242237
+            }
+        },
+        {
+            "id": "a0ad86f5-15b0-48da-bc31-349059b8ea59",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.targetConfigs",
+            "uniqueIdentifier": "Schisto",
+            "data": {
+                "campaignType": "Schisto",
+                "beneficiaries": [
+                    {
+                        "columns": [
+                            "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_1",
+                            "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_2"
+                        ],
+                        "beneficiaryType": "INDIVIDUAL"
+                    },
+                    {
+                        "columns": [
+                            "HCM_ADMIN_CONSOLE_TARGET_SCHISTO_COLUMN_3"
+                        ],
+                        "beneficiaryType": "HOUSEHOLD"
+                    }
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1757832224622,
+                "lastModifiedTime": 1757832224622
+            }
+        },
+        {
+            "id": "f01ac56b-fa3e-4460-80ef-9a5802c3bc64",
+            "tenantId": "mz",
+            "schemaCode": "HCM-ADMIN-CONSOLE.targetConfigs",
+            "uniqueIdentifier": "NTD1",
+            "data": {
+                "campaignType": "NTD1",
+                "beneficiaries": [
+                    {
+                        "columns": [
+                            "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_1",
+                            "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_2"
+                        ],
+                        "beneficiaryType": "INDIVIDUAL"
+                    },
+                    {
+                        "columns": [
+                            "HCM_ADMIN_CONSOLE_TARGET_NTD_COLUMN_3"
+                        ],
+                        "beneficiaryType": "HOUSEHOLD"
+                    }
+                ]
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "lastModifiedBy": "b2be1420-4656-407a-9176-5486a964c326",
+                "createdTime": 1756977858324,
+                "lastModifiedTime": 1757484516251
+            }
+        }
 ]
