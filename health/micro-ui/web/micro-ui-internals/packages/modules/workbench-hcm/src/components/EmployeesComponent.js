@@ -1,6 +1,6 @@
 import React,{ useState, useEffect, useRef, useCallback } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, Loader, Button, Modal, ModalHeader, ModalBody } from "@egovernments/digit-ui-react-components";
+import { Header, Loader, Button, Modal, Card, Close, CloseSvg } from "@egovernments/digit-ui-react-components";
 import { Toast } from "@egovernments/digit-ui-components";
 import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
@@ -309,6 +309,25 @@ const EmployeesComponent = (props) => {
   const handleCloseMapPopup = () => {
     setShowMapPopup(false);
     setSelectedEmployee(null);
+  };
+
+  // Helper components for Modal (following ProjectStaffModal pattern)
+  const CloseBtn = (props) => {
+    return (
+      <div onClick={props?.onClick} style={props?.isMobileView ? { padding: 5 } : null}>
+        {props?.isMobileView ? (
+          <CloseSvg />
+        ) : (
+          <div className={"icon-bg-secondary"} style={{ backgroundColor: "#FFFFFF" }}>
+            <Close />
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  const Heading = (props) => {
+    return <h1 className="heading-m">{props.heading}</h1>;
   };
 
   const columns = [
@@ -654,25 +673,21 @@ const EmployeesComponent = (props) => {
         }}
       />
       
-      {/* Map Popup Modal */}
+      {/* Map Popup Modal - Following ProjectStaffModal pattern */}
       {showMapPopup && selectedEmployee && (
-        <Modal>
-          <ModalHeader>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
-              <h2 style={{ margin: 0 }}>
-                {t("MAP_VIEW")} - {selectedEmployee.employeeName}
-              </h2>
-              <Button
-                label={t("CLOSE")}
-                variation="secondary"
-                onButtonClick={handleCloseMapPopup}
-                style={{ marginLeft: 'auto' }}
-              />
-            </div>
-          </ModalHeader>
-          <ModalBody>
+        <Modal
+          className="employee-map-modal"
+          popupStyles={{ maxWidth: "800px", width: "70%" }}
+          formId="modal-action"
+          headerBarMain={<Heading t={t} heading={`${t("MAP_VIEW")} - ${selectedEmployee.employeeName}`} />}
+          headerBarEnd={<CloseBtn onClick={handleCloseMapPopup} />}
+          actionSaveLabel={null}
+          actionCancelLabel={t("CORE_COMMON_CLOSE")}
+          actionCancelOnSubmit={handleCloseMapPopup}
+          hideSubmit={true}
+        >
+          <Card style={{ boxShadow: "none" }}>
             <div style={{ 
-              padding: "1rem",
               minHeight: "500px",
               maxHeight: "80vh",
               overflow: "auto"
@@ -707,7 +722,7 @@ const EmployeesComponent = (props) => {
               
               <MapComponent projectId={props.projectId} userName={selectedEmployee.userName} />
             </div>
-          </ModalBody>
+          </Card>
         </Modal>
       )}
     </div>
