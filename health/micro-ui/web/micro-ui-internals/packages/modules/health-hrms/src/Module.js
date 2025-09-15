@@ -23,7 +23,7 @@ import SelectableList from "./components/pageComponents/SelectableList";
 import HRMSCard from "./components/HRMSCard";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-  console.log("I'm HRMS module");
+
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const modulePrefix = "hcm";
   const [hierarchySelected, setHierarchySelected] = useState(null);

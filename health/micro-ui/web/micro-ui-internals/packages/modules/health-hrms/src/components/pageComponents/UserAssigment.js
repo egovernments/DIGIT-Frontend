@@ -85,28 +85,13 @@ const UserAssignment = ({ t, config, onSelect, formData, }) => {
     return (<div>
         <LabelFieldPair>
             <CardLabel style={{ width: "50.1%" }} className="digit-card-label-smaller">
-                {t("HCM_AM_REPORTING_TO")}
+                {t("HCM_AM_REPORTING_TO")}<span style={{ color: "#B91900" }}> *</span>
             </CardLabel>
             <div style={{ width: "100%" }}
                 onClick={() => {
                     setOpen(true)
                 }}
-
             >
-
-
-                {/* {<Dropdown
-                    style={{ width: "40rem" }}
-                    t={t}
-                    option={options}
-                    optionKey={"name"}
-                    selected={selectedHierarchy}
-                    select={(value) => {
-                        setSelectedHierarchy(value)
-                        onSelect(config.key, value);
-                    }}
-                // select={(value) => onHierarchySelect(value)}
-                />} */}
 
                 <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
             </div>
@@ -123,11 +108,6 @@ const UserAssignment = ({ t, config, onSelect, formData, }) => {
         }
     </div>
     )
-
-
-
-
-
 }
 
 

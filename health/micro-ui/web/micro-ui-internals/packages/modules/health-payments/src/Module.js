@@ -14,7 +14,7 @@ import AttendeeBoundaryComponent from "./components/SearchAttendeeBoundary";
 
 export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   // const [hierarchySelected, setHierarchySelected] = useState(null);
-  console.log("I'm payments module");
+
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 

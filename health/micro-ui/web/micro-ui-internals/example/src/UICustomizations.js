@@ -2617,7 +2617,7 @@ export const UICustomizations = {
 
       // filterForm
       // params
-      console.log(data)
+
       if (data.state.filterForm && Object.keys(data.state.filterForm).length > 0) {
         const updatedParams = {}; // Temporary object to store updates
 
@@ -2637,25 +2637,7 @@ export const UICustomizations = {
       data.params.limit = data.state.tableForm.limit;
       data.params.offset = data.state.tableForm.offset;
 
-      // data.body.Individual = {
-      //   mobileNumber: data.state.searchForm.phone,
-      //   name: {
-      //     givenName: data.state.searchForm.names
-      //   },
-      //   username: data.state.searchForm.codes,
-      //   locality: {
-      //     id: null,
-      //     tenantId: null,
-      //     code: data.state.filterForm.AttendeeBoundaryComponent || Digit?.SessionStorage.get("selectedBoundary")?.code,
-      //     geometry: null,
-      //     auditDetails: null,
-      //     additionalDetails: null,
-      //   },
-      //   // boundaryCode: data.state.filterForm.AttendeeBoundaryComponent
-      // };
 
-
-    
       const { phone, names, codes } = data.state.searchForm;
       const boundaryCode = data.state.filterForm.AttendeeBoundaryComponent
         || Digit?.SessionStorage.get("selectedBoundary")?.code;
@@ -2679,33 +2661,13 @@ export const UICustomizations = {
 
       // Always add locality (since it has structure, but you can also check boundaryCode if required)
       if (boundaryCode && boundaryCode.trim() !== "") {
-        // Individual.locality = {
-        //   id: null,
-        //   tenantId: null,
-        //   code: boundaryCode,
-        //   geometry: null,
-        //   auditDetails: null,
-        //   additionalDetails: null,
-        // };
-        Individual.boundaryCode=boundaryCode
+
+        Individual.boundaryCode = boundaryCode
       }
 
       // Assign back to data.body
       data.body.Individual = Individual;
 
-
-      // if (data.state.searchForm.hasOwnProperty("codes")) {
-      //   delete data.state.searchForm.codes;
-      // }
-
-      // if (data.state.searchForm.hasOwnProperty("AttendeeBoundaryComponent")) {
-      //   delete data.state.searchForm.AttendeeBoundaryComponent;
-      // }
-      //  if (data.state.searchForm.hasOwnProperty("names")) {
-      //   delete data.state.searchForm.names;
-      // }
-
-      console.log("payload", data)
       return data;
     },
 

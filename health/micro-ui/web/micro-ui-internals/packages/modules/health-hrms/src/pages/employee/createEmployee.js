@@ -19,6 +19,7 @@ import { CreateEmployeeConfig } from "../../components/config/createEmployeeConf
 
 const CreateEmployee = ({ editUser = false }) => {
   const { boundaryCode } = Digit.Hooks.useQueryParams();
+
   const isEdit = window.location.pathname.includes("/edit/");
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [canSubmit, setSubmitValve] = useState(false);
@@ -31,6 +32,11 @@ const CreateEmployee = ({ editUser = false }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const location = useLocation();
+  // Get query params
+  const queryParams = new URLSearchParams(location.search);
+
+  // Access specific param
+  const boundaryCodep = queryParams.get("boundarycode");
 
   const [createEmployeeData, setCreateEmployeeData] = useState({});
 
@@ -344,7 +350,9 @@ const CreateEmployee = ({ editUser = false }) => {
     (section) => section.head === "HR_NEW_EMPLOYEE_FORM_HEADER"
   );
 
-  if (boundaryCode) {
+
+  if (boundaryCodep) {
+
     if (newEmployeeFormSection) {
       const body = newEmployeeFormSection.body;
 
