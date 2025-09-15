@@ -6,6 +6,7 @@ import getProjectServiceUrl, { getKibanaDetails } from "../utils/getProjectServi
 import BoundariesMapWrapper from "./BoundariesMapWrapper";
 import { createDeliveryPopup } from "./MapPointsPopup";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
+import { projectStaffConfig } from "../configs/elasticsearchConfigs";
 
 // Function to convert boundary type to camelCase
 function toCamelCase(str) {
@@ -36,6 +37,15 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     endDate: ""
   });
   const [availableBoundaries, setAvailableBoundaries] = useState([]);
+  
+  // New LGA region filter states
+  const [lgaFilter, setLgaFilter] = useState("");
+  const [wardFilter, setWardFilter] = useState("");
+  const [facilityFilter, setFacilityFilter] = useState("");
+  const [availableLGAs, setAvailableLGAs] = useState([]);
+  const [availableWards, setAvailableWards] = useState([]);
+  const [availableFacilities, setAvailableFacilities] = useState([]);
+  const [activeFilters, setActiveFilters] = useState([]);
 
   // Default sample data for testing and fallback - Ondo State locations
   const rawData = [
@@ -69,13 +79,42 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
   // Apply filters to project tasks
   useEffect(() => {
     let filtered = [...projectTask];
+    const appliedFilters = [];
     
-    // Filter by boundary name
+    // Filter by LGA
+    if (lgaFilter) {
+      filtered = filtered.filter(task => 
+        task.lga && 
+        task.lga.toLowerCase().includes(lgaFilter.toLowerCase())
+      );
+      appliedFilters.push({ type: 'LGA', value: lgaFilter, label: `LGA: ${lgaFilter}` });
+    }
+    
+    // Filter by Ward
+    if (wardFilter) {
+      filtered = filtered.filter(task => 
+        task.ward && 
+        task.ward.toLowerCase().includes(wardFilter.toLowerCase())
+      );
+      appliedFilters.push({ type: 'Ward', value: wardFilter, label: `Ward: ${wardFilter}` });
+    }
+    
+    // Filter by Health Facility
+    if (facilityFilter) {
+      filtered = filtered.filter(task => 
+        task.healthFacility && 
+        task.healthFacility.toLowerCase().includes(facilityFilter.toLowerCase())
+      );
+      appliedFilters.push({ type: 'Facility', value: facilityFilter, label: `Facility: ${facilityFilter}` });
+    }
+    
+    // Filter by boundary name (general administrative area)
     if (boundaryNameFilter) {
       filtered = filtered.filter(task => 
         task.administrativeArea && 
         task.administrativeArea.toLowerCase().includes(boundaryNameFilter.toLowerCase())
       );
+      appliedFilters.push({ type: 'Area', value: boundaryNameFilter, label: `Area: ${boundaryNameFilter}` });
     }
     
     // Filter by delivery date range
@@ -99,10 +138,31 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         
         return true;
       });
+      
+      if (deliveryDateFilter.startDate && deliveryDateFilter.endDate) {
+        appliedFilters.push({ 
+          type: 'DateRange', 
+          value: `${deliveryDateFilter.startDate}-${deliveryDateFilter.endDate}`, 
+          label: `Date: ${deliveryDateFilter.startDate} - ${deliveryDateFilter.endDate}` 
+        });
+      } else if (deliveryDateFilter.startDate) {
+        appliedFilters.push({ 
+          type: 'StartDate', 
+          value: deliveryDateFilter.startDate, 
+          label: `From: ${deliveryDateFilter.startDate}` 
+        });
+      } else if (deliveryDateFilter.endDate) {
+        appliedFilters.push({ 
+          type: 'EndDate', 
+          value: deliveryDateFilter.endDate, 
+          label: `Until: ${deliveryDateFilter.endDate}` 
+        });
+      }
     }
     
     setFilteredProjectTask(filtered);
-  }, [projectTask, boundaryNameFilter, deliveryDateFilter]);
+    setActiveFilters(appliedFilters);
+  }, [projectTask, lgaFilter, wardFilter, facilityFilter, boundaryNameFilter, deliveryDateFilter]);
   
   // Extract unique boundaries from tasks
   useEffect(() => {
@@ -111,6 +171,27 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
       .filter(area => area && area !== "NA")
     )].sort();
     setAvailableBoundaries(boundaries);
+    
+    // Extract LGAs
+    const lgas = [...new Set(projectTask
+      .map(task => task.lga || task.boundaryHierarchy?.lga)
+      .filter(lga => lga && lga !== "NA")
+    )].sort();
+    setAvailableLGAs(lgas);
+    
+    // Extract Wards
+    const wards = [...new Set(projectTask
+      .map(task => task.ward || task.boundaryHierarchy?.ward)
+      .filter(ward => ward && ward !== "NA")
+    )].sort();
+    setAvailableWards(wards);
+    
+    // Extract Health Facilities
+    const facilities = [...new Set(projectTask
+      .map(task => task.healthFacility || task.boundaryHierarchy?.healthFacility)
+      .filter(facility => facility && facility !== "NA")
+    )].sort();
+    setAvailableFacilities(facilities);
   }, [projectTask]);
 
   // Intersection Observer for visibility detection
@@ -166,7 +247,48 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
             projectTaskIndex: getKibanaDetails('projectTaskIndex'),
             username: getKibanaDetails('username'),
             password: getKibanaDetails('password'),
-            queryField: getKibanaDetails('value') || 'projectName'
+            queryField: getKibanaDetails('value') || 'projectName',
+            dataPrefix: 'Data',
+            // Include boundary hierarchy fields in source
+            sourceFields: [
+              "Data.geoPoint",
+              "Data.@timestamp", 
+              "Data.productName",
+              "Data.memberCount",
+              "Data.additionalDetails.administrativeArea",
+              "Data.quantity",
+              "Data.userName",
+              "Data.status",
+              "Data.userId",
+              "Data.boundaryHierarchy",
+              "Data.boundaryHierarchy.country",
+              "Data.boundaryHierarchy.state", 
+              "Data.boundaryHierarchy.lga",
+              "Data.boundaryHierarchy.ward",
+              "Data.boundaryHierarchy.healthFacility"
+            ],
+            // Add field mappings to properly extract boundary data
+            fieldMappings: {
+              id: 'id',
+              plannedStartDate: '@timestamp',
+              resourcesQuantity: 'quantity',
+              latitude: 'geoPoint.1',  // geoPoint is [lon, lat] format
+              longitude: 'geoPoint.0',
+              createdBy: 'userName',
+              resourcesCount: 'resourcesCount',
+              locationAccuracy: 'locationAccuracy',
+              productName: 'productName',
+              memberCount: 'memberCount',
+              administrativeArea: 'additionalDetails.administrativeArea',
+              quantity: 'quantity',
+              status: 'status',
+              userId: 'userId',
+              country: 'boundaryHierarchy.country',
+              state: 'boundaryHierarchy.state',
+              lga: 'boundaryHierarchy.lga',
+              ward: 'boundaryHierarchy.ward',
+              healthFacility: 'boundaryHierarchy.healthFacility'
+            }
           };
           workerRef.current?.postMessage({
             type: 'AUTHENTICATE_KIBANA',
@@ -242,12 +364,54 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
     const API_TOKEN = getKibanaDetails('token');
     const AUTH_KEY = getKibanaDetails('sendBasicAuthHeader') ? `Basic ${auth}` : `ApiKey ${API_TOKEN}`;
     
+    // MapComponent config with boundary hierarchy fields
     const kibanaConfig = {
       kibanaPath: getKibanaDetails('kibanaPath'),
       projectTaskIndex: getKibanaDetails('projectTaskIndex'),
       username: getKibanaDetails('username'),
       password: getKibanaDetails('password'),
-      queryField: getKibanaDetails('value') || 'projectName'
+      queryField: getKibanaDetails('value') || 'projectName',
+      dataPrefix: 'Data',
+      // Include boundary hierarchy fields in source
+      sourceFields: [
+        "Data.geoPoint",
+        "Data.@timestamp", 
+        "Data.productName",
+        "Data.memberCount",
+        "Data.additionalDetails.administrativeArea",
+        "Data.quantity",
+        "Data.userName",
+        "Data.status",
+        "Data.userId",
+        "Data.boundaryHierarchy",
+        "Data.boundaryHierarchy.country",
+        "Data.boundaryHierarchy.state", 
+        "Data.boundaryHierarchy.lga",
+        "Data.boundaryHierarchy.ward",
+        "Data.boundaryHierarchy.healthFacility"
+      ],
+      // Add field mappings to properly extract boundary data
+      fieldMappings: {
+        id: 'id',
+        plannedStartDate: '@timestamp',
+        resourcesQuantity: 'quantity',
+        latitude: 'geoPoint.1',  // geoPoint is [lon, lat] format
+        longitude: 'geoPoint.0',
+        createdBy: 'userName',
+        resourcesCount: 'resourcesCount',
+        locationAccuracy: 'locationAccuracy',
+        productName: 'productName',
+        memberCount: 'memberCount',
+        administrativeArea: 'additionalDetails.administrativeArea',
+        quantity: 'quantity',
+        status: 'status',
+        userId: 'userId',
+        country: 'boundaryHierarchy.country',
+        state: 'boundaryHierarchy.state',
+        lga: 'boundaryHierarchy.lga',
+        ward: 'boundaryHierarchy.ward',
+        healthFacility: 'boundaryHierarchy.healthFacility'
+      }
     };
 
     // Build query parameters - boundary-based filtering with correct term structure
@@ -341,10 +505,39 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
   
   const clearFilters = () => {
     setBoundaryNameFilter("");
+    setLgaFilter("");
+    setWardFilter("");
+    setFacilityFilter("");
     setDeliveryDateFilter({
       startDate: "",
       endDate: ""
     });
+    setActiveFilters([]);
+  };
+  
+  // Remove individual filter
+  const removeFilter = (filterType) => {
+    switch (filterType) {
+      case 'LGA':
+        setLgaFilter("");
+        break;
+      case 'Ward':
+        setWardFilter("");
+        break;
+      case 'Facility':
+        setFacilityFilter("");
+        break;
+      case 'Area':
+        setBoundaryNameFilter("");
+        break;
+      case 'DateRange':
+      case 'StartDate':
+      case 'EndDate':
+        setDeliveryDateFilter({ startDate: "", endDate: "" });
+        break;
+      default:
+        break;
+    }
   };
 
   // Dark green marker style for MapComponent - no inner circle, smaller, darker
@@ -381,7 +574,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
               </div>
             )}
           </div>
-          {/* <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+          <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <Button
               variation={showFilters ? "secondary" : "primary"}
               label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
@@ -400,7 +593,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
                 {filteredProjectTask?.length} of {projectTask?.length} points
               </span>
             )}
-          </div> */}
+          </div>
         </div>
       )}
       
@@ -420,6 +613,81 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         </div>
       )}
       
+      {/* Active Filters Chips */}
+      {activeFilters.length > 0 && (
+        <div style={{ 
+          marginBottom: "12px", 
+          padding: "12px", 
+          backgroundColor: "#e3f2fd", 
+          borderRadius: "8px", 
+          border: "1px solid #bbdefb" 
+        }}>
+          <div style={{ display: "flex", alignItems: "center", flexWrap: "wrap", gap: "8px" }}>
+            <span style={{ fontSize: "12px", fontWeight: "600", color: "#1976d2", marginRight: "8px" }}>
+              {t("ACTIVE_FILTERS")}:
+            </span>
+            {activeFilters.map((filter, index) => (
+              <div
+                key={`${filter.type}-${index}`}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  backgroundColor: "#2196f3",
+                  color: "white",
+                  padding: "4px 8px",
+                  borderRadius: "16px",
+                  fontSize: "12px",
+                  fontWeight: "500",
+                  gap: "4px"
+                }}
+              >
+                <span>{filter.label}</span>
+                <button
+                  onClick={() => removeFilter(filter.type)}
+                  style={{
+                    background: "none",
+                    border: "none",
+                    color: "white",
+                    cursor: "pointer",
+                    padding: "0",
+                    margin: "0",
+                    fontSize: "14px",
+                    fontWeight: "bold",
+                    lineHeight: "1",
+                    borderRadius: "50%",
+                    width: "16px",
+                    height: "16px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center"
+                  }}
+                  title={`Remove ${filter.type} filter`}
+                >
+                  ×
+                </button>
+              </div>
+            ))}
+            <button
+              onClick={clearFilters}
+              style={{
+                background: "#f44336",
+                border: "none",
+                color: "white",
+                padding: "4px 8px",
+                borderRadius: "12px",
+                fontSize: "11px",
+                fontWeight: "500",
+                cursor: "pointer",
+                marginLeft: "4px"
+              }}
+              title="Clear all filters"
+            >
+              {t("CLEAR_ALL")}
+            </button>
+          </div>
+        </div>
+      )}
+      
       {/* Filter Section */}
       {showFilters && (
         <div style={{ 
@@ -431,21 +699,119 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
         }}>
           <h4 style={{ marginBottom: "12px", color: "#333" }}>{t("FILTER_OPTIONS")}</h4>
           
+          {/* Row 1: Geographic Filters */}
           <div style={{ 
             display: "grid",
-            gridTemplateColumns: "1fr 1fr 1fr auto",
+            gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))",
             gap: "16px",
-            alignItems: "end"
+            marginBottom: "16px"
           }}>
-            {/* Boundary Name Filter */}
+            {/* LGA Filter */}
             <div>
               <label style={{ 
                 display: "block",
                 marginBottom: "8px", 
                 color: "#555",
-                fontSize: "14px"
+                fontSize: "14px",
+                fontWeight: "600"
               }}>
-                {t("BOUNDARY_NAME")}
+                🏛️ {t("LGA")}
+              </label>
+              <select
+                value={lgaFilter}
+                onChange={(e) => setLgaFilter(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  backgroundColor: "white"
+                }}
+              >
+                <option value="">{t("ALL_LGAS") || "All LGAs"}</option>
+                {availableLGAs.map(lga => (
+                  <option key={lga} value={lga}>
+                    {lga}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Ward Filter */}
+            <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px",
+                fontWeight: "600"
+              }}>
+                📍 {t("WARD")}
+              </label>
+              <select
+                value={wardFilter}
+                onChange={(e) => setWardFilter(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  backgroundColor: "white"
+                }}
+              >
+                <option value="">{t("ALL_WARDS") || "All Wards"}</option>
+                {availableWards.map(ward => (
+                  <option key={ward} value={ward}>
+                    {ward}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Health Facility Filter */}
+            <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px",
+                fontWeight: "600"
+              }}>
+                🏥 {t("HEALTH_FACILITY")}
+              </label>
+              <select
+                value={facilityFilter}
+                onChange={(e) => setFacilityFilter(e.target.value)}
+                style={{
+                  width: "100%",
+                  padding: "8px 12px",
+                  border: "1px solid #ccc",
+                  borderRadius: "4px",
+                  fontSize: "14px",
+                  backgroundColor: "white"
+                }}
+              >
+                <option value="">{t("ALL_FACILITIES") || "All Facilities"}</option>
+                {availableFacilities.map(facility => (
+                  <option key={facility} value={facility}>
+                    {facility}
+                  </option>
+                ))}
+              </select>
+            </div>
+            
+            {/* General Boundary Name Filter */}
+            {/* <div>
+              <label style={{ 
+                display: "block",
+                marginBottom: "8px", 
+                color: "#555",
+                fontSize: "14px",
+                fontWeight: "600"
+              }}>
+                🌐 {t("BOUNDARY_NAME") || "Area"}
               </label>
               <select
                 value={boundaryNameFilter}
@@ -459,14 +825,23 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
                   backgroundColor: "white"
                 }}
               >
-                <option value="">{t("ALL_BOUNDARIES")}</option>
+                <option value="">{t("ALL_BOUNDARIES") || "All Areas"}</option>
                 {availableBoundaries.map(boundary => (
                   <option key={boundary} value={boundary}>
                     {boundary}
                   </option>
                 ))}
               </select>
-            </div>
+            </div> */}
+          </div>
+          
+          {/* Row 2: Date Filters */}
+          <div style={{ 
+            display: "grid",
+            gridTemplateColumns: "1fr 1fr auto",
+            gap: "16px",
+            alignItems: "end"
+          }}>
             
             {/* Start Date Filter */}
             <div>
@@ -493,7 +868,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
             </div>
             
             {/* End Date Filter */}
-            <div>
+            {/* <div>
               <label style={{ 
                 display: "block",
                 marginBottom: "8px", 
@@ -515,7 +890,7 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
                   fontSize: "14px"
                 }}
               />
-            </div>
+            </div> */}
             
             {/* Clear Button */}
             <div>
@@ -523,40 +898,11 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
                 variation="secondary"
                 label={t("CLEAR_FILTERS")}
                 onClick={clearFilters}
-                isDisabled={!boundaryNameFilter && !deliveryDateFilter.startDate && !deliveryDateFilter.endDate}
+                isDisabled={activeFilters.length === 0}
                 style={{ padding: "0.5rem 1rem", fontSize: "0.85rem" }}
               />
             </div>
           </div>
-          
-          {/* Active Filters Display */}
-          {(boundaryNameFilter || deliveryDateFilter.startDate || deliveryDateFilter.endDate) && (
-            <div style={{ 
-              marginTop: "12px", 
-              padding: "8px",
-              backgroundColor: "#e3f2fd",
-              borderRadius: "4px",
-              fontSize: "14px",
-              color: "#1976d2"
-            }}>
-              <strong>{t("ACTIVE_FILTERS")}:</strong>
-              {boundaryNameFilter && (
-                <span style={{ marginLeft: "8px" }}>
-                  Boundary: {boundaryNameFilter}
-                </span>
-              )}
-              {deliveryDateFilter.startDate && (
-                <span style={{ marginLeft: "8px" }}>
-                  From: {new Date(deliveryDateFilter.startDate).toLocaleDateString()}
-                </span>
-              )}
-              {deliveryDateFilter.endDate && (
-                <span style={{ marginLeft: "8px" }}>
-                  To: {new Date(deliveryDateFilter.endDate).toLocaleDateString()}
-                </span>
-              )}
-            </div>
-          )}
         </div>
       )}
       
