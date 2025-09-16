@@ -59,7 +59,7 @@ const AddAttributeField = ({
 
   useEffect(() => {
     setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
-  }, [delivery, deliveryRules]);
+  }, [delivery?.attributes]);
 
   // const schemaCode = useMemo(() => {
   //   const code = showAttribute?.valuesSchema;
@@ -138,16 +138,13 @@ const AddAttributeField = ({
   };
 
   const selectValue = (e) => {
-    let val = e.target.value;
-    val = val.replace(/[^\d.]/g, "");
-    val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    // if (val.startsWith("-")) {
-    //   val = val.slice(1); // Remove the negative sign
-    // }
-    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
-      val = val.slice(0, -1);
+    if ([" ", "e", "E"].some((f) => val.includes(f))) {
       return;
     }
+    let val = e.target.value;
+    val = val.replace(/[^\d.]/g, "");
+    const match = val.match(/^\d*\.?\d{0,2}/);
+    val = match ? match[0] : "";
     // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
     const updatedData = deliveryRules.map((item, index) => {
       if (item.ruleKey === deliveryRuleIndex) {
@@ -170,17 +167,17 @@ const AddAttributeField = ({
   };
 
   const selectToFromValue = (e, range) => {
-    let val = e.target.value;
-    val = val.replace(/[^\d.]/g, "");
-    val = val.match(/^\d*\.?\d{0,2}/)[0] || "";
-    // if (val.startsWith("-")) {
-    //   val = val.slice(1); // Remove the negative sign
-    // }
-
-    if (isNaN(val) || [" ", "e", "E"].some((f) => val.includes(f))) {
-      val = val.slice(0, -1);
-      return;
-    }
+    const sanitizeNumericInput = (value) => {
+      // Early validation for special characters
+      if ([" ", "e", "E"].some((f) => value.includes(f))) {
+        return null;
+      }
+      let val = value.replace(/[^\d.]/g, "");
+      const match = val.match(/^\d*\.?\d{0,2}/);
+      return match ? match[0] : "";
+    };
+    const val = sanitizeNumericInput(e.target.value);
+    if (val === null) return;
     if (range === "to") {
       const updatedData = deliveryRules.map((item, index) => {
         if (item.ruleKey === deliveryRuleIndex) {
@@ -244,7 +241,7 @@ const AddAttributeField = ({
             </CardLabel>
             <Dropdown
               className="form-field"
-              showToolTip = {true}
+              showToolTip={true}
               selected={attributeConfig?.find((item) => item?.code === attribute?.attribute?.code)}
               disable={false}
               isMandatory={true}
@@ -264,7 +261,7 @@ const AddAttributeField = ({
               // disable={attribute?.attribute?.code === "Gender" ? true : false}
               isMandatory={true}
               option={operatorConfig}
-              showToolTip = {true}
+              showToolTip={true}
               select={(value) => selectOperator(value)}
               optionKey="code"
               t={t}
@@ -313,8 +310,8 @@ const AddAttributeField = ({
                 }}
               >
                 {(typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value)) ||
-                attribute?.attribute?.valuesSchema ||
-                isNaN(attribute?.value) ? (
+                  attribute?.attribute?.valuesSchema ||
+                  isNaN(attribute?.value) ? (
                   <Dropdown
                     className="form-field"
                     selected={attribute?.value?.code ? attribute?.value : { code: attribute?.value }}
@@ -387,9 +384,9 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
       prev.map((item, index) =>
         index + 1 === deliveryRuleIndex
           ? {
-              ...item,
-              attributes: [...item.attributes, { key: item.attributes.length + 1, attribute: "", operator: "", value: "" }],
-            }
+            ...item,
+            attributes: [...item.attributes, { key: item.attributes.length + 1, attribute: "", operator: "", value: "" }],
+          }
           : item
       )
     );
@@ -423,13 +420,11 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
-  if (Array.isArray(delivery?.attributes) && delivery.attributes.length === 0) {
-    delivery.attributes = [{ key: 1, attribute: null, operator: null, value: "" }];
-  }
+  const deliveryAttributes = Array.isArray(delivery?.attributes) && delivery.attributes.length === 0  ? [{ key: 1, attribute: null, operator: null, value: "" }]  : delivery.attributes;
 
   return (
     <Card className="attribute-container">
-      {delivery.attributes.map((item, index) => (
+      {deliveryAttributes.map((item, index) => (
         <AddAttributeField
           config={filteredDeliveryConfig?.attributeConfig?.[index]}
           deliveryRuleIndex={deliveryRuleIndex}
@@ -460,7 +455,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
   );
 };
 
-const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index, key, delivery, onDelete }) => {
+const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index, delivery, onDelete }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [showModal, setShowModal] = useState(false);
   const [showToast, setShowToast] = useState(null);
@@ -586,7 +581,6 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           deliveryRules={deliveryRules}
           setDeliveryRules={setDeliveryRules}
           index={index}
-          key={key}
         />
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
@@ -640,7 +634,7 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   );
 };
 
-const AddDeliveryRuleWrapper = ({}) => {
+const AddDeliveryRuleWrapper = () => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [targetedData, setTargetedData] = useState(campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true));
   const [deliveryRules, setDeliveryRules] = useState(targetedData?.deliveryRules);
@@ -704,24 +698,24 @@ const AddDeliveryRuleWrapper = ({}) => {
       ))}
       {filteredDeliveryConfig?.projectType === "IRS-mz"
         ? selectedStructureCodes?.length < 4 && (
-            <Button
-              variation="secondary"
-              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-              className={"add-rule-btn hover"}
-              icon="AddIcon"
-              onClick={addMoreDelivery}
-            />
-          )
+          <Button
+            variation="secondary"
+            label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+            className={"add-rule-btn hover"}
+            icon="AddIcon"
+            onClick={addMoreDelivery}
+          />
+        )
         : !filteredDeliveryConfig?.deliveryAddDisable &&
-          deliveryRules?.length < 5 && (
-            <Button
-              variation="secondary"
-              label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
-              className={"add-rule-btn hover"}
-              icon="AddIcon"
-              onClick={addMoreDelivery}
-            />
-          )}
+        deliveryRules?.length < 5 && (
+          <Button
+            variation="secondary"
+            label={t(`CAMPAIGN_ADD_MORE_DELIVERY_BUTTON`)}
+            className={"add-rule-btn hover"}
+            icon="AddIcon"
+            onClick={addMoreDelivery}
+          />
+        )}
     </>
   );
 };
