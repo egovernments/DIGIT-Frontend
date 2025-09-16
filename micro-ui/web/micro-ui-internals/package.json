@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-
+    "packages/modules/workbench",
+    "example"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -12,7 +13,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build:core start:example-only",
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build start:example-only",
     "start-dev": "cross-env SKIP_PREFLIGHT_CHECK=true run-s buildDev start:dev",
     "start:example-only": "cd example && yarn start",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
@@ -24,7 +25,7 @@
     "buildD:libraries": "cd packages/libraries && yarn build",
     "buildDD:ui-components": "cd packages/ui-components && yarn build",
     "buildD:react-components": "cd packages/react-components && yarn build",
-    "build:core": "cd packages/modules/core && yarn build",
+    "buildD:core": "cd packages/modules/core && yarn build",
     "buildDev:core": "cd packages/modules/core && yarn build:dev",
     "build:workbench": "cd packages/modules/workbench && yarn build",
     "buildDev:workbench": "cd packages/modules/workbench && yarn build:dev",
@@ -81,8 +82,6 @@
     "npm-run-all": "4.1.5",
     "prettier": "2.1.2",
     "vite": "^6.1.0",
-    "webpack": "^5.97.1",
-    "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0",
     "semver": "^7.5.4",
     "rimraf": "^5.0.1"
