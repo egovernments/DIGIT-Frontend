@@ -175,12 +175,76 @@ const MapViewSafe = ({
 
         console.log('✅ Map initialized safely');
 
-        // Add base layer if requested
+        // Define multiple base layers
+        const baseLayers = {};
+        
         if (showBaseLayer) {
-          L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-            attribution: '&copy; OpenStreetMap',
-            maxZoom: 18
-          }).addTo(mapRef.current);
+          // OpenStreetMap
+          const osmLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+            maxZoom: 19
+          });
+          
+          // Google Streets
+          const googleStreets = L.tileLayer('https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
+          });
+          
+          // Google Satellite
+          const googleSatellite = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
+          });
+          
+          // Google Hybrid (Satellite + Labels)
+          const googleHybrid = L.tileLayer('https://{s}.google.com/vt/lyrs=y&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
+          });
+          
+          // Google Terrain
+          const googleTerrain = L.tileLayer('https://{s}.google.com/vt/lyrs=p&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0', 'mt1', 'mt2', 'mt3'],
+            attribution: '&copy; <a href="https://maps.google.com">Google Maps</a>'
+          });
+          
+          // CartoDB Positron (Light theme)
+          const cartoLight = L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+          });
+          
+          // CartoDB Dark Matter (Dark theme)
+          const cartoDark = L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            subdomains: 'abcd',
+            maxZoom: 20
+          });
+          
+          // Esri World Imagery
+          const esriSatellite = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+            attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+          });
+          
+          // Add base layers to map
+          baseLayers["🗺️ OpenStreetMap"] = osmLayer;
+          baseLayers["🌍 Google Streets"] = googleStreets;
+          baseLayers["🛰️ Google Satellite"] = googleSatellite;
+          baseLayers["🗺️ Google Hybrid"] = googleHybrid;
+          baseLayers["🏔️ Google Terrain"] = googleTerrain;
+          baseLayers["☀️ Light Theme"] = cartoLight;
+          baseLayers["🌙 Dark Theme"] = cartoDark;
+          baseLayers["🛰️ Esri Satellite"] = esriSatellite;
+          
+          // Add default layer (OpenStreetMap)
+          osmLayer.addTo(mapRef.current);
+          
         } else {
           container.style.backgroundColor = '#f8f9fa';
         }
@@ -188,6 +252,66 @@ const MapViewSafe = ({
         // Create layer groups
         markersRef.current = L.layerGroup().addTo(mapRef.current);
         boundaryLayerRef.current = L.layerGroup().addTo(mapRef.current);
+        
+        // Add layer control if base layers are available
+        if (showBaseLayer && Object.keys(baseLayers).length > 0) {
+          const overlayMaps = {
+            "📍 Data Points": markersRef.current,
+            "🗺️ Boundaries": boundaryLayerRef.current
+          };
+          
+          // Add layer control with both base layers and overlay layers
+          const layerControl = L.control.layers(baseLayers, overlayMaps, {
+            position: 'topright',
+            collapsed: true
+          }).addTo(mapRef.current);
+          
+          console.log('✅ Layer control added with', Object.keys(baseLayers).length, 'base layers');
+          
+          // Add custom CSS for better layer control styling
+          const style = document.createElement('style');
+          style.innerHTML = `
+            .leaflet-control-layers {
+              background: rgba(255, 255, 255, 0.95) !important;
+              backdrop-filter: blur(8px);
+              border-radius: 8px !important;
+              box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+              border: 1px solid rgba(255, 255, 255, 0.3) !important;
+            }
+            
+            .leaflet-control-layers-expanded {
+              min-width: 200px;
+            }
+            
+            .leaflet-control-layers label {
+              font-size: 13px;
+              font-weight: 500;
+              margin: 4px 0;
+              display: flex;
+              align-items: center;
+              gap: 8px;
+              padding: 2px;
+              border-radius: 4px;
+              transition: background-color 0.2s;
+            }
+            
+            .leaflet-control-layers label:hover {
+              background-color: rgba(66, 165, 245, 0.1);
+            }
+            
+            .leaflet-control-layers-separator {
+              margin: 8px 0 !important;
+              border-top: 1px solid rgba(0,0,0,0.1) !important;
+            }
+            
+            .leaflet-control-layers-toggle {
+              background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2'%3E%3Cpath d='M3 6h18M3 12h18M3 18h18'/%3E%3C/svg%3E") !important;
+              width: 28px !important;
+              height: 28px !important;
+            }
+          `;
+          document.head.appendChild(style);
+        }
 
         // Handle boundaries
         if (shapefileData && boundaryLayerRef.current) {
