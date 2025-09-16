@@ -195,10 +195,11 @@ const createEnhancedTaskPopup = (dataPoint, index) => {
   return createVisitPopup(dataPoint, index);
 };
 
-const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map", showBaseLayer = true }) => {
+const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map", showBaseLayer = false }) => {
   const mapRef = useRef(null);
   const markersRef = useRef(null); // L.LayerGroup for markers+polyline
   const boundaryLayerRef = useRef(null); // L.GeoJSON layer for shapefile boundaries
+  const zoomTimeoutRef = useRef(null);
 
   useEffect(() => {
     // Initialize map once
@@ -484,7 +485,51 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
         zoom: 8, // State-level zoom for Ondo State
         zoomControl: true,
         attributionControl: showBaseLayer, // Hide attribution when no base layer
+        // Zoom safety options
+        doubleClickZoom: false, // Disable double-click zoom
+        boxZoom: false, // Disable box zoom
+        keyboard: false, // Disable keyboard zoom
+        scrollWheelZoom: false, // Disable default scroll wheel zoom - custom implementation
+        touchZoom: false, // Disable touch zoom to prevent DomUtil errors
+        zoomAnimation: false, // Disable zoom animations for stability
+        fadeAnimation: false,
+        markerZoomAnimation: false,
+        wheelDebounceTime: 200, // Increase debounce for stability
+        wheelPxPerZoomLevel: 120 // Reduce zoom sensitivity
       });
+      
+      // Disable ALL problematic zoom features
+      mapRef.current.off('dblclick');
+      mapRef.current.doubleClickZoom.disable();
+      mapRef.current.scrollWheelZoom.disable();
+      
+      // Implement custom safe scroll wheel zoom
+      mapRef.current.getContainer().addEventListener('wheel', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        // Debounce zoom operations
+        if (zoomTimeoutRef.current) {
+          clearTimeout(zoomTimeoutRef.current);
+        }
+        
+        zoomTimeoutRef.current = setTimeout(() => {
+          try {
+            if (!mapRef.current || !mapRef.current.getZoom) return;
+            
+            const currentZoom = mapRef.current.getZoom();
+            const delta = e.deltaY > 0 ? -1 : 1;
+            const newZoom = Math.max(1, Math.min(18, currentZoom + delta));
+            
+            if (newZoom !== currentZoom) {
+              // Use simple setZoom instead of setZoomAround to avoid DomUtil errors
+              mapRef.current.setZoom(newZoom, { animate: false });
+            }
+          } catch (error) {
+            console.warn('Custom zoom failed:', error);
+          }
+        }, 50); // Debounce zoom operations
+      }, { passive: false });
 
       // Apply clean background style when no base layer is used
       if (!showBaseLayer) {
@@ -630,13 +675,8 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
           
           geoJsonLayer.addTo(boundaryLayer);
           
-          // Optionally fit map to boundary bounds
-          if (boundaryStyle.fitBounds !== false && !visits?.length) {
-            const bounds = geoJsonLayer.getBounds();
-            if (bounds.isValid()) {
-              map.fitBounds(bounds, { padding: [50, 50] });
-            }
-          }
+          // Removed fitBounds to prevent DomUtil errors
+          // Use fixed center/zoom instead of dynamic bounds
         } catch (err) {
           console.error("Error rendering shapefile data:", err);
         }
@@ -683,14 +723,18 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
         L.polyline(positions, { color: "blue" }).addTo(layerGroup);
       }
 
-      // Fit bounds (with small padding) only if map exists
-      if (map && typeof map.fitBounds === "function") {
-        try {
-          map.fitBounds(positions, { padding: [30, 30] });
-        } catch (err) {
-          // ignore if fitBounds fails
-          // console.warn("fitBounds failed", err);
-        }
+      // Center on first marker if available, otherwise use fixed center - safer method
+      if (map && positions.length > 0) {
+        setTimeout(() => {
+          try {
+            const firstPosition = positions[0];
+            if (map && map.setView && firstPosition) {
+              map.setView(firstPosition, 10, { animate: false });
+            }
+          } catch (err) {
+            console.warn("setView failed", err);
+          }
+        }, 200);
       }
     }
 
@@ -703,8 +747,20 @@ const MapView = ({ visits = [], shapefileData = null, boundaryStyle = {}, showCo
 
     // Cleanup: remove map entirely on unmount to free resources and prevent conflicts
     return () => {
+      if (zoomTimeoutRef.current) {
+        clearTimeout(zoomTimeoutRef.current);
+      }
       if (mapRef.current && typeof mapRef.current.remove === "function") {
-        mapRef.current.remove();
+        try {
+          // Remove custom wheel event listener before removing map
+          const container = mapRef.current.getContainer();
+          if (container) {
+            container.removeEventListener('wheel', null);
+          }
+          mapRef.current.remove();
+        } catch (error) {
+          console.error('Error removing map:', error);
+        }
         mapRef.current = null;
       }
       if (markersRef.current) {

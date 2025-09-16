@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MapView from "./MapView";
+import MapViewSafe from "./MapViewSafe";
 import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 
 /**
@@ -129,7 +129,7 @@ const LGABoundariesMap = ({ visits = [], showConnectingLines = false, customPopu
       </div>
       
       <div style={{ flex: 1 }}>
-        <MapView
+        <MapViewSafe
           visits={visits}
           shapefileData={boundaryData}
           boundaryStyle={lgaBoundaryStyle}

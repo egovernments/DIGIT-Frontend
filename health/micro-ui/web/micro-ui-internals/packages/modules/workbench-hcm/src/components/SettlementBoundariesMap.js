@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import MapView from "./MapView";
+import MapViewSafe from "./MapViewSafe";
 import { getGeoJsonUrl } from "../utils/getProjectServiceUrl";
 
 const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, customPopupContent = null, customMarkerStyle = null, mapContainerId = "map", showBaseLayer = true }) => {
@@ -124,15 +124,13 @@ const SettlementBoundariesMap = ({ visits = [], showConnectingLines = false, cus
       </div>
       
       <div style={{ flex: 1 }}>
-        <MapView
+        <MapViewSafe
           visits={visits}
           shapefileData={boundaryData}
           boundaryStyle={settlementBoundaryStyle}
-          boundaryPopupContent={boundaryPopupContent}
           showConnectingLines={showConnectingLines}
           customPopupContent={customPopupContent}
           customMarkerStyle={customMarkerStyle}
-          mapType="settlement"
           mapContainerId={mapContainerId}
           showBaseLayer={showBaseLayer}
         />
