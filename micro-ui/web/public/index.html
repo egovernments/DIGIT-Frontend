@@ -22,11 +22,9 @@
     _paq.push(['trackPageView']);
     _paq.push(['enableLinkTracking']);
     (function () {
-      var u = "https://unified-demo.digit.org/matomo/";
+      var u = window?.globalConfigs?.getConfig("MATOMO_URL") || "https://unified-demo.digit.org/matomo/";
       _paq.push(['setTrackerUrl', u + 'matomo.php']);
       _paq.push(['setSiteId', '1']);
-      // Adding a second tracker
-      _paq.push(['addTracker', 'https://digit-analytics.matomo.cloud/matomo.php', '2']);
       var d = document, g = d.createElement('script'), s = d.getElementsByTagName('script')[0];
       g.async = true; g.src = u + 'matomo.js';
       s.parentNode.insertBefore(g, s);
