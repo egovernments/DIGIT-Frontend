@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
-import { Divider, Button, PopUp, Card, ActionBar, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
+import { Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
+import { Loader, Divider, Button, PopUp, Card, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -459,7 +459,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   }
 
   if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
-    return <LoaderScreen />
+    return <Loader />
   }
 
   return (
@@ -529,14 +529,14 @@ const ViewAttendance = ({ editAttendance = false }) => {
         )}
 
         {/* To DeEnroll Attendee*/}
-         {showDeEnrollPopup && (
+        {/* {showDeEnrollPopup && (
           <EditAttendeePopUp
             onClose={onDeEnrollClose}
             businessId={registerNumber}
             heading={`${t("Edit Attendance Register")}`}
           />
-        )}
-        
+        )} */}
+
       </div>
 
       {/* Alert Pop-Up for edit */}
@@ -578,47 +578,66 @@ const ViewAttendance = ({ editAttendance = false }) => {
       />}
 
       {/* action bar for bill generation*/}
-      <ActionBar
-        actionFields={[
-          disabledAction ? (
-            <Button
-              label={t(`HCM_AM_GO_BACK`)}
-              title={t(`HCM_AM_GO_BACK`)}
-              onClick={() => {
-                fromCampaignSupervisor ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, { fromViewScreen: true }) :
-                  history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-              }}
-              type="button"
-              style={{ minWidth: "14rem" }}
-              variation="primary"
-            />
-          ) : editAttendance ? (
-            <Button
-              label={t(`HCM_AM_SUBMIT_LABEL`)}
-              title={t(`HCM_AM_SUBMIT_LABEL`)}
-              onClick={() => {
-                setUpdateDisabled(true);
-                triggerMusterRollUpdate();
-              }}
-              style={{ minWidth: "14rem" }}
-              type="button"
-              variation="primary"
-              isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
-            />
-          ) : (
+      {<ActionBar className="mc_back"
+
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          alignItems: "center",
+          width: "100%",
+          gap: "1rem",
+        }}
+
+      >
+
+        {disabledAction ? (
+          <Button
+            label={t(`HCM_AM_GO_BACK`)}
+            title={t(`HCM_AM_GO_BACK`)}
+            onClick={() => {
+              fromCampaignSupervisor
+                ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
+                  fromViewScreen: true,
+                })
+                : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+            }}
+            type="button"
+            style={{ minWidth: "14rem" }}
+            variation="primary"
+          />
+        ) : editAttendance ? (
+          <Button
+            label={t(`HCM_AM_SUBMIT_LABEL`)}
+            title={t(`HCM_AM_SUBMIT_LABEL`)}
+            onClick={() => {
+              setUpdateDisabled(true);
+              triggerMusterRollUpdate();
+            }}
+            style={{ minWidth: "14rem" }}
+            type="button"
+            variation="primary"
+            isDisabled={
+              updateMutation.isLoading || updateDisabled || !isSubmitEnabled
+            }
+          />
+        ) : (
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              width: "15%",
+
+            }}
+          >
             <Button
               className="custom-class"
               iconFill=""
               label={t(`HCM_AM_ACTIONS`)}
-              menuStyles={{
-                bottom: "40px",
-              }}
+              menuStyles={{ bottom: "40px" }}
               onOptionSelect={(value) => {
-                if (value.code === "EDIT_ATTENDANCE") {
-                  setOpenEditAlertPopUp(true);
-                } else if (value.code === "APPROVE") {
-                  setOpenApproveCommentPopUp(true);
-                }
+                if (value.code === "EDIT_ATTENDANCE") setOpenEditAlertPopUp(true);
+                if (value.code === "APPROVE") setOpenApproveCommentPopUp(true);
               }}
               options={[
                 {
@@ -631,19 +650,16 @@ const ViewAttendance = ({ editAttendance = false }) => {
                 },
               ]}
               optionsKey="name"
-              size=""
               style={{ minWidth: "14rem" }}
-              title=""
               type="actionButton"
             />
-          ),
-        ]}
-        className=""
-        maxActionFieldsAllowed={5}
-        setactionFieldsToRight
-        sortActionFields
-        style={{}}
-      />
+          </div>
+        )}
+
+      </ActionBar>
+
+      }
+
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
