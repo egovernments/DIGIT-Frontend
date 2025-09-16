@@ -6,8 +6,8 @@ import { getKibanaDetails } from "../utils/getProjectServiceUrl";
 import ReusableTableWrapper from "./ReusableTableWrapper";
 import { elasticsearchWorkerString } from "../workers/elasticsearchWorkerString";
 import { projectStaffConfig } from "../configs/elasticsearchConfigs";
-import MapComponentWrapper from "./MapComponentWrapper";
 import { Button } from "@egovernments/digit-ui-components";
+import MapComponent from "./MapComponent";
 
 // Function to convert boundary type to camelCase
 function toCamelCase(str) {
@@ -833,40 +833,18 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
               height: "calc(100% - 2rem)",
               overflow: "visible"
             }}>
-              <div style={{ 
-                marginBottom: "1rem", 
-                padding: "1rem", 
-                backgroundColor: "#f8f9fa", 
-                borderRadius: "8px",
-                border: "1px solid #dee2e6",
-                flexShrink: 0
-              }}>
-                <h4 style={{ marginBottom: "0.5rem", color: "#495057" }}>
-                  {t("EMPLOYEE_DETAILS")}
-                </h4>
-                <div style={{ 
-                  display: "grid", 
-                  gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", 
-                  gap: "0.5rem",
-                  fontSize: "14px"
-                }}>
-                  <div><strong>{t("NAME")}:</strong> {selectedEmployee.employeeName}</div>
-                  <div><strong>{t("USER_NAME")}:</strong> {selectedEmployee.userName}</div>
-                  <div><strong>{t("ROLE")}:</strong> {t(selectedEmployee.role)}</div>
-                  <div><strong>{t("PROJECT_TYPE")}:</strong> {selectedEmployee.projectType}</div>
-                  <div><strong>{t("STATUS")}:</strong> {selectedEmployee.status}</div>
-                </div>
-              </div>
+            
               
-              <div style={{ flex: 1, overflow: "visible", position: "relative", minHeight: "400px" }}>
-                <MapComponentWrapper 
+              <div style={{ flex: 1, overflow: "visible", position: "relative" }}>
+                <MapComponent 
                   projectId={projectId} 
                   userName={selectedEmployee.userName}
                   key={`map-${selectedEmployee.employeeId}`}
-                  hideHeader={true}
+                  // hideHeader={true}
                   boundaryType={boundaryType}
                   boundaryCode={boundaryCode}
                   dataReady={true}
+                  mapContainerId={`employee-map-${selectedEmployee.employeeId}`}
                 />
               </div>
             </div>
