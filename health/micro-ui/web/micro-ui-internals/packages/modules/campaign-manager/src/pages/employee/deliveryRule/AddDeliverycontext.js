@@ -53,16 +53,24 @@ const AddAttributeField = ({
   const [val, setVal] = useState("");
   const [showAttribute, setShowAttribute] = useState(null);
   const [showOperator, setShowOperator] = useState(null);
+  const [addedOption, setAddedOption] = useState(null);
   const [dropdownOption, setDropdownOption] = useState(null);
   const { t } = useTranslation();
 
+  useEffect(() => {
+    setAddedOption(delivery?.attributes?.map((i) => i?.attribute?.code)?.filter((i) => i));
+  }, [delivery?.attributes]);
 
-  const addedOption = useMemo(
-    () => (delivery?.attributes || []).map(i => i?.attribute?.code).filter(Boolean),
-    [delivery?.attributes]
-  );
+  // const schemaCode = useMemo(() => {
+  //   const code = showAttribute?.valuesSchema;
+  //   return code;
+  // }, [showAttribute]);
 
-  const schemaCode = useMemo(() => showAttribute?.valuesSchema, [showAttribute]);
+  const schemaCode = useMemo(() => {
+    const code = showAttribute?.valuesSchema;
+    // fetchStructureConfig(code);
+    return code;
+  }, [showAttribute]);
 
   // const { data: structureConfig } = Digit.Hooks.useCustomMDMS(
   //   tenantId,
@@ -87,17 +95,21 @@ const AddAttributeField = ({
   // }, [showAttribute, structureConfig, attributeConfig]);
 
   useEffect(() => {
-    let alive = true;
-    (async () => {
-      if (!schemaCode) { if (alive) setDropdownOption([]); return; }
-      try {
-        const list = await fetchStructureConfig(schemaCode);
-        if (alive) setDropdownOption(Array.isArray(list) ? list : []);
-      } catch {
-        if (alive) setDropdownOption([]);
-      }
-    })();
-    return () => { alive = false; };
+    if (schemaCode) {
+      const fetchData = async () => {
+        try {
+          const fetch = await fetchStructureConfig(schemaCode);
+          if (fetch?.length > 0) {
+            setDropdownOption(fetch);
+          } else setDropdownOption([]);
+        } catch (error) {
+          console.error("Error fetching structure config:", error);
+          setDropdownOption([]);
+        }
+      };
+
+      fetchData();
+    }
   }, [schemaCode, tenantId]);
 
   const fetchStructureConfig = async (schemaCode) => {
@@ -125,55 +137,98 @@ const AddAttributeField = ({
     return data?.MdmsRes?.[moduleName]?.[schemaName];
   };
 
-  const setRuleAttr = (updater) => {
-    setDeliveryRules(prev =>
-      prev.map(rule => {
-        if (rule.ruleKey !== deliveryRuleIndex) return rule;
-        const attrs = rule.attributes.map(a => a.key === attribute.key ? updater(a) : a);
-        return { ...rule, attributes: attrs };
-      })
-    );
-  };
-
-  const sanitizeNum = (raw) => {
-    let v = String(raw ?? "").replace(/[^\d.]/g, "");
-    v = (v.match(/^\d*\.?\d{0,2}/)?.[0]) || "";
-    if ([" ", "e", "E"].some(f => v.includes(f))) return "";
-    return v;
-  };
-
   const selectValue = (e) => {
-    const v = sanitizeNum(e.target.value);
-    if (v === "" && e.target.value) return; // ignore invalid keystroke
-    setRuleAttr(a => ({ ...a, value: v }));
+    if ([" ", "e", "E"].some((f) => val.includes(f))) {
+      return;
+    }
+    let val = e.target.value;
+    val = val.replace(/[^\d.]/g, "");
+    const match = val.match(/^\d*\.?\d{0,2}/);
+    val = match ? match[0] : "";
+    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
+    const updatedData = deliveryRules.map((item, index) => {
+      if (item.ruleKey === deliveryRuleIndex) {
+        item.attributes.find((i) => i.key === attribute.key).value = val;
+      }
+      return item;
+    });
+    setDeliveryRules(updatedData);
   };
 
   const selectDropdownValue = (value) => {
-    setRuleAttr(a => ({ ...a, value: value?.code }));
+    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
+    const updatedData = deliveryRules.map((item, index) => {
+      if (item.ruleKey === deliveryRuleIndex) {
+        item.attributes.find((i) => i.key === attribute.key).value = value?.code;
+      }
+      return item;
+    });
+    setDeliveryRules(updatedData);
   };
 
   const selectToFromValue = (e, range) => {
-    const v = sanitizeNum(e.target.value);
-    if (v === "" && e.target.value) return;
-    setRuleAttr(a => range === "to" ? ({ ...a, toValue: v }) : ({ ...a, fromValue: v }));
+    const sanitizeNumericInput = (value) => {
+      // Early validation for special characters
+      if ([" ", "e", "E"].some((f) => value.includes(f))) {
+        return null;
+      }
+      let val = value.replace(/[^\d.]/g, "");
+      const match = val.match(/^\d*\.?\d{0,2}/);
+      return match ? match[0] : "";
+    };
+    const val = sanitizeNumericInput(e.target.value);
+    if (val === null) return;
+    if (range === "to") {
+      const updatedData = deliveryRules.map((item, index) => {
+        if (item.ruleKey === deliveryRuleIndex) {
+          item.attributes.find((i) => i.key === attribute.key).toValue = val;
+        }
+        return item;
+      });
+      setDeliveryRules(updatedData);
+    } else {
+      const updatedData = deliveryRules.map((item, index) => {
+        if (item.ruleKey === deliveryRuleIndex) {
+          item.attributes.find((i) => i.key === attribute.key).fromValue = val;
+        }
+        return item;
+      });
+      setDeliveryRules(updatedData);
+    }
   };
 
   const selectAttribute = (value) => {
+    const updatedData = deliveryRules.map((item, index) => {
+      if (item.ruleKey === deliveryRuleIndex) {
+        item.attributes.find((i) => i.key === attribute.key).attribute = value;
+        item.attributes.find((i) => i.key === attribute.key).value = "";
+        item.attributes.find((i) => i.key === attribute.key).toValue = "";
+        item.attributes.find((i) => i.key === attribute.key).fromValue = "";
+        const defaultOperator = value.allowedOperators?.[0] || null;
+        if (defaultOperator) {
+          item.attributes.find((i) => i.key === attribute.key).operator = {
+            code: defaultOperator,
+          };
+        }
+      }
+      return item;
+    });
     setShowAttribute(value);
-    const defaultOp = value?.allowedOperators?.[0];
-    setRuleAttr(a => ({
-      ...a,
-      attribute: value,
-      value: "",
-      toValue: "",
-      fromValue: "",
-      ...(defaultOp ? { operator: { code: defaultOp } } : {})
-    }));
+    setDeliveryRules(updatedData);
   };
 
   const selectOperator = (value) => {
+    // setAttributes((pre) => pre.map((item) => (item.key === attribute.key ? { ...item, value: e.target.value } : item)));
+    const updatedData = deliveryRules.map((item, index) => {
+      if (item.ruleKey === deliveryRuleIndex) {
+        item.attributes.find((i) => i.key === attribute.key).operator = value;
+        delete item.attributes.find((i) => i.key === attribute.key).toValue;
+        delete item.attributes.find((i) => i.key === attribute.key).fromValue;
+      }
+      return item;
+    });
     setShowOperator(value);
-    setRuleAttr(a => ({ ...a, operator: value, toValue: undefined, fromValue: undefined }));
+    setDeliveryRules(updatedData);
   };
 
   try {
@@ -290,7 +345,7 @@ const AddAttributeField = ({
   }
 };
 
-const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, }) => {
+const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, deliveryRules, setDeliveryRules, index, key }) => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -361,25 +416,15 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
     cycle?.deliveries?.flatMap((delivery) => delivery?.deliveryRules?.flatMap((rule) => rule?.attributes?.map((attribute) => attribute?.value)))
   );
 
-  useEffect(() => {
-    if (Array.isArray(delivery?.attributes) && delivery.attributes.length === 0) {
-      setDeliveryRules(prev =>
-        prev.map(rule =>
-          rule.ruleKey === delivery.ruleKey
-            ? { ...rule, attributes: [{ key: 1, attribute: null, operator: null, value: "" }] }
-            : rule
-        )
-      );
-    }
-  }, [delivery?.ruleKey, delivery?.attributes?.length]);
-
   if (operatorConfigLoading || commonAttributesLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
   }
 
+  const deliveryAttributes = Array.isArray(delivery?.attributes) && delivery.attributes.length === 0  ? [{ key: 1, attribute: null, operator: null, value: "" }]  : delivery.attributes;
+
   return (
     <Card className="attribute-container">
-      {delivery.attributes.map((item, index) => (
+      {deliveryAttributes.map((item, index) => (
         <AddAttributeField
           config={filteredDeliveryConfig?.attributeConfig?.[index]}
           deliveryRuleIndex={deliveryRuleIndex}
@@ -388,7 +433,7 @@ const AddAttributeWrapper = ({ targetedData, deliveryRuleIndex, delivery, delive
           setDeliveryRules={setDeliveryRules}
           attribute={item}
           setAttributes={setAttributes}
-          key={`${item}-${index}`}
+          key={index}
           index={index}
           onDelete={() => deleteAttribute(item, deliveryRuleIndex)}
           attributeConfig={attributeConfig}
@@ -536,7 +581,6 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
           deliveryRules={deliveryRules}
           setDeliveryRules={setDeliveryRules}
           index={index}
-          key={delivery.ruleKey}
         />
         <div className="product-tag-container digit-tag-container">
           {delivery?.products?.length > 0 &&
@@ -590,62 +634,33 @@ const AddDeliveryRule = ({ targetedData, deliveryRules, setDeliveryRules, index,
   );
 };
 
-const AddDeliveryRuleWrapper = ({ }) => {
+const AddDeliveryRuleWrapper = () => {
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
   const [targetedData, setTargetedData] = useState(campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true));
   const [deliveryRules, setDeliveryRules] = useState(targetedData?.deliveryRules);
   const { t } = useTranslation();
-  // derive the active delivery once
-  const currentTarget = useMemo(
-    () => campaignData?.find(i => i?.active)?.deliveries?.find(d => d?.active),
-    [campaignData]
-  );
-  const contextRules = currentTarget?.deliveryRules;
-
-  // pull only when content differs
-  useEffect(() => {
-    setTargetedData(prev => (isEqual(prev, currentTarget) ? prev : currentTarget));
-    setDeliveryRules(prev => (isEqual(prev, contextRules) ? prev : contextRules));
-  }, [currentTarget, contextRules]);
-
-  // push only when content truly differs from context
-  const rulesHash = useMemo(() => JSON.stringify(deliveryRules ?? []), [deliveryRules]);
-  const lastPushed = useRef(null);
 
   useEffect(() => {
-    if (!deliveryRules) return;
-    if (rulesHash !== lastPushed.current && !isEqual(deliveryRules, contextRules)) {
-      dispatchCampaignData({
-        type: "UPDATE_CAMPAIGN_DATA",
-        payload: { currentDeliveryRules: deliveryRules },
-      });
-      lastPushed.current = rulesHash;
-    }
-  }, [rulesHash, deliveryRules, contextRules, dispatchCampaignData]);
+    const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
+    const tt = dd?.deliveryRules;
+    setTargetedData(dd);
+    // Only update if deliveryRules actually changed
+    setDeliveryRules((prev) => {
+      if (!isEqual(prev, tt)) {
+        return tt;
+      }
+      return prev; // no change
+    });
+  }, [campaignData]);
 
-
-  ///OLDER APPROACH - may cause loops
-  // useEffect(() => {
-  //   const dd = campaignData?.find((i) => i?.active === true)?.deliveries?.find((d) => d?.active === true);
-  //   const tt = dd?.deliveryRules;
-  //   setTargetedData(dd);
-  //   // Only update if deliveryRules actually changed
-  //   setDeliveryRules((prev) => {
-  //     if (!isEqual(prev, tt)) {
-  //       return tt;
-  //     }
-  //     return prev; // no change
-  //   });
-  // }, [campaignData]);
-
-  // useEffect(() => {
-  //   dispatchCampaignData({
-  //     type: "UPDATE_CAMPAIGN_DATA",
-  //     payload: {
-  //       currentDeliveryRules: deliveryRules,
-  //     },
-  //   });
-  // }, [deliveryRules]);
+  useEffect(() => {
+    dispatchCampaignData({
+      type: "UPDATE_CAMPAIGN_DATA",
+      payload: {
+        currentDeliveryRules: deliveryRules,
+      },
+    });
+  }, [deliveryRules]);
 
   const addMoreDelivery = () => {
     dispatchCampaignData({
@@ -676,7 +691,7 @@ const AddDeliveryRuleWrapper = ({ }) => {
           deliveryRules={deliveryRules}
           delivery={item}
           setDeliveryRules={setDeliveryRules}
-          key={`${item.ruleKey}-${index}`}
+          key={index}
           index={index}
           onDelete={() => deleteDeliveryRule(item)}
         />

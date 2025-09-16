@@ -3,7 +3,6 @@ import MultiTab from "./MultiTabcontext";
 import { Loader } from "@egovernments/digit-ui-components";
 // import { deliveryConfig } from "../../../configs/deliveryConfig";
 import getDeliveryConfig from "../../../utils/getDeliveryConfig";
-import { isEqual } from "lodash";
 
 const CycleContext = createContext();
 
@@ -16,7 +15,7 @@ function makeSequential(jsonArray, keyName) {
 
 function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subTabCount = 3, ...props }) {
   // Campaign Tab Skeleton function
-  const [cycleData, setCycleData] = useState(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
+  const cycleData = config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
   const saved = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
   const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -37,14 +36,12 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     },
     { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
   );
-  useEffect(() => {
-     const next = config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
-    setCycleData(prev => isEqual(prev, next) ? prev : next);
-  }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
+  // useEffect(() => {
+  //   setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
+  // }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
 
   const generateTabsData = (tabs, subTabs) => {
-    const base = saved ? JSON.parse(JSON.stringify(saved)) : null;
-    if (!base || base?.length === 0) {
+    if (!saved || saved?.length === 0) {
       return [...Array(tabs)].map((_, tabIndex) => ({
         cycleIndex: `${tabIndex + 1}`,
         active: activeCycle == tabIndex + 1 ? true : tabIndex === 0 ? true : false,
@@ -116,8 +113,8 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       }));
     }
     // if no change
-    if (base && base?.length == tabs && base?.[0]?.deliveries?.length === subTabs) {
-      return base.map((i, n) => {
+    if (saved && saved?.length == tabs && saved?.[0]?.deliveries?.length === subTabs) {
+      return saved.map((i, n) => {
         return {
           ...i,
           active: activeCycle ? (activeCycle == n + 1 ? true : false) : n === 0 ? true : false,
@@ -125,17 +122,17 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       });
     }
     // if cycle number decrease
-    if (base?.length > tabs) {
+    if (saved?.length > tabs) {
       // const temp = saved;
-      savbaseed.splice(tabs);
+      return saved.slice(0, tabs);
       // return temp;
     }
     // if cycle number increase
-    if (tabs > base?.length) {
+    if (tabs > saved?.length) {
       // const temp = saved;
-      for (let i = base.length + 1; i <= tabs; i++) {
+      for (let i = saved.length + 1; i <= tabs; i++) {
         const newIndex = i.toString();
-        base.push({
+        saved.push({
           cycleIndex: newIndex,
           active: false,
           deliveries: [...Array(subTabs || 1)].map((_, subTabIndex) => ({
@@ -201,7 +198,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     }
     // if delivery number decrease
 
-    base.forEach((cycle) => {
+    saved.forEach((cycle) => {
       // Remove deliveries if there are more deliveries than the specified number
       if (cycle?.deliveries?.length > subTabs) {
         cycle?.deliveries.splice(subTabs);
@@ -227,7 +224,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       }
     });
 
-    return base;
+    return saved;
     // if delivery number increase
 
     //if no above case
@@ -239,25 +236,23 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
       case "GENERATE_CAMPAIGN_DATA":
         return generateTabsData(action.cycle, action.deliveries);
       case "UPDATE_CAMPAIGN_DATA": {
-        let changed = false;
-        const next = state.map((cycle) => {
-          if (!cycle.active) return cycle;
-          const activeDelivery = cycle.deliveries.find((d) => d.active);
-          if (!activeDelivery) return cycle;
-
-          const deliveries = cycle.deliveries.map((d) => {
-            if (!d.active) return d;
-            if (isEqual(d.deliveryRules, action.payload.currentDeliveryRules)) return d;
-            changed = true;
-            return { ...d, deliveryRules: action.payload.currentDeliveryRules };
-          });
-          if (deliveries === cycle.deliveries) return cycle;
-          changed = true;
-          return { ...cycle, deliveries };
+        const changeUpdate = state.map((i) => {
+          if (i.active) {
+            const activeDelivery = i.deliveries.find((j) => j.active === true);
+            if (activeDelivery) {
+              return {
+                ...i,
+                deliveries: i.deliveries.map((j) => ({
+                  ...j,
+                  deliveryRules: j.active ? action.payload.currentDeliveryRules : j.deliveryRules,
+                })),
+              };
+            }
+          }
+          return i;
         });
-        return changed ? next : state;
+        return changeUpdate;
       }
-
       case "TAB_CHANGE_UPDATE":
         const temp = state.map((i) => ({
           ...i,
@@ -339,9 +334,7 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
           ...i,
           value: i?.value?.id,
           name: i?.value?.displayName,
-          quantity: i?.quantity,
         }));
-        console.log("ADD_PRODUCT after", prodTemp, state);
         const updatedState = state.map((cycle) => {
           if (cycle.active) {
             const updatedDeliveries = cycle.deliveries.map((dd) => {
@@ -369,7 +362,6 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
           }
           return cycle;
         });
-        console.log("ADD_PRODUCT final", updatedState);
         return updatedState;
       case "REMOVE_PRODUCT":
         return action.payload;
@@ -384,53 +376,21 @@ function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subT
     campaignDataReducer,
     []
   );
-  const [executionCount, setExecutionCount] = useState(0);
+  // const [executionCount, setExecutionCount] = useState(0);
 
-  // Generate campaign data when cycleData or filteredDeliveryConfig changes
-  const genInputsHash = React.useMemo(
-    () => JSON.stringify({
-      cycle: cycleData?.cycleConfgureDate?.cycle ?? null,
-      deliveries: cycleData?.cycleConfgureDate?.deliveries ?? null,
-      sig: filteredDeliveryConfig ? {
-        projectType: filteredDeliveryConfig.projectType ?? null,
-        deliveryLen: filteredDeliveryConfig.deliveryConfig?.length ?? 0,
-        condLens: (filteredDeliveryConfig.deliveryConfig ?? []).map(c => c?.conditionConfig?.length ?? 0),
-      } : null,
-    }),
-    [cycleData?.cycleConfgureDate?.cycle,
-    cycleData?.cycleConfgureDate?.deliveries,
-      filteredDeliveryConfig]
-  );
-
-  const lastGenHashRef = React.useRef(null);
   useEffect(() => {
-    const ready = filteredDeliveryConfig && cycleData?.cycleConfgureDate?.cycle && cycleData?.cycleConfgureDate?.deliveries;
-    if (!ready) return;
-    if (genInputsHash !== lastGenHashRef.current) {
+    if (filteredDeliveryConfig && cycleData?.cycleConfgureDate?.cycle && cycleData?.cycleConfgureDate?.deliveries) {
       dispatchCampaignData({
         type: "GENERATE_CAMPAIGN_DATA",
         cycle: cycleData.cycleConfgureDate.cycle,
         deliveries: cycleData.cycleConfgureDate.deliveries,
       });
-      lastGenHashRef.current = genInputsHash;
     }
-  }, [genInputsHash, filteredDeliveryConfig, cycleData, dispatchCampaignData]);
+  }, [cycleData, filteredDeliveryConfig]);
 
-
-  const lastSentRef = React.useRef(null);
   useEffect(() => {
-    const hash = JSON.stringify(campaignData ?? []);
-    if (hash !== lastSentRef.current) {
-      onSelect("deliveryRule", campaignData);
-      lastSentRef.current = hash;
-    }
-  }, [campaignData, onSelect]);
-
-
-  ////OLDER APPROACH - may cause loops
-  // useEffect(() => {
-  //   onSelect("deliveryRule", campaignData);
-  // }, [campaignData]);
+    onSelect("deliveryRule", campaignData);
+  }, [campaignData]);
 
   // useEffect(() => {
   //   if (executionCount < 5) {
