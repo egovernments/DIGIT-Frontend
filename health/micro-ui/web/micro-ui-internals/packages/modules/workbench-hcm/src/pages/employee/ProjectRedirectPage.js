@@ -56,7 +56,7 @@ const ProjectRedirectPage = () => {
       // First, fetch project staff data
       
       const staffResponse = await Digit.CustomService.getResponse({
-        url: `${url}/staff/v1/_search?offset=0&tenantId=${tenantId}&limit=10`,
+        url: `${url}/staff/v1/_search?offset=0&tenantId=${tenantId}&limit=30`,
         body: {
           ProjectStaff: {
             staffId: [userId],

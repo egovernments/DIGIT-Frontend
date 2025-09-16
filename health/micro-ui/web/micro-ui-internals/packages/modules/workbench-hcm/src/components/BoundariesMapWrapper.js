@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-components";
 import LGABoundariesMap from "./LGABoundariesMap";
@@ -27,10 +27,90 @@ const BoundariesMapWrapper = ({
   const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA", "WARD", or "SETTLEMENT"
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [showBaseLayers, setShowBaseLayers] = useState(showBaseLayer);
+  
+  // Filter states
+  const [searchTerm, setSearchTerm] = useState('');
+  const [filters, setFilters] = useState({});
 
   const handleBoundaryTypeChange = (type) => {
     setBoundaryType(type);
+    // Reset filters when changing boundary type
+    setSearchTerm('');
+    setFilters({});
   };
+  
+  // Filter utility functions
+  const formatValue = (value, key) => {
+    if (value === null || value === undefined) return 'N/A';
+    
+    if (key === 'lat' || key === 'lng') {
+      return typeof value === 'number' ? value.toFixed(6) : value;
+    }
+    
+    if (key === 'time' || key.includes('date') || key.includes('Date')) {
+      try {
+        return new Date(value).toLocaleDateString() + ' ' + new Date(value).toLocaleTimeString();
+      } catch (e) {
+        return value;
+      }
+    }
+    
+    return String(value);
+  };
+  
+  // Apply filters to visits data
+  const filteredVisits = useMemo(() => {
+    let filtered = [...visits];
+    
+    // Apply search term
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase();
+      filtered = filtered.filter(visit => {
+        return Object.values(visit).some(value => {
+          const stringValue = formatValue(value, '').toLowerCase();
+          return stringValue.includes(searchLower);
+        });
+      });
+    }
+    
+    // Apply column filters
+    for (const [filterCol, filterValue] of Object.entries(filters)) {
+      if (filterValue && filterValue !== 'all') {
+        filtered = filtered.filter(visit => {
+          const visitValue = formatValue(visit[filterCol], filterCol);
+          return visitValue === filterValue;
+        });
+      }
+    }
+    
+    return filtered;
+  }, [visits, searchTerm, filters]);
+  
+  // Get unique values for filter dropdowns
+  const getUniqueValues = (columnName) => {
+    const uniqueValues = [...new Set(
+      visits.map(visit => formatValue(visit[columnName], columnName))
+        .filter(value => value && value !== 'N/A')
+    )].sort();
+    return uniqueValues.slice(0, 50);
+  };
+  
+  // Get available filter columns
+  const getFilterColumns = () => {
+    if (visits.length === 0) return [];
+    
+    const sampleVisit = visits[0];
+    const priorityColumns = ['status', 'name', 'type', 'category', 'wardname', 'lganame', 'statename'];
+    const allColumns = Object.keys(sampleVisit);
+    
+    return priorityColumns.filter(col => {
+      const hasColumn = allColumns.includes(col);
+      const hasValues = hasColumn && getUniqueValues(col).length > 1;
+      return hasValues;
+    });
+  };
+  
+  const filterColumns = getFilterColumns();
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
@@ -70,6 +150,20 @@ const BoundariesMapWrapper = ({
             {boundaryType === "LGA" ? "LGA Boundaries" : 
              boundaryType === "WARD" ? "Ward Boundaries" : 
              "Settlement Boundaries"}
+            {filteredVisits.length !== visits.length && (
+              <span style={{
+                marginLeft: '8px',
+                fontSize: '14px',
+                color: '#059669',
+                fontWeight: '500',
+                background: '#ecfdf5',
+                padding: '2px 8px',
+                borderRadius: '12px',
+                border: '1px solid #d1fae5'
+              }}>
+                {filteredVisits.length} filtered
+              </span>
+            )}
           </h3>
           <span style={{ 
             fontSize: '0.9rem', 
@@ -77,10 +171,10 @@ const BoundariesMapWrapper = ({
             fontStyle: 'italic'
           }}>
             {boundaryType === "LGA" 
-              ? "Showing Local Government Areas" 
+              ? `Showing ${visits.length} records in Local Government Areas` 
               : boundaryType === "WARD"
-              ? "Showing Ward Boundaries"
-              : "Showing Settlement Areas"
+              ? `Showing ${visits.length} records in Ward Boundaries`
+              : `Showing ${visits.length} records in Settlement Areas`
             }
           </span>
         </div>
@@ -272,10 +366,97 @@ const BoundariesMapWrapper = ({
           )}
         </div>
       
+      {/* Centralized Filters Section */}
+      {visits.length > 0 && (
+        <div style={{
+          padding: '12px 20px',
+          borderBottom: '1px solid #e5e7eb',
+          background: '#fafafa'
+        }}>
+          <div style={{
+            display: 'flex',
+            flexWrap: 'wrap',
+            gap: '12px',
+            alignItems: 'center'
+          }}>
+            {/* Search */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: '200px' }}>
+              <span style={{ fontSize: '14px', color: '#374151', fontWeight: '500' }}>🔍 Search:</span>
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Search all columns..."
+                style={{
+                  padding: '6px 10px',
+                  border: '1px solid #d1d5db',
+                  borderRadius: '4px',
+                  fontSize: '14px',
+                  flex: 1,
+                  minWidth: '150px'
+                }}
+              />
+            </div>
+            
+            {/* Column filters */}
+            {filterColumns.map(column => {
+              const uniqueValues = getUniqueValues(column);
+              if (uniqueValues.length <= 1) return null;
+              
+              return (
+                <div key={column} style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: '13px', color: '#374151', fontWeight: '500', textTransform: 'capitalize' }}>
+                    {column}:
+                  </span>
+                  <select
+                    value={filters[column] || 'all'}
+                    onChange={(e) => setFilters(prev => ({ ...prev, [column]: e.target.value }))}
+                    style={{
+                      padding: '4px 8px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '4px',
+                      fontSize: '13px',
+                      minWidth: '100px'
+                    }}
+                  >
+                    <option value="all">All</option>
+                    {uniqueValues.map(value => (
+                      <option key={value} value={value}>{value}</option>
+                    ))}
+                  </select>
+                </div>
+              );
+            })}
+            
+            {/* Clear filters */}
+            {(searchTerm || Object.values(filters).some(f => f && f !== 'all')) && (
+              <button
+                onClick={() => {
+                  setSearchTerm('');
+                  setFilters({});
+                }}
+                style={{
+                  padding: '6px 12px',
+                  border: '1px solid #dc2626',
+                  borderRadius: '4px',
+                  background: '#fff',
+                  color: '#dc2626',
+                  cursor: 'pointer',
+                  fontSize: '13px',
+                  fontWeight: '500'
+                }}
+              >
+                ✕ Clear Filters
+              </button>
+            )}
+          </div>
+        </div>
+      )}
+      
       <div style={{ flex: 1 }}>
         {boundaryType === "LGA" ? (
           <LGABoundariesMap 
-            visits={visits} 
+            visits={filteredVisits} 
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
@@ -284,7 +465,7 @@ const BoundariesMapWrapper = ({
           />
         ) : boundaryType === "WARD" ? (
           <WardBoundariesMap 
-            visits={visits} 
+            visits={filteredVisits} 
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}
@@ -293,7 +474,7 @@ const BoundariesMapWrapper = ({
           />
         ) : (
           <SettlementBoundariesMap 
-            visits={visits} 
+            visits={filteredVisits} 
             showConnectingLines={showConnectingLines} 
             customPopupContent={customPopupContent}
             customMarkerStyle={customMarkerStyle}

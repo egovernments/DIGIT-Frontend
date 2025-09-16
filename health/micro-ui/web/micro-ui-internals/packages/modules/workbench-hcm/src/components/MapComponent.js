@@ -565,12 +565,12 @@ const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader 
             )}
           </div>
           <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
-            <Button
+            {/* <Button
               variation={showFilters ? "secondary" : "primary"}
               label={showFilters ? t("HIDE_FILTERS") : t("SHOW_FILTERS")}
               onClick={() => setShowFilters(!showFilters)}
               style={{ padding: "0.5rem 1rem", fontSize: "0.9rem" }}
-            />
+            /> */}
                   
             {filteredProjectTask?.length !== projectTask?.length && (
               <span style={{ 
