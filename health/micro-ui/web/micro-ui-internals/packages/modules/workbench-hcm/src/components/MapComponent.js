@@ -18,7 +18,7 @@ function toCamelCase(str) {
 const MapComponent = ({ projectId, userName, mapContainerId = "map", hideHeader = false, boundaryType = "state", boundaryCode = "OD_01_ONDO", dataReady = false, ...props }) => {
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(10000); // Large page size to fetch all data
+  const [pageSize, setPageSize] = useState(30000); // Large page size to fetch all data
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
   // Removed projectName state - using boundary-based filtering

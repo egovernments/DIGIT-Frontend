@@ -1,10 +1,32 @@
 // Web Worker for Elasticsearch data fetching - as a string export for build compatibility
 export const elasticsearchWorkerString = `
-// Web Worker for Elasticsearch data fetching
+// Web Worker for Elasticsearch data fetching with deduplication
 
-// Global variables for request management
+// Global state for request management
+const activeRequests = new Map(); // Track active fetch requests by requestId
+const batchCache = new Map(); // Cache successful batch results by batch key
+const inFlightBatches = new Map(); // Track in-flight batch requests to prevent duplicates
 let currentRequestId = null;
 let isCancelled = false;
+const CACHE_TTL = 5 * 60 * 1000; // 5 minutes cache TTL
+const MAX_PARALLEL_BATCHES = 4; // Process 4 batches in parallel
+
+// Helper function to generate batch key for deduplication
+function generateBatchKey(index, offset, size, queryParams) {
+  const paramsStr = JSON.stringify(queryParams || {});
+  return \`\${index}_\${offset}_\${size}_\${paramsStr}\`;
+}
+
+// Clean expired cache entries
+function cleanCache() {
+  const now = Date.now();
+  for (const [key, value] of batchCache.entries()) {
+    if (now - value.timestamp > CACHE_TTL) {
+      batchCache.delete(key);
+      console.log(\`🗑️ Removed expired cache entry: \${key}\`);
+    }
+  }
+}
 
 // Helper function to get nested values from objects
 function getNestedValue(obj, path) {
@@ -234,13 +256,35 @@ self.onmessage = async function(e) {
         await fetchElasticsearchData(payload);
         break;
       case 'CANCEL_REQUEST':
-        if (payload.requestId && currentRequestId === payload.requestId) {
-          isCancelled = true;
+        if (payload.requestId) {
+          // Cancel specific request
+          if (activeRequests.has(payload.requestId)) {
+            activeRequests.delete(payload.requestId);
+            console.log(\`🚫 Cancelled request: \${payload.requestId}\`);
+          }
+          
+          // Also handle legacy cancellation
+          if (currentRequestId === payload.requestId) {
+            isCancelled = true;
+          }
+          
+          // Clear any in-flight batches for this request
+          for (const [key, value] of inFlightBatches.entries()) {
+            if (value.requestId === payload.requestId) {
+              inFlightBatches.delete(key);
+            }
+          }
+          
           postMessage({
             type: 'FETCH_CANCELLED',
             payload: { requestId: payload.requestId }
           });
         }
+        break;
+      case 'CLEAR_CACHE':
+        batchCache.clear();
+        inFlightBatches.clear();
+        console.log('🗑️ All caches cleared');
         break;
       default:
         postMessage({
@@ -311,7 +355,118 @@ async function authenticateKibana({ origin, kibanaConfig, requestId }) {
   }
 }
 
-// Fetch data from Elasticsearch with smart chunking strategy
+// Fetch single batch with deduplication
+async function fetchSingleBatchWithDedup(batchInfo, origin, kibanaConfig, authKey, requestId) {
+  const { batchIndex, batchOffset, currentBatchSize, projectName, queryParams } = batchInfo;
+  const batchKey = generateBatchKey(kibanaConfig.projectTaskIndex || 'default', batchOffset, currentBatchSize, queryParams);
+  
+  console.log(\`[Batch \${batchIndex}] 🔍 Checking batch key: \${batchKey}\`);
+  
+  // Check cache first
+  if (batchCache.has(batchKey)) {
+    const cached = batchCache.get(batchKey);
+    console.log(\`[Batch \${batchIndex}] ✅ Using cached data (\${cached.data.length} records)\`);
+    return {
+      batchIndex,
+      data: cached.data,
+      totalHits: cached.totalHits,
+      fromCache: true
+    };
+  }
+  
+  // Check if batch is already being fetched
+  if (inFlightBatches.has(batchKey)) {
+    console.log(\`[Batch \${batchIndex}] ⏳ Waiting for in-flight batch...\`);
+    const existingPromise = inFlightBatches.get(batchKey);
+    
+    // If it's from a different request, wait for it
+    if (existingPromise.requestId !== requestId) {
+      try {
+        const result = await existingPromise.promise;
+        console.log(\`[Batch \${batchIndex}] ✅ Reusing in-flight result\`);
+        return result;
+      } catch (err) {
+        console.log(\`[Batch \${batchIndex}] ⚠️ In-flight batch failed, retrying...\`);
+      }
+    }
+  }
+  
+  // Create new fetch promise
+  console.log(\`[Batch \${batchIndex}] 🚀 Fetching new batch: offset=\${batchOffset}, size=\${currentBatchSize}\`);
+  
+  const fetchPromise = (async () => {
+    try {
+      const elasticsearchQuery = await buildElasticsearchQuery({
+        projectName, 
+        queryParams, 
+        offset: batchOffset, 
+        size: currentBatchSize, 
+        kibanaConfig
+      });
+
+      const response = await fetch(
+        origin + '/' + kibanaConfig.kibanaPath + '/api/console/proxy?path=%2F' + 
+        kibanaConfig.projectTaskIndex + '%2F_search&method=POST', 
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': authKey,
+            'kbn-xsrf': 'true'
+          },
+          credentials: 'include',
+          body: JSON.stringify(elasticsearchQuery)
+        }
+      );
+
+      if (response.status === 401 || response.status === 403) {
+        throw new Error('AUTHENTICATION_REQUIRED');
+      }
+
+      const data = await response.json();
+      
+      if (data && data.hits && data.hits.hits) {
+        const batchData = parseElasticsearchHits(data.hits.hits, batchOffset, kibanaConfig);
+        
+        const result = {
+          batchIndex,
+          data: batchData,
+          totalHits: data.hits.total?.value || data.hits.total || batchData.length,
+          fromCache: false
+        };
+        
+        // Cache the successful result
+        batchCache.set(batchKey, {
+          ...result,
+          timestamp: Date.now()
+        });
+        
+        console.log(\`[Batch \${batchIndex}] ✅ Fetched and cached \${batchData.length} records\`);
+        return result;
+      }
+      
+      return {
+        batchIndex,
+        data: [],
+        totalHits: 0,
+        fromCache: false
+      };
+    } finally {
+      // Clean up in-flight tracking
+      inFlightBatches.delete(batchKey);
+    }
+  })();
+  
+  // Track in-flight batch
+  inFlightBatches.set(batchKey, {
+    promise: fetchPromise,
+    requestId: requestId
+  });
+  
+  return fetchPromise;
+}
+
+// Fetch data from Elasticsearch with smart chunking strategy and deduplication
 async function fetchElasticsearchData({ projectName, queryParams, page, pageSize, origin, batchSize, kibanaConfig, authKey, requestId }) {
   batchSize = batchSize || 1000;
   
@@ -320,7 +475,11 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
     if (requestId) {
       currentRequestId = requestId;
       isCancelled = false;
+      activeRequests.set(requestId, true);
     }
+    
+    // Clean old cache entries
+    cleanCache();
     
     // Check if request was cancelled before starting
     if (isCancelled) {
@@ -399,6 +558,7 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
     const totalBatches = Math.ceil(effectivePageSize / optimalChunkSize);
     let allData = [];
     let processedBatches = 0;
+    let cachedBatches = 0;
 
     // Check if cancelled before processing results
     if (isCancelled) {
@@ -425,10 +585,13 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
         }
       });
     } else {
-      // Process in optimal chunks
-      for (let batch = 0; batch < totalBatches; batch++) {
-        // Check if cancelled before each batch
-        if (isCancelled) {
+      // Process in optimal chunks with parallel batch fetching (4 at a time)
+      console.log(\`📦 Processing \${totalBatches} batches in parallel chunks of \${MAX_PARALLEL_BATCHES}\`);
+      
+      // Process batches in parallel chunks
+      for (let chunkStart = 0; chunkStart < totalBatches; chunkStart += MAX_PARALLEL_BATCHES) {
+        // Check if cancelled before each chunk
+        if (isCancelled || !activeRequests.has(requestId)) {
           postMessage({
             type: 'FETCH_CANCELLED',
             payload: { requestId: requestId }
@@ -436,68 +599,77 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
           return;
         }
         
-        const batchOffset = page * effectivePageSize + (batch * optimalChunkSize);
-        const currentBatchSize = Math.min(optimalChunkSize, effectivePageSize - (batch * optimalChunkSize));
-
-        if (currentBatchSize <= 0) break;
-
-        // Build dynamic Elasticsearch query for this batch
-        const elasticsearchQuery = await buildElasticsearchQuery({
-          projectName, 
-          queryParams, 
-          offset: batchOffset, 
-          size: currentBatchSize, 
-          kibanaConfig
-        });
-
-      const response = await fetch(
-        origin + '/' + kibanaConfig.kibanaPath + '/api/console/proxy?path=%2F' + 
-        kibanaConfig.projectTaskIndex + '%2F_search&method=POST', 
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': authKey,
-            'kbn-xsrf': 'true'
-          },
-          credentials: 'include',
-          body: JSON.stringify(elasticsearchQuery)
-        }
-      );
-
-      if (response.status === 401 || response.status === 403) {
-        postMessage({
-          type: 'AUTHENTICATION_REQUIRED',
-          payload: { requestId: requestId }
-        });
-        return;
-      }
-
-        const data = await response.json();
+        const chunkEnd = Math.min(chunkStart + MAX_PARALLEL_BATCHES, totalBatches);
+        const batchPromises = [];
         
-        if (data && data.hits && data.hits.hits) {
-          const batchData = parseElasticsearchHits(data.hits.hits, batchOffset, kibanaConfig);
-          allData = allData.concat(batchData);
-          processedBatches++;
+        // Create parallel batch requests for this chunk
+        for (let batch = chunkStart; batch < chunkEnd; batch++) {
+          const batchOffset = page * effectivePageSize + (batch * optimalChunkSize);
+          const currentBatchSize = Math.min(optimalChunkSize, effectivePageSize - (batch * optimalChunkSize));
 
-          // Send progress update
-          postMessage({
-            type: 'FETCH_PROGRESS',
-            payload: {
-              batchesCompleted: processedBatches,
-              totalBatches: totalBatches,
-              dataReceived: allData.length,
-              progress: (processedBatches / totalBatches) * 100,
-              requestId: requestId
+          if (currentBatchSize <= 0) break;
+
+          // Create batch info
+          const batchInfo = {
+            batchIndex: batch,
+            batchOffset,
+            currentBatchSize,
+            projectName,
+            queryParams
+          };
+
+          // Add batch promise to parallel execution
+          batchPromises.push(
+            fetchSingleBatchWithDedup(batchInfo, origin, kibanaConfig, authKey, requestId)
+              .catch(error => {
+                console.error(\`[Batch \${batch}] ❌ Failed:\`, error.message);
+                return { batchIndex: batch, data: [], totalHits: 0, error: error.message };
+              })
+          );
+        }
+        
+        // Execute batch chunk in parallel with Promise.all
+        console.log(\`⏳ Processing batches \${chunkStart + 1} to \${chunkEnd} in parallel...\`);
+        const batchResults = await Promise.all(batchPromises);
+        
+        // Process results from parallel batch execution
+        for (const result of batchResults) {
+          if (result.error) {
+            if (result.error === 'AUTHENTICATION_REQUIRED') {
+              postMessage({ 
+                type: 'AUTHENTICATION_REQUIRED',
+                payload: { requestId: requestId }
+              });
+              return;
             }
-          });
-
-          // Small delay to prevent overwhelming the main thread
-          if (batch < totalBatches - 1) {
-            await new Promise(function(resolve) { setTimeout(resolve, 50); });
+            // Continue with other batches even if one fails
+          } else {
+            allData = allData.concat(result.data);
+            if (result.fromCache) cachedBatches++;
+            processedBatches++;
           }
         }
+
+        // Send progress update after each parallel chunk
+        postMessage({
+          type: 'FETCH_PROGRESS',
+          payload: {
+            batchesCompleted: processedBatches,
+            totalBatches: totalBatches,
+            dataReceived: allData.length,
+            progress: (processedBatches / totalBatches) * 100,
+            cachedBatches: cachedBatches,
+            requestId: requestId
+          }
+        });
+
+        // Small delay between chunks to prevent overwhelming the server
+        if (chunkEnd < totalBatches) {
+          await new Promise(function(resolve) { setTimeout(resolve, 100); });
+        }
       }
+      
+      console.log(\`📊 Parallel batch processing complete: \${cachedBatches}/\${processedBatches} batches from cache\`);
     }
 
     // Final check before sending success
@@ -516,11 +688,14 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
         totalRecords: allData.length,
         totalRecordsAvailable: totalRecordsAvailable,
         batchesProcessed: processedBatches,
+        cachedBatches: cachedBatches || 0,
         chunkSize: optimalChunkSize,
         smartChunking: totalRecordsAvailable > 100,
         requestId: requestId
       }
     });
+    
+    console.log(\`✅ Fetch completed: \${allData.length} records (\${cachedBatches || 0}/\${processedBatches} from cache)\`);
 
   } catch (error) {
     // Don't send error if request was cancelled
@@ -531,6 +706,11 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
         stack: error.stack,
         payload: { requestId: requestId }
       });
+    }
+  } finally {
+    // Clean up request tracking
+    if (requestId) {
+      activeRequests.delete(requestId);
     }
   }
 }

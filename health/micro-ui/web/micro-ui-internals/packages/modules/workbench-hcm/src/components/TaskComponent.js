@@ -16,7 +16,7 @@ const TaskComponent = (props) => {
   const url = getProjectServiceUrl();
   const [showMapview, setShowMapview] = useState({ showMaps: false });
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(props?.userId?1000:100);
+  const [pageSize, setPageSize] = useState(props?.userId?30000:10000);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   
   // // Use the project hierarchy context (optional - for caching only)

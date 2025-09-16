@@ -21,7 +21,7 @@ const EmployeesComponent = ({ projectId, boundaryType = "state", boundaryCode = 
   
   const { t } = useTranslation();
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(4000); // Maximum 4000 records
+  const [pageSize, setPageSize] = useState(30000); // Maximum 30000 records
   const [isLoading, setIsLoading] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState({ progress: 0, batchesCompleted: 0, totalBatches: 0, dataReceived: 0 });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
