@@ -12,7 +12,7 @@ import {
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 
-const HierarchySelection = ({onHierarchyChosen  }) => {
+const HierarchySelection = ({ onHierarchyChosen }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -93,12 +93,12 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
       });
       return;
     }
-    else{
+    else {
 
-    Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
+      Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
 
-    onHierarchyChosen(selectedHierarchy);
-  }
+      onHierarchyChosen(selectedHierarchy);
+    }
   };
 
   useEffect(() => {
@@ -118,7 +118,20 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
     }
   }, [boundaryData, selectedHierarchy]);
 
-  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) return <Loader />;
+  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) {
+
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
+  }
 
   return (
     <div className="container">

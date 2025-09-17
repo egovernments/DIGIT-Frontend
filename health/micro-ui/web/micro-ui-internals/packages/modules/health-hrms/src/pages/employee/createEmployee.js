@@ -47,7 +47,7 @@ const CreateEmployee = ({ editUser = false }) => {
   const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
   const { isLoading: isHRMSSearchLoading, isError, error, data } = Digit.Hooks.hrms.useHRMSSearch({ codes: id }, tenantId);
 
-  const { data: mdmsData, isLoading:  isHRMSConfigLoading} = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CreateEmployeeConfig"], {
+  const { data: mdmsData, isLoading: isHRMSConfigLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CreateEmployeeConfig"], {
     select: (data) => {
       return data?.["egov-hrms"]?.CreateEmployeeConfig?.[0];
     },
@@ -55,12 +55,12 @@ const CreateEmployee = ({ editUser = false }) => {
     enable: false,
   });
 
-  
+
   // Validate phone number based on config
   const validatePhoneNumber = (value, config) => {
     const { minLength, maxLength, min, max } = config?.populators?.validation || {};
     const stringValue = String(value || "");
-  
+
     if (
       (minLength && stringValue.length < minLength) ||
       (maxLength && stringValue.length > maxLength) ||
@@ -144,31 +144,31 @@ const CreateEmployee = ({ editUser = false }) => {
       }
     }
 
-     // Validate mobile number
-     const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
-     .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
+    // Validate mobile number
+    const contactFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
+      .find(field => field?.populators?.name === "SelectEmployeePhoneNumber");
 
-   if (EmployeeContactNumber && !validatePhoneNumber(EmployeeContactNumber, contactFieldConfig)) {
-     if (!formState.errors.SelectEmployeePhoneNumber) {
-       setError("SelectEmployeePhoneNumber", {
-         type: "custom",
-         message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
-       },);
-     }
-   } else if (formState.errors.SelectEmployeePhoneNumber) {
-     clearErrors("SelectEmployeePhoneNumber");
-   }
+    if (EmployeeContactNumber && !validatePhoneNumber(EmployeeContactNumber, contactFieldConfig)) {
+      if (!formState.errors.SelectEmployeePhoneNumber) {
+        setError("SelectEmployeePhoneNumber", {
+          type: "custom",
+          message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
+        },);
+      }
+    } else if (formState.errors.SelectEmployeePhoneNumber) {
+      clearErrors("SelectEmployeePhoneNumber");
+    }
 
     if (
       formData?.SelectEmployeeName &&
       formData?.SelectEmployeeType?.code &&
       formData?.SelectEmployeeId && formData?.SelectEmployeePhoneNumber &&
-      formData?.gender && formData?.SelectDateofBirthEmployment && 
+      formData?.gender && formData?.SelectDateofBirthEmployment &&
       formData?.SelectDateofEmployment &&
       formData?.SelectEmployeeDepartment &&
       formData?.SelectEmployeeDesignation &&
       formData?.RolesAssigned &&
-      (isEdit || formData?.Jurisdictions) 
+      (isEdit || formData?.Jurisdictions)
     ) {
       setSubmitValve(true);
     } else {
@@ -270,7 +270,7 @@ const CreateEmployee = ({ editUser = false }) => {
       if (editUser == false) {
         const type = await checkIfUserExist(formData, tenantId);
         if (type == true) {
-          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID", type: "error" });
           setShowModal(false);
         } else {
           const payload = formPayloadToCreateUser(formData, tenantId);
@@ -283,7 +283,7 @@ const CreateEmployee = ({ editUser = false }) => {
         await updateEmployeeService(payload);
       }
     } catch (err) {
-      setShowToast({ key: true, label: t(err ? `${err?.code}` : "BAD_REQUEST") });
+      setShowToast({ key: true, label: t(err ? `${err?.code}` : "BAD_REQUEST"), type: "error" });
       setShowModal(false);
     }
   };
@@ -292,7 +292,7 @@ const CreateEmployee = ({ editUser = false }) => {
     if (isEdit && mobile) {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID", type: "error" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
@@ -304,7 +304,7 @@ const CreateEmployee = ({ editUser = false }) => {
     } else {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOBILE_NUMBER" });
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOBILE_NUMBER", type: "error" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
@@ -328,13 +328,13 @@ const CreateEmployee = ({ editUser = false }) => {
         {
           updateDependent: [
             {
-             key : "SelectDateofBirthEmployment",
-             value : [formattedDate]
-           },
-           {
-            key : "SelectDateofEmployment",
-            value : [new Date().toISOString().split("T")[0]]
-          }
+              key: "SelectDateofBirthEmployment",
+              value: [formattedDate]
+            },
+            {
+              key: "SelectDateofEmployment",
+              value: [new Date().toISOString().split("T")[0]]
+            }
 
           ],
         }
@@ -344,15 +344,25 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const config = isEdit
     ? updatedConfig?.form?.map((section) => ({
-        ...section,
-        body: section.body.filter(
-          (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
-        ),
-      }))
+      ...section,
+      body: section.body.filter(
+        (field) => field.key !== "employeePassword" && field.key !== "employeeConfirmPassword" && field.key !== "Jurisdictions"
+      ),
+    }))
     : updatedConfig?.form;
 
   if (isHRMSSearchLoading || isHRMSConfigLoading) {
-    return <Loader />;
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
   }
 
   return (
@@ -385,6 +395,7 @@ const CreateEmployee = ({ editUser = false }) => {
 
         {showToast && (
           <Toast
+            type={showToast.type}
             error={showToast.key}
             isDleteBtn="true"
             label={t(showToast.label)}
