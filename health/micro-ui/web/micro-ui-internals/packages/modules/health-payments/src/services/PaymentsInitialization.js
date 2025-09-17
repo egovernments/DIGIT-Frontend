@@ -23,7 +23,10 @@ const initializePaymentsModule = async ({ tenantId }) => {
 
   const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_CONTEXT_PATH") || "health-project";
   const individualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
-  const hierarchyType = "NEWTEST00222";
+  // const hierarchyType = Digit.SessionStorage.get("HIERARCHY_TYPE") || "MICROPLAN";
+
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+
 
   let user = Digit?.SessionStorage.get("User");
 
