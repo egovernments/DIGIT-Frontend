@@ -35,24 +35,57 @@ export const applyBoundaryFilters = (data, filters) => {
 };
 
 /**
- * Extracts unique boundary values from data array
+ * Dynamically discovers all boundary field names from the data
  * @param {Array} data - Array of data objects with boundaryHierarchy property
- * @param {Array} boundaryTypes - Array of boundary types to extract (default: all)
- * @returns {Object} Object with arrays of unique values for each boundary type
+ * @returns {Array} Array of discovered boundary field names
  */
-export const extractBoundaryOptions = (data, boundaryTypes = ['country', 'state', 'lga', 'ward', 'healthFacility']) => {
+export const discoverBoundaryFields = (data) => {
   if (!data || !Array.isArray(data)) {
-    return boundaryTypes.reduce((acc, type) => ({ ...acc, [type]: [] }), {});
+    return [];
   }
 
-  const options = boundaryTypes.reduce((acc, type) => ({ ...acc, [type]: new Set() }), {});
+  const allFields = new Set();
+
+  // Scan all records to discover boundary fields
+  data.forEach(row => {
+    const boundaryHierarchy = row.boundaryHierarchy;
+    if (boundaryHierarchy && typeof boundaryHierarchy === 'object') {
+      Object.keys(boundaryHierarchy).forEach(field => {
+        if (boundaryHierarchy[field]) { // Only include fields with values
+          allFields.add(field);
+        }
+      });
+    }
+  });
+
+  return Array.from(allFields).sort();
+};
+
+/**
+ * Extracts unique boundary values from data array
+ * @param {Array} data - Array of data objects with boundaryHierarchy property
+ * @param {Array} boundaryTypes - Array of boundary types to extract (default: auto-discovered)
+ * @returns {Object} Object with arrays of unique values for each boundary type
+ */
+export const extractBoundaryOptions = (data, boundaryTypes = null) => {
+  if (!data || !Array.isArray(data)) {
+    return {};
+  }
+
+  // Auto-discover boundary types if not provided
+  const fieldsToExtract = boundaryTypes || discoverBoundaryFields(data);
+  if (fieldsToExtract.length === 0) {
+    return {};
+  }
+
+  const options = fieldsToExtract.reduce((acc, type) => ({ ...acc, [type]: new Set() }), {});
 
   // Extract boundary values from each data row
   data.forEach(row => {
     const boundaryHierarchy = row.boundaryHierarchy;
     
     if (boundaryHierarchy && typeof boundaryHierarchy === 'object') {
-      boundaryTypes.forEach(type => {
+      fieldsToExtract.forEach(type => {
         if (boundaryHierarchy[type]) {
           options[type].add(boundaryHierarchy[type]);
         }
@@ -60,11 +93,15 @@ export const extractBoundaryOptions = (data, boundaryTypes = ['country', 'state'
     }
   });
 
-  // Convert sets to sorted arrays
-  return boundaryTypes.reduce((acc, type) => ({
-    ...acc,
-    [type]: Array.from(options[type]).sort()
-  }), {});
+  // Convert sets to sorted arrays and filter out fields with only one option
+  return fieldsToExtract.reduce((acc, type) => {
+    const uniqueValues = Array.from(options[type]).sort();
+    // Only include fields that have more than one unique value
+    if (uniqueValues.length > 1) {
+      acc[type] = uniqueValues;
+    }
+    return acc;
+  }, {});
 };
 
 /**
@@ -77,27 +114,40 @@ export const getBoundaryStats = (data) => {
     return {
       totalRecords: 0,
       recordsWithBoundary: 0,
-      uniqueCountries: 0,
-      uniqueStates: 0,
-      uniqueLgas: 0,
-      uniqueWards: 0,
-      uniqueHealthFacilities: 0
+      boundaryFields: {},
+      coveragePercentage: 0
     };
   }
 
+  // Get all available boundary options (includes filtering for multiple values)
   const options = extractBoundaryOptions(data);
+  
+  // Get all discovered fields (includes single-value fields)
+  const allFields = discoverBoundaryFields(data);
+  
   const recordsWithBoundary = data.filter(row => 
     row.boundaryHierarchy && typeof row.boundaryHierarchy === 'object'
   ).length;
 
+  // Create dynamic stats object
+  const boundaryFieldStats = {};
+  allFields.forEach(field => {
+    // Count total unique values (even if filtered out by extractBoundaryOptions)
+    const uniqueValues = new Set();
+    data.forEach(row => {
+      if (row.boundaryHierarchy && row.boundaryHierarchy[field]) {
+        uniqueValues.add(row.boundaryHierarchy[field]);
+      }
+    });
+    boundaryFieldStats[field] = uniqueValues.size;
+  });
+
   return {
     totalRecords: data.length,
     recordsWithBoundary,
-    uniqueCountries: options.country.length,
-    uniqueStates: options.state.length,
-    uniqueLgas: options.lga.length,
-    uniqueWards: options.ward.length,
-    uniqueHealthFacilities: options.healthFacility.length,
+    boundaryFields: boundaryFieldStats,
+    availableFilters: Object.keys(options), // Only fields with multiple values
+    allDiscoveredFields: allFields, // All fields found in data
     coveragePercentage: data.length > 0 ? Math.round((recordsWithBoundary / data.length) * 100) : 0
   };
 };

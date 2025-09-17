@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect ,Fragment} from 'react';
 import BoundaryFilterComponent from './BoundaryFilterComponent';
 import { applyBoundaryFilters, getBoundaryStats } from '../utils/boundaryFilterUtils';
 
@@ -23,7 +23,7 @@ const withBoundaryFilter = (WrappedComponent, options = {}) => {
     customLabels = {},
     
     // Filter configuration
-    filterOrder = ['country', 'state', 'lga', 'ward', 'healthFacility'],
+    filterOrder = null, // null for auto-discovery, array for custom order
     requiredFilters = [],
     
     // Styling

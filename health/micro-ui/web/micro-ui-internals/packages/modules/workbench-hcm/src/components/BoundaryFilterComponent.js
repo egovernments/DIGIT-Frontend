@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { discoverBoundaryFields, extractBoundaryOptions } from '../utils/boundaryFilterUtils';
 
 /**
  * Reusable boundary filter component that creates dropdown filters
@@ -24,73 +25,53 @@ const BoundaryFilterComponent = ({
   // Custom labels (optional)
   customLabels = {},
   
-  // Filter order (optional - to control the order of dropdowns)
-  filterOrder = ['country', 'state', 'lga', 'ward', 'healthFacility']
+  // Filter order (optional - to control the order of dropdowns, null for auto-discovery)
+  filterOrder = null
 }) => {
   const { t } = useTranslation();
 
-  // State to store selected filter values
-  const [selectedFilters, setSelectedFilters] = useState({
-    country: '',
-    state: '',
-    lga: '',
-    ward: '',
-    healthFacility: ''
+  // Dynamically discover boundary fields from data
+  const discoveredFields = useMemo(() => {
+    return discoverBoundaryFields(data);
+  }, [data]);
+
+  // Use provided filterOrder or discovered fields
+  const fieldsToShow = useMemo(() => {
+    return filterOrder || discoveredFields;
+  }, [filterOrder, discoveredFields]);
+
+  // Initialize state dynamically based on discovered fields
+  const [selectedFilters, setSelectedFilters] = useState(() => {
+    const initialState = {};
+    fieldsToShow.forEach(field => {
+      initialState[field] = '';
+    });
+    return initialState;
   });
 
-  // Extract unique boundary values from data
-  const boundaryOptions = useMemo(() => {
-    if (!data || data.length === 0) {
-      return {
-        country: [],
-        state: [],
-        lga: [],
-        ward: [],
-        healthFacility: []
-      };
-    }
-
-    const options = {
-      country: new Set(),
-      state: new Set(),
-      lga: new Set(),
-      ward: new Set(),
-      healthFacility: new Set()
-    };
-
-    // Extract boundary values from each data row
-    data.forEach(row => {
-      const boundaryHierarchy = row.boundaryHierarchy;
-      
-      if (boundaryHierarchy && typeof boundaryHierarchy === 'object') {
-        // Add values to sets (Set automatically handles uniqueness)
-        if (boundaryHierarchy.country) options.country.add(boundaryHierarchy.country);
-        if (boundaryHierarchy.state) options.state.add(boundaryHierarchy.state);
-        if (boundaryHierarchy.lga) options.lga.add(boundaryHierarchy.lga);
-        if (boundaryHierarchy.ward) options.ward.add(boundaryHierarchy.ward);
-        if (boundaryHierarchy.healthFacility) options.healthFacility.add(boundaryHierarchy.healthFacility);
-      }
+  // Update selectedFilters when fieldsToShow changes
+  useEffect(() => {
+    setSelectedFilters(prevFilters => {
+      const newFilters = {};
+      fieldsToShow.forEach(field => {
+        newFilters[field] = prevFilters[field] || '';
+      });
+      return newFilters;
     });
+  }, [fieldsToShow]);
 
-    // Convert sets to sorted arrays
-    return {
-      country: Array.from(options.country).sort(),
-      state: Array.from(options.state).sort(),
-      lga: Array.from(options.lga).sort(),
-      ward: Array.from(options.ward).sort(),
-      healthFacility: Array.from(options.healthFacility).sort()
-    };
-  }, [data]);
+  // Extract unique boundary values from data (only fields with multiple values)
+  const boundaryOptions = useMemo(() => {
+    return extractBoundaryOptions(data, fieldsToShow);
+  }, [data, fieldsToShow]);
 
   // Get stats about available options
   const filterStats = useMemo(() => {
-    return {
-      country: boundaryOptions.country.length,
-      state: boundaryOptions.state.length,
-      lga: boundaryOptions.lga.length,
-      ward: boundaryOptions.ward.length,
-      healthFacility: boundaryOptions.healthFacility.length
-    };
+    const stats = {};
+    Object.keys(boundaryOptions).forEach(field => {
+      stats[field] = boundaryOptions[field]?.length || 0;
+    });
+    return stats;
   }, [boundaryOptions]);
 
   // Handle filter change
@@ -117,13 +98,10 @@ const BoundaryFilterComponent = ({
 
   // Clear all filters
   const handleClearAll = () => {
-    const clearedFilters = {
-      country: '',
-      state: '',
-      lga: '',
-      ward: '',
-      healthFacility: ''
-    };
+    const clearedFilters = {};
+    fieldsToShow.forEach(field => {
+      clearedFilters[field] = '';
+    });
     
     setSelectedFilters(clearedFilters);
     
@@ -135,16 +113,19 @@ const BoundaryFilterComponent = ({
   // Get count of active filters
   const activeFilterCount = Object.values(selectedFilters).filter(value => value).length;
 
-  // Default labels
-  const defaultLabels = {
-    country: 'Country',
-    state: 'State', 
-    lga: 'LGA',
-    ward: 'Ward',
-    healthFacility: 'Health Facility'
+  // Generate labels with proper formatting
+  const getFieldLabel = (fieldName) => {
+    // Check custom labels first
+    if (customLabels[fieldName]) {
+      return customLabels[fieldName];
+    }
+    
+    // Generate human-readable label from field name
+    return fieldName
+      .replace(/([A-Z])/g, ' $1') // Add space before capital letters
+      .replace(/^./, str => str.toUpperCase()) // Capitalize first letter
+      .trim();
   };
-
-  const labels = { ...defaultLabels, ...customLabels };
 
   // Default styles
   const defaultContainerStyle = {
@@ -220,11 +201,12 @@ const BoundaryFilterComponent = ({
         )}
       </div>
 
-      {/* Filter Dropdowns */}
+      {/* Filter Dropdowns - Only show fields with multiple values */}
       <div style={defaultFilterRowStyle}>
-        {filterOrder.map(filterType => {
+        {Object.keys(boundaryOptions).map(filterType => {
           const options = boundaryOptions[filterType] || [];
           const hasOptions = options.length > 0;
+          const fieldLabel = getFieldLabel(filterType);
           
           return (
             <div key={filterType}>
@@ -235,14 +217,14 @@ const BoundaryFilterComponent = ({
                 color: '#374151',
                 marginBottom: '4px'
               }}>
-                {t(labels[filterType])}
+                {t(fieldLabel)}
                 <span style={{ color: '#9ca3af', marginLeft: '4px' }}>
-                  ({filterStats[filterType]})
+                  ({options.length})
                 </span>
               </label>
               
               <select
-                value={selectedFilters[filterType]}
+                value={selectedFilters[filterType] || ''}
                 onChange={(e) => handleFilterChange(filterType, e.target.value)}
                 disabled={!hasOptions}
                 style={{
@@ -253,7 +235,7 @@ const BoundaryFilterComponent = ({
                 }}
               >
                 <option value="">
-                  {hasOptions ? `All ${labels[filterType]}` : `No ${labels[filterType]} data`}
+                  {hasOptions ? `All ${fieldLabel}` : `No ${fieldLabel} data`}
                 </option>
                 {options.map(option => (
                   <option key={option} value={option}>
@@ -278,8 +260,10 @@ const BoundaryFilterComponent = ({
         }}>
           <strong>Debug Info:</strong> 
           Found {data.length} records • 
+          Discovered fields: [{discoveredFields.join(', ')}] • 
+          Showing filters: [{Object.keys(boundaryOptions).join(', ')}] • 
           Active filters: {JSON.stringify(Object.keys(selectedFilters).filter(k => selectedFilters[k]))} • 
-          Options: {Object.keys(filterStats).map(k => `${k}:${filterStats[k]}`).join(', ')}
+          Options: {Object.keys(boundaryOptions).map(k => `${k}:${boundaryOptions[k].length}`).join(', ')}
         </div>
       )}
     </div>

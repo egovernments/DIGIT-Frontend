@@ -1,15 +1,55 @@
-import React, { useMemo } from 'react';
+import React, { useMemo ,Fragment} from 'react';
 import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
+import withBoundaryFilter from './withBoundaryFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
+import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
 
 function toCamelCase(str) {
   return str
     .toLowerCase()
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
+
+// Create FullFeaturedFiltered ReusableTableWrapper for delivery data
+const FullFeaturedFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
+  showFilters: true,
+  showStats: true,
+  showClearAll: true,
+  autoApplyFilters: true,
+  persistFilters: true,
+  filterPosition: 'top',
+  storageKey: 'deliveryComponentFilters',
+  customLabels: {
+    country: 'Country',
+    state: 'State',
+    lga: 'Local Government Area',
+    ward: 'Ward',
+    healthFacility: 'Health Facility'
+  },
+  filterOrder: null, // Auto-discover from data
+  requiredFilters: [],
+  filterStyle: {
+    backgroundColor: '#f8f9fa',
+    padding: '20px',
+    borderRadius: '8px',
+    marginBottom: '10px'
+  },
+  statsStyle: {
+    backgroundColor: '#e3f2fd',
+    color: '#1565c0',
+    fontSize: '14px',
+    fontWeight: '500'
+  },
+  onFiltersChange: (activeFilters, allFilters) => {
+    console.log('Delivery table boundary filters changed:', activeFilters);
+  },
+  onDataFiltered: (filteredData, filters) => {
+    console.log(`Delivery table filtered: ${filteredData.length} records with filters:`, filters);
+  }
+});
 
 const DeliveryComponent = ({ 
   projectId, 
@@ -117,7 +157,7 @@ console.log(data,"delivery data",data?.length);
         syncedTime: source.syncedTime ? new Date(source.syncedTime).toLocaleString() : 'N/A',
         administrativeArea: source.additionalDetails?.administrativeArea || 'N/A',
         deliveryStatus: source.status || 'N/A',
-        boundaryHierarchy: source.boundaryHierarchy || 'N/A',
+        boundaryHierarchy: source.boundaryHierarchy || {},
         latitude: geoPoint[1] || geoPoint.lat || 'N/A',
         longitude: geoPoint[0] || geoPoint.lon || 'N/A',
         createdTime: source.auditDetails?.createdTime 
@@ -130,49 +170,89 @@ console.log(data,"delivery data",data?.length);
     });
   }, [data]);
 
-  // Define table columns
-  const columns = [
-    { key: 'deliveredBy', label: t('DELIVERED_BY'), sortable: true },
-    { key: 'quantity', label: t('QUANTITY'), sortable: true },
-    { key: 'memberCount', label: t('MEMBER_COUNT'), sortable: true },
-    { key: 'deliveryStatus', label: t('DELIVERY_STATUS'), sortable: true },
-    { key: 'deliveryDate', label: t('DELIVERY_DATE'), sortable: true },
-    { key: 'latitude', label: t('LATITUDE'), sortable: false },
-    { key: 'longitude', label: t('LONGITUDE'), sortable: false },
-    { key: 'productName', label: t('PRODUCT_NAME'), sortable: true },
-    { key: 'administrativeArea', label: t('ADMINISTRATIVE_AREA'), sortable: true },
-    { key: 'syncedTime', label: t('SYNCED_TIME'), sortable: true }
+  // Discover boundary fields from data
+  const boundaryFields = useMemo(() => {
+    return discoverBoundaryFields(tableData);
+  }, [tableData]);
 
-  ];
+  // Helper function to generate field label
+  const getFieldLabel = (fieldName) => {
+    return fieldName
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .trim();
+  };
+
+  // Define table columns with dynamic boundary columns
+  const columns = useMemo(() => {
+    const baseColumns = [
+      { key: 'deliveredBy', label: t('DELIVERED_BY'), sortable: true },
+      { key: 'quantity', label: t('QUANTITY'), sortable: true },
+      { key: 'memberCount', label: t('MEMBER_COUNT'), sortable: true },
+      { key: 'deliveryStatus', label: t('DELIVERY_STATUS'), sortable: true },
+      { key: 'deliveryDate', label: t('DELIVERY_DATE'), sortable: true },
+      { key: 'productName', label: t('PRODUCT_NAME'), sortable: true }
+    ];
+
+    // Add dynamic boundary hierarchy columns
+    const boundaryColumns = boundaryFields.map(field => ({
+      key: `boundaryHierarchy.${field}`,
+      label: t(getFieldLabel(field)),
+      sortable: true,
+      width: '150px'
+    }));
+
+    const endColumns = [
+      { key: 'latitude', label: t('LATITUDE'), sortable: false },
+      { key: 'longitude', label: t('LONGITUDE'), sortable: false },
+      { key: 'administrativeArea', label: t('ADMINISTRATIVE_AREA'), sortable: true },
+      { key: 'syncedTime', label: t('SYNCED_TIME'), sortable: true }
+    ];
+
+    return [...baseColumns, ...boundaryColumns, ...endColumns];
+  }, [boundaryFields, t]);
 
   // Custom cell renderers for specific fields
-  const customCellRenderer = {
-    quantity: (row) => (
-      <span style={{ 
-        fontWeight: 'bold',
-        color: row.quantity > 0 ? '#28a745' : '#dc3545'
-      }}>
-        {row.quantity.toLocaleString()}
-      </span>
-    ),
-    deliveryStatus: (row) => (
-      <span style={{
-        padding: '4px 8px',
-        borderRadius: '12px',
-        fontSize: '12px',
-        fontWeight: '500',
-        backgroundColor: getStatusColor(row.deliveryStatus).background,
-        color: getStatusColor(row.deliveryStatus).text
-      }}>
-        {row.deliveryStatus}
-      </span>
-    ),
-    deliveryDate: (row) => (
-      <span style={{ fontSize: '14px' }}>
-        {row.deliveryDate !== 'N/A' ? row.deliveryDate : '-'}
-      </span>
-    )
-  };
+  const customCellRenderer = useMemo(() => {
+    const renderers = {
+      quantity: (row) => (
+        <span style={{ 
+          fontWeight: 'bold',
+          color: row.quantity > 0 ? '#28a745' : '#dc3545'
+        }}>
+          {row.quantity.toLocaleString()}
+        </span>
+      ),
+      deliveryStatus: (row) => (
+        <span style={{
+          padding: '4px 8px',
+          borderRadius: '12px',
+          fontSize: '12px',
+          fontWeight: '500',
+          backgroundColor: getStatusColor(row.deliveryStatus).background,
+          color: getStatusColor(row.deliveryStatus).text
+        }}>
+          {row.deliveryStatus}
+        </span>
+      ),
+      deliveryDate: (row) => (
+        <span style={{ fontSize: '14px' }}>
+          {row.deliveryDate !== 'N/A' ? row.deliveryDate : '-'}
+        </span>
+      )
+    };
+
+    // Add dynamic boundary field renderers
+    boundaryFields.forEach(field => {
+      renderers[`boundaryHierarchy.${field}`] = (row) => (
+        <span style={{ fontSize: '13px' }}>
+          {row.boundaryHierarchy?.[field] || '-'}
+        </span>
+      );
+    });
+
+    return renderers;
+  }, [boundaryFields]);
 
   // Helper function for status colors
   const getStatusColor = (status) => {
@@ -234,8 +314,8 @@ console.log(data,"delivery data",data?.length);
         </div>
       )}
 
-      {/* Table */}
-      <ReusableTableWrapper
+      {/* Table with Boundary Filtering */}
+      <FullFeaturedFilteredTable
         title=""
         data={tableData}
         columns={columns}
@@ -247,10 +327,9 @@ console.log(data,"delivery data",data?.length);
         paginationRowsPerPageOptions={[10, 25, 50, 100, 500, 1000]}
         className="delivery-table"
         headerClassName="delivery-header"
-        enableExcelDownload = {true}
-  excelFileName = "delivery_data"
-  excelButtonText = "Download Excel"
-
+        enableExcelDownload={true}
+        excelFileName="delivery_data_filtered"
+        excelButtonText="Download Filtered Data"
       />
     </div>
   );
