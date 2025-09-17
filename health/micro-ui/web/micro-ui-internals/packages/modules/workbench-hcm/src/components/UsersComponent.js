@@ -112,8 +112,7 @@ const UsersComponent = ({
               status: (source.status !== undefined ? source.status : source.isDeleted) === false ? "ACTIVE" : "INACTIVE",
               country: source.country || source.boundaryHierarchy?.country || "NA",
               state: source.state || source.boundaryHierarchy?.state || "NA",
-              lga: source.lga || source.boundaryHierarchy?.lga || "NA",
-              ward: source.ward || source.boundaryHierarchy?.ward || "NA",
+            
               healthFacility: source.healthFacility || source.boundaryHierarchy?.healthFacility || "NA",
               createdTime: source.createdTime ? (typeof source.createdTime === 'number' ? Digit.DateUtils.ConvertEpochToDate(source.createdTime) : source.createdTime) : "NA",
               createdBy: source.createdBy || "NA"

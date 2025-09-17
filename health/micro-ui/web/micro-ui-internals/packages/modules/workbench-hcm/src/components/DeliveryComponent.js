@@ -88,7 +88,8 @@ const DeliveryComponent = ({
   "Data.quantity",
   "Data.userName",
   "Data.status",
-  "Data.userId"
+  "Data.userId",
+  "Data.boundaryHierarchy"
 ],
     maxRecordLimit: 100000,
     maxBatchSize: 5000,
@@ -116,6 +117,7 @@ console.log(data,"delivery data",data?.length);
         syncedTime: source.syncedTime ? new Date(source.syncedTime).toLocaleString() : 'N/A',
         administrativeArea: source.additionalDetails?.administrativeArea || 'N/A',
         deliveryStatus: source.status || 'N/A',
+        boundaryHierarchy: source.boundaryHierarchy || 'N/A',
         latitude: geoPoint[1] || geoPoint.lat || 'N/A',
         longitude: geoPoint[0] || geoPoint.lon || 'N/A',
         createdTime: source.auditDetails?.createdTime 

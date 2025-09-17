@@ -78,7 +78,9 @@ const StockTransactionComponent = ({
   "Data.createdTime",
   "Data.userName",
   "Data.status",
-  "Data.createdBy"
+  "Data.createdBy",
+    "Data.boundaryHierarchy"
+
     ],
     maxRecordLimit: 100000,
     maxBatchSize: 5000,
