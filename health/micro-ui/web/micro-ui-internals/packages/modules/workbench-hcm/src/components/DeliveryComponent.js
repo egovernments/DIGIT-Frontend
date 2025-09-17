@@ -95,6 +95,7 @@ const DeliveryComponent = ({
     requiresAuth: true,
     enabled: !externalLoading && !!projectId
   });
+console.log(data,"delivery data",data?.length);
 
   // Transform data for table display
   const tableData = useMemo(() => {

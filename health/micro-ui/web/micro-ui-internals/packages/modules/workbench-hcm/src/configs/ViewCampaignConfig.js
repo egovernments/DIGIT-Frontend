@@ -172,23 +172,23 @@ export const data = (project) => {
           },
         ],
       },
-      // {
-      //   navigationKey: "card11",
-      //   sections: [
-      //     {
-      //       navigationKey: "card11",
+      {
+        navigationKey: "card11",
+        sections: [
+          {
+            navigationKey: "card11",
 
-      //       type: "COMPONENT",
-      //       component: "StockTransactionComponent",
-      //       props: { 
-      //         projectId: project?.Project?.[0]?.id,
-      //         boundaryType: project?.Project?.[0]?.address?.boundaryType || "state",
-      //         boundaryCode: project?.Project?.[0]?.address?.boundary || "OD_01_ONDO",
-      //         dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
-      //       },
-      //     },
-      //   ],
-      // }, 
+            type: "COMPONENT",
+            component: "StockTransactionComponent",
+            props: { 
+              projectId: project?.Project?.[0]?.id,
+              boundaryType: project?.Project?.[0]?.address?.boundaryType || "state",
+              boundaryCode: project?.Project?.[0]?.address?.boundary || "OD_01_ONDO",
+              dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
+            },
+          },
+        ],
+      }, 
     ],
     apiResponse: {},
     additionalDetails: {},
@@ -246,11 +246,11 @@ export const data = (project) => {
           active: true,
           code: "EMPLOYEES",
         },
-        //   {
-        //   name: "card11",
-        //   active: true,
-        //   code: "STOCK_TRANSACTIONS",
-        // },
+          {
+          name: "card11",
+          active: true,
+          code: "STOCK_TRANSACTIONS",
+        },
         // {
         //   name: "card10",
         //   active: true,

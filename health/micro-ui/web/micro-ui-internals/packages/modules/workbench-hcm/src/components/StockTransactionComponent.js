@@ -2,6 +2,13 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
+import { getKibanaDetails } from '../utils/getProjectServiceUrl';
+
+function toCamelCase(str) {
+  return str
+    .toLowerCase()
+    .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+}
 
 const StockTransactionComponent = ({ 
   projectId, 
@@ -16,43 +23,19 @@ const StockTransactionComponent = ({
     const conditions = [];
 
     // Add project filter if provided
-    if (projectId) {
-      conditions.push({
-        "term": {
-          "Data.projectId.keyword": projectId
-        }
-      });
-    }
+   
 
     // Add boundary filters if provided
-    if (boundaryType && boundaryCode) {
-      if (boundaryType === 'WARD') {
+       if (boundaryType && boundaryCode) {
         conditions.push({
           "term": {
-            "Data.facilityDetails.addressDetails.wardCode.keyword": boundaryCode
+            [`Data.boundaryHierarchyCode.${toCamelCase(boundaryType)}.keyword`]: boundaryCode
           }
-        });
-      } else if (boundaryType === 'LGA') {
-        conditions.push({
-          "term": {
-            "Data.facilityDetails.addressDetails.lgaCode.keyword": boundaryCode
-          }
-        });
-      } else if (boundaryType === 'SETTLEMENT') {
-        conditions.push({
-          "term": {
-            "Data.facilityDetails.addressDetails.settlementCode.keyword": boundaryCode
-          }
-        });
-      }
+        })
     }
 
     // Add stock transaction-specific filters
-    conditions.push({
-      "term": {
-        "Data.entityType.keyword": "STOCK"
-      }
-    });
+  
 
     if (conditions.length === 0) {
       return { "match_all": {} };
@@ -76,29 +59,25 @@ const StockTransactionComponent = ({
     metadata,
     refetch
   } = useSimpleElasticsearch({
-    indexName: 'health-project-stock-index',
+    indexName: getKibanaDetails('projectStockIndex') || 'od-stock-index-v1',
     query: elasticsearchQuery,
     sourceFields: [
       "Data.id",
-      "Data.stockId",
-      "Data.projectId",
-      "Data.facilityId",
-      "Data.facilityName",
-      "Data.productVariantId",
-      "Data.productName",
-      "Data.productCategory",
-      "Data.transactionType",
-      "Data.transactionReason",
-      "Data.referenceId",
-      "Data.referenceIdType",
-      "Data.quantity",
-      "Data.stockOnHand",
-      "Data.transactionDate",
-      "Data.transactedBy",
-      "Data.facilityDetails",
-      "Data.additionalDetails",
-      "Data.auditDetails.createdTime",
-      "Data.auditDetails.lastModifiedTime"
+    "Data.eventType",
+  "Data.facilityId",
+    "Data.facilityName",
+  "Data.physicalCount",
+  "Data.waybillNumber",
+  "Data.transactingFacilityId",
+    "Data.transactingFacilityName",
+  "Data.additionalDetails.quantitySent",
+  "Data.additionalDetails.quantityReceived",
+  "Data.additionalDetails.materialNoteNumber",
+  "Data.quantity",
+  "Data.createdTime",
+  "Data.userName",
+  "Data.status",
+  "Data.createdBy"
     ],
     maxRecordLimit: 100000,
     maxBatchSize: 5000,
@@ -115,74 +94,58 @@ const StockTransactionComponent = ({
       const facilityAddress = facilityDetails.addressDetails || {};
       
       return {
-        id: source.id || source.stockId || hit._id || `stock-${index}`,
-        stockId: source.stockId || 'N/A',
-        facilityId: source.facilityId || 'N/A',
-        facilityName: source.facilityName || facilityDetails.facilityName || 'N/A',
-        productName: source.productName || 'N/A',
-        productCategory: source.productCategory || 'N/A',
-        transactionType: source.transactionType || 'N/A',
-        transactionReason: source.transactionReason || 'N/A',
-        referenceId: source.referenceId || 'N/A',
-        referenceIdType: source.referenceIdType || 'N/A',
+        id: source.id  || `stock-${index}`,
+        senderId: source.facilityId || 'N/A',
+        facilityName: source.facilityName ||  'N/A',
+        quantitySent: source.additionalDetails?.quantitySent || source?.physicalCount || 0,
+        receiverId: source.transactingFacilityId || 'N/A',
+        transactingFacilityName: source.transactingFacilityName || 'N/A',
+        quantityReceived: source.additionalDetails?.quantityReceived || 0,
         quantity: source.quantity || 0,
-        stockOnHand: source.stockOnHand || 0,
-        transactionDate: source.transactionDate 
-          ? new Date(source.transactionDate).toLocaleDateString() 
-          : 'N/A',
-        transactedBy: source.transactedBy || 'N/A',
-        wardName: facilityAddress.wardName || 'N/A',
-        lgaName: facilityAddress.lgaName || 'N/A',
-        settlementName: facilityAddress.settlementName || 'N/A',
-        createdTime: source.auditDetails?.createdTime 
-          ? new Date(source.auditDetails.createdTime).toLocaleString() 
-          : 'N/A',
-        lastModifiedTime: source.auditDetails?.lastModifiedTime 
-          ? new Date(source.auditDetails.lastModifiedTime).toLocaleString() 
-          : 'N/A'
+        materialNoteNumber: source.additionalDetails?.materialNoteNumber || 'N/A',
+        batchNumber: source.batchNumber || 'N/A',
+        transactionType: source.eventType || 'N/A',
+        wayBillNumber: source.waybillNumber || 'N/A',
+        createdBy: source.createdBy || 'N/A',
+        createdTime: source.createdTime ? new Date(source.createdTime).toLocaleString() : 'N/A',
+        distributorName: facilityDetails.facilityName || 'N/A',
+        stockOnHand: source.physicalCount || 0, 
+       
       };
     });
   }, [data]);
 
   // Define table columns
   const columns = [
-    { key: 'stockId', label: t('STOCK_ID'), sortable: true },
-    { key: 'facilityName', label: t('FACILITY_NAME'), sortable: true },
-    { key: 'productName', label: t('PRODUCT_NAME'), sortable: true },
-    { key: 'productCategory', label: t('PRODUCT_CATEGORY'), sortable: true },
-    { key: 'transactionType', label: t('TRANSACTION_TYPE'), sortable: true },
-    { key: 'transactionReason', label: t('TRANSACTION_REASON'), sortable: true },
-    { key: 'quantity', label: t('QUANTITY'), sortable: true },
-    { key: 'stockOnHand', label: t('STOCK_ON_HAND'), sortable: true },
-    { key: 'transactionDate', label: t('TRANSACTION_DATE'), sortable: true },
-    { key: 'transactedBy', label: t('TRANSACTED_BY'), sortable: true },
-    { key: 'referenceId', label: t('REFERENCE_ID'), sortable: true },
-    { key: 'wardName', label: t('WARD'), sortable: true },
-    { key: 'lgaName', label: t('LGA'), sortable: true },
-    { key: 'createdTime', label: t('CREATED'), sortable: true }
+
+ { label: t("WBH_STOCK_ID"), key: "id", },
+        { label: t("WBH_SENDER_ID"), key: "senderId",width: '180px'},
+        { label: t("WBH_FACILITY_NAME"), key: "facilityName", width: '100px' },
+
+            { label: t("WBH_QUANTITY_SENT"), key: "quantitySent",width: '120px' },
+{ label: t("WBH_TRANSACTION_TYPE"), key: "transactionType", width: '120px'},
+    { label: t("WBH_RECEIVER_ID"), key: "receiverId",  width: '180px'},
+    { label: t("WBH_TRANS_FACILITY_NAME"), key: "transactingFacilityName", width: '100px'  },
+    { label: t("WBH_QUANTITY_RECEIVED"), key: "quantityReceived", width: '120px' },
+        { label: t("WBH_STOCK_ON_HAND"), key: "stockOnHand", width: '120px' ,},
+
+    { label: t("WBH_QUANTITY"), key: "quantity", width: '120px' },
+    { label: t("WBH_MATERIAL_NOTE_NUMBER"), key: "materialNoteNumber" },
+    { label: t("WBH_BATCH_NUMBER"), key: "batchNumber", },
+    { label: t("WBH_TRANSACTION_TYPE"), key: "transactionType" },
+    { label: t("WBH_WAY_BILL_NUMBER"), key: "wayBillNumber" },
+    // { label: t("WBH_SENDER_TYPE"), key: "senderType" },
+    // { label: t("WBH_RECEIVER_TYPE"), key: "receiverType" },
+    { label: t("HCM_ADMIN_CONSOLE_USER_ID"), key: "createdBy" },
+    { label: t("WBH_TRANSACTION_DATE"), key: "createdTime" },
+    { label: t("WBH_DISTRIBUTOR_NAME"), key: "distributorName" },
+
+
   ];
 
   // Custom cell renderers for specific fields
   const customCellRenderer = {
-    quantity: (row) => (
-      <span style={{ 
-        fontWeight: 'bold',
-        fontFamily: 'monospace',
-        color: getQuantityColor(row.quantity, row.transactionType)
-      }}>
-        {row.transactionType === 'RECEIPT' ? '+' : row.transactionType === 'ISSUE' ? '-' : ''}
-        {Math.abs(row.quantity).toLocaleString()}
-      </span>
-    ),
-    stockOnHand: (row) => (
-      <span style={{ 
-        fontWeight: 'bold',
-        fontFamily: 'monospace',
-        color: row.stockOnHand <= 0 ? '#dc3545' : row.stockOnHand < 10 ? '#ffa500' : '#28a745'
-      }}>
-        {row.stockOnHand.toLocaleString()}
-      </span>
-    ),
+ 
     transactionType: (row) => (
       <span style={{
         padding: '4px 8px',
@@ -206,15 +169,7 @@ const StockTransactionComponent = ({
         {row.transactionReason}
       </span>
     ),
-    productCategory: (row) => (
-      <span style={{
-        fontSize: '12px',
-        color: '#6c757d',
-        fontStyle: 'italic'
-      }}>
-        {row.productCategory}
-      </span>
-    ),
+   
     transactionDate: (row) => (
       <span style={{ fontSize: '14px' }}>
         {row.transactionDate !== 'N/A' ? row.transactionDate : '-'}
@@ -222,22 +177,16 @@ const StockTransactionComponent = ({
     )
   };
 
-  // Helper function for quantity colors based on transaction type
-  const getQuantityColor = (quantity, transactionType) => {
-    if (transactionType === 'RECEIPT') return '#28a745'; // Green for receipts
-    if (transactionType === 'ISSUE') return '#dc3545'; // Red for issues
-    if (transactionType === 'ADJUSTMENT') return '#ffa500'; // Orange for adjustments
-    return '#6c757d'; // Gray for others
-  };
+
 
   // Helper function for transaction type colors
   const getTransactionTypeColor = (transactionType) => {
     switch (transactionType?.toUpperCase()) {
-      case 'RECEIPT':
+      case 'RECEIVED':
         return { background: '#d4edda', text: '#155724' };
       case 'ISSUE':
         return { background: '#f8d7da', text: '#721c24' };
-      case 'ADJUSTMENT':
+      case 'DISPATCHED':
         return { background: '#fff3cd', text: '#856404' };
       case 'TRANSFER':
         return { background: '#d1ecf1', text: '#0c5460' };
@@ -280,13 +229,12 @@ const StockTransactionComponent = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h3 style={{ margin: 0, color: '#374151', fontSize: '18px' }}>
-              📦 Stock Transaction Records
+              Stock Transaction Records
             </h3>
             <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px' }}>
               {boundaryType && boundaryCode 
                 ? `Filtered by ${boundaryType}: ${boundaryCode}` 
                 : 'All stock transaction records'}
-              {projectId && ` for Project: ${projectId}`}
             </p>
           </div>
           

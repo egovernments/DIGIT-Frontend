@@ -580,15 +580,16 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
       // Calculate optimal chunk size based on actual total count with maximum limit
       if (totalRecordsAvailable > 100) {
         const calculatedChunkSize = Math.ceil(totalRecordsAvailable / 10);
-        // Enforce maximum batch size of 10,000 records
-        optimalChunkSize = Math.min(10000, Math.max(100, calculatedChunkSize));
+        // Use a reasonable batch size, but allow larger batches for big datasets
+        // Cap individual batch size at 50,000 for better performance
+        optimalChunkSize = Math.min(50000, Math.max(100, calculatedChunkSize));
       } else {
         // For small datasets, use smaller chunks
         optimalChunkSize = Math.max(50, totalRecordsAvailable);
       }
       
       console.log(`📊 _count API returned: ${totalRecordsAvailable} total records available`);
-      console.log(`📦 Optimal chunk size: ${optimalChunkSize} (max 10,000 enforced)`);
+      console.log(`📦 Optimal chunk size: ${optimalChunkSize} (max 50,000 enforced)`);
       console.log(`🔢 calculatedChunkSize was: ${Math.ceil(totalRecordsAvailable / 10)} before max limit applied`);
     } else {
       console.warn('_count API failed, falling back to default chunk size');
