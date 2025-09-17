@@ -15,7 +15,7 @@ export const UICustomizations = {
 
   PGRInboxConfig: {
     preProcess: (data) => {
-      console.log("PGRInboxConfig preProcess", data);
+      console.log("999 preProcess", data);
       data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.inbox.limit= data?.state?.tableForm?.limit;

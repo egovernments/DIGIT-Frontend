@@ -153,9 +153,7 @@ const PGRSearchInboxConfig = () => {
                 minReqFields: 0,
                 defaultValues: {
                     assignedToMe: { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" },
-                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.locality && { 
-                      locality: window.Digit.SessionStorage.get("filtersForInbox").locality 
-                    }),
+      
                     ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.serviceCode && { 
                       serviceCode: window.Digit.SessionStorage.get("filtersForInbox").serviceCode 
                     }),
