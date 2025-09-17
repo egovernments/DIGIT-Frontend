@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
+import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 
 function toCamelCase(str) {
@@ -220,105 +221,56 @@ const UsersComponent = ({
 
   const isLoading = externalLoading || loading;
 
+  // Calculate active users count
+  const activeUsersCount = useMemo(() => {
+    return tableData ? tableData.filter(user => user.isActive === 'Active').length : 0;
+  }, [tableData]);
+
+  // Prepare summary cards data
+  const summaryCards = useMemo(() => {
+    if (!metadata.totalRecords || metadata.totalRecords === 0) return [];
+    
+    return [
+      {
+        key: 'totalUsers',
+        value: metadata.totalRecords.toLocaleString(),
+        label: 'Total Users',
+        subtitle: `of ${metadata.totalAvailable.toLocaleString()} total`,
+        valueColor: '#7c3aed'
+      },
+      {
+        key: 'activeUsers',
+        value: activeUsersCount.toLocaleString(),
+        label: 'Active Users',
+        subtitle: `${Math.round((activeUsersCount / tableData.length) * 100)}% active`,
+        valueColor: '#059669'
+      }
+    ];
+  }, [metadata, activeUsersCount, tableData]);
+
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {/* Header with summary info */}
-      <div style={{
-        padding: '16px 20px',
-        borderBottom: '1px solid #e5e7eb',
-        background: '#f8f9fa'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h3 style={{ margin: 0, color: '#374151', fontSize: '18px' }}>
-              User Records
-            </h3>
-            <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px' }}>
-              {boundaryType && boundaryCode 
-                ? `Filtered by ${boundaryType}: ${ t(boundaryCode)}` 
-                : 'All user records'}
-            </p>
-          </div>
-          
-          {metadata.totalRecords > 0 && (
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#7c3aed' }}>
-                {metadata.totalRecords.toLocaleString()}
-              </div>
-              <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                of {metadata.totalAvailable.toLocaleString()} total
-              </div>
-              <div style={{ fontSize: '12px', color: '#059669', marginTop: '2px' }}>
-                {tableData.filter(user => user.isActive === 'Active').length} active users
-              </div>
-            </div>
-          )}
-        </div>
+      <ElasticsearchDataHeader
+        loading={isLoading}
+        error={error}
+        onRetry={refetch}
+        data={tableData}
+        metadata={metadata}
+        progress={progress}
+        title="User Records"
+        errorMessage="Failed to load user data"
+        summaryCards={summaryCards}
+        headerStyle={{
+          background: '#f8f9fa'
+        }}
+      />
 
-        {/* Progress indicator while loading */}
-        {isLoading && (
-          <div style={{ marginTop: '12px' }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '4px'
-            }}>
-              <span style={{ fontSize: '14px', color: '#374151' }}>
-                Loading user data...
-              </span>
-              <span style={{ fontSize: '14px', color: '#6b7280' }}>
-                {progress.progress.toFixed(1)}%
-              </span>
-            </div>
-            <div style={{
-              width: '100%',
-              height: '6px',
-              backgroundColor: '#e5e7eb',
-              borderRadius: '3px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                width: `${progress.progress}%`,
-                height: '100%',
-                backgroundColor: '#7c3aed',
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-            <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
-              {progress.batchesCompleted}/{progress.totalBatches} batches • {progress.recordsReceived.toLocaleString()} records
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Error display */}
-      {error && (
-        <div style={{
-          margin: '20px',
-          padding: '16px',
-          backgroundColor: '#fef2f2',
-          border: '1px solid #fecaca',
-          borderRadius: '8px',
-          color: '#b91c1c'
-        }}>
-          <div style={{ fontWeight: '600', marginBottom: '4px' }}>Failed to load user data</div>
-          <div style={{ fontSize: '14px' }}>{error}</div>
-          <button
-            onClick={refetch}
-            style={{
-              marginTop: '8px',
-              padding: '6px 12px',
-              backgroundColor: '#dc2626',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            Retry
-          </button>
+      {/* Additional context info */}
+      {!isLoading && !error && (
+        <div style={{ padding: '12px 20px', fontSize: '14px', color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
+          {boundaryType && boundaryCode 
+            ? `Filtered by ${boundaryType}: ${t(boundaryCode)}` 
+            : 'All user records'}
         </div>
       )}
 

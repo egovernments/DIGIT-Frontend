@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
+import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 
 function toCamelCase(str) {
@@ -218,180 +219,73 @@ const StockTransactionComponent = ({
 
   const isLoading = externalLoading || loading;
 
+  // Prepare summary cards data  
+  const summaryCards = useMemo(() => {
+    if (!tableData || tableData.length === 0) return [];
+    
+    return [
+      {
+        key: 'receipts',
+        value: summaryStats.totalReceipts.toLocaleString(),
+        label: 'Receipts',
+        subtitle: `+${summaryStats.totalQuantityReceived.toLocaleString()} qty`,
+        valueColor: '#155724'
+      },
+      {
+        key: 'issues', 
+        value: summaryStats.totalIssues.toLocaleString(),
+        label: 'Issues',
+        subtitle: `-${summaryStats.totalQuantityIssued.toLocaleString()} qty`,
+        valueColor: '#721c24'
+      },
+      {
+        key: 'adjustments',
+        value: summaryStats.totalAdjustments.toLocaleString(), 
+        label: 'Adjustments',
+        valueColor: '#856404'
+      },
+      {
+        key: 'products',
+        value: summaryStats.uniqueProducts,
+        label: 'Products',
+        valueColor: '#01579b'
+      },
+      {
+        key: 'facilities',
+        value: summaryStats.uniqueFacilities,
+        label: 'Facilities', 
+        valueColor: '#4a148c'
+      }
+    ];
+  }, [summaryStats, tableData]);
+
   return (
     <div style={{ width: '100%', height: '100%' }}>
-      {/* Header with summary info */}
-      <div style={{
-        padding: '16px 20px',
-        borderBottom: '1px solid #e5e7eb',
-        background: '#f8f9fa'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h3 style={{ margin: 0, color: '#374151', fontSize: '18px' }}>
-              Stock Transaction Records
-            </h3>
-            <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px' }}>
-              {boundaryType && boundaryCode 
-                ? `Filtered by ${boundaryType}: ${boundaryCode}` 
-                : 'All stock transaction records'}
-            </p>
-          </div>
-          
-          {metadata.totalRecords > 0 && (
-            <div style={{ textAlign: 'right' }}>
-              <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#dc2626' }}>
-                {metadata.totalRecords.toLocaleString()}
-              </div>
-              <div style={{ fontSize: '12px', color: '#6b7280' }}>
-                of {metadata.totalAvailable.toLocaleString()} total
-              </div>
-            </div>
-          )}
-        </div>
-
-        {/* Progress indicator while loading */}
-        {isLoading && (
-          <div style={{ marginTop: '12px' }}>
-            <div style={{
-              display: 'flex',
-              justifyContent: 'space-between',
-              alignItems: 'center',
-              marginBottom: '4px'
-            }}>
-              <span style={{ fontSize: '14px', color: '#374151' }}>
-                Loading stock transaction data...
-              </span>
-              <span style={{ fontSize: '14px', color: '#6b7280' }}>
-                {progress.progress.toFixed(1)}%
-              </span>
-            </div>
-            <div style={{
-              width: '100%',
-              height: '6px',
-              backgroundColor: '#e5e7eb',
-              borderRadius: '3px',
-              overflow: 'hidden'
-            }}>
-              <div style={{
-                width: `${progress.progress}%`,
-                height: '100%',
-                backgroundColor: '#dc2626',
-                transition: 'width 0.3s ease'
-              }} />
-            </div>
-            <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
-              {progress.batchesCompleted}/{progress.totalBatches} batches • {progress.recordsReceived.toLocaleString()} records
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Error display */}
-      {error && (
-        <div style={{
-          margin: '20px',
-          padding: '16px',
-          backgroundColor: '#fef2f2',
-          border: '1px solid #fecaca',
-          borderRadius: '8px',
-          color: '#b91c1c'
-        }}>
-          <div style={{ fontWeight: '600', marginBottom: '4px' }}>Failed to load stock transaction data</div>
-          <div style={{ fontSize: '14px' }}>{error}</div>
-          <button
-            onClick={refetch}
-            style={{
-              marginTop: '8px',
-              padding: '6px 12px',
-              backgroundColor: '#dc2626',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
-              fontSize: '14px'
-            }}
-          >
-            Retry
-          </button>
-        </div>
-      )}
-
-      {/* Summary cards */}
-      {!isLoading && !error && tableData.length > 0 && (
-        <div style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-          gap: '12px',
-          padding: '16px 20px',
+      <ElasticsearchDataHeader
+        loading={isLoading}
+        error={error}
+        onRetry={refetch}
+        data={tableData}
+        metadata={metadata}
+        progress={progress}
+        title="Stock Transaction Records"
+        errorMessage="Failed to load stock transaction data"
+        summaryCards={summaryCards}
+        headerStyle={{
+          background: '#f8f9fa'
+        }}
+        summaryCardsStyle={{
           backgroundColor: '#fafafa',
-          borderBottom: '1px solid #e5e7eb'
-        }}>
-          <div style={{
-            padding: '12px',
-            backgroundColor: '#d4edda',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#155724' }}>
-              {summaryStats.totalReceipts.toLocaleString()}
-            </div>
-            <div style={{ fontSize: '11px', color: '#155724' }}>Receipts</div>
-            <div style={{ fontSize: '10px', color: '#6c757d', marginTop: '2px' }}>
-              +{summaryStats.totalQuantityReceived.toLocaleString()} qty
-            </div>
-          </div>
-          
-          <div style={{
-            padding: '12px',
-            backgroundColor: '#f8d7da',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#721c24' }}>
-              {summaryStats.totalIssues.toLocaleString()}
-            </div>
-            <div style={{ fontSize: '11px', color: '#721c24' }}>Issues</div>
-            <div style={{ fontSize: '10px', color: '#6c757d', marginTop: '2px' }}>
-              -{summaryStats.totalQuantityIssued.toLocaleString()} qty
-            </div>
-          </div>
-          
-          <div style={{
-            padding: '12px',
-            backgroundColor: '#fff3cd',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#856404' }}>
-              {summaryStats.totalAdjustments.toLocaleString()}
-            </div>
-            <div style={{ fontSize: '11px', color: '#856404' }}>Adjustments</div>
-          </div>
-          
-          <div style={{
-            padding: '12px',
-            backgroundColor: '#e1f5fe',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#01579b' }}>
-              {summaryStats.uniqueProducts}
-            </div>
-            <div style={{ fontSize: '11px', color: '#01579b' }}>Products</div>
-          </div>
-          
-          <div style={{
-            padding: '12px',
-            backgroundColor: '#f3e5f5',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '18px', fontWeight: 'bold', color: '#4a148c' }}>
-              {summaryStats.uniqueFacilities}
-            </div>
-            <div style={{ fontSize: '11px', color: '#4a148c' }}>Facilities</div>
-          </div>
+          padding: '16px 20px'
+        }}
+      />
+
+      {/* Additional context info */}
+      {!isLoading && !error && (
+        <div style={{ padding: '12px 20px', fontSize: '14px', color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
+          {boundaryType && boundaryCode 
+            ? `Filtered by ${boundaryType}: ${boundaryCode}` 
+            : 'All stock transaction records'}
         </div>
       )}
 
