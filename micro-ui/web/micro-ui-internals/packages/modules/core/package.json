@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-module-core",
-  "version": "2.0.0-rc19-02",
+  "version": "2.0.0-rc19-03",
   "license": "MIT",
   "main": "dist/main.js",
   "module": "dist/main.js",
@@ -12,7 +12,7 @@
     "example": "cd example && npm run start",
     "start": "webpack serve --mode=development --config webpack.config.js",
     "start:prod": "NODE_ENV=production webpack serve --config webpack.config.js",
-    "build": "NODE_ENV=production webpack --config webpack.config.js",
+    "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
     "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js",
     "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze",
     "prepare": "yarn build",
@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@egovernments/digit-ui-components": "2.0.0-rc19-01",
-    "@egovernments/digit-ui-react-components": "2.0.0-rc19-01",
+    "@egovernments/digit-ui-react-components": "2.0.0-rc19-02",
     "react-i18next": "15.0.0",
     "react-redux": "7.2.8",
     "react-responsive": "10.0.1",
