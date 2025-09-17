@@ -24,6 +24,7 @@ function AddProduct() {
       return isValid;
     }
   };
+  
   const closeToast = () => {
     setShowToast(null);
   };
@@ -114,11 +115,12 @@ function AddProduct() {
           }
           return;
         });
-        // const cleanedPayload = variantPayload.filter(item => item !== null && item !== undefined);
+        
         if ((variantPayload || []).some((item) => item == null && item == undefined)) {
           setShowToast({ key: "error", label: "DUPLICATE_PRODUCT_VARIANT_ERROR", isError: true });
           return;
         }
+        
         await createProductVariant(variantPayload, {
           onError: (error, variables) => {
             console.log(error);
@@ -141,11 +143,24 @@ function AddProduct() {
     });
     return;
   };
+  
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
     return;
   };
 
   const onSecondayActionClick = () => {
+    // Preserve current campaign session data when navigating back
+    const currentSessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+    
+    // Force a flag to indicate we're returning from AddProduct
+    if (currentSessionData) {
+      const updatedSessionData = {
+        ...currentSessionData,
+        RETURNING_FROM_ADD_PRODUCT: true
+      };
+      Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", updatedSessionData);
+    }
+    
     navigate(`/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`);
   };
 
@@ -173,7 +188,6 @@ function AddProduct() {
       {showToast && (
         <Toast
           type={showToast?.isError ? "error" : "success"}
-          // error={showToast?.isError}
           label={t(showToast?.label)}
           isDleteBtn={"true"}
           onClose={() => setShowToast(false)}

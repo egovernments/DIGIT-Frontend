@@ -1,419 +1,158 @@
-import React, { createContext, useContext, useEffect, useReducer, useState } from "react";
-import MultiTab from "./MultiTabcontext";
+import React, { useEffect, useMemo } from "react";
+import { Provider } from 'react-redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Loader } from "@egovernments/digit-ui-components";
-// import { deliveryConfig } from "../../../configs/deliveryConfig";
-import getDeliveryConfig from "../../../utils/getDeliveryConfig";
+import deliveryRulesReducer from './deliveryRulesSlice';
+import { useDeliveryRules, useDeliveryRuleData } from './useDeliveryRules';
+import MultiTab from "./MultiTabcontext";
 
-const CycleContext = createContext();
-
-function makeSequential(jsonArray, keyName) {
-  return jsonArray.map((item, index) => ({
-    ...item,
-    [keyName]: index + 1,
-  }));
-}
-
-function DeliverySetup({ onSelect, config, formData, control, tabCount = 2, subTabCount = 3, ...props }) {
-  // Campaign Tab Skeleton function
-  const cycleData = config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
-  const saved = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-  const selectedProjectType = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA")?.HCM_CAMPAIGN_TYPE?.projectType?.code;
-  const tenantId = Digit.ULBService.getCurrentTenantId();
-  const searchParams = new URLSearchParams(location.search);
-  const activeCycle = searchParams.get("activeCycle");
-  const { isLoading: deliveryConfigLoading, data: filteredDeliveryConfig } = Digit.Hooks.useCustomMDMS(
-    tenantId,
-    "HCM-PROJECT-TYPES",
-    [{ name: "projectTypes" }],
-    {
-      staleTime: 0,
-      cacheTime: 0,
-      enabled: true,
-      select: (data) => {
-        const temp = getDeliveryConfig({ data: data?.["HCM-PROJECT-TYPES"], projectType: selectedProjectType });
-        return temp;
+// Configure Redux store
+const store = configureStore({
+  reducer: {
+    deliveryRules: deliveryRulesReducer,
+  },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: ['deliveryRules/initializeCampaignData'],
       },
-    },
-    { schemaCode: `${"HCM-PROJECT-TYPES"}.projectTypes` }
-  );
-  // useEffect(() => {
-  //   setCycleData(config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure);
-  // }, [config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure]);
+    }),
+});
 
-  const generateTabsData = (tabs, subTabs) => {
-    if (!saved || saved?.length === 0) {
-      return [...Array(tabs)].map((_, tabIndex) => ({
-        cycleIndex: `${tabIndex + 1}`,
-        active: activeCycle == tabIndex + 1 ? true : tabIndex === 0 ? true : false,
-        deliveries: [...Array(subTabs || 1)].map((_, subTabIndex) => ({
-          deliveryIndex: `${subTabIndex + 1}`,
-          active: subTabIndex === 0 ? true : false,
-          deliveryRules:
-            filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]
-              ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
-                if (item) {
-                  return {
-                    ruleKey: index + 1,
-                    delivery: {},
-                    deliveryType: item?.deliveryType,
-                    attributes:
-                      Array.isArray(item?.attributeConfig) && item?.attributeConfig.length > 0
-                        ? item?.attributeConfig?.map((i, c) => {
-                          if (i?.operatorValue === "IN_BETWEEN") {
-                            return {
-                              key: c + 1,
-                              attribute: { code: i?.attrValue },
-                              operator: { code: i?.operatorValue },
-                              toValue: i?.fromValue,
-                              fromValue: i?.toValue,
-                            };
-                          }
-                          return {
-                            key: c + 1,
-                            attribute: { code: i?.attrValue },
-                            operator: { code: i?.operatorValue },
-                            value: i?.value,
-                          };
-                        })
-                        : [{ key: 1, attribute: null, operator: null, value: "" }],
-                    // products: [],
-                    products: item?.productConfig
-                      ? item?.productConfig?.map((i, c) => ({
-                        ...i,
-                      }))
-                      : [],
-                  };
-                } else {
-                  return {
-                    ruleKey: index + 1,
-                    delivery: {},
-                    deliveryType: null,
-                    attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                    products: [],
-                  };
-                }
-              })
-              : [
-                {
-                  ruleKey: 1,
-                  delivery: {},
-                  attributes:
-                    filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[0]?.attributeConfig
-                      ? filteredDeliveryConfig?.deliveryConfig?.[0]?.attributeConfig?.map((i, c) => ({
-                        key: c + 1,
-                        attribute: { code: i?.attrValue },
-                        operator: { code: i?.operatorValue },
-                        value: i?.value,
-                      }))
-                      : [{ key: 1, attribute: null, operator: null, value: "" }],
-                  products: [],
-                },
-              ],
-        })),
-      }));
-    }
-    // if no change
-    if (saved && saved?.length == tabs && saved?.[0]?.deliveries?.length === subTabs) {
-      return saved.map((i, n) => {
-        return {
-          ...i,
-          active: activeCycle ? (activeCycle == n + 1 ? true : false) : n === 0 ? true : false,
-        };
-      });
-    }
-    // if cycle number decrease
-    if (saved?.length > tabs) {
-      // const temp = saved;
-      return saved.slice(0, tabs);
-      // return temp;
-    }
-    // if cycle number increase
-    if (tabs > saved?.length) {
-      // const temp = saved;
-      for (let i = saved.length + 1; i <= tabs; i++) {
-        const newIndex = i.toString();
-        saved.push({
-          cycleIndex: newIndex,
-          active: false,
-          deliveries: [...Array(subTabs || 1)].map((_, subTabIndex) => ({
-            deliveryIndex: `${subTabIndex + 1}`,
-            active: subTabIndex === 0,
-            deliveryRules:
-              filteredDeliveryConfig && filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig
-                ? filteredDeliveryConfig?.deliveryConfig?.[subTabIndex]?.conditionConfig?.map((item, index) => {
-                  if (item) {
-                    return {
-                      ruleKey: index + 1,
-                      delivery: {},
-                      deliveryType: item?.deliveryType,
-                      attributes:
-                        Array.isArray(item?.attributeConfig) && item?.attributeConfig.length > 0
-                          ? item?.attributeConfig?.map((i, c) => {
-                            if (i?.operatorValue === "IN_BETWEEN") {
-                              return {
-                                key: c + 1,
-                                attribute: { code: i?.attrValue },
-                                operator: { code: i?.operatorValue },
-                                toValue: i?.fromValue,
-                                fromValue: i?.toValue,
-                              };
-                            }
-                            return {
-                              key: c + 1,
-                              attribute: { code: i?.attrValue },
-                              operator: { code: i?.operatorValue },
-                              value: i?.value,
-                            };
-                          })
-                          : [{ key: 1, attribute: null, operator: null, value: "" }],
-                      // products: [],
-                      products: item?.productConfig
-                        ? item?.productConfig?.map((i, c) => ({
-                          ...i,
-                        }))
-                        : [],
-                    };
-                  } else {
-                    return {
-                      ruleKey: index + 1,
-                      delivery: {},
-                      deliveryType: null,
-                      attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                      products: [],
-                    };
-                  }
-                })
-                : [
-                  {
-                    ruleKey: 1,
-                    delivery: {},
-                    deliveryType: null,
-                    attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                    products: [],
-                  },
-                ],
-          })),
-        });
-      }
-    }
-    // if delivery number decrease
+const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount = 2, subTabCount = 3, ...props }) => {
+  const {
+    projectConfig,
+    attributeConfig,
+    operatorConfig,
+    deliveryTypeConfig,
+    loading: dataLoading,
+    error: dataError,
+    sessionData,
+  } = useDeliveryRuleData();
 
-    saved.forEach((cycle) => {
-      // Remove deliveries if there are more deliveries than the specified number
-      if (cycle?.deliveries?.length > subTabs) {
-        cycle?.deliveries.splice(subTabs);
-      }
+  const {
+    campaignData,
+    initializeData,
+    initialized,
+    loading: storeLoading,
+    setErrorState,
+  } = useDeliveryRules();
 
-      // Add deliveries if there are fewer deliveries than the specified number
-      if (subTabs > cycle?.deliveries?.length) {
-        for (let i = cycle?.deliveries.length + 1; i <= subTabs; i++) {
-          const newIndex = i.toString();
-          cycle.deliveries.push({
-            deliveryIndex: newIndex,
-            active: false,
-            deliveryRules: [
-              {
-                ruleKey: 1,
-                delivery: {},
-                attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-                products: [],
-              },
-            ],
-          });
-        }
-      }
+  // Get cycle configuration with proper delivery config priority
+  const cycleData = useMemo(() => {
+    const data = config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure ||
+      sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
+    console.log('Cycle configuration data:', data);
+    return data;
+  }, [config, sessionData]);
+
+  // Get effective delivery configuration - prioritize cycle data over project config
+  const effectiveDeliveryConfig = useMemo(() => {
+    const cycleDeliveryConfig = cycleData?.deliveryConfig;
+    
+    if (cycleDeliveryConfig) {
+      console.log('Using cycle delivery config:', cycleDeliveryConfig);
+      return cycleDeliveryConfig;
+    }
+    
+    console.log('Using project config as fallback:', projectConfig);
+    return projectConfig;
+  }, [cycleData, projectConfig]);
+
+  // Get saved delivery rules
+  const savedDeliveryRules = useMemo(() => {
+    const saved = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
+    console.log('Saved delivery rules:', saved);
+    return saved;
+  }, [sessionData]);
+
+  // Initialize campaign data when dependencies are ready
+  useEffect(() => {
+    console.log('Initialization check:', {
+      effectiveDeliveryConfig: !!effectiveDeliveryConfig,
+      cycleData: !!cycleData?.cycleConfgureDate,
+      initialized,
+      savedDeliveryRules: !!savedDeliveryRules,
+      attributeConfigCount: attributeConfig?.length || 0,
+      operatorConfigCount: operatorConfig?.length || 0,
+      configSource: cycleData?.deliveryConfig ? 'cycle' : 'project'
     });
 
-    return saved;
-    // if delivery number increase
-
-    //if no above case
-  };
-
-  // Reducer function
-  const campaignDataReducer = (state, action) => {
-    switch (action.type) {
-      case "GENERATE_CAMPAIGN_DATA":
-        return generateTabsData(action.cycle, action.deliveries);
-      case "UPDATE_CAMPAIGN_DATA": {
-        const changeUpdate = state.map((i) => {
-          if (i.active) {
-            const activeDelivery = i.deliveries.find((j) => j.active === true);
-            if (activeDelivery) {
-              return {
-                ...i,
-                deliveries: i.deliveries.map((j) => ({
-                  ...j,
-                  deliveryRules: j.active ? action.payload.currentDeliveryRules : j.deliveryRules,
-                })),
-              };
-            }
-          }
-          return i;
-        });
-        return changeUpdate;
-      }
-      case "TAB_CHANGE_UPDATE":
-        const temp = state.map((i) => ({
-          ...i,
-          active: i.cycleIndex == action.payload.tabIndex ? true : false,
-        }));
-        return temp;
-      // return action.payload;
-      case "SUBTAB_CHANGE_UPDATE":
-        const tempSub = state.map((camp, index) => {
-          if (camp.active === true) {
-            return {
-              ...camp,
-              deliveries: camp.deliveries.map((deliver) => ({
-                ...deliver,
-                active: deliver.deliveryIndex == action.payload.subTabIndex ? true : false,
-              })),
-            };
-          }
-          return camp;
-        });
-        return tempSub;
-      case "ADD_DELIVERY_RULE":
-        const updatedDeliveryRules = [
-          ...action.payload.currentDeliveryRules,
-          {
-            ruleKey: action.payload.currentDeliveryRules.length + 1,
-            delivery: {},
-            attributes: [{ key: 1, attribute: null, operator: null, value: "" }],
-            products: [],
-          },
-        ];
-        const updatedData = state.map((i) => {
-          if (i.active) {
-            const activeDelivery = i.deliveries.find((j) => j.active);
-            if (activeDelivery) {
-              return {
-                ...i,
-                deliveries: i.deliveries.map((j) => ({
-                  ...j,
-                  deliveryRules: j.active ? updatedDeliveryRules : j.deliveryRules,
-                })),
-              };
-            }
-          }
-          return i;
-        });
-        return updatedData;
-      case "REMOVE_DELIVERY_RULE":
-        const updatedDeleted = state.map((i) => {
-          if (i.active) {
-            const activeDelivery = i.deliveries.find((j) => j.active);
-            const w = makeSequential(
-              activeDelivery.deliveryRules.filter((j) => j.ruleKey != action.payload.item.ruleKey),
-              "ruleKey"
-            );
-            if (activeDelivery) {
-              return {
-                ...i,
-                deliveries: i.deliveries.map((j) => ({
-                  ...j,
-                  deliveryRules: j.active ? w : j.deliveryRules,
-                })),
-              };
-            }
-          }
-          return i;
-        });
-        return updatedDeleted;
-      case "UPDATE_DELIVERY_RULE":
-        return action.payload;
-      case "ADD_ATTRIBUTE":
-        return action.payload;
-      case "REMOVE_ATTRIBUTE":
-        return action.payload;
-      case "UPDATE_ATTRIBUTE":
-        return action.payload;
-      case "ADD_PRODUCT":
-        const prodTemp = action.payload.productData.map((i) => ({
-          ...i,
-          value: i?.value?.id,
-          name: i?.value?.displayName,
-        }));
-        const updatedState = state.map((cycle) => {
-          if (cycle.active) {
-            const updatedDeliveries = cycle.deliveries.map((dd) => {
-              if (dd.active) {
-                const updatedRules = dd.deliveryRules.map((rule) => {
-                  if (rule.ruleKey === action.payload.delivery.ruleKey) {
-                    return {
-                      ...rule,
-                      products: [...prodTemp],
-                    };
-                  }
-                  return rule;
-                });
-                return {
-                  ...dd,
-                  deliveryRules: updatedRules,
-                };
-              }
-              return dd;
-            });
-            return {
-              ...cycle,
-              deliveries: updatedDeliveries,
-            };
-          }
-          return cycle;
-        });
-        return updatedState;
-      case "REMOVE_PRODUCT":
-        return action.payload;
-      case "UPDATE_PRODUCT":
-        return action.payload;
-      default:
-        return state;
-    }
-  };
-
-  const [campaignData, dispatchCampaignData] = useReducer(
-    campaignDataReducer,
-    []
-  );
-  // const [executionCount, setExecutionCount] = useState(0);
-
-  useEffect(() => {
-    if (filteredDeliveryConfig && cycleData?.cycleConfgureDate?.cycle && cycleData?.cycleConfgureDate?.deliveries) {
-      dispatchCampaignData({
-        type: "GENERATE_CAMPAIGN_DATA",
-        cycle: cycleData.cycleConfgureDate.cycle,
-        deliveries: cycleData.cycleConfgureDate.deliveries,
+    if (effectiveDeliveryConfig && cycleData?.cycleConfgureDate && !initialized) {
+      const cycles = cycleData.cycleConfgureDate.cycle || tabCount;
+      const deliveries = cycleData.cycleConfgureDate.deliveries || subTabCount;
+      
+      console.log('Initializing with:', {
+        cycles,
+        deliveries,
+        effectiveDeliveryConfig,
+        savedDeliveryRules,
+        attributeConfig,
+        operatorConfig,
+        configSource: cycleData?.deliveryConfig ? 'cycle deliveryConfig' : 'project config fallback'
       });
+      
+      try {
+        initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfig, operatorConfig);
+      } catch (error) {
+        console.error('Error initializing campaign data:', error);
+        setErrorState(error.message);
+      }
     }
-  }, [cycleData, filteredDeliveryConfig]);
+  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, tabCount, subTabCount, setErrorState, attributeConfig, operatorConfig]);
 
+  // Update parent component when campaign data changes
   useEffect(() => {
-    onSelect("deliveryRule", campaignData);
-  }, [campaignData]);
+    if (initialized && campaignData.length > 0) {
+      console.log('Updating parent with campaign data:', campaignData);
+      onSelect("deliveryRule", campaignData);
+    }
+  }, [campaignData, initialized, onSelect]);
 
-  // useEffect(() => {
-  //   if (executionCount < 5) {
-  //     onSelect("deliveryRule", campaignData);
-  //     setExecutionCount((prevCount) => prevCount + 1);
-  //   }
-  // });
+  // Handle data loading error
+  useEffect(() => {
+    if (dataError) {
+      setErrorState(dataError.message || 'Failed to load configuration data');
+    }
+  }, [dataError, setErrorState]);
 
-  if (deliveryConfigLoading) {
-    return <Loader page={true} variant={"PageLoader"} />;
+  console.log('DeliverySetupContainer render state:', {
+    dataLoading,
+    storeLoading,
+    initialized,
+    campaignDataLength: campaignData.length,
+    attributeConfigLength: attributeConfig?.length,
+    operatorConfigLength: operatorConfig?.length
+  });
+
+  if (dataLoading || storeLoading || !initialized) {
+    return <Loader page={true} variant="PageLoader" />;
   }
+
+  if (dataError) {
+    return (
+      <div className="error-container">
+        <p>Error loading delivery configuration: {dataError.message}</p>
+      </div>
+    );
+  }
+
   return (
-    <CycleContext.Provider
-      value={{
-        campaignData,
-        dispatchCampaignData,
-        filteredDeliveryConfig,
-      }}
-    >
-      <MultiTab />
-    </CycleContext.Provider>
+    <MultiTab
+      projectConfig={projectConfig}
+      attributeConfig={attributeConfig}
+      operatorConfig={operatorConfig}
+      deliveryTypeConfig={deliveryTypeConfig}
+    />
+  );
+};
+
+function DeliverySetup(props) {
+  return (
+    <Provider store={store}>
+      <DeliverySetupContainer {...props} />
+    </Provider>
   );
 }
 
 export default DeliverySetup;
-export { CycleContext };
