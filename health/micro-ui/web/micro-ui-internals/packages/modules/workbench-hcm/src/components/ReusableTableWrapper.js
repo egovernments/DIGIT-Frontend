@@ -175,7 +175,9 @@ const ReusableTableWrapper = ({
       {title && (
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
           <Header className={headerClassName}>{t(title)}</Header>
-          {enableExcelDownload && data && data.length > 0 && (
+        </div>
+      )}
+           {enableExcelDownload && data && data.length > 0 && (
             <button
               onClick={handleExcelDownload}
               style={{
@@ -211,8 +213,6 @@ const ReusableTableWrapper = ({
               {t(excelButtonText)}
             </button>
           )}
-        </div>
-      )}
       {(!data || data.length === 0) ? (
         defaultNoDataComponent
       ) : (

@@ -4,6 +4,13 @@ import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 
+function toCamelCase(str) {
+  return str
+    .toLowerCase()
+    .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
+}
+
+
 const UsersComponent = ({ 
   projectId, 
   boundaryType, 
@@ -17,43 +24,29 @@ const UsersComponent = ({
     const conditions = [];
 
     // Add project filter if provided
-    if (projectId) {
-      conditions.push({
-        "term": {
-          "Data.projectId.keyword": projectId
-        }
-      });
-    }
+    // if (projectId) {
+    //   conditions.push({
+    //     "term": {
+    //       "Data.projectId.keyword": projectId
+    //     }
+    //   });
+    // }
 
     // Add boundary filters if provided
-    if (boundaryType && boundaryCode) {
-      if (boundaryType === 'WARD') {
+     if (boundaryType && boundaryCode) {
         conditions.push({
           "term": {
-            "Data.addressDetails.wardCode.keyword": boundaryCode
+            [`Data.boundaryHierarchyCode.${toCamelCase(boundaryType)}.keyword`]: boundaryCode
           }
-        });
-      } else if (boundaryType === 'LGA') {
-        conditions.push({
-          "term": {
-            "Data.addressDetails.lgaCode.keyword": boundaryCode
-          }
-        });
-      } else if (boundaryType === 'SETTLEMENT') {
-        conditions.push({
-          "term": {
-            "Data.addressDetails.settlementCode.keyword": boundaryCode
-          }
-        });
-      }
+        })
     }
 
     // Add user-specific filters
-    conditions.push({
-      "term": {
-        "Data.entityType.keyword": "USER"
-      }
-    });
+    // conditions.push({
+    //   "term": {
+    //     "Data.entityType.keyword": "USER"
+    //   }
+    // });
 
     if (conditions.length === 0) {
       return { "match_all": {} };
@@ -80,24 +73,20 @@ const UsersComponent = ({
     indexName: getKibanaDetails('projectStaffIndex') || 'project-staff-index-v1',
     query: elasticsearchQuery,
     sourceFields: [
-      "Data.id",
-      "Data.userId",
-      "Data.projectId",
-      "Data.userName",
-      "Data.userType",
-      "Data.mobileNumber",
-      "Data.email",
-      "Data.employeeCode",
-      "Data.designation",
-      "Data.department",
-      "Data.roles",
-      "Data.isActive",
-      "Data.addressDetails",
-      "Data.geoPoint",
-      "Data.additionalDetails",
-      "Data.auditDetails.createdTime",
-      "Data.auditDetails.lastModifiedTime"
-    ],
+    "Data.id",
+    "Data.userId",
+    "Data.userName",
+    "Data.nameOfUser",
+    "Data.role",
+    "Data.projectType",
+    "Data.projectTypeId",
+    "Data.localityCode",
+    "Data.boundaryHierarchy",
+    "Data.isDeleted",
+    "Data.createdBy",
+    "Data.createdTime",
+    "Data.projectId"
+  ],
     maxRecordLimit: 100000,
     maxBatchSize: 5000,
     parallelBatches: 4,
@@ -109,52 +98,47 @@ const UsersComponent = ({
   const tableData = useMemo(() => {
     return data.map((hit, index) => {
       const source = hit._source?.Data || {};
-      const address = source.addressDetails || {};
-      const geoPoint = source.geoPoint || {};
-      const roles = Array.isArray(source.roles) ? source.roles.join(', ') : (source.roles || 'N/A');
       
       return {
-        id: source.id || source.userId || hit._id || `user-${index}`,
-        userId: source.userId || 'N/A',
-        userName: source.userName || 'N/A',
-        userType: source.userType || 'N/A',
-        mobileNumber: source.mobileNumber || 'N/A',
-        email: source.email || 'N/A',
-        employeeCode: source.employeeCode || 'N/A',
-        designation: source.designation || 'N/A',
-        department: source.department || 'N/A',
-        roles: roles,
-        isActive: source.isActive !== undefined ? (source.isActive ? 'Active' : 'Inactive') : 'N/A',
-        wardName: address.wardName || 'N/A',
-        lgaName: address.lgaName || 'N/A',
-        settlementName: address.settlementName || 'N/A',
-        latitude: geoPoint[1] || geoPoint.lat || 'N/A',
-        longitude: geoPoint[0] || geoPoint.lon || 'N/A',
-        createdTime: source.auditDetails?.createdTime 
-          ? new Date(source.auditDetails.createdTime).toLocaleString() 
-          : 'N/A',
-        lastModifiedTime: source.auditDetails?.lastModifiedTime 
-          ? new Date(source.auditDetails.lastModifiedTime).toLocaleString() 
-          : 'N/A'
+
+         employeeId: source.employeeId || source.id || `EMP-${index + 1}`,
+         employeeName: source.employeeName || source.nameOfUser || "NA",
+         userName: source.userName || "NA",
+         userId: source.userId || "NA",
+         role: (source?.role && t(source.role)) || "NA",
+              projectType: source.projectType || "NA",
+              localityCode: (source?.localityCode&&t(source.localityCode)) || "NA",
+              status: (source.status !== undefined ? source.status : source.isDeleted) === false ? "ACTIVE" : "INACTIVE",
+              country: source.country || source.boundaryHierarchy?.country || "NA",
+              state: source.state || source.boundaryHierarchy?.state || "NA",
+              lga: source.lga || source.boundaryHierarchy?.lga || "NA",
+              ward: source.ward || source.boundaryHierarchy?.ward || "NA",
+              healthFacility: source.healthFacility || source.boundaryHierarchy?.healthFacility || "NA",
+              createdTime: source.createdTime ? (typeof source.createdTime === 'number' ? Digit.DateUtils.ConvertEpochToDate(source.createdTime) : source.createdTime) : "NA",
+              createdBy: source.createdBy || "NA"
       };
     });
   }, [data]);
 
   // Define table columns
   const columns = [
-    { key: 'userId', label: t('USER_ID'), sortable: true },
-    { key: 'userName', label: t('USER_NAME'), sortable: true },
-    { key: 'userType', label: t('USER_TYPE'), sortable: true },
-    { key: 'mobileNumber', label: t('MOBILE_NUMBER'), sortable: true },
-    { key: 'email', label: t('EMAIL'), sortable: true },
-    { key: 'employeeCode', label: t('EMPLOYEE_CODE'), sortable: true },
-    { key: 'designation', label: t('DESIGNATION'), sortable: true },
-    { key: 'department', label: t('DEPARTMENT'), sortable: true },
-    { key: 'roles', label: t('ROLES'), sortable: false },
-    { key: 'isActive', label: t('STATUS'), sortable: true },
-    { key: 'wardName', label: t('WARD'), sortable: true },
-    { key: 'lgaName', label: t('LGA'), sortable: true },
-    { key: 'createdTime', label: t('CREATED'), sortable: true }
+
+
+
+     { label: t("EMPLOYEE_ID"), key: "employeeId" ,sortable: true},
+    { label: t("EMPLOYEE_NAME"), key: "employeeName",sortable: true },
+    { label: t("USER_NAME"), key: "userName" ,sortable: true},
+    { label: t("ROLE"), key: "role" ,sortable: true},
+    // { label: t("PROJECT_TYPE"), key: "projectType" },
+    // { label: t("STATE"), key: "state" },
+    // { label: t("LGA"), key: "lga" },
+    // { label: t("WARD"), key: "ward" },
+    // { label: t("HEALTH_FACILITY"), key: "healthFacility" },
+    { label: t("LOCALITY_CODE"), key: "localityCode" ,sortable: true},
+    { label: t("CREATED_TIME"), key: "createdTime" ,sortable: true},
+    { label: t("STATUS"), key: "status" ,sortable: true},
+    { label: t("VIEW_MAP"), key: "viewMap"},
+
   ];
 
   // Custom cell renderers for specific fields
@@ -400,6 +384,9 @@ const UsersComponent = ({
         paginationRowsPerPageOptions={[10, 25, 50, 100, 500, 1000]}
         className="users-table"
         headerClassName="users-header"
+         enableExcelDownload = {true}
+  excelFileName = "staff_data"
+  excelButtonText = "Download Excel"
       />
     </div>
   );

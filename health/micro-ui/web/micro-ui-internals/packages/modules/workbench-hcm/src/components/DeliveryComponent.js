@@ -301,6 +301,10 @@ const DeliveryComponent = ({
         paginationRowsPerPageOptions={[10, 25, 50, 100, 500, 1000]}
         className="delivery-table"
         headerClassName="delivery-header"
+        enableExcelDownload = {true}
+  excelFileName = "delivery_data"
+  excelButtonText = "Download Excel"
+
       />
     </div>
   );
