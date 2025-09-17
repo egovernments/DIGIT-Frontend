@@ -402,16 +402,29 @@ async function fetchSingleBatchWithDedup(batchInfo, origin, kibanaConfig, authKe
         kibanaConfig
       });
 
+      // Construct authKey if not provided
+      let finalAuthKey = authKey;
+      if (!finalAuthKey && kibanaConfig.username && kibanaConfig.password) {
+        const basicAuth = btoa(`${kibanaConfig.username}:${kibanaConfig.password}`);
+        finalAuthKey = `Basic ${basicAuth}`;
+      }
+      
+      const searchHeaders = {
+        'Content-Type': 'application/json',
+        'kbn-xsrf': 'true'
+      };
+      
+      // Only add Authorization header if we have an auth key
+      if (finalAuthKey) {
+        searchHeaders.Authorization = finalAuthKey;
+      }
+
       const response = await fetch(
         origin + '/' + kibanaConfig.kibanaPath + '/api/console/proxy?path=%2F' + 
         kibanaConfig.projectTaskIndex + '%2F_search&method=POST', 
         {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': authKey,
-            'kbn-xsrf': 'true'
-          },
+          headers: searchHeaders,
           credentials: 'include',
           body: JSON.stringify(elasticsearchQuery)
         }
@@ -493,18 +506,23 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
       payload: { projectName: projectName, page: page, pageSize: pageSize, requestId: requestId }
     });
 
-    // SMART CHUNKING STRATEGY: First query with 100 records to get total count
+    // SMART CHUNKING STRATEGY: Use _count API to get accurate total count
     let totalRecordsAvailable = 0;
     let optimalChunkSize = batchSize;
     
-    // Build the initial count query (same structure but with size: 100)
-    const countQuery = await buildElasticsearchQuery({
+    // Build the count query for _count API (only needs query, no _source or pagination)
+    const baseQuery = await buildElasticsearchQuery({
       projectName, 
       queryParams, 
       offset: 0, 
-      size: 100, 
+      size: 0, 
       kibanaConfig
     });
+    
+    // Create count-specific query (only query part needed for _count API)
+    const countQuery = {
+      query: baseQuery.query
+    };
 
     // Check if cancelled before count query
     if (isCancelled) {
@@ -515,17 +533,33 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
       return;
     }
 
-    // Execute initial count query
+    // Execute _count API query for accurate count
+    console.log(`📊 Step 2: Getting total count for query...`);
+    
+    // Construct authKey if not provided
+    let finalAuthKey = authKey;
+    if (!finalAuthKey && kibanaConfig.username && kibanaConfig.password) {
+      const basicAuth = btoa(`${kibanaConfig.username}:${kibanaConfig.password}`);
+      finalAuthKey = `Basic ${basicAuth}`;
+      console.log('🔑 Constructed Basic auth key from credentials');
+    }
+    
+    const countHeaders = {
+      'Content-Type': 'application/json',
+      'kbn-xsrf': 'true'
+    };
+    
+    // Only add Authorization header if we have an auth key
+    if (finalAuthKey) {
+      countHeaders.Authorization = finalAuthKey;
+    }
+    
     const countResponse = await fetch(
       origin + '/' + kibanaConfig.kibanaPath + '/api/console/proxy?path=%2F' + 
-      kibanaConfig.projectTaskIndex + '%2F_search&method=POST', 
+      kibanaConfig.projectTaskIndex + '%2F_count&method=POST', 
       {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': authKey,
-          'kbn-xsrf': 'true'
-        },
+        headers: countHeaders,
         credentials: 'include',
         body: JSON.stringify(countQuery)
       }
@@ -540,20 +574,43 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
     }
 
     const countData = await countResponse.json();
-    if (countData && countData.hits) {
-      totalRecordsAvailable = countData.hits.total.value || countData.hits.total || 0;
+    if (countData && (countData.count !== undefined)) {
+      totalRecordsAvailable = countData.count || 0;
       
-      // If more than 100 records, calculate optimal chunk size (total/10)
+      // Calculate optimal chunk size based on actual total count with maximum limit
       if (totalRecordsAvailable > 100) {
-        optimalChunkSize = Math.max(100, Math.ceil(totalRecordsAvailable / 10));
+        const calculatedChunkSize = Math.ceil(totalRecordsAvailable / 10);
+        // Enforce maximum batch size of 10,000 records
+        optimalChunkSize = Math.min(10000, Math.max(100, calculatedChunkSize));
       } else {
-        // Use the initial 100 records as the final result
+        // For small datasets, use smaller chunks
+        optimalChunkSize = Math.max(50, totalRecordsAvailable);
       }
+      
+      console.log(`📊 _count API returned: ${totalRecordsAvailable} total records available`);
+      console.log(`📦 Optimal chunk size: ${optimalChunkSize} (max 10,000 enforced)`);
+      console.log(`🔢 calculatedChunkSize was: ${Math.ceil(totalRecordsAvailable / 10)} before max limit applied`);
+    } else {
+      console.warn('_count API failed, falling back to default chunk size');
+      totalRecordsAvailable = pageSize; // Fallback estimate
     }
 
     // Calculate batches using the optimal chunk size
-    const effectivePageSize = Math.min(pageSize, totalRecordsAvailable);
+    // Use totalRecordsAvailable but respect reasonable pageSize limits
+    // Only limit if pageSize is significantly smaller than available records (not just default limits)
+    let effectivePageSize;
+    if (pageSize < 50000 && pageSize < totalRecordsAvailable * 0.5) {
+      // Respect intentional pageSize limits (when pageSize is < 50k and less than half of available data)
+      effectivePageSize = pageSize;
+      console.log(`📊 Respecting pageSize limit: ${pageSize} (total available: ${totalRecordsAvailable})`);
+    } else {
+      // Fetch all available records
+      effectivePageSize = totalRecordsAvailable;
+      console.log(`📊 Fetching all available records: ${totalRecordsAvailable}`);
+    }
+    
     const totalBatches = Math.ceil(effectivePageSize / optimalChunkSize);
+    console.log(`📊 Will fetch ${effectivePageSize} records in ${totalBatches} batches of ${optimalChunkSize} each`);
     let allData = [];
     let processedBatches = 0;
     let cachedBatches = 0;
@@ -567,26 +624,71 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
       return;
     }
 
-    // If we have <= 100 records, use the count query result
-    if (totalRecordsAvailable <= 100 && countData.hits.hits) {
-      allData = parseElasticsearchHits(countData.hits.hits, 0, kibanaConfig);
-      processedBatches = 1;
+    // For small datasets, fetch data directly instead of using the count result
+    if (totalRecordsAvailable <= 100) {
+      console.log(`📦 Small dataset (${totalRecordsAvailable} records) - fetching directly`);
       
-      postMessage({
-        type: 'FETCH_PROGRESS',
-        payload: {
-          batchesCompleted: 1,
-          totalBatches: 1,
-          dataReceived: allData.length,
-          progress: 100,
-          requestId: requestId
-        }
+      // Build a simple query to fetch all records directly
+      const smallDataQuery = await buildElasticsearchQuery({
+        projectName, 
+        queryParams, 
+        offset: 0, 
+        size: totalRecordsAvailable, 
+        kibanaConfig
       });
+      
+      // Construct authKey if not provided for small data query
+      let finalAuthKey = authKey;
+      if (!finalAuthKey && kibanaConfig.username && kibanaConfig.password) {
+        const basicAuth = btoa(`${kibanaConfig.username}:${kibanaConfig.password}`);
+        finalAuthKey = `Basic ${basicAuth}`;
+      }
+      
+      const smallDataHeaders = {
+        'Content-Type': 'application/json',
+        'kbn-xsrf': 'true'
+      };
+      
+      // Only add Authorization header if we have an auth key
+      if (finalAuthKey) {
+        smallDataHeaders.Authorization = finalAuthKey;
+      }
+
+      const smallDataResponse = await fetch(
+        origin + '/' + kibanaConfig.kibanaPath + '/api/console/proxy?path=%2F' + 
+        kibanaConfig.projectTaskIndex + '%2F_search&method=POST', 
+        {
+          method: 'POST',
+          headers: smallDataHeaders,
+          credentials: 'include',
+          body: JSON.stringify(smallDataQuery)
+        }
+      );
+      
+      if (smallDataResponse.ok) {
+        const smallData = await smallDataResponse.json();
+        if (smallData && smallData.hits && smallData.hits.hits) {
+          allData = parseElasticsearchHits(smallData.hits.hits, 0, kibanaConfig);
+          processedBatches = 1;
+          
+          postMessage({
+            type: 'FETCH_PROGRESS',
+            payload: {
+              batchesCompleted: 1,
+              totalBatches: 1,
+              dataReceived: allData.length,
+              progress: 100,
+              requestId: requestId
+            }
+          });
+        }
+      }
     } else {
       // Process in optimal chunks with parallel batch fetching (4 at a time)
       console.log(`📦 Processing ${totalBatches} batches in parallel chunks of ${MAX_PARALLEL_BATCHES}`);
       
       // Process batches in parallel chunks
+      console.log(`🚀 Starting to process ${totalBatches} total batches with MAX_PARALLEL_BATCHES=${MAX_PARALLEL_BATCHES}`);
       for (let chunkStart = 0; chunkStart < totalBatches; chunkStart += MAX_PARALLEL_BATCHES) {
         // Check if cancelled before each chunk
         if (isCancelled || !activeRequests.has(requestId)) {
@@ -598,12 +700,14 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
         }
         
         const chunkEnd = Math.min(chunkStart + MAX_PARALLEL_BATCHES, totalBatches);
+        console.log(`📦 Processing chunk ${chunkStart + 1} to ${chunkEnd} (out of ${totalBatches} total batches)`);
         const batchPromises = [];
         
         // Create parallel batch requests for this chunk
         for (let batch = chunkStart; batch < chunkEnd; batch++) {
           const batchOffset = page * effectivePageSize + (batch * optimalChunkSize);
           const currentBatchSize = Math.min(optimalChunkSize, effectivePageSize - (batch * optimalChunkSize));
+          console.log(`🔢 Batch ${batch}: offset=${batchOffset}, size=${currentBatchSize}, page=${page}, effectivePageSize=${effectivePageSize}`);
 
           if (currentBatchSize <= 0) break;
 
@@ -631,8 +735,10 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
         const batchResults = await Promise.all(batchPromises);
         
         // Process results from parallel batch execution
+        console.log(`📊 Processing ${batchResults.length} batch results from Promise.all`);
         for (const result of batchResults) {
           if (result.error) {
+            console.log(`❌ Batch ${result.batchIndex} failed with error: ${result.error}`);
             if (result.error === 'AUTHENTICATION_REQUIRED') {
               postMessage({ 
                 type: 'AUTHENTICATION_REQUIRED',
@@ -642,11 +748,13 @@ async function fetchElasticsearchData({ projectName, queryParams, page, pageSize
             }
             // Continue with other batches even if one fails
           } else {
+            console.log(`✅ Batch ${result.batchIndex} succeeded with ${result.data.length} records`);
             allData = allData.concat(result.data);
             if (result.fromCache) cachedBatches++;
             processedBatches++;
           }
         }
+        console.log(`📈 After processing chunk: allData.length=${allData.length}, processedBatches=${processedBatches}`);
 
         // Send progress update after each parallel chunk
         postMessage({

@@ -107,8 +107,8 @@ const MapViewOptimized = ({
     return {
       isLargeDataset: count > 1000,
       isVeryLargeDataset: count > 5000,
-      useAggressive: count > 10000,
-      maxVisible: count > 10000 ? 50 : count > 5000 ? 100 : count > 1000 ? 200 : maxVisibleMarkers,
+      useAggressive: count > 1000000,
+      maxVisible: count > 1000000 ? 50 : count > 5000 ? 100 : count > 1000 ? 200 : maxVisibleMarkers,
       clusterThreshold: count > 5000 ? 10 : count > 1000 ? 25 : maxMarkersBeforeClustering
     };
   }, [processedVisits.length, maxMarkersBeforeClustering, maxVisibleMarkers]);

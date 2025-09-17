@@ -24,7 +24,7 @@ const useElasticsearch = (config) => {
     dataParser,
     customQuery,
     enabled = true,
-    pageSize = 30000,
+    pageSize = 1000000,
     batchSize = 1000,
     defaultData = [],
     lazyLoad = false

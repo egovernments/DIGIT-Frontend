@@ -755,7 +755,8 @@ const MapViewSafe = ({
                 <select
                   value={pageSize}
                   onChange={(e) => {
-                    setPageSize(Number(e.target.value));
+                    const value = e.target.value;
+                    setPageSize(value === 'all' ? sortedData.length : Number(value));
                     setCurrentPage(1);
                   }}
                   style={{
@@ -769,6 +770,11 @@ const MapViewSafe = ({
                   <option value={25}>25</option>
                   <option value={50}>50</option>
                   <option value={100}>100</option>
+                  <option value={500}>500</option>
+                  <option value={1000}>1,000</option>
+                  <option value={5000}>5,000</option>
+                  <option value={10000}>10,000</option>
+                  <option value="all">All ({sortedData.length.toLocaleString()})</option>
                 </select>
                 <span style={{ fontSize: '14px', color: '#6b7280' }}>entries</span>
                 
@@ -796,7 +802,11 @@ const MapViewSafe = ({
               </div>
               
               <div style={{ fontSize: '14px', color: '#374151' }}>
-                Showing {startIndex + 1} to {Math.min(startIndex + pageSize, sortedData.length)} of {sortedData.length} entries
+                {pageSize >= sortedData.length ? (
+                  `Showing all ${sortedData.length.toLocaleString()} entries`
+                ) : (
+                  `Showing ${startIndex + 1} to ${Math.min(startIndex + pageSize, sortedData.length)} of ${sortedData.length.toLocaleString()} entries`
+                )}
               </div>
             </div>
             
@@ -890,8 +900,8 @@ const MapViewSafe = ({
               )}
             </div>
             
-            {/* Pagination */}
-            {totalPages > 1 && (
+            {/* Pagination - hide when showing all records */}
+            {totalPages > 1 && pageSize < sortedData.length && (
               <div style={{
                 display: 'flex',
                 justifyContent: 'center',

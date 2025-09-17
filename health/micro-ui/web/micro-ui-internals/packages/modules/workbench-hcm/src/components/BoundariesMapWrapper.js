@@ -27,6 +27,8 @@ const BoundariesMapWrapper = ({
   const [boundaryType, setBoundaryType] = useState("WARD"); // "LGA", "WARD", or "SETTLEMENT"
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [showBaseLayers, setShowBaseLayers] = useState(showBaseLayer);
+  console.log(visits,'visits',visits?.length);
+  
   
   // Filter states
   const [searchTerm, setSearchTerm] = useState('');
