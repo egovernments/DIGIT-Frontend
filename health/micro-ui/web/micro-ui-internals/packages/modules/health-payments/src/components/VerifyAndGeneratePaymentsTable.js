@@ -56,7 +56,7 @@ const VerifyAndGeneratePaymentsTable = ({
     const updateBillDetailMutation = Digit.Hooks.useCustomAPIMutationHook({
        url: `/health-expense/v1/bill/details/status/_update`,
     });
-    const updateBillDetailWorkflow = async(bill,billDetails, wfState, assignee) => {
+    const updateBillDetailWorkflow = async(bill,billDetails, wfState) => {
       try{
         await updateBillDetailMutation.mutateAsync(
           {
@@ -66,9 +66,7 @@ const VerifyAndGeneratePaymentsTable = ({
                     billDetails: billDetails
                 },
                 workflow: {
-                    action: wfState,
-                    assignes: assignee ? [assignee.value] : null
-                    //TODO: Add comments too
+                    action: wfState,                    
                 }
             },
         },
@@ -99,7 +97,7 @@ const VerifyAndGeneratePaymentsTable = ({
             }); 
         }
             }
-        const sendBillDetailsForEdit = async (selectedBill, assignee) => {
+        const sendBillDetailsForEdit = async (selectedBill) => {
             const detailsToEdit = selectedBill?.billDetails?.filter(
                 (detail) => detail?.status === "VERIFICATION_FAILED" || detail?.status === "PAYMENT_FAILED"
             );
@@ -114,7 +112,7 @@ const VerifyAndGeneratePaymentsTable = ({
             }
           
             setIsLoading(true);
-            await updateBillDetailWorkflow(selectedBill, detailsToEdit, "SEND_FOR_EDIT", assignee);
+            await updateBillDetailWorkflow(selectedBill, detailsToEdit, "SEND_FOR_EDIT");
             setIsLoading(false);
 
             setShowToast({
@@ -649,20 +647,19 @@ const getAvailableActions = (status) => {
           triggerGeneratePayment(paymentPopupState.row);
           setPaymentPopupState({ open: false, row: null });
         }}
-      />}
-            {editPopupState.open && <SendForEditPopUp
-        isEditTrue={false}
-        dropdownOptions={hrmsUsersData ? hrmsUsersData.map((emp) => ({
-                title: emp?.user?.name,
-                value: emp?.user?.userServiceUuid,
-              })) : []}
+      />}            
+      {editPopupState.open && <AlertPopUp
         onClose={() => {
           setEditPopupState({ open: false, row: null });
         }}
-        onSubmit={(comment, selectedUser) => {
-          sendBillDetailsForEdit(editPopupState.row, selectedUser);
+        alertHeading={t(`HCM_AM_SEND_FOR_EDIT`)}
+        alertMessage={t(`HCM_AM_ALERT_SEND_FOR_EDIT_DESCRIPTION`)}
+        submitLabel={t(`HCM_AM_APPROVE`)}
+        cancelLabel={t(`HCM_AM_CANCEL`)}
+        onPrimaryAction={() => {
+          sendBillDetailsForEdit(editPopupState.row);
           setEditPopupState({ open: false, row: null });
-        }}
+        }}        
       />}
             {showToast && (
                 <Toast
