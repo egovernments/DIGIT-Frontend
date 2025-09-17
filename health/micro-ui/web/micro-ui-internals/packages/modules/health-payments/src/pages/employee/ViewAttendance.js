@@ -455,7 +455,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
   );
 
   if (updateMutation.isLoading) {
-    return <LoaderComponent variant={"OverlayLoader"} />
+    return <Loader variant={"OverlayLoader"} />
+
   }
 
   if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
