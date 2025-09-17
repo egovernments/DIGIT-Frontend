@@ -199,13 +199,13 @@ const DeliveryComponent = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h3 style={{ margin: 0, color: '#374151', fontSize: '18px' }}>
-              🚚 Delivery Records
+               Delivery Records
             </h3>
             <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px' }}>
               {boundaryType && boundaryCode 
-                ? `Filtered by ${boundaryType}: ${boundaryCode}` 
+                ? `Filtered by ${boundaryType}: ${t(boundaryCode)}` 
                 : 'All delivery records'}
-              {projectId && ` for Project: ${projectId}`}
+              {/* {projectId && ` for Project: ${projectId}`} */}
             </p>
           </div>
           

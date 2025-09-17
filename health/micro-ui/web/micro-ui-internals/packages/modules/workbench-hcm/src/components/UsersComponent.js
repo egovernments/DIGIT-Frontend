@@ -231,13 +231,12 @@ const UsersComponent = ({
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div>
             <h3 style={{ margin: 0, color: '#374151', fontSize: '18px' }}>
-              👥 User Records
+              User Records
             </h3>
             <p style={{ margin: '4px 0 0 0', color: '#6b7280', fontSize: '14px' }}>
               {boundaryType && boundaryCode 
-                ? `Filtered by ${boundaryType}: ${boundaryCode}` 
+                ? `Filtered by ${boundaryType}: ${ t(boundaryCode)}` 
                 : 'All user records'}
-              {projectId && ` for Project: ${projectId}`}
             </p>
           </div>
           
@@ -323,53 +322,7 @@ const UsersComponent = ({
         </div>
       )}
 
-      {/* Summary cards */}
-      {!isLoading && !error && tableData.length > 0 && (
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          padding: '16px 20px',
-          backgroundColor: '#fafafa',
-          borderBottom: '1px solid #e5e7eb'
-        }}>
-          <div style={{
-            flex: 1,
-            padding: '12px',
-            backgroundColor: '#e8f5e8',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#2e7d32' }}>
-              {tableData.filter(user => user.isActive === 'Active').length}
-            </div>
-            <div style={{ fontSize: '12px', color: '#555' }}>Active Users</div>
-          </div>
-          <div style={{
-            flex: 1,
-            padding: '12px',
-            backgroundColor: '#ffebee',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#c62828' }}>
-              {tableData.filter(user => user.isActive === 'Inactive').length}
-            </div>
-            <div style={{ fontSize: '12px', color: '#555' }}>Inactive Users</div>
-          </div>
-          <div style={{
-            flex: 1,
-            padding: '12px',
-            backgroundColor: '#e1f5fe',
-            borderRadius: '8px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '20px', fontWeight: 'bold', color: '#01579b' }}>
-              {new Set(tableData.map(user => user.userType).filter(type => type !== 'N/A')).size}
-            </div>
-            <div style={{ fontSize: '12px', color: '#555' }}>User Types</div>
-          </div>
-        </div>
-      )}
+
 
       {/* Table */}
       <ReusableTableWrapper

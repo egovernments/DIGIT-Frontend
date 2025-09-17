@@ -143,6 +143,7 @@ export const data = (project) => {
             navigationKey: "card9",
 
             type: "COMPONENT",
+            // component: "MapComponent",
             component: "DeliveryComponent",
             props: { 
               projectId: project?.Project?.[0]?.id,
