@@ -2,6 +2,7 @@ import _ from "lodash";
 import axios from "axios";
 import { CustomisedHooks } from "../hooks";
 import { UICustomizations } from "../configs/UIcustomizations";
+import { downloadPdfWithCustomName } from "./downloadPDF";
 
 
 
@@ -203,5 +204,6 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
 
   return complaint;
 };
+
 
 export default {};

@@ -14,6 +14,7 @@ import CreateComplaint from "./pages/employee/CreateComplaint";
 import Response from "./components/Response";
 import BreadCrumbs from "./components/BreadCrumbs";
 import HierarchySelection from "./components/HierarchySelection";
+import UploadFileComponent from "./components/UploadFileComponent";
 
 export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
@@ -74,6 +75,7 @@ const componentsToRegister = {
   PGRResponse: Response,
   PGRBreadCrumbs: BreadCrumbs,
   PGRHierarchySelection: HierarchySelection,
+  UploadFileComponent
 };
 
 export const initPGRComponents = () => {
