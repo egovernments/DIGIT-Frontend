@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from "react";
+import React, { useEffect, useMemo, useRef, useCallback } from "react";
 import { Provider } from 'react-redux';
 import { configureStore } from '@reduxjs/toolkit';
 import { Loader } from "@egovernments/digit-ui-components";
@@ -28,6 +28,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     loading: dataLoading,
     error: dataError,
     sessionData,
+    selectedProjectType,
   } = useDeliveryRuleData();
 
   const {
@@ -36,13 +37,23 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     initialized,
     loading: storeLoading,
     setErrorState,
+    resetData,
   } = useDeliveryRules();
+
+  // Track previous project type and campaign ID to detect changes
+  const prevProjectTypeRef = useRef(null);
+  const prevCampaignIdRef = useRef(null);
+  
+  // Get current campaign ID from session or URL
+  const currentCampaignId = useMemo(() => {
+    return sessionData?.HCM_CAMPAIGN_NAME?.id || 
+           new URLSearchParams(window.location.search).get("id");
+  }, [sessionData]);
 
   // Get cycle configuration with proper delivery config priority
   const cycleData = useMemo(() => {
     const data = config?.customProps?.sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure ||
       sessionData?.["HCM_CAMPAIGN_CYCLE_CONFIGURE"]?.cycleConfigure;
-    console.log('Cycle configuration data:', data);
     return data;
   }, [config, sessionData]);
 
@@ -51,63 +62,77 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     const cycleDeliveryConfig = cycleData?.deliveryConfig;
     
     if (cycleDeliveryConfig) {
-      console.log('Using cycle delivery config:', cycleDeliveryConfig);
       return cycleDeliveryConfig;
     }
     
-    console.log('Using project config as fallback:', projectConfig);
     return projectConfig;
   }, [cycleData, projectConfig]);
 
   // Get saved delivery rules
   const savedDeliveryRules = useMemo(() => {
     const saved = sessionData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
-    console.log('Saved delivery rules:', saved);
     return saved;
   }, [sessionData]);
 
+  // Store attribute and operator config in refs to avoid dependency issues
+  const attributeConfigRef = useRef(attributeConfig);
+  const operatorConfigRef = useRef(operatorConfig);
+
+  useEffect(() => {
+    attributeConfigRef.current = attributeConfig;
+  }, [attributeConfig]);
+
+  useEffect(() => {
+    operatorConfigRef.current = operatorConfig;
+  }, [operatorConfig]);
+
+  // Detect when project type or campaign changes and reset if necessary
+  useEffect(() => {
+    const hasProjectTypeChanged = prevProjectTypeRef.current !== null && 
+                                  prevProjectTypeRef.current !== selectedProjectType;
+    const hasCampaignIdChanged = prevCampaignIdRef.current !== null && 
+                                  prevCampaignIdRef.current !== currentCampaignId;
+    
+    if (hasProjectTypeChanged || hasCampaignIdChanged) {
+      
+      // Reset the Redux state to force re-initialization
+      resetData();
+    }
+    
+    // Update refs for next comparison
+    prevProjectTypeRef.current = selectedProjectType;
+    prevCampaignIdRef.current = currentCampaignId;
+  }, [selectedProjectType, currentCampaignId, resetData]);
+
   // Initialize campaign data when dependencies are ready
   useEffect(() => {
-    console.log('Initialization check:', {
-      effectiveDeliveryConfig: !!effectiveDeliveryConfig,
-      cycleData: !!cycleData?.cycleConfgureDate,
-      initialized,
-      savedDeliveryRules: !!savedDeliveryRules,
-      attributeConfigCount: attributeConfig?.length || 0,
-      operatorConfigCount: operatorConfig?.length || 0,
-      configSource: cycleData?.deliveryConfig ? 'cycle' : 'project'
-    });
 
     if (effectiveDeliveryConfig && cycleData?.cycleConfgureDate && !initialized) {
       const cycles = cycleData.cycleConfgureDate.cycle || tabCount;
       const deliveries = cycleData.cycleConfgureDate.deliveries || subTabCount;
-      
-      console.log('Initializing with:', {
-        cycles,
-        deliveries,
-        effectiveDeliveryConfig,
-        savedDeliveryRules,
-        attributeConfig,
-        operatorConfig,
-        configSource: cycleData?.deliveryConfig ? 'cycle deliveryConfig' : 'project config fallback'
-      });
-      
+
       try {
-        initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfig, operatorConfig);
+        initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
       } catch (error) {
         console.error('Error initializing campaign data:', error);
         setErrorState(error.message);
       }
     }
-  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, tabCount, subTabCount, setErrorState, attributeConfig, operatorConfig]);
+  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, tabCount, subTabCount, setErrorState, selectedProjectType, currentCampaignId]);
+
+  // Wrap onSelect in useCallback to prevent dependency issues
+  const handleDataUpdate = useCallback((data) => {
+    if (onSelect && typeof onSelect === 'function') {
+      onSelect("deliveryRule", data);
+    }
+  }, [onSelect]);
 
   // Update parent component when campaign data changes
   useEffect(() => {
     if (initialized && campaignData.length > 0) {
-      console.log('Updating parent with campaign data:', campaignData);
-      onSelect("deliveryRule", campaignData);
+      handleDataUpdate(campaignData);
     }
-  }, [campaignData, initialized, onSelect]);
+  }, [campaignData, initialized, handleDataUpdate]);
 
   // Handle data loading error
   useEffect(() => {
@@ -116,14 +141,12 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
     }
   }, [dataError, setErrorState]);
 
-  console.log('DeliverySetupContainer render state:', {
-    dataLoading,
-    storeLoading,
-    initialized,
-    campaignDataLength: campaignData.length,
-    attributeConfigLength: attributeConfig?.length,
-    operatorConfigLength: operatorConfig?.length
-  });
+  // Clean up on unmount
+  useEffect(() => {
+    return () => {
+      resetData();
+    };
+  }, [resetData]);
 
   if (dataLoading || storeLoading || !initialized) {
     return <Loader page={true} variant="PageLoader" />;

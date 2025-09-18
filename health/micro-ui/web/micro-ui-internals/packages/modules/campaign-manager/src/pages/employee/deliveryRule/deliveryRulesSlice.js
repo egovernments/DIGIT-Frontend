@@ -15,12 +15,13 @@ const deliveryRulesSlice = createSlice({
   reducers: {
     initializeCampaignData: (state, action) => {
       const { cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig } = action.payload;
-      
+
       // Always reset the state to ensure clean initialization
       state.campaignData = [];
       state.activeTabIndex = 0;
       state.activeSubTabIndex = 0;
-      
+      state.error = null;
+
       if (savedData && savedData.length > 0) {
         // Process saved data to ensure proper structure
         state.campaignData = savedData.map((cycle, cycleIndex) => ({
@@ -34,10 +35,10 @@ const deliveryRulesSlice = createSlice({
               attributes: rule.attributes?.map(attr => ({
                 ...attr,
                 // Ensure attribute and operator objects have proper structure
-                attribute: attr.attribute && typeof attr.attribute === 'object' ? attr.attribute : 
-                          attr.attribute ? { code: attr.attribute } : null,
+                attribute: attr.attribute && typeof attr.attribute === 'object' ? attr.attribute :
+                          attr.attribute ? { code: attr.attribute, name: attr.attribute } : null,
                 operator: attr.operator && typeof attr.operator === 'object' ? attr.operator :
-                         attr.operator ? { code: attr.operator } : null,
+                         attr.operator ? { code: attr.operator, name: attr.operator } : null,
               })) || [{ key: 1, attribute: null, operator: null, value: "" }]
             })) || []
           })) || []
@@ -45,8 +46,9 @@ const deliveryRulesSlice = createSlice({
       } else {
         state.campaignData = generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig, operatorConfig);
       }
-      
+
       state.initialized = true;
+      state.loading = false;
     },
     
     resetCampaignData: (state) => {
@@ -131,14 +133,16 @@ const deliveryRulesSlice = createSlice({
         // Clear values when attribute or operator changes
         if (field === 'attribute') {
           attribute.value = "";
-          attribute.toValue = "";
-          attribute.fromValue = "";
+          delete attribute.toValue;
+          delete attribute.fromValue;
+          attribute.operator = null;
           // Set default operator if available
           const defaultOperator = value?.allowedOperators?.[0];
           if (defaultOperator) {
-            attribute.operator = { code: defaultOperator };
+            attribute.operator = { code: defaultOperator, name: defaultOperator.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase()) };
           }
         } else if (field === 'operator') {
+          attribute.value = "";
           delete attribute.toValue;
           delete attribute.fromValue;
         }
@@ -183,11 +187,20 @@ const deliveryRulesSlice = createSlice({
         }));
       }
     },
+
+        // Add a new reducer for updating delivery type at delivery level
+    updateDeliveryTypeForDelivery: (state, action) => {
+      const { cycleIndex, deliveryIndex, deliveryType } = action.payload;
+      const delivery = state.campaignData[cycleIndex]?.deliveries?.[deliveryIndex];
+      
+      if (delivery) {
+        delivery.deliveryType = deliveryType;
+      }
+    },
     
     updateDeliveryType: (state, action) => {
       const { cycleIndex, deliveryIndex, ruleKey, deliveryType } = action.payload;
       const rule = state.campaignData[cycleIndex]?.deliveries?.[deliveryIndex]?.deliveryRules?.find(r => r.ruleKey === ruleKey);
-      
       if (rule) {
         rule.deliveryType = deliveryType;
       }
@@ -205,14 +218,30 @@ const deliveryRulesSlice = createSlice({
 
 // Helper function to generate initial campaign data
 function generateInitialCampaignData(cycles, deliveries, effectiveDeliveryConfig, attributeConfig = [], operatorConfig = []) {
+  
   return Array.from({ length: cycles }, (_, cycleIndex) => ({
     cycleIndex: (cycleIndex + 1).toString(),
     active: cycleIndex === 0,
-    deliveries: Array.from({ length: deliveries }, (_, deliveryIndex) => ({
-      deliveryIndex: (deliveryIndex + 1).toString(),
-      active: deliveryIndex === 0,
-      deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig),
-    })),
+    deliveries: Array.from({ length: deliveries }, (_, deliveryIndex) => {
+      // Extract delivery strategy from the effectiveDeliveryConfig
+      let deliveryStrategy = null;
+      
+      // Check if we have cycles data in effectiveDeliveryConfig
+      if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles)) {
+        const cycle = effectiveDeliveryConfig.cycles[cycleIndex];
+        if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
+          const delivery = cycle.deliveries[deliveryIndex];
+          deliveryStrategy = delivery?.deliveryStrategy || "DIRECT";
+        }
+      }
+      
+      return {
+        deliveryIndex: (deliveryIndex + 1).toString(),
+        active: deliveryIndex === 0,
+        deliveryType: deliveryStrategy || "DIRECT", // Default to "DIRECT" if not found
+        deliveryRules: generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig, operatorConfig),
+      };
+    }),
   }));
 }
 
@@ -269,35 +298,24 @@ function parseConditionString(conditionString) {
 }
 
 function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, attributeConfig = [], operatorConfig = []) {
-  console.log('generateInitialDeliveryRules:', {
-    deliveryIndex,
-    effectiveDeliveryConfig,
-    hasDeliveryConfig: !!effectiveDeliveryConfig?.deliveryConfig,
-    hasCycles: !!effectiveDeliveryConfig?.cycles,
-    isProjectConfig: !!effectiveDeliveryConfig?.code
-  });
   
   // Priority 1: Check for deliveryConfig (from cycle configuration)
   if (effectiveDeliveryConfig?.deliveryConfig && Array.isArray(effectiveDeliveryConfig.deliveryConfig)) {
     const deliveryConfigArray = effectiveDeliveryConfig.deliveryConfig;
-    console.log('Using deliveryConfig array:', deliveryConfigArray);
     
     if (deliveryConfigArray.length > deliveryIndex) {
       const deliveryConfig = deliveryConfigArray[deliveryIndex];
-      console.log('Using delivery config at index', deliveryIndex, ':', deliveryConfig);
       
       if (deliveryConfig?.conditionConfig && deliveryConfig.conditionConfig.length > 0) {
         const rules = deliveryConfig.conditionConfig.map((condition, index) => {
-          console.log('Creating rule for condition:', condition);
           return {
             ruleKey: index + 1,
             delivery: {},
-            deliveryType: condition?.deliveryType || null,
+            // deliveryType: condition?.deliveryType || null,
             attributes: generateInitialAttributes(condition?.attributeConfig, attributeConfig, operatorConfig),
             products: condition?.productConfig || [],
           };
         });
-        console.log('Generated rules from deliveryConfig:', rules);
         return rules;
       }
     }
@@ -305,23 +323,19 @@ function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, at
   
   // Priority 2: Check for cycles structure (from project configuration)
   if (effectiveDeliveryConfig?.cycles && Array.isArray(effectiveDeliveryConfig.cycles)) {
-    console.log('Using cycles structure from project config');
     
     // For now, use the first cycle (we can make this dynamic later)
     const cycle = effectiveDeliveryConfig.cycles[0];
     if (cycle?.deliveries && Array.isArray(cycle.deliveries)) {
       if (cycle.deliveries.length > deliveryIndex) {
         const delivery = cycle.deliveries[deliveryIndex];
-        console.log('Using delivery at index', deliveryIndex, ':', delivery);
         
         if (delivery?.doseCriteria && Array.isArray(delivery.doseCriteria)) {
           // Create one rule per doseCriteria
           const rules = delivery.doseCriteria.map((criteria, index) => {
-            console.log('Parsing doseCriteria:', criteria);
             
             // Parse the condition string
             const parsedAttributes = parseConditionString(criteria.condition);
-            console.log('Parsed attributes from condition:', parsedAttributes);
             
             // Map ProductVariants to our product structure
             const products = criteria.ProductVariants?.map((variant, variantIndex) => ({
@@ -330,7 +344,6 @@ function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, at
               quantity: variant.quantity,
               value: variant.productVariantId
             })) || [];
-            
             return {
               ruleKey: index + 1,
               delivery: {},
@@ -340,7 +353,6 @@ function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, at
             };
           });
           
-          console.log('Generated rules from cycles structure:', rules);
           return rules;
         }
       }
@@ -348,7 +360,6 @@ function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, at
   }
   
   // Fallback to single delivery rule if no specific config found
-  console.log('Using fallback single rule - no valid config structure found');
   return [{
     ruleKey: 1,
     delivery: {},
@@ -359,6 +370,7 @@ function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, at
 }
 
 function generateInitialAttributes(attributeConfigFromProject, globalAttributeConfig = [], globalOperatorConfig = []) {
+
   if (Array.isArray(attributeConfigFromProject) && attributeConfigFromProject.length > 0) {
     return attributeConfigFromProject.map((attr, index) => {
       // Create attribute object - check if we have global config, otherwise create basic structure
@@ -376,7 +388,8 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
             code: attributeCode,
             name: attr?.label || attributeCode,
             dataType: attr?.attrType || "string",
-            i18nKey: `CAMPAIGN_ATTRIBUTE_${attributeCode.toUpperCase()}`
+            i18nKey: `CAMPAIGN_ATTRIBUTE_${attributeCode.toUpperCase()}`,
+            allowedOperators: attr?.allowedOperators || []
           };
         }
       }
@@ -392,7 +405,10 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
           operatorObj = globalOp;
         } else {
           // Create basic structure
-          operatorObj = { code: operatorCode };
+          operatorObj = {
+            code: operatorCode,
+            name: operatorCode.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, s => s.toUpperCase())
+          };
         }
       }
       
@@ -404,12 +420,12 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
       
       if (attr?.operatorValue === "IN_BETWEEN") {
         // For IN_BETWEEN operator, map the values correctly
-        // fromValue in data = "From" field in UI = toValue in state
-        // toValue in data = "To" field in UI = fromValue in state
+        // fromValue in data = "From" field in UI
+        // toValue in data = "To" field in UI
         return {
           ...baseAttr,
-          toValue: attr?.fromValue?.toString() || "",
-          fromValue: attr?.toValue?.toString() || "",
+          fromValue: attr?.fromValue?.toString() || "",
+          toValue: attr?.toValue?.toString() || "",
         };
       }
       

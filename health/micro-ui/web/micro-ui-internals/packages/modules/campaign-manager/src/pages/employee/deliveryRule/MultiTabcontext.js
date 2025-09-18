@@ -86,13 +86,11 @@ const MultiTab = React.memo(({
   // Get session data for display
   const tempSession = useMemo(() => 
     Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA") || {}
-  , []);
+  , [projectConfig]);
 
   const campaignName = tempSession?.HCM_CAMPAIGN_NAME?.campaignName;
-  const projectType = tempSession?.HCM_CAMPAIGN_TYPE?.projectType;
+  const projectType = tempSession?.HCM_CAMPAIGN_TYPE?.projectType || projectConfig?.code;
   const campaignDates = tempSession?.HCM_CAMPAIGN_DATE?.campaignDates;
-
-  console.log("MultiTab Rendered: ", { projectConfig, attributeConfig, operatorConfig, deliveryTypeConfig, tempSession });
 
   // Memoize date formatting
   const formattedDates = useMemo(() => {

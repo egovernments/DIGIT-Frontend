@@ -21,6 +21,7 @@ import {
   removeAttribute,
   updateProducts,
   updateDeliveryType,
+  updateDeliveryTypeForDelivery,
   setLoading,
   setError,
 } from './deliveryRulesSlice';
@@ -28,7 +29,7 @@ import { CONSOLE_MDMS_MODULENAME } from '../../../Module';
 
 export const useDeliveryRules = () => {
   const dispatch = useDispatch();
-  
+
   const campaignData = useSelector(selectCampaignData);
   const activeTabIndex = useSelector(selectActiveTabIndex);
   const activeSubTabIndex = useSelector(selectActiveSubTabIndex);
@@ -38,6 +39,7 @@ export const useDeliveryRules = () => {
   const loading = useSelector(selectLoading);
   const error = useSelector(selectError);
   const initialized = useSelector(selectInitialized);
+
 
   const initializeData = useCallback((cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig) => {
     dispatch(initializeCampaignData({ cycles, deliveries, effectiveDeliveryConfig, savedData, attributeConfig, operatorConfig }));
@@ -112,6 +114,15 @@ export const useDeliveryRules = () => {
     }));
   }, [dispatch, activeTabIndex, activeSubTabIndex]);
 
+  const updateDeliveryTypeForEachDelivery = useCallback((deliveryType) => {
+    dispatch(updateDeliveryTypeForDelivery({
+      cycleIndex: activeTabIndex,
+      deliveryIndex: activeSubTabIndex,
+      deliveryType,
+    }));
+  }, [dispatch, activeTabIndex, activeSubTabIndex]);
+
+
   const setLoadingState = useCallback((isLoading) => {
     dispatch(setLoading(isLoading));
   }, [dispatch]);
@@ -135,7 +146,7 @@ export const useDeliveryRules = () => {
     loading,
     error,
     initialized,
-    
+
     // Actions
     initializeData,
     resetData,
@@ -150,14 +161,17 @@ export const useDeliveryRules = () => {
     updateRuleDeliveryType,
     setLoadingState,
     setErrorState,
+    updateDeliveryTypeForEachDelivery,
   };
 };
 
 export const useDeliveryRuleData = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const searchParams = new URLSearchParams(location.search);
+
   const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  const selectedProjectType = sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.code;
-  
+  const selectedProjectType = sessionData?.HCM_CAMPAIGN_TYPE?.projectType?.code || searchParams.get("projectType");
+
   // Fetch project configuration from MDMS
   const { isLoading: configLoading, data: projectConfig, error: configError } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -168,12 +182,13 @@ export const useDeliveryRuleData = () => {
       cacheTime: 0,
       enabled: !!selectedProjectType,
       select: (data) => {
-        const projectTypes = data?.["HCM-PROJECT-TYPES"]?.projectTypes || [];
+        const projectTypes = data?.["HCM-PROJECT-TYPES"]?.projectTypes;
         return projectTypes.find(type => type.code === selectedProjectType);
       },
     },
     { schemaCode: "HCM-PROJECT-TYPES.projectTypes" }
   );
+
 
   // Fetch attribute configuration
   const { isLoading: attributesLoading, data: attributeConfig } = Digit.Hooks.useCustomMDMS(
@@ -209,7 +224,7 @@ export const useDeliveryRuleData = () => {
     {
       select: (data) => data?.[CONSOLE_MDMS_MODULENAME]?.deliveryTypeConfig || [],
     },
-    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.deliveryTypeConfig`}
+    { schemaCode: `${CONSOLE_MDMS_MODULENAME}.deliveryTypeConfig` }
   );
 
   const loading = configLoading || attributesLoading || operatorsLoading || deliveryTypesLoading;

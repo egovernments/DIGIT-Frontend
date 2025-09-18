@@ -85,34 +85,14 @@ const AddAttributeField = React.memo(({
   
   const { options: dropdownOptions, loading: optionsLoading, fetchOptions } = useDropdownOptions(null, tenantId);
 
-  // Debug logs
-  React.useEffect(() => {
-    console.log('AddAttributeField render with:', {
-      rule: rule.ruleKey,
-      attribute: attribute,
-      attributeConfig: attributeConfig?.length,
-      operatorConfig: operatorConfig?.length
-    });
-  }, [rule.ruleKey, attribute, attributeConfig?.length, operatorConfig?.length]);
-
   // Memoize selected attribute and operator
   const selectedAttribute = useMemo(() => {
     const found = attributeConfig?.find(item => item.code === attribute?.attribute?.code) || null;
-    console.log('Selected attribute:', { 
-      attributeCode: attribute?.attribute?.code, 
-      found: found?.code,
-      availableAttributes: attributeConfig?.map(a => a.code)
-    });
     return found;
   }, [attributeConfig, attribute?.attribute?.code]);
 
   const selectedOperator = useMemo(() => {
     const found = operatorConfig?.find(item => item.code === attribute?.operator?.code) || null;
-    console.log('Selected operator:', { 
-      operatorCode: attribute?.operator?.code, 
-      found: found?.code,
-      availableOperators: operatorConfig?.map(o => o.code)
-    });
     return found;
   }, [operatorConfig, attribute?.operator?.code]);
 
@@ -123,36 +103,30 @@ const AddAttributeField = React.memo(({
       .map(attr => attr.attribute.code);
     
     const available = attributeConfig?.filter(item => !usedCodes.includes(item.code)) || [];
-    console.log('Available attributes:', available.map(a => a.code));
     return available;
   }, [attributeConfig, rule.attributes, attribute.key]);
 
   // Memoize allowed operators for selected attribute
   const allowedOperators = useMemo(() => {
     if (!selectedAttribute?.allowedOperators) {
-      console.log('No allowed operators defined, using all operators');
       return operatorConfig || [];
     }
     const filtered = operatorConfig?.filter(op => selectedAttribute.allowedOperators.includes(op.code)) || [];
-    console.log('Filtered operators for attribute:', selectedAttribute.code, filtered.map(o => o.code));
     return filtered;
   }, [selectedAttribute, operatorConfig]);
 
   // Fetch dropdown options when attribute changes
   React.useEffect(() => {
     if (selectedAttribute?.valuesSchema) {
-      console.log('Fetching dropdown options for schema:', selectedAttribute.valuesSchema);
       fetchOptions(selectedAttribute.valuesSchema);
     }
   }, [selectedAttribute?.valuesSchema, fetchOptions]);
 
   const handleAttributeChange = useCallback((value) => {
-    console.log('Attribute changed:', value);
     updateAttributeField(rule.ruleKey, attribute.key, 'attribute', value);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
   const handleOperatorChange = useCallback((value) => {
-    console.log('Operator changed:', value);
     updateAttributeField(rule.ruleKey, attribute.key, 'operator', value);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
@@ -165,12 +139,10 @@ const AddAttributeField = React.memo(({
       return;
     }
     
-    console.log('Value changed:', val);
     updateAttributeField(rule.ruleKey, attribute.key, 'value', val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
   const handleDropdownValueChange = useCallback((value) => {
-    console.log('Dropdown value changed:', value);
     updateAttributeField(rule.ruleKey, attribute.key, 'value', value?.code);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
@@ -184,7 +156,6 @@ const AddAttributeField = React.memo(({
     }
     
     const field = range === "to" ? "toValue" : "fromValue";
-    console.log('Range value changed:', field, val);
     updateAttributeField(rule.ruleKey, attribute.key, field, val);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
 
@@ -192,7 +163,6 @@ const AddAttributeField = React.memo(({
   const isDropdownValue = selectedAttribute?.valuesSchema || 
     (typeof attribute?.value === "string" && /^[a-zA-Z]+$/.test(attribute?.value));
 
-  console.log("AddAttributeField render state:", {selectedAttribute, selectedOperator, isRangeOperator, isDropdownValue});
 
   return (
     <div className="attribute-field-wrapper">
@@ -349,6 +319,8 @@ const AddDeliveryRule = React.memo(({
   canDelete,
   onDelete 
 }) => {
+
+  console.log("Add Delivery Rule: ", {rule, attributeConfig, operatorConfig, deliveryTypeConfig, projectConfig, canDelete});
   const { updateRuleProducts, updateRuleDeliveryType } = useDeliveryRules();
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -362,9 +334,6 @@ const AddDeliveryRule = React.memo(({
     updateRuleProducts(rule.ruleKey, updatedProducts);
   }, [rule.products, rule.ruleKey, updateRuleProducts]);
 
-  const handleDeliveryTypeChange = useCallback((value) => {
-    updateRuleDeliveryType(rule.ruleKey, value?.code);
-  }, [rule.ruleKey, updateRuleDeliveryType]);
 
   const confirmResources = useCallback(() => {
     const products = prodRef.current || [];
@@ -379,9 +348,9 @@ const AddDeliveryRule = React.memo(({
     setShowModal(false);
   }, [rule.ruleKey, updateRuleProducts]);
 
-  const selectedDeliveryType = useMemo(() => 
-    deliveryTypeConfig?.find(item => item.code === rule?.deliveryType)
-  , [deliveryTypeConfig, rule?.deliveryType]);
+
+    console.log("Add Delivery Rule Line 388: ", {rule, attributeConfig, operatorConfig, deliveryTypeConfig, projectConfig, canDelete});
+
 
   return (
     <>
@@ -409,7 +378,7 @@ const AddDeliveryRule = React.memo(({
           )}
         </CardHeader>
 
-        {projectConfig?.customAttribute && !projectConfig?.IsCycleDisable && (
+        {/* {deliveryTypeConfig && deliveryTypeConfig?.length > 0 && (
           <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
             <div className="deliveryType-labelfield">
               <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
@@ -424,7 +393,7 @@ const AddDeliveryRule = React.memo(({
               disabled={false}
             />
           </LabelFieldPair>
-        )}
+        )} */}
 
         <AddAttributeWrapper
           rule={rule}
@@ -495,9 +464,11 @@ const AddDeliveryRuleWrapper = React.memo(({
 }) => {
   const { 
     activeDeliveryRules, 
+    activeDelivery,
     addRule, 
     removeRule,
-    campaignData
+    updateDeliveryTypeForEachDelivery,
+    campaignData,
   } = useDeliveryRules();
   const { t } = useTranslation();
 
@@ -508,6 +479,15 @@ const AddDeliveryRuleWrapper = React.memo(({
   const handleRemoveRule = useCallback((ruleKey) => {
     removeRule(ruleKey);
   }, [removeRule]);
+
+   const handleDeliveryTypeChange = useCallback((value) => {
+    updateDeliveryTypeForEachDelivery(value?.code);
+  }, [updateDeliveryTypeForEachDelivery]);
+
+  const selectedDeliveryType = useMemo(() => 
+    deliveryTypeConfig?.find(item => item.code === (activeDelivery?.deliveryType || activeDelivery?.deliveryStrategy) ) || 
+    deliveryTypeConfig?.[0] // default to first option
+  , [deliveryTypeConfig, activeDelivery?.deliveryType]);
 
   // Calculate if we can add more rules
   const canAddMore = useMemo(() => {
@@ -530,6 +510,24 @@ const AddDeliveryRuleWrapper = React.memo(({
 
   return (
     <>
+     {deliveryTypeConfig && deliveryTypeConfig?.length > 0 && (
+        <Card className="delivery-type-container">
+          <LabelFieldPair style={{ marginTop: "1.5rem", marginBottom: "1.5rem" }} className="delivery-type-radio">
+            <div className="deliveryType-labelfield">
+              <span className="bold">{t("HCM_DELIVERY_TYPE")}</span>
+            </div>
+            <RadioButtons
+              options={deliveryTypeConfig}
+              selectedOption={selectedDeliveryType}
+              optionsKey="code"
+              value={selectedDeliveryType?.code}
+              onSelect={handleDeliveryTypeChange}
+              t={t}
+              disabled={false}
+            />
+          </LabelFieldPair>
+        </Card>
+      )}
       {activeDeliveryRules.map((rule) => (
         <AddDeliveryRule
           key={rule.ruleKey}

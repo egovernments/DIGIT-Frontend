@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
 
 const AddProducts = React.memo(({ 
@@ -21,9 +21,10 @@ const AddProducts = React.memo(({
   const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const projectType = searchParams.get('projectType');
 
   // Fetch available products
-  const productData = Digit.Hooks.campaign.useProductList(tenantId, projectConfig?.projectType);
+  const {isLoading: isProductLoading , productData} = Digit.Hooks.campaign.useProductList(tenantId, projectType);
 
   // Initialize products from selected products
   useEffect(() => {
@@ -66,10 +67,10 @@ const AddProducts = React.memo(({
         .filter(p => p.key !== currentProductKey && p.value?.id)
         .map(p => p.value.id)
     );
-    
     const alreadySelectedIds = new Set(
       selectedDelivery?.products?.map(p => p.value) || []
     );
+
     
     return productData?.filter(item => 
       !otherProductIds.has(item.id) && !alreadySelectedIds.has(item.id)
@@ -146,6 +147,11 @@ const AddProducts = React.memo(({
   }, [showToast, closeToast]);
 
   const canAddMore = availableOptions.length > 0;
+
+  if(isProductLoading){
+    return (<Loader/>);
+  }
+
 
   return (
     <div className="add-resource-wrapper">
@@ -228,10 +234,13 @@ const AddProducts = React.memo(({
           <Link
             to={{
               pathname: `/${window.contextPath}/employee/campaign/add-product`,
+              search: window.location.search, // Pass the query string directly
               state: {
-                campaignId: id,
-                urlParams: window?.location?.search,
-                projectType: projectConfig?.projectType,
+                returnPath: window.location.pathname + window.location.search,
+                campaignId: id || new URLSearchParams(window.location.search).get('id'),
+                campaignNumber: new URLSearchParams(window.location.search).get('campaignNumber'),
+                urlParams: window.location.search,
+                projectType: projectConfig?.projectType || projectConfig?.code,
               },
             }}
           >
