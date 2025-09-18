@@ -1,5 +1,4 @@
 export const useProductList = (tenantId,projectType) => {
-  console.log("useProductList called with:", { tenantId, projectType });
   const reqCriteriaVariant = {
     url: `/product/variant/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
@@ -22,7 +21,6 @@ export const useProductList = (tenantId,projectType) => {
 
   const { isLoading, data: productVariant, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaVariant);
 
-  console.log("Product Variant: ", productVariant);
 
   const reqCriteriaProduct = {
     url: `/product/v1/_search`,
@@ -42,16 +40,12 @@ export const useProductList = (tenantId,projectType) => {
 
   const { isLoading: isProductLoading, data: product } = Digit.Hooks.useCustomAPIHook(reqCriteriaProduct);
 
-  console.log("useProduyctList productL", product);
 
   let productList;
   if (productVariant && product) {
-    console.log("useProductList if conditionL : ", {product, productVariant})
     productList = productVariant
       ?.map((item) => {
         const target = product?.find((j) => j.id === item.productId);
-        console.log("Target:", target);
-        console.log("Item:", item);
         if (!target?.name || !item?.variation) {
           return null;
         }
@@ -63,7 +57,6 @@ export const useProductList = (tenantId,projectType) => {
       ?.filter((i) => i !== null);
   }
 
-  console.log("Product List: ", productList);
 
   return {isLoading: isProductLoading || isLoading , productList: productList};
 };

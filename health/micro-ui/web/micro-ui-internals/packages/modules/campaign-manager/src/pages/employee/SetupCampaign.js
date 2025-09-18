@@ -437,7 +437,6 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType,
                 "draft"
               );
-
               payloadData.deliveryRules = temp?.[0];
               // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
             }
@@ -513,7 +512,7 @@ const SetupCampaign = ({ hierarchyType, hierarchyData }) => {
                 DeliveryConfig,
                 totalFormData?.HCM_CAMPAIGN_TYPE?.projectType?.code || draftData?.projectType,
                 "draft"
-              );s
+              );
 
               payloadData.deliveryRules = [temp?.[0]];
               // payloadData.deliveryRules = totalFormData?.HCM_CAMPAIGN_DELIVERY_DATA?.deliveryRule;
