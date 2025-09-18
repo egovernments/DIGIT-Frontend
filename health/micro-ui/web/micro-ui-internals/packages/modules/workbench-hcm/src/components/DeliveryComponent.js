@@ -197,9 +197,9 @@ const DeliveryComponentBase = ({
   "Data.userId",
   "Data.boundaryHierarchy"
 ],
-    maxRecordLimit: 50000, // Temporarily reduced to test regular API
-    maxBatchSize: 2000,
-    parallelBatches: 1,
+    maxRecordLimit: 10000, // Temporarily reduced to test regular API
+    maxBatchSize: 2500,
+    parallelBatches: 4,
     requiresAuth: true,
     enabled: !externalLoading && !!projectId
   });
@@ -226,17 +226,14 @@ console.log('🚚 Delivery data received:', {
         productName: source.productName || 'N/A',
         quantity: source.quantity || 0,
         memberCount: source.memberCount || 0,
-        syncedTime: source.syncedTime ? new Date(source.syncedTime).toLocaleString() : 'N/A',
+        syncedTime: source?.syncedTime ? new Date(source.syncedTime)?.toLocaleString() : 'N/A',
         administrativeArea: source.additionalDetails?.administrativeArea || 'N/A',
         deliveryStatus: source.status || 'N/A',
         boundaryHierarchy: source.boundaryHierarchy || {},
         latitude: geoPoint[1] || geoPoint.lat || 'N/A',
         longitude: geoPoint[0] || geoPoint.lon || 'N/A',
-        createdTime: source.auditDetails?.createdTime 
-          ? new Date(source.auditDetails.createdTime).toLocaleString() 
-          : 'N/A',
-        lastModifiedTime: source.auditDetails?.lastModifiedTime 
-          ? new Date(source.auditDetails.lastModifiedTime).toLocaleString() 
+        createdTime: source.createdTime 
+          ? new Date(source.createdTime).toLocaleString() 
           : 'N/A'
       };
     });

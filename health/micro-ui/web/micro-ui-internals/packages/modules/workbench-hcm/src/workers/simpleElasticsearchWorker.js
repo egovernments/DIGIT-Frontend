@@ -367,7 +367,8 @@ async function fetchElasticsearchData(config) {
         origin,
         finalAuthKey: finalAuthKey || authKey,
         username,
-        password
+        password,
+        parallelBatches
       });
     }
 
@@ -708,7 +709,7 @@ async function fetchSingleBatch(indexName, searchQuery, batchIndex, kibanaPath, 
   }
 }
 
-// Scroll API implementation for large datasets
+// Scroll API implementation for large datasets with parallel processing
 async function fetchDataUsingScrollAPI({
   indexName,
   query,
@@ -720,16 +721,38 @@ async function fetchDataUsingScrollAPI({
   origin,
   finalAuthKey,
   username,
-  password
+  password,
+  parallelBatches = 1
 }) {
-  console.log(`🔄 Starting Scroll API fetch for ${effectiveLimit} records`);
+  console.log(`🔄 Starting Scroll API fetch for ${effectiveLimit} records with ${parallelBatches} parallel contexts`);
   
   const allHits = [];
+  const scrollTimeout = '5m'; // Keep scroll context alive for 5 minutes
+  const scrollSize = Math.min(maxBatchSize, 5000); // Scroll batch size per context
+  
+  // Implement parallel scroll processing if parallelBatches > 1
+  if (parallelBatches > 1) {
+    return await fetchDataUsingParallelScrollAPI({
+      indexName,
+      query,
+      sourceFields,
+      effectiveLimit,
+      scrollSize,
+      scrollTimeout,
+      parallelBatches,
+      requestId,
+      kibanaPath,
+      origin,
+      finalAuthKey,
+      username,
+      password
+    });
+  }
+  
+  // Single scroll context implementation
   let scrollId = null;
   let fetchedCount = 0;
   let scrollBatch = 0;
-  const scrollSize = Math.min(maxBatchSize, 5000); // Scroll batch size
-  const scrollTimeout = '5m'; // Keep scroll context alive for 5 minutes
   
   try {
     // Step 1: Initial scroll search
@@ -740,14 +763,21 @@ async function fetchDataUsingScrollAPI({
     };
     
     console.log(`📜 Initiating scroll search with batch size: ${scrollSize}`);
+    console.log(`🔐 Scroll API auth: finalAuthKey=${finalAuthKey ? finalAuthKey.substring(0, 20) + '...' : 'null'}, username=${username || 'null'}`);
     
     const headers = {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
+      'kbn-xsrf': 'true'
     };
     
-    // Add authentication headers
+    // Add authentication headers (same logic as fetchSingleBatch)
     if (finalAuthKey) {
-      headers['Authorization'] = `ApiKey ${finalAuthKey}`;
+      // finalAuthKey could be "Basic xxx" or just the API key
+      if (finalAuthKey.startsWith('Basic ') || finalAuthKey.startsWith('ApiKey ')) {
+        headers['Authorization'] = finalAuthKey;
+      } else {
+        headers['Authorization'] = `ApiKey ${finalAuthKey}`;
+      }
     } else if (username && password) {
       headers['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
     }
@@ -863,7 +893,7 @@ async function fetchDataUsingScrollAPI({
       try {
         console.log(`📜 Clearing scroll context: ${scrollId}`);
         await fetch(
-          `${origin}/${kibanaPath}/api/console/proxy?path=%2F_search%2Fscroll&method=DELETE`,
+          `${origin}/${kibanaPath}/api/console/proxy?path=${encodeURIComponent('/_search/scroll')}&method=DELETE`,
           {
             method: 'DELETE',
             headers: headers,
@@ -918,7 +948,7 @@ async function fetchDataUsingScrollAPI({
     if (scrollId) {
       try {
         await fetch(
-          `${origin}/${kibanaPath}/api/console/proxy?path=%2F_search%2Fscroll&method=DELETE`,
+          `${origin}/${kibanaPath}/api/console/proxy?path=${encodeURIComponent('/_search/scroll')}&method=DELETE`,
           {
             method: 'DELETE',
             headers: {
@@ -946,6 +976,333 @@ async function fetchDataUsingScrollAPI({
         payload: { 
           requestId, 
           error: 'Authentication expired during scroll fetch. Please retry the operation.',
+          partialResults: allHits.length > 0 ? allHits : null,
+          recordsReceived: allHits.length
+        }
+      });
+    } else {
+      postMessage({
+        type: 'FETCH_ERROR',
+        payload: {
+          error: error.message,
+          details: error.stack,
+          requestId: requestId,
+          partialResults: allHits.length > 0 ? allHits : null,
+          recordsReceived: allHits.length
+        }
+      });
+    }
+  }
+}
+
+// Parallel scroll API implementation using multiple scroll contexts
+async function fetchDataUsingParallelScrollAPI({
+  indexName,
+  query,
+  sourceFields,
+  effectiveLimit,
+  scrollSize,
+  scrollTimeout,
+  parallelBatches,
+  requestId,
+  kibanaPath,
+  origin,
+  finalAuthKey,
+  username,
+  password
+}) {
+  console.log(`🔄 Starting parallel scroll with ${parallelBatches} contexts, ${scrollSize} records each`);
+  
+  const allHits = [];
+  const scrollContexts = [];
+  
+  try {
+    // Create headers for authentication
+    const headers = {
+      'Content-Type': 'application/json',
+      'kbn-xsrf': 'true'
+    };
+    
+    if (finalAuthKey) {
+      if (finalAuthKey.startsWith('Basic ') || finalAuthKey.startsWith('ApiKey ')) {
+        headers['Authorization'] = finalAuthKey;
+      } else {
+        headers['Authorization'] = `ApiKey ${finalAuthKey}`;
+      }
+    } else if (username && password) {
+      headers['Authorization'] = `Basic ${btoa(`${username}:${password}`)}`;
+    }
+    
+    // Step 1: Create multiple scroll contexts in parallel
+    console.log(`📜 Creating ${parallelBatches} parallel scroll contexts...`);
+    
+    const initialScrollPromises = [];
+    for (let i = 0; i < parallelBatches; i++) {
+      const initialQuery = {
+        _source: sourceFields,
+        query: query,
+        size: scrollSize
+      };
+      
+      const promise = fetch(
+        `${origin}/${kibanaPath}/api/console/proxy?path=${encodeURIComponent(`/${indexName}/_search?scroll=${scrollTimeout}`)}&method=POST`,
+        {
+          method: 'POST',
+          headers: headers,
+          credentials: 'include',
+          body: JSON.stringify(initialQuery)
+        }
+      ).then(async response => {
+        if (response.status === 401 || response.status === 403) {
+          throw new Error('AUTHENTICATION_REQUIRED');
+        }
+        
+        const data = await response.json();
+        if (!data || !data.hits || !data.hits.hits) {
+          throw new Error(`Invalid initial scroll response for context ${i}`);
+        }
+        
+        return {
+          contextId: i,
+          scrollId: data._scroll_id,
+          hits: data.hits.hits,
+          total: data.hits.total?.value || data.hits.total || data.hits.hits.length
+        };
+      });
+      
+      initialScrollPromises.push(promise);
+    }
+    
+    // Wait for all initial scroll contexts to be created
+    const initialResults = await Promise.all(initialScrollPromises);
+    
+    // Process initial results
+    let totalFetched = 0;
+    for (const result of initialResults) {
+      allHits.push(...result.hits);
+      totalFetched += result.hits.length;
+      scrollContexts.push({
+        contextId: result.contextId,
+        scrollId: result.scrollId,
+        active: result.hits.length > 0,
+        fetchedFromContext: result.hits.length
+      });
+      
+      console.log(`📜 Context ${result.contextId}: Initial batch ${result.hits.length} records`);
+    }
+    
+    console.log(`📜 Initial parallel fetch: ${totalFetched} records from ${parallelBatches} contexts`);
+    
+    // Step 2: Continue scrolling from active contexts until we have enough data
+    let batchCount = 1;
+    while (totalFetched < effectiveLimit && scrollContexts.some(ctx => ctx.active) && !isCancelled) {
+      batchCount++;
+      
+      // Create scroll continuation promises for active contexts
+      const scrollPromises = scrollContexts
+        .filter(ctx => ctx.active)
+        .map(async (context) => {
+          const scrollQuery = {
+            scroll: scrollTimeout,
+            scroll_id: context.scrollId
+          };
+          
+          try {
+            const scrollResponse = await fetch(
+              `${origin}/${kibanaPath}/api/console/proxy?path=${encodeURIComponent('/_search/scroll')}&method=POST`,
+              {
+                method: 'POST',
+                headers: headers,
+                credentials: 'include',
+                body: JSON.stringify(scrollQuery)
+              }
+            );
+            
+            if (scrollResponse.status === 401 || scrollResponse.status === 403) {
+              throw new Error('AUTHENTICATION_REQUIRED');
+            }
+            
+            const scrollData = await scrollResponse.json();
+            
+            if (!scrollData || !scrollData.hits || !scrollData.hits.hits || scrollData.hits.hits.length === 0) {
+              return {
+                contextId: context.contextId,
+                hits: [],
+                scrollId: context.scrollId,
+                finished: true
+              };
+            }
+            
+            return {
+              contextId: context.contextId,
+              hits: scrollData.hits.hits,
+              scrollId: scrollData._scroll_id,
+              finished: false
+            };
+          } catch (error) {
+            console.error(`❌ Context ${context.contextId} scroll failed:`, error.message);
+            return {
+              contextId: context.contextId,
+              hits: [],
+              scrollId: context.scrollId,
+              finished: true,
+              error: error.message
+            };
+          }
+        });
+      
+      // Execute all scroll requests in parallel
+      const scrollResults = await Promise.all(scrollPromises);
+      
+      // Process results and update contexts
+      let batchFetched = 0;
+      for (const result of scrollResults) {
+        const context = scrollContexts.find(ctx => ctx.contextId === result.contextId);
+        
+        if (result.finished) {
+          context.active = false;
+          console.log(`📜 Context ${result.contextId}: Finished (${context.fetchedFromContext} total)`);
+        } else {
+          // Limit hits to not exceed effectiveLimit
+          const remainingLimit = effectiveLimit - totalFetched;
+          const hitsToAdd = result.hits.slice(0, remainingLimit);
+          
+          allHits.push(...hitsToAdd);
+          batchFetched += hitsToAdd.length;
+          totalFetched += hitsToAdd.length;
+          context.scrollId = result.scrollId;
+          context.fetchedFromContext += hitsToAdd.length;
+          
+          console.log(`📜 Context ${result.contextId}: Batch ${batchCount} - ${hitsToAdd.length} records`);
+          
+          // Stop this context if we've reached the limit
+          if (totalFetched >= effectiveLimit) {
+            context.active = false;
+          }
+        }
+      }
+      
+      console.log(`📜 Parallel batch ${batchCount}: ${batchFetched} records (total: ${totalFetched})`);
+      
+      // Send progress update
+      postMessage({
+        type: 'FETCH_PROGRESS',
+        payload: {
+          batchesCompleted: batchCount,
+          totalBatches: Math.ceil(effectiveLimit / (scrollSize * parallelBatches)),
+          recordsProcessed: totalFetched,
+          totalRecords: effectiveLimit,
+          progress: (totalFetched / effectiveLimit) * 100,
+          requestId: requestId
+        }
+      });
+      
+      // Small delay to prevent overwhelming the server
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+    
+    // Step 3: Clear all scroll contexts
+    const clearPromises = scrollContexts.map(context => {
+      if (context.scrollId) {
+        return fetch(
+          `${origin}/${kibanaPath}/api/console/proxy?path=${encodeURIComponent('/_search/scroll')}&method=DELETE`,
+          {
+            method: 'DELETE',
+            headers: headers,
+            credentials: 'include',
+            body: JSON.stringify({ scroll_id: context.scrollId })
+          }
+        ).catch(error => {
+          console.warn(`⚠️ Failed to clear scroll context ${context.contextId}: ${error.message}`);
+        });
+      }
+      return Promise.resolve();
+    });
+    
+    await Promise.all(clearPromises);
+    console.log(`📜 Cleared ${scrollContexts.length} scroll contexts`);
+    
+    // Step 4: Send final results
+    const fetchSummary = {
+      recordsFetched: allHits.length,
+      totalAvailable: effectiveLimit,
+      expectedBatches: Math.ceil(effectiveLimit / (scrollSize * parallelBatches)),
+      processedBatches: batchCount,
+      completionRate: ((allHits.length / effectiveLimit) * 100).toFixed(1) + '%',
+      avgRecordsPerBatch: batchCount > 0 ? Math.round(allHits.length / batchCount) : 0,
+      method: `Parallel Scroll API (${parallelBatches} contexts)`,
+      parallelContexts: parallelBatches
+    };
+    
+    console.log(`✅ Parallel Scroll API fetch completed:`, fetchSummary);
+    
+    if (allHits.length < effectiveLimit) {
+      console.warn(`⚠️ Incomplete parallel scroll fetch: Expected ${effectiveLimit}, got ${allHits.length} (${fetchSummary.completionRate})`);
+    }
+    
+    postMessage({
+      type: 'FETCH_SUCCESS',
+      payload: {
+        hits: allHits,
+        totalRecords: allHits.length,
+        totalAvailable: effectiveLimit,
+        batchesProcessed: batchCount,
+        fetchSummary: fetchSummary,
+        config: {
+          indexName,
+          method: `Parallel Scroll API`,
+          scrollSize,
+          effectiveLimit,
+          parallelBatches
+        },
+        requestId: requestId
+      }
+    });
+    
+  } catch (error) {
+    console.error(`❌ Parallel Scroll API fetch failed:`, error);
+    
+    // Clear all scroll contexts on error
+    if (scrollContexts.length > 0) {
+      const headers = {
+        'Content-Type': 'application/json',
+        'kbn-xsrf': 'true',
+        ...(finalAuthKey ? 
+          (finalAuthKey.startsWith('Basic ') || finalAuthKey.startsWith('ApiKey ') ? 
+            { 'Authorization': finalAuthKey } : 
+            { 'Authorization': `ApiKey ${finalAuthKey}` }) : 
+          username && password ? { 'Authorization': `Basic ${btoa(`${username}:${password}`)}` } : {})
+      };
+      
+      const clearPromises = scrollContexts.map(context => {
+        if (context.scrollId) {
+          return fetch(
+            `${origin}/${kibanaPath}/api/console/proxy?path=${encodeURIComponent('/_search/scroll')}&method=DELETE`,
+            {
+              method: 'DELETE',
+              headers: headers,
+              credentials: 'include',
+              body: JSON.stringify({ scroll_id: context.scrollId })
+            }
+          ).catch(() => {}); // Ignore cleanup errors
+        }
+        return Promise.resolve();
+      });
+      
+      await Promise.all(clearPromises);
+    }
+    
+    if (error.message === 'AUTHENTICATION_REQUIRED') {
+      // Reset authentication state
+      isAuthenticated = false;
+      authSessionExpiry = null;
+      lastAuthConfig = null;
+      
+      postMessage({
+        type: 'AUTHENTICATION_REQUIRED',
+        payload: { 
+          requestId, 
+          error: 'Authentication expired during parallel scroll fetch. Please retry the operation.',
           partialResults: allHits.length > 0 ? allHits : null,
           recordsReceived: allHits.length
         }

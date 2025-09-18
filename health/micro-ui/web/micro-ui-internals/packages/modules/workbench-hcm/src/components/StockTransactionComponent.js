@@ -128,8 +128,8 @@ const StockTransactionComponent = ({
     "Data.boundaryHierarchy"
 
     ],
-    maxRecordLimit: 100000,
-    maxBatchSize: 5000,
+    maxRecordLimit: 10000, // Temporarily reduced to test regular API
+    maxBatchSize: 2500,
     parallelBatches: 4,
     requiresAuth: true,
     enabled: !externalLoading && !!projectId
@@ -180,11 +180,13 @@ const StockTransactionComponent = ({
   // Define table columns with dynamic boundary columns
   const columns = useMemo(() => {
     const baseColumns = [
-      { label: t("WBH_STOCK_ID"), key: "id", sortable: true },
+      { label: t("WBH_STOCK_ID"), key: "id", width: '150px',sortable: true },
+      { label: t("WBH_FACILITY_ID"), key: "senderId", width: '140px', sortable: true },
       { label: t("WBH_FACILITY_NAME"), key: "facilityName", width: '140px', sortable: true },
       { label: t("WBH_QUANTITY_SENT"), key: "quantitySent", width: '120px', sortable: true },
       { label: t("WBH_TRANSACTION_TYPE"), key: "transactionType", width: '120px', sortable: true },
-      { label: t("WBH_RECEIVER_ID"), key: "receiverId", width: '180px', sortable: true }
+      { label: t("WBH_RECEIVER_ID"), key: "receiverId", width: '180px', sortable: true },
+      { label: t("WBH_RECEIVER_FACILITY"), key: "transactingFacilityName", width: '180px', sortable: true }
     ];
 
     // Add dynamic boundary hierarchy columns (first 2 for stock view)

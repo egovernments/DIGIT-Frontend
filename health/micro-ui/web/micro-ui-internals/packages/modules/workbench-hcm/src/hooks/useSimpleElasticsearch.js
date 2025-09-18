@@ -310,7 +310,7 @@ const useSimpleElasticsearch = (config) => {
     // Progress helpers
     progressPercentage: progress.progress,
     batchProgress: progress.totalBatches > 0 ? `${progress.batchesCompleted}/${progress.totalBatches}` : '0/0',
-    recordsProgress: progress.recordsReceived.toLocaleString()
+    recordsProgress: progress?.recordsReceived?.toLocaleString?.()
   };
 };
 
