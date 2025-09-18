@@ -24,7 +24,7 @@ const ACTION_CONFIGS = [
           body: [
             {
               type: "component",
-              isMandatory: true,
+              isMandatory: false,
               component: "PGRAssigneeComponent",
               key: "SelectedAssignee",
               label: "CS_COMMON_EMPLOYEE_NAME",
@@ -234,6 +234,8 @@ const PGRDetails = () => {
         assignes: _data?.SelectedAssignee?.userServiceUUID ? [_data?.SelectedAssignee?.userServiceUUID] : null,
         hrmsAssignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         comments: _data?.SelectedComments || "",
+        // Include documents array if complaint file is provided
+        ..._data?.complaintFile && { verificationDocuments: [_data.complaintFile] }
       },
     };
     handleResponseForUpdateComplaint(updateRequest);
