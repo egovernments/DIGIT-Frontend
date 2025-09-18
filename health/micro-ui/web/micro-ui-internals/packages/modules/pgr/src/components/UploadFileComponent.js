@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import { Card, CardLabel, CardLabelDesc, UploadFile, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { Card, UploadFile, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { downloadPdfWithCustomName } from "../utils/downloadPDF";
 
-const UploadedFileComponent = () => {
+const UploadedFileComponent = ({ config, onSelect }) => {
   const { t } = useTranslation();
   const [file, setFile] = useState(null);
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -20,7 +20,20 @@ const UploadedFileComponent = () => {
           try {
             const response = await Digit.UploadServices.Filestorage("property-upload", file, tenantId);
             if (response?.data?.files?.length > 0) {
-              setUploadedFile(response?.data?.files[0]);
+              const uploaded = response?.data?.files[0];
+              setUploadedFile(uploaded);
+
+              // 🔹 Notify FormComposer
+              if (config?.key) {
+                const auditDetails = {
+                  createdBy: user?.info?.uuid,
+                  lastModifiedBy: user?.info?.uuid,
+                  createdTime: timestamp,
+                  lastModifiedTime: timestamp
+                };
+                console.log("999 onSelect",config.key,uploaded,response)
+                onSelect(config.key, {...uploaded,auditDetails});
+              }
             } else {
               setError(t("CS_FILE_UPLOAD_ERROR"));
             }
@@ -43,8 +56,12 @@ const UploadedFileComponent = () => {
       const fileData = fileStoreIds?.[0];
       if (fileData?.url) {
         const fileNameWithoutExtension = (uploadedFile?.name || "downloaded_file").split(/\.(jpg|jpeg|png|pdf|xls|xlsx)/)[0];
-        console.log("999 filestoreid",fileData?.id,fileNameWithoutExtension)
-       downloadPdfWithCustomName({ fileStoreId: fileData?.id, customName: fileNameWithoutExtension });
+        
+        downloadPdfWithCustomName({
+          fileStoreId: fileData?.id,
+          customName: fileNameWithoutExtension,
+        });
+
       }
     } catch (err) {
       setError(t("CS_FILE_DOWNLOAD_ERROR"));
@@ -53,14 +70,14 @@ const UploadedFileComponent = () => {
 
   return (
     <Card>
-      <CardLabel>{t("CS_ACTION_SUPPORTING_DOCUMENTS")}</CardLabel>
-      <CardLabelDesc>{t("CS_UPLOAD_RESTRICTIONS")}</CardLabelDesc>
-
       <UploadFile
         id={"simple-doc"}
         accept=".jpg,.png,.pdf,.xls,.xlsx"
         onUpload={selectFile}
-        onDelete={() => setUploadedFile(null)}
+        onDelete={() => {
+          setUploadedFile(null);
+          if (config?.key) onSelect(config.key, null); // 🔹 reset in form data
+        }}
         message={uploadedFile ? `1 ${t("CS_ACTION_FILEUPLOADED")}` : t("CS_ACTION_NO_FILEUPLOADED")}
       />
 
