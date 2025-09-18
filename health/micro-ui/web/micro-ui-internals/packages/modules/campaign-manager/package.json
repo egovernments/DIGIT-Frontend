@@ -14,7 +14,7 @@
     "start": "webpack serve --mode=development --config webpack.config.js",
     "start:prod": "NODE_ENV=production webpack serve --config webpack.config.js",
     "build": "cross-env NODE_ENV=production webpack --config webpack.config.js",
-    "build:dev": "NODE_ENV=development webpack --config webpack.config.js",
+    "build:dev": "cross-env NODE_ENV=development webpack --config webpack.config.js",
     "build:analyze": "NODE_ENV=production webpack --config webpack.config.js --analyze",
     "publish:components": "npm publish --tag console-v0.5"
   },
