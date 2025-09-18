@@ -579,13 +579,8 @@ function NavigationLogicWrapper({
         <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
             <span
                 style={{
-                    background: "#ffffffff",
-                    color: "#C84C0E",
-                    borderRadius: 4,
-                    padding: "0.1rem 0.5rem",
-                    border: "1px solid #C84C0E",
-                    fontSize: "0.75rem",
-                    fontWeight: 600,
+                    background:"#EFF8FF",
+                    height: "fit-content",
                 }}
             >
                 {orText.toUpperCase()}
