@@ -76,10 +76,6 @@
   },
   "scripts": {
     "start": "webpack serve --config webpack.config.js --mode development",
-    "started":"cd micro-ui-internals && yarn build && cd ../ && yarn start",
-    "started-dev":"cd micro-ui-internals && yarn buildDev && cd ../ && yarn start",
-    "start:core":"cd micro-ui-internals && yarn build:core && cd ../ && yarn start:dev",
-    "start:dev": "webpack serve --config webpack.dev.js --mode development",
     "build": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true build",
     "build:prepare": "./build.sh",
     "build:libraries": "cd micro-ui-internals && yarn build",
