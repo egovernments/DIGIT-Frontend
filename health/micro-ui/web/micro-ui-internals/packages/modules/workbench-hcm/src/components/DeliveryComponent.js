@@ -4,6 +4,7 @@ import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import withGenericFilter from './withGenericFilter';
+import withDateRangeFilter from './withDateRangeFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
@@ -90,11 +91,15 @@ const FullFeaturedFilteredTable = withBoundaryFilter(GenericFilteredTable, {
   }
 });
 
-const DeliveryComponent = ({ 
+const DeliveryComponentBase = ({ 
   projectId, 
   boundaryType, 
   boundaryCode, 
-  loading: externalLoading = false 
+  loading: externalLoading = false,
+  // Date range filter props
+  startDate = null,
+  endDate = null,
+  dateRange = null
 }) => {
   const { t } = useTranslation();
 
@@ -118,6 +123,28 @@ const DeliveryComponent = ({
             [`Data.boundaryHierarchyCode.${toCamelCase(boundaryType)}.keyword`]: boundaryCode
           }
         })
+    }
+
+    // Add date range filter if provided
+    const actualStartDate = startDate || dateRange?.startDate;
+    const actualEndDate = endDate || dateRange?.endDate;
+    
+    if (actualStartDate || actualEndDate) {
+      const dateFilter = {
+        "range": {
+          "Data.createdTime": {}
+        }
+      };
+      
+      if (actualStartDate) {
+        dateFilter.range["Data.createdTime"]["gte"] = actualStartDate.getTime();
+      }
+      
+      if (actualEndDate) {
+        dateFilter.range["Data.createdTime"]["lte"] = actualEndDate.getTime();
+      }
+      
+      conditions.push(dateFilter);
     }
 
     // Add delivery-specific filters
@@ -144,7 +171,7 @@ const DeliveryComponent = ({
         }
       };
     }
-  }, [projectId, boundaryType, boundaryCode]);
+  }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange]);
 
   // Use the simple Elasticsearch hook
   const {
@@ -346,10 +373,34 @@ console.log(data,"delivery data",data?.length);
       {/* Additional context info */}
       {!isLoading && !error && (
         <div style={{ padding: '12px 20px', fontSize: '14px', color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
-          {boundaryType && boundaryCode 
-            ? `Filtered by ${boundaryType}: ${t(boundaryCode)}` 
-            : 'All delivery records'}
-          {/* {projectId && ` for Project: ${projectId}`} */}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+            <span>
+              {boundaryType && boundaryCode 
+                ? `Filtered by ${boundaryType}: ${t(boundaryCode)}` 
+                : 'All delivery records'}
+              {/* {projectId && ` for Project: ${projectId}`} */}
+            </span>
+            
+            {/* Date range info */}
+            {((startDate || dateRange?.startDate) || (endDate || dateRange?.endDate)) && (
+              <span style={{ 
+                padding: '4px 8px', 
+                backgroundColor: '#fef3c7', 
+                color: '#92400e',
+                borderRadius: '4px',
+                fontSize: '13px',
+                fontWeight: '500'
+              }}>
+                📅 Date: {
+                  (startDate || dateRange?.startDate) && (endDate || dateRange?.endDate) 
+                    ? `${(startDate || dateRange?.startDate).toLocaleDateString()} - ${(endDate || dateRange?.endDate).toLocaleDateString()}`
+                    : (startDate || dateRange?.startDate)
+                    ? `From ${(startDate || dateRange?.startDate).toLocaleDateString()}`
+                    : `Until ${(endDate || dateRange?.endDate).toLocaleDateString()}`
+                }
+              </span>
+            )}
+          </div>
         </div>
       )}
 
@@ -374,4 +425,26 @@ console.log(data,"delivery data",data?.length);
   );
 };
 
+// Create the date range filtered delivery component as the default export
+const DeliveryComponent = withDateRangeFilter(DeliveryComponentBase, {
+  showDateFilter: true,
+  showPresets: true,
+  persistDates: true,
+  storageKey: 'deliveryComponentDateRange',
+  defaultPreset: 'last30days',
+  label: 'Delivery Date Range Filter',
+  filterPosition: 'top',
+  containerStyle: {
+    backgroundColor: '#fff3cd',
+    borderBottom: '2px solid #ffc107',
+    padding: '16px 20px'
+  },
+  onDateRangeChange: (startDate, endDate) => {
+    console.log('Delivery component date range changed:', { startDate, endDate });
+  }
+});
+
 export default DeliveryComponent;
+
+// Also export the base component for cases where date filtering is not needed
+export { DeliveryComponentBase };
