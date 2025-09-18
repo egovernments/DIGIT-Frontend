@@ -197,13 +197,19 @@ const DeliveryComponentBase = ({
   "Data.userId",
   "Data.boundaryHierarchy"
 ],
-    maxRecordLimit: 100000,
-    maxBatchSize: 5000,
-    parallelBatches: 4,
+    maxRecordLimit: 50000, // Temporarily reduced to test regular API
+    maxBatchSize: 2000,
+    parallelBatches: 1,
     requiresAuth: true,
     enabled: !externalLoading && !!projectId
   });
-console.log(data,"delivery data",data?.length);
+console.log('🚚 Delivery data received:', {
+  recordsReceived: data?.length || 0,
+  totalAvailable: metadata?.totalAvailable || 0,
+  totalRecords: metadata?.totalRecords || 0,
+  isComplete: (data?.length || 0) === (metadata?.totalAvailable || 0),
+  fetchedPercentage: metadata?.totalAvailable ? ((data?.length || 0) / metadata.totalAvailable * 100).toFixed(1) + '%' : 'N/A'
+});
 
   // Transform data for table display
   const tableData = useMemo(() => {
