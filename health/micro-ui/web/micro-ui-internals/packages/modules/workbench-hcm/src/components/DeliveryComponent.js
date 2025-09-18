@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
+import withGenericFilter from './withGenericFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
@@ -13,15 +14,52 @@ function toCamelCase(str) {
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
-// Create FullFeaturedFiltered ReusableTableWrapper for delivery data
-const FullFeaturedFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
+// Step 1: Apply generic filters first (will appear at bottom)
+const GenericFilteredTable = withGenericFilter(ReusableTableWrapper, {
   showFilters: true,
   showStats: true,
   showClearAll: true,
   autoApplyFilters: true,
   persistFilters: true,
   filterPosition: 'top',
-  storageKey: 'deliveryComponentFilters',
+  storageKey: 'deliveryGenericFilters',
+  filterFields: ['deliveredBy', 'quantity', 'deliveryStatus', 'productName'], // Generic fields to filter
+  customLabels: {
+    deliveredBy: 'Delivered By',
+    quantity: 'Quantity',
+    deliveryStatus: 'Delivery Status',
+    productName: 'Product Name'
+  },
+  filterStyle: {
+    backgroundColor: '#f0fdf4',
+    padding: '20px',
+    borderRadius: '8px',
+    marginBottom: '10px',
+    border: '1px solid #bbf7d0'
+  },
+  statsStyle: {
+    backgroundColor: '#dcfce7',
+    color: '#166534',
+    fontSize: '14px',
+    fontWeight: '500'
+  },
+  onFiltersChange: (activeFilters, allFilters) => {
+    console.log('Delivery generic filters changed:', activeFilters);
+  },
+  onDataFiltered: (filteredData, filters) => {
+    console.log(`Generic filtered: ${filteredData.length} records with filters:`, filters);
+  }
+});
+
+// Step 2: Apply boundary filters on top (will appear at top)
+const FullFeaturedFilteredTable = withBoundaryFilter(GenericFilteredTable, {
+  showFilters: true,
+  showStats: false,
+  showClearAll: true,
+  autoApplyFilters: true,
+  persistFilters: true,
+  filterPosition: 'top',
+  storageKey: 'deliveryBoundaryFilters',
   customLabels: {
     country: 'Country',
     state: 'State',
@@ -32,22 +70,23 @@ const FullFeaturedFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
   filterOrder: null, // Auto-discover from data
   requiredFilters: [],
   filterStyle: {
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#f0f9ff',
     padding: '20px',
     borderRadius: '8px',
-    marginBottom: '10px'
+    marginBottom: '8px',
+    border: '1px solid #bae6fd'
   },
   statsStyle: {
-    backgroundColor: '#e3f2fd',
-    color: '#1565c0',
+    backgroundColor: '#dbeafe',
+    color: '#1e40af',
     fontSize: '14px',
     fontWeight: '500'
   },
   onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Delivery table boundary filters changed:', activeFilters);
+    console.log('Delivery boundary filters changed:', activeFilters);
   },
   onDataFiltered: (filteredData, filters) => {
-    console.log(`Delivery table filtered: ${filteredData.length} records with filters:`, filters);
+    console.log(`Boundary filtered: ${filteredData.length} records with filters:`, filters);
   }
 });
 
@@ -314,7 +353,7 @@ console.log(data,"delivery data",data?.length);
         </div>
       )}
 
-      {/* Table with Boundary Filtering */}
+      {/* Table with Boundary + Generic Filtering */}
       <FullFeaturedFilteredTable
         title=""
         data={tableData}

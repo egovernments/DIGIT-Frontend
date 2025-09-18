@@ -2,14 +2,60 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
+import withBoundaryFilter from './withBoundaryFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
+import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
 
 function toCamelCase(str) {
   return str
     .toLowerCase()
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
+
+// Create RequiredFiltersTable for stock data - requires selection for meaningful filtering
+const RequiredFiltersTable = withBoundaryFilter(ReusableTableWrapper, {
+  showFilters: true,
+  showStats: true,
+  showClearAll: true,
+  autoApplyFilters: true,
+  persistFilters: true,
+  filterPosition: 'top',
+  storageKey: 'stockTransactionFilters',
+  requiredFilters: ['state'], // Must select at least state to filter stock data meaningfully
+  customLabels: {
+    state: 'State',
+    lga: 'Local Government Area',
+    ward: 'Ward',
+    healthFacility: 'Health Facility',
+    warehouseId: 'Warehouse',
+    facilityCode: 'Facility Code'
+  },
+  filterStyle: {
+    backgroundColor: '#fef9e7',
+    border: '2px solid #f59e0b',
+    borderRadius: '8px',
+    padding: '16px 20px',
+    marginBottom: '12px'
+  },
+  statsStyle: {
+    backgroundColor: '#fffbeb',
+    color: '#92400e',
+    fontSize: '14px',
+    fontWeight: '600',
+    borderBottom: '2px solid #fbbf24'
+  },
+  onFiltersChange: (activeFilters, allFilters) => {
+    console.log('Stock transaction filters changed:', activeFilters);
+    const missingRequired = ['state'].filter(field => !activeFilters[field]);
+    if (missingRequired.length > 0) {
+      console.warn('Missing required filters for stock data:', missingRequired);
+    }
+  },
+  onDataFiltered: (filteredData, filters) => {
+    console.log(`Stock data filtered to ${filteredData.length} records with filters:`, filters);
+  }
+});
 
 const StockTransactionComponent = ({ 
   projectId, 
@@ -112,42 +158,55 @@ const StockTransactionComponent = ({
         createdBy: source.createdBy || 'N/A',
         createdTime: source.createdTime ? new Date(source.createdTime).toLocaleString() : 'N/A',
         distributorName: facilityDetails.facilityName || 'N/A',
-        stockOnHand: source.physicalCount || 0, 
-       
+        stockOnHand: source.physicalCount || 0,
+        boundaryHierarchy: source.boundaryHierarchy || {}
       };
     });
   }, [data]);
 
-  // Define table columns
-  const columns = [
+  // Discover boundary fields from data
+  const boundaryFields = useMemo(() => {
+    return discoverBoundaryFields(tableData);
+  }, [tableData]);
 
- { label: t("WBH_STOCK_ID"), key: "id", },
-        { label: t("WBH_SENDER_ID"), key: "senderId",width: '180px'},
-        { label: t("WBH_FACILITY_NAME"), key: "facilityName", width: '100px' },
+  // Helper function to generate field label
+  const getFieldLabel = (fieldName) => {
+    return fieldName
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .trim();
+  };
 
-            { label: t("WBH_QUANTITY_SENT"), key: "quantitySent",width: '120px' },
-{ label: t("WBH_TRANSACTION_TYPE"), key: "transactionType", width: '120px'},
-    { label: t("WBH_RECEIVER_ID"), key: "receiverId",  width: '180px'},
-    { label: t("WBH_TRANS_FACILITY_NAME"), key: "transactingFacilityName", width: '100px'  },
-    { label: t("WBH_QUANTITY_RECEIVED"), key: "quantityReceived", width: '120px' },
-        { label: t("WBH_STOCK_ON_HAND"), key: "stockOnHand", width: '120px' ,},
+  // Define table columns with dynamic boundary columns
+  const columns = useMemo(() => {
+    const baseColumns = [
+      { label: t("WBH_STOCK_ID"), key: "id", sortable: true },
+      { label: t("WBH_FACILITY_NAME"), key: "facilityName", width: '140px', sortable: true },
+      { label: t("WBH_QUANTITY_SENT"), key: "quantitySent", width: '120px', sortable: true },
+      { label: t("WBH_TRANSACTION_TYPE"), key: "transactionType", width: '120px', sortable: true },
+      { label: t("WBH_RECEIVER_ID"), key: "receiverId", width: '180px', sortable: true }
+    ];
 
-    { label: t("WBH_QUANTITY"), key: "quantity", width: '120px' },
-    { label: t("WBH_MATERIAL_NOTE_NUMBER"), key: "materialNoteNumber" },
-    { label: t("WBH_BATCH_NUMBER"), key: "batchNumber", },
-    { label: t("WBH_TRANSACTION_TYPE"), key: "transactionType" },
-    { label: t("WBH_WAY_BILL_NUMBER"), key: "wayBillNumber" },
-    // { label: t("WBH_SENDER_TYPE"), key: "senderType" },
-    // { label: t("WBH_RECEIVER_TYPE"), key: "receiverType" },
-    { label: t("HCM_ADMIN_CONSOLE_USER_ID"), key: "createdBy" },
-    { label: t("WBH_TRANSACTION_DATE"), key: "createdTime" },
-    { label: t("WBH_DISTRIBUTOR_NAME"), key: "distributorName" },
+    // Add dynamic boundary hierarchy columns (first 2 for stock view)
+    const boundaryColumns = boundaryFields.slice(0, 2).map(field => ({
+      key: `boundaryHierarchy.${field}`,
+      label: t(getFieldLabel(field)),
+      sortable: true,
+      width: '140px'
+    }));
 
+    const endColumns = [
+      { label: t("WBH_QUANTITY_RECEIVED"), key: "quantityReceived", width: '120px', sortable: true },
+      { label: t("WBH_STOCK_ON_HAND"), key: "stockOnHand", width: '120px', sortable: true },
+      { label: t("WBH_QUANTITY"), key: "quantity", width: '120px', sortable: true }
+    ];
 
-  ];
+    return [...baseColumns, ...boundaryColumns, ...endColumns];
+  }, [boundaryFields, t]);
 
   // Custom cell renderers for specific fields
-  const customCellRenderer = {
+  const customCellRenderer = useMemo(() => {
+    const renderers = {
  
     transactionType: (row) => (
       <span style={{
@@ -178,7 +237,19 @@ const StockTransactionComponent = ({
         {row.transactionDate !== 'N/A' ? row.transactionDate : '-'}
       </span>
     )
-  };
+    };
+
+    // Add dynamic boundary field renderers
+    boundaryFields.forEach(field => {
+      renderers[`boundaryHierarchy.${field}`] = (row) => (
+        <span style={{ fontSize: '13px' }}>
+          {row.boundaryHierarchy?.[field] || '-'}
+        </span>
+      );
+    });
+
+    return renderers;
+  }, [boundaryFields]);
 
 
 
@@ -291,8 +362,8 @@ const StockTransactionComponent = ({
         </div>
       )}
 
-      {/* Table */}
-      <ReusableTableWrapper
+      {/* Table with Required Boundary Filtering */}
+      <RequiredFiltersTable
         title=""
         data={tableData}
         columns={columns}

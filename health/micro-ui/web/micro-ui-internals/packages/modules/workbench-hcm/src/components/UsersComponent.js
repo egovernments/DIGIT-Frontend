@@ -2,14 +2,42 @@ import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
+import withBoundaryFilter from './withBoundaryFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
+import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
 
 function toCamelCase(str) {
   return str
     .toLowerCase()
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
+
+// Create MinimalFilteredTable for users data - clean and simple
+const MinimalFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
+  showFilters: true,
+  showStats: false, // Hide stats for cleaner look
+  showClearAll: false, // Hide clear all button
+  autoApplyFilters: true,
+  persistFilters: false, // Don't persist filters
+  filterPosition: 'top',
+  customLabels: {
+    state: 'State',
+    lga: 'LGA',
+    ward: 'Ward',
+    healthFacility: 'Health Facility'
+  },
+  filterStyle: {
+    backgroundColor: '#ffffff',
+    border: '1px solid #e5e7eb',
+    borderRadius: '6px',
+    padding: '12px 16px',
+    marginBottom: '8px'
+  },
+  onFiltersChange: (activeFilters) => {
+    console.log('Users minimal filters changed:', activeFilters);
+  }
+});
 
 
 const UsersComponent = ({ 
@@ -115,34 +143,54 @@ const UsersComponent = ({
             
               healthFacility: source.healthFacility || source.boundaryHierarchy?.healthFacility || "NA",
               createdTime: source.createdTime ? (typeof source.createdTime === 'number' ? Digit.DateUtils.ConvertEpochToDate(source.createdTime) : source.createdTime) : "NA",
-              createdBy: source.createdBy || "NA"
+              createdBy: source.createdBy || "NA",
+              boundaryHierarchy: source.boundaryHierarchy || {}
       };
     });
   }, [data]);
 
-  // Define table columns
-  const columns = [
+  // Discover boundary fields from data
+  const boundaryFields = useMemo(() => {
+    return discoverBoundaryFields(tableData);
+  }, [tableData]);
 
+  // Helper function to generate field label
+  const getFieldLabel = (fieldName) => {
+    return fieldName
+      .replace(/([A-Z])/g, ' $1')
+      .replace(/^./, str => str.toUpperCase())
+      .trim();
+  };
 
+  // Define table columns with dynamic boundary columns
+  const columns = useMemo(() => {
+    const baseColumns = [
+      { label: t("EMPLOYEE_ID"), key: "employeeId", sortable: true },
+      { label: t("EMPLOYEE_NAME"), key: "employeeName", sortable: true },
+      { label: t("USER_NAME"), key: "userName", sortable: true },
+      { label: t("ROLE"), key: "role", sortable: true }
+    ];
 
-     { label: t("EMPLOYEE_ID"), key: "employeeId" ,sortable: true},
-    { label: t("EMPLOYEE_NAME"), key: "employeeName",sortable: true },
-    { label: t("USER_NAME"), key: "userName" ,sortable: true},
-    { label: t("ROLE"), key: "role" ,sortable: true},
-    // { label: t("PROJECT_TYPE"), key: "projectType" },
-    // { label: t("STATE"), key: "state" },
-    // { label: t("LGA"), key: "lga" },
-    // { label: t("WARD"), key: "ward" },
-    // { label: t("HEALTH_FACILITY"), key: "healthFacility" },
-    { label: t("LOCALITY_CODE"), key: "localityCode" ,sortable: true},
-    { label: t("CREATED_TIME"), key: "createdTime" ,sortable: true},
-    { label: t("STATUS"), key: "status" ,sortable: true},
-    { label: t("VIEW_MAP"), key: "viewMap"},
+    // Add dynamic boundary hierarchy columns (limited for users view)
+    const boundaryColumns = boundaryFields.slice(0, 3).map(field => ({
+      key: `boundaryHierarchy.${field}`,
+      label: t(getFieldLabel(field)),
+      sortable: true,
+      width: '140px'
+    }));
 
-  ];
+    const endColumns = [
+      { label: t("LOCALITY_CODE"), key: "localityCode", sortable: true },
+      { label: t("STATUS"), key: "status", sortable: true },
+      { label: t("CREATED_TIME"), key: "createdTime", sortable: true }
+    ];
+
+    return [...baseColumns, ...boundaryColumns, ...endColumns];
+  }, [boundaryFields, t]);
 
   // Custom cell renderers for specific fields
-  const customCellRenderer = {
+  const customCellRenderer = useMemo(() => {
+    const renderers = {
     isActive: (row) => (
       <span style={{
         padding: '4px 8px',
@@ -198,7 +246,19 @@ const UsersComponent = ({
         ) : '-'}
       </div>
     )
-  };
+    };
+
+    // Add dynamic boundary field renderers
+    boundaryFields.forEach(field => {
+      renderers[`boundaryHierarchy.${field}`] = (row) => (
+        <span style={{ fontSize: '13px' }}>
+          {row.boundaryHierarchy?.[field] || '-'}
+        </span>
+      );
+    });
+
+    return renderers;
+  }, [boundaryFields]);
 
   // Helper function for user type colors
   const getUserTypeColor = (userType) => {
@@ -275,8 +335,8 @@ const UsersComponent = ({
 
 
 
-      {/* Table */}
-      <ReusableTableWrapper
+      {/* Table with Minimal Boundary Filtering */}
+      <MinimalFilteredTable
         title=""
         data={tableData}
         columns={columns}
