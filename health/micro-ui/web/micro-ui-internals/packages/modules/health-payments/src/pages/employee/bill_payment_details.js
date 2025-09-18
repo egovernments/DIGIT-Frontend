@@ -620,60 +620,62 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       fetchIndividualIds(bill);
       const billId = bill?.id;
 
-      try {
-        const res = await getTaskStatusMutation.mutateAsync({
-          body: {
-            task: {
-              billId: billId,
-              type: "Transfer",
+      if (!editBillDetails) {
+        try {
+          const res = await getTaskStatusMutation.mutateAsync({
+            body: {
+              task: {
+                billId: billId,
+                type: "Transfer",
+              }
+            },
+          });
+          console.log("Task status response for billId:", billId, res);
+
+          if (res?.task?.status === "IN_PROGRESS") {
+            if (res?.task?.type === "Transfer") {
+              setIsSelectionDisabledTransfer(true);
+              console.log("Polling started for billId:", billId);
+              pollTaskUntilDone(billId, "Transfer", res);
             }
-          },
-        });
-        console.log("Task status response for billId:", billId, res);
-
-        if (res?.task?.status === "IN_PROGRESS") {
-          if (res?.task?.type === "Transfer") {
-            setIsSelectionDisabledTransfer(true);
-            console.log("Polling started for billId:", billId);
-            pollTaskUntilDone(billId, "Transfer", res);
+          } else {
+            console.log("inside else 2")
+            setIsSelectionDisabledTransfer(false);
           }
-        } else {
-          console.log("inside else 2")
-          setIsSelectionDisabledTransfer(false);
-        }
-      } catch (e) {
-        console.warn("Task status check failed for", billId, e);
-        setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
-      };
+        } catch (e) {
+          console.warn("Task status check failed for", billId, e);
+          setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+        };
 
-      //Verify polling
-      try {
-        const res = await getTaskStatusMutation.mutateAsync({
-          body: {
-            task: {
-              billId: billId,
-              type: "Verify",
+        //Verify polling
+        try {
+          const res = await getTaskStatusMutation.mutateAsync({
+            body: {
+              task: {
+                billId: billId,
+                type: "Verify",
+              }
+            },
+          });
+          console.log("Task status response for billId:", billId, res);
+
+          if (res?.task?.status === "IN_PROGRESS") {
+            if (res?.task?.type === "Verify") {
+              setIsSelectionDisabledVerify(true);
+              console.log("Polling started for billId:", billId);
+              pollTaskUntilDone(billId, "Verify", res);
             }
-          },
-        });
-        console.log("Task status response for billId:", billId, res);
-
-        if (res?.task?.status === "IN_PROGRESS") {
-          if (res?.task?.type === "Verify") {
-            setIsSelectionDisabledVerify(true);
-            console.log("Polling started for billId:", billId);
-            pollTaskUntilDone(billId, "Verify", res);
+          } else {
+            console.log("inside else 2")
+            setIsSelectionDisabledVerify(false);
           }
-        } else {
-          console.log("inside else 2")
-          setIsSelectionDisabledVerify(false);
-        }
-      } catch (e) {
-        console.warn("Task status check failed for", billId, e);
-        setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
-      };
+        } catch (e) {
+          console.warn("Task status check failed for", billId, e);
+          setShowToast({ key: "error", label: t("HCM_AM_SOMETHING_WENT_WRONG"), transitionTime: 2000 });
+        };
+      }
     }
-  }, [BillData]);
+  }, [BillData, editBillDetails]);
 
   const getPaginatedData = (data, currentPage, rowsPerPage) => {
     const startIndex = (currentPage - 1) * rowsPerPage;
