@@ -302,7 +302,6 @@ export const updateUrlParams = (params) => {
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
     const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((i) => i?.code === draftData?.projectType);
     const restructureFormData = {
-      HCM_CAMPAIGN_TYPE: { projectType: filteredProjectType?.[0] },
       HCM_CAMPAIGN_NAME: {
         campaignName: draftData?.campaignName,
       },
