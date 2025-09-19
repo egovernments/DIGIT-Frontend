@@ -13,6 +13,8 @@ function AddProduct() {
   const { state } = useLocation();
   const { mutate: createProduct } = Digit.Hooks.campaign.useCreateProduct(tenantId);
   const { mutate: createProductVariant } = Digit.Hooks.campaign.useCreateProductVariant(tenantId);
+  const searchParams = new URLSearchParams(location.search);
+  const projectType = searchParams.get('projectType');
 
   const checkValid = (formData) => {
     const target = formData?.["addProduct"];
@@ -24,6 +26,7 @@ function AddProduct() {
       return isValid;
     }
   };
+  
   const closeToast = () => {
     setShowToast(null);
   };
@@ -46,6 +49,7 @@ function AddProduct() {
       })
       ?.includes(false);
 
+
     const invalidVariant = formData?.addProduct
       ?.map((i) => {
         if (i?.variant?.length >= 2 && i?.variant?.length < 101) {
@@ -56,10 +60,12 @@ function AddProduct() {
       })
       ?.includes(false);
 
+
     if (!isValid) {
       setShowToast({ key: "error", label: "CAMPAIGN_ADD_PRODUCT_MANDATORY_ERROR", isError: true });
       return;
     }
+
 
     if (invalidName) {
       setShowToast({ key: "error", label: "CAMPAIGN_PRODUCT_NAME_ERROR", isError: true });
@@ -79,7 +85,6 @@ function AddProduct() {
 
     await createProduct(payloadData, {
       onError: (error, variables) => {
-        console.log(error);
         setShowToast({ key: "error", label: error, isError: true });
       },
       onSuccess: async (data) => {
@@ -105,7 +110,7 @@ function AddProduct() {
                 version: 1,
                 fields: [
                   {
-                    value: state?.projectType,
+                    value: projectType,
                     key: "projectType",
                   },
                 ],
@@ -114,17 +119,20 @@ function AddProduct() {
           }
           return;
         });
-        // const cleanedPayload = variantPayload.filter(item => item !== null && item !== undefined);
+        
         if ((variantPayload || []).some((item) => item == null && item == undefined)) {
           setShowToast({ key: "error", label: "DUPLICATE_PRODUCT_VARIANT_ERROR", isError: true });
           return;
         }
+        
         await createProductVariant(variantPayload, {
           onError: (error, variables) => {
-            console.log(error);
             setShowToast({ key: "error", label: error, isError: true });
           },
-          onSuccess: async (data) => {
+          onSuccess: async (data) => {s
+            // Determine the correct return path based on where we came from
+            const returnPath = getReturnPath();
+            
             navigate(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
               state: {
                 message: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE",
@@ -132,7 +140,7 @@ function AddProduct() {
                 boldText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_BOLD_TEXT",
                 postText: "ES_PRODUCT_CREATE_SUCCESS_RESPONSE_POST_TEXT",
                 actionLabel: "ES_PRODUCT_RESPONSE_ACTION",
-                actionLink: `/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`,
+                actionLink: returnPath,
               },
             });
           },
@@ -141,12 +149,36 @@ function AddProduct() {
     });
     return;
   };
+  
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
     return;
   };
 
+  // Helper function to construct return URL from session and state
+  const getReturnPath = () => {
+    const currentPath = window.location.pathname;
+    const currentSearch = window.location.search;
+    if (currentPath.includes('add-product') && currentSearch) {
+      // Parse current URL params to check if they contain campaign info
+      const urlParams = new URLSearchParams(currentSearch);
+      if (urlParams.has('id') || urlParams.has('campaignId')) {
+        // Update key to 8 for delivery rules step
+        urlParams.set('key', '8');
+        return `/${window.contextPath}/employee/campaign/setup-campaign?${urlParams.toString()}`;
+      }
+    }
+  };
+
   const onSecondayActionClick = () => {
-    navigate(`/${window.contextPath}/employee/campaign/setup-campaign${state?.urlParams}`);
+    
+    // Preserve current campaign session data when navigating back
+    const currentSessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
+    
+
+    
+    // Get the return path
+    const returnPath = getReturnPath();
+    navigate(returnPath);
   };
 
   return (
@@ -173,7 +205,6 @@ function AddProduct() {
       {showToast && (
         <Toast
           type={showToast?.isError ? "error" : "success"}
-          // error={showToast?.isError}
           label={t(showToast?.label)}
           isDleteBtn={"true"}
           onClose={() => setShowToast(false)}

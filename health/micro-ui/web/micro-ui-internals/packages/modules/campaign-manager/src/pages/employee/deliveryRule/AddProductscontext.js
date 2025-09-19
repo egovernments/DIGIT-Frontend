@@ -1,66 +1,84 @@
-import { AddIcon, Label } from "@egovernments/digit-ui-react-components";
-import React, { Fragment, useContext, useEffect, useState } from "react";
+import React, { useState, useEffect, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair } from "@egovernments/digit-ui-components";
+import { Dropdown, TextInput, Toast, Button, CardText, LabelFieldPair, Loader } from "@egovernments/digit-ui-components";
 import { Link } from "react-router-dom";
-import { CycleContext } from ".";
-import { PRIMARY_COLOR } from "../../../utils";
 
-const DustbinIcon = () => (
-  <svg width="12" height="16" viewBox="0 0 12 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M0.999837 13.8333C0.999837 14.75 1.74984 15.5 2.6665 15.5L9.33317 15.5C10.2498 15.5 10.9998 14.75 10.9998 13.8333L10.9998 3.83333L0.999837 3.83333L0.999837 13.8333ZM11.8332 1.33333L8.9165 1.33333L8.08317 0.5L3.9165 0.5L3.08317 1.33333L0.166504 1.33333L0.166504 3L11.8332 3V1.33333Z"
-      fill={PRIMARY_COLOR}
-    />
-  </svg>
-);
-function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedProducts }) {
+const AddProducts = React.memo(({ 
+  stref, 
+  selectedDelivery, 
+  selectedProducts, 
+  projectConfig 
+}) => {
   const { t } = useTranslation();
-  const oldSessionData = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
-  const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
+  const [products, setProducts] = useState([{
+    key: 1,
+    quantity: 1,
+    value: null,
+  }]);
+  const [showToast, setShowToast] = useState(null);
+
   const tenantId = Digit.ULBService.getStateId();
-  const updateSession = () => {
-    const newData = {
-      ...oldSessionData,
-      HCM_CAMPAIGN_DELIVERY_DATA: {
-        deliveryRule: campaignData,
-      },
-    };
-    window.Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", newData);
-  };
+  const sessionData = Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
-  const [products, setProducts] = useState([
-    {
-      key: 1,
-      quantity: 1,
-      value: null,
-    },
-  ]);
-  const data = Digit.Hooks.campaign.useProductList(tenantId, filteredDeliveryConfig?.projectType);
+  const projectType = searchParams.get('projectType');
+
+  // Fetch available products
+  const {isLoading: isProductLoading , productData} = Digit.Hooks.campaign.useProductList(tenantId, projectType);
+
+  // Initialize products from selected products
   useEffect(() => {
-    const updatedProducts = selectedProducts.map((selectedProduct, index) => {
-      const id = selectedProduct?.value;
-      return {
+    if (selectedProducts && selectedProducts.length > 0) {
+      const updatedProducts = selectedProducts.map((selectedProduct, index) => ({
         key: index + 1,
         quantity: selectedProduct?.quantity || 1,
-        // value: selectedProduct.additionalData,
         value: {
           displayName: selectedProduct.name,
-          id: id,
+          id: selectedProduct?.value,
         },
         name: selectedProduct.name,
-      };
-    });
-
-    setProducts(updatedProducts);
+      }));
+      setProducts(updatedProducts);
+    }
   }, [selectedProducts]);
 
-  const filteredData = data?.filter((item) => !selectedDelivery?.products?.some((entry) => entry?.value === item?.id));
-  const temp = filteredData?.filter((item) => !products?.some((entry) => entry?.value?.id === item?.id));
+  // Update ref when products change
+  useEffect(() => {
+    if (stref) {
+      stref.current = products;
+    }
+  }, [products, stref]);
 
-  const add = () => {
-    setProducts((prevState) => [
+  // Filter available options
+  const availableOptions = useMemo(() => {
+    if (!productData) return [];
+    
+    const selectedProductIds = new Set([
+      ...(selectedDelivery?.products?.map(p => p.value) || []),
+      ...products.map(p => p.value?.id).filter(Boolean)
+    ]);
+    
+    return productData.filter(item => !selectedProductIds.has(item.id));
+  }, [productData, selectedDelivery?.products, products]);
+
+  const getOptionsForProduct = useCallback((currentProductKey) => {
+    const otherProductIds = new Set(
+      products
+        .filter(p => p.key !== currentProductKey && p.value?.id)
+        .map(p => p.value.id)
+    );
+    const alreadySelectedIds = new Set(
+      selectedDelivery?.products?.map(p => p.value) || []
+    );
+
+    
+    return productData?.filter(item => 
+      !otherProductIds.has(item.id) && !alreadySelectedIds.has(item.id)
+    ) || [];
+  }, [productData, products, selectedDelivery?.products]);
+
+  const addProduct = useCallback(() => {
+    setProducts(prevState => [
       ...prevState,
       {
         key: prevState.length + 1,
@@ -68,102 +86,139 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
         quantity: 1,
       },
     ]);
-  };
+  }, []);
 
-  const deleteItem = (data) => {
-    const fil = products.filter((i) => i.key !== data.key);
-    const up = fil.map((item, index) => ({ ...item, key: index + 1 }));
-    setProducts(up);
-  };
-
-  const incrementC = (data, value) => {
-    if (value?.target?.value.trim() === "") return;
-    if (value?.target?.value.trim() === 0 || value?.target?.value.trim() > 10) return;
-    if (value === 0) return;
-    if (value > 10) return;
-    setProducts((prevState) => {
-      return prevState.map((item) => {
-        if (item.key === data.key) {
-          return { ...item, quantity: value?.target?.value ? Number(value?.target?.value) : value };
-        }
-        return item;
-      });
+  const deleteProduct = useCallback((productToDelete) => {
+    setProducts(prevState => {
+      const filtered = prevState.filter(p => p.key !== productToDelete.key);
+      return filtered.map((product, index) => ({ 
+        ...product, 
+        key: index + 1 
+      }));
     });
-  };
+  }, []);
 
-  const updateValue = (key, newValue) => {
-    setProducts((prevState) => {
-      return prevState.map((item) => {
-        if (item.key === key.key) {
-          return { ...item, value: newValue };
-        }
-        return item;
-      });
-    });
-  };
+  const updateQuantity = useCallback((productKey, value) => {
+    const numValue = value?.target?.value ? Number(value.target.value) : value;
+    
+    if (numValue === 0 || numValue > 10 || isNaN(numValue)) {
+      return;
+    }
 
-  // INFO:: removed "stref" from dependency array as it was causing infinite rerendering issue
+    setProducts(prevState =>
+      prevState.map(product =>
+        product.key === productKey
+          ? { ...product, quantity: numValue }
+          : product
+      )
+    );
+  }, []);
+
+  const updateProductValue = useCallback((productKey, newValue) => {
+    setProducts(prevState =>
+      prevState.map(product =>
+        product.key === productKey
+          ? { ...product, value: newValue }
+          : product
+      )
+    );
+  }, []);
+
+  const updateSession = useCallback(() => {
+    const oldSessionData = sessionData;
+    const newData = {
+      ...oldSessionData,
+      HCM_CAMPAIGN_DELIVERY_DATA: {
+        deliveryRule: [], // This would be populated from Redux store
+      },
+    };
+    Digit.SessionStorage.set("HCM_CAMPAIGN_MANAGER_FORM_DATA", newData);
+  }, [sessionData]);
+
+  const closeToast = useCallback(() => {
+    setShowToast(null);
+  }, []);
+
   useEffect(() => {
-    stref.current = products; // Update the ref with the latest child state
-  }, [products]);
+    if (showToast) {
+      const timer = setTimeout(closeToast, 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast, closeToast]);
+
+  const canAddMore = availableOptions.length > 0;
+
+  if(isProductLoading){
+    return (<Loader/>);
+  }
+
 
   return (
     <div className="add-resource-wrapper">
-      {products.map((i, c) => (
-        <div className="add-resource-container">
-          <div className="header-container">
-            <CardText>
-              {t(`CAMPAIGN_RESOURCE`)} {c + 1}
-            </CardText>
-            {products?.length > 1 ? (
-              <Button
-                // className="custom-class"
-                icon="Delete"
-                iconFill=""
-                label={t(`DELETE`)}
-                onClick={() => deleteItem(i, c)}
-                size=""
-                style={{}}
-                title=""
-                variation="link"
-              />
-            ) : null}
-          </div>
-          <div className="add-resource-label-field-container">
-            <LabelFieldPair style={{ display: "grid" }}>
-              <Label>{t(`CAMPAIGN_ADD_PRODUCTS_LABEL`)}</Label>
-              {
+      {products.map((product, index) => {
+        const optionsForThisProduct = getOptionsForProduct(product.key);
+        
+        return (
+          <div key={product.key} className="add-resource-container">
+            <div className="header-container">
+              <CardText>
+                {t("CAMPAIGN_RESOURCE")} {index + 1}
+              </CardText>
+              {products.length > 1 && (
+                <Button
+                  icon="Delete"
+                  label={t("DELETE")}
+                  onClick={() => deleteProduct(product)}
+                  variation="link"
+                />
+              )}
+            </div>
+            
+            <div className="add-resource-label-field-container">
+              <LabelFieldPair style={{ display: "grid" }}>
+                <label>{t("CAMPAIGN_ADD_PRODUCTS_LABEL")}</label>
                 <Dropdown
                   t={t}
                   style={{ width: "100%", minWidth: "100%", marginBottom: 0 }}
                   className="form-field"
-                  selected={i?.value}
+                  selected={product?.value}
                   disable={false}
-                  isMandatory={true}
-                  option={temp ? temp : filteredData}
-                  select={(d) => updateValue(i, d)}
+                  isMandatory
+                  option={optionsForThisProduct}
+                  select={(value) => updateProductValue(product.key, value)}
                   optionKey="displayName"
                 />
-              }
-            </LabelFieldPair>
-            {!filteredDeliveryConfig?.productCountHide && (
-              <LabelFieldPair style={{ display: "flex", flexDirection: "column", alignItems: "flex-start" }}>
-                <Label>{t(`CAMPAIGN_COUNT_LABEL`)}</Label>
-                <TextInput type="numeric" defaultValue={i?.quantity} value={i?.quantity} onChange={(d) => incrementC(i, d)} />
               </LabelFieldPair>
-            )}
+              
+              {!projectConfig?.productCountHide && (
+                <LabelFieldPair style={{ 
+                  display: "flex", 
+                  flexDirection: "column", 
+                  alignItems: "flex-start" 
+                }}>
+                  <label>{t("CAMPAIGN_COUNT_LABEL")}</label>
+                  <TextInput
+                    type="numeric"
+                    value={product?.quantity}
+                    onChange={(value) => updateQuantity(product.key, value)}
+                  />
+                </LabelFieldPair>
+              )}
+            </div>
           </div>
-        </div>
-      ))}
-      {(temp === undefined || temp.length > 0) && (
+        );
+      })}
+      
+      {canAddMore && (
         <Button
           variation="secondary"
-          label={t(`CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION`)}
-          className={"add-rule-btn hover"}
+          label={t("CAMPAIGN_PRODUCTS_MODAL_SECONDARY_ACTION")}
+          className="add-rule-btn hover"
           icon="AddIcon"
-          onClick={add}
+          onClick={addProduct}
         />
       )}
+      
       <div
         style={{
           display: "flex",
@@ -171,7 +226,7 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           justifyContent: "center",
           gap: "1rem",
           marginTop: "1rem",
-          marginBottom: "1rem",
+          marginBottom: "1rem"
         }}
       >
         <p>{t("CAMPAIGN_NEW_PRODUCT_TEXT")}</p>
@@ -179,27 +234,30 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
           <Link
             to={{
               pathname: `/${window.contextPath}/employee/campaign/add-product`,
-            }}
-            state={{
-              campaignId: id,
-              urlParams: window?.location?.search,
-              projectType: filteredDeliveryConfig?.projectType,
+              search: window.location.search, // Pass the query string directly
+              state: {
+                returnPath: window.location.pathname + window.location.search,
+                campaignId: id || new URLSearchParams(window.location.search).get('id'),
+                campaignNumber: new URLSearchParams(window.location.search).get('campaignNumber'),
+                urlParams: window.location.search,
+                projectType: projectConfig?.projectType || projectConfig?.code,
+              },
             }}
           >
             {t("ES_CAMPAIGN_ADD_PRODUCT_LINK")}
           </Link>
         </span>
       </div>
+      
       {showToast && (
         <Toast
           type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          // error={showToast.key === "error" ? true : false}
           label={t(showToast.label)}
           onClose={closeToast}
         />
       )}
     </div>
   );
-}
+});
 
 export default AddProducts;

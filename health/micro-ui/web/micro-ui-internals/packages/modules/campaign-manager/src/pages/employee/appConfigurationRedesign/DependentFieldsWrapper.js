@@ -501,13 +501,8 @@ function DependentFieldsWrapper({
                 showIcon={false}
                 stroke={true}
                 style={{
-                    background: "#FFFFFF",
-                    border: "1px solid #C84C0E",
-                    borderRadius: 8,
+                    background: "#EFF8FF",
                     height: "fit-content",
-                    padding: "0.25rem 0.5rem",
-                    width: "100%",
-                    maxWidth: "100%",
                 }}
                 className={"version-tag"}
                 labelStyle={{ whiteSpace: "normal", wordBreak: "break-word" }}
@@ -946,7 +941,7 @@ function DependentFieldsWrapper({
                                     size={"large"}
                                     variation={"secondary"}
                                     label={closeLabel}
-                                    onClick={handleFooterClose}
+                                    onClick={discardAndCloseEditor}
                                 />,
                                 <Button
                                     key="submit"
