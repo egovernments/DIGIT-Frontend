@@ -311,7 +311,7 @@ const generatePaymentMutation = Digit.Hooks.useCustomAPIMutationHook({
 };
 
 const getAvailableActions = (status) => {
-  switch (status) { //TODO : add Download action
+  switch (status) {
     case "PARTIALLY_VERIFIED":
       return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
     case "PENDING_VERIFICATION":
@@ -324,33 +324,48 @@ const getAvailableActions = (status) => {
             return ["HCM_AM_VERIFY", "HCM_AM_EDIT", "HCM_AM_GENERATE_PAYMENT"];
     case "FULLY_PAID":
     default:
-      return []; // No actions allowed except download
+      return [];
   }
 };
+
     const columns = useMemo(() => {
-        const baseColumns = [
+        const commonColumns = [
             {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                         {t("HCM_AM_BILL_ID")}
                     </div>
                 ),
-                selector: (row) => {
-                    return (
-                        <div className="ellipsis-cell" title={t(row?.billNumber) || t("NA")}
+                selector: (row) => (
+                    <div
+                        className="ellipsis-cell"
+                        style={{
+                            textAlign: "center",
+                            width: "100%",
+                            color: "#C84C0E",
+                            cursor: "pointer",
+                            textDecoration: "underline",
+                            whiteSpace: "nowrap",   // prevent line break
+                            overflow: "hidden",     // hide overflow
+                            textOverflow: "ellipsis",
+                        }}
+                        title={row?.billNumber}
                         onClick={() => {
-                            //view bill/edit bill
-                           if (props?.editBill) {
-                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`,{ billID: row.billNumber });
+                            if (props?.editBill) {
+                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`, {
+                                    billID: row.billNumber,
+                                });
                             } else {
-                                history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`,{ billID: row.billNumber });
+                                history.push(`/${window.contextPath}/employee/payments/view-bill-payment-details`, {
+                                    billID: row.billNumber,
+                                });
                             }
                         }}
-                        style={{ color: "#C84C0E", cursor: "pointer", textDecoration: "underline" }}>
-                            {t(row?.billNumber) || t("NA")}
-                        </div>
-                    );
-                },
+                    >
+                        {row?.billNumber || t("NA")}
+                    </div>
+                ),
+                width: "240px",
             },
             {
                 name: (
@@ -358,16 +373,12 @@ const getAvailableActions = (status) => {
                         {t("HCM_AM_NUMBER_OF_WORKERS")}
                     </div>
                 ),
-                selector: (row) => {
-                    return (
-                        <div className="ellipsis-cell" style={{ paddingRight: "1rem" }}>
-                            {t(row?.billDetails?.length) || t("0")}
-                        </div>
-                    );
-                },
-                style: {
-                    justifyContent: "flex-end",
-                },
+                selector: (row) => (
+                    <div className="ellipsis-cell" style={{ textAlign: "center", width: "100%" }}>
+                        {t(row?.billDetails?.length) || t("NA")}
+                    </div>
+                ),
+                width: "140px",
             },
             {
                 name: (
@@ -381,217 +392,228 @@ const getAvailableActions = (status) => {
                         : row?.billDetails?.filter(
                             (detail) =>
                                 detail?.status === "PENDING_VERIFICATION" ||
-                                detail?.status === "VERIFICATION_FAILED" || detail?.status === "PENDING_EDIT" || detail?.status === "EDITED")?.length || 0;
-                    // const pendingCount = row?.billDetails?.filter((detail) => detail?.status === "PENDING_VERIFICATION" || 
-                    // detail?.status ==="VERIFICATION_FAILED" || detail?.status ==="PENDING_EDIT" || detail?.status ==="EDITED")?.length || 0;
+                                detail?.status === "VERIFICATION_FAILED" ||
+                                detail?.status === "PENDING_EDIT" ||
+                                detail?.status === "EDITED"
+                        )?.length || 0;
+
                     return (
-                        <div className="ellipsis-cell" style={{ color: "#B91900", paddingRight: "1rem" }}>
-                             {t(count)}
+                        <div className="ellipsis-cell" style={{ color: "#B91900", textAlign: "center", width: "100%" }}>
+                            {t(count)}
                         </div>
                     );
                 },
-                style: {
-                            justifyContent: "flex-end",
-                        },
+                width: "160px",
             },
+        ];
 
-            !props?.editBill && {
+        const nonEditColumns = [
+            {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                         {t("HCM_AM_VERIFIED")}
                     </div>
                 ),
-                 selector: (row) => {
-                    const verifiedCount = row?.billDetails?.filter((detail) => detail?.status === "VERIFIED" || detail?.status ==="PAYMENT_FAILED")?.length || 0;
-     
+                selector: (row) => {
+                    const verifiedCount =
+                        row?.billDetails?.filter(
+                            (detail) => detail?.status === "VERIFIED" || detail?.status === "PAYMENT_FAILED"
+                        )?.length || 0;
+
                     return (
-                        <div className="ellipsis-cell" style={{ color: "#9E5F00", paddingRight: "1rem" }}>
-                             {(verifiedCount)}
+                        <div className="ellipsis-cell" style={{ color: "#9E5F00", textAlign: "center", width: "100%" }}>
+                            {verifiedCount}
                         </div>
                     );
                 },
-                style: {
-                            justifyContent: "flex-end",
-                        },
+                width: "120px",
             },
-           !props?.editBill && {
+            {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                         {t("HCM_AM_PAID")}
                     </div>
                 ),
-               selector: (row) => {
+                selector: (row) => {
                     const paidCount = row?.billDetails?.filter((detail) => detail?.status === "PAID")?.length || 0;
                     return (
-                        <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>
-                             {t(paidCount)}
+                        <div className="ellipsis-cell" style={{ color: "#00703C", textAlign: "center", width: "100%" }}>
+                            {t(paidCount)}
                         </div>
                     );
                 },
-                style: {
-                            justifyContent: "flex-end",
-                        },
+                width: "120px",
             },
-            props?.editBill && {
+        ];
+
+        // Extra column for edit mode
+        const editColumns = [
+            {
                 name: (
                     <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
                         {t("HCM_AM_EDITED")}
                     </div>
                 ),
-               selector: (row) => {
+                selector: (row) => {
                     const editedCount = row?.billDetails?.filter((detail) => detail?.status === "EDITED")?.length || 0;
                     return (
-                        <div className="ellipsis-cell" style={{ color: "#00703C", paddingRight: "1rem" }}>
-                             {t(editedCount)}
+                        <div className="ellipsis-cell" style={{ color: "#00703C", textAlign: "center", width: "100%" }}>
+                            {t(editedCount)}
                         </div>
                     );
                 },
-                style: {
-                            justifyContent: "flex-end",
-                        },
-            },
-            {
-                name: (
-                    <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
-                        {t("HCM_AM_STATUS")}
-                    </div>
-                ),
-                selector: (row) => {
-    const status = row?.status || "NA";
-    let backgroundColor = "#B91900"; // Default: red
-
-    if (status === "FULLY_VERIFIED") backgroundColor = "#00703C"; // Green
-    else if (status === "FULLY_PAID") backgroundColor = "#00703C"; // Green
-    else if (status === "PARTIALLY_VERIFIED") backgroundColor = "#9E5F00"; // Yellow
-    else if (status === "PARTIALLY_PAID") backgroundColor = "#9E5F00"; // Yellow
-
-    return (
-      <span
-        className="ellipsis-cell"
-        style={{
-          backgroundColor,
-          color: "#fff",
-          padding: "0.25rem 0.5rem",
-          borderRadius: "4px",
-          fontWeight: "bold",
-          display: "inline-block",
-          minWidth: "100px",
-          textAlign: "center",
-        }}
-      >
-        {t(status)}
-      </span>
-    );
-  },
-            },
-            {
-                name: (
-                    <div style={{ borderRight: "2px solid #787878",width: "100%",textAlign: "start" }}>
-                        {t("HCM_AM_BILL_ACTIONS")}
-                    </div>
-                )
-                ,
-                selector: (row, index) => {
-                    const reportDetails = row?.additionalDetails?.reportDetails;
-                    const billId = row?.billNumber;
-                    const id = row?.id;
-                    const isLastRow = index === props.totalCount - 1;
-                    const status = row?.status || "UNKNOWN";
-                    const actions = getAvailableActions(status);
-                    const isInProgress = inProgressBillsTransfer?.[id] === true || inProgressBillsVerify?.[id] === true;
-                    const options = actions.map((code) => ({
-                        code,
-                        name: t(code),
-                    }));
-
-                    return (!props?.editBill?(
-                        // reportDetails?.status === "COMPLETED" ?
-                        !isInProgress ? 
-                        <Button
-                            className="custom-class"
-                            iconFill=""
-                            icon="ArrowDropDown"
-                            size="medium"
-                            isSuffix
-                            label={t(`HCM_AM_BILL_ACTIONS`)}
-                            title={t(`HCM_AM_BILL_ACTIONS`)}
-                            showBottom={isLastRow && props.data.length !== 1? false : true}
-                            // showBottom={!(props?.data?.length === 1 || isLastRow)}
-                            onOptionSelect={(value) => {
-                                // if (value.code === "HCM_AM_PDF") {
-                                //     if (reportDetails?.pdfReportId) {
-                                //         downloadFileWithName({ fileStoreId: reportDetails?.pdfReportId, customName: `${billId}`, type: "pdf" })
-                                //     } else {
-                                //         setShowToast({ key: "error", label: t(`HCM_AM_PDF_GENERATION_FAILED`), transitionTime: 3000 });
-                                //     }
-                                // } else if (value.code === "HCM_AM_EXCEL") {
-                                //     if (reportDetails?.excelReportId) {
-                                //         downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
-                                //     } else {
-                                //         setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
-                                //     }
-
-                                // }
-                                if (value.code === "HCM_AM_VERIFY") {                                    
-                                    setVerifyPopupState({ open: true, row });
-                                } else if (value.code === "HCM_AM_EDIT") {
-                                    setEditPopupState({ open: true, row });                                
-                                }
-                                else if (value.code === "HCM_AM_GENERATE_PAYMENT") {      
-                                    setPaymentPopupState({ open: true, row });
-                                }
-                                else if (value.code === "HCM_AM_DOWNLOAD_REPORT") {
-                                    if (reportDetails?.excelReportId) {
-                                        try{
-                                            downloadFileWithName({ fileStoreId: reportDetails?.excelReportId, customName: `${billId}`, type: "excel" });
-                                        }catch{
-                                            setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
-                                        }
-                                    } else {
-                                        setShowToast({ key: "error", label: t(`HCM_AM_EXCEL_GENERATION_FAILED`), transitionTime: 3000 });
-                                    }
-                            }}}
-                            options={options}
-                            optionsKey="name"
-                        
-                            style={{ minWidth: "14rem" }}
-                            type="actionButton"
-                            variation="secondary"
-                        /> 
-                        :
-                          <div>
-                            <Tag
-                                icon="Info"
-                                label={
-                                    inProgressBillsTransfer?.[id]
-                                        ? t("HCM_AM_PAYMENT_IN_PROGRESS")
-                                        : t("HCM_AM_VERIFICATION_IN_PROGRESS")
-                                }
-                                showIcon={true}
-                            />
-                            </div>
-                            )
-                            :(
-                                <Button
-                            className="custom-class"
-                            iconFill=""
-                            variation="secondary"
-                            icon="Edit"
-                            size="small"
-                            isSuffix
-                            onClick={() => {//edit bill                           
-                                history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`,{ billID: row.billNumber });
-                            }}
-                            label={t(`HCM_AM_EDIT_BILL`)}
-                            title={t(`HCM_AM_EDIT_BILL`)}/>
-                            )
-                    );
-                },
+                width: "120px",
             },
         ];
 
-        return baseColumns;
-    }, [props.data, t, inProgressBillsTransfer, inProgressBillsVerify, props?.edit]);
+        const statusColumn = {
+            name: (
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    {t("HCM_AM_STATUS")}
+                </div>
+            ),
+            selector: (row) => {
+                const status = row?.status || "NA";
+                let backgroundColor = "#B91900";
+
+                if (status === "FULLY_VERIFIED") backgroundColor = "#00703C";
+                else if (status === "FULLY_PAID") backgroundColor = "#00703C";
+                else if (status === "PARTIALLY_VERIFIED") backgroundColor = "#9E5F00";
+                else if (status === "PARTIALLY_PAID") backgroundColor = "#9E5F00";
+
+                return (
+                    <div style={{ display: "flex", justifyContent: "center", width: "100%" }}>
+                        <span
+                            className="ellipsis-cell"
+                            style={{
+                                backgroundColor,
+                                color: "#fff",
+                                padding: "0.25rem 0.75rem",
+                                borderRadius: "4px",
+                                fontWeight: "bold",
+                                whiteSpace: "nowrap",
+                                textAlign: "center",
+                            }}
+                        >
+                            {t(status)}
+                        </span>
+                    </div>
+                );
+            },
+            width: "200px",
+        };
+
+        const actionsColumn = {
+            name: (
+                <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+                    {t("HCM_AM_BILL_ACTIONS")}
+                </div>
+            ),
+            selector: (row, index) => {
+                const reportDetails = row?.additionalDetails?.reportDetails;
+                const billId = row?.billNumber;
+                const id = row?.id;
+                const isLastRow = index === props.totalCount - 1;
+                const status = row?.status || "UNKNOWN";
+                const actions = getAvailableActions(status);
+                const isInProgress =
+                    inProgressBillsTransfer?.[id] === true || inProgressBillsVerify?.[id] === true;
+                const options = actions.map((code) => ({
+                    code,
+                    name: t(code),
+                }));
+
+                return (
+                    <div style={{ textAlign: "center", width: "100%" }}>
+                        {!props?.editBill ? (
+                            !isInProgress ? (
+                                <Button
+                                    className="custom-class"
+                                    iconFill=""
+                                    icon="ArrowDropDown"
+                                    size="medium"
+                                    isSuffix
+                                    label={t(`HCM_AM_BILL_ACTIONS`)}
+                                    title={t(`HCM_AM_BILL_ACTIONS`)}
+                                    showBottom={isLastRow && props.data.length !== 1 ? false : true}
+                                    onOptionSelect={(value) => {
+                                        if (value.code === "HCM_AM_VERIFY") {
+                                            setVerifyPopupState({ open: true, row });
+                                        } else if (value.code === "HCM_AM_EDIT") {
+                                            setEditPopupState({ open: true, row });
+                                        } else if (value.code === "HCM_AM_GENERATE_PAYMENT") {
+                                            setPaymentPopupState({ open: true, row });
+                                        } else if (value.code === "HCM_AM_DOWNLOAD_REPORT") {
+                                            if (reportDetails?.excelReportId) {
+                                                try {
+                                                    downloadFileWithName({
+                                                        fileStoreId: reportDetails?.excelReportId,
+                                                        customName: `${billId}`,
+                                                        type: "excel",
+                                                    });
+                                                } catch {
+                                                    setShowToast({
+                                                        key: "error",
+                                                        label: t(`HCM_AM_EXCEL_GENERATION_FAILED`),
+                                                        transitionTime: 3000,
+                                                    });
+                                                }
+                                            } else {
+                                                setShowToast({
+                                                    key: "error",
+                                                    label: t(`HCM_AM_EXCEL_GENERATION_FAILED`),
+                                                    transitionTime: 3000,
+                                                });
+                                            }
+                                        }
+                                    }}
+                                    options={options}
+                                    optionsKey="name"
+                                    style={{ minWidth: "10rem" }}
+                                    type="actionButton"
+                                    variation="secondary"
+                                />
+                            ) : (
+                                <Tag
+                                    icon="Info"
+                                    label={
+                                        inProgressBillsTransfer?.[id]
+                                            ? t("HCM_AM_PAYMENT_IN_PROGRESS")
+                                            : t("HCM_AM_VERIFICATION_IN_PROGRESS")
+                                    }
+                                    showIcon={true}
+                                />
+                            )
+                        ) : (
+                            <Button
+                                className="custom-class"
+                                iconFill=""
+                                variation="secondary"
+                                icon="Edit"
+                                size="small"
+                                isSuffix
+                                onClick={() => {
+                                    history.push(`/${window.contextPath}/employee/payments/edit-bill-payment-details`, {
+                                        billID: row.billNumber,
+                                    });
+                                }}
+                                label={t(`HCM_AM_EDIT_BILL`)}
+                                title={t(`HCM_AM_EDIT_BILL`)}
+                            />
+                        )}
+                    </div>
+                );
+            },
+            width: "220px",
+        };
+
+        // Return final set
+        if (props?.editBill) {
+            return [...commonColumns, ...editColumns, statusColumn, actionsColumn];
+        } else {
+            return [...commonColumns, ...nonEditColumns, statusColumn, actionsColumn];
+        }
+    }, [props.data, t, inProgressBillsTransfer, inProgressBillsVerify, props?.editBill]);
 
     const handlePageChange = (page, totalRows) => {
         props?.handlePageChange(page, totalRows);
