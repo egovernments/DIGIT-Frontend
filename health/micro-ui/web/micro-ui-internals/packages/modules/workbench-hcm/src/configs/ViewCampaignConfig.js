@@ -136,15 +136,33 @@ export const data = (project) => {
       //     },
       //   ],
       // },
+      //  {
+      //   navigationKey: "card9",
+      //   sections: [
+      //     {
+      //       navigationKey: "card9",
+
+      //       type: "COMPONENT",
+      //       // component: "MapComponent",
+      //       component: "DeliveryComponent",
+      //       props: { 
+      //         projectId: project?.Project?.[0]?.id,
+      //         boundaryType: project?.Project?.[0]?.address?.boundaryType,
+      //         boundaryCode: project?.Project?.[0]?.address?.boundary,
+      //         dataReady: !!(project?.Project?.[0]?.id && project?.Project?.[0]?.address?.boundaryType && project?.Project?.[0]?.address?.boundary)
+      //       },
+      //     },
+      //   ],
+      // },
       {
-        navigationKey: "card9",
+        navigationKey: "card13",
         sections: [
           {
-            navigationKey: "card9",
+            navigationKey: "card13",
 
             type: "COMPONENT",
             // component: "MapComponent",
-            component: "DeliveryComponent",
+            component: "MapComponent",
             props: { 
               projectId: project?.Project?.[0]?.id,
               boundaryType: project?.Project?.[0]?.address?.boundaryType,
@@ -162,7 +180,9 @@ export const data = (project) => {
             navigationKey: "card10",
 
             type: "COMPONENT",
-            component: "UsersComponent",
+            component: "EmployeesComponent",
+        // component: "UsersComponent",
+
             props: { 
               projectId: project?.Project?.[0]?.id,
               boundaryType: project?.Project?.[0]?.address?.boundaryType || "state",
@@ -236,11 +256,17 @@ export const data = (project) => {
         //   active: true,
         //   code: "STOCK_DETAILS",
         // },
-        {
-          name: "card9",
+        // {
+        //   name: "card9",
+        //   active: true,
+        //   code: "DELIVERY_VIEW",
+        // },
+           {
+          name: "card13",
           active: true,
           code: "MAP_VIEW",
         },
+      
          {
           name: "card10",
           active: true,
@@ -259,7 +285,8 @@ export const data = (project) => {
         
         
       ],
-      activeByDefault: "card9",
+      // activeByDefault: "card9",
+      activeByDefault: "card13",
     },
   };
 };

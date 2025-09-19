@@ -5,6 +5,7 @@ import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import withGenericFilter from './withGenericFilter';
 import withDateRangeFilter from './withDateRangeFilter';
+import withMapView from './withMapView';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
@@ -15,8 +16,94 @@ function toCamelCase(str) {
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
-// Step 1: Apply generic filters first (will appear at bottom)
-const GenericFilteredTable = withGenericFilter(ReusableTableWrapper, {
+/**
+ * HOC Composition Order (bottom to top):
+ * 1. ReusableTableWrapper (base table)
+ * 2. withMapView (adds map/table toggle)
+ * 3. withGenericFilter (adds generic field filters)
+ * 4. withBoundaryFilter (adds boundary filters) 
+ * 5. withDateRangeFilter (adds date range filtering)
+ */
+
+// Step 1: Apply map view toggle to the base table
+const MapViewTable = withMapView(ReusableTableWrapper, {
+  showMapToggle: true,
+  defaultView: 'table',
+  mapContainerId: 'delivery-map-container',
+  persistViewMode: true,
+  storageKey: 'deliveryComponentMapView',
+  
+  // Custom coordinate extraction for delivery data
+  getLatitude: (row) => {
+    // Try multiple field patterns for latitude
+    return row.latitude || row.lat || (Array.isArray(row.geoPoint) ? row.geoPoint[1] : row.geoPoint?.lat);
+  },
+  
+  getLongitude: (row) => {
+    // Try multiple field patterns for longitude  
+    return row.longitude || row.lng || (Array.isArray(row.geoPoint) ? row.geoPoint[0] : row.geoPoint?.lon);
+  },
+  
+  // Custom popup content for map markers
+  getMapPopupContent: (visit, index, originalData) => {
+    const data = originalData[visit._originalIndex] || visit;
+    return `
+      <div style="padding: 16px; min-width: 250px; font-family: 'Inter', sans-serif;">
+        <h4 style="margin: 0 0 12px 0; color: #1f2937; font-size: 16px; font-weight: 700; border-bottom: 2px solid #f59e0b; padding-bottom: 8px;">
+          🚚 Delivery Record
+        </h4>
+        <div style="font-size: 14px; line-height: 1.6; color: #374151;">
+          ${data.deliveredBy ? `<div style="margin-bottom: 6px;"><strong style="color: #059669;">👤 Delivered By:</strong> ${data.deliveredBy}</div>` : ''}
+          ${data.productName ? `<div style="margin-bottom: 6px;"><strong style="color: #0ea5e9;">📦 Product:</strong> ${data.productName}</div>` : ''}
+          ${data.quantity ? `<div style="margin-bottom: 6px;"><strong style="color: #dc2626;">📊 Quantity:</strong> ${data.quantity.toLocaleString()}</div>` : ''}
+          ${data.memberCount ? `<div style="margin-bottom: 6px;"><strong style="color: #7c3aed;">👥 Members:</strong> ${data.memberCount}</div>` : ''}
+          ${data.deliveryStatus ? `<div style="margin-bottom: 6px;"><strong style="color: #0d9488;">✅ Status:</strong> <span style="padding: 2px 6px; background: ${getStatusBgColor(data.deliveryStatus)}; color: ${getStatusTextColor(data.deliveryStatus)}; border-radius: 4px; font-size: 12px;">${data.deliveryStatus}</span></div>` : ''}
+          ${data.deliveryDate ? `<div style="margin-bottom: 6px;"><strong style="color: #6366f1;">📅 Date:</strong> ${data.deliveryDate}</div>` : ''}
+          ${data.administrativeArea ? `<div style="margin-bottom: 6px;"><strong style="color: #8b5cf6;">🏢 Area:</strong> ${data.administrativeArea}</div>` : ''}
+        </div>
+        <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
+          <strong>📍 Coordinates:</strong> ${visit.lat.toFixed(4)}, ${visit.lng.toFixed(4)}
+        </div>
+      </div>
+    `;
+  },
+  
+  // Custom marker styling
+  customMarkerStyle: {
+    fill: '#F47738',
+    stroke: '#fff',
+    strokeWidth: 2,
+    radius: 8
+  },
+  
+  // Map features
+  showConnectingLines: false,
+  showBaseLayer: true
+});
+
+// Helper functions for popup styling
+function getStatusBgColor(status) {
+  switch (status?.toUpperCase()) {
+    case 'ADMINISTRATION_SUCCESS': return '#d4edda';
+    case 'PENDING': return '#fff3cd';
+    case 'FAILED': return '#f8d7da';
+    case 'IN_PROGRESS': return '#d1ecf1';
+    default: return '#e2e3e5';
+  }
+}
+
+function getStatusTextColor(status) {
+  switch (status?.toUpperCase()) {
+    case 'ADMINISTRATION_SUCCESS': return '#155724';
+    case 'PENDING': return '#856404';
+    case 'FAILED': return '#721c24';
+    case 'IN_PROGRESS': return '#0c5460';
+    default: return '#383d41';
+  }
+}
+
+// Step 2: Apply generic filters to the map-enabled table
+const GenericFilteredTable = withGenericFilter(MapViewTable, {
   showFilters: true,
   showStats: true,
   showClearAll: true,
@@ -52,7 +139,7 @@ const GenericFilteredTable = withGenericFilter(ReusableTableWrapper, {
   }
 });
 
-// Step 2: Apply boundary filters on top (will appear at top)
+// Step 3: Apply boundary filters on top (will appear at top)
 const FullFeaturedFilteredTable = withBoundaryFilter(GenericFilteredTable, {
   showFilters: true,
   showStats: false,
