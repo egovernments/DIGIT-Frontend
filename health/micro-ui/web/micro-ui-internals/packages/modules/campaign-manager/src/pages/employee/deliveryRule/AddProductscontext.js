@@ -24,7 +24,7 @@ const AddProducts = React.memo(({
   const projectType = searchParams.get('projectType');
 
   // Fetch available products
-  const {isLoading: isProductLoading , productData} = Digit.Hooks.campaign.useProductList(tenantId, projectType);
+   const {isLoading: isProductLoading , productList: productData} = Digit.Hooks.campaign.useProductList(tenantId, projectType);
 
   // Initialize products from selected products
   useEffect(() => {

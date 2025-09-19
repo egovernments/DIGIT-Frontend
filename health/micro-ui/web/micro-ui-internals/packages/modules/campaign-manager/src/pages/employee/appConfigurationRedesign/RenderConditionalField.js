@@ -77,8 +77,8 @@ const getDefaultRules = (key) => {
 const ErrorComponent = ({ error }) => <span style={{ color: "red" }}>{error}</span>;
 const computeError = (field, currentField, t) => {
   let error = "";
-  const attr = t(field.label);
-  const valueStr = currentField?.[attr];
+   const attr = t(field.label);
+  const valueStr = currentField?.[field?.bindTo];
 
   // 1. Pattern Validation
   const pattern = field?.validation?.pattern;
