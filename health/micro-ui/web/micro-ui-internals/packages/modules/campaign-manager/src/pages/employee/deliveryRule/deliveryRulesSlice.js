@@ -475,6 +475,7 @@ export const {
   removeAttribute,
   updateProducts,
   updateDeliveryType,
+  updateDeliveryTypeForDelivery,
   setLoading,
   setError,
 } = deliveryRulesSlice.actions;
