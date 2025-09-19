@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { BackLink, Loader, Toast } from "@egovernments/digit-ui-components";
+import { BackLink, Loader, Toast, Button } from "@egovernments/digit-ui-components";
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory, useLocation, useRouteMatch } from "react-router-dom";
@@ -210,10 +210,26 @@ const Otp = ({ isLogin = false }) => {
         inline
         submitInForm
         config={config}
-        label={OtpConfig[0].texts.submitButtonLabel}
+        label={t("CORE_COMMON_SUBMIT")}
         headingStyle={{ textAlign: "center" }}
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="sandbox-onboarding-wrapper"
+        buttonClassName="sandbox-otp-submit-button"
+        buttonStyle={{ 
+          width: "100%", 
+          maxWidth: "408px",
+          backgroundColor: "#F47738",
+          borderColor: "#F47738",
+          color: "#fff",
+          fontWeight: "500",
+          padding: "12px 24px",
+          borderRadius: "4px",
+          fontSize: "16px",
+          textAlign: "center",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center"
+        }}
         onFormValueChange={(_, formValue) => setIsOtpValid(formValue?.OtpComponent?.otp?.length === 6)}
         isDisabled={!isOtpValid}
       >
