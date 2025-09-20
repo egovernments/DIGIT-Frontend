@@ -4,6 +4,7 @@ import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import withGenericFilter from './withGenericFilter';
+import withDateRangeFilter from './withDateRangeFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
@@ -101,11 +102,15 @@ const FullFilteredStockTable = withBoundaryFilter(GenericFilteredStockTable, {
   }
 });
 
-const StockTransactionComponent = ({ 
+const StockTransactionComponentBase = ({ 
   projectId, 
   boundaryType, 
   boundaryCode, 
-  loading: externalLoading = false 
+  loading: externalLoading = false,
+  // Date range filter props
+  startDate = null,
+  endDate = null,
+  dateRange = null
 }) => {
   const { t } = useTranslation();
 
@@ -125,6 +130,28 @@ const StockTransactionComponent = ({
         })
     }
 
+    // Add date range filter if provided
+    const actualStartDate = startDate || dateRange?.startDate;
+    const actualEndDate = endDate || dateRange?.endDate;
+    
+    if (actualStartDate || actualEndDate) {
+      const dateFilter = {
+        "range": {
+          "Data.createdTime": {}
+        }
+      };
+      
+      if (actualStartDate) {
+        dateFilter.range["Data.createdTime"]["gte"] = actualStartDate.getTime();
+      }
+      
+      if (actualEndDate) {
+        dateFilter.range["Data.createdTime"]["lte"] = actualEndDate.getTime();
+      }
+      
+      conditions.push(dateFilter);
+    }
+
     // Add stock transaction-specific filters
   
 
@@ -139,7 +166,7 @@ const StockTransactionComponent = ({
         }
       };
     }
-  }, [projectId, boundaryType, boundaryCode]);
+  }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange]);
 
   // Use the simple Elasticsearch hook
   const {
@@ -402,9 +429,33 @@ const StockTransactionComponent = ({
       {/* Additional context info */}
       {!isLoading && !error && (
         <div style={{ padding: '12px 20px', fontSize: '14px', color: '#6b7280', borderBottom: '1px solid #e5e7eb' }}>
-          {boundaryType && boundaryCode 
-            ? `Filtered by ${boundaryType}: ${boundaryCode}` 
-            : 'All stock transaction records'}
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', alignItems: 'center' }}>
+            <span>
+              {boundaryType && boundaryCode 
+                ? `Filtered by ${boundaryType}: ${boundaryCode}` 
+                : 'All stock transaction records'}
+            </span>
+            
+            {/* Date range info */}
+            {((startDate || dateRange?.startDate) || (endDate || dateRange?.endDate)) && (
+              <span style={{ 
+                padding: '4px 8px', 
+                backgroundColor: '#fef3c7', 
+                color: '#92400e',
+                borderRadius: '4px',
+                fontSize: '13px',
+                fontWeight: '500'
+              }}>
+                📅 Date: {
+                  (startDate || dateRange?.startDate) && (endDate || dateRange?.endDate) 
+                    ? `${(startDate || dateRange?.startDate).toLocaleDateString()} - ${(endDate || dateRange?.endDate).toLocaleDateString()}`
+                    : (startDate || dateRange?.startDate)
+                    ? `From ${(startDate || dateRange?.startDate).toLocaleDateString()}`
+                    : `Until ${(endDate || dateRange?.endDate).toLocaleDateString()}`
+                }
+              </span>
+            )}
+          </div>
         </div>
       )}
 
@@ -426,4 +477,26 @@ const StockTransactionComponent = ({
   );
 };
 
+// Create the date range filtered stock transaction component as the default export
+const StockTransactionComponent = withDateRangeFilter(StockTransactionComponentBase, {
+  showDateFilter: true,
+  showPresets: true,
+  persistDates: true,
+  storageKey: 'stockTransactionComponentDateRange',
+  defaultPreset: 'last30days',
+  label: 'Stock Transaction Date Range Filter',
+  filterPosition: 'top',
+  containerStyle: {
+    backgroundColor: '#e0f2fe',
+    borderBottom: '2px solid #0288d1',
+    padding: '16px 20px'
+  },
+  onDateRangeChange: (startDate, endDate) => {
+    console.log('Stock transaction component date range changed:', { startDate, endDate });
+  }
+});
+
 export default StockTransactionComponent;
+
+// Also export the base component for cases where date filtering is not needed
+export { StockTransactionComponentBase };
