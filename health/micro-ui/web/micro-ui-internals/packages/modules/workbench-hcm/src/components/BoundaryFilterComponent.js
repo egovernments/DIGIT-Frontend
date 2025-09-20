@@ -1,5 +1,6 @@
 import React, { useMemo, useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@egovernments/digit-ui-components';
 import { discoverBoundaryFields, extractBoundaryOptions } from '../utils/boundaryFilterUtils';
 
 /**
@@ -190,14 +191,15 @@ const BoundaryFilterComponent = ({
         </div>
         
         {showClearAll && activeFilterCount > 0 && (
-          <button
+          <Button
+            type="button"
+            variation="secondary"
+            label={t('Clear All')}
             onClick={handleClearAll}
-            style={defaultClearButtonStyle}
-            onMouseOver={(e) => e.target.style.backgroundColor = '#4b5563'}
-            onMouseOut={(e) => e.target.style.backgroundColor = '#6b7280'}
-          >
-            {t('Clear All')}
-          </button>
+            style={{
+              fontSize: '13px'
+            }}
+          />
         )}
       </div>
 

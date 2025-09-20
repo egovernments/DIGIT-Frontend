@@ -1,5 +1,6 @@
 import React, { useState, useMemo, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@egovernments/digit-ui-components';
 import MapViewSafe from './MapViewSafe';
 
 /**
@@ -218,68 +219,30 @@ const withMapView = (WrappedComponent, options = {}) => {
               )}
               
               {/* View toggle buttons */}
-              <button
+              <Button
+                type="button"
+                variation={viewMode === 'table' ? 'primary' : 'secondary'}
+                label="📊 Table"
                 onClick={() => handleViewModeChange('table')}
                 style={{
-                  padding: '8px 16px',
-                  border: viewMode === 'table' ? '2px solid #3b82f6' : '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  backgroundColor: viewMode === 'table' ? '#eff6ff' : '#fff',
-                  color: viewMode === 'table' ? '#1d4ed8' : '#374151',
-                  cursor: 'pointer',
-                  fontSize: '14px',
-                  fontWeight: viewMode === 'table' ? '600' : '400',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s'
+                  minWidth: '90px',
+                  fontSize: '14px'
                 }}
-                onMouseOver={(e) => {
-                  if (viewMode !== 'table') {
-                    e.target.style.backgroundColor = '#f3f4f6';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (viewMode !== 'table') {
-                    e.target.style.backgroundColor = '#fff';
-                  }
-                }}
-              >
-                📊 Table
-              </button>
+              />
               
-              <button
+              <Button
+                type="button"
+                variation={viewMode === 'map' ? 'primary' : 'secondary'}
+                label="🗺️ Map"
                 onClick={() => handleViewModeChange('map')}
-                disabled={!dataSummary.hasValidCoordinates}
+                isDisabled={!dataSummary.hasValidCoordinates}
                 style={{
-                  padding: '8px 16px',
-                  border: viewMode === 'map' ? '2px solid #10b981' : '1px solid #d1d5db',
-                  borderRadius: '6px',
-                  backgroundColor: viewMode === 'map' ? '#ecfdf5' : dataSummary.hasValidCoordinates ? '#fff' : '#f3f4f6',
-                  color: viewMode === 'map' ? '#047857' : dataSummary.hasValidCoordinates ? '#374151' : '#9ca3af',
-                  cursor: dataSummary.hasValidCoordinates ? 'pointer' : 'not-allowed',
+                  minWidth: '90px',
                   fontSize: '14px',
-                  fontWeight: viewMode === 'map' ? '600' : '400',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '6px',
-                  transition: 'all 0.2s',
                   opacity: dataSummary.hasValidCoordinates ? 1 : 0.6
                 }}
-                onMouseOver={(e) => {
-                  if (viewMode !== 'map' && dataSummary.hasValidCoordinates) {
-                    e.target.style.backgroundColor = '#f0fdf4';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (viewMode !== 'map' && dataSummary.hasValidCoordinates) {
-                    e.target.style.backgroundColor = '#fff';
-                  }
-                }}
                 title={!dataSummary.hasValidCoordinates ? 'No valid coordinates found in data' : 'Switch to map view'}
-              >
-                🗺️ Map
-              </button>
+              />
             </div>
           </div>
         )}
@@ -343,22 +306,15 @@ const withMapView = (WrappedComponent, options = {}) => {
                   }}>
                     The current dataset doesn't contain valid coordinate data (latitude/longitude) required for map visualization.
                   </p>
-                  <button
+                  <Button
+                    type="button"
+                    variation="primary"
+                    label="📊 View as Table"
                     onClick={() => handleViewModeChange('table')}
                     style={{
-                      marginTop: '16px',
-                      padding: '8px 16px',
-                      backgroundColor: '#3b82f6',
-                      color: 'white',
-                      border: 'none',
-                      borderRadius: '6px',
-                      cursor: 'pointer',
-                      fontSize: '14px',
-                      fontWeight: '500'
+                      marginTop: '16px'
                     }}
-                  >
-                    📊 View as Table
-                  </button>
+                  />
                 </div>
               )}
             </div>

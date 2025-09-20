@@ -1,4 +1,5 @@
 import React, { useState, useEffect ,Fragment} from 'react';
+import { Button } from '@egovernments/digit-ui-components';
 import DateRangePicker from './DateRangePicker';
 
 /**
@@ -222,20 +223,15 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
           )}
         </div>
         {filterPosition !== 'none' && (
-          <button
+          <Button
+            type="button"
+            variation="secondary"
+            label={filterVisible ? 'Hide Date Filter' : 'Show Date Filter'}
             onClick={() => setFilterVisible(!filterVisible)}
             style={{
-              padding: '4px 12px',
-              backgroundColor: '#ffc107',
-              color: 'white',
-              border: 'none',
-              borderRadius: '4px',
-              cursor: 'pointer',
               fontSize: '12px'
             }}
-          >
-            {filterVisible ? 'Hide Date Filter' : 'Show Date Filter'}
-          </button>
+          />
         )}
       </div>
     ) : null;

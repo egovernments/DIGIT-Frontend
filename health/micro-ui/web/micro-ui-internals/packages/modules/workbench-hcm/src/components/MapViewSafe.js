@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { Button } from "@egovernments/digit-ui-components";
 import { createVisitPopup } from "./MapPointsPopup";
 
 // Override Leaflet's default icon to prevent 404 errors
@@ -679,42 +680,24 @@ const MapViewSafe = ({
         </div>
         
         <div style={{ display: 'flex', gap: '8px' }}>
-          <button
+          <Button
+            type="button"
+            variation={viewMode === 'table' ? 'primary' : 'secondary'}
+            label="📊 Table View"
             onClick={() => setViewMode('table')}
             style={{
-              padding: '8px 16px',
-              border: viewMode === 'table' ? '2px solid #3b82f6' : '1px solid #d1d5db',
-              borderRadius: '6px',
-              background: viewMode === 'table' ? '#eff6ff' : '#fff',
-              color: viewMode === 'table' ? '#1d4ed8' : '#374151',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: viewMode === 'table' ? '600' : '400',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
+              fontSize: '14px'
             }}
-          >
-            📊 Table View
-          </button>
-          <button
+          />
+          <Button
+            type="button"
+            variation={viewMode === 'map' ? 'primary' : 'secondary'}
+            label="🗺️ Map View"
             onClick={() => setViewMode('map')}
             style={{
-              padding: '8px 16px',
-              border: viewMode === 'map' ? '2px solid #10b981' : '1px solid #d1d5db',
-              borderRadius: '6px',
-              background: viewMode === 'map' ? '#ecfdf5' : '#fff',
-              color: viewMode === 'map' ? '#047857' : '#374151',
-              cursor: 'pointer',
-              fontSize: '14px',
-              fontWeight: viewMode === 'map' ? '600' : '400',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px'
+              fontSize: '14px'
             }}
-          >
-            🗺️ Map View
-          </button>
+          />
         </div>
       </div>
       
@@ -779,26 +762,17 @@ const MapViewSafe = ({
                 <span style={{ fontSize: '14px', color: '#6b7280' }}>entries</span>
                 
                 {/* Excel Download Button */}
-                <button
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="📊 Download Excel"
                   onClick={downloadAsExcel}
                   style={{
                     marginLeft: '16px',
-                    padding: '6px 12px',
-                    border: '1px solid #059669',
-                    borderRadius: '4px',
-                    background: '#ecfdf5',
-                    color: '#059669',
-                    cursor: 'pointer',
-                    fontSize: '13px',
-                    fontWeight: '500',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
+                    fontSize: '13px'
                   }}
                   title="Download filtered data as Excel file"
-                >
-                  📊 Download Excel
-                </button>
+                />
               </div>
               
               <div style={{ fontSize: '14px', color: '#374151' }}>
@@ -911,41 +885,31 @@ const MapViewSafe = ({
                 background: '#fafafa',
                 gap: '8px'
               }}>
-                <button
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="← Previous"
                   onClick={() => setCurrentPage(Math.max(1, currentPage - 1))}
-                  disabled={currentPage === 1}
+                  isDisabled={currentPage === 1}
                   style={{
-                    padding: '6px 12px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '4px',
-                    background: currentPage === 1 ? '#f3f4f6' : '#fff',
-                    color: currentPage === 1 ? '#9ca3af' : '#374151',
-                    cursor: currentPage === 1 ? 'not-allowed' : 'pointer',
                     fontSize: '14px'
                   }}
-                >
-                  ← Previous
-                </button>
+                />
                 
                 <span style={{ fontSize: '14px', color: '#374151', margin: '0 16px' }}>
                   Page {currentPage} of {totalPages}
                 </span>
                 
-                <button
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label="Next →"
                   onClick={() => setCurrentPage(Math.min(totalPages, currentPage + 1))}
-                  disabled={currentPage === totalPages}
+                  isDisabled={currentPage === totalPages}
                   style={{
-                    padding: '6px 12px',
-                    border: '1px solid #d1d5db',
-                    borderRadius: '4px',
-                    background: currentPage === totalPages ? '#f3f4f6' : '#fff',
-                    color: currentPage === totalPages ? '#9ca3af' : '#374151',
-                    cursor: currentPage === totalPages ? 'not-allowed' : 'pointer',
                     fontSize: '14px'
                   }}
-                >
-                  Next →
-                </button>
+                />
               </div>
             )}
           </div>

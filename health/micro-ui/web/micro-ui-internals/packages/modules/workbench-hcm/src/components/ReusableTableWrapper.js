@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@egovernments/digit-ui-react-components";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader, Button } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
 import { tableCustomStyle } from "./tableCustomStyle";
 import XLSX from 'xlsx';
@@ -178,40 +178,16 @@ const ReusableTableWrapper = ({
         </div>
       )}
            {enableExcelDownload && data && data.length > 0 && (
-            <button
+            <Button
+              type="button"
+              variation="secondary"
+              label={`📊 ${t(excelButtonText)}`}
               onClick={handleExcelDownload}
               style={{
-                padding: '8px 16px',
-                backgroundColor: '#007bff',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
                 fontSize: '14px',
-                fontWeight: '500',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '8px'
+                marginBottom: '8px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#0056b3'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#007bff'}
-            >
-              <svg 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round"
-              >
-                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                <polyline points="7,10 12,15 17,10"/>
-                <line x1="12" y1="15" x2="12" y2="3"/>
-              </svg>
-              {t(excelButtonText)}
-            </button>
+            />
           )}
       {(!data || data.length === 0) ? (
         defaultNoDataComponent

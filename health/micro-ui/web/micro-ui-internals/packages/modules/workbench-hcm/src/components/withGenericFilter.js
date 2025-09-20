@@ -1,4 +1,5 @@
 import React, { useState, useMemo, useEffect,Fragment } from 'react';
+import { Button } from '@egovernments/digit-ui-components';
 import GenericFilterComponent from './GenericFilterComponent';
 import { 
   applyGenericFilters, 
@@ -225,20 +226,15 @@ const withGenericFilter = (WrappedComponent, options = {}) => {
           </div>
           
           {filterPosition !== 'none' && (
-            <button
+            <Button
+              type="button"
+              variation="secondary"
+              label={filtersVisible ? 'Hide Generic Filters' : 'Show Generic Filters'}
               onClick={() => setFiltersVisible(!filtersVisible)}
               style={{
-                padding: '4px 12px',
-                backgroundColor: '#3b82f6',
-                color: 'white',
-                border: 'none',
-                borderRadius: '4px',
-                cursor: 'pointer',
                 fontSize: '12px'
               }}
-            >
-              {filtersVisible ? 'Hide Generic Filters' : 'Show Generic Filters'}
-            </button>
+            />
           )}
         </div>
       </div>

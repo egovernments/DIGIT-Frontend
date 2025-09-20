@@ -1,5 +1,6 @@
 import React, { useState, useEffect ,Fragment} from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from '@egovernments/digit-ui-components';
 
 /**
  * DateRangePicker component for selecting date ranges
@@ -288,19 +289,15 @@ const DateRangePicker = ({
           </h4>
           
           {(startDate || endDate) && (
-            <button
+            <Button
+              type="button"
+              variation="secondary"
+              label="Clear Dates"
               onClick={handleClearDates}
               style={{
-                ...defaultButtonStyle,
-                backgroundColor: '#dc3545',
-                color: 'white',
-                border: '1px solid #dc3545'
+                fontSize: '13px'
               }}
-              onMouseOver={(e) => e.target.style.backgroundColor = '#c82333'}
-              onMouseOut={(e) => e.target.style.backgroundColor = '#dc3545'}
-            >
-              Clear Dates
-            </button>
+            />
           )}
         </div>
 
@@ -389,29 +386,17 @@ const DateRangePicker = ({
             flexWrap: 'wrap' 
           }}>
             {datePresets.map(preset => (
-              <button
+              <Button
                 key={preset.value}
+                type="button"
+                variation={selectedPreset === preset.value ? 'primary' : 'secondary'}
+                label={preset.label}
                 onClick={() => handlePresetClick(preset)}
                 style={{
-                  ...defaultButtonStyle,
-                  backgroundColor: selectedPreset === preset.value ? '#ffc107' : 'white',
-                  color: selectedPreset === preset.value ? 'white' : '#495057',
-                  borderColor: selectedPreset === preset.value ? '#ffc107' : '#dee2e6',
-                  fontWeight: selectedPreset === preset.value ? '600' : '400'
+                  fontSize: '13px',
+                  margin: '2px'
                 }}
-                onMouseOver={(e) => {
-                  if (selectedPreset !== preset.value) {
-                    e.target.style.backgroundColor = '#fff3cd';
-                  }
-                }}
-                onMouseOut={(e) => {
-                  if (selectedPreset !== preset.value) {
-                    e.target.style.backgroundColor = 'white';
-                  }
-                }}
-              >
-                {preset.label}
-              </button>
+              />
             ))}
           </div>
         )}
