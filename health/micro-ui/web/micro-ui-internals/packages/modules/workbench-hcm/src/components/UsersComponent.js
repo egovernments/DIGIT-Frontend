@@ -17,7 +17,7 @@ function toCamelCase(str) {
 
 // Create MinimalFilteredTable for users data - clean and simple
 const MinimalFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
-  showFilters: true,
+  showFilters: false,
   showStats: false, // Hide stats for cleaner look
   showClearAll: false, // Hide clear all button
   autoApplyFilters: true,

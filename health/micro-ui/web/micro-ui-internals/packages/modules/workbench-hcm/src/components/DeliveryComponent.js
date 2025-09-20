@@ -102,18 +102,18 @@ function getStatusTextColor(status) {
 // Step 2: Apply generic filters to the map-enabled table
 const GenericFilteredTable = withGenericFilter(MapViewTable, {
   showFilters: true,
-  showStats: true,
+  showStats: false,
   showClearAll: true,
   autoApplyFilters: true,
   persistFilters: true,
   filterPosition: 'top',
   storageKey: 'deliveryGenericFilters',
-  filterFields: ['deliveredBy', 'quantity', 'deliveryStatus', 'productName'], // Generic fields to filter
+  filterFields: ['deliveredBy', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Generic fields to filter
   customLabels: {
     deliveredBy: 'Delivered By',
     quantity: 'Quantity',
-    deliveryStatus: 'Delivery Status',
-    productName: 'Product Name'
+    ward: 'Ward',
+    healthFacility: 'Health Facility'
   },
   filterStyle: {
     backgroundColor: '#f0fdf4',
@@ -138,7 +138,7 @@ const GenericFilteredTable = withGenericFilter(MapViewTable, {
 
 // Step 3: Apply boundary filters on top (will appear at top)
 const FullFeaturedFilteredTable = withBoundaryFilter(GenericFilteredTable, {
-  showFilters: true,
+  showFilters: false,
   showStats: false,
   showClearAll: true,
   autoApplyFilters: true,
