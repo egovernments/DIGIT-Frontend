@@ -121,10 +121,10 @@ const createFullFilteredTable = (mapId) => {
     storageKey: genericStorageKey,
     filterFields: ['deliveredBy', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Generic fields to filter
     customLabels: {
-      deliveredBy: t('WBH_DELIVERY_FILTER_DELIVERED_BY'),
-      quantity: t('WBH_DELIVERY_FILTER_QUANTITY'),
-      ward: t('WBH_DELIVERY_FILTER_WARD'),
-      healthFacility: t('WBH_DELIVERY_FILTER_HEALTH_FACILITY')
+      deliveredBy: 'WBH_DELIVERY_FILTER_DELIVERED_BY',
+      quantity: 'WBH_DELIVERY_FILTER_QUANTITY',
+      ward: 'WBH_DELIVERY_FILTER_WARD',
+      healthFacility: 'WBH_DELIVERY_FILTER_HEALTH_FACILITY'
     },
     filterStyle: {
       backgroundColor: '#f0fdf4',
@@ -157,11 +157,11 @@ const createFullFilteredTable = (mapId) => {
     filterPosition: 'top',
     storageKey: boundaryStorageKey,
     customLabels: {
-      country: t('WBH_BOUNDARY_COUNTRY'),
-      state: t('WBH_BOUNDARY_STATE'),
-      lga: t('WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA'),
-      ward: t('WBH_BOUNDARY_WARD'),
-      healthFacility: t('WBH_BOUNDARY_HEALTH_FACILITY')
+      country: 'WBH_BOUNDARY_COUNTRY',
+      state: 'WBH_BOUNDARY_STATE',
+      lga: 'WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA',
+      ward: 'WBH_BOUNDARY_WARD',
+      healthFacility: 'WBH_BOUNDARY_HEALTH_FACILITY'
     },
     filterOrder: null, // Auto-discover from data
     requiredFilters: [],
@@ -537,7 +537,7 @@ console.log('🚚 Delivery data received:', {
         paginationRowsPerPageOptions={[10, 25, 50, 100, 500, 1000]}
         className="delivery-table"
         headerClassName="delivery-header"
-        enableExcelDownload={true}
+        enableExcelDownload={false}
         excelFileName="delivery_data_filtered"
         excelButtonText="Download Filtered Data"
       />

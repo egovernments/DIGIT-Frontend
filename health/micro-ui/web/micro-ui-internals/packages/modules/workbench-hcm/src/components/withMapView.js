@@ -228,7 +228,7 @@ const withMapView = (WrappedComponent, options = {}) => {
                 label={
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <SVG.TableView width="14" height="14" />
-                    Table
+                    {t('WBH_MAP_TABLE')}
                   </div>
                 }
                 onClick={() => handleViewModeChange('table')}
@@ -244,7 +244,7 @@ const withMapView = (WrappedComponent, options = {}) => {
                 label={
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <SVG.LocationOn width="14" height="14" />
-                    Map
+                    {t('WBH_MAP_MAP')}
                   </div>
                 }
                 onClick={() => handleViewModeChange('map')}
@@ -329,7 +329,7 @@ const withMapView = (WrappedComponent, options = {}) => {
                     label={
                       <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                         <SVG.TableView width="14" height="14" />
-                        View as Table
+                        {t('WBH_MAP_VIEW_AS_TABLE')}
                       </div>
                     }
                     onClick={() => handleViewModeChange('table')}

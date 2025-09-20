@@ -229,7 +229,7 @@ const MapViewComponent = ({
             label={
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 {showBaseLayers ? <SVG.VisibilityOff width="14" height="14" /> : <SVG.Visibility width="14" height="14" />}
-                {showBaseLayers ? "Hide Layers" : "Show Layers"}
+                {showBaseLayers ? t('WBH_MAP_HIDE_LAYERS') : t('WBH_MAP_SHOW_LAYERS')}
               </div>
             }
             onClick={() => setShowBaseLayers(!showBaseLayers)}

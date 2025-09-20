@@ -1,4 +1,5 @@
 import React, { useState, useEffect ,Fragment} from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from '@egovernments/digit-ui-components';
 import { SVG } from '@egovernments/digit-ui-react-components';
 import DateRangePicker from './DateRangePicker';
@@ -35,6 +36,8 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
   } = options;
 
   return function DateRangeFilteredComponent(props) {
+    const { t } = useTranslation();
+    
     // Initialize dates from storage or defaults
     const [dateRange, setDateRange] = useState(() => {
       if (persistDates && typeof window !== 'undefined') {
@@ -212,7 +215,7 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
       } else if (dateRange.endDate) {
         return `Until ${dateRange.endDate.toLocaleDateString()}`;
       } else {
-        return 'All Time';
+        return t('WBH_DATE_FILTER_ALL_TIME');
       }
     };
 
@@ -245,7 +248,7 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
           label={
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
               <SVG.Edit width="12" height="12" />
-              Change
+              {t('WBH_DATE_FILTER_CHANGE')}
             </div>
           }
           onClick={() => setShowPopup(true)}
@@ -336,7 +339,7 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
               label={
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <SVG.Close width="12" height="12" />
-                  Clear Dates
+                  {t('WBH_DATE_FILTER_CLEAR_DATES')}
                 </div>
               }
               onClick={() => handleDateRangeChange(null, null)}
@@ -348,7 +351,7 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
               label={
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <SVG.Check width="12" height="12" />
-                  Close
+                  {t('WBH_DATE_FILTER_CLOSE')}
                 </div>
               }
               onClick={() => setShowPopup(false)}

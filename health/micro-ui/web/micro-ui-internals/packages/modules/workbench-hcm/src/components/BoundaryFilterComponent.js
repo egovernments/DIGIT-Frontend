@@ -118,7 +118,12 @@ const BoundaryFilterComponent = ({
   const getFieldLabel = (fieldName) => {
     // Check custom labels first
     if (customLabels[fieldName]) {
-      return customLabels[fieldName];
+      const label = customLabels[fieldName];
+      // If the label looks like a localization key (starts with WBH_), translate it
+      if (typeof label === 'string' && label.startsWith('WBH_')) {
+        return t(label);
+      }
+      return label;
     }
     
     // Generate human-readable label from field name

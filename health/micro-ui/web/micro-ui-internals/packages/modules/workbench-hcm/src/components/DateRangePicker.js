@@ -285,7 +285,7 @@ const DateRangePicker = ({
             fontWeight: '600', 
             color: '#856404' 
           }}>
-            📅 {t(label)}
+             {t(label)}
           </h4>
           
           {(startDate || endDate) && (

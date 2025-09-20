@@ -146,7 +146,12 @@ const GenericFilterComponent = ({
   const getFieldLabel = (fieldPath) => {
     // Check custom labels first
     if (customLabels[fieldPath]) {
-      return customLabels[fieldPath];
+      const label = customLabels[fieldPath];
+      // If the label looks like a localization key (starts with WBH_), translate it
+      if (typeof label === 'string' && label.startsWith('WBH_')) {
+        return t(label);
+      }
+      return label;
     }
     
     // Generate human-readable label from field path
@@ -171,7 +176,7 @@ const GenericFilterComponent = ({
     });
     
     if (activeParts.length === 0) {
-      return 'No filters applied';
+      return t('WBH_FILTER_NO_FILTERS_APPLIED');
     }
     
     return activeParts.join(' • ');
@@ -251,7 +256,7 @@ const GenericFilterComponent = ({
             </div>
             <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#374151', display: 'flex', alignItems: 'center', gap: '6px' }}>
               <SVG.FilterAlt width="16" height="16" />
-              {t('Filters')} 
+              {t('WBH_FILTERS')} 
               {activeFilterCount > 0 && (
                 <span style={{
                   marginLeft: '8px',
@@ -263,7 +268,7 @@ const GenericFilterComponent = ({
                   borderRadius: '12px',
                   border: '1px solid #d1fae5'
                 }}>
-                  {activeFilterCount} active
+                  {activeFilterCount} {t(activeFilterCount === 1 ? 'WBH_FILTER_FILTER_APPLIED' : 'WBH_FILTER_FILTERS_APPLIED')}
                 </span>
               )}
             </h4>
@@ -286,7 +291,7 @@ const GenericFilterComponent = ({
               label={
                 <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                   <SVG.Close width="14" height="14" />
-                  {t('Clear')}
+                  {t('WBH_FILTER_CLEAR')}
                 </div>
               }
               onClick={(e) => {
@@ -305,7 +310,7 @@ const GenericFilterComponent = ({
             label={
               <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                 {isExpanded ? <SVG.VisibilityOff width="14" height="14" /> : <SVG.Visibility width="14" height="14" />}
-                {isExpanded ? t('Hide') : t('Show')}
+                {isExpanded ? t('WBH_FILTER_HIDE') : t('WBH_FILTER_SHOW')}
               </div>
             }
             onClick={(e) => {
@@ -342,11 +347,11 @@ const GenericFilterComponent = ({
                 marginBottom: '4px'
               }}>
                 <SVG.Search width="16" height="16" />
-                {t('Search in all fields')}
+                {t('WBH_FILTER_SEARCH_ALL_FIELDS')}
               </label>
               <TextInput
                 type="text"
-                placeholder={t('Enter search term...')}
+                placeholder={t('WBH_FILTER_ENTER_SEARCH_TERM')}
                 value={searchText}
                 onChange={(e) => handleSearchChange(e.target.value)}
                 style={{
@@ -365,7 +370,7 @@ const GenericFilterComponent = ({
                 color: '#374151',
                 marginBottom: '8px'
               }}>
-                {t('Filter by fields:')}
+                {t('WBH_FILTER_BY_FIELDS')}
               </div>
               <div style={defaultFilterRowStyle}>
                 {availableFields.map(fieldPath => {
@@ -424,9 +429,9 @@ const GenericFilterComponent = ({
           }}>
             <div style={{ fontSize: '12px', color: '#6b7280' }}>
               {activeFilterCount > 0 ? (
-                <span>{activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} applied</span>
+                <span>{activeFilterCount} {t(activeFilterCount === 1 ? 'WBH_FILTER_FILTER_APPLIED' : 'WBH_FILTER_FILTERS_APPLIED')}</span>
               ) : (
-                <span>No filters applied</span>
+                <span>{t('WBH_FILTER_NO_FILTERS_APPLIED')}</span>
               )}
             </div>
             
@@ -438,7 +443,7 @@ const GenericFilterComponent = ({
                   label={
                     <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                       <SVG.Close width="14" height="14" />
-                      {t('Clear All Filters')}
+                      {t('WBH_FILTER_CLEAR_ALL')}
                     </div>
                   }
                   onClick={handleClearAll}
@@ -453,7 +458,7 @@ const GenericFilterComponent = ({
                 label={
                   <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
                     <SVG.Check width="14" height="14" />
-                    {t('Apply & Hide')}
+                    {t('WBH_FILTER_APPLY_HIDE')}
                   </div>
                 }
                 onClick={() => setIsExpanded(false)}

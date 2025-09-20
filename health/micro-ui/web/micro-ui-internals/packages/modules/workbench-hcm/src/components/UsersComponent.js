@@ -109,16 +109,10 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
   );
 };
 
-const UsersComponent = ({ 
-  projectId, 
-  boundaryType, 
-  boundaryCode, 
-  loading: externalLoading = false 
-}) => {
-  const { t } = useTranslation();
-  
-  // Create HOCs with access to t() function
-  const GenericFilteredUsersTable = useMemo(() => withGenericFilter(ReusableTableWrapper, {
+// Function to create filtered table
+const createUsersFilteredTable = () => {
+  // Step 1: Apply generic filters to the base table
+  const GenericFilteredUsersTable = withGenericFilter(ReusableTableWrapper, {
     showFilters: true,
     showStats: false,
     showClearAll: true,
@@ -128,10 +122,10 @@ const UsersComponent = ({
     storageKey: 'usersGenericFilters',
     filterFields: ['role', 'status', 'employeeName', 'userName'],
     customLabels: {
-      role: t('WBH_USER_FILTER_ROLE'),
-      status: t('WBH_USER_FILTER_STATUS'),
-      employeeName: t('WBH_USER_FILTER_EMPLOYEE_NAME'),
-      userName: t('WBH_USER_FILTER_USERNAME')
+      role: 'WBH_USER_FILTER_ROLE',
+      status: 'WBH_USER_FILTER_STATUS',
+      employeeName: 'WBH_USER_FILTER_EMPLOYEE_NAME',
+      userName: 'WBH_USER_FILTER_USERNAME'
     },
     filterStyle: {
       backgroundColor: '#fef3c7',
@@ -152,9 +146,9 @@ const UsersComponent = ({
     onDataFiltered: (filteredData, filters) => {
       console.log(`Users generic filtered: ${filteredData.length} records with filters:`, filters);
     }
-  }), [t]);
+  });
   
-  const FullFilteredUsersTable = useMemo(() => withBoundaryFilter(GenericFilteredUsersTable, {
+  const FullFilteredUsersTable = withBoundaryFilter(GenericFilteredUsersTable, {
     showFilters: false,
     showStats: false,
     showClearAll: true,
@@ -163,11 +157,11 @@ const UsersComponent = ({
     filterPosition: 'top',
     storageKey: 'usersBoundaryFilters',
     customLabels: {
-      country: t('WBH_BOUNDARY_COUNTRY'),
-      state: t('WBH_BOUNDARY_STATE'),
-      lga: t('WBH_BOUNDARY_LGA'),
-      ward: t('WBH_BOUNDARY_WARD'),
-      healthFacility: t('WBH_BOUNDARY_HEALTH_FACILITY')
+      country: 'WBH_BOUNDARY_COUNTRY',
+      state: 'WBH_BOUNDARY_STATE',
+      lga: 'WBH_BOUNDARY_LGA',
+      ward: 'WBH_BOUNDARY_WARD',
+      healthFacility: 'WBH_BOUNDARY_HEALTH_FACILITY'
     },
     filterStyle: {
       backgroundColor: '#f0f9ff',
@@ -188,7 +182,23 @@ const UsersComponent = ({
     onDataFiltered: (filteredData, filters) => {
       console.log(`Users boundary filtered: ${filteredData.length} records with filters:`, filters);
     }
-  }), [GenericFilteredUsersTable, t]);
+  });
+  
+  return FullFilteredUsersTable;
+};
+
+const UsersComponent = ({ 
+  projectId, 
+  boundaryType, 
+  boundaryCode, 
+  loading: externalLoading = false 
+}) => {
+  const { t } = useTranslation();
+  
+  // Create the filtered table component
+  const FullFilteredUsersTable = useMemo(() => {
+    return createUsersFilteredTable();
+  }, []);
   
   // State for deliveries popup
   const [isDeliveriesPopupOpen, setIsDeliveriesPopupOpen] = useState(false);

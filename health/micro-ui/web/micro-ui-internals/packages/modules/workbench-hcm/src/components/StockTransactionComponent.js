@@ -22,20 +22,10 @@ function toCamelCase(str) {
  * 3. withBoundaryFilter (adds boundary filters with required state selection)
  */
 
-const StockTransactionComponentBase = ({ 
-  projectId, 
-  boundaryType, 
-  boundaryCode, 
-  loading: externalLoading = false,
-  // Date range filter props
-  startDate = null,
-  endDate = null,
-  dateRange = null
-}) => {
-  const { t } = useTranslation();
-  
-  // Create HOCs with access to t() function
-  const GenericFilteredStockTable = useMemo(() => withGenericFilter(ReusableTableWrapper, {
+// Function to create filtered table
+const createStockFilteredTable = () => {
+  // Step 1: Apply generic filters to the base table
+  const GenericFilteredStockTable = withGenericFilter(ReusableTableWrapper, {
     showFilters: true,
     showStats: false,
     showClearAll: true,
@@ -45,9 +35,9 @@ const StockTransactionComponentBase = ({
     storageKey: 'stockGenericFilters',
     filterFields: ['transactionType', 'facilityName', 'transactingFacilityName'],
     customLabels: {
-      transactionType: t('WBH_STOCK_TRANSACTION_TYPE'),
-      facilityName: t('WBH_STOCK_SENDING_FACILITY'),
-      transactingFacilityName: t('WBH_STOCK_RECEIVING_FACILITY')
+      transactionType: 'WBH_STOCK_TRANSACTION_TYPE',
+      facilityName: 'WBH_STOCK_SENDING_FACILITY',
+      transactingFacilityName: 'WBH_STOCK_RECEIVING_FACILITY'
     },
     filterStyle: {
       backgroundColor: '#f0fdf4',
@@ -68,9 +58,9 @@ const StockTransactionComponentBase = ({
     onDataFiltered: (filteredData, filters) => {
       console.log(`Stock generic filtered: ${filteredData.length} records with filters:`, filters);
     }
-  }), [t]);
+  });
   
-  const FullFilteredStockTable = useMemo(() => withBoundaryFilter(GenericFilteredStockTable, {
+  const FullFilteredStockTable = withBoundaryFilter(GenericFilteredStockTable, {
     showFilters: false,
     showStats: false,
     showClearAll: true,
@@ -80,12 +70,12 @@ const StockTransactionComponentBase = ({
     storageKey: 'stockBoundaryFilters',
     requiredFilters: ['state'],
     customLabels: {
-      state: t('WBH_BOUNDARY_STATE'),
-      lga: t('WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA'),
-      ward: t('WBH_BOUNDARY_WARD'),
-      healthFacility: t('WBH_BOUNDARY_HEALTH_FACILITY'),
-      warehouseId: t('WBH_BOUNDARY_WAREHOUSE'),
-      facilityCode: t('WBH_BOUNDARY_FACILITY_CODE')
+      state: 'WBH_BOUNDARY_STATE',
+      lga: 'WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA',
+      ward: 'WBH_BOUNDARY_WARD',
+      healthFacility: 'WBH_BOUNDARY_HEALTH_FACILITY',
+      warehouseId: 'WBH_BOUNDARY_WAREHOUSE',
+      facilityCode: 'WBH_BOUNDARY_FACILITY_CODE'
     },
     filterStyle: {
       backgroundColor: '#fef9e7',
@@ -111,7 +101,27 @@ const StockTransactionComponentBase = ({
     onDataFiltered: (filteredData, filters) => {
       console.log(`Stock boundary filtered: ${filteredData.length} records with filters:`, filters);
     }
-  }), [GenericFilteredStockTable, t]);
+  });
+  
+  return FullFilteredStockTable;
+};
+
+const StockTransactionComponentBase = ({ 
+  projectId, 
+  boundaryType, 
+  boundaryCode, 
+  loading: externalLoading = false,
+  // Date range filter props
+  startDate = null,
+  endDate = null,
+  dateRange = null
+}) => {
+  const { t } = useTranslation();
+  
+  // Create the filtered table component
+  const FullFilteredStockTable = useMemo(() => {
+    return createStockFilteredTable();
+  }, []);
 
   // Build Elasticsearch query based on inputs
   const elasticsearchQuery = useMemo(() => {
