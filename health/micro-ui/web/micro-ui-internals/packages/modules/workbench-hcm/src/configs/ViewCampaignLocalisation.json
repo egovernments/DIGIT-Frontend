@@ -1,0 +1,511 @@
+[ {
+            "code": "WBH_STOCK_ID",
+            "message": "Id",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FACILITY_ID",
+            "message": "Sender Id",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FACILITY_NAME",
+            "message": "Sender",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_QUANTITY_SENT",
+            "message": "Quantity",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_TRANSACTION_TYPE",
+            "message": "Type",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_RECEIVER_ID",
+            "message": "Receiver Id",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_RECEIVER_FACILITY",
+            "message": "Receiver",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_QUANTITY_RECEIVED",
+            "message": "Qty Received",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_STOCK_ON_HAND",
+            "message": "Stock on Hand",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "DESCENDANTS_PROJECT_BOUNDARY_TYPE",
+            "message": "Boundary Level",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "DESCENDANTS_PROJECT_NUMBER",
+            "message": "Project Number",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "DESCENDENTS_PROJECT_BOUNDARY_TYPE",
+            "message": "Boundary Level",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "DESCENDENTS_PROJECT_NUMBER",
+            "message": "Project Number",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "EMPLOYEES",
+            "message": "Campaign Users",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "EMPLOYEE_DETAILS",
+            "message": "Campaign User Details",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "EMPLOYEE_ID",
+            "message": "Mapping Id",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "EMPLOYEE_NAME",
+            "message": "Name",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "ENTER_BOUNDARY",
+            "message": "Enter Boundary",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "ENTER_BOUNDARY_TYPE",
+            "message": "Enter Boundary Level",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "ENTER_PROJECT_NUMBER",
+            "message": "Enter Project Number",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "FILTER_OPTIONS",
+            "message": "Filters",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "HCM_CHILDREN_MAPPED",
+            "message": "Boundary level coverage",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "HCM_LOADING_PROJECTS",
+            "message": "Loading Project Status",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "HCM_MULTIPLE_PROJECTS_MESSAGE",
+            "message": "List of Boundaries",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERED_BY",
+            "message": "Delivered By",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_QUANTITY",
+            "message": "Quantity",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_MEMBER_COUNT",
+            "message": "Member Count",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERY_STATUS",
+            "message": "Delivery Status",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERY_DATE",
+            "message": "Delivery Date",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_PRODUCT_NAME",
+            "message": "Product Name",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_LATITUDE",
+            "message": "Latitude",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_LONGITUDE",
+            "message": "Longitude",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_ADMINISTRATIVE_AREA",
+            "message": "Administrative Area",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_SYNCED_TIME",
+            "message": "Synced Time",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_EMPLOYEE_ID",
+            "message": "Employee ID",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_EMPLOYEE_NAME",
+            "message": "Employee Name",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_USER_NAME",
+            "message": "User Name",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_ROLE",
+            "message": "Role",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_LOCALITY_CODE",
+            "message": "Locality Code",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_STATUS",
+            "message": "Status",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_CREATED_TIME",
+            "message": "Created Time",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_VIEW",
+            "message": "View",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_VIEW_DELIVERIES",
+            "message": "View Deliveries",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_DELIVERIES_OF",
+            "message": "Deliveries of",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTERS",
+            "message": "Filters",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_CLEAR",
+            "message": "Clear",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_SHOW",
+            "message": "Show",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_HIDE",
+            "message": "Hide",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_SEARCH_ALL_FIELDS",
+            "message": "Search in all fields",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_ENTER_SEARCH_TERM",
+            "message": "Enter search term...",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_BY_FIELDS",
+            "message": "Filter by fields:",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_CLEAR_ALL",
+            "message": "Clear All Filters",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_APPLY_HIDE",
+            "message": "Apply & Hide",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_NO_FILTERS_APPLIED",
+            "message": "No filters applied",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_FILTERS_APPLIED",
+            "message": "filters applied",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_FILTER_FILTER_APPLIED",
+            "message": "filter applied",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DATE_FILTER_LABEL",
+            "message": "Date Range Filter",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DATE_FILTER_ALL_TIME",
+            "message": "All Time",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DATE_FILTER_CHANGE",
+            "message": "Change",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DATE_FILTER_CLEAR_DATES",
+            "message": "Clear Dates",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DATE_FILTER_CLOSE",
+            "message": "Close",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_MAP_HIDE_LAYERS",
+            "message": "Hide Layers",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_MAP_SHOW_LAYERS",
+            "message": "Show Layers",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_MAP_TABLE",
+            "message": "Table",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_MAP_MAP",
+            "message": "Map",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_MAP_VIEW_AS_TABLE",
+            "message": "View as Table",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_STOCK_TRANSACTION_TYPE",
+            "message": "Transaction Type",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_STOCK_SENDING_FACILITY",
+            "message": "Sending Facility",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_STOCK_RECEIVING_FACILITY",
+            "message": "Receiving Facility",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_COUNTRY",
+            "message": "Country",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_STATE",
+            "message": "State",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_LGA",
+            "message": "LGA",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_WARD",
+            "message": "Ward",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_HEALTH_FACILITY",
+            "message": "Health Facility",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_WAREHOUSE",
+            "message": "Warehouse",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_FACILITY_CODE",
+            "message": "Facility Code",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA",
+            "message": "Local Government Area",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_FILTER_ROLE",
+            "message": "Role",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_FILTER_STATUS",
+            "message": "Status",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_FILTER_EMPLOYEE_NAME",
+            "message": "Employee Name",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_USER_FILTER_USERNAME",
+            "message": "Username",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERY_FILTER_DELIVERED_BY",
+            "message": "Delivered By",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERY_FILTER_QUANTITY",
+            "message": "Quantity",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERY_FILTER_WARD",
+            "message": "Ward",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        },
+        {
+            "code": "WBH_DELIVERY_FILTER_HEALTH_FACILITY",
+            "message": "Health Facility",
+            "module": "hcm-campaign-settings",
+            "locale": "en_NG"
+        }
+    ]

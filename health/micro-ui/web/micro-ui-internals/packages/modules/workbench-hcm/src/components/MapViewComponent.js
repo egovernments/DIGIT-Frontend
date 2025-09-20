@@ -1,6 +1,7 @@
 import React, { useState, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@egovernments/digit-ui-components";
+import { SVG } from '@egovernments/digit-ui-react-components';
 import LGABoundariesMap from "./LGABoundariesMap";
 import WardBoundariesMap from "./WardBoundariesMap";
 import SettlementBoundariesMap from "./SettlementBoundariesMap";
@@ -225,7 +226,12 @@ const MapViewComponent = ({
           <Button
             type="button"
             variation="secondary"
-            label={showBaseLayers ? "Hide Layers" : "Show Layers"}
+            label={
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {showBaseLayers ? <SVG.VisibilityOff width="14" height="14" /> : <SVG.Visibility width="14" height="14" />}
+                {showBaseLayers ? "Hide Layers" : "Show Layers"}
+              </div>
+            }
             onClick={() => setShowBaseLayers(!showBaseLayers)}
             style={{ fontSize: '13px' }}
           />

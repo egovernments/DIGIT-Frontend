@@ -22,86 +22,6 @@ function toCamelCase(str) {
  * 3. withBoundaryFilter (adds boundary filters with required state selection)
  */
 
-// Step 1: Apply generic filters to the base table
-const GenericFilteredStockTable = withGenericFilter(ReusableTableWrapper, {
-  showFilters: true,
-  showStats: false,
-  showClearAll: true,
-  autoApplyFilters: true,
-  persistFilters: true,
-  filterPosition: 'top',
-  storageKey: 'stockGenericFilters',
-  filterFields: ['transactionType', 'facilityName', 'transactingFacilityName'], // Stock-specific fields to filter
-  customLabels: {
-    transactionType: 'Transaction Type',
-    facilityName: 'Sending Facility',
-    transactingFacilityName: 'Receiving Facility'
-  },
-  filterStyle: {
-    backgroundColor: '#f0fdf4',
-    padding: '16px',
-    borderRadius: '8px',
-    marginBottom: '8px',
-    border: '1px solid #bbf7d0'
-  },
-  statsStyle: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-    fontSize: '14px',
-    fontWeight: '500'
-  },
-  onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Stock generic filters changed:', activeFilters);
-  },
-  onDataFiltered: (filteredData, filters) => {
-    console.log(`Stock generic filtered: ${filteredData.length} records with filters:`, filters);
-  }
-});
-
-// Step 2: Apply boundary filters on top with required selection
-const FullFilteredStockTable = withBoundaryFilter(GenericFilteredStockTable, {
-  showFilters: false,
-  showStats: false,
-  showClearAll: true,
-  autoApplyFilters: true,
-  persistFilters: true,
-  filterPosition: 'top',
-  storageKey: 'stockBoundaryFilters',
-  requiredFilters: ['state'], // Must select at least state to filter stock data meaningfully
-  customLabels: {
-    state: 'State',
-    lga: 'Local Government Area',
-    ward: 'Ward',
-    healthFacility: 'Health Facility',
-    warehouseId: 'Warehouse',
-    facilityCode: 'Facility Code'
-  },
-  filterStyle: {
-    backgroundColor: '#fef9e7',
-    border: '2px solid #f59e0b',
-    borderRadius: '8px',
-    padding: '16px 20px',
-    marginBottom: '12px'
-  },
-  statsStyle: {
-    backgroundColor: '#fffbeb',
-    color: '#92400e',
-    fontSize: '14px',
-    fontWeight: '600',
-    borderBottom: '2px solid #fbbf24'
-  },
-  onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Stock boundary filters changed:', activeFilters);
-    const missingRequired = ['state'].filter(field => !activeFilters[field]);
-    if (missingRequired.length > 0) {
-      console.warn('Missing required filters for stock data:', missingRequired);
-    }
-  },
-  onDataFiltered: (filteredData, filters) => {
-    console.log(`Stock boundary filtered: ${filteredData.length} records with filters:`, filters);
-  }
-});
-
 const StockTransactionComponentBase = ({ 
   projectId, 
   boundaryType, 
@@ -113,6 +33,85 @@ const StockTransactionComponentBase = ({
   dateRange = null
 }) => {
   const { t } = useTranslation();
+  
+  // Create HOCs with access to t() function
+  const GenericFilteredStockTable = useMemo(() => withGenericFilter(ReusableTableWrapper, {
+    showFilters: true,
+    showStats: false,
+    showClearAll: true,
+    autoApplyFilters: true,
+    persistFilters: true,
+    filterPosition: 'top',
+    storageKey: 'stockGenericFilters',
+    filterFields: ['transactionType', 'facilityName', 'transactingFacilityName'],
+    customLabels: {
+      transactionType: t('WBH_STOCK_TRANSACTION_TYPE'),
+      facilityName: t('WBH_STOCK_SENDING_FACILITY'),
+      transactingFacilityName: t('WBH_STOCK_RECEIVING_FACILITY')
+    },
+    filterStyle: {
+      backgroundColor: '#f0fdf4',
+      padding: '16px',
+      borderRadius: '8px',
+      marginBottom: '8px',
+      border: '1px solid #bbf7d0'
+    },
+    statsStyle: {
+      backgroundColor: '#dcfce7',
+      color: '#166534',
+      fontSize: '14px',
+      fontWeight: '500'
+    },
+    onFiltersChange: (activeFilters, allFilters) => {
+      console.log('Stock generic filters changed:', activeFilters);
+    },
+    onDataFiltered: (filteredData, filters) => {
+      console.log(`Stock generic filtered: ${filteredData.length} records with filters:`, filters);
+    }
+  }), [t]);
+  
+  const FullFilteredStockTable = useMemo(() => withBoundaryFilter(GenericFilteredStockTable, {
+    showFilters: false,
+    showStats: false,
+    showClearAll: true,
+    autoApplyFilters: true,
+    persistFilters: true,
+    filterPosition: 'top',
+    storageKey: 'stockBoundaryFilters',
+    requiredFilters: ['state'],
+    customLabels: {
+      state: t('WBH_BOUNDARY_STATE'),
+      lga: t('WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA'),
+      ward: t('WBH_BOUNDARY_WARD'),
+      healthFacility: t('WBH_BOUNDARY_HEALTH_FACILITY'),
+      warehouseId: t('WBH_BOUNDARY_WAREHOUSE'),
+      facilityCode: t('WBH_BOUNDARY_FACILITY_CODE')
+    },
+    filterStyle: {
+      backgroundColor: '#fef9e7',
+      border: '2px solid #f59e0b',
+      borderRadius: '8px',
+      padding: '16px 20px',
+      marginBottom: '12px'
+    },
+    statsStyle: {
+      backgroundColor: '#fffbeb',
+      color: '#92400e',
+      fontSize: '14px',
+      fontWeight: '600',
+      borderBottom: '2px solid #fbbf24'
+    },
+    onFiltersChange: (activeFilters, allFilters) => {
+      console.log('Stock boundary filters changed:', activeFilters);
+      const missingRequired = ['state'].filter(field => !activeFilters[field]);
+      if (missingRequired.length > 0) {
+        console.warn('Missing required filters for stock data:', missingRequired);
+      }
+    },
+    onDataFiltered: (filteredData, filters) => {
+      console.log(`Stock boundary filtered: ${filteredData.length} records with filters:`, filters);
+    }
+  }), [GenericFilteredStockTable, t]);
 
   // Build Elasticsearch query based on inputs
   const elasticsearchQuery = useMemo(() => {

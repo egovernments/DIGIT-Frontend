@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from "@egovernments/digit-ui-components";
+import { SVG } from '@egovernments/digit-ui-react-components';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
@@ -22,80 +23,6 @@ function toCamelCase(str) {
  * 2. withGenericFilter (adds generic field filters)
  * 3. withBoundaryFilter (adds boundary filters)
  */
-
-// Step 1: Apply generic filters to the base table
-const GenericFilteredUsersTable = withGenericFilter(ReusableTableWrapper, {
-  showFilters: true,
-  showStats: false,
-  showClearAll: true,
-  autoApplyFilters: true,
-  persistFilters: true,
-  filterPosition: 'top',
-  storageKey: 'usersGenericFilters',
-  filterFields: ['role', 'status', 'employeeName', 'userName'], // User-specific fields to filter
-  customLabels: {
-    role: 'Role',
-    status: 'Status',
-    employeeName: 'Employee Name',
-    userName: 'Username'
-  },
-  filterStyle: {
-    backgroundColor: '#fef3c7',
-    padding: '16px',
-    borderRadius: '8px',
-    marginBottom: '8px',
-    border: '1px solid #fbbf24'
-  },
-  statsStyle: {
-    backgroundColor: '#fef3c7',
-    color: '#92400e',
-    fontSize: '14px',
-    fontWeight: '500'
-  },
-  onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Users generic filters changed:', activeFilters);
-  },
-  onDataFiltered: (filteredData, filters) => {
-    console.log(`Users generic filtered: ${filteredData.length} records with filters:`, filters);
-  }
-});
-
-// Step 2: Apply boundary filters on top
-const FullFilteredUsersTable = withBoundaryFilter(GenericFilteredUsersTable, {
-  showFilters: false,
-  showStats: false,
-  showClearAll: true,
-  autoApplyFilters: true,
-  persistFilters: true,
-  filterPosition: 'top',
-  storageKey: 'usersBoundaryFilters',
-  customLabels: {
-    country: 'Country',
-    state: 'State',
-    lga: 'LGA',
-    ward: 'Ward',
-    healthFacility: 'Health Facility'
-  },
-  filterStyle: {
-    backgroundColor: '#f0f9ff',
-    padding: '16px',
-    borderRadius: '8px',
-    marginBottom: '8px',
-    border: '1px solid #bae6fd'
-  },
-  statsStyle: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-    fontSize: '14px',
-    fontWeight: '500'
-  },
-  onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Users boundary filters changed:', activeFilters);
-  },
-  onDataFiltered: (filteredData, filters) => {
-    console.log(`Users boundary filtered: ${filteredData.length} records with filters:`, filters);
-  }
-});
 
 // Deliveries Popup Component
 const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
@@ -135,18 +62,17 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
           paddingBottom: '16px'
         }}>
           <h3 style={{ margin: 0, color: '#1f2937', fontSize: '18px', fontWeight: '600' }}>
-             Deliveries of {rowData?.employeeName || rowData?.userName || 'User'}
+             {t('WBH_USER_DELIVERIES_OF')} {rowData?.employeeName || rowData?.userName || 'User'}
           </h3>
           <Button
             type="button"
             variation="secondary"
-            label="✕"
+            label={<SVG.Close width="16" height="16" />}
             onClick={onClose}
             style={{
               minWidth: '32px',
               height: '32px',
-              padding: '0',
-              fontSize: '16px'
+              padding: '0'
             }}
           />
         </div>
@@ -190,6 +116,79 @@ const UsersComponent = ({
   loading: externalLoading = false 
 }) => {
   const { t } = useTranslation();
+  
+  // Create HOCs with access to t() function
+  const GenericFilteredUsersTable = useMemo(() => withGenericFilter(ReusableTableWrapper, {
+    showFilters: true,
+    showStats: false,
+    showClearAll: true,
+    autoApplyFilters: true,
+    persistFilters: true,
+    filterPosition: 'top',
+    storageKey: 'usersGenericFilters',
+    filterFields: ['role', 'status', 'employeeName', 'userName'],
+    customLabels: {
+      role: t('WBH_USER_FILTER_ROLE'),
+      status: t('WBH_USER_FILTER_STATUS'),
+      employeeName: t('WBH_USER_FILTER_EMPLOYEE_NAME'),
+      userName: t('WBH_USER_FILTER_USERNAME')
+    },
+    filterStyle: {
+      backgroundColor: '#fef3c7',
+      padding: '16px',
+      borderRadius: '8px',
+      marginBottom: '8px',
+      border: '1px solid #fbbf24'
+    },
+    statsStyle: {
+      backgroundColor: '#fef3c7',
+      color: '#92400e',
+      fontSize: '14px',
+      fontWeight: '500'
+    },
+    onFiltersChange: (activeFilters, allFilters) => {
+      console.log('Users generic filters changed:', activeFilters);
+    },
+    onDataFiltered: (filteredData, filters) => {
+      console.log(`Users generic filtered: ${filteredData.length} records with filters:`, filters);
+    }
+  }), [t]);
+  
+  const FullFilteredUsersTable = useMemo(() => withBoundaryFilter(GenericFilteredUsersTable, {
+    showFilters: false,
+    showStats: false,
+    showClearAll: true,
+    autoApplyFilters: true,
+    persistFilters: true,
+    filterPosition: 'top',
+    storageKey: 'usersBoundaryFilters',
+    customLabels: {
+      country: t('WBH_BOUNDARY_COUNTRY'),
+      state: t('WBH_BOUNDARY_STATE'),
+      lga: t('WBH_BOUNDARY_LGA'),
+      ward: t('WBH_BOUNDARY_WARD'),
+      healthFacility: t('WBH_BOUNDARY_HEALTH_FACILITY')
+    },
+    filterStyle: {
+      backgroundColor: '#f0f9ff',
+      padding: '16px',
+      borderRadius: '8px',
+      marginBottom: '8px',
+      border: '1px solid #bae6fd'
+    },
+    statsStyle: {
+      backgroundColor: '#dbeafe',
+      color: '#1e40af',
+      fontSize: '14px',
+      fontWeight: '500'
+    },
+    onFiltersChange: (activeFilters, allFilters) => {
+      console.log('Users boundary filters changed:', activeFilters);
+    },
+    onDataFiltered: (filteredData, filters) => {
+      console.log(`Users boundary filtered: ${filteredData.length} records with filters:`, filters);
+    }
+  }), [GenericFilteredUsersTable, t]);
   
   // State for deliveries popup
   const [isDeliveriesPopupOpen, setIsDeliveriesPopupOpen] = useState(false);
@@ -330,11 +329,11 @@ const UsersComponent = ({
   // Define table columns with dynamic boundary columns
   const columns = useMemo(() => {
     const baseColumns = [
-      { label: "View Deliveries", key: "viewDeliveries", sortable: false, width: "140px" },
-      { label: t("EMPLOYEE_ID"), key: "employeeId", sortable: true },
-      { label: t("EMPLOYEE_NAME"), key: "employeeName", sortable: true },
-      { label: t("USER_NAME"), key: "userName", sortable: true },
-      { label: t("ROLE"), key: "role", sortable: true }
+      { label: t('WBH_USER_VIEW_DELIVERIES'), key: "viewDeliveries", sortable: false, width: "140px" },
+      { label: t('WBH_USER_EMPLOYEE_ID'), key: "employeeId", sortable: true },
+      { label: t('WBH_USER_EMPLOYEE_NAME'), key: "employeeName", sortable: true },
+      { label: t('WBH_USER_USER_NAME'), key: "userName", sortable: true },
+      { label: t('WBH_USER_ROLE'), key: "role", sortable: true }
     ];
 
     // Add dynamic boundary hierarchy columns (limited for users view)
@@ -346,9 +345,9 @@ const UsersComponent = ({
     }));
 
     const endColumns = [
-      { label: t("LOCALITY_CODE"), key: "localityCode", sortable: true },
-      { label: t("STATUS"), key: "status", sortable: true },
-      { label: t("CREATED_TIME"), key: "createdTime", sortable: true }
+      { label: t('WBH_USER_LOCALITY_CODE'), key: "localityCode", sortable: true },
+      { label: t('WBH_USER_STATUS'), key: "status", sortable: true },
+      { label: t('WBH_USER_CREATED_TIME'), key: "createdTime", sortable: true }
     ];
 
     return [...baseColumns, ...boundaryColumns, ...endColumns];
@@ -361,7 +360,12 @@ const UsersComponent = ({
       <Button
         type="button"
         variation="primary"
-        label="📦 View"
+        label={
+          <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            <SVG.Visibility width="14" height="14" />
+            {t('WBH_USER_VIEW')}
+          </div>
+        }
         onClick={() => handleViewDeliveries(row)}
         style={{
           fontSize: '13px',

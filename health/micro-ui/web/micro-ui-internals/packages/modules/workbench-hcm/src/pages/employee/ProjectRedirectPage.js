@@ -179,10 +179,9 @@ const ProjectRedirectPage = () => {
       <Button
         label= {selectedProjectId === project.id ? t("HCM_REDIRECTING") : t("HCM_SELECT_PROJECT")}
         type="button"
-        variation="primary"
-                  onButtonClick={() => handleProjectSelection(project)}
+        variation="link"
+        onButtonClick={() => handleProjectSelection(project)}
           disabled={redirecting || selectedProjectId === project.id}
-
         style={{
                       cursor: (redirecting || selectedProjectId === project.id) ? 'not-allowed' : 'pointer',
                                   opacity: (redirecting || selectedProjectId === project.id) ? 0.6 : 1

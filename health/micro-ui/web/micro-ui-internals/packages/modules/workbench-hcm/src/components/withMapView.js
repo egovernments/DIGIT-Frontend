@@ -1,6 +1,7 @@
 import React, { useState, useMemo, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@egovernments/digit-ui-components';
+import { SVG } from '@egovernments/digit-ui-react-components';
 import MapViewComponent from './MapViewComponent';
 
 /**
@@ -224,7 +225,12 @@ const withMapView = (WrappedComponent, options = {}) => {
               <Button
                 type="button"
                 variation={viewMode === 'table' ? 'primary' : 'secondary'}
-                label="📊 Table"
+                label={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <SVG.TableView width="14" height="14" />
+                    Table
+                  </div>
+                }
                 onClick={() => handleViewModeChange('table')}
                 style={{
                   minWidth: '90px',
@@ -235,7 +241,12 @@ const withMapView = (WrappedComponent, options = {}) => {
               <Button
                 type="button"
                 variation={viewMode === 'map' ? 'primary' : 'secondary'}
-                label="🗺️ Map"
+                label={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <SVG.LocationOn width="14" height="14" />
+                    Map
+                  </div>
+                }
                 onClick={() => handleViewModeChange('map')}
                 isDisabled={!dataSummary.hasValidCoordinates}
                 style={{
@@ -315,7 +326,12 @@ const withMapView = (WrappedComponent, options = {}) => {
                   <Button
                     type="button"
                     variation="primary"
-                    label="📊 View as Table"
+                    label={
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <SVG.TableView width="14" height="14" />
+                        View as Table
+                      </div>
+                    }
                     onClick={() => handleViewModeChange('table')}
                     style={{
                       marginTop: '16px'

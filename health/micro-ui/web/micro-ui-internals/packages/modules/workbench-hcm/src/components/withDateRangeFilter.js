@@ -1,5 +1,6 @@
 import React, { useState, useEffect ,Fragment} from 'react';
 import { Button } from '@egovernments/digit-ui-components';
+import { SVG } from '@egovernments/digit-ui-react-components';
 import DateRangePicker from './DateRangePicker';
 
 /**
@@ -241,7 +242,12 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
         <Button
           type="button"
           variation="secondary"
-          label="Change"
+          label={
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <SVG.Edit width="12" height="12" />
+              Change
+            </div>
+          }
           onClick={() => setShowPopup(true)}
           style={{
             fontSize: '12px',
@@ -291,13 +297,12 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
             <Button
               type="button"
               variation="secondary"
-              label="✕"
+              label={<SVG.Close width="16" height="16" />}
               onClick={() => setShowPopup(false)}
               style={{
                 minWidth: '32px',
                 height: '32px',
-                padding: '0',
-                fontSize: '16px'
+                padding: '0'
               }}
             />
           </div>
@@ -328,14 +333,24 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
             <Button
               type="button"
               variation="secondary"
-              label="Clear Dates"
+              label={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <SVG.Close width="12" height="12" />
+                  Clear Dates
+                </div>
+              }
               onClick={() => handleDateRangeChange(null, null)}
               style={{ fontSize: '13px' }}
             />
             <Button
               type="button"
               variation="primary"
-              label="Close"
+              label={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <SVG.Check width="12" height="12" />
+                  Close
+                </div>
+              }
               onClick={() => setShowPopup(false)}
               style={{ fontSize: '13px' }}
             />

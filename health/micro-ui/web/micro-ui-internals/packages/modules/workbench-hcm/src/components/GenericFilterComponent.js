@@ -1,6 +1,7 @@
 import React, { useMemo, useState, useEffect,Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button, Dropdown, TextInput } from '@egovernments/digit-ui-components';
+import { SVG } from '@egovernments/digit-ui-react-components';
 import { 
   extractFieldOptions, 
   generateFieldLabel,
@@ -240,14 +241,16 @@ const GenericFilterComponent = ({
             alignItems: 'center', 
             gap: '8px'
           }}>
-            <span style={{ 
-              fontSize: '16px',
+            <div style={{ 
               transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
-              transition: 'transform 0.2s'
+              transition: 'transform 0.2s',
+              display: 'flex',
+              alignItems: 'center'
             }}>
-              ▶
-            </span>
-            <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+              <SVG.ArrowForward width="16" height="16" />
+            </div>
+            <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#374151', display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <SVG.FilterAlt width="16" height="16" />
               {t('Filters')} 
               {activeFilterCount > 0 && (
                 <span style={{
@@ -280,7 +283,12 @@ const GenericFilterComponent = ({
             <Button
               type="button"
               variation="secondary"
-              label={t('Clear')}
+              label={
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <SVG.Close width="14" height="14" />
+                  {t('Clear')}
+                </div>
+              }
               onClick={(e) => {
                 e.stopPropagation();
                 handleClearAll();
@@ -294,7 +302,12 @@ const GenericFilterComponent = ({
           <Button
             type="button"
             variation="primary"
-            label={isExpanded ? t('Hide') : t('Show')}
+            label={
+              <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                {isExpanded ? <SVG.VisibilityOff width="14" height="14" /> : <SVG.Visibility width="14" height="14" />}
+                {isExpanded ? t('Hide') : t('Show')}
+              </div>
+            }
             onClick={(e) => {
               e.stopPropagation();
               setIsExpanded(!isExpanded);
@@ -320,12 +333,15 @@ const GenericFilterComponent = ({
           {showTextSearch && (
             <div style={{ marginBottom: '16px' }}>
               <label style={{ 
-                display: 'block',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '4px',
                 fontSize: '12px',
                 fontWeight: '500',
                 color: '#374151',
                 marginBottom: '4px'
               }}>
+                <SVG.Search width="16" height="16" />
                 {t('Search in all fields')}
               </label>
               <TextInput
@@ -419,7 +435,12 @@ const GenericFilterComponent = ({
                 <Button
                   type="button"
                   variation="secondary"
-                  label={t('Clear All Filters')}
+                  label={
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                      <SVG.Close width="14" height="14" />
+                      {t('Clear All Filters')}
+                    </div>
+                  }
                   onClick={handleClearAll}
                   style={{
                     fontSize: '12px'
@@ -429,7 +450,12 @@ const GenericFilterComponent = ({
               <Button
                 type="button"
                 variation="primary"
-                label={t('Apply & Hide')}
+                label={
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <SVG.Check width="14" height="14" />
+                    {t('Apply & Hide')}
+                  </div>
+                }
                 onClick={() => setIsExpanded(false)}
                 style={{
                   fontSize: '12px'

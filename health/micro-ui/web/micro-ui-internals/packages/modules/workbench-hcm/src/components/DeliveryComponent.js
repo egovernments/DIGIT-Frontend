@@ -121,10 +121,10 @@ const createFullFilteredTable = (mapId) => {
     storageKey: genericStorageKey,
     filterFields: ['deliveredBy', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Generic fields to filter
     customLabels: {
-      deliveredBy: 'Delivered By',
-      quantity: 'Quantity',
-      ward: 'Ward',
-      healthFacility: 'Health Facility'
+      deliveredBy: t('WBH_DELIVERY_FILTER_DELIVERED_BY'),
+      quantity: t('WBH_DELIVERY_FILTER_QUANTITY'),
+      ward: t('WBH_DELIVERY_FILTER_WARD'),
+      healthFacility: t('WBH_DELIVERY_FILTER_HEALTH_FACILITY')
     },
     filterStyle: {
       backgroundColor: '#f0fdf4',
@@ -157,11 +157,11 @@ const createFullFilteredTable = (mapId) => {
     filterPosition: 'top',
     storageKey: boundaryStorageKey,
     customLabels: {
-      country: 'Country',
-      state: 'State',
-      lga: 'Local Government Area',
-      ward: 'Ward',
-      healthFacility: 'Health Facility'
+      country: t('WBH_BOUNDARY_COUNTRY'),
+      state: t('WBH_BOUNDARY_STATE'),
+      lga: t('WBH_BOUNDARY_LOCAL_GOVERNMENT_AREA'),
+      ward: t('WBH_BOUNDARY_WARD'),
+      healthFacility: t('WBH_BOUNDARY_HEALTH_FACILITY')
     },
     filterOrder: null, // Auto-discover from data
     requiredFilters: [],
@@ -367,12 +367,12 @@ console.log('🚚 Delivery data received:', {
   // Define table columns with dynamic boundary columns
   const columns = useMemo(() => {
     const baseColumns = [
-      { key: 'deliveredBy', label: t('DELIVERED_BY'), sortable: true },
-      { key: 'quantity', label: t('QUANTITY'), sortable: true },
-      { key: 'memberCount', label: t('MEMBER_COUNT'), sortable: true },
-      { key: 'deliveryStatus', label: t('DELIVERY_STATUS'), sortable: true },
-      { key: 'deliveryDate', label: t('DELIVERY_DATE'), sortable: true },
-      { key: 'productName', label: t('PRODUCT_NAME'), sortable: true }
+      { key: 'deliveredBy', label: t('WBH_DELIVERED_BY'), sortable: true },
+      { key: 'quantity', label: t('WBH_QUANTITY'), sortable: true },
+      { key: 'memberCount', label: t('WBH_MEMBER_COUNT'), sortable: true },
+      { key: 'deliveryStatus', label: t('WBH_DELIVERY_STATUS'), sortable: true },
+      { key: 'deliveryDate', label: t('WBH_DELIVERY_DATE'), sortable: true },
+      { key: 'productName', label: t('WBH_PRODUCT_NAME'), sortable: true }
     ];
 
     // Add dynamic boundary hierarchy columns
@@ -384,10 +384,10 @@ console.log('🚚 Delivery data received:', {
     }));
 
     const endColumns = [
-      { key: 'latitude', label: t('LATITUDE'), sortable: false },
-      { key: 'longitude', label: t('LONGITUDE'), sortable: false },
-      { key: 'administrativeArea', label: t('ADMINISTRATIVE_AREA'), sortable: true },
-      { key: 'syncedTime', label: t('SYNCED_TIME'), sortable: true }
+      { key: 'latitude', label: t('WBH_LATITUDE'), sortable: false },
+      { key: 'longitude', label: t('WBH_LONGITUDE'), sortable: false },
+      { key: 'administrativeArea', label: t('WBH_ADMINISTRATIVE_AREA'), sortable: true },
+      { key: 'syncedTime', label: t('WBH_SYNCED_TIME'), sortable: true }
     ];
 
     return [...baseColumns, ...boundaryColumns, ...endColumns];
