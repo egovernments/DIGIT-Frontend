@@ -25,13 +25,17 @@ function toCamelCase(str) {
  * 5. withDateRangeFilter (adds date range filtering)
  */
 
-// Step 1: Apply map view toggle to the base table
-const MapViewTable = withMapView(ReusableTableWrapper, {
-  showMapToggle: true,
-  defaultView: 'table',
-  mapContainerId: 'delivery-map-container',
-  persistViewMode: true,
-  storageKey: 'deliveryComponentMapView',
+// Function to create MapViewTable with dynamic mapId
+const createMapViewTable = (mapId) => {
+  const mapContainerId = mapId ? `${mapId}-map-container` : 'delivery-map-container';
+  const storageKey = mapId ? `${mapId}-deliveryComponentMapView` : 'deliveryComponentMapView';
+  
+  return withMapView(ReusableTableWrapper, {
+    showMapToggle: true,
+    defaultView: 'table',
+    mapContainerId: mapContainerId,
+    persistViewMode: true,
+    storageKey: storageKey,
   
   // Custom coordinate extraction for delivery data
   getLatitude: (row) => {
@@ -70,13 +74,14 @@ const MapViewTable = withMapView(ReusableTableWrapper, {
   },
   
   // Map features (MapViewComponent handles advanced map features automatically)
-  showConnectingLines: false,
+  showConnectingLines: mapId ? true:false,
   showBaseLayer: true,
   showBoundaryControls: true,
   defaultBoundaryType: 'WARD',
   showFilters: true,
   showSearch: true
-});
+  });
+};
 
 // Helper functions for popup styling
 function getStatusBgColor(status) {
@@ -99,81 +104,90 @@ function getStatusTextColor(status) {
   }
 }
 
-// Step 2: Apply generic filters to the map-enabled table
-const GenericFilteredTable = withGenericFilter(MapViewTable, {
-  showFilters: true,
-  showStats: false,
-  showClearAll: true,
-  autoApplyFilters: true,
-  persistFilters: true,
-  filterPosition: 'top',
-  storageKey: 'deliveryGenericFilters',
-  filterFields: ['deliveredBy', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Generic fields to filter
-  customLabels: {
-    deliveredBy: 'Delivered By',
-    quantity: 'Quantity',
-    ward: 'Ward',
-    healthFacility: 'Health Facility'
-  },
-  filterStyle: {
-    backgroundColor: '#f0fdf4',
-    padding: '20px',
-    borderRadius: '8px',
-    marginBottom: '10px',
-    border: '1px solid #bbf7d0'
-  },
-  statsStyle: {
-    backgroundColor: '#dcfce7',
-    color: '#166534',
-    fontSize: '14px',
-    fontWeight: '500'
-  },
-  onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Delivery generic filters changed:', activeFilters);
-  },
-  onDataFiltered: (filteredData, filters) => {
-    console.log(`Generic filtered: ${filteredData.length} records with filters:`, filters);
-  }
-});
+// Function to create full filtered table stack with dynamic mapId
+const createFullFilteredTable = (mapId) => {
+  const MapViewTable = createMapViewTable(mapId);
+  const genericStorageKey = mapId ? `${mapId}-deliveryGenericFilters` : 'deliveryGenericFilters';
+  const boundaryStorageKey = mapId ? `${mapId}-deliveryBoundaryFilters` : 'deliveryBoundaryFilters';
 
-// Step 3: Apply boundary filters on top (will appear at top)
-const FullFeaturedFilteredTable = withBoundaryFilter(GenericFilteredTable, {
-  showFilters: false,
-  showStats: false,
-  showClearAll: true,
-  autoApplyFilters: true,
-  persistFilters: true,
-  filterPosition: 'top',
-  storageKey: 'deliveryBoundaryFilters',
-  customLabels: {
-    country: 'Country',
-    state: 'State',
-    lga: 'Local Government Area',
-    ward: 'Ward',
-    healthFacility: 'Health Facility'
-  },
-  filterOrder: null, // Auto-discover from data
-  requiredFilters: [],
-  filterStyle: {
-    backgroundColor: '#f0f9ff',
-    padding: '20px',
-    borderRadius: '8px',
-    marginBottom: '8px',
-    border: '1px solid #bae6fd'
-  },
-  statsStyle: {
-    backgroundColor: '#dbeafe',
-    color: '#1e40af',
-    fontSize: '14px',
-    fontWeight: '500'
-  },
-  onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Delivery boundary filters changed:', activeFilters);
-  },
-  onDataFiltered: (filteredData, filters) => {
-    console.log(`Boundary filtered: ${filteredData.length} records with filters:`, filters);
-  }
-});
+  // Step 2: Apply generic filters to the map-enabled table
+  const GenericFilteredTable = withGenericFilter(MapViewTable, {
+    showFilters: true,
+    showStats: false,
+    showClearAll: true,
+    autoApplyFilters: true,
+    persistFilters: true,
+    filterPosition: 'top',
+    storageKey: genericStorageKey,
+    filterFields: ['deliveredBy', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Generic fields to filter
+    customLabels: {
+      deliveredBy: 'Delivered By',
+      quantity: 'Quantity',
+      ward: 'Ward',
+      healthFacility: 'Health Facility'
+    },
+    filterStyle: {
+      backgroundColor: '#f0fdf4',
+      padding: '20px',
+      borderRadius: '8px',
+      marginBottom: '10px',
+      border: '1px solid #bbf7d0'
+    },
+    statsStyle: {
+      backgroundColor: '#dcfce7',
+      color: '#166534',
+      fontSize: '14px',
+      fontWeight: '500'
+    },
+    onFiltersChange: (activeFilters, allFilters) => {
+      console.log('Delivery generic filters changed:', activeFilters);
+    },
+    onDataFiltered: (filteredData, filters) => {
+      console.log(`Generic filtered: ${filteredData.length} records with filters:`, filters);
+    }
+  });
+
+  // Step 3: Apply boundary filters on top (will appear at top)
+  const FullFeaturedFilteredTable = withBoundaryFilter(GenericFilteredTable, {
+    showFilters: false,
+    showStats: false,
+    showClearAll: true,
+    autoApplyFilters: true,
+    persistFilters: true,
+    filterPosition: 'top',
+    storageKey: boundaryStorageKey,
+    customLabels: {
+      country: 'Country',
+      state: 'State',
+      lga: 'Local Government Area',
+      ward: 'Ward',
+      healthFacility: 'Health Facility'
+    },
+    filterOrder: null, // Auto-discover from data
+    requiredFilters: [],
+    filterStyle: {
+      backgroundColor: '#f0f9ff',
+      padding: '20px',
+      borderRadius: '8px',
+      marginBottom: '8px',
+      border: '1px solid #bae6fd'
+    },
+    statsStyle: {
+      backgroundColor: '#dbeafe',
+      color: '#1e40af',
+      fontSize: '14px',
+      fontWeight: '500'
+    },
+    onFiltersChange: (activeFilters, allFilters) => {
+      console.log('Delivery boundary filters changed:', activeFilters);
+    },
+    onDataFiltered: (filteredData, filters) => {
+      console.log(`Boundary filtered: ${filteredData.length} records with filters:`, filters);
+    }
+  });
+
+  return FullFeaturedFilteredTable;
+};
 
 const DeliveryComponentBase = ({ 
   projectId, 
@@ -184,7 +198,9 @@ const DeliveryComponentBase = ({
   startDate = null,
   endDate = null,
   userName=null,
-  dateRange = null
+  dateRange = null,
+  // Map configuration
+  mapId = null
 }) => {
   const { t } = useTranslation();
 
@@ -437,6 +453,11 @@ console.log('🚚 Delivery data received:', {
 
   const isLoading = externalLoading || loading;
 
+  // Create the filtered table component based on mapId
+  const FilteredTableComponent = useMemo(() => {
+    return createFullFilteredTable(mapId);
+  }, [mapId]);
+
   // Prepare summary cards data
   const summaryCards = useMemo(() => {
     if (!metadata.totalRecords || metadata.totalRecords === 0) return [];
@@ -504,7 +525,7 @@ console.log('🚚 Delivery data received:', {
       )}
 
       {/* Table with Boundary + Generic Filtering */}
-      <FullFeaturedFilteredTable
+      <FilteredTableComponent
         title=""
         data={tableData}
         columns={columns}

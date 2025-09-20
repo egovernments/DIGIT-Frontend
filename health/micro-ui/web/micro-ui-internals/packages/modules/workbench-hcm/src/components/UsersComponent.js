@@ -118,7 +118,8 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
         backgroundColor: 'white',
         borderRadius: '8px',
         padding: '24px',
-        maxWidth: '600px',
+        maxWidth: '80vw',
+        width: '80vw',
         maxHeight: '80vh',
         overflow: 'auto',
         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
@@ -158,7 +159,7 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
             color: '#6b7280',
             fontSize: '14px'
           }}>
-            <DeliveryComponent  userName={rowData?.userName} projectId={userComponentProps?.projectId} boundaryType={userComponentProps?.boundaryType} boundaryCode={userComponentProps?.boundaryCode} loading={userComponentProps?.loading} />
+            <DeliveryComponent mapId="delivery-user-popup" userName={rowData?.userName} projectId={userComponentProps?.projectId} boundaryType={userComponentProps?.boundaryType} boundaryCode={userComponentProps?.boundaryCode} loading={userComponentProps?.loading} />
           </div>
         </div>
 

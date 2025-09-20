@@ -144,13 +144,17 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
       };
     });
 
-    // State for filter visibility
-    const [filterVisible, setFilterVisible] = useState(showDateFilter);
+    // State for filter visibility (popup mode)
+    const [filterVisible, setFilterVisible] = useState(false);
+    const [showPopup, setShowPopup] = useState(false);
 
     // Handle date range changes
     const handleDateRangeChange = (startDate, endDate) => {
       const newRange = { startDate, endDate };
       setDateRange(newRange);
+      
+      // Close popup after selection
+      setShowPopup(false);
       
       // Persist if enabled
       if (persistDates && typeof window !== 'undefined') {
@@ -198,63 +202,155 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
       dateFilterActive: !!(dateRange.startDate || dateRange.endDate)
     };
 
-    // Date range info component
-    const DateRangeInfo = (dateRange.startDate || dateRange.endDate) ? (
+    // Get date range summary text
+    const getDateRangeSummary = () => {
+      if (dateRange.startDate && dateRange.endDate) {
+        return `${dateRange.startDate.toLocaleDateString()} - ${dateRange.endDate.toLocaleDateString()}`;
+      } else if (dateRange.startDate) {
+        return `From ${dateRange.startDate.toLocaleDateString()}`;
+      } else if (dateRange.endDate) {
+        return `Until ${dateRange.endDate.toLocaleDateString()}`;
+      } else {
+        return 'All Time';
+      }
+    };
+
+    // Compact date range summary component
+    const DateRangeSummary = filterPosition !== 'none' ? (
       <div style={{
-        padding: '10px 20px',
-        backgroundColor: '#fff3cd',
-        borderBottom: '1px solid #ffc107',
+        padding: '8px 16px',
+        backgroundColor: containerStyle.backgroundColor || '#e3f2fd',
+        borderBottom: containerStyle.borderBottom || '1px solid #90caf9',
         fontSize: '13px',
-        color: '#856404',
+        color: '#1565c0',
         display: 'flex',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        cursor: 'pointer'
       }}>
-        <div>
-          <strong>Date Filter Active:</strong>{' '}
-          {dateRange.startDate && dateRange.endDate ? (
-            <>
-              {dateRange.startDate.toLocaleDateString()} - {dateRange.endDate.toLocaleDateString()}
-            </>
-          ) : dateRange.startDate ? (
-            <>From {dateRange.startDate.toLocaleDateString()}</>
-          ) : (
-            <>Until {dateRange.endDate.toLocaleDateString()}</>
-          )}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <span style={{ fontSize: '16px' }}>📅</span>
+          <strong>{label}:</strong>
+          <span style={{ 
+            fontWeight: '500',
+            color: (dateRange.startDate || dateRange.endDate) ? '#1565c0' : '#757575'
+          }}>
+            {getDateRangeSummary()}
+          </span>
         </div>
-        {filterPosition !== 'none' && (
-          <Button
-            type="button"
-            variation="secondary"
-            label={filterVisible ? 'Hide Date Filter' : 'Show Date Filter'}
-            onClick={() => setFilterVisible(!filterVisible)}
-            style={{
-              fontSize: '12px'
-            }}
-          />
-        )}
+        <Button
+          type="button"
+          variation="secondary"
+          label="Change"
+          onClick={() => setShowPopup(true)}
+          style={{
+            fontSize: '12px',
+            padding: '4px 12px'
+          }}
+        />
       </div>
     ) : null;
 
-    // Date filter component
-    const DateFilterComponent = (filterPosition !== 'none' && filterVisible) ? (
-      <DateRangePicker
-        onDateRangeChange={handleDateRangeChange}
-        initialStartDate={dateRange.startDate}
-        initialEndDate={dateRange.endDate}
-        showPresets={showPresets}
-        containerStyle={containerStyle}
-        label={label}
-      />
+    // Date filter popup component
+    const DateFilterPopup = showPopup && filterPosition !== 'none' ? (
+      <div style={{
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+        backgroundColor: 'rgba(0, 0, 0, 0.5)',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        zIndex: 10000
+      }}>
+        <div style={{
+          backgroundColor: 'white',
+          borderRadius: '8px',
+          padding: '20px',
+          maxWidth: '500px',
+          width: '90%',
+          maxHeight: '80vh',
+          overflow: 'auto',
+          boxShadow: '0 10px 25px rgba(0, 0, 0, 0.3)',
+          position: 'relative'
+        }}>
+          {/* Header */}
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '16px',
+            borderBottom: '1px solid #e5e7eb',
+            paddingBottom: '12px'
+          }}>
+            <h3 style={{ margin: 0, color: '#1f2937', fontSize: '16px', fontWeight: '600' }}>
+              {label}
+            </h3>
+            <Button
+              type="button"
+              variation="secondary"
+              label="✕"
+              onClick={() => setShowPopup(false)}
+              style={{
+                minWidth: '32px',
+                height: '32px',
+                padding: '0',
+                fontSize: '16px'
+              }}
+            />
+          </div>
+
+          {/* Date Range Picker */}
+          <DateRangePicker
+            onDateRangeChange={handleDateRangeChange}
+            initialStartDate={dateRange.startDate}
+            initialEndDate={dateRange.endDate}
+            showPresets={showPresets}
+            containerStyle={{
+              backgroundColor: 'transparent',
+              border: 'none',
+              padding: '0'
+            }}
+            label=""
+          />
+
+          {/* Footer */}
+          <div style={{
+            marginTop: '16px',
+            paddingTop: '12px',
+            borderTop: '1px solid #e5e7eb',
+            display: 'flex',
+            justifyContent: 'space-between',
+            gap: '8px'
+          }}>
+            <Button
+              type="button"
+              variation="secondary"
+              label="Clear Dates"
+              onClick={() => handleDateRangeChange(null, null)}
+              style={{ fontSize: '13px' }}
+            />
+            <Button
+              type="button"
+              variation="primary"
+              label="Close"
+              onClick={() => setShowPopup(false)}
+              style={{ fontSize: '13px' }}
+            />
+          </div>
+        </div>
+      </div>
     ) : null;
 
     // Render based on filter position
     if (filterPosition === 'bottom') {
       return (
         <div style={{ width: '100%', height: '100%' }}>
-          {DateRangeInfo}
           <WrappedComponent {...enhancedProps} />
-          {DateFilterComponent}
+          {DateRangeSummary}
+          {DateFilterPopup}
         </div>
       );
     } else if (filterPosition === 'none') {
@@ -264,9 +360,9 @@ const withDateRangeFilter = (WrappedComponent, options = {}) => {
       // Default: filter on top
       return (
         <div style={{ width: '100%', height: '100%' }}>
-          {DateFilterComponent}
-          {DateRangeInfo}
+          {DateRangeSummary}
           <WrappedComponent {...enhancedProps} />
+          {DateFilterPopup}
         </div>
       );
     }
