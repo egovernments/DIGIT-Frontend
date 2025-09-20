@@ -44,7 +44,8 @@ const MapViewTable = withMapView(ReusableTableWrapper, {
     return row.longitude || row.lng || (Array.isArray(row.geoPoint) ? row.geoPoint[0] : row.geoPoint?.lon);
   },
   
-  // Custom popup content for map markers
+  // MapViewComponent provides comprehensive popup content through boundary maps
+  // Custom popup content can enhance the default display
   getMapPopupContent: (visit, index, originalData) => {
     const data = originalData[visit._originalIndex] || visit;
     return `
@@ -68,17 +69,13 @@ const MapViewTable = withMapView(ReusableTableWrapper, {
     `;
   },
   
-  // Custom marker styling
-  customMarkerStyle: {
-    fill: '#F47738',
-    stroke: '#fff',
-    strokeWidth: 2,
-    radius: 8
-  },
-  
-  // Map features
+  // Map features (MapViewComponent handles advanced map features automatically)
   showConnectingLines: false,
-  showBaseLayer: true
+  showBaseLayer: true,
+  showBoundaryControls: true,
+  defaultBoundaryType: 'WARD',
+  showFilters: true,
+  showSearch: true
 });
 
 // Helper functions for popup styling

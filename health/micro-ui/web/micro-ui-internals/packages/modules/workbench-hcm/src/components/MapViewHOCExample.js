@@ -18,19 +18,13 @@ const SimpleMapTable = withMapView(ReusableTableWrapper, {
   
   // Basic coordinate extraction
   getLatitude: (row) => row.latitude || row.lat,
-  getLongitude: (row) => row.longitude || row.lng,
+  getLongitude: (row) => row.longitude || row.lng
   
-  // Simple popup content
-  getMapPopupContent: (visit, index, originalData) => {
-    const data = originalData[visit._originalIndex] || visit;
-    return `
-      <div style="padding: 12px;">
-        <h4>${data.name || `Point ${index + 1}`}</h4>
-        <p>Coordinates: ${visit.lat.toFixed(4)}, ${visit.lng.toFixed(4)}</p>
-        ${data.description ? `<p>${data.description}</p>` : ''}
-      </div>
-    `;
-  }
+  // MapViewComponent provides comprehensive map features automatically
+  // Including boundary controls, filtering, search, and smart clustering
+  showBoundaryControls: true,
+  showFilters: true,
+  showSearch: true
 });
 
 // Complex usage: Map view with multiple filter HOCs
@@ -58,34 +52,16 @@ const ComplexFilteredMapTable = withBoundaryFilter(
           return Array.isArray(row.geoLocation) ? row.geoLocation[0] : row.geoLocation.lng;
         }
         return row.longitude || row.lng || row.coordinates?.lng;
-      },
-      
-      // Rich popup content with conditional fields
-      getMapPopupContent: (visit, index, originalData) => {
-        const data = originalData[visit._originalIndex] || visit;
-        return `
-          <div style="padding: 16px; min-width: 200px; font-family: system-ui;">
-            <h4 style="margin: 0 0 8px 0; color: #1f2937;">${data.title || data.name || `Location ${index + 1}`}</h4>
-            <div style="font-size: 13px; line-height: 1.5;">
-              ${data.category ? `<div><strong>Category:</strong> ${data.category}</div>` : ''}
-              ${data.status ? `<div><strong>Status:</strong> ${data.status}</div>` : ''}
-              ${data.date ? `<div><strong>Date:</strong> ${new Date(data.date).toLocaleDateString()}</div>` : ''}
-              ${data.value ? `<div><strong>Value:</strong> ${data.value}</div>` : ''}
-              <div style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
-                <strong>Coordinates:</strong> ${visit.lat.toFixed(4)}, ${visit.lng.toFixed(4)}
-              </div>
-            </div>
-          </div>
-        `;
-      },
-      
-      // Custom marker styling based on data
-      customMarkerStyle: {
-        fill: '#3B82F6',
-        stroke: '#fff',
-        strokeWidth: 2,
-        radius: 6
       }
+      
+      // MapViewComponent automatically provides:
+      // - Multi-boundary support (LGA, Ward, Settlement)
+      // - Built-in search and filtering
+      // - Smart clustering and rich popups
+      showBoundaryControls: true,
+      defaultBoundaryType: 'WARD',
+      showFilters: true,
+      showSearch: true
     }), 
     {
       // Generic filter configuration

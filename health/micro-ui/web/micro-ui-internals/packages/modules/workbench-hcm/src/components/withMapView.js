@@ -1,11 +1,18 @@
 import React, { useState, useMemo, Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@egovernments/digit-ui-components';
-import MapViewSafe from './MapViewSafe';
+import MapViewComponent from './MapViewComponent';
 
 /**
  * Higher-Order Component that wraps a table component with map view toggle functionality
- * Provides map/table view switching with data transformation for map visualization
+ * Provides map/table view switching using MapViewComponent for pure map visualization
+ * 
+ * Features:
+ * - Automatic boundary detection and visualization (LGA, Ward, Settlement)
+ * - Built-in filtering and search capabilities
+ * - Smart clustering and map controls
+ * - Seamless integration with existing table components
+ * - No nested tables - clean separation of table and map views
  * 
  * @param {React.Component} WrappedComponent - Component to wrap with map view functionality
  * @param {Object} options - Configuration options for the HOC
@@ -30,19 +37,13 @@ const withMapView = (WrappedComponent, options = {}) => {
       radius: 7
     },
     
-    // Boundary/shapefile support
-    getBoundaryData = null, // Function to get boundary/shapefile data
-    boundaryStyle = {
-      color: '#3388ff',
-      weight: 2,
-      opacity: 0.8,
-      fillColor: '#3388ff',
-      fillOpacity: 0.1
-    },
-    
-    // Map features
+    // Map features (MapViewComponent handles boundaries automatically)
     showConnectingLines = false,
     showBaseLayer = true,
+    showBoundaryControls = true,
+    defaultBoundaryType = 'WARD',
+    showFilters = true,
+    showSearch = true,
     
     // Storage and persistence
     persistViewMode = true,
@@ -102,13 +103,7 @@ const withMapView = (WrappedComponent, options = {}) => {
       }).filter(Boolean); // Remove null entries
     }, [data, getLatitude, getLongitude]);
 
-    // Get boundary data if function provided
-    const boundaryData = useMemo(() => {
-      if (getBoundaryData) {
-        return getBoundaryData(data, props);
-      }
-      return null;
-    }, [data, props, getBoundaryData]);
+    // MapViewComponent handles boundaries automatically through LGA/Ward/Settlement maps
 
     // Custom popup content function
     const customPopupContent = useMemo(() => {
@@ -266,15 +261,19 @@ const withMapView = (WrappedComponent, options = {}) => {
             // Map view
             <div style={{ height: '100%', position: 'relative' }}>
               {dataSummary.hasValidCoordinates ? (
-                <MapViewSafe
+                <MapViewComponent
                   visits={mapData}
-                  shapefileData={boundaryData}
-                  boundaryStyle={boundaryStyle}
+                  totalCount={mapData.length}
                   showConnectingLines={showConnectingLines}
                   customPopupContent={customPopupContent}
                   customMarkerStyle={customMarkerStyle}
                   mapContainerId={mapContainerId}
                   showBaseLayer={showBaseLayer}
+                  showBoundaryControls={showBoundaryControls}
+                  defaultBoundaryType={defaultBoundaryType}
+                  showFilters={showFilters}
+                  showSearch={showSearch}
+                  containerHeight='100%'
                 />
               ) : (
                 // No coordinates available

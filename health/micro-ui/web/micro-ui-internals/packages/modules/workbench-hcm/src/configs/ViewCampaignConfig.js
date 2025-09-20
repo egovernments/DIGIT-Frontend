@@ -162,7 +162,7 @@ export const data = (project) => {
 
             type: "COMPONENT",
             // component: "MapComponent",
-            component: "MapComponent",
+            component: "DeliveryComponent",
             props: { 
               projectId: project?.Project?.[0]?.id,
               boundaryType: project?.Project?.[0]?.address?.boundaryType,
@@ -180,8 +180,8 @@ export const data = (project) => {
             navigationKey: "card10",
 
             type: "COMPONENT",
-            component: "EmployeesComponent",
-        // component: "UsersComponent",
+            // component: "EmployeesComponent",
+        component: "UsersComponent",
 
             props: { 
               projectId: project?.Project?.[0]?.id,
