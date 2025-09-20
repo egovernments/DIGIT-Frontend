@@ -4,6 +4,7 @@ import { Button } from "@egovernments/digit-ui-components";
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
+import withGenericFilter from './withGenericFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
@@ -15,29 +16,84 @@ function toCamelCase(str) {
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
-// Create MinimalFilteredTable for users data - clean and simple
-const MinimalFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
-  showFilters: false,
-  showStats: false, // Hide stats for cleaner look
-  showClearAll: false, // Hide clear all button
+/**
+ * HOC Composition Order for Users Component (bottom to top):
+ * 1. ReusableTableWrapper (base table)
+ * 2. withGenericFilter (adds generic field filters)
+ * 3. withBoundaryFilter (adds boundary filters)
+ */
+
+// Step 1: Apply generic filters to the base table
+const GenericFilteredUsersTable = withGenericFilter(ReusableTableWrapper, {
+  showFilters: true,
+  showStats: false,
+  showClearAll: true,
   autoApplyFilters: true,
-  persistFilters: false, // Don't persist filters
+  persistFilters: true,
   filterPosition: 'top',
+  storageKey: 'usersGenericFilters',
+  filterFields: ['role', 'status', 'employeeName', 'userName'], // User-specific fields to filter
   customLabels: {
+    role: 'Role',
+    status: 'Status',
+    employeeName: 'Employee Name',
+    userName: 'Username'
+  },
+  filterStyle: {
+    backgroundColor: '#fef3c7',
+    padding: '16px',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    border: '1px solid #fbbf24'
+  },
+  statsStyle: {
+    backgroundColor: '#fef3c7',
+    color: '#92400e',
+    fontSize: '14px',
+    fontWeight: '500'
+  },
+  onFiltersChange: (activeFilters, allFilters) => {
+    console.log('Users generic filters changed:', activeFilters);
+  },
+  onDataFiltered: (filteredData, filters) => {
+    console.log(`Users generic filtered: ${filteredData.length} records with filters:`, filters);
+  }
+});
+
+// Step 2: Apply boundary filters on top
+const FullFilteredUsersTable = withBoundaryFilter(GenericFilteredUsersTable, {
+  showFilters: false,
+  showStats: false,
+  showClearAll: true,
+  autoApplyFilters: true,
+  persistFilters: true,
+  filterPosition: 'top',
+  storageKey: 'usersBoundaryFilters',
+  customLabels: {
+    country: 'Country',
     state: 'State',
     lga: 'LGA',
     ward: 'Ward',
     healthFacility: 'Health Facility'
   },
   filterStyle: {
-    backgroundColor: '#ffffff',
-    border: '1px solid #e5e7eb',
-    borderRadius: '6px',
-    padding: '12px 16px',
-    marginBottom: '8px'
+    backgroundColor: '#f0f9ff',
+    padding: '16px',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    border: '1px solid #bae6fd'
   },
-  onFiltersChange: (activeFilters) => {
-    console.log('Users minimal filters changed:', activeFilters);
+  statsStyle: {
+    backgroundColor: '#dbeafe',
+    color: '#1e40af',
+    fontSize: '14px',
+    fontWeight: '500'
+  },
+  onFiltersChange: (activeFilters, allFilters) => {
+    console.log('Users boundary filters changed:', activeFilters);
+  },
+  onDataFiltered: (filteredData, filters) => {
+    console.log(`Users boundary filtered: ${filteredData.length} records with filters:`, filters);
   }
 });
 
@@ -440,7 +496,7 @@ const UsersComponent = ({
         progress={progress}
         title="User Records"
         errorMessage="Failed to load user data"
-        summaryCards={summaryCards}
+        // summaryCards={summaryCards}
         headerStyle={{
           background: '#f8f9fa'
         }}
@@ -457,8 +513,8 @@ const UsersComponent = ({
 
 
 
-      {/* Table with Minimal Boundary Filtering */}
-      <MinimalFilteredTable
+      {/* Table with Generic + Boundary Filtering */}
+      <FullFilteredUsersTable
         title=""
         data={tableData}
         columns={columns}

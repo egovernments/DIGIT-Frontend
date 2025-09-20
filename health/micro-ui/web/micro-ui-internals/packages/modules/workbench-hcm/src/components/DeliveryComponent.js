@@ -463,7 +463,7 @@ console.log('🚚 Delivery data received:', {
         progress={progress}
         title="Delivery Records"
         errorMessage="Failed to load delivery data"
-        summaryCards={summaryCards}
+        // summaryCards={summaryCards}
         headerStyle={{
           background: '#f8f9fa'
         }}

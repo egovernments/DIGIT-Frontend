@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
+import withGenericFilter from './withGenericFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
@@ -13,15 +14,58 @@ function toCamelCase(str) {
     .replace(/[-_\s]+(.)?/g, (_, c) => c ? c.toUpperCase() : '');
 }
 
-// Create RequiredFiltersTable for stock data - requires selection for meaningful filtering
-const RequiredFiltersTable = withBoundaryFilter(ReusableTableWrapper, {
+/**
+ * HOC Composition Order for Stock Transaction Component (bottom to top):
+ * 1. ReusableTableWrapper (base table)
+ * 2. withGenericFilter (adds generic field filters)
+ * 3. withBoundaryFilter (adds boundary filters with required state selection)
+ */
+
+// Step 1: Apply generic filters to the base table
+const GenericFilteredStockTable = withGenericFilter(ReusableTableWrapper, {
   showFilters: true,
-  showStats: true,
+  showStats: false,
   showClearAll: true,
   autoApplyFilters: true,
   persistFilters: true,
   filterPosition: 'top',
-  storageKey: 'stockTransactionFilters',
+  storageKey: 'stockGenericFilters',
+  filterFields: ['transactionType', 'facilityName', 'transactingFacilityName'], // Stock-specific fields to filter
+  customLabels: {
+    transactionType: 'Transaction Type',
+    facilityName: 'Sending Facility',
+    transactingFacilityName: 'Receiving Facility'
+  },
+  filterStyle: {
+    backgroundColor: '#f0fdf4',
+    padding: '16px',
+    borderRadius: '8px',
+    marginBottom: '8px',
+    border: '1px solid #bbf7d0'
+  },
+  statsStyle: {
+    backgroundColor: '#dcfce7',
+    color: '#166534',
+    fontSize: '14px',
+    fontWeight: '500'
+  },
+  onFiltersChange: (activeFilters, allFilters) => {
+    console.log('Stock generic filters changed:', activeFilters);
+  },
+  onDataFiltered: (filteredData, filters) => {
+    console.log(`Stock generic filtered: ${filteredData.length} records with filters:`, filters);
+  }
+});
+
+// Step 2: Apply boundary filters on top with required selection
+const FullFilteredStockTable = withBoundaryFilter(GenericFilteredStockTable, {
+  showFilters: false,
+  showStats: false,
+  showClearAll: true,
+  autoApplyFilters: true,
+  persistFilters: true,
+  filterPosition: 'top',
+  storageKey: 'stockBoundaryFilters',
   requiredFilters: ['state'], // Must select at least state to filter stock data meaningfully
   customLabels: {
     state: 'State',
@@ -46,14 +90,14 @@ const RequiredFiltersTable = withBoundaryFilter(ReusableTableWrapper, {
     borderBottom: '2px solid #fbbf24'
   },
   onFiltersChange: (activeFilters, allFilters) => {
-    console.log('Stock transaction filters changed:', activeFilters);
+    console.log('Stock boundary filters changed:', activeFilters);
     const missingRequired = ['state'].filter(field => !activeFilters[field]);
     if (missingRequired.length > 0) {
       console.warn('Missing required filters for stock data:', missingRequired);
     }
   },
   onDataFiltered: (filteredData, filters) => {
-    console.log(`Stock data filtered to ${filteredData.length} records with filters:`, filters);
+    console.log(`Stock boundary filtered: ${filteredData.length} records with filters:`, filters);
   }
 });
 
@@ -345,7 +389,7 @@ const StockTransactionComponent = ({
         progress={progress}
         title="Stock Transaction Records"
         errorMessage="Failed to load stock transaction data"
-        summaryCards={summaryCards}
+        // summaryCards={summaryCards}
         headerStyle={{
           background: '#f8f9fa'
         }}
@@ -364,8 +408,8 @@ const StockTransactionComponent = ({
         </div>
       )}
 
-      {/* Table with Required Boundary Filtering */}
-      <RequiredFiltersTable
+      {/* Table with Generic + Boundary Filtering */}
+      <FullFilteredStockTable
         title=""
         data={tableData}
         columns={columns}
