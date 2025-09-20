@@ -1,3 +1,4 @@
+import { Loader } from '@egovernments/digit-ui-components';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
 
@@ -116,6 +117,10 @@ const ElasticsearchDataHeader = ({
         </div>
       )}
 
+      {loading && showProgress && (
+        <Loader page={true} variant={"OverlayLoader"} loaderText={t("Loading data...")} />
+      )}
+
       {/* Progress indicator */}
       {loading && showProgress && (
         <div style={defaultProgressStyle}>
@@ -126,18 +131,6 @@ const ElasticsearchDataHeader = ({
             padding: '12px',
             margin: '0 20px'
           }}>
-            <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
-              <div style={{
-                width: '16px',
-                height: '16px',
-                border: '2px solid #007bff',
-                borderTop: '2px solid transparent',
-                borderRadius: '50%',
-                animation: 'spin 1s linear infinite',
-                marginRight: '8px'
-              }}></div>
-              <span style={{ fontWeight: '500' }}>Loading data...</span>
-            </div>
             
             {progress.progress !== undefined && (
               <div>

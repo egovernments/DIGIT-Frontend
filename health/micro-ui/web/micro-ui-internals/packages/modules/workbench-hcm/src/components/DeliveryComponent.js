@@ -75,7 +75,7 @@ const createMapViewTable = (mapId) => {
   
   // Map features (MapViewComponent handles advanced map features automatically)
   showConnectingLines: mapId ? true:false,
-  showBaseLayer: true,
+  showBaseLayer: false,
   showBoundaryControls: true,
   defaultBoundaryType: 'WARD',
   showFilters: true,

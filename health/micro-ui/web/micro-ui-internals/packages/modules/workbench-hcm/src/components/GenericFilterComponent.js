@@ -1,6 +1,6 @@
 import React, { useMemo, useState, useEffect,Fragment } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Button } from '@egovernments/digit-ui-components';
+import { Button, Dropdown, TextInput } from '@egovernments/digit-ui-components';
 import { 
   extractFieldOptions, 
   generateFieldLabel,
@@ -8,7 +8,7 @@ import {
 } from '../utils/genericFilterUtils';
 
 /**
- * Generic filter component that creates dropdown filters for any specified fields
+ * Generic filter component that creates dropdown filters for any specified fields and text search
  * @param {Array} data - Array of data objects to filter
  * @param {Array} filterFields - Array of field paths to create filters for
  * @param {Function} onFiltersChange - Callback when filters change
@@ -16,6 +16,7 @@ import {
  * @param {Object} containerStyle - Custom container styling
  * @param {boolean} showClearAll - Whether to show clear all button
  * @param {boolean} showStats - Whether to show filter statistics
+ * @param {boolean} showTextSearch - Whether to show text search input
  */
 const GenericFilterComponent = ({
   // Data props
@@ -28,6 +29,7 @@ const GenericFilterComponent = ({
   // Configuration
   showClearAll = true,
   showStats = true,
+  showTextSearch = true,
   
   // Styling
   containerStyle = {},
@@ -51,6 +53,12 @@ const GenericFilterComponent = ({
     });
     return initial;
   });
+
+  // State for text search
+  const [searchText, setSearchText] = useState(initialFilters.searchText || '');
+
+  // State for filter visibility (collapsed by default)
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Extract unique field values from data (only fields with multiple values)
   const fieldOptions = useMemo(() => {
@@ -81,17 +89,37 @@ const GenericFilterComponent = ({
     };
     
     setSelectedFilters(newFilters);
+    notifyFiltersChange(newFilters, searchText);
+  };
 
-    // Notify parent component about filter changes
+  // Handle text search change
+  const handleSearchChange = (value) => {
+    setSearchText(value);
+    notifyFiltersChange(selectedFilters, value);
+  };
+
+  // Unified function to notify parent about filter changes
+  const notifyFiltersChange = (filters, search) => {
     if (onFiltersChange) {
-      const activeFilters = Object.keys(newFilters)
-        .filter(key => newFilters[key])
+      const activeFilters = Object.keys(filters)
+        .filter(key => filters[key])
         .reduce((obj, key) => {
-          obj[key] = newFilters[key];
+          obj[key] = filters[key];
           return obj;
         }, {});
       
-      onFiltersChange(activeFilters, newFilters);
+      // Add search text to active filters if present
+      if (search && search.trim()) {
+        activeFilters.searchText = search.trim();
+      }
+      
+      // Include search in all filters for consistency
+      const allFilters = { ...filters };
+      if (search) {
+        allFilters.searchText = search;
+      }
+      
+      onFiltersChange(activeFilters, allFilters);
     }
   };
 
@@ -103,14 +131,15 @@ const GenericFilterComponent = ({
     });
     
     setSelectedFilters(clearedFilters);
+    setSearchText('');
     
     if (onFiltersChange) {
       onFiltersChange({}, clearedFilters);
     }
   };
 
-  // Get count of active filters
-  const activeFilterCount = Object.values(selectedFilters).filter(value => value).length;
+  // Get count of active filters (including text search)
+  const activeFilterCount = Object.values(selectedFilters).filter(value => value).length + (searchText.trim() ? 1 : 0);
 
   // Generate labels with proper formatting
   const getFieldLabel = (fieldPath) => {
@@ -121,6 +150,30 @@ const GenericFilterComponent = ({
     
     // Generate human-readable label from field path
     return generateFieldLabel(fieldPath);
+  };
+
+  // Generate a summary of active filters for compact display
+  const getFilterSummary = () => {
+    const activeParts = [];
+    
+    // Add search text if present
+    if (searchText.trim()) {
+      activeParts.push(`Search: "${searchText.trim()}"`);
+    }
+    
+    // Add field filters
+    Object.entries(selectedFilters).forEach(([fieldPath, value]) => {
+      if (value) {
+        const label = getFieldLabel(fieldPath);
+        activeParts.push(`${label}: ${value}`);
+      }
+    });
+    
+    if (activeParts.length === 0) {
+      return 'No filters applied';
+    }
+    
+    return activeParts.join(' • ');
   };
 
   // Default styles
@@ -171,49 +224,101 @@ const GenericFilterComponent = ({
 
   return (
     <div style={defaultContainerStyle}>
-      {/* Header */}
+      {/* Compact Header - Always Visible */}
       <div style={{ 
         display: 'flex', 
         justifyContent: 'space-between', 
-        alignItems: 'center', 
-        marginBottom: '16px' 
-      }}>
-        <div>
-          <h4 style={{ margin: 0, fontSize: '16px', fontWeight: '600', color: '#374151' }}>
-            {t('Generic Filters')}
-          </h4>
-          <div style={{ fontSize: '12px', color: '#6b7280', marginTop: '4px' }}>
-            {activeFilterCount > 0 ? (
-              <span>{activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} active</span>
-            ) : (
-              <span>Filter data by field values</span>
-            )}
+        alignItems: 'center',
+        cursor: 'pointer',
+        padding: '8px 0'
+      }}
+      onClick={() => setIsExpanded(!isExpanded)}
+      >
+        <div style={{ flex: 1 }}>
+          <div style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            gap: '8px'
+          }}>
+            <span style={{ 
+              fontSize: '16px',
+              transform: isExpanded ? 'rotate(90deg)' : 'rotate(0deg)',
+              transition: 'transform 0.2s'
+            }}>
+              ▶
+            </span>
+            <h4 style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#374151' }}>
+              {t('Filters')} 
+              {activeFilterCount > 0 && (
+                <span style={{
+                  marginLeft: '8px',
+                  fontSize: '12px',
+                  color: '#059669',
+                  fontWeight: '500',
+                  background: '#ecfdf5',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  border: '1px solid #d1fae5'
+                }}>
+                  {activeFilterCount} active
+                </span>
+              )}
+            </h4>
+          </div>
+          <div style={{ 
+            fontSize: '12px', 
+            color: '#6b7280', 
+            marginTop: '2px',
+            marginLeft: '32px'
+          }}>
+            {getFilterSummary()}
           </div>
         </div>
         
-        {showClearAll && activeFilterCount > 0 && (
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {showClearAll && activeFilterCount > 0 && (
+            <Button
+              type="button"
+              variation="secondary"
+              label={t('Clear')}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleClearAll();
+              }}
+              style={{
+                fontSize: '12px',
+                padding: '4px 8px'
+              }}
+            />
+          )}
           <Button
             type="button"
-            variation="secondary"
-            label={t('Clear All')}
-            onClick={handleClearAll}
+            variation="primary"
+            label={isExpanded ? t('Hide') : t('Show')}
+            onClick={(e) => {
+              e.stopPropagation();
+              setIsExpanded(!isExpanded);
+            }}
             style={{
-              fontSize: '13px'
+              fontSize: '12px',
+              padding: '4px 12px'
             }}
           />
-        )}
+        </div>
       </div>
 
-      {/* Filter Dropdowns */}
-      <div style={defaultFilterRowStyle}>
-        {availableFields.map(fieldPath => {
-          const options = fieldOptions[fieldPath] || [];
-          const hasOptions = options.length > 0;
-          const fieldLabel = getFieldLabel(fieldPath);
-          const stats = filterStats.fieldStats[fieldPath] || {};
-          
-          return (
-            <div key={fieldPath}>
+      {/* Expanded Filter Controls */}
+      {isExpanded && (
+        <div style={{ 
+          marginTop: '16px',
+          padding: '16px',
+          backgroundColor: '#f9fafb',
+          borderRadius: '6px',
+          border: '1px solid #e5e7eb'
+        }}>
+          {/* Text Search */}
+          {showTextSearch && (
+            <div style={{ marginBottom: '16px' }}>
               <label style={{ 
                 display: 'block',
                 fontSize: '12px',
@@ -221,71 +326,154 @@ const GenericFilterComponent = ({
                 color: '#374151',
                 marginBottom: '4px'
               }}>
-                {t(fieldLabel)}
-                <span style={{ color: '#9ca3af', marginLeft: '4px' }}>
-                  ({options.length}{stats.coveragePercentage ? ` • ${stats.coveragePercentage}%` : ''})
-                </span>
+                {t('Search in all fields')}
               </label>
-              
-              <select
-                value={selectedFilters[fieldPath] || ''}
-                onChange={(e) => handleFilterChange(fieldPath, e.target.value)}
-                disabled={!hasOptions}
+              <TextInput
+                type="text"
+                placeholder={t('Enter search term...')}
+                value={searchText}
+                onChange={(e) => handleSearchChange(e.target.value)}
                 style={{
-                  ...defaultSelectStyle,
-                  opacity: hasOptions ? 1 : 0.6,
-                  cursor: hasOptions ? 'pointer' : 'not-allowed',
-                  borderColor: selectedFilters[fieldPath] ? '#3b82f6' : '#d1d5db'
+                  width: '100%'
                 }}
-              >
-                <option value="">
-                  {hasOptions ? `All ${fieldLabel}` : `No ${fieldLabel} data`}
-                </option>
-                {options.map(option => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              />
             </div>
-          );
-        })}
-      </div>
+          )}
 
-      {/* Statistics */}
-      {showStats && (
-        <div style={{
-          marginTop: '12px',
-          padding: '8px 12px',
-          backgroundColor: '#f3f4f6',
-          borderRadius: '4px',
-          fontSize: '12px',
-          color: '#6b7280'
-        }}>
-          <strong>Filter Stats:</strong>{' '}
-          {availableFields.map(field => {
-            const stats = filterStats.fieldStats[field];
-            const label = getFieldLabel(field);
-            return stats ? `${label}: ${stats.uniqueValues} options (${stats.coveragePercentage}%)` : '';
-          }).filter(Boolean).join(' • ')}
-        </div>
-      )}
+          {/* Filter Dropdowns */}
+          {availableFields.length > 0 && (
+            <>
+              <div style={{
+                fontSize: '12px',
+                fontWeight: '500',
+                color: '#374151',
+                marginBottom: '8px'
+              }}>
+                {t('Filter by fields:')}
+              </div>
+              <div style={defaultFilterRowStyle}>
+                {availableFields.map(fieldPath => {
+                  const options = fieldOptions[fieldPath] || [];
+                  const hasOptions = options.length > 0;
+                  const fieldLabel = getFieldLabel(fieldPath);
+                  const stats = filterStats.fieldStats[fieldPath] || {};
+                  
+                  return (
+                    <div key={fieldPath}>
+                      <label style={{ 
+                        display: 'block',
+                        fontSize: '12px',
+                        fontWeight: '500',
+                        color: '#374151',
+                        marginBottom: '4px'
+                      }}>
+                        {t(fieldLabel)}
+                        <span style={{ color: '#9ca3af', marginLeft: '4px' }}>
+                          ({options.length}{stats.coveragePercentage ? ` • ${stats.coveragePercentage}%` : ''})
+                        </span>
+                      </label>
+                      
+                      <Dropdown
+                        variant="select-dropdown"
+                        t={t}
+                        option={[
+                          { code: '', name: hasOptions ? `All ${fieldLabel}` : `No ${fieldLabel} data` },
+                          ...options.map(option => ({ code: option, name: option }))
+                        ]}
+                        selected={selectedFilters[fieldPath] ? { code: selectedFilters[fieldPath], name: selectedFilters[fieldPath] } : { code: '', name: hasOptions ? `All ${fieldLabel}` : `No ${fieldLabel} data` }}
+                        select={(value) => handleFilterChange(fieldPath, value.code)}
+                        disable={!hasOptions}
+                        optionKey="code"
+                        placeholder={`Select ${fieldLabel}`}
+                        style={{
+                          width: '100%',
+                          opacity: hasOptions ? 1 : 0.6
+                        }}
+                      />
+                    </div>
+                  );
+                })}
+              </div>
+            </>
+          )}
 
-      {/* Debug Info (only show in development) */}
-      {process.env.NODE_ENV === 'development' && (
-        <div style={{
-          marginTop: '8px',
-          padding: '8px',
-          backgroundColor: '#f3f4f6',
-          borderRadius: '4px',
-          fontSize: '11px',
-          color: '#6b7280'
-        }}>
-          <strong>Debug Info:</strong> 
-          Found {data.length} records • 
-          Requested fields: [{filterFields.join(', ')}] • 
-          Available filters: [{availableFields.join(', ')}] • 
-          Active filters: {JSON.stringify(Object.keys(selectedFilters).filter(k => selectedFilters[k]))}
+          {/* Action Buttons */}
+          <div style={{
+            marginTop: '16px',
+            paddingTop: '12px',
+            borderTop: '1px solid #e5e7eb',
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center'
+          }}>
+            <div style={{ fontSize: '12px', color: '#6b7280' }}>
+              {activeFilterCount > 0 ? (
+                <span>{activeFilterCount} filter{activeFilterCount > 1 ? 's' : ''} applied</span>
+              ) : (
+                <span>No filters applied</span>
+              )}
+            </div>
+            
+            <div style={{ display: 'flex', gap: '8px' }}>
+              {showClearAll && activeFilterCount > 0 && (
+                <Button
+                  type="button"
+                  variation="secondary"
+                  label={t('Clear All Filters')}
+                  onClick={handleClearAll}
+                  style={{
+                    fontSize: '12px'
+                  }}
+                />
+              )}
+              <Button
+                type="button"
+                variation="primary"
+                label={t('Apply & Hide')}
+                onClick={() => setIsExpanded(false)}
+                style={{
+                  fontSize: '12px'
+                }}
+              />
+            </div>
+          </div>
+
+          {/* Statistics */}
+          {showStats && availableFields.length > 0 && (
+            <div style={{
+              marginTop: '12px',
+              padding: '8px 12px',
+              backgroundColor: '#f3f4f6',
+              borderRadius: '4px',
+              fontSize: '11px',
+              color: '#6b7280'
+            }}>
+              <strong>Filter Stats:</strong>{' '}
+              {availableFields.map(field => {
+                const stats = filterStats.fieldStats[field];
+                const label = getFieldLabel(field);
+                return stats ? `${label}: ${stats.uniqueValues} options (${stats.coveragePercentage}%)` : '';
+              }).filter(Boolean).join(' • ')}
+            </div>
+          )}
+
+          {/* Debug Info (only show in development) */}
+          {process.env.NODE_ENV === 'development' && (
+            <div style={{
+              marginTop: '8px',
+              padding: '8px',
+              backgroundColor: '#f3f4f6',
+              borderRadius: '4px',
+              fontSize: '10px',
+              color: '#6b7280'
+            }}>
+              <strong>Debug Info:</strong> 
+              Found {data.length} records • 
+              Requested fields: [{filterFields.join(', ')}] • 
+              Available filters: [{availableFields.join(', ')}] • 
+              Active filters: {JSON.stringify(Object.keys(selectedFilters).filter(k => selectedFilters[k]))}
+            </div>
+          )}
         </div>
       )}
     </div>

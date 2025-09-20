@@ -80,8 +80,20 @@ export const applyGenericFilters = (data, filters) => {
   }
 
   return data.filter(item => {
-    // Check each filter condition
+    // Handle text search first
+    if (filters.searchText && filters.searchText.trim()) {
+      const searchTerm = filters.searchText.toLowerCase().trim();
+      const matchesSearch = searchInAllFields(item, searchTerm);
+      if (!matchesSearch) {
+        return false;
+      }
+    }
+    
+    // Check each field filter condition
     for (const [fieldPath, filterValue] of Object.entries(filters)) {
+      // Skip searchText as it's handled above
+      if (fieldPath === 'searchText') continue;
+      
       if (filterValue) {
         const itemValue = getNestedValue(item, fieldPath);
         if (itemValue !== filterValue) {
@@ -271,4 +283,49 @@ export const createCompoundFilter = (filters) => {
     }
     return true;
   };
+};
+
+/**
+ * Searches for a term in all fields of an object (including nested objects)
+ * @param {Object} obj - Object to search in
+ * @param {string} searchTerm - Term to search for (should be lowercase)
+ * @returns {boolean} True if search term is found anywhere in the object
+ */
+export const searchInAllFields = (obj, searchTerm) => {
+  if (!obj || !searchTerm) return false;
+  
+  // Convert object to a flat string representation of all values
+  const getAllValues = (object, visited = new Set()) => {
+    // Prevent circular references
+    if (visited.has(object)) return [];
+    visited.add(object);
+    
+    const values = [];
+    
+    for (const [key, value] of Object.entries(object)) {
+      if (value === null || value === undefined) continue;
+      
+      if (typeof value === 'object' && !Array.isArray(value)) {
+        // Recursively get values from nested objects
+        values.push(...getAllValues(value, visited));
+      } else if (Array.isArray(value)) {
+        // Handle arrays
+        value.forEach(item => {
+          if (typeof item === 'object') {
+            values.push(...getAllValues(item, visited));
+          } else {
+            values.push(String(item).toLowerCase());
+          }
+        });
+      } else {
+        // Convert primitive values to strings
+        values.push(String(value).toLowerCase());
+      }
+    }
+    
+    return values;
+  };
+  
+  const allValues = getAllValues(obj);
+  return allValues.some(value => value.includes(searchTerm));
 };

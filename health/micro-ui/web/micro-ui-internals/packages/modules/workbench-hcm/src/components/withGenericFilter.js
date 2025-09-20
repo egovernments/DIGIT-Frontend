@@ -21,6 +21,7 @@ const withGenericFilter = (WrappedComponent, options = {}) => {
     showFilters = true,
     showStats = true,
     showClearAll = true,
+    showTextSearch = true,
     autoApplyFilters = true,
     persistFilters = false,
     storageKey = 'genericFilters',
@@ -247,6 +248,7 @@ const withGenericFilter = (WrappedComponent, options = {}) => {
         filterFields={validFilterFields}
         onFiltersChange={handleFiltersChange}
         showClearAll={showClearAll}
+        showTextSearch={showTextSearch}
         customLabels={customLabels}
         containerStyle={filterStyle}
         initialFilters={activeFilters}
