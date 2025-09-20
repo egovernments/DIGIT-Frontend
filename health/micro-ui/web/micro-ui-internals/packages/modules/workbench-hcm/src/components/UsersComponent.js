@@ -1,11 +1,13 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Button } from "@egovernments/digit-ui-components";
 import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
+import DeliveryComponent from './DeliveryComponent';
 
 function toCamelCase(str) {
   return str
@@ -39,6 +41,90 @@ const MinimalFilteredTable = withBoundaryFilter(ReusableTableWrapper, {
   }
 });
 
+// Deliveries Popup Component
+const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
+  if (!isOpen) return null;
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      backgroundColor: 'rgba(0, 0, 0, 0.5)',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 10000
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '8px',
+        padding: '24px',
+        maxWidth: '600px',
+        maxHeight: '80vh',
+        overflow: 'auto',
+        boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
+        position: 'relative'
+      }}>
+        {/* Header */}
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: '20px',
+          borderBottom: '1px solid #e5e7eb',
+          paddingBottom: '16px'
+        }}>
+          <h3 style={{ margin: 0, color: '#1f2937', fontSize: '18px', fontWeight: '600' }}>
+             Deliveries of {rowData?.employeeName || rowData?.userName || 'User'}
+          </h3>
+          <Button
+            type="button"
+            variation="secondary"
+            label="✕"
+            onClick={onClose}
+            style={{
+              minWidth: '32px',
+              height: '32px',
+              padding: '0',
+              fontSize: '16px'
+            }}
+          />
+        </div>
+
+        {/* Content */}
+        <div style={{ minHeight: '200px' }}>
+          <div style={{
+            padding: '20px',
+            textAlign: 'center',
+            color: '#6b7280',
+            fontSize: '14px'
+          }}>
+            <DeliveryComponent  userName={rowData?.userName} projectId={userComponentProps?.projectId} boundaryType={userComponentProps?.boundaryType} boundaryCode={userComponentProps?.boundaryCode} loading={userComponentProps?.loading} />
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div style={{
+          marginTop: '20px',
+          paddingTop: '16px',
+          borderTop: '1px solid #e5e7eb',
+          display: 'flex',
+          justifyContent: 'flex-end'
+        }}>
+          <Button
+            type="button"
+            variation="primary"
+            label="Close"
+            onClick={onClose}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const UsersComponent = ({ 
   projectId, 
@@ -47,6 +133,10 @@ const UsersComponent = ({
   loading: externalLoading = false 
 }) => {
   const { t } = useTranslation();
+  
+  // State for deliveries popup
+  const [isDeliveriesPopupOpen, setIsDeliveriesPopupOpen] = useState(false);
+  const [selectedUserData, setSelectedUserData] = useState(null);
 
   // Build Elasticsearch query based on inputs
   const elasticsearchQuery = useMemo(() => {
@@ -162,9 +252,28 @@ const UsersComponent = ({
       .trim();
   };
 
+  // Functions to handle popup
+  const handleViewDeliveries = (rowData) => {
+    const userComponentProps = {
+      projectId,
+      boundaryType,
+      boundaryCode,
+      loading: externalLoading
+    };
+    
+    setSelectedUserData({ rowData, userComponentProps });
+    setIsDeliveriesPopupOpen(true);
+  };
+
+  const handleCloseDeliveriesPopup = () => {
+    setIsDeliveriesPopupOpen(false);
+    setSelectedUserData(null);
+  };
+
   // Define table columns with dynamic boundary columns
   const columns = useMemo(() => {
     const baseColumns = [
+      { label: "View Deliveries", key: "viewDeliveries", sortable: false, width: "140px" },
       { label: t("EMPLOYEE_ID"), key: "employeeId", sortable: true },
       { label: t("EMPLOYEE_NAME"), key: "employeeName", sortable: true },
       { label: t("USER_NAME"), key: "userName", sortable: true },
@@ -191,6 +300,19 @@ const UsersComponent = ({
   // Custom cell renderers for specific fields
   const customCellRenderer = useMemo(() => {
     const renderers = {
+    viewDeliveries: (row) => (
+      <Button
+        type="button"
+        variation="primary"
+        label="📦 View"
+        onClick={() => handleViewDeliveries(row)}
+        style={{
+          fontSize: '13px',
+          padding: '6px 12px',
+          minWidth: '100px'
+        }}
+      />
+    ),
     isActive: (row) => (
       <span style={{
         padding: '4px 8px',
@@ -258,7 +380,7 @@ const UsersComponent = ({
     });
 
     return renderers;
-  }, [boundaryFields]);
+  }, [boundaryFields, handleViewDeliveries]);
 
   // Helper function for user type colors
   const getUserTypeColor = (userType) => {
@@ -351,6 +473,14 @@ const UsersComponent = ({
          enableExcelDownload = {true}
   excelFileName = "staff_data"
   excelButtonText = "Download Excel"
+      />
+
+      {/* Deliveries Popup */}
+      <DeliveriesPopup 
+        isOpen={isDeliveriesPopupOpen}
+        onClose={handleCloseDeliveriesPopup}
+        rowData={selectedUserData?.rowData}
+        userComponentProps={selectedUserData?.userComponentProps}
       />
     </div>
   );

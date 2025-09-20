@@ -31,11 +31,18 @@ const withMapView = (WrappedComponent, options = {}) => {
     
     // Map styling
     customMarkerStyle = {
-      fill: '#F47738',
+      fill: '#15803D',     
       stroke: '#fff',
       strokeWidth: 2,
       radius: 7
     },
+
+  //    const greenMarkerStyle = {
+  //   fill: '#15803D',        // Green-700 - darker green
+  //   stroke: '#FFFFFF',      // White border
+  //   innerFill: null,        // No inner circle
+  //   size: 18                // Even smaller for dense data
+  // }
     
     // Map features (MapViewComponent handles boundaries automatically)
     showConnectingLines = false,

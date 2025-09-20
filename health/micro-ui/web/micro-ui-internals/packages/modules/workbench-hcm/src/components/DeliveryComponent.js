@@ -51,16 +51,16 @@ const MapViewTable = withMapView(ReusableTableWrapper, {
     return `
       <div style="padding: 16px; min-width: 250px; font-family: 'Inter', sans-serif;">
         <h4 style="margin: 0 0 12px 0; color: #1f2937; font-size: 16px; font-weight: 700; border-bottom: 2px solid #f59e0b; padding-bottom: 8px;">
-          🚚 Delivery Record
+          Delivery Details
         </h4>
         <div style="font-size: 14px; line-height: 1.6; color: #374151;">
-          ${data.deliveredBy ? `<div style="margin-bottom: 6px;"><strong style="color: #059669;">👤 Delivered By:</strong> ${data.deliveredBy}</div>` : ''}
-          ${data.productName ? `<div style="margin-bottom: 6px;"><strong style="color: #0ea5e9;">📦 Product:</strong> ${data.productName}</div>` : ''}
-          ${data.quantity ? `<div style="margin-bottom: 6px;"><strong style="color: #dc2626;">📊 Quantity:</strong> ${data.quantity.toLocaleString()}</div>` : ''}
-          ${data.memberCount ? `<div style="margin-bottom: 6px;"><strong style="color: #7c3aed;">👥 Members:</strong> ${data.memberCount}</div>` : ''}
-          ${data.deliveryStatus ? `<div style="margin-bottom: 6px;"><strong style="color: #0d9488;">✅ Status:</strong> <span style="padding: 2px 6px; background: ${getStatusBgColor(data.deliveryStatus)}; color: ${getStatusTextColor(data.deliveryStatus)}; border-radius: 4px; font-size: 12px;">${data.deliveryStatus}</span></div>` : ''}
-          ${data.deliveryDate ? `<div style="margin-bottom: 6px;"><strong style="color: #6366f1;">📅 Date:</strong> ${data.deliveryDate}</div>` : ''}
-          ${data.administrativeArea ? `<div style="margin-bottom: 6px;"><strong style="color: #8b5cf6;">🏢 Area:</strong> ${data.administrativeArea}</div>` : ''}
+          ${data.deliveredBy ? `<div style="margin-bottom: 6px;"><strong > Delivered By:</strong> ${data.deliveredBy}</div>` : ''}
+          ${data.productName ? `<div style="margin-bottom: 6px;"><strong > Product:</strong> ${data.productName}</div>` : ''}
+          ${data.quantity ? `<div style="margin-bottom: 6px;"><strong > Quantity:</strong> ${data.quantity.toLocaleString()}</div>` : ''}
+          ${data.memberCount ? `<div style="margin-bottom: 6px;"><strong > Members:</strong> ${data.memberCount}</div>` : ''}
+          ${data.deliveryStatus ? `<div style="margin-bottom: 6px;"><strong > Status:</strong> <span style="padding: 2px 6px; background: ${getStatusBgColor(data.deliveryStatus)}; color: ${getStatusTextColor(data.deliveryStatus)}; border-radius: 4px; font-size: 12px;">${data.deliveryStatus}</span></div>` : ''}
+          ${data.deliveryDate ? `<div style="margin-bottom: 6px;"><strong > Date:</strong> ${data.deliveryDate}</div>` : ''}
+          ${data.administrativeArea ? `<div style="margin-bottom: 6px;"><strong > Area:</strong> ${data.administrativeArea}</div>` : ''}
         </div>
         <div style="margin-top: 12px; padding-top: 8px; border-top: 1px solid #e5e7eb; font-size: 12px; color: #6b7280;">
           <strong>📍 Coordinates:</strong> ${visit.lat.toFixed(4)}, ${visit.lng.toFixed(4)}
@@ -183,6 +183,7 @@ const DeliveryComponentBase = ({
   // Date range filter props
   startDate = null,
   endDate = null,
+  userName=null,
   dateRange = null
 }) => {
   const { t } = useTranslation();
@@ -207,6 +208,17 @@ const DeliveryComponentBase = ({
             [`Data.boundaryHierarchyCode.${toCamelCase(boundaryType)}.keyword`]: boundaryCode
           }
         })
+    }
+
+    if(userName){
+      conditions.push({
+        "match": {
+          "Data.userName": {
+            "query": userName,
+            "operator": "and"
+          }
+        }
+      });
     }
 
     // Add date range filter if provided

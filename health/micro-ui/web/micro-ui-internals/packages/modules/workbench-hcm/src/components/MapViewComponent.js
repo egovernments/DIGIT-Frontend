@@ -12,7 +12,7 @@ import SettlementBoundariesMap from "./SettlementBoundariesMap";
  * Features:
  * - Multi-boundary support (LGA, Ward, Settlement)
  * - Built-in filtering and search
- * - Smart clustering
+ * - Individual point markers (no clustering)
  * - Multiple base layers
  * - No table view (pure map)
  */
@@ -330,44 +330,7 @@ const MapViewComponent = ({
           showBaseLayer={showBaseLayers}
         />
         
-        {/* Data Summary Overlay */}
-        {visits.length > 0 && (
-          <div style={{
-            position: 'absolute',
-            top: '10px',
-            left: '10px',
-            background: 'rgba(0, 0, 0, 0.85)',
-            color: 'white',
-            padding: '10px 14px',
-            borderRadius: '8px',
-            fontSize: '13px',
-            fontWeight: '500',
-            zIndex: 1000,
-            maxWidth: '280px',
-            lineHeight: '1.5',
-            boxShadow: '0 4px 12px rgba(0,0,0,0.3)'
-          }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginBottom: '4px' }}>
-              📊 <strong>{filteredVisits.length.toLocaleString()}</strong> records
-              {filteredVisits.length !== visits.length && (
-                <span style={{ fontSize: '11px', opacity: '0.9' }}>
-                  (of {visits.length.toLocaleString()})
-                </span>
-              )}
-            </div>
-            {visits.length <= 50 ? (
-              <div style={{ fontSize: '11px', opacity: '0.9', fontStyle: 'italic' }}>
-                📍 Showing all individual points
-              </div>
-            ) : (
-              <div style={{ fontSize: '11px', opacity: '0.9', fontStyle: 'italic' }}>
-                🎯 Smart clustering enabled
-                <br/>🔍 Zoom in for details
-                <br/>📍 Click clusters to expand
-              </div>
-            )}
-          </div>
-        )}
+       
       </div>
     </div>
   );
