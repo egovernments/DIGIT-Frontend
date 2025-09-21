@@ -90,7 +90,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
             </div>
           </PrivateRoute>
           <PrivateRoute path={`${path}/productPage`}>
-            <div className="employee-app-wrapper sandbox-landing-wrapper">
+            <div className="sandbox-landing-wrapper">
               <ProductPage />
             </div>
           </PrivateRoute>
