@@ -1919,8 +1919,9 @@ digit-card-text.center {
   line-height: 1.75;
   text-align: left;
   margin-bottom: 1.5rem;
+  margin-left: 4rem;
   width: 100%;
-  padding: 0rem 4rem;
+  padding: 0rem 2rem;
 }
 
 .roles-column-align {
@@ -1950,7 +1951,8 @@ digit-card-text.center {
   /* Vertical alignment */
   gap: 1rem;
   width: 100%;
-  padding: 0rem 8rem;
+  padding: 0rem 4rem;
+  margin-left: 2rem;
 }
 
 .role-icon-wrapper {
@@ -1984,7 +1986,7 @@ digit-card-text.center {
 }
 
 .cs-wrapper-align {
-  margin-left: 2rem;
+  margin-left: 0rem;
 }
 
 
@@ -1992,7 +1994,7 @@ digit-card-text.center {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 40px;
+  padding: 0px 2rem;
   flex-wrap: wrap;
 }
 
@@ -2079,13 +2081,13 @@ digit-card-text.center {
 }
 
 .cs-left {
-  padding-left: 40px;
+  padding-left: 2rem;
 
 }
 
 
 .cs-right {
-  padding-right: 40px;
+  padding-right: 2rem;
   display: flex;
 }
 
@@ -2134,7 +2136,7 @@ digit-card-text.center {
 
 .wt-tab-wrapper {
   display: flex;
-  margin-bottom: 0;
+  margin-bottom: -1rem;
   border-bottom: none;
   padding-left: 0;
 }
@@ -2154,10 +2156,10 @@ digit-card-text.center {
 }
 
 .wt-tab.active {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
   color: #d93800;
   background-color: #ffffff;
-  border: 2px solid #d93800;
+  border: 1px solid #d93600b9;
   text-align: center;
   width: 12rem;
 }

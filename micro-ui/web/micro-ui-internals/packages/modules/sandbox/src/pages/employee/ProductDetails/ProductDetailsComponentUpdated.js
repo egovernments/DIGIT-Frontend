@@ -31,7 +31,7 @@ const Breadcrumb = ({ path }) => {
     };
 
     return (
-      <div style={{ width: "100%", backgroundColor: "#e4edf1", padding: "2rem 3rem" }}>
+      <div style={{ width: "100%", backgroundColor: "#e4edf1", padding: "2rem 2rem 2rem 4rem" }}>
         <nav className="nav-breadcrumb">
           <a href={redirectPath} onClick={handleContinue}>Products</a>
           <span className="separator">/</span>
@@ -43,10 +43,10 @@ const Breadcrumb = ({ path }) => {
 
 const HeroSection = ({ title, headline, img }) => (
     <div style={{
-        width: '100%', backgroundColor: '#e4edf1', padding: '3rem 6rem', minHeight: '35rem'
+        width: '100%', backgroundColor: '#e4edf1', padding: '3rem 2rem 3rem 4rem', minHeight: '35rem'
     }}>
-        <div style={{ display: 'flex', height: '400px', margin: '0 auto' }}>
-            <div style={{ width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
+        <div style={{ display: 'flex', height: '400px', margin: '0 auto', marginLeft: '2rem' }}>
+            <div style={{ marginLeft: '2rem', width: '50%', paddingRight: '2rem', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
                 <h2 style={{ color: '#215B73', fontSize: '2.5rem', margin: '0rem 0rem' }}>{title}</h2>
                 <p style={{ fontSize: '3.75rem', fontWeight: 'bold', lineHeight: '1.3', margin: '1.5rem 0rem' }}>
                     {headline.map((segment, i) => (
@@ -67,7 +67,7 @@ const HeroSection = ({ title, headline, img }) => (
 
 const AboutSection = ({ about }) =>
 (
-    <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '0rem 6rem' }}>
+    <div style={{ width: '100%', backgroundColor: '#ffffff', padding: '0rem 2rem 0rem 4rem' }}>
         <div className="about-container">
             <div className="about-title-wrapper">
                 <h2 className="about-title">{about.title}</h2>
@@ -109,7 +109,7 @@ const RoleBlock = ({ description }) => {
 
 
 const ExperienceSection = ({ experience, t = { t } }) => (
-    <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '0rem 6rem' }}>
+    <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '0rem 2rem 0rem 4rem' }}>
         <div className="about-container-2" style={{ backgroundColor: '#e4edf1' }}>
             <div className="about-title-wrapper">
                 <h2 className="about-title">{experience.title}</h2>
@@ -174,7 +174,7 @@ const RoleContent = ({ role, cards, config, t }) => (
 //             : stakeholderWTLink;
 
 //     return (
-//         <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
+//         <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 2rem 3rem 4rem' }}>
 //             <div className="wt-c1">
 //                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
 //                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
@@ -463,7 +463,7 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     });
     content.experience.roles = roles;
     return (
-        <div>
+        <div style={{ paddingLeft: '0.5rem' }}>
             <Breadcrumb path={`${t(config[0].heading)}`} />
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
