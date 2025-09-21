@@ -27,12 +27,13 @@ const ProductsPageComponent = ({ detailsConfig }) => {
   };
 
   return (
-    <div className="products-container">
-      {/* Header Section */}
-      <HeaderComponent className="products-title">{t("SANDBOX_PRODUCT_HEADER")}</HeaderComponent>
-      <CardText className="products-description">
-        {t("SANDBOX_PRODUCT_HEADER_DESC")}
-      </CardText>
+    <div className="custom-products-container">
+      <div className="custom-products-card">
+        {/* Header Section */}
+        <HeaderComponent className="products-title">{t("SANDBOX_PRODUCT_HEADER")}</HeaderComponent>
+        <CardText className="products-description">
+          {t("SANDBOX_PRODUCT_HEADER_DESC")}
+        </CardText>
 
       {/* Product Cards Section */}
       <div className="products-list">
@@ -46,9 +47,19 @@ const ProductsPageComponent = ({ detailsConfig }) => {
               <div className="icon-wrap">
                 {Digit.Utils.iconRender(product.icon, "#c84c0e")}
               </div>
-              <HeaderComponent className="product-title">{t(product.heading)}</HeaderComponent>
+              <div 
+                className="product-title"
+                title={t(product.heading)}
+              >
+                {t(product.heading)}
+              </div>
             </div>
-            <CardText className="product-description">{t(product?.cardDescription)}</CardText>
+            <div 
+              className="product-description"
+              title={t(product?.cardDescription)}
+            >
+              {t(product?.cardDescription)}
+            </div>
             <Button
               className="explore-button-updated no-hover"
               size={"medium"}
@@ -62,6 +73,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
           </Card>
         )}
         )}
+      </div>
       </div>
     </div>
   );
