@@ -26,6 +26,8 @@ function toCamelCase(str) {
 
 // Deliveries Popup Component
 const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
+  const { t } = useTranslation();
+
   if (!isOpen) return null;
 
   return (
