@@ -478,6 +478,7 @@ const StockTransactionComponentBase = ({
         customCellRenderer={customCellRenderer}
         pagination={true}
         paginationPerPage={25}
+        enableExcelDownload={false}
         paginationRowsPerPageOptions={[10, 25, 50, 100, 500, 1000]}
         className="stock-transaction-table"
         headerClassName="stock-transaction-header"

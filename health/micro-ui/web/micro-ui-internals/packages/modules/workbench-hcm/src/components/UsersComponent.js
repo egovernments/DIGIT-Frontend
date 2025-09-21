@@ -543,9 +543,9 @@ const UsersComponent = ({
         paginationRowsPerPageOptions={[10, 25, 50, 100, 500, 1000]}
         className="users-table"
         headerClassName="users-header"
-         enableExcelDownload = {true}
-  excelFileName = "staff_data"
-  excelButtonText = "Download Excel"
+        enableExcelDownload={false}
+        excelFileName="staff_data"
+        excelButtonText="Download Excel"
       />
 
       {/* Deliveries Popup */}
