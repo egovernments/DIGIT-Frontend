@@ -85,7 +85,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <PrivateRoute path={`${path}/application-management/setup-master`} component={() => <SetupMaster />} />
           <PrivateRoute path={`${path}/application-management/module`} component={() => <ModuleMasterTable />} />
           <PrivateRoute path={`${path}/landing`}>
-            <div className="employee-app-wrapper sandbox-landing-wrapper">
+            <div className="sandbox-landing-wrapper">
               <Landing />
             </div>
           </PrivateRoute>
