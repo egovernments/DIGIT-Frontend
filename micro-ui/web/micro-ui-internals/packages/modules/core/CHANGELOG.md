@@ -1,5 +1,7 @@
 # Changelog 
 
+## [1.8.42(Sandbox)] - [22-Sept-2025]
+- Sandbox ui style changes (Landing Page/Product Page/Details Page/OTP Carousel) / CCSD-833
 
 ## [1.8.43]  [26-June-2025]
 - Login and SignUp Pages UI for Sandbox is updated
