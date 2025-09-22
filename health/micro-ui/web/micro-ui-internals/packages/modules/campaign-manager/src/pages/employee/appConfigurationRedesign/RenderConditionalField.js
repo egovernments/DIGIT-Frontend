@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, Fragment } from "react";
+import React, { useEffect, useMemo, Fragment, useState } from "react";
 import { TextInput, Dropdown, RadioButtons, Button, FieldV1 } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
@@ -77,16 +77,17 @@ const getDefaultRules = (key) => {
 const ErrorComponent = ({ error }) => <span style={{ color: "red" }}>{error}</span>;
 const computeError = (field, currentField, t) => {
   let error = "";
-  const attr = t(field.label);
-  const valueStr = currentField?.[attr];
+   const attr = t(field.label);
+  const valueStr = currentField?.[field?.bindTo];
 
   // 1. Pattern Validation
   const pattern = field?.validation?.pattern;
+
   if (pattern) {
     try {
       const regex = new RegExp(pattern);
       if (!regex.test(valueStr)) {
-        error = `${attr}: Value doesn't match required pattern`;
+        error = `${`attr`}: Value doesn't match required pattern`;
         return error;
       }
     } catch (e) {
@@ -148,42 +149,50 @@ export const RenderConditionalField = ({
   selectedField,
 }) => {
   const { t } = useTranslation();
-  // const { state: appState, setFieldError, clearFieldError } = useAppConfigContext();
+  const { state: appState, setFieldError, clearFieldError } = useAppConfigContext();
   const useT = useCustomT();
+  
+  // Track if field has been touched
+  const [isTouched, setIsTouched] = useState(false);
+  
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === (drawerState?.appType || drawerState?.type))
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
-  // const errorKey = useMemo(() => `${drawerState?.jsonPath || drawerState?.id || "field"}::${cField?.bindTo || "bind"}`, [
-  //   drawerState?.jsonPath,
-  //   drawerState?.id,
-  //   cField?.bindTo,
-  // ]);
-  // const currentError = appState?.errorMap?.[errorKey] || "";
+  
+  const errorKey = useMemo(() => `${drawerState?.jsonPath || drawerState?.id || "field"}::${cField?.bindTo || "bind"}`, [
+    drawerState?.jsonPath,
+    drawerState?.id,
+    cField?.bindTo,
+  ]);
+  
+  const currentError = appState?.errorMap?.[errorKey] || "";
+  const evaluatedError = useMemo(() => computeError(cField, drawerState, t), [cField, drawerState]);
 
-  // const evaluatedError = useMemo(() => computeError(cField, drawerState, t), [cField, drawerState]);
-
-  // Only show error if field has content (not empty)
+  // Only show error if field has been touched and has content
   const fieldValue = typeof drawerState?.[cField?.bindTo] === "boolean" ? null : drawerState?.[cField?.bindTo];
-  // const hasContent = fieldValue !== undefined && fieldValue !== null && fieldValue !== "";
-  // const shouldShowError = hasContent && evaluatedError && evaluatedError !== "";
+  const hasContent = fieldValue !== undefined && fieldValue !== null && fieldValue !== "";
+  const shouldShowError = isTouched && hasContent && evaluatedError && evaluatedError !== "";
 
-  // useEffect(() => {
-  //   if (evaluatedError && evaluatedError !== currentError) {
-  //     setFieldError(errorKey, evaluatedError);
-  //   } else if (!evaluatedError && currentError) {
-  //     clearFieldError(errorKey);
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [evaluatedError, errorKey]);
+  useEffect(() => {
+    // Only validate if field has been touched
+    if (isTouched) {
+      if (evaluatedError && evaluatedError !== currentError) {
+        setFieldError(errorKey, evaluatedError);
+      } else if (!evaluatedError && currentError) {
+        clearFieldError(errorKey);
+      }
+    }
+  }, [evaluatedError, errorKey, isTouched, currentError, setFieldError, clearFieldError]);
+
   switch (cField?.type) {
     case "text":
     case "number":
     case "date":
     case "time":
       return (
-        <span>
+        <div style={{ width: "100%" }}>
           <FieldV1
             type={cField?.type}
             label={cField?.label}
@@ -192,8 +201,18 @@ export const RenderConditionalField = ({
             config={{
               step: "",
             }}
+            onBlur={() => {
+              // Mark as touched when user leaves the field
+              setIsTouched(true);
+            }}
             onChange={(event) => {
               const value = event.target.value;
+              
+              // Mark as touched when user starts typing
+              if (!isTouched && value) {
+                setIsTouched(true);
+              }
+              
               if (isLocalisable) {
                 updateLocalization(
                   drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
@@ -213,21 +232,27 @@ export const RenderConditionalField = ({
                           drawerState?.jsonPath || drawerState?.id
                         }`,
                 }));
-                return;
               } else {
                 setDrawerState((prev) => ({
                   ...prev,
                   [cField?.bindTo]: value,
                 }));
-                return;
               }
             }}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
-            // charCount={field?.charCount}
             disabled={disabled}
           />
-          {/* {shouldShowError ? <ErrorComponent error={currentError} /> : null} */}
-        </span>
+          {shouldShowError && (
+            <div style={{ 
+              color: "red", 
+              fontSize: "0.875rem", 
+              marginTop: "0.25rem",
+              pointerEvents: "none" // Prevents blocking interactions
+            }}>
+              {currentError}
+            </div>
+          )}
+        </div>
       );
     case "options":
       return (

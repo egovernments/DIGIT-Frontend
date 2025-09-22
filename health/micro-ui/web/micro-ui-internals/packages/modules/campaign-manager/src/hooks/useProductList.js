@@ -21,6 +21,7 @@ export const useProductList = (tenantId,projectType) => {
 
   const { isLoading, data: productVariant, isFetching } = Digit.Hooks.useCustomAPIHook(reqCriteriaVariant);
 
+
   const reqCriteriaProduct = {
     url: `/product/v1/_search`,
     params: { tenantId: tenantId, limit: 1000, offset: 0 },
@@ -30,7 +31,7 @@ export const useProductList = (tenantId,projectType) => {
       },
     },
     config: {
-      enabled: productVariant && !isLoading ? true : false,
+      enabled: productVariant?.length > 0 && !isLoading ? true : false,
       select: (data) => {
         return data?.Product;
       },
@@ -38,6 +39,7 @@ export const useProductList = (tenantId,projectType) => {
   };
 
   const { isLoading: isProductLoading, data: product } = Digit.Hooks.useCustomAPIHook(reqCriteriaProduct);
+
 
   let productList;
   if (productVariant && product) {
@@ -55,5 +57,6 @@ export const useProductList = (tenantId,projectType) => {
       ?.filter((i) => i !== null);
   }
 
-  return productList;
+
+  return {isLoading: isProductLoading || isLoading , productList: productList};
 };

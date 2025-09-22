@@ -157,7 +157,7 @@ export const cycleDataRemap=(data)=> {
 export const processDelivery = (delivery, resourcesMap, ageInfo, type, projectType) => {
   return {
     id: parseInt(delivery.deliveryIndex, 10),
-    deliveryStrategy: delivery.deliveryStrategy || "DIRECT",
+    deliveryStrategy: delivery.deliveryType || "DIRECT",
     mandatoryWaitSinceLastDeliveryInDays: null,
     doseCriteria: delivery.deliveryRules.map((rule) => {
       const doseCriteriaResult = processDoseCriteria(rule, resourcesMap, type, projectType);
@@ -300,11 +300,13 @@ export const updateUrlParams = (params) => {
   export const transformDraftDataToFormData =(draftData,projectType)=>{
 
     const delivery = Array.isArray(draftData?.deliveryRules) ? draftData?.deliveryRules : [];
-    const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.filter((i) => i?.code === draftData?.projectType);
+    const filteredProjectType = projectType?.["HCM-PROJECT-TYPES"]?.projectTypes?.find((i) => i?.code === draftData?.projectType);
     const restructureFormData = {
-      HCM_CAMPAIGN_TYPE: { projectType: filteredProjectType?.[0] },
       HCM_CAMPAIGN_NAME: {
         campaignName: draftData?.campaignName,
+      },
+      HCM_CAMPAIGN_TYPE: {
+        projectType: filteredProjectType
       },
       HCM_CAMPAIGN_DATE: {
         campaignDates: {
