@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.8.42] - [22-Sept-2025]
+
+- Sandbox ui style changes (Landing Page/Product Page/Details Page/OTP Carousel) / CCSD-833 
+
 ## [1.8.41] - [26-Aug-2025]
 
 - Removed the extra margin below in inbox search of ws module

@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.47]  [22-Sep-2025]
+- Carousel Transitions Added, OTP Page Text bold and minor ui tweeks
+
 ## [1.8.46]  [13-Sep-2025]
 - Added new logic for language selection page
 
