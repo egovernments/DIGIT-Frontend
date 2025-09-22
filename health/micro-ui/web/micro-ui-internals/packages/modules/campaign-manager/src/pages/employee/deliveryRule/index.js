@@ -105,20 +105,31 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   }, [selectedProjectType, currentCampaignId, resetData]);
 
   // Initialize campaign data when dependencies are ready
-  useEffect(() => {
+ // Around line 85-95, modify to:
+useEffect(() => {
+  if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
+    return;
+  }
 
-    if (effectiveDeliveryConfig && cycleData?.cycleConfgureDate && !initialized) {
-      const cycles = cycleData.cycleConfgureDate.cycle || tabCount;
-      const deliveries = cycleData.cycleConfgureDate.deliveries || subTabCount;
+  if (initialized) {
+    return;
+  }
 
-      try {
-        initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
-      } catch (error) {
-        console.error('Error initializing campaign data:', error);
-        setErrorState(error.message);
-      }
-    }
-  }, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, tabCount, subTabCount, setErrorState, selectedProjectType, currentCampaignId]);
+  const cycles = cycleData.cycleConfgureDate.cycle;
+  const deliveries = cycleData.cycleConfgureDate.deliveries;
+
+  if (!cycles || !deliveries) {
+    return;
+  }
+
+
+  try {
+    initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
+  } catch (error) {
+    console.error('Error initializing campaign data:', error);
+    setErrorState(error.message);
+  }
+}, [cycleData, effectiveDeliveryConfig, initialized, initializeData, savedDeliveryRules, setErrorState]);
 
   // Wrap onSelect in useCallback to prevent dependency issues
   const handleDataUpdate = useCallback((data) => {
