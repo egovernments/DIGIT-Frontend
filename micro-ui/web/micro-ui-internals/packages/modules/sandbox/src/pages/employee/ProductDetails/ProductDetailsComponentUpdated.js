@@ -285,7 +285,7 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
                         getTabs()
                     )}
                 </div>
-                <div className="wt-iframe-wrapper" style={{ width: '100%' }}>
+                <div className="wt-iframe-wrapper h-full w-full relative overflow-hidden" style={{ marginTop: '-1rem', height: '40rem', width: '100%', alignSelf: 'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {iframeSrc && <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe" style={{ width: '100%', height: '600px' }}></iframe>}
                 </div>
             </div>
