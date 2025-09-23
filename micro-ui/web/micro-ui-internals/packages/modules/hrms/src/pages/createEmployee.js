@@ -149,8 +149,10 @@ const CreateEmployee = () => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
     const selectedCity= data?.Jurisdictions?.[0]?.boundary;
     data.Jurisdictions = data?.Jurisdictions?.map((juris) => {
+      const normalizedBoundary = juris?.boundary === "citya" ? "pg.citya" : juris?.boundary;
       return {
         ...juris,
+        boundary: normalizedBoundary,
         tenantId: tenantId
       };
     });
