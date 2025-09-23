@@ -135,6 +135,7 @@ const AppConfigurationTabLayer = () => {
       cacheTime: 0,
       staleTime: 0,
       select: (data) => {
+        console.log("data?.mdms", data);  
         tabStateDispatch({
           key: "SET_TAB",
           data: data?.mdms,

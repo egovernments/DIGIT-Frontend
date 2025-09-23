@@ -25,6 +25,8 @@ import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
+import AppConfigurationFlowManager from "./appConfigurationRedesign/AppConfigurationFlowManager";
+import AppConfigurationStore from "./NewAppConfiguration/AppConfigurationStore";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -86,14 +88,14 @@ const CampaignBreadCrumb = ({ location, defaultPath }) => {
       query: `campaignNumber=${campaignNumber}&tenantId=${tenantId}`,
       show:
         pathVar.match("view-details") ||
-          pathVar.match("setup-campaign") ||
-          pathVar.match("app-configuration-redesign") ||
-          pathVar.match("app-modules") ||
-          pathVar.match("app-features") ||
-          pathVar === "update-dates-boundary" ||
-          pathVar === "update-campaign" ||
-          pathVar === "checklist/search" ||
-          pathVar === "upload-screen"
+        pathVar.match("setup-campaign") ||
+        pathVar.match("app-configuration-redesign") ||
+        pathVar.match("app-modules") ||
+        pathVar.match("app-features") ||
+        pathVar === "update-dates-boundary" ||
+        pathVar === "update-campaign" ||
+        pathVar === "checklist/search" ||
+        pathVar === "upload-screen"
           ? true
           : false,
     },
@@ -190,18 +192,15 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
 
   useEffect(() => {
     if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     }
     if (window.location.pathname === "/workbench-ui/employee/campaign/response") {
-
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
       window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     }
     return () => {
       if (window.location.pathname !== "/workbench-ui/employee/campaign/setup-campaign") {
-
         window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
         window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
       }
@@ -212,7 +211,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
-          window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
+        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
         <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
@@ -245,6 +244,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <PrivateRoute path={`${path}/update-campaign`} component={() => <UpdateCampaign hierarchyData={hierarchyData} />} />
           <PrivateRoute path={`${path}/setup-from-microplan`} component={() => <ApprovedMicroplans />} />
           <PrivateRoute path={`${path}/app-configuration-redesign`} component={() => <AppConfigurationParentRedesign />} />
+          <PrivateRoute path={`${path}/new-app-configuration-redesign`} component={() => <AppConfigurationStore />} />
           <PrivateRoute
             path={`${path}/create-campaign`}
             component={() => <CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}

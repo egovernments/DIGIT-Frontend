@@ -1,0 +1,273 @@
+import React, { Fragment, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useSelector, useDispatch } from "react-redux";
+import { FieldV1, Switch, TextBlock, Tag, Divider } from "@egovernments/digit-ui-components";
+import { updateSelectedField } from "./redux/remoteConfigSlice";
+
+// Simple field renderer for different field types
+const getValueByPath = (source, path, defaultValue = "") => {
+  if (!path || typeof path !== "string") return defaultValue;
+  if (!path.includes(".")) return source?.[path] || defaultValue;
+  const keys = path.split(".");
+  let value = source;
+  for (const key of keys) {
+    value = value?.[key];
+    if (value === undefined || value === null) return defaultValue;
+  }
+  return value;
+};
+const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => {
+  const { t } = useTranslation();
+
+  // Check if field should be visible based on field type
+  const isFieldVisible = () => {
+    // If visibilityEnabledFor is empty, the field is always visible
+    if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
+      return true;
+    }
+    // Check if current field type matches any of the enabled types
+    return panelItem.visibilityEnabledFor.includes(fieldType);
+  };
+
+  if (!isFieldVisible()) {
+    return null;
+  }
+
+  const getFieldValue = () => {
+    const bindTo = panelItem.bindTo;
+    return getValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
+  };
+
+  // Check if conditional fields should be shown
+  const shouldShowConditionalFields = () => {
+    if (!panelItem?.showFieldOnToggle) {
+      return false;
+    }
+    const fieldValue = getFieldValue();
+    return Boolean(fieldValue);
+  };
+
+  // Get conditional fields to show
+  const getConditionalFields = () => {
+    if (!shouldShowConditionalFields() || !Array.isArray(panelItem?.conditionalField)) {
+      return [];
+    }
+    return panelItem.conditionalField.filter((cField) => {
+      if (cField.condition === undefined) {
+        return true;
+      }
+      return cField.condition === Boolean(getFieldValue());
+    });
+  };
+
+  const handleFieldChange = (value) => {
+    const bindTo = panelItem.bindTo;
+    if (bindTo.includes(".")) {
+      // Handle nested properties
+      const keys = bindTo.split(".");
+      const newField = { ...selectedField };
+      let current = newField;
+      for (let i = 0; i < keys.length - 1; i++) {
+        if (!current[keys[i]]) {
+          current[keys[i]] = {};
+        }
+        current = current[keys[i]];
+      }
+      current[keys[keys.length - 1]] = value;
+      onFieldChange(newField);
+    } else {
+      onFieldChange({ ...selectedField, [bindTo]: value });
+    }
+  };
+
+  const renderMainField = () => {
+    switch (panelItem.fieldType) {
+      case "toggle":
+        return (
+          <Switch label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)} onToggle={handleFieldChange} isCheckedInitially={getFieldValue()} shapeOnOff />
+        );
+
+      case "text":
+        return (
+          <FieldV1
+            type="text"
+            label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
+            value={getFieldValue()}
+            onChange={(event) => handleFieldChange(event.target.value)}
+            placeholder={t(panelItem.innerLabel) || ""}
+            populators={{ fieldPairClassName: "drawer-field" }}
+          />
+        );
+
+      case "number":
+        return (
+          <FieldV1
+            type="number"
+            label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
+            value={getFieldValue()}
+            onChange={(event) => handleFieldChange(parseInt(event.target.value) || 0)}
+            placeholder={t(panelItem.innerLabel) || ""}
+            populators={{ fieldPairClassName: "drawer-field" }}
+          />
+        );
+
+      default:
+        return null;
+    }
+  };
+
+  const renderConditionalField = (cField) => {
+    console.log("CHECK D", cField);
+    switch (cField.type) {
+      case "text":
+        return (
+          <FieldV1
+            key={cField.bindTo}
+            type="text"
+            label={t(`FIELD_DRAWER_LABEL_${cField.label}`)}
+            value={selectedField[cField.bindTo]}
+            onChange={(event) => {
+              const newField = { ...selectedField };
+              newField[cField.bindTo] = event.target.value;
+              onFieldChange(newField);
+            }}
+            placeholder={t(cField.innerLabel) || ""}
+            populators={{ fieldPairClassName: "drawer-field" }}
+          />
+        );
+      default:
+        return null;
+    }
+  };
+
+  return (
+    <div>
+      {renderMainField()}
+      {/* Render conditional fields */}
+      {getConditionalFields().map((cField, index) => (
+        <div key={`${cField.bindTo}-${index}`} style={{ marginTop: "8px" }}>
+          {renderConditionalField(cField)}
+        </div>
+      ))}
+    </div>
+  );
+};
+
+// Simple tabs component
+const Tabs = ({ tabs, activeTab, onTabChange }) => {
+  const { t } = useTranslation();
+
+  return (
+    <div className="drawer-tabs">
+      {tabs.map((tab) => (
+        <button key={tab} className={`drawer-tab ${activeTab === tab ? "active" : ""}`} onClick={() => onTabChange(tab)}>
+          {t(`TAB_${tab.toUpperCase()}`)}
+        </button>
+      ))}
+    </div>
+  );
+};
+
+const getFieldType = (field, fieldTypeMasterData) => {
+  if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
+    return "text";
+  }
+
+  // Find matching field type based on type and format
+  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
+
+  return matched?.fieldType || "text";
+};
+
+function NewDrawerFieldComposer() {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  // Get data from Redux
+  const { selectedField } = useSelector((state) => state.remoteConfig);
+  const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
+  const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
+  // Local state for tabs
+  const [activeTab, setActiveTab] = useState("content");
+  // Get panel configuration
+  const panelConfig = panelProperties?.FieldPropertiesPanelConfig || {};
+  const tabs = Object.keys(panelConfig);
+  // Get current tab properties
+  const currentTabProperties = useMemo(() => {
+    return panelConfig[activeTab] || [];
+  }, [panelConfig, activeTab]);
+
+  // Get field type from field type master
+  const fieldType = useMemo(() => {
+    if (!selectedField || !fieldTypeMaster?.FieldTypeMappingConfig) {
+      return selectedField?.type || "textInput";
+    }
+    return getFieldType(selectedField, fieldTypeMaster.FieldTypeMappingConfig);
+  }, [selectedField, fieldTypeMaster]);
+
+  // Filter properties based on field type visibility
+  const visibleTabProperties = useMemo(() => {
+    return currentTabProperties.filter((panelItem) => {
+      // If visibilityEnabledFor is empty, the field is always visible
+      if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
+        return true;
+      }
+      // Check if current field type matches any of the enabled types
+      return panelItem.visibilityEnabledFor.includes(fieldType);
+    });
+  }, [currentTabProperties, fieldType]);
+
+  console.log("NABEEL", panelProperties, panelConfig, tabs, currentTabProperties, fieldType, visibleTabProperties);
+  // Handle field changes
+  const handleFieldChange = (updatedField) => {
+    dispatch(updateSelectedField(updatedField));
+  };
+
+  // Don't render if no field selected
+  if (!selectedField) {
+    return (
+      <div style={{ padding: "16px" }}>
+        <p>No field selected</p>
+      </div>
+    );
+  }
+
+  return (
+    <Fragment>
+      <div className="app-config-drawer-subheader">
+        <div>{t("APPCONFIG_PROPERTIES")}</div>
+      </div>
+      <Divider />
+
+      {/* Tabs */}
+      <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
+
+      {/* Tab Description */}
+      <TextBlock body="" caption={t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)} header="" captionClassName="camp-drawer-caption" subHeader="" />
+
+      {/* Hidden Field Warning */}
+      {selectedField?.hidden && (
+        <div style={{ marginBottom: "16px" }}>
+          <Tag showIcon={true} label={t("CMP_DRAWER_FIELD_DISABLED_SINCE_HIDDEN")} type="warning" />
+        </div>
+      )}
+
+      {/* Field Properties */}
+      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        {visibleTabProperties.map((panelItem) => (
+          <div key={panelItem.id} className="drawer-field-container">
+            <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
+          </div>
+        ))}
+
+        {/* No properties message */}
+        {visibleTabProperties.length === 0 && (
+          <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
+            <Tag showIcon={true} label={t(`CMP_DRAWER_NO_CONFIG_ERROR_${activeTab.toUpperCase()}`)} type="error" />
+          </div>
+        )}
+      </div>
+    </Fragment>
+  );
+}
+
+export default React.memo(NewDrawerFieldComposer);

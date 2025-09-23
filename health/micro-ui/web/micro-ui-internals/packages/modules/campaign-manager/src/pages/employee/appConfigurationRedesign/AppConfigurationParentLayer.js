@@ -445,6 +445,7 @@ const AppConfigurationParentRedesign = ({
     return <Loader className="loader-center" page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")} />;
   }
 
+  console.log("PARENT STATE", parentState);
   return (
     <div>
       <Header className="app-config-header">

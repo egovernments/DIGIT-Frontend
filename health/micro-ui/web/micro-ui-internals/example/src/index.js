@@ -8,13 +8,13 @@ import { Loader } from "@egovernments/digit-ui-components";
 
 import { UICustomizations } from "./UICustomizations";
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager"
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+// import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
-import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
-import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
-import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
+// import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
+// import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan";
+// import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+// import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
+// import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
 var Digit = window.Digit || {};
 
@@ -76,13 +76,13 @@ const initDigitUI = () => {
     // PaymentLinks,
   });
   initUtilitiesComponents();
-  initWorkbenchComponents();
-  initWorkbenchHCMComponents();
+  // initWorkbenchComponents();
+  // initWorkbenchHCMComponents();
   initCampaignComponents();
-  initMicroplanComponents();
-  initHRMSComponents();
-  initPGRComponents();
-  initDSSComponents();
+  // initMicroplanComponents();
+  // initHRMSComponents();
+  // initPGRComponents();
+  // initDSSComponents();
 
   const moduleReducers = (initData) => initData;
 

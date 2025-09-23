@@ -46,7 +46,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
 
   // Fetch roles relevant to checklists
   const reqRoles = {
-    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    url: `/mdms-v2/v2/_search`,
     body: {
       MdmsCriteria: {
         tenantId,
@@ -132,7 +132,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
   // Mutation to create new MDMS entries using a dynamic URL with schemaCode
   const mdmsCreateMutation = useMutation(
     async ({ schemaCode, body }) => {
-      const dynamicUrl = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_create/${schemaCode}`;
+      const dynamicUrl = `/mdms-v2/v2/_create/${schemaCode}`;
       const res = await Digit.CustomService.getResponse({
         url: dynamicUrl,
         body,
@@ -147,7 +147,7 @@ const useCloneCampaign = ({ tenantId, campaignId, campaignName, startDate, endDa
     // Mutation to create new MDMS entries using a dynamic URL with schemaCode
     const mdmsUpdateMutation = useMutation(
       async ({ schemaCode, body }) => {
-        const dynamicUrl = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_update/${schemaCode}`;
+        const dynamicUrl = `/mdms-v2/v2/_update/${schemaCode}`;
         const res = await Digit.CustomService.getResponse({
           url: dynamicUrl,
           body,

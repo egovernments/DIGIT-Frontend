@@ -45,7 +45,9 @@
     "xlsx": "0.17.5",
     "react-dnd-html5-backend": "16.0.1",
     "react-dnd": "16.0.1",
-    "react-qr-code": "1.1.1"
+    "react-qr-code": "1.1.1",
+    "@reduxjs/toolkit": "^1.9.5",
+    "react-redux": "^7.2.9"
   },
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",

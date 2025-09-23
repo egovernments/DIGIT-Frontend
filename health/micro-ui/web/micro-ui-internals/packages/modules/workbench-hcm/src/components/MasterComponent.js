@@ -31,7 +31,7 @@ const MasterComponent = () => {
   };
 
   const { isLoading, data: Schemadata } = Digit.Hooks.useCustomAPIHook({
-    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    url: `/mdms-v2/v2/_search`,
     body: {
       MdmsCriteria,
     },
