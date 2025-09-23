@@ -11,6 +11,7 @@ import React from "react";
  */
 
 const inboxAttendeeSearchConfig = (boundarycode) => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   return {
     type: "inbox", // Defines the type of configuration (search functionality)
@@ -129,7 +130,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
             roles: "",
             offset: 0,
             //   /sortBy: "lastModifiedTime",
-            tenantId: "dev",
+            tenantId: tenantId,
             sortOrder: "DESC",
           },
 
@@ -201,7 +202,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
         // roles: "",
         offset: 0,
         //sortBy: "lastModifiedTime",
-        tenantId: "dev",
+        tenantId: tenantId,
         // sortOrder: "DESC",
         //   includeUnassigned:true
       },
