@@ -148,8 +148,11 @@ const LandingComponent = ({ config = {} }) => {
 
           {/* Bottom header with title and subtitle */}
           <HeaderComponent className="custom-landing-header-button">
-            <span className="header-span">{t(buttonSection?.title)}</span>{" "}
-            {t(buttonSection?.subtitle)}
+            <div style={{ lineHeight: "1.2" }}>
+              <span className="header-span">{t(buttonSection?.title)}</span>
+              <br />
+              {t(buttonSection?.subtitle)}
+            </div>
           </HeaderComponent>
 
           {/* Continue button */}

@@ -26,10 +26,11 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
   const searchParams = new URLSearchParams(location.search);
   const module = location.pathname.split('/').pop();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee/sandbox/landing`,
+      path: `/${window?.contextPath}/employee/sandbox-ui/${tenantId}/employee?from=sandbox`,
       content: t("HOME"),
       show: true,
     },
@@ -65,14 +66,18 @@ const App = ({ path, stateCode, userType, tenants }) => {
 
   const hideClass =
     location.pathname.includes(`${path}/productDetailsPage/`);
+  
+  const hideBreadcrumb = location.pathname.includes(`${path}/landing`);
     
   return (
     <div className="employee-ui">
       <Switch>
         <AppContainer className= {hideClass ? "" : "ground-container" }>
-          <React.Fragment>
-            <ProjectBreadCrumb location={location} defaultPath={path} />
-          </React.Fragment>
+          {!hideBreadcrumb && (
+            <React.Fragment>
+              <ProjectBreadCrumb location={location} defaultPath={path} />
+            </React.Fragment>
+          )}
           <PrivateRoute path={`${path}/tenant-response`} component={() => <SandboxResponse />} />
           <PrivateRoute path={`${path}/tenant-create`} component={() => <SandboxCreate />} />
           <PrivateRoute path={`${path}/tenant-search`} component={() => <SandboxSearch />} />
@@ -85,7 +90,7 @@ const App = ({ path, stateCode, userType, tenants }) => {
           <PrivateRoute path={`${path}/application-management/setup-master`} component={() => <SetupMaster />} />
           <PrivateRoute path={`${path}/application-management/module`} component={() => <ModuleMasterTable />} />
           <PrivateRoute path={`${path}/landing`}>
-            <div className="sandbox-landing-wrapper">
+            <div className="sandbox-landing-wrapper" style={{ marginTop: "3rem" }}>
               <Landing />
             </div>
           </PrivateRoute>

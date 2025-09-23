@@ -29,10 +29,12 @@ const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
   const { masterName, moduleName, uniqueIdentifier, from, screen, action } = Digit.Hooks.useQueryParams();
 
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  
   const crumbs = [
     {
-      internalLink: `/${window?.contextPath}/employee`,
-      content: t("WORKBENCH_HOME"),
+      internalLink: from === "sandbox" ? `/${window?.contextPath}/employee/sandbox-ui/${tenantId}/employee?from=sandbox` : `/${window?.contextPath}/employee`,
+      content: from === "sandbox" ? t("HOME") : t("WORKBENCH_HOME"),
       show: true,
     },
     {

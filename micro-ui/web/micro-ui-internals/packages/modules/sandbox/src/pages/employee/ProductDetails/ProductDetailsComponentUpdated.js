@@ -108,7 +108,7 @@ const RoleBlock = ({ description }) => {
 
 
 
-const ExperienceSection = ({ experience, t = { t } }) => (
+const ExperienceSection = ({ experience, t = { t }, module, permalink }) => (
     <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '0rem 2rem 0rem 4rem' }}>
         <div className="about-container-2" style={{ backgroundColor: '#e4edf1' }}>
             <div className="about-title-wrapper">
@@ -117,33 +117,50 @@ const ExperienceSection = ({ experience, t = { t } }) => (
             </div>
             <p className="about-description">{experience.description}</p>
             {experience.roles.map((r, i) => (
-                <UserRoleBlock key={i} role={r.role} imageUrl={r.imageUrl} reverse={r.reverse} cards={r.cards} config={r.config} t={t} />
+                <UserRoleBlock key={i} role={r.role} imageUrl={r.imageUrl} reverse={r.reverse} cards={r.cards} config={r.config} t={t} module={module} permalink={permalink} />
             ))}
         </div>
     </div>
 );
 
-const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t }) => (
+const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t, module, permalink }) => (
     <div className="cs-wrapper-align">
         <div className="cs-wrapper">
-            {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+            {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} module={module} permalink={permalink} />}
             <div className={`cs-right ${reverse ? `cs-justify-start` : `cs-justify-end`}`}>
                 <img src={imageUrl} alt="UI" className="cs-image" />
             </div>
-            {reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+            {reverse && <RoleContent role={role} cards={cards} config={config} t={t} module={module} permalink={permalink} />}
         </div>
     </div>
 );
 
-const RoleContent = ({ role, cards, config, t }) => (
+const RoleContent = ({ role, cards, config, t, module, permalink }) => (
     <div className="cs-left">
         <h2 className="cs-title">{role}</h2>
         {cards.map(({ icon, text }, idx) => {
             const IconComponent = iconMap[icon];
+            const isOBPSStakeholderFeature2 = module === 'OBPS' && text === t('OBPS_STAKEHOLDER_FEATURE2');
+            
             return (
                 <div key={idx} className="cs-card">
                     <IconComponent className="cs-icon" />
                     <span>{text}</span>
+                    {isOBPSStakeholderFeature2 && permalink && (
+                        <a 
+                            href={permalink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style={{ 
+                                marginLeft: '8px', 
+                                color: '#C84C0E', 
+                                textDecoration: 'underline',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            (Link)
+                        </a>
+                    )}
                 </div>
             );
         })}
@@ -255,21 +272,21 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
     };
 
     return (
-        <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem' }}>
+        <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem 3rem 6rem' }}>
             <div className="wt-c1">
                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
             </div>
-            <div className="wt-tabs-center wt-tabs-and-iframe">
-                <div className="wt-tab-wrapper">
+            <div className="wt-tabs-center wt-tabs-and-iframe" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2rem' }}>
+                <div className="wt-tab-wrapper" style={{ marginBottom: '-2rem', display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
                     {module === "Finance" ? (
                         <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
                     ) : (
                         getTabs()
                     )}
                 </div>
-                <div className="wt-iframe-wrapper">
-                    {iframeSrc && <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>}
+                <div className="wt-iframe-wrapper" style={{ width: '100%' }}>
+                    {iframeSrc && <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe" style={{ width: '100%', height: '600px' }}></iframe>}
                 </div>
             </div>
         </div>
@@ -355,6 +372,18 @@ function getLinkByType(config, type) {
     const imageObject = contentArray.find(item => item.type === type);
 
     return imageObject?.link || null;
+}
+
+function getPermalinkByType(config, type) {
+    const contentArray = config[0]?.subsections?.[1]?.content;
+
+    if (!Array.isArray(contentArray)) {
+        return null;
+    }
+
+    const permalinkObject = contentArray.find(item => item.type === type);
+
+    return permalinkObject?.permalink || null;
 }
 
 
@@ -462,12 +491,17 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
         }
     });
     content.experience.roles = roles;
+
+    // Get permalink for OBPS module
+    const permalink = getPermalinkByType(config, 'permalink');
+
+    console.log("*** Log ===> ", content.experience);
     return (
         <div style={{ paddingLeft: '0.5rem' }}>
             <Breadcrumb path={`${t(config[0].heading)}`} />
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
-            <ExperienceSection experience={content.experience} t={t} />
+            <ExperienceSection experience={content.experience} t={t} module={module} permalink={permalink} />
             <WalkthroughSection
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}

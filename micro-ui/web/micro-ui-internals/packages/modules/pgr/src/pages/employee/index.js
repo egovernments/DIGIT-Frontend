@@ -12,10 +12,12 @@ import InboxV2 from "./new-inbox";
 const PGRBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const isFromSandbox = Digit.Utils.getMultiRootTenant();
 
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      path: isFromSandbox ? `/${window?.contextPath}/employee/sandbox-ui/${tenantId}/employee?from=sandbox` : `/${window?.contextPath}/employee`,
       content: t("HOME"),
       show: true,
     },
