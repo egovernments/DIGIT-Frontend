@@ -15,7 +15,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "cd example && yarn start",
     "start:script": "./scripts/create.sh",
