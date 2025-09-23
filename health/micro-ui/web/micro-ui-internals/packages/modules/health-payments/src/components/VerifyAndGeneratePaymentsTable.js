@@ -30,7 +30,6 @@ const VerifyAndGeneratePaymentsTable = ({
     inProgressBillsTransfer = {},
     setInProgressBillsTransfer,
     setInProgressBillsVerify,
-    hrmsUsersData,
     ...props }) => {
     const { t } = useTranslation();
     const history = useHistory();

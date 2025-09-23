@@ -151,21 +151,6 @@ const [isTableActionLoading, setIsTableActionLoading] = useState(false);
         refetchBill();
     }
 };
-const userSearchCri = {
-        url: `/egov-hrms/employees/_search`,
-         params: {
-            tenantId : tenantId,
-            roles: "PAYMENT_EDITOR",
-          },
-        config: {
-            enabled: project && !editBills ? true : false,
-            select: (data) => {
-                return data?.Employees || [];
-            },
-        },
-    };
-
-  const { isLoading: isHrmsSearchLoading, data: hrmsUsersData, refetch: refetchHrmsUsers, isHrmsSearchFetching } = Digit.Hooks.useCustomAPIHook(userSearchCri);
     
     
     const handlePageChange = (page, totalRows) => {
@@ -272,7 +257,7 @@ const userSearchCri = {
     };
 
 
-    if (isBillLoading || isTableActionLoading || isHrmsSearchLoading || isHrmsSearchFetching) {
+    if (isBillLoading || isTableActionLoading) {
         return <LoaderScreen />
     }
 
@@ -303,7 +288,6 @@ const userSearchCri = {
                     onTaskDone={handleTaskDone}
                     handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange}
-                    hrmsUsersData={hrmsUsersData}
                     isLoading={isTableActionLoading}
                     setIsLoading={setIsTableActionLoading}
                     inProgressBillsTransfer={inProgressBillsTransfer}

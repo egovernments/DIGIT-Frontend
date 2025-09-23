@@ -188,22 +188,6 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
     });
   }
 
-  const userSearchCri = {
-    url: `/egov-hrms/employees/_search`,
-    params: {
-      tenantId: tenantId,
-      roles: "PAYMENT_EDITOR",
-    },
-    config: {
-      enabled: project && !editBillDetails ? true : false,
-      select: (data) => {
-        return data?.Employees || [];
-      },
-    },
-  };
-
-  const { isLoading: isHrmsSearchLoading, data: hrmsUsersData, refetch: refetchHrmsUsers, isHrmsSearchFetching } = Digit.Hooks.useCustomAPIHook(userSearchCri);
-
   const updateIndividualMutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/individual/v1/bulk/_update`
   });
@@ -733,7 +717,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
 
 
 
-  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading || isHrmsSearchLoading) {
+  if (isBillLoading || isAllIndividualsLoading || isLoading || isFetching || updateBillDetailMutation.isLoading) {
     console.log("Loading bill data or individual data...");
     return <LoaderScreen />
   }
@@ -937,22 +921,7 @@ const BillPaymentDetails = ({ editBillDetails = false }) => {
       )}
 
 
-      {/* {openSendForEditPopUp && <SendForEditPopUp
-        isEditTrue={editBillDetails}
-        dropdownOptions={hrmsUsersData ? hrmsUsersData.map((emp) => ({
-          title: emp?.user?.name,
-          value: emp?.user?.userServiceUuid,
-        })) : []}
-        onClose={() => {
-          setOpenSendForEditPopUp(false);
-        }}
-        onSubmit={(comment, selectedUser) => {
-          // setComment(comment);
-          setOpenSendForEditPopUp(false);
-          updateBillDetailWorkflow(billData, selectedRows, "SEND_FOR_EDIT", selectedUser);
-          // setOpenApproveAlertPopUp(true);
-        }}
-      />} */}
+    
         {openSendForEditPopUp && <AlertPopUp
         onClose={() => {
           setOpenSendForEditPopUp(false);
