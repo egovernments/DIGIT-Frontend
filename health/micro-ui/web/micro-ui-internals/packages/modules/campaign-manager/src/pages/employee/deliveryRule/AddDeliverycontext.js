@@ -204,16 +204,16 @@ const AddAttributeField = React.memo(({
           <LabelFieldPair style={{ marginBottom: "0rem" }}>
             <CardLabel className="card-label-smaller">{t("CAMPAIGN_FROM_LABEL")}</CardLabel>
             <TextInput
-              value={attribute?.toValue || ""}
-              onChange={(e) => handleRangeValueChange(e, "to")}
+              value={attribute?.fromValue || ""}
+              onChange={(e) => handleRangeValueChange(e, "from")}
               disable={false}
             />
           </LabelFieldPair>
           <LabelFieldPair style={{ marginBottom: "0rem" }}>
             <CardLabel className="card-label-smaller">{t("CAMPAIGN_TO_LABEL")}</CardLabel>
             <TextInput
-              value={attribute?.fromValue || ""}
-              onChange={(e) => handleRangeValueChange(e, "from")}
+              value={attribute?.toValue || ""}
+              onChange={(e) => handleRangeValueChange(e, "to")}
               disable={false}
             />
           </LabelFieldPair>
@@ -320,7 +320,6 @@ const AddDeliveryRule = React.memo(({
   onDelete 
 }) => {
 
-  console.log("Add Delivery Rule: ", {rule, attributeConfig, operatorConfig, deliveryTypeConfig, projectConfig, canDelete});
   const { updateRuleProducts, updateRuleDeliveryType } = useDeliveryRules();
   const { t } = useTranslation();
   const [showModal, setShowModal] = useState(false);
@@ -347,10 +346,6 @@ const AddDeliveryRule = React.memo(({
     updateRuleProducts(rule.ruleKey, products);
     setShowModal(false);
   }, [rule.ruleKey, updateRuleProducts]);
-
-
-    console.log("Add Delivery Rule Line 388: ", {rule, attributeConfig, operatorConfig, deliveryTypeConfig, projectConfig, canDelete});
-
 
   return (
     <>

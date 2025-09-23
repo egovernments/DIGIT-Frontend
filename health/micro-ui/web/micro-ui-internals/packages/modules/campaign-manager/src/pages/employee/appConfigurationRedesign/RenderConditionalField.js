@@ -15,7 +15,7 @@ const getDefaultRules = (key) => {
           type: "compare",
           compareWith: "toArray.maxAge",
           operator: "<=",
-          message: "Minimum age must be less than or equal to maximum age",
+          message: "MIN_AGE_MUST_BE_LESS_OR_EQUALTO_MAX_AGE",
         },
       ];
 
@@ -25,7 +25,7 @@ const getDefaultRules = (key) => {
           type: "compare",
           compareWith: "toArray.minAge",
           operator: ">=",
-          message: "Maximum age must be greater than or equal to minimum age",
+          message: "MAX_AGE_MUST_BE_GREATER_OR_EQUALTO_MIN_AGE",
         },
       ];
 
@@ -35,7 +35,7 @@ const getDefaultRules = (key) => {
           type: "compare",
           compareWith: "toArray.max",
           operator: "<=",
-          message: "Min must be less than or equal to Max",
+          message: "MIN_MUST_BE_LESS_OR_EQUALTO_MAX",
         },
       ];
 
@@ -45,7 +45,7 @@ const getDefaultRules = (key) => {
           type: "compare",
           compareWith: "toArray.min",
           operator: ">=",
-          message: "Max must be greater than or equal to Min",
+          message: "MAX_MUST_BE_GREATER_OR_EQUALTO_MIN",
         },
       ];
 
@@ -55,7 +55,7 @@ const getDefaultRules = (key) => {
           type: "compare",
           compareWith: "toArray.maxLength",
           operator: "<=",
-          message: "Minimum length must be less than or equal to maximum length",
+          message: "MIN_LENGTH_MUST_BE_LESS_OR_EQUALTO_MAX_LENGTH",
         },
       ];
 
@@ -65,7 +65,7 @@ const getDefaultRules = (key) => {
           type: "compare",
           compareWith: "toArray.minLength",
           operator: ">=",
-          message: "Maximum length must be greater than or equal to minimum length",
+          message: "MAX_LENGTH_MUST_BE_GREATER_OR_EQUALTO_MIN",
         },
       ];
 
@@ -87,11 +87,12 @@ const computeError = (field, currentField, t) => {
     try {
       const regex = new RegExp(pattern);
       if (!regex.test(valueStr)) {
-        error = `${`attr`}: Value doesn't match required pattern`;
+        error = `${attr}: ${t('PATTERN_VALIDATION_FAILED')}`;
         return error;
       }
     } catch (e) {
       console.warn(`Invalid regex pattern: ${pattern}`);
+      return t('INVALID_REGEX_PATTERN');
     }
   }
 
@@ -249,7 +250,7 @@ export const RenderConditionalField = ({
               marginTop: "0.25rem",
               pointerEvents: "none" // Prevents blocking interactions
             }}>
-              {currentError}
+              {t(currentError)}
             </div>
           )}
         </div>
