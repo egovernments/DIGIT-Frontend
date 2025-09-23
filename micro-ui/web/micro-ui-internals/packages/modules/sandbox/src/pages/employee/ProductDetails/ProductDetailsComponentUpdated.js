@@ -277,15 +277,15 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
             </div>
-            <div className="wt-tabs-center wt-tabs-and-iframe" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2rem' }}>
-                <div className="wt-tab-wrapper" style={{ marginBottom: '-2rem', display: 'flex', justifyContent: 'flex-start', width: '100%' }}>
+            <div className="wt-tabs-center wt-tabs-and-iframe" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2rem', position: 'relative' }}>
+                <div className="wt-tab-wrapper" style={{ marginBottom: '-2rem', display: 'flex', justifyContent: 'flex-start', width: 'auto', position: 'absolute', top: '0', left: '0', zIndex: 10 }}>
                     {module === "Finance" ? (
                         <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
                     ) : (
                         getTabs()
                     )}
                 </div>
-                <div className="wt-iframe-wrapper h-full w-full relative overflow-hidden" style={{ marginTop: '-1rem', height: '40rem', width: '100%', alignSelf: 'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                <div className="wt-iframe-wrapper h-full w-full relative overflow-hidden" style={{ marginTop: '3rem', height: '40rem', width: '70rem', alignSelf: 'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
                     {iframeSrc && <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe" style={{ width: '100%', height: '600px' }}></iframe>}
                 </div>
             </div>
