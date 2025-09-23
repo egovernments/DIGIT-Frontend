@@ -548,47 +548,64 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
     return;
   };
   const handleSubmit = async (finalSubmit, tabChange) => {
-    const relevantErrors = {};
-    if (state?.errorMap) {
-      Object.keys(state.errorMap).forEach(key => {
-        const error = state.errorMap[key];
-        // Check if the field has actual content before considering its error
-        const [fieldId, bindTo] = key.split('::');
-        const field = state?.screenData?.[0]?.cards?.[0]?.fields?.find(
-          f => f.jsonPath === fieldId || f.id === fieldId
-        );
 
-        if (field && state?.drawerField?.[bindTo]) {
+     // First, check if there are any errors in the errorMap
+  const hasErrors = state?.errorMap && Object.keys(state.errorMap).length > 0;
+  
+  if (hasErrors) {
+    // Check if any of the errors are for fields that have actual content
+    const relevantErrors = {};
+    const allFields = (state?.screenData || []).flatMap((screen) => 
+      (screen?.cards || []).flatMap((card) => card?.fields || [])
+    );
+    
+    Object.keys(state.errorMap).forEach(key => {
+      const error = state.errorMap[key];
+      const [fieldId, bindTo] = key.split('::');
+      
+      // Find the field in the current screen data
+      const field = allFields.find(f => 
+        (f.jsonPath === fieldId) || (f.id === fieldId)
+      );
+      
+      if (field) {
+        // Check if the field has actual content
+        const fieldHasContent = Object.keys(field).some(k => {
+          const value = field[k];
+          return value !== undefined && value !== null && value !== "" && value !== true;
+        });
+        
+        if (fieldHasContent) {
           relevantErrors[key] = error;
         }
-      });
-    }
-
-    const hasErrors = Object.keys(relevantErrors).length > 0;
-    if (hasErrors) {
-      // Try to include field labels in the error toast for better clarity
-      const errorKeys = Object.keys(state.errorMap || {});
-      const errorFieldIds = errorKeys.map((k) => (k || "").split("::")[0]);
-
-      // Collect all fields from current screen data
-      const allFields = (state?.screenData || []).flatMap((screen) => (screen?.cards || []).flatMap((card) => card?.fields || []));
-
+      }
+    });
+    
+    if (Object.keys(relevantErrors).length > 0) {
       // Find the first field with an error to get its translated label
-      const firstErrorField = errorFieldIds
-        .map((id) => allFields.find((f) => (f?.jsonPath && f.jsonPath === id) || (f?.id && f.id === id)))
-        .filter(Boolean)[0];
-
+      const errorKeys = Object.keys(relevantErrors);
+      const firstErrorKey = errorKeys[0];
+      const [fieldId] = firstErrorKey.split('::');
+      
+      const firstErrorField = allFields.find(f => 
+        (f.jsonPath === fieldId) || (f.id === fieldId)
+      );
+      
       if (firstErrorField?.label) {
         const translatedLabel = locState?.find((i) => i.code === firstErrorField.label)?.[currentLocale];
         setShowToast({
           key: "error",
-          label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")} ${translatedLabel ? translatedLabel : ""}`,
+          label: `${t("PLEASE_FIX_ERRORS_IN_FIELDS")}${translatedLabel ? ': ' + translatedLabel : ""}`,
         });
       } else {
-        setShowToast({ key: "error", label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") });
+        setShowToast({ 
+          key: "error", 
+          label: t("PLEASE_FIX_ERRORS_BEFORE_CONTINUING") 
+        });
       }
       return;
     }
+  }
     if (state?.screenData?.[0]?.type === "object") {
       //skipping template screen validation
       const errorCheck = validateFromState(
@@ -632,7 +649,9 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag, parentSt
       // Submit the form here
       await handleSubmit(false, true); // your submit function
       // Now notify the caller that submit is done
+    if (!state?.errorMap || Object.keys(state.errorMap).length === 0) {
       e.detail?.onComplete?.();
+    }
     };
 
     window.addEventListener("lastButtonDisabled", handleStepChange);
