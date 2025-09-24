@@ -312,8 +312,6 @@ function Jurisdiction({
       code: value?.code,
       name: value?.name,
     };
-    console.log("selected hierarchy", hierarchy);
-    console.log(jurisdictions);
     setjurisdictions((prev) =>
       prev.map((item) =>
         item.key === jurisdiction.key ? { ...item, hierarchy } : item
