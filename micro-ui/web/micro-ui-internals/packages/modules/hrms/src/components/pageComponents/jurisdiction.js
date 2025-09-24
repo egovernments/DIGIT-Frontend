@@ -278,9 +278,20 @@ function Jurisdiction({
   useEffect(() => {
     if (Digit.Utils.getMultiRootTenant()) {
       selectboundary(cities);
-    }
-    else {
-      selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
+    } else {
+      const tenantList =
+        data?.MdmsRes?.tenant?.tenants
+          .filter((city) => city.code !== Digit.ULBService.getStateId())
+          .map((city) => ({
+            ...city,
+            i18text: Digit.Utils.locale.getCityLocale(city.code),
+          }));
+  
+      selectboundary(tenantList);
+  
+      if (tenantList?.length === 1) {
+        selectedboundary(tenantList[0]);
+      }
     }
   }, [jurisdiction?.boundaryType, data?.MdmsRes, cities]);
 
@@ -301,6 +312,8 @@ function Jurisdiction({
       code: value?.code,
       name: value?.name,
     };
+    console.log("selected hierarchy", hierarchy);
+    console.log(jurisdictions);
     setjurisdictions((prev) =>
       prev.map((item) =>
         item.key === jurisdiction.key ? { ...item, hierarchy } : item

@@ -15,7 +15,7 @@
     "@egovernments/digit-ui-module-dss": "1.8.12",
     "@egovernments/digit-ui-module-core": "1.8.47",
     "@egovernments/digit-ui-module-common": "1.8.10",
-    "@egovernments/digit-ui-module-hrms": "1.8.16",
+    "@egovernments/digit-ui-module-hrms": "1.8.17",
     "@egovernments/digit-ui-module-utilities": "1.0.15",
     "@egovernments/digit-ui-module-open-payment": "0.0.2",
     "@egovernments/digit-ui-module-engagement": "1.5.20",
