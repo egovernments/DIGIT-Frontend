@@ -1,3 +1,5 @@
+## [1.8.17] [24-Sept-2025] 
+- Added auto select functionality if only one tenant present
 
 ## [1.8.16] [25-July-2025] 
 - DatePicker HRMS - Maxwidth Added for 2 more fields

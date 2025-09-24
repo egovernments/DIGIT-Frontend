@@ -280,7 +280,25 @@ function Jurisdiction({
       selectboundary(cities);
     }
     else {
-      selectboundary(data?.MdmsRes?.tenant?.tenants.filter(city => city.code != Digit.ULBService.getStateId()).map(city => { return { ...city, i18text: Digit.Utils.locale.getCityLocale(city.code) } }));
+      const tenantList =
+        data?.MdmsRes?.tenant?.tenants
+          .filter((city) => city.code !== Digit.ULBService.getStateId())
+          .map((city) => ({
+            ...city,
+            i18text: Digit.Utils.locale.getCityLocale(city.code),
+          }));
+
+      selectboundary(tenantList);
+
+      let allTenant = data?.MdmsRes?.tenant?.tenants?.map((city) => ({
+        ...city,
+        i18text: Digit.Utils.locale.getCityLocale(city.code),
+      }))
+          
+      if ( data?.MdmsRes?.tenant?.tenants?.length === 1) {
+        selectboundary(allTenant);
+        selectedboundary(allTenant?.[0]);
+      }
     }
   }, [jurisdiction?.boundaryType, data?.MdmsRes, cities]);
 
@@ -406,7 +424,7 @@ function Jurisdiction({
             className="form-field"
             isMandatory={true}
             selected={jurisdiction?.boundary}
-            disable={Boundary?.length === 0}
+            //disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
             optionKey={"name"}
