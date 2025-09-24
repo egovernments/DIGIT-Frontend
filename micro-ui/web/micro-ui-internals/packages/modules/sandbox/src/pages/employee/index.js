@@ -30,7 +30,9 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
 
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee/sandbox-ui/${tenantId}/employee?from=sandbox`,
+      path: location.pathname.includes("productPage") 
+        ? `/${window?.contextPath}/employee/sandbox/landing`
+        : `/${window?.contextPath}/employee/sandbox-ui/${tenantId}/employee?from=sandbox`,
       content: t("HOME"),
       show: true,
     },
