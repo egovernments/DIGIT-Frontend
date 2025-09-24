@@ -6,8 +6,8 @@ const getTypeAndMetaData = (field, fieldTypeMasterData = []) => {
   // Try to find a matching field type from master data
   const matched = fieldTypeMasterData.find((item) => {
     // Match type and format from metadata and fieldName in case of type : dynamic and format : custom
-    if(item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom"){
-      return item?.metadata?.type === field.type && item?.metadata?.format === field.format  && item?.type === field?.fieldName
+    if (item?.metadata?.type === "dynamic" && item?.metadata?.format === "custom") {
+      return item?.metadata?.type === field.type && item?.metadata?.format === field.format && item?.type === field?.fieldName;
     }
     // Match both type and format from metadata
     return item?.metadata?.type === field.type && item?.metadata?.format === field.format;
@@ -178,6 +178,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        visibilityCondition: { ...field?.visibilityCondition } || null,
       }));
 
     return {
@@ -281,6 +282,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        visibilityCondition: { ...field?.visibilityCondition } || null,
       };
     });
 
