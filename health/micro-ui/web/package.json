@@ -8,10 +8,9 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals",
-    "micro-ui-internals/packages/modules/campaign-manager",
-    "micro-ui-internals/packages/css"
-    ],
+    "packages/css",
+    "packages/modules/campaign-manager"
+  ],
   "homepage": "/workbench-ui",
   "husky": {},
   "lint-staged": {
@@ -19,6 +18,7 @@
   },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
+    "concurrently": "^8.2.2",
     "dotenv-webpack": "^8.0.0",
     "eslint-config-react-app": "^7.0.1",
     "html-webpack-plugin": "^5.6.3",
@@ -29,6 +29,7 @@
     "vite": "^6.1.0",
     "webpack": "^5.97.1",
     "webpack-bundle-analyzer": "^4.10.2",
+    "webpack-merge": "^5.10.0",
     "terser-webpack-plugin": "^5.3.10",
     "webpack-cli": "^6.0.1",
     "webpack-dev-server": "^5.2.0"
@@ -44,7 +45,6 @@
     "@egovernments/digit-ui-svg-components": "2.0.0-rc19-01",
     "@egovernments/digit-ui-components": "2.0.0-rc19-01",
     "@egovernments/digit-ui-module-workbench": "2.0.0-rc19-04",
-    "@egovernments/digit-ui-module-campaign-manager": "0.4.0",
     "@tanstack/react-query": "^5.62.16",
     "babel-loader": "^9",
     "cross-env": "^7.0.3",
@@ -72,17 +72,23 @@
     "**/styled-components": "5.0.0",
     "fast-uri": "2.1.0",
     "**/react": "19.0.0",
-    "**/react-dom": "19.0.0"
+    "**/react-dom": "19.0.0",
+    "**/react-query": "@tanstack/react-query@^5.62.16",
+    "**/@tanstack/react-query": "^5.62.16"
   },
   "scripts": {
-    "start": "webpack serve --config webpack.config.js --mode development",
-    "build": "cross-env GENERATE_SOURCEMAP=false SKIP_PREFLIGHT_CHECK=true build",
-    "build:prepare": "./build.sh",
-    "build:libraries": "cd micro-ui-internals && yarn build",
-    "build:prod": "NODE_ENV=production webpack --config webpack.config.js",
-    "build:webpack": "yarn build:libraries && cd .. && ls && cd ./web && ls && yarn build:prod",
-    "clean": "rm -rf node_modules && cd micro-ui-internals && yarn clean",
-    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' \\) -type d -prune -exec rm -rf '{}' +"
+    "start": "node start-dev.js",
+    "start:dev": "node start-dev.js",
+    "start:webpack-only": "webpack serve --config webpack.dev.js --port 3000",
+    "dev:packages": "concurrently \"npm run dev:css\" \"npm run dev:campaign\"",
+    "dev:css": "cd packages/css && npm run start",
+    "dev:campaign": "cd packages/modules/campaign-manager && npm run build:dev -- --watch",
+    "build": "npm run build:packages && webpack --config webpack.prod.js",
+    "build:prod": "npm run build:packages && webpack --config webpack.prod.js",
+    "build:analyze": "npm run build:packages && ANALYZE=true webpack --config webpack.prod.js",
+    "build:packages": "cd packages/css && npm run build && cd ../modules/campaign-manager && npm run build",
+    "clean": "rm -rf node_modules build dist && find packages -name node_modules -type d -exec rm -rf {} + 2>/dev/null || true",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "eslintConfig": {
     "extends": [
