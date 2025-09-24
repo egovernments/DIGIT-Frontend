@@ -128,7 +128,7 @@
             attribute?.toValue &&
             attribute?.fromValue !== "" &&
             attribute?.toValue !== "" &&
-            Number(attribute?.toValue) >= Number(attribute?.fromValue)
+            Number(attribute?.toValue) <= Number(attribute?.fromValue)
           ) {
             // return `Error: Attribute "${attribute?.attribute?.code ? attribute?.attribute?.code : attribute?.attribute}" has invalid range (${
             //   attribute.toValue
