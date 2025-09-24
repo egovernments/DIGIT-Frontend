@@ -103,10 +103,16 @@ const computeError = (field, currentField, t) => {
 
     for (const rule of rules) {
       const { compareWith, operator, message } = rule;
+
       const compareValue = currentField?.[compareWith];
 
-      if (compareValue !== undefined) {
+      if (compareValue !== undefined && compareValue !== null && compareValue !== "") {
         const compareNum = Number(compareValue);
+         // Skip comparison if either number is NaN
+        if (isNaN(value) || isNaN(compareNum)) {
+          continue;
+        }
+
         switch (operator) {
           case ">":
             if (!(value > compareNum)) error = message || `${attr} must be > ${compareWith}`;
@@ -129,10 +135,7 @@ const computeError = (field, currentField, t) => {
     }
   }
 
-  if (error != "") {
-    return error;
-  }
-  return "";
+  return error || "";
 };
 export const RenderConditionalField = ({
   cField,
