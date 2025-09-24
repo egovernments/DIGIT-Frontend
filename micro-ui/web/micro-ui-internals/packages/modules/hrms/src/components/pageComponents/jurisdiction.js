@@ -278,7 +278,8 @@ function Jurisdiction({
   useEffect(() => {
     if (Digit.Utils.getMultiRootTenant()) {
       selectboundary(cities);
-    } else {
+    }
+    else {
       const tenantList =
         data?.MdmsRes?.tenant?.tenants
           .filter((city) => city.code !== Digit.ULBService.getStateId())
@@ -286,11 +287,17 @@ function Jurisdiction({
             ...city,
             i18text: Digit.Utils.locale.getCityLocale(city.code),
           }));
-  
+
       selectboundary(tenantList);
-  
-      if (tenantList?.length === 1) {
-        selectedboundary(tenantList[0]);
+
+      let allTenant = data?.MdmsRes?.tenant?.tenants?.map((city) => ({
+        ...city,
+        i18text: Digit.Utils.locale.getCityLocale(city.code),
+      }))
+          
+      if ( data?.MdmsRes?.tenant?.tenants?.length === 1) {
+        selectboundary(allTenant);
+        selectedboundary(allTenant?.[0]);
       }
     }
   }, [jurisdiction?.boundaryType, data?.MdmsRes, cities]);
@@ -417,7 +424,7 @@ function Jurisdiction({
             className="form-field"
             isMandatory={true}
             selected={jurisdiction?.boundary}
-            disable={Boundary?.length === 0}
+            //disable={Boundary?.length === 0}
             option={Boundary}
             select={selectedboundary}
             optionKey={"name"}
