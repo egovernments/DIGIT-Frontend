@@ -32,9 +32,9 @@ const enabledModules = [
   "Campaign",
   //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
-  "Microplan",
-  "Payments",
-  "PGR",
+  // "Microplan",
+  // "Payments",
+  // "PGR",
   //added to check fsm
   // "FSM"
 ];
