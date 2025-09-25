@@ -73,11 +73,6 @@ config:
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: digit-ui
 
-  - name: builds/Digit-Frontend/core-ui
-    build:
-      - work-dir: micro-ui/
-        dockerfile: micro-ui/web/core/Dockerfile
-        image-name: core-ui
 
   - name: builds/Digit-Frontend/utilities/egov-bff
     build:
