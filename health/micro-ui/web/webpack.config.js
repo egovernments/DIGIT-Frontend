@@ -6,6 +6,10 @@ const TerserPlugin = require("terser-webpack-plugin");
 const dotenv = require("dotenv");
 const fs = require("fs");
 
+// Load package.json to get the homepage/publicPath
+const packageJson = require("./package.json");
+const publicPath = packageJson.homepage || "/";
+
 // Load .env variables
 const envFile = dotenv.config().parsed || {};
 
@@ -43,7 +47,7 @@ module.exports = {
         chunkFilename: "[name].[contenthash:8].chunk.js",
         path: path.resolve(__dirname, "build"),
         clean: true, // Clean the output directory before emit
-    publicPath: "/workbench-ui/",
+    publicPath: publicPath,
   },
  optimization: {
     minimize: process.env.NODE_ENV === "production",
@@ -146,9 +150,9 @@ module.exports = {
     port: 3000,
     hot: true,
     historyApiFallback: {
-      index: '/workbench-ui/index.html',
+      index: `${publicPath}index.html`,
       rewrites: [
-        { from: /^\/workbench-ui/, to: '/workbench-ui/index.html' }
+        { from: new RegExp(`^${publicPath}`), to: `${publicPath}index.html` }
       ]
     },
     proxy: [

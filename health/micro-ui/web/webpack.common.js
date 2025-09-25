@@ -3,6 +3,10 @@ const webpack = require("webpack");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const dotenv = require("dotenv");
 
+// Load package.json to get the homepage/publicPath
+const packageJson = require("./package.json");
+const publicPath = packageJson.homepage || "/";
+
 // Load .env variables
 const envFile = dotenv.config().parsed || {};
 
@@ -87,6 +91,6 @@ module.exports = {
   output: {
     path: path.resolve(__dirname, "build"),
     clean: true,
-    publicPath: "/workbench-ui/",
+    publicPath: publicPath,
   },
 };

@@ -6,6 +6,10 @@ const CompressionPlugin = require("compression-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 const BundleAnalyzerPlugin = require("webpack-bundle-analyzer").BundleAnalyzerPlugin;
 
+// Load package.json to get the homepage/publicPath
+const packageJson = require("./package.json");
+const publicPath = packageJson.homepage || "/";
+
 module.exports = merge(common, {
   mode: "production",
   devtool: false,
@@ -13,7 +17,7 @@ module.exports = merge(common, {
   output: {
     filename: "[name].[contenthash:8].bundle.js",
     chunkFilename: "[name].[contenthash:8].chunk.js",
-    publicPath: "/workbench-ui/",
+    publicPath: publicPath,
   },
   
   plugins: [
