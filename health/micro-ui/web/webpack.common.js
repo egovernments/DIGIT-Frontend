@@ -48,6 +48,7 @@ module.exports = {
   plugins: [
     new HtmlWebpackPlugin({
       template: path.resolve(__dirname, "public/index.html"),
+      publicPath: publicPath,
       templateParameters: {
         REACT_APP_GLOBAL: process.env.REACT_APP_GLOBAL || '',
       },
