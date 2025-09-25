@@ -3,3 +3,5 @@ accelerators/frontend/micro-ui-internals/node_modules/*
 .idea
 index.lock
 utilities/project-factory/
+/health/micro-ui
+/micro-frontends/sandbox-ui
