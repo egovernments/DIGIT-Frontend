@@ -29,11 +29,12 @@ module.exports = {
 
   optimization: {
     usedExports: true,
-    sideEffects: true, // safer than false
+    sideEffects: false, // Enable tree-shaking
     concatenateModules: isProduction,
     minimize: isProduction,
     runtimeChunk: false, // Disable runtime chunk for library builds
     splitChunks: false, // Disable code splitting for library builds
+    moduleIds: isProduction ? 'deterministic' : 'named',
   },
 
   performance: {

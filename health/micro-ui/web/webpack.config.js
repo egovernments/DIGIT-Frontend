@@ -98,10 +98,24 @@ module.exports = {
         },
         campaign: {
           test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-campaign-manager[\\/]/,
-          name: 'campaign-module',
+          name(module, chunks, cacheGroupKey) {
+            // Split campaign manager into smaller chunks
+            const moduleFileName = module.identifier().split('/').reduceRight(item => item);
+            if (moduleFileName.includes('xlsx') || moduleFileName.includes('exceljs')) {
+              return 'campaign-excel';
+            }
+            if (moduleFileName.includes('leaflet') || moduleFileName.includes('proj4')) {
+              return 'campaign-maps';
+            }
+            if (moduleFileName.includes('react-table') || moduleFileName.includes('data-table')) {
+              return 'campaign-tables';
+            }
+            return 'campaign-core';
+          },
           chunks: 'async', // Load campaign module asynchronously
-          priority: 5,
-          maxSize: 150000,
+          priority: 15,
+          maxSize: 100000,
+          enforce: true,
         },
         workbench: {
           test: /[\\/]node_modules[\\/]@egovernments[\\/]digit-ui-module-workbench[\\/]/,
@@ -109,6 +123,35 @@ module.exports = {
           chunks: 'async', // Load workbench module asynchronously
           priority: 5,
           maxSize: 150000,
+        },
+        // Separate heavy dependencies into their own chunks
+        excel: {
+          test: /[\\/]node_modules[\\/](xlsx|exceljs)[\\/]/,
+          name: 'excel-libs',
+          chunks: 'async',
+          priority: 20,
+          enforce: true,
+        },
+        maps: {
+          test: /[\\/]node_modules[\\/](leaflet|proj4|geojson)[\\/]/,
+          name: 'map-libs',
+          chunks: 'async',
+          priority: 20,
+          enforce: true,
+        },
+        forms: {
+          test: /[\\/]node_modules[\\/](@rjsf|ajv|react-hook-form)[\\/]/,
+          name: 'form-libs',
+          chunks: 'async',
+          priority: 18,
+          enforce: true,
+        },
+        tables: {
+          test: /[\\/]node_modules[\\/](react-table|react-data-table)[\\/]/,
+          name: 'table-libs',
+          chunks: 'async',
+          priority: 18,
+          enforce: true,
         },
       },
     },
