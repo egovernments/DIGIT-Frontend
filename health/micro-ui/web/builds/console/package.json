@@ -11,7 +11,7 @@
     "packages/css",
     "packages/modules/campaign-manager"
   ],
-  "homepage": "/console",
+  "homepage": "/console/",
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"

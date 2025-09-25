@@ -12,9 +12,13 @@ WORKDIR /app
 # Copy the entire micro-ui directory into the container
 COPY health/micro-ui .
 
-# Copy variant-specific files (App.js, package.json, etc.) from builds folder
+# Copy variant-specific files (App.js, package.json, index.js) from builds folder
 COPY health/micro-ui/web/builds/${BUILD_VARIANT}/index.js ./web/src/index.js
 COPY health/micro-ui/web/builds/${BUILD_VARIANT}/package.json ./web/package.json
+
+# Debug: Show what's been copied and verify package.json homepage
+RUN echo "=== BUILD_VARIANT: ${BUILD_VARIANT} ===" && \
+    echo "=== package.json homepage ===" && grep -A1 -B1 "homepage" ./web/package.json
 
 # If variant has public folder files, copy them too
 # Using conditional copy with proper syntax

@@ -11,7 +11,7 @@
     "packages/css",
     "packages/modules/campaign-manager"
   ],
-  "homepage": "/workbench-ui",
+  "homepage": "/workbench-ui/",
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"

@@ -11,7 +11,7 @@
     "packages/css",
     "packages/modules/campaign-manager"
   ],
-  "homepage": "/core-ui",
+  "homepage": "/core-ui/",
   "husky": {},
   "lint-staged": {
     "*.{js,css,md}": "prettier --write"
