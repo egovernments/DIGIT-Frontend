@@ -10,9 +10,8 @@ COPY health/micro-ui .
 
 # Navigate to the web directory to install dependencies and build.
 RUN cd web \
-    && ./install-deps.sh \
     && yarn install \
-    && yarn build:webpack
+    && yarn build:prod
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
