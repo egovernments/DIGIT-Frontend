@@ -24,30 +24,24 @@ config:
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: digit-ui
 
-  # Health UI variants
+  # Health UI variants - BUILD_VARIANT automatically derived from pipeline name
   - name: builds/Digit-Frontend/health/console
     build:
       - work-dir: health/micro-ui/
         dockerfile: health/micro-ui/web/docker/Dockerfile
         image-name: console
-        build-args:
-          BUILD_VARIANT: console
 
   - name: builds/Digit-Frontend/health/core-ui
     build:
       - work-dir: health/micro-ui/
         dockerfile: health/micro-ui/web/docker/Dockerfile
         image-name: core-ui
-        build-args:
-          BUILD_VARIANT: core-ui
           
   - name: builds/Digit-Frontend/health/workbench-ui
     build:
       - work-dir: health/micro-ui/
         dockerfile: health/micro-ui/web/docker/Dockerfile
         image-name: workbench-ui
-        build-args:
-          BUILD_VARIANT: workbench-ui
 
   - name: builds/Digit-Frontend/sandbox-ui
     build:
