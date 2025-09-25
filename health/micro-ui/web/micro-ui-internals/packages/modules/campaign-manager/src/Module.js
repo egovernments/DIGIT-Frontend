@@ -56,6 +56,7 @@ import DateSelection from "./components/CreateCampaignComponents/DateSelection";
 import ViewDetailComponent from "./components/CreateCampaignComponents/ViewDetailComponent";
 //App config import
 import AppPreview from "./components/AppPreview";
+import OldAppPreview from "./components/OldAppPreview"; //--- IGNORE ---
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
@@ -178,6 +179,7 @@ const componentsToRegister = {
   UploadDataMappingWrapper,
   DataUploadWrapper,
   AppPreview,
+  OldAppPreview,
   AppConfigurationParentRedesign: AppConfigurationTabLayer,
   DateSelection,
   ViewDetailComponent,
@@ -185,10 +187,8 @@ const componentsToRegister = {
   HCMMyCampaignRowCard,
   MyCampaignNew,
   QRButton,
-EqualHeightWrapper,
-CampaignNameInfo
-
-  
+  EqualHeightWrapper,
+  CampaignNameInfo,
 };
 
 const overrideHooks = () => {

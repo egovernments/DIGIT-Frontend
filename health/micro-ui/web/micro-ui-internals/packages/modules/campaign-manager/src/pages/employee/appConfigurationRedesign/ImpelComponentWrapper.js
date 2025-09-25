@@ -2,9 +2,10 @@ import React, { Fragment, useEffect, useState } from "react";
 // import { dummyMaster } from "../../../configs/dummyMaster";
 //production mode
 import { AppLocalisationWrapper, Loader, useCustomT } from "@egovernments/digit-ui-components";
+import AppPreview from "../../../components/OldAppPreview";
 // import AppLocalisationWrapperDev from "./AppLocalisationWrapper";
 //development mode
-import AppPreview from "../../../components/AppPreview";
+// import AppPreview from "../../../components/AppPreview";
 
 function ImpelComponentWrapper({ variant, screenConfig, submit, back, showBack, parentDispatch, localeModule, pageTag, ...props }) {
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";

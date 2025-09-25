@@ -7,9 +7,9 @@ import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import AppPreview from "../../../components/AppPreview";
 import { useCustomT } from "./useCustomT";
 import { useQueryClient } from "react-query";
+import AppPreview from "../../../components/OldAppPreview";
 
 const AppConfigContext = createContext();
 
@@ -288,7 +288,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
 function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
-    const queryClient = useQueryClient();
+  const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
   const tenantId = Digit.ULBService.getCurrentTenantId();

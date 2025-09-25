@@ -25,7 +25,6 @@ import AppHelpTutorial from "../../components/AppHelpTutorial";
 import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
-import AppConfigurationFlowManager from "./appConfigurationRedesign/AppConfigurationFlowManager";
 import AppConfigurationStore from "./NewAppConfiguration/AppConfigurationStore";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
