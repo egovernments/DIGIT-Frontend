@@ -1,19 +1,51 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, lazy, Suspense } from "react";
 import { useTranslation } from "react-i18next";
 import { Routes, Route, useLocation, useNavigate,Navigate } from "react-router-dom"; // Updated imports for v6
 import { AppModules } from "../../components/AppModules";
 import ErrorBoundary from "../../components/ErrorBoundaries";
 import TopBarSideBar from "../../components/TopBarSideBar";
-import ChangePassword from "./ChangePassword";
-import ForgotPassword from "./ForgotPassword";
-import LanguageSelection from "./LanguageSelection";
-import EmployeeLogin from "./Login";
-import Otp from "./Otp";
-import UserProfile from "../citizen/Home/UserProfile";
-import ErrorComponent from "../../components/ErrorComponent";
-import { PrivateRoute } from "@egovernments/digit-ui-components"; // Assuming PrivateRoute is v6 compatible or will be adapted
+import { PrivateRoute, Loader } from "@egovernments/digit-ui-components"; // Assuming PrivateRoute is v6 compatible or will be adapted
 import ImageComponent from "../../components/ImageComponent";
 import withAutoFocusMain from "../../hoc/withAutoFocusMain";
+
+// Try to use lazy loading, but have a fallback strategy
+let ChangePassword, ForgotPassword, LanguageSelection, EmployeeLogin, Otp, UserProfile, ErrorComponent;
+
+try {
+  // Attempt lazy loading (will work in apps with proper webpack setup)
+  ChangePassword = lazy(() => import(/* webpackChunkName: "employee-change-password" */ "./ChangePassword"));
+  ForgotPassword = lazy(() => import(/* webpackChunkName: "employee-forgot-password" */ "./ForgotPassword"));
+  LanguageSelection = lazy(() => import(/* webpackChunkName: "employee-language-selection" */ "./LanguageSelection"));
+  EmployeeLogin = lazy(() => import(/* webpackChunkName: "employee-login" */ "./Login"));
+  Otp = lazy(() => import(/* webpackChunkName: "employee-otp" */ "./Otp"));
+  UserProfile = lazy(() => import(/* webpackChunkName: "user-profile" */ "../citizen/Home/UserProfile"));
+  ErrorComponent = lazy(() => import(/* webpackChunkName: "error-component" */ "../../components/ErrorComponent"));
+} catch (e) {
+  // Fallback to regular imports if lazy loading is not available
+  ChangePassword = require("./ChangePassword").default;
+  ForgotPassword = require("./ForgotPassword").default;
+  LanguageSelection = require("./LanguageSelection").default;
+  EmployeeLogin = require("./Login").default;
+  Otp = require("./Otp").default;
+  UserProfile = require("../citizen/Home/UserProfile").default;
+  ErrorComponent = require("../../components/ErrorComponent").default;
+}
+
+// Helper to wrap components with Suspense only if they're lazy loaded
+const withSuspense = (Component, props) => {
+  // Check if it's a lazy component
+    const { t } = useTranslation();
+
+  if (Component._result || Component.$$typeof === Symbol.for('react.lazy')) {
+    return (
+      <Suspense fallback={<Loader page={true} variant="PageLoader" loaderText={t("CORE_LOADING_EMPLOYEE_APP")} />}>
+        <Component {...props} />
+      </Suspense>
+    );
+  }
+  // Regular component, render directly
+  return <Component {...props} />;
+};
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error", "user/productPage"];
 
@@ -84,27 +116,25 @@ const EmployeeApp = ({
               }
             >
               <Routes> {/* Nested Routes for /user/* paths */}
-                <Route path="login" element={<EmployeeLogin stateCode={stateCode} />} /> {/* path is relative */}
-                <Route path="login/otp" element={<Otp isLogin={true} />} /> {/* path is relative */}
-                <Route path="forgot-password" element={<ForgotPassword stateCode={stateCode} />} /> {/* path is relative */}
-                <Route path="change-password" element={<ChangePassword />} /> {/* path is relative */}
+                <Route path="login" element={withSuspense(EmployeeLogin, { stateCode })} /> {/* path is relative */}
+                <Route path="login/otp" element={withSuspense(Otp, { isLogin: true })} /> {/* path is relative */}
+                <Route path="forgot-password" element={withSuspense(ForgotPassword, { stateCode })} /> {/* path is relative */}
+                <Route path="change-password" element={withSuspense(ChangePassword, {})} /> {/* path is relative */}
                 {/* Assuming PrivateRoute is updated for v6 to use `element` prop and `Maps` internally */}
                 <Route
                   path="profile"
-                  element={<PrivateRoute component={() => <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />} />}
+                  element={<PrivateRoute component={() => withSuspense(UserProfile, { stateCode, userType: "employee", cityDetails })} />}
                 />
                 <Route
                   path="error"
-                  element={
-                    <ErrorComponent
-                      initData={initData}
-                      goToHome={() => {
-                        navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`); // Replaced history.push with navigate
-                      }}
-                    />
-                  }
+                  element={withSuspense(ErrorComponent, {
+                    initData,
+                    goToHome: () => {
+                      navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`); // Replaced history.push with navigate
+                    }
+                  })}
                 />
-                <Route path="language-selection" element={<LanguageSelection />} /> {/* path is relative */}
+                <Route path="language-selection" element={withSuspense(LanguageSelection, {})} /> {/* path is relative */}
                 {/* Default redirect for /user/ anything that doesn't match above */}
                 <Route path="*" element={<Navigate to="language-selection" replace />} /> {/* Replaced Redirect with Navigate, `replace` for history */}
               </Routes>

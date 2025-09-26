@@ -56,36 +56,36 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
   return (
     <div className="ground-container digit-home-ground">
       <Routes> {/* Replaced Switch with Routes */}
-        {appRoutes}
-        {/*
-          Paths are now relative.
-          If AppModules is typically mounted at `/${window?.contextPath}/employee`,
-          then these paths will correctly resolve.
-        */}
-        <Route
-          path="login" // Relative path
-          element={
-            // Replaced Redirect with Navigate component
-            <Navigate
-              to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }}
-              replace
-            />
-          }
-        />
-        <Route path="forgot-password" element={<ForgotPassword />} />
-        <Route path="change-password" element={<ChangePassword />} />
-        <Route
-          path="*"
-          element={
-            <AppHome
-              userType={userType}
-              modules={modules}
-              additionalComponent={additionalComponent}
-            />
-          }
-        />
-        {/* <Route path="user-profile" element={<UserProfile />} /> */}
-      </Routes>
+          {appRoutes}
+          {/*
+            Paths are now relative.
+            If AppModules is typically mounted at `/${window?.contextPath}/employee`,
+            then these paths will correctly resolve.
+          */}
+          <Route
+            path="login" // Relative path
+            element={
+              // Replaced Redirect with Navigate component
+              <Navigate
+                to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }}
+                replace
+              />
+            }
+          />
+          <Route path="forgot-password" element={<ForgotPassword />} />
+          <Route path="change-password" element={<ChangePassword />} />
+          <Route
+            path="*"
+            element={
+              <AppHome
+                userType={userType}
+                modules={modules}
+                additionalComponent={additionalComponent}
+              />
+            }
+          />
+          {/* <Route path="user-profile" element={<UserProfile />} /> */}
+        </Routes>
     </div>
   );
 };
