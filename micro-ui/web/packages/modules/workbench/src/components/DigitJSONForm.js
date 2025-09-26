@@ -34,6 +34,13 @@ https://rjsf-team.github.io/react-jsonschema-form/docs/
 const AdditionalPropertiesContext = createContext();
 export const useAdditionalProperties = () => useContext(AdditionalPropertiesContext);
 
+const checkForHybrid = (title, titleCode, label) => {
+  if (title == titleCode) {
+    return label;
+  }
+  return title;
+};
+
 const uiSchema = {
   "ui:title": " ",
   "ui:classNames": "my-class",
@@ -240,7 +247,7 @@ function CustomFieldTemplate(props) {
       <div className={classNames} style={style}>
         <label htmlFor={id} className="control-label" id={"label_" + id}>
           <span className="tooltip">
-            {t(titleCode)} {additionalCode}
+            {checkForHybrid(t(titleCode),titleCode,label)} {additionalCode}
             <span className="tooltiptext" style={{ maxWidth: "540px" }}>
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
             </span>

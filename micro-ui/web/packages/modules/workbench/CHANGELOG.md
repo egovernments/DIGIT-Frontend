@@ -1,4 +1,7 @@
 
+## ["2.0.0-rc19-05"] [26-Sep-2025]
+-Optimised packages of core with lazy implementation
+
 ## [2.0.0-rc19-03] [09-Sept-2025]
 -Webpack changes to fix reload issue
 

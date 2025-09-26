@@ -1,5 +1,8 @@
 # Changelog 
 
+## ["2.0.0-rc19-05"] [26-Sep-2025]
+-Optimised packages of core with lazy implementation
+
 ## ["2.0.0-rc19-02"] [27-Jun-2025]
 -Added new logic for language selection page
 
