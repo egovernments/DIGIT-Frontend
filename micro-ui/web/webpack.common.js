@@ -50,7 +50,7 @@ module.exports = {
       template: path.resolve(__dirname, "public/index.html"),
       publicPath: publicPath,
       templateParameters: {
-        REACT_APP_GLOBAL: process.env.REACT_APP_GLOBAL || '',
+        REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL || '',
       },
     }),
     new webpack.DefinePlugin(envKeys),
