@@ -117,7 +117,7 @@ const MDMSView = ({ ...props }) => {
     data,
     navigate,
     handleEnableDisable,
-    additionalParams
+    additionalParams,
   };
 
   const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);

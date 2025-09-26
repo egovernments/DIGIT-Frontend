@@ -3,24 +3,111 @@ import { useLocation, Route, Routes } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer } from "@egovernments/digit-ui-react-components";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
-import LocalisationSearch from "./LocalisationSearch";
-import MDMSSearch from "./MDMSSearch";
-import MDMSAdd from "./MDMSAdd";
-import MDMSAddV2 from "./MDMSAddV2";
-import MDMSAddV4 from "./MDMSAddV4";
-import MDMSEdit from "./MDMSEdit";
-import MDMSView from "./MDMSView";
-import MDMSSearchv2 from "./MDMSSearchv2";
-import MDMSManageMaster from "./MDMSManageMaster";
-import LocalisationAdd from "./LocalisationAdd";
 import WorkbenchHeader from "../../components/WorkbenchHeader";
-import BoundaryHierarchyTypeAdd from "./BoundaryHierarchyTypeAdd";
-import UploadBoundary from "./UploadBoundary";
-import UploadBoundaryPure from "./BoundaryUploadPure";
-import SidebarConfig from "./SidebarConfig";
-import SidebarItems from "./SidebarItems";
-import SidebarAddEditItems from "./SidebarAddEditItems";
-import MDMSManager from "../../components/MDMSData";
+import { lazyWithFallback } from "../../utils/lazyWithFallback";
+
+// Create lazy components with fallbacks using the utility
+const LocalisationSearch = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-localisation-search" */ "./LocalisationSearch"),
+  () => require("./LocalisationSearch").default,
+  { loaderText: "Loading Localisation Search..." }
+);
+
+const MDMSSearch = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-search" */ "./MDMSSearch"),
+  () => require("./MDMSSearch").default,
+  { loaderText: "Loading MDMS Search..." }
+);
+
+const MDMSAdd = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-add" */ "./MDMSAdd"),
+  () => require("./MDMSAdd").default,
+  { loaderText: "Loading MDMS Add..." }
+);
+
+const MDMSAddV2 = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-add-v2" */ "./MDMSAddV2"),
+  () => require("./MDMSAddV2").default,
+  { loaderText: "Loading MDMS Add V2..." }
+);
+
+const MDMSAddV4 = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-add-v4" */ "./MDMSAddV4"),
+  () => require("./MDMSAddV4").default,
+  { loaderText: "Loading MDMS Add V4..." }
+);
+
+const MDMSEdit = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-edit" */ "./MDMSEdit"),
+  () => require("./MDMSEdit").default,
+  { loaderText: "Loading MDMS Edit..." }
+);
+
+const MDMSView = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-view" */ "./MDMSView"),
+  () => require("./MDMSView").default,
+  { loaderText: "Loading MDMS View..." }
+);
+
+const MDMSSearchv2 = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-search-v2" */ "./MDMSSearchv2"),
+  () => require("./MDMSSearchv2").default,
+  { loaderText: "Loading MDMS Search V2..." }
+);
+
+const MDMSManageMaster = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-manage-master" */ "./MDMSManageMaster"),
+  () => require("./MDMSManageMaster").default,
+  { loaderText: "Loading MDMS Manage Master..." }
+);
+
+const LocalisationAdd = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-localisation-add" */ "./LocalisationAdd"),
+  () => require("./LocalisationAdd").default,
+  { loaderText: "Loading Localisation Add..." }
+);
+
+const BoundaryHierarchyTypeAdd = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-boundary-hierarchy-type-add" */ "./BoundaryHierarchyTypeAdd"),
+  () => require("./BoundaryHierarchyTypeAdd").default,
+  { loaderText: "Loading Boundary Hierarchy Type Add..." }
+);
+
+const UploadBoundary = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-upload-boundary" */ "./UploadBoundary"),
+  () => require("./UploadBoundary").default,
+  { loaderText: "Loading Upload Boundary..." }
+);
+
+const UploadBoundaryPure = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-boundary-upload-pure" */ "./BoundaryUploadPure"),
+  () => require("./BoundaryUploadPure").default,
+  { loaderText: "Loading Upload Boundary Pure..." }
+);
+
+const SidebarSearch = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-sidebar-config" */ "./SidebarSearch"),
+  () => require("./SidebarSearch").default,
+  { loaderText: "Loading Sidebar Config..." }
+);
+
+const SidebarView = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-sidebar-view" */ "./SidebarView"),
+  () => require("./SidebarView").default,
+  { loaderText: "Loading Sidebar Items..." }
+);
+
+const SidebarAdd = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-sidebar-add" */ "./SidebarAdd"),
+  () => require("./SidebarAdd").default,
+  { loaderText: "Loading Sidebar Add..." }
+);
+
+const MDMSManager = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-manager" */ "../../components/MDMSData"),
+  () => require("../../components/MDMSData").default,
+  { loaderText: "Loading MDMS Manager..." }
+);
 
 const WorkbenchBreadCrumb = ({ location, defaultPath }) => {
   const { t } = useTranslation();
@@ -124,7 +211,6 @@ const App = ({ path }) => {
 
       <AppContainer className="workbench">
         <Routes>
-          <Route path="sample" element={<PrivateRoute element={<div>Sample Screen loaded</div>} />} />
           <Route path="localisation-search" element={<PrivateRoute element={<LocalisationSearch />} />} />
           <Route path="mdms-search" element={<PrivateRoute element={<MDMSSearch />} />} />
           <Route path="mdms-search-v2" element={<PrivateRoute element={<MDMSSearchv2 parentRoute={path} />} />} />
@@ -138,9 +224,9 @@ const App = ({ path }) => {
           <Route path="create-boundary-hierarchy-type" element={<PrivateRoute element={<BoundaryHierarchyTypeAdd />} />} />
           <Route path="upload-boundary" element={<PrivateRoute element={<UploadBoundary />} />} />
           <Route path="upload-boundary-pure" element={<PrivateRoute element={<UploadBoundaryPure />} />} />
-          <Route path="sidebar-search" element={<PrivateRoute element={<SidebarConfig />} />} />
-          <Route path="sidebar-items" element={<PrivateRoute element={<SidebarItems />} />} />
-          <Route path="sidebar-manage" element={<PrivateRoute element={<SidebarAddEditItems />} />} />
+          <Route path="sidebar-search" element={<PrivateRoute element={<SidebarSearch />} />} />
+          <Route path="sidebar-view" element={<PrivateRoute element={<SidebarView />} />} />
+          <Route path="sidebar-add" element={<PrivateRoute element={<SidebarAdd />} />} />
           <Route path="manage-schema" element={<PrivateRoute element={<MDMSManager />} />} />
         </Routes>
       </AppContainer>
