@@ -149,7 +149,7 @@ const TopBar = ({
       className=""
       img={logoUrl}
       logoWidth={"72px"}
-      logoHeight={"48px"}
+      logoHeight={"64px"}
       logo={loggedin ? cityDetails?.logoId : stateInfo?.statelogo}
       onImageClick={() => {}}
       onLogoClick={() => {}}
