@@ -1,0 +1,69 @@
+name: Build UI Variants
+
+on:
+  workflow_dispatch:
+    inputs:
+      variant:
+        description: 'Build variant to deploy'
+        required: true
+        default: 'core-ui'
+        type: choice
+        options:
+          - core-ui
+          - workbench-ui
+  push:
+    branches:
+      - develop-react19
+    paths:
+      - 'micro-ui/web/**'
+
+jobs:
+  build-variant:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Set build variant
+        id: set-variant
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "BUILD_VARIANT=${{ github.event.inputs.variant }}" >> $GITHUB_ENV
+          else
+            echo "BUILD_VARIANT=core-ui" >> $GITHUB_ENV
+          fi
+          echo "ACTION_NUMBER=${GITHUB_RUN_NUMBER}" >> $GITHUB_ENV
+          echo "COMMIT_ID=${GITHUB_SHA: -8}" >> $GITHUB_ENV
+          echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+          
+      - name: Setup Docker Buildx
+        uses: docker/setup-buildx-action@v2
+        
+      - name: Login to Docker Hub
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+          
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: micro-ui/web/docker/Dockerfile
+          build-args: |
+            BUILD_VARIANT=${{ env.BUILD_VARIANT }}
+          push: true
+          tags: |
+            egovio/${{ env.BUILD_VARIANT }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}
+            egovio/${{ env.BUILD_VARIANT }}:latest
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          
+      - name: Output summary
+        run: |
+          echo "### Build Summary" >> $GITHUB_STEP_SUMMARY
+          echo "- **Variant**: ${{ env.BUILD_VARIANT }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Image**: egovio/${{ env.BUILD_VARIANT }}:${{ env.BRANCH_NAME }}-${{ env.COMMIT_ID }}-${{ env.ACTION_NUMBER }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Branch**: ${{ env.BRANCH_NAME }}" >> $GITHUB_STEP_SUMMARY
+          echo "- **Commit**: ${{ env.COMMIT_ID }}" >> $GITHUB_STEP_SUMMARY

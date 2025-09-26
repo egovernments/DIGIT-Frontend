@@ -4,7 +4,7 @@ on:
     branches:
       - VersionUpgrade-test5-withPackages
     paths:
-      - 'micro-ui/web/micro-ui-internals/**'
+      - 'micro-ui/web/packages/**'
   pull_request:
     branches:
       - VersionUpgrade-test5
