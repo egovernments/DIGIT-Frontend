@@ -62,122 +62,68 @@ This application supports three distinct build variants:
 - **Features**: Campaign planning, data visualization, reporting
 
 
-## 🚀 Local Development
 
-### Prerequisites
-- Node.js >= 14
-- Yarn package manager
-- Git
+## 🐳 Docker Deployment
 
-### Quick Start
+### Building Docker Images
 
-1. **Clone the repository**
+The project uses a unified Dockerfile that can build different variants:
+
 ```bash
-git clone https://github.com/egovernments/DIGIT-Frontend.git
-cd DIGIT-Frontend/health/micro-ui/web
+# Build Workbench UI variant
+docker build -f health/micro-ui/web/docker/Dockerfile \
+  --build-arg BUILD_VARIANT=workbench-ui \
+  -t health-workbench:latest .
+
+# Build Core UI variant
+docker build -f health/micro-ui/web/docker/Dockerfile \
+  --build-arg BUILD_VARIANT=core-ui \
+  -t health-core:latest .
+
+# Build Console variant
+docker build -f health/micro-ui/web/docker/Dockerfile \
+  --build-arg BUILD_VARIANT=console \
+  -t health-console:latest .
 ```
 
-2. **Choose and configure a build variant**
+### Running Docker Containers
+
 ```bash
-# For Workbench UI (default - includes campaign management)
-cp builds/workbench-ui/package.json package.json
-cp builds/workbench-ui/index.js src/index.js
+# Run Workbench UI
+docker run -p 80:80 health-workbench:latest
+# Access at: http://localhost/workbench-ui/
 
-# OR for Core UI (basic healthcare features only)
-cp builds/core-ui/package.json package.json
-cp builds/core-ui/index.js src/index.js
+# Run Core UI  
+docker run -p 80:80 health-core:latest
+# Access at: http://localhost/core-ui/
 
-# OR for Console (admin interface)
-cp builds/console/package.json package.json
-cp builds/console/index.js src/index.js
+# Run Console
+docker run -p 80:80 health-console:latest  
+# Access at: http://localhost/console/
 ```
 
-3. **Install dependencies**
-```bash
-yarn install
-```
+### Docker Compose (Optional)
 
-4. **Create environment file**
-```bash
-cp .env.example .env
-# Edit .env with your configuration
-```
-
-5. **Start development server**
-```bash
-yarn start
-```
-
-The application will be available at:
-- **Workbench UI**: http://localhost:3000/workbench-ui/
-- **Core UI**: http://localhost:3000/core-ui/
-- **Console**: http://localhost:3000/console/
-
-### Development Tips
-
-- **Hot Reload**: Changes are automatically reloaded
-- **Switching Variants**: Copy different variant files and restart the server
-- **Package Building**: Run `yarn build:packages` to build local packages
-- **Production Build**: Run `yarn build:prod` for optimized production bundle
-
-
-## 🔧 Environment Variables
-
-Create a `.env` file in the `health/micro-ui/web/` directory with the following variables:
-
-```bash
-# API Configuration
-REACT_APP_PROXY_API=https://your-api-server.com
-REACT_APP_GLOBAL=https://your-global-server.com
-REACT_APP_PROXY_ASSETS=https://your-assets-server.com
-
-# User Configuration  
-REACT_APP_USER_TYPE=EMPLOYEE
-# Options: EMPLOYEE, CITIZEN
-
-# Build Configuration
-SKIP_PREFLIGHT_CHECK=true
-
-# Optional: State Configuration
-REACT_APP_STATE_LEVEL_TENANT_ID=mz
-```
-
-### Environment Profiles
-
-Different deployment environments may require different configurations:
-
-- **Development**: Local API endpoints
-- **Staging**: Staging server endpoints  
-- **Production**: Production server endpoints
-
-
-## 🚢 CI/CD Deployment
-
-### GitHub Actions
-
-The repository includes automated CI/CD pipelines that build and deploy different variants:
-
-1. **Navigate to Actions tab** in GitHub
-2. **Select "Build Pipeline"**  
-3. **Choose variant**: `console`, `core-ui`, or `workbench-ui`
-4. **Run workflow**
-
-The pipeline automatically:
-- Detects the build variant from the selection
-- Builds the appropriate Docker image
-- Supports both AMD64 and ARM64 architectures
-- Creates multi-platform manifest
-
-### Manual Deployment
-
-For manual deployments, use the build configuration:
-
-```bash
-# Build specific variant
-yarn build:prod
-
-# Or with Docker
-docker build --build-arg BUILD_VARIANT=workbench-ui -t my-app .
+```yaml
+version: '3.8'
+services:
+  workbench-ui:
+    build:
+      context: .
+      dockerfile: health/micro-ui/web/docker/Dockerfile
+      args:
+        BUILD_VARIANT: workbench-ui
+    ports:
+      - "3001:80"
+      
+  core-ui:
+    build:
+      context: .
+      dockerfile: health/micro-ui/web/docker/Dockerfile  
+      args:
+        BUILD_VARIANT: core-ui
+    ports:
+      - "3002:80"
 ```
 
 ## 🛠 Tech Stack
@@ -189,11 +135,6 @@ docker build --build-arg BUILD_VARIANT=workbench-ui -t my-app .
 - **[Tailwind CSS](https://tailwindcss.com/)** - Utility-first CSS framework
 - **[Webpack 5](https://webpack.js.org/)** - Module bundler with advanced optimizations
 
-### Additional Libraries
-- **Campaign Management**: Excel processing, mapping, form handling
-- **Data Visualization**: Charts and analytics components  
-- **UI Components**: DIGIT UI component library
-- **State Management**: Redux Toolkit for complex state
 
 ### Build Optimizations
 - **Code Splitting**: Lazy loading of heavy modules
@@ -201,25 +142,6 @@ docker build --build-arg BUILD_VARIANT=workbench-ui -t my-app .
 - **Bundle Analysis**: Webpack Bundle Analyzer integration
 - **Compression**: Gzip compression for production
 
-## 🗂 Modules
-
-The application is organized into modular components:
-
-### Core Modules
-1. **Core** - Basic functionality and routing
-2. **Assignment** - Task and assignment management  
-3. **Utilities** - Common utilities and helpers
-
-### Variant-Specific Modules
-4. **Workbench** - Data management and configuration
-5. **Campaign Manager** - Campaign planning and execution
-6. **Admin/Console** - System administration (console variant)
-
-### Optional Modules
-7. **HRMS** - Human Resource Management
-8. **Dashboard** - Analytics and reporting
-9. **Engagement** - User engagement tools
-10. **Payment** - Payment processing
 
 ## 📖 Documentation
 

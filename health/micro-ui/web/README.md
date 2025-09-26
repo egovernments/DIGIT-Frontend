@@ -140,21 +140,6 @@ The application connects to various backend microservices:
 - Localization
 - User Management
 
-## Deployment
-
-### Docker Deployment
-
-```bash
-# Build Docker image
-docker build -f docker/Dockerfile -t health-campaign-web .
-
-# Run container
-docker run -p 80:80 health-campaign-web
-```
-
-### Nginx Configuration
-
-The application includes an nginx configuration for production deployment.
 
 ## Troubleshooting
 
