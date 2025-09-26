@@ -41,7 +41,9 @@
     "react-tooltip": "4.1.2",
     "react-inlinesvg": "1.1.7",
     "lodash": "4.17.21",
-    "react-data-table-component": "7.6.2"
+    "react-data-table-component": "7.6.2",
+    "dom-to-image": "2.6.0",
+    "jspdf": "2.5.1"
   },
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
   "license": "MIT"

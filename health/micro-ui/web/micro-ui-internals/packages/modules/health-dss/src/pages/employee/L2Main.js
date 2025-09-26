@@ -12,6 +12,7 @@ import { getTitleHeading } from "../../utils/locale";
 import { Loader, Chip, Button } from "@egovernments/digit-ui-components";
 import { HeaderComponent } from "@egovernments/digit-ui-components";
 import { getDuration } from "../../utils/getDuration";
+import { PDFDownload } from "../../utils/PDFDownload";
 
 const nationalScreenURLs = {
   overview: { key: "national-overview", stateKey: "overview", label: "NURT_OVERVIEW", active: true, nActive: true },
@@ -455,7 +456,7 @@ const L2Main = ({}) => {
         break;
       case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
-          return Digit.Download.PDFMAIN(fullPageRef, t(dashboardConfig?.[0]?.name));
+          return PDFDownload(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
         break;
       case "ES_DSS_SHARE_PDF_EMAIL":

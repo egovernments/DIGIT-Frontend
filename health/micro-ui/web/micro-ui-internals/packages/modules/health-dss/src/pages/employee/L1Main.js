@@ -19,6 +19,7 @@ import CustomPieChart from "../../components/CustomPieChart";
 import CustomHorizontalBarChart from "../../components/CustomHorizontalBarChart";
 import VennDiagramChart from "../../components/VennDiagramChart";
 import { getDuration } from "../../utils/getDuration";
+import { PDFDownload } from "../../utils/PDFDownload";
 
 const key = "DSS_FILTERS";
 const getInitialRange = () => {
@@ -384,7 +385,7 @@ const L1Main = () => {
         break;
       case "ES_DSS_DOWNLOAD_PDF":
         setTimeout(() => {
-          return Digit.Download.PDFMAIN(fullPageRef, t(dashboardConfig?.[0]?.name));
+          return PDFDownload(fullPageRef, t(dashboardConfig?.[0]?.name));
         }, 500);
         break;
       case "ES_DSS_SHARE_PDF_EMAIL":

@@ -102,7 +102,6 @@ export const InboxConfig = {
       showAsRemovableTagsInMobile: true,
       customHookName: "DSS.useInboxSearch",
     },
-    // // Commenting PAST Aand LIVE Campaigns tabs as of now, as LIVE Campaigns needs some api changes. 
     // {
     //   headerLabel: "CAMPAIGN_SEARCH_TITLE",
     //   label: "PAST_CAMPAIGNS",
