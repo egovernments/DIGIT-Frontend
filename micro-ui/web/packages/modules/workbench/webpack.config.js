@@ -29,11 +29,12 @@ module.exports = {
 
   optimization: {
     usedExports: true,
-    sideEffects: true, // safer than false
+    sideEffects: false, // Enable tree-shaking
     concatenateModules: isProduction,
     minimize: isProduction,
     runtimeChunk: false, // Disable runtime chunk for library builds
     splitChunks: false, // Disable code splitting for library builds
+    moduleIds: isProduction ? 'deterministic' : 'named',
   },
 
   performance: {
@@ -44,18 +45,8 @@ module.exports = {
 
   externals: {
     // Core React ecosystem
-    react: {
-      commonjs: 'react',
-      commonjs2: 'react',
-      amd: 'react',
-      root: 'React',
-    },
-    'react-dom': {
-      commonjs: 'react-dom',
-      commonjs2: 'react-dom',
-      amd: 'react-dom',
-      root: 'ReactDOM',
-    },
+    react: "React",
+    "react-dom": "ReactDOM",
     "react-router-dom": "react-router-dom",
     "react-i18next": "react-i18next",
     "@tanstack/react-query": "@tanstack/react-query",
@@ -64,6 +55,10 @@ module.exports = {
     redux: "redux",
     "redux-thunk": "redux-thunk",
     // DIGIT UI cross-dependencies
+    "@egovernments/digit-ui-components": "@egovernments/digit-ui-components",
+    "@egovernments/digit-ui-react-components": "@egovernments/digit-ui-react-components",
+    "@egovernments/digit-ui-libraries": "@egovernments/digit-ui-libraries",
+    "@egovernments/digit-ui-svg-components": "@egovernments/digit-ui-svg-components",
   },
 
   module: {
