@@ -1,4 +1,8 @@
 
+## ["2.0.0-rc19-06"] [26-Sep-2025]
+-Optimised packages of core with lazy implementation - republish
+
+
 ## ["2.0.0-rc19-05"] [26-Sep-2025]
 -Optimised packages of core with lazy implementation
 
