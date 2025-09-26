@@ -23,30 +23,7 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
 
   if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
 
-  useEffect(() => {
-    if (!pathname?.includes("application-details")) {
-      if (!pathname?.includes("inbox")) {
-        Digit.SessionStorage.del("fsm/inbox/searchParams");
-      }
-      if (pathname?.includes("search")) {
-        Digit.SessionStorage.del("fsm/search/searchParams");
-      }
-    }
-    if (!pathname?.includes("dss")) {
-      Digit.SessionStorage.del("DSS_FILTERS");
-    }
-    if (pathname?.toString() === `/${window?.contextPath}/employee`) {
-      Digit.SessionStorage.del("SEARCH_APPLICATION_DETAIL");
-      Digit.SessionStorage.del("WS_EDIT_APPLICATION_DETAILS");
-    }
-    if (pathname?.toString() === `/${window?.contextPath}/citizen` || pathname?.toString() === `/${window?.contextPath}/employee`) {
-      Digit.SessionStorage.del("WS_DISCONNECTION");
-    }
-  }, [pathname]);
 
-  // history.listen(() => {
-  //   window?.scrollTo({ top: 0, left: 0, behavior: "smooth" });
-  // });
 
   const handleUserDropdownSelection = (option) => {
     option.func();

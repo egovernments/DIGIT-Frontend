@@ -58,9 +58,8 @@ const MainApp = ({ stateCode, enabledModules }) => {
   useEffect(() => {
     initLibraries().then(async () => {
       try {
-        const { initCampaignComponents } = await import("@egovernments/digit-ui-module-campaign-manager")
+        
         const { initWorkbenchComponents } = await import("@egovernments/digit-ui-module-workbench")
-        initCampaignComponents();
         initWorkbenchComponents();
       } catch (error) {
         console.log("Error loading modules:", error);

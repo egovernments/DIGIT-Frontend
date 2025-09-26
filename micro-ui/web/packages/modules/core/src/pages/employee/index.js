@@ -8,14 +8,11 @@ import ChangePassword from "./ChangePassword";
 import ForgotPassword from "./ForgotPassword";
 import LanguageSelection from "./LanguageSelection";
 import EmployeeLogin from "./Login";
-import SignUp from "./SignUp";
 import Otp from "./Otp";
-import ViewUrl from "./ViewUrl";
 import UserProfile from "../citizen/Home/UserProfile";
 import ErrorComponent from "../../components/ErrorComponent";
 import { PrivateRoute } from "@egovernments/digit-ui-components"; // Assuming PrivateRoute is v6 compatible or will be adapted
 import ImageComponent from "../../components/ImageComponent";
-// import SkipToMainContent from "./SkipToMainContent/SkipToMainContent.js";
 import withAutoFocusMain from "../../hoc/withAutoFocusMain";
 
 const userScreensExempted = ["user/landing", "user/profile", "user/error", "user/productPage"];
@@ -29,7 +26,6 @@ const EmployeeApp = ({
   handleUserDropdownSelection,
   logoUrl,
   logoUrlWhite,
-  DSO,
   stateCode,
   modules,
   appTenants,
@@ -133,7 +129,7 @@ const EmployeeApp = ({
                 modules={modules}
               />
             )}
-            <div className={!noTopBar ? `main ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+            <div className={!noTopBar ? `main digit-home-main` : ""}>
               <div className="employee-app-wrapper digit-home-app-wrapper">
                 <ErrorBoundary initData={initData}>
                   <AppModules
@@ -160,11 +156,7 @@ const EmployeeApp = ({
         }/>
 
         {/* Global Redirect for any unmatched path, usually placed last */}
-        {/* The previous redirect to language-selection was inside the /user path,
-            this one handles any other unmatched path outside of /user.
-            If this component is mounted at `/employee`, then `language-selection`
-            here will resolve to `/employee/language-selection`.
-        */}
+
         <Route path="*" element={<Navigate to={`user/language-selection`} replace />} />
       </Routes>
     </div>
