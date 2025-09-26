@@ -94,7 +94,9 @@ class ErrorBoundary extends React.Component {
       return (
         <div className="error-boundary">
           <Redircter />
-          <ErrorComponent initData={this.props.initData} errorData={this.state} />
+          <ErrorComponent initData={this.props.initData} errorData={this.state}  goToHome={() => {
+                window.location.href = `/${window?.contextPath}/${Digit?.UserService?.getType?.()}`; // Use navigate
+              }}/>
 
           {/* <summary>Something went wrong</summary>
           <details style={{ whiteSpace: "pre-wrap" }}>

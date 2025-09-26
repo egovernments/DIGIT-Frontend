@@ -20,10 +20,11 @@ function log(message, color = colors.reset) {
 }
 
 function checkDistFiles() {
-  const campaignDist = path.join(__dirname, 'packages/modules/campaign-manager/dist/main.js');
+  const coreDist = path.join(__dirname, 'packages/modules/core/dist/main.js');
   const cssDist = path.join(__dirname, 'packages/css/dist/index.css');
-  
-  return fs.existsSync(campaignDist) && fs.existsSync(cssDist);
+  const workbenchDist = path.join(__dirname, 'packages/modules/workbench/dist/main.js');
+
+  return fs.existsSync(coreDist) && fs.existsSync(cssDist) && fs.existsSync(workbenchDist);
 }
 
 async function buildPackages() {
@@ -61,10 +62,11 @@ async function startDevelopment() {
     // Start the concurrent processes
     const devProcess = spawn('npx', [
       'concurrently',
-      '--names', 'CSS,Campaign,Webpack',
+      '--names', 'CSS,Core,Workbencßh,Webpack',
       '--prefix-colors', 'yellow,magenta,cyan',
       '"cd packages/css && npm run start"',
-      '"cd packages/modules/campaign-manager && npm run build:dev -- --watch"',
+      '"cd packages/modules/core && npm run build:dev -- --watch"',
+      '"cd packages/modules/workbench && npm run build:dev -- --watch"',
       '"webpack serve --config webpack.dev.js --port 3000"'
     ], {
       stdio: 'inherit',
