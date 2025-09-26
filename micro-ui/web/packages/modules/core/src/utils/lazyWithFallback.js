@@ -2,41 +2,67 @@ import React, { lazy, Suspense } from "react";
 import { Loader } from "@egovernments/digit-ui-components";
 
 /**
- * Creates a component that attempts lazy loading but falls back to direct import if it fails.
- * This allows the library to work both when chunks are available (dev/apps with code splitting)
- * and when bundled as a single file (library distribution).
+ * Creates a component with lazy loading that gracefully falls back to synchronous import.
+ * This allows the library to work in both environments:
+ * - Development/Apps with webpack code splitting enabled
+ * - Production library bundles without code splitting
+ * 
+ * @param {Function} lazyImportFn - Function that returns a dynamic import promise
+ * @param {Function} fallbackRequireFn - Function that returns a synchronous require
+ * @param {Object} options - Optional configuration
+ * @returns {React.Component} - Either a lazy-loaded component with Suspense or a regular component
  */
-export const lazyWithFallback = (lazyImport, directImport) => {
-  // Check if we're in an environment that supports dynamic imports
-  const supportsLazyLoading = typeof window !== 'undefined' && 
-    window.__webpack_require__ && 
-    typeof window.__webpack_require__.e === 'function';
+export const lazyWithFallback = (lazyImportFn, fallbackRequireFn, options = {}) => {
+  const { 
+    loaderText = "Loading...",
+    loaderVariant = "PageLoader",
+    showPage = true 
+  } = options;
 
-  if (!supportsLazyLoading || !lazyImport) {
-    // Return the direct import if lazy loading is not supported
-    return directImport;
+  let Component;
+  
+  try {
+    // Try to create a lazy component
+    Component = lazy(lazyImportFn);
+  } catch (error) {
+    // If lazy loading fails (e.g., in a bundled library), use fallback
+    console.warn('Lazy loading not available, using synchronous import:', error.message);
+    try {
+      Component = fallbackRequireFn();
+    } catch (requireError) {
+      console.error('Both lazy and fallback loading failed:', requireError);
+      return () => <div>Error loading component</div>;
+    }
   }
 
-  // Create lazy component
-  const LazyComponent = lazy(lazyImport);
+  // If Component has the lazy signature, wrap it with Suspense
+  if (Component && (Component._result || Component.$$typeof === Symbol.for('react.lazy'))) {
+    return (props) => (
+      <Suspense fallback={<Loader page={showPage} variant={loaderVariant} loaderText={loaderText} />}>
+        <Component {...props} />
+      </Suspense>
+    );
+  }
 
-  // Return a wrapper component that handles loading and errors
-  return (props) => (
-    <Suspense fallback={<Loader page={true} variant="PageLoader" />}>
-      <LazyComponent {...props} />
-    </Suspense>
-  );
+  // Otherwise, return the component directly
+  return Component || (() => <div>Component not found</div>);
 };
 
 /**
- * Alternative approach: Always try lazy loading, but provide fallback
+ * Helper function to wrap a component with Suspense only if it's lazy
+ * Use this when you already have a component that might or might not be lazy
  */
-export const safeLazy = (importFn) => {
-  return lazy(() => 
-    importFn().catch((error) => {
-      console.warn('Failed to lazy load component:', error);
-      // Return a default export that renders nothing or a placeholder
-      return { default: () => <div>Component failed to load</div> };
-    })
-  );
+export const withConditionalSuspense = (Component, loaderText = "Loading...") => {
+  return (props) => {
+    // Check if it's a lazy component
+    if (Component && (Component._result || Component.$$typeof === Symbol.for('react.lazy'))) {
+      return (
+        <Suspense fallback={<Loader page={true} variant="PageLoader" loaderText={loaderText} />}>
+          <Component {...props} />
+        </Suspense>
+      );
+    }
+    // Regular component, render directly
+    return Component ? <Component {...props} /> : null;
+  };
 };

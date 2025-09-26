@@ -1,44 +1,50 @@
-import React, { useEffect, lazy, Suspense } from "react";
+import React from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { Loader } from "@egovernments/digit-ui-components";
+import { lazyWithFallback } from "./utils/lazyWithFallback";
 
-// Try to use lazy loading, with fallback to regular imports
-let CitizenApp, EmployeeApp, SignUp, Otp, ViewUrl, CustomErrorComponent, DummyLoaderScreen;
+// Create lazy components with fallbacks using the utility
+const CitizenApp = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-app" */ "./pages/citizen"),
+  () => require("./pages/citizen").default,
+  { loaderText: "Loading Citizen App..." }
+);
 
-try {
-  // Attempt lazy loading (will work in apps with proper webpack setup)
-  CitizenApp = lazy(() => import(/* webpackChunkName: "citizen-app" */ "./pages/citizen"));
-  EmployeeApp = lazy(() => import(/* webpackChunkName: "employee-app" */ "./pages/employee"));
-  SignUp = lazy(() => import(/* webpackChunkName: "sign-up" */ "./pages/employee/SignUp"));
-  Otp = lazy(() => import(/* webpackChunkName: "otp" */ "./pages/employee/Otp"));
-  ViewUrl = lazy(() => import(/* webpackChunkName: "view-url" */ "./pages/employee/ViewUrl"));
-  CustomErrorComponent = lazy(() => import(/* webpackChunkName: "custom-error" */ "./components/CustomErrorComponent"));
-  DummyLoaderScreen = lazy(() => import(/* webpackChunkName: "dummy-loader" */ "./components/DummyLoader"));
-} catch (e) {
-  // Fallback to regular imports if lazy loading is not available
-  CitizenApp = require("./pages/citizen").default;
-  EmployeeApp = require("./pages/employee").default;
-  SignUp = require("./pages/employee/SignUp").default;
-  Otp = require("./pages/employee/Otp").default;
-  ViewUrl = require("./pages/employee/ViewUrl").default;
-  CustomErrorComponent = require("./components/CustomErrorComponent").default;
-  DummyLoaderScreen = require("./components/DummyLoader").default;
-}
+const EmployeeApp = lazyWithFallback(
+  () => import(/* webpackChunkName: "employee-app" */ "./pages/employee"),
+  () => require("./pages/employee").default,
+  { loaderText: "Loading Employee App..." }
+);
 
-// Helper to wrap components with Suspense only if they're lazy loaded
-const withSuspense = (Component, props) => {
-  // Check if it's a lazy component
-  if (Component._result || Component.$$typeof === Symbol.for('react.lazy')) {
-    return (
-      <Suspense fallback={<Loader page={true} variant="PageLoader" loaderText={"Loading App"} />}>
-        <Component {...props} />
-      </Suspense>
-    );
-  }
-  // Regular component, render directly
-  return <Component {...props} />;
-};
+const SignUp = lazyWithFallback(
+  () => import(/* webpackChunkName: "sign-up" */ "./pages/employee/SignUp"),
+  () => require("./pages/employee/SignUp").default,
+  { loaderText: "Loading Sign Up..." }
+);
+
+const Otp = lazyWithFallback(
+  () => import(/* webpackChunkName: "otp" */ "./pages/employee/Otp"),
+  () => require("./pages/employee/Otp").default,
+  { loaderText: "Loading OTP..." }
+);
+
+const ViewUrl = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-url" */ "./pages/employee/ViewUrl"),
+  () => require("./pages/employee/ViewUrl").default,
+  { loaderText: "Loading View URL..." }
+);
+
+const CustomErrorComponent = lazyWithFallback(
+  () => import(/* webpackChunkName: "custom-error" */ "./components/CustomErrorComponent"),
+  () => require("./components/CustomErrorComponent").default,
+  { loaderText: "Loading Error Component..." }
+);
+
+const DummyLoaderScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "dummy-loader" */ "./components/DummyLoader"),
+  () => require("./components/DummyLoader").default,
+  { loaderText: "Loading..." }
+);
 
 export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite, initData, defaultLanding = "citizen", allowedUserTypes = ["citizen", "employee"] }) => {
   const navigate = useNavigate();
@@ -53,8 +59,6 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   let CITIZEN = userDetails?.info?.type === "CITIZEN" || !window.location.pathname.split("/").includes("employee") ? true : false;
 
   if (window.location.pathname.split("/").includes("employee")) CITIZEN = false;
-
-
 
   const handleUserDropdownSelection = (option) => {
     option.func();
@@ -83,13 +87,13 @@ export const DigitApp = ({ stateCode, modules, appTenants, logoUrl, logoUrlWhite
   return (
     <Routes>
       {allowedUserTypes?.includes("employee") && (
-        <Route path={`/${window?.contextPath}/employee/*`} element={withSuspense(EmployeeApp, commonProps)} />
+        <Route path={`/${window?.contextPath}/employee/*`} element={<EmployeeApp {...commonProps} />} />
       )}
       {allowedUserTypes?.includes("citizen") && (
-        <Route path={`/${window?.contextPath}/citizen/*`} element={withSuspense(CitizenApp, commonProps)} />
+        <Route path={`/${window?.contextPath}/citizen/*`} element={<CitizenApp {...commonProps} />} />
       )}
       {allowedUserTypes?.includes("employee") && (
-        <Route path={`/${window?.contextPath}/no-top-bar/employee`} element={withSuspense(EmployeeApp, { ...commonProps, noTopBar: true })} />
+        <Route path={`/${window?.contextPath}/no-top-bar/employee`} element={<EmployeeApp {...commonProps} noTopBar />} />
       )}
       <Route path="*" element={<Navigate to={`/${window?.contextPath}/${defaultLanding}`} />} />
     </Routes>
@@ -115,11 +119,11 @@ export const DigitAppWrapper = ({ stateCode, modules, appTenants, logoUrl, logoU
       }
     >
       <Routes>
-        <Route path={`/${window?.globalPath}/user/invalid-url`} element={withSuspense(CustomErrorComponent, {})} />
-        <Route path={`/${window?.globalPath}/user/sign-up`} element={withSuspense(SignUp, { stateCode })} />
-        <Route path={`/${window?.globalPath}/user/otp`} element={withSuspense(Otp, {})} />
-        <Route path={`/${window?.globalPath}/user/setup`} element={withSuspense(DummyLoaderScreen, {})} />
-        <Route path={`/${window?.globalPath}/user/url`} element={withSuspense(ViewUrl, {})} />
+        <Route path={`/${window?.globalPath}/user/invalid-url`} element={<CustomErrorComponent />} />
+        <Route path={`/${window?.globalPath}/user/sign-up`} element={<SignUp stateCode={stateCode} />} />
+        <Route path={`/${window?.globalPath}/user/otp`} element={<Otp />} />
+        <Route path={`/${window?.globalPath}/user/setup`} element={<DummyLoaderScreen />} />
+        <Route path={`/${window?.globalPath}/user/url`} element={<ViewUrl />} />
         {window?.globalPath !== window?.contextPath && (
           <Route
             path={`/${window?.contextPath}/*`}
