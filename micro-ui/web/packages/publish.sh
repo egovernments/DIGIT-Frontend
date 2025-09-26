@@ -20,3 +20,4 @@ cd "$BASEDIR/modules/core" &&   rm -rf dist && yarn&& yarn build &&   npm publis
 
 msg "Building and publishing workbench"
 cd "$BASEDIR/modules/workbench" &&   rm -rf dist && yarn&& yarn build && npm publish --tag console-0.5
+
