@@ -1,62 +1,44 @@
-const path = require("path");
+const { merge } = require("webpack-merge");
+const common = require("./webpack.common.js");
 const webpack = require("webpack");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
+const path = require("path");
 
-module.exports = {
+module.exports = merge(common, {
   mode: "development",
-  entry: path.resolve(__dirname, "src/index.js"),
-  devtool: "eval-source-map", // Faster rebuilds, good for dev
-
+  devtool: "eval-source-map",
+  
   output: {
     filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "dist"),
-    publicPath: "/", // Use root for dev
+    chunkFilename: "[name].chunk.js",
+    publicPath: "/workbench-ui/",
   },
-
-  module: {
-    rules: [
-      {
-        test: /\.(js|jsx)$/,
-        exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            presets: ["@babel/preset-env", "@babel/preset-react"],
-            plugins: ["@babel/plugin-proposal-optional-chaining"],
-          },
-        },
-      },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      },
-    ],
-  },
-
-  plugins: [
-    new webpack.ProvidePlugin({
-      process: "process/browser",
-    }),
-    new HtmlWebpackPlugin({
-      template: "public/index.html",
-      inject: true,
-    }),
-  ],
-
-  resolve: {
-    modules: [path.resolve(__dirname, "src"), "node_modules"],
-    extensions: [".js", ".jsx", ".ts", ".tsx"],
-    fallback: {
-      process: require.resolve("process/browser"),
-    },
-  },
-
+  
   devServer: {
-    static: path.join(__dirname, "dist"),
+    static: {
+      directory: path.join(__dirname, "public"),
+    },
+    historyApiFallback: {
+      index: "/workbench-ui/index.html",
+    },
     compress: true,
-    port: 3000,
+    port: process.env.PORT || 3000,
     hot: true,
-    historyApiFallback: true,
+    liveReload: false, // Disable auto refresh to prevent conflicts
+    open: true,
+    client: {
+      overlay: {
+        errors: true,
+        warnings: false,
+      },
+      progress: true,
+    },
+    watchFiles: {
+      paths: ["packages/**/*"],
+      options: {
+        usePolling: false,
+        ignored: /node_modules/,
+      },
+    },
     proxy: [
       {
         context: [
@@ -97,11 +79,44 @@ module.exports = {
           "/org-services",
           "/bpa-services",
           "/noc-services",
+          "/health-hrms",
+          "/health-project",
+          "/fsm-calculator",
         ],
-        target: "https://unified-qa.digit.org",
+        target: process.env.REACT_APP_PROXY_URL || "https://unified-qa.digit.org",
         changeOrigin: true,
         secure: false,
       },
     ],
   },
-};
+  
+  plugins: [
+    new webpack.HotModuleReplacementPlugin(),
+    new webpack.DefinePlugin({
+      "process.env.NODE_ENV": JSON.stringify("development"),
+    }),
+  ],
+  
+  optimization: {
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendor: {
+          test: /[\\/]node_modules[\\/]/,
+          name: "vendors",
+          priority: -10,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
+  },
+  
+  performance: {
+    hints: false,
+  },
+});
