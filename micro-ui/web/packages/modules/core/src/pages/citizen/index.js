@@ -1,22 +1,74 @@
 import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import { Routes, Route, useNavigate, useLocation } from "react-router-dom"; // Updated imports for v6
+import { Routes, Route, useNavigate, useLocation } from "react-router-dom";
 import ErrorBoundary from "../../components/ErrorBoundaries";
-import ErrorComponent from "../../components/ErrorComponent";
 import { AppHome, processLinkData } from "../../components/Home";
 import TopBarSideBar from "../../components/TopBarSideBar";
 import StaticCitizenSideBar from "../../components/TopBarSideBar/SideBar/StaticCitizenSideBar";
-import FAQsSection from "./FAQs/FAQs";
-import CitizenHome from "./Home";
-import LanguageSelection from "./Home/LanguageSelection";
-import LocationSelection from "./Home/LocationSelection";
-import UserProfile from "./Home/UserProfile";
-import HowItWorks from "./HowItWorks/howItWorks";
-import Login from "./Login";
-import Search from "./SearchApp";
-import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
 import ImageComponent from "../../components/ImageComponent";
+import { lazyWithFallback } from "../../utils/lazyWithFallback";
+
+// Create lazy components with fallbacks using the utility
+const ErrorComponent = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-error-component" */ "../../components/ErrorComponent"),
+  () => require("../../components/ErrorComponent").default,
+  { loaderText: "Loading Error Component..." }
+);
+
+const FAQsSection = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-faqs" */ "./FAQs/FAQs"),
+  () => require("./FAQs/FAQs").default,
+  { loaderText: "Loading FAQs..." }
+);
+
+const CitizenHome = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-home" */ "./Home"),
+  () => require("./Home").default,
+  { loaderText: "Loading Home..." }
+);
+
+const LanguageSelection = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-language-selection" */ "./Home/LanguageSelection"),
+  () => require("./Home/LanguageSelection").default,
+  { loaderText: "Loading Language Selection..." }
+);
+
+const LocationSelection = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-location-selection" */ "./Home/LocationSelection"),
+  () => require("./Home/LocationSelection").default,
+  { loaderText: "Loading Location Selection..." }
+);
+
+const UserProfile = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-user-profile" */ "./Home/UserProfile"),
+  () => require("./Home/UserProfile").default,
+  { loaderText: "Loading User Profile..." }
+);
+
+const HowItWorks = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-how-it-works" */ "./HowItWorks/howItWorks"),
+  () => require("./HowItWorks/howItWorks").default,
+  { loaderText: "Loading How It Works..." }
+);
+
+const Login = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-login" */ "./Login"),
+  () => require("./Login").default,
+  { loaderText: "Loading Login..." }
+);
+
+const Search = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-search" */ "./SearchApp"),
+  () => require("./SearchApp").default,
+  { loaderText: "Loading Search..." }
+);
+
+const StaticDynamicCard = lazyWithFallback(
+  () => import(/* webpackChunkName: "citizen-static-dynamic-card" */ "./StaticDynamicComponent/StaticDynamicCard"),
+  () => require("./StaticDynamicComponent/StaticDynamicCard").default,
+  { loaderText: "Loading Dynamic Content..." }
+);
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -67,11 +119,10 @@ const Home = ({
       },
     }
   );
-  const classname = Digit.Hooks.useRouteSubscription(pathname); // Assuming this hook is compatible or doesn't rely on v5 specific router props
+  const classname = Digit.Hooks.useRouteSubscription(pathname);
   const { t } = useTranslation();
-  // const { path } = useRouteMatch(); // Removed: Replaced by relative paths in Routes
-  const navigate = useNavigate(); // Replaced useHistory with useNavigate
-  const location = useLocation(); // Keep useLocation for current path checks
+  const navigate = useNavigate();
+  const location = useLocation();
 
   const handleClickOnWhatsApp = (obj) => {
     window.open(obj);
@@ -79,12 +130,10 @@ const Home = ({
 
   const hideSidebar = sidebarHiddenFor.some((e) => window.location.href.includes(e));
 
-  // The `appRoutes` and `ModuleLevelLinkHomePages` arrays now build `Route` elements with `element` prop.
-  // The `path` prop should be relative to the base path where this `Home` component is mounted (e.g., `/citizen`).
   const appRoutes = modules.map(({ code, tenants }, index) => {
     const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
     return Module ? (
-      <Route key={index} path={`${code.toLowerCase()}/*`} element={ // Added /* for nested routes within modules
+      <Route key={index} path={`${code.toLowerCase()}/*`} element={
         <Module stateCode={stateCode} moduleCode={code} userType="citizen" tenants={getTenants(tenants, appTenants)} />
       } />
     ) : null;
@@ -100,11 +149,11 @@ const Home = ({
       });
     }
     return (
-      <React.Fragment key={code + "-routes"}> {/* Added a key to the fragment */}
+      <React.Fragment key={code + "-routes"}>
         <Route path={`${code.toLowerCase()}-home`} element={
           <div className="moduleLinkHomePage">
             <ImageComponent src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
-            <BackLink className="moduleLinkHomePageBackButton" onClick={() => navigate(-1)} /> {/* navigate(-1) for back */}
+            <BackLink className="moduleLinkHomePageBackButton" onClick={() => navigate(-1)} />
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
               {mdmsDataObj && (
@@ -126,8 +175,6 @@ const Home = ({
                   isInfo={code === "OBPS" ? true : false}
                 />
               )}
-              {/* If Links component expects router props, ensure it's v6 compatible or pass navigate/location */}
-              {/* <Links key={index} matchPath={`/digit-ui/citizen/${code.toLowerCase()}`} userType={"citizen"} /> */}
             </div>
             <StaticDynamicCard moduleCode={code?.toUpperCase()} />
           </div>
@@ -161,9 +208,8 @@ const Home = ({
           </div>
         )}
 
-        <Routes> {/* Replaced Switch with Routes */}
-          {/* Base routes for /citizen */}
-          <Route path="/" element={<CitizenHome />} /> {/* Exact path not needed, it matches "/" exactly */}
+        <Routes>
+          <Route path="/" element={<CitizenHome />} />
 
           <Route path="select-language" element={<LanguageSelection />} />
 
@@ -173,7 +219,7 @@ const Home = ({
             <ErrorComponent
               initData={initData}
               goToHome={() => {
-                navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`); // Use navigate
+                navigate(`/${window?.contextPath}/${Digit?.UserService?.getType?.()}`);
               }}
             />
           } />
@@ -188,9 +234,9 @@ const Home = ({
             />
           } />
 
-          <Route path="login/*" element={<Login stateCode={stateCode} />} /> {/* Use /* if Login has nested routes */}
+          <Route path="login/*" element={<Login stateCode={stateCode} />} />
 
-          <Route path="register/*" element={<Login stateCode={stateCode} isUserRegistered={false} />} /> {/* Use /* if Login has nested routes */}
+          <Route path="register/*" element={<Login stateCode={stateCode} isUserRegistered={false} />} />
 
           <Route path="user/profile" element={<UserProfile stateCode={stateCode} userType={"citizen"} cityDetails={cityDetails} />} />
 

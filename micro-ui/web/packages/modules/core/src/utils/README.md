@@ -58,7 +58,89 @@ import { withConditionalSuspense } from './utils/lazyWithFallback';
 const WrappedComponent = withConditionalSuspense(SomeComponent, "Loading...");
 ```
 
+## Implementation Coverage
+
+This utility has been implemented throughout the core module:
+
+### Employee App Routes
+- `/src/pages/employee/index.js` - All employee route components:
+  - ChangePassword
+  - ForgotPassword
+  - LanguageSelection
+  - EmployeeLogin
+  - Otp
+  - UserProfile
+  - ErrorComponent
+
+### Citizen App Routes
+- `/src/pages/citizen/index.js` - All citizen route components:
+  - CitizenHome
+  - LanguageSelection
+  - LocationSelection
+  - UserProfile
+  - Login
+  - Search
+  - ErrorComponent
+  - FAQsSection
+  - HowItWorks
+  - StaticDynamicCard
+
+### Main App Routes
+- `/src/App.js` - Top-level app components:
+  - CitizenApp
+  - EmployeeApp
+  - SignUp
+  - Otp
+  - ViewUrl
+  - CustomErrorComponent
+  - DummyLoaderScreen
+
+### App Modules
+- `/src/components/AppModules.js` - Module-level components:
+  - ChangePassword
+  - ForgotPassword
+  - AppHome
+
+## Webpack Configuration
+
+The webpack configuration has been updated to support code splitting in library mode:
+
+```javascript
+// webpack.config.js
+output: {
+  filename: "[name].js",
+  chunkFilename: "[name].[contenthash:8].chunk.js",
+  publicPath: "auto"
+},
+optimization: {
+  splitChunks: {
+    chunks: "async", // Only split async chunks
+    cacheGroups: {
+      async: {
+        chunks: "async",
+        minSize: 20000,
+        minChunks: 1,
+        priority: 10
+      }
+    }
+  }
+}
+```
+
+## Benefits
+
 This utility ensures your library works in both:
 - Applications with full webpack configuration and code splitting
 - Bundled library distributions without code splitting
 - Development environments with hot module replacement
+- Provides consistent loading states across all components
+- Improves performance through code splitting when available
+- Graceful error handling and fallback mechanisms
+
+## Chunk Naming Convention
+
+All components use descriptive webpack chunk names:
+- Employee components: `employee-*` (e.g., `employee-login`, `employee-otp`)
+- Citizen components: `citizen-*` (e.g., `citizen-home`, `citizen-login`)
+- App-level components: `*-app` (e.g., `citizen-app`, `employee-app`)
+- Shared components: `*-component` (e.g., `error-component`, `custom-error`)
