@@ -137,6 +137,53 @@ This utility ensures your library works in both:
 - Improves performance through code splitting when available
 - Graceful error handling and fallback mechanisms
 
+## Dynamic Module Loading
+
+### DynamicModuleLoader Component
+
+A specialized component (`/src/components/DynamicModuleLoader.js`) handles loading of dynamic modules from the ComponentRegistryService with:
+
+- **Initial Delay**: Waits before first module check to allow modules to register (prevents reload failures)
+- **Loading States**: Shows appropriate loading indicators while modules load
+- **Retry Logic**: Automatically retries failed module loads (configurable attempts)
+- **Exponential Backoff**: Increases delay between retry attempts (1s, 1.5s, 2.25s...)
+- **Graceful Error Handling**: Redirects to error page if module can't be loaded
+- **Translation Support**: Internationalized loading messages
+
+#### Usage
+
+```javascript
+import DynamicModuleLoader from "./components/DynamicModuleLoader";
+
+<DynamicModuleLoader
+  moduleCode="WORKBENCH"
+  stateCode={stateCode}
+  userType="employee"
+  tenants={tenants}
+  maxRetries={3}
+  retryDelay={1000}
+  initialDelay={800}
+/>
+```
+
+#### Parameters
+
+- `moduleCode`: The module code to load (e.g., "WORKBENCH", "PGR")
+- `stateCode`: State code for the module
+- `userType`: User type ("citizen" or "employee")
+- `tenants`: Tenant configuration for the module
+- `maxRetries`: Maximum number of retry attempts (default: 3)
+- `retryDelay`: Base delay between retries in ms (default: 1000)
+- `initialDelay`: Initial delay before first check in ms (default: 500)
+
+#### Implementation
+
+Applied in:
+- **Employee App Modules** (`/src/components/AppModules.js`)
+- **Citizen App Modules** (`/src/pages/citizen/index.js`)
+
+This ensures that during page reloads or slow module initialization, users see loading states instead of "module not found" errors. The initial delay is particularly effective at preventing failures that occur when modules haven't finished registering themselves after a page reload.
+
 ## Chunk Naming Convention
 
 All components use descriptive webpack chunk names:

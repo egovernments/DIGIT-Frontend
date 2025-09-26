@@ -1,6 +1,7 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { lazyWithFallback } from "../utils/lazyWithFallback";
+import DynamicModuleLoader from "./DynamicModuleLoader";
 
 // Create lazy components with fallbacks using the utility
 const ChangePassword = lazyWithFallback(
@@ -30,25 +31,24 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
   const user = Digit.UserService.getUser();
 
   if (!user || !user?.access_token || !user?.info) {
-    return <Navigate to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }} replace />;
+    return <Navigate to={{ pathname: `/${window?.contextPath}/${userType}/user/login`, state: { from: location.pathname + location.search } }} replace />;
   }
 
+  // Create app routes with dynamic module loading and loading states
   const appRoutes = modules?.map(({ code, tenants }, index) => {
-    const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
-    return Module ? (
-      <Route
-        key={index}
-        path={`${code.toLowerCase()}/*`}
-        element={<Module stateCode={stateCode} moduleCode={code} userType={userType} tenants={getTenants(tenants, appTenants)} />}
-      />
-    ) : (
+    return (
       <Route
         key={index}
         path={`${code.toLowerCase()}/*`}
         element={
-          <Navigate
-            to={`/${window?.contextPath}/employee/user/error?type=notfound&module=${code}`}
-            replace
+          <DynamicModuleLoader
+            moduleCode={code}
+            stateCode={stateCode}
+            userType={userType}
+            tenants={getTenants(tenants, appTenants)}
+            maxRetries={3}
+            retryDelay={1000}
+            initialDelay={800}
           />
         }
       />
@@ -63,7 +63,7 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
           path="login"
           element={
             <Navigate
-              to={{ pathname: `/${window?.contextPath}/employee/user/login`, state: { from: location.pathname + location.search } }}
+              to={{ pathname: `/${window?.contextPath}/${userType}/user/login`, state: { from: location.pathname + location.search } }}
               replace
             />
           }

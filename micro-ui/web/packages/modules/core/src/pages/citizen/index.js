@@ -8,6 +8,7 @@ import TopBarSideBar from "../../components/TopBarSideBar";
 import StaticCitizenSideBar from "../../components/TopBarSideBar/SideBar/StaticCitizenSideBar";
 import ImageComponent from "../../components/ImageComponent";
 import { lazyWithFallback } from "../../utils/lazyWithFallback";
+import DynamicModuleLoader from "../../components/DynamicModuleLoader";
 
 // Create lazy components with fallbacks using the utility
 const ErrorComponent = lazyWithFallback(
@@ -130,13 +131,25 @@ const Home = ({
 
   const hideSidebar = sidebarHiddenFor.some((e) => window.location.href.includes(e));
 
+  // Create app routes with dynamic module loading and loading states for citizen modules
   const appRoutes = modules.map(({ code, tenants }, index) => {
-    const Module = Digit.ComponentRegistryService.getComponent(`${code}Module`);
-    return Module ? (
-      <Route key={index} path={`${code.toLowerCase()}/*`} element={
-        <Module stateCode={stateCode} moduleCode={code} userType="citizen" tenants={getTenants(tenants, appTenants)} />
-      } />
-    ) : null;
+    return (
+      <Route
+        key={index}
+        path={`${code.toLowerCase()}/*`}
+        element={
+          <DynamicModuleLoader
+            moduleCode={code}
+            stateCode={stateCode}
+            userType="citizen"
+            tenants={getTenants(tenants, appTenants)}
+            maxRetries={3}
+            retryDelay={1000}
+            initialDelay={800}
+          />
+        }
+      />
+    );
   });
 
   const ModuleLevelLinkHomePages = modules.map(({ code, bannerImage }, index) => {
