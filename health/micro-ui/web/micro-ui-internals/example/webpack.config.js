@@ -105,8 +105,8 @@ module.exports = {
       templateParameters: isProduction
         ? {}
         : {
-            REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
-          },
+          REACT_APP_GLOBAL: envFile.REACT_APP_GLOBAL, // <-- Inject env into HTML
+        },
     }),
   ],
   resolve: {
@@ -136,13 +136,16 @@ module.exports = {
     watchFiles: isProduction
       ? undefined
       : {
-          paths: ["**/*"], // watch all project files
-          options: {
-            ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
-            poll: 1000, // check for changes every second
-            aggregateTimeout: 300, // delay rebuild after first change
-          },
+        paths: ["**/*"], // watch all project files
+        options: {
+          ignored: path.resolve(__dirname, "node_modules"), // skip same-level node_modules
+          poll: 1000, // check for changes every second
+          aggregateTimeout: 300, // delay rebuild after first change
         },
+      },
+    devMiddleware: {
+      writeToDisk: true,
+    },
     proxy: [
       {
         context: [

@@ -10,6 +10,7 @@ import SearchChecklist from "./SearchChecklist";
 import UpdateCampaign from "./UpdateCampaign";
 import BoundaryRelationCreate from "./BoundaryRelationCreate";
 import ViewBoundary from "./ViewBoundary";
+import ViewBoundaryV2 from "./ViewBoundaryV2";
 import ViewHierarchy from "./ViewHierarchy";
 import ViewChecklist from "./ViewChecklist";
 import UpdateChecklist from "./UpdateChecklist";
@@ -237,6 +238,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`boundary/home`} element={<BoundaryHome />} />
           <Route path={`boundary/create`} element={<BoundaryRelationCreate />} />
           <Route path={`boundary/view-all-hierarchy`} element={<ViewBoundary />} />
+          <Route path={`boundary/view`} element={<ViewBoundaryV2 />} />
           <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />

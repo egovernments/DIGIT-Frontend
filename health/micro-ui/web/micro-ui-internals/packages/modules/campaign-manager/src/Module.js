@@ -76,6 +76,7 @@ export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
  * a TourProvider component wrapping an EmployeeApp component with specific props passed to it.
  */
 const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
+  console.log("console loaded");
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const moduleName = Digit.Utils.campaign.getModuleName();
   const { data: BOUNDARY_HIERARCHY_TYPE, isLoading: hierarchyLoading } = Digit.Hooks.useCustomMDMS(

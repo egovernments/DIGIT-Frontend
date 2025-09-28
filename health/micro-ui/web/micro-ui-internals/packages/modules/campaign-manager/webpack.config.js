@@ -86,7 +86,7 @@ module.exports = {
                 },
               ],
             ],
-            plugins: [...(isProduction ? [["transform-remove-console", { exclude: ["error", "warn"] }]] : [])],
+            // plugins: [...(isProduction ? [["transform-remove-console", { exclude: ["error", "warn"] }]] : [])],
           },
         },
       },
@@ -109,6 +109,10 @@ module.exports = {
           filename: "fonts/[name].[hash][ext]",
         },
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      }
     ],
   },
 
@@ -116,20 +120,20 @@ module.exports = {
 
   devServer: isDevelopment
     ? {
-        static: {
-          directory: path.join(__dirname, "dist"),
+      static: {
+        directory: path.join(__dirname, "dist"),
+      },
+      hot: true,
+      historyApiFallback: true,
+      watchFiles: {
+        paths: ["src/**/*"], // watch your source files
+        options: {
+          ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
+          poll: 1000,
+          aggregateTimeout: 300,
         },
-        hot: true,
-        historyApiFallback: true,
-        watchFiles: {
-          paths: ["src/**/*"], // watch your source files
-          options: {
-            ignored: [path.resolve(__dirname, "node_modules"), path.resolve(__dirname, "dist")],
-            poll: 1000,
-            aggregateTimeout: 300,
-          },
-        },
-      }
+      },
+    }
     : undefined,
 
   plugins: [
@@ -139,12 +143,12 @@ module.exports = {
     ...(isDevelopment ? [new webpack.HotModuleReplacementPlugin()] : []),
     ...(isProduction
       ? [
-          new CompressionPlugin({
-            algorithm: "brotliCompress", // or gzip
-            test: /\.(js|css|html|svg)$/,
-          }),
-          // new BundleAnalyzerPlugin(), // enable when debugging bundle size
-        ]
+        new CompressionPlugin({
+          algorithm: "brotliCompress", // or gzip
+          test: /\.(js|css|html|svg)$/,
+        }),
+        // new BundleAnalyzerPlugin(), // enable when debugging bundle size
+      ]
       : []),
   ],
 

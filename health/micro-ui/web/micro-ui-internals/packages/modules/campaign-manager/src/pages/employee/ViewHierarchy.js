@@ -68,7 +68,7 @@ const ViewHierarchy = () => {
       const res1 = await callSearch(hierarchyType);
       if (res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy) setHierData(res1?.BoundaryHierarchy?.[0]?.boundaryHierarchy);
       setViewState(true);
-    } catch (error) {}
+    } catch (error) { }
   };
 
   useEffect(() => {
@@ -390,7 +390,7 @@ const ViewHierarchy = () => {
   const [showPopUp, setShowPopUp] = useState(false);
 
   if (!viewState || isLoading) {
-    return <Loader page={true} variant={"PageLoader"}/>;
+    return <Loader page={true} variant={"PageLoader"} />;
   } else {
     return (
       <React.Fragment>
@@ -410,6 +410,14 @@ const ViewHierarchy = () => {
                     return (
                       <div>
                         <div className="hierarchy-boundary-sub-heading2">{trimming(hierItem?.boundaryType)}</div>
+                        <Button
+                          variation="link"
+                          size="small"
+                          label={t("VIEW_GEOJSON")}
+                          onClick={() => {
+                            navigate(`/${window.contextPath}/employee/campaign/boundary/view?type=${hierItem?.boundaryType}&hierarchyType=${hierarchyType}`);
+                          }}
+                        />
                         <div style={{ height: "1rem" }}></div>
                         {/* <Card type={"primary"} variant={"form"} className={"question-card-container"} >
                                                     <div style={{display:"flex", gap:"2rem"}}>
@@ -436,6 +444,14 @@ const ViewHierarchy = () => {
                                                 variation="secondary"
                                               /> */}
                         </div>
+                        <Button
+                          variation="link"
+                          size="small"
+                          label={t("VIEW_GEOJSON")}
+                          onClick={() => {
+                            navigate(`/${window.contextPath}/employee/campaign/boundary/view?type=${hierItem?.boundaryType}&hierarchyType=${hierarchyType}`);
+                          }}
+                        />
                         <div style={{ height: "1rem" }}></div>
                         <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                       </div>
@@ -474,6 +490,14 @@ const ViewHierarchy = () => {
                                             variation="secondary"
                                           /> */}
                       </div>
+                      <Button
+                          variation="link"
+                          size="small"
+                          label={t("VIEW_GEOJSON")}
+                          onClick={() => {
+                            navigate(`/${window.contextPath}/employee/campaign/boundary/view?type=${hierItem?.boundaryType}&hierarchyType=${hierarchyType}`);
+                          }}
+                        />
                       <div style={{ height: "1rem" }}></div>
                       <hr style={{ borderTop: "1px solid #ccc", margin: "1rem 0" }} />
                     </div>
@@ -625,14 +649,14 @@ const ViewHierarchy = () => {
             {!dataCreationGoing && (
               <XlsPreviewNew
                 file={fileData}
-                onDownload={() => {}}
+                onDownload={() => { }}
                 onBack={() => {
                   setShowPreview(false);
                   setUploadPage(true);
                 }}
               />
             )}
-            {dataCreationGoing &&<Loader page={true} variant={"PageLoader"}/>}
+            {dataCreationGoing && <Loader page={true} variant={"PageLoader"} />}
             <Footer
               actionFields={[
                 <Button
