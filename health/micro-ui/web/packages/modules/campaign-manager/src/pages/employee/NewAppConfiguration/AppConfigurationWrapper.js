@@ -20,7 +20,6 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
   const dispatch = useDispatch();
   const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
-
   const [newFieldType, setNewFieldType] = useState(null);
   // Redux selectors
   const { remoteData: actualState, currentData, showAddFieldPopup } = useSelector((state) => state.remoteConfig);
@@ -29,8 +28,6 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
 
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
-
-  console.log(newFieldType, "showAddFieldPopup", fieldTypeMaster);
 
   // Handle adding new field
   const handleAddNewField = () => {
@@ -150,7 +147,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
           />
         </div>
       </Header>
-      <TextBlock body="" caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")} header="" captionClassName="camp-drawer-caption" subHeader="" />
+      <TextBlock
+        body=""
+        caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")}
+        header=""
+        captionClassName="camp-drawer-caption"
+        subHeader=""
+      />
       <div style={{ display: "flex" }}>
         <div>
           <div
@@ -173,7 +176,6 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
           onClose={closeToast}
         />
       )} */}
-      {console.log("showAddFieldPopup", showAddFieldPopup)}
       {showAddFieldPopup && (
         <PopUp
           className={"add-field-popup"}

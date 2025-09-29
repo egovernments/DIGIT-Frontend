@@ -6,7 +6,6 @@ import {
   deleteField,
   hideField,
   reorderFields,
-  addField,
   addSection,
   updateHeaderField,
   updateActionLabel,
@@ -16,20 +15,10 @@ import {
 import { useCustomT } from "./hooks/useCustomT";
 
 // Wrapper component to handle useCustomT calls outside of loops
-const LocalizedHeaderField = React.memo(({ type, label, active, required, value, formId, projectType, currentCard, onChange }) => {
-  const localizedValue = useCustomT(formId ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`);
+const LocalizedHeaderField = React.memo(({ type, label, active, value, formId, currentCard, onChange }) => {
+  const localizedValue = useCustomT(value ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`);
 
-  return (
-    <NewAppFieldComposer
-      type={type}
-      label={label}
-      active={active}
-      required={required}
-      value={localizedValue}
-      headerFields={true}
-      onChange={onChange}
-    />
-  );
+  return <NewAppFieldComposer type={type} label={label} active={active} value={localizedValue} headerFields={true} onChange={onChange} />;
 });
 
 // Wrapper component for draggable fields with localization
@@ -149,26 +138,6 @@ function NewAppFieldScreenWrapper() {
     dispatch(handleShowAddFieldPopup({ currentCard, card }));
   }, []);
 
-  // const handleConfirmAddField = useCallback(() => {
-  //   if (!newFieldLabel.trim() || !newFieldType) {
-  //     return;
-  //   }
-
-  //   const fieldData = {
-  //     type: newFieldType,
-  //     label: newFieldLabel.trim(),
-  //     jsonPath: `${newFieldLabel.trim().toLowerCase().replace(/\s+/g, "_")}_${Date.now()}`,
-  //     required: false,
-  //     active: true,
-  //   };
-
-  //   dispatch(addField({ cardIndex: selectedCardIndex, fieldData }));
-  //   setShowAddFieldPopup(false);
-  //   setNewFieldLabel("");
-  //   setNewFieldType("");
-  //   setSelectedCardIndex(null);
-  // }, [dispatch, newFieldLabel, newFieldType, selectedCardIndex]);
-
   const handleAddSection = useCallback(() => {
     dispatch(addSection());
   }, [dispatch]);
@@ -195,39 +164,69 @@ function NewAppFieldScreenWrapper() {
     );
   }
 
+  console.log("currentCardcurrentCardcurrentCard", currentCard);
   return (
     <React.Fragment>
+      <div className="app-config-drawer-subheader">
+        <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
+      </div>
+      <Divider />
+      {currentCard?.headerFields?.map(({ label, type, value }, index, field) => {
+        return (
+          <Fragment key={`card-${index}`}>
+            <LocalizedHeaderField
+              key={`header-field-${index}`}
+              type={type}
+              label={label}
+              active={true}
+              // required={required}
+              value={value}
+              formId={formId}
+              projectType={projectType}
+              currentCard={currentCard}
+              onChange={(event) => {
+                if (value) {
+                  dispatch(
+                    updateLocalizationEntry({
+                      code: value,
+                      locale: currentLocale || "en_IN",
+                      message: event.target.value,
+                    })
+                  );
+                } else {
+                  dispatch(
+                    updateLocalizationEntry({
+                      code: "SKJSKSJSKJSKJsksk",
+                      locale: currentLocale || "en_IN",
+                      message: event.target.value,
+                    })
+                  );
+                }
+                handleUpdateHeaderField(label, index);
+              }}
+            />
+          </Fragment>
+        );
+      })}
+      <Divider />
+      <div className="app-config-drawer-subheader">
+        <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
+      </div>
       {currentCard?.cards?.map(({ fields, headerFields }, index, card) => {
         return (
           <Fragment key={`card-${index}`}>
-            <div className="app-config-drawer-subheader">
-              <div>{t("APPCONFIG_HEAD_FIELDS")}</div>
-              <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
-            </div>
-            <Divider />
-            {headerFields?.map(({ type, label, active, required, value }, indx) => (
-              <LocalizedHeaderField
-                key={`header-field-${indx}`}
-                type={type}
-                label={label}
-                active={active}
-                required={required}
-                value={value}
-                formId={formId}
-                projectType={projectType}
-                currentCard={currentCard}
-                onChange={(event) => {
-                  handleUpdateHeaderField(event.target.value, indx, index);
-                }}
-              />
-            ))}
-            <Divider />
             <div className="app-config-drawer-subheader">
               <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
               <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
             </div>
             {fields?.map(
-              ({ type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest }, i, c) => {
+              (
+                { type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest },
+                i,
+                c
+              ) => {
                 return (
                   <LocalizedDraggableField
                     key={`field-${i}`}
@@ -314,71 +313,6 @@ function NewAppFieldScreenWrapper() {
           </LabelFieldPair>
         </>
       )}
-
-      {/* Add Field Popup */}
-      {/* {showAddFieldPopup && (
-        <PopUp
-          className={"add-field-popup"}
-          type={"default"}
-          heading={t("ADD_FIELD")}
-          onClose={() => {
-            setShowAddFieldPopup(false);
-            setNewFieldLabel("");
-            setNewFieldType("");
-            setSelectedCardIndex(null);
-          }}
-          style={{
-            height: "auto",
-            width: "32rem"
-          }}
-        >
-          <div style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
-            <LabelFieldPair>
-              <span style={{ fontWeight: "600" }}>{t("FIELD_LABEL")} <span style={{ color: "red" }}>*</span></span>
-              <TextInput
-                name="fieldLabel"
-                value={newFieldLabel}
-                placeholder={t("ENTER_FIELD_LABEL")}
-                onChange={(event) => setNewFieldLabel(event.target.value)}
-              />
-            </LabelFieldPair>
-
-            <LabelFieldPair>
-              <span style={{ fontWeight: "600" }}>{t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span></span>
-              <Dropdown
-                option={fieldTypeOptions}
-                optionKey="code"
-                selected={fieldTypeOptions.find(option => option.code === newFieldType)}
-                select={(selectedOption) => setNewFieldType(selectedOption.code)}
-                placeholder={t("SELECT_FIELD_TYPE")}
-              />
-            </LabelFieldPair>
-
-            <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "1rem" }}>
-              <Button
-                type="button"
-                size="medium"
-                variation="secondary"
-                label={t("CANCEL")}
-                onClick={() => {
-                  setShowAddFieldPopup(false);
-                  setNewFieldLabel("");
-                  setNewFieldType("");
-                  setSelectedCardIndex(null);
-                }}
-              />
-              <Button
-                type="button"
-                size="medium"
-                variation="primary"
-                label={t("ADD")}
-                isDisabled={!newFieldLabel.trim() || !newFieldType}
-                onClick={handleConfirmAddField}
-              />
-            </div>
-          </div>
-        </PopUp>
-      )} */}
     </React.Fragment>
   );
 }

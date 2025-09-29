@@ -8,10 +8,12 @@
     {
       "type": "text",
       "label": "SCREEN_HEADING",
+      "jsonPath": "ScreenHeading",
       "value": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING"
     },
     {
       "type": "textarea",
+      "jsonPath": "ScreenDescription",
       "label": "SCREEN_DESCRIPTION",
       "value": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_DESCRIPTION"
     }
