@@ -7,7 +7,7 @@ import { AppHome, processLinkData } from "../../components/Home";
 import TopBarSideBar from "../../components/TopBarSideBar";
 import StaticCitizenSideBar from "../../components/TopBarSideBar/SideBar/StaticCitizenSideBar";
 import ImageComponent from "../../components/ImageComponent";
-import { lazyWithFallback } from "../../utils/lazyWithFallback";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import DynamicModuleLoader from "../../components/DynamicModuleLoader";
 
 // Create lazy components with fallbacks using the utility

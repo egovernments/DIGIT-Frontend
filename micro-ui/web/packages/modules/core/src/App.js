@@ -1,7 +1,7 @@
 import React from "react";
 import { Routes, Route, useLocation, useNavigate } from "react-router-dom";
 import { Navigate } from "react-router-dom";
-import { lazyWithFallback } from "./utils/lazyWithFallback";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 
 // Create lazy components with fallbacks using the utility
 const CitizenApp = lazyWithFallback(

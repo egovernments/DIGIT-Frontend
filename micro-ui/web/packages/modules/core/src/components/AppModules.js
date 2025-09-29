@@ -1,6 +1,6 @@
 import React from "react";
 import { Routes, Route, Navigate, useLocation } from "react-router-dom";
-import { lazyWithFallback } from "../utils/lazyWithFallback";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import DynamicModuleLoader from "./DynamicModuleLoader";
 
 // Create lazy components with fallbacks using the utility

@@ -7,7 +7,7 @@ import TopBarSideBar from "../../components/TopBarSideBar";
 import { PrivateRoute } from "@egovernments/digit-ui-components";
 import ImageComponent from "../../components/ImageComponent";
 import withAutoFocusMain from "../../hoc/withAutoFocusMain";
-import { lazyWithFallback } from "../../utils/lazyWithFallback";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 
 // Create lazy components with fallbacks using the utility
 const ChangePassword = lazyWithFallback(

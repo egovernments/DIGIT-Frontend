@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { PrivateRoute, AppContainer } from "@egovernments/digit-ui-react-components";
 import { BreadCrumb } from "@egovernments/digit-ui-components";
 import WorkbenchHeader from "../../components/WorkbenchHeader";
-import { lazyWithFallback } from "../../utils/lazyWithFallback";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 
 // Create lazy components with fallbacks using the utility
 const LocalisationSearch = lazyWithFallback(
