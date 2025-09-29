@@ -11,15 +11,12 @@ import { useAppLocalisationContext } from "./AppLocalisationWrapper";
  */
 export const useCustomT = (maybeCode) => {
   const { locState, addMissingKey } = useAppLocalisationContext();
-  const currentLocale =
-    Digit?.SessionStorage.get("locale") ||
-    Digit?.SessionStorage.get("initData")?.selectedLanguage;
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
   const translate = useMemo(() => {
     const list = Array.isArray(locState) ? locState : [];
     return (code) => {
       if (!code) {
-        console.warn("useCustomT: code parameter is required");
         return "";
       }
       const entry = list.find((item) => item?.code === code);

@@ -6,8 +6,6 @@ import MobileBezelFrame from "./MobileBezelFrame";
 import GenericTemplateScreen from "./GenericTemplateScreen";
 import DynamicSVG from "./DynamicSVGComponent";
 import RenderSelectionField from "./RenderSelectionField";
-import ComponentToRender from "./ComponentToRender";
-// import { useCustomT } from "../pages/employee/NewAppConfiguration/hooks/useCustomT";
 
 const MdmsDropdown = ({
   t,
@@ -171,114 +169,111 @@ const getFieldType = (field) => {
       return "button";
   }
 };
-const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
-  console.log("datadata", data);
+const AppPreview = ({ data = {}, selectedField, t }) => {
   return (
     <MobileBezelFrame>
       {/* <div className="app-preview"> */}
       <div className="mobile-bezel-child-container">
-        <Card className="app-card" style={{}}>
-          {data.headerFields?.map((headerField, headerIndex) => (
-            <div key={headerIndex}>
-              {headerField.jsonPath === "ScreenHeading" ? (
-                <CardHeader>{t(headerField.value)}</CardHeader>
-              ) : (
-                <CardText className="app-preview-sub-heading">{t(headerField.value)}</CardText>
-              )}
-            </div>
-          ))}
-          {data?.cards?.map((card, index) => (
-            <Card key={index} className="app-card" style={{}}>
-              {data.type !== "template" &&
-                card?.fields
-                  ?.filter((field) => field.active && !field.hidden) //added logic to hide fields in display
-                  ?.map((field, fieldIndex) => {
-                    const isSelected =
-                      selectedField &&
-                      ((selectedField.jsonPath && selectedField.jsonPath === field.jsonPath) || (selectedField.id && selectedField.id === field.id));
-
+        {data?.cards?.map((card, index) => (
+          <Card key={index} className="app-card" style={{}}>
+            {card.headerFields.map((headerField, headerIndex) => (
+              <div key={headerIndex}>
+                {headerField.jsonPath === "ScreenHeading" ? (
+                  <CardHeader>{t(headerField.value)}</CardHeader>
+                ) : (
+                  <CardText className="app-preview-sub-heading">{t(headerField.value)}</CardText>
+                )}
+              </div>
+            ))}
+            {data.type !== "template" &&
+              card?.fields
+                ?.filter((field) => field.active && (field.hidden == false || field.deleteFlag == true)) //added logic to hide fields in display
+                ?.map((field, fieldIndex) => {
+                  if (getFieldType(field) === "checkbox") {
                     return (
                       <div
-                        key={fieldIndex}
-                        onClick={() => onFieldClick && onFieldClick(field, data, card)}
-                        style={{
-                          cursor: "pointer",
-                          border: isSelected ? "2px solid #0B4B66" : "2px solid transparent",
-                          borderRadius: "4px",
-                          padding: "8px",
-                          margin: "4px 0",
-                          backgroundColor: isSelected ? "#f0f8ff" : "transparent",
-                        }}
+                        className={`app-preview-field-pair ${
+                          selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                            ? `app-preview-selected`
+                            : selectedField?.id && selectedField?.id === field?.id
+                            ? `app-preview-selected`
+                            : ``
+                        }`}
                       >
-                        <ComponentToRender field={field} t={t} selectedField={selectedField} />
+                        <CheckBox
+                          mainClassName={"app-config-checkbox-main"}
+                          labelClassName={`app-config-checkbox-label ${field?.["toArray.required"] ? "required" : ""}`}
+                          onChange={(e) => {}}
+                          value={""}
+                          label={t(field?.label)}
+                          isLabelFirst={false}
+                          disabled={field?.readOnly || false}
+                        />
                       </div>
                     );
-                  })}
-              {data.type !== "template" && (
-                <Button
-                  className="app-preview-action-button"
-                  variation="primary"
-                  label={t(data?.actionLabel)}
-                  title={t(data?.actionLabel)}
-                  onClick={() => {}}
-                />
-              )}
-              {data.type === "template" && (
-                <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t} templateName={data.name} />
-              )}
-            </Card>
-          ))}
-          {/* Rendering Footer */}
-          {data?.footer?.length > 0 &&
-            data?.footer?.map((footer_item, footer_index) => {
-              return (
-                <FieldV1
-                  config={{ step: "" }}
-                  description={null}
-                  error={null}
-                  infoMessage={null}
-                  label={
-                    getFieldType(footer_item) === "checkbox" || getFieldType(footer_item) === "button" || getFieldType(footer_item) === "custom"
-                      ? null
-                      : footer_item?.isMdms
-                      ? t(footer_item?.label)
-                      : footer_item?.label
                   }
-                  onChange={function noRefCheck() {}}
-                  placeholder={t(footer_item?.innerLabel) || ""}
-                  populators={{
-                    t: footer_item?.isMdms ? null : t,
-                    title: footer_item?.label,
-                    fieldPairClassName: `app-preview-field-pair ${
-                      selectedField?.jsonPath && selectedField?.jsonPath === footer_item?.jsonPath
-                        ? `app-preview-selected`
-                        : selectedField?.id && selectedField?.id === footer_item?.id
-                        ? `app-preview-selected`
-                        : ``
-                    }`,
-                    mdmsConfig: footer_item?.isMdms
-                      ? {
-                          moduleName: footer_item?.schemaCode?.split(".")[0],
-                          masterName: footer_item?.schemaCode?.split(".")[1],
-                        }
-                      : null,
-                    options: footer_item?.isMdms ? null : footer_item?.dropDownOptions,
-                    optionsKey: footer_item?.isMdms ? "code" : "name",
-                    component:
-                      getFieldType(footer_item) === "button" || getFieldType(footer_item) === "select" || getFieldType(footer_item) === "custom"
-                        ? renderField(footer_item, t)
-                        : null,
-                  }}
-                  required={getFieldType(footer_item) === "custom" ? null : footer_item?.["toArray.required"]}
-                  type={
-                    getFieldType(footer_item) === "button" || getFieldType(footer_item) === "select" ? "custom" : getFieldType(footer_item) || "text"
-                  }
-                  value={footer_item?.value === true ? "" : footer_item?.value || ""}
-                  disabled={footer_item?.readOnly || false}
-                />
-              );
-            })}
-        </Card>
+                  return (
+                    <FieldV1
+                      charCount={field?.charCount}
+                      config={{
+                        step: "",
+                      }}
+                      description={field?.isMdms ? t(field?.helpText) : field?.helpText || null}
+                      error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
+                      infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
+                      label={
+                        getFieldType(field) === "checkbox" || getFieldType(field) === "button" || getFieldType(field) === "custom"
+                          ? null
+                          : field?.isMdms
+                          ? t(field?.label)
+                          : field?.label
+                      }
+                      onChange={function noRefCheck() {}}
+                      placeholder={t(field?.innerLabel) || ""}
+                      populators={{
+                        t: field?.isMdms ? null : t,
+                        title: field?.label,
+                        fieldPairClassName: `app-preview-field-pair ${
+                          selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
+                            ? `app-preview-selected`
+                            : selectedField?.id && selectedField?.id === field?.id
+                            ? `app-preview-selected`
+                            : ``
+                        }`,
+                        mdmsConfig: field?.isMdms
+                          ? {
+                              moduleName: field?.schemaCode?.split(".")[0],
+                              masterName: field?.schemaCode?.split(".")[1],
+                            }
+                          : null,
+                        options: field?.isMdms ? null : field?.dropDownOptions,
+                        optionsKey: field?.isMdms ? "code" : "name",
+                        component:
+                          getFieldType(field) === "button" || getFieldType(field) === "select" || getFieldType(field) === "custom"
+                            ? renderField(field, t)
+                            : null,
+                      }}
+                      required={getFieldType(field) === "custom" ? null : field?.["toArray.required"]}
+                      type={getFieldType(field) === "button" || getFieldType(field) === "select" ? "custom" : getFieldType(field) || "text"}
+                      value={field?.value === true ? "" : field?.value || ""}
+                      disabled={field?.readOnly || false}
+                    />
+                  );
+                })}
+            {data.type !== "template" && (
+              <Button
+                className="app-preview-action-button"
+                variation="primary"
+                label={t(data?.actionLabel)}
+                title={t(data?.actionLabel)}
+                onClick={() => {}}
+              />
+            )}
+            {data.type === "template" && (
+              <GenericTemplateScreen components={card.fields} selectedField={selectedField} t={t} templateName={data.name} />
+            )}
+          </Card>
+        ))}
       </div>
     </MobileBezelFrame>
   );

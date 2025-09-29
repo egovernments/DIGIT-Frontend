@@ -7,7 +7,7 @@ import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import AppLocalisationTable from "./AppLocalisationTable";
 import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import AppPreview from "../../../components/AppPreview";
+import AppPreview from "../../../components/OldAppPreview";
 import { useCustomT } from "./useCustomT";
 import { useQueryClient } from "@tanstack/react-query";
 

@@ -91,7 +91,6 @@ const computeError = (field, currentField, t) => {
         return error;
       }
     } catch (e) {
-      console.warn(`Invalid regex pattern: ${pattern}`);
       return t('INVALID_REGEX_PATTERN');
     }
   }

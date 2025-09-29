@@ -26,6 +26,8 @@ import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
 import AppConfigurationTabLayer from "./appConfigurationRedesign/AppConfigurationTabLayer";
+import AppConfigurationStore from "./NewAppConfiguration/AppConfigurationStore";
+
 // import AppConfigurationTabLayer from "./appConfigurationRedesign//AppConfigurationTabLayer";
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
@@ -216,13 +218,15 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
         )}
         <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
       </div>
-      <div>hello Jk</div>
       <AppContainer className="campaign">
         <Routes>
           <Route path={`create-campaign/upload-boundary-data`} element={<UploadBoundaryData />} />
           <Route path={`create-campaign/cycle-configure`} element={<CycleConfiguration />} />
           <Route path={`create-campaign/delivery-details`} element={<DeliveryRule />} />
-          <Route path={`setup-campaign`} element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+          <Route
+            path={`setup-campaign`}
+            element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
           <Route path={`my-campaign`} element={<MyCampaign />} />
           <Route path={`my-campaign-new`} element={<MyCampaignNew />} />
           <Route path={`fetch-from-microplan`} element={<FetchFromMicroplan />} />
@@ -242,7 +246,11 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
           <Route path={`app-configuration-redesign`} element={<AppConfigurationTabLayer />} />
-          <Route path={`create-campaign`} element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+          <Route path={`new-app-configuration-redesign`} element={<AppConfigurationStore />} />
+          <Route
+            path={`create-campaign`}
+            element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
           <Route path={`campaign-home`} element={<CampaignHome />} />
           <Route path={`view-details`} element={<CampaignDetails />} />
           <Route path={`app-modules`} element={<AppModule />} />
