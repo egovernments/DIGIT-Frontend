@@ -14,7 +14,7 @@
   ],
   "homepage": "/dashboard-ui",
   "dependencies": {
-    "@egovernments/digit-ui-libraries": "1.8.22",
+    "@egovernments/digit-ui-libraries": "1.8.17",
     "@egovernments/digit-ui-module-core": "1.8.42",
     "@egovernments/digit-ui-react-components": "1.8.19",
     "@egovernments/digit-ui-module-utilities": "1.0.1-beta.23",
@@ -33,7 +33,9 @@
     "react-query": "3.6.1",
     "css-loader": "5.2.6",
     "webpack-cli": "4.10.0",
-    "style-loader": "2.0.0"
+    "style-loader": "2.0.0",
+    "dom-to-image": "2.6.0",
+    "jspdf": "2.5.1"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "7.21.0",
