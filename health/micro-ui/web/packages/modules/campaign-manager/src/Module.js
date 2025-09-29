@@ -1,8 +1,9 @@
 import { TourProvider } from "@egovernments/digit-ui-react-components";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader, lazyWithFallback } from "@egovernments/digit-ui-components";
 import React from "react";
 // import { useRouteMatch } from "react-router-dom";
-import EmployeeApp from "./pages/employee";
+
+
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
@@ -68,6 +69,13 @@ import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignName
  * MDMS Module name
  */
 export const CONSOLE_MDMS_MODULENAME = "HCM-ADMIN-CONSOLE";
+
+// Create lazy components with fallbacks using the utility
+const EmployeeApp = lazyWithFallback(
+  () => import(/* webpackChunkName: "employee-app" */ "./pages/employee"),
+  () => require("./pages/employee").default,
+  { loaderText: "Loading Employee App..." }
+);
 
 /**
  * The CampaignModule function fetches store data based on state code, module code, and language, and
