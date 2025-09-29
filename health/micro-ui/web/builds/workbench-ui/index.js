@@ -2,6 +2,7 @@ import React, { useEffect, useState, lazy, Suspense } from "react";
 import ReactDOM from "react-dom/client";
 import { Hooks } from "@egovernments/digit-ui-libraries";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+import { Loader } from "@egovernments/digit-ui-components";
 
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
@@ -79,11 +80,11 @@ const MainApp = ({ stateCode, enabledModules }) => {
   }, [stateCode, isReady]);
 
   if (!loaded) {
-    return <div>Loading...</div>;
+    return <Loader page={true} variant={"PageLoader"} />;
   }
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<Loader page={true} variant={"PageLoader"} />}>
       {window.Digit && (
         <DigitUILazy 
           stateCode={stateCode} 
