@@ -139,7 +139,7 @@ const ViewBoundaryV2 = () => {
         params: {},
         body: {
           BoundaryTypeHierarchySearchCriteria: {
-            tenantId: "mz",
+            tenantId: "dev",
             hierarchyType,
           },
         }
@@ -172,7 +172,7 @@ const ViewBoundaryV2 = () => {
           boundaryType: rootType,
           hierarchyType,
           includeChildren: false,
-          tenantId: "mz"
+          tenantId: "dev"
         },
         body: {}
       });
@@ -234,7 +234,7 @@ const ViewBoundaryV2 = () => {
           hierarchyType,
           includeChildren: false,
           includeParents: parentNode.boundaryType !== "COUNTRY",
-          tenantId: "mz",
+          tenantId: "dev",
         },
         body: {},
       });

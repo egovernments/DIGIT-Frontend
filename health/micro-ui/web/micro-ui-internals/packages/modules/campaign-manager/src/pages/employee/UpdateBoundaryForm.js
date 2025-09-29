@@ -4,7 +4,10 @@ import { useTranslation } from "react-i18next";
 
 const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
   const { t } = useTranslation();
+  console.log("node.code:", node.code);
+  console.log("t(node.code):", t(node.code));
   const [code, setCode] = useState(node.code || "");
+  const [msg, setMsg] = useState(t(node.code) || "");
   const [selectedParent, setSelectedParent] = useState(null);
   const [possibleParents, setPossibleParents] = useState([]);
   
@@ -84,25 +87,42 @@ const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
     }
 
     try {
+      const localizationPayload = {
+        tenantId: node.tenantId || "dev",
+        messages: [
+          {
+            code: code,
+            message: msg, // You can customize this message
+            module: `hcm-boundary-${(node.hierarchyType || "ADMIN").toLowerCase()}`,
+            locale: "en_IN"
+          }
+        ]
+      };
+
+      console.log("Calling Localization API with payload:", localizationPayload);
+      
+      const localizationResponse = await Digit.CustomService.getResponse({
+        url: "/localization/messages/v1/_upsert",
+        body: localizationPayload,
+      });
+      
+      console.log("Localization API response:", localizationResponse);
+
+      // Now update the boundary relationship with new parent
       const payload = {
-        RequestInfo: {
-          apiId: "Rainmaker",
-          authToken: Digit.UserService.getUser()?.access_token,
-          userInfo: Digit.UserService.getUser(),
-        },
         BoundaryRelationship: {
-          tenantId: node.tenantId || "mz",
+          tenantId: node.tenantId || "dev",
           code,
           boundaryType: node.boundaryType,
-          parent: selectedParent.code,
           hierarchyType: node.hierarchyType || "ADMIN",
+          parent: selectedParent.code,
         },
       };
 
       console.log("Update payload:", payload);
 
-      const response = await Digit.CustomService.post({
-        url: "/boundary-service/boundary/boundary-relationships/_update",
+      const response = await Digit.CustomService.getResponse({
+        url: "/boundary-service/boundary-relationships/_update",
         body: payload,
       });
 
@@ -140,8 +160,8 @@ const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
 
       <TextInput
         label={t("HCM_BOUNDARY_CODE")}
-        value={t(code)}
-        onChange={(e) => setCode(e.target.value)}
+        value={msg}
+        onChange={(e) => setMsg(e.target.value)}
         required
       />
 
