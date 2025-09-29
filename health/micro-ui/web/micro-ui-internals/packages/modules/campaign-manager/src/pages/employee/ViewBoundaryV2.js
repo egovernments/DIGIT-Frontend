@@ -118,6 +118,8 @@ const ViewBoundaryV2 = () => {
   const [popupOpen, setPopupOpen] = useState(false);
   const [selectedNode, setSelectedNode] = useState(null);
 
+  const tenantId = window.localStorage.getItem("Employee.tenant-id")
+
   // Fetch hierarchy definition first
   useEffect(() => {
     if (hierarchyType) {
@@ -139,7 +141,7 @@ const ViewBoundaryV2 = () => {
         params: {},
         body: {
           BoundaryTypeHierarchySearchCriteria: {
-            tenantId: "dev",
+            tenantId: tenantId,
             hierarchyType,
           },
         }
@@ -172,7 +174,7 @@ const ViewBoundaryV2 = () => {
           boundaryType: rootType,
           hierarchyType,
           includeChildren: false,
-          tenantId: "dev"
+          tenantId: tenantId
         },
         body: {}
       });
@@ -234,7 +236,7 @@ const ViewBoundaryV2 = () => {
           hierarchyType,
           includeChildren: false,
           includeParents: parentNode.boundaryType !== "COUNTRY",
-          tenantId: "dev",
+          tenantId: tenantId,
         },
         body: {},
       });
@@ -329,6 +331,7 @@ const ViewBoundaryV2 = () => {
             allBoundaries={rootBoundary}
             onClose={handleClose}
             onSave={handleSave}
+            hierarchyType={hierarchyType}
           />
         </PopUp>
       )}

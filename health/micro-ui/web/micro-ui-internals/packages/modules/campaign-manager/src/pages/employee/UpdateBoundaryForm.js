@@ -2,13 +2,14 @@ import React, { useState, useEffect } from "react";
 import { TextInput, Dropdown, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 
-const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
+const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave, hierarchyType }) => {
   const { t } = useTranslation();
   console.log("node.code:", node.code);
   console.log("t(node.code):", t(node.code));
   const [code, setCode] = useState(node.code || "");
   const [msg, setMsg] = useState(t(node.code) || "");
   const [selectedParent, setSelectedParent] = useState(null);
+  const [currentParent, setCurrentParent] = useState(null);
   const [possibleParents, setPossibleParents] = useState([]);
   
   console.log("Current node:", node);
@@ -50,6 +51,7 @@ const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
 
     if (result && result.parent) {
       const currentParent = result.parent;
+      setCurrentParent(currentParent);
       console.log("Current parent:", currentParent);
 
       // Find ALL nodes that have the same boundary type as the current parent
@@ -80,64 +82,172 @@ const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
     }
   }, [node, allBoundaries, t]);
 
-  const handleSave = async () => {
-    if (!selectedParent) {
-      alert(t("HCM_BOUNDARY_SELECT_PARENT_ERROR"));
-      return;
-    }
+  // const handleSave = async () => {
+  //   if (!selectedParent) {
+  //     alert(t("HCM_BOUNDARY_SELECT_PARENT_ERROR"));
+  //     return;
+  //   }
 
-    try {
+  //   try {
+  //     const localizationPayload = {
+  //       tenantId: node.tenantId || "dev",
+  //       messages: [
+  //         {
+  //           code: code,
+  //           message: msg, // You can customize this message
+  //           module: `hcm-boundary-${(hierarchyType || "ADMIN").toLowerCase()}`,
+  //           locale: "en_IN"
+  //         }
+  //       ]
+  //     };
+
+  //     console.log("Calling Localization API with payload:", localizationPayload);
+      
+  //     const localizationResponse = await Digit.CustomService.getResponse({
+  //       url: "/localization/messages/v1/_upsert",
+  //       body: localizationPayload,
+  //     });
+      
+  //     console.log("Localization API response:", localizationResponse);
+
+  //     // Now update the boundary relationship with new parent
+  //     const payload = {
+  //       BoundaryRelationship: {
+  //         tenantId: node.tenantId || "dev",
+  //         code,
+  //         boundaryType: node.boundaryType,
+  //         hierarchyType: hierarchyType || "ADMIN",
+  //         parent: selectedParent.code,
+  //       },
+  //     };
+
+  //     console.log("Update payload:", payload);
+
+  //     const response = await Digit.CustomService.getResponse({
+  //       url: "/boundary-service/boundary-relationships/_update",
+  //       body: payload,
+  //     });
+
+  //     console.log("Update response:", response);
+  //     onSave({ ...node, code, parent: selectedParent.code });
+  //     onClose();
+  //   } catch (error) {
+  //     console.error("Error updating boundary:", error);
+  //     alert(t("HCM_BOUNDARY_UPDATE_ERROR") + ": " + error.message);
+  //   }
+  // };
+
+  const handleSave = async () => {
+    console.log("cuurrent selectedParent:", selectedParent);
+    console.log("current parent:", currentParent);
+  if (!selectedParent) {
+    alert(t("HCM_BOUNDARY_SELECT_PARENT_ERROR"));
+    return;
+  }
+
+  try {
+    let localizationResponse = null;
+    let updateResponse = null;
+
+    // ✅ Call localization API only if msg changed
+    if (msg !== t(node.code)) {
       const localizationPayload = {
         tenantId: node.tenantId || "dev",
         messages: [
           {
             code: code,
-            message: msg, // You can customize this message
-            module: `hcm-boundary-${(node.hierarchyType || "ADMIN").toLowerCase()}`,
-            locale: "en_IN"
-          }
-        ]
+            message: msg,
+            module: `hcm-boundary-${(hierarchyType || "ADMIN").toLowerCase()}`,
+            locale: "en_IN",
+          },
+        ],
       };
 
       console.log("Calling Localization API with payload:", localizationPayload);
-      
-      const localizationResponse = await Digit.CustomService.getResponse({
+
+      localizationResponse = await Digit.CustomService.getResponse({
         url: "/localization/messages/v1/_upsert",
         body: localizationPayload,
       });
-      
-      console.log("Localization API response:", localizationResponse);
 
-      // Now update the boundary relationship with new parent
+      console.log("Localization API response:", localizationResponse);
+    } else {
+      console.log("No change in msg, skipping Localization API call");
+    }
+
+    // ✅ Call boundary update API only if parent changed
+    if (selectedParent.code !== currentParent.code) {
       const payload = {
         BoundaryRelationship: {
           tenantId: node.tenantId || "dev",
           code,
           boundaryType: node.boundaryType,
-          hierarchyType: node.hierarchyType || "ADMIN",
+          hierarchyType: hierarchyType || "ADMIN",
           parent: selectedParent.code,
         },
       };
 
-      console.log("Update payload:", payload);
+      console.log("Calling Update API with payload:", payload);
 
-      const response = await Digit.CustomService.getResponse({
+      updateResponse = await Digit.CustomService.getResponse({
         url: "/boundary-service/boundary-relationships/_update",
         body: payload,
       });
 
-      console.log("Update response:", response);
-      onSave({ ...node, code, parent: selectedParent.code });
-      onClose();
-    } catch (error) {
-      console.error("Error updating boundary:", error);
-      alert(t("HCM_BOUNDARY_UPDATE_ERROR") + ": " + error.message);
+      console.log("Update API response:", updateResponse);
+    } else {
+      console.log("No change in parent, skipping Update API call");
     }
-  };
+
+    // ✅ Trigger onSave only if something actually changed
+    if (msg !== t(node.code) || selectedParent.code !== node.parent) {
+      onSave({ ...node, code, parent: selectedParent.code });
+    }
+
+    onClose();
+  } catch (error) {
+    console.error("Error updating boundary:", error);
+    alert(t("HCM_BOUNDARY_UPDATE_ERROR") + ": " + error.message);
+  }
+};
+
 
   const handleCancel = () => {
     onClose();
   };
+
+  const deleteNode = async () => {
+  const confirmDelete = window.confirm(t("HCM_BOUNDARY_DELETE_CONFIRM") || "Are you sure you want to delete this node?");
+  if (!confirmDelete) return;
+
+  try {
+    const payload = {
+      BoundaryRelationship: {
+        tenantId: node.tenantId || "dev",
+        code,
+        boundaryType: node.boundaryType,
+        hierarchyType: hierarchyType || "ADMIN",
+        parent: null,   // Remove parent
+      },
+    };
+
+    console.log("Delete node payload (parent=null):", payload);
+
+    const response = await Digit.CustomService.getResponse({
+      url: "/boundary-service/boundary-relationships/_update",
+      body: payload,
+    });
+
+    console.log("Delete node response:", response);
+
+    onSave({ ...node, code, parent: null });
+    onClose();
+  } catch (error) {
+    console.error("Error deleting node:", error);
+    alert(t("HCM_BOUNDARY_DELETE_ERROR") + ": " + error.message);
+  }
+};
+
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: 16, minWidth: 400 }}>
@@ -207,6 +317,11 @@ const UpdateBoundaryForm = ({ node, allBoundaries, onClose, onSave }) => {
           onClick={handleCancel}
           variation="secondary"
         />
+        <Button 
+    label={t("HCM_COMMON_DELETE")}
+    onClick={deleteNode}
+    variation="secondary"
+  />
         <Button 
           label={t("HCM_COMMON_SAVE")}
           onClick={handleSave}
