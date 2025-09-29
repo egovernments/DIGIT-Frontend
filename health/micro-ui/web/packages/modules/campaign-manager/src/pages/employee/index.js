@@ -3,32 +3,142 @@ import { Routes, useLocation, Route } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-components";
-import SetupCampaign from "./SetupCampaign";
-import ConfigureApp from "./ConfigureApp";
-import { CreateChecklist } from "./CreateChecklist";
-import SearchChecklist from "./SearchChecklist";
-import UpdateCampaign from "./UpdateCampaign";
-import BoundaryRelationCreate from "./BoundaryRelationCreate";
-import ViewBoundary from "./ViewBoundary";
-import ViewHierarchy from "./ViewHierarchy";
-import ViewChecklist from "./ViewChecklist";
-import UpdateChecklist from "./UpdateChecklist";
-import BoundaryHome from "./BoundaryHome";
-import ApprovedMicroplans from "./ApprovedMicroplans";
-import FetchFromMicroplan from "../../components/fetchFromMicroplan";
-import CampaignHome from "./NewCampaignCreate/CampaignHome";
-import CreateCampaign from "./NewCampaignCreate/CreateCampaign";
-import CampaignDetails from "./NewCampaignCreate/CampaignDetails";
-import AppModule from "./NewCampaignCreate/AppModule";
-import AppFeatures from "./NewCampaignCreate/AppFeatures";
+import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
-import MyCampaignNew from "./MyCampaignNew";
 import HelpInfoCard from "../../components/HelpInfoCard";
-import NewUploadScreen from "./NewCampaignCreate/NewUploadScreen";
-import AppConfigurationTabLayer from "./appConfigurationRedesign/AppConfigurationTabLayer";
-import AppConfigurationStore from "./NewAppConfiguration/AppConfigurationStore";
 
-// import AppConfigurationTabLayer from "./appConfigurationRedesign//AppConfigurationTabLayer";
+// Create lazy components with fallbacks using the utility
+const SetupCampaign = lazyWithFallback(
+  () => import(/* webpackChunkName: "setup-campaign" */ "./SetupCampaign"),
+  () => require("./SetupCampaign").default,
+  { loaderText: "Loading Setup Campaign..." }
+);
+
+const ConfigureApp = lazyWithFallback(
+  () => import(/* webpackChunkName: "configure-app" */ "./ConfigureApp"),
+  () => require("./ConfigureApp").default,
+  { loaderText: "Loading Configure App..." }
+);
+
+const CreateChecklist = lazyWithFallback(
+  () => import(/* webpackChunkName: "create-checklist" */ "./CreateChecklist"),
+  () => require("./CreateChecklist").CreateChecklist,
+  { loaderText: "Loading Create Checklist..." }
+);
+
+const SearchChecklist = lazyWithFallback(
+  () => import(/* webpackChunkName: "search-checklist" */ "./SearchChecklist"),
+  () => require("./SearchChecklist").default,
+  { loaderText: "Loading Search Checklist..." }
+);
+
+const UpdateCampaign = lazyWithFallback(
+  () => import(/* webpackChunkName: "update-campaign" */ "./UpdateCampaign"),
+  () => require("./UpdateCampaign").default,
+  { loaderText: "Loading Update Campaign..." }
+);
+
+const BoundaryRelationCreate = lazyWithFallback(
+  () => import(/* webpackChunkName: "boundary-relation-create" */ "./BoundaryRelationCreate"),
+  () => require("./BoundaryRelationCreate").default,
+  { loaderText: "Loading Boundary Relation Create..." }
+);
+
+const ViewBoundary = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-boundary" */ "./ViewBoundary"),
+  () => require("./ViewBoundary").default,
+  { loaderText: "Loading View Boundary..." }
+);
+
+const ViewHierarchy = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-hierarchy" */ "./ViewHierarchy"),
+  () => require("./ViewHierarchy").default,
+  { loaderText: "Loading View Hierarchy..." }
+);
+
+const ViewChecklist = lazyWithFallback(
+  () => import(/* webpackChunkName: "view-checklist" */ "./ViewChecklist"),
+  () => require("./ViewChecklist").default,
+  { loaderText: "Loading View Checklist..." }
+);
+
+const UpdateChecklist = lazyWithFallback(
+  () => import(/* webpackChunkName: "update-checklist" */ "./UpdateChecklist"),
+  () => require("./UpdateChecklist").default,
+  { loaderText: "Loading Update Checklist..." }
+);
+
+const BoundaryHome = lazyWithFallback(
+  () => import(/* webpackChunkName: "boundary-home" */ "./BoundaryHome"),
+  () => require("./BoundaryHome").default,
+  { loaderText: "Loading Boundary Home..." }
+);
+
+const ApprovedMicroplans = lazyWithFallback(
+  () => import(/* webpackChunkName: "approved-microplans" */ "./ApprovedMicroplans"),
+  () => require("./ApprovedMicroplans").default,
+  { loaderText: "Loading Approved Microplans..." }
+);
+
+const FetchFromMicroplan = lazyWithFallback(
+  () => import(/* webpackChunkName: "fetch-from-microplan" */ "../../components/fetchFromMicroplan"),
+  () => require("../../components/fetchFromMicroplan").default,
+  { loaderText: "Loading Fetch From Microplan..." }
+);
+
+const CampaignHome = lazyWithFallback(
+  () => import(/* webpackChunkName: "campaign-home" */ "./NewCampaignCreate/CampaignHome"),
+  () => require("./NewCampaignCreate/CampaignHome").default,
+  { loaderText: "Loading Campaign Home..." }
+);
+
+const CreateCampaign = lazyWithFallback(
+  () => import(/* webpackChunkName: "create-campaign" */ "./NewCampaignCreate/CreateCampaign"),
+  () => require("./NewCampaignCreate/CreateCampaign").default,
+  { loaderText: "Loading Create Campaign..." }
+);
+
+const CampaignDetails = lazyWithFallback(
+  () => import(/* webpackChunkName: "campaign-details" */ "./NewCampaignCreate/CampaignDetails"),
+  () => require("./NewCampaignCreate/CampaignDetails").default,
+  { loaderText: "Loading Campaign Details..." }
+);
+
+const AppModule = lazyWithFallback(
+  () => import(/* webpackChunkName: "app-module" */ "./NewCampaignCreate/AppModule"),
+  () => require("./NewCampaignCreate/AppModule").default,
+  { loaderText: "Loading App Module..." }
+);
+
+const AppFeatures = lazyWithFallback(
+  () => import(/* webpackChunkName: "app-features" */ "./NewCampaignCreate/AppFeatures"),
+  () => require("./NewCampaignCreate/AppFeatures").default,
+  { loaderText: "Loading App Features..." }
+);
+
+const MyCampaignNew = lazyWithFallback(
+  () => import(/* webpackChunkName: "my-campaign-new" */ "./MyCampaignNew"),
+  () => require("./MyCampaignNew").default,
+  { loaderText: "Loading My Campaign New..." }
+);
+
+const NewUploadScreen = lazyWithFallback(
+  () => import(/* webpackChunkName: "new-upload-screen" */ "./NewCampaignCreate/NewUploadScreen"),
+  () => require("./NewCampaignCreate/NewUploadScreen").default,
+  { loaderText: "Loading New Upload Screen..." }
+);
+
+const AppConfigurationTabLayer = lazyWithFallback(
+  () => import(/* webpackChunkName: "app-configuration-tab-layer" */ "./appConfigurationRedesign/AppConfigurationTabLayer"),
+  () => require("./appConfigurationRedesign/AppConfigurationTabLayer").default,
+  { loaderText: "Loading App Configuration..." }
+);
+const AppConfigurationStore = lazyWithFallback(
+  () => import(/* webpackChunkName: "app-configuration-store" */ "./NewAppConfiguration/AppConfigurationStore"),
+  () => require("./NewAppConfiguration/AppConfigurationStore").default,
+  { loaderText: "Loading App Configuration..." }
+);
+
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.

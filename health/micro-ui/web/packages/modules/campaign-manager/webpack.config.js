@@ -13,7 +13,8 @@ module.exports = {
   entry: "./src/Module.js",
 
   output: {
-    filename: "main.js", // fixed for library consumers
+    filename: "[name].js", // Use [name] to support multiple entry points
+    chunkFilename: "[name].[contenthash:8].chunk.js", // For lazy-loaded chunks
     path: path.resolve(__dirname, "dist"),
     library: {
       name: "@egovernments/digit-ui-module-campaign-manager",
@@ -21,6 +22,7 @@ module.exports = {
     },
     globalObject: "this",
     clean: true,
+    publicPath: "auto", // Auto-detect public path for lazy loading
   },
 
   resolve: {
@@ -32,8 +34,21 @@ module.exports = {
     sideEffects: false, // Enable tree-shaking
     concatenateModules: isProduction,
     minimize: isProduction,
-    runtimeChunk: false, // Disable runtime chunk for library builds
-    splitChunks: false, // Disable code splitting for library builds
+    runtimeChunk: false, // Keep runtime in main bundle for library compatibility
+    splitChunks: {
+      chunks: "async", // Only split async chunks (for lazy loading)
+      cacheGroups: {
+        default: false,
+        vendors: false,
+        // Only create chunks for lazy-loaded modules
+        async: {
+          chunks: "async",
+          minSize: 20000,
+          minChunks: 1,
+          priority: 10,
+        },
+      },
+    },
     moduleIds: isProduction ? 'deterministic' : 'named',
   },
 
