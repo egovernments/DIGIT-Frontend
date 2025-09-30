@@ -2,18 +2,7 @@ import { FieldV1 } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-
-// Simple helper function to get field type
-const getFieldType = (field, fieldTypeMasterData) => {
-  if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
-    return "textInput";
-  }
-
-  // Find matching field type based on type and format
-  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
-
-  return matched?.fieldType || "textInput";
-};
+import { getFieldTypeFromMasterData } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
 
 const ComponentToRender = ({ field, t: customT, selectedField }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
@@ -22,7 +11,7 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
   const fieldTypeMasterData = byName?.FieldTypeMappingConfig || [];
 
   // Get the field type
-  const fieldType = getFieldType(field, fieldTypeMasterData);
+  const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
 
   return (
     <FieldV1
@@ -46,7 +35,7 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
             : ``
         }`,
       }}
-      required={getFieldType(field) === "custom" ? null : field?.["toArray.required"]}
+      required={getFieldTypeFromMasterData(field) === "custom" ? null : field?.required}
       type={fieldType}
       value={field?.value === true ? "" : field?.value || ""}
       disabled={field?.readOnly || false}

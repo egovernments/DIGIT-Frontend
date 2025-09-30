@@ -1,6 +1,6 @@
-import React, { Fragment, useCallback, useMemo, useRef, useState } from "react";
+import React, { Fragment, useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Button, Divider, LabelFieldPair, TextInput, PopUp, Dropdown } from "@egovernments/digit-ui-components";
+import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
 import {
   deleteField,
@@ -18,11 +18,32 @@ import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import HeaderFieldWrapper from "./HeaderFieldWrapper";
 
-// Wrapper for action label
-const LocalizedActionLabel = React.memo(({ currentCard, onChange }) => {
-  const localizedValue = useCustomT(currentCard?.actionLabel);
+// Wrapper for footer label to avoid hook-in-loop violation
+const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t }) => {
+  const localizedLabel = useCustomT(label);
 
-  return <TextInput name="actionLabel" value={localizedValue} onChange={onChange} />;
+  return (
+    <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
+      <div className="">
+        <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+      </div>
+      <TextInput
+        name={`footerLabel-${index}`}
+        value={localizedLabel}
+        onChange={(event) => {
+          if (label) {
+            dispatch(
+              updateLocalizationEntry({
+                code: label,
+                locale: currentLocale || "en_IN",
+                message: event.target.value,
+              })
+            );
+          }
+        }}
+      />
+    </LabelFieldPair>
+  );
 });
 
 function NewAppFieldScreenWrapper() {
@@ -30,10 +51,6 @@ function NewAppFieldScreenWrapper() {
   const dispatch = useDispatch();
   const { currentData } = useSelector((state) => state.remoteConfig);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
-
-  // Popup state for adding new fields - managed by Redux
-  // Removed unused state variables
-
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   const formId = searchParams.get("formId");
@@ -198,62 +215,9 @@ function NewAppFieldScreenWrapper() {
       </div>
       {currentCard?.footer &&
         currentCard?.footer.length > 0 &&
-        currentCard?.footer?.map(({ label }, index) => {
-          const localizedLabel = useCustomT(label);
-          return (
-            <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
-              <div className="">
-                <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
-              </div>
-              <TextInput
-                name={`footerLabel-${index}`}
-                value={localizedLabel}
-                onChange={(event) => {
-                  if (label) {
-                    dispatch(
-                      updateLocalizationEntry({
-                        code: label,
-                        locale: currentLocale || "en_IN",
-                        message: event.target.value,
-                      })
-                    );
-                  }
-                }}
-              />
-            </LabelFieldPair>
-          );
-        })}
-      {/* REVAMP FOR FOOTER NEEDED */}
-      {/* {currentCard?.type !== "template" && (
-        <LabelFieldPair className="app-preview-app-config-drawer-action-button">
-          <div className="">
-            <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
-          </div>
-          <LocalizedActionLabel
-            currentCard={currentCard}
-            onChange={(event) => {
-              if (currentCard?.actionLabel) {
-                dispatch(
-                  updateLocalizationEntry({
-                    code: currentCard?.actionLabel,
-                    locale: currentLocale || "en_IN",
-                    message: event.target.value,
-                  })
-                );
-              } else {
-                dispatch(
-                  updateLocalizationEntry({
-                    code: "SKJSKSJSKJSKJ",
-                    locale: currentLocale || "en_IN",
-                    message: event.target.value,
-                  })
-                );
-              }
-              handleUpdateActionLabel(currentCard?.actionLabel);
-            }}
-          />
-        </LabelFieldPair>
-      )} */}
+        currentCard?.footer?.map(({ label }, index) => (
+          <FooterLabelField key={`footer-${index}`} label={label} index={index} currentLocale={currentLocale} dispatch={dispatch} t={t} />
+        ))}
     </React.Fragment>
   );
 }

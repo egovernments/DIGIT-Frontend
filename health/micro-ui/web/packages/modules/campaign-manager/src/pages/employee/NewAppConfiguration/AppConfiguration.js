@@ -1,17 +1,14 @@
-import React, { Fragment } from "react";
-import { useTranslation } from "react-i18next";
+import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectField } from "./redux/remoteConfigSlice";
-import { useCustomT } from "./hooks/useCustomT";
+import { useCustomTranslate } from "./hooks/useCustomT";
 import AppPreview from "../../../components/AppPreview";
 import SidePanelApp from "./SidePanelApp";
 
-const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
-
 function AppConfiguration({ screenConfig, localeModule, pageTag }) {
-  const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentData, selectedField, isFieldSelected } = useSelector((state) => state.remoteConfig);
+  const t = useCustomTranslate();
 
   const handleFieldClick = (field, screen, card) => {
     dispatch(selectField({ field, screen, card }));
@@ -19,7 +16,7 @@ function AppConfiguration({ screenConfig, localeModule, pageTag }) {
 
   return (
     <div>
-      <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={useCustomT} />
+      <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
       <SidePanelApp showPanelProperties={isFieldSelected && selectedField} />
     </div>
   );
