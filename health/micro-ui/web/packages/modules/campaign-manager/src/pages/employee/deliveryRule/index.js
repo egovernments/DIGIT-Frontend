@@ -107,7 +107,7 @@ const DeliverySetupContainer = ({ onSelect, config, formData, control, tabCount 
   // Initialize campaign data when dependencies are ready
  // Around line 85-95, modify to:
 useEffect(() => {
-  if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig) {
+  if (!cycleData?.cycleConfgureDate || !effectiveDeliveryConfig || !attributeConfigRef.current) {
     return;
   }
 
@@ -118,13 +118,13 @@ useEffect(() => {
   const cycles = cycleData.cycleConfgureDate.cycle;
   const deliveries = cycleData.cycleConfgureDate.deliveries;
 
-  if (!cycles || !deliveries) {
+  if (!cycles || !deliveries || !attributeConfigRef.current?.length) {
     return;
   }
 
 
   try {
-    initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfigRef.current, operatorConfigRef.current);
+    initializeData(cycles, deliveries, effectiveDeliveryConfig, savedDeliveryRules, attributeConfig, operatorConfig);
   } catch (error) {
     console.error('Error initializing campaign data:', error);
     setErrorState(error.message);

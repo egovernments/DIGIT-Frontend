@@ -115,7 +115,7 @@ const AddAttributeField = React.memo(({
     return filtered;
   }, [selectedAttribute, operatorConfig]);
 
-  const selectedDropdownValue = useMemo(() => {
+const selectedDropdownValue = useMemo(() => {
   if (!attribute?.value) return null;
   
   // If value is already an object with code, use it
@@ -124,32 +124,39 @@ const AddAttributeField = React.memo(({
   }
   
   // If value is a string, find the matching option
-  if (typeof attribute.value === 'string' && dropdownOptions.length > 0) {
-    // Try to find by code first
-    const matchedOption = dropdownOptions.find(opt => opt.code === attribute.value);
-    if (matchedOption) {
-      return matchedOption;
+  if (typeof attribute.value === 'string') {
+    // If dropdown options are loaded, find the match
+    if (dropdownOptions?.length > 0) {
+      // Try exact match first
+      const matchedOption = dropdownOptions?.find(opt => opt.code === attribute.value);
+      if (matchedOption) {
+        return matchedOption;
+      }
+      
+      // Try case-insensitive match
+      const caseInsensitiveMatch = dropdownOptions.find(
+        opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
+      );
+      if (caseInsensitiveMatch) {
+        return caseInsensitiveMatch;
+      }
     }
-    
-    // If no exact code match, try case-insensitive match
-    const caseInsensitiveMatch = dropdownOptions.find(
-      opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
-    );
-    if (caseInsensitiveMatch) {
-      return caseInsensitiveMatch;
-    }
+    // Return a temporary object with code if options aren't loaded yet
+    return { code: attribute.value };
   }
   
   return null;
 }, [attribute?.value, dropdownOptions]);
 
-  // Fetch dropdown options when attribute changes
-  React.useEffect(() => {
-    if (selectedAttribute?.valuesSchema) {
+// Fetch dropdown options when attribute changes or when we have a value but no options
+React.useEffect(() => {
+  if (selectedAttribute?.valuesSchema) {
+    // Fetch if we don't have options, or if we have a value that needs matching
+    if (dropdownOptions.length === 0 || (attribute?.value && !selectedDropdownValue?.name)) {
       fetchOptions(selectedAttribute.valuesSchema);
     }
-  }, [selectedAttribute?.valuesSchema, fetchOptions]);
-
+  }
+}, [selectedAttribute?.valuesSchema, fetchOptions, attribute?.value]);
   const handleAttributeChange = useCallback((value) => {
     updateAttributeField(rule.ruleKey, attribute.key, 'attribute', value);
   }, [updateAttributeField, rule.ruleKey, attribute.key]);
