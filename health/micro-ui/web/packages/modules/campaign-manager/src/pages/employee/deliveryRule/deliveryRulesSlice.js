@@ -254,43 +254,67 @@ function parseConditionString(conditionString) {
   const parsedAttributes = [];
   
   conditions.forEach((condition, index) => {
-    // Match patterns like: memberCount>=1, maxCount<=3, age>18, etc.
-    const match = condition.match(/(\w+)(>=|<=|>|<|=)(\d+(?:\.\d+)?)/);
+    // Check for range conditions first (e.g., 60<=age<180)
+    const rangeMatch = condition.match(/(\d+(?:\.\d+)?)\s*<=?\s*(\w+)\s*<?=?\s*(\d+(?:\.\d+)?)/);
     
-    if (match) {
-      const [, attrValue, operator, value] = match;
-      
-      // Map operators to our system
-      let operatorValue = '';
-      switch (operator) {
-        case '>=':
-          operatorValue = 'GREATER_THAN_EQUAL_TO';
-          break;
-        case '<=':
-          operatorValue = 'LESS_THAN_EQUAL_TO';
-          break;
-        case '>':
-          operatorValue = 'GREATER_THAN';
-          break;
-        case '<':
-          operatorValue = 'LESS_THAN';
-          break;
-        case '=':
-          operatorValue = 'EQUAL_TO';
-          break;
-        default:
-          operatorValue = 'EQUAL_TO';
-      }
+    if (rangeMatch) {
+      const [, fromValue, attrValue, toValue] = rangeMatch;
       
       parsedAttributes.push({
         key: index + 1,
         label: "Custom",
         attrType: attrValue,
         attrValue: attrValue,
-        operatorValue: operatorValue,
-        value: value,
-        fromValue: parseFloat(value)
+        operatorValue: 'IN_BETWEEN',
+        fromValue: parseFloat(fromValue),
+        toValue: parseFloat(toValue)
       });
+    } else {
+      // Handle single comparisons
+      const match = condition.match(/(\w+)(==|>=|<=|>|<|=)(.+)/);
+      
+      if (match) {
+        let [, attrValue, operator, value] = match;
+        value = value.trim();
+        
+        // Map operators
+        let operatorValue = '';
+        switch (operator) {
+          case '==':
+          case '=':
+            operatorValue = 'EQUAL_TO';
+            break;
+          case '>=':
+            operatorValue = 'GREATER_THAN_EQUAL_TO';
+            break;
+          case '<=':
+            operatorValue = 'LESS_THAN_EQUAL_TO';
+            break;
+          case '>':
+            operatorValue = 'GREATER_THAN';
+            break;
+          case '<':
+            operatorValue = 'LESS_THAN';
+            break;
+          default:
+            operatorValue = 'EQUAL_TO';
+        }
+        
+        // Convert boolean strings to proper case for matching
+        if (value.toLowerCase() === 'true' || value.toLowerCase() === 'false') {
+          value = value.toLowerCase();
+        }
+        
+        parsedAttributes.push({
+          key: index + 1,
+          label: "Custom",
+          attrType: attrValue,
+          attrValue: attrValue,
+          operatorValue: operatorValue,
+          value: value, // Keep the value as-is for dropdown matching
+          fromValue: !isNaN(parseFloat(value)) ? parseFloat(value) : undefined
+        });
+      }
     }
   });
   
@@ -370,10 +394,9 @@ function generateInitialDeliveryRules(effectiveDeliveryConfig, deliveryIndex, at
 }
 
 function generateInitialAttributes(attributeConfigFromProject, globalAttributeConfig = [], globalOperatorConfig = []) {
-
   if (Array.isArray(attributeConfigFromProject) && attributeConfigFromProject.length > 0) {
     return attributeConfigFromProject.map((attr, index) => {
-      // Create attribute object - check if we have global config, otherwise create basic structure
+      // Create attribute object
       const attributeCode = attr?.attrValue;
       let attributeObj = null;
       
@@ -389,7 +412,8 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
             name: attr?.label || attributeCode,
             dataType: attr?.attrType || "string",
             i18nKey: `CAMPAIGN_ATTRIBUTE_${attributeCode.toUpperCase()}`,
-            allowedOperators: attr?.allowedOperators || []
+            allowedOperators: attr?.allowedOperators || [],
+            valuesSchema: attr?.valuesSchema // Include valuesSchema if present
           };
         }
       }
@@ -419,9 +443,6 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
       };
       
       if (attr?.operatorValue === "IN_BETWEEN") {
-        // For IN_BETWEEN operator, map the values correctly
-        // fromValue in data = "From" field in UI
-        // toValue in data = "To" field in UI
         return {
           ...baseAttr,
           fromValue: attr?.fromValue?.toString() || "",
@@ -429,16 +450,19 @@ function generateInitialAttributes(attributeConfigFromProject, globalAttributeCo
         };
       }
       
+      // For dropdown values (when valuesSchema exists or value is non-numeric)
+      // Store the value as a string that will be matched against dropdown options later
+      const value = attr?.value?.toString() || "";
+      
       return {
         ...baseAttr,
-        value: attr?.value?.toString() || "",
+        value: value, // Keep as string, will be handled by the component
       };
     });
   }
   
   return [{ key: 1, attribute: null, operator: null, value: "" }];
 }
-
 // Selectors
 export const selectCampaignData = (state) => state.deliveryRules.campaignData;
 export const selectActiveTabIndex = (state) => state.deliveryRules.activeTabIndex;
