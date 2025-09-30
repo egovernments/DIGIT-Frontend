@@ -21,6 +21,7 @@ import DraggableField from "./DraggableField";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import NavigationLogicWrapper from "./NavigationLogicWrapper";
 
 function AppFieldScreenWrapper() {
   const { state, dispatch, openAddFieldPopup } = useAppConfigContext();
@@ -29,6 +30,7 @@ function AppFieldScreenWrapper() {
   const projectType = searchParams.get("prefix");
   const formId = searchParams.get("formId");
   const { t } = useTranslation();
+  const useT = useCustomT();
 
   const currentCard = useMemo(() => {
     return state?.screenData?.[0];
@@ -63,7 +65,7 @@ function AppFieldScreenWrapper() {
                 label={label}
                 active={active}
                 required={required}
-                value={useCustomT(formId ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
+                value={useT(formId ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
                 headerFields={true}
                 onChange={(event) => {
                   dispatch({
@@ -89,7 +91,7 @@ function AppFieldScreenWrapper() {
                 return (
                   <DraggableField
                     type={type}
-                    label={useCustomT(label)}
+                    label={useT(label)}
                     active={active}
                     required={required}
                     isDelete={deleteFlag === false ? false : true}
@@ -129,9 +131,9 @@ function AppFieldScreenWrapper() {
                     }}
                     config={c[i]}
                     Mandatory={Mandatory}
-                    helpText={useCustomT(helpText)}
-                    infoText={useCustomT(infoText)}
-                    innerLabel={useCustomT(innerLabel)}
+                    helpText={useT(helpText)}
+                    infoText={useT(infoText)}
+                    innerLabel={useT(innerLabel)}
                     rest={rest}
                     index={i}
                     fieldIndex={i}
@@ -196,6 +198,18 @@ function AppFieldScreenWrapper() {
             <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
             <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
           </div>
+          <NavigationLogicWrapper
+            t={t}
+            parentState={parentState}
+            currentState={currentCard}
+            onConditionalNavigateChange={(data) => {
+               dispatch({
+                type: "PATCH_PAGE_CONDITIONAL_NAV",
+                pageName: currentCard?.name, // optional but safer
+                data,                        // array built by NavigationLogicWrapper on Submit
+              });
+            }}
+          />
           <LabelFieldPair className="app-preview-app-config-drawer-action-button">
             <div className="">
               <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
@@ -203,7 +217,7 @@ function AppFieldScreenWrapper() {
             <TextInput
               // style={{ maxWidth: "40rem" }}
               name="name"
-              value={useCustomT(currentCard?.actionLabel)}
+              value={useT(currentCard?.actionLabel)}
               onChange={(event) => {
                 updateLocalization(
                   currentCard?.actionLabel && currentCard?.actionLabel !== true
