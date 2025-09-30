@@ -224,15 +224,30 @@ const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
 
     return (
         <React.Fragment>
-            <div>
-                <span
-                    onClick={() => {
-                        setReset(true);
-                    }}
-                    style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px", cursor: "pointer" }}
-                >
-                    <SVG.AutoRenew width={"24px"} height={"24px"} fill={"#c84c0e"} />
-                </span>
+            <div style={{ width: "100%" }}>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "space-between", // pushes elements apart
+                    alignItems: "center", // vertically centers them
+                    padding: 0, // remove extra padding
+                    margin: 0, // remove extra margin
+                }}>
+
+                    <span className="custom-inbox-filter-heading"
+                        style={{
+                            paddingLeft: "0px"
+                        }}
+                    >{t("HCM_AM_FILTER")}</span>
+
+                    <span
+                        onClick={() => {
+                            setReset(true);
+                        }}
+                        style={{ border: "1px solid #e0e0e0", padding: "6px", marginBottom: "10px", cursor: "pointer" }}
+                    >
+                        <SVG.AutoRenew width={"24px"} height={"24px"} fill={"#c84c0e"} />
+                    </span>
+                </div>
 
                 {boundaryHierarchy.map((key, index) => {
                     if (boundaryData[key]) {

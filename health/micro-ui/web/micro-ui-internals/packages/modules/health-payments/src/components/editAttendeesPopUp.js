@@ -176,7 +176,7 @@ const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, register
     // -------- Render --------
     return (<React.Fragment>
         <PopUp
-            style={{ minWidth: "1000px" }}
+            style={{ minWidth: "1300px" }}
             onClose={onClose}
             heading={t(heading)}
             onOverlayClick={onClose}

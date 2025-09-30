@@ -33,7 +33,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
 
 
             {
-              label: "HCM_AM_COMMON_TABLE_COL_FILTER",
+              //label: "HCM_AM_COMMON_TABLE_COL_FILTER",
               isMandatory: false,
               key: "AttendeeBoundaryComponent",
               type: "component",
@@ -48,7 +48,7 @@ const inboxAttendeeSearchConfig = (boundarycode) => {
 
           ],
         },
-        label: "ES_COMMON_FILTERS",
+       // label: "ES_COMMON_FILTERS",
         show: true,
       },
 
