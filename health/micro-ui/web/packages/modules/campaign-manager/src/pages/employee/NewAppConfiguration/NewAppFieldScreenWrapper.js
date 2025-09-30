@@ -99,7 +99,6 @@ function NewAppFieldScreenWrapper() {
       </div>
     );
   }
-  console.log("currentCard", currentCard);
 
   return (
     <React.Fragment>

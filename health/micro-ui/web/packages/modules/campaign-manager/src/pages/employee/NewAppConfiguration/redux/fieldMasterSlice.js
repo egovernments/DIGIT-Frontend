@@ -5,7 +5,6 @@ import dummyFieldTypeConfig from "../configs/dummyFieldTypeConfig.json";
 export const getFieldMaster = createAsyncThunk(
   "fieldTypeMaster/fetch",
   async ({ tenantId, moduleName, name, limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
-    console.log("namenamename", name);
     try {
       const existing = getState()?.fieldTypeMaster?.byName?.[name];
       if (existing) return existing;

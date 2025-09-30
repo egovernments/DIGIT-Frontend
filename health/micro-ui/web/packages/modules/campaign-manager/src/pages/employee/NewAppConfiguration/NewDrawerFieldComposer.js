@@ -76,8 +76,6 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
   };
 
   const handleFieldChangeWithLoc = (code, value, pI) => {
-    console.log("HANDLE CHANGE", code, value, pI, selectedField);
-
     const bindTo = panelItem.bindTo;
     let finalValueToSave;
 
@@ -141,7 +139,6 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
         );
 
       case "text":
-        console.log("RENDERING TEXT", panelItem, getFieldValue(), selectedField);
         return (
           <FieldV1
             type="text"
@@ -258,7 +255,6 @@ function NewDrawerFieldComposer() {
     });
   }, [currentTabProperties, fieldType]);
 
-  console.log("NABEEL", panelProperties, panelConfig, tabs, currentTabProperties, fieldType, visibleTabProperties);
   // Handle field changes
   const handleFieldChange = (updatedField) => {
     dispatch(updateSelectedField(updatedField));

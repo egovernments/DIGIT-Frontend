@@ -18,14 +18,11 @@ const getFieldType = (field, fieldTypeMasterData) => {
 const ComponentToRender = ({ field, t: customT, selectedField }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
   const { t } = useTranslation();
-  console.log("responsePanelComponent", field, byName);
   // Get field type mapping from the field master data
   const fieldTypeMasterData = byName?.FieldTypeMappingConfig || [];
 
   // Get the field type
   const fieldType = getFieldType(field, fieldTypeMasterData);
-
-  console.log("fieldType", fieldType);
 
   return (
     <FieldV1

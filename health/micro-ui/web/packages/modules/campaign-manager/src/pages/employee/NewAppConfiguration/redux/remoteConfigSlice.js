@@ -107,7 +107,6 @@ const remoteConfigSlice = createSlice({
       }
     },
     handleShowAddFieldPopup(state, action) {
-      console.log("action.payload", state, action, action.payload);
       if (!action.payload) {
         state.showAddFieldPopup = false;
       } else {
