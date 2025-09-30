@@ -4,17 +4,8 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+import { getFieldTypeFromMasterData } from "./helpers";
 
-const getFieldType = (field, fieldTypeMasterData) => {
-  if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
-    return "text";
-  }
-
-  // Find matching field type based on type and format
-  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
-
-  return matched?.fieldType || "text";
-};
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
 const ToggleVisibilityControl = ({ config, onToggle }) => {
   if (config?.deleteFlag || config?.["toArray.required"]) return null;
@@ -83,7 +74,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
           </div>
           <Tag
             icon=""
-            label={t(getFieldType(rest?.field || { type, format: rest?.format }, fieldTypeMaster.FieldTypeMappingConfig))}
+            label={t(getFieldTypeFromMasterData(rest?.field || { type, format: rest?.format }, fieldTypeMaster.FieldTypeMappingConfig))}
             className="app-config-field-tag"
             labelStyle={{}}
             showIcon={false}

@@ -5,19 +5,8 @@ import { FieldV1, Switch, TextBlock, Tag, Divider } from "@egovernments/digit-ui
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
+import { getFieldTypeFromMasterData, getFieldValueByPath } from "./helpers";
 
-// Simple field renderer for different field types
-const getValueByPath = (source, path, defaultValue = "") => {
-  if (!path || typeof path !== "string") return defaultValue;
-  if (!path.includes(".")) return source?.[path] || defaultValue;
-  const keys = path.split(".");
-  let value = source;
-  for (const key of keys) {
-    value = value?.[key];
-    if (value === undefined || value === null) return defaultValue;
-  }
-  return value;
-};
 const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -39,7 +28,7 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
 
   const getFieldValue = () => {
     const bindTo = panelItem.bindTo;
-    return getValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
+    return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
   };
 
   // Check if conditional fields should be shown
@@ -222,25 +211,14 @@ const Tabs = ({ tabs, activeTab, onTabChange }) => {
   const { t } = useTranslation();
 
   return (
-    <div className="drawer-tabs">
+    <div className="configure-app-tabs">
       {tabs.map((tab) => (
-        <button key={tab} className={`drawer-tab ${activeTab === tab ? "active" : ""}`} onClick={() => onTabChange(tab)}>
+        <button key={tab} className={`configure-app-tab-head ${activeTab === tab ? "active" : ""} hover`} onClick={() => onTabChange(tab)}>
           {t(`TAB_${tab.toUpperCase()}`)}
         </button>
       ))}
     </div>
   );
-};
-
-const getFieldType = (field, fieldTypeMasterData) => {
-  if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
-    return "text";
-  }
-
-  // Find matching field type based on type and format
-  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
-
-  return matched?.fieldType || "text";
 };
 
 function NewDrawerFieldComposer() {
@@ -265,7 +243,7 @@ function NewDrawerFieldComposer() {
     if (!selectedField || !fieldTypeMaster?.FieldTypeMappingConfig) {
       return selectedField?.type || "textInput";
     }
-    return getFieldType(selectedField, fieldTypeMaster.FieldTypeMappingConfig);
+    return getFieldTypeFromMasterData(selectedField, fieldTypeMaster.FieldTypeMappingConfig);
   }, [selectedField, fieldTypeMaster]);
 
   // Filter properties based on field type visibility
