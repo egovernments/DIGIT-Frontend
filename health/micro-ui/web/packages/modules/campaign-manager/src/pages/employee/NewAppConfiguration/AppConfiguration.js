@@ -11,7 +11,7 @@ const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 function AppConfiguration({ screenConfig, localeModule, pageTag }) {
   const { t } = useTranslation();
   const dispatch = useDispatch();
-  const { currentData, selectedField, currentScreen, currentCard, isFieldSelected } = useSelector((state) => state.remoteConfig);
+  const { currentData, selectedField, isFieldSelected } = useSelector((state) => state.remoteConfig);
 
   const handleFieldClick = (field, screen, card) => {
     dispatch(selectField({ field, screen, card }));
