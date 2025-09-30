@@ -11,7 +11,7 @@ import { useAttendanceSummary } from "../utils/update_attendance_summary";
 import SearchUserPopUp from "./SearchUserPopUp";
 
 
-const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, registerId }) => {
+const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registerId }) => {
     const history = useHistory();
     // context path variables
     const attendanceContextPath =
@@ -182,7 +182,14 @@ const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, register
             onOverlayClick={onClose}
             children={[
                 isAttendanceLoading || isAllIndividualsLoading ? (
-                    <Loader />
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        height: "100vh"   // full screen height
+                    }}>
+                        <Loader />
+                    </div>
                 ) : (
                     <div style={{
                         display: "flex",
@@ -204,12 +211,12 @@ const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, register
 
                             <div>{t(labels[1])}</div>
                             <Button label={t("HCM_AM_SEARCH_USER")} variation="link" onClick={() => {
-                                
-                               // INFO: commenting for demo
+
+                                // INFO: commenting for demo
                                 //setSearchUserpopUp(true)
 
                                 history.push(`/${window?.contextPath}/employee/payments/attendee-inbox?registerId=${registerId}&boundaryCode=${boundaryCode}`)
-                                }} />
+                            }} />
                         </div>
 
                     </div>
@@ -221,7 +228,7 @@ const EditAttendeePopUp = ({boundaryCode, onClose, businessId, heading, register
                     size={"large"}
                     variation={"primary"}
                     label={t("HCM_AM_SAVE_AND_CLOSE")}
-                    onClick={ onClose}
+                    onClick={onClose}
                 />,
             ]}
             sortFooterChildren={true}

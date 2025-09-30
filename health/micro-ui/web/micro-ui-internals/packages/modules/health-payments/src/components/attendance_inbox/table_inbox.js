@@ -239,31 +239,43 @@ const CustomInboxTable = ({
               />
               <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", maxHeight: "64.5vh" }}>
 
-                {isLoading ? <Loader /> : tableData && tableData.length === 0 ? (
-                  <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
-                ) : (
-                  <DataTable
-                    columns={columns}
-                    className="search-component-table"
-                    data={tableData}
-                    progressPending={isLoading}
-                    progressComponent={<Loader />}
-                    pagination
-                    paginationServer
-                    customStyles={tableCustomStyle(true)}
-                    onRowClicked={handleRowClick}
-                    pointerOnHover
-                    paginationTotalRows={totalCount}
-                    onChangePage={handlePaginationChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationPerPage={rowsPerPage}
-                    sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                    paginationRowsPerPageOptions={defaultPaginationValues}
-                    fixedHeader={true}
-                    fixedHeaderScrollHeight={"60vh"}
-                    paginationComponentOptions={getCustomPaginationOptions(t)}
-                  />
-                )}
+                {isLoading ?
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "1vh",
+                    paddingTop: "2rem",
+                    marginTop:"2rem"
+                  }}>
+                    <Loader />
+                  </div>
+
+                  : tableData && tableData.length === 0 ? (
+                    <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                  ) : (
+                    <DataTable
+                      columns={columns}
+                      className="search-component-table"
+                      data={tableData}
+                      progressPending={isLoading}
+                      progressComponent={<Loader />}
+                      pagination
+                      paginationServer
+                      customStyles={tableCustomStyle(true)}
+                      onRowClicked={handleRowClick}
+                      pointerOnHover
+                      paginationTotalRows={totalCount}
+                      onChangePage={handlePaginationChange}
+                      onChangeRowsPerPage={handleRowsPerPageChange}
+                      paginationPerPage={rowsPerPage}
+                      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                      paginationRowsPerPageOptions={defaultPaginationValues}
+                      fixedHeader={true}
+                      fixedHeaderScrollHeight={"60vh"}
+                      paginationComponentOptions={getCustomPaginationOptions(t)}
+                    />
+                  )}
               </Card>
             </div>
           )

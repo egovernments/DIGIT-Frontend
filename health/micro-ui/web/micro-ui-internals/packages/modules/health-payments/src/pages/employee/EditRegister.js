@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef,Fragment } from "react";
+import React, { useState, useEffect, useRef, Fragment } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 // import { Loader, Header, LoaderWithGap } from "@egovernments/digit-ui-react-components";
@@ -245,7 +245,15 @@ const EditRegister = ({ editAttendance = false }) => {
     // }
 
     if (loading || isAttendanceLoading || isIndividualsLoading || isAllIndividualsLoading) {
-        return <Loader />
+        return (
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                height: "100vh"
+            }}>
+                <Loader />
+            </div>)
     }
 
     return (
@@ -280,7 +288,7 @@ const EditRegister = ({ editAttendance = false }) => {
                     )}
 
 
-                    { <div className="label-pair">
+                    {<div className="label-pair">
                         <span className="view-label-heading">
                             <Button
                                 className="custom-class"
@@ -376,9 +384,9 @@ const EditRegister = ({ editAttendance = false }) => {
                 }}
             />} */}
 
-           
 
-            
+
+
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}
