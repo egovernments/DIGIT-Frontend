@@ -1,18 +1,21 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { selectField } from "./redux/remoteConfigSlice";
 import { useCustomTranslate } from "./hooks/useCustomT";
 import AppPreview from "../../../components/AppPreview";
 import SidePanelApp from "./SidePanelApp";
 
-function AppConfiguration({ screenConfig, localeModule, pageTag }) {
+function AppConfiguration() {
   const dispatch = useDispatch();
   const { currentData, selectedField, isFieldSelected } = useSelector((state) => state.remoteConfig);
   const t = useCustomTranslate();
 
-  const handleFieldClick = (field, screen, card) => {
-    dispatch(selectField({ field, screen, card }));
-  };
+  const handleFieldClick = useCallback(
+    (field, screen, card) => {
+      dispatch(selectField({ field, screen, card }));
+    },
+    [dispatch]
+  );
 
   return (
     <div>

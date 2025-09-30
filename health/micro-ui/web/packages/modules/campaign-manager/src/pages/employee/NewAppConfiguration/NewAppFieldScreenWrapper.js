@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback, useMemo } from "react";
+import React, { Fragment, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
@@ -55,9 +55,7 @@ function NewAppFieldScreenWrapper() {
   const projectType = searchParams.get("prefix");
   const formId = searchParams.get("formId");
 
-  const currentCard = useMemo(() => {
-    return currentData;
-  }, [currentData]);
+  const currentCard = currentData;
 
   const moveField = useCallback(
     (fromIndex, toIndex, cardIndex) => {
@@ -89,7 +87,7 @@ function NewAppFieldScreenWrapper() {
 
   const handleAddField = useCallback((currentCard, card) => {
     dispatch(handleShowAddFieldPopup({ currentCard, card }));
-  }, []);
+  }, [dispatch]);
 
   const handleAddSection = useCallback(() => {
     dispatch(addSection());

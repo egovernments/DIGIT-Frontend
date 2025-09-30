@@ -9,6 +9,7 @@ const remoteConfigSlice = createSlice({
     parentData: [],
     // Drawer state for field selection and editing
     selectedField: null,
+    selectedFieldPath: { cardIndex: null, fieldIndex: null }, // Store field path for O(1) updates
     currentScreen: null,
     currentCard: null,
     isFieldSelected: false,
@@ -28,13 +29,19 @@ const remoteConfigSlice = createSlice({
     // Field selection actions
     selectField(state, action) {
       const { field, screen, card } = action.payload;
+      // Store field path for efficient updates
+      const cardIndex = state.currentData?.cards?.findIndex((c) => c === card) ?? -1;
+      const fieldIndex = card?.fields?.findIndex((f) => f === field) ?? -1;
+
       state.selectedField = field;
+      state.selectedFieldPath = { cardIndex, fieldIndex };
       state.currentScreen = screen;
       state.currentCard = card;
       state.isFieldSelected = true;
     },
     deselectField(state) {
       state.selectedField = null;
+      state.selectedFieldPath = { cardIndex: null, fieldIndex: null };
       state.currentScreen = null;
       state.currentCard = null;
       state.isFieldSelected = false;
@@ -42,28 +49,20 @@ const remoteConfigSlice = createSlice({
     updateSelectedField(state, action) {
       if (!state.selectedField || !action?.payload) return;
       const updates = action.payload;
+      const { cardIndex, fieldIndex } = state.selectedFieldPath;
 
       // Update selected field
       for (const key in updates) {
         state.selectedField[key] = updates[key];
       }
 
-      // Also update the field in currentData
-      if (state.currentData && state.currentData.cards) {
-        const cardIndex = state.currentData.cards.findIndex((card) => card.fields && card.fields.some((field) => field === state.selectedField));
-
-        if (cardIndex !== -1) {
-          const fieldIndex = state.currentData.cards[cardIndex].fields.findIndex((field) => field === state.selectedField);
-
-          if (fieldIndex !== -1) {
-            // Update the field in currentData
-            for (const key in updates) {
-              state.currentData.cards[cardIndex].fields[fieldIndex][key] = updates[key];
-            }
-            // Ensure reactivity by creating new reference
-            state.currentData = { ...state.currentData };
-          }
+      // Also update the field in currentData using stored path (O(1) instead of O(n*m))
+      if (state.currentData?.cards && cardIndex !== null && cardIndex !== -1 && fieldIndex !== null && fieldIndex !== -1) {
+        for (const key in updates) {
+          state.currentData.cards[cardIndex].fields[fieldIndex][key] = updates[key];
         }
+        // Ensure reactivity by creating new reference
+        state.currentData = { ...state.currentData };
       }
     },
     // Field management actions

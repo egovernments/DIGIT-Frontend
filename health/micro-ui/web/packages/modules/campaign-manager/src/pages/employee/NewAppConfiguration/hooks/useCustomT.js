@@ -1,34 +1,39 @@
-import { useSelector, useDispatch, useCallback } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import { useCallback, useMemo } from "react";
 import { addMissingKey } from "../redux/localizationSlice";
 
 export const useCustomT = (code) => {
   const dispatch = useDispatch();
   const { data: locState, currentLocale } = useSelector((state) => state.localization);
 
-  if (!code) {
-    return "";
-  }
+  const translatedValue = useMemo(() => {
+    if (!code) {
+      return "";
+    }
 
-  if (!Array.isArray(locState)) {
-    return "";
-  }
+    if (!Array.isArray(locState)) {
+      return "";
+    }
 
-  const entry = locState?.find((item) => item.code === code);
+    const entry = locState.find((item) => item.code === code);
 
-  if (!entry) {
-    // Get enabled modules from session storage
-    const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
+    if (!entry) {
+      // Get enabled modules from session storage
+      const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
 
-    // Add the missing key to Redux store
-    dispatch(addMissingKey({ code, enabledModules }));
+      // Add the missing key to Redux store
+      dispatch(addMissingKey({ code, enabledModules }));
 
-    return ""; // Return empty string as placeholder
-  }
+      return ""; // Return empty string as placeholder
+    }
 
-  // Get current locale from Redux state or session storage as fallback
-  const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+    // Get current locale from Redux state or session storage as fallback
+    const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
-  return entry[locale] || ""; // Return the message or fallback to empty string
+    return entry[locale] || ""; // Return the message or fallback to empty string
+  }, [code, locState, currentLocale, dispatch]);
+
+  return translatedValue;
 };
 
 // Hook that returns a stable translate function (can be passed as prop)

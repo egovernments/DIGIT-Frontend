@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { FieldV1, Switch, TextBlock, Tag, Divider } from "@egovernments/digit-ui-components";
@@ -7,7 +7,7 @@ import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import { getFieldTypeFromMasterData, getFieldValueByPath } from "./helpers";
 
-const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => {
+const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -30,6 +30,10 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
     const bindTo = panelItem.bindTo;
     return getFieldValueByPath(selectedField, bindTo, panelItem.defaultValue || "");
   };
+
+  // Get localized field value for text fields
+  const fieldValue = getFieldValue();
+  const localizedFieldValue = useCustomT(fieldValue);
 
   // Check if conditional fields should be shown
   const shouldShowConditionalFields = () => {
@@ -75,7 +79,7 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
     }
   };
 
-  const handleFieldChangeWithLoc = (code, value, pI) => {
+  const handleFieldChangeWithLoc = (code, value) => {
     const bindTo = panelItem.bindTo;
     let finalValueToSave;
 
@@ -143,8 +147,8 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
           <FieldV1
             type="text"
             label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
-            value={useCustomT(getFieldValue())}
-            onChange={(event) => handleFieldChangeWithLoc(getFieldValue(), event.target.value, panelItem)}
+            value={localizedFieldValue}
+            onChange={(event) => handleFieldChangeWithLoc(fieldValue, event.target.value)}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-field" }}
           />
@@ -201,10 +205,10 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
       ))}
     </div>
   );
-};
+});
 
 // Simple tabs component
-const Tabs = ({ tabs, activeTab, onTabChange }) => {
+const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
   const { t } = useTranslation();
 
   return (
@@ -216,7 +220,7 @@ const Tabs = ({ tabs, activeTab, onTabChange }) => {
       ))}
     </div>
   );
-};
+});
 
 function NewDrawerFieldComposer() {
   const { t } = useTranslation();
