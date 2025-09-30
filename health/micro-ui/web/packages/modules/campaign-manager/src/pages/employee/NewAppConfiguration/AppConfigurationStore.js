@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
 
-const AppConfigurationStore = ({ children }) => {
+const AppConfigurationStore = () => {
   return (
     <Provider store={store}>
       <AppConfigurationWrapper />
