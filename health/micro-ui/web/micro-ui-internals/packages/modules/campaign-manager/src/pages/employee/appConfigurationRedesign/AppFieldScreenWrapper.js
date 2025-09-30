@@ -192,11 +192,11 @@ function AppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-      {currentCard?.type !== "template" && (
+        {currentCard?.type !== "template" && (
         <>
           <div className="app-config-drawer-subheader">
-            <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
-            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+            <div>{t("APPCONFIG_NAVIGATION_LOGIC")}</div>
+            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
           </div>
           <NavigationLogicWrapper
             t={t}
@@ -210,6 +210,15 @@ function AppFieldScreenWrapper() {
               });
             }}
           />
+        </>
+      )}
+      <Divider className="app-config-drawer-action-divider" />
+      {currentCard?.type !== "template" && (
+        <>
+          <div className="app-config-drawer-subheader">
+            <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
+            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+          </div>
           <LabelFieldPair className="app-preview-app-config-drawer-action-button">
             <div className="">
               <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>

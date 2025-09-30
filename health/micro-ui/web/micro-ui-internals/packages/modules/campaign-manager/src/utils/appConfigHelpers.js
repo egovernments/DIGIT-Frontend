@@ -222,6 +222,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         allowCommentsAdditionAt: ["body"],
       },
       navigateTo: page?.navigateTo || {},
+       conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
   });
@@ -294,6 +295,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       order: index + 1,
       properties,
       navigateTo: section?.navigateTo || {},
+       conditionalNavigateTo: section?.conditionalNavigateTo,
     };
   });
 };

@@ -280,6 +280,30 @@ const reducer = (state = initialState, action, updateLocalization) => {
           },
         ],
       };
+    case "PATCH_PAGE_CONDITIONAL_NAV": {
+      const { pageName, data } = action; // data is the array from onConditionalNavigateChange
+
+      const patchArray = (arr) => {
+        if (!Array.isArray(arr) || arr.length === 0) return arr;
+
+        // If pageName is provided, try to patch by name
+        if (pageName) {
+          const idx = arr.findIndex((p) => p?.name === pageName);
+          if (idx !== -1) {
+            return arr.map((p, i) => (i === idx ? { ...p, conditionalNavigateTo: data } : p));
+          }
+        }
+
+        // Fallback: patch the first page (your “current page is first” invariant)
+        return arr;
+      };
+
+      return {
+        ...state,
+        screenConfig: patchArray(state.screenConfig),
+        screenData: patchArray(state.screenData),
+      };
+    }
     default:
       return state;
   }
