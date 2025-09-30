@@ -15,6 +15,7 @@ import { initMicroplanComponents } from "@egovernments/digit-ui-module-microplan
 import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
 import { initPGRComponents } from "@egovernments/digit-ui-module-health-pgr";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
+import { initDSSComponents } from "@egovernments/digit-ui-module-health-dss";
 
 var Digit = window.Digit || {};
 
@@ -83,6 +84,7 @@ const initDigitUI = () => {
   initHRMSComponents();
   initPGRComponents();
   initPaymentComponents();
+  initDSSComponents();
 
   const moduleReducers = (initData) => initData;
 

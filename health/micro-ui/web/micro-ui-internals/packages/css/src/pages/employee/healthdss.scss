@@ -728,6 +728,9 @@
 
 .digit-dss-card-item-border {
   border-bottom: 0.063rem solid theme(digitv2.lightTheme.divider);
+  .digit-dss-insight-card {
+    margin-bottom: 2rem !important;
+  }
 }
 
 .digit-dss-insight-card {
@@ -956,6 +959,7 @@
   &.customTable{
     margin:0rem;
     margin-bottom: 1.5rem;
+    max-width: 90%;
   }
 }
 

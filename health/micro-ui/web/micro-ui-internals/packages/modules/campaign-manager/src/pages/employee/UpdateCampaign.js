@@ -1,7 +1,7 @@
 import { FormComposerV2 } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory, useParams, useLocation } from "react-router-dom";
 import { Toast, Stepper, Loader } from "@egovernments/digit-ui-components";
 import _ from "lodash";
 import { UpdateBoundaryConfig } from "../../configs/UpdateBoundaryConfig";
@@ -18,10 +18,11 @@ import { compareIdentical, groupByTypeRemap, resourceData, updateUrlParams } fro
  * triggers API calls to create or update the campaign
  */
 
-const UpdateCampaign = ({ hierarchyData }) => {
+const UpdateCampaign = ({ hierarchyData, ...props }) => {
   const resourceDatas = Digit.SessionStorage.get("HCM_ADMIN_CONSOLE_SET_UP");
   Digit.SessionStorage.set("HCM_ADMIN_CONSOLE_SET_UP", resourceDatas);
-
+  const location = useLocation();
+  // const isDraftCampaign = location.state?.isDraftCampaign;
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const history = useHistory();
@@ -39,6 +40,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
   const searchParams = new URLSearchParams(location.search);
   const id = searchParams.get("id");
+  const isDraftCampaign = searchParams.get("isDraftCampaign") === "true";
   const parentId = searchParams.get("parentId");
   const isPreview = searchParams.get("preview");
   const isSummary = searchParams.get("summary");
@@ -85,6 +87,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
       CampaignDetails: {
         tenantId: tenantId,
         ids: [parentId],
+        ...(isDraftCampaign && { status: ["drafted"] }),
       },
     },
     config: {
@@ -122,7 +125,8 @@ const UpdateCampaign = ({ hierarchyData }) => {
   const { isLoading: draftLoading, data: draftData, error: draftError, refetch: draftRefetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
-      ids: [id],
+      ids: id ? [id] : [parentId],
+      ...(isDraftCampaign && { status: ["drafted"] }),
     },
     config: {
       enabled: id ? true : false,
@@ -221,7 +225,13 @@ const UpdateCampaign = ({ hierarchyData }) => {
 
   useEffect(() => {
     setCampaignConfig(
-      UpdateBoundaryConfig({ totalFormData, hierarchyData, projectType: CampaignData?.CampaignDetails?.[0]?.projectType, summaryErrors, CampaignData: CampaignData })
+      UpdateBoundaryConfig({
+        totalFormData,
+        hierarchyData,
+        projectType: CampaignData?.CampaignDetails?.[0]?.projectType,
+        summaryErrors,
+        CampaignData: CampaignData,
+      })
     );
   }, [totalFormData, dataParams, isSubmitting, summaryErrors, hierarchyData, CampaignData?.CampaignDetails?.[0]?.projectType]);
 
@@ -255,17 +265,19 @@ const UpdateCampaign = ({ hierarchyData }) => {
           payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
           payloadData.tenantId = tenantId;
           payloadData.action = "create";
-          payloadData.parentId = parentId;
+          payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.parentId;
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
+            const temp = restructureBoundaryData(
+              totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+              CampaignData?.CampaignDetails?.[0]?.boundaries
+            );
             payloadData.boundaries = temp;
           }
           const temp = resourceData(
-            resourceDatas?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0],
             totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
-            resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0],
-
+            totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
 
           payloadData.resources = temp;
@@ -288,9 +300,6 @@ const UpdateCampaign = ({ hierarchyData }) => {
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           if (compareIdentical(draftData, payloadData) === false) {
             setIsDataCreating(true);
-
-
-
             await updateCampaign(payloadData, {
               onError: (error, variables) => {
                 setShowToast({ key: "error", label: error?.message ? error?.message : error });
@@ -319,7 +328,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
         };
 
         reqCreate();
-      } else if (!isDraftCreated && !id) {
+      } else if (!isDraftCampaign && !isDraftCreated && !id) {
         const reqCreate = async () => {
           let payloadData = {};
           payloadData.hierarchyType = hierarchyType;
@@ -327,10 +336,13 @@ const UpdateCampaign = ({ hierarchyData }) => {
           payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
-          payloadData.parentId = parentId;
+          payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.id;
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
+            const temp = restructureBoundaryData(
+              totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+              CampaignData?.CampaignDetails?.[0]?.boundaries
+            );
             payloadData.boundaries = temp;
           }
           const temp = resourceData(
@@ -338,8 +350,6 @@ const UpdateCampaign = ({ hierarchyData }) => {
             resourceDatas?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0],
             resourceDatas?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]
           );
-
-
 
           payloadData.resources = temp;
           payloadData.projectType = CampaignData?.CampaignDetails?.[0]?.projectType;
@@ -360,8 +370,6 @@ const UpdateCampaign = ({ hierarchyData }) => {
           }
           payloadData.deliveryRules = CampaignData?.CampaignDetails?.[0]?.deliveryRules;
           setIsDataCreating(true);
-
-
 
           await mutate(payloadData, {
             onError: (error, variables) => {
@@ -388,16 +396,19 @@ const UpdateCampaign = ({ hierarchyData }) => {
         reqCreate();
       } else {
         const reqCreate = async () => {
-          let payloadData = { ...draftData };
+          let payloadData = { ...CampaignData?.CampaignDetails?.[0] };
           payloadData.hierarchyType = hierarchyType;
           payloadData.endDate = CampaignData?.CampaignDetails?.[0]?.endDate;
           payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
-          payloadData.parentId = parentId;
+          payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.parentId;
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
-            const temp = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
+            const temp = restructureBoundaryData(
+              totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+              CampaignData?.CampaignDetails?.[0]?.boundaries
+            );
             payloadData.boundaries = temp;
           }
           const temp = resourceData(
@@ -581,48 +592,51 @@ const UpdateCampaign = ({ hierarchyData }) => {
           return true;
         }
       case "summary":
-        const updateBoundary = restructureBoundaryData(totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData, CampaignData?.CampaignDetails?.[0]?.boundaries);
+        const updateBoundary = restructureBoundaryData(
+          totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
+          CampaignData?.CampaignDetails?.[0]?.boundaries
+        );
         const isTargetError = totalFormData?.HCM_CAMPAIGN_UPLOAD_BOUNDARY_DATA?.uploadBoundary?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              target: [
-                {
-                  name: `target`,
-                  error: t(`TARGET_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+              return {
+                ...prev,
+                target: [
+                  {
+                    name: `target`,
+                    error: t(`TARGET_FILE_MISSING`),
+                  },
+                ],
+              };
+            }),
             true);
         const isFacilityError = totalFormData?.HCM_CAMPAIGN_UPLOAD_FACILITY_DATA?.uploadFacility?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              facility: [
-                {
-                  name: `facility`,
-                  error: t(`FACILITY_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+              return {
+                ...prev,
+                facility: [
+                  {
+                    name: `facility`,
+                    error: t(`FACILITY_FILE_MISSING`),
+                  },
+                ],
+              };
+            }),
             true);
         const isUserError = totalFormData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile?.[0]?.filestoreId
           ? false
           : (setSummaryErrors((prev) => {
-            return {
-              ...prev,
-              user: [
-                {
-                  name: `user`,
-                  error: t(`USER_FILE_MISSING`),
-                },
-              ],
-            };
-          }),
+              return {
+                ...prev,
+                user: [
+                  {
+                    name: `user`,
+                    error: t(`USER_FILE_MISSING`),
+                  },
+                ],
+              };
+            }),
             true);
         if (isTargetError && isFacilityError && isUserError) {
           setShowToast({ key: "error", label: "AT_LEAST_ONE_FILE_REQUIRED_ERROR" });
@@ -653,11 +667,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
     }
   }, [showToast]);
 
-
   const onSubmit = (formData, cc) => {
-
-
-
     setIsSubmitting(true);
     const checkValid = handleValidate(formData);
     if (checkValid === false) {
@@ -814,8 +824,7 @@ const UpdateCampaign = ({ hierarchyData }) => {
     if (currentKey > 1) {
       setShouldUpdate(false);
       setCurrentKey(currentKey - 1);
-    }
-    else {
+    } else {
       history.push(`/${window.contextPath}/employee/campaign/view-details?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     }
   };

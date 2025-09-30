@@ -25,7 +25,6 @@ import { ErrorBoundary } from "@egovernments/digit-ui-components";
 import CampaignResourceDocuments from "./components/CampaignResourceDocuments";
 import ConfigureApp from "./pages/employee/ConfigureApp";
 import TimelineComponent from "./components/TimelineComponent";
-import { DSSCard } from "./components/DSSCard";
 import UpdateDatesWithBoundaries from "./pages/employee/UpdateDatesWithBoundaries";
 import DateWithBoundary from "./components/DateWithBoundary";
 import BoundaryWithDate from "./components/BoundaryWithDate";
@@ -151,7 +150,6 @@ const componentsToRegister = {
   CycleDataPreview,
   CampaignResourceDocuments,
   ConfigureApp,
-  DSSCard,
   UpdateDatesWithBoundaries,
   DateWithBoundary,
   BoundaryWithDate,
