@@ -13,70 +13,10 @@ import {
   handleShowAddFieldPopup,
 } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
-
-// Wrapper component to handle useCustomT calls outside of loops
-const LocalizedHeaderField = React.memo(({ type, label, active, value, formId, currentCard, onChange }) => {
-  const localizedValue = useCustomT(value ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`);
-
-  return <NewAppFieldComposer type={type} label={label} active={active} value={localizedValue} headerFields={true} onChange={onChange} />;
-});
-
-// Wrapper component for draggable fields with localization
-const LocalizedDraggableField = React.memo(
-  ({
-    type,
-    label,
-    active,
-    required,
-    Mandatory,
-    helpText,
-    infoText,
-    innerLabel,
-    dropDownOptions,
-    deleteFlag,
-    rest,
-    i,
-    c,
-    index,
-    handleDeleteField,
-    handleHideField,
-    handleSelectField,
-    currentCard,
-    card,
-    moveField,
-  }) => {
-    const localizedLabel = useCustomT(label);
-    const localizedHelpText = useCustomT(helpText);
-    const localizedInfoText = useCustomT(infoText);
-    const localizedInnerLabel = useCustomT(innerLabel);
-
-    return (
-      <NewDraggableField
-        type={type}
-        label={localizedLabel}
-        active={active}
-        required={required}
-        isDelete={deleteFlag === false ? false : true}
-        dropDownOptions={dropDownOptions}
-        onDelete={() => handleDeleteField(i, index)}
-        onHide={() => handleHideField(i, index)}
-        onSelectField={() => handleSelectField(c[i], currentCard, card[index])}
-        config={c[i]}
-        Mandatory={Mandatory}
-        helpText={localizedHelpText}
-        infoText={localizedInfoText}
-        innerLabel={localizedInnerLabel}
-        rest={rest}
-        index={i}
-        fieldIndex={i}
-        cardIndex={card[index]}
-        indexOfCard={index}
-        moveField={moveField}
-        fields={c}
-      />
-    );
-  }
-);
+import NewDraggableField from "./NewDraggableField";
+import ConsoleTooltip from "../../../components/ConsoleToolTip";
+import { updateLocalizationEntry } from "./redux/localizationSlice";
+import HeaderFieldWrapper from "./HeaderFieldWrapper";
 
 // Wrapper for action label
 const LocalizedActionLabel = React.memo(({ currentCard, onChange }) => {
@@ -84,10 +24,6 @@ const LocalizedActionLabel = React.memo(({ currentCard, onChange }) => {
 
   return <TextInput name="actionLabel" value={localizedValue} onChange={onChange} />;
 });
-import NewAppFieldComposer from "./NewAppFieldComposer";
-import NewDraggableField from "./NewDraggableField";
-import ConsoleTooltip from "../../../components/ConsoleToolTip";
-import { updateLocalizationEntry } from "./redux/localizationSlice";
 
 function NewAppFieldScreenWrapper() {
   const { t } = useTranslation();
@@ -163,8 +99,8 @@ function NewAppFieldScreenWrapper() {
       </div>
     );
   }
+  console.log("currentCard", currentCard);
 
-  console.log("currentCardcurrentCardcurrentCard", currentCard);
   return (
     <React.Fragment>
       <div className="app-config-drawer-subheader">
@@ -174,39 +110,32 @@ function NewAppFieldScreenWrapper() {
       <Divider />
       {currentCard?.headerFields?.map(({ label, type, value }, index, field) => {
         return (
-          <Fragment key={`card-${index}`}>
-            <LocalizedHeaderField
-              key={`header-field-${index}`}
-              type={type}
-              label={label}
-              active={true}
-              // required={required}
-              value={value}
-              formId={formId}
-              projectType={projectType}
-              currentCard={currentCard}
-              onChange={(event) => {
-                if (value) {
-                  dispatch(
-                    updateLocalizationEntry({
-                      code: value,
-                      locale: currentLocale || "en_IN",
-                      message: event.target.value,
-                    })
-                  );
-                } else {
-                  dispatch(
-                    updateLocalizationEntry({
-                      code: "SKJSKSJSKJSKJsksk",
-                      locale: currentLocale || "en_IN",
-                      message: event.target.value,
-                    })
-                  );
-                }
-                handleUpdateHeaderField(label, index);
-              }}
-            />
-          </Fragment>
+          <HeaderFieldWrapper
+            label={label}
+            type={type}
+            value={value}
+            currentCard={currentCard}
+            onChange={(event) => {
+              if (value) {
+                dispatch(
+                  updateLocalizationEntry({
+                    code: value,
+                    locale: currentLocale || "en_IN",
+                    message: event.target.value,
+                  })
+                );
+              } else {
+                dispatch(
+                  updateLocalizationEntry({
+                    code: `${currentCard?.flow}_${currentCard?.parent}_${currentCard?.name}_${label}`,
+                    locale: currentLocale || "en_IN",
+                    message: event.target.value,
+                  })
+                );
+              }
+              handleUpdateHeaderField(label, index);
+            }}
+          />
         );
       })}
       <Divider />
@@ -214,46 +143,33 @@ function NewAppFieldScreenWrapper() {
         <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
-      {currentCard?.cards?.map(({ fields, headerFields }, index, card) => {
+      {currentCard?.cards?.map(({ fields }, index, card) => {
         return (
           <Fragment key={`card-${index}`}>
-            <div className="app-config-drawer-subheader">
-              <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
-              <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
-            </div>
-            {fields?.map(
-              (
-                { type, label, active, required, Mandatory, helpText, infoText, innerLabel, dropDownOptions, deleteFlag, ...rest },
-                i,
-                c
-              ) => {
-                return (
-                  <LocalizedDraggableField
-                    key={`field-${i}`}
-                    type={type}
-                    label={label}
-                    active={active}
-                    required={required}
-                    Mandatory={Mandatory}
-                    helpText={helpText}
-                    infoText={infoText}
-                    innerLabel={innerLabel}
-                    dropDownOptions={dropDownOptions}
-                    deleteFlag={deleteFlag}
-                    rest={rest}
-                    i={i}
-                    c={c}
-                    index={index}
-                    handleDeleteField={handleDeleteField}
-                    handleHideField={handleHideField}
-                    handleSelectField={handleSelectField}
-                    currentCard={currentCard}
-                    card={card}
-                    moveField={moveField}
-                  />
-                );
-              }
-            )}
+            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, ...rest }, i, c) => {
+              return (
+                <NewDraggableField
+                  type={type}
+                  label={label}
+                  active={active}
+                  required={required}
+                  isDelete={deleteFlag === false ? false : true}
+                  onDelete={() => handleDeleteField(i, index)}
+                  onHide={() => handleHideField(i, index)}
+                  onSelectField={() => handleSelectField(c[i], currentCard, card[index])}
+                  config={c[i]}
+                  Mandatory={Mandatory}
+                  rest={rest}
+                  index={i}
+                  fieldIndex={i}
+                  cardIndex={index}
+                  indexOfCard={index}
+                  moveField={moveField}
+                  key={`field-${i}`}
+                  fields={c}
+                />
+              );
+            })}
             <Button
               className={"app-config-drawer-button"}
               type={"button"}
@@ -277,42 +193,68 @@ function NewAppFieldScreenWrapper() {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-      {currentCard?.type !== "template" && (
-        <>
-          <div className="app-config-drawer-subheader">
-            <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
-            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+      <div className="app-config-drawer-subheader">
+        <div>{t("APPCONFIG_SUBHEAD_BUTTONS")}</div>
+        <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_BUTTONS")} />
+      </div>
+      {currentCard?.footer &&
+        currentCard?.footer.length > 0 &&
+        currentCard?.footer?.map(({ label }, index) => {
+          const localizedLabel = useCustomT(label);
+          return (
+            <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
+              <div className="">
+                <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
+              </div>
+              <TextInput
+                name={`footerLabel-${index}`}
+                value={localizedLabel}
+                onChange={(event) => {
+                  if (label) {
+                    dispatch(
+                      updateLocalizationEntry({
+                        code: label,
+                        locale: currentLocale || "en_IN",
+                        message: event.target.value,
+                      })
+                    );
+                  }
+                }}
+              />
+            </LabelFieldPair>
+          );
+        })}
+      {/* REVAMP FOR FOOTER NEEDED */}
+      {/* {currentCard?.type !== "template" && (
+        <LabelFieldPair className="app-preview-app-config-drawer-action-button">
+          <div className="">
+            <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
           </div>
-          <LabelFieldPair className="app-preview-app-config-drawer-action-button">
-            <div className="">
-              <span>{`${t("APP_CONFIG_ACTION_BUTTON_LABEL")}`}</span>
-            </div>
-            <LocalizedActionLabel
-              currentCard={currentCard}
-              onChange={(event) => {
-                if (currentCard?.actionLabel) {
-                  dispatch(
-                    updateLocalizationEntry({
-                      code: currentCard?.actionLabel,
-                      locale: currentLocale || "en_IN",
-                      message: event.target.value,
-                    })
-                  );
-                } else {
-                  dispatch(
-                    updateLocalizationEntry({
-                      code: "SKJSKSJSKJSKJ",
-                      locale: currentLocale || "en_IN",
-                      message: event.target.value,
-                    })
-                  );
-                }
-                handleUpdateActionLabel(currentCard?.actionLabel);
-              }}
-            />
-          </LabelFieldPair>
-        </>
-      )}
+          <LocalizedActionLabel
+            currentCard={currentCard}
+            onChange={(event) => {
+              if (currentCard?.actionLabel) {
+                dispatch(
+                  updateLocalizationEntry({
+                    code: currentCard?.actionLabel,
+                    locale: currentLocale || "en_IN",
+                    message: event.target.value,
+                  })
+                );
+              } else {
+                dispatch(
+                  updateLocalizationEntry({
+                    code: "SKJSKSJSKJSKJ",
+                    locale: currentLocale || "en_IN",
+                    message: event.target.value,
+                  })
+                );
+              }
+              handleUpdateActionLabel(currentCard?.actionLabel);
+            }}
+          />
+        </LabelFieldPair>
+      )} */}
     </React.Fragment>
   );
 }

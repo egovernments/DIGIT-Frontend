@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import NewAppFieldComposer from "./NewAppFieldComposer";
+import PanelFieldDisplay from "./PanelFieldDisplay";
 import { useDrag, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-
+import { useCustomT } from "./hooks/useCustomT";
 const FIELD_TYPE = "FIELD";
 
 function NewDraggableField({
@@ -16,25 +16,19 @@ function NewDraggableField({
   onSelectField,
   config,
   Mandatory,
-  helpText,
-  infoText,
-  innerLabel,
   rest,
-  index,
   fieldIndex,
   cardIndex,
   moveField,
   onHide,
-  fields,
-  indexOfCard,
 }) {
   const ref = useRef(null);
-
+  const localizedLabel = useCustomT(label);
   const [, drop] = useDrop({
     accept: FIELD_TYPE,
     hover: (draggedItem) => {
       if (draggedItem.index !== fieldIndex) {
-        moveField(fields, config, draggedItem.index, fieldIndex, cardIndex, indexOfCard);
+        moveField(draggedItem.index, fieldIndex, cardIndex);
         draggedItem.index = fieldIndex;
       }
     },
@@ -42,7 +36,7 @@ function NewDraggableField({
 
   const [{ isDragging }, drag] = useDrag({
     type: FIELD_TYPE,
-    item: { index },
+    item: { index: fieldIndex },
     collect: (monitor) => ({ isDragging: monitor.isDragging() }),
   });
 
@@ -50,7 +44,6 @@ function NewDraggableField({
 
   return (
     <div className="draggableField-cont" ref={ref} style={{ opacity: isDragging ? 0.5 : 1, display: "flex", alignItems: "center" }}>
-      {/* Drag handle visual indicator */}
       <div className="drag-handle">
         <span></span>
         <span></span>
@@ -61,10 +54,9 @@ function NewDraggableField({
         <span></span>
         <span></span>
       </div>
-
-      <NewAppFieldComposer
+      <PanelFieldDisplay
         type={type}
-        label={label}
+        label={localizedLabel}
         active={active}
         required={required}
         isDelete={isDelete}
@@ -74,9 +66,6 @@ function NewDraggableField({
         onHide={() => onHide()}
         config={config}
         Mandatory={Mandatory}
-        helpText={helpText}
-        infoText={infoText}
-        innerLabel={innerLabel}
         rest={rest}
       />
     </div>

@@ -153,47 +153,37 @@
           "validations": [],
           "errorMessage": "",
           "isMultiSelect": false
-        },
-        {
-          "type": "string",
-          "enums": [
-            {
-              "code": "PERMANENT",
-              "name": "PERMANENT"
-            },
-            {
-              "code": "CORRESPONDENCE",
-              "name": "CORRESPONDENCE"
-            },
-            {
-              "code": "OTHER",
-              "name": "OTHER"
-            }
-          ],
-          "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_label_typeOfAddress",
-          "order": 7,
-          "value": "PERMANENT",
-          "format": "dropdown",
-          "hidden": false,
-          "tooltip": "",
-          "helpText": "",
-          "infoText": "",
-          "active": true,
-          "readOnly": false,
-          "fieldName": "typeOfAddress",
-          "deleteFlag": false,
-          "innerLabel": "",
-          "systemDate": false,
-          "validations": [],
-          "errorMessage": "",
-          "includeInForm": true,
-          "isMultiSelect": false,
-          "includeInSummary": false
         }
       ]
     }
   ],
-  "footer": [],
+  "footer": [
+    {
+      "format": "button",
+      "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_ACTION_BUTTON_LABEL_1",
+      "properties": {
+        "type": "primary",
+        "size": "large",
+        "mainAxisSize": "max",
+        "mainAxisAlignment": "center"
+      },
+      "onAction": [
+        {
+          "actionType": "NAVIGATION",
+          "properties": {
+            "type": "FORM",
+            "name": "HOUSEHOLD",
+            "data": [
+              {
+                "key": "nameOfIndividual",
+                "value": "searchBar.value"
+              }
+            ]
+          }
+        }
+      ]
+    }
+  ],
   "order": 2,
   "page": "beneficiaryLocation",
   "label": "APPONE_REGISTRATION_BENEFICIARY_LOCATION_SCREEN_HEADING",

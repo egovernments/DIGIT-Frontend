@@ -143,7 +143,12 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
     switch (panelItem.fieldType) {
       case "toggle":
         return (
-          <Switch label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)} onToggle={handleFieldChange} isCheckedInitially={getFieldValue()} shapeOnOff />
+          <Switch
+            label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
+            onToggle={handleFieldChange}
+            isCheckedInitially={getFieldValue()}
+            shapeOnOff
+          />
         );
 
       case "text":
@@ -177,7 +182,6 @@ const RenderField = ({ panelItem, selectedField, onFieldChange, fieldType }) => 
   };
 
   const renderConditionalField = (cField) => {
-    console.log("CHECK D", cField);
     switch (cField.type) {
       case "text":
         return (
@@ -302,7 +306,13 @@ function NewDrawerFieldComposer() {
       <Tabs tabs={tabs} activeTab={activeTab} onTabChange={setActiveTab} />
 
       {/* Tab Description */}
-      <TextBlock body="" caption={t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)} header="" captionClassName="camp-drawer-caption" subHeader="" />
+      <TextBlock
+        body=""
+        caption={t(`CMP_DRAWER_WHAT_IS_${activeTab.toUpperCase()}`)}
+        header=""
+        captionClassName="camp-drawer-caption"
+        subHeader=""
+      />
 
       {/* Hidden Field Warning */}
       {selectedField?.hidden && (
