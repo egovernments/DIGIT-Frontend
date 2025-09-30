@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import dummyConfig from "../dummyConfig.json";
+import dummyConfig from "../configs/dummyConfig.json";
 
 // Slice for storing app config data
 const remoteConfigSlice = createSlice({

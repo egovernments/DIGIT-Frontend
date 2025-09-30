@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import dummyFieldTypeConfig from "../dummyFieldTypeConfig.json";
+import dummyFieldTypeConfig from "../configs/dummyFieldTypeConfig.json";
 
 // Async thunk with status/error tracking
 export const getFieldMaster = createAsyncThunk(
