@@ -115,6 +115,34 @@ const AddAttributeField = React.memo(({
     return filtered;
   }, [selectedAttribute, operatorConfig]);
 
+  const selectedDropdownValue = useMemo(() => {
+  if (!attribute?.value) return null;
+  
+  // If value is already an object with code, use it
+  if (typeof attribute.value === 'object' && attribute.value.code) {
+    return attribute.value;
+  }
+  
+  // If value is a string, find the matching option
+  if (typeof attribute.value === 'string' && dropdownOptions.length > 0) {
+    // Try to find by code first
+    const matchedOption = dropdownOptions.find(opt => opt.code === attribute.value);
+    if (matchedOption) {
+      return matchedOption;
+    }
+    
+    // If no exact code match, try case-insensitive match
+    const caseInsensitiveMatch = dropdownOptions.find(
+      opt => opt.code?.toLowerCase() === attribute.value.toLowerCase()
+    );
+    if (caseInsensitiveMatch) {
+      return caseInsensitiveMatch;
+    }
+  }
+  
+  return null;
+}, [attribute?.value, dropdownOptions]);
+
   // Fetch dropdown options when attribute changes
   React.useEffect(() => {
     if (selectedAttribute?.valuesSchema) {
@@ -228,7 +256,7 @@ const AddAttributeField = React.memo(({
               ) : (
                 <Dropdown
                   className="form-field"
-                  selected={attribute?.value?.code ? attribute.value : { code: attribute?.value }}
+                  selected={selectedDropdownValue}
                   disable={false}
                   isMandatory
                   option={dropdownOptions}
