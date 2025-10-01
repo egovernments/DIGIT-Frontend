@@ -23,7 +23,7 @@ import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import NavigationLogicWrapper from "./NavigationLogicWrapper";
 
-function AppFieldScreenWrapper() {
+function AppFieldScreenWrapper({ parentState }) {
   const { state, dispatch, openAddFieldPopup } = useAppConfigContext();
   const { locState, updateLocalization } = useAppLocalisationContext();
   const searchParams = new URLSearchParams(location.search);

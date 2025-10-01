@@ -311,7 +311,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag , parentState}) {
     const useT = useCustomT();
     const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
@@ -662,7 +662,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
-              <AppFieldScreenWrapper />
+              <AppFieldScreenWrapper parentState={parentState}/>
             </DndProvider>
           )}
         </SidePanel>

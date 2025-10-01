@@ -477,6 +477,7 @@ const AppConfigurationParentRedesign = ({
               back={back}
               showBack={true}
               parentDispatch={parentDispatch}
+              parentState={parentState}
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
               pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
