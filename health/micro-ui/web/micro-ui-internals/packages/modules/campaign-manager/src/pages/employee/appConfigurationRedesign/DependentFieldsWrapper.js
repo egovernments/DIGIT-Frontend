@@ -116,10 +116,10 @@ function DependentFieldsWrapper({
 
     // page helpers
     const parsePageOrder = (p) => {
-        const raw = p?.order ?? p?.pageOrder;
+        const raw = p?.order || p?.pageOrder;
         const n = Number(raw);
         if (!Number.isNaN(n)) return n;
-        const match = String(p?.name ?? "").match(/^(\d+(?:\.\d+)?)/);
+        const match = String(p?.name || "").match(/^(\d+(?:\.\d+)?)/);
         return match ? Number(match[1]) : NaN;
     };
     const currPageObj = (parentState?.currentTemplate || []).find(
@@ -234,7 +234,7 @@ function DependentFieldsWrapper({
 
     // inputs
     const sanitizeIntegerInput = (raw) => {
-        const s = String(raw ?? "");
+        const s = String(raw || "");
         if (s === "" || s === "+" || s === "-") return s;
         if (/^[+-]?\d+$/.test(s)) return s;
         const sign = s[0] === "+" || s[0] === "-" ? s[0] : "";
@@ -272,17 +272,17 @@ function DependentFieldsWrapper({
         const { field } = getFieldMeta(r.selectedPage.code, r.selectedField.code);
 
         if (field && isDobLike(field)) {
-            const months = String(r?.fieldValue ?? "").trim();
+            const months = String(r?.fieldValue || "").trim();
             if (months === "") return "";
             const left = `calculateAgeInMonths(${r.selectedPage.code}.${r.selectedField.code})`;
             return `${left}${r.comparisonType.code}${months}`;
         }
         if (field && isDatePickerNotDob(field)) {
-            const ddmmyyyy = String(r?.fieldValue ?? "").trim();
+            const ddmmyyyy = String(r?.fieldValue || "").trim();
             if (ddmmyyyy === "") return "";
             return `${r.selectedPage.code}.${r.selectedField.code}${r.comparisonType.code}${ddmmyyyy}`;
         }
-        if (String(r?.fieldValue ?? "").trim() === "") return "";
+        if (String(r?.fieldValue || "").trim() === "") return "";
         return `${r.selectedPage.code}.${r.selectedField.code}${r.comparisonType.code}${r.fieldValue}`;
     };
 
@@ -402,7 +402,7 @@ function DependentFieldsWrapper({
         Boolean(r?.selectedPage?.code) &&
         Boolean(r?.selectedField?.code) &&
         Boolean(r?.comparisonType?.code) &&
-        String(r?.fieldValue ?? "").trim() !== "";
+        String(r?.fieldValue || "").trim() !== "";
 
     // ---------- actions ----------
     const openEditorForNew = () => {

@@ -178,6 +178,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        prefixText: field?.prefixText || "",
+        suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
       }));
 
@@ -282,6 +284,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        prefixText: field?.prefixText || "",
+        suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
       };
     });

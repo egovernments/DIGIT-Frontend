@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, Fragment } from "react";
 import {
     Dropdown,
     Card,
@@ -184,7 +184,7 @@ function NavigationLogicWrapper({
     };
 
     const sanitizeIntegerInput = (raw) => {
-        const s = String(raw ?? "");
+        const s = String(raw || "");
         if (s === "" || s === "+" || s === "-") return s;
         if (/^[+-]?\d+$/.test(s)) return s;
         const sign = s[0] === "+" || s[0] === "-" ? s[0] : "";
@@ -277,14 +277,14 @@ function NavigationLogicWrapper({
         if (!c?.selectedField?.code || !c?.comparisonType?.code) return "";
 
         if (field && isDobLike(field)) {
-            const months = String(c?.fieldValue ?? "").trim();
+            const months = String(c?.fieldValue || "").trim();
             if (months === "") return "";
             const left = `calculateAgeInMonths(${currentPage}.${c.selectedField.code})`;
             return `${left}${c.comparisonType.code}${months}`;
         }
 
         if (field && isDatePickerNotDob(field)) {
-            const ddmmyyyy = String(c?.fieldValue ?? "").trim();
+            const ddmmyyyy = String(c?.fieldValue || "").trim();
             if (ddmmyyyy === "") return "";
             return `${currentPage}.${c.selectedField.code}${c.comparisonType.code}${ddmmyyyy}`;
         }
@@ -500,7 +500,7 @@ function NavigationLogicWrapper({
     const isCondComplete = (c) =>
         Boolean(c?.selectedField?.code) &&
         Boolean(c?.comparisonType?.code) &&
-        String(c?.fieldValue ?? "").trim() !== "";
+        String(c?.fieldValue || "").trim() !== "";
 
     const isRuleComplete = (r) =>
         r?.conds?.every(isCondComplete) &&
