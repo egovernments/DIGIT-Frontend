@@ -12,7 +12,7 @@ const ViewDashboard = ({ stateCode }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const project = location?.state?.project;
   const boundaryCodeResponse = location?.state?.boundaryCodeResponse;
-  const campaignId = project?.referenceID;
+  const campaignNumber = project?.referenceID;
   const [redirected, setRedirected] = useState(false);
   const queryStrings = Digit.Hooks.useQueryParams();
   const [loaderText, setLoaderText] = useState(t("LOADING"));
@@ -21,11 +21,11 @@ const ViewDashboard = ({ stateCode }) => {
   const { isLoading: campaignSearchLoading, data: campaignData, error: campaignError, refetch: refetch } = Digit.Hooks.campaign.useSearchCampaign({
     tenantId: tenantId,
     filter: {
-      campaignNumber: campaignId,
+      campaignNumber: campaignNumber,
       isActive: true,
     },
     config: { 
-      enabled: campaignId ? true : false,
+      enabled: campaignNumber ? true : false,
       select: (data) => {
         return data;
       },
@@ -193,7 +193,7 @@ const ViewDashboard = ({ stateCode }) => {
     if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
       history.push(
-        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignId=${campaignId}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
+        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignNumber=${campaignNumber}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
         {
           dashboardData: dashboardDataResponse?.responseData,
           projectTypeId: project?.projectTypeId,
