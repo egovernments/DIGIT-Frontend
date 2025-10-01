@@ -178,6 +178,8 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        prefixText: field?.prefixText || "",
+        suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
       }));
 
@@ -222,6 +224,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         allowCommentsAdditionAt: ["body"],
       },
       navigateTo: page?.navigateTo || {},
+       conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
   });
@@ -263,7 +266,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       return {
         ...typeAndFormat,
         label: field?.label || "",
-        order: fieldIndex + 1,
+        order: field?.order,
         value: field?.value || "",
         // required: field.Mandatory || false,
         hidden: field?.hidden || false,
@@ -281,6 +284,8 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
+        prefixText: field?.prefixText || "",
+        suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
       };
     });
@@ -291,9 +296,10 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
-      order: index + 1,
+      order: section.order,
       properties,
       navigateTo: section?.navigateTo || {},
+       conditionalNavigateTo: section?.conditionalNavigateTo,
     };
   });
 };
