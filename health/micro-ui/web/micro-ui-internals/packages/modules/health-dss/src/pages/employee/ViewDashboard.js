@@ -193,7 +193,7 @@ const ViewDashboard = ({ stateCode }) => {
     if (dashboardDataResponse?.responseData && !redirected) {
       setRedirected(true);
       history.push(
-        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignId=${campaignData?.[0]?.id}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
+        `/${window?.contextPath}/employee/dss/${selectedDashboard?.level === "level-one" ? "level-one" : "level-two"}/${dashboardId}?campaignId=${campaignId}&boundaryType=${queryStrings?.boundaryType}&boundaryValue=${queryStrings?.boundaryValue}`,
         {
           dashboardData: dashboardDataResponse?.responseData,
           projectTypeId: project?.projectTypeId,
