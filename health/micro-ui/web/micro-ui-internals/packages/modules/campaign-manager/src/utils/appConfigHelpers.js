@@ -266,7 +266,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       return {
         ...typeAndFormat,
         label: field?.label || "",
-        order: fieldIndex + 1,
+        order: field?.order,
         value: field?.value || "",
         // required: field.Mandatory || false,
         hidden: field?.hidden || false,
@@ -296,7 +296,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
-      order: index + 1,
+      order: section.order,
       properties,
       navigateTo: section?.navigateTo || {},
        conditionalNavigateTo: section?.conditionalNavigateTo,
