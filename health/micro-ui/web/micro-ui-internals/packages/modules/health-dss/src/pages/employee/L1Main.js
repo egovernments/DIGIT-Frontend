@@ -76,7 +76,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { id, chartType } = data;
   const { startDate, endDate, interval } = getInitialRange();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const requestDate = {
     startDate: startDate.getTime(),
     endDate: endDate.getTime(),
@@ -88,7 +88,7 @@ const Chart = ({ data, moduleLevel, overview = false }) => {
       visualizationType: chartType,
       queryType: "",
       requestDate: requestDate,
-      filters: {campaignId:campaignId},
+      filters: {campaignNumber:campaignNumber},
       moduleLevel:moduleLevel,
       aggregationFactors: null,
     };
@@ -147,7 +147,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
 
   filters = { ...filters };
   const { startDate, endDate, interval } = getInitialRange();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -161,7 +161,7 @@ const HorBarChart = ({ data, setselectState = "" }) => {
       visualizationType: chartType,
       queryType: "",
       requestDate:requestDate,
-      filters:{...filters,campaignId:campaignId},
+      filters:{...filters,campaignNumber:campaignNumber},
       aggregationFactors: null,
     };
     const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
@@ -257,7 +257,7 @@ const L1Main = () => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const language = Digit.StoreData.getCurrentLanguage();
   // const projectTypeId = location.state?.projectTypeId;
-  const campaignId = location.state?.campaignId;
+  const campaignNumber = location.state?.campaignNumber;
   const dashboardLink = location.state?.dashboardLink;
   const dashboardId = dashboardLink?.dashboardId;
   const stateCode = Digit?.ULBService?.getStateId();

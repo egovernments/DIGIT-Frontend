@@ -36,7 +36,7 @@ const Chart = ({ data }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
   const aggregationRequestDto = {
@@ -44,7 +44,7 @@ const Chart = ({ data }) => {
     visualizationType: chartType,
     queryType: "",
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: { ...value?.filters, campaignId: campaignId },
+    filters: { ...value?.filters, campaignNumber: campaignNumber },
     aggregationFactors: null,
   };
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);

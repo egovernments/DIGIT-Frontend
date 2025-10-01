@@ -63,16 +63,16 @@ const renderText = (value, t) => {
 export const UICustomizations = {
   IframeInterfaceConfig: {
     addAdditionalFilters: (url, filters) => {
-      const { boundaryType, campaignId } = filters || {};
+      const { boundaryType, campaignNumber } = filters || {};
       const boundaryValue = filters?.[boundaryType];
       let filter = "";
-      if (boundaryType && boundaryValue && campaignId) {
-        filter = `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}'))),(query:(match_phrase:(Data.campaignId.keyword:'${campaignId}')))`;
+      if (boundaryType && boundaryValue && campaignNumber) {
+        filter = `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}'))),(query:(match_phrase:(Data.campaignNumber.keyword:'${campaignNumber}')))`;
       } else {
         filter = boundaryType && boundaryValue
           ? `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}')))`
-          : campaignId
-          ? `(query:(match_phrase:(Data.campaignId.keyword:'${campaignId}')))`
+          : campaignNumber
+          ? `(query:(match_phrase:(Data.campaignNumber.keyword:'${campaignNumber}')))`
           : null;
       }
       // Extract existing _g values for refreshInterval and time

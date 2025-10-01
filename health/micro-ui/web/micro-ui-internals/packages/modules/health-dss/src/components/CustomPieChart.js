@@ -28,7 +28,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
   const [drillDownId, setdrillDownId] = useState(null);
   const [activeIndex, setActiveIndex] = useState(null);
   const { startDate, endDate, interval } = getInitialRange();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -51,7 +51,7 @@ const CustomPieChart = ({ dataKey = "value", data, setChartDenomination, isNatio
             endDate: value?.range?.endDate?.getTime(),
           }
         : requestDate,
-    filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected, campaignId: campaignId } : { ...value?.filters, campaignId: campaignId },
+    filters: isPieClicked ? { ...value?.filters, selectedType: pieSelected, campaignNumber: campaignNumber } : { ...value?.filters, campaignNumber: campaignNumber },
     moduleLevel: value?.moduleLevel,
     aggregationFactors: null,
   };
