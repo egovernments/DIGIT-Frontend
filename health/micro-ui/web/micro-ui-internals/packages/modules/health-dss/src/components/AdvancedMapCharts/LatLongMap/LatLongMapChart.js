@@ -55,7 +55,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
 
   useEffect(() => {
     setChartKey(chartId);
@@ -108,7 +108,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       visualizationType: chartType,
       queryType: "",
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: { ...value?.filters, campaignId: campaignId },
+      filters: { ...value?.filters, campaignNumber: campaignNumber },
       aggregationFactors: null,
     };
     const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
@@ -139,7 +139,7 @@ const LatLongMapChart = ({ data, chartName, pageZoom }) => {
       visualizationType: "table",
       queryType: "",
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-      filters: {...filterStack?.value?.filters, ...filterFeature,campaignId:campaignId
+      filters: {...filterStack?.value?.filters, ...filterFeature,campaignNumber:campaignNumber
       },
       aggregationFactors: null,
     };

@@ -70,7 +70,7 @@ const CustomHorizontalBarChart = ({
   const [drillDownFilters, setDrillDownFilters] = useState({});
   const [symbolKeyMap, setSymbolKeyMap] = useState({});
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
 
   useEffect(() => {
     if (filterStack.length > 1) {
@@ -124,14 +124,14 @@ const CustomHorizontalBarChart = ({
         id === chartKey && value?.filters != null
           ? {
               ...value.filters,
-              campaignId: campaignId,
+              campaignNumber: campaignNumber,
             }
           : value?.filters != null || drillDownFilters || selectedStack
           ? {
               ...value?.filters,
               ...drillDownFilters,
               selectedStack: selectedStack,
-              campaignId: campaignId,
+              campaignNumber: campaignNumber,
             }
           : {},
       moduleLevel: value?.moduleLevel,
@@ -153,12 +153,12 @@ const CustomHorizontalBarChart = ({
         filters:
           id === targetLineChart
             ? { ...value.filters,
-              campaignId:campaignId
+              campaignNumber:campaignNumber
                }
             : {
                 ...value?.filters,
                 [filterStack[filterStack.length - 1]["filterKey"]]: filterStack[filterStack.length - 1]?.filterValue,
-                campaignId:campaignId
+                campaignNumber:campaignNumber
 
               },
         moduleLevel: value?.moduleLevel,

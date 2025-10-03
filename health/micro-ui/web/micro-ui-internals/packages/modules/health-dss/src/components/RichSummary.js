@@ -77,7 +77,7 @@ const Chart = ({ data, showDivider }) => {
   const { id, chartType } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { t } = useTranslation();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
   const isMobile = window.Digit.Utils.browser.isMobile();
@@ -88,7 +88,7 @@ const Chart = ({ data, showDivider }) => {
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: {
       ...value?.filters,
-      campaignId: campaignId,
+      campaignNumber: campaignNumber,
     },
     aggregationFactors: null,
   };

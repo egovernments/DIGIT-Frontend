@@ -70,7 +70,7 @@ const CustomBarChart = ({
   const [maxValue, setMaxValue] = useState({});
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { startDate, endDate, interval } = getInitialRange();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
 
   const requestDate = {
     startDate: startDate.getTime(),
@@ -88,7 +88,7 @@ const CustomBarChart = ({
         : requestDate,
     filters: {
       ...value?.filters,
-      campaignId: campaignId,
+      campaignNumber: campaignNumber,
     },
     aggregationFactors: null,
     moduleLevel: value?.moduleLevel,
