@@ -12,7 +12,7 @@ import { ScreenTypeEnum } from "../utils/constants";
 
 const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
 
-    console.log("formData", formData);
+
     const isRequired = ScreenTypeEnum.REGISTER;
     const disableChildOptions = false;
 
@@ -114,6 +114,7 @@ const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
                 handleButtonClick(childrenData[0]?.boundary[0]);
             }
         }
+
     }, [childrenData]);
 
     // Reset boundaries and session storage when the reset prop is triggered
@@ -166,14 +167,17 @@ const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
                 ...updatedState,
             }));
 
-            setSelectedValues((prev) => {
-                const newSelectedValues = { ...prev, [value?.boundaryType]: value };
 
-                Digit.SessionStorage.set("selectedValues", newSelectedValues);
-
-                return newSelectedValues;
-            });
         }
+
+        setSelectedValues((prev) => {
+            const newSelectedValues = { ...prev, [value?.boundaryType]: value };
+
+
+            Digit.SessionStorage.set("selectedValues", newSelectedValues);
+
+            return newSelectedValues;
+        });
     };
 
     // Reset the selected values of child boundaries
