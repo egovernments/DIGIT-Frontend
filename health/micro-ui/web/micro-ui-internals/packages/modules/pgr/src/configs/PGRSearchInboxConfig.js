@@ -101,7 +101,7 @@ const PGRSearchInboxConfig = () => {
               },
               {
                 label: "CS_COMPLAINT_DETAILS_CURRENT_STATUS",
-                jsonPath: "businessObject.service.applicationStatus",
+                jsonPath: "ProcessInstance.assignes",
                 additionalCustomization: true,
               },
               {
@@ -111,8 +111,8 @@ const PGRSearchInboxConfig = () => {
                 key: "assignee",
               },
               {
-                label: "WF_INBOX_HEADER_SLA_DAYS_REMAINING",
-                jsonPath: "businessObject.serviceSla",
+                label: "WF_INBOX_HEADER_CREATED_DATE",
+                jsonPath: "businessObject.service.auditDetails.createdTime",
                 additionalCustomization: true,
                 key: "state",
               },
@@ -152,7 +152,7 @@ const PGRSearchInboxConfig = () => {
                 secondaryLabel: 'ES_CLEAR_ALL',
                 minReqFields: 0,
                 defaultValues: {
-                    assignedToMe: { code: "ASSIGNED_TO_ME", name: "ASSIGNED_TO_ME" },
+                    assignedToMe: { code: "ASSIGNED_TO_ALL", name: "ASSIGNED_TO_ALL" },
       
                     ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.serviceCode && { 
                       serviceCode: window.Digit.SessionStorage.get("filtersForInbox").serviceCode 
