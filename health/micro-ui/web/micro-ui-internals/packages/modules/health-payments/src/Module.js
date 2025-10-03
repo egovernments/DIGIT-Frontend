@@ -70,7 +70,13 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   // }
 
   if (isLoading || isPaymentsModuleInitializing || isMDMSLoading) {
-    return <Loader />;
+    return <div style={{
+      display: "flex",
+      justifyContent: "center",
+      alignItems: "center",
+      height: "100vh"
+    }}>
+      <Loader /></div>;
   } else {
     return (
       <ProviderContext>
