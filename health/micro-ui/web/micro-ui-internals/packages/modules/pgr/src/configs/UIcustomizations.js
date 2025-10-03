@@ -110,14 +110,18 @@ export const UICustomizations = {
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
-          return <span>{t(`CS_COMMON_${value}`)}</span>;
+          return value && value?.length>0
+            ? <span>{t("WF_INBOX_ASSIGNED")}</span>: <span>{t("WF_INBOX_PENDING_ASSIGNMENT")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
           return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
 
-        case "WF_INBOX_HEADER_SLA_DAYS_REMAINING":
-          return value > 0 ? <Tag label={value} showIcon={false} type="success" /> : <Tag label={value} showIcon={false} type="error" />;
-
+        case "WF_INBOX_HEADER_CREATED_DATE":
+          return value > 0 ? (
+            <Tag label={new Date(value).toLocaleDateString()} showIcon={false} type="success" />
+          ) : (
+            <Tag label={new Date(value).toLocaleDateString()} showIcon={false} type="error" />
+          );
         default:
           return t("ES_COMMON_NA");
       }
