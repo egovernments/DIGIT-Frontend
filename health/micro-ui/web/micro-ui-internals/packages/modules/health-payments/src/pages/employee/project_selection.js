@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Card, Header, Button,  Dropdown, Toast } from "@egovernments/digit-ui-components";
+import { Card, Header, Button, Dropdown, Toast } from "@egovernments/digit-ui-components";
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 
 /**
@@ -99,7 +99,7 @@ const ProjectSelect = () => {
         }
     };
 
-    
+
 
     return (
         <React.Fragment>
@@ -147,26 +147,28 @@ const ProjectSelect = () => {
                     )}
                 </Card>
             </div>
-            {<ActionBar className="mc_back">
-               
-                    <Button
-                        icon="ArrowBack"
-                        label={t("HCM_AM_BACK_LABEL")}
-                        onClick={() => history.push(`/${window.contextPath}/employee`)}
-                        style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
-                        type="button"
-                        variation="secondary"
-                    />,
-                    <Button
-                        icon="ArrowForward"
-                        isSuffix
-                        label={t("HCM_AM_NEXT_LABEL")}
-                        onClick={handleNextClick}
-                        style={{ minWidth: "14rem" }}
-                        type="button"
-                        variation="primary"
-                    />
-                
+            {<ActionBar className="mc_back" style={{
+                display: "flex", justifyContent: "space-between"
+            }}>
+
+                <Button
+                    icon="ArrowBack"
+                    label={t("HCM_AM_BACK_LABEL")}
+                    onClick={() => history.push(`/${window.contextPath}/employee`)}
+                    style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
+                    type="button"
+                    variation="secondary"
+                />,
+                <Button
+                    icon="ArrowForward"
+                    isSuffix
+                    label={t("HCM_AM_NEXT_LABEL")}
+                    onClick={handleNextClick}
+                    style={{ minWidth: "14rem" }}
+                    type="button"
+                    variation="primary"
+                />
+
             </ActionBar>}
             {showToast && (
                 <Toast
