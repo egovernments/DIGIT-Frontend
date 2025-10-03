@@ -53,7 +53,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
   const [drillDownChart, setDrillDownChart] = useState("none");
   const [chartKey, setChartKey] = useState(chartId);
   const [drillDownStack, setDrillDownStack] = useState([{ id: chartId, label: mapSelector, boundary: boundaryLevel }]);
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
 
   useEffect(() => {
     setChartKey(chartId);
@@ -136,7 +136,7 @@ export default function HeatMapChart({ chartId, visualizer, initialRange, isNati
     visualizationType: "table",
     queryType: "",
     requestDate: requestDate,
-    filters: { ...filterStack?.value?.filters, ...filterFeature, campaignId: campaignId },
+    filters: { ...filterStack?.value?.filters, ...filterFeature, campaignNumber: campaignNumber },
     aggregationFactors: null,
   };
   const { isLoading: isFetchingChart, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);

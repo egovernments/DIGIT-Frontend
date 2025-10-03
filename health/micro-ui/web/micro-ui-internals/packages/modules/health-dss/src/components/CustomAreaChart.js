@@ -55,7 +55,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
   const [totalCapacity, setTotalCapacity] = useState(0);
   const [totalWaste, setTotalWaste] = useState(0);
   const [keysArr, setKeysArr] = useState([]);
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const [manageChart, setmanageChart] = useState("Area");
   const stateTenant = Digit?.ULBService?.getStateId();
   const aggregationRequestDto = {
@@ -65,7 +65,7 @@ const CustomAreaChart = ({ xDataKey = "name", yDataKey = getValue, data, setChar
       requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
       filters: {
         ...value?.filters,
-        campaignId: campaignId,
+        campaignNumber: campaignNumber,
       },
       aggregationFactors: null,
       moduleLevel: value?.moduleLevel,

@@ -14,7 +14,7 @@ const BannerCard = ({ data }) => {
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const { value } = useContext(FilterContext);
   const isMobile = window.Digit.Utils.browser.isMobile();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const getWidth = (name) => {
     if (isMobile) return "auto";
     else return t(`TIP_${name}`).length < 50 ? "fit-content" : 400;
@@ -37,7 +37,7 @@ const BannerCard = ({ data }) => {
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
     filters: {
       ...value?.filters,
-      campaignId: campaignId,
+      campaignNumber: campaignNumber,
     },
     aggregationFactors: null,
   };

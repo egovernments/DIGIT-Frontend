@@ -47,7 +47,7 @@ const MapDrillChart = ({
 
 }) => {
     const { t } = useTranslation();
-    const { campaignId } = Digit.Hooks.useQueryParams();
+    const { campaignNumber } = Digit.Hooks.useQueryParams();
     const { id } = data;
     const tenantId = Digit?.ULBService?.getCurrentTenantId();
     let filters = {}
@@ -69,7 +69,7 @@ const MapDrillChart = ({
       visualizationType: "metric",
       queryType: "",
       requestDate: requestDate,
-      filters: { ...filters, campaignId: campaignId },
+      filters: { ...filters, campaignNumber: campaignNumber },
       aggregationFactors: null,
     };
     const { isLoading, data: response, error } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
