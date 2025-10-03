@@ -8,9 +8,6 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
   const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const isEmailValid = useMemo(() => EMAIL_REGEX.test(email), [email]);
-  const isDisabled = useMemo(() => {
-    return isEmail ? !(isEmailValid && canSubmit) : !(isMobileValid && canSubmit);
-  }, [isEmail, isEmailValid, isMobileValid, canSubmit]);
 
   const handleSubmit = () => {
     if (isEmail) {
@@ -22,6 +19,10 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
 
   const core_mobile_config = window?.globalConfigs?.getConfig("CORE_MOBILE_CONFIGS") || {};
   const isMobileValid = useMemo(() => mobileNumber && mobileNumber.length === core_mobile_config?.mobileNumberLength, [mobileNumber]);
+
+  const isDisabled = useMemo(() => {
+    return isEmail ? !(isEmailValid && canSubmit) : !(isMobileValid && canSubmit);
+  }, [isEmail, isEmailValid, isMobileValid, canSubmit]);
 
   return (
     <InputCard
