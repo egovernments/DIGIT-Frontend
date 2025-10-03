@@ -19,14 +19,14 @@ import { Loader } from "@egovernments/digit-ui-components";
 import HierarchySelection from "./pages/employee/HierarchySelection";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const modulePrefix = "hcm";
   const [hierarchySelected, setHierarchySelected] = useState(null);
 
 
   const { data: hierarchies,
-    isLoading : isHierarchyLoading,
-     } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({tenantId});
+    isLoading: isHierarchyLoading,
+  } = Digit.Hooks.hrms.useFetchAllBoundaryHierarchies({ tenantId });
 
   const moduleCode = ["HR",];
   const language = Digit.StoreData.getCurrentLanguage();
@@ -34,18 +34,27 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
   useEffect(() => {
     Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
   }, []);
-  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode : moduleCode, language, modulePrefix });
+  const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode: moduleCode, language, modulePrefix });
   Digit.SessionStorage.set("HRMS_TENANTS", tenants);
   Digit.SessionStorage.set("BOUNDARY_HIERARCHIES", hierarchies);
-  
+
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
     return null;
   }
 
   if (isLoading || isHierarchyLoading) {
-      return <Loader />;
-    } 
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      <Loader /></div>;
+  }
 
   if (!hierarchySelected) {
     return (
@@ -57,12 +66,12 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
       />
     );
   }
-    
+
   else {
-  if (userType === "employee") {
-    return <EmployeeApp path={path} url={url} />;
-  } 
-}
+    if (userType === "employee") {
+      return <EmployeeApp path={path} url={url} />;
+    }
+  }
 };
 
 const componentsToRegister = {

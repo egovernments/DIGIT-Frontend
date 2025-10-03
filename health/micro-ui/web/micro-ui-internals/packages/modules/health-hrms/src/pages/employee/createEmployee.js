@@ -37,6 +37,7 @@ const CreateEmployee = ({ editUser = false }) => {
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const eighteenYearsAgo = new Date();
   eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
@@ -182,6 +183,7 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const createEmployeeService = async (payload) => {
     try {
+      setLoading(true);
       await mutation.mutateAsync(
         {
           Employees: payload,
@@ -191,6 +193,7 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREAT_EUSER,
               state: "success",
@@ -203,6 +206,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREATE_USER_ERROR,
               state: "error",
@@ -220,18 +224,21 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
+      setLoading(false);
       // setTriggerEstimate(true);
     }
   };
 
   const updateEmployeeService = async (payload) => {
     try {
+      setLoading(true);
       await mutationUpdate.mutateAsync(
         {
           Employees: payload,
         },
         {
           onSuccess: (res) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
@@ -244,6 +251,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
@@ -363,6 +371,10 @@ const CreateEmployee = ({ editUser = false }) => {
     >
       {<Loader />}
     </div>;
+  }
+
+  if (loading) {
+    return <Loader variant={"OverlayLoader"} />
   }
 
   return (
