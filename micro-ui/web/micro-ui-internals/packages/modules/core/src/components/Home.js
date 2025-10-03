@@ -165,10 +165,6 @@ export const AppHome = ({
   additionalComponent,
 }) => {
   if (userType === "citizen") {
-    console.log(modules,"modules");
-    console.log(getCitizenMenu,"getCitizenMenu");
-    console.log(fetchedCitizen,"fetchedCitizen");
-    console.log(isLoading,"isLoading");
     return (
       <CitizenHome
         modules={modules}
