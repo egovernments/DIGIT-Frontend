@@ -1,6 +1,6 @@
 # Changelog 
 
-## [1.8.48]  [22-Sep-2025]
+## [1.8.49]  [22-Sep-2025]
 - updated the login componenet to handle email based login
 
 ## [1.8.47]  [22-Sep-2025]
