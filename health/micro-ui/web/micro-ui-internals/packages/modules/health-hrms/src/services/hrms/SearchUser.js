@@ -1,4 +1,4 @@
-import AttendeeService from "./attendee_service/attendeeService";
+import AttendeeService from "./AttendeeService";
 
 
 export const AttendanceService = {

@@ -18,10 +18,20 @@ const InboxSearch = () => {
   });
 
   if (isLoading) {
-    return <Loader />;
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
   }
 
-  
+
   // const config = mdmsData ? mdmsData : inboxSearchConfig(); [TODO: Use this once MDMS is updated with the new config]
   const config = inboxSearchConfig();
 
@@ -43,12 +53,12 @@ const InboxSearch = () => {
       <div className="digit-inbox-search-wrapper">
         <InboxSearchComposer
           configs={config}
-          //   browserSession={SelectCampaignSession}
-          //   additionalConfig={{
-          //     resultsTable: {
-          //       onClickRow,
-          //     },
-          //   }}
+        //   browserSession={SelectCampaignSession}
+        //   additionalConfig={{
+        //     resultsTable: {
+        //       onClickRow,
+        //     },
+        //   }}
         />
       </div>
     </div>

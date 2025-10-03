@@ -84,10 +84,37 @@ const CustomInboxTable = ({
           <span className="link" >
             <Button
               label={t(`${row.id}`)}
-              onClick={() =>
-                history.push(
-                  `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
-                )
+              onClick={() => {
+                const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+                const endDate = existingPaymentInbox?.selectedProject?.endDate;
+                // history.push(
+                //   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                // )
+
+                if (endDate) {
+
+                  const currentDate = Date.now(); // current time in epoch
+
+                  if (!(currentDate <= endDate)) {
+                    // Allowed → Navigate
+                    history.push(
+                      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                    );
+                  } else {
+                    // Expired → handle case
+                    history.push(
+                      `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+                    );
+                  }
+                } else {
+                  // No endDate → fallback navigation or error
+                  console.warn("No endDate found in session storage");
+                  history.push(
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                  );
+                }
+
+              }
               }
               title={t(`${row.id}`)}
               variation="link"
@@ -212,31 +239,43 @@ const CustomInboxTable = ({
               />
               <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", maxHeight: "64.5vh" }}>
 
-                {isLoading ? <Loader /> : tableData && tableData.length === 0 ? (
-                  <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
-                ) : (
-                  <DataTable
-                    columns={columns}
-                    className="search-component-table"
-                    data={tableData}
-                    progressPending={isLoading}
-                    progressComponent={<Loader />}
-                    pagination
-                    paginationServer
-                    customStyles={tableCustomStyle(true)}
-                    onRowClicked={handleRowClick}
-                    pointerOnHover
-                    paginationTotalRows={totalCount}
-                    onChangePage={handlePaginationChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationPerPage={rowsPerPage}
-                    sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                    paginationRowsPerPageOptions={defaultPaginationValues}
-                    fixedHeader={true}
-                    fixedHeaderScrollHeight={"60vh"}
-                    paginationComponentOptions={getCustomPaginationOptions(t)}
-                  />
-                )}
+                {isLoading ?
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "1vh",
+                    paddingTop: "2rem",
+                    marginTop:"2rem"
+                  }}>
+                    <Loader />
+                  </div>
+
+                  : tableData && tableData.length === 0 ? (
+                    <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                  ) : (
+                    <DataTable
+                      columns={columns}
+                      className="search-component-table"
+                      data={tableData}
+                      progressPending={isLoading}
+                      progressComponent={<Loader />}
+                      pagination
+                      paginationServer
+                      customStyles={tableCustomStyle(true)}
+                      onRowClicked={handleRowClick}
+                      pointerOnHover
+                      paginationTotalRows={totalCount}
+                      onChangePage={handlePaginationChange}
+                      onChangeRowsPerPage={handleRowsPerPageChange}
+                      paginationPerPage={rowsPerPage}
+                      sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                      paginationRowsPerPageOptions={defaultPaginationValues}
+                      fixedHeader={true}
+                      fixedHeaderScrollHeight={"60vh"}
+                      paginationComponentOptions={getCustomPaginationOptions(t)}
+                    />
+                  )}
               </Card>
             </div>
           )

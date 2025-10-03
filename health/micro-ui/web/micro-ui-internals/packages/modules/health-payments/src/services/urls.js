@@ -48,7 +48,9 @@ const Urls = {
 
   attendee:{
     deenrollAttendee:`/health-attendance/attendee/v1/_delete`,
-     search: `/health-individual/v1/_search`,
+    search: `/health-individual/v1/_search`,
+    enrollAttendee:`/health-attendance/attendee/v1/_create`,
+    
   }
 };
 
