@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.51]  [9-April-2025]
+- Added email login and home screen changes for App
+
 ## [1.8.33]  [9-April-2025]
 - FEATURE/CCSD-57 :Sandbox Changes
 
