@@ -44,6 +44,7 @@ const CreateEmployee = ({ editUser = false }) => {
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   const [showModal, setShowModal] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const eighteenYearsAgo = new Date();
   eighteenYearsAgo.setFullYear(eighteenYearsAgo.getFullYear() - 18);
@@ -191,6 +192,7 @@ const CreateEmployee = ({ editUser = false }) => {
 
   const createEmployeeService = async (payload) => {
     try {
+      setLoading(true);
       await mutation.mutateAsync(
         {
           Employees: payload,
@@ -200,6 +202,7 @@ const CreateEmployee = ({ editUser = false }) => {
         },
         {
           onSuccess: (res) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREAT_EUSER,
               state: "success",
@@ -212,6 +215,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.CREATE_USER_ERROR,
               state: "error",
@@ -229,18 +233,21 @@ const CreateEmployee = ({ editUser = false }) => {
         }
       );
     } catch (error) {
+      setLoading(false);
       // setTriggerEstimate(true);
     }
   };
 
   const updateEmployeeService = async (payload) => {
     try {
+      setLoading(true);
       await mutationUpdate.mutateAsync(
         {
           Employees: payload,
         },
         {
           onSuccess: (res) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER,
               state: "success",
@@ -253,6 +260,7 @@ const CreateEmployee = ({ editUser = false }) => {
             });
           },
           onError: (error) => {
+            setLoading(false);
             history.replace(`/${window?.contextPath}/employee/hrms/response`, {
               isCampaign: ReposeScreenType.EDIT_USER_ERROR,
               state: "error",
@@ -279,7 +287,7 @@ const CreateEmployee = ({ editUser = false }) => {
       if (editUser == false) {
         const type = await checkIfUserExist(formData, tenantId);
         if (type == true) {
-          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+          setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID", type: "error" });
           setShowModal(false);
         } else {
           const payload = formPayloadToCreateUser(formData, tenantId);
@@ -292,7 +300,7 @@ const CreateEmployee = ({ editUser = false }) => {
         await updateEmployeeService(payload);
       }
     } catch (err) {
-      setShowToast({ key: true, label: t(err ? `${err?.code}` : "BAD_REQUEST") });
+      setShowToast({ key: true, label: t(err ? `${err?.code}` : "BAD_REQUEST"), type: "error" });
       setShowModal(false);
     }
   };
@@ -301,7 +309,7 @@ const CreateEmployee = ({ editUser = false }) => {
     if (isEdit && mobile) {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID" });
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_ID", type: "error" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
@@ -313,7 +321,7 @@ const CreateEmployee = ({ editUser = false }) => {
     } else {
       const type = await checkIfUserExistWithPhoneNumber(e, tenantId);
       if (type == true) {
-        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOBILE_NUMBER" });
+        setShowToast({ key: true, label: "ERR_HRMS_USER_EXIST_MOBILE_NUMBER", type: "error" });
         setShowModal(false);
       } else {
         setCreateEmployeeData(e);
@@ -404,7 +412,21 @@ const CreateEmployee = ({ editUser = false }) => {
     : updatedConfig?.form;
 
   if (isHRMSSearchLoading || isHRMSConfigLoading) {
-    return <Loader />;
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
+  }
+
+  if (loading) {
+    return <Loader variant={"OverlayLoader"} />
   }
 
   return (
@@ -437,6 +459,7 @@ const CreateEmployee = ({ editUser = false }) => {
 
         {showToast && (
           <Toast
+            type={showToast.type}
             error={showToast.key}
             isDleteBtn="true"
             label={t(showToast.label)}

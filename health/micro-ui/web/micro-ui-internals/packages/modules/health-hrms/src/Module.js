@@ -23,7 +23,6 @@ import SelectableList from "./components/pageComponents/SelectableList";
 import HRMSCard from "./components/HRMSCard";
 
 export const HRMSModule = ({ stateCode, userType, tenants }) => {
-
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const modulePrefix = "hcm";
   const [hierarchySelected, setHierarchySelected] = useState(null);
@@ -49,7 +48,16 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
   }
 
   if (isLoading || isHierarchyLoading) {
-    return <Loader />;
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      <Loader /></div>;
   }
 
   if (!hierarchySelected) {

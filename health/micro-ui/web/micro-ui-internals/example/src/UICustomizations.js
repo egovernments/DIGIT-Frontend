@@ -1563,8 +1563,8 @@ export const UICustomizations = {
         filter = boundaryType && boundaryValue
           ? `(query:(match_phrase:(Data.boundaryHierarchy.${boundaryType}.keyword:'${boundaryValue}')))`
           : campaignId
-          ? `(query:(match_phrase:(Data.campaignId.keyword:'${campaignId}')))`
-          : null;
+            ? `(query:(match_phrase:(Data.campaignId.keyword:'${campaignId}')))`
+            : null;
       }
       // Extract existing _g values for refreshInterval and time
       const gParamMatch = /_g=\((.*?)\)/.exec(url);
@@ -2039,7 +2039,12 @@ export const UICustomizations = {
 
       const handleModalSubmit = async () => {
         const missingFields = validateFormData(sessionFormData, formConfig, t);
-        if (missingFields.length > 0) return;
+
+
+        if (missingFields.length > 0) {
+          setToast({ key: true, label: t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS"), type: "error" });
+          return;
+        }
         else {
           setModalOpen(false);
           const payload = {

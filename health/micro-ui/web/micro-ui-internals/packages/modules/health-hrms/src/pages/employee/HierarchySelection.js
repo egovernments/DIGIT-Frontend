@@ -118,7 +118,20 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
     }
   }, [boundaryData, selectedHierarchy]);
 
-  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) return <Loader />;
+  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) {
+
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
+  }
 
   return (
     <div className="container">
