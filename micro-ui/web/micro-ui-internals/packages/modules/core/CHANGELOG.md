@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.50]  [3rd-Oct-2025]
+- updated the citizen home page to not to filter the cards using module, directly show citizen menu details
+
 ## [1.8.49]  [22-Sep-2025]
 - updated the login componenet to handle email based login
 
