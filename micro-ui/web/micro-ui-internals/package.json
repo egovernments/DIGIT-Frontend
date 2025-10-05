@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
+    "start": "cross-env SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
@@ -25,7 +25,6 @@
     "publish:css": "cd packages/css && yarn publish --access public",
     "dev:libraries": "cd packages/libraries && yarn start",
     "dev:components": "cd packages/react-components && yarn start",
-    "dev:example": "cd example && yarn start",
     "dev:core": "cd packages/modules/core && yarn start",
     "dev:dss": "cd packages/modules/dss && yarn start",
     "dev:hrms": "cd packages/modules/hrms && yarn start",
@@ -37,6 +36,7 @@
     "devD:openpayment": "cd packages/modules/open-payment && yarn start",
     "devD:engagement": "cd packages/modules/engagement && yarn start",
     "dev:sandbox": "cd packages/modules/sandbox && yarn start",
+    "dev:example": "cd example && yarn start",
     "build": "run-p build:**",
     "build:libraries": "cd packages/libraries && yarn build",
     "build:components": "cd packages/react-components && yarn build",
@@ -83,7 +83,8 @@
     "clean-dist:utilities": "cd packages/modules/utilities && rm -rf node_modules && rm -rf dist",
     "clean-dist:workbench": "cd packages/modules/workbench && rm -rf node_modules && rm -rf dist",
     "clean": "run-s clean:**",
-    "clean-dist": "run-p clean-dist:**"
+    "clean-dist": "run-p clean-dist:**",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",

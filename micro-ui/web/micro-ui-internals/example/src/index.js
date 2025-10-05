@@ -101,8 +101,8 @@ const initDigitUI = () => {
     pgr: PGRReducers(initData),
   });
 
-  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  const stateCode = Digit.ULBService.getStateId();
+  const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
+  // const stateCode = Digit.ULBService.getStateId();
   initTokens(stateCode);
 
   ReactDOM.render(

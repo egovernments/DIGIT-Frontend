@@ -8,9 +8,6 @@
     "node": ">=14"
   },
   "workspaces": [
-    "micro-ui-internals/packages/libraries",
-    "micro-ui-internals/packages/react-components",
-    "micro-ui-internals/packages/modules/*"
   ],
   "homepage": "/digit-ui",
   "dependencies": {
@@ -80,11 +77,6 @@
     "build:prod": "webpack --mode production",
     "build:webpack": "yarn build:libraries &&cd .. && ls && cd ./web && ls && yarn build:prod",
     "clean": "rm -rf node_modules"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app"
-    ]
   },
   "browserslist": {
     "production": [
