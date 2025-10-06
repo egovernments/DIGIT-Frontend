@@ -40,7 +40,10 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
         placeholder={isEmail ? t("ENTER_EMAIL_PLACEHOLDER") : t("ENTER_MOBILE_PLACEHOLDER")}
         populators={{
           name : isEmail ? "userName" : "mobileNumber",
-          prefix: isEmail ? "" : core_mobile_config?.mobilePrefix
+          prefix: isEmail ? "" : core_mobile_config?.mobilePrefix,
+          validation: {
+            maxlength: core_mobile_config?.mobileNumberLength || 10
+          }
         }}
         props={{
           fieldStyle: { width: "100%" }
