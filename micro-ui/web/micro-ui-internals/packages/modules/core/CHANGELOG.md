@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.51]  [6th-Oct-2025]
+- Added the redirection fix in citizen side after login and max length fix for mobile number
+
 ## [1.8.50]  [3rd-Oct-2025]
 - updated the citizen home page to not to filter the cards using module, directly show citizen menu details
 
