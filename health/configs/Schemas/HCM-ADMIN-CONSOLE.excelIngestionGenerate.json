@@ -1,0 +1,65 @@
+{
+            "id": "f1087242-530f-4dcb-ad74-86e61f9fa6a8",
+            "tenantId": "dev",
+            "code": "HCM-ADMIN-CONSOLE.excelIngestionGenerate",
+            "description": null,
+            "definition": {
+                "type": "object",
+                "title": "Excel Ingestion Generation Config",
+                "$schema": "http://json-schema.org/draft-07/schema#",
+                "required": [
+                    "excelIngestionGenerateName",
+                    "sheets"
+                ],
+                "x-unique": [
+                    "excelIngestionGenerateName"
+                ],
+                "properties": {
+                    "sheets": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "required": [
+                                "sheetName"
+                            ],
+                            "properties": {
+                                "order": {
+                                    "type": "integer"
+                                },
+                                "visible": {
+                                    "type": "boolean"
+                                },
+                                "sheetName": {
+                                    "type": "string"
+                                },
+                                "schemaName": {
+                                    "type": "string"
+                                },
+                                "generationClass": {
+                                    "type": "string"
+                                },
+                                "isGenerationClassViaExcelPopulator": {
+                                    "type": "boolean"
+                                }
+                            },
+                            "additionalProperties": false
+                        },
+                        "minItems": 1
+                    },
+                    "applyWorkbookProtection": {
+                        "type": "boolean"
+                    },
+                    "excelIngestionGenerateName": {
+                        "type": "string"
+                    }
+                },
+                "additionalProperties": false
+            },
+            "isActive": true,
+            "auditDetails": {
+                "createdBy": "63a21269-d40d-4c26-878f-4f4486b1f44b",
+                "lastModifiedBy": "63a21269-d40d-4c26-878f-4f4486b1f44b",
+                "createdTime": 1759135028679,
+                "lastModifiedTime": 1759135028679
+            }
+        }
