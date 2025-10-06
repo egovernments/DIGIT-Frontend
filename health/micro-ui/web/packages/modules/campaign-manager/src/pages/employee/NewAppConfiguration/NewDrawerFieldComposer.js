@@ -1,4 +1,4 @@
-import React, { Fragment, useMemo, useState } from "react";
+import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
 import { FieldV1, Switch, TextBlock, Tag, Divider } from "@egovernments/digit-ui-components";
@@ -11,6 +11,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
+
+  // Local state for immediate UI feedback
+  const [localValue, setLocalValue] = useState("");
+  const debounceTimerRef = useRef(null);
 
   // Check if field should be visible based on field type
   const isFieldVisible = () => {
@@ -34,6 +38,24 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   // Get localized field value for text fields
   const fieldValue = getFieldValue();
   const localizedFieldValue = useCustomT(fieldValue);
+
+  // Initialize local value when field changes
+  useEffect(() => {
+    if (panelItem.fieldType === "text") {
+      setLocalValue(localizedFieldValue || "");
+    } else if (panelItem.fieldType === "number") {
+      setLocalValue(getFieldValue() || 0);
+    }
+  }, [selectedField, panelItem.bindTo, panelItem.fieldType]);
+
+  // Cleanup debounce timer on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
 
   // Check if conditional fields should be shown
   const shouldShowConditionalFields = () => {
@@ -79,56 +101,117 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     }
   };
 
-  const handleFieldChangeWithLoc = (code, value) => {
-    const bindTo = panelItem.bindTo;
-    let finalValueToSave;
+  // Debounced handler for text fields with localization
+  const handleFieldChangeWithLoc = useCallback(
+    (code, value) => {
+      const bindTo = panelItem.bindTo;
 
-    // Handle localization
-    if (code) {
-      // If a code is provided, update the localization entry
-      dispatch(
-        updateLocalizationEntry({
-          code: code,
-          locale: currentLocale || "en_IN",
-          message: value,
-        })
-      );
-      finalValueToSave = code; // Save the code instead of the value
-    } else if (value && typeof value === "string" && value.trim() !== "") {
-      // Create a unique code if no code is provided
-      const timestamp = Date.now();
-      const fieldName = bindTo.replace(/\./g, "_").toUpperCase();
-      const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
-
-      // Update localization entry with the new code
-      dispatch(
-        updateLocalizationEntry({
-          code: uniqueCode,
-          locale: currentLocale || "en_IN",
-          message: value,
-        })
-      );
-      finalValueToSave = uniqueCode; // Save the generated code
-    }
-
-    // Update the field with the code (or value if no localization)
-    if (bindTo.includes(".")) {
-      // Handle nested properties
-      const keys = bindTo.split(".");
-      const newField = { ...selectedField };
-      let current = newField;
-      for (let i = 0; i < keys.length - 1; i++) {
-        if (!current[keys[i]]) {
-          current[keys[i]] = {};
-        }
-        current = current[keys[i]];
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
-      current[keys[keys.length - 1]] = finalValueToSave;
-      onFieldChange(newField);
-    } else {
-      onFieldChange({ ...selectedField, [bindTo]: finalValueToSave });
+
+      // Debounce the Redux dispatch
+      debounceTimerRef.current = setTimeout(() => {
+        let finalValueToSave;
+
+        // Handle localization
+        if (code) {
+          // If a code is provided, update the localization entry
+          dispatch(
+            updateLocalizationEntry({
+              code: code,
+              locale: currentLocale || "en_IN",
+              message: value,
+            })
+          );
+          finalValueToSave = code; // Save the code instead of the value
+        } else if (value && typeof value === "string" && value.trim() !== "") {
+          // Create a unique code if no code is provided
+          const timestamp = Date.now();
+          const fieldName = bindTo.replace(/\./g, "_").toUpperCase();
+          const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
+
+          // Update localization entry with the new code
+          dispatch(
+            updateLocalizationEntry({
+              code: uniqueCode,
+              locale: currentLocale || "en_IN",
+              message: value,
+            })
+          );
+          finalValueToSave = uniqueCode; // Save the generated code
+        }
+
+        // Update the field with the code (or value if no localization)
+        if (bindTo.includes(".")) {
+          // Handle nested properties
+          const keys = bindTo.split(".");
+          const newField = { ...selectedField };
+          let current = newField;
+          for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]]) {
+              current[keys[i]] = {};
+            }
+            current = current[keys[i]];
+          }
+          current[keys[keys.length - 1]] = finalValueToSave;
+          onFieldChange(newField);
+        } else {
+          onFieldChange({ ...selectedField, [bindTo]: finalValueToSave });
+        }
+      }, 800); // 800ms debounce
+    },
+    [panelItem.bindTo, dispatch, currentLocale, selectedField, onFieldChange]
+  );
+
+  // Debounced handler for number fields
+  const handleNumberChange = useCallback(
+    (value) => {
+      const bindTo = panelItem.bindTo;
+
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+
+      // Debounce the Redux dispatch
+      debounceTimerRef.current = setTimeout(() => {
+        if (bindTo.includes(".")) {
+          // Handle nested properties
+          const keys = bindTo.split(".");
+          const newField = { ...selectedField };
+          let current = newField;
+          for (let i = 0; i < keys.length - 1; i++) {
+            if (!current[keys[i]]) {
+              current[keys[i]] = {};
+            }
+            current = current[keys[i]];
+          }
+          current[keys[keys.length - 1]] = value;
+          onFieldChange(newField);
+        } else {
+          onFieldChange({ ...selectedField, [bindTo]: value });
+        }
+      }, 800); // 800ms debounce
+    },
+    [panelItem.bindTo, selectedField, onFieldChange]
+  );
+
+  // Force dispatch on blur
+  const handleBlur = useCallback(() => {
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      debounceTimerRef.current = null;
     }
-  };
+
+    // Immediately dispatch the current value
+    if (panelItem.fieldType === "text") {
+      handleFieldChangeWithLoc(fieldValue, localValue);
+    } else if (panelItem.fieldType === "number") {
+      handleNumberChange(localValue);
+    }
+  }, [panelItem.fieldType, fieldValue, localValue, handleFieldChangeWithLoc, handleNumberChange]);
 
   const renderMainField = () => {
     switch (panelItem.fieldType) {
@@ -147,8 +230,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           <FieldV1
             type="text"
             label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
-            value={localizedFieldValue}
-            onChange={(event) => handleFieldChangeWithLoc(fieldValue, event.target.value)}
+            value={localValue}
+            onChange={(event) => {
+              setLocalValue(event.target.value);
+              handleFieldChangeWithLoc(fieldValue, event.target.value);
+            }}
+            onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-field" }}
           />
@@ -159,8 +246,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           <FieldV1
             type="number"
             label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
-            value={getFieldValue()}
-            onChange={(event) => handleFieldChange(parseInt(event.target.value) || 0)}
+            value={localValue}
+            onChange={(event) => {
+              const value = parseInt(event.target.value) || 0;
+              setLocalValue(value);
+              handleNumberChange(value);
+            }}
+            onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-field" }}
           />
@@ -172,6 +264,37 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   };
 
   const renderConditionalField = (cField) => {
+    const [conditionalLocalValue, setConditionalLocalValue] = useState(selectedField[cField.bindTo] || "");
+    const conditionalDebounceRef = useRef(null);
+
+    useEffect(() => {
+      setConditionalLocalValue(selectedField[cField.bindTo] || "");
+    }, [selectedField, cField.bindTo]);
+
+    const handleConditionalChange = useCallback(
+      (value) => {
+        if (conditionalDebounceRef.current) {
+          clearTimeout(conditionalDebounceRef.current);
+        }
+
+        conditionalDebounceRef.current = setTimeout(() => {
+          const newField = { ...selectedField };
+          newField[cField.bindTo] = value;
+          onFieldChange(newField);
+        }, 800);
+      },
+      [selectedField, cField.bindTo, onFieldChange]
+    );
+
+    const handleConditionalBlur = useCallback(() => {
+      if (conditionalDebounceRef.current) {
+        clearTimeout(conditionalDebounceRef.current);
+        const newField = { ...selectedField };
+        newField[cField.bindTo] = conditionalLocalValue;
+        onFieldChange(newField);
+      }
+    }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange]);
+
     switch (cField.type) {
       case "text":
         return (
@@ -179,12 +302,12 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             key={cField.bindTo}
             type="text"
             label={t(`FIELD_DRAWER_LABEL_${cField.label}`)}
-            value={selectedField[cField.bindTo]}
+            value={conditionalLocalValue}
             onChange={(event) => {
-              const newField = { ...selectedField };
-              newField[cField.bindTo] = event.target.value;
-              onFieldChange(newField);
+              setConditionalLocalValue(event.target.value);
+              handleConditionalChange(event.target.value);
             }}
+            onBlur={handleConditionalBlur}
             placeholder={t(cField.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-field" }}
           />

@@ -1,4 +1,4 @@
-import React, { Fragment, useCallback } from "react";
+import React, { Fragment, useCallback, useState, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
@@ -7,8 +7,6 @@ import {
   hideField,
   reorderFields,
   addSection,
-  updateHeaderField,
-  updateActionLabel,
   selectField,
   handleShowAddFieldPopup,
 } from "./redux/remoteConfigSlice";
@@ -21,6 +19,60 @@ import HeaderFieldWrapper from "./HeaderFieldWrapper";
 // Wrapper for footer label to avoid hook-in-loop violation
 const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t }) => {
   const localizedLabel = useCustomT(label);
+  const [localValue, setLocalValue] = useState(localizedLabel || "");
+  const debounceTimerRef = useRef(null);
+
+  // Sync local value when localizedLabel changes
+  useEffect(() => {
+    setLocalValue(localizedLabel || "");
+  }, [localizedLabel]);
+
+  // Cleanup on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+    };
+  }, []);
+
+  const handleChange = useCallback((value) => {
+    setLocalValue(value);
+
+    // Clear previous timer
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+    }
+
+    // Debounce dispatch
+    debounceTimerRef.current = setTimeout(() => {
+      if (label) {
+        dispatch(
+          updateLocalizationEntry({
+            code: label,
+            locale: currentLocale || "en_IN",
+            message: value,
+          })
+        );
+      }
+    }, 800);
+  }, [label, currentLocale, dispatch]);
+
+  const handleBlur = useCallback(() => {
+    // Force immediate dispatch on blur
+    if (debounceTimerRef.current) {
+      clearTimeout(debounceTimerRef.current);
+      if (label) {
+        dispatch(
+          updateLocalizationEntry({
+            code: label,
+            locale: currentLocale || "en_IN",
+            message: localValue,
+          })
+        );
+      }
+    }
+  }, [label, currentLocale, localValue, dispatch]);
 
   return (
     <LabelFieldPair key={`footer-${index}`} className="app-preview-app-config-drawer-action-button">
@@ -29,18 +81,9 @@ const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t 
       </div>
       <TextInput
         name={`footerLabel-${index}`}
-        value={localizedLabel}
-        onChange={(event) => {
-          if (label) {
-            dispatch(
-              updateLocalizationEntry({
-                code: label,
-                locale: currentLocale || "en_IN",
-                message: event.target.value,
-              })
-            );
-          }
-        }}
+        value={localValue}
+        onChange={(event) => handleChange(event.target.value)}
+        onBlur={handleBlur}
       />
     </LabelFieldPair>
   );
@@ -93,19 +136,6 @@ function NewAppFieldScreenWrapper() {
     dispatch(addSection());
   }, [dispatch]);
 
-  const handleUpdateHeaderField = useCallback(
-    (value, fieldIndex, cardIndex) => {
-      dispatch(updateHeaderField({ cardIndex, fieldIndex, value }));
-    },
-    [dispatch]
-  );
-
-  const handleUpdateActionLabel = useCallback(
-    (value) => {
-      dispatch(updateActionLabel({ value }));
-    },
-    [dispatch]
-  );
 
   if (!currentCard) {
     return (
@@ -122,33 +152,16 @@ function NewAppFieldScreenWrapper() {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
       </div>
       <Divider />
-      {currentCard?.headerFields?.map(({ label, type, value }, index, field) => {
+      {currentCard?.headerFields?.map(({ label, type, value }, index) => {
         return (
           <HeaderFieldWrapper
+            key={`header-${index}`}
             label={label}
             type={type}
             value={value}
             currentCard={currentCard}
-            onChange={(event) => {
-              if (value) {
-                dispatch(
-                  updateLocalizationEntry({
-                    code: value,
-                    locale: currentLocale || "en_IN",
-                    message: event.target.value,
-                  })
-                );
-              } else {
-                dispatch(
-                  updateLocalizationEntry({
-                    code: `${currentCard?.flow}_${currentCard?.parent}_${currentCard?.name}_${label}`,
-                    locale: currentLocale || "en_IN",
-                    message: event.target.value,
-                  })
-                );
-              }
-              handleUpdateHeaderField(label, index);
-            }}
+            index={index}
+            cardIndex={0}
           />
         );
       })}
