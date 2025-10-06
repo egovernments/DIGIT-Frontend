@@ -7,6 +7,7 @@ const remoteConfigSlice = createSlice({
   initialState: {
     remoteData: null,
     parentData: [],
+    pageType: "object", // "object" or "template"
     // Drawer state for field selection and editing
     selectedField: null,
     selectedFieldPath: { cardIndex: null, fieldIndex: null }, // Store field path for O(1) updates
@@ -16,9 +17,17 @@ const remoteConfigSlice = createSlice({
     showAddFieldPopup: false,
   },
   reducers: {
-    initializeConfig(state) {
-      state.remoteData = dummyConfig;
-      state.currentData = dummyConfig || {};
+    initializeConfig(state, action) {
+      const pageConfig = action.payload;
+      if (pageConfig) {
+        state.remoteData = pageConfig;
+        state.currentData = pageConfig;
+        state.pageType = pageConfig.type || "object"; // Extract pageType from config
+      } else {
+        state.remoteData = dummyConfig;
+        state.currentData = dummyConfig || {};
+        state.pageType = dummyConfig?.type || "object";
+      }
     },
     setRemoteData(state, action) {
       state.remoteData = action.payload;
@@ -179,6 +188,14 @@ const remoteConfigSlice = createSlice({
         state.currentData = { ...state.currentData };
       }
     },
+    updatePageRoles(state, action) {
+      const { roles } = action.payload;
+      if (state.currentData) {
+        state.currentData.roles = roles;
+        // Ensure reactivity by creating new reference
+        state.currentData = { ...state.currentData };
+      }
+    },
   },
 });
 
@@ -202,6 +219,7 @@ export const {
   addSection,
   updateHeaderField,
   updateActionLabel,
+  updatePageRoles,
   handleShowAddFieldPopup,
 } = remoteConfigSlice.actions;
 export default remoteConfigSlice.reducer;

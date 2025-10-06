@@ -6,6 +6,7 @@ import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-component
 import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import HelpInfoCard from "../../components/HelpInfoCard";
+import FullConfigWrapper from "./NewAppConfiguration/FullConfigWrapper";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -356,7 +357,7 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
           <Route path={`app-configuration-redesign`} element={<AppConfigurationTabLayer />} />
-          <Route path={`new-app-configuration-redesign`} element={<AppConfigurationStore />} />
+          <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper />} />
           <Route
             path={`create-campaign`}
             element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}

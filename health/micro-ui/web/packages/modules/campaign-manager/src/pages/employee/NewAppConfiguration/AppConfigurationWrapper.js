@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
+import { handleShowAddFieldPopup, initializeConfig, addField, updatePageRoles } from "./redux/remoteConfigSlice";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
 import { fetchLocalization, fetchAppScreenConfig, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
@@ -9,8 +9,10 @@ import { Header } from "@egovernments/digit-ui-react-components";
 import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput } from "@egovernments/digit-ui-components";
 import IntermediateWrapper from "./IntermediateWrapper";
 import { useFieldDataLabel } from "./hooks/useCustomT";
+import fullParentConfig from "./configs/fullParentConfig.json";
+import { getPageFromConfig } from "./utils/configUtils";
 
-const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule = "hcm-registrationflow-CMP-2025-09-19-006993" }) => {
+const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "beneficiaryLocation", localeModule = "hcm-registrationflow-CMP-2025-09-19-006993", onPageChange, addedRoles = [] }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -29,6 +31,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
 
+  console.log("currentDatacurrentData", currentData, actualState)
   // Handle adding new field
   const handleAddNewField = () => {
     if (!newFieldType?.label || !newFieldType?.field) {
@@ -62,8 +65,11 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
     setNewFieldType(null);
   };
   useEffect(() => {
-    // Initialize remote config
-    dispatch(initializeConfig());
+    // Filter page from fullParentConfig using flow and pageName
+    const pageConfig = getPageFromConfig(fullParentConfig, flow, pageName);
+
+    // Initialize config
+    dispatch(initializeConfig(pageConfig));
 
     // Fetch field master if specified
     if (fieldMasterName) {
@@ -111,11 +117,38 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
         })
       );
     }
-  }, [dispatch, fieldMasterName, localeModule, tenantId, mdmsContext, currentLocale]);
+  }, [dispatch, flow, pageName, fieldMasterName, localeModule, tenantId, mdmsContext, currentLocale]);
 
   if (!currentData || (localeModule && localizationStatus === "loading")) {
     return <Loader />;
   }
+
+  // Check button disabled states from currentData
+  const isPreviousDisabled = !currentData?.previousRoute || currentData?.previousRoute === null;
+  const isNextDisabled = !currentData?.nextRoute || currentData?.nextRoute === null;
+
+  const handlePrevious = () => {
+    if (currentData?.previousRoute && onPageChange) {
+      console.log("Navigating to previous page:", currentData.previousRoute);
+      onPageChange(currentData.previousRoute);
+    }
+  };
+
+  const handleNext = () => {
+    // Dispatch roles update to Redux
+    if (addedRoles.length > 0) {
+      dispatch(updatePageRoles({ roles: addedRoles }));
+    }
+
+    // Console the final submit data
+    console.log("Submitting current data:", { ...currentData, roles: addedRoles.length > 0 ? addedRoles : currentData.roles });
+
+    // Navigate to next page if exists
+    if (currentData?.nextRoute && onPageChange) {
+      console.log("Navigating to next page:", currentData.nextRoute);
+      onPageChange(currentData.nextRoute);
+    }
+  };
 
   const handleFieldChange = (value) => {
     const locVal = newFieldType?.label
@@ -167,6 +200,30 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", localeModule 
             <IntermediateWrapper />
           </div>
         </div>
+      </div>
+      <div className="appConfig-flex-action" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", marginTop: "20px" }}>
+        <Button
+          className="app-configure-action-button"
+          variation="secondary"
+          label={t("PREVIOUS")}
+          title={t("PREVIOUS")}
+          icon="ArrowBack"
+          isDisabled={isPreviousDisabled}
+          onClick={() => handlePrevious()}
+        />
+        <span className="app-config-tag-page" style={{ fontSize: "14px", fontWeight: "500" }}>
+          {currentData?.name || ""}
+        </span>
+        <Button
+          className="app-configure-action-button"
+          variation="secondary"
+          label={t("NEXT")}
+          title={t("NEXT")}
+          icon="ArrowForward"
+          isSuffix={true}
+          isDisabled={isNextDisabled}
+          onClick={() => handleNext()}
+        />
       </div>
       {/* {showToast && (
         <Toast

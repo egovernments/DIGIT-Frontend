@@ -4,10 +4,11 @@ import { selectField } from "./redux/remoteConfigSlice";
 import { useCustomTranslate } from "./hooks/useCustomT";
 import AppPreview from "../../../components/AppPreview";
 import SidePanelApp from "./SidePanelApp";
+import { LayoutRenderer } from "./LayoutRenderer";
 
 function AppConfiguration() {
   const dispatch = useDispatch();
-  const { currentData, selectedField, isFieldSelected } = useSelector((state) => state.remoteConfig);
+  const { currentData, selectedField, isFieldSelected, pageType } = useSelector((state) => state.remoteConfig);
   const t = useCustomTranslate();
 
   const handleFieldClick = useCallback(
@@ -17,9 +18,16 @@ function AppConfiguration() {
     [dispatch]
   );
 
+  // Determine which preview to render based on pageType
+  const isTemplateView = pageType === "template";
+
   return (
     <div>
-      <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
+      {isTemplateView ? (
+        <LayoutRenderer config={currentData} selectedField={selectedField} onFieldClick={handleFieldClick} t={t} />
+      ) : (
+        <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
+      )}
       <SidePanelApp showPanelProperties={isFieldSelected && selectedField} />
     </div>
   );
