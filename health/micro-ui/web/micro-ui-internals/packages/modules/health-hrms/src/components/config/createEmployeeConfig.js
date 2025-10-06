@@ -259,7 +259,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 required: true,
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
-                mdmsv2: true,
+                //mdmsv2: true,
                 mdmsConfig: {
                   masterName: "Designation",
                   moduleName: "common-masters",
@@ -283,7 +283,7 @@ export const CreateEmployeeConfig = {
                 allowMultiselect : true,
                 isDropdownWithChip: true,
                 chipsKey: "name",
-                mdmsv2: true,
+               // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "roles",
                   moduleName: "ACCESSCONTROL-ROLES",
