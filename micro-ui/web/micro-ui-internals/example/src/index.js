@@ -3,15 +3,7 @@ import ReactDOM from "react-dom";
 import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 // import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
-import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
-import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
-import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
-import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
-import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
-import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
-import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
-import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
+
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -59,7 +51,17 @@ const initTokens = (stateCode) => {
   if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
 };
 
-const initDigitUI = () => {
+const initDigitUI = async () => {
+  // const { DigitUI, initCoreComponents } = window.Digit;
+  const { DigitUI, initCoreComponents } = await "@egovernments/digit-ui-module-core";
+  const { initDSSComponents } = await "@egovernments/digit-ui-module-dss";
+  const { initEngagementComponents } = await "@egovernments/digit-ui-module-engagement";
+  const { initHRMSComponents } = await "@egovernments/digit-ui-module-hrms";
+  const { initUtilitiesComponents } = await "@egovernments/digit-ui-module-utilities";
+  const { initWorkbenchComponents } = await "@egovernments/digit-ui-module-workbench";
+  const { initPGRComponents } = await "@egovernments/digit-ui-module-pgr";
+  const { initOpenPaymentComponents } = await "@egovernments/digit-ui-module-open-payment";
+  const { initSandboxComponents } = await "@egovernments/digit-ui-module-sandbox";
   const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
 
   if (isMultiRootTenant) {
@@ -110,7 +112,7 @@ const initDigitUI = () => {
       stateCode={stateCode}
       enabledModules={enabledModules}
       defaultLanding="employee"
-      allowedUserTypes={["employee","citizen"]}
+      allowedUserTypes={["employee", "citizen"]}
       moduleReducers={moduleReducers}
     />,
     document.getElementById("root")
