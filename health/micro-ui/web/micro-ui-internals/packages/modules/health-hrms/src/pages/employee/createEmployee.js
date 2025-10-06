@@ -339,10 +339,8 @@ const CreateEmployee = ({ editUser = false }) => {
 
 
   // Original config assignment
-  // const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
-  const fConfig = CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
-
-
+   const fConfig = mdmsData ? mdmsData : CreateEmployeeConfig?.CreateEmployeeConfig?.[0];
+ 
   // Define your new component to be injected
   const userAssignmentComponent = {
     type: "component",
