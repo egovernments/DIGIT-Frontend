@@ -199,7 +199,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 required: true,
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
-                mdmsv2: true,
+                // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "EmployeeType",
                   moduleName: "egov-hrms",
@@ -239,7 +239,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 required: true,
-                mdmsv2: true,
+                // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "Department",
                   moduleName: "common-masters",
