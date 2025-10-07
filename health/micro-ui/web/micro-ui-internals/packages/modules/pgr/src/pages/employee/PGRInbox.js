@@ -58,7 +58,6 @@ const PGRSearchInbox = () => {
   // Fallback to static config if MDMS is not available
   const configs = PGRSearchInboxConfig();
 
-  console.log("999 PGRSearchInbox configs", configs);
 
   // Fetch the list of service definitions (e.g., complaint types) for current tenant
   const serviceDefs = Digit.Hooks.pgr.useServiceDefs(tenantId, "PGR");
