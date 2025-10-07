@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.52]  [7th-Oct-2025]
+- Added fix for privacy policy error
+
 ## [1.8.51]  [6th-Oct-2025]
 - Added the redirection fix in citizen side after login and max length fix for mobile number
 
