@@ -8,6 +8,9 @@
     "node": ">=14"
   },
   "workspaces": [
+    "micro-ui-internals/packages/libraries",
+    "micro-ui-internals/packages/react-components",
+    "micro-ui-internals/packages/modules/*"
   ],
   "homepage": "/digit-ui",
   "dependencies": {
@@ -76,7 +79,8 @@
     "build:libraries": "cd micro-ui-internals && yarn build",
     "build:prod": "webpack --mode production",
     "build:webpack": "yarn build:libraries &&cd .. && ls && cd ./web && ls && yarn build:prod",
-    "clean": "rm -rf node_modules"
+    "clean": "rm -rf node_modules",
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "browserslist": {
     "production": [
