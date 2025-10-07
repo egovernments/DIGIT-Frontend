@@ -12,7 +12,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
 
   const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, moduleName, [{ name: "PrivacyPolicy" }], {
     select: (data) => {
-      const filteredPrivacyPolicy = data?.[moduleName]?.PrivacyPolicy.find(policy => policy.module === props?.props?.module);
+      const filteredPrivacyPolicy = data?.[moduleName]?.PrivacyPolicy?.find(policy => policy.module === props?.props?.module);
       return filteredPrivacyPolicy;
     },
   });
