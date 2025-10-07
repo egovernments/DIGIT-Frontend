@@ -132,6 +132,37 @@ function flattenValidationsToField(validationsArray) {
   return result;
 }
 
+function flattenValidationsToField2(validationsArray, groupKey = "validation") {
+  const result = {};
+  if (!Array.isArray(validationsArray)) return result;
+  for (const rule of validationsArray) {
+    if (!rule || typeof rule !== "object") continue;
+    const { type, value, message } = rule;
+    if (!type || value === undefined || value === null) continue;
+    if (!result[groupKey]) result[groupKey] = {};
+    result[groupKey][type] = value;
+    if (message !== undefined && message !== null) {
+      result[groupKey][`${type}.message`] = message;
+    }
+  }
+  return result;
+}
+function flattenConfigArrays(configObj) {
+  const result = {};
+  for (const key in configObj) {
+    if (key === "validations") {
+      continue;
+    }
+    const value = configObj[key];
+    // Handle array of {type, value} objects (like validations)
+    if (Array.isArray(value) && value.every((v) => typeof v === "object" && v.type)) {
+      const flattened = flattenValidationsToField2(value, key);
+      Object.assign(result, flattened); // Only merged part (e.g., { validations: { ... } })
+    }
+  }
+  return result; // :white_check_mark: Only changed keys
+}
+
 const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
   const validationArray = [];
   if (field && field.pattern) {
@@ -151,6 +182,7 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
       ?.sort((a, b) => a.order - b.order)
       ?.map((field, index) => ({
         ...getTypeAndMetaData(field, fieldTypeMasterData),
+        ...flattenConfigArrays(field),
         ...flattenValidationsToField(field?.validations || []),
         label: field?.label || "",
         value: field?.value || "",
@@ -175,12 +207,14 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         MdmsDropdown: field?.schemaCode ? true : false,
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
+        schemaCode: field?.schemaCode || "",
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
         prefixText: field?.prefixText || "",
         suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
+        autoFillCondition: field?.autoFillCondition,
       }));
 
     return {
@@ -287,6 +321,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         prefixText: field?.prefixText || "",
         suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
+        autoFillCondition: field?.autoFillCondition,
       };
     });
 
