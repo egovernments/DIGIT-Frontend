@@ -11,6 +11,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
+  const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState("");
@@ -218,7 +219,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       case "toggle":
         return (
           <Switch
-            label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             onToggle={handleFieldChange}
             isCheckedInitially={getFieldValue()}
             shapeOnOff
@@ -229,7 +230,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         return (
           <FieldV1
             type="text"
-            label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
               setLocalValue(event.target.value);
@@ -245,7 +246,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         return (
           <FieldV1
             type="number"
-            label={t(`FIELD_DRAWER_LABEL_${panelItem.label}`)}
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
               const value = parseInt(event.target.value) || 0;
@@ -258,60 +259,68 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           />
         );
 
-      default:
-        return null;
-    }
-  };
+      case "fieldTypeDropdown": {
+        const switchRef = useRef(null);
+        const [showTooltip, setShowTooltip] = useState(false);
 
-  const renderConditionalField = (cField) => {
-    const [conditionalLocalValue, setConditionalLocalValue] = useState(selectedField[cField.bindTo] || "");
-    const conditionalDebounceRef = useRef(null);
+        // Get field type options from Redux
+        const fieldTypeOptions = fieldTypeMaster?.FieldTypeMappingConfig || [];
 
-    useEffect(() => {
-      setConditionalLocalValue(selectedField[cField.bindTo] || "");
-    }, [selectedField, cField.bindTo]);
-
-    const handleConditionalChange = useCallback(
-      (value) => {
-        if (conditionalDebounceRef.current) {
-          clearTimeout(conditionalDebounceRef.current);
-        }
-
-        conditionalDebounceRef.current = setTimeout(() => {
-          const newField = { ...selectedField };
-          newField[cField.bindTo] = value;
-          onFieldChange(newField);
-        }, 800);
-      },
-      [selectedField, cField.bindTo, onFieldChange]
-    );
-
-    const handleConditionalBlur = useCallback(() => {
-      if (conditionalDebounceRef.current) {
-        clearTimeout(conditionalDebounceRef.current);
-        const newField = { ...selectedField };
-        newField[cField.bindTo] = conditionalLocalValue;
-        onFieldChange(newField);
-      }
-    }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange]);
-
-    switch (cField.type) {
-      case "text":
-        return (
-          <FieldV1
-            key={cField.bindTo}
-            type="text"
-            label={t(`FIELD_DRAWER_LABEL_${cField.label}`)}
-            value={conditionalLocalValue}
-            onChange={(event) => {
-              setConditionalLocalValue(event.target.value);
-              handleConditionalChange(event.target.value);
-            }}
-            onBlur={handleConditionalBlur}
-            placeholder={t(cField.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-field" }}
-          />
+        // Find current selected field type based on type and format
+        const currentSelectedFieldType = fieldTypeOptions.find(
+          (item) => item?.metadata?.type === selectedField?.type && item?.metadata?.format === selectedField?.format
         );
+
+        // Get current field's metadata type
+        const metadataType = currentSelectedFieldType?.metadata?.type;
+
+        // Determine if field should be disabled
+        const isTemplate = metadataType === "template";
+        const isDynamic = metadataType === "dynamic";
+        const isMandatory = selectedField?.required === true || selectedField?.required?.required === true;
+        const isDisabled = (panelItem?.disableForRequired && isMandatory) || isTemplate || isDynamic;
+
+        return (
+          <div
+            ref={switchRef}
+            className="drawer-container-tooltip"
+            onMouseEnter={() => setShowTooltip(true)}
+            onMouseLeave={() => setShowTooltip(false)}
+          >
+            {isDisabled && <span className="onhover-tooltip-text"> {t("MANDATORY_FIELD_PROPERTIES_DISABLE_HOVER_TEXT")}</span>}
+            <FieldV1
+              config={{
+                step: "",
+              }}
+              label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+              onChange={(value) => {
+                const isIdPopulator = value?.type === "idPopulator";
+                const updatedField = {
+                  ...selectedField,
+                  type: value?.metadata?.type,
+                  format: value?.metadata?.format,
+                  fieldType: value?.fieldType,
+                  ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
+                };
+
+                onFieldChange(updatedField);
+              }}
+              placeholder={t(panelItem?.innerLabel) || ""}
+              populators={{
+                title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
+                fieldPairClassName: "drawer-toggle-conditional-field",
+                options: fieldTypeOptions
+                  .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
+                  ?.sort((a, b) => a?.order - b?.order),
+                optionsKey: "type",
+              }}
+              type={"dropdown"}
+              value={currentSelectedFieldType}
+              disabled={isDisabled}
+            />
+          </div>
+        );
+      }
       default:
         return null;
     }
@@ -322,12 +331,67 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       {renderMainField()}
       {/* Render conditional fields */}
       {getConditionalFields().map((cField, index) => (
-        <div key={`${cField.bindTo}-${index}`} style={{ marginTop: "8px" }}>
-          {renderConditionalField(cField)}
-        </div>
+        <ConditionalField key={`${cField.bindTo}-${index}`} cField={cField} selectedField={selectedField} onFieldChange={onFieldChange} />
       ))}
     </div>
   );
+});
+
+// Separate component for conditional fields to avoid hooks violations
+const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) => {
+  const { t } = useTranslation();
+  const [conditionalLocalValue, setConditionalLocalValue] = useState(selectedField[cField.bindTo] || "");
+  const conditionalDebounceRef = useRef(null);
+
+  useEffect(() => {
+    setConditionalLocalValue(selectedField[cField.bindTo] || "");
+  }, [selectedField, cField.bindTo]);
+
+  const handleConditionalChange = useCallback(
+    (value) => {
+      if (conditionalDebounceRef.current) {
+        clearTimeout(conditionalDebounceRef.current);
+      }
+
+      conditionalDebounceRef.current = setTimeout(() => {
+        const newField = { ...selectedField };
+        newField[cField.bindTo] = value;
+        onFieldChange(newField);
+      }, 800);
+    },
+    [selectedField, cField.bindTo, onFieldChange]
+  );
+
+  const handleConditionalBlur = useCallback(() => {
+    if (conditionalDebounceRef.current) {
+      clearTimeout(conditionalDebounceRef.current);
+      const newField = { ...selectedField };
+      newField[cField.bindTo] = conditionalLocalValue;
+      onFieldChange(newField);
+    }
+  }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange]);
+
+  switch (cField.type) {
+    case "text":
+      return (
+        <div style={{ marginTop: "8px" }}>
+          <FieldV1
+            type="text"
+            label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
+            value={conditionalLocalValue}
+            onChange={(event) => {
+              setConditionalLocalValue(event.target.value);
+              handleConditionalChange(event.target.value);
+            }}
+            onBlur={handleConditionalBlur}
+            placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
+            populators={{ fieldPairClassName: "drawer-field" }}
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
 });
 
 // Simple tabs component

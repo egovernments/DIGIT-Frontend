@@ -12,8 +12,8 @@ function AppConfiguration() {
   const t = useCustomTranslate();
 
   const handleFieldClick = useCallback(
-    (field, screen, card) => {
-      dispatch(selectField({ field, screen, card }));
+    (field, screen, card, cardIndex, fieldIndex) => {
+      dispatch(selectField({ field, screen, card, cardIndex, fieldIndex }));
     },
     [dispatch]
   );

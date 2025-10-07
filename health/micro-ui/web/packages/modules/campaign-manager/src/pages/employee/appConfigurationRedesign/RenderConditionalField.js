@@ -77,7 +77,7 @@ const getDefaultRules = (key) => {
 const ErrorComponent = ({ error }) => <span style={{ color: "red" }}>{error}</span>;
 const computeError = (field, currentField, t) => {
   let error = "";
-   const attr = t(field.label);
+  const attr = t(field.label);
   const valueStr = currentField?.[field?.bindTo];
 
   // 1. Pattern Validation
@@ -87,11 +87,11 @@ const computeError = (field, currentField, t) => {
     try {
       const regex = new RegExp(pattern);
       if (!regex.test(valueStr)) {
-        error = `${attr}: ${t('PATTERN_VALIDATION_FAILED')}`;
+        error = `${attr}: ${t("PATTERN_VALIDATION_FAILED")}`;
         return error;
       }
     } catch (e) {
-      return t('INVALID_REGEX_PATTERN');
+      return t("INVALID_REGEX_PATTERN");
     }
   }
 
@@ -107,7 +107,7 @@ const computeError = (field, currentField, t) => {
 
       if (compareValue !== undefined && compareValue !== null && compareValue !== "") {
         const compareNum = Number(compareValue);
-         // Skip comparison if either number is NaN
+        // Skip comparison if either number is NaN
         if (isNaN(value) || isNaN(compareNum)) {
           continue;
         }
@@ -154,22 +154,22 @@ export const RenderConditionalField = ({
   const { t } = useTranslation();
   const { state: appState, setFieldError, clearFieldError } = useAppConfigContext();
   const useT = useCustomT();
-  
+
   // Track if field has been touched
   const [isTouched, setIsTouched] = useState(false);
-  
+
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === (drawerState?.appType || drawerState?.type))
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
-  
+
   const errorKey = useMemo(() => `${drawerState?.jsonPath || drawerState?.id || "field"}::${cField?.bindTo || "bind"}`, [
     drawerState?.jsonPath,
     drawerState?.id,
     cField?.bindTo,
   ]);
-  
+
   const currentError = appState?.errorMap?.[errorKey] || "";
   const evaluatedError = useMemo(() => computeError(cField, drawerState, t), [cField, drawerState]);
 
@@ -198,9 +198,15 @@ export const RenderConditionalField = ({
         <div style={{ width: "100%" }}>
           <FieldV1
             type={cField?.type}
-            label={cField?.label}
+            label={cField?.label || null}
             withoutLabel={Boolean(!cField?.label)}
-            value={isLocalisable ? useT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]}
+            value={
+              isLocalisable
+                ? useT(drawerState?.[cField?.bindTo])
+                : drawerState?.[cField?.bindTo] === true
+                ? ""
+                : drawerState?.[cField?.bindTo]
+            }
             config={{
               step: "",
             }}
@@ -210,12 +216,12 @@ export const RenderConditionalField = ({
             }}
             onChange={(event) => {
               const value = event.target.value;
-              
+
               // Mark as touched when user starts typing
               if (!isTouched && value) {
                 setIsTouched(true);
               }
-              
+
               if (isLocalisable) {
                 updateLocalization(
                   drawerState?.[cField.bindTo] && drawerState?.[cField.bindTo] !== true
@@ -246,12 +252,14 @@ export const RenderConditionalField = ({
             disabled={disabled}
           />
           {shouldShowError && (
-            <div style={{ 
-              color: "red", 
-              fontSize: "0.875rem", 
-              marginTop: "0.25rem",
-              pointerEvents: "none" // Prevents blocking interactions
-            }}>
+            <div
+              style={{
+                color: "red",
+                fontSize: "0.875rem",
+                marginTop: "0.25rem",
+                pointerEvents: "none", // Prevents blocking interactions
+              }}
+            >
               {t(currentError)}
             </div>
           )}
@@ -260,7 +268,14 @@ export const RenderConditionalField = ({
     case "options":
       return (
         <div
-          style={{ padding: "1.5rem", border: "1px solid #c84c0e", borderRadius: "1rem", display: "flex", flexDirection: "column", gap: "1.5rem" }}
+          style={{
+            padding: "1.5rem",
+            border: "1px solid #c84c0e",
+            borderRadius: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
+          }}
         >
           {(drawerState?.[cField?.bindTo] || []).map((item, index) => (
             <div style={{ display: "flex", gap: "1rem" }} key={item.code || index}>
@@ -276,7 +291,9 @@ export const RenderConditionalField = ({
                     [cField?.bindTo]: prev?.[cField?.bindTo]?.map((i) => {
                       if (i.code && i.code === item.code) {
                         updateLocalization(
-                          item?.name ? item?.name : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
+                          item?.name
+                            ? item?.name
+                            : `${projectType}_${state?.currentScreen?.parent}_${state?.currentScreen?.name}_${item?.code}`,
                           Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage,
                           event.target.value
                         );

@@ -37,13 +37,23 @@ const remoteConfigSlice = createSlice({
     },
     // Field selection actions
     selectField(state, action) {
-      const { field, screen, card } = action.payload;
-      // Store field path for efficient updates
-      const cardIndex = state.currentData?.cards?.findIndex((c) => c === card) ?? -1;
-      const fieldIndex = card?.fields?.findIndex((f) => f === field) ?? -1;
+      const { field, screen, card, cardIndex, fieldIndex } = action.payload;
+      // Use passed indices if available, otherwise try to find them
+      let finalCardIndex = cardIndex;
+      let finalFieldIndex = fieldIndex;
+
+      if (finalCardIndex === undefined || finalCardIndex === null) {
+        // Fallback: try to find by ID or reference
+        finalCardIndex = state.currentData?.cards?.findIndex((c) => c.id === card?.id || c === card) ?? -1;
+      }
+
+      if (finalFieldIndex === undefined || finalFieldIndex === null) {
+        // Fallback: try to find by ID or reference
+        finalFieldIndex = card?.fields?.findIndex((f) => f.id === field?.id || f === field) ?? -1;
+      }
 
       state.selectedField = field;
-      state.selectedFieldPath = { cardIndex, fieldIndex };
+      state.selectedFieldPath = { cardIndex: finalCardIndex, fieldIndex: finalFieldIndex };
       state.currentScreen = screen;
       state.currentCard = card;
       state.isFieldSelected = true;
@@ -70,8 +80,6 @@ const remoteConfigSlice = createSlice({
         for (const key in updates) {
           state.currentData.cards[cardIndex].fields[fieldIndex][key] = updates[key];
         }
-        // Ensure reactivity by creating new reference
-        state.currentData = { ...state.currentData };
       }
     },
     // Field management actions

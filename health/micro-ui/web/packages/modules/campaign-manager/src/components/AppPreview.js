@@ -34,7 +34,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                     return (
                       <div
                         key={fieldIndex}
-                        onClick={() => onFieldClick && onFieldClick(field, data, card)}
+                        onClick={() => onFieldClick && onFieldClick(field, data, card, index, fieldIndex)}
                         style={{
                           cursor: "pointer",
                           border: isSelected ? "2px solid #0B4B66" : "2px solid transparent",

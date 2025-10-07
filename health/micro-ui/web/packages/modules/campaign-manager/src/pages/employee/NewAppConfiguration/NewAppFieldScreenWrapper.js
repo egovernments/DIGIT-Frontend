@@ -122,8 +122,8 @@ function NewAppFieldScreenWrapper() {
   );
 
   const handleSelectField = useCallback(
-    (field, screen, card) => {
-      dispatch(selectField({ field, screen, card }));
+    (field, screen, card, cardIndex, fieldIndex) => {
+      dispatch(selectField({ field, screen, card, cardIndex, fieldIndex }));
     },
     [dispatch]
   );
@@ -183,7 +183,7 @@ function NewAppFieldScreenWrapper() {
                   isDelete={deleteFlag === false ? false : true}
                   onDelete={() => handleDeleteField(i, index)}
                   onHide={() => handleHideField(i, index)}
-                  onSelectField={() => handleSelectField(c[i], currentCard, card[index])}
+                  onSelectField={() => handleSelectField(c[i], currentCard, card[index], index, i)}
                   config={c[i]}
                   Mandatory={Mandatory}
                   rest={rest}

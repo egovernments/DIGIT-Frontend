@@ -26,6 +26,8 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
       onChange={function noRefCheck() {}}
       placeholder={t(field?.innerLabel) || ""}
       populators={{
+        prefix: field?.prefixText || null,
+        suffix: field?.suffixText || null,
         t: field?.isMdms ? null : customT,
         fieldPairClassName: `app-preview-field-pair ${
           selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
