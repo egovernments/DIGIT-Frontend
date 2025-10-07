@@ -33,8 +33,8 @@ export const SandboxModule = ({ stateCode, userType, tenants }) => {
 const componentsToRegister = {
   SandboxModule,
   SandboxCard,
-  WorkbenchCard: null,
-  HRMSCard:null,
+  // WorkbenchCard: null,
+  // HRMSCard:null,
   SandboxModuleCard: ModuleCard,
   ConfigUploaderComponent,
   LogoUploaderComponent

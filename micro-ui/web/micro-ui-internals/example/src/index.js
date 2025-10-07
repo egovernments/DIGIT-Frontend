@@ -11,7 +11,7 @@ import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
-import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
+// import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -104,7 +104,7 @@ const initDigitUI = async() => {
   initWorkbenchComponents();
   initPGRComponents();
   initOpenPaymentComponents();
-  initSandboxComponents();
+  // initSandboxComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
