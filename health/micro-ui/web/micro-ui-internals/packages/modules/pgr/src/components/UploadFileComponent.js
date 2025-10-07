@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Card, UploadFile, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
+import jsPDF from "jspdf";
 
 const UploadedFileComponent = ({ config, onSelect }) => {
   const { t } = useTranslation();
@@ -22,12 +23,18 @@ const UploadedFileComponent = ({ config, onSelect }) => {
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
           try {
-            const response = await Digit.UploadServices.Filestorage("property-upload", file, tenantId);
+            // Convert JPEG/JPG to PDF before uploading
+            let fileToUpload = file;
+            if (file.type === "image/jpeg" || file.type === "image/jpg") {
+              fileToUpload = await convertImageToPdf(file);
+            }
+
+            const response = await Digit.UploadServices.Filestorage("property-upload", fileToUpload, tenantId);
             console.log("999 response", response);
             if (response?.data?.files?.length > 0) {
               const uploaded = response?.data?.files[0];
               setUploadedFile(uploaded);
-              
+
               if (config?.key) {
                 const auditDetails = {
                   createdBy: user?.info?.uuid,
@@ -53,6 +60,39 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   function selectFile(e) {
     setFile(e.target.files[0]);
   }
+
+  // Convert image file to PDF
+  const convertImageToPdf = (imageFile) => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (event) => {
+        const img = new Image();
+        img.onload = () => {
+          try {
+            const pdf = new jsPDF();
+            const imgWidth = 190;
+            const imgHeight = (img.height * imgWidth) / img.width;
+            pdf.addImage(img, 'JPEG', 10, 10, imgWidth, imgHeight);
+
+            // Convert PDF to Blob
+            const pdfBlob = pdf.output('blob');
+
+            // Create new File object with .pdf extension
+            const fileName = imageFile.name.replace(/\.(jpg|jpeg)$/i, '.pdf');
+            const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
+
+            resolve(pdfFile);
+          } catch (error) {
+            reject(error);
+          }
+        };
+        img.onerror = reject;
+        img.src = event.target.result;
+      };
+      reader.onerror = reject;
+      reader.readAsDataURL(imageFile);
+    });
+  };
 
   async function downloadFile() {
     if (!uploadedFile?.fileStoreId) return;

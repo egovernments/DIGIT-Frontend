@@ -159,7 +159,7 @@ const PGRDetails = () => {
 
   // Fetch complaint details
   const { isLoading, isError, error, data: pgrData, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch({ serviceRequestId: id }, tenantId);
-
+  console.log( "999 pgrData", pgrData);
   // Hook to update the complaint
   const { mutate: UpdateComplaintMutation } = Digit.Hooks.pgr.usePGRUpdate(tenantId);
 
@@ -170,6 +170,8 @@ const PGRDetails = () => {
     config: { enabled: true },
     changeQueryName: id,
   });
+
+  console.log( "99 workflowData", workflowData);
 
   // Fetch business service metadata
   const { isLoading: isBusinessServiceLoading, data: businessServiceData } = Digit.Hooks.useCustomAPIHook({
@@ -193,6 +195,7 @@ const PGRDetails = () => {
 
   // Prepare and submit the update complaint request
   const handleActionSubmit = (_data) => {
+    console.log("999 action submit data", _data, "selectedAction", selectedAction);
     const actionConfig = ACTION_CONFIGS.find((config) => config.actionType === selectedAction.action);
 
   if (!actionConfig) return;
@@ -231,11 +234,11 @@ const PGRDetails = () => {
       service: { ...pgrData?.ServiceWrappers[0].service },
       workflow: {
         action: selectedAction.action,
-        assignes: _data?.SelectedAssignee?.userServiceUUID ? [_data?.SelectedAssignee?.userServiceUUID] : null,
+        assignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         hrmsAssignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         comments: _data?.SelectedComments || "",
         // Include documents array if complaint file is provided
-        ..._data?.complaintFile && { verificationDocuments: [_data.complaintFile] }
+        verificationDocument: _data?.complaintFile ? _data.complaintFile : null
       },
     };
     handleResponseForUpdateComplaint(updateRequest);
@@ -264,6 +267,8 @@ const PGRDetails = () => {
       },
     });
   };
+
+
 
   // Enhance config with roles and department dynamically
   const getUpdatedConfig = (selectedAction, workflowData, configs, serviceDefs, complaintData) => {
@@ -351,7 +356,7 @@ const PGRDetails = () => {
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
-                    value: t(`CS_COMMON_PGR_STATE_${pgrData?.ServiceWrappers[0].service?.applicationStatus || "NA"}`),
+                    value:  pgrData?.ServiceWrappers[0].workflow.assignes?.length>0? t("WF_INBOX_ASSIGNED"):t("WF_INBOX_PENDING_ASSIGNMENT")
                   },
                   {
                     inline: true,
