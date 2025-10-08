@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.53]  [8th-Oct-2025]
+- Added dynamicLoginComponent (custom) to be displayed below login card
+
 ## [1.8.52]  [7th-Oct-2025]
 - Added fix for privacy policy error
 
