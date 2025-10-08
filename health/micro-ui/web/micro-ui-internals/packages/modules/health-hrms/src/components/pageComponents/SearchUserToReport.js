@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AttendanceService from "../../services/hrms/SearchUser";
 import SelectableList from "./SelectableList";
+import ReportingUserSearchTable from "./ReportingUserSearchTable";
 
 
 
@@ -33,16 +34,23 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
     const [searchQuery, setSearchQuery] = useState("");
     const [searchedIndividual, setSearchedIndividual] = useState([]);
 
-    const [selectedUser, setSelectedUser] = useState();
+    const [selectedUser, setSelectedUser] = useState(null);
     const [loading, setLoading] = useState(false);
 
+    const [totalCount, setTotalCount] = useState(0);
+    const [offset, setOffset] = useState(0); // ✅ store offset
 
-    const searchUser = async (name) => {
+    const rowsPerPage = 5;
+
+
+    const searchUser = async (name, currentoffset=0, limit=rowsPerPage) => {
 
         try {
+  
 
             setLoading(true); // start loader
             setSearchedIndividual([]);
+            setSelectedUser(null);
 
             const locallity = Digit.SessionStorage.get("selectedBoundary")?.code || null;
 
@@ -61,10 +69,12 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
             }
 
             const result = await AttendanceService.searchIndividual(
-                { name, locallity, tenantId }
+                { name, locallity, tenantId, offset:currentoffset, limit }
             );
 
-            setSearchedIndividual(result)
+            setSearchedIndividual(result.Individual)
+            setTotalCount(result.TotalCount)
+            setOffset(currentoffset);
         } catch (error) {
 
             setLoading(false);
@@ -100,7 +110,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
     // -------- Render --------
     return (
         <PopUp
-            style={{ width: "500px", minHeight: "400px" }}
+            style={{ width: "800px", minHeight: "430px" }}
             onClose={onClose}
             heading={t("HCM_AM_SEARCH_USER")}
             onOverlayClick={onClose}
@@ -127,7 +137,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                             }} onKeyPress={(e) => {
                                 if (e.key === "Enter") {
                                     e.preventDefault(); // prevent form submit if inside a form
-                                    searchUser(searchQuery); // call your API
+                                    searchUser(searchQuery,0,rowsPerPage); // call your API
 
 
                                 }
@@ -155,7 +165,20 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                             </div>
                         }
 
-                        {!loading && searchedIndividual.length > 0 && <SelectableList selectableList={searchedIndividual} onSelect={onSelect} />}
+                        {!loading && searchedIndividual.length > 0 && (
+                            <ReportingUserSearchTable
+                                data={searchedIndividual}
+                                totalCount={totalCount} // you'll store this in state
+                                rowsPerPage={5}
+                                 offset={offset}
+                                loading={loading}
+                                onSelect={onSelect}
+                                onPageChange={({ offset, limit }) => {
+                                    searchUser(searchQuery, offset, limit); // call your search function with new values
+                                }}
+                            />
+                        )
+                        }
 
 
 
@@ -164,7 +187,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
             ]}
             footerChildren={[
                 <Button
-                    isDisabled={searchedIndividual.length > 0 ? false : true}
+                    isDisabled={selectedUser ? false : true}
                     type={"button"}
                     size={"large"}
                     variation={"primary"}

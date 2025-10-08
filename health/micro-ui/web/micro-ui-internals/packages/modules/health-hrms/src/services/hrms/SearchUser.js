@@ -72,11 +72,11 @@ export const AttendanceService = {
   },
 
 
-  searchIndividual: async ({ name, locallity, tenantId }) => {
+  searchIndividual: async ({ name, locallity, tenantId ,offset,limit}) => {
     try {
 
       //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
-      const result = await AttendeeService.search(tenantId, null, { limit: 10, offset: 0 }, {
+      const result = await AttendeeService.search(tenantId, null, { limit: limit || 5, offset: offset|| 0 }, {
 
         "Individual": {
 
@@ -99,7 +99,7 @@ export const AttendanceService = {
 
       });
 
-      return result.Individual;
+      return result;
     } catch (error) {
       throw error; // throw on error
     }
