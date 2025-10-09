@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.54]  [8th-Oct-2025]
+- Updated the validation for email, css fix and email sending in payload while otp flow
+
 ## [1.8.53]  [8th-Oct-2025]
 - Added dynamicLoginComponent (custom) to be displayed below login card
 

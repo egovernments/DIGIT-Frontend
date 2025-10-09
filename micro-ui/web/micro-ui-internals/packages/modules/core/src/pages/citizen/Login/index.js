@@ -164,10 +164,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     try {
       setIsOtpValid(true);
       setCanSubmitOtp(false);
-      const { mobileNumber, otp, name } = params;
+      const { mobileNumber, otp, name, userName } = params;
       if (isUserRegistered) {
         const requestData = {
-          username: mobileNumber,
+          username: mobileNumber || userName,
           password: otp,
           tenantId: stateCode,
           userType: getUserType(),
@@ -190,7 +190,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       } else if (!isUserRegistered) {
         const requestData = {
           name,
-          username: mobileNumber,
+          username: mobileNumber || userName,
           otpReference: otp,
           tenantId: stateCode,
         };
