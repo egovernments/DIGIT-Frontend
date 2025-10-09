@@ -8,7 +8,7 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
   const { t } = useTranslation();
   // Get field type mapping from the field master data
-  const fieldTypeMasterData = byName?.FieldTypeMappingConfig || [];
+  const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
   // Get the field type
   const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);

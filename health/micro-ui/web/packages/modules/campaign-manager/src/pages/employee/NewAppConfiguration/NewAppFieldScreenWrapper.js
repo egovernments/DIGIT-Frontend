@@ -2,14 +2,7 @@ import React, { Fragment, useCallback, useState, useRef, useEffect } from "react
 import { useTranslation } from "react-i18next";
 import { Button, Divider, LabelFieldPair, TextInput } from "@egovernments/digit-ui-components";
 import { useSelector, useDispatch } from "react-redux";
-import {
-  deleteField,
-  hideField,
-  reorderFields,
-  addSection,
-  selectField,
-  handleShowAddFieldPopup,
-} from "./redux/remoteConfigSlice";
+import { deleteField, hideField, reorderFields, addSection, selectField, handleShowAddFieldPopup } from "./redux/remoteConfigSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import NewDraggableField from "./NewDraggableField";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
@@ -36,27 +29,30 @@ const FooterLabelField = React.memo(({ label, index, currentLocale, dispatch, t 
     };
   }, []);
 
-  const handleChange = useCallback((value) => {
-    setLocalValue(value);
+  const handleChange = useCallback(
+    (value) => {
+      setLocalValue(value);
 
-    // Clear previous timer
-    if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
-    }
-
-    // Debounce dispatch
-    debounceTimerRef.current = setTimeout(() => {
-      if (label) {
-        dispatch(
-          updateLocalizationEntry({
-            code: label,
-            locale: currentLocale || "en_IN",
-            message: value,
-          })
-        );
+      // Clear previous timer
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
       }
-    }, 800);
-  }, [label, currentLocale, dispatch]);
+
+      // Debounce dispatch
+      debounceTimerRef.current = setTimeout(() => {
+        if (label) {
+          dispatch(
+            updateLocalizationEntry({
+              code: label,
+              locale: currentLocale || "en_IN",
+              message: value,
+            })
+          );
+        }
+      }, 800);
+    },
+    [label, currentLocale, dispatch]
+  );
 
   const handleBlur = useCallback(() => {
     // Force immediate dispatch on blur
@@ -94,9 +90,6 @@ function NewAppFieldScreenWrapper() {
   const dispatch = useDispatch();
   const { currentData } = useSelector((state) => state.remoteConfig);
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
-  const searchParams = new URLSearchParams(location.search);
-  const projectType = searchParams.get("prefix");
-  const formId = searchParams.get("formId");
 
   const currentCard = currentData;
 
@@ -128,14 +121,16 @@ function NewAppFieldScreenWrapper() {
     [dispatch]
   );
 
-  const handleAddField = useCallback((currentCard, card) => {
-    dispatch(handleShowAddFieldPopup({ currentCard, card }));
-  }, [dispatch]);
+  const handleAddField = useCallback(
+    (currentCard, card) => {
+      dispatch(handleShowAddFieldPopup({ currentCard, card }));
+    },
+    [dispatch]
+  );
 
   const handleAddSection = useCallback(() => {
     dispatch(addSection());
   }, [dispatch]);
-
 
   if (!currentCard) {
     return (

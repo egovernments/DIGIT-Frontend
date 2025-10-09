@@ -12,15 +12,18 @@ import { useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
 
-const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "beneficiaryLocation", localeModule = "hcm-registrationflow-CMP-2025-09-19-006993", onPageChange, addedRoles = [] }) => {
+const AppConfigurationWrapper = ({
+  flow = "REGISTRATION-DELIVERY",
+  pageName = "beneficiaryLocation",
+  localeModule = "hcm-registrationflow-CMP-2025-09-19-006993",
+  onPageChange,
+  addedRoles = [],
+}) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const searchParams = new URLSearchParams(location.search);
-  const fieldMasterName = searchParams.get("fieldType");
   const { t } = useTranslation();
   const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const dispatch = useDispatch();
-  const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const [newFieldType, setNewFieldType] = useState(null);
   // Redux selectors
@@ -31,15 +34,14 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "b
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
 
-  console.log("currentDatacurrentData", currentData, actualState)
   // Handle adding new field
   const handleAddNewField = () => {
     if (!newFieldType?.label || !newFieldType?.field) {
       return; // Validation: ensure required fields are present
     }
 
-    // Create the new field object based on the selected field type
-    const selectedFieldType = fieldTypeMaster?.FieldTypeMappingConfig?.find((field) => field.type === newFieldType.field.type);
+    // Create the new field object based on the selected field type - using fixed key 'fieldTypeMappingConfig'
+    const selectedFieldType = fieldTypeMaster?.fieldTypeMappingConfig?.find((field) => field.type === newFieldType.field.type);
 
     const newFieldData = {
       type: newFieldType.field.type,
@@ -72,24 +74,22 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "b
     dispatch(initializeConfig(pageConfig));
 
     // Fetch field master if specified
-    if (fieldMasterName) {
-      dispatch(
-        getFieldMaster({
-          tenantId,
-          moduleName: MODULE_CONSTANTS,
-          name: fieldMasterName,
-          mdmsContext: mdmsContext,
-          limit: 10000,
-        })
-      );
-    }
+    dispatch(
+      getFieldMaster({
+        tenantId,
+        moduleName: MODULE_CONSTANTS,
+        name: "FieldMaster",
+        mdmsContext: mdmsContext,
+        limit: 10000,
+      })
+    );
 
     // Fetch field panel master
     dispatch(
       getFieldPanelMaster({
         tenantId,
         moduleName: MODULE_CONSTANTS,
-        name: "FieldPropertiesPanelConfig",
+        name: "AppPanelMasters",
         mdmsContext: mdmsContext,
         limit: 10000,
       })
@@ -117,7 +117,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "b
         })
       );
     }
-  }, [dispatch, flow, pageName, fieldMasterName, localeModule, tenantId, mdmsContext, currentLocale]);
+  }, [dispatch, flow, pageName, localeModule, tenantId, mdmsContext, currentLocale]);
 
   if (!currentData || (localeModule && localizationStatus === "loading")) {
     return <Loader />;
@@ -201,7 +201,10 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "b
           </div>
         </div>
       </div>
-      <div className="appConfig-flex-action" style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", marginTop: "20px" }}>
+      <div
+        className="appConfig-flex-action"
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", marginTop: "20px" }}
+      >
         <Button
           className="app-configure-action-button"
           variation="secondary"
@@ -265,9 +268,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", pageName = "b
                 {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
               </span>
               <Dropdown
-                option={fieldTypeMaster?.FieldTypeMappingConfig}
+                option={fieldTypeMaster?.fieldTypeMappingConfig}
                 optionKey="type"
-                // selected={fieldTypeMaster?.FieldTypeMappingConfig.find((option) => option.type === newFieldType.field)}
                 selected={newFieldType?.field || null}
                 select={(value) => {
                   // Update the newdata state with the selected value from the dropdown

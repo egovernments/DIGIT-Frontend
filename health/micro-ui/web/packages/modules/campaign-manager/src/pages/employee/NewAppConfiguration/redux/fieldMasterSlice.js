@@ -4,15 +4,11 @@ import dummyFieldTypeConfig from "../configs/dummyFieldTypeConfig.json";
 // Async thunk with status/error tracking
 export const getFieldMaster = createAsyncThunk(
   "fieldTypeMaster/fetch",
-  async ({ tenantId, moduleName, name, limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
+  async ({ tenantId, moduleName = "HCM-ADMIN-CONSOLE", name = "FieldMaster", limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
     try {
-      const existing = getState()?.fieldTypeMaster?.byName?.[name];
+      // Always check for 'fieldTypeMappingConfig' regardless of the master name
+      const existing = getState()?.fieldTypeMaster?.byName?.fieldTypeMappingConfig;
       if (existing) return existing;
-
-      // For development, use dummy data for FieldTypeMappingConfig
-      if (name === "FieldTypeMappingConfig") {
-        return dummyFieldTypeConfig;
-      }
 
       const contextPath = mdmsContext || window?.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
       const url = `/${contextPath}/v1/_search`;
@@ -39,11 +35,9 @@ export const getFieldMaster = createAsyncThunk(
       const data = response?.MdmsRes?.[moduleName]?.[name] || [];
       return data;
     } catch (err) {
-      // Fallback to dummy data for FieldTypeMappingConfig on error
-      if (name === "FieldTypeMappingConfig") {
-        return dummyFieldTypeConfig;
-      }
-      return rejectWithValue(err?.message || "Failed to fetch field master");
+      // Fallback to dummy data on error
+      console.error("Failed to fetch from MDMS, using fallback:", err);
+      return dummyFieldTypeConfig;
     }
   }
 );
@@ -69,8 +63,8 @@ const fieldMasterSlice = createSlice({
       })
       .addCase(getFieldMaster.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const { name } = action.meta.arg;
-        state.byName[name] = action.payload;
+        // Always save as 'fieldTypeMappingConfig' regardless of the master name
+        state.byName.fieldTypeMappingConfig = action.payload;
       })
       .addCase(getFieldMaster.rejected, (state, action) => {
         state.status = "failed";

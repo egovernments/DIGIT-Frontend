@@ -74,7 +74,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
           </div>
           <Tag
             icon=""
-            label={t(getFieldTypeFromMasterData(rest?.field || { type, format: rest?.format }, fieldTypeMaster.FieldTypeMappingConfig))}
+            label={t(getFieldTypeFromMasterData(rest?.field || { type, format: rest?.format }, fieldTypeMaster.fieldTypeMappingConfig))}
             className="app-config-field-tag"
             labelStyle={{}}
             showIcon={false}

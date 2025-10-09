@@ -6,6 +6,8 @@ import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
 import { getFieldTypeFromMasterData, getFieldValueByPath } from "./helpers";
+import { TextInput, Button } from "@egovernments/digit-ui-components";
+import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 
 const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType }) => {
   const { t } = useTranslation();
@@ -58,25 +60,22 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     };
   }, []);
 
-  // Check if conditional fields should be shown
-  const shouldShowConditionalFields = () => {
-    if (!panelItem?.showFieldOnToggle) {
-      return false;
-    }
-    const fieldValue = getFieldValue();
-    return Boolean(fieldValue);
-  };
-
-  // Get conditional fields to show
+  // Get conditional fields to show based on toggle value
   const getConditionalFields = () => {
-    if (!shouldShowConditionalFields() || !Array.isArray(panelItem?.conditionalField)) {
+    // Only show conditional fields if showFieldOnToggle is enabled
+    if (!panelItem?.showFieldOnToggle || !Array.isArray(panelItem?.conditionalField)) {
       return [];
     }
+
+    const toggleValue = Boolean(getFieldValue());
+
     return panelItem.conditionalField.filter((cField) => {
+      // If no condition specified, always show the field
       if (cField.condition === undefined) {
         return true;
       }
-      return cField.condition === Boolean(getFieldValue());
+      // Show field only if its condition matches the current toggle value
+      return cField.condition === toggleValue;
     });
   };
 
@@ -263,8 +262,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const switchRef = useRef(null);
         const [showTooltip, setShowTooltip] = useState(false);
 
-        // Get field type options from Redux
-        const fieldTypeOptions = fieldTypeMaster?.FieldTypeMappingConfig || [];
+        // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
+        const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
 
         // Find current selected field type based on type and format
         const currentSelectedFieldType = fieldTypeOptions.find(
@@ -299,10 +298,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                   ...selectedField,
                   type: value?.metadata?.type,
                   format: value?.metadata?.format,
-                  fieldType: value?.fieldType,
                   ...(isIdPopulator && { isMdms: true, MdmsDropdown: true, schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR" }),
                 };
-
                 onFieldChange(updatedField);
               }}
               placeholder={t(panelItem?.innerLabel) || ""}
@@ -389,6 +386,86 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
           />
         </div>
       );
+    case "options":
+      return (
+        <div
+          style={{
+            padding: "1.5rem",
+            border: "1px solid #c84c0e",
+            borderRadius: "1rem",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
+          }}
+        >
+          {(selectedField[cField.bindTo] || []).map((item, index) => (
+            <div key={item.code || index} style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
+              <TextInput
+                type="text"
+                value={item.name || ""}
+                placeholder={t("OPTION_PLACEHOLDER")}
+                onChange={(e) => {
+                  const updated = (selectedField[cField.bindTo] || []).map((i) =>
+                    i.code === item.code ? { ...i, name: e.target.value } : i
+                  );
+                  onFieldChange({ ...selectedField, [cField.bindTo]: updated });
+                }}
+                // disabled={disabled}
+              />
+              <div
+                onClick={() => {
+                  const filtered = (selectedField[cField.bindTo] || []).filter((i) => i.code !== item.code);
+                  onFieldChange({ ...selectedField, [cField.bindTo]: filtered });
+                }}
+                style={{
+                  cursor: "pointer",
+                  color: "#c84c0e",
+                  fontWeight: 600,
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "0.5rem",
+                }}
+              >
+                <DustbinIcon />
+              </div>
+            </div>
+          ))}
+
+          <Button
+            type="button"
+            icon="AddIcon"
+            size="small"
+            variation="tertiary"
+            label={t("ADD_OPTIONS")}
+            // disabled={disabled}
+            onClick={() => {
+              const newOption = { code: crypto.randomUUID(), name: "" };
+              const updated = selectedField[cField.bindTo] ? [...selectedField[cField.bindTo], newOption] : [newOption];
+              onFieldChange({ ...selectedField, [cField.bindTo]: updated });
+            }}
+          />
+        </div>
+      );
+
+    case "dropdown":
+      const dropdownOptionKey = cField.optionKey || "schemaCode";
+      const bindValue = selectedField[cField.bindTo];
+      return (
+        <div style={{ marginTop: "8px" }}>
+          <FieldV1
+            type="dropdown"
+            label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`${cField.label}`)) : null}
+            value={cField.options?.find((i) => i[dropdownOptionKey] === bindValue) || null}
+            onChange={(value) => onFieldChange({ ...selectedField, [cField.bindTo]: value?.[dropdownOptionKey] })}
+            placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
+            populators={{
+              options: cField.options || [],
+              optionsKey: dropdownOptionKey,
+              fieldPairClassName: "drawer-field",
+            }}
+          />
+        </div>
+      );
     default:
       return null;
   }
@@ -418,20 +495,20 @@ function NewDrawerFieldComposer() {
   const { byName: panelProperties } = useSelector((state) => state.fieldPanelMaster);
   // Local state for tabs
   const [activeTab, setActiveTab] = useState("content");
-  // Get panel configuration
-  const panelConfig = panelProperties?.FieldPropertiesPanelConfig || {};
+  // Get panel configuration - using fixed key 'drawerPanelConfig'
+  const panelConfig = panelProperties?.drawerPanelConfig || {};
   const tabs = Object.keys(panelConfig);
   // Get current tab properties
   const currentTabProperties = useMemo(() => {
     return panelConfig[activeTab] || [];
   }, [panelConfig, activeTab]);
 
-  // Get field type from field type master
+  // Get field type from field type master - using fixed key 'fieldTypeMappingConfig'
   const fieldType = useMemo(() => {
-    if (!selectedField || !fieldTypeMaster?.FieldTypeMappingConfig) {
+    if (!selectedField || !fieldTypeMaster?.fieldTypeMappingConfig) {
       return selectedField?.type || "textInput";
     }
-    return getFieldTypeFromMasterData(selectedField, fieldTypeMaster.FieldTypeMappingConfig);
+    return getFieldTypeFromMasterData(selectedField, fieldTypeMaster.fieldTypeMappingConfig);
   }, [selectedField, fieldTypeMaster]);
 
   // Filter properties based on field type visibility

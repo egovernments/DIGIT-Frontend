@@ -180,6 +180,66 @@ const dummyPanelConfig = {
       showFieldOnToggle: false,
       visibilityEnabledFor: [],
     },
+    {
+      label: "isMdms",
+      order: 12,
+      fieldType: "toggle",
+      defaultValue: false,
+      bindTo: "isMdms",
+      conditionalField: [
+        {
+          type: "dropdown",
+          label: "APPCONFIG_SELECT_SCHEMA",
+          bindTo: "schemaCode",
+          jsonPath: "schemaCode",
+          condition: true,
+          options: [
+            {
+              masterName: "GenderType",
+              moduleName: "common-masters",
+              schemaCode: "common-masters.GenderType",
+            },
+            {
+              masterName: "HOUSE_STRUCTURE_TYPES",
+              moduleName: "HCM",
+              schemaCode: "HCM.HOUSE_STRUCTURE_TYPES",
+            },
+            {
+              masterName: "ID_TYPE_OPTIONS_POPULATOR",
+              moduleName: "HCM",
+              schemaCode: "HCM.ID_TYPE_OPTIONS_POPULATOR",
+            },
+            {
+              masterName: "DELIVERY_COMMENT_OPTIONS_POPULATOR",
+              moduleName: "HCM",
+              schemaCode: "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR",
+            },
+            {
+              masterName: "ServiceDefs",
+              moduleName: "RAINMAKER-PGR",
+              schemaCode: "RAINMAKER-PGR.ServiceDefs",
+            },
+            {
+              masterName: "REFERRAL_REASONS",
+              moduleName: "HCM",
+              schemaCode: "HCM.REFERRAL_REASONS",
+            },
+            {
+              masterName: "SEARCH_HOUSEHOLD_FILTERS",
+              moduleName: "HCM",
+              schemaCode: "HCM.SEARCH_HOUSEHOLD_FILTERS",
+            },
+          ],
+        },
+        {
+          type: "options",
+          bindTo: "dropDownOptions",
+          condition: false,
+        },
+      ],
+      showFieldOnToggle: true,
+      visibilityEnabledFor: ["dropdown", "radio", "select", "searchableDropdown"],
+    },
   ],
   validation: [
     {
@@ -270,15 +330,11 @@ const dummyPanelConfig = {
 // Async thunk with status/error tracking
 export const getFieldPanelMaster = createAsyncThunk(
   "fieldPanelMaster/fetch",
-  async ({ tenantId, moduleName, name, limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
+  async ({ tenantId, moduleName = "HCM-ADMIN-CONSOLE", name = "AppPanelMasters", limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
     try {
-      const existing = getState()?.fieldPanelMaster?.byName?.[name];
+      // Always check for 'drawerPanelConfig' regardless of the master name
+      const existing = getState()?.fieldPanelMaster?.byName?.drawerPanelConfig;
       if (existing) return existing;
-
-      // For development, use dummy data
-      if (name === "FieldPropertiesPanelConfig") {
-        return dummyPanelConfig;
-      }
 
       const contextPath = mdmsContext || window?.globalConfigs?.getConfig("MDMS_V1_CONTEXT_PATH") || "egov-mdms-service";
       const url = `/${contextPath}/v1/_search`;
@@ -303,13 +359,20 @@ export const getFieldPanelMaster = createAsyncThunk(
         },
       });
       const data = response?.MdmsRes?.[moduleName]?.[name] || [];
+
+      // Extract the actual config from the MDMS response
+      // MDMS returns an array with an object containing id and the actual content/validation
+      // We only want content and validation, not the id (which would show up as a tab)
+      if (Array.isArray(data) && data.length > 0 && data[0]?.content && data[0]?.validation) {
+        const { content, validation } = data[0];
+        return { content, validation };
+      }
+
       return data;
     } catch (err) {
       // Fallback to dummy data on error
-      if (name === "FieldPropertiesPanelConfig") {
-        return dummyPanelConfig;
-      }
-      return rejectWithValue(err?.message || "Failed to fetch field master");
+      console.error("Failed to fetch from MDMS, using fallback:", err);
+      return dummyPanelConfig;
     }
   }
 );
@@ -336,8 +399,8 @@ const fieldPanelMasterSlice = createSlice({
       })
       .addCase(getFieldPanelMaster.fulfilled, (state, action) => {
         state.status = "succeeded";
-        const { name } = action.meta.arg;
-        state.byName[name] = action.payload;
+        // Always save as 'drawerPanelConfig' regardless of the master name
+        state.byName.drawerPanelConfig = action.payload;
       })
       .addCase(getFieldPanelMaster.rejected, (state, action) => {
         state.status = "failed";

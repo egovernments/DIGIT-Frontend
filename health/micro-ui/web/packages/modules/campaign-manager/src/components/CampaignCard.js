@@ -57,7 +57,7 @@ const CampaignCard = () => {
     },
     {
       label: t("NEW APP CONFIGURATION"),
-      link: `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?variant=app&masterName=FormConfig&fieldType=FieldTypeMappingConfig&prefix=CMP-2025-09-29-009540&localeModule=APPONE&tenantId=mz&campaignNumber=CMP-2025-09-29-009540&formId=default&projectType=Schisto`,
+      link: `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign`,
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
