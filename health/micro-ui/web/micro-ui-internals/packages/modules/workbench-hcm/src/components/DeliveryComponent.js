@@ -1,6 +1,6 @@
 import React, { useMemo ,Fragment} from 'react';
 import { useTranslation } from 'react-i18next';
-import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
+import useSimpleElasticsearchWithProxy from '../hooks/useSimpleElasticsearchWithProxy';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import withGenericFilter from './withGenericFilter';
@@ -285,15 +285,16 @@ const DeliveryComponentBase = ({
     }
   }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange]);
 
-  // Use the simple Elasticsearch hook
+  // Use the simple Elasticsearch hook with proxy support
   const {
     data,
     loading,
     error,
     progress,
     metadata,
-    refetch
-  } = useSimpleElasticsearch({
+    refetch,
+    usingProxy
+  } = useSimpleElasticsearchWithProxy({
     indexName: getKibanaDetails('projectTaskIndex') || 'project-task-index-v1',
     query: elasticsearchQuery,
     sourceFields: [
@@ -313,14 +314,16 @@ const DeliveryComponentBase = ({
     maxBatchSize: 2500,
     parallelBatches: 4,
     requiresAuth: true,
-    enabled: !externalLoading && !!projectId
+    enabled: !externalLoading && !!projectId,
+    useProxy: window.ELASTIC_USE_PROXY || false // Enable proxy mode when configured
   });
 console.log('🚚 Delivery data received:', {
   recordsReceived: data?.length || 0,
   totalAvailable: metadata?.totalAvailable || 0,
   totalRecords: metadata?.totalRecords || 0,
   isComplete: (data?.length || 0) === (metadata?.totalAvailable || 0),
-  fetchedPercentage: metadata?.totalAvailable ? ((data?.length || 0) / metadata.totalAvailable * 100).toFixed(1) + '%' : 'N/A'
+  fetchedPercentage: metadata?.totalAvailable ? ((data?.length || 0) / metadata.totalAvailable * 100).toFixed(1) + '%' : 'N/A',
+  usingProxy: usingProxy ? '✅ Using Proxy' : '❌ Direct Connection'
 });
 
   // Transform data for table display
