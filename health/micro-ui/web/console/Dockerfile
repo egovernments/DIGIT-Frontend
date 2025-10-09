@@ -37,9 +37,7 @@ RUN yarn build:webpack
 # Build proxy server stage
 FROM node:14-alpine3.16 AS proxy
 WORKDIR /proxy
-# Copy proxy files - they should be in console directory
-COPY ./console/proxy-server.js ./proxy-server.js
-COPY ./console/proxy-package.json ./package.json
+COPY ./proxy/package.json ./proxy/server.js ./
 RUN npm install --production
 
 # Final stage with nginx and proxy server
@@ -79,7 +77,7 @@ RUN echo "[supervisord]" > /etc/supervisord.conf && \
     echo "stderr_logfile_maxbytes=0" >> /etc/supervisord.conf && \
     echo "" >> /etc/supervisord.conf && \
     echo "[program:proxy]" >> /etc/supervisord.conf && \
-    echo "command=node /proxy/proxy-server.js" >> /etc/supervisord.conf && \
+    echo "command=node /proxy/server.js" >> /etc/supervisord.conf && \
     echo "directory=/proxy" >> /etc/supervisord.conf && \
     echo "autostart=true" >> /etc/supervisord.conf && \
     echo "autorestart=true" >> /etc/supervisord.conf && \

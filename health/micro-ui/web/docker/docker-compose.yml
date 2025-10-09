@@ -19,6 +19,8 @@ services:
     depends_on:
       - elasticsearch
       - kibana
+    volumes:
+      - ./proxy:/usr/local/share/proxy-config:ro
 
   elasticsearch:
     image: docker.elastic.co/elasticsearch/elasticsearch:7.17.9

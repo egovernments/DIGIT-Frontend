@@ -145,7 +145,12 @@ app.get('/health', (req, res) => {
   res.status(200).json({ 
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
+    environment: {
+      elasticsearchUrl: ELASTICSEARCH_URL,
+      kibanaUrl: KIBANA_URL,
+      port: PORT
+    }
   });
 });
 
@@ -158,9 +163,10 @@ app.use((err, req, res, next) => {
 });
 
 const server = app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Elasticsearch proxy server running on port ${PORT}`);
-  console.log(`Proxying to Elasticsearch: ${ELASTICSEARCH_URL}`);
-  console.log(`Proxying to Kibana: ${KIBANA_URL}`);
+  console.log(`🚀 Elasticsearch proxy server running on port ${PORT}`);
+  console.log(`📡 Proxying to Elasticsearch: ${ELASTICSEARCH_URL}`);
+  console.log(`📊 Proxying to Kibana: ${KIBANA_URL}`);
+  console.log(`🔗 Health check: http://localhost:${PORT}/health`);
 });
 
 process.on('SIGTERM', () => {
