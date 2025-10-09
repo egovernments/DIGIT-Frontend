@@ -1,12 +1,49 @@
-/*@import 'normalize.css';*/
-
-/*@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap");*/
-
 @import "tailwindcss/base";
-
 @import "tailwindcss/components";
-
 @import "tailwindcss/utilities";
 
-@import "./components/microplanning.scss";
-@import "./pages/employee/index.scss";
+/* Custom DIGIT UI styles */
+.property-tax-screen {
+  @apply bg-grey-light min-h-screen;
+}
+
+.employee-app-wrapper {
+  margin: 0rem;
+}
+
+.property-header {
+  @apply text-primary-dark border-b-2 border-primary-dark pb-2 mb-4;
+}
+
+.property-form-card {
+  @apply bg-white rounded-lg shadow-md;
+}
+
+.info-card {
+  @apply bg-grey-light rounded-lg border border-grey-mid;
+}
+
+#logo-img-container {
+  display: none !important;
+  position: unset !important;
+}
+
+.transfer-ownership-card {
+  .digit-label-field-pair {
+    background: none !important;
+  }
+}
+
+.assessment-form-card {
+  .digit-label-field-pair {
+    margin-bottom: 0px;
+  }
+
+  .digit-checkbox-container {
+      margin-bottom: 0px;
+  }
+}
+
+/* Import Property Tax Module Styles */
+@import "components/property-tax";
+@import "pages/employee/property-tax";

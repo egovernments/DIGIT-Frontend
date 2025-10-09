@@ -1,29 +1,70 @@
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const { CleanWebpackPlugin } = require("clean-webpack-plugin");
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
+const path = require('path');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
-module.exports = {
-  // mode: 'development',
-  entry: "./src/index.js",
-  devtool: "none",
-  module: {
-    rules: [
-      {
-        test: /\.(js)$/,
-        use: ["babel-loader"],
+module.exports = (env) => {
+  const isProduction = env === 'production';
+
+  return {
+    mode: isProduction ? 'production' : 'development',
+    entry: './src/index.js',
+    output: {
+      path: path.resolve(__dirname, 'dist'),
+      filename: isProduction ? '[name].[contenthash].js' : '[name].js',
+      publicPath: '/',
+    },
+    resolve: {
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
+      alias: {
+        '@': path.resolve(__dirname, 'src'),
       },
-      {
-        test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
-      }
+    },
+    module: {
+      rules: [
+        {
+          test: /\.(js|jsx)$/,
+          exclude: /node_modules/,
+          use: {
+            loader: 'babel-loader',
+            options: {
+              presets: [
+                '@babel/preset-env',
+                '@babel/preset-react',
+              ],
+            },
+          },
+        },
+        {
+          test: /\.css$/,
+          use: ['style-loader', 'css-loader'],
+        },
+        {
+          test: /\.(png|jpe?g|gif|svg)$/,
+          use: {
+            loader: 'file-loader',
+            options: {
+              name: '[path][name].[ext]',
+            },
+          },
+        },
+      ],
+    },
+    plugins: [
+      new CleanWebpackPlugin(),
+      new HtmlWebpackPlugin({
+        template: './public/index.html',
+        filename: 'index.html',
+        inject: 'body',
+      }),
     ],
-  },
-  output: {
-    filename: "[name].bundle.js",
-    path: path.resolve(__dirname, "build"),
-    publicPath: "/digit-ui/",
-  },
+    devServer: {
+      contentBase: path.join(__dirname, 'dist'),
+      compress: true,
+      port: 3000,
+      historyApiFallback: true,
+      hot: true,
+      open: true,
+    },
   optimization: {
     splitChunks: {
       chunks: 'all',
@@ -35,9 +76,5 @@ module.exports = {
       maxInitialRequests:30
     },
   },
-  plugins: [
-    new CleanWebpackPlugin(),
-    // new BundleAnalyzerPlugin(),
-    new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
-  ],
+  };
 };

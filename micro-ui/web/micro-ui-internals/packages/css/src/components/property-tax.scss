@@ -1,0 +1,412 @@
+/* Property Tax Component Styles */
+
+/* Action Cards */
+.action-card-content {
+  @apply flex items-center p-5 gap-4;
+}
+
+.card-icon {
+  @apply flex-shrink-0;
+}
+
+.card-text h3 {
+  @apply m-0 mb-2 text-base font-semibold text-gray-800;
+}
+
+.card-text p {
+  @apply m-0 text-sm text-gray-600;
+}
+
+/* Navigation Items */
+.navigation-items {
+  @apply flex flex-col gap-3;
+}
+
+.navigation-item {
+  @apply flex justify-between items-center py-3 border-b border-gray-200 cursor-pointer transition-colors;
+}
+
+.navigation-item:hover {
+  @apply bg-gray-50 px-2 -mx-2 rounded;
+}
+
+.navigation-item:last-child {
+  @apply border-b-0;
+}
+
+.nav-text {
+  @apply text-sm text-gray-800;
+}
+
+.nav-arrow {
+  @apply text-base text-orange-500;
+}
+
+/* Stats Container */
+.stats-container {
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+}
+
+.stat-item {
+  @apply text-center p-4 bg-gray-50 rounded-lg;
+}
+
+.stat-number {
+  @apply block text-2xl font-bold text-orange-500 mb-1;
+}
+
+.stat-label {
+  @apply text-xs text-gray-600 uppercase;
+}
+
+/* Form Grid */
+.form-grid {
+  @apply grid gap-5;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+/* Search Form Actions */
+.search-form-actions {
+  @apply flex gap-3 justify-end pt-4 border-t border-gray-200;
+}
+
+/* Action Buttons */
+.action-buttons {
+  @apply flex gap-2 flex-wrap;
+}
+
+.action-buttons button {
+  @apply min-w-20;
+}
+
+/* No Results */
+.no-results {
+  @apply text-center py-10 px-5 text-gray-600;
+}
+
+.no-results span {
+  @apply block text-base font-semibold mb-2;
+}
+
+.no-results p {
+  @apply text-sm m-0;
+}
+
+/* Quick Actions */
+.quick-actions-grid {
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.quick-action-item {
+  @apply flex flex-col items-center p-5 bg-gray-50 rounded-lg cursor-pointer transition-all border-2 border-transparent;
+}
+
+.quick-action-item:hover {
+  @apply bg-white border-orange-500 transform -translate-y-0.5;
+  box-shadow: 0 4px 12px rgba(244, 119, 56, 0.1);
+}
+
+.quick-action-icon {
+  @apply mb-3;
+}
+
+.quick-action-item span {
+  @apply text-sm font-semibold text-gray-800 text-center;
+}
+
+/* Assessment Form Specific */
+.steps-navigation {
+  @apply flex justify-between mb-8 px-4;
+}
+
+.step-item {
+  @apply flex flex-col items-center flex-1 relative;
+}
+
+.step-item:not(:last-child)::after {
+  content: '';
+  @apply absolute top-5 -right-1/2 w-full h-0.5 bg-gray-200 -z-10;
+}
+
+.step-item.completed:not(:last-child)::after {
+  @apply bg-orange-500;
+}
+
+.step-number {
+  @apply w-10 h-10 rounded-full bg-gray-200 text-gray-600 flex items-center justify-center font-semibold mb-2;
+}
+
+.step-item.active .step-number {
+  @apply bg-orange-500 text-white;
+}
+
+.step-item.completed .step-number {
+  @apply bg-green-600 text-white;
+}
+
+.step-label {
+  @apply text-xs text-center text-gray-600 max-w-20;
+}
+
+.step-item.active .step-label {
+  @apply text-orange-500 font-semibold;
+}
+
+/* Form Navigation */
+.form-navigation {
+  @apply flex justify-between pt-5 border-t border-gray-200 mt-6;
+}
+
+.form-navigation button {
+  @apply min-w-30;
+}
+
+/* Payment Collection Specific */
+.amount-section {
+  @apply flex flex-col gap-4 p-4 bg-gray-50 rounded-lg border-l-4 border-orange-500;
+}
+
+.payment-mode-section {
+  @apply p-4 bg-gray-50 rounded-lg;
+}
+
+.payment-mode-fields {
+  @apply mt-5 p-5 bg-white rounded-lg border border-gray-200;
+}
+
+.payment-mode-fields h4 {
+  @apply m-0 mb-4 text-orange-500 text-base;
+}
+
+.payment-actions {
+  @apply flex gap-4 justify-end pt-6 border-t border-gray-200 mt-6;
+}
+
+/* Property Details Specific */
+.property-header {
+  @apply flex justify-between items-center flex-wrap gap-4;
+}
+
+.property-id h2 {
+  @apply m-0 mb-2 text-gray-800 text-2xl;
+}
+
+.status {
+  @apply px-3 py-1 rounded-full text-xs font-semibold uppercase;
+}
+
+.status.active {
+  @apply bg-green-100 text-green-800;
+}
+
+.status.inactive {
+  @apply bg-yellow-100 text-yellow-800;
+}
+
+.header-actions {
+  @apply flex gap-3 flex-wrap;
+}
+
+.info-grid {
+  @apply grid gap-5;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+}
+
+.info-item {
+  @apply flex flex-col gap-1 p-3 bg-gray-50 rounded border-l-3 border-orange-500;
+}
+
+.info-item .label {
+  @apply text-xs font-semibold text-gray-600 uppercase;
+}
+
+.info-item .value {
+  @apply text-sm text-gray-800 font-medium;
+}
+
+.address-display {
+  @apply p-4 bg-gray-50 rounded-lg border-l-4 border-orange-500;
+}
+
+.address-display p {
+  @apply m-0 leading-relaxed text-gray-800;
+}
+
+/* Tax Information */
+.tax-info {
+  @apply flex flex-col gap-5;
+}
+
+.tax-summary {
+  @apply grid gap-4;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.tax-item {
+  @apply flex flex-col gap-1 p-4 bg-gray-50 rounded-lg text-center;
+}
+
+.tax-item .label {
+  @apply text-xs font-semibold text-gray-600 uppercase;
+}
+
+.tax-item .value {
+  @apply text-base text-gray-800 font-semibold;
+}
+
+.tax-item .value.amount {
+  @apply text-lg font-bold;
+}
+
+.tax-item .value.amount.paid {
+  @apply text-green-600;
+}
+
+.tax-item .value.amount.pending {
+  @apply text-red-600;
+}
+
+.payment-due-notice {
+  @apply flex items-center gap-3 p-4 bg-yellow-50 border border-yellow-200 rounded-lg text-yellow-800;
+}
+
+.warning-icon {
+  @apply text-xl text-yellow-500;
+}
+
+/* Documents Section */
+.documents-section {
+  @apply flex flex-col gap-5;
+}
+
+.document-upload {
+  @apply flex flex-col gap-2 p-4 border-2 border-dashed border-gray-200 rounded-lg bg-gray-50;
+}
+
+.document-label {
+  @apply font-semibold text-gray-800;
+}
+
+.document-upload input[type="file"] {
+  @apply p-2 border border-gray-200 rounded bg-white;
+}
+
+/* Review Section */
+.review-section {
+  @apply flex flex-col gap-6;
+}
+
+.review-item {
+  @apply p-4 bg-gray-50 rounded-lg border-l-4 border-orange-500;
+}
+
+.review-item h4 {
+  @apply m-0 mb-3 text-orange-500 text-base;
+}
+
+.review-item p {
+  @apply my-1 text-gray-800;
+}
+
+/* Actions Section */
+.actions-section {
+  @apply flex justify-center pt-6 border-t border-gray-200 mt-6;
+}
+
+/* Error Message */
+.error-message {
+  @apply text-center py-10 text-red-600 text-base;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .stats-container {
+    @apply grid-cols-1;
+  }
+
+  .form-grid {
+    @apply grid-cols-1;
+  }
+
+  .quick-actions-grid {
+    @apply grid-cols-1;
+  }
+
+  .search-form-actions {
+    @apply flex-col;
+  }
+
+  .search-form-actions button {
+    @apply w-full;
+  }
+
+  .action-buttons {
+    @apply flex-col;
+  }
+
+  .action-buttons button {
+    @apply w-full;
+  }
+
+  .form-navigation {
+    @apply flex-col gap-3;
+  }
+
+  .form-navigation button {
+    @apply w-full;
+  }
+
+  .payment-actions {
+    @apply flex-col;
+  }
+
+  .payment-actions button {
+    @apply w-full;
+  }
+
+  .property-header {
+    @apply flex-col items-start;
+  }
+
+  .header-actions {
+    @apply w-full justify-stretch;
+  }
+
+  .header-actions button {
+    @apply flex-1;
+  }
+
+  .info-grid {
+    @apply grid-cols-1;
+  }
+
+  .tax-summary {
+    @apply grid-cols-1;
+  }
+
+  .info-item {
+    @apply text-center;
+  }
+
+  .steps-navigation {
+    @apply flex-col gap-4;
+  }
+
+  .step-item {
+    @apply flex-row justify-start text-left;
+  }
+
+  .step-item:not(:last-child)::after {
+    @apply hidden;
+  }
+
+  .step-number {
+    @apply mr-3 mb-0;
+  }
+
+  .step-label {
+    @apply max-w-none text-left;
+  }
+}

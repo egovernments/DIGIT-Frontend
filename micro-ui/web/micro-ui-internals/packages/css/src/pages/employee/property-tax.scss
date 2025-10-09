@@ -1,0 +1,387 @@
+/* Property Tax Employee Page Styles */
+
+/* Page Layout */
+.page-header {
+  @apply px-4 py-4 bg-orange-500 text-white mb-6;
+}
+
+.page-header h1 {
+  @apply m-0 text-2xl font-semibold;
+}
+
+/* Container Layouts */
+.property-tax-home-container {
+  @apply px-4 max-w-6xl mx-auto;
+}
+
+.property-search-container {
+  @apply px-4 max-w-6xl mx-auto;
+}
+
+.assessment-form-container {
+  @apply px-4 max-w-4xl mx-auto;
+}
+
+.payment-collection-container {
+  @apply px-4 max-w-4xl mx-auto;
+}
+
+.property-details-container {
+  @apply px-4 max-w-4xl mx-auto;
+}
+
+/* Card Layouts */
+.action-cards-container {
+  @apply grid gap-4 mb-6;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.property-tax-action-card {
+  @apply cursor-pointer transition-all border border-gray-200;
+}
+
+.property-tax-action-card:hover {
+  @apply transform -translate-y-0.5 border-orange-500;
+  box-shadow: 0 4px 12px rgba(244, 119, 56, 0.1);
+}
+
+/* Info Cards */
+.property-tax-info-card {
+  @apply mb-6;
+}
+
+.property-tax-stats-card {
+  @apply mb-6;
+}
+
+.search-form-card {
+  @apply mb-6;
+}
+
+.search-results-card {
+  @apply mb-6;
+}
+
+.quick-actions-card {
+  @apply mb-6;
+}
+
+.assessment-form-card {
+  @apply mb-6;
+}
+
+.property-details-card,
+.tax-details-card,
+.payment-form-card {
+  @apply mb-6;
+}
+
+.property-header-card {
+  @apply mb-6;
+}
+
+.info-card {
+  @apply mb-6;
+}
+
+/* Section Titles */
+.card-header-text {
+  @apply text-lg font-semibold mb-4 text-gray-800 border-b-2 border-orange-500 pb-2;
+}
+
+.search-form-title {
+  @apply text-lg font-semibold mb-6 text-gray-800 border-b-2 border-orange-500 pb-2;
+}
+
+.search-results-title {
+  @apply text-lg font-semibold mb-4 text-gray-800 border-b-2 border-orange-500 pb-2;
+}
+
+.quick-actions-title {
+  @apply text-lg font-semibold mb-4 text-gray-800 border-b-2 border-orange-500 pb-2;
+}
+
+.form-section-title {
+  @apply text-lg font-semibold mb-6 text-gray-800 border-b-2 border-orange-500 pb-2;
+}
+
+.section-title {
+  @apply text-lg font-semibold mb-5 text-gray-800 border-b-2 border-orange-500 pb-2;
+}
+
+/* Form Content */
+.form-content {
+  @apply mb-8;
+}
+
+/* Property Information Displays */
+.property-info {
+  @apply flex flex-col gap-3;
+}
+
+.info-row {
+  @apply flex justify-between items-center py-2 border-b border-gray-100;
+}
+
+.info-row:last-child {
+  @apply border-b-0;
+}
+
+.info-row .label {
+  @apply font-semibold text-gray-600 flex-1;
+}
+
+.info-row .value {
+  @apply text-gray-800 flex-2 text-right;
+}
+
+/* Tax Details Display */
+.tax-breakup {
+  @apply flex flex-col gap-2;
+}
+
+.tax-item {
+  @apply flex justify-between items-center p-3 bg-gray-50 rounded;
+}
+
+.tax-item.total {
+  @apply bg-orange-500 text-white font-bold text-base mt-2;
+}
+
+.tax-component {
+  @apply font-medium;
+}
+
+.tax-amount {
+  @apply font-semibold;
+}
+
+/* Payment Form Specific */
+.payment-form {
+  @apply flex flex-col gap-6;
+}
+
+/* Search Results */
+.search-form-grid {
+  @apply grid gap-5 mb-6;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Tab Navigation Styles */
+.tab-navigation {
+  @apply flex border-b border-gray-200 mb-6;
+
+  .tab-item {
+    @apply px-6 py-3 cursor-pointer border-b-2 border-transparent transition-colors duration-200;
+    @apply hover:text-orange-600 hover:border-orange-200;
+
+    &.active {
+      @apply border-orange-600 text-orange-600 font-medium;
+    }
+
+    .tab-label {
+      @apply text-sm font-medium;
+    }
+  }
+}
+
+/* Tab Content */
+.tab-content {
+  @apply mb-6;
+}
+
+/* Search Form Enhancements */
+.search-form-card {
+  .search-form-subtitle {
+    @apply text-sm text-gray-600 mb-4;
+  }
+
+  .search-form-actions {
+    @apply flex flex-col sm:flex-row gap-3 sm:gap-4 justify-end;
+    @apply border-t border-gray-200 pt-4;
+
+    .button {
+      @apply w-full sm:w-auto min-w-32;
+    }
+  }
+}
+
+/* Search Results Enhancements */
+.search-results-card {
+  .no-results {
+    @apply text-center py-8 text-gray-500;
+
+    span {
+      @apply block text-lg font-medium mb-2;
+    }
+
+    p {
+      @apply text-sm;
+    }
+  }
+}
+
+/* Action buttons in table */
+.action-buttons {
+  @apply flex gap-2 flex-wrap;
+
+  .button {
+    @apply min-w-20;
+  }
+}
+
+/* InboxSearchComposer Integration */
+.property-search-tab-container {
+  @apply bg-gray-50 min-h-screen;
+
+  .digit-inbox-search-wrapper {
+    @apply bg-white rounded-lg;
+  }
+}
+
+/* Custom search field wrapper for Property Tax */
+.custom-digit-search-field-wrapper {
+  @apply grid gap-4 mb-6;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.custom-both-clear-search {
+  @apply grid gap-4 mb-6;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Inbox Container */
+.inbox-container {
+  @apply w-full;
+
+  .inbox-search-wrapper {
+    @apply w-full;
+  }
+}
+
+/* Action buttons styling */
+.action-buttons {
+  .link {
+    @apply text-orange-600 cursor-pointer hover:text-orange-800 hover:underline;
+  }
+}
+
+/* Cell text styling */
+.cell-text {
+  @apply text-gray-800;
+}
+
+/* Mobile Responsive Adjustments */
+@media (max-width: 768px) {
+  .property-tax-home-container,
+  .property-search-container,
+  .assessment-form-container,
+  .payment-collection-container,
+  .property-details-container {
+    @apply px-2;
+  }
+
+  .action-cards-container {
+    @apply grid-cols-1;
+  }
+
+  .info-row {
+    @apply flex-col items-start gap-1;
+  }
+
+  .info-row .value {
+    @apply text-left;
+  }
+
+  .tax-item {
+    @apply flex-col items-start gap-1;
+  }
+
+  .search-form-grid {
+    @apply grid-cols-1;
+  }
+}
+
+/* Animation for loading states */
+.payment-form-card.loading {
+  @apply opacity-70 pointer-events-none;
+}
+
+/* Toast positioning */
+.toast-container {
+  @apply fixed top-5 right-5 z-50;
+}
+
+/* Page-specific backgrounds */
+.property-tax-screen {
+  @apply bg-gray-50 min-h-screen;
+}
+
+/* Custom checkbox styling for payment form */
+.amount-section .checkbox-wrapper {
+  @apply mb-4;
+}
+
+/* Property Assessment Form with FormComposer */
+.property-assessment-form {
+  @apply p-5;
+
+  .page-header {
+    @apply flex justify-between items-center mb-6 pb-4 border-b border-gray-200;
+
+    h1 {
+      @apply m-0 text-2xl font-semibold text-gray-900;
+    }
+  }
+
+  .stepper-container {
+    @apply mb-8;
+  }
+
+  .form-container {
+    @apply bg-white rounded shadow-sm;
+  }
+}
+
+/* Property Summary Component */
+.property-summary {
+  @apply flex flex-col gap-4;
+
+  .summary-card {
+    @apply mb-4;
+  }
+
+  .summary-section-title {
+    @apply font-semibold text-base mb-3 text-gray-900;
+  }
+
+  .summary-content {
+    @apply flex flex-col gap-2;
+  }
+
+  .summary-row {
+    @apply flex justify-between items-center py-2 border-b border-gray-100;
+
+    &:last-child {
+      @apply border-b-0;
+    }
+  }
+
+  .summary-label {
+    @apply font-medium text-gray-600 min-w-52;
+  }
+
+  .summary-value {
+    @apply text-gray-900 text-right break-words;
+  }
+}
+
+/* Print styles for property assessment form */
+@media print {
+  .property-assessment-form {
+    .stepper-container,
+    .form-container .form-composer-actions {
+      @apply hidden;
+    }
+  }
+}

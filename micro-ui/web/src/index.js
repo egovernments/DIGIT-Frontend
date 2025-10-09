@@ -3,13 +3,10 @@ import ReactDOM from 'react-dom';
 import { initLibraries } from "@egovernments/digit-ui-libraries";
 import "./index.css";
 import App from './App';
-import { TLCustomisations } from './Customisations/tl/TLCustomisation';
 
 
 initLibraries();
-
-
-window.Digit.Customizations = { PGR: {} ,TL:TLCustomisations};
+window.Digit.Customizations = {};
 
 const user = window.Digit.SessionStorage.get("User");
 
@@ -50,7 +47,6 @@ if (!user || !user.access_token || !user.info) {
   window.Digit.SessionStorage.set("User", userDetails);
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);
   window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
-  // end
 }
 
 ReactDOM.render(

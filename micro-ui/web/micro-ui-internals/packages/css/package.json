@@ -1,9 +1,9 @@
 {
-  "name": "@egovernments/digit-ui-sample-css",
-  "version": "0.0.1",
+  "name": "@egovernments/digit-ui-urban-css",
+  "version": "1.0.0",
   "license": "MIT",
   "main": "dist/index.css",
-  "author": "Jagankumar <jagan.kumar@egov.org.in>",
+  "author": "Developer <developer@example.com>",
   "engines": {
     "node": ">=14"
   },
@@ -47,19 +47,10 @@
     "postcss-scss": "3.0.5",
     "sass": "^1.26.11"
   },
-  "files": [
-    "dist/index.min.css",
-    "dist/index.css",
-    "svg/**/*.svg",
-    "img/**/*.png",
-    "src/**/*.scss",
-    "src/**/*.css"
-  ],
-  "keywords": [
-    "digit",
-    "egov",
-    "dpg",
-    "digit-ui",
-    "css"
-  ]
+  "resolutions": {
+    "**/minimatch": "7.4.6",
+    "minimatch": "7.4.6",
+    "**/glob": "7.2.3",
+    "glob": "7.2.3"
+  }
 }

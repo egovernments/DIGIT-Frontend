@@ -57,15 +57,8 @@ function livereloadStyles() {
 }
 
 exports.styles = styles;
-exports.default = series(styles);
-exports.watch = livereloadStyles;
-if (process.env.NODE_ENV === "production") {
-  exports.build = series(cleanStyles, styles, minify);
-} else {
-  exports.build = series(styles, livereloadStyles);
-}
-
-// gulp.task("watch:styles", function () {
-//   livereload.listen();
-//   gulp.watch("**/*.scss", ["styles"]);
-// });
+exports.livereload = livereloadStyles;
+exports.clean = cleanStyles;
+exports.minify = minify;
+exports.build = series(cleanStyles, styles, minify);
+exports.default = exports.build;

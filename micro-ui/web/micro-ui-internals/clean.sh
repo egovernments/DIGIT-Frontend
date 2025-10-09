@@ -14,15 +14,5 @@ cd "$BASEDIR/packages/css" && rm -rf node_modules
 
 msg "Cleaning libraries"
 cd "$BASEDIR/packages/libraries" && rm -rf node_modules
-
-msg "Cleaning react-components"
-cd "$BASEDIR/packages/react-components" && rm -rf node_modules
-
-msg "Cleaning PGR module"
-cd "$BASEDIR/packages/modules/pgr" && rm -rf node_modules
-
-msg "Cleaning FSM module"
-cd "$BASEDIR/packages/modules/fsm" && rm -rf node_modules
-
-msg "Cleaning Core module"
-cd "$BASEDIR/packages/modules/core" && rm -rf node_modules
+msg "Cleaning property-tax module"
+cd "$BASEDIR/packages/modules/property-tax" && rm -rf node_modules

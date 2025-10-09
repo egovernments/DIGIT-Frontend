@@ -1,4 +1,7 @@
 {
-  "name": "workbench-ui",
-  "version": "1.0.0"
+  "name": "property-tax-ui",
+  "version": "1.0.0",
+  "description": "Property Tax Micro UI for DIGIT",
+  "author": "Developer",
+  "license": "MIT"
 }

@@ -1,100 +1,80 @@
+# DIGIT UI Micro Frontend Internals
 
-# workbench ui 
+This directory contains the internal packages and components for the DIGIT UI micro frontend architecture.
 
-A React App built on top of DIGIT UI Core.
+## Structure
 
-
-# DIGIT UI 
-
-DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India's largest platform for governance services. Visit https://www.digit.org for more details.
-
-This repository contains source code for web implementation of the new Digit UI modules with dependencies and libraries.
-
-Workbench module is used to Manage the master data (MDMS V2 Service) used across the DIGIT Services / Applications
-
-It is also used to manage the Localisation data present in the system (Localisation service)
-
-
-## Run Locally
-
-Clone the project
-
-```bash
-  git clone https://github.com/egovernments/Digit-Core.git
+```
+micro-ui-internals/
+├── packages/
+│   ├── css/                 # Shared CSS and styling configuration
+│   └── modules/            # Individual micro frontend modules
+│       └── property-tax/   # Property Tax management module
+├── scripts/                # Build and deployment scripts
+├── example/                # Development examples
+└── config files           # Configuration and setup files
 ```
 
-Go to the Sub directory to run UI
+## Available Packages
+
+### Modules
+- **@egovernments/digit-ui-module-pt**: Property Tax management interface
+
+### CSS
+- **@egovernments/digit-ui-css**: Shared styling and Tailwind CSS configuration
+
+## Development
+
+### Prerequisites
+- Node.js >= 14
+- Yarn package manager
+
+### Getting Started
+
+1. Install dependencies:
+   ```bash
+   yarn install
+   ```
+
+2. Start development:
+   ```bash
+   yarn start
+   ```
+
+3. Build all packages:
+   ```bash
+   yarn build
+   ```
+
+### Working with Individual Modules
+
+Each module can be developed independently:
+
 ```bash
-    cd into frontend/micro-ui/web/micro-ui-internals
+# Development
+cd packages/modules/property-tax
+yarn start
+
+# Build
+cd packages/modules/property-tax
+yarn build
 ```
 
-Install dependencies
+## Scripts
 
-```bash
-  yarn install
-```
+- `yarn start` - Start all development servers
+- `yarn build` - Build all packages
+- `yarn clean` - Clean all node_modules
+- `yarn publish:css` - Publish CSS package
+- `./scripts/deploy.sh` - Deploy to environment
 
-Add .env file
-```bash
-    frontend/micro-ui/web/micro-ui-internals/example/.env
-```
+## Contributing
 
-Start the server
-
-```bash
-  yarn start
-```
-
-
-## Environment Variables
-
-To run this project, you will need to add the following environment variables to your .env file
-
-`REACT_APP_PROXY_API` ::  `{{server url}}`
-
-`REACT_APP_GLOBAL`  ::  `{{server url}}`
-
-`REACT_APP_PROXY_ASSETS`  ::  `{{server url}}`
-
-`REACT_APP_USER_TYPE`  ::  `{{EMPLOYEE||CITIZEN}}`
-
-`SKIP_PREFLIGHT_CHECK` :: `true`
-
-[sample .env file](https://github.com/egovernments/Digit-Core/blob/workbench/frontend/micro-ui/web/micro-ui-internals/example/.env-unifieddev)
-
-## Tech Stack
-
-**Libraries:** 
-
-[React](https://react.dev/)
-
-[React Hook Form](https://www.react-hook-form.com/)
-
-[React Query](https://tanstack.com/query/v3/)
-
-[Tailwind CSS](https://tailwindcss.com/)
-
-[Webpack](https://webpack.js.org/)
+1. Follow the existing code structure
+2. Use Prettier for code formatting
+3. Test changes in the example application
+4. Update documentation as needed
 
 ## License
 
-[MIT](https://choosealicense.com/licenses/mit/)
-
-
-## Author
-
-- [@jagankumar-egov](https://www.github.com/jagankumar-egov)
-
-
-## Documentation
-
-[Documentation](https://https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
-
-
-## Support
-
-For support, add the issues in https://github.com/egovernments/DIGIT-core/issues.
-
-
-![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
-
+MIT
