@@ -24,7 +24,6 @@ const setEmployeeDetail = (userObject, token) => {
 };
 
 const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
-  console.log("propsConfigs", propsConfig);
   const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
@@ -156,10 +155,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   };
 
   let config = [{ body: propsConfig?.inputs }];
-  console.log("config", config);
 
   const { mode } = Digit.Hooks.useQueryParams();
-  console.log("mode", mode);
 
   if (config?.[0]?.body?.[2]) {
   config[0].body[2].disable = false;

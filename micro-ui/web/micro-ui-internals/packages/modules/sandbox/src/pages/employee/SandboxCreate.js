@@ -48,7 +48,6 @@ const PucarCreate = () => {
         })}
         defaultValues={defaultValue}
         onFormValueChange ={ (setValue, formData, formState, reset, setError, clearErrors, trigger, getValues) => {
-          console.log(formData, "formData");
         }}
         onSubmit={(data,) => onSubmit(data, )}
         fieldStyle={fieldStyle}

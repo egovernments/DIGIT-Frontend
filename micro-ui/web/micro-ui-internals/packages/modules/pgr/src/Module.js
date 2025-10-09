@@ -25,7 +25,6 @@ import { UICustomizations } from "./configs/UICustomizations";
 export const PGRReducers = getRootReducer;
 
 const PGRModule = ({ stateCode, userType, tenants }) => {
-  console.log("pgr module rendered");
   const moduleCode = "PGR";
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({ stateCode, moduleCode, language });
@@ -91,7 +90,6 @@ const updateCustomConfigs = () => {
 };
 
 export const initPGRComponents = () => {
-  console.log("pgr init called");
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
     Digit.ComponentRegistryService.setComponent(key, value);
