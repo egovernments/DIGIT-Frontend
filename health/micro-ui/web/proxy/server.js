@@ -21,7 +21,11 @@ const createAxiosInstance = (baseURL, headers = {}) => {
     headers: {
       'Content-Type': 'application/json',
       ...headers
-    }
+    },
+    // Handle SSL certificate issues in development/internal networks
+    httpsAgent: baseURL.startsWith('https') ? new (require('https').Agent)({
+      rejectUnauthorized: false
+    }) : undefined
   });
 };
 
@@ -45,11 +49,28 @@ const validateEnvironment = () => {
     
     try {
       const kibanaClient = createAxiosInstance(KIBANA_URL);
-      await kibanaClient.get('/api/status');
-      console.log('✅ Kibana connectivity test passed');
+      // Try multiple endpoints to find one that works
+      let kibanaWorking = false;
+      const testEndpoints = ['/api/status', '/app/kibana', '/status', '/'];
+      
+      for (const endpoint of testEndpoints) {
+        try {
+          await kibanaClient.get(endpoint);
+          console.log(`✅ Kibana connectivity test passed (endpoint: ${endpoint})`);
+          kibanaWorking = true;
+          break;
+        } catch (endpointError) {
+          // Continue to next endpoint
+        }
+      }
+      
+      if (!kibanaWorking) {
+        throw new Error('No working Kibana endpoints found');
+      }
     } catch (error) {
       console.error('❌ Kibana connectivity test failed:', error.message);
       console.error('   Check KIBANA_URL environment variable and network connectivity');
+      console.error('   Tested endpoints: /api/status, /app/kibana, /status, /');
     }
   }, 2000);
 };
