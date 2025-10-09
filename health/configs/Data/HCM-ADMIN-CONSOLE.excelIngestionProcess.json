@@ -20,5 +20,27 @@
         ],
         "processingResultTopic": "hcm-processing-result",
         "excelIngestionProcessName": "unified-console-parse"
+    },
+    {
+        "sheets": [
+            {
+                "sheetName": "HCM_ADMIN_CONSOLE_FACILITIES_LIST",
+                "schemaName": "facility-microplan-ingestion",
+                "parseEnabled": false,
+                "processorClass": "FacilityValidationProcessor"
+            },
+            {
+                "sheetName": "HCM_ADMIN_CONSOLE_USERS_LIST",
+                "schemaName": "user-microplan-ingestion",
+                "parseEnabled": false,
+                "processorClass": "UserValidationProcessor"
+            },
+            {
+                "sheetName": "HCM_CONSOLE_BOUNDARY_HIERARCHY",
+                "parseEnabled": false,
+                "processorClass": "BoundaryHierarchyTargetProcessor"
+            }
+        ],
+        "excelIngestionProcessName": "unified-console-validation"
     }
 ]
