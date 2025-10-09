@@ -36,41 +36,58 @@ const validateEnvironment = () => {
   console.log(`  KIBANA_URL: ${KIBANA_URL}`);
   console.log(`  PROXY_PORT: ${PORT}`);
   
+  // Get credentials from environment or use defaults
+  const ES_USERNAME = process.env.ES_USERNAME || 'elastic';
+  const ES_PASSWORD = process.env.ES_PASSWORD || 'changeme';
+  
   // Test connectivity on startup
   setTimeout(async () => {
     try {
-      const esClient = createAxiosInstance(ELASTICSEARCH_URL);
+      const esClient = createAxiosInstance(ELASTICSEARCH_URL, {
+        'Authorization': `Basic ${Buffer.from(`${ES_USERNAME}:${ES_PASSWORD}`).toString('base64')}`
+      });
       await esClient.get('/_cluster/health');
       console.log('✅ Elasticsearch connectivity test passed');
     } catch (error) {
       console.error('❌ Elasticsearch connectivity test failed:', error.message);
-      console.error('   Check ELASTICSEARCH_URL environment variable');
+      if (error.response && error.response.status === 401) {
+        console.error('   Authentication required - check ES_USERNAME and ES_PASSWORD environment variables');
+      } else {
+        console.error('   Check ELASTICSEARCH_URL environment variable');
+      }
     }
     
     try {
-      const kibanaClient = createAxiosInstance(KIBANA_URL);
+      const kibanaClient = createAxiosInstance(KIBANA_URL, {
+        'Authorization': `Basic ${Buffer.from(`${ES_USERNAME}:${ES_PASSWORD}`).toString('base64')}`
+      });
       // Try multiple endpoints to find one that works
       let kibanaWorking = false;
-      const testEndpoints = ['/api/status', '/app/kibana', '/status', '/'];
+      const testEndpoints = ['/api/status', '/api/saved_objects/_find?type=index-pattern', '/app/kibana', '/status', '/', '/api/features'];
       
       for (const endpoint of testEndpoints) {
         try {
-          await kibanaClient.get(endpoint);
-          console.log(`✅ Kibana connectivity test passed (endpoint: ${endpoint})`);
+          const response = await kibanaClient.get(endpoint);
+          console.log(`✅ Kibana connectivity test passed (endpoint: ${endpoint}, status: ${response.status})`);
           kibanaWorking = true;
           break;
         } catch (endpointError) {
+          if (endpointError.response) {
+            console.log(`   Tested ${endpoint} - Status: ${endpointError.response.status}`);
+          }
           // Continue to next endpoint
         }
       }
       
       if (!kibanaWorking) {
-        throw new Error('No working Kibana endpoints found');
+        // Just log warning, don't throw - Kibana might still work for proxy requests
+        console.warn('⚠️  Kibana health check did not find a working endpoint');
+        console.log('   Proxy may still work for actual Kibana API requests');
       }
     } catch (error) {
       console.error('❌ Kibana connectivity test failed:', error.message);
       console.error('   Check KIBANA_URL environment variable and network connectivity');
-      console.error('   Tested endpoints: /api/status, /app/kibana, /status, /');
+      console.error('   Note: Kibana proxy may still work even if health check fails');
     }
   }, 2000);
 };
