@@ -155,7 +155,7 @@ const ProjectSelect = () => {
                     icon="ArrowBack"
                     label={t("HCM_AM_BACK_LABEL")}
                     onClick={() => history.push(`/${window.contextPath}/employee`)}
-                    style={{ marginLeft: "2.5rem", minWidth: "14rem" }}
+                    style={{ marginLeft: "2.5rem", minWidth: "10rem" }}
                     type="button"
                     variation="secondary"
                 />,
@@ -164,7 +164,7 @@ const ProjectSelect = () => {
                     isSuffix
                     label={t("HCM_AM_NEXT_LABEL")}
                     onClick={handleNextClick}
-                    style={{ minWidth: "14rem" }}
+                    style={{ minWidth: "10rem" }}
                     type="button"
                     variation="primary"
                 />
