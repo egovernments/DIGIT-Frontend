@@ -85,7 +85,7 @@ export const CreateEmployeeConfig = {
               populators: {
                 required: true,
                 name: "SelectEmployeeName",
-                error: "CORE_COMMON_REQUIRED_ERRMSG",
+                error: "HRMS_EMPLOYEE_NAME_VALIDATION_ERROR_MSG",
                 validation: { pattern: /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i },
               },
             },
@@ -105,7 +105,8 @@ export const CreateEmployeeConfig = {
                   minLength: 10,
                   maxLength: 10,
                   min: 6000000000,
-                  max: 9999999999
+                  max: 9999999999,
+                  
                 }, // 10-digit phone number validation
               },
             },

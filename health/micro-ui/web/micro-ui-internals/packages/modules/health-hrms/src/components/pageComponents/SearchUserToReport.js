@@ -43,10 +43,10 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
     const rowsPerPage = 5;
 
 
-    const searchUser = async (name, currentoffset=0, limit=rowsPerPage) => {
+    const searchUser = async (name, currentoffset = 0, limit = rowsPerPage) => {
 
         try {
-  
+
 
             setLoading(true); // start loader
             setSearchedIndividual([]);
@@ -69,7 +69,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
             }
 
             const result = await AttendanceService.searchIndividual(
-                { name, locallity, tenantId, offset:currentoffset, limit }
+                { name, locallity, tenantId, offset: currentoffset, limit }
             );
 
             setSearchedIndividual(result.Individual)
@@ -123,25 +123,39 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                     }} >
 
                         <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
-                            <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => {
-                                setSearchQuery(e.target.value)
-                                // live check
-                                if (e.target.value.length < 3) {
-                                    setShowHint(true);
-                                    setSearchedIndividual([]); // clear results
-                                } else {
-                                    setShowHint(false);
+                            <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => {
+                                    setSearchQuery(e.target.value)
+                                    // live check
+                                    if (e.target.value.length < 3) {
+                                        setShowHint(true);
+                                        setSearchedIndividual([]); // clear results
+                                    } else {
+                                        setShowHint(false);
 
-                                }
+                                    }
 
-                            }} onKeyPress={(e) => {
-                                if (e.key === "Enter") {
-                                    e.preventDefault(); // prevent form submit if inside a form
-                                    searchUser(searchQuery,0,rowsPerPage); // call your API
+                                }} onKeyPress={(e) => {
+                                    if (e.key === "Enter") {
+                                        e.preventDefault(); // prevent form submit if inside a form
+                                        searchUser(searchQuery, 0, rowsPerPage); // call your API
 
 
-                                }
-                            }} />
+                                    }
+                                }} />
+                                <Button
+                                    style={{ minWidth: "140px" }}
+                                    isDisabled={searchQuery.length >= 3 ? false : true}
+                                    type={"button"}
+                                    size={"large"}
+                                    variation={"primary"}
+                                    label={t("CS_INBOX_SEARCH")}
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        searchUser(searchQuery, 0, rowsPerPage);
+                                    }}
+                                />
+                            </div>
                             {/* Show hint live while typing */}
                             {showHint && (
                                 <p style={{ fontSize: "14px", color: "#B91900", margin: 0 }}>
@@ -170,7 +184,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                                 data={searchedIndividual}
                                 totalCount={totalCount} // you'll store this in state
                                 rowsPerPage={5}
-                                 offset={offset}
+                                offset={offset}
                                 loading={loading}
                                 onSelect={onSelect}
                                 onPageChange={({ offset, limit }) => {
