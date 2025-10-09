@@ -42,7 +42,7 @@ const SelectMobileNumber = ({ t, onSelect, showRegisterLink, mobileNumber, onMob
           name : isEmail ? "userName" : "mobileNumber",
           prefix: isEmail ? "" : core_mobile_config?.mobilePrefix,
           validation: {
-            maxlength: core_mobile_config?.mobileNumberLength || 10
+            maxlength: isEmail ? 256 : (core_mobile_config?.mobileNumberLength || 10)
           }
         }}
         props={{
