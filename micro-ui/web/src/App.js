@@ -9,7 +9,7 @@ import {
   initPGRComponents,
   PGRReducers,
 } from "@egovernments/digit-ui-module-pgr";
-import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
+// import { DigitUI,initCoreComponents } from "@egovernments/digit-ui-module-core";
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
@@ -33,7 +33,8 @@ const moduleReducers = (initData) => ({
   initData, pgr: PGRReducers(initData),
 });
 
-const initDigitUI = () => {
+const initDigitUI = async() => {
+  const { DigitUI, initCoreComponents } = await import("@egovernments/digit-ui-module-core");
   window.Digit.ComponentRegistryService.setupRegistry({
     PaymentModule,
     ...paymentConfigs,
