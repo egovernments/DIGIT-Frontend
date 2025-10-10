@@ -1,5 +1,8 @@
 # Changelog 
 
+## [1.8.55]  [8th-Oct-2025]
+- Updated the email and mobilenumber login flow with pattern validation, link instead of toggle and state management fixes
+
 ## [1.8.54]  [8th-Oct-2025]
 - Updated the validation for email, css fix and email sending in payload while otp flow
 

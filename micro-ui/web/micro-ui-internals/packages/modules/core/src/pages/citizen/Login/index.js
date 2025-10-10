@@ -107,6 +107,11 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     setParmas({ ...params, mobileNumber: value });
   };
 
+  const handleEmailChange = (event) => {
+    const { value } = event.target;
+    setParmas({ ...params, userName: value });
+  };
+
   const selectMobileNumber = async (mobileNumber) => {
     setCanSubmitNo(false);
     setParmas({ ...params, ...mobileNumber });
@@ -242,7 +247,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               onSelect={selectMobileNumber}
               config={stepItems[0]}
               mobileNumber={params.mobileNumber || ""}
+              emailId={params.userName || ""}
               onMobileChange={handleMobileChange}
+              onEmailChange={handleEmailChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
               t={t}
