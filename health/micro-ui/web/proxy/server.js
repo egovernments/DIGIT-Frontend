@@ -100,11 +100,11 @@ app.use((req, res, next) => {
 app.post('/elasticsearch/*', async (req, res) => {
   try {
     const path = req.params[0];
-    const authHeader = req.headers.authorization;
     
-    if (!authHeader) {
-      return res.status(401).json({ error: 'Authorization header required' });
-    }
+    // Use server-side credentials from environment variables
+    const ES_USERNAME = process.env.ES_USERNAME || 'elastic';
+    const ES_PASSWORD = process.env.ES_PASSWORD || 'changeme';
+    const authHeader = `Basic ${Buffer.from(`${ES_USERNAME}:${ES_PASSWORD}`).toString('base64')}`;
 
     const elasticsearchClient = createAxiosInstance(ELASTICSEARCH_URL, {
       'Authorization': authHeader
@@ -140,11 +140,11 @@ app.post('/elasticsearch/*', async (req, res) => {
 app.get('/elasticsearch/*', async (req, res) => {
   try {
     const path = req.params[0];
-    const authHeader = req.headers.authorization;
     
-    if (!authHeader) {
-      return res.status(401).json({ error: 'Authorization header required' });
-    }
+    // Use server-side credentials from environment variables
+    const ES_USERNAME = process.env.ES_USERNAME || 'elastic';
+    const ES_PASSWORD = process.env.ES_PASSWORD || 'changeme';
+    const authHeader = `Basic ${Buffer.from(`${ES_USERNAME}:${ES_PASSWORD}`).toString('base64')}`;
 
     const elasticsearchClient = createAxiosInstance(ELASTICSEARCH_URL, {
       'Authorization': authHeader
@@ -175,11 +175,11 @@ app.get('/elasticsearch/*', async (req, res) => {
 app.post('/kibana/*', async (req, res) => {
   try {
     const path = req.params[0];
-    const authHeader = req.headers.authorization;
     
-    if (!authHeader) {
-      return res.status(401).json({ error: 'Authorization header required' });
-    }
+    // Use server-side credentials from environment variables
+    const ES_USERNAME = process.env.ES_USERNAME || 'elastic';
+    const ES_PASSWORD = process.env.ES_PASSWORD || 'changeme';
+    const authHeader = `Basic ${Buffer.from(`${ES_USERNAME}:${ES_PASSWORD}`).toString('base64')}`;
 
     const kibanaClient = createAxiosInstance(KIBANA_URL, {
       'Authorization': authHeader,
@@ -235,6 +235,47 @@ app.get('/health', (req, res) => {
       port: PORT
     }
   });
+});
+
+// Test endpoint using server-side credentials (for debugging)
+app.get('/test/elasticsearch/health', async (req, res) => {
+  try {
+    const ES_USERNAME = process.env.ES_USERNAME || 'elastic';
+    const ES_PASSWORD = process.env.ES_PASSWORD || 'changeme';
+    const authHeader = `Basic ${Buffer.from(`${ES_USERNAME}:${ES_PASSWORD}`).toString('base64')}`;
+    
+    const elasticsearchClient = createAxiosInstance(ELASTICSEARCH_URL, {
+      'Authorization': authHeader
+    });
+
+    const response = await elasticsearchClient.get('/_cluster/health');
+    
+    res.status(200).json({
+      message: 'Test endpoint using server credentials',
+      elasticsearch: {
+        status: response.status,
+        data: response.data,
+        url: ELASTICSEARCH_URL,
+        credentials: 'Using ES_USERNAME/ES_PASSWORD from environment'
+      }
+    });
+  } catch (error) {
+    console.error('Test elasticsearch health error:', error.message);
+    
+    res.status(500).json({
+      error: 'Test endpoint failed',
+      details: error.message,
+      elasticsearch: {
+        url: ELASTICSEARCH_URL,
+        credentials: 'Using ES_USERNAME/ES_PASSWORD from environment'
+      },
+      troubleshooting: {
+        checkEnvVars: 'Verify ES_USERNAME and ES_PASSWORD are set correctly',
+        checkConnectivity: 'Verify ELASTICSEARCH_URL is reachable from container',
+        authError: error.response?.status === 401 ? 'Invalid credentials' : 'Connection or other error'
+      }
+    });
+  }
 });
 
 app.use((err, req, res, next) => {
