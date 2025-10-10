@@ -9,6 +9,7 @@ import withMapView from './withMapView';
 import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
+import ElasticsearchDebugger from './ElasticsearchDebugger';
 
 function toCamelCase(str) {
   return str
@@ -492,6 +493,7 @@ console.log('🚚 Delivery data received:', {
 
   return (
     <div style={{ width: '100%', height: '100%' }}>
+      <ElasticsearchDebugger projectId={projectId} externalLoading={externalLoading} />
       <ElasticsearchDataHeader
         loading={isLoading}
         error={error}
