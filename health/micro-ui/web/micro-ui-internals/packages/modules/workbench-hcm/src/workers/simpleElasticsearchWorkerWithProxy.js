@@ -175,8 +175,7 @@ async function fetchElasticsearchData(config) {
     // Step 1: Get total count
     console.log('📊 Getting total count...');
     const countQuery = {
-      query: query,
-      size: 0
+      query: query
     };
     
     const headers = getRequestHeaders(authKey, username, password, USE_PROXY);
