@@ -171,8 +171,6 @@ export const processDelivery = (delivery, resourcesMap, ageInfo, type, projectTy
   };
 };
 export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
-  console.log("rule in processDoseCriteria:", rule);
-  console.log("type in processDoseCriteria:", type);
   rule.products.forEach((product) => {
     if (resourcesMap.has(product.value)) {
       resourcesMap.get(product.value).quantity += product.quantity;
@@ -190,7 +188,6 @@ export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
   let maxCount;
 
   const conditions = rule.attributes.map((attr) => {
-    console.log("attr in processDoseCriteria:", attr);
     const attributeCode = attr?.attribute?.code;
 
     if (projectType === "LLIN-mz") {
