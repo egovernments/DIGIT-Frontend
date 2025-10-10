@@ -228,13 +228,17 @@ const AttendeeBoundaryComponent = ({ t, config, onSelect, formData }) => {
 
     return (
         <React.Fragment>
-            <div style={{ width: "100%" }}>
+            <div style={{
+                width: "100%",
+                marginBottom: "50px"
+            }}>
                 <div style={{
                     display: "flex",
                     justifyContent: "space-between", // pushes elements apart
                     alignItems: "center", // vertically centers them
                     padding: 0, // remove extra padding
                     margin: 0, // remove extra margin
+
                 }}>
 
                     <span className="custom-inbox-filter-heading"
