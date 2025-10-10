@@ -34,7 +34,7 @@ const moduleReducers = (initData) => ({
 });
 
 const initDigitUI = async() => {
-  // const { DigitUI, initCoreComponents } = await import("@egovernments/digit-ui-module-core");
+  const { DigitUI, initCoreComponents } = await import("@egovernments/digit-ui-module-core");
   window.Digit.ComponentRegistryService.setupRegistry({
     PaymentModule,
     ...paymentConfigs,
@@ -54,15 +54,11 @@ const initDigitUI = async() => {
   };
 };
 
-const LazyDigitUI = lazy(() => import("@egovernments/digit-ui-module-core").then(m => ({ default: m.DigitUI })));
+initLibraries().then(() => {
+  initDigitUI();
+});
 
 function App() {
-  const [libsReady, setLibsReady] = useState(false);
-
-  useEffect(() => {
-    initLibraries().then(() => setLibsReady(true));
-  }, []);
-  if (!libsReady) return <h1>Loading...</h1>;
   window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
   const stateCode =
     window.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") ||
@@ -71,13 +67,12 @@ function App() {
     return <h1>stateCode is not defined</h1>;
   }
   return (
-    <Suspense fallback={<h2>Loading Digit UI...</h2>}>
-      <LazyDigitUI
-        stateCode={stateCode}
-        enabledModules={enabledModules}
-        moduleReducers={moduleReducers}
-      />
-    </Suspense>
+    <DigitUI
+      stateCode={stateCode}
+      enabledModules={enabledModules}
+      moduleReducers={moduleReducers}
+      // defaultLanding="employee"
+    />
   );
 }
 
