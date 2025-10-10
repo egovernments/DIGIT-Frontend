@@ -185,15 +185,38 @@ const AppConfigurationParentRedesign = ({
       .sort((a, b) => Number(a.order) - Number(b.order));
   }, [parentState?.currentTemplate, numberTabs]);
 
-  useEffect(() => {
+useEffect(() => {
   const last = currentTabPages.length
     ? Number(currentTabPages[currentTabPages.length - 1].order)
     : null;
 
   const isLast = last != null && Math.abs(Number(currentStep) - last) < 1e-6;
+  
+  // Check if there's only one page in the current tab - if so, disable Next
+  const isSinglePage = currentTabPages.length === 1;
 
-  window.dispatchEvent(new CustomEvent("lastButtonDisabled", { detail: isLast }));
+  // Dispatch immediately - this runs synchronously
+  window.dispatchEvent(new CustomEvent("lastButtonDisabled", { 
+    detail: isLast || isSinglePage 
+  }));
 }, [currentStep, currentTabPages]);
+
+
+// ALSO ADD: Dispatch the event immediately when currentTabPages changes
+// Add this new useEffect right after the above one:
+
+useEffect(() => {
+  // This ensures the button state is set immediately when pages load
+  if (currentTabPages.length > 0) {
+    const last = Number(currentTabPages[currentTabPages.length - 1].order);
+    const isLast = Math.abs(Number(currentStep) - last) < 1e-6;
+    const isSinglePage = currentTabPages.length === 1;
+    
+    window.dispatchEvent(new CustomEvent("lastButtonDisabled", { 
+      detail: isLast || isSinglePage 
+    }));
+  }
+}, [currentTabPages]); // Only dep
 
 
   // Build the ordered list of valid steps once.
@@ -274,16 +297,17 @@ const AppConfigurationParentRedesign = ({
   }
 
   const submit = async (screenData, finalSubmit, tabChange) => {
-
     parentDispatch({
       key: "SETBACK",
       data: screenData,
       isSubmit: finalSubmit ? true : false,
     });
+
     const mergedTemplate = parentState.currentTemplate.map((item) => {
       const updated = screenData.find((d) => d.name === item.name);
       return updated ? updated : item;
     });
+
     if (finalSubmit) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
@@ -373,7 +397,6 @@ const AppConfigurationParentRedesign = ({
           );
         }
 
-        // All updates succeeded
         setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
         setChangeLoader(false);
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
@@ -457,6 +480,21 @@ const AppConfigurationParentRedesign = ({
       );
       return;
     } else {
+      // Check if we're on the last page before proceeding
+      const lastPageOrder = currentTabPages.length > 0
+        ? Number(currentTabPages[currentTabPages.length - 1].order)
+        : null;
+      const isOnLastPage = lastPageOrder != null && Math.abs(Number(currentStep) - lastPageOrder) < 1e-6;
+
+      // Also check if this is a single page
+      const isSinglePage = currentTabPages.length === 1;
+
+      if (isOnLastPage || isSinglePage) {
+        // Already on the last page or only one page exists, don't proceed
+        setShowToast({ key: "info", label: "HCM_ALREADY_ON_LAST_PAGE" });
+        return;
+      }
+
       await updateMutate(
         {
           moduleName: "HCM-ADMIN-CONSOLE",
@@ -490,17 +528,17 @@ const AppConfigurationParentRedesign = ({
   };
 
   const back = () => {
-  const activeStep = stepper?.find((i) => i.active);
-  if (activeStep?.isFirst && isPreviousTabAvailable) {
-    tabStateDispatch({ key: "PREVIOUS_TAB" });
-    setCurrentStep(availableSteps[0] || 1);
-    return;
-  } else if (activeStep?.isFirst && !isPreviousTabAvailable) {
-    setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
-  } else {
-    setCurrentStep((prev) => prevStepFrom(prev));
-  }
-};
+    const activeStep = stepper?.find((i) => i.active);
+    if (activeStep?.isFirst && isPreviousTabAvailable) {
+      tabStateDispatch({ key: "PREVIOUS_TAB" });
+      setCurrentStep(availableSteps[0] || 1);
+      return;
+    } else if (activeStep?.isFirst && !isPreviousTabAvailable) {
+      setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
+    } else {
+      setCurrentStep((prev) => prevStepFrom(prev));
+    }
+  };
   if (changeLoader) {
     return <Loader className="loader-center" page={true} variant={"Overlayloader"} loaderText={t("HCM_CHANGING_MODULE")} />;
   }
