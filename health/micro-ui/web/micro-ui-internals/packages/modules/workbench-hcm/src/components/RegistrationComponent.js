@@ -60,9 +60,9 @@ const createMapViewTable = (mapId) => {
         <div style="font-size: 14px; line-height: 1.6; color: #374151;">
           ${data.name ? `<div style="margin-bottom: 6px;"><strong>Name:</strong> ${data.name}</div>` : ''}
           ${data.individualId ? `<div style="margin-bottom: 6px;"><strong>ID:</strong> ${data.individualId}</div>` : ''}
-          ${data.gender ? `<div style="margin-bottom: 6px;"><strong>Gender:</strong> ${data.gender}</div>` : ''}
+          ${data.assessmentQ1 ? `<div style="margin-bottom: 6px;"><strong>Assessment:</strong> ${data.assessmentQ1}</div>` : ''}
           ${data.age !== undefined ? `<div style="margin-bottom: 6px;"><strong>Age:</strong> ${data.age}</div>` : ''}
-          ${data.mobileNumber ? `<div style="margin-bottom: 6px;"><strong>Mobile:</strong> ${data.mobileNumber}</div>` : ''}
+          ${data.memberCount ? `<div style="margin-bottom: 6px;"><strong>Member Count:</strong> ${data.memberCount}</div>` : ''}
           ${data.registrationDate ? `<div style="margin-bottom: 6px;"><strong>Registered:</strong> ${data.registrationDate}</div>` : ''}
           ${data.status ? `<div style="margin-bottom: 6px;"><strong>Status:</strong> <span style="padding: 2px 6px; background: ${getStatusBgColor(data.status)}; color: ${getStatusTextColor(data.status)}; border-radius: 4px; font-size: 12px;">${data.status}</span></div>` : ''}
           ${data.administrativeArea ? `<div style="margin-bottom: 6px;"><strong>Area:</strong> ${data.administrativeArea}</div>` : ''}
@@ -120,10 +120,10 @@ const createFullFilteredTable = (mapId) => {
     persistFilters: true,
     filterPosition: 'top',
     storageKey: genericStorageKey,
-    filterFields: ['gender', 'status', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Household-specific fields
+    filterFields: ['userName', 'role', 'boundaryHierarchy.ward', 'boundaryHierarchy.healthFacility'], // Household-specific fields
     customLabels: {
-      gender: 'WBH_INDIVIDUAL_FILTER_GENDER',
-      status: 'WBH_INDIVIDUAL_FILTER_STATUS',
+      userName: 'WBH_HOUSEHOLD_FILTER_USERNAME',
+      role: 'WBH_HOUSEHOLD_FILTER_ROLE',
       ward: 'WBH_INDIVIDUAL_FILTER_WARD',
       healthFacility: 'WBH_INDIVIDUAL_FILTER_HEALTH_FACILITY'
     },
@@ -233,16 +233,16 @@ const HouseholdComponentBase = ({
     if (actualStartDate || actualEndDate) {
       const dateFilter = {
         "range": {
-          "Data.createdTime": {}
+          "Data.@timestamp": {}
         }
       };
       
       if (actualStartDate) {
-        dateFilter.range["Data.createdTime"]["gte"] = actualStartDate.getTime();
+        dateFilter.range["Data.@timestamp"]["gte"] = actualStartDate.getTime();
       }
       
       if (actualEndDate) {
-        dateFilter.range["Data.createdTime"]["lte"] = actualEndDate.getTime();
+        dateFilter.range["Data.@timestamp"]["lte"] = actualEndDate.getTime();
       }
       
       conditions.push(dateFilter);
@@ -290,8 +290,7 @@ const HouseholdComponentBase = ({
       "Data.@timestamp",
       "Data.additionalDetails",
       "Data.role",
-      "Data.boundaryHierarchy",
-      "Data.userId"
+      "Data.boundaryHierarchy"
     ],
     maxRecordLimit: 10000,
     maxBatchSize: 2500,
@@ -323,10 +322,11 @@ const HouseholdComponentBase = ({
         id: source.id || hit._id || `household-${index}`,
         userName: source.userName || 'N/A',
         role: source.role || 'N/A',
-        userId: source.userId || 'N/A',
         registrationDate: source['@timestamp'] ? new Date(source['@timestamp']).toLocaleDateString() : 'N/A',
         administrativeArea: source.additionalDetails?.administrativeArea || 'N/A',
         boundaryHierarchy: source.boundaryHierarchy || {},
+        memberCount: source?.additionalDetails?.memberCount || 'NA',
+        assessmentQ1: source?.additionalDetails?.assessmentQ1 || 'NA',
         latitude: geoPoint[1] || geoPoint.lat || 'N/A',
         longitude: geoPoint[0] || geoPoint.lon || 'N/A',
         timestamp: source['@timestamp'] 
@@ -354,7 +354,6 @@ const HouseholdComponentBase = ({
     const baseColumns = [
       { key: 'userName', label: t('WBH_USER_NAME'), sortable: true },
       { key: 'role', label: t('WBH_ROLE'), sortable: true },
-      { key: 'userId', label: t('WBH_USER_ID'), sortable: true },
       { key: 'registrationDate', label: t('WBH_REGISTRATION_DATE'), sortable: true }
     ];
 
@@ -369,6 +368,8 @@ const HouseholdComponentBase = ({
     const endColumns = [
       { key: 'latitude', label: t('WBH_LATITUDE'), sortable: false },
       { key: 'longitude', label: t('WBH_LONGITUDE'), sortable: false },
+      { key: 'memberCount', label: t('WBH_MEMBER_COUNT'), sortable: false },
+
       { key: 'administrativeArea', label: t('WBH_ADMINISTRATIVE_AREA'), sortable: true },
       { key: 'timestamp', label: t('WBH_TIMESTAMP'), sortable: true }
     ];
@@ -376,44 +377,33 @@ const HouseholdComponentBase = ({
     return [...baseColumns, ...boundaryColumns, ...endColumns];
   }, [boundaryFields, t]);
 
-  // Custom cell renderers for specific fields
+  // Custom cell renderers for specific fields - based on available data
   const customCellRenderer = useMemo(() => {
     const renderers = {
-      gender: (row) => (
+      role: (row) => (
         <span style={{ 
           padding: '4px 8px',
           borderRadius: '12px',
           fontSize: '12px',
           fontWeight: '500',
-          backgroundColor: row.gender === 'MALE' ? '#e3f2fd' : row.gender === 'FEMALE' ? '#fce4ec' : '#f5f5f5',
-          color: row.gender === 'MALE' ? '#1565c0' : row.gender === 'FEMALE' ? '#c2185b' : '#616161'
+          backgroundColor: getRoleColor(row.role).background,
+          color: getRoleColor(row.role).text
         }}>
-          {row.gender}
+          {row.role}
         </span>
       ),
-      status: (row) => (
-        <span style={{
-          padding: '4px 8px',
-          borderRadius: '12px',
-          fontSize: '12px',
-          fontWeight: '500',
-          backgroundColor: getIndividualStatusColor(row.status).background,
-          color: getIndividualStatusColor(row.status).text
-        }}>
-          {row.status}
-        </span>
-      ),
-      age: (row) => (
+      userName: (row) => (
         <span style={{ 
-          fontWeight: row.age !== 'N/A' && row.age < 18 ? 'bold' : 'normal',
-          color: row.age !== 'N/A' && row.age < 18 ? '#ff9800' : '#333'
+          fontWeight: '500',
+          color: '#374151'
         }}>
-          {row.age !== 'N/A' ? `${row.age} years` : '-'}
+          {row.userName}
         </span>
       ),
-      mobileNumber: (row) => (
-        <span style={{ fontSize: '13px', fontFamily: 'monospace' }}>
-          {row.mobileNumber !== 'N/A' ? row.mobileNumber : '-'}
+
+      registrationDate: (row) => (
+        <span style={{ fontSize: '14px' }}>
+          {row.registrationDate !== 'N/A' ? row.registrationDate : '-'}
         </span>
       )
     };
@@ -429,6 +419,24 @@ const HouseholdComponentBase = ({
 
     return renderers;
   }, [boundaryFields]);
+
+  // Helper function for role colors
+  const getRoleColor = (role) => {
+    switch (role?.toUpperCase()) {
+      case 'ADMIN':
+        return { background: '#fef3c7', text: '#92400e' };
+      case 'SUPERVISOR':
+        return { background: '#ddd6fe', text: '#6d28d9' };
+      case 'FIELD_WORKER':
+        return { background: '#d1fae5', text: '#047857' };
+      case 'DISTRIBUTOR':
+        return { background: '#dbeafe', text: '#1d4ed8' };
+      case 'REGISTRAR':
+        return { background: '#fed7d7', text: '#c53030' };
+      default:
+        return { background: '#e2e3e5', text: '#383d41' };
+    }
+  };
 
   // Helper function for status colors
   const getIndividualStatusColor = (status) => {
