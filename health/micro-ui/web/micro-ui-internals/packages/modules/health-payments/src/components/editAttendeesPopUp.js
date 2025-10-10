@@ -26,7 +26,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
 
     const labels = ["HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL", "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER"];
     const maxLabelLength = Math.max(...labels.map(label => label.length));
-    const labelWidth = `${maxLabelLength * 8}px`;
+    const labelWidth = `${maxLabelLength * 7}px`;
 
 
     const [attendanceSummary, setAttendanceSummary] = useState([]);
@@ -37,6 +37,24 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
 
 
     const [searchUserpopUp, setSearchUserpopUp] = useState(false);
+
+    const [popupWidth, setPopupWidth] = useState(getResponsiveWidth());
+
+    // Function to determine width dynamically
+    function getResponsiveWidth() {
+        if (window.innerWidth < 768) return "100%";   // Mobile
+        if (window.innerWidth < 1200) return "90%";   // Tablet
+        return "1300px";                              // Desktop
+    }
+
+    useEffect(() => {
+        const handleResize = () => {
+            setPopupWidth(getResponsiveWidth());
+        };
+
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     // -------- 1. Attendance Register API --------
     const AttendancereqCri = {
@@ -176,7 +194,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
     // -------- Render --------
     return (<React.Fragment>
         <PopUp
-            style={{ minWidth: "1300px" }}
+            style={{ minWidth: popupWidth }}
             onClose={onClose}
             heading={t(heading)}
             onOverlayClick={onClose}
@@ -206,14 +224,12 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
                             editAction={true}
                         />
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
-                            {/* {<div>{t(labels[0])}</div>
-                            <Button label={t("Register New User")} variation="link" onClick={() => history.push(`/${window?.contextPath}/employee/hrms/create`)} />} */}
+
 
                             <div>{t(labels[1])}</div>
                             <Button label={t("HCM_AM_SEARCH_USER")} variation="link" onClick={() => {
 
-                                // INFO: commenting for demo
-                                //setSearchUserpopUp(true)
+
 
                                 history.push(`/${window?.contextPath}/employee/payments/attendee-inbox?registerId=${registerId}&boundaryCode=${boundaryCode}`)
                             }} />
