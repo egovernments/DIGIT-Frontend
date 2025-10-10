@@ -1,0 +1,37 @@
+import React, { useCallback } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { selectField } from "./redux/remoteConfigSlice";
+import { useCustomTranslate } from "./hooks/useCustomT";
+import AppPreview from "../../../components/AppPreview";
+import SidePanelApp from "./SidePanelApp";
+import { LayoutRenderer } from "./LayoutRenderer";
+import dummyFieldTypeConfig from "./configs/dummyFieldTypeConfig.json";
+
+function AppConfiguration() {
+  const dispatch = useDispatch();
+  const { currentData, selectedField, isFieldSelected, pageType } = useSelector((state) => state.remoteConfig);
+  const t = useCustomTranslate();
+
+  const handleFieldClick = useCallback(
+    (field, screen, card, cardIndex, fieldIndex) => {
+      dispatch(selectField({ field, screen, card, cardIndex, fieldIndex }));
+    },
+    [dispatch]
+  );
+
+  // Determine which preview to render based on pageType
+  const isTemplateView = pageType === "template";
+
+  return (
+    <div>
+      {isTemplateView ? (
+        <LayoutRenderer config={currentData} selectedField={selectedField} onFieldClick={handleFieldClick} t={t} fieldTypeConfig={dummyFieldTypeConfig} />
+      ) : (
+        <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
+      )}
+      <SidePanelApp showPanelProperties={isFieldSelected && selectedField} />
+    </div>
+  );
+}
+
+export default React.memo(AppConfiguration);

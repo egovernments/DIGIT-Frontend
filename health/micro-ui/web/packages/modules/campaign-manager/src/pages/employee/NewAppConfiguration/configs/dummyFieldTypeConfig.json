@@ -1,0 +1,226 @@
+[
+  {
+    "type": "text",
+    "order": 1,
+    "metadata": {
+      "type": "string",
+      "format": "latLng"
+    },
+    "fieldType": "text",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "text",
+    "order": 1,
+    "metadata": {
+      "type": "string",
+      "format": "locality"
+    },
+    "fieldType": "text",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "text",
+    "order": 1,
+    "metadata": {
+      "type": "string",
+      "format": "text"
+    },
+    "fieldType": "text",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "latLng",
+    "order": 2,
+    "metadata": {
+      "type": "string",
+      "format": "latLng"
+    },
+    "fieldType": "locationPicker",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "date",
+    "order": 3,
+    "metadata": {
+      "type": "string",
+      "format": "date"
+    },
+    "fieldType": "date",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "dropdown",
+    "order": 4,
+    "metadata": {
+      "type": "string",
+      "format": "dropdown"
+    },
+    "fieldType": "dropdown",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "number",
+    "order": 5,
+    "metadata": {
+      "type": "integer",
+      "format": "text"
+    },
+    "fieldType": "number",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "email",
+    "order": 6,
+    "metadata": {
+      "type": "string",
+      "format": "email"
+    },
+    "fieldType": "email",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+  {
+    "type": "phone",
+    "order": 7,
+    "metadata": {
+      "type": "string",
+      "format": "phone"
+    },
+    "fieldType": "phone",
+    "attributeToRename": {
+      "helpText": "helpText"
+    }
+  },
+     {
+    "type": "switch",
+    "metadata": {
+      "type": "template",
+      "format": "switch"
+    }
+  },
+    {
+    "type": "searchBar",
+    "metadata": {
+      "type": "template",
+      "format": "searchBar"
+    }
+  },
+   {
+    "type": "filter",
+    "metadata": {
+      "type": "template",
+      "format": "filter"
+    }
+  },
+   {
+    "type": "button",
+    "metadata": {
+      "type": "template",
+      "format": "button"
+    },
+    "properties":[
+      {
+        "code":"variation",
+        "options":[ "primary","secondary"]
+      },
+      {
+        "code":"icon",
+        "options":["Add","Edit","Delete","Search","Download", "QrCodeScanner" ]
+      }
+    ]
+  },
+   {
+    "type": "panelCard",
+    "metadata": {
+      "type": "template",
+      "format": "panelCard"
+    },
+    "properties":[
+      {
+        "code":"panelType",
+        "options":[ "success","error"]
+      }
+    ]
+  },
+   {
+    "type": "card",
+    "metadata": {
+      "type": "template",
+      "format": "card"
+    },
+     "properties":[
+      {
+        "code":"cardType",
+        "options":[ "primary","secondary"]
+      }
+    ]
+  },
+  {
+    "type": "infoCard",
+    "metadata": {
+      "type": "template",
+      "format": "infoCard"
+    },
+     "properties":[
+      {
+        "code":"infoCardType",
+        "options":[ "info","success","error","warning"]
+      }
+    ]
+  },
+  {
+    "type": "tag",
+    "metadata": {
+      "type": "template",
+      "format": "tag"
+    },
+     "properties":[
+      {
+        "code":"tagType",
+        "options":[ "success","error","warning", "monochrome"]
+      }
+    ]
+  },
+    {
+    "type": "Column",
+    "metadata": {
+      "type": "template",
+      "format": "Column"
+    },
+    "properties":[
+      {
+        "code":"children",
+        "options":[ "Card","infoCard","panelCard","button","Row", "Column", "switch", "searchBar", "filter"  ]
+      }
+    ]
+  },
+  {
+    "type": "Row",
+    "metadata": {
+      "type": "template",
+      "format": "Row"
+    },
+    "properties":[
+      {
+        "code":"children",
+        "options":[ "Card","infoCard","panelCard","button","Row", "Column", "switch", "searchBar", "filter"  ]
+      }
+    ]
+  }
+]

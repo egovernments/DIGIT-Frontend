@@ -1,0 +1,310 @@
+import React, { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { useDispatch, useSelector } from "react-redux";
+import { handleShowAddFieldPopup, initializeConfig, addField, updatePageRoles } from "./redux/remoteConfigSlice";
+import { getFieldMaster } from "./redux/fieldMasterSlice";
+import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
+import { fetchLocalization, fetchAppScreenConfig, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
+import { Header } from "@egovernments/digit-ui-react-components";
+import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput } from "@egovernments/digit-ui-components";
+import IntermediateWrapper from "./IntermediateWrapper";
+import { useFieldDataLabel } from "./hooks/useCustomT";
+import fullParentConfig from "./configs/fullParentConfig.json";
+import { getPageFromConfig } from "./utils/configUtils";
+
+const AppConfigurationWrapper = ({
+  flow = "REGISTRATION-DELIVERY",
+  pageName = "beneficiaryLocation",
+  localeModule = "hcm-registrationflow-CMP-2025-09-19-006993",
+  onPageChange,
+  addedRoles = [],
+}) => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const { t } = useTranslation();
+  const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
+  const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
+  const dispatch = useDispatch();
+  const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+  const [newFieldType, setNewFieldType] = useState(null);
+  // Redux selectors
+  const { remoteData: actualState, currentData, showAddFieldPopup } = useSelector((state) => state.remoteConfig);
+  const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
+  const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
+
+  // Call hook at top level - always called, never conditionally
+  const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
+
+  // Handle adding new field
+  const handleAddNewField = () => {
+    if (!newFieldType?.label || !newFieldType?.field) {
+      return; // Validation: ensure required fields are present
+    }
+
+    // Create the new field object based on the selected field type - using fixed key 'fieldTypeMappingConfig'
+    const selectedFieldType = fieldTypeMaster?.fieldTypeMappingConfig?.find((field) => field.type === newFieldType.field.type);
+
+    const newFieldData = {
+      type: newFieldType.field.type,
+      format: newFieldType.field.format,
+      label: newFieldType.label, // This should be the localization code
+      required: false,
+      active: true,
+      order: (currentData?.cards?.[0]?.fields?.length || 0) + 1,
+      jsonPath: `field_${Date.now()}`, // Generate a unique jsonPath
+      ...selectedFieldType?.metadata, // Include any metadata from field type
+    };
+
+    // Dispatch the addField action - using cardIndex 0 since there's only one card
+    dispatch(
+      addField({
+        cardIndex: 0,
+        fieldData: newFieldData,
+      })
+    );
+
+    // Close the popup and reset state
+    dispatch(handleShowAddFieldPopup(null));
+    setNewFieldType(null);
+  };
+  useEffect(() => {
+    // Filter page from fullParentConfig using flow and pageName
+    const pageConfig = getPageFromConfig(fullParentConfig, flow, pageName);
+
+    // Initialize config
+    dispatch(initializeConfig(pageConfig));
+
+    // Fetch field master if specified
+    dispatch(
+      getFieldMaster({
+        tenantId,
+        moduleName: MODULE_CONSTANTS,
+        name: "FieldMaster",
+        mdmsContext: mdmsContext,
+        limit: 10000,
+      })
+    );
+
+    // Fetch field panel master
+    dispatch(
+      getFieldPanelMaster({
+        tenantId,
+        moduleName: MODULE_CONSTANTS,
+        name: "AppPanelMasters",
+        mdmsContext: mdmsContext,
+        limit: 10000,
+      })
+    );
+
+    // Fetch localization data if locale module is provided
+    if (localeModule) {
+      dispatch(
+        fetchLocalization({
+          tenantId,
+          localeModule,
+          enabledModules: [currentLocale],
+        })
+      );
+
+      dispatch(fetchAppScreenConfig({ tenantId }));
+
+      // Set localization context data
+      dispatch(
+        setLocalizationData({
+          localisationData: localizationData,
+          currentLocale,
+          enabledModules: [currentLocale],
+          localeModule,
+        })
+      );
+    }
+  }, [dispatch, flow, pageName, localeModule, tenantId, mdmsContext, currentLocale]);
+
+  if (!currentData || (localeModule && localizationStatus === "loading")) {
+    return <Loader />;
+  }
+
+  // Check button disabled states from currentData
+  const isPreviousDisabled = !currentData?.previousRoute || currentData?.previousRoute === null;
+  const isNextDisabled = !currentData?.nextRoute || currentData?.nextRoute === null;
+
+  const handlePrevious = () => {
+    if (currentData?.previousRoute && onPageChange) {
+      console.log("Navigating to previous page:", currentData.previousRoute);
+      onPageChange(currentData.previousRoute);
+    }
+  };
+
+  const handleNext = () => {
+    // Dispatch roles update to Redux
+    if (addedRoles.length > 0) {
+      dispatch(updatePageRoles({ roles: addedRoles }));
+    }
+
+    // Console the final submit data
+    console.log("Submitting current data:", { ...currentData, roles: addedRoles.length > 0 ? addedRoles : currentData.roles });
+
+    // Navigate to next page if exists
+    if (currentData?.nextRoute && onPageChange) {
+      console.log("Navigating to next page:", currentData.nextRoute);
+      onPageChange(currentData.nextRoute);
+    }
+  };
+
+  const handleFieldChange = (value) => {
+    const locVal = newFieldType?.label
+      ? newFieldType?.label
+      : `${showAddFieldPopup?.currentCard?.flow}_${showAddFieldPopup?.currentCard?.name}_newField_${Date.now()}`;
+    dispatch(
+      updateLocalizationEntry({
+        code: locVal,
+        locale: currentLocale || "en_IN",
+        message: value,
+      })
+    );
+    setNewFieldType((prev) => ({
+      ...prev,
+      label: locVal,
+    }));
+  };
+  return (
+    <div>
+      <Header className="app-config-header">
+        <div className="app-config-header-group" style={{ display: "flex", alignItems: "center" }}>
+          {t(`APP_CONFIG_HEADING_LABEL`)}
+          <Tag
+            stroke={true}
+            showIcon={false}
+            label={`${t("APPCONFIG_VERSION")} - ${currentData?.version}`}
+            style={{ background: "#EFF8FF", height: "fit-content" }}
+            className={"version-tag"}
+          />
+        </div>
+      </Header>
+      <TextBlock
+        body=""
+        caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")}
+        header=""
+        captionClassName="camp-drawer-caption"
+        subHeader=""
+      />
+      <div style={{ display: "flex" }}>
+        <div>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "flex-end",
+              marginLeft: "30.5rem",
+              gap: "5rem",
+            }}
+          >
+            <IntermediateWrapper />
+          </div>
+        </div>
+      </div>
+      <div
+        className="appConfig-flex-action"
+        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", marginTop: "20px" }}
+      >
+        <Button
+          className="app-configure-action-button"
+          variation="secondary"
+          label={t("PREVIOUS")}
+          title={t("PREVIOUS")}
+          icon="ArrowBack"
+          isDisabled={isPreviousDisabled}
+          onClick={() => handlePrevious()}
+        />
+        <span className="app-config-tag-page" style={{ fontSize: "14px", fontWeight: "500" }}>
+          {currentData?.name || ""}
+        </span>
+        <Button
+          className="app-configure-action-button"
+          variation="secondary"
+          label={t("NEXT")}
+          title={t("NEXT")}
+          icon="ArrowForward"
+          isSuffix={true}
+          isDisabled={isNextDisabled}
+          onClick={() => handleNext()}
+        />
+      </div>
+      {/* {showToast && (
+        <Toast
+          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+          label={t(showToast?.label)}
+          transitionTime={showToast.transitionTime}
+          onClose={closeToast}
+        />
+      )} */}
+      {showAddFieldPopup && (
+        <PopUp
+          className={"add-field-popup"}
+          type={"default"}
+          heading={t("ADD_FIELD")}
+          onClose={() => {
+            dispatch(handleShowAddFieldPopup(null));
+            setNewFieldType(null);
+          }}
+          style={{
+            height: "auto",
+            width: "32rem",
+          }}
+        >
+          <div style={{ padding: "1rem", display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <LabelFieldPair>
+              <span style={{ fontWeight: "600" }}>
+                {t("FIELD_LABEL")} <span style={{ color: "red" }}>*</span>
+              </span>
+              <TextInput
+                name="fieldLabel"
+                value={fieldDataLabel}
+                placeholder={t("ENTER_FIELD_LABEL")}
+                onChange={(event) => handleFieldChange(event.target.value)}
+              />
+            </LabelFieldPair>
+
+            <LabelFieldPair>
+              <span style={{ fontWeight: "600" }}>
+                {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
+              </span>
+              <Dropdown
+                option={fieldTypeMaster?.fieldTypeMappingConfig}
+                optionKey="type"
+                selected={newFieldType?.field || null}
+                select={(value) => {
+                  // Update the newdata state with the selected value from the dropdown
+                  const updatedData = { ...newFieldType, field: value };
+                  setNewFieldType(updatedData);
+                }}
+                placeholder={t("SELECT_FIELD_TYPE")}
+              />
+            </LabelFieldPair>
+
+            <div style={{ display: "flex", gap: "1rem", justifyContent: "flex-end", marginTop: "1rem" }}>
+              <Button
+                type="button"
+                size="medium"
+                variation="secondary"
+                label={t("CANCEL")}
+                onClick={() => {
+                  dispatch(handleShowAddFieldPopup(null));
+                  setNewFieldType(null);
+                }}
+              />
+              <Button
+                type="button"
+                size="medium"
+                variation="primary"
+                label={t("ADD")}
+                isDisabled={!newFieldType?.label || !newFieldType?.field}
+                onClick={handleAddNewField}
+              />
+            </div>
+          </div>
+        </PopUp>
+      )}
+    </div>
+  );
+};
+
+export default AppConfigurationWrapper;
