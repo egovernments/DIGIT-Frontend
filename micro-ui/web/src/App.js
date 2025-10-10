@@ -24,7 +24,7 @@ const enabledModules = [
   "Utilities",
   "HRMS",
   "Engagement",
-  // "Workbench",
+  "Workbench",
   "PGR"
 ];
 
