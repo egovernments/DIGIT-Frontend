@@ -159,6 +159,18 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   let config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
+
+  if (config?.[0]?.body?.[2]) {
+  config[0].body[2].disable = false;
+  // config[0].body[2].isMandatory = true;
+  // config[0].body[2].populators.disable = false;
+  // config[0].body[2].populators.isMandatory = true;
+  // config[0].body[2].populators.defaultValue = {
+  //   code: "pg.citya",
+  //   name: "City A",
+  // };
+}
+
   if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
