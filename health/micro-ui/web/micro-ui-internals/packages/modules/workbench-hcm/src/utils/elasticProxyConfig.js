@@ -18,11 +18,11 @@ export const getElasticProxyConfig = (useProxy = false) => {
     // Use the proxy server running in the same container
     return {
       useProxy: true,
-      kibanaPath: 'api/kibana',
-      elasticsearchPath: 'api/elasticsearch',
+      kibanaPath: 'console/proxy/kibana',
+      elasticsearchPath: 'console/proxy/elasticsearch',
       origin: window.location.origin,
       // The proxy server handles the actual Kibana/Elasticsearch URLs
-      proxyEndpoint: '/api'
+      proxyEndpoint: '/console/proxy'
     };
   }
   

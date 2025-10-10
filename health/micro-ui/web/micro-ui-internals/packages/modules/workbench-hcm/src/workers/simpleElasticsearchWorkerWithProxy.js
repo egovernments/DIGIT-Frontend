@@ -5,7 +5,7 @@ export const createProxyAwareWorkerString = (useProxy = false) => {
   const proxyConfig = useProxy ? `
     // Proxy configuration
     const USE_PROXY = true;
-    const PROXY_PATH = '/api/elasticsearch';
+    const PROXY_PATH = '/console/proxy/elasticsearch';
     
     // Transform Kibana console proxy URLs to use our proxy server
     function transformUrl(kibanaPath, elasticsearchPath, origin) {

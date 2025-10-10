@@ -286,6 +286,16 @@ const DeliveryComponentBase = ({
     }
   }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange]);
 
+  // Debug the query
+  console.log('🔍 DeliveryComponent Query Debug:', {
+    projectId,
+    boundaryType,
+    boundaryCode,
+    userName,
+    query: elasticsearchQuery,
+    indexName: getKibanaDetails('projectTaskIndex') || 'project-task-index-v1'
+  });
+
   // Use the simple Elasticsearch hook with proxy support
   const {
     data,
@@ -324,7 +334,11 @@ console.log('🚚 Delivery data received:', {
   totalRecords: metadata?.totalRecords || 0,
   isComplete: (data?.length || 0) === (metadata?.totalAvailable || 0),
   fetchedPercentage: metadata?.totalAvailable ? ((data?.length || 0) / metadata.totalAvailable * 100).toFixed(1) + '%' : 'N/A',
-  usingProxy: usingProxy ? '✅ Using Proxy' : '❌ Direct Connection'
+  usingProxy: usingProxy ? '✅ Using Proxy' : '❌ Direct Connection',
+  loading: loading,
+  error: error,
+  indexName: getKibanaDetails('projectTaskIndex') || 'project-task-index-v1',
+  querySize: JSON.stringify(elasticsearchQuery).length
 });
 
   // Transform data for table display

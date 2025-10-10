@@ -11,7 +11,7 @@ const ElasticsearchDebugger = ({ projectId, externalLoading }) => {
     
     // Test proxy health
     if (window.ELASTIC_USE_PROXY) {
-      fetch('/api/health')
+      fetch('/console/proxy/health')
         .then(response => response.json())
         .then(data => {
           console.log('✅ Proxy health check:', data);
@@ -25,7 +25,7 @@ const ElasticsearchDebugger = ({ projectId, externalLoading }) => {
     
     // Check if we can reach the proxy endpoints
     if (window.ELASTIC_USE_PROXY) {
-      fetch('/api/elasticsearch/_cluster/health')
+      fetch('/console/proxy/elasticsearch/_cluster/health')
         .then(response => {
           console.log('📡 Elasticsearch proxy test status:', response.status);
           return response.json();
