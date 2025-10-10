@@ -85,7 +85,7 @@ export const CreateEmployeeConfig = {
               populators: {
                 required: true,
                 name: "SelectEmployeeName",
-                error: "CORE_COMMON_REQUIRED_ERRMSG",
+                error: "HRMS_EMPLOYEE_NAME_VALIDATION_ERROR_MSG",
                 validation: { pattern: /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i },
               },
             },
@@ -105,7 +105,8 @@ export const CreateEmployeeConfig = {
                   minLength: 10,
                   maxLength: 10,
                   min: 6000000000,
-                  max: 9999999999
+                  max: 9999999999,
+                  
                 }, // 10-digit phone number validation
               },
             },
@@ -199,7 +200,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 required: true,
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
-                mdmsv2: true,
+              //  mdmsv2: true,
                 mdmsConfig: {
                   masterName: "EmployeeType",
                   moduleName: "egov-hrms",
@@ -239,7 +240,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 required: true,
-                mdmsv2: true,
+               // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "Department",
                   moduleName: "common-masters",
@@ -259,7 +260,7 @@ export const CreateEmployeeConfig = {
                 optionsKey: "name",
                 required: true,
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
-                mdmsv2: true,
+               // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "Designation",
                   moduleName: "common-masters",
@@ -283,7 +284,7 @@ export const CreateEmployeeConfig = {
                 allowMultiselect : true,
                 isDropdownWithChip: true,
                 chipsKey: "name",
-                mdmsv2: true,
+               // mdmsv2: true,
                 mdmsConfig: {
                   masterName: "roles",
                   moduleName: "ACCESSCONTROL-ROLES",
@@ -291,6 +292,18 @@ export const CreateEmployeeConfig = {
                 },
               },
             },
+            // // INFO:: testing
+
+            // {
+            //   type: "component",
+            //   isMandatory: true,
+            //   component: "UserAssignment",
+            //   key: "UserAssignment",
+            //   withoutLabel: true,
+            //   populators: {
+            //     name: "UserAssignment",
+            //   },
+            // },
             {
               type: "component",
               isMandatory: true,
@@ -301,6 +314,7 @@ export const CreateEmployeeConfig = {
                 name: "Jurisdictions",
               },
             },
+            
           ],
         },
       ],

@@ -9,6 +9,7 @@ const ROLES = {
 
 const PaymentsCard = () => {
 
+ 
   // Reset session storage
   useEffect(() => {
     Digit.SessionStorage.del("paymentInbox");

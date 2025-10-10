@@ -3,6 +3,7 @@ import { TextInput, Dropdown, RadioButtons, Button, FieldV1 } from "@egovernment
 import { useTranslation } from "react-i18next";
 import { useCustomT } from "./useCustomT";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+import DependentFieldsWrapper from "./DependentFieldsWrapper";
 
 export const RenderConditionalField = ({
   cField,
@@ -16,6 +17,7 @@ export const RenderConditionalField = ({
   disabled,
 }) => {
   const { t } = useTranslation();
+  const useT = useCustomT();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === (drawerState?.appType || drawerState?.type))
     ?.localisableProperties?.includes(cField?.bindTo?.split(".")?.at(-1));
@@ -33,7 +35,7 @@ export const RenderConditionalField = ({
           label={cField?.label}
           withoutLabel={Boolean(!cField?.label)}
           value={
-            isLocalisable ? useCustomT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
+            isLocalisable ? useT(drawerState?.[cField?.bindTo]) : drawerState?.[cField?.bindTo] === true ? "" : drawerState?.[cField?.bindTo]
           }
           config={{
             step: "",
@@ -85,7 +87,7 @@ export const RenderConditionalField = ({
                 className=""
                 type={"text"}
                 name="title"
-                value={useCustomT(item?.name)}
+                value={useT(item?.name)}
                 onChange={(event) => {
                   setDrawerState((prev) => ({
                     ...prev,
@@ -212,6 +214,17 @@ export const RenderConditionalField = ({
             }));
           }}
           optionsKey="code"
+        />
+      );
+    case "dependencyFieldWrapper":
+      return (
+        <DependentFieldsWrapper
+          t={t}
+          currentState={state}
+          parentState={parentState}
+          onExpressionChange={handleExpressionChange}
+          screenConfig={screenConfig}
+          selectedFieldItem={selectedField}
         />
       );
     default:

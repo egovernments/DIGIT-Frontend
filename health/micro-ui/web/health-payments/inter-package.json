@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "main": "index.js",
   "workspaces": [
-    "packages/modules/health-payments"
+    "packages/modules/health-payments",
+    "packages/modules/health-hrms"
   ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
@@ -21,12 +22,14 @@
     "dev:example": "cd example && yarn start",
     "dev:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn start",
     "dev:health-payments": "cd packages/modules/health-payments && yarn start",
+    "dev:health-hrms": "cd packages/modules/health-hrms && yarn start",
     "dev:microplan": "cd packages/modules/microplan && yarn start",
     "dev:campaign": "cd packages/modules/campaign-manager && yarn start",
     "build": "run-p build:**",
     "build:campaign": "cd packages/modules/campaign-manager && yarn build",
     "buildD:hcm-microplanning": "cd packages/modules/hcm-microplanning && yarn build",
     "build:health-payments": "cd packages/modules/health-payments && yarn build",
+    "build:health-hrms": "cd packages/modules/health-hrms && yarn build",
     "build:microplan": "cd packages/modules/microplan && yarn build",
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
