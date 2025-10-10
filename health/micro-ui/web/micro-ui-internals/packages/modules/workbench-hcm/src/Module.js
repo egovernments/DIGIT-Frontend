@@ -31,6 +31,7 @@ import CampaignStatus from "./pages/employee/CampaignStatus";
 import StockTransactionComponent from './components/StockTransactionComponent';
 import UsersComponent from "./components/UsersComponent";
 import DeliveryComponent from "./components/DeliveryComponent";
+import RegistrationComponent from "./components/RegistrationComponent";
 
 const HCMWORKBENCHModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "hcm";
@@ -86,7 +87,8 @@ const componentsToRegister = {
   useProjectHierarchy,
   StockTransactionComponent,
   UsersComponent,
-  DeliveryComponent
+  DeliveryComponent,
+  RegistrationComponent
 };
 
 const overrideHooks = () => {
