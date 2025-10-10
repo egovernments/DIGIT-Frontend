@@ -277,7 +277,8 @@ module.exports = {
           "/billing-service/bill/v2/_fetchbill",
           "/tenant-management",
           "/default-data-handler",
-          "/facility/v1/_create"
+          "/facility/v1/_create",
+          "/product",
         ],
         target: envFile.REACT_APP_PROXY_API,
         changeOrigin: true,

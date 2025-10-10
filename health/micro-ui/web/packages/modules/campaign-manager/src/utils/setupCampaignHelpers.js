@@ -206,9 +206,9 @@ export const processDoseCriteria = (rule, resourcesMap, type, projectType) => {
 
       // return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
       if (type === "create") {
-        return `${roundedToValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedFromValue}`;
+        return `${roundedFromValue}<=${attributeCode.toLowerCase()}and${attributeCode.toLowerCase()}<${roundedToValue}`;
       } else {
-        return `${roundedToValue} <= ${attr.attribute.code} < ${roundedFromValue}`;
+        return `${roundedFromValue} <= ${attr.attribute.code} < ${roundedToValue}`;
       }
     } else {
 
