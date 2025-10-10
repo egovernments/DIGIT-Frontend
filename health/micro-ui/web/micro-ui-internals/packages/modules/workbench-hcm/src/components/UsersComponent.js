@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from "@egovernments/digit-ui-components";
 import { SVG } from '@egovernments/digit-ui-react-components';
-import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
+import useSimpleElasticsearchWithProxy from '../hooks/useSimpleElasticsearchWithProxy';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import withGenericFilter from './withGenericFilter';
@@ -10,6 +10,7 @@ import ElasticsearchDataHeader from './ElasticsearchDataHeader';
 import { getKibanaDetails } from '../utils/getProjectServiceUrl';
 import { discoverBoundaryFields } from '../utils/boundaryFilterUtils';
 import DeliveryComponent from './DeliveryComponent';
+import RegistrationComponent from './RegistrationComponent';
 
 function toCamelCase(str) {
   return str
@@ -27,8 +28,13 @@ function toCamelCase(str) {
 // Deliveries Popup Component
 const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
   const { t } = useTranslation();
+  const [activeView, setActiveView] = useState('deliveries'); // 'deliveries' or 'registration'
 
   if (!isOpen) return null;
+
+  const toggleView = (view) => {
+    setActiveView(view);
+  };
 
   return (
     <div style={{
@@ -47,9 +53,9 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
         backgroundColor: 'white',
         borderRadius: '8px',
         padding: '24px',
-        maxWidth: '80vw',
-        width: '80vw',
-        maxHeight: '80vh',
+        maxWidth: '85vw',
+        width: '85vw',
+        maxHeight: '85vh',
         overflow: 'auto',
         boxShadow: '0 10px 25px rgba(0, 0, 0, 0.2)',
         position: 'relative'
@@ -63,9 +69,53 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
           borderBottom: '1px solid #e5e7eb',
           paddingBottom: '16px'
         }}>
-          <h3 style={{ margin: 0, color: '#1f2937', fontSize: '18px', fontWeight: '600' }}>
-             {t('WBH_USER_DELIVERIES_OF')} {rowData?.employeeName || rowData?.userName || 'User'}
-          </h3>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+            <h3 style={{ margin: 0, color: '#1f2937', fontSize: '18px', fontWeight: '600' }}>
+              {activeView === 'deliveries' ? t('WBH_USER_DELIVERIES_OF') : t('WBH_USER_REGISTRATIONS_OF')} {rowData?.employeeName || rowData?.userName || 'User'}
+            </h3>
+            
+            {/* Toggle Buttons */}
+            <div style={{
+              display: 'flex',
+              backgroundColor: '#f3f4f6',
+              borderRadius: '8px',
+              padding: '4px'
+            }}>
+              <button
+                onClick={() => toggleView('deliveries')}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: activeView === 'deliveries' ? '#3b82f6' : 'transparent',
+                  color: activeView === 'deliveries' ? 'white' : '#6b7280',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                🚚 Deliveries
+              </button>
+              <button
+                onClick={() => toggleView('registration')}
+                style={{
+                  padding: '8px 16px',
+                  backgroundColor: activeView === 'registration' ? '#3b82f6' : 'transparent',
+                  color: activeView === 'registration' ? 'white' : '#6b7280',
+                  border: 'none',
+                  borderRadius: '6px',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                📋 Registrations
+              </button>
+            </div>
+          </div>
+          
           <Button
             type="button"
             variation="secondary"
@@ -87,7 +137,25 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
             color: '#6b7280',
             fontSize: '14px'
           }}>
-            <DeliveryComponent mapId="delivery-user-popup" userName={rowData?.userName} projectId={userComponentProps?.projectId} boundaryType={userComponentProps?.boundaryType} boundaryCode={userComponentProps?.boundaryCode} loading={userComponentProps?.loading} />
+            {activeView === 'deliveries' ? (
+              <DeliveryComponent 
+                mapId="delivery-user-popup" 
+                userName={rowData?.userName} 
+                projectId={userComponentProps?.projectId} 
+                boundaryType={userComponentProps?.boundaryType} 
+                boundaryCode={userComponentProps?.boundaryCode} 
+                loading={userComponentProps?.loading} 
+              />
+            ) : (
+              <RegistrationComponent 
+                mapId="registration-user-popup" 
+                userName={rowData?.userName} 
+                projectId={userComponentProps?.projectId} 
+                boundaryType={userComponentProps?.boundaryType} 
+                boundaryCode={userComponentProps?.boundaryCode} 
+                loading={userComponentProps?.loading} 
+              />
+            )}
           </div>
         </div>
 
@@ -97,8 +165,12 @@ const DeliveriesPopup = ({ isOpen, onClose, rowData, userComponentProps }) => {
           paddingTop: '16px',
           borderTop: '1px solid #e5e7eb',
           display: 'flex',
-          justifyContent: 'flex-end'
+          justifyContent: 'space-between',
+          alignItems: 'center'
         }}>
+          <div style={{ fontSize: '14px', color: '#6b7280' }}>
+            Showing {activeView === 'deliveries' ? 'delivery tasks' : 'household registrations'} for {rowData?.employeeName || rowData?.userName}
+          </div>
           <Button
             type="button"
             variation="primary"
@@ -256,7 +328,7 @@ const UsersComponent = ({
     progress,
     metadata,
     refetch
-  } = useSimpleElasticsearch({
+  } = useSimpleElasticsearchWithProxy({
     indexName: getKibanaDetails('projectStaffIndex') || 'project-staff-index-v1',
     query: elasticsearchQuery,
     sourceFields: [

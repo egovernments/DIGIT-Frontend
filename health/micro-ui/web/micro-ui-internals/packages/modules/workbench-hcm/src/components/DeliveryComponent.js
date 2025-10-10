@@ -286,15 +286,6 @@ const DeliveryComponentBase = ({
     }
   }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange]);
 
-  // Debug the query
-  console.log('🔍 DeliveryComponent Query Debug:', {
-    projectId,
-    boundaryType,
-    boundaryCode,
-    userName,
-    query: elasticsearchQuery,
-    indexName: getKibanaDetails('projectTaskIndex') || 'project-task-index-v1'
-  });
 
   // Use the simple Elasticsearch hook with proxy support
   const {
@@ -328,18 +319,7 @@ const DeliveryComponentBase = ({
     enabled: !externalLoading && !!projectId,
     useProxy: window.ELASTIC_USE_PROXY || false // Enable proxy mode when configured
   });
-console.log('🚚 Delivery data received:', {
-  recordsReceived: data?.length || 0,
-  totalAvailable: metadata?.totalAvailable || 0,
-  totalRecords: metadata?.totalRecords || 0,
-  isComplete: (data?.length || 0) === (metadata?.totalAvailable || 0),
-  fetchedPercentage: metadata?.totalAvailable ? ((data?.length || 0) / metadata.totalAvailable * 100).toFixed(1) + '%' : 'N/A',
-  usingProxy: usingProxy ? '✅ Using Proxy' : '❌ Direct Connection',
-  loading: loading,
-  error: error,
-  indexName: getKibanaDetails('projectTaskIndex') || 'project-task-index-v1',
-  querySize: JSON.stringify(elasticsearchQuery).length
-});
+
 
   // Transform data for table display
   const tableData = useMemo(() => {

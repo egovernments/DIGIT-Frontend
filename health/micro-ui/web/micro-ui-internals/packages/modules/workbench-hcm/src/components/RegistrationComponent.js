@@ -198,6 +198,7 @@ const HouseholdComponentBase = ({
   // Date range filter props
   startDate = null,
   endDate = null,
+  userName=null,
   dateRange = null,
   // Map configuration
   mapId = null
@@ -224,6 +225,17 @@ const HouseholdComponentBase = ({
             [`Data.boundaryHierarchyCode.${toCamelCase(boundaryType)}.keyword`]: boundaryCode
           }
         })
+    }
+
+    if(userName){
+      conditions.push({
+        "match": {
+          "Data.userName": {
+            "query": userName,
+            "operator": "and"
+          }
+        }
+      });
     }
 
     // Add date range filter if provided
@@ -260,13 +272,14 @@ const HouseholdComponentBase = ({
         }
       };
     }
-  }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange]);
+  }, [projectId, boundaryType, boundaryCode, startDate, endDate, dateRange, userName]);
 
   // Debug the query
   console.log('👤 HouseholdComponent Query Debug:', {
     projectId,
     boundaryType,
     boundaryCode,
+    userName,
     query: elasticsearchQuery,
     indexName: getKibanaDetails('projectHouseholdIndex') || 'household-index-v1'
   });
@@ -465,9 +478,6 @@ const HouseholdComponentBase = ({
   const summaryCards = useMemo(() => {
     if (!metadata.totalRecords || metadata.totalRecords === 0) return [];
     
-    // Calculate gender statistics
-    const maleCount = tableData.filter(row => row.gender === 'MALE').length;
-    const femaleCount = tableData.filter(row => row.gender === 'FEMALE').length;
     const activeCount = tableData.filter(row => row.status === 'ACTIVE').length;
     
     return [
@@ -478,13 +488,7 @@ const HouseholdComponentBase = ({
         subtitle: `of ${metadata.totalAvailable.toLocaleString()} total`,
         valueColor: '#059669'
       },
-      {
-        key: 'genderStats',
-        value: `${maleCount} / ${femaleCount}`,
-        label: 'Male / Female',
-        subtitle: 'Gender distribution',
-        valueColor: '#3b82f6'
-      },
+
       {
         key: 'activeHouseholds',
         value: activeCount.toLocaleString(),

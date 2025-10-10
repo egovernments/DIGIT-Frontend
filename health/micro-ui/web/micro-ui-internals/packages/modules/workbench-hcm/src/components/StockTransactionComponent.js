@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import useSimpleElasticsearch from '../hooks/useSimpleElasticsearch';
+import useSimpleElasticsearchWithProxy from '../hooks/useSimpleElasticsearchWithProxy';
 import ReusableTableWrapper from './ReusableTableWrapper';
 import withBoundaryFilter from './withBoundaryFilter';
 import withGenericFilter from './withGenericFilter';
@@ -185,7 +185,7 @@ const StockTransactionComponentBase = ({
     progress,
     metadata,
     refetch
-  } = useSimpleElasticsearch({
+  } = useSimpleElasticsearchWithProxy({
     indexName: getKibanaDetails('projectStockIndex') || 'od-stock-index-v1',
     query: elasticsearchQuery,
     sourceFields: [
