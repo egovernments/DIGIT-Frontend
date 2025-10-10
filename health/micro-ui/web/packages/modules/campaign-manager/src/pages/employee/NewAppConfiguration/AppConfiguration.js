@@ -5,6 +5,7 @@ import { useCustomTranslate } from "./hooks/useCustomT";
 import AppPreview from "../../../components/AppPreview";
 import SidePanelApp from "./SidePanelApp";
 import { LayoutRenderer } from "./LayoutRenderer";
+import dummyFieldTypeConfig from "./configs/dummyFieldTypeConfig.json";
 
 function AppConfiguration() {
   const dispatch = useDispatch();
@@ -24,7 +25,7 @@ function AppConfiguration() {
   return (
     <div>
       {isTemplateView ? (
-        <LayoutRenderer config={currentData} selectedField={selectedField} onFieldClick={handleFieldClick} t={t} />
+        <LayoutRenderer config={currentData} selectedField={selectedField} onFieldClick={handleFieldClick} t={t} fieldTypeConfig={dummyFieldTypeConfig} />
       ) : (
         <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
       )}

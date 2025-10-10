@@ -476,7 +476,7 @@
               "value": "",
               "format": "button",
               "hidden": false,
-              "componentName": "button",
+              "componentName": "registrationButton",
               "validations": [
                 {
                   "type": "required",
@@ -495,7 +495,7 @@
               "value": "",
               "format": "button",
               "hidden": false,
-              "componentName": "button",
+              "componentName": "scanBeneficiaryQR",
               "validations": [
                 {
                   "type": "required",
