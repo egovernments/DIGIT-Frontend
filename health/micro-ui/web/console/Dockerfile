@@ -46,15 +46,16 @@ RUN echo '#!/bin/sh' > /copy-proxy.sh && \
     echo 'if [ -f "/build-context/proxy/package.json" ]; then' >> /copy-proxy.sh && \
     echo '  echo "Found proxy in ./proxy/"' >> /copy-proxy.sh && \
     echo '  cp /build-context/proxy/package.json ./package.json' >> /copy-proxy.sh && \
-    echo '  cp /build-context/proxy/server.js ./server.js' >> /copy-proxy.sh && \
+    echo '  cp -r /build-context/proxy/src ./src' >> /copy-proxy.sh && \
     echo 'elif [ -f "/build-context/web/proxy/package.json" ]; then' >> /copy-proxy.sh && \
     echo '  echo "Found proxy in ./web/proxy/"' >> /copy-proxy.sh && \
     echo '  cp /build-context/web/proxy/package.json ./package.json' >> /copy-proxy.sh && \
-    echo '  cp /build-context/web/proxy/server.js ./server.js' >> /copy-proxy.sh && \
+    echo '  cp -r /build-context/web/proxy/src ./src' >> /copy-proxy.sh && \
     echo 'else' >> /copy-proxy.sh && \
     echo '  echo "Proxy files not found - creating placeholder"' >> /copy-proxy.sh && \
-    echo '  echo '"'"'{"name":"proxy-placeholder","version":"1.0.0","main":"server.js","dependencies":{}}'"'"' > ./package.json' >> /copy-proxy.sh && \
-    echo '  echo "console.log(\"Proxy server not configured\");" > ./server.js' >> /copy-proxy.sh && \
+    echo '  mkdir -p ./src' >> /copy-proxy.sh && \
+    echo '  echo '"'"'{"name":"proxy-placeholder","version":"1.0.0","main":"src/server.js","dependencies":{}}'"'"' > ./package.json' >> /copy-proxy.sh && \
+    echo '  echo "console.log(\"Proxy server not configured\");" > ./src/server.js' >> /copy-proxy.sh && \
     echo 'fi' >> /copy-proxy.sh && \
     chmod +x /copy-proxy.sh && \
     /copy-proxy.sh
@@ -107,7 +108,7 @@ RUN echo "[supervisord]" > /etc/supervisord.conf && \
 RUN if [ -f /proxy/package.json ] && grep -q "express" /proxy/package.json 2>/dev/null; then \
       echo "" >> /etc/supervisord.conf && \
       echo "[program:proxy]" >> /etc/supervisord.conf && \
-      echo "command=node /proxy/server.js" >> /etc/supervisord.conf && \
+      echo "command=node /proxy/src/server.js" >> /etc/supervisord.conf && \
       echo "directory=/proxy" >> /etc/supervisord.conf && \
       echo "autostart=true" >> /etc/supervisord.conf && \
       echo "autorestart=true" >> /etc/supervisord.conf && \
