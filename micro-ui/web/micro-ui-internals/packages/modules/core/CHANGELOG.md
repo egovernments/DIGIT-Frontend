@@ -1,5 +1,20 @@
 # Changelog 
 
+## [1.8.55]  [8th-Oct-2025]
+- Updated the email and mobilenumber login flow with pattern validation, link instead of toggle and state management fixes
+
+## [1.8.54]  [8th-Oct-2025]
+- Updated the validation for email, css fix and email sending in payload while otp flow
+
+## [1.8.53]  [8th-Oct-2025]
+- Added dynamicLoginComponent (custom) to be displayed below login card
+
+## [1.8.52]  [7th-Oct-2025]
+- Added fix for privacy policy error
+
+## [1.8.51]  [6th-Oct-2025]
+- Added the redirection fix in citizen side after login and max length fix for mobile number
+
 ## [1.8.50]  [3rd-Oct-2025]
 - updated the citizen home page to not to filter the cards using module, directly show citizen menu details
 

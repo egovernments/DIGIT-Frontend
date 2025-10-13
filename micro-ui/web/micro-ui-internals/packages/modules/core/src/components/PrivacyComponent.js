@@ -45,7 +45,7 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
           size={"small"}
           onClick={onButtonClick}
           // isSuffix={true}
-          style={{ marginBottom: "1.18rem", paddingLeft: "0.2rem" }}
+          style={{ marginBottom: "1rem", paddingLeft: "0.2rem" }}
         ></Button>
       </div>
       {showPopUp && (
