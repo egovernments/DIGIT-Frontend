@@ -75,7 +75,8 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-const RenderField = ({ state, panelItem, parentState, screenConfig, selectedField, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
+const RenderField = ({ state, panelItem, parentState, screenConfig, selectedField, drawerState, setDrawerState, updateLocalization,  handleExpressionChange,
+ AppScreenLocalisationConfig }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === drawerState?.appType)
@@ -168,6 +169,7 @@ const RenderField = ({ state, panelItem, parentState, screenConfig, selectedFiel
                     selectedField={selectedField}
                     screenConfig={screenConfig}
                     drawerState={drawerState}
+                    handleExpressionChange={handleExpressionChange}
                     AppScreenLocalisationConfig={AppScreenLocalisationConfig}
                     disabled={drawerState?.hidden}
                   />
@@ -408,6 +410,18 @@ function DrawerFieldComposer({ parentState, screenConfig, selectedField }) {
     return state?.MASTER_DATA?.DrawerPanelConfig?.filter((i) => i.tab === activeTab).sort((a, b) => a.order - b.order);
   }, [state?.MASTER_DATA?.drawerField, tabs]);
 
+   const handleExpressionChange = (expressionString) => {
+    if (drawerState.visibilityCondition?.expression !== expressionString) {
+      setDrawerState((prev) => ({
+        ...prev,
+        visibilityCondition: {
+          ...prev.visibilityCondition,
+          expression: expressionString,
+        },
+      }));
+    }
+  };
+
   useEffect(() => {
     if (state?.drawerField) {
       setDrawerState(state?.drawerField);
@@ -482,6 +496,7 @@ function DrawerFieldComposer({ parentState, screenConfig, selectedField }) {
                   state={state}
                   selectedField={selectedField}
                   updateLocalization={updateLocalization}
+                  handleExpressionChange={handleExpressionChange}
                   AppScreenLocalisationConfig={AppScreenLocalisationConfig}
                 />
               </div>
