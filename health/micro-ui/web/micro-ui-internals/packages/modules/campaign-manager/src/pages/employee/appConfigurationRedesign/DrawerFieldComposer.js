@@ -75,7 +75,7 @@ const whenToShow = (panelItem, drawerState) => {
   }
 };
 
-const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
+const RenderField = ({ state, panelItem, parentState, screenConfig, drawerState, setDrawerState, updateLocalization, AppScreenLocalisationConfig }) => {
   const { t } = useTranslation();
   const isLocalisable = AppScreenLocalisationConfig?.fields
     ?.find((i) => i.fieldType === drawerState?.appType)
@@ -164,6 +164,9 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
                     setDrawerState={setDrawerState}
                     updateLocalization={updateLocalization}
                     state={state}
+                    parentState={parentState}
+                    selectedField={selectedField}
+                    screenConfig={screenConfig}
                     drawerState={drawerState}
                     AppScreenLocalisationConfig={AppScreenLocalisationConfig}
                     disabled={drawerState?.hidden}
@@ -382,7 +385,7 @@ const RenderField = ({ state, panelItem, drawerState, setDrawerState, updateLoca
   }
 };
 
-function DrawerFieldComposer() {
+function DrawerFieldComposer({ parentState, screenConfig, selectedField }) {
   const { t } = useTranslation();
   const { locState, updateLocalization, AppScreenLocalisationConfig } = useAppLocalisationContext();
   const { state, dispatch } = useAppConfigContext();
@@ -473,7 +476,9 @@ function DrawerFieldComposer() {
                 <RenderField
                   panelItem={panelItem}
                   drawerState={drawerState}
+                  parentState={parentState}
                   setDrawerState={setDrawerState}
+                  screenConfig={screenConfig}
                   state={state}
                   updateLocalization={updateLocalization}
                   AppScreenLocalisationConfig={AppScreenLocalisationConfig}
