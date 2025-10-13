@@ -8,8 +8,11 @@ COPY package.json ./
 # Install dependencies
 RUN npm install --production
 
-# Copy server file
-COPY server.js ./
+# Copy source code
+COPY src/ ./src/
+
+# Copy .env file if it exists (optional - environment variables are typically handled by container orchestration)
+# COPY .env ./src/
 
 # Create non-root user
 RUN addgroup -g 1001 -S nodejs && \
@@ -28,4 +31,4 @@ HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
 
 EXPOSE 3001
 
-CMD ["node", "server.js"]
+CMD ["node", "src/server.js"]
