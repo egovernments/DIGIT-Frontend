@@ -141,7 +141,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
         </HeaderComponent>
         <p className="description-type">{t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}</p>
         <LabelFieldPair>
-          <div className="campaign-type">
+          <div className="">
             <span>{t("HCM_HIERARCHY_TYPE")}</span>
             <span className="mandatory-span">*</span>
           </div>
