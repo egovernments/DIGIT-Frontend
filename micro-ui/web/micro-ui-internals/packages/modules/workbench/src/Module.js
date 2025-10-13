@@ -14,7 +14,6 @@ import * as parsingUtils from "../src/utils/ParsingUtils"
 import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  console.log("workbench module rendered");
   
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
@@ -90,10 +89,7 @@ const updateCustomConfigs = () => {
 
 
  const initWorkbenchComponents = () => {
-  console.log("workbench init called");
-  
   // Log what's being registered
-  console.log("Registering components:", Object.keys(componentsToRegister));
   
   overrideHooks();
   updateCustomConfigs();
@@ -104,7 +100,6 @@ const updateCustomConfigs = () => {
   });
   
   // Check if registration was successful
-  console.log("Component registry:", Digit.ComponentRegistryService.getComponent("WorkbenchModule"));
 };
 
 // Also add logging in WorkbenchModul

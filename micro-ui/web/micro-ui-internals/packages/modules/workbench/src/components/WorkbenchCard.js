@@ -13,7 +13,6 @@ const WorkbenchCard = () => {
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
     return null;
   }
-  console.log("workbench card rendered");
   const { t } = useTranslation();
 
   let links = [
