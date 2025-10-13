@@ -40,12 +40,14 @@ const AttendanceInbox = () => {
 
   return (
     <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>
+      <Header styles={{ fontSize: "28px" }}>
         {t("HCM_AM_ATTENDANCE_INBOX")}
       </Header>
-      <div className="inbox-search-wrapper">
+      {<div className="inbox-search-wrapper" style={{
+        height:"160px"
+      }}>
         <AttendanceInboxComponent></AttendanceInboxComponent>
-      </div>
+      </div>}
     </React.Fragment>
   );
 };

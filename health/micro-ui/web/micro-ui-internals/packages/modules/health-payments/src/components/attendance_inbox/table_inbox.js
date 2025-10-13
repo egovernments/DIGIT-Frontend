@@ -237,7 +237,7 @@ const CustomInboxTable = ({
                 style={{}}
                 showNav={true}
               />
-              <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", maxHeight: "64.5vh" }}>
+              <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px",minHeight:"60vh", maxHeight: "80vh" }}>
 
                 {isLoading ?
                   <div style={{
@@ -252,7 +252,7 @@ const CustomInboxTable = ({
                   </div>
 
                   : tableData && tableData.length === 0 ? (
-                    <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                    <NoResultsFound style={{ height: "40vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
                   ) : (
                     <DataTable
                       columns={columns}

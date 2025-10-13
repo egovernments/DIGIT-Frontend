@@ -191,10 +191,13 @@ const AttendanceInboxComponent = () => {
 
   return (
     <React.Fragment>
-      <div className="custom-register-inbox-screen">
+      <div className="custom-register-inbox-screen" style={{
+        // "minHeight":"20%",
+        // "maxHeight":"30%"
+      }}>
         <div className="inner-div-row-section">
           <div className="custom-inbox-filter-section">
-            <div className="custom-inbox-inner-filter-section" style={{ height: "80vh" }}>
+            <div className="custom-inbox-inner-filter-section" style={{ height: "60vh" }}>
               <CustomFilter
                 resetTable={resetTable}
                 isRequired={ScreenTypeEnum.REGISTER}
@@ -204,11 +207,11 @@ const AttendanceInboxComponent = () => {
           </div>
 
           <div className="custom-inbox-outer-table-section" >
-            <div className="inner-table-section" style={{ height: "80vh" }}>
+            <div className="inner-table-section" style={{ height: "60vh" }}>
               {card == false ? (
                 <Card className="card-overide">
                   <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
-                  <SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />
+                  {<SearchResultsPlaceholder placeholderText={"HCM_AM_FILTER_AND_CHOOSE_BOUNDARY_PLACEHOLDER_TEXT"} />}
                 </Card>
               ) : (
                 <CustomInboxTable
