@@ -14,41 +14,36 @@ const setupMiddleware = (app) => {
   // Restrictive CORS configuration - allow only same server and authorized apps
   const corsOptions = {
     origin: function (origin, callback) {
+      serverLogger('debug')(`CORS check - Origin: ${origin}, ALLOWED_SERVER_URL: ${process.env.ALLOWED_SERVER_URL}`);
+      
       // Allow requests without origin (same server)
       if (!origin) {
+        serverLogger('debug')('CORS allowing request with no origin (same server)');
         return callback(null, true);
       }
       
       // Allow same origin (localhost/same server)
       if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+        serverLogger('debug')('CORS allowing localhost/127.0.0.1');
         return callback(null, true);
       }
       
-      // Get allowed server URL and context paths from environment
+      // Get allowed server URL from environment
       const allowedServerUrl = process.env.ALLOWED_SERVER_URL;
-      const allowedContextPaths = process.env.ALLOWED_CONTEXT_PATHS; // Comma-separated paths like "console,workbench,admin"
       
       if (allowedServerUrl) {
-        // Parse origin to check server and path
+        // Parse origin to check server
         try {
           const originUrl = new URL(origin);
           const allowedUrl = new URL(allowedServerUrl);
           
-          // Check if server matches
+          // Check if server matches (hostname and port)
           if (originUrl.hostname === allowedUrl.hostname && originUrl.port === allowedUrl.port) {
-            // If no context paths specified, allow all paths on this server
-            if (!allowedContextPaths) {
-              return callback(null, true);
-            }
-            
-            // Check if path matches allowed context paths
-            const contextPaths = allowedContextPaths.split(',').map(path => path.trim());
-            const originPath = originUrl.pathname.split('/')[1]; // Get first path segment
-            
-            if (contextPaths.includes(originPath)) {
-              return callback(null, true);
-            }
+            serverLogger('info')(`CORS allowed request from origin: ${origin}`);
+            return callback(null, true);
           }
+          
+          serverLogger('warn')(`CORS server mismatch - Origin: ${originUrl.hostname}:${originUrl.port}, Allowed: ${allowedUrl.hostname}:${allowedUrl.port}`);
         } catch (err) {
           serverLogger('error')(`Error parsing origin URL: ${origin}`, err.message);
         }
