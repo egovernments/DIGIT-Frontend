@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useTranslation } from "react-i18next";
-import { PopUp, Timeline, Loader, TextInput, Button } from '@egovernments/digit-ui-components';
+import { PopUp, Timeline, Loader, TextInput, Button, NoResultsFound } from '@egovernments/digit-ui-components';
 import { useEffect } from "react";
 import { useHistory } from "react-router-dom";
 import AttendanceService from "../../services/hrms/SearchUser";
@@ -39,6 +39,8 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
 
     const [totalCount, setTotalCount] = useState(0);
     const [offset, setOffset] = useState(0); // ✅ store offset
+
+    const [apiCall,setApiCall]=useState(false);
 
     const rowsPerPage = 5;
 
@@ -129,8 +131,10 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                                     // live check
                                     if (e.target.value.length < 3) {
                                         setShowHint(true);
+                                        setApiCall(false);
                                         setSearchedIndividual([]); // clear results
                                     } else {
+                                        setApiCall(false);
                                         setShowHint(false);
 
                                     }
@@ -152,16 +156,12 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                                     label={t("CS_INBOX_SEARCH")}
                                     onClick={(e) => {
                                         e.preventDefault();
+                                        setApiCall(true);
                                         searchUser(searchQuery, 0, rowsPerPage);
                                     }}
                                 />
                             </div>
-                            {/* Show hint live while typing */}
-                            {showHint && (
-                                <p style={{ fontSize: "14px", color: "#B91900", margin: 0 }}>
-                                    {t("HCM_AM_WARNING_CHARACTER_SIZE_TO_SEARCH")}
-                                </p>
-                            )}
+
                         </div>
 
                         {/* Loader while searching */}
@@ -179,6 +179,14 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                             </div>
                         }
 
+
+                        {!loading && searchQuery != "" && searchedIndividual.length === 0 && apiCall ==true   && (
+                            <div>
+                                <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+                            </div>
+                        )
+                        }
+
                         {!loading && searchedIndividual.length > 0 && (
                             <ReportingUserSearchTable
                                 data={searchedIndividual}
@@ -193,6 +201,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                             />
                         )
                         }
+
 
 
 
