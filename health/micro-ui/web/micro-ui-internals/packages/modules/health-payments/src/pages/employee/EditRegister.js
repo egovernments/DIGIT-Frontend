@@ -358,35 +358,6 @@ const EditRegister = ({ editAttendance = false }) => {
 
             </div>
 
-            {/* Alert Pop-Up for edit */}
-            {/* {openEditAlertPopUp && <AlertPopUp
-                onClose={closeActionBarPopUp}
-                alertHeading={t(`HCM_AM_ALERT_HEADING`)}
-                alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
-                submitLabel={t(`HCM_AM_PROCEED`)}
-                cancelLabel={t(`HCM_AM_CANCEL`)}
-                onPrimaryAction={() => {
-                    history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
-                }}
-            />} */}
-
-            {/* Alert Pop-Up for approve */}
-            {/* {openApproveAlertPopUp && <AlertPopUp
-                onClose={() => {
-                    setOpenApproveAlertPopUp(false);
-                }}
-                alertHeading={t(`HCM_AM_ALERT_APPROVE_HEADING`)}
-                alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
-                submitLabel={t(`HCM_AM_APPROVE`)}
-                cancelLabel={t(`HCM_AM_CANCEL`)}
-                onPrimaryAction={() => {
-
-                }}
-            />} */}
-
-
-
-
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}

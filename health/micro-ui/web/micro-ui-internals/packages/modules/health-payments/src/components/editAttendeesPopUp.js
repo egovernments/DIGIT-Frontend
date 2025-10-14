@@ -26,7 +26,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
 
     const labels = ["HCM_AM_ATTENDANCE_NOT_FIND_USER_LABEL", "HCM_AM_ATTENDANCE_USER_ASSIGN_REGISTER"];
     const maxLabelLength = Math.max(...labels.map(label => label.length));
-    const labelWidth = `${maxLabelLength * 7}px`;
+    const labelWidth = `${maxLabelLength * 6}px`;
 
 
     const [attendanceSummary, setAttendanceSummary] = useState([]);
@@ -39,6 +39,23 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
     const [searchUserpopUp, setSearchUserpopUp] = useState(false);
 
     const [popupWidth, setPopupWidth] = useState(getResponsiveWidth());
+
+    const [popupHeight, setPopupHeight] = useState(getResponsiveHeight());
+    function getResponsiveHeight() {
+        const windowHeight = window.innerHeight;
+
+        if (windowHeight < 600) return "90vh";    // Small mobile screens
+        if (windowHeight < 900) return "80vh";    // Tablet or small laptop
+        return "200vh";                            // Desktop
+    }
+
+
+    useEffect(() => {
+        const handleResize = () => setPopupHeight(getResponsiveHeight());
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
+
 
     // Function to determine width dynamically
     function getResponsiveWidth() {
@@ -194,7 +211,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
     // -------- Render --------
     return (<React.Fragment>
         <PopUp
-            style={{ minWidth: popupWidth }}
+            style={{ minWidth: popupWidth, height: "650px" }}
             onClose={onClose}
             heading={t(heading)}
             onOverlayClick={onClose}
@@ -216,6 +233,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
                     }} >
                         <TextInput type="search" name="title" placeholder={t("HCM_AM_VIEW_REGISTER_PLACE_HOLDER")} value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} />
                         <EditAttendanceManagementTable
+                            height="320px"
                             data={searchQuery != "" ? filteredData : attendanceSummary}
                             setAttendanceSummary={setAttendanceSummary}
                             disableUser={disableUser}
@@ -223,7 +241,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
                             registerNumber={registerId}
                             editAction={true}
                         />
-                        <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "10px", alignItems: "center" }}>
+                        <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "5px", alignItems: "center" }}>
 
 
                             <div>{t(labels[1])}</div>

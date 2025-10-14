@@ -200,7 +200,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       {
         onError: async (error) => {
 
-         
+
           setShowToast(
             { key: "error", label: t(`HCM_AM_ERROR_MESSAGE`), transitionTime: 3000 }
           );
@@ -217,6 +217,8 @@ const EditAttendanceManagementTable = ({ ...props }) => {
 
 
   };
+
+
 
   return (
     <>
@@ -237,7 +239,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
         paginationRowsPerPageOptions={defaultPaginationValuesForEditAttendee}
         fixedHeader={true}
-        fixedHeaderScrollHeight={"70vh"}
+        fixedHeaderScrollHeight={props.height ? props.height : "70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
 
       />
