@@ -101,7 +101,7 @@ const PGRSearchInboxConfig = () => {
               },
               {
                 label: "CS_COMPLAINT_DETAILS_CURRENT_STATUS",
-                jsonPath: "ProcessInstance.assignes",
+                jsonPath: "businessObject.service.applicationStatus",
                 additionalCustomization: true,
               },
               {
