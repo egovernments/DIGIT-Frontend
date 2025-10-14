@@ -234,7 +234,7 @@ const PGRDetails = () => {
       service: { ...pgrData?.ServiceWrappers[0].service },
       workflow: {
         action: selectedAction.action,
-        assignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
+        assignes: _data?.SelectedAssignee?.userServiceUUID ? [_data?.SelectedAssignee?.userServiceUUID] : null,
         hrmsAssignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         comments: _data?.SelectedComments || "",
         // Include documents array if complaint file is provided
@@ -297,6 +297,7 @@ const PGRDetails = () => {
   const getNextActionOptions = (workflowData, businessServiceResponse) => {
     const currentState = workflowData?.ProcessInstances?.[0]?.state;
     const matchingState = businessServiceResponse?.states?.find((state) => state.uuid === currentState?.uuid);
+    console.log("999 matchingState", matchingState, currentState, businessServiceResponse);
     if (!matchingState) return [];
     const userRoles = userInfo?.info?.roles?.map((role) => role.code) || [];
     return matchingState.actions
