@@ -8,10 +8,8 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [isChecked, setIsChecked] = useState(false);
   const [showPopUp, setShowPopUp] = useState(false);
-
-
   const moduleName=Digit.Utils.getConfigModuleName();
-
+  
   const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, moduleName, [{ name: "PrivacyPolicy" }], {
     select: (data) => {
       const filteredPrivacyPolicy = data?.[moduleName]?.PrivacyPolicy?.find(policy => policy.module === props?.props?.module);

@@ -89,8 +89,6 @@ const updateCustomConfigs = () => {
 
 
  const initWorkbenchComponents = () => {
-  // Log what's being registered
-  
   overrideHooks();
   updateCustomConfigs();
   
@@ -98,11 +96,7 @@ const updateCustomConfigs = () => {
     console.log(`Registering component: ${key}`);
     Digit.ComponentRegistryService.setComponent(key, value);
   });
-  
-  // Check if registration was successful
 };
-
-// Also add logging in WorkbenchModul
 
 export {initWorkbenchComponents, DigitJSONForm};
 

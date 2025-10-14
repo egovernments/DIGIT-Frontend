@@ -1,6 +1,7 @@
 # Changelog
 
 ## [0.0.3] [16-Apr-2025]
+
 - Fixed breadcrumb navigation issues in the Sandbox module.
 - Added sidebar to the Product Details page for better navigation consistency.
 - Included missing MCollect icon and inline CSS refinements for layout consistency.
@@ -10,6 +11,7 @@
 - Applied final CSS improvements and code review suggestions for UI stability.
 
 ## [0.0.1]  [21-Feb-2025]
+
 - Publishing a new version for more stability & as part of Components Release
 
 

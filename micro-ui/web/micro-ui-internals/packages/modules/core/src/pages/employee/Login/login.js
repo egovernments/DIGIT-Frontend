@@ -160,7 +160,7 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 
   const { mode } = Digit.Hooks.useQueryParams();
 
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+  if (mode === "admin" && config?.[0]?.body?.[2]?.disable === false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;

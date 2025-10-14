@@ -24,7 +24,6 @@ const enabledModules = [
   "Workbench",
   "Utilities",
   "PGR",
-  "FSM",
   "Sandbox",
   "OpenPayment",
 ];
