@@ -4,8 +4,8 @@ import { selectField } from "./redux/remoteConfigSlice";
 import { useCustomTranslate } from "./hooks/useCustomT";
 import AppPreview from "../../../components/AppPreview";
 import SidePanelApp from "./SidePanelApp";
-import { LayoutRenderer } from "./LayoutRenderer";
-import dummyFieldTypeConfig from "./configs/dummyFieldTypeConfig.json";
+// import LayoutRenderer from "./LayoutRenderer";
+import NewLayoutRenderer from "./NewLayoutRenderer";
 
 function AppConfiguration() {
   const dispatch = useDispatch();
@@ -19,13 +19,14 @@ function AppConfiguration() {
     [dispatch]
   );
 
+  console.log("pageTypepageType", pageType);
   // Determine which preview to render based on pageType
   const isTemplateView = pageType === "template";
 
   return (
     <div>
       {isTemplateView ? (
-        <LayoutRenderer config={currentData} selectedField={selectedField} onFieldClick={handleFieldClick} t={t} fieldTypeConfig={dummyFieldTypeConfig} />
+        <NewLayoutRenderer data={currentData} selectedField={selectedField} onFieldClick={handleFieldClick} t={t} />
       ) : (
         <AppPreview data={currentData} onFieldClick={handleFieldClick} selectedField={selectedField} t={t} />
       )}

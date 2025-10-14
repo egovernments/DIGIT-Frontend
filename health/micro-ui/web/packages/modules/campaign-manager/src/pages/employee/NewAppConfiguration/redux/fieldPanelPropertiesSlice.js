@@ -2,6 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 // Dummy panel properties config with tab structure
 const dummyPanelConfig = {
+  id: "NewPanelConfig",
   content: [
     {
       label: "fieldType",
@@ -240,6 +241,38 @@ const dummyPanelConfig = {
       showFieldOnToggle: true,
       visibilityEnabledFor: ["dropdown", "radio", "select", "searchableDropdown"],
     },
+    {
+      id: "min",
+      label: "min",
+      order: 13,
+      bindTo: "min",
+      fieldType: "toggle",
+      defaultValue: "",
+      conditionalField: [
+        {
+          type: "number",
+          bindTo: "min",
+        },
+      ],
+      showFieldOnToggle: true,
+      visibilityEnabledFor: [],
+    },
+    {
+      id: "max",
+      label: "max",
+      order: 14,
+      bindTo: "max",
+      fieldType: "toggle",
+      defaultValue: "",
+      conditionalField: [
+        {
+          type: "number",
+          bindTo: "max",
+        },
+      ],
+      showFieldOnToggle: true,
+      visibilityEnabledFor: [],
+    },
   ],
   validation: [
     {
@@ -330,7 +363,10 @@ const dummyPanelConfig = {
 // Async thunk with status/error tracking
 export const getFieldPanelMaster = createAsyncThunk(
   "fieldPanelMaster/fetch",
-  async ({ tenantId, moduleName = "HCM-ADMIN-CONSOLE", name = "AppPanelMasters", limit = 1000, mdmsContext }, { getState, rejectWithValue }) => {
+  async (
+    { tenantId, moduleName = "HCM-ADMIN-CONSOLE", name = "AppPanelMasters", limit = 1000, mdmsContext },
+    { getState, rejectWithValue }
+  ) => {
     try {
       // Always check for 'drawerPanelConfig' regardless of the master name
       const existing = getState()?.fieldPanelMaster?.byName?.drawerPanelConfig;
@@ -360,9 +396,11 @@ export const getFieldPanelMaster = createAsyncThunk(
       });
       const data = response?.MdmsRes?.[moduleName]?.[name] || [];
 
+      console.log("MDMS NewDrawerPanelConfig Response:", data);
+
       // Extract the actual config from the MDMS response
-      // MDMS returns an array with an object containing id and the actual content/validation
-      // We only want content and validation, not the id (which would show up as a tab)
+      // MDMS returns an array with an object containing label, content, and validation
+      // We only want content and validation, not the label (which would show up as a tab)
       if (Array.isArray(data) && data.length > 0 && data[0]?.content && data[0]?.validation) {
         const { content, validation } = data[0];
         return { content, validation };

@@ -9,7 +9,7 @@ import { getFieldTypeFromMasterData, getFieldValueByPath } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 
-const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType }) => {
+const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
@@ -21,6 +21,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
   // Check if field should be visible based on field type
   const isFieldVisible = () => {
+    // If this is a child of a group, always show it (group handles its own visibility)
+    if (isGroupChild) {
+      return true;
+    }
     // If visibilityEnabledFor is empty, the field is always visible
     if (!panelItem?.visibilityEnabledFor || panelItem.visibilityEnabledFor.length === 0) {
       return true;
@@ -257,6 +261,78 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             populators={{ fieldPairClassName: "drawer-field" }}
           />
         );
+
+      case "group": {
+        // Evaluate validation expression
+        const evaluateValidation = () => {
+          if (!panelItem.validationExpression) {
+            return true;
+          }
+
+          try {
+            // Create a safe evaluation context with only the selectedField data
+            const evalContext = { ...selectedField };
+
+            // Replace property paths in expression with actual values
+            const expression = panelItem.validationExpression;
+
+            // Use Function constructor for safe evaluation (safer than eval)
+            const func = new Function(...Object.keys(evalContext), `return ${expression}`);
+            return func(...Object.values(evalContext));
+          } catch (error) {
+            console.error("Validation expression error:", error);
+            return true; // Return true on error to avoid blocking
+          }
+        };
+
+        const isValid = evaluateValidation();
+
+        // Render group with children
+        return (
+          <div style={{
+            border: `1px solid ${isValid ? "#e0e0e0" : "#d32f2f"}`,
+            borderRadius: "4px",
+            padding: "12px",
+            marginBottom: "8px",
+            backgroundColor: isValid ? "#f9f9f9" : "#fff4f4"
+          }}>
+            <div style={{
+              fontWeight: "600",
+              marginBottom: "12px",
+              fontSize: "14px"
+            }}>
+              {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+            </div>
+            <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+              {panelItem.children?.map((childItem, index) => (
+                <RenderField
+                  key={`${childItem.id}-${index}`}
+                  panelItem={childItem}
+                  selectedField={selectedField}
+                  onFieldChange={onFieldChange}
+                  fieldType={fieldType}
+                  isGroupChild={true}
+                />
+              ))}
+            </div>
+            {/* Show validation message if validation fails */}
+            {panelItem.validationMessage && !isValid && (
+              <div style={{
+                marginTop: "8px",
+                fontSize: "12px",
+                color: "#d32f2f",
+                fontWeight: "500",
+                display: "flex",
+                alignItems: "center",
+                gap: "4px"
+              }}>
+                <span style={{ fontSize: "14px" }}>⚠</span>
+                {t(panelItem.validationMessage)}
+              </div>
+            )}
+          </div>
+        );
+      }
 
       case "fieldTypeDropdown": {
         const switchRef = useRef(null);

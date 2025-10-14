@@ -1,4 +1,5 @@
 import React, { useMemo } from "react";
+import { useSelector } from "react-redux";
 import {
   Card,
   CardHeader,
@@ -12,51 +13,19 @@ import {
   RoundedLabel,
   CustomSVG,
 } from "@egovernments/digit-ui-components";
-
-// Mobile bezel frame component
-const MobileBezelFrame = ({ children }) => (
-  <div
-    style={{
-      width: "375px",
-      height: "667px",
-      border: "12px solid #333",
-      borderRadius: "36px",
-      overflow: "hidden",
-      backgroundColor: "#000",
-      position: "relative",
-      boxShadow: "0 10px 30px rgba(0,0,0,0.3)",
-    }}
-  >
-    <div
-      style={{
-        width: "100%",
-        height: "100%",
-        backgroundColor: "#fff",
-        borderRadius: "24px",
-        overflow: "auto",
-      }}
-    >
-      {children}
-    </div>
-  </div>
-);
-
+import MobileBezelFrame from "../../../components/MobileBezelFrame";
 // Template Component Implementations
 const SearchBarComponent = ({ field, t }) => (
-  <div style={{ width: "100%" }}>
-    <FieldV1
-      style={{ width: "100%" }}
-      onChange={() => {}}
-      placeholder={t(field?.innerLabel) || "Search..."}
-      type="search"
-      value={field?.value || ""}
-      populators={{
-        fieldPairClassName: "app-preview-field-pair",
-      }}
-    />
-  </div>
+  <FieldV1
+    onChange={() => {}}
+    placeholder={t(field?.innerLabel) || "Search..."}
+    type="search"
+    value={field?.value || ""}
+    populators={{
+      fieldPairClassName: "app-preview-field-pair",
+    }}
+  />
 );
-
 const FilterComponent = ({ field, t }) => {
   const FilterIcon = () => (
     <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -66,7 +35,6 @@ const FilterComponent = ({ field, t }) => {
       />
     </svg>
   );
-
   return (
     <div
       className="digit-search-action"
@@ -89,38 +57,33 @@ const FilterComponent = ({ field, t }) => {
     </div>
   );
 };
-
 const SwitchComponent = ({ field, t }) => (
   <Switch label={t(field?.label) || "Toggle"} onToggle={() => {}} isCheckedInitially={field?.value || false} shapeOnOff />
 );
-
 const ButtonComponent = ({ field, t, fieldTypeConfig }) => {
-  console.log("Button Component Props:", { field, fieldTypeConfig });
-  // Get icon options from config
-  const buttonConfig = fieldTypeConfig?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "button");
+  // Get icon component if specified
+  const iconName = field?.additionalProps?.icon;
+  let IconComponent = null;
 
-  const iconOptions = buttonConfig?.properties?.find((p) => p.code === "icon")?.options || [];
-
-  const IconComponent = field?.additionalProps?.icon;
-
+  if (iconName) {
+    // Direct icon name mapping - the CustomSVG component expects these exact names
+    // Based on common DIGIT UI patterns
+    IconComponent = () => <CustomSVG name={iconName} />;
+  }
   return (
     <Button
       variation={field?.additionalProps?.variation || "primary"}
       label={t(field?.label) || "Button"}
       onClick={() => {}}
-      style={{ width: "100%" }}
+      className="app-preview-action-button"
       icon={IconComponent}
     />
   );
 };
-
 const PanelCardComponent = ({ field, t, fieldTypeConfig }) => {
-  // Get panel types from config
   const panelConfig = fieldTypeConfig?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "panelCard");
-
   const panelTypes = panelConfig?.properties?.find((p) => p.code === "panelType")?.options || ["success", "error"];
   const panelType = field?.additionalProps?.panelType || panelTypes[0];
-
   return (
     <PanelCard
       type={panelType}
@@ -132,14 +95,10 @@ const PanelCardComponent = ({ field, t, fieldTypeConfig }) => {
     />
   );
 };
-
 const CardComponent = ({ field, t, fieldTypeConfig }) => {
-  // Get card types from config
   const cardConfig = fieldTypeConfig?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "card");
-
   const cardTypes = cardConfig?.properties?.find((p) => p.code === "cardType")?.options || ["primary", "secondary"];
   const cardType = field?.additionalProps?.cardType || cardTypes[0];
-
   return (
     <Card
       className={`card-type-${cardType}`}
@@ -155,22 +114,16 @@ const CardComponent = ({ field, t, fieldTypeConfig }) => {
     </Card>
   );
 };
-
 const InfoCardComponent = ({ field, t, fieldTypeConfig }) => {
-  // Get info card types from config
   const infoConfig = fieldTypeConfig?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "infoCard");
-
   const infoTypes = infoConfig?.properties?.find((p) => p.code === "infoCardType")?.options || ["info"];
   const infoType = field?.additionalProps?.infoCardType || infoTypes[0];
-
-  // Map config types to InfoCard variants
   const variantMap = {
     info: "default",
     success: "success",
     error: "error",
     warning: "warning",
   };
-
   return (
     <InfoCard
       populators={{
@@ -183,45 +136,36 @@ const InfoCardComponent = ({ field, t, fieldTypeConfig }) => {
     />
   );
 };
-
 const TagComponent = ({ field, t, fieldTypeConfig }) => {
-  // Get tag types from config
   const tagConfig = fieldTypeConfig?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "tag");
-
   const tagTypes = tagConfig?.properties?.find((p) => p.code === "tagType")?.options || ["monochrome"];
   const tagType = field?.additionalProps?.tagType || tagTypes[0];
-
-  // Map config types to Tag variants
   const variantMap = {
     success: "success",
     error: "error",
     warning: "warning",
     monochrome: "default",
   };
-
   return <Tag variant={variantMap[tagType] || "default"} label={field?.value || "Tag"} />;
 };
-
-// Main LayoutRenderer Component
-export const LayoutRenderer = ({ config, selectedField, onFieldClick, fieldTypeConfig = [] }) => {
-    console.log("LayoutRenderer Props:", { config, selectedField, fieldTypeConfig });
-  // Translation function placeholder
-  const t = (key) => key;
-
+// Main LayoutRenderer Component - matching AppPreview signature
+const LayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
+  console.log("Rendering LayoutRenderer with data:", data);
+  // Get fieldTypeConfig from Redux
+  const { byName } = useSelector((state) => state.fieldTypeMaster);
+  console.log("Field Type Master byName:", byName);
+  const fieldTypeConfig = byName?.fieldTypeMappingConfig || [];
+  console.log("Field Type Config:", fieldTypeConfig);
   // Extract template components from fieldTypeConfig
   const templateComponents = useMemo(() => {
     return fieldTypeConfig.filter((item) => item?.metadata?.type === "template");
   }, [fieldTypeConfig]);
-
   // Build component registry dynamically
   const templateComponentRegistry = useMemo(() => {
     const registry = {
       Column: "Column",
       Row: "Row",
     };
-
-    console.log("Layout Render: Template Components:", templateComponents);
-    // Map each template component to its renderer
     templateComponents.forEach((component) => {
       const format = component.metadata.format;
       switch (format) {
@@ -251,74 +195,84 @@ export const LayoutRenderer = ({ config, selectedField, onFieldClick, fieldTypeC
           break;
       }
     });
-
     return registry;
   }, [templateComponents]);
-
   // Get allowed children for layout components
   const getLayoutChildrenOptions = (layoutType) => {
     const layoutConfig = fieldTypeConfig.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === layoutType);
     return layoutConfig?.properties?.find((p) => p.code === "children")?.options || [];
   };
+  // Check if a field is selected - simplified since componentNames are unique
+  const isFieldSelected = (field) => {
+    if (!selectedField || !field) return false;
 
-  // Render individual template component
-  const renderTemplateComponent = (field, index, depth = 0) => {
-    if (!field || field.hidden) return null;
-
-    const componentType = field.format || field.type;
-    const isSelected = selectedField?.componentName === field.componentName;
-
-    // Handle Row and Column layout components
-    if (componentType === "Row" || componentType === "Column") {
-      return renderLayoutComponent(field, index, depth);
+    // Primary check: unique componentName (most reliable for template components)
+    if (field.componentName && selectedField.componentName) {
+      return field.componentName === selectedField.componentName;
     }
 
+    // Fallback: check by id if available
+    if (field.id && selectedField.id) {
+      return field.id === selectedField.id;
+    }
+
+    // Last resort: reference equality
+    return field === selectedField;
+  };
+  // Render individual template component
+  const renderTemplateComponent = (field, sectionName, index, depth = 0) => {
+    if (!field || field.hidden) return null;
+    const componentType = field.format || field.type;
+    const isSelected = isFieldSelected(field);
+    // Handle Row and Column layout components
+    if (componentType === "Row" || componentType === "Column") {
+      return renderLayoutComponent(field, sectionName, index, depth);
+    }
     // Get the component from registry
     const Component = templateComponentRegistry[componentType];
     if (!Component) {
       console.warn(`Component type "${componentType}" not found in registry`);
       return null;
     }
-
+    // Generate unique key for this component
+    const uniqueKey = field.id || field.componentName || `${sectionName}-${componentType}-${index}`;
     return (
       <div
-        key={`${field.componentName}-${index}-${depth}`}
+        key={uniqueKey}
         onClick={(e) => {
           e.stopPropagation();
-          onFieldClick?.(field);
+          onFieldClick && onFieldClick(field, data, null, index, null);
         }}
         style={{
+          cursor: "pointer",
           border: isSelected ? "2px solid #0B4B66" : "2px solid transparent",
           borderRadius: "4px",
-          padding: depth > 0 ? "4px" : "8px",
+          padding: "8px",
           margin: "4px 0",
           backgroundColor: isSelected ? "#f0f8ff" : "transparent",
-          cursor: "pointer",
           transition: "all 0.2s ease",
-          width: "100%",
-          boxSizing: "border-box",
         }}
       >
         <Component field={field} t={t} fieldTypeConfig={fieldTypeConfig} />
       </div>
     );
   };
-
   // Render Row or Column layout components
-  const renderLayoutComponent = (field, index, depth = 0) => {
+  const renderLayoutComponent = (field, sectionName, index, depth = 0) => {
     const isRow = field.format === "Row";
-    const isSelected = selectedField?.componentName === field.componentName;
+    const isSelected = isFieldSelected(field);
 
-    // Get children components
     const childrenToRender = field.children || [];
     const allowedChildren = getLayoutChildrenOptions(field.format);
 
+    // Generate unique key for this layout component
+    const uniqueKey = field.id || field.componentName || `${sectionName}-${field.format}-${index}`;
     return (
       <div
-        key={`${field.componentName}-${index}-${depth}`}
+        key={uniqueKey}
         onClick={(e) => {
           e.stopPropagation();
-          onFieldClick?.(field);
+          onFieldClick && onFieldClick(field, data, null, index, null);
         }}
         style={{
           display: "flex",
@@ -335,7 +289,7 @@ export const LayoutRenderer = ({ config, selectedField, onFieldClick, fieldTypeC
           boxSizing: "border-box",
         }}
       >
-        {/* Layout type indicator with allowed children hint */}
+        {/* Layout type indicator */}
         <div
           style={{
             position: "absolute",
@@ -355,18 +309,17 @@ export const LayoutRenderer = ({ config, selectedField, onFieldClick, fieldTypeC
             <span style={{ fontSize: "10px", marginLeft: "4px", color: "#999" }}>({allowedChildren.length} types)</span>
           )}
         </div>
-
         {/* Render children components */}
         {childrenToRender.length > 0 ? (
           childrenToRender.map((child, childIndex) => {
             if (isRow) {
               return (
-                <div key={childIndex} style={{ flex: 1 }}>
-                  {renderTemplateComponent(child, childIndex, depth + 1)}
+                <div key={`${uniqueKey}-child-${childIndex}`} style={{ flex: 1 }}>
+                  {renderTemplateComponent(child, `${sectionName}-${uniqueKey}`, childIndex, depth + 1)}
                 </div>
               );
             }
-            return renderTemplateComponent(child, childIndex, depth + 1);
+            return renderTemplateComponent(child, `${sectionName}-${uniqueKey}`, childIndex, depth + 1);
           })
         ) : (
           <div
@@ -396,108 +349,73 @@ export const LayoutRenderer = ({ config, selectedField, onFieldClick, fieldTypeC
       </div>
     );
   };
-
-  // Render sections (header, body, footer)
+  // Render sections (body, footer)
   const renderSection = (fields, sectionName) => {
     if (!fields || fields.length === 0) return null;
-
-    const sectionStyles = {
-      body: {
-        padding: "0",
-      },
-      footer: {
-        display: "flex",
-        flexDirection: "column",
-        gap: "8px",
-      },
-    };
-
     return (
-      <div style={sectionStyles[sectionName] || {}}>
+      <>
         {fields
           .filter((field) => !field.hidden)
           .sort((a, b) => (a.order || 0) - (b.order || 0))
-          .map((field, index) => renderTemplateComponent(field, index))}
-      </div>
+          .map((field, index) => {
+            // For footer buttons, ensure unique identification
+            const fieldWithId = {
+              ...field,
+              id: field.id || `${sectionName}-${field.componentName || field.format}-${index}`,
+            };
+            return renderTemplateComponent(fieldWithId, sectionName, index);
+          })}
+      </>
     );
   };
-
   return (
     <MobileBezelFrame>
       <div
+        className="mobile-bezel-child-container"
         style={{
-          height: "100%",
           display: "flex",
           flexDirection: "column",
-          backgroundColor: "#fafafa",
+          height: "100%",
+          position: "relative",
         }}
       >
         <Card
+          className="app-card"
           style={{
             flex: 1,
-            margin: "0",
-            borderRadius: "0",
-            display: "flex",
-            flexDirection: "column",
-            overflow: "hidden",
-            padding: 0,
+            overflow: "auto",
+            marginBottom: data?.footer?.length > 0 ? "80px" : "0",
           }}
         >
-          {/* Header Section */}
-          <div
-            style={{
-              padding: "16px",
-              borderBottom: "1px solid #e0e0e0",
-              backgroundColor: "#fff",
-            }}
-          >
-            {config.headerFields?.map((headerField, index) => (
-              <div key={index}>
-                {headerField.label === "SCREEN_HEADING" ? (
-                  <CardHeader style={{ padding: 0, margin: 0 }}>{t(headerField.value)}</CardHeader>
-                ) : (
-                  <CardText
-                    style={{
-                      fontSize: "14px",
-                      color: "#666",
-                      margin: "8px 0 0 0",
-                    }}
-                  >
-                    {t(headerField.value)}
-                  </CardText>
-                )}
-              </div>
-            ))}
-          </div>
+          {/* RENDERING HEADER AND SUB-HEADING */}
+          {data.heading && <CardHeader>{t(data.heading)}</CardHeader>}
+          {data.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
-          {/* Body Section - Scrollable */}
-          <div
-            style={{
-              flex: 1,
-              overflowY: "auto",
-              overflowX: "hidden",
-              padding: "16px",
-              backgroundColor: "#fafafa",
-            }}
-          >
-            {renderSection(config.body, "body")}
-          </div>
-
-          {/* Footer Section - Fixed at bottom */}
-          {config.footer && config.footer.length > 0 && (
-            <div
-              style={{
-                padding: "16px",
-                borderTop: "1px solid #e0e0e0",
-                backgroundColor: "#fff",
-                boxShadow: "0 -2px 4px rgba(0,0,0,0.05)",
-              }}
-            >
-              {renderSection(config.footer, "footer")}
-            </div>
-          )}
+          {/* RENDERING BODY */}
+          {data?.body && renderSection(data.body, "body")}
         </Card>
+        {/* RENDERING FOOTER - Fixed at bottom */}
+        {data?.footer?.length > 0 && (
+          <div
+            style={{
+              position: "absolute",
+              bottom: 60,
+              left: 0,
+              right: 0,
+              backgroundColor: "#fff",
+              padding: "16px",
+              borderTop: "1px solid #e0e0e0",
+              boxShadow: "0 -2px 4px rgba(0,0,0,0.05)",
+              display: "flex",
+              flexDirection: "column",
+              gap: "8px",
+            }}
+          >
+            {renderSection(data.footer, "footer")}
+          </div>
+        )}
       </div>
     </MobileBezelFrame>
   );
 };
+export default LayoutRenderer;

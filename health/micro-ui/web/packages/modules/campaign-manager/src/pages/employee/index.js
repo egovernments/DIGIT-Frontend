@@ -324,7 +324,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
-        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
+        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ||
+        window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
         <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />

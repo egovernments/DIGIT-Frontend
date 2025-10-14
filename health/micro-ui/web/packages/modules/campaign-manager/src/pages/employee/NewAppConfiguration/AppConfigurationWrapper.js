@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useDispatch, useSelector } from "react-redux";
-import { handleShowAddFieldPopup, initializeConfig, addField, updatePageRoles } from "./redux/remoteConfigSlice";
+import { handleShowAddFieldPopup, initializeConfig, addField } from "./redux/remoteConfigSlice";
 import { getFieldMaster } from "./redux/fieldMasterSlice";
 import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
 import { fetchLocalization, fetchAppScreenConfig, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
@@ -14,11 +14,18 @@ import { getPageFromConfig } from "./utils/configUtils";
 
 const AppConfigurationWrapper = ({
   flow = "REGISTRATION-DELIVERY",
+  flowName,
   pageName = "beneficiaryLocation",
+  campaignNumber,
   localeModule = "hcm-registrationflow-CMP-2025-09-19-006993",
-  onPageChange,
-  addedRoles = [],
 }) => {
+  console.log("AppConfigurationWrapper Props:", {
+    flow,
+    flowName,
+    pageName,
+    campaignNumber,
+    localeModule,
+  });
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
@@ -26,11 +33,15 @@ const AppConfigurationWrapper = ({
   const dispatch = useDispatch();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
   const [newFieldType, setNewFieldType] = useState(null);
+  const [isLoadingPageConfig, setIsLoadingPageConfig] = useState(true);
+  const [pageConfigError, setPageConfigError] = useState(null);
+
   // Redux selectors
-  const { remoteData: actualState, currentData, showAddFieldPopup } = useSelector((state) => state.remoteConfig);
+  const { currentData, showAddFieldPopup } = useSelector((state) => state.remoteConfig);
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
+  console.log("currentDatacurrentData", currentData);
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
 
@@ -49,7 +60,7 @@ const AppConfigurationWrapper = ({
       label: newFieldType.label, // This should be the localization code
       required: false,
       active: true,
-      order: (currentData?.cards?.[0]?.fields?.length || 0) + 1,
+      order: (currentData?.body?.[0]?.fields?.length || 0) + 1,
       jsonPath: `field_${Date.now()}`, // Generate a unique jsonPath
       ...selectedFieldType?.metadata, // Include any metadata from field type
     };
@@ -67,18 +78,58 @@ const AppConfigurationWrapper = ({
     setNewFieldType(null);
   };
   useEffect(() => {
-    // Filter page from fullParentConfig using flow and pageName
-    const pageConfig = getPageFromConfig(fullParentConfig, flow, pageName);
+    const fetchPageConfig = async () => {
+      try {
+        setIsLoadingPageConfig(true);
+        setPageConfigError(null);
 
-    // Initialize config
-    dispatch(initializeConfig(pageConfig));
+        // Fetch page configuration from MDMS
+        const response = await Digit.CustomService.getResponse({
+          url: "/mdms-v2/v2/_search",
+          body: {
+            MdmsCriteria: {
+              tenantId: tenantId,
+              schemaCode: `${MODULE_CONSTANTS}.NewFormConfig`,
+              filters: {
+                flow: flow,
+                project: campaignNumber,
+                page: pageName,
+              },
+              isActive: true,
+            },
+          },
+        });
+
+        console.log("MDMS NewFormConfig Response:", response);
+
+        if (response?.mdms && response.mdms.length > 0) {
+          const pageConfig = response.mdms[0].data;
+          console.log("Page Config from MDMS:", pageConfig);
+
+          // Initialize config with the fetched data
+          dispatch(initializeConfig(pageConfig));
+        } else {
+          setPageConfigError("No page configuration found");
+          console.error("No page configuration found for:", { flow, pageName, campaignNumber });
+        }
+      } catch (err) {
+        console.error("Error fetching page config:", err);
+        setPageConfigError("Failed to fetch page configuration");
+      } finally {
+        setIsLoadingPageConfig(false);
+      }
+    };
+
+    if (flow && pageName && campaignNumber) {
+      fetchPageConfig();
+    }
 
     // Fetch field master if specified
     dispatch(
       getFieldMaster({
         tenantId,
         moduleName: MODULE_CONSTANTS,
-        name: "FieldMaster",
+        name: "NewFieldType",
         mdmsContext: mdmsContext,
         limit: 10000,
       })
@@ -89,7 +140,7 @@ const AppConfigurationWrapper = ({
       getFieldPanelMaster({
         tenantId,
         moduleName: MODULE_CONSTANTS,
-        name: "AppPanelMasters",
+        name: "NewDrawerPanelConfig",
         mdmsContext: mdmsContext,
         limit: 10000,
       })
@@ -117,38 +168,20 @@ const AppConfigurationWrapper = ({
         })
       );
     }
-  }, [dispatch, flow, pageName, localeModule, tenantId, mdmsContext, currentLocale]);
+  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale]);
 
-  if (!currentData || (localeModule && localizationStatus === "loading")) {
+  if (isLoadingPageConfig || !currentData || (localeModule && localizationStatus === "loading")) {
     return <Loader />;
   }
 
-  // Check button disabled states from currentData
-  const isPreviousDisabled = !currentData?.previousRoute || currentData?.previousRoute === null;
-  const isNextDisabled = !currentData?.nextRoute || currentData?.nextRoute === null;
-
-  const handlePrevious = () => {
-    if (currentData?.previousRoute && onPageChange) {
-      console.log("Navigating to previous page:", currentData.previousRoute);
-      onPageChange(currentData.previousRoute);
-    }
-  };
-
-  const handleNext = () => {
-    // Dispatch roles update to Redux
-    if (addedRoles.length > 0) {
-      dispatch(updatePageRoles({ roles: addedRoles }));
-    }
-
-    // Console the final submit data
-    console.log("Submitting current data:", { ...currentData, roles: addedRoles.length > 0 ? addedRoles : currentData.roles });
-
-    // Navigate to next page if exists
-    if (currentData?.nextRoute && onPageChange) {
-      console.log("Navigating to next page:", currentData.nextRoute);
-      onPageChange(currentData.nextRoute);
-    }
-  };
+  if (pageConfigError) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", flexDirection: "column" }}>
+        <h3 style={{ color: "#d32f2f" }}>Error Loading Configuration</h3>
+        <p>{pageConfigError}</p>
+      </div>
+    );
+  }
 
   const handleFieldChange = (value) => {
     const locVal = newFieldType?.label
@@ -167,80 +200,14 @@ const AppConfigurationWrapper = ({
     }));
   };
   return (
-    <div>
-      <Header className="app-config-header">
-        <div className="app-config-header-group" style={{ display: "flex", alignItems: "center" }}>
-          {t(`APP_CONFIG_HEADING_LABEL`)}
-          <Tag
-            stroke={true}
-            showIcon={false}
-            label={`${t("APPCONFIG_VERSION")} - ${currentData?.version}`}
-            style={{ background: "#EFF8FF", height: "fit-content" }}
-            className={"version-tag"}
-          />
-        </div>
-      </Header>
-      <TextBlock
-        body=""
-        caption={t("CMP_DRAWER_WHAT_IS_APP_CONFIG_SCREEN")}
-        header=""
-        captionClassName="camp-drawer-caption"
-        subHeader=""
-      />
-      <div style={{ display: "flex" }}>
-        <div>
-          <div
-            style={{
-              display: "flex",
-              alignItems: "flex-end",
-              marginLeft: "30.5rem",
-              gap: "5rem",
-            }}
-          >
-            <IntermediateWrapper />
-          </div>
-        </div>
-      </div>
-      <div
-        className="appConfig-flex-action"
-        style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "16px", marginTop: "20px" }}
-      >
-        <Button
-          className="app-configure-action-button"
-          variation="secondary"
-          label={t("PREVIOUS")}
-          title={t("PREVIOUS")}
-          icon="ArrowBack"
-          isDisabled={isPreviousDisabled}
-          onClick={() => handlePrevious()}
-        />
-        <span className="app-config-tag-page" style={{ fontSize: "14px", fontWeight: "500" }}>
-          {currentData?.name || ""}
-        </span>
-        <Button
-          className="app-configure-action-button"
-          variation="secondary"
-          label={t("NEXT")}
-          title={t("NEXT")}
-          icon="ArrowForward"
-          isSuffix={true}
-          isDisabled={isNextDisabled}
-          onClick={() => handleNext()}
-        />
-      </div>
-      {/* {showToast && (
-        <Toast
-          type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
-          label={t(showToast?.label)}
-          transitionTime={showToast.transitionTime}
-          onClose={closeToast}
-        />
-      )} */}
+    <React.Fragment>
+      <IntermediateWrapper />
       {showAddFieldPopup && (
         <PopUp
           className={"add-field-popup"}
           type={"default"}
           heading={t("ADD_FIELD")}
+          onOverlayClick={() => {}}
           onClose={() => {
             dispatch(handleShowAddFieldPopup(null));
             setNewFieldType(null);
@@ -303,7 +270,7 @@ const AppConfigurationWrapper = ({
           </div>
         </PopUp>
       )}
-    </div>
+    </React.Fragment>
   );
 };
 

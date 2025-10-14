@@ -2,7 +2,7 @@ import { FieldV1 } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
-import { getFieldTypeFromMasterData } from "../pages/employee/NewAppConfiguration/helpers/getFieldTypeFromMasterData";
+import { getFieldTypeFromMasterData, getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers";
 
 const ComponentToRender = ({ field, t: customT, selectedField }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
@@ -13,9 +13,14 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
   // Get the field type
   const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
 
+  // Get component from fieldTypeMasterData, fallback to null
+  const component = fieldType === "component" ? getComponentFromMasterData(field, fieldTypeMasterData) : null;
+
+  console.log("component", fieldType, component);
   return (
     <FieldV1
       charCount={field?.charCount}
+      component={component}
       config={{
         step: "",
       }}

@@ -9,22 +9,15 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
       <div className="mobile-bezel-child-container">
         <Card className="app-card" style={{}}>
           {/* RENDERING HEADER AND SUB-HEADING */}
-          {data.headerFields?.map((headerField, headerIndex) => (
-            <div key={headerIndex}>
-              {headerField.jsonPath === "ScreenHeading" ? (
-                <CardHeader>{t(headerField.value)}</CardHeader>
-              ) : (
-                <CardText className="app-preview-sub-heading">{t(headerField.value)}</CardText>
-              )}
-            </div>
-          ))}
+          {data.heading && <CardHeader>{t(data.heading)}</CardHeader>}
+          {data.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
           {/* RENDERING FORMS */}
-          {data?.cards?.map((card, index) => (
-            <Card key={index} className="app-card" style={{}}>
+          {data?.body?.map((card, index) => (
+            <Fragment key={index}>
               {data.type !== "template" &&
                 card?.fields
-                  ?.filter((field) => field.active && !field.hidden)
+                  ?.filter((field) => !field.hidden)
                   ?.map((field, fieldIndex) => {
                     const isSelected =
                       selectedField &&
@@ -48,7 +41,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                       </div>
                     );
                   })}
-            </Card>
+            </Fragment>
           ))}
 
           {/* RENDERING FOOTER */}

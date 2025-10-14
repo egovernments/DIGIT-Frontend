@@ -1,225 +1,199 @@
 [
   {
-    "type": "text",
+    "type": "latLng",
     "order": 1,
     "metadata": {
       "type": "string",
       "format": "latLng"
     },
-    "fieldType": "text",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "text"
   },
   {
-    "type": "text",
-    "order": 1,
+    "type": "locality",
+    "order": 2,
     "metadata": {
       "type": "string",
       "format": "locality"
     },
-    "fieldType": "text",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "text"
   },
   {
     "type": "text",
-    "order": 1,
+    "order": 3,
     "metadata": {
       "type": "string",
       "format": "text"
     },
-    "fieldType": "text",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
-  },
-  {
-    "type": "latLng",
-    "order": 2,
-    "metadata": {
-      "type": "string",
-      "format": "latLng"
-    },
-    "fieldType": "locationPicker",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "text"
   },
   {
     "type": "date",
-    "order": 3,
+    "order": 4,
     "metadata": {
       "type": "string",
       "format": "date"
     },
-    "fieldType": "date",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "date"
   },
   {
     "type": "dropdown",
-    "order": 4,
+    "order": 5,
     "metadata": {
       "type": "string",
       "format": "dropdown"
     },
-    "fieldType": "dropdown",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "dropdown"
   },
   {
     "type": "number",
-    "order": 5,
+    "order": 6,
     "metadata": {
       "type": "integer",
       "format": "text"
     },
-    "fieldType": "number",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "number"
   },
   {
     "type": "email",
-    "order": 6,
+    "order": 7,
     "metadata": {
       "type": "string",
       "format": "email"
     },
-    "fieldType": "email",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "email"
   },
   {
     "type": "phone",
-    "order": 7,
+    "order": 8,
     "metadata": {
       "type": "string",
       "format": "phone"
     },
-    "fieldType": "phone",
-    "attributeToRename": {
-      "helpText": "helpText"
-    }
+    "fieldType": "phone"
   },
-     {
+  {
     "type": "switch",
+    "order": 9,
     "metadata": {
       "type": "template",
       "format": "switch"
     }
   },
-    {
+  {
     "type": "searchBar",
+    "order": 10,
     "metadata": {
       "type": "template",
       "format": "searchBar"
     }
   },
-   {
+  {
     "type": "filter",
+    "order": 11,
     "metadata": {
       "type": "template",
       "format": "filter"
     }
   },
-   {
+  {
     "type": "button",
+    "order": 12,
     "metadata": {
       "type": "template",
       "format": "button"
     },
-    "properties":[
+    "properties": [
       {
-        "code":"variation",
-        "options":[ "primary","secondary"]
+        "code": "variation",
+        "options": ["primary", "secondary"]
       },
       {
-        "code":"icon",
-        "options":["Add","Edit","Delete","Search","Download", "QrCodeScanner" ]
+        "code": "icon",
+        "options": ["Add", "Edit", "Delete", "Search", "Download", "QrCodeScanner"]
       }
     ]
   },
-   {
+  {
     "type": "panelCard",
+    "order": 13,
     "metadata": {
       "type": "template",
       "format": "panelCard"
     },
-    "properties":[
+    "properties": [
       {
-        "code":"panelType",
-        "options":[ "success","error"]
+        "code": "panelType",
+        "options": ["success", "error"]
       }
     ]
   },
-   {
+  {
     "type": "card",
+    "order": 14,
     "metadata": {
       "type": "template",
       "format": "card"
     },
-     "properties":[
+    "properties": [
       {
-        "code":"cardType",
-        "options":[ "primary","secondary"]
+        "code": "cardType",
+        "options": ["primary", "secondary"]
       }
     ]
   },
   {
     "type": "infoCard",
+    "order": 15,
     "metadata": {
       "type": "template",
       "format": "infoCard"
     },
-     "properties":[
+    "properties": [
       {
-        "code":"infoCardType",
-        "options":[ "info","success","error","warning"]
+        "code": "infoCardType",
+        "options": ["info", "success", "error", "warning"]
       }
     ]
   },
   {
     "type": "tag",
+    "order": 16,
     "metadata": {
       "type": "template",
       "format": "tag"
     },
-     "properties":[
+    "properties": [
       {
-        "code":"tagType",
-        "options":[ "success","error","warning", "monochrome"]
+        "code": "tagType",
+        "options": ["success", "error", "warning", "monochrome"]
       }
     ]
   },
-    {
+  {
     "type": "Column",
+    "order": 17,
     "metadata": {
       "type": "template",
       "format": "Column"
     },
-    "properties":[
+    "properties": [
       {
-        "code":"children",
-        "options":[ "Card","infoCard","panelCard","button","Row", "Column", "switch", "searchBar", "filter"  ]
+        "code": "children",
+        "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
       }
     ]
   },
   {
     "type": "Row",
+    "order": 18,
     "metadata": {
       "type": "template",
       "format": "Row"
     },
-    "properties":[
+    "properties": [
       {
-        "code":"children",
-        "options":[ "Card","infoCard","panelCard","button","Row", "Column", "switch", "searchBar", "filter"  ]
+        "code": "children",
+        "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
       }
     ]
   }

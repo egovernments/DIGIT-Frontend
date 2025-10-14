@@ -3,7 +3,6 @@ import { Loader, lazyWithFallback } from "@egovernments/digit-ui-components";
 import React from "react";
 // import { useRouteMatch } from "react-router-dom";
 
-
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
@@ -65,6 +64,15 @@ import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/
 import QRButton from "./components/CreateCampaignComponents/QRButton";
 import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
 import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignNameInfo";
+import ButtonTemplate from "./pages/employee/NewAppConfiguration/components/ButtonTemplate";
+import CardTemplate from "./pages/employee/NewAppConfiguration/components/CardTemplate";
+import Filter from "./pages/employee/NewAppConfiguration/components/Filter";
+import InfoCardTemplate from "./pages/employee/NewAppConfiguration/components/InfoCardTemplate";
+import PanelCardTemplate from "./pages/employee/NewAppConfiguration/components/PanelCardTemplate";
+import SearchBar from "./pages/employee/NewAppConfiguration/components/SearchBar";
+import SwitchTemplate from "./pages/employee/NewAppConfiguration/components/SwitchTemplate";
+import TagTemplate from "./pages/employee/NewAppConfiguration/components/TagTemplate";
+
 /**
  * MDMS Module name
  */
@@ -126,7 +134,12 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} stateCode={stateCode} userType={userType} hierarchyData={hierarchyData} />
+        <EmployeeApp
+          BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
+          stateCode={stateCode}
+          userType={userType}
+          hierarchyData={hierarchyData}
+        />
       </TourProvider>
     </ErrorBoundary>
   );
@@ -190,6 +203,16 @@ const componentsToRegister = {
   QRButton,
   EqualHeightWrapper,
   CampaignNameInfo,
+  SearchByProximity: SwitchTemplate,
+  SearchByID: SwitchTemplate,
+  ButtonTemplate,
+  CardTemplate,
+  Filter,
+  InfoCardTemplate,
+  PanelCardTemplate,
+  SearchBar,
+  SwitchTemplate,
+  TagTemplate,
 };
 
 const overrideHooks = () => {

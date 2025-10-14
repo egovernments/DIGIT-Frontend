@@ -1,135 +1,257 @@
 import { useState, useEffect } from "react";
-import fullParentConfig from "./configs/fullParentConfig.json";
 import AppConfigurationStore from "./AppConfigurationStore";
+import { Loader, Button } from "@egovernments/digit-ui-components";
+import { useTranslation } from "react-i18next";
 
 const FullConfigWrapper = () => {
-  const [selectedFlow, setSelectedFlow] = useState("REGISTRATION-DELIVERY");
-  const [selectedPageName, setSelectedPageName] = useState("beneficiaryLocation");
-  const [addedRoles, setAddedRoles] = useState([]);
-  const allRoles = ["ADMIN", "SUPERUSER", "CAMPAIGN_MANAGER", "EMPLOYEE", "AGENT"];
+  const { t } = useTranslation();
+  const [selectedFlow, setSelectedFlow] = useState(null);
+  const [selectedPageName, setSelectedPageName] = useState(null);
+  const [currentPageRoles, setCurrentPageRoles] = useState([]);
+  const [flowConfig, setFlowConfig] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-  // Initialize addedRoles on first load
+  // Fetch flow configuration from MDMS
   useEffect(() => {
-    const initialFlow = fullParentConfig.flows?.find((f) => f.id === selectedFlow);
-    const initialPage = initialFlow?.pages?.find((p) => p.name === selectedPageName);
-    if (initialPage?.roles) {
-      setAddedRoles(initialPage.roles);
-    }
-  }, []); // Run only once on mount
+    const fetchFlowConfig = async () => {
+      try {
+        setIsLoading(true);
+        const response = await Digit.CustomService.getResponse({
+          url: "/mdms-v2/v2/_search",
+          body: {
+            MdmsCriteria: {
+              tenantId: "mz",
+              schemaCode: "HCM-ADMIN-CONSOLE.AppFlowConfig",
+              filters: {
+                project: "CMP-2025-08-04-004846",
+              },
+              isActive: true,
+            },
+          },
+        });
+
+        if (response?.mdms && response.mdms.length > 0) {
+          const configData = response.mdms[0].data;
+          setFlowConfig(configData);
+
+          // Set initial flow and page
+          if (configData.flows && configData.flows.length > 0) {
+            const firstFlow = configData.flows[0];
+            setSelectedFlow(firstFlow.id);
+            setSelectedPageName(firstFlow.indexRoute || firstFlow.pages?.[0]?.name);
+          }
+        } else {
+          setError("No flow configuration found");
+        }
+      } catch (err) {
+        console.error("Error fetching flow config:", err);
+        setError("Failed to fetch flow configuration");
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchFlowConfig();
+  }, []);
+
+  // Update currentPageRoles when page changes
+  useEffect(() => {
+    if (!flowConfig) return;
+
+    const flow = flowConfig.flows?.find((f) => f.id === selectedFlow);
+    const page = flow?.pages?.find((p) => p.name === selectedPageName);
+
+    // Use page roles if available, otherwise fall back to flow roles
+    setCurrentPageRoles(page?.roles || flow?.roles || []);
+  }, [flowConfig, selectedFlow, selectedPageName]);
 
   const handleFlowClick = (flow) => {
     setSelectedFlow(flow.id);
-    // Set first page as default when flow is clicked
-    if (flow.pages && flow.pages.length > 0) {
-      setSelectedPageName(flow.pages[0].name);
-      setAddedRoles(flow.pages[0].roles || []);
+    // Set index route or first page as default when flow is clicked
+    const defaultPage = flow.indexRoute || (flow.pages && flow.pages.length > 0 ? flow.pages[0].name : null);
+    if (defaultPage) {
+      setSelectedPageName(defaultPage);
     }
   };
 
   const handlePageClick = (page) => {
     setSelectedPageName(page.name);
-    setSelectedFlow(page.flow);
-    // Set addedRoles to current page's roles when page changes
-    setAddedRoles(page.roles || []);
   };
 
-  const handleRoleToggle = (role) => {
-    if (addedRoles.includes(role)) {
-      // Remove role
-      setAddedRoles(addedRoles.filter((r) => r !== role));
-    } else {
-      // Add role
-      setAddedRoles([...addedRoles, role]);
-    }
-  };
+  // Show loader while fetching data
+  if (isLoading) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh" }}>
+        <Loader />
+      </div>
+    );
+  }
 
-  const activeFlow = fullParentConfig.flows?.find((flow) => flow.id === selectedFlow);
+  // Show error message if fetch failed
+  if (error || !flowConfig) {
+    return (
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" }}>
+        <h2 style={{ color: "#d32f2f" }}>Error</h2>
+        <p>{error || "Failed to load flow configuration"}</p>
+      </div>
+    );
+  }
+
+  const activeFlow = flowConfig.flows?.find((flow) => flow.id === selectedFlow);
+
+  // Get current page's route information
+  const currentPage = activeFlow?.pages?.find((p) => p.name === selectedPageName);
+  const nextRoute = currentPage?.nextRoute || null;
+  const previousRoute = currentPage?.previousRoute || null;
 
   const styles = {
     container: {
+      marginTop: "-1.5rem",
+      marginLeft: "-1.5rem",
       display: "flex",
-      height: "100vh",
+      height: "calc(100vh - 80px)", // Subtract bottom nav height
       overflow: "hidden",
+      position: "relative",
     },
-    sidebar: {
-      position: "absolute",
-      left: "3rem",
-      top: "9rem",
-      width: "250px",
-      height: "100vh",
-      backgroundColor: "#ffffff",
-      borderRight: "1px solid #e0e0e0",
+    leftSidebar: {
+      width: "220px",
+      height: "100%",
+      backgroundColor: "#FAFAFA",
+      borderRight: "1px solid #D6D5D5",
       overflowY: "auto",
-      boxShadow: "2px 0 8px rgba(0,0,0,0.05)",
-      zIndex: 100,
+      padding: "16px",
+      display: "flex",
+      flexDirection: "column",
+      gap: "24px",
     },
     sidebarSection: {
-      padding: "16px",
-      borderBottom: "1px solid #f0f0f0",
+      display: "flex",
+      flexDirection: "column",
+      gap: "8px",
     },
     sectionTitle: {
-      fontSize: "12px",
-      fontWeight: "600",
-      color: "#666",
-      textTransform: "uppercase",
-      letterSpacing: "0.5px",
-      marginBottom: "12px",
+      fontSize: "16px",
+      fontWeight: "700",
+      color: "#0B4B66",
+      marginBottom: "8px",
     },
     flowItem: {
       padding: "10px 12px",
-      marginBottom: "6px",
-      borderRadius: "6px",
+      borderRadius: "4px",
       cursor: "pointer",
       transition: "all 0.2s",
       fontSize: "14px",
-      fontWeight: "500",
+      fontWeight: "400",
+      backgroundColor: "transparent",
     },
     roleItem: {
       padding: "8px 12px",
-      marginBottom: "4px",
       borderRadius: "4px",
-      fontSize: "13px",
+      fontSize: "14px",
+      backgroundColor: "#EEEEEE",
+      color: "#505A5F",
+      fontWeight: "400",
+    },
+    centerContent: {
+      flex: 1,
+      display: "flex",
+      flexDirection: "column",
+      overflow: "hidden",
+      maxWidth: "75rem",
+    },
+    pageTabs: {
+      marginTop: "1rem",
+      display: "flex",
+      alignItems: "flex-end",
+      overflowX: "auto",
+      borderBottom: "1px solid #D6D5D5",
+    },
+    pageTab: {
+      padding: "12px 20px",
+      cursor: "pointer",
+      fontSize: "14px",
+      fontWeight: "400",
+      whiteSpace: "nowrap",
+      transition: "all 0.2s",
+      border: "1px solid #D6D5D5",
+      borderBottom: "none",
+      borderRadius: "8px 8px 0 0",
+      backgroundColor: "#FFFFFF",
+      color: "#505A5F",
+      marginRight: "-1px", // Overlap borders
+    },
+    pageTabActive: {
+      padding: "16px 20px",
+      borderColor: "#F47738",
+      borderBottom: "3px solid #F47738",
+      color: "#F47738",
+      fontWeight: "600",
+      backgroundColor: "#FFFFFF",
+      position: "relative",
+      zIndex: 1,
+    },
+    previewArea: {
+      flex: 1,
       display: "flex",
       alignItems: "center",
-      gap: "8px",
-      cursor: "pointer",
-      transition: "background-color 0.2s",
-    },
-    checkbox: {
-      width: "16px",
-      height: "16px",
-      cursor: "pointer",
-    },
-    pageItem: {
-      padding: "8px 12px",
-      marginBottom: "4px",
-      borderRadius: "4px",
-      cursor: "pointer",
-      transition: "all 0.2s",
-      fontSize: "13px",
-      paddingLeft: "16px",
-    },
-    mainContent: {
-      marginLeft: "250px",
-      flex: 1,
+      justifyContent: "center",
+      gap: "24px",
+      padding: "24px",
       overflow: "auto",
-      backgroundColor: "#f8f9fa",
+    },
+    navArrow: {
+      cursor: "pointer",
+      padding: "8px",
+      borderRadius: "50%",
+      transition: "background-color 0.2s",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    },
+    bottomNav: {
+      position: "fixed",
+      bottom: 0,
+      left: 0,
+      right: 0,
+      height: "72px",
+      backgroundColor: "#FAFAFA",
+      borderTop: "1px solid #D6D5D5",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "space-between",
+      padding: "0 24px",
+      zIndex: 1000,
     },
   };
 
   return (
     <div style={styles.container}>
-      <div style={styles.sidebar}>
+      {/* Left Sidebar - Roles and Flows */}
+      <div style={styles.leftSidebar}>
+        <div style={styles.sidebarSection}>
+          <div style={styles.sectionTitle}>Roles</div>
+          {currentPageRoles.length > 0 ? (
+            currentPageRoles.map((role, index) => (
+              <div key={index} style={styles.roleItem}>
+                {role}
+              </div>
+            ))
+          ) : (
+            <div style={{ fontSize: "13px", color: "#999", padding: "8px 0" }}>No roles assigned</div>
+          )}
+        </div>
+
         <div style={styles.sidebarSection}>
           <div style={styles.sectionTitle}>Flows</div>
-          {fullParentConfig.flows?.map((flow, index) => (
+          {flowConfig.flows?.map((flow, index) => (
             <div
               key={index}
               style={{
                 ...styles.flowItem,
-                backgroundColor: selectedFlow === flow.id ? "#e3f2fd" : "transparent",
-                color: selectedFlow === flow.id ? "#1976d2" : "#333",
-                fontWeight: selectedFlow === flow.id ? "600" : "500",
+                backgroundColor: selectedFlow === flow.id ? "#F47738" : "transparent",
+                color: selectedFlow === flow.id ? "#FFFFFF" : "#505A5F",
+                fontWeight: selectedFlow === flow.id ? "700" : "400",
               }}
               onClick={() => handleFlowClick(flow)}
             >
@@ -137,40 +259,18 @@ const FullConfigWrapper = () => {
             </div>
           ))}
         </div>
+      </div>
 
-        <div style={styles.sidebarSection}>
-          <div style={styles.sectionTitle}>Roles</div>
-          {allRoles.map((role, index) => (
-            <div
-              key={index}
-              style={{
-                ...styles.roleItem,
-                backgroundColor: addedRoles.includes(role) ? "#e8f5e9" : "#f5f5f5",
-                color: addedRoles.includes(role) ? "#2e7d32" : "#555",
-              }}
-              onClick={() => handleRoleToggle(role)}
-            >
-              <input
-                type="checkbox"
-                style={styles.checkbox}
-                checked={addedRoles.includes(role)}
-                onChange={() => handleRoleToggle(role)}
-              />
-              <span>{role}</span>
-            </div>
-          ))}
-        </div>
-
-        <div style={styles.sidebarSection}>
-          <div style={styles.sectionTitle}>Pages</div>
+      {/* Center Content - Page Tabs and Preview */}
+      <div style={styles.centerContent}>
+        {/* Page Tabs */}
+        <div style={styles.pageTabs}>
           {activeFlow?.pages?.map((page, index) => (
             <div
               key={index}
               style={{
-                ...styles.pageItem,
-                backgroundColor: selectedPageName === page.name ? "#e8f5e9" : "transparent",
-                color: selectedPageName === page.name ? "#2e7d32" : "#555",
-                fontWeight: selectedPageName === page.name ? "600" : "400",
+                ...styles.pageTab,
+                ...(selectedPageName === page.name ? styles.pageTabActive : {}),
               }}
               onClick={() => handlePageClick(page)}
             >
@@ -178,14 +278,78 @@ const FullConfigWrapper = () => {
             </div>
           ))}
         </div>
+
+        {/* Preview Area with Navigation Arrows */}
+        <div style={styles.previewArea}>
+          {/* Left Arrow */}
+          <div
+            style={{
+              ...styles.navArrow,
+              opacity: !previousRoute ? 0.3 : 1,
+              cursor: !previousRoute ? "not-allowed" : "pointer",
+            }}
+            onClick={() => {
+              if (previousRoute) {
+                setSelectedPageName(previousRoute);
+              }
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M15 18L9 12L15 6" stroke="#505A5F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+
+          {/* App Preview */}
+          <AppConfigurationStore
+            flow={selectedFlow}
+            flowName={activeFlow?.name}
+            pageName={selectedPageName}
+            campaignNumber={flowConfig?.project}
+            onPageChange={setSelectedPageName}
+            nextRoute={nextRoute}
+            previousRoute={previousRoute}
+          />
+
+          {/* Right Arrow */}
+          <div
+            style={{
+              ...styles.navArrow,
+              opacity: !nextRoute ? 0.3 : 1,
+              cursor: !nextRoute ? "not-allowed" : "pointer",
+            }}
+            onClick={() => {
+              if (nextRoute) {
+                setSelectedPageName(nextRoute);
+              }
+            }}
+          >
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M9 18L15 12L9 6" stroke="#505A5F" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </div>
+        </div>
       </div>
 
-      <div style={styles.mainContent}>
-        <AppConfigurationStore
-          flow={selectedFlow}
-          pageName={selectedPageName}
-          onPageChange={setSelectedPageName}
-          addedRoles={addedRoles}
+      {/* Bottom Navigation */}
+      <div style={styles.bottomNav}>
+        <Button
+          variation="secondary"
+          label={t("BACK")}
+          icon="ArrowBack"
+          onClick={() => {
+            // Handle back navigation - could go to module selection or previous screen
+            window.history.back();
+          }}
+        />
+        <Button
+          variation="primary"
+          label={t("PROCEED_TO_PREVIEW")}
+          icon="ArrowForward"
+          isSuffix={true}
+          onClick={() => {
+            // Handle proceed to preview
+            console.log("Proceeding to preview with config:", flowConfig);
+          }}
         />
       </div>
     </div>

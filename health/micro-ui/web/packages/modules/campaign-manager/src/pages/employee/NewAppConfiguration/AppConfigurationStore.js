@@ -3,10 +3,10 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import AppConfigurationWrapper from "./AppConfigurationWrapper";
 
-const AppConfigurationStore = ({ flow, pageName, onPageChange, addedRoles }) => {
+const AppConfigurationStore = ({ flow, flowName, pageName, campaignNumber }) => {
   return (
     <Provider store={store}>
-      <AppConfigurationWrapper flow={flow} pageName={pageName} onPageChange={onPageChange} addedRoles={addedRoles} />
+      <AppConfigurationWrapper flow={flow} flowName={flowName} pageName={pageName} campaignNumber={campaignNumber} />
     </Provider>
   );
 };

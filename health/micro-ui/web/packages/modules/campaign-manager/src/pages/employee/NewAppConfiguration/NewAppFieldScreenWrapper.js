@@ -147,25 +147,34 @@ function NewAppFieldScreenWrapper() {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_HEAD_FIELDS")} />
       </div>
       <Divider />
-      {currentCard?.headerFields?.map(({ label, type, value }, index) => {
-        return (
-          <HeaderFieldWrapper
-            key={`header-${index}`}
-            label={label}
-            type={type}
-            value={value}
-            currentCard={currentCard}
-            index={index}
-            cardIndex={0}
-          />
-        );
-      })}
+      {/* Heading Field */}
+      <HeaderFieldWrapper
+        key="header-heading"
+        label="heading"
+        type="text"
+        value={currentCard?.heading}
+        currentCard={currentCard}
+        index={0}
+        cardIndex={0}
+        fieldKey="heading"
+      />
+      {/* Description Field */}
+      <HeaderFieldWrapper
+        key="header-description"
+        label="description"
+        type="text"
+        value={currentCard?.description}
+        currentCard={currentCard}
+        index={1}
+        cardIndex={0}
+        fieldKey="description"
+      />
       <Divider />
       <div className="app-config-drawer-subheader">
         <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
-      {currentCard?.cards?.map(({ fields }, index, card) => {
+      {currentCard?.body?.map(({ fields }, index, card) => {
         return (
           <Fragment key={`card-${index}`}>
             {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, ...rest }, i, c) => {

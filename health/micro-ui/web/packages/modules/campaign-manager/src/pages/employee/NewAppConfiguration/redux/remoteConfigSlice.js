@@ -44,7 +44,7 @@ const remoteConfigSlice = createSlice({
 
       if (finalCardIndex === undefined || finalCardIndex === null) {
         // Fallback: try to find by ID or reference
-        finalCardIndex = state.currentData?.cards?.findIndex((c) => c.id === card?.id || c === card) ?? -1;
+        finalCardIndex = state.currentData?.body?.findIndex((c) => c.id === card?.id || c === card) ?? -1;
       }
 
       if (finalFieldIndex === undefined || finalFieldIndex === null) {
@@ -76,17 +76,17 @@ const remoteConfigSlice = createSlice({
       }
 
       // Also update the field in currentData using stored path (O(1) instead of O(n*m))
-      if (state.currentData?.cards && cardIndex !== null && cardIndex !== -1 && fieldIndex !== null && fieldIndex !== -1) {
+      if (state.currentData?.body && cardIndex !== null && cardIndex !== -1 && fieldIndex !== null && fieldIndex !== -1) {
         for (const key in updates) {
-          state.currentData.cards[cardIndex].fields[fieldIndex][key] = updates[key];
+          state.currentData.body[cardIndex].fields[fieldIndex][key] = updates[key];
         }
       }
     },
     // Field management actions
     deleteField(state, action) {
       const { fieldIndex, cardIndex } = action.payload;
-      if (state.currentData && state.currentData.cards && state.currentData.cards[cardIndex]) {
-        state.currentData.cards[cardIndex].fields.splice(fieldIndex, 1);
+      if (state.currentData && state.currentData.body && state.currentData.body[cardIndex]) {
+        state.currentData.body[cardIndex].fields.splice(fieldIndex, 1);
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
       }
@@ -95,19 +95,19 @@ const remoteConfigSlice = createSlice({
       const { fieldIndex, cardIndex } = action.payload;
       if (
         state.currentData &&
-        state.currentData.cards &&
-        state.currentData.cards[cardIndex] &&
-        state.currentData.cards[cardIndex].fields[fieldIndex]
+        state.currentData.body &&
+        state.currentData.body[cardIndex] &&
+        state.currentData.body[cardIndex].fields[fieldIndex]
       ) {
-        state.currentData.cards[cardIndex].fields[fieldIndex].hidden = !state.currentData.cards[cardIndex].fields[fieldIndex].hidden;
+        state.currentData.body[cardIndex].fields[fieldIndex].hidden = !state.currentData.body[cardIndex].fields[fieldIndex].hidden;
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
       }
     },
     reorderFields(state, action) {
       const { cardIndex, fromIndex, toIndex } = action.payload;
-      if (state.currentData && state.currentData.cards && state.currentData.cards[cardIndex]) {
-        const fields = state.currentData.cards[cardIndex].fields;
+      if (state.currentData && state.currentData.body && state.currentData.body[cardIndex]) {
+        const fields = state.currentData.body[cardIndex].fields;
         if (fromIndex >= 0 && toIndex >= 0 && fromIndex < fields.length && toIndex < fields.length) {
           const [movedField] = fields.splice(fromIndex, 1);
           fields.splice(toIndex, 0, movedField);
@@ -132,20 +132,20 @@ const remoteConfigSlice = createSlice({
     },
     addField(state, action) {
       const { cardIndex, fieldData } = action.payload;
-      if (state.currentData && state.currentData.cards && state.currentData.cards[cardIndex]) {
+      if (state.currentData && state.currentData.body && state.currentData.body[cardIndex]) {
         const newField = {
           ...fieldData,
           id: crypto.randomUUID(),
           deleteFlag: true,
           active: true,
         };
-        state.currentData.cards[cardIndex].fields.push(newField);
+        state.currentData.body[cardIndex].fields.push(newField);
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
       }
     },
     addSection(state) {
-      if (state.currentData && state.currentData.cards) {
+      if (state.currentData && state.currentData.body) {
         const newCard = {
           fields: [],
           header: "Header",
@@ -169,7 +169,7 @@ const remoteConfigSlice = createSlice({
             },
           ],
         };
-        state.currentData.cards.push(newCard);
+        state.currentData.body.push(newCard);
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
       }
@@ -178,12 +178,12 @@ const remoteConfigSlice = createSlice({
       const { cardIndex, fieldIndex, value } = action.payload;
       if (
         state.currentData &&
-        state.currentData.cards &&
-        state.currentData.cards[cardIndex] &&
-        state.currentData.cards[cardIndex].headerFields &&
-        state.currentData.cards[cardIndex].headerFields[fieldIndex]
+        state.currentData.body &&
+        state.currentData.body[cardIndex] &&
+        state.currentData.body[cardIndex].headerFields &&
+        state.currentData.body[cardIndex].headerFields[fieldIndex]
       ) {
-        state.currentData.cards[cardIndex].headerFields[fieldIndex].value = value;
+        state.currentData.body[cardIndex].headerFields[fieldIndex].value = value;
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
       }
@@ -196,10 +196,10 @@ const remoteConfigSlice = createSlice({
         state.currentData = { ...state.currentData };
       }
     },
-    updatePageRoles(state, action) {
-      const { roles } = action.payload;
-      if (state.currentData) {
-        state.currentData.roles = roles;
+    updateHeaderProperty(state, action) {
+      const { fieldKey, value } = action.payload;
+      if (state.currentData && fieldKey) {
+        state.currentData[fieldKey] = value;
         // Ensure reactivity by creating new reference
         state.currentData = { ...state.currentData };
       }
@@ -227,7 +227,7 @@ export const {
   addSection,
   updateHeaderField,
   updateActionLabel,
-  updatePageRoles,
+  updateHeaderProperty,
   handleShowAddFieldPopup,
 } = remoteConfigSlice.actions;
 export default remoteConfigSlice.reducer;

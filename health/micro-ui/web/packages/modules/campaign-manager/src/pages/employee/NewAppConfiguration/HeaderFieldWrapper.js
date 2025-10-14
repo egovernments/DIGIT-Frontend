@@ -4,9 +4,9 @@ import { useCustomT } from "./hooks/useCustomT";
 import { useTranslation } from "react-i18next";
 import { LabelFieldPair, TextInput, TextArea } from "@egovernments/digit-ui-components";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
-import { updateHeaderField } from "./redux/remoteConfigSlice";
+import { updateHeaderField, updateHeaderProperty } from "./redux/remoteConfigSlice";
 
-const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0 }) => {
+const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex = 0, fieldKey }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const currentLocale = useSelector((state) => state.localization.currentLocale);
@@ -47,9 +47,15 @@ const HeaderFieldWrapper = ({ label, type, value, currentCard, index, cardIndex 
         })
       );
     }
-    // Update header field in Redux
-    dispatch(updateHeaderField({ cardIndex, fieldIndex: index, value: label }));
-  }, [value, currentCard, label, currentLocale, cardIndex, index, dispatch]);
+
+    // Update header property in Redux - use new action if fieldKey is provided
+    if (fieldKey) {
+      dispatch(updateHeaderProperty({ fieldKey, value: value || `${currentCard?.flow}_${currentCard?.parent}_${currentCard?.name}_${label}` }));
+    } else {
+      // Fallback to old method for backward compatibility
+      dispatch(updateHeaderField({ cardIndex, fieldIndex: index, value: label }));
+    }
+  }, [value, currentCard, label, currentLocale, cardIndex, index, fieldKey, dispatch]);
 
   const handleChange = useCallback((e) => {
     const newValue = e.target.value;
