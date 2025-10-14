@@ -141,7 +141,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
         </HeaderComponent>
         <p className="description-type">{t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}</p>
         <LabelFieldPair>
-          <div className="">
+          <div className="" style={{justifyContent:"center",marginTop:"6px"}}> 
             <span>{t("HCM_HIERARCHY_TYPE")}</span>
             <span className="mandatory-span">*</span>
           </div>
@@ -157,7 +157,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
       </Card>
       <ActionBar className="mc_back">
         <Button
-          style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
+          style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "10rem" }}
           variation="primary"
           label={t("NEXT")}
           title={t("NEXT")}
