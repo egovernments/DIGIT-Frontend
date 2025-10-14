@@ -3,6 +3,7 @@ import { useRouteMatch } from "react-router-dom";
 import { Route, Switch } from "react-router-dom";
 
 import { default as EmployeeApp } from "./pages/employee";
+import { default as CitizenApp } from "./pages/citizen";
 
 import PTCard from "./components/PropertyTaxCard";
 import PTTransfereeDetails from "./components/PTTransfereeDetails";
@@ -44,7 +45,7 @@ export const PTModule = ({ stateCode, userType, tenants }) => {
     return "";
   }
 
-  return userType === "employee" ? <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} /> : <div>"Citizen App"</div>;
+  return userType === "employee" ? <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} /> : <CitizenApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />;
 };
 
 const componentsToRegister = {

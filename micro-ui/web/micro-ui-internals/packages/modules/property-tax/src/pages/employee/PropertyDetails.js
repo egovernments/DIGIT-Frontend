@@ -1009,7 +1009,7 @@ const PropertyDetails = () => {
         } else {
           setToast({
             label: t("PT_RECEIPT_FILESTOREID_NOT_FOUND"),
-            type: "success"
+            type: "warning"
           });
         }
       } else {
