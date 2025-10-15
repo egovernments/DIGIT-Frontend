@@ -10,8 +10,8 @@
 
   if [ ! -d "$INTERNALS" ]; then
       echo "Cloning DIGIT-Studio repository..."
-      if [ -n "$GITHUB_TOKEN" ]; then
-          git clone -b STUDIO-UI-4 "https://${GITHUB_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$INTERNALS"
+      if [ -n "$GIT_TOKEN" ]; then
+          git clone -b STUDIO-UI-4 "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$INTERNALS"
       else
           git clone -b STUDIO-UI-4 "https://github.com/egovernments/DIGIT-Studio.git" "$INTERNALS"
       fi
