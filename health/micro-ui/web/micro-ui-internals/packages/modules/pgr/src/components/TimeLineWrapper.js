@@ -6,7 +6,6 @@ import { convertEpochFormateToDate } from '../utils';
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
 
 const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPrefix="" }) => {
-    console.log("999 TimelineWrapper", { businessId, isWorkFlowLoading, workflowData, labelPrefix });
     const { state } = useMyContext();
     const { t } = useTranslation();
     const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -61,7 +60,7 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
                     ...(instance?.documents && instance.documents.length > 0
                         ? instance.documents.map(
                             (doc) =>
-                              `${t("ES_COMMON_CONTACT_DETAILS")}: ${doc.fileStoreId}`
+                              `${t("ES_COMMON_FILE_UPLOADED")}: ${doc.fileStoreId}`
                           )
                         : []),
                 ].filter(Boolean),

@@ -53,7 +53,6 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
           mobileNumber: employee.user?.mobileNumber,
           department: department
         });
-  
         return acc;
       }, {}) || {}
     );
@@ -75,7 +74,6 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
   const handleEmployeeSelect = (employee) => {
     setSelectedEmployee(employee);
     if (employee && config?.key) {
-      console.log("999 config.key employee",config.key,employee)
       onSelect(config.key, employee);
     }
   };

@@ -159,7 +159,6 @@ const PGRDetails = () => {
 
   // Fetch complaint details
   const { isLoading, isError, error, data: pgrData, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch({ serviceRequestId: id }, tenantId);
-  console.log( "999 pgrData", pgrData);
   // Hook to update the complaint
   const { mutate: UpdateComplaintMutation } = Digit.Hooks.pgr.usePGRUpdate(tenantId);
 
@@ -170,8 +169,6 @@ const PGRDetails = () => {
     config: { enabled: true },
     changeQueryName: id,
   });
-
-  console.log( "99 workflowData", workflowData);
 
   // Fetch business service metadata
   const { isLoading: isBusinessServiceLoading, data: businessServiceData } = Digit.Hooks.useCustomAPIHook({
@@ -195,7 +192,6 @@ const PGRDetails = () => {
 
   // Prepare and submit the update complaint request
   const handleActionSubmit = (_data) => {
-    console.log("999 action submit data", _data, "selectedAction", selectedAction);
     const actionConfig = ACTION_CONFIGS.find((config) => config.actionType === selectedAction.action);
 
   if (!actionConfig) return;
@@ -238,7 +234,7 @@ const PGRDetails = () => {
         hrmsAssignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         comments: _data?.SelectedComments || "",
         // Include documents array if complaint file is provided
-        verificationDocument: _data?.complaintFile ? _data.complaintFile : null
+        verificationDocuments: _data?.complaintFile ? [_data.complaintFile] : null
       },
     };
     handleResponseForUpdateComplaint(updateRequest);
@@ -297,7 +293,6 @@ const PGRDetails = () => {
   const getNextActionOptions = (workflowData, businessServiceResponse) => {
     const currentState = workflowData?.ProcessInstances?.[0]?.state;
     const matchingState = businessServiceResponse?.states?.find((state) => state.uuid === currentState?.uuid);
-    console.log("999 matchingState", matchingState, currentState, businessServiceResponse);
     if (!matchingState) return [];
     const userRoles = userInfo?.info?.roles?.map((role) => role.code) || [];
     return matchingState.actions

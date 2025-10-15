@@ -1,9 +1,7 @@
 import axios from "axios";
 
 export const downloadPdfWithCustomName = ({ fileStoreId = null, customName = null }) => {
-console.log("999 downloadPdfWithCustomName",fileStoreId,customName)
   const downloadPdf = (blob, fileName) => {
-    console.log("999 blob filename",blob,fileName)
     const link = document.createElement("a");
     link.href = URL.createObjectURL(blob);
     link.download = fileName + ".pdf"; // Always ends with .pdf
@@ -14,7 +12,6 @@ console.log("999 downloadPdfWithCustomName",fileStoreId,customName)
   };
 
   if (fileStoreId) {
-    console.log("999 filestoreid",fileStoreId)
     axios
       .get("/filestore/v1/files/id", {
         responseType: "arraybuffer",

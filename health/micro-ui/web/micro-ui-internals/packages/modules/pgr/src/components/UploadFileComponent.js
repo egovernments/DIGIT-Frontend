@@ -13,8 +13,6 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   const user = Digit.UserService.getUser();
   const timestamp = new Date().getTime();
 
-  console.log("999 config", config);
-
   useEffect(() => {
     (async () => {
       setError(null);
@@ -30,7 +28,6 @@ const UploadedFileComponent = ({ config, onSelect }) => {
             }
 
             const response = await Digit.UploadServices.Filestorage("property-upload", fileToUpload, tenantId);
-            console.log("999 response", response);
             if (response?.data?.files?.length > 0) {
               const uploaded = response?.data?.files[0];
               setUploadedFile(uploaded);
@@ -42,14 +39,12 @@ const UploadedFileComponent = ({ config, onSelect }) => {
                   createdTime: timestamp,
                   lastModifiedTime: timestamp
                 };
-                console.log("999 onSelect", config.key, uploaded, response);
                 onSelect(config.key, { ...uploaded, auditDetails });
               }
             } else {
               setError(t("CS_FILE_UPLOAD_ERROR"));
             }
           } catch (err) {
-            console.log("999 error", err);
             setError(t("CS_FILE_UPLOAD_ERROR"));
           }
         }
@@ -102,8 +97,6 @@ const UploadedFileComponent = ({ config, onSelect }) => {
       const fileData = fileStoreIds?.[0];
   
       if (fileData?.url) {
-        console.log("999 fileData", fileData);
-        
         // Get original file name and extension
         const originalName = uploadedFile?.name || "downloaded_file";
         const fileExtension = originalName.split('.').pop();
@@ -122,7 +115,6 @@ const UploadedFileComponent = ({ config, onSelect }) => {
       setError(t("CS_FILE_DOWNLOAD_ERROR"));
     }
   }
-  console.log("999 uploadedFile", uploadedFile);
 
   return (
     <Card>

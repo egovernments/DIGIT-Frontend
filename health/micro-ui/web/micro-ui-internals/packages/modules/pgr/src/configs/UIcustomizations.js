@@ -15,7 +15,6 @@ export const UICustomizations = {
 
   PGRInboxConfig: {
     preProcess: (data) => {
-      console.log("999 preProcess", data);
       data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.inbox.limit= data?.state?.tableForm?.limit;
@@ -111,7 +110,7 @@ export const UICustomizations = {
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
           return value && value?.length>0
-            ? <span>{t("WF_INBOX_ASSIGNED")}</span>: <span>{t("WF_INBOX_PENDING_ASSIGNMENT")}</span>;
+            ? <span>{t(`WF_INBOX_${value}`)}</span>: <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
           return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
