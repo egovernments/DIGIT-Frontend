@@ -159,7 +159,6 @@ const CreateComplaintForm = ({
     const updatedData = { ...formData };
   
     if (selectedUser === "MYSELF") {
-      console.log("user", user);
       updatedData.ComplainantName = user?.info?.userName || "";
       updatedData.ComplainantContactNumber = user?.info?.mobileNumber || "";
     } else if (selectedUser === "ANOTHER_USER") {
@@ -181,7 +180,6 @@ const CreateComplaintForm = ({
    * Handles form submission event
    */
   const onFormSubmit = (_data) => {
-    console.log("999 Form submit data", _data);
     const payload = formPayloadToCreateComplaint(_data, tenantId, user?.info);
     handleResponseForCreateComplaint(payload);
   };
@@ -190,7 +188,6 @@ const CreateComplaintForm = ({
    * Makes API call to create complaint and handles response
    */
   const handleResponseForCreateComplaint = async (payload) => {
-    console.log("999 payload", payload);
     await CreateComplaintMutation(payload, {
       onError: async () => {
         setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });

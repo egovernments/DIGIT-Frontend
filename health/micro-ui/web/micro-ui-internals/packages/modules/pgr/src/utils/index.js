@@ -186,7 +186,7 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
         },
         "geoLocation": {}
       },
-      "additionalDetail": JSON.stringify(additionalDetail),
+      "additionalDetail": additionalDetail,
       "auditDetails": {
         "createdBy": user?.uuid,
         "createdTime": timestamp,
