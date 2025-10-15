@@ -111,6 +111,11 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         flexDirection: "column",
       }}
     >
+      <style>{`
+        .sandbox-signup-form .label-container .info-icon:hover .infotext {
+          margin-left: -6.25rem !important;
+        }
+      `}</style>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
         {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
