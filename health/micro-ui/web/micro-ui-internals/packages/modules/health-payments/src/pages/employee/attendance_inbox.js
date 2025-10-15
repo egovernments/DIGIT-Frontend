@@ -39,7 +39,7 @@ const AttendanceInbox = () => {
   const location = useLocation();
 
   return (
-    <React.Fragment>
+    <div>
       <Header styles={{ fontSize: "28px" }}>
         {t("HCM_AM_ATTENDANCE_INBOX")}
       </Header>
@@ -48,7 +48,7 @@ const AttendanceInbox = () => {
       }}>
         <AttendanceInboxComponent></AttendanceInboxComponent>
       </div>}
-    </React.Fragment>
+    </div>
   );
 };
 

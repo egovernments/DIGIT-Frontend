@@ -190,7 +190,7 @@ const AttendanceInboxComponent = () => {
   };
 
   return (
-    <React.Fragment>
+    <div>
       <div className="custom-register-inbox-screen" style={{
         // "minHeight":"20%",
         // "maxHeight":"30%"
@@ -239,7 +239,7 @@ const AttendanceInboxComponent = () => {
           onClose={() => setShowToast(null)}
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 

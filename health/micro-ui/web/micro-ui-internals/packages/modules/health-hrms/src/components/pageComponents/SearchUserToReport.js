@@ -142,6 +142,7 @@ const SearchUserToReport = ({ boundaryCode, onClose, onSubmit }) => {
                                 }} onKeyPress={(e) => {
                                     if (e.key === "Enter") {
                                         e.preventDefault(); // prevent form submit if inside a form
+                                        setApiCall(true);
                                         searchUser(searchQuery, 0, rowsPerPage); // call your API
 
 

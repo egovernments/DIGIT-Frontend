@@ -181,7 +181,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           );
         },
         style: {
-          justifyContent: "flex-end",
+          justifyContent: "flex-start",
         },
       },
     )
