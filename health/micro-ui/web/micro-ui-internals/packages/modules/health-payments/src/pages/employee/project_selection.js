@@ -129,7 +129,7 @@ const ProjectSelect = () => {
                     </div>
                     {billScreen && selectedProject && (
                         <div className="label-pair">
-                            <div className="label-heading">
+                            <div className="">
                                 {t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")}
                                 <span className="required" style={{ color: "#b91900" }}> *</span>
                             </div>
