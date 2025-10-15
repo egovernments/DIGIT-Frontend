@@ -5,7 +5,8 @@ const RenderSelectionField = ({ field, t }) => {
   const isMdmsEnabled = field?.isMdms && !!field?.schemaCode;
 
   const { isLoading, data } = Digit?.Hooks.useCustomMDMS(
-    Digit?.ULBService?.getStateId(),
+    //Digit?.ULBService?.getStateId(),
+    Digit.ULBService.getCurrentTenantId(),
     field?.schemaCode?.split(".")[0],
     [{ name: field?.schemaCode?.split(".")[1] }],
     {

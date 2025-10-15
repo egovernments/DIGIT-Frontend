@@ -12,7 +12,8 @@ const SelectingBoundariesDuplicate = ({ onSelect, formData, ...props }) => {
   const history = useHistory();
   const isDraftCampaign = location.state?.isDraftCampaign;
   const queryParams = Digit.Hooks.useQueryParams();
-  const tenantId = Digit.ULBService.getStateId();
+  // const tenantId = Digit.ULBService.getStateId();
+  const tenantId = Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const hierarchyType = props?.props?.dataParams?.hierarchyType;
   const campaignNumber = searchParams.get("campaignNumber");

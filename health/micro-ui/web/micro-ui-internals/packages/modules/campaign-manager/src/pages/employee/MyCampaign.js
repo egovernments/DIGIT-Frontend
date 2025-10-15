@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
-import { myCampaignConfig } from "../../configs/myCampaignConfig";
+import { myCampaignConfigs } from "../../configs/myCampaignConfig";
 
 /**
  * The `MyCampaign` function is a React component that displays a header with a campaign search title
@@ -13,6 +13,8 @@ import { myCampaignConfig } from "../../configs/myCampaignConfig";
  * component is being passed props such as `configs`, `showTab`, `tabData`, and `onTabChange
  */
 const MyCampaign = () => {
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const myCampaignConfig = myCampaignConfigs(tenantId);
   const { t } = useTranslation();
   const history = useHistory();
   const [config, setConfig] = useState(myCampaignConfig?.myCampaignConfig?.[0]);
@@ -26,7 +28,7 @@ const MyCampaign = () => {
   };
 
   useEffect(() => {
-    
+
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_FORM_DATA");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_MANAGER_UPLOAD_ID");
     window.Digit.SessionStorage.del("HCM_CAMPAIGN_UPDATE_FORM_DATA");
@@ -64,8 +66,8 @@ const MyCampaign = () => {
         if (row?.parentId) {
           history.push(`/${window.contextPath}/employee/campaign/update-campaign?parentId=${row.parentId}&id=${row.id}&draft=${true}&campaignName=${row.campaignName}`);
         } else {
-          const baseUrl = `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=true&fetchBoundary=true&draftBoundary=true`; 
-          const hasPassedDates = row.startDate <= currentDate || row.endDate <= currentDate; 
+          const baseUrl = `/${window.contextPath}/employee/campaign/setup-campaign?id=${row.id}&draft=true&fetchBoundary=true&draftBoundary=true`;
+          const hasPassedDates = row.startDate <= currentDate || row.endDate <= currentDate;
           const finalUrl = hasPassedDates ? `${baseUrl}&date=true` : baseUrl;
           history.push(finalUrl);
         }

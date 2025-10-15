@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { InboxSearchComposer , Loader} from "@egovernments/digit-ui-components";
-import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
+import { myCampaignConfigNews } from "../../configs/myCampaignConfigNew";
 
 /**
  * The `MyCampaignNew` function is a React component that displays a header with a campaign search title
@@ -13,6 +13,10 @@ import { myCampaignConfigNew } from "../../configs/myCampaignConfigNew";
  */
 
 const MyCampaignNew = ({showDashboardLink}) => {
+
+  const tenantId= Digit.ULBService.getCurrentTenantId();
+
+  const myCampaignConfigNew=myCampaignConfigNews(tenantId);
   
   const { t } = useTranslation();
   const [config, setConfig] = useState(null);
