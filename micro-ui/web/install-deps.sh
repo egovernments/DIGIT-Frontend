@@ -47,29 +47,4 @@
       
   fi
 
-#   if [ -d "$INTERNALS" ]; then
-#       cd "$INTERNALS"
-#       echo "Branch: $(git branch --show-current 2>/dev/null || echo 'unknown')"
-#       echo "$(git log -1 --pretty=%B 2>/dev/null || echo 'No git log available')"
-
-#       if [ -f "package.json" ]; then
-#           echo "Installing packages and building..."
-#           yarn install
-#           yarn build
-#           echo "Cleaning node_modules in internals..."
-#           find . -name "node_modules" -type d -prune -print -exec rm -rf '{}' \;
-#       else
-#           echo "No package.json found in internals"
-#       fi
-
-#       cd ..
-#   fi
-
-#   echo "Cleaning up root directory..."
-#   rm -rf node_modules
-#   if [ -f "yarn.lock" ]; then
-#       rm -f yarn.lock
-#       echo "Removed yarn.lock"
-#   fi
-
   echo "Dependencies installation completed"
