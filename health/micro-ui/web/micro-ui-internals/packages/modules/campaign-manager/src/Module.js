@@ -185,13 +185,23 @@ const componentsToRegister = {
   HCMMyCampaignRowCard,
   MyCampaignNew,
   QRButton,
-EqualHeightWrapper,
-CampaignNameInfo
+  EqualHeightWrapper,
+  CampaignNameInfo
 
-  
+
 };
 
 const overrideHooks = () => {
+
+  // Save original method
+  const originalGetStateId = Digit.ULBService.getStateId();
+
+  // Override globally
+  window.Digit.ULBService.getStateId = () => {
+
+    return Digit.ULBService.getCurrentTenantId() || originalGetStateId;
+  };
+
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
       Object.keys(CustomisedHooks[ele]).map((hook) => {
