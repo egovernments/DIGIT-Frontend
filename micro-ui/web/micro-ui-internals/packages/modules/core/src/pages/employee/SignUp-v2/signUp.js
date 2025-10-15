@@ -7,7 +7,7 @@ import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
-  const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  // const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const [showToast, setShowToast] = useState(null);
@@ -144,7 +144,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     </div>
   );
 
-  if (isLoading || isStoreLoading) return <Loader />;
+  if (isStoreLoading) return <Loader />;
 
   if (isMobile) {
     // On mobile return only form section
