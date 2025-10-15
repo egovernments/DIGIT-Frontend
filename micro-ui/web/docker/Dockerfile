@@ -2,8 +2,10 @@ FROM node:14-alpine3.16 AS build
 RUN apk update
 RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
+ARG GIT_TOKEN
 WORKDIR /app
 ENV NODE_OPTIONS="--max-old-space-size=8168"
+ENV GIT_TOKEN=${GIT_TOKEN}
 
 COPY ${WORK_DIR} .
 RUN ls -lah

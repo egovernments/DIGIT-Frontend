@@ -6,15 +6,23 @@
 
   echo "Main Branch: $BRANCH"
 
+  STUDIO_REPO="DIGIT-Studio"
   INTERNALS="frontend/web/micro-ui-internals"
 
-  if [ ! -d "$INTERNALS" ]; then
+  if [ ! -d "$STUDIO_REPO" ]; then
       echo "Cloning DIGIT-Studio repository..."
       if [ -n "$GIT_TOKEN" ]; then
-          git clone -b STUDIO-UI-4 "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$INTERNALS"
+          git clone -b STUDIO-UI-4 "https://${GIT_TOKEN}@github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
       else
-          git clone -b STUDIO-UI-4 "https://github.com/egovernments/DIGIT-Studio.git" "$INTERNALS"
+          git clone -b STUDIO-UI-4 "https://github.com/egovernments/DIGIT-Studio.git" "$STUDIO_REPO"
       fi
+  fi
+  
+  # Check if the internals path exists in the cloned repo
+  if [ -d "$STUDIO_REPO/$INTERNALS" ]; then
+      INTERNALS="$STUDIO_REPO/$INTERNALS"
+  elif [ -d "$STUDIO_REPO" ]; then
+      INTERNALS="$STUDIO_REPO"
   fi
 
   if [ -f "$INTERNALS/example/src/UICustomizations.js" ]; then
