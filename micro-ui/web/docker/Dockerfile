@@ -4,7 +4,7 @@ RUN apk add --no-cache 'git>2.30.0'
 ARG WORK_DIR
 ARG GIT_TOKEN
 WORKDIR /app
-ENV NODE_OPTIONS="--max-old-space-size=8168"
+ENV NODE_OPTIONS="--max-old-space-size=8168 --max-http-header-size=81920"
 ENV GIT_TOKEN=${GIT_TOKEN}
 
 COPY ${WORK_DIR} .
@@ -25,8 +25,8 @@ RUN echo "Files in /app/web directory:" && ls -la
 # Install dependencies
 RUN yarn install
 
-# Build the project
-RUN yarn build:webpack
+# Build the project with increased timeout
+RUN timeout 1800 yarn build:webpack || (echo "Build failed or timed out" && exit 1)
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
