@@ -3,8 +3,9 @@ different types of campaigns - ongoing, completed, and drafts. Each campaign typ
 configuration with fields like campaign name, type, start date, end date, etc. The configurations
 also include API details for fetching data, UI styles, search result columns, pagination settings,
 and more. The object is exported for use in other parts of the codebase. */
-export const myCampaignConfig = {
-  tenantId: "mz",
+
+export const myCampaignConfigs =(tenantId)=>( {
+  tenantId: tenantId,
   moduleName: "commonCampaignUiConfig",
   showTab: true,
   myCampaignConfig: [
@@ -838,4 +839,4 @@ export const myCampaignConfig = {
       showAsRemovableTagsInMobile: true,
     },
   ],
-};
+});

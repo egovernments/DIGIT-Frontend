@@ -275,7 +275,7 @@ const HCMMyCampaignRowCard = ({ key, rowData, tabData }) => {
     url: "/project-factory/v1/project-type/cancel-campaign",
     body: {
       CampaignDetails: {
-        tenantId: Digit.ULBService.getStateId(),
+        tenantId: Digit.ULBService.getCurrentTenantId(),
         campaignId: rowData?.id,
       },
     },

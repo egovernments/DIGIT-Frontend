@@ -8,7 +8,8 @@ import TagComponent from "./TagComponent";
 
 const UpdateBoundaryWrapper = ({ onSelect, ...props }) => {
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getStateId();
+  // const tenantId = Digit.ULBService.getStateId();
+   const tenantId=Digit.ULBService.getCurrentTenantId();
   const searchParams = new URLSearchParams(location.search);
   const parentId = searchParams.get("parentId");
   const id = searchParams.get("id");

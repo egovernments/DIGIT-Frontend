@@ -18,7 +18,13 @@ function AddProducts({ stref, selectedDelivery, showToast, closeToast, selectedP
   const { t } = useTranslation();
   const oldSessionData = window.Digit.SessionStorage.get("HCM_CAMPAIGN_MANAGER_FORM_DATA");
   const { campaignData, dispatchCampaignData, filteredDeliveryConfig } = useContext(CycleContext);
-  const tenantId = Digit.ULBService.getStateId();
+  //const tenantId = Digit.ULBService.getStateId();
+
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  // console.log("stateID", tenantId);
+  // console.log("tenantIdcurrent", tenantIdcurrent);
+
+
   const updateSession = () => {
     const newData = {
       ...oldSessionData,
