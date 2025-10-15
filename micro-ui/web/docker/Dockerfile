@@ -30,7 +30,7 @@ RUN timeout 18000 yarn build:webpack || (echo "Build failed or timed out" && exi
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/digit-ui
+ENV WORK_DIR=/var/web/digit-studio
 
 RUN mkdir -p ${WORK_DIR}
 
