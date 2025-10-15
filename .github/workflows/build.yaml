@@ -167,9 +167,16 @@ jobs:
           username: ${{ env.DOCKER_USERNAME }}
           password: ${{ env.DOCKER_PASSWORD }}
 
+      - name: Configure Git for private repos
+        run: |
+          git config --global url."https://${{ secrets.GIT_TOKEN }}@github.com/".insteadOf "https://github.com/"
+        env:
+          GIT_TOKEN: ${{ secrets.GIT_TOKEN }}
+
       - name: Build image for ${{ matrix.arch }}
         run: |
           docker buildx build \
+            --build-arg GIT_TOKEN=${{ secrets.GIT_TOKEN }} \
             --platform ${{ matrix.platform }} \
             --build-arg WORK_DIR=${{ needs.resolve-config.outputs.work_dir }} \
             --file ${{ needs.resolve-config.outputs.dockerfile }} \
