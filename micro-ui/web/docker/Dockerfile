@@ -19,6 +19,9 @@ RUN ./install-deps.sh
 # Increase timeout before install (recommended for GitHub Actions)
 RUN yarn config set network-timeout 600000
 
+# List files before yarn install for debugging
+RUN echo "Files in /app/web directory:" && ls -la
+
 # Install dependencies
 RUN yarn install
 
