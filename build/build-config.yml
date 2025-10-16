@@ -74,12 +74,6 @@ config:
     - work-dir: health/micro-ui/
       dockerfile: health/micro-ui/web/health-dss/Dockerfile
       image-name: dashboard-ui   
-  
-  - name: builds/Digit-Frontend/health/pgr-ui
-    build:
-    - work-dir: health/micro-ui/
-      dockerfile: health/micro-ui/web/docker/Dockerfile
-      image-name: pgr-ui   
 
  # Others       
   - name: builds/Digit-Frontend/storybook-svg
