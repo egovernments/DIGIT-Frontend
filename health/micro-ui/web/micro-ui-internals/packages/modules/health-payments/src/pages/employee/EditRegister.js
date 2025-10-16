@@ -144,35 +144,43 @@ const EditRegister = ({ editAttendance = false }) => {
 
     function getUserAttendanceSummary(attendanceData, individualsData, t) {
 
-        const attendanceLogData = attendanceData.attendanceRegister[0].attendees.map((individualEntry) => {
-            const individualId = individualEntry.individualId;
-            const matchingIndividual = individualsData?.Individual?.find(
-                (individual) => individual.id === individualId
-            );
+        if (attendanceData.attendanceRegister[0].attendees == null || attendanceData.attendanceRegister[0].attendees.length == 0) {
+            return [];
+        }
+        else {
 
-            if (matchingIndividual) {
-                const userName = matchingIndividual.name?.givenName || t("NA");
-                const userId = matchingIndividual?.userDetails?.username || t("NA");
-                const userRole =
-                    t(matchingIndividual.skills?.[0]?.type) || t("NA");
-                // const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
-                const tag = individualEntry?.tag || "N/A";
-                const id = individualEntry.individualId || 0;
 
-                return [id, userName, userId, userRole, tag];
-            } else {
-                // Handle cases where no match is found in individualsData
-                return ["N/A", "Unknown", "N/A", "Unassigned", "N/A"];
-            }
-        });
 
-        const sortedData = [...attendanceLogData].sort((a, b) => {
-            const nameA = a[1].toLowerCase(); // Convert to lowercase for case-insensitive sorting
-            const nameB = b[1].toLowerCase();
-            return nameA.localeCompare(nameB);
-        });
+            const attendanceLogData = attendanceData.attendanceRegister[0].attendees.map((individualEntry) => {
+                const individualId = individualEntry.individualId;
+                const matchingIndividual = individualsData?.Individual?.find(
+                    (individual) => individual.id === individualId
+                );
 
-        return sortedData;
+                if (matchingIndividual) {
+                    const userName = matchingIndividual.name?.givenName || t("NA");
+                    const userId = matchingIndividual?.userDetails?.username || t("NA");
+                    const userRole =
+                        t(matchingIndividual.skills?.[0]?.type) || t("NA");
+                    // const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
+                    const tag = individualEntry?.tag || "N/A";
+                    const id = individualEntry.individualId || 0;
+
+                    return [id, userName, userId, userRole, tag];
+                } else {
+                    // Handle cases where no match is found in individualsData
+                    return ["N/A", "Unknown", "N/A", "Unassigned", "N/A"];
+                }
+            });
+
+            const sortedData = [...attendanceLogData].sort((a, b) => {
+                const nameA = a[1].toLowerCase(); // Convert to lowercase for case-insensitive sorting
+                const nameB = b[1].toLowerCase();
+                return nameA.localeCompare(nameB);
+            });
+
+            return sortedData;
+        }
     }
 
     // Populate attendanceSummary when AttendanceData changes
@@ -339,7 +347,7 @@ const EditRegister = ({ editAttendance = false }) => {
                             variation="secondary"
                         />
                     </div>
-                    {<EditAttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />}
+                    {<EditAttendanceManagementTable data={attendanceSummary||[]} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} editAction={false} />}
                 </Card>
 
 

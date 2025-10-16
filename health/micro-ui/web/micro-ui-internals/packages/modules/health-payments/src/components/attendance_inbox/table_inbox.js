@@ -167,9 +167,31 @@ const CustomInboxTable = ({
   }
 
   const handleRowClick = (row) => {
-    history.push(
-      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
-    );
+
+    const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+    const endDate = existingPaymentInbox?.selectedProject?.endDate;
+
+    if (endDate) {
+      const currentDate = Date.now();
+      if (!(currentDate <= endDate)) {
+        history.push(
+          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+        );
+      } else {
+        history.push(
+          `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+        );
+      }
+    } else {
+      console.warn("No endDate found in session storage");
+      history.push(
+        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+      );
+    }
+
+    // history.push(
+    //   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+    // );
   };
 
   useEffect(() => {
@@ -187,7 +209,7 @@ const CustomInboxTable = ({
           <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
         ) : (
           <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
-            
+
             {/* Fixed Tab Section */}
             <div
               style={{
