@@ -47,7 +47,8 @@
     "safe-buffer": "^5.2.1",
     "shpjs": "^4.0.4",
     "uuid": "^9.0.1",
-    "xlsx": "0.17.5"
+    "xlsx": "0.17.5",
+    "jspdf": "^2.5.2"
   },
   "license": "MIT",
   "keywords": [
