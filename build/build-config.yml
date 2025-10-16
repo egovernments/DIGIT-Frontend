@@ -75,10 +75,10 @@ config:
       dockerfile: health/micro-ui/web/health-dss/Dockerfile
       image-name: dashboard-ui   
   
-  - name: builds/Digit-Frontend/health/pgr
+  - name: builds/Digit-Frontend/health/pgr-ui
     build:
     - work-dir: health/micro-ui/
-      dockerfile: micro-ui/web/docker/Dockerfile
+      dockerfile: health/micro-ui/web/docker/Dockerfile
       image-name: pgr-ui   
 
  # Others       
