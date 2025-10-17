@@ -133,6 +133,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
+                        order: j.fields.length + 1,
                         active: true,
                         deleteFlag: true,
                       },
