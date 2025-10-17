@@ -6,7 +6,7 @@ import { getFieldMaster } from "./redux/fieldMasterSlice";
 import { getFieldPanelMaster } from "./redux/fieldPanelPropertiesSlice";
 import { fetchLocalization, fetchAppScreenConfig, setLocalizationData, updateLocalizationEntry } from "./redux/localizationSlice";
 import { Header } from "@egovernments/digit-ui-react-components";
-import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput } from "@egovernments/digit-ui-components";
+import { Button, Dropdown, LabelFieldPair, Loader, PopUp, Tag, TextBlock, TextInput, Toast } from "@egovernments/digit-ui-components";
 import IntermediateWrapper from "./IntermediateWrapper";
 import { useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
@@ -35,15 +35,62 @@ const AppConfigurationWrapper = ({
   const [newFieldType, setNewFieldType] = useState(null);
   const [isLoadingPageConfig, setIsLoadingPageConfig] = useState(true);
   const [pageConfigError, setPageConfigError] = useState(null);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [showToast, setShowToast] = useState(null);
 
   // Redux selectors
-  const { currentData, showAddFieldPopup } = useSelector((state) => state.remoteConfig);
+  const { currentData, showAddFieldPopup, responseData } = useSelector((state) => state.remoteConfig);
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
   console.log("currentDatacurrentData", currentData);
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
+
+  // Handle MDMS update when next button is clicked
+  const handleUpdateMDMS = async () => {
+    if (!responseData || !currentData) {
+      console.error("Missing responseData or currentData for MDMS update");
+      return;
+    }
+
+    try {
+      setIsUpdating(true);
+
+      // Prepare the payload - use responseData structure but replace data with currentData
+      const updatePayload = {
+        Mdms: {
+          id: responseData.id,
+          tenantId: responseData.tenantId,
+          schemaCode: responseData.schemaCode,
+          uniqueIdentifier: responseData.uniqueIdentifier,
+          data: currentData, // Replace with updated config
+          isActive: responseData.isActive,
+          auditDetails: responseData.auditDetails,
+        },
+      };
+
+      console.log("MDMS Update Payload:", updatePayload);
+
+      // Make the update call
+      const response = await Digit.CustomService.getResponse({
+        url: `/mdms-v2/v2/_update/${MODULE_CONSTANTS}.AppConfigCache`,
+        body: updatePayload,
+      });
+
+      console.log("MDMS Update Response:", response);
+
+      if (response) {
+        // Show success message
+        setShowToast({ key: "success", label: "CONFIGURATION_UPDATED_SUCCESSFULLY" });
+      }
+    } catch (error) {
+      console.error("Error updating MDMS:", error);
+      setShowToast({ key: "error", label: "CONFIGURATION_UPDATE_FAILED" });
+    } finally {
+      setIsUpdating(false);
+    }
+  };
 
   // Handle adding new field
   const handleAddNewField = () => {
@@ -104,10 +151,12 @@ const AppConfigurationWrapper = ({
 
         if (response?.mdms && response.mdms.length > 0) {
           const pageConfig = response.mdms[0].data;
-          console.log("Page Config from MDMS:", pageConfig);
+          const responseData = response.mdms[0]; // Store full MDMS response for updates
+          console.log("Page Config from MDMS:", pageConfig, responseData);
+          console.log("Response Data from MDMS:", responseData);
 
           // Initialize config with the fetched data
-          dispatch(initializeConfig(pageConfig));
+          dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
           setPageConfigError("No page configuration found");
           console.error("No page configuration found for:", { flow, pageName, campaignNumber });
@@ -170,6 +219,14 @@ const AppConfigurationWrapper = ({
     }
   }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale]);
 
+  // Auto-close toast after 10 seconds
+  useEffect(() => {
+    if (showToast) {
+      const timer = setTimeout(() => setShowToast(null), 10000);
+      return () => clearTimeout(timer);
+    }
+  }, [showToast]);
+
   if (isLoadingPageConfig || !currentData || (localeModule && localizationStatus === "loading")) {
     return <Loader />;
   }
@@ -184,9 +241,11 @@ const AppConfigurationWrapper = ({
   }
 
   const handleFieldChange = (value) => {
+    // Generate unique localization code: campaignNumber_flow_pageName_uuid
     const locVal = newFieldType?.label
       ? newFieldType?.label
-      : `${showAddFieldPopup?.currentCard?.flow}_${showAddFieldPopup?.currentCard?.name}_newField_${Date.now()}`;
+      : `${campaignNumber}_${flow}_${pageName}_${crypto.randomUUID()}`.toUpperCase();
+
     dispatch(
       updateLocalizationEntry({
         code: locVal,
@@ -201,7 +260,7 @@ const AppConfigurationWrapper = ({
   };
   return (
     <React.Fragment>
-      <IntermediateWrapper />
+      <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} />
       {showAddFieldPopup && (
         <PopUp
           className={"add-field-popup"}
@@ -269,6 +328,13 @@ const AppConfigurationWrapper = ({
             </div>
           </div>
         </PopUp>
+      )}
+      {showToast && (
+        <Toast
+          type={showToast?.key === "error" ? "error" : "success"}
+          label={t(showToast?.label)}
+          onClose={() => setShowToast(null)}
+        />
       )}
     </React.Fragment>
   );

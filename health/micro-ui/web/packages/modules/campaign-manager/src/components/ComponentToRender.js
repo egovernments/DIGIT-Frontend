@@ -24,12 +24,12 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
       config={{
         step: "",
       }}
-      description={field?.isMdms ? t(field?.helpText) : field?.helpText || null}
-      error={field?.isMdms ? t(field?.errorMessage) : field?.errorMessage || null}
-      infoMessage={field?.isMdms ? t(field?.tooltip) : field?.tooltip || null}
-      label={field?.label}
+      description={field?.isMdms ? t(field?.helpText) : customT(field?.helpText) || null}
+      error={field?.isMdms ? t(field?.errorMessage) : customT(field?.errorMessage) || null}
+      infoMessage={field?.isMdms ? t(field?.tooltip) : customT(field?.tooltip) || null}
+      label={customT(field?.label)}
       onChange={function noRefCheck() {}}
-      placeholder={t(field?.innerLabel) || ""}
+      placeholder={customT(field?.innerLabel) || ""}
       populators={{
         prefix: field?.prefixText || null,
         suffix: field?.suffixText || null,

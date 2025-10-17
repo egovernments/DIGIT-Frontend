@@ -8,6 +8,7 @@ const remoteConfigSlice = createSlice({
     remoteData: null,
     parentData: [],
     pageType: "object", // "object" or "template"
+    responseData: null, // Store full MDMS response for updates
     // Drawer state for field selection and editing
     selectedField: null,
     selectedFieldPath: { cardIndex: null, fieldIndex: null }, // Store field path for O(1) updates
@@ -18,15 +19,17 @@ const remoteConfigSlice = createSlice({
   },
   reducers: {
     initializeConfig(state, action) {
-      const pageConfig = action.payload;
+      const { pageConfig, responseData } = action.payload;
       if (pageConfig) {
         state.remoteData = pageConfig;
         state.currentData = pageConfig;
         state.pageType = pageConfig.type || "object"; // Extract pageType from config
+        state.responseData = responseData || null; // Store full MDMS response
       } else {
         state.remoteData = dummyConfig;
         state.currentData = dummyConfig || {};
         state.pageType = dummyConfig?.type || "object";
+        state.responseData = null;
       }
     },
     setRemoteData(state, action) {

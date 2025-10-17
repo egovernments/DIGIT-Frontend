@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
+import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
 
 const FullConfigWrapper = () => {
   const { t } = useTranslation();
@@ -79,6 +80,54 @@ const FullConfigWrapper = () => {
     setSelectedPageName(page.name);
   };
 
+  const saveToAppConfig = async () => {
+    try {
+      const response = await Digit.CustomService.getResponse({
+        url: "/mdms-v2/v2/_search",
+        body: {
+          MdmsCriteria: {
+            tenantId: "mz",
+            schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
+            filters: {
+              project: "CMP-2025-08-04-004846",
+            },
+            isActive: true,
+          },
+        },
+      });
+
+      const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
+      const transformedData = transformMdmsToAppConfig(fullData);
+      console.log("Transformed App Config:", fullData, transformedData);
+
+      // Loop through transformed data and create MDMS records
+      for (const configObj of transformedData) {
+        const payload = {
+          Mdms: {
+            tenantId: "mz",
+            schemaCode: "HCM-ADMIN-CONSOLE.NewAppConfig",
+            uniqueIdentifier: `${configObj.project}.${configObj.name}`,
+            data: configObj,
+            isActive: true
+          }
+        };
+
+        try {
+          const createResponse = await Digit.CustomService.getResponse({
+            url: "/mdms-v2/v2/_create",
+            body: payload,
+          });
+          console.log(`Created app config for ${configObj.name}:`, createResponse);
+        } catch (error) {
+          console.error(`Failed to create app config for ${configObj.name}:`, error);
+        }
+      }
+
+      console.log("All app configs created successfully!");
+    } catch (error) {
+      console.error("Error in saveToAppConfig:", error);
+    }
+  };
   // Show loader while fetching data
   if (isLoading) {
     return (
@@ -317,8 +366,13 @@ const FullConfigWrapper = () => {
               opacity: !nextRoute ? 0.3 : 1,
               cursor: !nextRoute ? "not-allowed" : "pointer",
             }}
-            onClick={() => {
+            onClick={async () => {
               if (nextRoute) {
+                // Call MDMS update if available
+                if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+                  await window.__appConfig_onNext();
+                }
+                // Navigate to next page
                 setSelectedPageName(nextRoute);
               }
             }}
@@ -348,7 +402,7 @@ const FullConfigWrapper = () => {
           isSuffix={true}
           onClick={() => {
             // Handle proceed to preview
-            console.log("Proceeding to preview with config:", flowConfig);
+            saveToAppConfig();
           }}
         />
       </div>
