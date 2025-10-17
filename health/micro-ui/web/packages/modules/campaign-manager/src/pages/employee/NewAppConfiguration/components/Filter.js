@@ -26,7 +26,7 @@ const Filter = ({ field, t }) => {
       }}
     >
       <FilterIcon />
-      <span className="digit-search-text">{t(field?.label) || "Filter"}</span>
+      <span className="digit-search-text">{t(field?.label)}</span>
       {field?.value && Array.isArray(field.value) && field.value.length > 0 && <RoundedLabel count={field.value.length} />}
     </div>
   );
