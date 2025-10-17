@@ -16,14 +16,15 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "";
   const language = Digit.StoreData.getCurrentLanguage();
   const currentTenant = Digit.ULBService.getCurrentTenantId();
+  stateCode=currentTenant;
   const { isLoading, data: store } = Digit.Services.useStore({
-    currentTenant,
-    // stateCode,
+   // currentTenant,
+    stateCode,
     moduleCode,
     language,
     modulePrefix,
   });
-
+  debugger;
   console.log(stateCode)
   console.log(currentTenant)
 
@@ -32,7 +33,7 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
   } else {
     return (
       <ProviderContext>
-        <EmployeeApp path={path} stateCode={currentTenant} userType={userType} tenants={tenants} />
+        <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
       </ProviderContext>
     );
   }
