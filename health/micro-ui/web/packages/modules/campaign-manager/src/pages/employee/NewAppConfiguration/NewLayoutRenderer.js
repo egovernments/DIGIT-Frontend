@@ -11,13 +11,14 @@ import { getFieldTypeFromMasterData } from "./helpers";
  * @returns {string|null} - Component name or null
  */
 const getComponentName = (field, fieldTypeMasterData) => {
+  console.log("getComponentName", { field, fieldTypeMasterData });  
   if (!field || !fieldTypeMasterData || fieldTypeMasterData.length === 0) {
     return null;
   }
 
   // Find matching field type config by type and format
   const fieldTypeConfig = fieldTypeMasterData.find(
-    (item) => item?.metadata?.type === field?.type && item?.metadata?.format === field?.format
+    (item) => item?.metadata?.type === field?.type && item?.metadata?.format === field?.format && item?.fieldType === field?.fieldName
   );
 
   return fieldTypeConfig?.component || null;
@@ -192,28 +193,54 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
 
   return (
     <MobileBezelFrame>
-      <div className="mobile-bezel-child-container">
-        <Card className="app-card" style={{}}>
+      <div className="mobile-bezel-child-container" style={{ 
+        display: "flex", 
+        flexDirection: "column", 
+        height: "100%",
+        position: "relative"
+      }}>
+        <Card className="app-card" style={{ 
+          flex: 1,
+          overflow: "auto",
+          paddingBottom: data?.footer?.length > 0 ? "80px" : "0"
+        }}>
           {/* RENDERING HEADER AND SUB-HEADING */}
           {data?.heading && <CardHeader>{t(data.heading)}</CardHeader>}
           {data?.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
           {/* RENDERING BODY */}
           {data?.body && renderSection(data.body, "body", fieldTypeMasterData, selectedField, t, onFieldClick, data)}
-
-          {/* RENDERING FOOTER */}
-          {data?.footer?.length > 0 &&
-            data.footer.map((footer_item, index) => (
-              <Button
-                key={index}
-                className="app-preview-action-button"
-                variation="primary"
-                label={t(footer_item?.label)}
-                title={t(footer_item?.label)}
-                onClick={() => {}}
-              />
-            ))}
         </Card>
+        
+        {/* RENDERING FOOTER */}
+        {data?.footer?.length > 0 && (
+          <div style={{
+            position: "absolute",
+            bottom: 60,
+            left: 0,
+            right: 0,
+            padding: "12px 16px",
+            backgroundColor: "#fff",
+            borderTop: "1px solid #e0e0e0",
+            display: "flex",
+            flexDirection: "column",
+            gap: "8px"
+          }}>
+            {data.footer.map((footer_item, index) => {
+              console.log("footer_item", {footer_item, index});
+              return (
+                <Button
+                  key={index}
+                  className="app-preview-action-button"
+                  variation={footer_item?.properties?.type || "primary"}
+                  label={t(footer_item?.label)}
+                  icon={footer_item?.properties?.icon || null}
+                  onClick={() => {}}
+                />
+              );
+            })}
+          </div>
+        )}
       </div>
     </MobileBezelFrame>
   );
