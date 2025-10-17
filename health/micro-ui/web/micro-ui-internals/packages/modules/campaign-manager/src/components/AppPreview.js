@@ -137,7 +137,7 @@ const getFieldType = (field) => {
       return "text";
     case "number":
       return "number";
-    case "textarea":
+    case "textArea":
       return "textarea";
     case "time":
       return "time";
@@ -232,6 +232,8 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                       placeholder={t(field?.innerLabel) || ""}
                       populators={{
                         t: field?.isMdms ? null : t,
+                        prefix: field?.prefixText,
+                        suffix: field?.suffixText,
                         title: field?.label,
                         fieldPairClassName: `app-preview-field-pair ${
                           selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
@@ -239,7 +241,7 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                             : selectedField?.id && selectedField?.id === field?.id
                             ? `app-preview-selected`
                             : ``
-                        }`,
+                        } ${field?.["toArray.required"] && getFieldType(field) !== "custom" ? `required` : ``}`,
                         mdmsConfig: field?.isMdms
                           ? {
                               moduleName: field?.schemaCode?.split(".")[0],
@@ -253,7 +255,6 @@ const AppPreview = ({ data = {}, selectedField, t }) => {
                             ? renderField(field, t)
                             : null,
                       }}
-                      required={getFieldType(field) === "custom" ? null : field?.["toArray.required"]}
                       type={getFieldType(field) === "button" || getFieldType(field) === "select" ? "custom" : getFieldType(field) || "text"}
                       value={field?.value === true ? "" : field?.value || ""}
                       disabled={field?.readOnly || false}
