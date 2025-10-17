@@ -1,8 +1,8 @@
 import React, { useMemo, useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
-import { Card, LoaderScreen, NoResultsFound } from "@egovernments/digit-ui-components";
+import { Card, NoResultsFound, Loader } from "@egovernments/digit-ui-components";
 import MyBillsSearch from "../../components/MyBillsSearch";
 import MyBillsTable from "../../components/MyBillsTable";
 import { defaultRowsPerPage } from "../../utils/constants";
@@ -89,22 +89,29 @@ const MyBills = () => {
 
 
     if (isBillLoading) {
-        return <LoaderScreen />
+        return <div style={{
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            height: "100vh"   // full screen height
+        }}>
+            <Loader />
+        </div>
     }
 
     return (
         <React.Fragment>
-            <Header styles={{ fontSize: "32px" }}>
+            {<Header styles={{ fontSize: "32px" }}>
                 {t("HCM_AM_MY_BILLS")}
-            </Header>
+            </Header>}
 
 
             <MyBillsSearch onSubmit={onSubmit} onClear={onClear} />
 
-            <Card>
+            {<Card>
                 {isFetching ? <Loader /> : tableData.length === 0 ? <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND_FOR_BILLS`)} /> : <MyBillsTable data={tableData} totalCount={totalCount} rowsPerPage={rowsPerPage} currentPage={currentPage} handlePageChange={handlePageChange}
                     handlePerRowsChange={handlePerRowsChange} />}
-            </Card>
+            </Card>}
 
         </React.Fragment>
     );

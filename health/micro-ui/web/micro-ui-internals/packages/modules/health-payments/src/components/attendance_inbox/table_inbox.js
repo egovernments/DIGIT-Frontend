@@ -1,6 +1,6 @@
 import { Button, Card, Loader, NoResultsFound, Tab, Toast } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
-import { Link, useHistory } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import DataTable from "react-data-table-component";
 import { CustomSVG } from "@egovernments/digit-ui-components";
@@ -31,7 +31,6 @@ const CustomInboxTable = ({
   const [showToast, setShowToast] = useState(null);
   const [data, setData] = useState(null);
 
-  // context path variables
   const musterRollContextPath = window?.globalConfigs?.getConfig("MUSTER_ROLL_CONTEXT_PATH") || "health-muster-roll";
 
   const searchMutation = Digit.Hooks.useCustomAPIMutationHook({
@@ -74,80 +73,84 @@ const CustomInboxTable = ({
 
   const columns = [
     {
-      name: (
-        <div className="custom-inbox-table-row">
-          {t("HCM_AM_ATTENDANCE_ID")}
-        </div>
-      ),
-      selector: (row) => {
-        return (
-          <span className="link" >
-            <Button
-              label={t(`${row.id}`)}
-              onClick={() =>
+      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ID")}</div>,
+      selector: (row) => (
+        <span className="link">
+          <Button
+            label={t(`${row.id}`)}
+            onClick={() => {
+              const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+              const endDate = existingPaymentInbox?.selectedProject?.endDate;
+
+              if (endDate) {
+                const currentDate = Date.now();
+                if (!(currentDate <= endDate)) {
+                  history.push(
+                    `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+                  );
+                } else {
+                  history.push(
+                    `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+                  );
+                }
+              } else {
+                console.warn("No endDate found in session storage");
                 history.push(
                   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
-                )
+                );
               }
-              title={t(`${row.id}`)}
-              variation="link"
-              size={"medium"}
-              style={{ minWidth: "unset" }}
-            />
-          </span>
-        );
-      },
+            }}
+            title={t(`${row.id}`)}
+            variation="link"
+            size={"medium"}
+            style={{ minWidth: "unset" }}
+          />
+        </span>
+      ),
     },
     {
       name: (
         <div className="custom-inbox-table-row">
-          {activeLink?.code == "PENDINGFORAPPROVAL" ? t("HCM_AM_ATTENDANCE_MARKED_BY") : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
+          {activeLink?.code === "PENDINGFORAPPROVAL"
+            ? t("HCM_AM_ATTENDANCE_MARKED_BY")
+            : t("HCM_AM_ATTENDANCE_APPROVED_BY")}
         </div>
       ),
-      selector: (row) => {
-        return (
-          <div className="ellipsis-cell" title={activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy
-            || t("NA")}>
-            {activeLink?.code == "PENDINGFORAPPROVAL" ? row?.markby : row?.approvedBy || t("NA")}
-          </div>
-        );
-      },
-    },
-    {
-      name: (
-        <div className="custom-inbox-table-row">
-          {t("HCM_AM_ATTENDANCE_BOUNDARY")}
+      selector: (row) => (
+        <div
+          className="ellipsis-cell"
+          title={
+            activeLink?.code === "PENDINGFORAPPROVAL"
+              ? row?.markby
+              : row?.approvedBy || t("NA")
+          }
+        >
+          {activeLink?.code === "PENDINGFORAPPROVAL"
+            ? row?.markby
+            : row?.approvedBy || t("NA")}
         </div>
       ),
-      selector: (row) => {
-        return (
-          <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
-            {t(row.boundary) || t("NA")}
-          </div>
-        );
-      },
     },
-
     {
-      name: activeLink.code === "APPROVED" ? (
-        <div className="custom-inbox-table-row">
-          {t("HCM_AM_ATTENDANCE_ATTENDEES")}
+      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_BOUNDARY")}</div>,
+      selector: (row) => (
+        <div className="ellipsis-cell" title={t(row?.boundary) || t("NA")}>
+          {t(row.boundary) || t("NA")}
         </div>
-      ) : t("HCM_AM_ATTENDANCE_ATTENDEES"),
-      selector: (row) => {
-        return (
-          <div className="ellipsis-cell" title={t(row?.status || "0")}>
-            {t(row?.status || "0")}
-          </div>
-        );
-      },
-      style: {
-        justifyContent: "flex-end",
-      },
+      ),
+    },
+    {
+      name: <div className="custom-inbox-table-row">{t("HCM_AM_ATTENDANCE_ATTENDEES")}</div>,
+      selector: (row) => (
+        <div className="ellipsis-cell" title={t(row?.status || "0")}>
+          {t(row?.status || "0")}
+        </div>
+      ),
+      style: { justifyContent: "flex-end" },
     },
   ];
 
-  if (activeLink?.code == "APPROVED") {
+  if (activeLink?.code === "APPROVED") {
     columns.push({
       name: t("HCM_AM_COMMENT_LOGS"),
       selector: (row) => (
@@ -155,8 +158,7 @@ const CustomInboxTable = ({
           label={t("HCM_AM_VIEW_COMMENT_LOGS")}
           onClick={() => {
             triggerMusterRollSearch(row?.registerId);
-          }
-          }
+          }}
           variation="link"
           size={"medium"}
         />
@@ -165,9 +167,31 @@ const CustomInboxTable = ({
   }
 
   const handleRowClick = (row) => {
-    history.push(
-      `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
-    )
+
+    const existingPaymentInbox = Digit.SessionStorage.get("paymentInbox");
+    const endDate = existingPaymentInbox?.selectedProject?.endDate;
+
+    if (endDate) {
+      const currentDate = Date.now();
+      if (!(currentDate <= endDate)) {
+        history.push(
+          `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+        );
+      } else {
+        history.push(
+          `/${window?.contextPath}/employee/payments/edit-register?registerNumber=${row?.id}&boundaryCode=${row?.boundary}&registerId=${row?.registerId}`
+        );
+      }
+    } else {
+      console.warn("No endDate found in session storage");
+      history.push(
+        `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+      );
+    }
+
+    // history.push(
+    //   `/${window?.contextPath}/employee/payments/view-attendance?registerNumber=${row?.id}&boundaryCode=${row?.boundary}`
+    // );
   };
 
   useEffect(() => {
@@ -178,13 +202,25 @@ const CustomInboxTable = ({
 
   return (
     <React.Fragment>
-      <Card style={{ gap: "1.5rem", maxHeight: "80vh" }}>
+      <Card style={{ gap: "1.5rem", height: "80vh", display: "flex", flexDirection: "column" }}>
         <div className="summary-sub-heading">{t(selectedProject?.name)}</div>
-        {
-          !tableData ? (
-            <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
-          ) : (
-            <div>
+
+        {!tableData ? (
+          <NoResultsFound text={t(`HCM_AM_NO_DATA_FOUND`)} />
+        ) : (
+          <div style={{ display: "flex", flexDirection: "column", height: "100%", overflow: "hidden" }}>
+
+            {/* Fixed Tab Section */}
+            <div
+              style={{
+                position: "sticky",
+                top: 0,
+                zIndex: 10,
+                background: "#fff",
+                paddingBottom: "0.5rem",
+                boxShadow: "0 2px 4px rgba(0, 0, 0, 0.1)",
+              }}
+            >
               <Tab
                 activeLink={activeLink?.code}
                 configItemKey="code"
@@ -193,55 +229,72 @@ const CustomInboxTable = ({
                 configNavItems={[
                   {
                     code: "PENDINGFORAPPROVAL",
-
-                    name: `${`${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`}`,
+                    name: `${t(`HCM_AM_PENDING_FOR_APPROVAL`)} (${statusCount?.PENDINGFORAPPROVAL})`,
                   },
                   {
                     code: "APPROVED",
-                    name: `${`${t(`HCM_AM_APPROVED`)} (${statusCount?.APPROVED})`}`,
+                    name: `${t(`HCM_AM_APPROVED`)} (${statusCount?.APPROVED})`,
                   },
                 ]}
-                navStyles={{}}
                 onTabClick={(e) => {
                   setActiveLink(e);
                   handleTabChange(e);
                 }}
                 setActiveLink={setActiveLink}
-                style={{}}
                 showNav={true}
               />
-              <Card style={{ maxWidth: "100%", overflow: "auto", margin: "0px", maxHeight: "64.5vh" }}>
-
-                {isLoading ? <Loader /> : tableData && tableData.length === 0 ? (
-                  <NoResultsFound style={{ height: "60vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
-                ) : (
-                  <DataTable
-                    columns={columns}
-                    className="search-component-table"
-                    data={tableData}
-                    progressPending={isLoading}
-                    progressComponent={<Loader />}
-                    pagination
-                    paginationServer
-                    customStyles={tableCustomStyle(true)}
-                    onRowClicked={handleRowClick}
-                    pointerOnHover
-                    paginationTotalRows={totalCount}
-                    onChangePage={handlePaginationChange}
-                    onChangeRowsPerPage={handleRowsPerPageChange}
-                    paginationPerPage={rowsPerPage}
-                    sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
-                    paginationRowsPerPageOptions={defaultPaginationValues}
-                    fixedHeader={true}
-                    fixedHeaderScrollHeight={"60vh"}
-                    paginationComponentOptions={getCustomPaginationOptions(t)}
-                  />
-                )}
-              </Card>
             </div>
-          )
-        }
+
+            {/* Scrollable Table Section */}
+            <div
+              style={{
+                flex: 1,
+                overflowY: "auto",
+                maxHeight: "70vh",
+                paddingRight: "0.5rem",
+              }}
+            >
+              {isLoading ? (
+                <div
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    height: "100%",
+                  }}
+                >
+                  <Loader />
+                </div>
+              ) : tableData && tableData.length === 0 ? (
+                <NoResultsFound style={{ height: "40vh" }} text={t(`HCM_AM_NO_DATA_FOUND`)} />
+              ) : (
+                <DataTable
+                  columns={columns}
+                  className="search-component-table"
+                  data={tableData}
+                  progressPending={isLoading}
+                  progressComponent={<Loader />}
+                  pagination
+                  paginationServer
+                  customStyles={tableCustomStyle(true)}
+                  onRowClicked={handleRowClick}
+                  pointerOnHover
+                  paginationTotalRows={totalCount}
+                  onChangePage={handlePaginationChange}
+                  onChangeRowsPerPage={handleRowsPerPageChange}
+                  paginationPerPage={rowsPerPage}
+                  sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+                  paginationRowsPerPageOptions={defaultPaginationValues}
+                  fixedHeader
+                  fixedHeaderScrollHeight="60vh"
+                  paginationComponentOptions={getCustomPaginationOptions(t)}
+                />
+              )}
+            </div>
+          </div>
+        )}
       </Card>
+
       {commentLogs && (
         <CommentPopUp
           onClose={onCommentLogClose}
@@ -254,7 +307,6 @@ const CustomInboxTable = ({
           style={{ zIndex: 10001 }}
           label={showToast.label}
           type={showToast.key}
-          // error={showToast.key === "error"}
           transitionTime={showToast.transitionTime}
           onClose={() => setShowToast(null)}
         />

@@ -41,7 +41,7 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
       : [];
 
     const newOpts = {};
-    const newSel  = {};
+    const newSel = {};
 
     if (path.length) {
       // editing: pre-populate every level in path
@@ -72,10 +72,10 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
   const handleSelection = (node) => {
     if (!node) return;
     const type = node.boundaryType;
-    const idx  = levels.indexOf(type);
+    const idx = levels.indexOf(type);
 
     const opts = { ...optionsByType };
-    const sel  = { ...selectedByType, [type]: { ...node, hierarchyType: hierarchy.hierarchyType } };
+    const sel = { ...selectedByType, [type]: { ...node, hierarchyType: hierarchy.hierarchyType } };
 
     // clear deeper levels
     for (let i = idx + 1; i < levels.length; i++) {
@@ -93,7 +93,19 @@ const BoundaryComponent = ({ t, config, onSelect, formData, index, hierarchy }) 
     onSelect(config.key, sel[type]);
   };
 
-  if (isLoading) return <Loader />;
+  if (isLoading) {
+    return <div
+      style={{
+        display: "flex",
+        justifyContent: "center",  // horizontal center
+        alignItems: "center",      // vertical center
+        height: "100vh",           // take full viewport height
+        width: "100%",             // full width
+      }}
+    >
+      {<Loader />}
+    </div>;
+  }
 
   return (
     <LabelFieldPair>

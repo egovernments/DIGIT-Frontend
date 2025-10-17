@@ -44,6 +44,12 @@ const Urls = {
     createStaff: `/${projectContextPath}/staff/v1/_create`,
     deleteStaff: `/${projectContextPath}/staff/v1/_delete`,
   },
+
+
+  attendee:{
+    deenrollAttendee:`/health-attendance/attendee/v1/_delete`,
+     search: `/health-individual/v1/_search`,
+  }
 };
 
 export default Urls;

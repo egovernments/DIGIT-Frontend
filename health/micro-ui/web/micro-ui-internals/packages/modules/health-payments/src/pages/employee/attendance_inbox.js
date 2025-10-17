@@ -39,14 +39,16 @@ const AttendanceInbox = () => {
   const location = useLocation();
 
   return (
-    <React.Fragment>
-      <Header styles={{ fontSize: "32px" }}>
+    <div>
+      <Header styles={{ fontSize: "28px" }}>
         {t("HCM_AM_ATTENDANCE_INBOX")}
       </Header>
-      <div className="inbox-search-wrapper">
+      {<div className="inbox-search-wrapper" style={{
+        height:"160px"
+      }}>
         <AttendanceInboxComponent></AttendanceInboxComponent>
-      </div>
-    </React.Fragment>
+      </div>}
+    </div>
   );
 };
 
