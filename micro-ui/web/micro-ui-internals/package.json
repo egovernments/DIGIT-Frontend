@@ -84,7 +84,8 @@
     "clean-dist:workbench": "cd packages/modules/workbench && rm -rf node_modules && rm -rf dist",
     "clean": "run-s clean:**",
     "clean-dist": "run-p clean-dist:**",
-    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
+    "cleancmd": "find . \\( -name 'node_modules' -o -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +",
+    "cleandist": "find . \\( -name 'dist' -o -name 'build' \\) -type d -prune -exec rm -rf '{}' +"
   },
   "resolutions": {
     "**/@babel/runtime": "7.20.1",

@@ -185,14 +185,24 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     setDisable(hasEmptyFields);
   };
 
+  const updatedConfig = config.map(section => ({
+  ...section,
+  body: section.body.map(field =>
+    field.key === "check"
+      ? { ...field, isMandatory: true }
+      : field
+  ),
+}));
+
   const renderLoginForm = (extraClasses = "", cardClassName = "", wrapperClass = "") => (
+    console.log("updatedConfig", updatedConfig),
     <FormComposerV2
       onSubmit={loginOTPBased ? onOtpLogin : onLogin}
       isDisabled={isDisabled || disable}
       noBoxShadow
       inline
       submitInForm
-      config={config}
+      config={updatedConfig}
       label={propsConfig?.texts?.submitButtonLabel}
       secondaryActionLabel={
         propsConfig?.texts?.secondaryButtonLabel +
