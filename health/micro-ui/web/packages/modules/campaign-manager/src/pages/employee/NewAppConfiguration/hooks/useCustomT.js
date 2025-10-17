@@ -12,7 +12,7 @@ export const useCustomT = (code) => {
     }
 
     if (!Array.isArray(locState)) {
-      return "";
+      return ""; // Return empty string if locState not ready
     }
 
     const entry = locState.find((item) => item.code === code);
@@ -21,16 +21,16 @@ export const useCustomT = (code) => {
       // Get enabled modules from session storage
       const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
 
-      // Add the missing key to Redux store
+      // Add the missing key to Redux store with empty message
       dispatch(addMissingKey({ code, enabledModules }));
 
-      return ""; // Return empty string as placeholder
+      return ""; // Return empty string when entry not found
     }
 
     // Get current locale from Redux state or session storage as fallback
     const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
-    return entry[locale] || ""; // Return the message or fallback to empty string
+    return entry[locale] || ""; // Return the message or empty string
   }, [code, locState, currentLocale, dispatch]);
 
   return translatedValue;
@@ -48,7 +48,7 @@ export const useCustomTranslate = () => {
       }
 
       if (!Array.isArray(locState)) {
-        return "";
+        return ""; // Return empty string if locState not ready
       }
 
       const entry = locState?.find((item) => item.code === code);
@@ -57,16 +57,16 @@ export const useCustomTranslate = () => {
         // Get enabled modules from session storage
         const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
 
-        // Add the missing key to Redux store
+        // Add the missing key to Redux store with empty message
         dispatch(addMissingKey({ code, enabledModules }));
 
-        return ""; // Return empty string as placeholder
+        return ""; // Return empty string when entry not found
       }
 
       // Get current locale from Redux state or session storage as fallback
       const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
 
-      return entry[locale] || ""; // Return the message or fallback to empty string
+      return entry[locale] || ""; // Return the message or empty string
     },
     [dispatch, locState, currentLocale]
   );

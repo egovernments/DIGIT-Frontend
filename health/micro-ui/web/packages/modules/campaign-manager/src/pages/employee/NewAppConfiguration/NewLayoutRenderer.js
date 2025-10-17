@@ -96,7 +96,7 @@ const renderTemplateComponent = (field, fieldTypeMasterData, selectedField, t, o
       >
         <FieldV1
           type={fieldType}
-          label={field?.label}
+          label={t(field?.label)}
           value={field?.value || ""}
           placeholder={t(field?.innerLabel) || ""}
           onChange={() => {}}
