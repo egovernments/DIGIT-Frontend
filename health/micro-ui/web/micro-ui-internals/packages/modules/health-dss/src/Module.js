@@ -16,17 +16,15 @@ export const DSSModule = ({ stateCode, userType, tenants }) => {
   const modulePrefix = "";
   const language = Digit.StoreData.getCurrentLanguage();
   const currentTenant = Digit.ULBService.getCurrentTenantId();
-  stateCode=currentTenant;
+  stateCode = currentTenant;
   const { isLoading, data: store } = Digit.Services.useStore({
-   // currentTenant,
+    // currentTenant,
     stateCode,
     moduleCode,
     language,
     modulePrefix,
   });
-  debugger;
-  console.log(stateCode)
-  console.log(currentTenant)
+
 
   if (isLoading) {
     return <Loader className={"digit-center-loader"} />;

@@ -104,20 +104,18 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
   const tenant = Digit.ULBService.getCurrentTenantId();
-  
+
   stateCode = tenant;
 
   const { isLoading, data: store } = Digit.Services.useStore({
     //tenant,
-     stateCode,
+    stateCode,
     moduleCode,
     language,
     modulePrefix,
   });
 
-console.log("statecode",stateCode)
-console.log("current",tenant)
-  
+
 
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
