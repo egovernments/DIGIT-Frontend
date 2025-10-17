@@ -9,17 +9,24 @@ import DateRangePicker from "./components/DateRangePicker";
 import DSSCampaignRowCard from "./components/DSSCampaignRowCard";
 
 export const DSSModule = ({ stateCode, userType, tenants }) => {
+  debugger;
+
   const { path, url } = useRouteMatch();
   const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
   const moduleCode = ["hcm-campaignmanager","hcm-dss", `hcm-boundary-${hierarchyType}`,"rainmaker-hcm-dss"];
   const modulePrefix = "";
   const language = Digit.StoreData.getCurrentLanguage();
+  const tenant = Digit.ULBService.getCurrentTenantId();
   const { isLoading, data: store } = Digit.Services.useStore({
-    stateCode,
+    tenant,
+   // stateCode,
     moduleCode,
     language,
     modulePrefix,
   });
+
+  console.log(data)
+  console.log(store)
   if (isLoading) {
     return <Loader className={"digit-center-loader"}/>;
   } else {
@@ -39,6 +46,7 @@ const componentsToRegister = {
 };
 
 export const initDSSComponents = () => {
+  
   overrideHooks();
   updateCustomConfigs();
   Object.entries(componentsToRegister).forEach(([key, value]) => {
