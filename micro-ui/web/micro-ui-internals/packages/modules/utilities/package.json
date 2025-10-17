@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@cyntler/react-doc-viewer": "1.10.3",
-    "@egovernments/digit-ui-components":"0.2.0",
+    "@egovernments/digit-ui-components": "0.2.0-beta.66",
     "json-edit-react": "1.22.6",
     "@egovernments/digit-ui-react-components": "1.8.24",
     "axios": "^1.7.2",

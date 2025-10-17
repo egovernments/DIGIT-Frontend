@@ -159,7 +159,8 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
   let config = [{ body: propsConfig?.inputs }];
 
   const { mode } = Digit.Hooks.useQueryParams();
-  if (mode === "admin" && config?.[0]?.body?.[2]?.disable == false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
+
+  if (mode === "admin" && config?.[0]?.body?.[2]?.disable === false && config?.[0]?.body?.[2]?.populators?.defaultValue == undefined) {
     config[0].body[2].disable = true;
     config[0].body[2].isMandatory = false;
     config[0].body[2].populators.defaultValue = defaultValue;
@@ -184,14 +185,24 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
     setDisable(hasEmptyFields);
   };
 
+  const updatedConfig = config.map(section => ({
+  ...section,
+  body: section.body.map(field =>
+    field.key === "check"
+      ? { ...field, isMandatory: true }
+      : field
+  ),
+}));
+
   const renderLoginForm = (extraClasses = "", cardClassName = "", wrapperClass = "") => (
+    console.log("updatedConfig", updatedConfig),
     <FormComposerV2
       onSubmit={loginOTPBased ? onOtpLogin : onLogin}
       isDisabled={isDisabled || disable}
       noBoxShadow
       inline
       submitInForm
-      config={config}
+      config={updatedConfig}
       label={propsConfig?.texts?.submitButtonLabel}
       secondaryActionLabel={
         propsConfig?.texts?.secondaryButtonLabel +

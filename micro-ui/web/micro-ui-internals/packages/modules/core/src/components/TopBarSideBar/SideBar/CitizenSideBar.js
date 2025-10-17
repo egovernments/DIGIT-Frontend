@@ -102,6 +102,7 @@ export const CitizenSideBar = ({
       filteredArray = [];
     userloggedValues?.info?.roles?.forEach((role) => teantsArray.push(role.tenantId));
     let unique = teantsArray.filter((item, i, ar) => ar.indexOf(item) === i);
+    console.log("unique", unique);
     unique?.forEach((uniCode) => {
       filteredArray.push({
         label: t(`TENANT_TENANTS_${stringReplaceAll(uniCode, ".", "_")?.toUpperCase()}`),
@@ -302,7 +303,8 @@ export const CitizenSideBar = ({
   if (Digit.Utils.getMultiRootTenant()) {
     city = t(`TENANT_TENANTS_${tenantId}`);
   } else {
-    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`);
+    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.ULBService.getCurrentTenantId(), ".", "_")?.toUpperCase()}`);
+    // city = "TEST";
   }
   const goToHome = () => {
     if (isEmployee) {
