@@ -79,14 +79,12 @@ function NewDependentFieldWrapper({ t }) {
     const flowPagesStatus = useSelector((state) => state.flowPages.status);
     const pageConfigs = useSelector((state) => state.pageFields.byPage);
     const pageFieldsLoading = useSelector((state) => state.pageFields.loadingPages);
+    const moduleName = "HCM-ADMIN-CONSOLE";
+    const masterName = "AppFlowConfig";
 
     const flowId = currentData?.flow || "REGISTRATION";
     const campaignNumber = currentData?.project || "";
     const currentPageName = currentData?.page;
-
-    console.log("selectedField in dependent field wrapper", selectedField);
-    console.log("currentData in dependent field wrapper", currentData);
-    console.log("flowPages in dependent field wrapper", flowPages);
 
     // Fetch flows on mount or when campaign changes
     useEffect(() => {
@@ -94,6 +92,9 @@ function NewDependentFieldWrapper({ t }) {
             dispatch(fetchFlowPages({
                 tenantId,
                 campaignNumber,
+                flowId,
+                moduleName,
+                masterName,
             }));
         }
     }, [dispatch, flowPagesStatus, tenantId, campaignNumber]);

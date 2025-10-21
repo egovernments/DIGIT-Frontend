@@ -28,7 +28,6 @@ export const fetchPageFields = createAsyncThunk(
         },
       });
 
-      console.log(`Page Config MDMS Response for ${pageName}:`, response);
 
       if (response?.mdms && response.mdms.length > 0) {
         // Extract the complete page data from MDMS response

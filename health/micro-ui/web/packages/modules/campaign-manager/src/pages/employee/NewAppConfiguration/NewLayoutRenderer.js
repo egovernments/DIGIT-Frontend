@@ -11,7 +11,6 @@ import { getFieldTypeFromMasterData } from "./helpers";
  * @returns {string|null} - Component name or null
  */
 const getComponentName = (field, fieldTypeMasterData) => {
-  console.log("getComponentName", { field, fieldTypeMasterData });  
   if (!field || !fieldTypeMasterData || fieldTypeMasterData.length === 0) {
     return null;
   }
@@ -187,7 +186,6 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
  */
 const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   // Get field type master data from Redux
-  console.log("fields in  data in new layout renderer", data);
   const { byName } = useSelector((state) => state.fieldTypeMaster);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
@@ -219,7 +217,6 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
             bottom: 60,
             left: 0,
             right: 0,
-            padding: "12px 16px",
             backgroundColor: "#fff",
             borderTop: "1px solid #e0e0e0",
             display: "flex",
@@ -227,7 +224,6 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
             gap: "8px"
           }}>
             {data.footer.map((footer_item, index) => {
-              console.log("footer_item", {footer_item, index});
               return (
                 <Button
                   key={index}
