@@ -686,13 +686,10 @@ input[type="number"] {
 }
 .employee-app-wrapper {
   min-height: calc(100vh - 4em);
-  margin: 70px;
+/*  margin: 70px; */
 }
 
-.employee-app-wrapper.margin-fix {
-    margin: -2px;
-   }
-   
+
 
 .ws-custom-wrapper {
   .submit {
