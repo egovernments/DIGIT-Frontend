@@ -32,25 +32,29 @@ export const loginConfig = [
           error: "ERR_PASSWORD_REQUIRED",
         },
       },
-      {
-        isMandatory: true,
-        type: "dropdown",
-        key: "city",
-        label: "CORE_COMMON_CITY",
-        disable: false,
-        populators: {
-          name: "city",
-          optionsKey: "name",
-          error: "ERR_HRMS_INVALID_CITY",
-          mdmsConfig: {
-            masterName: "tenants",
-            moduleName: "tenant",
-            localePrefix: "TENANT_TENANTS",
-            select:
-              "(data)=>{ return Array.isArray(data['tenant'].tenants) && Digit.Utils.getUnique(data['tenant'].tenants).map(ele=>({code:ele.code,name:Digit.Utils.locale.getTransformedLocale('TENANT_TENANTS_'+ele.code)}))}",
+    {
+          "key": "city",
+          "type": "dropdown",
+          "label": "CORE_COMMON_CITY",
+          "disable": false,
+          "populators": {
+            "name": "city",
+            "error": "ERR_HRMS_INVALID_CITY",
+              
+          "required": true,
+
+          "options": [
+            {
+              code: "mz",
+              name: "TENANTS_TENANT_MZ"
+            },{
+              code: "in",
+              name: "TENANTS_TENANT_IN"
+            }],
+            "optionsKey": "name"
           },
+          "isMandatory": true
         },
-      },
       {
         key: "check",
         type: "component",
