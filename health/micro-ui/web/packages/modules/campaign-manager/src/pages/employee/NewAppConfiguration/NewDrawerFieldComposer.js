@@ -8,6 +8,7 @@ import { useCustomT } from "./hooks/useCustomT";
 import { getFieldTypeFromMasterData, getFieldValueByPath } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
+import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 
 const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
   const { t } = useTranslation();
@@ -17,6 +18,14 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState("");
+  // Local state for toggles to control UI without forcing Redux writes
+  const [localToggle, setLocalToggle] = useState(false);
+
+  // Keep local toggle in sync when selectedField changes from outside
+  useEffect(() => {
+    setLocalToggle(Boolean(getFieldValue()));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedField, panelItem.bindTo]);
   const debounceTimerRef = useRef(null);
 
   // Check if field should be visible based on field type
@@ -219,15 +228,45 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
   const renderMainField = () => {
     switch (panelItem.fieldType) {
-      case "toggle":
+      case "toggle": {
+        const bindTo = panelItem.bindTo;
+
+        const handleToggleChange = (value) => {
+          // always update local UI
+          setLocalToggle(Boolean(value));
+
+          // only write to Redux if the bindTo already exists AND has a value
+          // i.e., the user already persisted this setting earlier.
+          console.log("Handling toggle change for", bindTo, "with value", value , {panelItem, selectedField});
+          const existing = getFieldValueByPath(selectedField, bindTo, undefined);
+          console.log("Existing value is", existing);
+
+          if (existing !== undefined && existing !== null && existing !== "") {
+            // safe to update existing field
+            handleFieldChange(Boolean(value));
+          }
+          // else: do nothing — don't create new key/value
+        };
         return (
-          <Switch
-            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
-            onToggle={handleFieldChange}
-            isCheckedInitially={getFieldValue()}
-            shapeOnOff
-          />
+          <div>
+            <Switch
+              label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+              onToggle={handleToggleChange}
+              isCheckedInitially={localToggle}
+              shapeOnOff
+            />
+            {/* Render Conditional Fields */}
+            {localToggle && getConditionalFields().map((cField, index) => (
+              <ConditionalField
+                key={`${cField.bindTo}-${index}`}
+                cField={cField}
+                selectedField={selectedField}
+                onFieldChange={onFieldChange}
+              />
+            ))}
+          </div>
         );
+      }
 
       case "text":
         return (
@@ -402,10 +441,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   return (
     <div>
       {renderMainField()}
-      {/* Render conditional fields */}
-      {getConditionalFields().map((cField, index) => (
-        <ConditionalField key={`${cField.bindTo}-${index}`} cField={cField} selectedField={selectedField} onFieldChange={onFieldChange} />
-      ))}
     </div>
   );
 });
@@ -486,7 +521,6 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
                   );
                   onFieldChange({ ...selectedField, [cField.bindTo]: updated });
                 }}
-                // disabled={disabled}
               />
               <div
                 onClick={() => {
@@ -513,7 +547,6 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             size="small"
             variation="tertiary"
             label={t("ADD_OPTIONS")}
-            // disabled={disabled}
             onClick={() => {
               const newOption = { code: crypto.randomUUID(), name: "" };
               const updated = selectedField[cField.bindTo] ? [...selectedField[cField.bindTo], newOption] : [newOption];
@@ -542,6 +575,14 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
           />
         </div>
       );
+
+    case "dependencyFieldWrapper":
+      return (
+        <NewDependentFieldWrapper
+          t={t}
+        />
+      );
+
     default:
       return null;
   }
@@ -581,6 +622,8 @@ function NewDrawerFieldComposer() {
 
   // Get field type from field type master - using fixed key 'fieldTypeMappingConfig'
   const fieldType = useMemo(() => {
+    console.log("Calculating field type for:", selectedField);
+    console.log("Get from master data:", getFieldTypeFromMasterData(selectedField, fieldTypeMaster.fieldTypeMappingConfig));
     if (!selectedField || !fieldTypeMaster?.fieldTypeMappingConfig) {
       return selectedField?.type || "textInput";
     }
@@ -643,7 +686,12 @@ function NewDrawerFieldComposer() {
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         {visibleTabProperties.map((panelItem) => (
           <div key={panelItem.id} className="drawer-field-container">
-            <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
+            <RenderField
+              panelItem={panelItem}
+              selectedField={selectedField}
+              onFieldChange={handleFieldChange}
+              fieldType={fieldType}
+            />
           </div>
         ))}
 
