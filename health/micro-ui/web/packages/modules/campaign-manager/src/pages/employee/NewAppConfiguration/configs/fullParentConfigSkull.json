@@ -1,0 +1,99 @@
+{
+  "ResponseInfo": {
+    "apiId": null,
+    "ver": null,
+    "ts": null,
+    "resMsgId": "uief87324",
+    "msgId": null,
+    "status": "successful"
+  },
+  "mdms": [
+    {
+      "id": "99d2fced-16da-4af8-a2d0-7d65467962b7",
+      "tenantId": "mz",
+      "schemaCode": "HCM-ADMIN-CONSOLE.AppFlowConfig",
+      "uniqueIdentifier": "CMP-2025-08-04-004846",
+      "data": {
+        "flows": [
+          {
+            "id": "REGISTRATION",
+            "name": "Registration",
+            "order": 1,
+            "pages": [
+              {
+                "name": "SearchBeneficiary",
+                "order": 1,
+                "nextRoute": "beneficiaryLocation",
+                "previousRoute": null
+              },
+              {
+                "name": "beneficiaryLocation",
+                "order": 2,
+                "nextRoute": "householdDetails",
+                "previousRoute": "SearchBeneficiary"
+              },
+              {
+                "name": "householdDetails",
+                "order": 3,
+                "nextRoute": "beneficiaryDetails",
+                "previousRoute": "beneficiaryLocation"
+              },
+              {
+                "name": "beneficiaryDetails",
+                "order": 4,
+                "nextRoute": "HouseholdOverview",
+                "previousRoute": "householdDetails"
+              },
+              {
+                "name": "HouseholdOverview",
+                "order": 5,
+                "nextRoute": null,
+                "previousRoute": "beneficiaryDetails"
+              }
+            ],
+            "roles": ["ADMIN", "CAMPAIGN_MANAGER"],
+            "project": "CMP-2025-08-04-004846",
+            "indexRoute": "SearchBeneficiary"
+          },
+          {
+            "id": "DELIVERY",
+            "name": "Delivery",
+            "order": 2,
+            "pages": [
+              {
+                "name": "BeneficiaryDetails",
+                "order": 1,
+                "nextRoute": "DeliveryDetails",
+                "previousRoute": null
+              },
+              {
+                "name": "DeliveryDetails",
+                "order": 2,
+                "nextRoute": "HouseholdAcknowledgement",
+                "previousRoute": "BeneficiaryDetails"
+              },
+              {
+                "name": "HouseholdAcknowledgement",
+                "order": 3,
+                "nextRoute": null,
+                "previousRoute": "DeliveryDetails"
+              }
+            ],
+            "roles": ["ADMIN", "CAMPAIGN_MANAGER"],
+            "project": "CMP-2025-08-04-004846",
+            "indexRoute": "BeneficiaryDetails"
+          }
+        ],
+        "project": "CMP-2025-08-04-004846",
+        "version": 1
+      },
+      "isActive": true,
+      "auditDetails": {
+        "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+        "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+        "createdTime": 1760078480073,
+        "lastModifiedTime": 1760078480073
+      }
+    }
+  ]
+}
