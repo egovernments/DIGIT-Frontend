@@ -34,7 +34,6 @@ const setLocalTime = (baseDate, hours, minutes) => {
 export const enrolmentTimeWithSession = (sessionType, enrolmentEpoch) => {
 
 
-  debugger;
     // Convert epoch → Date (local)
     const enrolmentTime = new Date(enrolmentEpoch);
 

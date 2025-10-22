@@ -77,7 +77,7 @@ export const disableTimeWithSession = (sessionType, disableEpoch) => {
     const noon = setLocalTime(disableTime, 12, 0);
     const nextDay = new Date(disableTime);
     nextDay.setDate(nextDay.getDate() + 1);
-    debugger;
+
     if (sessionType === 0) {
         // Single session: 9AM–6PM
         if (disableTime < start9AM) {
