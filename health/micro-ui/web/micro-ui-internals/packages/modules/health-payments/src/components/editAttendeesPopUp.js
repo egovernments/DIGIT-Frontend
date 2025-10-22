@@ -8,10 +8,10 @@ import AttendeeService from "../services/attendance/attendee_service/attendeeSer
 
 import { useAttendanceSummary } from "../utils/update_attendance_summary";
 
-import SearchUserPopUp from "./SearchUserPopUp";
+// import SearchUserPopUp from "./SearchUserPopUp";
 
 
-const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registerId }) => {
+const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registerId ,sessionType}) => {
     const history = useHistory();
     // context path variables
     const attendanceContextPath =
@@ -240,6 +240,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
                             registerId={businessId}
                             registerNumber={registerId}
                             editAction={true}
+                            sessionType={sessionType}
                         />
                         <div style={{ display: "grid", gridTemplateColumns: `${labelWidth} auto`, rowGap: "5px", alignItems: "center" }}>
 
@@ -249,7 +250,7 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
 
 
 
-                                history.push(`/${window?.contextPath}/employee/payments/attendee-inbox?registerId=${registerId}&boundaryCode=${boundaryCode}`)
+                                history.push(`/${window?.contextPath}/employee/payments/attendee-inbox?registerId=${registerId}&boundaryCode=${boundaryCode}&sessionType=${sessionType}`)
                             }} />
                         </div>
 
@@ -268,12 +269,12 @@ const EditAttendeePopUp = ({ boundaryCode, onClose, businessId, heading, registe
             sortFooterChildren={true}
         />
         {
-            searchUserpopUp && <SearchUserPopUp
-                registerId={registerId}
-                boundaryCode={boundaryCode}
-                onClose={closeActionBarPopUp}
-                heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
-            />
+            // searchUserpopUp && <SearchUserPopUp
+            //     registerId={registerId}
+            //     boundaryCode={boundaryCode}
+            //     onClose={closeActionBarPopUp}
+            //     heading={`${t("HCM_AM_ATTENDANCE_ASSIGN_USER")}`}
+            // />
         }
 
 

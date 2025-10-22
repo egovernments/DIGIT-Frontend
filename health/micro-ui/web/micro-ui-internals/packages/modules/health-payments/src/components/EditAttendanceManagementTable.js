@@ -10,6 +10,7 @@ import { getCustomPaginationOptions } from "../utils";
 import AttendeeService from "../services/attendance/attendee_service/attendeeService";
 
 import AlertPopUp from "./alertPopUp";
+import { disableTimeWithSession } from "../utils/time_conversion";
 
 
 /**
@@ -118,37 +119,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       },
     },
 
-    // {
-    //   name: t("HCM_AM_ACTION"),
-    //   selector: (row) => {
-    //     return (
-    //       <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
-    //         {row?.[5] == false ? <Tag label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")} type="error" stroke={false} /> :
-    //           <Button
-    //             className="custom-class"
-    //             icon="Edit"
-    //             iconFill=""
-    //             label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
-    //             onClick={() => {
-    //               setSelectedRowId(row?.[0]);
-    //               setOpenAlertPopUp(true);
-    //               // handleDaysWorkedChange(row?.[0])
-    //             }}
-    //             options={[]}
-    //             optionsKey=""
-    //             size=""
-    //             style={{}}
-    //             title={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
-    //             variation="secondary"
-    //           />
-    //         }
-    //       </div>
-    //     );
-    //   },
-    //   style: {
-    //     justifyContent: "flex-end",
-    //   },
-    // },
+
   ];
 
   if (props.editAction) {
@@ -193,7 +164,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       registerId: props.registerNumber,
       individualId: value,
       enrollmentDate: null,
-      denrollmentDate: new Date(Date.now() - (1 * 60 * 1000 + 30 * 1000)).getTime(),
+      denrollmentDate: disableTimeWithSession(props.sessionType, new Date(Date.now()).getTime()),
       tenantId: String(tenantId)
     };
     await updateMapping({ "attendees": [attendee] },

@@ -5,11 +5,82 @@ import { DeleteIconv2, DownloadIcon, FileIcon, Button, Card, CardSubHeader, Edit
 import { Button as ButtonNew, Dropdown, Toast, Tag, Loader, FormComposerV2, PopUp, TextInput } from "@egovernments/digit-ui-components";
 import { useNavigate } from "react-router-dom";
 
+
 //create functions here based on module name set in mdms(eg->SearchProjectConfig)
 //how to call these -> Digit?.Customizations?.[masterName]?.[moduleName]
 // these functions will act as middlewares
 // var Digit = window.Digit || {};
 
+
+const setLocalTime = (baseDate, hours, minutes) => {
+    return new Date(
+        baseDate.getFullYear(),
+        baseDate.getMonth(),
+        baseDate.getDate(),
+        hours,
+        minutes,
+        0,
+        0
+    );
+};
+
+/**
+ * enrolmentTimeWithSession
+ * 
+ * @param {"single" | "multi"} sessionType - Type of session
+ * @param {number} enrolmentEpoch - Enrolment time in epoch milliseconds
+ * @returns {number} Epoch (ms) representing effective enrolment time
+ */
+export const enrolmentTimeWithSession = (sessionType, enrolmentEpoch) => {
+
+
+  debugger;
+    // Convert epoch → Date (local)
+    const enrolmentTime = new Date(enrolmentEpoch);
+
+    const start9AM = setLocalTime(enrolmentTime, 9, 0);
+    const noon = setLocalTime(enrolmentTime, 12, 0);
+    const nextDay = new Date(enrolmentTime);
+    nextDay.setDate(nextDay.getDate() + 1);
+
+    if (sessionType === "0") {
+        // Single session: 9AM - 6PM
+        if (enrolmentTime < start9AM) {
+            // before 9AM → 12:10 AM same day
+            return setLocalTime(enrolmentTime, 0, 10).getTime();
+        } else {
+            // after 9AM → 12:10 AM next day
+            return setLocalTime(nextDay, 0, 10).getTime();
+        }
+    }
+
+    if (sessionType === "2") {
+        // Multi session
+        // Session 1: 9AM–12PM
+        // Session 2: 12:01PM–6PM
+        if (enrolmentTime < noon) {
+            // Session 1
+            if (enrolmentTime < start9AM) {
+                // before 9AM → 12:10 AM same day
+                return setLocalTime(enrolmentTime, 0, 10).getTime();
+            } else {
+                // after 9AM → 11:55 AM same day
+                return setLocalTime(enrolmentTime, 11, 55).getTime();
+            }
+        } else {
+            // Session 2
+            // before 12PM → 11:55 AM same day
+            // after 12PM → 12:10 AM next day
+            if (enrolmentTime < noon) {
+                return setLocalTime(enrolmentTime, 11, 55).getTime();
+            } else {
+                return setLocalTime(nextDay, 0, 10).getTime();
+            }
+        }
+    }
+
+    return null;
+};
 
 const wrapTextStyle = {
   maxWidth: "15rem",
@@ -2719,7 +2790,7 @@ export const UICustomizations = {
       const [selectedId, setSelectedId] = useState(null);
       const [loading, setLoading] = useState(false);
       const { mutate: createMapping } = Digit.Hooks.payments.useCreateAttendeeFromRegister(tenantId);
-      const { registerNumber, boundaryCode, registerId } = Digit.Hooks.useQueryParams();
+      const { registerNumber, boundaryCode, registerId, sessionType } = Digit.Hooks.useQueryParams();
 
       const [tag, setTag] = useState("");
 
@@ -2738,13 +2809,13 @@ export const UICustomizations = {
               {
                 registerId: registerId,
                 individualId: row.id,
-                enrollmentDate: new Date().getTime(),
+                enrollmentDate: enrolmentTimeWithSession(sessionType, new Date().getTime()),
                 tenantId: row.tenantId,
 
               } : {
                 registerId: registerId,
                 individualId: row.id,
-                enrollmentDate: new Date().getTime(),
+                enrollmentDate: enrolmentTimeWithSession(sessionType, new Date().getTime()),
                 tenantId: row.tenantId,
                 tag: tag
               }]
