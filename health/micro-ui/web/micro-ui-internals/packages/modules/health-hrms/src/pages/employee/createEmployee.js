@@ -412,17 +412,7 @@ const CreateEmployee = ({ editUser = false }) => {
     : updatedConfig?.form;
 
   if (isHRMSSearchLoading || isHRMSConfigLoading) {
-    return <div
-      style={{
-        display: "flex",
-        justifyContent: "center",  // horizontal center
-        alignItems: "center",      // vertical center
-        height: "100vh",           // take full viewport height
-        width: "100%",             // full width
-      }}
-    >
-      {<Loader />}
-    </div>;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />
   }
 
   if (loading) {

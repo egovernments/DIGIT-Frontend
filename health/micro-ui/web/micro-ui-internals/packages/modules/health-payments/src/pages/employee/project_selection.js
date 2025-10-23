@@ -133,7 +133,7 @@ const ProjectSelect = () => {
                                 {t("HCM_AM_BILL_AGGREGATION_FOR_EMPLOYEE_MAPPED_AT")}
                                 <span className="required" style={{ color: "#b91900" }}> *</span>
                             </div>
-                            {<div className="label-text">
+                            <div className="label-text">
                                 <Dropdown
                                     t={t}
                                     option={filteredAggregationOptions}
@@ -142,12 +142,12 @@ const ProjectSelect = () => {
                                     selected={selectedLevel}
                                     select={handleAggregationLevelChange}
                                 />
-                            </div>}
+                            </div>
                         </div>
                     )}
                 </Card>
             </div>
-            {<ActionBar className="mc_back" style={{
+            <ActionBar className="mc_back" style={{
                 display: "flex", justifyContent: "space-between"
             }}>
 
@@ -169,7 +169,7 @@ const ProjectSelect = () => {
                     variation="primary"
                 />
 
-            </ActionBar>}
+            </ActionBar>
             {showToast && (
                 <Toast
                     style={{ zIndex: 10001 }}

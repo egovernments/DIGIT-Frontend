@@ -120,17 +120,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
 
   if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) {
 
-    return <div
-      style={{
-        display: "flex",
-        justifyContent: "center",  // horizontal center
-        alignItems: "center",      // vertical center
-        height: "100vh",           // take full viewport height
-        width: "100%",             // full width
-      }}
-    >
-      {<Loader />}
-    </div>;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
   return (
@@ -141,7 +131,7 @@ const HierarchySelection = ({ onHierarchyChosen }) => {
         </HeaderComponent>
         <p className="description-type">{t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}</p>
         <LabelFieldPair>
-          <div className="" style={{justifyContent:"center",marginTop:"6px"}}> 
+          <div className="" style={{ justifyContent: "center", marginTop: "6px" }}>
             <span>{t("HCM_HIERARCHY_TYPE")}</span>
             <span className="mandatory-span">*</span>
           </div>

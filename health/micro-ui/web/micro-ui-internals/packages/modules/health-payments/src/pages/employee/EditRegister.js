@@ -224,14 +224,9 @@ const EditRegister = ({ editAttendance = false }) => {
     /** -------------------- 🔹 LOADING STATE -------------------- **/
     if (loading || isAttendanceLoading || isIndividualsLoading || isAllIndividualsLoading) {
         return (
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-                height: "100vh"
-            }}>
-                <Loader />
-            </div>
+
+            <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+
         );
     }
 

@@ -26,55 +26,7 @@ const UserAssignment = ({ t, config, onSelect, formData, }) => {
 
     const [open, setOpen] = useState(false);
 
-    // const reqCri = {
-    //     url: `/health-individual/v1/_search`,
-    //     params: {
-    //         tenantId: tenantId,
-    //         limit: 4,
-    //         offset: 0,
-    //     },
-    //     body: {
-    //         Individual: {
-    //             roleCodes: ["PROXIMITY_SUPERVISOR"],
-    //             locality: {
-    //                 id: null,
-    //                 tenantId: null,
-    //                 code: boundaryCode,
-    //                 geometry: null,
-    //                 auditDetails: null,
-    //                 additionalDetails: null
-    //             }
-    //         }
-    //     },
-    //     config: {
-    //         enabled: true,
-    //         select: (data) => {
 
-    //             console.log("data", data);
-    //             return data.Individual;
-    //         },
-    //     },
-    // };
-    // // Fetch project staff details using custom API hook
-    // const { isLoading: isIndividualsLoading, data: individualData } = Digit.Hooks.useCustomAPIHook(reqCri);
-
-    // console.log("assignTo", individualData);
-
-
-    // useEffect(() => {
-    //     if (!individualData) return; // wait until data is available
-
-    //     const result = individualData.map(item => ({
-    //         code: item.id,
-    //         name: item.name?.givenName || null
-    //     }));
-    //     setOptions(result);
-    // }, [individualData]);
-
-
-    // if (isIndividualsLoading) {
-    //     return <Loader />
-    // }
 
 
     const seletctedValue = (value) => {

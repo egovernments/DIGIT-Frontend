@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
@@ -70,13 +70,7 @@ export const PaymentsModule = ({ stateCode, userType, tenants }) => {
   // }
 
   if (isLoading || isPaymentsModuleInitializing || isMDMSLoading) {
-    return <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      height: "100vh"
-    }}>
-      <Loader /></div>;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   } else {
     return (
       <ProviderContext>
