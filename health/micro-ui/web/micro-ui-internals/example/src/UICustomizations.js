@@ -55,7 +55,7 @@ export const enrolmentTimeWithSession = (sessionType, enrolmentEpoch) => {
 
   let effectiveDate;
 
-  if (sessionType === 0) {
+  if (sessionType === "0") {
     // Single session: 9AM - 6PM
     if (enrolmentTime < start9AM) {
       // before 9AM → 12:10 AM same day
@@ -64,7 +64,7 @@ export const enrolmentTimeWithSession = (sessionType, enrolmentEpoch) => {
       // after 9AM → 12:10 AM next day
       effectiveDate = setLocalTime(nextDay, 0, 10, 10);
     }
-  } else if (sessionType === 2) {
+  } else if (sessionType === "2") {
     // Multi session: 9AM–12PM, 12:01PM–6PM
     if (enrolmentTime < noon) {
       if (enrolmentTime < start9AM) {
