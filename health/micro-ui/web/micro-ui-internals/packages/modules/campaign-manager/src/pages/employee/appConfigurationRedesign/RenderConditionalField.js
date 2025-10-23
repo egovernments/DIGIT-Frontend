@@ -11,12 +11,8 @@ export const RenderConditionalField = ({
   setDrawerState,
   updateLocalization,
   state,
-  parentState,
   drawerState,
-  screenConfig,
   AppScreenLocalisationConfig,
-  handleExpressionChange,
-  selectedField,
   disabled,
 }) => {
   const { t } = useTranslation();

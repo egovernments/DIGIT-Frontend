@@ -633,7 +633,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                   })
                 }
               />
-              <DrawerFieldComposer parentState={parentState} screenConfig={screenConfig} selectedField={state?.drawerField}/>
+              <DrawerFieldComposer />
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
