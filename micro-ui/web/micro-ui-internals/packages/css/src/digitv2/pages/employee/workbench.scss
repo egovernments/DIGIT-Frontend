@@ -585,6 +585,12 @@
       cursor: pointer;
     }
   }
+
+  .module-cards-header,
+  .master-details-header{
+    display: flex;
+    justify-content:space-between
+  }
 .module-cards-grid,
 .master-cards-grid {
   display: flex;
@@ -1143,6 +1149,21 @@ background-color: #eaffee;
   font-size: 0.9rem;
   color: #555;
   line-height: 1.2rem;
+}
+
+.workbench {
+  .mdms-search-bar-container {
+    margin-bottom: 1rem;
+
+    .mdms-search-input{
+      width: 100%;
+    
+    }
+  }
+
+  .no-results-message{
+width: 100%;
+  }
 }
 
 

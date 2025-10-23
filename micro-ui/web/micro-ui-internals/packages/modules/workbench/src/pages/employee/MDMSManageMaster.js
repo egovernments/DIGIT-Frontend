@@ -118,7 +118,27 @@ const MDMSManageMaster = () => {
     setSelectedModule(null)
     setModuleOptions([])
     setShowModules(true)
+    setSearchQuery("")
   }
+
+  // Filter logic for modules and masters
+  const filteredModules = useMemo(() => {
+    if (!searchQuery) return masterOptions
+    return masterOptions?.filter(module => 
+      (module.translatedValue || module.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    )
+  }, [masterOptions, searchQuery])
+
+  const filteredMasters = useMemo(() => {
+    if (!searchQuery) return moduleOptions
+    return moduleOptions?.filter(master => 
+      (master.translatedValue || master.name || "")
+        .toLowerCase()
+        .includes(searchQuery.toLowerCase())
+    )
+  }, [moduleOptions, searchQuery])
   
   // useEffect(() => {
   //   if (currentSchema) {
@@ -175,9 +195,20 @@ const MDMSManageMaster = () => {
           <div className="module-cards-container">
             <div className="module-cards-header">
               <CardHeader>{t("WBH_SELECT_MODULE")}</CardHeader>
+              <div className="mdms-search-bar-container">
+                <TextInput
+                  type="text"
+                  placeholder={t("WBH_SEARCH_MODULES")}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="mdms-search-input"
+                  style={{ marginTop: "1rem" }}
+                />
+              </div>
             </div>
             <div className="module-cards-grid">
-              {masterOptions?.map((module, index) => (
+              {filteredModules?.length > 0 ? (
+                filteredModules.map((module, index) => (
                 <Card 
                   key={index} 
                   className="module-card clickable"
@@ -190,12 +221,16 @@ const MDMSManageMaster = () => {
                     {t("WBH_CLICK_TO_VIEW_MASTERS")}
                   </CardText>
                 </Card>
-              ))}
+                ))
+              ) : (
+                <div className="no-results-message">
+                  <CardText>{t("WBH_NO_MODULES_FOUND")}</CardText>
+                </div>
+              )}
             </div>
           </div>
         ) : (
           <div className="master-details-container">
-            <div className="master-details-header">
               <Button 
                 type="button" 
                 label={t("WBH_BACK_TO_MODULES")}
@@ -203,10 +238,23 @@ const MDMSManageMaster = () => {
                 onClick={handleBackToModules}
                 style={{marginBottom: "1rem"}}
               />
+            <div className="master-details-header">
+            
               <CardHeader>{selectedModule?.translatedValue || selectedModule?.name} - {t("WBH_MASTERS")}</CardHeader>
+              <div className="mdms-search-bar-container">
+                <TextInput
+                  type="text"
+                  placeholder={t("WBH_SEARCH_MASTERS")}
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="mdms-search-input"
+                  style={{ marginTop: "1rem" }}
+                />
+              </div>
             </div>
             <div className="master-cards-grid">
-              {moduleOptions?.map((master, index) => (
+              {filteredMasters?.length > 0 ? (
+                filteredMasters.map((master, index) => (
                 <Card 
                   key={index} 
                   className="master-card clickable"
@@ -219,7 +267,12 @@ const MDMSManageMaster = () => {
                     {t("WBH_CLICK_TO_MANAGE")}
                   </CardText>
                 </Card>
-              ))}
+                ))
+              ) : (
+                <div className="no-results-message">
+                  <CardText>{t("WBH_NO_MASTERS_FOUND")}</CardText>
+                </div>
+              )}
             </div>
           </div>
         )}
