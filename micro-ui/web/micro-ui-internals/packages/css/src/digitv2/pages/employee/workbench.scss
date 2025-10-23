@@ -585,6 +585,17 @@
       cursor: pointer;
     }
   }
+.module-cards-grid,
+.master-cards-grid {
+  display: flex;
+  flex-flow: wrap;
+
+  .module-card,
+  .master-card {
+    width: 22rem;
+    margin: 0.5rem;
+  }
+}
 }
 
 .header-btn {

@@ -1,10 +1,10 @@
-import { AddFilled, Button, Header, InboxSearchComposer,  Dropdown, Card } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Header, InboxSearchComposer, Card, CardHeader, CardText, CardSubHeader } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader ,Button} from "@egovernments/digit-ui-components";
 
 
 
@@ -32,12 +32,10 @@ const MDMSManageMaster = () => {
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
   
   const [availableSchemas, setAvailableSchemas] = useState([]);
-  const [currentSchema, setCurrentSchema] = useState(null);
-  const [masterName, setMasterName] = useState(null); //for dropdown
-  const [moduleName, setModuleName] = useState(null); //for dropdown
+  const [selectedModule, setSelectedModule] = useState(null);
   const [masterOptions,setMasterOptions] = useState([])
   const [moduleOptions,setModuleOptions] = useState([])
-  const [updatedConfig,setUpdatedConfig] = useState(null)
+  const [showModules, setShowModules] = useState(true)
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
   const SchemaDefCriteria = {
     tenantId:tenantId ,
@@ -78,7 +76,7 @@ const MDMSManageMaster = () => {
         const obj = {
           mastersAvailable: [],
         };
-        schemas.forEach((schema, idx) => {
+        schemas.forEach((schema) => {
           const { code } = schema;
           const splittedString = code.split(".");
           const [master, mod] = splittedString;
@@ -98,21 +96,28 @@ const MDMSManageMaster = () => {
 
   useEffect(() => {
     setMasterOptions(dropdownData?.mastersAvailable)
+    if(master && modulee) {
+      setSelectedModule(dropdownData?.mastersAvailable?.find(m => m.name === master))
+      setModuleOptions(sortByKey(dropdownData?.[master],'translatedValue'))
+      setShowModules(false)
+    }
   }, [dropdownData])
 
-  useEffect(() => {
-    if(dropdownData?.[masterName?.name]?.length>0){
-    setModuleOptions(sortByKey(dropdownData?.[masterName?.name],'translatedValue'))
-    }
-  }, [masterName])
+  const handleModuleSelect = (module) => {
+    setSelectedModule(module)
+    setModuleOptions(sortByKey(dropdownData?.[module.name],'translatedValue'))
+    setShowModules(false)
+  }
 
-  useEffect(() => {
-    //here set current schema based on module and master name
-    if(masterName?.name && moduleName?.name){
-    setCurrentSchema(availableSchemas.filter(schema => schema.code === `${masterName?.name}.${moduleName?.name}`)?.[0])
-    history.push(`/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${masterName.name}&masterName=${moduleName.name}`)
-    }
-  }, [moduleName])
+  const handleMasterSelect = (master) => {
+    history.push(`/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${selectedModule.name}&masterName=${master.name}`)
+  }
+
+  const handleBackToModules = () => {
+    setSelectedModule(null)
+    setModuleOptions([])
+    setShowModules(true)
+  }
   
   // useEffect(() => {
   //   if (currentSchema) {
@@ -160,43 +165,64 @@ const MDMSManageMaster = () => {
   // }, [currentSchema]);
 
   if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
+  
   return (
     <React.Fragment>
-        <Header className="works-header-search">{t(Config?.label)}</Header>
+      <Header className="works-header-search">{t(Config?.label)}</Header>
       <div className="jk-header-btn-wrapper">
-        <Card className="manage-master-wrapper">
-        <Dropdown
-          option={masterOptions}
-          className={"form-field wbh-mdms-module-name"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master) : masterName}
-          select={(e) => {
-            setMasterName(e);
-            setModuleName(null)
-            setUpdatedConfig(null)
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MODULE_NAME")}
-          
-          disable={master ? true : false}
-        />
-        <Dropdown
-          option={moduleOptions}
-          style={{marginRight:"auto" }}
-          className={"form-field wbh-mdms-master-name"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master,modulee) : moduleName}
-          select={(e) => {
-            setModuleName(e);
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MASTER_NAME")}
-          
-          disable = {modulee ? true : false}
-        />
-        </Card>
+        {showModules ? (
+          <div className="module-cards-container">
+            <div className="module-cards-header">
+              <CardHeader>{t("WBH_SELECT_MODULE")}</CardHeader>
+            </div>
+            <div className="module-cards-grid">
+              {masterOptions?.map((module, index) => (
+                <Card 
+                  key={index} 
+                  className="module-card clickable"
+                  onClick={() => handleModuleSelect(module)}
+                >
+                  <CardSubHeader>
+                    {module.translatedValue || module.name}
+                  </CardSubHeader>
+                  <CardText>
+                    {t("WBH_CLICK_TO_VIEW_MASTERS")}
+                  </CardText>
+                </Card>
+              ))}
+            </div>
+          </div>
+        ) : (
+          <div className="master-details-container">
+            <div className="master-details-header">
+              <Button 
+                type="button" 
+                className="back-button"
+                onClick={handleBackToModules}
+                style={{marginBottom: "1rem"}}
+              >
+                ← {t("WBH_BACK_TO_MODULES")}
+              </Button>
+              <CardHeader>{selectedModule?.translatedValue || selectedModule?.name} - {t("WBH_MASTERS")}</CardHeader>
+            </div>
+            <div className="master-cards-grid">
+              {moduleOptions?.map((master, index) => (
+                <Card 
+                  key={index} 
+                  className="master-card clickable"
+                  onClick={() => handleMasterSelect(master)}
+                >
+                  <CardSubHeader>
+                    {master.translatedValue || master.name}
+                  </CardSubHeader>
+                  <CardText>
+                    {t("WBH_CLICK_TO_MANAGE")}
+                  </CardText>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </React.Fragment>
   );
