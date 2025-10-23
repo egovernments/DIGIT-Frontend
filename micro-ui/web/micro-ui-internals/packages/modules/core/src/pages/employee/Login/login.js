@@ -195,7 +195,6 @@ const Login = ({ config: propsConfig, t, isDisabled, loginOTPBased }) => {
 }));
 
   const renderLoginForm = (extraClasses = "", cardClassName = "", wrapperClass = "") => (
-    console.log("updatedConfig", updatedConfig),
     <FormComposerV2
       onSubmit={loginOTPBased ? onOtpLogin : onLogin}
       isDisabled={isDisabled || disable}

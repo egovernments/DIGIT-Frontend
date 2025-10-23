@@ -59,7 +59,6 @@ const NonIFrameInterface = (props) => {
       xhr.onreadystatechange = function () {
         if (xhr.readyState === XMLHttpRequest.DONE) {
           if (xhr.status === 200) {
-            console.log(xhr.responseText);
             setHtmlContent(xhr.responseText);
             setIframeLoaded({type:"info",label:"External Website getting loaded"})
             // Handle successful response here

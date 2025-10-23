@@ -43,7 +43,6 @@ const UploadBoundaryPure = () => {
   };
   const { data: hierarchyTypeData } = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
 
-  // console.log("hhhh" , hierarchyTypeData);
 
   const filteredXlsxData = hierarchyTypeData?.BoundaryHierarchy?.filter((item) => {
     return item.hierarchyType === selectedValue?.hierarchyType;

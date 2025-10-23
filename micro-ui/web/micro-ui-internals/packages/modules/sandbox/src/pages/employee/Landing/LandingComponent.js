@@ -75,9 +75,7 @@ const LandingComponent = ({ config = {} }) => {
 
   const { firstPart, lastPart } = splitStepsTitle();
 
-  console.log("*** Log ===> ", stepsSection.title);
-  console.log("*** First Part ===> ", firstPart);
-  console.log("*** Last Part ===> ", lastPart);
+
 
   return (
     <div className="" style={{ "padding": "0px" }}>

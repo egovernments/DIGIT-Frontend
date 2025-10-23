@@ -25,7 +25,6 @@ const IndividualCreateCitizen = () => {
 
 
   const onFormSubmit = async (data) => {
-    console.log(data, "data");
     await mutation.mutate({
       url: `/individual/v1/_create`,
       params: { tenantId },
