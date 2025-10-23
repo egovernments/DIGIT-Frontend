@@ -222,15 +222,12 @@ const IFrameInterface = (props) => {
             'x-kbn-context': `{"type":"application","name":"security_login","url":"${basePath}login"}`
           }
         });
-        console.log("response from axios",response);
-        console.log('Response headers axios:', response.headers);
+
         const setCookie = response.headers['set-cookie'];
         if (setCookie) {
-          console.log("axios cookie set",setCookie);
           document.cookie = setCookie;
         }
       } catch (error) {
-        console.log("axios resp err",error.message);
         console.error('Error fetching data:', error);
       } finally {
         setIsAxiosLoading(false);

@@ -23,7 +23,6 @@ export const UICustomizations = {
         businessService
       }
       data.params = finalParams
-      console.log(data);
       // const tenantId = Digit.ULBService.getCurrentTenantId();
       // data.body = { RequestInfo: data.body.RequestInfo };
       // const { limit, offset } = data?.state?.tableForm || {};

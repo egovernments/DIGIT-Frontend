@@ -207,7 +207,6 @@ export const convertEpochToDate = (dateEpoch) => {
           }
           payments.Payments[0].additionalDetails=details;
           paymentArray[0]=payments.Payments[0]
-          console.log("paymentArray",paymentArray)
            response = await Digit.PaymentService.generatePdf(state, { Payments: paymentArray }, generatePdfKey);
         }       
     }  
@@ -277,7 +276,6 @@ export const convertEpochToDate = (dateEpoch) => {
       currentDate.getFullYear() + "-" + (currentDate.getMonth() + 1) + "-" + currentDate.getDate()
     );
     let reqData = { ...bpaDataDetails, edcrDetail: [{ ...edcrData }] };
-    console.log("reqData",reqData)
     let response = await Digit.PaymentService.generatePdf(bpaDataDetails?.tenantId, { Bpa: [reqData] }, order);
     const fileStore = await Digit.PaymentService.printReciept(bpaDataDetails?.tenantId, { fileStoreIds: response.filestoreIds[0] });
     window.open(fileStore[response?.filestoreIds[0]], "_blank");
@@ -362,7 +360,6 @@ export const convertEpochToDate = (dateEpoch) => {
   //New Payment Reciept For PT module with year bifurcations
 
   const printRecieptNew = async (payment) => {
-    console.log("paymentpayment",payment,payment.Payments[0].paymentDetails[0].receiptNumber,payment.Payments[0])
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const state = Digit.ULBService.getStateId();
     let paymentArray=[];
@@ -557,9 +554,7 @@ export const convertEpochToDate = (dateEpoch) => {
         }
     
          paymentArray[0]=payments.Payments[0]
-        console.log("payments",payments)
       response = await Digit.PaymentService.generatePdf(state, { Payments: paymentArray }, generatePdfKey);
-      console.log("responseresponse",response)
     }
     const fileStore = await Digit.PaymentService.printReciept(state, { fileStoreIds: response.filestoreIds[0] });
     window.open(fileStore[response.filestoreIds[0]], "_blank");

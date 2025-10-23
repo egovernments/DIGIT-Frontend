@@ -1,5 +1,8 @@
 # Changelog
 
+## [1.8.23] [8-sept-2025]
+- New PDF download logic added
+
 ## [1.8.19]  [5-Aug-2025]
 - Updated field util to generate field id
 

@@ -6,7 +6,9 @@ import { useHistory, Redirect } from "react-router-dom";
 import Background from "../../../components/Background";
 import ImageComponent from "../../../components/ImageComponent";
 
-const defaultLanguage = { label: "English", value: Digit.Utils.getDefaultLanguage() };
+const DEFAULT_LOCALE=Digit?.Utils?.getDefaultLanguage?.();
+
+const defaultLanguage = { label: "English", value:  DEFAULT_LOCALE};
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();

@@ -7,6 +7,7 @@ import ChangeLanguage from "../ChangeLanguage";
 import { Header as TopBarComponentMain } from "@egovernments/digit-ui-components";
 import ImageComponent from "../ImageComponent";
 
+const DEFAULT_EGOV_LOGO ="https://egov-dev-assets.s3.ap-south-1.amazonaws.com/egov-logo-2025.png";
 const TopBar = ({
   t,
   stateInfo,
@@ -143,11 +144,11 @@ const TopBar = ({
       onHamburgerClick={() => {
         toggleSidebar();
       }}
-      className=""
+      className="digit-employee-header"
       img={logoUrl}
-      logoWidth={"48px"}
+      logoWidth={"64px"}
       logoHeight={"48px"}
-      logo={loggedin ? cityDetails?.logoId : stateInfo?.statelogo}
+      logo={(loggedin ? cityDetails?.logoId : stateInfo?.statelogo)||DEFAULT_EGOV_LOGO}
       onImageClick={() => {}}
       onLogoClick={() => {}}
       props={{}}

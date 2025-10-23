@@ -5,6 +5,8 @@ import { loginConfig as defaultLoginConfig } from "./config";
 import { LoginOtpConfig as defaultLoginOtpConfig } from "./ConfigOtp";
 import LoginComponent from "./login";
 import { useHistory, useLocation } from "react-router-dom";
+import { useLoginConfig } from "../../../hooks/useLoginConfig";
+import { Loader } from "@egovernments/digit-ui-components";
 
 const EmployeeLogin = ({ stateCode }) => {
   const { t } = useTranslation();
@@ -15,6 +17,8 @@ const EmployeeLogin = ({ stateCode }) => {
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = "digit";
   const loginType = window?.globalConfigs?.getConfig("OTP_BASED_LOGIN") || false;
+    const { data : mdmsData, isLoading } = useLoginConfig(stateCode)
+
   const history = useHistory();
   const location = useLocation();
 
@@ -38,14 +42,6 @@ const EmployeeLogin = ({ stateCode }) => {
     modulePrefix,
   });
 
-  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(stateCode, "commonUiConfig", ["LoginConfig"], {
-    select: (data) => {
-      return {
-        config: data?.commonUiConfig?.LoginConfig,
-      };
-    },
-    retry: false,
-  });
 
   //let loginConfig = mdmsData?.config ? mdmsData?.config : defaultLoginConfig;
   useEffect(() => {
@@ -81,7 +77,9 @@ const EmployeeLogin = ({ stateCode }) => {
       [loginOtpConfig]
     )
   );
-
+  if(isLoading){
+      return <Loader page={false} variant={"PageLoader"} />;
+  }
   return (
     <Switch>
       <Route path={`${path}`} exact>

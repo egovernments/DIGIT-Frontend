@@ -94,6 +94,7 @@ const CitizenHome = ({ getCitizenMenu, isLoading }) => {
     <div className="citizen-all-services-wrapper">
       {location.pathname.includes("sanitation-ui/citizen/all-services") ||
       (location.pathname.includes("sandbox-ui") &&
+        location.pathname.includes("all-services")) || (location.pathname.includes("digit-studio") &&
         location.pathname.includes("all-services")) ? null : (
         <BackLink onClick={() => window.history.back()} />
       )}

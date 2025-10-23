@@ -14,6 +14,7 @@ import * as parsingUtils from "../src/utils/ParsingUtils"
 import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
+  
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -90,10 +91,12 @@ const updateCustomConfigs = () => {
  const initWorkbenchComponents = () => {
   overrideHooks();
   updateCustomConfigs();
+  
   Object.entries(componentsToRegister).forEach(([key, value]) => {
+    console.log(`Registering component: ${key}`);
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };
 
-export   {initWorkbenchComponents, DigitJSONForm};
+export {initWorkbenchComponents, DigitJSONForm};
 

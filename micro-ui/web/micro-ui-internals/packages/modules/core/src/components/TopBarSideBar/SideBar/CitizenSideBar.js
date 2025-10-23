@@ -302,7 +302,8 @@ export const CitizenSideBar = ({
   if (Digit.Utils.getMultiRootTenant()) {
     city = t(`TENANT_TENANTS_${tenantId}`);
   } else {
-    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`);
+    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.ULBService.getCurrentTenantId(), ".", "_")?.toUpperCase()}`);
+    // city = "TEST";
   }
   const goToHome = () => {
     if (isEmployee) {

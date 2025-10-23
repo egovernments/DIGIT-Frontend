@@ -2,8 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { PGRReducers } from "@egovernments/digit-ui-module-pgr";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-// import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common";
-import { DigitUI, initCoreComponents } from "@egovernments/digit-ui-module-core";
+// import { paymentConfigs, PaymentLinks, PaymentModule } from "@egovernments/digit-ui-module-common"
 import { initDSSComponents } from "@egovernments/digit-ui-module-dss";
 import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
@@ -11,7 +10,6 @@ import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-payment";
-import { initSandboxComponents } from "@egovernments/digit-ui-module-sandbox";
 
 import "@egovernments/digit-ui-css/example/index.css";
 
@@ -24,11 +22,8 @@ const enabledModules = [
   "DSS",
   "HRMS",
   "Workbench",
-  //  "Engagement", "NDSS","QuickPayLinks", "Payment",
   "Utilities",
   "PGR",
-  //added to check fsm
-  // "FSM"
   "Sandbox",
   "OpenPayment",
 ];
@@ -51,7 +46,6 @@ const initTokens = (stateCode) => {
   if (userType !== "CITIZEN") {
     window.Digit.SessionStorage.set("User", { access_token: token, info: userType !== "CITIZEN" ? JSON.parse(employeeInfo) : citizenInfo });
   } else {
-    // if (!window.Digit.SessionStorage.get("User")?.extraRoleInfo) window.Digit.SessionStorage.set("User", { access_token: token, info: citizenInfo });
   }
 
   window.Digit.SessionStorage.set("Citizen.tenantId", citizenTenantId);
@@ -59,7 +53,8 @@ const initTokens = (stateCode) => {
   if (employeeTenantId && employeeTenantId.length) window.Digit.SessionStorage.set("Employee.tenantId", employeeTenantId);
 };
 
-const initDigitUI = () => {
+const initDigitUI = async() => {
+  const { DigitUI, initCoreComponents } = await import("@egovernments/digit-ui-module-core");
   const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
 
   if (isMultiRootTenant) {
@@ -84,9 +79,7 @@ const initDigitUI = () => {
 
   window?.Digit.ComponentRegistryService.setupRegistry({
     ...overrideComponents,
-    // PaymentModule,
-    // ...paymentConfigs,
-    // PaymentLinks,
+  
   });
   initCoreComponents();
   initDSSComponents();
@@ -95,14 +88,12 @@ const initDigitUI = () => {
   initWorkbenchComponents();
   initPGRComponents();
   initOpenPaymentComponents();
-  initSandboxComponents();
 
   const moduleReducers = (initData) => ({
     pgr: PGRReducers(initData),
   });
 
-  // const stateCode = window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
-  const stateCode = Digit.ULBService.getStateId();
+  const stateCode = Digit?.ULBService?.getStateId?.() || window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID") || "pb";
   initTokens(stateCode);
 
   ReactDOM.render(
