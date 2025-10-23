@@ -1,198 +1,256 @@
-import React, { Fragment, useState, } from "react";
+import React, { useState, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Loader, Button, TextInput, Toast, Tag } from "@egovernments/digit-ui-components";
-import { CustomSVG } from "@egovernments/digit-ui-components";
-import DataTable, { TableProps } from "react-data-table-component";
-import { tableCustomStyle, editAttendeetableCustomStyle } from "./table_inbox_custom_style";
-import { defaultPaginationValues, defaultRowsPerPage, defaultPaginationValuesForEditAttendee, defaultRowsPerPageForEditAttendee } from "../utils/constants";
+import {
+  Loader,
+  Button,
+  TextInput,
+  Toast,
+  Tag,
+  CustomSVG,
+} from "@egovernments/digit-ui-components";
+import DataTable from "react-data-table-component";
+import {
+  editAttendeetableCustomStyle,
+} from "./table_inbox_custom_style";
+import {
+  defaultPaginationValuesForEditAttendee,
+  defaultRowsPerPageForEditAttendee,
+} from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
-import AttendeeService from "../services/attendance/attendee_service/attendeeService";
-
 import AlertPopUp from "./alertPopUp";
 import { disableTimeWithSession } from "../utils/time_conversion";
 
-
 /**
- * A React component for displaying a paginated table of frontline workers
- * with editable columns for disabling the user from register.
- *
- * @param {object} props The props object contains the data to be displayed,
- * the onEditAttendanceChange function to be called when the user updates
- * the attendance records, the editAttendance boolean to indicate whether
- * the table should be editable or not, and the duration of the event to validate max date.
- *
- * @returns {ReactElement} The JSX element for the table.
+ * Component: EditAttendanceManagementTable
+ * ------------------------------------------------
+ * Displays a paginated, editable list of attendees for a given attendance register.
+ * Allows disabling attendees (de-enrollment) and handles confirmation, pagination, and toast notifications.
  */
-
-
-
-
-
 const EditAttendanceManagementTable = ({ ...props }) => {
-
   const { t } = useTranslation();
   const history = useHistory();
   const url = Digit.Hooks.useQueryParams();
-  const [showToast, setShowToast] = useState(null);
-  // Local state for pagination
-  const [currentPage, setCurrentPage] = useState(1);
-  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPageForEditAttendee);
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [toast, setToast] = useState({ show: false, label: "", type: "" });
 
-  const [selectedRowId, setSelectedRowId] = useState(null);
+  /** -----------------------------
+   *  Local State Management
+   * -----------------------------
+   */
+  const [showToast, setShowToast] = useState(null); // Toast message state
+  const [currentPage, setCurrentPage] = useState(1); // Active pagination page
+  const [rowsPerPage, setRowsPerPage] = useState(
+    defaultRowsPerPageForEditAttendee
+  ); // Rows per page
+  const [selectedRowId, setSelectedRowId] = useState(null); // Selected attendee ID for disable action
+  const [openAlertPopUp, setOpenAlertPopUp] = useState(false); // Confirmation popup state
 
-  const [openAlertPopUp, setOpenAlertPopUp] = useState(false);
+  /** -----------------------------
+   *  Mutation Hook
+   * -----------------------------
+   * Digit custom hook to disable (de-enroll) an attendee from the register.
+   */
+  const { mutate: updateMapping } =
+    Digit.Hooks.payments.useDeleteAttendeeFromRegister(tenantId);
 
-  const { mutate: updateMapping } = Digit.Hooks.payments.useDeleteAttendeeFromRegister(tenantId);
+  /** -----------------------------
+   *  Pagination Logic
+   * -----------------------------
+   * Slices the full dataset to only show the current page items.
+   */
+  const paginatedData = props.data.slice(
+    (currentPage - 1) * rowsPerPage,
+    currentPage * rowsPerPage
+  );
 
-  // Sliced data based on pagination
-  const paginatedData = props.data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
-
-  const handlePageChange = (page, totalRows) => {
+  // Handles page number change
+  const handlePageChange = (page) => {
     setCurrentPage(page);
   };
 
-  const handlePerRowsChange = (currentRowsPerPage, currentPage) => {
+  // Handles rows per page change
+  const handlePerRowsChange = (currentRowsPerPage) => {
     setRowsPerPage(currentRowsPerPage);
     setCurrentPage(1);
-  }
+  };
 
+  /** -----------------------------
+   *  Table Columns Definition
+   * -----------------------------
+   * Defines how each column of the table will render its content.
+   */
   let columns = [
+    // Column 1: Frontline Worker Name
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div
+          style={{
+            borderRight: "2px solid #787878",
+            width: "100%",
+            textAlign: "start",
+          }}
+        >
           {t(`HCM_AM_FRONTLINE_WORKER`)}
         </div>
       ),
-      selector: (row) => {
-        return (
-          <span className="ellipsis-cell">
-            {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
-          </span>
-        );
-      },
+      selector: (row) => (
+        <span className="ellipsis-cell">
+          {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
+        </span>
+      ),
     },
 
+    // Column 2: Worker ID
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div
+          style={{
+            borderRight: "2px solid #787878",
+            width: "100%",
+            textAlign: "start",
+          }}
+        >
           {t("HCM_AM_WORKER_ID")}
         </div>
       ),
-      selector: (row) => {
-        return (
-          <div className="ellipsis-cell" title={row?.[2] || t("NA")}>
-            {row?.[2] || t("NA")}
-          </div>
-        );
-      },
+      selector: (row) => (
+        <div className="ellipsis-cell" title={row?.[2] || t("NA")}>
+          {row?.[2] || t("NA")}
+        </div>
+      ),
     },
+
+    // Column 3: Role
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div
+          style={{
+            borderRight: "2px solid #787878",
+            width: "100%",
+            textAlign: "start",
+          }}
+        >
           {t("HCM_AM_ROLE")}
         </div>
       ),
-      selector: (row) => {
-        return (
-          <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
-            {t(row?.[3]) || t("NA")}
-          </div>
-        );
-      },
+      selector: (row) => (
+        <div className="ellipsis-cell" title={t(row?.[3]) || t("NA")}>
+          {t(row?.[3]) || t("NA")}
+        </div>
+      ),
     },
 
+    // Column 4: Tag
     {
       name: (
-        <div style={{ borderRight: "2px solid #787878", width: "100%", textAlign: "start" }}>
+        <div
+          style={{
+            borderRight: "2px solid #787878",
+            width: "100%",
+            textAlign: "start",
+          }}
+        >
           {t("HCM_AM_TAG_LABEL")}
         </div>
       ),
-      selector: (row) => {
-        return (
-          <div className="ellipsis-cell" title={t(row?.[4]) || t("NA")}>
-            {t(row?.[4]) || t("NA")}
-          </div>
-        );
-      },
+      selector: (row) => (
+        <div className="ellipsis-cell" title={t(row?.[4]) || t("NA")}>
+          {t(row?.[4]) || t("NA")}
+        </div>
+      ),
     },
-
-
   ];
 
+  /** -----------------------------
+   *  Action Column (Edit Mode Only)
+   * -----------------------------
+   * Adds a column to disable attendees when editAction is true.
+   */
   if (props.editAction) {
-    columns.push(
-      {
-        name: t("HCM_AM_ACTION"),
-        selector: (row) => {
-          return (
-            <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
-              {row?.[5] == false ? <Tag label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")} type="error" stroke={false} /> :
-                <Button
-                  className="custom-class"
-                  icon="Edit"
-                  iconFill=""
-                  label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
-                  onClick={() => {
-                    setSelectedRowId(row?.[0]);
-                    setOpenAlertPopUp(true);
-                    // handleDaysWorkedChange(row?.[0])
-                  }}
-                  options={[]}
-                  optionsKey=""
-                  size=""
-                  style={{}}
-                  title={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
-                  variation="secondary"
-                />
-              }
-            </div>
-          );
-        },
-        style: {
-          justifyContent: "flex-start",
-        },
+    columns.push({
+      name: t("HCM_AM_ACTION"),
+      selector: (row) => (
+        <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
+          {/* Show 'Disabled' tag if attendee already disabled */}
+          {row?.[5] == false ? (
+            <Tag
+              label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")}
+              type="error"
+              stroke={false}
+            />
+          ) : (
+            // Show 'Disable User' button for active attendees
+            <Button
+              className="custom-class"
+              icon="Edit"
+              label={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+              onClick={() => {
+                setSelectedRowId(row?.[0]);
+                setOpenAlertPopUp(true);
+              }}
+              variation="secondary"
+              title={t(`HCM_AM_VIEW_REGISTER_DISABLE_USER`)}
+            />
+          )}
+        </div>
+      ),
+      style: {
+        justifyContent: "flex-start",
       },
-    )
+    });
   }
 
+  /** -----------------------------
+   *  Disable (De-enroll) Attendee
+   * -----------------------------
+   * Called when a user confirms the disable action.
+   * Triggers mutation API to de-enroll the selected attendee.
+   */
   const handleDaysWorkedChange = async (value) => {
-
     const attendee = {
       registerId: props.registerNumber,
       individualId: value,
       enrollmentDate: null,
-      denrollmentDate: disableTimeWithSession(props.sessionType, new Date(Date.now()).getTime()),
-      tenantId: String(tenantId)
+      // Generate de-enrollment time based on session type
+      denrollmentDate: disableTimeWithSession(
+        props.sessionType,
+        new Date(Date.now()).getTime()
+      ),
+      tenantId: String(tenantId),
     };
-    await updateMapping({ "attendees": [attendee] },
+
+    // Trigger API call using Digit mutation hook
+    await updateMapping(
+      { attendees: [attendee] },
       {
         onError: async (error) => {
-
-
-          setShowToast(
-            { key: "error", label: t(`HCM_AM_ERROR_MESSAGE`), transitionTime: 3000 }
-          );
-
-
+          // Show error toast
+          setShowToast({
+            key: "error",
+            label: t(`HCM_AM_ERROR_MESSAGE`),
+            transitionTime: 3000,
+          });
         },
         onSuccess: async (responseData) => {
-
-          setShowToast({ key: "success", label: t(`HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE`), transitionTime: 3000 });
+          // Show success toast and refresh parent data
+          setShowToast({
+            key: "success",
+            label: t(`HCM_AM_ATTENDEE_DE_ENROLL_SUCCESS_MESSAGE`),
+            transitionTime: 3000,
+          });
           props.disableUser("");
         },
       }
-    )
-
-
+    );
   };
 
-
-
+  /** -----------------------------
+   *  Render Section
+   * -----------------------------
+   */
   return (
     <>
+      {/* Main Data Table */}
       <DataTable
         className="search-component-table"
         columns={columns}
@@ -207,39 +265,48 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         onChangeRowsPerPage={handlePerRowsChange}
         paginationTotalRows={props?.data.length}
         paginationPerPage={defaultRowsPerPageForEditAttendee}
-        sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
+        sortIcon={
+          <CustomSVG.SortUp
+            width={"16px"}
+            height={"16px"}
+            fill={"#0b4b66"}
+          />
+        }
         paginationRowsPerPageOptions={defaultPaginationValuesForEditAttendee}
         fixedHeader={true}
         fixedHeaderScrollHeight={props.height ? props.height : "70vh"}
         paginationComponentOptions={getCustomPaginationOptions(t)}
-
       />
+
+      {/* Toast Notification */}
       {showToast && (
         <Toast
           style={{ zIndex: 10001 }}
           label={showToast.label}
           type={showToast.key}
-          // error={showToast.key === "error"}
           transitionTime={showToast.transitionTime}
           onClose={() => setShowToast(null)}
         />
       )}
 
-      {openAlertPopUp && <AlertPopUp
-        onClose={() => {
-          setOpenAlertPopUp(false);
-        }}
-        alertHeading={t(`HCM_AM_WARNING`)}
-        alertMessage={t(`HCM_AM_NOT_RE_ENABLED_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_YES_DISABLE_USER`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
-        onPrimaryAction={() => {
-          setOpenAlertPopUp(false);
-          if (selectedRowId) {
-            handleDaysWorkedChange(selectedRowId); // use stored row.[0]
-          }
-        }}
-      />}
+      {/* Confirmation Alert Pop-Up */}
+      {openAlertPopUp && (
+        <AlertPopUp
+          onClose={() => {
+            setOpenAlertPopUp(false);
+          }}
+          alertHeading={t(`HCM_AM_WARNING`)}
+          alertMessage={t(`HCM_AM_NOT_RE_ENABLED_DESCRIPTION`)}
+          submitLabel={t(`HCM_AM_YES_DISABLE_USER`)}
+          cancelLabel={t(`HCM_AM_CANCEL`)}
+          onPrimaryAction={() => {
+            setOpenAlertPopUp(false);
+            if (selectedRowId) {
+              handleDaysWorkedChange(selectedRowId); // Perform de-enrollment
+            }
+          }}
+        />
+      )}
     </>
   );
 };
