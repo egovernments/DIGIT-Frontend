@@ -594,6 +594,28 @@
   .master-card {
     width: 22rem;
     margin: 0.5rem;
+
+
+
+.employee-card-sub-header {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    z-index: 10;
+    padding: 0.5rem;
+    margin: -0.5rem;
+    border-radius: 4px;
+  }
+}
+
+
   }
 }
 }
@@ -1122,9 +1144,6 @@ background-color: #eaffee;
   color: #555;
   line-height: 1.2rem;
 }
-
-
-
 
 
 

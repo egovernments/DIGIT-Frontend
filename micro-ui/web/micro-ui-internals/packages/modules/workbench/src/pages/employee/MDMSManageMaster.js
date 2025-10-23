@@ -1,4 +1,4 @@
-import { AddFilled, Header, InboxSearchComposer, Card, CardHeader, CardText, CardSubHeader } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Header, Card, CardHeader, CardText, CardSubHeader, TextInput } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -36,6 +36,7 @@ const MDMSManageMaster = () => {
   const [masterOptions,setMasterOptions] = useState([])
   const [moduleOptions,setModuleOptions] = useState([])
   const [showModules, setShowModules] = useState(true)
+  const [searchQuery, setSearchQuery] = useState("")
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
   const SchemaDefCriteria = {
     tenantId:tenantId ,
@@ -182,7 +183,7 @@ const MDMSManageMaster = () => {
                   className="module-card clickable"
                   onClick={() => handleModuleSelect(module)}
                 >
-                  <CardSubHeader>
+                  <CardSubHeader className="employee-card-sub-header">
                     {module.translatedValue || module.name}
                   </CardSubHeader>
                   <CardText>
@@ -197,12 +198,11 @@ const MDMSManageMaster = () => {
             <div className="master-details-header">
               <Button 
                 type="button" 
-                className="back-button"
+                label={t("WBH_BACK_TO_MODULES")}
+                variation={"secondary"}
                 onClick={handleBackToModules}
                 style={{marginBottom: "1rem"}}
-              >
-                ← {t("WBH_BACK_TO_MODULES")}
-              </Button>
+              />
               <CardHeader>{selectedModule?.translatedValue || selectedModule?.name} - {t("WBH_MASTERS")}</CardHeader>
             </div>
             <div className="master-cards-grid">
@@ -212,7 +212,7 @@ const MDMSManageMaster = () => {
                   className="master-card clickable"
                   onClick={() => handleMasterSelect(master)}
                 >
-                  <CardSubHeader>
+                  <CardSubHeader className="employee-card-sub-header">
                     {master.translatedValue || master.name}
                   </CardSubHeader>
                   <CardText>
