@@ -1,3 +1,25 @@
+## [1.8.18] [23-October-2025]
+
+### New Features:
+- **Multi-Tenant Support**: 
+  - Compatible with Core v1.8.57 multi-tenant improvements
+  - Supports `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` flag
+  - Enhanced tenant auto-selection logic
+
+### Technical Updates:
+- Updated dependencies for better stability
+- Code optimization for employee management workflows
+- Improved form validation and error handling
+
+### Bug Fixes:
+- Fixed date picker width issues across different screen sizes
+- Resolved localization issues in employee forms
+- Fixed tenant selection edge cases
+
+### Global Config Integration:
+- Fully compatible with new global configuration system
+- Supports dynamic tenant switching for HR administrators
+
 ## [1.8.17] [24-Sept-2025] 
 - Added auto select functionality if only one tenant present
 

@@ -1,5 +1,28 @@
 # Changelog 
 
+## [1.8.57]  [23-October-2025]
+
+### New Features:
+- **Multi-Tenant Support Enhancement**: 
+  - Added support for `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` global config flag
+  - Enables better multi-tenant use cases
+  - Improved tenant context switching logic
+- **Logo Fixes**: 
+  - Fixed logo rendering issues in header
+  - Updated logo URL configurations
+- **Login Flow Improvements**:
+  - Enhanced tenant selection flow
+  - Better state management for logged-in tenant context
+
+### Technical Updates:
+- Updated ULB service to handle override tenant configurations
+- Improved state management for tenant switching
+- Enhanced error handling in login flow
+
+### Global Config Integration:
+- Supports new flag: `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT`
+- Backward compatible with existing tenant configurations
+
 ## [1.8.55]  [8th-Oct-2025]
 - Updated the email and mobilenumber login flow with pattern validation, link instead of toggle and state management fixes
 

@@ -1,5 +1,24 @@
 # Changelog
 
+## [1.0.17]  [23-October-2025]
+
+### New Features:
+- **Enhanced Module Integration**: 
+  - Improved compatibility with Core v1.8.57
+  - Better support for multi-tenant configurations
+- **Component Updates**:
+  - Updated utilities to work with new card-based interfaces
+  - Enhanced iframe handling for external resources
+
+### Technical Updates:
+- Compatible with new global config flags
+- Performance optimizations for utility functions
+- Code cleanup and refactoring
+
+### Bug Fixes:
+- Fixed compatibility issues with updated Core module
+- Resolved iframe loading issues in certain environments
+
 #### [1.0.16]  [26-Aug-2025]
 - Added iframe support and updated demo path handling based on KibanaMapsDomain
 

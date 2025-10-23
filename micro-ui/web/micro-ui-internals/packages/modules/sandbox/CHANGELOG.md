@@ -1,5 +1,24 @@
 # Changelog
 
+## [0.0.4] [23-October-2025]
+
+### New Features:
+- **Module Navigation Enhancement**: 
+  - Updated Module.js for improved routing
+  - Better integration with core module updates
+- **Component Updates**:
+  - Fixed component initialization issues
+  - Improved module loading performance
+
+### Technical Updates:
+- Compatible with Core v1.8.57 multi-tenant improvements
+- Updated dependency versions for better stability
+- Code cleanup and optimization
+
+### Bug Fixes:
+- Fixed module initialization errors
+- Resolved routing conflicts with other modules
+
 ## [0.0.3] [16-Apr-2025]
 
 - Fixed breadcrumb navigation issues in the Sandbox module.
