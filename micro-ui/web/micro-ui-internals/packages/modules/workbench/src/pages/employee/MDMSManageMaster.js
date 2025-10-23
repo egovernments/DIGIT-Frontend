@@ -40,7 +40,7 @@ const MDMSManageMaster = () => {
   tenantId = tenantId || Digit.ULBService.getCurrentTenantId();
   const SchemaDefCriteria = {
     tenantId:tenantId ,
-    limit:200
+    limit:500
   }
   if(master && modulee ) {
     SchemaDefCriteria.codes = [`${master}.${modulee}`] 
@@ -215,7 +215,7 @@ const MDMSManageMaster = () => {
                   onClick={() => handleModuleSelect(module)}
                 >
                   <CardSubHeader className="employee-card-sub-header">
-                    {module.translatedValue || module.name}
+                    {module?.translatedValue?.startsWith("WBH_MDMS_") ? module?.name : module?.translatedValue}
                   </CardSubHeader>
                   <CardText>
                     {t("WBH_CLICK_TO_VIEW_MASTERS")}
@@ -261,7 +261,7 @@ const MDMSManageMaster = () => {
                   onClick={() => handleMasterSelect(master)}
                 >
                   <CardSubHeader className="employee-card-sub-header">
-                    {master.translatedValue || master.name}
+                    {master?.translatedValue?.startsWith("WBH_MDMS_") ? master?.name : master?.translatedValue}
                   </CardSubHeader>
                   <CardText>
                     {t("WBH_CLICK_TO_MANAGE")}
