@@ -21,16 +21,14 @@ import DraggableField from "./DraggableField";
 import { useAppLocalisationContext } from "./AppLocalisationWrapper";
 import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
-import NavigationLogicWrapper from "./NavigationLogicWrapper";
 
-function AppFieldScreenWrapper({ parentState }) {
+function AppFieldScreenWrapper() {
   const { state, dispatch, openAddFieldPopup } = useAppConfigContext();
   const { locState, updateLocalization } = useAppLocalisationContext();
   const searchParams = new URLSearchParams(location.search);
   const projectType = searchParams.get("prefix");
   const formId = searchParams.get("formId");
   const { t } = useTranslation();
-  const useT = useCustomT();
 
   const currentCard = useMemo(() => {
     return state?.screenData?.[0];
@@ -65,7 +63,7 @@ function AppFieldScreenWrapper({ parentState }) {
                 label={label}
                 active={active}
                 required={required}
-                value={useT(formId ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
+                value={useCustomT(formId ? value : `${projectType}_${currentCard.parent}_${currentCard.name}_${label}`)}
                 headerFields={true}
                 onChange={(event) => {
                   dispatch({
@@ -91,7 +89,7 @@ function AppFieldScreenWrapper({ parentState }) {
                 return (
                   <DraggableField
                     type={type}
-                    label={useT(label)}
+                    label={useCustomT(label)}
                     active={active}
                     required={required}
                     isDelete={deleteFlag === false ? false : true}
@@ -131,9 +129,9 @@ function AppFieldScreenWrapper({ parentState }) {
                     }}
                     config={c[i]}
                     Mandatory={Mandatory}
-                    helpText={useT(helpText)}
-                    infoText={useT(infoText)}
-                    innerLabel={useT(innerLabel)}
+                    helpText={useCustomT(helpText)}
+                    infoText={useCustomT(infoText)}
+                    innerLabel={useCustomT(innerLabel)}
                     rest={rest}
                     index={i}
                     fieldIndex={i}
@@ -192,27 +190,6 @@ function AppFieldScreenWrapper({ parentState }) {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-        {currentCard?.type !== "template" && (
-        <>
-          <div className="app-config-drawer-subheader">
-            <div>{t("APPCONFIG_NAVIGATION_LOGIC")}</div>
-            <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
-          </div>
-          <NavigationLogicWrapper
-            t={t}
-            parentState={parentState}
-            currentState={currentCard}
-            onConditionalNavigateChange={(data) => {
-               dispatch({
-                type: "PATCH_PAGE_CONDITIONAL_NAV",
-                pageName: currentCard?.name, // optional but safer
-                data,                        // array built by NavigationLogicWrapper on Submit
-              });
-            }}
-          />
-        </>
-      )}
-      <Divider className="app-config-drawer-action-divider" />
       {currentCard?.type !== "template" && (
         <>
           <div className="app-config-drawer-subheader">
@@ -226,7 +203,7 @@ function AppFieldScreenWrapper({ parentState }) {
             <TextInput
               // style={{ maxWidth: "40rem" }}
               name="name"
-              value={useT(currentCard?.actionLabel)}
+              value={useCustomT(currentCard?.actionLabel)}
               onChange={(event) => {
                 updateLocalization(
                   currentCard?.actionLabel && currentCard?.actionLabel !== true

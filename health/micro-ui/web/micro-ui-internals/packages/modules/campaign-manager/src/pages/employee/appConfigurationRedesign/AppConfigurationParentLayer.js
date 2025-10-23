@@ -67,6 +67,16 @@ const AppConfigurationParentRedesign = ({
   const [changeLoader, setChangeLoader] = useState(false);
 
   useEffect(() => {
+    if (currentStep === parentState?.currentTemplate?.length) {
+      const event = new CustomEvent("lastButtonDisabled", { detail: true });
+      window.dispatchEvent(event);
+    } else {
+      const event = new CustomEvent("lastButtonDisabled", { detail: false });
+      window.dispatchEvent(event);
+    }
+  }, [currentStep, parentState]);
+
+  useEffect(() => {
     const handleResetStep = () => {
       setCurrentStep(1);
     };
@@ -90,7 +100,7 @@ const AppConfigurationParentRedesign = ({
   const { isLoading: isLoadingAppConfigMdmsData, data: AppConfigMdmsData } = Digit.Hooks.useCustomMDMS(
     Digit.ULBService.getCurrentTenantId(),
     MODULE_CONSTANTS,
-    [{ name: fieldTypeMaster, limit: 1000 }],
+    [{ name: fieldTypeMaster, limit: 100 }],
     {
       cacheTime: Infinity,
       staleTime: Infinity,
@@ -126,7 +136,7 @@ const AppConfigurationParentRedesign = ({
     },
   };
 
-  const { isLoading: isCacheLoading, data: cacheData, refetch: refetchCache } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
+  const { isLoading: isCacheLoading, data: cacheData, refetch: refetchCache, revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteriaForm);
 
   const { mutate: updateMutate } = Digit.Hooks.campaign.useUpdateAppConfig(tenantId);
 
@@ -157,7 +167,6 @@ const AppConfigurationParentRedesign = ({
       formId &&
       AppConfigMdmsData?.[fieldTypeMaster]?.length > 0
     ) {
-
       const fieldTypeMasterData = AppConfigMdmsData?.[fieldTypeMaster] || [];
       const temp = restructure(formData?.data?.pages, fieldTypeMasterData, formData?.data);
       parentDispatch({
@@ -178,109 +187,19 @@ const AppConfigurationParentRedesign = ({
     );
   }, [parentState?.currentTemplate]);
 
-  const currentTabPages = React.useMemo(() => {
-    const activeParent = numberTabs.find((j) => j.active)?.parent;
-    return (parentState?.currentTemplate || [])
-      .filter((i) => i.parent === activeParent)
-      .sort((a, b) => Number(a.order) - Number(b.order));
-  }, [parentState?.currentTemplate, numberTabs]);
-
-useEffect(() => {
-  const last = currentTabPages.length
-    ? Number(currentTabPages[currentTabPages.length - 1].order)
-    : null;
-
-  const isLast = last != null && Math.abs(Number(currentStep) - last) < 1e-6;
-  
-  // Check if there's only one page in the current tab - if so, disable Next
-  const isSinglePage = currentTabPages.length === 1;
-
-  // Dispatch immediately - this runs synchronously
-  window.dispatchEvent(new CustomEvent("lastButtonDisabled", { 
-    detail: isLast || isSinglePage 
-  }));
-}, [currentStep, currentTabPages]);
-
-
-// ALSO ADD: Dispatch the event immediately when currentTabPages changes
-// Add this new useEffect right after the above one:
-
-useEffect(() => {
-  // This ensures the button state is set immediately when pages load
-  if (currentTabPages.length > 0) {
-    const last = Number(currentTabPages[currentTabPages.length - 1].order);
-    const isLast = Math.abs(Number(currentStep) - last) < 1e-6;
-    const isSinglePage = currentTabPages.length === 1;
-    
-    window.dispatchEvent(new CustomEvent("lastButtonDisabled", { 
-      detail: isLast || isSinglePage 
-    }));
-  }
-}, [currentTabPages]); // Only dep
-
-
-  // Build the ordered list of valid steps once.
-  // 👉 Replace p.step / p.order / p.name with whatever your source-of-truth field is.
-  const availableSteps = React.useMemo(() => {
-    const raw = (parentState?.steps
-      || parentState?.stepOrder
-      || (parentState?.currentTemplate || []).map((p) => p?.step || p?.order || p?.name)
-    );
-
-    return (raw || [])
-      .map((x) => parseFloat(String(x)))
-      .filter((n) => Number.isFinite(n))
-      .sort((a, b) => a - b);
-  }, [parentState]);
-
-  const round1 = (n) => Number(n.toFixed(1));
-
-  const nextStepFrom = (current) => {
-    const cur = Number(current);
-
-    // Prefer the next known step from the canonical list
-    if (availableSteps.length) {
-      const next = availableSteps.find((s) => s > cur + 1e-9);
-      if (next != null) return round1(next);
-    }
-
-    // Fallbacks if no canonical "next" exists:
-    //  - if we're on an integer, try the nearest .1
-    //  - otherwise jump to next integer
-    const frac10 = Math.round((cur - Math.floor(cur)) * 10);
-    if (frac10 === 0) return round1(cur + 0.1);
-    return Math.floor(cur) + 1;
-  };
-
-  const prevStepFrom = (current) => {
-    const cur = Number(current);
-    let prev = null;
-    for (const s of availableSteps) {
-      if (s < cur - 1e-9) prev = s; else break;
-    }
-    return prev != null ? round1(prev) : cur;
-  };
-
   useEffect(() => {
     setStepper(
-      currentTabPages.map((k, j, t) => ({
-        name: k.name,
-        isLast: j === t.length - 1,
-        isFirst: j === 0,
-        // active by exact order match (works for 4.1, 4.2, …)
-        active: Number(k.order) === Number(currentStep),
-      }))
+      (parentState?.currentTemplate || [])
+        ?.filter((i) => i.parent === numberTabs.find((j) => j.active)?.parent)
+        .sort((a, b) => a.order - b.order)
+        ?.map((k, j, t) => ({
+          name: k.name,
+          isLast: j === t.length - 1 ? true : false,
+          isFirst: j === 0 ? true : false,
+          active: j === currentStep - 1 ? true : false,
+        }))
     );
-  }, [currentTabPages, currentStep]);
-
-  const mainPagesCount = React.useMemo(() => {
-    const ints = new Set();
-    for (const p of currentTabPages) {
-      const n = parseFloat(String(p?.order || p?.step || p?.name));
-      if (Number.isFinite(n)) ints.add(Math.floor(n));
-    }
-    return ints.size;
-  }, [currentTabPages]);
+  }, [parentState?.currentTemplate, numberTabs, currentStep]);
 
   useEffect(() => {
     if (variant === "app" && parentState?.currentTemplate?.length > 0 && currentStep && numberTabs?.length > 0) {
@@ -290,7 +209,6 @@ useEffect(() => {
       setCurrentScreen(parentState?.currentTemplate);
     }
   }, [parentState?.currentTemplate, currentStep, numberTabs]);
-
 
   if (isCacheLoading || isLoadingAppConfigMdmsData || !parentState?.currentTemplate || parentState?.currentTemplate?.length === 0) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -302,12 +220,10 @@ useEffect(() => {
       data: screenData,
       isSubmit: finalSubmit ? true : false,
     });
-
     const mergedTemplate = parentState.currentTemplate.map((item) => {
       const updated = screenData.find((d) => d.name === item.name);
       return updated ? updated : item;
     });
-
     if (finalSubmit) {
       const mergedTemplate = parentState.currentTemplate.map((item) => {
         const updated = screenData.find((d) => d.name === item.name);
@@ -317,15 +233,15 @@ useEffect(() => {
       const reverseFormat =
         cacheData && cacheData?.filteredCache?.data?.data
           ? {
-            ...parentState?.actualTemplate?.actualTemplate,
-            version: parentState?.actualTemplate?.version + 1,
-            pages: reverseData,
-          }
+              ...parentState?.actualTemplate?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            }
           : {
-            ...parentState?.actualTemplate,
-            version: parentState?.actualTemplate?.version + 1,
-            pages: reverseData,
-          };
+              ...parentState?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            };
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
@@ -397,6 +313,7 @@ useEffect(() => {
           );
         }
 
+        // All updates succeeded
         setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
         setChangeLoader(false);
         history.push(`/${window.contextPath}/employee/campaign/response?isSuccess=true`, {
@@ -423,15 +340,15 @@ useEffect(() => {
       const reverseFormat =
         cacheData && cacheData?.filteredCache?.data?.data
           ? {
-            ...parentState?.actualTemplate?.actualTemplate,
-            version: parentState?.actualTemplate?.version + 1,
-            pages: reverseData,
-          }
+              ...parentState?.actualTemplate?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            }
           : {
-            ...parentState?.actualTemplate,
-            version: parentState?.actualTemplate?.version + 1,
-            pages: reverseData,
-          };
+              ...parentState?.actualTemplate,
+              version: parentState?.actualTemplate?.version + 1,
+              pages: reverseData,
+            };
 
       const updatedFormData = { ...formData, data: reverseFormat };
 
@@ -475,26 +392,12 @@ useEffect(() => {
             setShowToast({ key: "success", label: "APP_CONFIGURATION_SUCCESS" });
             setChangeLoader(false);
             revalidateForm();
+            revalidate();
           },
         }
       );
       return;
     } else {
-      // Check if we're on the last page before proceeding
-      const lastPageOrder = currentTabPages.length > 0
-        ? Number(currentTabPages[currentTabPages.length - 1].order)
-        : null;
-      const isOnLastPage = lastPageOrder != null && Math.abs(Number(currentStep) - lastPageOrder) < 1e-6;
-
-      // Also check if this is a single page
-      const isSinglePage = currentTabPages.length === 1;
-
-      if (isOnLastPage || isSinglePage) {
-        // Already on the last page or only one page exists, don't proceed
-        setShowToast({ key: "info", label: "HCM_ALREADY_ON_LAST_PAGE" });
-        return;
-      }
-
       await updateMutate(
         {
           moduleName: "HCM-ADMIN-CONSOLE",
@@ -523,20 +426,19 @@ useEffect(() => {
           },
         }
       );
-      setCurrentStep((prev) => nextStepFrom(prev));
+      setCurrentStep((prev) => prev + 1);
     }
   };
 
   const back = () => {
-    const activeStep = stepper?.find((i) => i.active);
-    if (activeStep?.isFirst && isPreviousTabAvailable) {
+    if (stepper?.find((i) => i.active)?.isFirst && isPreviousTabAvailable) {
       tabStateDispatch({ key: "PREVIOUS_TAB" });
-      setCurrentStep(availableSteps[0] || 1);
+      setCurrentStep(1);
       return;
-    } else if (activeStep?.isFirst && !isPreviousTabAvailable) {
+    } else if (stepper?.find((i) => i.active)?.isFirst && !isPreviousTabAvailable) {
       setShowToast({ key: "error", label: "CANNOT_GO_BACK" });
     } else {
-      setCurrentStep((prev) => prevStepFrom(prev));
+      setCurrentStep((prev) => prev - 1);
     }
   };
   if (changeLoader) {
@@ -577,8 +479,7 @@ useEffect(() => {
               parentDispatch={parentDispatch}
               AppConfigMdmsData={AppConfigMdmsData}
               localeModule={localeModule}
-              parentState={parentState}
-              pageTag={`${t("CMN_PAGE")} ${currentStep} / ${mainPagesCount}`}
+              pageTag={`${t("CMN_PAGE")} ${currentStep} / ${stepper?.length}`}
             />
           </div>
         </div>

@@ -132,37 +132,6 @@ function flattenValidationsToField(validationsArray) {
   return result;
 }
 
-function flattenValidationsToField2(validationsArray, groupKey = "validation") {
-  const result = {};
-  if (!Array.isArray(validationsArray)) return result;
-  for (const rule of validationsArray) {
-    if (!rule || typeof rule !== "object") continue;
-    const { type, value, message } = rule;
-    if (!type || value === undefined || value === null) continue;
-    if (!result[groupKey]) result[groupKey] = {};
-    result[groupKey][type] = value;
-    if (message !== undefined && message !== null) {
-      result[groupKey][`${type}.message`] = message;
-    }
-  }
-  return result;
-}
-function flattenConfigArrays(configObj) {
-  const result = {};
-  for (const key in configObj) {
-    if (key === "validations") {
-      continue;
-    }
-    const value = configObj[key];
-    // Handle array of {type, value} objects (like validations)
-    if (Array.isArray(value) && value.every((v) => typeof v === "object" && v.type)) {
-      const flattened = flattenValidationsToField2(value, key);
-      Object.assign(result, flattened); // Only merged part (e.g., { validations: { ... } })
-    }
-  }
-  return result; // :white_check_mark: Only changed keys
-}
-
 const addValidationArrayToConfig = (field, fieldTypeMasterData = []) => {
   const validationArray = [];
   if (field && field.pattern) {
@@ -182,7 +151,6 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
       ?.sort((a, b) => a.order - b.order)
       ?.map((field, index) => ({
         ...getTypeAndMetaData(field, fieldTypeMasterData),
-        ...flattenConfigArrays(field),
         ...flattenValidationsToField(field?.validations || []),
         label: field?.label || "",
         value: field?.value || "",
@@ -207,14 +175,10 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         MdmsDropdown: field?.schemaCode ? true : false,
         isMdms: field?.schemaCode ? true : false,
         isMultiSelect: field?.isMultiSelect ? true : false,
-        schemaCode: field?.schemaCode || "",
         includeInForm: field?.includeInForm === false ? false : true,
         includeInSummary: field?.includeInSummary === false ? false : true,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
-        prefixText: field?.prefixText || "",
-        suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
-        autoFillCondition: field?.autoFillCondition,
       }));
 
     return {
@@ -258,7 +222,6 @@ export const restructure = (data1, fieldTypeMasterData = [], parent) => {
         allowCommentsAdditionAt: ["body"],
       },
       navigateTo: page?.navigateTo || {},
-       conditionalNavigateTo: page?.conditionalNavigateTo,
       parent: parent?.name || "",
     };
   });
@@ -300,7 +263,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       return {
         ...typeAndFormat,
         label: field?.label || "",
-        order: field?.order,
+        order: fieldIndex + 1,
         value: field?.value || "",
         // required: field.Mandatory || false,
         hidden: field?.hidden || false,
@@ -318,10 +281,7 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
         enums: field?.dropDownOptions,
         validations: toArrayFields,
         helpText: typeof field?.helpText === "string" ? field.helpText : "",
-        prefixText: field?.prefixText || "",
-        suffixText: field?.suffixText || "",
         visibilityCondition: { ...field?.visibilityCondition } || null,
-        autoFillCondition: field?.autoFillCondition,
       };
     });
 
@@ -331,10 +291,9 @@ export const reverseRestructure = (updatedData, fieldTypeMasterData = []) => {
       label: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "ScreenHeading")?.value,
       description: section.cards?.[0]?.headerFields?.find((i) => i.jsonPath === "Description")?.value,
       actionLabel: section?.actionLabel || "",
-      order: section.order,
+      order: index + 1,
       properties,
       navigateTo: section?.navigateTo || {},
-       conditionalNavigateTo: section?.conditionalNavigateTo,
     };
   });
 };
