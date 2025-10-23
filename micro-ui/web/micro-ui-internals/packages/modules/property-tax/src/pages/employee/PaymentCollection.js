@@ -141,7 +141,6 @@ const PaymentCollection = ({ match }) => {
   };
 
   const handlePaymentTypeChange = (selectedValue) => {
-    console.log(selectedValue, "selectedValue")
     setPaymentType(selectedValue);
 
     if (selectedValue.value === "full_amount") {

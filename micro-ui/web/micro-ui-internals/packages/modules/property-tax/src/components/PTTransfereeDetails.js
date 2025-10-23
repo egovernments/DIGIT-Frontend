@@ -32,7 +32,7 @@ const PTTransfereeDetails = ({ onSelect, config, formData, errors }) => {
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId: Digit.ULBService.getStateId(),
+        tenantId: Digit?.ULBService?.getStateId(),
         moduleDetails: [
           {
             moduleName: "PropertyTax",
@@ -42,7 +42,7 @@ const PTTransfereeDetails = ({ onSelect, config, formData, errors }) => {
       }
     },
     config: {
-      enabled: !!Digit.ULBService.getStateId(),
+      enabled: !!Digit?.ULBService?.getStateId(),
       select: (data) => data?.MdmsRes,
     },
   });
@@ -92,7 +92,7 @@ const PTTransfereeDetails = ({ onSelect, config, formData, errors }) => {
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId: Digit.ULBService.getStateId(),
+        tenantId: Digit?.ULBService?.getStateId(),
         moduleDetails: [
           {
             moduleName: "PropertyTax",
@@ -102,7 +102,7 @@ const PTTransfereeDetails = ({ onSelect, config, formData, errors }) => {
       }
     },
     config: {
-      enabled: !!Digit.ULBService.getStateId(),
+      enabled: !!Digit?.ULBService?.getStateId(),
       select: (data) => data?.MdmsRes,
     },
   });

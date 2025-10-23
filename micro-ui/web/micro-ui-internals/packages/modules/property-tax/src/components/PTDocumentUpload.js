@@ -12,7 +12,7 @@ import {
 const PTDocumentUpload = ({ onSelect, config, formData, errors }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const stateId = Digit.ULBService.getStateId();
+  const stateId = Digit?.ULBService?.getStateId();
   const sessionData = config?.customProps?.sessionData;
 
   // Use formData first, fallback to sessionData for the current step

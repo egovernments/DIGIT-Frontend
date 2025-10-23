@@ -5,7 +5,7 @@ import { FormComposerV2, Stepper, HeaderComponent, Loader, Toast } from "@egover
 import { PropertyRegistrationConfig } from "../../configs/employee/PropertyRegistrationConfig";
 import AddPropertyPopup from "../../components/AddPropertyPopup";
 
-const PropertyAssessmentForm = () => {
+const PropertyAssessmentForm = ({ userType = "employee" }) => {
   const { t } = useTranslation();
   const location = useLocation();
   const history = useHistory();
@@ -20,6 +20,7 @@ const PropertyAssessmentForm = () => {
 
   const isUpdateMode = !!(purpose === 'update' && propertyIdFromUrl);
   const isReassessMode = !!(purpose === 'reassess' && propertyIdFromUrl && assessmentIdFromUrl);
+  const isCitizen = userType === "citizen";
 
   // Session storage key for this form
   const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${(isUpdateMode || isReassessMode) ? propertyIdFromUrl : 'new'}`;
@@ -100,6 +101,10 @@ const PropertyAssessmentForm = () => {
   const [importantDates, setImportantDates] = useState(null);
   const [billingSlabs, setBillingSlabs] = useState([]);
 
+  // Citizen-specific state for declaration
+  const [termsAccepted, setTermsAccepted] = useState(false);
+  const [termsError, setTermsError] = useState("");
+
   const config = PropertyRegistrationConfig(t, formData, loading, {
     isReassessMode,
     taxCalculation,
@@ -107,7 +112,16 @@ const PropertyAssessmentForm = () => {
     financialYear: financialYearFromUrl,
     assessmentId: assessmentIdFromUrl,
     importantDates,
-    billingSlabs
+    billingSlabs,
+    isCitizen,
+    termsAccepted,
+    termsError,
+    onTermsChange: (checked) => {
+      setTermsAccepted(checked);
+      if (checked) {
+        setTermsError("");
+      }
+    }
   });
   const currentConfig = config[currentStep];
 
@@ -306,8 +320,9 @@ const PropertyAssessmentForm = () => {
           secondNumber: createdProperty.acknowldgementNumber
         });
 
+        const contextPath = isCitizen ? "citizen" : "employee";
         history.push(
-          `/${window.contextPath}/employee/pt/pt-acknowledgment?${params.toString()}`
+          `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
         );
       } else {
         setToast({
@@ -356,8 +371,9 @@ const PropertyAssessmentForm = () => {
           secondNumber: updatedProperty.acknowldgementNumber
         });
 
+        const contextPath = isCitizen ? "citizen" : "employee";
         history.push(
-          `/${window.contextPath}/employee/pt/pt-acknowledgment?${params.toString()}`
+          `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
         );
       } else {
         setToast({
@@ -417,6 +433,24 @@ const PropertyAssessmentForm = () => {
 
   const handleFormSubmit = (data) => {
     const currentStepKey = currentConfig.key;
+
+    // Validate declaration for citizens on the summary step (Step 5)
+    if (isCitizen && currentStepKey === "summary" && !termsAccepted) {
+      setTermsError("PT_PLEASE_ACCEPT_DECLARATION");
+
+      // Show alert
+      alert(t("PT_PLEASE_ACCEPT_DECLARATION") || "Please check the declaration box to proceed further");
+
+      // Scroll to declaration section
+      setTimeout(() => {
+        const declarationElement = document.querySelector(".declaration-container");
+        if (declarationElement) {
+          declarationElement.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100);
+      return; // Don't proceed if declaration is not accepted
+    }
+
     // Validate assessment details (Step 2) before proceeding
     if (currentStepKey === "assessment-info") {
       const assessmentConfig = currentConfig.body.find(field => field.component === "PTAssessmentDetails");
@@ -529,8 +563,9 @@ const PropertyAssessmentForm = () => {
             FY: financialYearFromUrl
           });
 
+          const contextPath = isCitizen ? "citizen" : "employee";
           history.push(
-            `/${window.contextPath}/employee/pt/pt-acknowledgment?${params.toString()}`
+            `/${window.contextPath}/${contextPath}/pt/pt-acknowledgment?${params.toString()}`
           );
         } else {
           setToast({

@@ -9,7 +9,7 @@ export const SearchConfig = {
       type: "search",
       actions: {
         actionLabel: "PT_ADD_NEW_PROPERTY_BUTTON",
-        actionRoles: ["STADMIN"],
+        actionRoles: ["STADMIN","CITIZEN"],
         actionLink: "pt/assessment-form",
       },
       apiDetails: {
@@ -219,7 +219,7 @@ export const SearchConfig = {
       type: "search",
       actions: {
         actionLabel: "PT_ADD_NEW_PROPERTY_BUTTON",
-        actionRoles: ["STADMIN"],
+        actionRoles: ["STADMIN","CITIZEN"],
         actionLink: "pt/assessment-form",
       },
       apiDetails: {

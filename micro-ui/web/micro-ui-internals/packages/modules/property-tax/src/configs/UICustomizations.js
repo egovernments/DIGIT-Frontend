@@ -188,6 +188,10 @@ export const UICustomizations = {
                 return (doorNo + buildingName + street + mohalla + city) || "-";
             };
 
+            // Get userType to determine routing
+            const userType = Digit.SessionStorage.get("userType") || window.sessionStorage.getItem("userType") || "employee";
+            const basePath = userType === "citizen" ? "citizen" : "employee";
+
             switch (key) {
                 case "PT_COMMON_TABLE_COL_PT_ID":
                     return (
@@ -197,7 +201,7 @@ export const UICustomizations = {
                             variation="link"
                             icon="ExternalLink"
                             size="small"
-                            onClick={() => window.location.href = `/${window.contextPath}/employee/pt/property/${value}?tenantId=${row?.tenantId}`}
+                            onClick={() => window.location.href = `/${window.contextPath}/${basePath}/pt/property/${value}?tenantId=${row?.tenantId}`}
                         />
                     );
 
@@ -209,7 +213,7 @@ export const UICustomizations = {
                             variation="link"
                             icon="ExternalLink"
                             size="small"
-                            onClick={() => window.location.href = `/${window.contextPath}/employee/pt/application-preview?propertyId=${row?.propertyId || row?.PT_PROPERTY_ID || ''}&applicationNumber=${value}&tenantId=${row?.tenantId}&type=property`}
+                            onClick={() => window.location.href = `/${window.contextPath}/${basePath}/pt/application-preview?propertyId=${row?.propertyId || row?.PT_PROPERTY_ID || ''}&applicationNumber=${value}&tenantId=${row?.tenantId}&type=property`}
                         />
                     );
 
@@ -225,7 +229,7 @@ export const UICustomizations = {
                             variation="link"
                             icon="Home"
                             size="small"
-                            onClick={() => window.location.href = `/${window.contextPath}/employee/pt/property/${value}?tenantId=${row?.tenantId}`}
+                            onClick={() => window.location.href = `/${window.contextPath}/${basePath}/pt/property/${value}?tenantId=${row?.tenantId}`}
                         />
                     );
 
@@ -476,6 +480,10 @@ export const UICustomizations = {
                 return (doorNo + buildingName + street + mohalla + city) || "-";
             };
 
+            // Get userType to determine routing
+            const userType = Digit.SessionStorage.get("userType") || window.sessionStorage.getItem("userType") || "employee";
+            const basePath = userType === "citizen" ? "citizen" : "employee";
+
             switch (key) {
                 case "PT_COMMON_TABLE_COL_PT_ID":
                     return (
@@ -485,7 +493,7 @@ export const UICustomizations = {
                             variation="link"
                             icon="ExternalLink"
                             size="small"
-                            onClick={() => window.location.href = `/${window.contextPath}/employee/pt/property/${value}?tenantId=${row?.tenantId}`}
+                            onClick={() => window.location.href = `/${window.contextPath}/${basePath}/pt/property/${value}?tenantId=${row?.tenantId}`}
                         />
                     );
 
@@ -497,7 +505,7 @@ export const UICustomizations = {
                             variation="link"
                             icon="ExternalLink"
                             size="small"
-                            onClick={() => window.location.href = `/${window.contextPath}/employee/pt/application-preview?propertyId=${row?.propertyId || row?.PT_PROPERTY_ID || ''}&applicationNumber=${value}&tenantId=${row?.tenantId}&type=property`}
+                            onClick={() => window.location.href = `/${window.contextPath}/${basePath}/pt/application-preview?propertyId=${row?.propertyId || row?.PT_PROPERTY_ID || ''}&applicationNumber=${value}&tenantId=${row?.tenantId}&type=property`}
                         />
                     );
 
@@ -513,7 +521,7 @@ export const UICustomizations = {
                             variation="link"
                             icon="Home"
                             size="small"
-                            onClick={() => window.location.href = `/${window.contextPath}/employee/pt/property/${value}?tenantId=${row?.tenantId}`}
+                            onClick={() => window.location.href = `/${window.contextPath}/${basePath}/pt/property/${value}?tenantId=${row?.tenantId}`}
                         />
                     );
 

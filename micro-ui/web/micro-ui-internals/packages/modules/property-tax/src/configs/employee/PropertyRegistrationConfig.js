@@ -3,14 +3,14 @@ const currentMonth = new Date().getMonth() + 1; // Jan = 1, Dec = 12
 const financialYearEnd = currentMonth > 3 ? currentYear : currentYear - 1; // FY starts in April
 
 export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessmentProps = {}) => {
-  const { isReassessMode, taxCalculation, existingAssessment, financialYear, assessmentId, importantDates, billingSlabs } = reassessmentProps;
+  const { isReassessMode, taxCalculation, existingAssessment, financialYear, assessmentId, importantDates, billingSlabs, isCitizen, termsAccepted, termsError, onTermsChange } = reassessmentProps;
 
   return [
     // Step 1: Property Address
     {
       stepCount: 1,
       key: "property-address",
-      message: "PT_EMP_FORM1_HEADER_MESSAGE",
+      message: isCitizen ? "PT_FORM1_HEADER_MESSAGE" : "PT_EMP_FORM1_HEADER_MESSAGE",
       body: [
         {
           isMandatory: true,
@@ -63,13 +63,16 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             name: "locality",
             placeholder: "PT_COMMONS_SELECT_PLACEHOLDER",
             validation: { required: true },
-            optionsKey: "code",
+            optionsKey: "name",
             allowMultiSelect: false,
             masterName: "commonUiConfig",
             moduleName: "PropertyRegistrationConfig",
             customfn: "populateLocalityOptions",
             style: {
               marginBottom: "0px",
+            },
+            optionsCustomStyle: {
+              maxHeight: "8vmax"
             },
             error: "PT_ERR_REQUIRED",
           },
@@ -88,7 +91,8 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             }
           }
         },
-        {
+        // Employee-only field: Existing Property ID
+        ...(isCitizen ? [] : [{
           isMandatory: false,
           key: "existingPropertyId",
           type: "text",
@@ -97,15 +101,17 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             name: "existingPropertyId",
             placeholder: "PT_PROPERTY_ADDRESS_EXISTING_PID_PLACEHOLDER"
           }
-        },
+        }]),
         {
-          isMandatory: false,
+          isMandatory: isCitizen ? false : true,
           key: "surveyId",
           type: "search",
           label: "PT_SURVEY_ID",
           populators: {
             name: "surveyId",
             placeholder: "Enter Survey Id/UID",
+            validation: isCitizen ? {} : { required: true },
+            error: isCitizen ? "" : "PT_ERR_REQUIRED",
             onIconSelection: (e) => {
               if (e?.preventDefault) e.preventDefault();
               e?.stopPropagation?.();
@@ -128,7 +134,7 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             validation: { required: true },
             optionsKey: "name",
             optionsCustomStyle: {
-              maxHeight: "8vmax"
+              maxHeight: "6vmax"
             },
             error: "PT_ERR_REQUIRED",
             options: Array.from(
@@ -150,7 +156,7 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
       stepCount: 2,
       key: "assessment-info",
       name: "PT_ASSESMENT_INFO_SUB_HEADER",
-      message: "PT_EMP_FORM2_HEADER_MESSAGE",
+      message: isCitizen ? "PT_FORM2_HEADER_MESSAGE" : "PT_EMP_FORM2_HEADER_MESSAGE",
       body: [
         {
           isMandatory: true,
@@ -288,7 +294,7 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
       stepCount: 3,
       key: "ownership-info",
       name: "PT_OWNERSHIP_INFO_SUB_HEADER",
-      message: "PT_EMP_FORM3_HEADER_MESSAGE",
+      message: isCitizen ? "PT_FORM3_HEADER_MESSAGE" : "PT_EMP_FORM3_HEADER_MESSAGE",
       body: [
         {
           isMandatory: true,
@@ -350,6 +356,7 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
       key: "summary",
       name: "PT_COMMON_SUMMARY",
       head: "PT_APPLICATION_SUMMARY",
+      message: isCitizen ? "PT_FORM1_HEADER_MESSAGE" : "PT_EMP_FORM5_HEADER_MESSAGE",
       body: [
         {
           type: "component",
@@ -369,7 +376,22 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             importantDates: importantDates || null,
             billingSlabs: billingSlabs || []
           }
-        }
+        },
+        // Citizen-specific declaration component
+        ...(isCitizen ? [{
+          type: "component",
+          component: "Declaration",
+          key: "declaration",
+          withoutLabel: true,
+          populators: {
+            name: "declaration"
+          },
+          customProps: {
+            termsAccepted: termsAccepted || false,
+            onTermsChange: onTermsChange,
+            error: termsError || null
+          }
+        }] : [])
       ]
     }
   ];

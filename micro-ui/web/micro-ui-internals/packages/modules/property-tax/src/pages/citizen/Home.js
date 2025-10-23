@@ -6,9 +6,37 @@ import { useHistory } from "react-router-dom";
 const Home = ({ }) => {
     const { t } = useTranslation();
     const history = useHistory();
+    const tenantId = Digit.ULBService.getCitizenCurrentTenant(true) || Digit.ULBService.getCurrentTenantId();
+    const user = Digit.UserService.getUser();
+    const [openAccordionIndex, setOpenAccordionIndex] = useState(-1);
+
+    // Fetch ALL properties once - matching mono-ui pattern (line 167-169: fetchProperties([]))
+    const { isLoading: propertiesLoading, data: allProperties } = Digit.Hooks.useCustomAPIHook({
+        url: "/property-services/property/_search",
+        params: {}, // Empty params to match mono-ui curl exactly
+        config: {
+            enabled: true,
+            select: (data) => {
+                const properties = data?.Properties || [];
+                // Return all properties (filter on client side)
+                return properties.filter(property => property.status !== "INACTIVE");
+            },
+        },
+    });
+
+    // Count ALL properties for "My Properties" (mono-ui line 302)
+    const propertiesCount = allProperties?.length || 0;
+
+    // Count only MUTATION properties for "My Applications" (mono-ui uses separate fetch)
+    const mutationCount = allProperties?.filter(property => property.creationReason === "MUTATION").length || 0;
+
     const onClickHandler = (link) => {
         history.push(`/${window.contextPath}/citizen/pt/${link}`);
     };
+
+    if (propertiesLoading) {
+        return <Loader />;
+    }
 
     return (
         <React.Fragment>
@@ -16,8 +44,14 @@ const Home = ({ }) => {
                 <MenuCardWrapper>
                     <MenuCard
                         icon="PropertyHouse"
-                        menuName={t("PAY_PROPERTY_TAX")}
+                        menuName={t("PT_PAYMENT_PAY_PROPERTY_TAX")}
                         onClick={() => onClickHandler("search-property")}
+                        styles={{}}
+                    />
+                    <MenuCard
+                        icon="Receipt"
+                        menuName={t("CS_TITLE_MY_BILLS") || "My Bills"}
+                        onClick={() => onClickHandler("my-bills")}
                         styles={{}}
                     />
                     <MenuCard
@@ -28,79 +62,47 @@ const Home = ({ }) => {
                     />
                     <MenuCard
                         icon="PropertyHouse"
-                        menuName={t("PT_MY_PROPERTIES")}
+                        menuName={`${t("PT_MY_PROPERTY_SCREEN_HEADER_NEW")} ${propertiesCount}`}
                         onClick={() => onClickHandler("my-properties")}
                         styles={{}}
                     />
                     <MenuCard
                         icon="PropertyHouse"
-                        menuName={t("PT_MY_APPLICATIONS")}
+                        menuName={`${t("PT_MUTATION_MY_APPLICATIONS_NEW")} ${mutationCount}`}
                         onClick={() => onClickHandler("my-applications")}
+                        styles={{}}
+                    />
+                    <MenuCard
+                        icon="Payment"
+                        menuName={t("PT_MY_PAYMENTS_HEADER") || "My Payments"}
+                        onClick={() => onClickHandler("my-payments")}
                         styles={{}}
                     />
                 </MenuCardWrapper>
 
-                <AccordionList>
-                    <Accordion
-                        number={1}
-                        title={t("HOW_IT_WORKS")}
-                    >
-                        <p>{t("HOW_IT_WORKS_DESCRIPTION")}</p>
-                    </Accordion>
-                    <Accordion
-                        number={2}
-                        title={t("PT_EXAMPLE")}
-                    >
-                        <>
-                            <p>{t("Property Tax is calculated based on rates stipulated by the Department of Local Government, Punjab.")}</p>
-                            <AccordionList allowMultipleOpen={true} addDivider={true}>
-                                <Accordion number={1} title={t("Residential Example")}>
-                                    <div className="pt-example-details">
-                                        <p style={{ margin: "0px" }}>
-                                            a. Plot Size: 200 sq yards
-                                        </p>
-                                        <p style={{ margin: "0px" }}>
-                                            b. Ground Floor total built-up area: 150 sq yards (1350 sq ft)
-                                        </p>
-                                        <p style={{ margin: "0px" }}>
-                                            c. Vacant Land (a-b): 50 sq yards (450 sqft)
-                                        </p>
-                                        <p style={{ margin: "0px" }}>
-                                            d. 1st Floor built-up area: 100 sq yards (900 sq ft)
-                                        </p>
-                                        <p style={{ margin: "0px" }}>
-                                            Calculation of Property Tax:
-                                            <br />
-                                            150 (b) × Rs. 2/sq yard = Rs. 300
-                                            <br />
-                                            50 (c) × Re. 1/sq yard = Rs. 50
-                                            <br />
-                                            100 (d) × Re. 1/sq yard = Rs. 100
-                                            <br />
-                                            Net Property Tax: Rs. 450
-                                        </p>
-                                    </div>
-                                </Accordion>
-
-                                <Accordion number={2} title={t("Commercial Example")}>
-                                    <div className="pt-example-details">
-                                        <p style={{ margin: "0px" }}>
-                                            a. Total Super Built-up area: 150 sq yards
-                                        </p>
-                                        <p style={{ margin: "0px" }}>
-                                            Calculation of Property Tax:
-                                            <br />
-                                            150 (a) × Rs. 36/sq yard = Rs. 5,400
-                                            <br />
-                                            Net Property Tax: Rs. 5,400
-                                        </p>
-                                    </div>
-                                </Accordion>
-                            </AccordionList>
-                        </>
-
-                    </Accordion>
-                </AccordionList>
+                {/* Navigation Links Section - matching mono-ui structure */}
+                <div className="digit-accordion-wrapper">
+                    {[
+                        { title: t("PT_HOW_IT_WORKS") || "How It Works", route: "pt-how-it-works", index: 0 },
+                        { title: t("PT_EXAMPLE") || "Property Tax Examples", route: "faq", index: 1 }
+                    ].map((item) => (
+                        <Accordion
+                            key={item.index}
+                            title={item.title}
+                            hideCardBorder={false}
+                            hideDivider={true}
+                            isClosed={openAccordionIndex !== item.index}
+                            onToggle={() => {
+                                // Toggle accordion state
+                                setOpenAccordionIndex(openAccordionIndex === item.index ? -1 : item.index);
+                                // Navigate to the route
+                                onClickHandler(item.route);
+                            }}
+                        >
+                            <div></div>
+                        </Accordion>
+                    ))}
+                </div>
             </div>
         </React.Fragment>
     );

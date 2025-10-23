@@ -190,19 +190,19 @@ export const InboxConfig = {
                     {
                         text: "SEARCH_PROPERTY",
                         url: "/employee/pt/search-property",
-                        roles: ["STADMIN"],
+                        roles: ["STADMIN","CITIZEN"],
                         hyperlink: false,
                     },
                     {
                         text: "SEARCH_APPLICATION",
                         url: "/employee/pt/search-application",
-                        roles: ["STADMIN"],
+                        roles: ["STADMIN","CITIZEN"],
                         hyperlink: false,
                     },
                     {
                         text: "ADD_NEW_PROPERTY",
                         url: "/employee/pt/assessment-form",
-                        roles: ["STADMIN"],
+                        roles: ["STADMIN","CITIZEN"],
                         hyperlink: false,
                     },
                 ],

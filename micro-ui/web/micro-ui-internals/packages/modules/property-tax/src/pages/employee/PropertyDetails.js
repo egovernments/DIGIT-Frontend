@@ -30,6 +30,7 @@ const PropertyDetails = () => {
   const searchParams = new URLSearchParams(location.search);
   const tenantId = searchParams.get('tenantId') || Digit?.ULBService?.getCurrentTenantId();
 
+  const userType = Digit.SessionStorage.get("userType") || window.sessionStorage.getItem("userType") || "employee"; 
   const [propertyData, setPropertyData] = useState(null);
   const [toast, setToast] = useState(null);
   const [totalDues, setTotalDues] = useState(0);
@@ -122,7 +123,7 @@ const PropertyDetails = () => {
     : { data: null };
 
   // Fetch financial years from MDMS
-  const stateId = Digit.ULBService.getStateId();
+  const stateId = Digit?.ULBService?.getStateId();
   const { isLoading: isMdmsLoading, data: mdmsFinancialYears } = Digit.Hooks.useCustomAPIHook({
     url: "/egov-mdms-service/v1/_search",
     params: {},
@@ -298,7 +299,7 @@ const PropertyDetails = () => {
   }, [propertyId, tenantId, t]);
 
   const handlePayDues = () => {
-    history.push(`/${window.contextPath}/employee/pt/payment/${propertyId}?tenantId=${tenantId}`);
+    history.push(`/${window.contextPath}/${userType}/pt/payment/${propertyId}?tenantId=${tenantId}`);
   };
 
   const handleEditProperty = () => {
@@ -310,7 +311,7 @@ const PropertyDetails = () => {
       return;
     }
     // Navigate to edit property screen
-    history.push(`/${window.contextPath}/employee/pt/assessment-form?assessmentId=0&purpose=update&propertyId=${propertyId}&tenantId=${tenantId}`);
+    history.push(`/${window.contextPath}/${userType}/pt/assessment-form?assessmentId=0&purpose=update&propertyId=${propertyId}&tenantId=${tenantId}`);
   };
 
   const handleAssessAndPay = () => {
@@ -343,7 +344,7 @@ const PropertyDetails = () => {
     // Navigate to assessment screen matching mono-ui pattern exactly
     // mono-ui uses: getPropertyLink(propertyId, tenantId, PROPERTY_FORM_PURPOSE.ASSESS, -1, assessmentNo) then appends &FY=${selectedYear}
     // which creates: /property-tax/assessment-form?FY=-1&assessmentId={assessmentNo}&purpose=assess&propertyId={propertyId}&tenantId={tenantId}&FY={selectedYear}
-    const assessmentUrl = `/${window.contextPath}/employee/pt/assessment-form?FY=-1&assessmentId=${assessmentNo}&purpose=assess&propertyId=${propertyId}&tenantId=${tenantId}&FY=${selectedFinancialYear}`;
+    const assessmentUrl = `/${window.contextPath}/${userType}/pt/assessment-form?FY=-1&assessmentId=${assessmentNo}&purpose=assess&propertyId=${propertyId}&tenantId=${tenantId}&FY=${selectedFinancialYear}`;
 
     // Close popup and navigate
     setShowFinancialYearPopup(false);
@@ -652,7 +653,7 @@ const PropertyDetails = () => {
 
   const handleProceedToTransfer = () => {
     setShowTransferOwnershipPopup(false);
-    const mutationUrl = `/${window.contextPath}/employee/pt/pt-mutation/apply?consumerCode=${propertyId}&tenantId=${tenantId}`;
+    const mutationUrl = `/${window.contextPath}/${userType}/pt/pt-mutation/apply?consumerCode=${propertyId}&tenantId=${tenantId}`;
     history.push(mutationUrl);
   };
 
@@ -913,7 +914,7 @@ const PropertyDetails = () => {
     }
 
     // Navigate to assessment form similar to mono-ui pattern with proper parameters
-    const assessmentUrl = `/${window.contextPath}/employee/pt/assessment-form?FY=${financialYear}&assessmentId=${assessmentNumber}&purpose=reassess&propertyId=${propertyId}&tenantId=${tenantId}`;
+    const assessmentUrl = `/${window.contextPath}/${userType}/pt/assessment-form?FY=${financialYear}&assessmentId=${assessmentNumber}&purpose=reassess&propertyId=${propertyId}&tenantId=${tenantId}`;
     history.push(assessmentUrl);
   };
 
@@ -984,7 +985,7 @@ const PropertyDetails = () => {
         if (fileStoreId) {
           try {
             // Call filestore API to get the actual file path from the fileStoreId
-            const fileResponse = await Digit.UploadServices.Filefetch([fileStoreId], Digit.ULBService.getStateId());
+            const fileResponse = await Digit.UploadServices.Filefetch([fileStoreId], Digit?.ULBService?.getStateId());
             if (fileResponse?.data?.fileStoreIds && fileResponse.data.fileStoreIds.length > 0) {
               const fileUrl = fileResponse.data.fileStoreIds[0].url;
               const link = document.createElement("a");
@@ -1009,7 +1010,7 @@ const PropertyDetails = () => {
         } else {
           setToast({
             label: t("PT_RECEIPT_FILESTOREID_NOT_FOUND"),
-            type: "warning"
+            type: "success"
           });
         }
       } else {
@@ -1029,7 +1030,7 @@ const PropertyDetails = () => {
 
   const handleApplicationViewDetails = (applicationNumber) => {
     // Navigate to application preview screen similar to mono-ui pattern
-    const applicationUrl = `/${window.contextPath}/employee/pt/application-preview?propertyId=${propertyId}&applicationNumber=${applicationNumber}&tenantId=${tenantId}&type=property`;
+    const applicationUrl = `/${window.contextPath}/${userType}/pt/application-preview?propertyId=${propertyId}&applicationNumber=${applicationNumber}&tenantId=${tenantId}&type=property`;
     history.push(applicationUrl);
   };
 

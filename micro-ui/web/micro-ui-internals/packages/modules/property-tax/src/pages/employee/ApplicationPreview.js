@@ -163,15 +163,23 @@ const ApplicationPreview = () => {
     if (workflowResponse && workflowResponse.length > 0) {
       // ProcessInstances array contains the workflow history
       // Map each process instance to display format
-      const formattedHistory = workflowResponse.map(processInstance => ({
-        date: processInstance.auditDetails?.createdTime
-          ? new Date(processInstance.auditDetails.createdTime).toLocaleDateString('en-GB')
-          : t("ES_COMMON_NA"),
-        updatedBy: processInstance.assigner?.name || t("ES_COMMON_NA"),
-        status: `WF_${processInstance.businessService}_${processInstance.state.state}`,
-        ulbOfficial: processInstance.assignes?.[0]?.name || t("ES_COMMON_NA"),
-        comments: processInstance.comment || t("ES_COMMON_NA")
-      }));
+      const formattedHistory = workflowResponse.map(processInstance => {
+        // Format status similar to mono-ui: WF_{businessService}_{state}
+        const businessService = processInstance.businessService || 'PT';
+        const state = processInstance.state?.state || '';
+        const statusKey = `WF_${businessService.replace(/\./g, '_')}_${state.replace(/[._:-\s\/]/g, '_')}`;
+
+        return {
+          date: processInstance.auditDetails?.createdTime
+            ? new Date(processInstance.auditDetails.createdTime).toLocaleDateString('en-GB')
+            : t("ES_COMMON_NA"),
+          updatedBy: processInstance.assigner?.name || t("ES_COMMON_NA"),
+          status: statusKey,
+          statusRaw: state,
+          ulbOfficial: processInstance.assignes?.[0]?.name || t("ES_COMMON_NA"),
+          comments: processInstance.comment || t("ES_COMMON_NA")
+        };
+      });
 
       setWorkflowHistory(formattedHistory);
     }
@@ -285,8 +293,8 @@ const ApplicationPreview = () => {
                   renderCustomContent: (value) => value,
                   value: (
                     <Tag
-                      type={getStatusType(history.status)}
-                      label={history.status}
+                      type={getStatusType(history.statusRaw)}
+                      label={t(history.status) || history.statusRaw || t("ES_COMMON_NA")}
                       showIcon={true}
                     />
                   )

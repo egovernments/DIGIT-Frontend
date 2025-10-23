@@ -13,6 +13,7 @@ import PTAssessmentDetails from "./components/PTAssessmentDetails";
 import PTOwnershipDetails from "./components/PTOwnershipDetails";
 import PTDocumentUploadAssessmentForm from "./components/PTDocumentUploadAssessmentForm";
 import PropertySummary from "./components/PropertySummary";
+import Declaration from "./components/Declaration";
 
 
 import PropertySearch from "./pages/employee/PropertySearch";
@@ -26,6 +27,14 @@ import AssessmentForm from "./pages/employee/AssessmentForm";
 import PropertyTaxInbox from "./pages/employee/PropertyTaxInbox";
 import PTAcknowledgmentEmployee from "./pages/employee/PTAcknowledgmentEmployee";
 import PaymentAcknowledgement from "./pages/employee/PaymentAcknowledgement";
+
+import Home from "./pages/citizen/Home";
+import { MyApplications } from "./pages/citizen/MyApplications";
+import { MyProperties } from "./pages/citizen/MyProperties";
+import PTFAQ from "./pages/citizen/PTFAQ";
+import PTHowItWorks from "./pages/citizen/PTHowItWorks";
+import PTMyPayments from "./pages/citizen/PTMyPayments";
+import { PTMyBills } from "./pages/citizen/PTMyBills";
 
 import { overrideHooks, updateCustomConfigs } from "./utils";
 
@@ -66,6 +75,15 @@ const componentsToRegister = {
   PTAcknowledgmentEmployee,
   PaymentAcknowledgement,
 
+  //Citizen releated
+  Home,
+  PTMyBills,
+  PTMyPayments,
+  PTFAQ,
+  PTHowItWorks,
+  MyApplications,
+  MyProperties,
+
   // Components
   PTTransfereeDetails,
   PTDocumentUpload,
@@ -74,6 +92,7 @@ const componentsToRegister = {
   PTAssessmentDetails,
   PTDocumentUploadAssessmentForm,
   PropertySummary,
+  Declaration
 };
 
 
