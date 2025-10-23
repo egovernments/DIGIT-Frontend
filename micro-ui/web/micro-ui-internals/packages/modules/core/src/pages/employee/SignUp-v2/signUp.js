@@ -7,7 +7,7 @@ import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
-  const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  // const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const [showToast, setShowToast] = useState(null);
@@ -111,6 +111,11 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         flexDirection: "column",
       }}
     >
+      <style>{`
+        .sandbox-signup-form .label-container .info-icon:hover .infotext {
+          margin-left: -6.25rem !important;
+        }
+      `}</style>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
         {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
@@ -144,7 +149,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     </div>
   );
 
-  if (isLoading || isStoreLoading) return <Loader />;
+  if (isStoreLoading) return <Loader />;
 
   if (isMobile) {
     // On mobile return only form section

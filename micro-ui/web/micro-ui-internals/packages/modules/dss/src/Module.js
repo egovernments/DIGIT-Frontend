@@ -15,9 +15,12 @@ const DssBreadCrumb = ({ location }) => {
   const {fromModule=false,title}= Digit.Hooks.useQueryParams();
   const moduleName=Digit.Utils.dss.getCurrentModuleName();
   const landingPageHiddenIn=["works-ui","sanitation-ui"];
+  const tenantId = Digit.ULBService.getCurrentTenantId();
+  const isFromSandbox = Digit.Utils.getMultiRootTenant();
+  
   const crumbs = [
     {
-      path: `/${window?.contextPath}/employee`,
+      path: isFromSandbox ? `/${window?.contextPath}/employee/sandbox-ui/${tenantId}/employee?from=sandbox` : `/${window?.contextPath}/employee`,
       content: t("ES_COMMON_HOME"),
       show: true,
     },
@@ -54,7 +57,7 @@ const Routes = ({ path, stateCode }) => {
   const location = useLocation();
   const isMobile = window.Digit.Utils.browser.isMobile();
   return (
-    <div className="chart-wrapper" style={isMobile ? {marginTop:"unset"} : {}}>
+    <div className="chart-wrapper" style={isMobile ? {marginTop:"unset"} : {marginTop:"6rem"}}>
       <DssBreadCrumb location={location} />
       <Switch>
         <PrivateRoute path={`${path}/landing/:moduleCode`} component={() => <Home stateCode={stateCode} />} />
