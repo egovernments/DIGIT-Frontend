@@ -1,5 +1,4 @@
-import Urls from "../urls";
-import AttendeeService from "./attendee_service/attendeeService";
+import AttendeeService from "./AttendeeService";
 
 
 export const AttendanceService = {
@@ -31,7 +30,7 @@ export const AttendanceService = {
     try {
 
       const response = await Digit.CustomService.getResponse({
-        url: Urls.attendee.registerSearch,
+        url: "/health-attendance/v1/_search",
         useCache: false,
         method: "POST",
         userService: true,
@@ -54,7 +53,7 @@ export const AttendanceService = {
     try {
 
       const response = await Digit.CustomService.getResponse({
-        url: Urls.attendee.deenrollAttendee,
+        url: "/health-attendance/attendee/v1/_delete",
         useCache: false,
         method: "POST",
         userService: true,
@@ -73,19 +72,22 @@ export const AttendanceService = {
   },
 
 
-  searchIndividual: async ({ name, locallity, tenantId }) => {
+  searchIndividual: async ({ name, locallity, tenantId, offset, limit }) => {
     try {
 
       //  if (data?.SelectEmployeePhoneNumber && data?.SelectEmployeePhoneNumber?.trim().length > 0) {
-      const result = await AttendeeService.search(tenantId, null, { limit: 10, offset: 0 }, {
+      const result = await AttendeeService.search(tenantId, null, { limit: limit || 5, offset: offset || 0 }, {
 
         "Individual": {
 
           "name": {
             "givenName": name
-
+            // "givenName": "Ava Taylor"
           },
-
+          "roleCodes": [
+            "DISTRICT_SUPERVISOR",
+            "TEAM_SUPERVISOR"
+          ],
           //  "mobileNumber": null,
 
           "locality": {
@@ -100,7 +102,7 @@ export const AttendanceService = {
 
       });
 
-      return result.Individual;
+      return result;
     } catch (error) {
       throw error; // throw on error
     }
