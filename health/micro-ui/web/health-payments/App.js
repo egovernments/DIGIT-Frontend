@@ -13,7 +13,8 @@ const enabledModules = [
   "Utilities",
   "Engagement",
   "Workbench",
-  "Payments"
+  "Payments",
+  "PGR"
 ];
 
 const moduleReducers = (initData) => ({
