@@ -15,7 +15,7 @@
   "homepage": "/digit-ui",
   "dependencies": {
     "@egovernments/digit-ui-libraries": "1.8.23",
-    "@egovernments/digit-ui-module-workbench": "1.0.28",
+    "@egovernments/digit-ui-module-workbench": "1.0.29",
     "@egovernments/digit-ui-module-pgr": "1.8.12",
     "@egovernments/digit-ui-module-dss": "1.8.12",
     "@egovernments/digit-ui-module-core": "1.8.55",
@@ -66,11 +66,9 @@
     "**/@jridgewell/gen-mapping": "0.3.5",
     "**/polished": "4.2.2",
     "**/ajv-formats": "2.1.1",
-    "**/minimatch": "7.4.6",
-    "minimatch": "7.4.6",
-    "**/glob": "7.2.3",
-    "glob": "7.2.3",
-    "fast-uri": "2.1.0"
+    "fast-uri": "2.1.0",
+    "**/minimatch": "^3.0.4",
+    "**/glob": "^7.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

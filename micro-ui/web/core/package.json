@@ -18,7 +18,7 @@
     "@egovernments/digit-ui-components":"0.2.0",
     "@egovernments/digit-ui-libraries": "1.8.23",
     "@egovernments/digit-ui-module-core": "1.8.48",
-    "@egovernments/digit-ui-module-workbench": "1.0.28",
+    "@egovernments/digit-ui-module-workbench": "1.0.29",
     "@egovernments/digit-ui-module-utilities": "1.0.15",
     "@egovernments/digit-ui-module-open-payment":"0.0.2",
     "@egovernments/digit-ui-module-hrms": "1.8.11",
@@ -61,10 +61,8 @@
     "**/polished": "4.2.2",
     "**/ajv-formats": "2.1.1",
     "fast-uri": "2.1.0",
-    "**/minimatch": "7.4.6",
-    "minimatch": "7.4.6",
-    "**/glob": "7.2.3",
-    "glob": "7.2.3"
+    "**/minimatch": "^3.0.4",
+    "**/glob": "^7.1.2"
   },
   "scripts": {
     "start": "react-scripts start",

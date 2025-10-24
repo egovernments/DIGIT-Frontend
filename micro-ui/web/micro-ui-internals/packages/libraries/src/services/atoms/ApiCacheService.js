@@ -3,7 +3,7 @@ import { PersistantStorage } from "./Utils/Storage";
 const defaultApiCachingSettings = [
   {
     serviceName: "localization",
-    cacheTimeInSecs: 86400,
+    cacheTimeInSecs: 3600, // Cache for 1 hour to reduce token dependency
   },
   {
     serviceName: "access/v1/actions",
@@ -15,7 +15,8 @@ const defaultApiCachingSettings = [
   },
   {
     serviceName: "egov-mdms-service",
-    cacheTimeInSecs: 3600,
+    cacheTimeInSecs: 0,
+    // cacheTimeInSecs: 3600,
     debounceTimeInMS: 100,
     moduleSettings: [
       {
@@ -26,7 +27,8 @@ const defaultApiCachingSettings = [
   },
   {
     serviceName: "mdms-v2",
-    cacheTimeInSecs: 3600,
+    cacheTimeInSecs: 0,
+    // cacheTimeInSecs: 3600,
     debounceTimeInMS: 100,
     moduleSettings: [
       {

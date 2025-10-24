@@ -14,7 +14,7 @@ export const SignUpConfig = [
           name: "accountName",
           validation: {
             required: true,
-            pattern: /^[A-Za-z]+( [A-Za-z]+)*$/,
+            pattern: /^[A-Z]+( [A-Z]+)*$/,
             maxLength: 50,
           },
           error: "ERR_ACCOUNT_NAME_REQUIRED",
@@ -65,20 +65,20 @@ export const SignUpConfig = [
           name: "check",
         },
       },
-      {
-        isMandatory: false,
-        key: "check",
-        type: "component",
-        component: "PrivacyComponent",
-        withoutLabel: true,
-        disable: false,
-        customProps: {
-          module: "SandboxSignUp",
-        },
-        populators: {
-          name: "check",
-        },
-      },
+      // {
+      //   isMandatory: false,
+      //   key: "check",
+      //   type: "component",
+      //   component: "PrivacyComponent",
+      //   withoutLabel: true,
+      //   disable: false,
+      //   customProps: {
+      //     module: "SandboxSignUp",
+      //   },
+      //   populators: {
+      //     name: "check",
+      //   },
+      // },
     ],
     bannerImages: [{
       id: 1,

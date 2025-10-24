@@ -18,6 +18,8 @@ const iconMap = {
 };
 
 
+
+
 import { useHistory } from "react-router-dom";
 const Breadcrumb = ({ path }) => {
     const history = useHistory();
@@ -106,7 +108,7 @@ const RoleBlock = ({ description }) => {
 
 
 
-const ExperienceSection = ({ experience, t = { t } }) => (
+const ExperienceSection = ({ experience, t = { t }, module, permalink }) => (
     <div style={{ width: '100%', backgroundColor: '#e4edf1', padding: '0rem 2rem 0rem 4rem' }}>
         <div className="about-container-2" style={{ backgroundColor: '#e4edf1' }}>
             <div className="about-title-wrapper">
@@ -115,33 +117,50 @@ const ExperienceSection = ({ experience, t = { t } }) => (
             </div>
             <p className="about-description">{experience.description}</p>
             {experience.roles.map((r, i) => (
-                <UserRoleBlock key={i} role={r.role} imageUrl={r.imageUrl} reverse={r.reverse} cards={r.cards} config={r.config} t={t} />
+                <UserRoleBlock key={i} role={r.role} imageUrl={r.imageUrl} reverse={r.reverse} cards={r.cards} config={r.config} t={t} module={module} permalink={permalink} />
             ))}
         </div>
     </div>
 );
 
-const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t }) => (
+const UserRoleBlock = ({ role, imageUrl, reverse, cards, config, t, module, permalink }) => (
     <div className="cs-wrapper-align">
         <div className="cs-wrapper">
-            {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+            {!reverse && <RoleContent role={role} cards={cards} config={config} t={t} module={module} permalink={permalink} />}
             <div className={`cs-right ${reverse ? `cs-justify-start` : `cs-justify-end`}`}>
                 <img src={imageUrl} alt="UI" className="cs-image" />
             </div>
-            {reverse && <RoleContent role={role} cards={cards} config={config} t={t} />}
+            {reverse && <RoleContent role={role} cards={cards} config={config} t={t} module={module} permalink={permalink} />}
         </div>
     </div>
 );
 
-const RoleContent = ({ role, cards, config, t }) => (
+const RoleContent = ({ role, cards, config, t, module, permalink }) => (
     <div className="cs-left">
         <h2 className="cs-title">{role}</h2>
         {cards.map(({ icon, text }, idx) => {
             const IconComponent = iconMap[icon];
+            const isOBPSStakeholderFeature2 = module === 'OBPS' && text === t('OBPS_STAKEHOLDER_FEATURE2');
+            
             return (
                 <div key={idx} className="cs-card">
                     <IconComponent className="cs-icon" />
                     <span>{text}</span>
+                    {isOBPSStakeholderFeature2 && permalink && (
+                        <a 
+                            href={permalink} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            style={{ 
+                                marginLeft: '8px', 
+                                color: '#C84C0E', 
+                                textDecoration: 'underline',
+                                fontWeight: 'bold'
+                            }}
+                        >
+                            (Link)
+                        </a>
+                    )}
                 </div>
             );
         })}
@@ -164,24 +183,110 @@ const RoleContent = ({ role, cards, config, t }) => (
     </div>
 );
 
-const WalkthroughSection = ({ activeTab, setActiveTab, t }) => {
+// const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citizenWTLink, stakeholderWTLink, module }) => {
+//     const iframeSrc = activeTab === "citizen"
+//         ? citizenWTLink
+//         : activeTab === "employee"
+//             ? employeeWTLink
+//             : stakeholderWTLink;
+
+//     return (
+//         <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 2rem 3rem 4rem' }}>
+//             <div className="wt-c1">
+//                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
+//                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
+//             </div>
+//             <div className="wt-tabs-center wt-tabs-and-iframe">
+//                 <div className="wt-tab-wrapper">
+//                     {module === "Finance" ? (
+//                         <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+//                     ) : (
+//                         <div className="wt-tab-wrapper">
+//                             <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
+//                             <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+//                             {(module === "FSM" || module === "OBPS") && (
+//                                 <div className={`wt-tab ${activeTab === "stakeholder" ? "active" : ""}`} onClick={() => setActiveTab("stakeholder")}>
+//                                     {module === "FSM" ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER")}
+//                                 </div>
+//                             )}
+//                         </div>
+//                     )}
+//                 </div>
+//                 <div className="wt-iframe-wrapper">
+//                     <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
+//                 </div>
+//             </div>
+//         </div>
+//     );
+// };
+
+
+const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citizenWTLink, stakeholderWTLink, module }) => {
     const iframeSrc = activeTab === "citizen"
-        ? "https://example.com"
-        : "https://www.wikipedia.org";
+        ? citizenWTLink
+        : activeTab === "employee"
+            ? employeeWTLink
+            : stakeholderWTLink;
+
+    const getTabs = () => {
+       
+        const allTabs = [
+            {
+                id: 'stakeholder',
+                label: module === 'FSM' ? t("FSM_STAKEHOLDER_FEATURE_HEADER") : t("OBPS_STAKEHOLDER_FEATURE_HEADER"),
+                show: module === 'FSM' || module === 'OBPS'
+            },
+            {
+                id: 'citizen',
+                label: t("SB_WALK_THROUHG_CITIZEN"),
+                show: true
+            },
+            {
+                id: 'employee',
+                label: module === 'FSM' ? t("FSM_EMPLOYEE_FEATURE_HEADER") : t("SB_WALK_THROUHG_EMPLOYEE"),
+                show: true
+            }
+        ];
+
+       
+        let visibleTabs = allTabs.filter(tab => tab.show);
+
+        if (module === "OBPS") {
+            const obpsOrder = ['stakeholder', 'citizen', 'employee'];
+            visibleTabs.sort((a, b) => obpsOrder.indexOf(a.id) - obpsOrder.indexOf(b.id));
+        }
+        if (module === "FSM") {
+            const fsmOrder = ['citizen', 'employee', 'stakeholder'];
+            visibleTabs.sort((a, b) => fsmOrder.indexOf(a.id) - fsmOrder.indexOf(b.id));
+        }
+
+        return visibleTabs.map(tab => (
+            <div
+                key={tab.id}
+                className={`wt-tab ${activeTab === tab.id ? "active" : ""}`}
+                onClick={() => setActiveTab(tab.id)}
+            >
+                {tab.label}
+            </div>
+        ));
+    };
 
     return (
-        <div className="walkthrough-container" style={{ width: '100%', backgroundColor: '#ffffff', padding: '3rem 6rem' }}>
+        <div className="walkthrough-container" style={{ backgroundColor: '#efefefef', padding: '3rem 6rem 3rem 6rem' }}>
             <div className="wt-c1">
                 <h2 className="wt-title">{t("SB_WALK_THROUHG_HEADER")}</h2>
                 <p className="wt-subtitle">{t("SB_WALK_THROUHG_DESCRIPTION")}</p>
             </div>
-            <div className="wt-tabs-center wt-tabs-and-iframe">
-                <div className="wt-tab-wrapper">
-                    <div className={`wt-tab ${activeTab === "citizen" ? "active" : ""}`} onClick={() => setActiveTab("citizen")}>{t("SB_WALK_THROUHG_CITIZEN")}</div>
-                    <div className={`wt-tab ${activeTab === "employee" ? "active" : ""}`} onClick={() => setActiveTab("employee")}>{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+            <div className="wt-tabs-center wt-tabs-and-iframe" style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start', gap: '2rem', position: 'relative' }}>
+                <div className="wt-tab-wrapper" style={{ marginBottom: '-2rem', display: 'flex', justifyContent: 'flex-start', width: 'auto', position: 'absolute', top: '0', left: '0', zIndex: 10 }}>
+                    {module === "Finance" ? (
+                        <div className="wt-tab active">{t("SB_WALK_THROUHG_EMPLOYEE")}</div>
+                    ) : (
+                        getTabs()
+                    )}
                 </div>
-                <div className="wt-iframe-wrapper">
-                    <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe"></iframe>
+                <div className="wt-iframe-wrapper h-full w-full relative overflow-hidden" style={{ marginTop: '3rem', height: '40rem', width: '70rem', alignSelf: 'flex-start', alignItems: 'flex-start', justifyContent: 'flex-start' }}>
+                    {iframeSrc && <iframe src={iframeSrc} title="Digit Sandbox" className="wt-iframe" style={{ width: '100%', height: '600px' }}></iframe>}
                 </div>
             </div>
         </div>
@@ -256,11 +361,52 @@ function getImageByType(config, type) {
     return imageObject?.text || null;
 }
 
+function getLinkByType(config, type) {
+    const contentArray = config[0]?.subsections?.[1]?.content;
+
+    if (!Array.isArray(contentArray)) {
+        return null;
+    }
+
+    const imageObject = contentArray.find(item => item.type === type);
+
+    return imageObject?.link || null;
+}
+
+function getPermalinkByType(config, type) {
+    const contentArray = config[0]?.subsections?.[1]?.content;
+
+    if (!Array.isArray(contentArray)) {
+        return null;
+    }
+
+    const permalinkObject = contentArray.find(item => item.type === type);
+
+    return permalinkObject?.permalink || null;
+}
+
 
 const ProductDetailsComponentUpdated = ({ config, module }) => {
 
+    console.log(`*** LOG ***`,config);
+
     const { t } = useTranslation();
-    const [activeTab, setActiveTab] = useState("citizen");
+    const getInitialActiveTab = (currentModule) => {
+    if (currentModule === "OBPS") {
+        return "stakeholder";
+    }
+    if (currentModule === "Finance") {
+        return "employee";
+    }
+    
+    return "citizen";
+    };
+
+    const [activeTab, setActiveTab] = useState(getInitialActiveTab(module));
+    const [employeeWTLink, setEmployeeWTLink] = useState('');
+    const [citizenWTLink, setCitizenWTLink] = useState('');
+    const [stakeholderWTLink, setStakeholderWTLink] = useState('');
+
 
 
     content.heroTitle = `${t(config[0].heading)}`
@@ -343,15 +489,27 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
             roles[currentRoleIndex].cards.push({ icon, text: t(item.text) });
         }
     });
-
     content.experience.roles = roles;
+
+    // Get permalink for OBPS module
+    const permalink = getPermalinkByType(config, 'permalink');
+
+    console.log("*** Log ===> ", content.experience);
     return (
         <div style={{ paddingLeft: '0.5rem' }}>
             <Breadcrumb path={`${t(config[0].heading)}`} />
             <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
             <AboutSection about={content.about} />
-            <ExperienceSection experience={content.experience} t={t} />
-            <WalkthroughSection activeTab={activeTab} setActiveTab={setActiveTab} t={t} />
+            <ExperienceSection experience={content.experience} t={t} module={module} permalink={permalink} />
+            <WalkthroughSection
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                t={t}
+                employeeWTLink={getLinkByType(config, 'employee')}
+                citizenWTLink={getLinkByType(config, 'citizen')}
+                stakeholderWTLink={getLinkByType(config, 'stakeholder')}
+                module={module}
+            />
         </div>
     );
 };

@@ -176,7 +176,7 @@ export const AppHome = ({
   }
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
   return Digit.Utils.getRoleBasedHomeCard() ? (
-    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
+    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""} style={{"marginTop":"6rem"}}>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
       {isSuperUserWithMultipleRootTenant && !window.Digit.Utils.browser.isMobile() ? <QuickSetupConfigComponent /> : null}
     </div>

@@ -166,6 +166,7 @@ const MDMSEdit = ({ ...props }) => {
       return;
     }
   
+    
     // Perform MDMS Update
     mutation.mutate(
       {
@@ -179,10 +180,14 @@ const MDMSEdit = ({ ...props }) => {
           closeToast();
         },
         onSuccess: () => {
-          setShowToast({ label: t("WBH_SUCCESS_UPD_MDMS_MSG") });
-          setTimeout(() => {
-             gotoView();
-          }, 1000);
+          setShowToast({
+            label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${transformedFormData?.code ? transformedFormData?.code : data?.
+uniqueIdentifier}`,
+            type: "success",
+          });
+           setTimeout(() => {
+            gotoView();
+          }, 3000);
         },
       }
     );

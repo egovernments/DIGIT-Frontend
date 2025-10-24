@@ -24,6 +24,16 @@ const SelectPincode = ({ t, config, onSelect, value }) => {
   }
 
   const goNext = async (data) => {
+    const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+
+    // If multiRootTenant is enabled, skip tenant validation (like skip but with pincode data)
+    if (isMultiRootTenant) {
+      // Just pass the pincode data to next step, let user select city manually
+      onSelect({ ...data });
+      return;
+    }
+
+    // Original validation for non-multiRootTenant
     var foundValue = tenants.find((obj) => obj.pincode?.find((item) => item == data?.pincode));
     if (foundValue) {
       Digit.SessionStorage.set("city_complaint", foundValue);

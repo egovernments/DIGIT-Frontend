@@ -1,6 +1,6 @@
 export const sandboxConfig = {
   heading: "SANDBOX_HEADING",
-  url: "https://www.youtube.com/watch?v=0wcuD67MVt8",
+  url: "https://app.supademo.com/embed/cmdphco8t0001y90ikoa6o142?embed_v=2&utm_source=embed",
   subsections: [
     {
       title: "SANDBOX_INTRODUCTION_TITLE",

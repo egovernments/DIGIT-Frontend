@@ -56,20 +56,86 @@ const Otp = ({ isLogin = false }) => {
           populators: { required: true }
         }
       ],
-      bannerImages: [   {
-        id: 1,
-        image: "https://images.unsplash.com/photo-1746277121508-f44615ff09bb",
-        title: "Digital Headquarters for National Health Agencies",
-        description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
-      },
-      {
-        id: 2,
-        image: "https://images.unsplash.com/photo-1581094271901-8022df4466f9",
-        title: "Digital Headquarters for National Health Agencies",
-        description: "Access real-time data dashboards and manage complaints."
-      }],
+      bannerImages:  [{
+      id: 1,
+      image: 'https://images.unsplash.com/photo-1746277121508-f44615ff09bb',
+      title: 'Digital Headquarters for National Health Agencies',
+      description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+    },
+    {
+      id: 2,
+      image: 'https://images.unsplash.com/photo-1581094271901-8022df4466f9',
+      title: 'Digital Headquarters for National Health Agencies',
+      description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+    },
+    {
+      id: 3,
+      image: 'https://images.unsplash.com/photo-1624555130581-1d9cca783bc0',
+      title: 'Digital Headquarters for National Health Agencies',
+      description: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Cupiditate aut autem aperiam et modi saepe obcaecati doloremque voluptatem iusto quidem!"
+    },
+    {
+      id: 4,
+      image: 'https://images.unsplash.com/photo-1547481887-a26e2cacb5b2',
+      title: 'Digital Headquarters for National Health Agencies',
+      description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+    },
+    {
+      id: 5,
+      image: 'https://images.unsplash.com/photo-1536782376847-5c9d14d97cc0',
+      title: 'Digital Headquarters for National Health Agencies',
+      description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+    },
+    {
+      id: 6,
+      image: 'https://images.unsplash.com/photo-1490730141103-6cac27aaab94',
+      title: 'Digital Headquarters for National Health Agencies',
+      description: "Set up and configure multiple campaigns, access real-time data dashboards, manage centralized help desks and complaints, and easily integrate with DHIS2 and other open-source products."
+    },
+    ],
     }
   ];
+
+
+   const { data: mdmsBannerImages, isLoading: loadingimages } = Digit.Hooks.useCustomAPIHook({
+    url: "/mdms-v2/v1/_search",
+
+    body: {
+      MdmsCriteria:{
+        "tenantId": "DEFAULT" || tenant,
+        "moduleDetails": [
+            {
+                "moduleName": "sandbox",
+                "masterDetails": [
+                    {
+                        "name": "BannerImages"
+                    }
+                ]
+            }
+        ]
+    }
+    },
+
+    config: {
+      select: (response) => {
+        try {
+          const fetchedBanners =response?.MdmsRes?.sandbox?.BannerImages?.[0]?.bannerImages;
+
+          if (Array.isArray(fetchedBanners) && fetchedBanners.length > 0) {
+            return fetchedBanners;
+          }
+
+          return null;
+
+        } catch (error) {
+          console.error("Error processing MDMS data from useCustomAPIHook:", error);
+         
+          return null;
+        }
+      },
+      retry: false, 
+    },
+  });
 
   const OtpConfig = [{ texts: { submitButtonLabel: "CORE_COMMON_SUBMIT" } }];
 
@@ -187,7 +253,12 @@ const Otp = ({ isLogin = false }) => {
   ) : (
     <div style={{ display: "flex", height: "100vh" }}>
       <div style={{ width: "70%", position: "relative" }}>
-        <Carousel bannerImages={config[0].bannerImages} />
+        {loadingimages ? (
+          <Loader />
+        ) : (
+          <Carousel bannerImages={mdmsBannerImages || config[0].bannerImages} />
+        )}
+        {/* <Carousel bannerImages={config[0].bannerImages} /> */}
       </div>
       {renderFormSection()}
     </div>
