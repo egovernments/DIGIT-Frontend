@@ -1,3 +1,4 @@
+import Urls from "../urls";
 import AttendeeService from "./attendee_service/attendeeService";
 
 
@@ -30,7 +31,7 @@ export const AttendanceService = {
     try {
 
       const response = await Digit.CustomService.getResponse({
-        url: "/health-attendance/v1/_search",
+        url: Urls.attendee.registerSearch,
         useCache: false,
         method: "POST",
         userService: true,
@@ -53,7 +54,7 @@ export const AttendanceService = {
     try {
 
       const response = await Digit.CustomService.getResponse({
-        url: "/health-attendance/attendee/v1/_delete",
+        url: Urls.attendee.deenrollAttendee,
         useCache: false,
         method: "POST",
         userService: true,
