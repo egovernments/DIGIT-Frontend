@@ -198,7 +198,7 @@ function AppFieldScreenWrapper({ parentState }) {
             <div>{t("APPCONFIG_NAVIGATION_LOGIC")}</div>
             <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_NAVIGATION_LOGIC")} />
           </div>
-          <NavigationLogicWrapper
+          {currentCard?.conditionalNavigateTo && (<NavigationLogicWrapper
             t={t}
             parentState={parentState}
             currentState={currentCard}
@@ -209,7 +209,7 @@ function AppFieldScreenWrapper({ parentState }) {
                 data,                        // array built by NavigationLogicWrapper on Submit
               });
             }}
-          />
+          />)}
         </>
       )}
       <Divider className="app-config-drawer-action-divider" />
