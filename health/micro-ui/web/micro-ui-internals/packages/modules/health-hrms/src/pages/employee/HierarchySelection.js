@@ -12,7 +12,7 @@ import {
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import { useHistory } from "react-router-dom";
 
-const HierarchySelection = ({onHierarchyChosen  }) => {
+const HierarchySelection = ({ onHierarchyChosen }) => {
   const { t } = useTranslation();
   const tenantId = Digit.ULBService.getStateId();
   const language = Digit.StoreData.getCurrentLanguage();
@@ -93,12 +93,12 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
       });
       return;
     }
-    else{
+    else {
 
-    Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
+      Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", selectedHierarchy);
 
-    onHierarchyChosen(selectedHierarchy);
-  }
+      onHierarchyChosen(selectedHierarchy);
+    }
   };
 
   useEffect(() => {
@@ -118,7 +118,10 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
     }
   }, [boundaryData, selectedHierarchy]);
 
-  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) return <Loader />;
+  if (isHierarchyLoading || isStoreLoading || isBoundaryLoading) {
+
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
+  }
 
   return (
     <div className="container">
@@ -128,7 +131,7 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
         </HeaderComponent>
         <p className="description-type">{t(`HCM_HIERARCHY_TYPE_DESCRIPTION`)}</p>
         <LabelFieldPair>
-          <div className="campaign-type">
+          <div className="" style={{ justifyContent: "center", marginTop: "6px" }}>
             <span>{t("HCM_HIERARCHY_TYPE")}</span>
             <span className="mandatory-span">*</span>
           </div>
@@ -144,7 +147,7 @@ const HierarchySelection = ({onHierarchyChosen  }) => {
       </Card>
       <ActionBar className="mc_back">
         <Button
-          style={{ margin: "0.5rem", marginLeft: "6rem", minWidth: "16rem" }}
+          style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "10rem" }}
           variation="primary"
           label={t("NEXT")}
           title={t("NEXT")}

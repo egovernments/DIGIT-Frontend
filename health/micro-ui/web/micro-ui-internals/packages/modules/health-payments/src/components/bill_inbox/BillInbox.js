@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import _ from "lodash";
 import { useTranslation } from "react-i18next";
 const { fromViewScreen } = location.state || false;
-import { ActionBar, Button, Card, InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
+import { ActionBar, Button, Card,AlertCard as InfoCard, Loader, Tab, Toast } from "@egovernments/digit-ui-components";
 import BillBoundaryFilter from "./bill_boundary_filter";
 import BillInboxTable from "./billInboxTable";
 import { defaultRowsPerPage, ScreenTypeEnum } from "../../utils/constants";
@@ -302,10 +302,14 @@ const BillInboxComponent = () => {
                 <div style={{ width: "100%", display: "flex", flexDirection: "column", gap: "24px" }}>
                     {infoDescription && <div style={{ display: "flex", flexDirection: "row", width: "100%" }}>
                         <InfoCard
+                            populators={{
+                                name: "infocard",
+                            }}
                             variant="default"
                             style={{ margin: "0rem", width: "100%", maxWidth: "unset", height: "124px" }}
                             label={t(`HCM_AM_INFO`)}
                             text={t(infoDescription)}
+                            
                         />
                     </div>}
                     <div style={{ width: "100%", display: "flex", flexDirection: "row", height: infoDescription ? "60vh" : "74vh", minHeight: "60vh" }}>

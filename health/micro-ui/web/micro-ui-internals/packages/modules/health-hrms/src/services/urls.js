@@ -6,6 +6,9 @@ const boundarySearchPath = window?.globalConfigs?.getConfig("BOUNDARY_CONTEXT") 
 const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "HIERARCHYTEST";
 const projectContextPath = window?.globalConfigs?.getConfig("PROJECT_SERVICE_PATH") || "health-project";
 
+const healthAttendanceContextPath = window?.globalConfigs?.getConfig("ATTENDANCE_CONTEXT_PATH") || "health-attendance";
+const healthIndividualContextPath = window?.globalConfigs?.getConfig("INDIVIDUAL_CONTEXT_PATH") || "health-individual";
+
 const Urls = {
   hrms: {
     search: `/${healthHrms}/employees/_search`,
@@ -44,6 +47,12 @@ const Urls = {
     createStaff: `/${projectContextPath}/staff/v1/_create`,
     deleteStaff: `/${projectContextPath}/staff/v1/_delete`,
   },
+
+
+  attendee:{
+    deenrollAttendee:`/${healthAttendanceContextPath}/attendee/v1/_delete`,
+     search: `/${healthIndividualContextPath}/v1/_search`,
+  }
 };
 
 export default Urls;

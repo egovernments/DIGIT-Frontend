@@ -10,6 +10,8 @@ import AttendanceInbox from "./attendance_inbox";
 import BillInbox from "./bill_inbox";
 import MyBills from "./my_bills";
 import ProjectSelect from "./project_selection";
+import EditRegister from "./EditRegister";
+import InboxAttendeesSearch from "./AttendeeSearchAssign";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -43,7 +45,8 @@ const ProjectBreadCrumb = ({ location }) => {
       content: fromCampaignSupervisor ? t("HCM_AM_BREADCRUMBS_GENERATE_BILLS") : t("HCM_AM_BREADCRUMBS_REGISTERS_INBOX"),
       show:
         Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "VIEW_ATTENDANCE" ||
-        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE"
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_ATTENDANCE" ||
+        Digit.Utils.locale.getTransformedLocale(location.pathname.split("/").pop()) === "EDIT_REGISTER"
     },
     {
       internalLink: `/${window?.contextPath}/employee`,
@@ -62,6 +65,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <React.Fragment>
           <ProjectBreadCrumb location={location} />
         </React.Fragment>
+        
+        <PrivateRoute path={`${path}/attendee-inbox`} component={() => <InboxAttendeesSearch />} />
+         <PrivateRoute path={`${path}/edit-register`} component={() => <EditRegister />} />
         <PrivateRoute path={`${path}/view-attendance`} component={() => <ViewAttendance />} />
         <PrivateRoute path={`${path}/edit-attendance`} component={() => <ViewAttendance editAttendance={true} />} />
         <PrivateRoute path={`${path}/attendance-approve-success`} component={() => <Response />} />

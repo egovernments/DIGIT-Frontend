@@ -13,7 +13,7 @@ import { ScreenTypeEnum } from "../utils/constants";
 const BoundaryComponent = ({ reset, makeReset, initialValue, updateSessionStorage, selectedProject, onChange, lowestLevel, isRequired, disableChildOptions }) => {
 
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "MICROPLAN";
+  const hierarchyType = window?.globalConfigs?.getConfig("HIERARCHY_TYPE") || "NEWTEST00222";
   // Get the hierarchy and boundary configurations from session storage
   const boundaryHierarchy = Digit.SessionStorage.get("boundaryHierarchyOrder").map((item) => item.code);
   const lowestLevelBoundaryType = Digit.SessionStorage.get("paymentsConfig")?.lowestLevelBoundary || "DISTRICT";
