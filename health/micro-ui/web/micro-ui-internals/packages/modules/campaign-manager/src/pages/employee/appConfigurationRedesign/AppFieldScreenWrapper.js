@@ -23,7 +23,7 @@ import { InfoOutline } from "@egovernments/digit-ui-svg-components";
 import ConsoleTooltip from "../../../components/ConsoleToolTip";
 import NavigationLogicWrapper from "./NavigationLogicWrapper";
 
-function AppFieldScreenWrapper({ parentState }) {
+function AppFieldScreenWrapper({ parentState, tabState }) {
   const { state, dispatch, openAddFieldPopup } = useAppConfigContext();
   const { locState, updateLocalization } = useAppLocalisationContext();
   const searchParams = new URLSearchParams(location.search);
@@ -201,6 +201,7 @@ function AppFieldScreenWrapper({ parentState }) {
           {currentCard?.conditionalNavigateTo && (<NavigationLogicWrapper
             t={t}
             parentState={parentState}
+            tabState={tabState}
             currentState={currentCard}
             onConditionalNavigateChange={(data) => {
                dispatch({

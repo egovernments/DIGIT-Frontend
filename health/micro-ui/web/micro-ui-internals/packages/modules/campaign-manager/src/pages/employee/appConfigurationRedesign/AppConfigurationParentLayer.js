@@ -579,6 +579,7 @@ useEffect(() => {
               localeModule={localeModule}
               parentState={parentState}
               pageTag={`${t("CMN_PAGE")} ${currentStep} / ${mainPagesCount}`}
+              tabState={tabState}
             />
           </div>
         </div>

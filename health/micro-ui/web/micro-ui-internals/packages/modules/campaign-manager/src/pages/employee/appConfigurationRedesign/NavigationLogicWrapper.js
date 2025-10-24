@@ -63,9 +63,11 @@ function BodyPortal({ children }) {
 function NavigationLogicWrapper({
     t,
     parentState,
+    tabState,
     currentState,
     onConditionalNavigateChange,
 }) {
+    console.log("Tab State in NavigationLogicWrapper:", tabState, parentState);
     const customT = useCustomT();
 
     // ----- labels -----
@@ -111,6 +113,7 @@ function NavigationLogicWrapper({
         []
     );
 
+    console.log("NavigationLogicWrapper render", { currentState, parentState });
     const currentPage = currentState?.name;
     const currentTemplate = parentState?.currentTemplate || [];
     const currentPageObj = currentState?.cards?.[0];
@@ -318,19 +321,40 @@ function NavigationLogicWrapper({
 
     // ---------- normalization helpers ----------
     const allPageOptions = useMemo(() => {
-        const seen = new Set();
-        const list = [];
-        const exclude = new Set([currentPage]); // don't include current page
-        const add = (p) => {
-            if (!p?.name) return;
-            if (exclude.has(p.name)) return;
-            if (seen.has(p.name)) return;
-            seen.add(p.name);
-            list.push({ code: p.name, name: p.name, type: p.type });
-        };
-        currentTemplate.forEach(add);
-        return list;
-    }, [currentTemplate, currentPage]);
+    const seen = new Set();
+    const list = [];
+    const exclude = new Set([currentPage]); // don't include current page
+    
+    const add = (p) => {
+        if (!p?.name) return;
+        if (exclude.has(p.name)) return;
+        if (seen.has(p.name)) return;
+        seen.add(p.name);
+        list.push({ code: p.name, name: p.name, type: p.type });
+    };
+    
+    // Add pages from currentTemplate
+    currentTemplate.forEach(add);
+    
+    // Add form names from tabState.actualData
+    if (tabState?.actualData && Array.isArray(tabState.actualData)) {
+        tabState.actualData.forEach(item => {
+            if (item?.data?.name && item?.data?.name !== parentState?.actualTemplate?.flow) {
+                const formName = item.data.name;
+                if (!exclude.has(formName) && !seen.has(formName)) {
+                    seen.add(formName);
+                    list.push({ 
+                        code: formName, 
+                        name: `${formName}_FLOW`, 
+                        type: 'form' 
+                    });
+                }
+            }
+        });
+    }
+    
+    return list;
+}, [currentTemplate, currentPage, tabState?.actualData]);
 
     const findFieldOptionByCode = (code) =>
         currentPageFieldOptions.find((f) => f.code === code) || (code ? { code, name: code, label: code } : {});
@@ -629,7 +653,7 @@ function NavigationLogicWrapper({
                     )}
                 </div>
 
-                <div
+                {/* <div
                     role="button"
                     title={deleteRuleLabel}
                     aria-label={deleteRuleLabel}
@@ -637,7 +661,7 @@ function NavigationLogicWrapper({
                     style={{ display: "inline-flex", alignItems: "center", cursor: "pointer" }}
                 >
                     <SVG.Delete fill={"#C84C0E"} width={"1.1rem"} height={"1.1rem"} />
-                </div>
+                </div> */}
             </div>
         </div>
     );
@@ -945,7 +969,7 @@ function NavigationLogicWrapper({
                                     </LabelFieldPair>
                                 </div>
 
-                                {/* Remove condition */}
+                                {/* Remove condition
                                 <div
                                     style={{
                                         marginLeft: "auto",
@@ -963,7 +987,7 @@ function NavigationLogicWrapper({
                                     <span style={{ color: "#C84C0E", fontSize: "0.875rem", fontWeight: 500 }}>
                                         {removeConditionLabel}
                                     </span>
-                                </div>
+                                </div> */}
                             </div>
 
                             {/* Per-condition error */}
@@ -1017,7 +1041,7 @@ function NavigationLogicWrapper({
                         <div className="digit-field" style={{ width: "100%" }}>
                             <Dropdown
                                 option={allPageOptions}
-                                optionKey="code"
+                                optionKey="name"
                                 name={`target-${editorIndex}`}
                                 optionCardStyles={{ maxHeight: 300, overflow: "auto", position: "relative", zIndex: 10000 }}
                                 t={t}
