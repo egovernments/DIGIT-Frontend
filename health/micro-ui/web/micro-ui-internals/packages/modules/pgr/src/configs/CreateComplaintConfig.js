@@ -114,7 +114,7 @@ export const CreateComplaintConfig = {
                 validation: {
                   minLength: 10,
                   maxLength: 10,
-                  min: 6000000000,
+                  min: 1000000000,
                   max: 9999999999
                 }, // 10-digit phone number validation
               },
