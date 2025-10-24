@@ -22,8 +22,8 @@ RUN node -e "console.log('Heap limit (MB):', v8.getHeapStatistics().heap_size_li
 # Print a marker log (optional debug message)
 RUN node -e "console.log('core only')"
 
-# Move into health-dss and run install script
-WORKDIR /app/web/health-dss
+
+WORKDIR /app/web
 RUN chmod +x ./install-deps.sh
 RUN ./install-deps.sh
 
