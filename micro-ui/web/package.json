@@ -10,7 +10,7 @@
   "workspaces": [
     "micro-ui-internals/packages/modules/*"
   ],
-  "homepage": "/digit-ui",
+  "homepage": "/mSeva-ui",
   "dependencies": {
     "@egovernments/digit-ui-svg-components": "1.0.21",
     "@egovernments/digit-ui-libraries": "1.8.19",

@@ -41,7 +41,7 @@ RUN yarn build:webpack
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/digit-ui
+ENV WORK_DIR=/var/web/mSeva-ui
 
 RUN mkdir -p ${WORK_DIR}
 

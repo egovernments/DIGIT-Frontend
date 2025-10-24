@@ -55,3 +55,8 @@ config:
         dockerfile: micro-ui/web/core/Dockerfile
         image-name: core-ui
 
+  - name: builds/Digit-Frontend/mSeva-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: mSeva-ui
