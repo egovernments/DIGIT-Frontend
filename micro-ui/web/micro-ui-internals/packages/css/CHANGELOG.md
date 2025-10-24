@@ -1,5 +1,113 @@
 # Changelog
 
+## [1.9.0] - [23-October-2025]
+
+### 🚀 Enhanced CSS Framework & Design System
+
+#### 🎨 Major UI/UX Design Overhaul:
+- **Card-Based Interface System**: 
+  - Complete MDMS interface redesign with modern card layouts
+  - Enhanced card components with hover states and transitions
+  - Responsive card grid systems for all screen sizes
+  - Improved card accessibility with proper focus states
+- **Modern Design Language**: 
+  - Updated visual hierarchy with consistent spacing
+  - Enhanced color palette with improved contrast ratios
+  - Modern typography system with improved readability
+  - Consistent component styling across all modules
+
+#### 🏗️ Sandbox & Platform Styling:
+- **Comprehensive Sandbox UI Enhancement**: 
+  - Landing Page complete redesign with modern aesthetics
+  - Product Page styling with improved information architecture
+  - Details Page enhanced with better data presentation
+  - OTP Carousel styling for better user experience
+- **Login & Authentication Styling**: 
+  - Enhanced Carousel.scss for login screen layouts
+  - Improved login-form-container class for banner image support
+  - Better FormComposer styling in login contexts
+  - Responsive authentication flows for all devices
+
+#### 📱 Mobile & Responsive Enhancements:
+- **Mobile-First Design**: 
+  - Enhanced mobile navigation and interaction patterns
+  - Improved touch targets and gesture support
+  - Better mobile typography and spacing
+  - Responsive breakpoint optimizations
+- **Cross-Platform Consistency**: 
+  - Consistent styling across desktop, tablet, and mobile
+  - Enhanced progressive web app styling
+  - Better performance on low-end devices
+
+#### 🛠️ Component System Improvements:
+- **Enhanced Form Components**: 
+  - Improved form field styling with better validation states
+  - Enhanced form layouts and responsive behavior
+  - Better error messaging and success state styling
+  - Improved accessibility for form interactions
+- **Advanced Table & Data Display**: 
+  - Enhanced table styling with better sorting indicators
+  - Improved pagination component styling
+  - Better data visualization support
+  - Enhanced responsive table patterns
+
+#### 🎯 Module-Specific Styling:
+- **Workbench Module Enhancement**: 
+  - Complete workbench interface redesign
+  - Enhanced MDMS management interface styling
+  - Better bulk upload and download UI styling
+  - Improved JSON editor integration styling
+- **Core Module Styling**: 
+  - Enhanced topbar, breadcrumb, and actionbar styling
+  - Improved sidebar navigation with better hierarchy
+  - Enhanced toast notifications with error/success styling
+  - Better modal and popup component styling
+
+#### 🔧 Technical Improvements:
+- **SCSS Architecture**: 
+  - Modular SCSS structure with better organization
+  - Enhanced variable system for consistency
+  - Improved mixin library for reusability
+  - Better build optimization and compilation
+- **Performance Optimizations**: 
+  - Reduced CSS bundle size through optimization
+  - Better critical CSS handling
+  - Enhanced loading performance
+  - Improved browser compatibility
+
+### Accessibility & Standards Compliance:
+- **WCAG 2.1 AA Compliance**: Enhanced accessibility across all components
+- **Keyboard Navigation**: Improved focus management and navigation
+- **Screen Reader Support**: Better ARIA implementation and semantic markup
+- **Color Contrast**: Improved contrast ratios for better readability
+
+### Browser & Platform Support:
+- **Enhanced Browser Support**: Better compatibility across modern browsers
+- **Progressive Enhancement**: Graceful degradation for older browsers
+- **Performance**: Optimized CSS delivery and rendering
+- **Mobile Optimization**: Enhanced mobile browser performance
+
+### Design System Integration:
+- **DIGIT v2 Design System**: Full integration with updated design tokens
+- **Color System**: Enhanced primary color (#c84c0e) with better variants
+- **Typography Scale**: Improved typography hierarchy and responsive scaling
+- **Spacing System**: Consistent spacing scale across all components
+
+### Bug Fixes & Refinements:
+- Fixed toast error message width issues in Property Tax module
+- Resolved extra margin issues in inbox search and employee pages
+- Fixed login styling and alignment issues across modules
+- Improved language selection dropdown styling
+- Enhanced loader and loading state styling
+- Fixed mobile view issues for detail modals
+- Improved bulk upload UI and toast styling
+
+### Platform-Specific Enhancements:
+- **Multi-Tenant Styling**: Enhanced support for tenant-specific theming
+- **Government Portal Styling**: Improved styling for government service portals
+- **Citizen Interface**: Enhanced citizen-facing interface styling
+- **Employee Dashboard**: Improved employee interface styling
+
 ## [1.8.42] - [22-Sept-2025]
 
 - Sandbox ui style changes (Landing Page/Product Page/Details Page/OTP Carousel) / CCSD-833 

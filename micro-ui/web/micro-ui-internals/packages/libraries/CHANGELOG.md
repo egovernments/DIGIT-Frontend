@@ -1,5 +1,71 @@
 # Changelog
 
+## [1.9.0] [23-October-2025]
+
+### 🚀 Enhanced Libraries & Core Utilities
+
+#### 📚 Advanced Hooks & Services:
+- **Enhanced Multi-Tenant Support**: 
+  - Updated useCustomMDMS hook with improved multi-tenant capabilities
+  - Enhanced tenant context management and switching
+  - Better integration with Core v1.9.0 multi-tenant architecture
+- **Improved API Hooks**: 
+  - Enhanced useCustomAPIHook with better error handling and retry logic
+  - Updated useCustomAPIMutationHook with improved request management
+  - Better header and method handling in API requests
+- **Enhanced Data Management**: 
+  - Improved useMDMS hook with MDMS v2 API support
+  - Better caching strategies for improved performance
+  - Enhanced data fetching and state management
+
+#### 🛠️ Utility Enhancements:
+- **PDF Generation**: Enhanced PDF download logic with better formatting
+- **Field Utilities**: Improved field ID generation and validation utilities
+- **Localization**: Enhanced localization cache management and cleanup
+- **Configuration**: Better configuration utilities and merge strategies
+- **Browser Utils**: Enhanced browser detection and compatibility utilities
+
+#### 🔧 Service Layer Improvements:
+- **API Service Abstractions**: Enhanced service layer patterns
+- **Error Handling**: Improved centralized error handling and logging
+- **Authentication**: Better authentication and authorization utilities
+- **File Services**: Enhanced file upload and management capabilities
+
+#### 🎯 Performance Optimizations:
+- **Bundle Optimization**: Reduced bundle size through better tree-shaking
+- **Memory Management**: Improved memory usage and cleanup
+- **Caching Strategies**: Enhanced data caching and invalidation
+- **Lazy Loading**: Better lazy loading patterns for improved performance
+
+### Technical Improvements:
+- **Module Architecture**: Enhanced library structure and organization
+- **TypeScript Support**: Better TypeScript definitions and support
+- **Testing**: Improved test coverage and utilities
+- **Documentation**: Enhanced inline documentation and examples
+
+### Multi-Tenant & Integration Features:
+- **Advanced Multi-Tenant Support**: 
+  - Compatible with Core v1.9.0 multi-tenant architecture
+  - Enhanced tenant-specific configuration handling
+  - Better data isolation and security patterns
+- **Cross-Module Integration**: 
+  - Enhanced integration patterns between modules
+  - Better shared state management
+  - Improved communication patterns
+
+### Bug Fixes:
+- Fixed module stability and performance issues
+- Resolved MDMS v2 API integration problems
+- Fixed localization and caching issues
+- Improved error handling across all utilities
+- Enhanced browser compatibility and performance
+
+### Global Config Integration:
+- **Full Global Config Support**: Enhanced support for all global configuration flags
+- **Dynamic Configuration**: Better dynamic configuration loading and management
+- **Environment Handling**: Improved environment-specific configuration
+- **Feature Flags**: Enhanced feature flag support and management
+
 ## [1.8.23] [8-sept-2025]
 - New PDF download logic added
 

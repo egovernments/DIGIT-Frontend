@@ -1,7 +1,95 @@
-Here's the `CHANGELOG` file for the specified versions:
-
-```markdown
 # Changelog
+
+## [1.9.0] [23-October-2025]
+
+### 🚀 Enhanced React Component Library
+
+#### 🧩 Advanced Component System:
+- **FormComposerV2 Enhancements**: 
+  - Enhanced form composition with better validation and error handling
+  - Improved FormComposerCitizen for citizen-specific workflows
+  - Better field rendering with RenderFormFields improvements
+  - Enhanced labelChildren and submitIcon props support
+- **InboxSearchComposerV2**: 
+  - Complete inbox overhaul with browser session integration
+  - Advanced removable tags for search/inbox screens on mobile
+  - Unified configuration for both mobile and desktop screens
+  - Multi-tab support with seamless navigation
+  - Custom hook integration and refetch capabilities
+
+#### 🎨 UI/UX Component Improvements:
+- **Enhanced Card Components**: 
+  - Improved CardBasedOptions for modern card-based interfaces
+  - Enhanced CitizenHomeCard with better responsive design
+  - Better ULBHomeCard with improved layout and interactions
+  - Enhanced EmployeeModuleCard with better functionality
+- **Advanced Input Components**: 
+  - Enhanced TextInput with improved validation and accessibility
+  - Better DatePicker with enhanced date selection capabilities
+  - Improved UploadFile and UploadImages with better error handling
+  - Enhanced MultiSelectDropdown with better performance
+
+#### 🔧 Form & Interaction Components:
+- **Enhanced Modal System**: 
+  - Improved Modal component with better className support
+  - Enhanced PopUp component with better positioning
+  - Better FileUploadModal with improved file handling
+  - Enhanced WorkflowModal with better workflow integration
+- **Table & Display Components**: 
+  - Enhanced Table component with better sorting and pagination
+  - Improved ResultsTable with custom pagination support
+  - Better DetailsCard with enhanced information display
+  - Enhanced XlsPreview for Excel file preview capabilities
+
+#### 📱 Mobile & Accessibility Enhancements:
+- **Responsive Design**: 
+  - Enhanced mobile-first approach for all components
+  - Better touch interactions and mobile gestures
+  - Improved accessibility with WCAG compliance
+  - Enhanced keyboard navigation support
+- **Performance Optimizations**: 
+  - Reduced bundle size through better tree-shaking
+  - Improved component rendering performance
+  - Better memory management and cleanup
+  - Enhanced lazy loading for large component libraries
+
+### Technical Improvements:
+- **Storybook Integration**: Enhanced component documentation and testing
+- **TypeScript Support**: Better TypeScript definitions and type safety
+- **Testing Suite**: Improved test coverage and component testing utilities
+- **Build Optimization**: Better build process and bundle optimization
+
+### Multi-Platform & Integration Features:
+- **Multi-Tenant Support**: 
+  - Enhanced components for multi-tenant architectures
+  - Better tenant context handling in forms and displays
+  - Improved data isolation and security patterns
+- **Cross-Module Integration**: 
+  - Better integration patterns between components
+  - Enhanced communication between form components
+  - Improved shared state management
+
+### Bug Fixes:
+- Fixed loader component issues in inbox and form composers
+- Resolved AJV-related Jenkins build issues
+- Fixed uploader component validation and error handling
+- Improved accessibility with proper ID attributes
+- Enhanced component stability and performance
+- Fixed tutorial and help component interactions
+
+### Component-Specific Enhancements:
+- **Toast Component**: Enhanced error className and better messaging
+- **SubmitBar**: Added ID attributes for accessibility
+- **Loader**: Improved LoaderWithGap and better loading states
+- **Search Components**: Enhanced SearchComponent with better filtering
+- **Navigation**: Improved HorizontalNav and HorizontalNavV2
+- **Upload Components**: Better file type support including Excel files
+
+### Global Config Integration:
+- **Full Component Support**: All components now support global configuration
+- **Dynamic Styling**: Better theme and styling support
+- **Feature Flags**: Enhanced feature flag support in components
+- **Environment Adaptation**: Components adapt better to different environments
 
 ## [1.8.24]  [6-Aug-2025]
 - Added id attribute in submit bar
