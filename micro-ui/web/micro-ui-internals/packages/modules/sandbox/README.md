@@ -55,9 +55,13 @@ Complete SVG icon library included:
 - `calculate.svg` - Computation features
 - `chat.svg` - Communication features
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+The Sandbox module supports a comprehensive configuration system with multiple configuration types for tenant management and demo environments.
+
+### 1. Global Configuration (globalConfigs.getConfig)
+
+Global configurations that affect the entire sandbox module behavior:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|--------|
@@ -65,11 +69,12 @@ This module uses the following global configuration flags:
 | `MULTI_ROOT_TENANT` | Boolean | `false` | Enables multi-root tenant support | Enhanced tenant management |
 | `contextPath` | String | `'sandbox-ui'` | Context path for sandbox application | Routing and navigation |
 | `configModuleName` | String | `'commonUiConfig'` | Configuration module name | MDMS configuration |
-
-### Configuration Example
+| `SANDBOX_AUTO_TENANT_CREATION` | Boolean | `false` | Enable automatic tenant creation | Demo environment setup |
+| `SANDBOX_MAX_TENANTS` | Number | `50` | Maximum tenants per sandbox | Resource limitation |
+| `SANDBOX_CONFIG_VALIDATION` | Boolean | `true` | Enable configuration validation | Quality assurance |
 
 ```javascript
-// In your globalConfigs
+// Global Configuration Example
 const getConfig = (key) => {
   switch(key) {
     case 'OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT':
@@ -80,8 +85,240 @@ const getConfig = (key) => {
       return 'sandbox-ui'; // Set sandbox context path
     case 'configModuleName':
       return 'commonUiConfig'; // Set configuration module
+    case 'SANDBOX_AUTO_TENANT_CREATION':
+      return false; // Disable auto tenant creation
+    case 'SANDBOX_MAX_TENANTS':
+      return 25; // Limit to 25 tenants
+    case 'SANDBOX_CONFIG_VALIDATION':
+      return true; // Enable validation
     default:
       return undefined;
+  }
+};
+```
+
+### 2. Component Props Configuration
+
+Direct configuration passed as props to sandbox components:
+
+```javascript
+// SandboxCard Component Configuration
+<SandboxCard
+  config={{
+    title: "Tenant Management",
+    description: "Manage tenant configurations and settings",
+    icon: "tenant",
+    features: ["create", "update", "delete", "configure"],
+    permissions: ["SANDBOX_ADMIN"]
+  }}
+  onClick={navigateToTenantManagement}
+/>
+
+// TenantCreate Component Configuration
+<TenantCreate
+  config={{
+    validationRules: {
+      tenantCode: /^[a-z0-9.-]+$/,
+      tenantName: { minLength: 3, maxLength: 50 },
+      logoSize: { maxSize: 2048000 } // 2MB
+    },
+    defaultModules: ["core", "workbench", "utilities"],
+    autoSave: true,
+    progressTracking: true
+  }}
+  onTenantCreated={handleTenantCreation}
+/>
+
+// ConfigUploader Component Configuration
+<ConfigUploaderComponent
+  config={{
+    supportedFormats: ['.json', '.yaml', '.yml'],
+    maxFileSize: 10485760, // 10MB
+    validationSchema: "sandbox-config-v1",
+    enablePreview: true,
+    autoValidate: true
+  }}
+  onUpload={handleConfigUpload}
+/>
+```
+
+### 3. MDMS Configuration
+
+Configuration stored in MDMS for dynamic sandbox behavior:
+
+```json
+{
+  "tenantId": "pg",
+  "moduleName": "sandbox-config",
+  "SandboxConfig": [
+    {
+      "module": "TenantManagement",
+      "config": {
+        "maxTenantsPerUser": 5,
+        "tenantCodePattern": "^[a-z][a-z0-9.-]*[a-z0-9]$",
+        "requiredModules": ["core"],
+        "optionalModules": ["workbench", "utilities", "hrms"],
+        "tenantTypes": ["demo", "development", "testing"]
+      }
+    },
+    {
+      "module": "ConfigurationManagement",
+      "config": {
+        "allowedConfigTypes": ["json", "yaml"],
+        "maxConfigSize": 10485760,
+        "validationRules": {
+          "strictMode": true,
+          "allowUnknownFields": false
+        },
+        "backupRetention": 30
+      }
+    },
+    {
+      "module": "ModuleManagement",
+      "config": {
+        "availableModules": [
+          {
+            "code": "core",
+            "name": "Core Module",
+            "version": "1.9.0",
+            "required": true
+          },
+          {
+            "code": "workbench",
+            "name": "Workbench Module",
+            "version": "1.9.0",
+            "dependencies": ["core"]
+          }
+        ]
+      }
+    }
+  ]
+}
+```
+
+### 4. UI Customizations (Digit.Customizations)
+
+Customizations for sandbox components and workflows:
+
+```javascript
+// Sandbox Module Customizations
+Digit.Customizations = {
+  "sandbox": {
+    "TenantCreate": {
+      "customValidators": {
+        "uniqueTenantCode": async (code) => {
+          const exists = await checkTenantExists(code);
+          return !exists;
+        },
+        "domainValidator": (domain) => /^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(domain)
+      },
+      "formSteps": [
+        {
+          "key": "basic",
+          "label": "Basic Information",
+          "fields": ["tenantCode", "tenantName", "description"]
+        },
+        {
+          "key": "modules",
+          "label": "Module Selection",
+          "fields": ["selectedModules", "moduleConfigs"]
+        },
+        {
+          "key": "branding",
+          "label": "Branding & Assets",
+          "fields": ["logo", "theme", "customStyles"]
+        }
+      ],
+      "autoSaveInterval": 30000
+    },
+    "TenantManagement": {
+      "listView": {
+        "columns": [
+          {
+            "key": "tenantCode",
+            "label": "Tenant Code",
+            "sortable": true,
+            "filterable": true
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "formatter": "status",
+            "filters": ["active", "inactive", "suspended"]
+          },
+          {
+            "key": "modules",
+            "label": "Modules",
+            "formatter": "moduleList"
+          },
+          {
+            "key": "lastModified",
+            "label": "Last Modified",
+            "sortable": true,
+            "formatter": "date"
+          }
+        ],
+        "actions": [
+          {
+            "key": "edit",
+            "label": "Edit",
+            "icon": "edit",
+            "permission": "SANDBOX_TENANT_EDIT"
+          },
+          {
+            "key": "configure",
+            "label": "Configure",
+            "icon": "settings",
+            "permission": "SANDBOX_TENANT_CONFIG"
+          },
+          {
+            "key": "delete",
+            "label": "Delete",
+            "icon": "delete",
+            "permission": "SANDBOX_TENANT_DELETE",
+            "confirmDialog": true
+          }
+        ]
+      }
+    },
+    "ConfigUploader": {
+      "uploadConfig": {
+        "dragDropArea": {
+          "height": 200,
+          "acceptMessage": "Drop configuration files here",
+          "rejectMessage": "Invalid file format"
+        },
+        "validationRules": {
+          "json": {
+            "parser": "JSON.parse",
+            "requiredFields": ["module", "version"]
+          },
+          "yaml": {
+            "parser": "yaml.parse",
+            "requiredFields": ["module", "version"]
+          }
+        },
+        "previewConfig": {
+          "enabled": true,
+          "maxLines": 100,
+          "syntax": "json"
+        }
+      }
+    },
+    "ModuleManager": {
+      "moduleCards": {
+        "layout": "grid",
+        "cardsPerRow": 3,
+        "showDependencies": true,
+        "showVersions": true,
+        "enableBulkActions": true
+      },
+      "dependencyManagement": {
+        "autoResolveDependencies": true,
+        "showDependencyTree": true,
+        "warnOnConflicts": true
+      }
+    }
   }
 };
 ```

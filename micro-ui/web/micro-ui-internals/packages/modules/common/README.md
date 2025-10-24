@@ -70,9 +70,13 @@ npm install --save @egovernments/digit-ui-module-common@1.9.0
    - **Notification Services**: Common notification and messaging abstractions
    - **File Services**: Shared file upload and management utilities
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module provides foundational support for all global configuration flags:
+The Common module supports a comprehensive configuration system providing foundational configuration support for all DIGIT modules.
+
+### 1. Global Configuration (globalConfigs.getConfig)
+
+Global configurations that provide foundational support for all DIGIT modules:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|-------|
@@ -80,11 +84,12 @@ This module provides foundational support for all global configuration flags:
 | `MULTI_ROOT_TENANT` | Boolean | `false` | Multi-root tenant support foundation | Base multi-tenant architecture |
 | `COMMON_PAYMENT_CONFIG` | String | `'PaymentConfig'` | Payment configuration module | Payment system configuration |
 | `COMMON_VALIDATION_CONFIG` | String | `'ValidationConfig'` | Validation configuration module | Form validation rules |
-
-### Configuration Example
+| `COMMON_LOCALE_CONFIG` | String | `'LocaleConfig'` | Locale configuration module | Internationalization support |
+| `COMMON_THEME_CONFIG` | String | `'ThemeConfig'` | Theme configuration module | UI theming and styling |
+| `COMMON_CACHE_ENABLED` | Boolean | `true` | Enable shared component caching | Performance optimization |
 
 ```javascript
-// In your globalConfigs
+// Global Configuration Example
 const getConfig = (key) => {
   switch(key) {
     case 'OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT':
@@ -95,8 +100,289 @@ const getConfig = (key) => {
       return 'PaymentConfig'; // Set payment configuration
     case 'COMMON_VALIDATION_CONFIG':
       return 'ValidationConfig'; // Set validation rules
+    case 'COMMON_LOCALE_CONFIG':
+      return 'LocaleConfig'; // Set locale configuration
+    case 'COMMON_THEME_CONFIG':
+      return 'ThemeConfig'; // Set theme configuration
+    case 'COMMON_CACHE_ENABLED':
+      return true; // Enable caching
     default:
       return undefined;
+  }
+};
+```
+
+### 2. Component Props Configuration
+
+Direct configuration passed as props to common components:
+
+```javascript
+// Payment Component Configuration
+<PaymentComponent
+  config={{
+    supportedGateways: ["paygov", "razorpay", "phonepe"],
+    defaultGateway: "paygov",
+    enableRetry: true,
+    maxRetryAttempts: 3,
+    timeoutDuration: 30000,
+    encryptionEnabled: true
+  }}
+  paymentData={paymentDetails}
+  onSuccess={handlePaymentSuccess}
+  onFailure={handlePaymentFailure}
+/>
+
+// Receipt Component Configuration
+<ReceiptComponent
+  config={{
+    format: "standard",
+    showBarcode: true,
+    enableDownload: true,
+    enablePrint: true,
+    watermark: "OFFICIAL",
+    logoDisplay: true
+  }}
+  receiptData={receiptDetails}
+  onDownload={handleDownload}
+/>
+
+// Form Validator Configuration
+<FormValidator
+  config={{
+    validationMode: "realtime",
+    showErrorSummary: true,
+    highlightErrors: true,
+    customValidators: {
+      "aadhar": (value) => /^[0-9]{12}$/.test(value),
+      "pan": (value) => /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(value)
+    }
+  }}
+  validationRules={validationConfig}
+/>
+```
+
+### 3. MDMS Configuration
+
+Configuration stored in MDMS for dynamic common module behavior:
+
+```json
+{
+  "tenantId": "pg",
+  "moduleName": "common-config",
+  "CommonConfig": [
+    {
+      "module": "PaymentSystem",
+      "config": {
+        "supportedGateways": [
+          {
+            "code": "paygov",
+            "name": "Pay.gov",
+            "enabled": true,
+            "timeout": 30000,
+            "retryLimit": 3
+          },
+          {
+            "code": "razorpay",
+            "name": "Razorpay",
+            "enabled": true,
+            "timeout": 45000,
+            "retryLimit": 2
+          }
+        ],
+        "defaultSettings": {
+          "currency": "USD",
+          "locale": "en-US",
+          "dateFormat": "MM/DD/YYYY"
+        }
+      }
+    },
+    {
+      "module": "ValidationSystem",
+      "config": {
+        "globalValidators": {
+          "email": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$",
+          "phone": "^[0-9]{10}$",
+          "zipcode": "^[0-9]{5}(-[0-9]{4})?$"
+        },
+        "errorMessages": {
+          "required": "This field is required",
+          "email": "Please enter a valid email address",
+          "phone": "Please enter a valid 10-digit phone number"
+        }
+      }
+    },
+    {
+      "module": "SharedComponents",
+      "config": {
+        "caching": {
+          "enabled": true,
+          "duration": 300000,
+          "maxCacheSize": 50
+        },
+        "accessibility": {
+          "enableKeyboardNavigation": true,
+          "enableScreenReader": true,
+          "contrastRatio": "AA"
+        }
+      }
+    }
+  ]
+}
+```
+
+### 4. UI Customizations (Digit.Customizations)
+
+Customizations for common components and shared functionality:
+
+```javascript
+// Common Module Customizations
+Digit.Customizations = {
+  "common": {
+    "PaymentComponent": {
+      "gatewayCustomization": {
+        "paygov": {
+          "theme": "government",
+          "logo": "/assets/paygov-logo.png",
+          "primaryColor": "#005ea2",
+          "buttonText": "Pay with Pay.gov"
+        },
+        "razorpay": {
+          "theme": "modern",
+          "logo": "/assets/razorpay-logo.png",
+          "primaryColor": "#3395ff",
+          "buttonText": "Pay with Razorpay"
+        }
+      },
+      "paymentFlow": {
+        "steps": [
+          {
+            "key": "review",
+            "label": "Review Payment",
+            "component": "PaymentReview"
+          },
+          {
+            "key": "gateway",
+            "label": "Payment Gateway",
+            "component": "GatewaySelection"
+          },
+          {
+            "key": "process",
+            "label": "Processing",
+            "component": "PaymentProcess"
+          },
+          {
+            "key": "confirmation",
+            "label": "Confirmation",
+            "component": "PaymentConfirmation"
+          }
+        ]
+      }
+    },
+    "ReceiptComponent": {
+      "templates": {
+        "standard": {
+          "header": {
+            "showLogo": true,
+            "showOrgName": true,
+            "showDate": true
+          },
+          "body": {
+            "showTransactionId": true,
+            "showPaymentMethod": true,
+            "showBillingDetails": true
+          },
+          "footer": {
+            "showBarcode": true,
+            "showTerms": true,
+            "showSignature": false
+          }
+        },
+        "minimal": {
+          "header": {
+            "showLogo": false,
+            "showOrgName": true,
+            "showDate": true
+          },
+          "body": {
+            "showTransactionId": true,
+            "showPaymentMethod": false,
+            "showBillingDetails": true
+          },
+          "footer": {
+            "showBarcode": false,
+            "showTerms": false,
+            "showSignature": false
+          }
+        }
+      },
+      "formatting": {
+        "currency": {
+          "symbol": "$",
+          "precision": 2,
+          "thousandsSeparator": ","
+        },
+        "date": {
+          "format": "MM/DD/YYYY",
+          "timezone": "America/New_York"
+        }
+      }
+    },
+    "FormValidator": {
+      "validationStyles": {
+        "errorHighlight": {
+          "borderColor": "#dc3545",
+          "backgroundColor": "#f8d7da",
+          "textColor": "#721c24"
+        },
+        "successHighlight": {
+          "borderColor": "#28a745",
+          "backgroundColor": "#d4edda",
+          "textColor": "#155724"
+        }
+      },
+      "customValidationRules": {
+        "strongPassword": {
+          "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{8,}$",
+          "message": "Password must be at least 8 characters with uppercase, lowercase, number and special character"
+        },
+        "govId": {
+          "pattern": "^[A-Z]{2}[0-9]{7}$",
+          "message": "Government ID must be 2 letters followed by 7 digits"
+        }
+      }
+    },
+    "SharedComponents": {
+      "dataTable": {
+        "pagination": {
+          "pageSize": 10,
+          "pageSizeOptions": [5, 10, 25, 50],
+          "showSizeChanger": true,
+          "showQuickJumper": true
+        },
+        "sorting": {
+          "defaultSort": "asc",
+          "multiSort": false,
+          "sortIndicator": true
+        },
+        "filtering": {
+          "enableGlobalFilter": true,
+          "enableColumnFilters": true,
+          "filterDelay": 300
+        }
+      },
+      "navigation": {
+        "breadcrumbs": {
+          "showHome": true,
+          "separator": "/",
+          "maxItems": 5
+        },
+        "sidebar": {
+          "collapsible": true,
+          "defaultExpanded": true,
+          "showIcons": true
+        }
+      }
+    }
   }
 };
 ```

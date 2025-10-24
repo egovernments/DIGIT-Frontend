@@ -82,9 +82,10 @@ npm install --save @egovernments/digit-ui-module-hrms@1.9.0
    - Better validation rules and error messages
    - Enhanced workflow definitions and status management
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+### Global Configuration (globalConfigs.getConfig)
+These configurations are accessed via `window.globalConfigs.getConfig(key)`:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|--------|
@@ -93,8 +94,39 @@ This module uses the following global configuration flags:
 | `HRMS_AUTO_SELECT_TENANT` | Boolean | `false` | Auto-select tenant when only one is available | Simplified UX for single-tenant scenarios |
 | `HRMS_ENABLE_ROLE_BASED_ACCESS` | Boolean | `true` | Enable role-based access control | HR permissions and workflow management |
 
-### Configuration Example
+### Component Props Configuration
+These configurations are passed as props to components:
 
+| Config Key | Type | Default | Description | Usage |
+|------------|------|---------|-------------|--------|
+| `tenantId` | String | - | Tenant context for HR operations | Employee data access and role management |
+| `employeeData` | Object | `{}` | Employee data for forms and display | Pre-populate forms and employee details |
+| `formData` | Object | `{}` | Form data for employee operations | Form state management and validation |
+| `config` | Object | `{}` | Form configuration for field rendering | DatePicker, form field, and validation configuration |
+| `onSelect` | Function | - | Callback for form field selection | Handle user interactions and data updates |
+| `maxWidth` | String | - | Maximum width for form components | DatePicker and form field width control |
+
+### MDMS Configuration
+These configurations are managed through MDMS:
+
+| Config Key | Module | Master | Description | Usage |
+|------------|--------|--------|-------------|-------|
+| `Department` | `common-masters` | `Department` | Organizational departments | Employee department assignment |
+| `Designation` | `common-masters` | `Designation` | Job designations and roles | Employee position and hierarchy |
+| `roles` | `ACCESSCONTROL-ROLES` | `roles` | System roles and permissions | Role-based access control for employees |
+| `Boundary` | `egov-location` | `boundary-data` | Administrative boundaries | Employee jurisdiction assignment |
+
+### UI Customizations (Digit.Customizations)
+These configurations provide custom behavior through the customization framework:
+
+| Config Key | Path | Description | Usage |
+|------------|------|-------------|-------|
+| `HRMS.customiseUpdateFormData` | `Digit?.Customizations?.HRMS?.customiseUpdateFormData` | Custom employee update data transformation | Modify employee data before update operations |
+| `HRMS.customiseCreateFormData` | `Digit?.Customizations?.HRMS?.customiseCreateFormData` | Custom employee creation data transformation | Modify employee data before creation operations |
+
+### Configuration Examples
+
+#### Global Configuration (globalConfigs.getConfig)
 ```javascript
 // In your globalConfigs
 const getConfig = (key) => {
@@ -109,6 +141,82 @@ const getConfig = (key) => {
       return true; // Enable role-based access control
     default:
       return undefined;
+  }
+};
+```
+
+#### Component Props Configuration
+```jsx
+// Employee form component usage
+<EmployeeForm
+  tenantId="pb.amritsar"
+  employeeData={existingEmployee}
+  formData={currentFormData}
+  config={{
+    validation: true,
+    allowEdit: true,
+    showAuditTrail: true
+  }}
+  onSelect={handleFieldSelection}
+/>
+
+// DatePicker component usage
+<SelectDateofEmployment
+  config={dateConfig}
+  onSelect={handleDateSelection}
+  formData={formData}
+  maxWidth="36.25rem"
+/>
+```
+
+#### MDMS Configuration
+```json
+// In common-masters/Department.json
+{
+  "tenantId": "pb",
+  "moduleName": "common-masters",
+  "Department": [
+    {
+      "name": "Human Resources",
+      "code": "HR",
+      "active": true
+    },
+    {
+      "name": "Information Technology",
+      "code": "IT", 
+      "active": true
+    }
+  ]
+}
+```
+
+#### UI Customizations
+```javascript
+// In your customizations file
+window.Digit = {
+  ...window.Digit,
+  Customizations: {
+    ...window.Digit?.Customizations,
+    HRMS: {
+      customiseUpdateFormData: (originalData, employees) => {
+        // Custom logic to modify employee data before update
+        return employees.map(employee => ({
+          ...employee,
+          // Add custom fields or transformations
+          lastModified: new Date().toISOString(),
+          modifiedBy: window.Digit.UserService.getUser()?.info?.userName
+        }));
+      },
+      customiseCreateFormData: (formData, employees) => {
+        // Custom logic to modify employee data before creation
+        return employees.map(employee => ({
+          ...employee,
+          // Add default values or custom logic
+          createdBy: window.Digit.UserService.getUser()?.info?.userName,
+          status: "ACTIVE"
+        }));
+      }
+    }
   }
 };
 ```

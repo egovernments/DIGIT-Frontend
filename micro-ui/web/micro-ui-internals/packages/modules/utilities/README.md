@@ -80,20 +80,25 @@ npm install --save @egovernments/digit-ui-module-utilities@1.1.0
    - Best practices implementation for citizen workflows
    - Validation patterns and error handling examples
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+The Utilities module supports a comprehensive configuration system with multiple configuration types for different use cases.
+
+### 1. Global Configuration (globalConfigs.getConfig)
+
+Global configurations that affect the entire utilities module behavior:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|--------|
 | `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` | Boolean | `false` | Multi-tenant support for utility operations | Tenant context switching |
 | `KibanaMapsDomain` | String | - | Domain for iframe integration | External dashboard embedding |
 | `CORE_UI_MODULE_LOCALE_PREFIX` | String | - | Module localization prefix | Localization key generation |
-
-### Configuration Example
+| `AUDIT_HISTORY_MAX_RECORDS` | Number | `100` | Maximum audit records to fetch | Performance optimization |
+| `DOC_VIEWER_MAX_FILE_SIZE` | Number | `50` | Maximum file size in MB | Upload limitations |
+| `FORM_EXPLORER_AUTO_SAVE` | Boolean | `true` | Auto-save form configurations | User experience |
 
 ```javascript
-// In your globalConfigs
+// Global Configuration Example
 const getConfig = (key) => {
   switch(key) {
     case 'OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT':
@@ -102,8 +107,196 @@ const getConfig = (key) => {
       return 'https://your-kibana-domain.com'; // Set Kibana domain
     case 'CORE_UI_MODULE_LOCALE_PREFIX':
       return 'UTILITIES'; // Set localization prefix
+    case 'AUDIT_HISTORY_MAX_RECORDS':
+      return 50; // Limit audit records for performance
+    case 'DOC_VIEWER_MAX_FILE_SIZE':
+      return 25; // Set max file size to 25MB
+    case 'FORM_EXPLORER_AUTO_SAVE':
+      return false; // Disable auto-save
     default:
       return undefined;
+  }
+};
+```
+
+### 2. Component Props Configuration
+
+Direct configuration passed as props to utility components:
+
+```javascript
+// FormExplorer Component Configuration
+<FormExplorer
+  defaultConfig={{
+    formName: "SampleForm",
+    autoSave: true,
+    theme: "dark",
+    validationMode: "realtime"
+  }}
+  editorSettings={{
+    fontSize: 14,
+    tabSize: 2,
+    wordWrap: true,
+    minimap: false
+  }}
+  onConfigChange={handleConfigChange}
+/>
+
+// DocViewer Component Configuration
+<DocViewer
+  config={{
+    maxFileSize: 50,
+    supportedFormats: ['.pdf', '.xlsx', '.csv', '.doc', '.docx'],
+    enableDownload: true,
+    enablePrint: true,
+    theme: 'digit'
+  }}
+  fileUrl="document.pdf"
+/>
+
+// AuditHistory Component Configuration
+<AuditHistory
+  config={{
+    maxRecords: 100,
+    showDiff: true,
+    dateFormat: 'DD/MM/YYYY',
+    enableExport: true,
+    diffViewMode: 'split'
+  }}
+  objectId="tenant-123"
+  tenantId="pg.citya"
+/>
+```
+
+### 3. MDMS Configuration
+
+Configuration stored in MDMS for dynamic behavior:
+
+```json
+{
+  "tenantId": "pg",
+  "moduleName": "utilities-config",
+  "UtilitiesConfig": [
+    {
+      "module": "FormExplorer",
+      "config": {
+        "defaultTheme": "github-dark",
+        "autoSaveInterval": 30000,
+        "maxConfigSize": 1000000,
+        "enabledFields": ["text", "number", "date", "dropdown", "checkbox"]
+      }
+    },
+    {
+      "module": "DocViewer",
+      "config": {
+        "allowedTypes": [".pdf", ".xlsx", ".csv", ".doc", ".docx", ".jpg", ".png"],
+        "maxFileSize": 52428800,
+        "previewTimeout": 10000,
+        "enableThumbnails": true
+      }
+    },
+    {
+      "module": "AuditHistory",
+      "config": {
+        "defaultPageSize": 20,
+        "maxSearchResults": 500,
+        "enableDiffView": true,
+        "auditDataPath": "auditDetails"
+      }
+    }
+  ]
+}
+```
+
+### 4. UI Customizations (Digit.Customizations)
+
+Customizations for utility components and workflows:
+
+```javascript
+// Utilities Module Customizations
+Digit.Customizations = {
+  "utilities": {
+    "FormExplorer": {
+      "customValidators": {
+        "emailValidator": (value) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value),
+        "phoneValidator": (value) => /^[0-9]{10}$/.test(value)
+      },
+      "customFieldTypes": {
+        "signature": {
+          "component": "SignatureField",
+          "validation": ["required"]
+        },
+        "geoLocation": {
+          "component": "LocationPicker",
+          "validation": ["coordinates"]
+        }
+      },
+      "themeOverrides": {
+        "editor": {
+          "backgroundColor": "#1e1e1e",
+          "textColor": "#d4d4d4"
+        }
+      }
+    },
+    "DocViewer": {
+      "customRenderers": {
+        ".dwg": "CADViewer",
+        ".step": "3DViewer"
+      },
+      "watermarkConfig": {
+        "enabled": true,
+        "text": "CONFIDENTIAL",
+        "opacity": 0.3
+      },
+      "downloadRestrictions": {
+        "allowDownload": false,
+        "allowPrint": true
+      }
+    },
+    "AuditHistory": {
+      "customColumns": [
+        {
+          "key": "department",
+          "label": "Department",
+          "sortable": true
+        },
+        {
+          "key": "priority",
+          "label": "Priority",
+          "formatter": "priority"
+        }
+      ],
+      "diffCustomization": {
+        "highlightStyle": "background",
+        "showLineNumbers": true,
+        "contextLines": 3
+      },
+      "exportFormats": ["pdf", "excel", "csv"]
+    },
+    "DynamicSearch": {
+      "searchFilters": {
+        "dateRange": {
+          "component": "DateRangePicker",
+          "format": "DD/MM/YYYY"
+        },
+        "status": {
+          "component": "MultiSelect",
+          "options": "MDMS"
+        }
+      },
+      "resultActions": [
+        {
+          "key": "edit",
+          "label": "Edit",
+          "icon": "edit",
+          "permission": "UTILITIES_EDIT"
+        },
+        {
+          "key": "audit",
+          "label": "View Audit",
+          "icon": "history"
+        }
+      ]
+    }
   }
 };
 ```

@@ -56,21 +56,40 @@ npm install --save @egovernments/digit-ui-module-core@1.9.0
 - `useTenantConfigSearch` - Advanced tenant search and filtering
 - Enhanced authentication state management hooks
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+### Global Configuration (globalConfigs.getConfig)
+These configurations are accessed via `window.globalConfigs.getConfig(key)`:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|--------|
 | `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` | Boolean | `false` | Enables override of root tenant with logged-in tenant context | Multi-tenant environments where tenant context needs to switch based on login |
 | `MULTI_ROOT_TENANT` | Boolean | `false` | Enables multi-root tenant support | Works with override flag for enhanced tenant management |
+| `ENABLE_SINGLEINSTANCE` | Boolean | `false` | Enables single instance login mode | Simplifies tenant selection in single-tenant scenarios |
+| `CORE_MOBILE_CONFIGS` | Object | `{}` | Mobile-specific configurations | Mobile app behavior and features |
+
+### Component Props Configuration
+These configurations are passed as props to components:
+
+| Config Key | Type | Default | Description | Usage |
+|------------|------|---------|-------------|--------|
 | `allowedUserTypes` | Array | `['citizen', 'employee']` | Controls which user types can access the application | Access control and routing |
 | `defaultLanding` | String | `'citizen'` | Sets default landing page | Can be 'citizen' or 'employee' |
 | `logoUrl` | String | - | Main logo URL for the application | Header and branding |
 | `logoUrlWhite` | String | - | White/alternative logo URL | Dark backgrounds and footer |
 
-### Configuration Example
+### MDMS Configuration
+These configurations are managed through MDMS:
 
+| Config Key | Module | Master | Description | Usage |
+|------------|--------|--------|-------------|-------|
+| `CityModule` | `commonUiConfig` | `modules` | Module definitions and configurations | Module routing and access control |
+| `TenantBoundary` | `tenant` | `tenants` | Tenant boundary and hierarchy data | Geographic and administrative boundaries |
+| `StateInfo` | `tenant` | `tenants` | State-level configuration | State-specific settings and features |
+
+### Configuration Examples
+
+#### Global Configuration (globalConfigs.getConfig)
 ```javascript
 // In your globalConfigs
 const getConfig = (key) => {
@@ -79,14 +98,45 @@ const getConfig = (key) => {
       return true; // Enable multi-tenant context switching
     case 'MULTI_ROOT_TENANT':
       return true; // Enable multi-root tenant support
-    case 'allowedUserTypes':
-      return ['citizen', 'employee']; // Allow both user types
-    case 'defaultLanding':
-      return 'employee'; // Default to employee landing
+    case 'ENABLE_SINGLEINSTANCE':
+      return false; // Disable single instance mode
+    case 'CORE_MOBILE_CONFIGS':
+      return { enablePush: true, theme: 'light' }; // Mobile settings
     default:
       return undefined;
   }
 };
+```
+
+#### Component Props Configuration
+```jsx
+// In your App.js component initialization
+<DigitUI 
+  stateCode={stateCode} 
+  enabledModules={enabledModules}
+  // Props-based configuration
+  allowedUserTypes={['citizen', 'employee']}
+  defaultLanding="employee"
+  logoUrl="/path/to/logo.png"
+  logoUrlWhite="/path/to/white-logo.png"
+/>
+```
+
+#### MDMS Configuration
+```json
+// In commonUiConfig/modules.json
+{
+  "tenantId": "pg",
+  "moduleName": "commonUiConfig", 
+  "modules": [
+    {
+      "module": "CORE",
+      "code": "CORE",
+      "active": true,
+      "order": 1
+    }
+  ]
+}
 ```
 
 ## 💻 Usage

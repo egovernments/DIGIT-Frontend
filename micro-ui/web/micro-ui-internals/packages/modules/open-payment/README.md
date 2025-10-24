@@ -76,9 +76,13 @@ This is a **completely new module** providing a comprehensive payment gateway sy
    - Better mobile responsiveness and accessibility
    - Streamlined payment workflows and navigation
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+The Open Payment module supports a comprehensive configuration system with multiple configuration types for payment gateway integration and transaction management.
+
+### 1. Global Configuration (globalConfigs.getConfig)
+
+Global configurations that affect the entire open payment module behavior:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|--------|
@@ -86,11 +90,12 @@ This module uses the following global configuration flags:
 | `MULTI_ROOT_TENANT` | Boolean | `false` | Enables multi-root tenant support | Enhanced tenant payment management |
 | `PAYMENT_GATEWAY_URL` | String | - | External payment gateway URL | PayGov and other gateway integration |
 | `BILLING_SERVICE_URL` | String | - | Billing service endpoint | Payment search and bill fetching |
-
-### Configuration Example
+| `PAYMENT_TIMEOUT` | Number | `30000` | Payment gateway timeout in ms | Transaction timeout handling |
+| `PAYMENT_RETRY_COUNT` | Number | `3` | Maximum retry attempts for failed payments | Error handling |
+| `PAYMENT_ENCRYPTION_ENABLED` | Boolean | `true` | Enable payment data encryption | Security compliance |
 
 ```javascript
-// In your globalConfigs
+// Global Configuration Example
 const getConfig = (key) => {
   switch(key) {
     case 'OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT':
@@ -101,8 +106,292 @@ const getConfig = (key) => {
       return 'https://paygov.example.com'; // Set payment gateway URL
     case 'BILLING_SERVICE_URL':
       return '/billing-service'; // Set billing service endpoint
+    case 'PAYMENT_TIMEOUT':
+      return 60000; // Set timeout to 60 seconds
+    case 'PAYMENT_RETRY_COUNT':
+      return 5; // Allow 5 retry attempts
+    case 'PAYMENT_ENCRYPTION_ENABLED':
+      return true; // Enable encryption
     default:
       return undefined;
+  }
+};
+```
+
+### 2. Component Props Configuration
+
+Direct configuration passed as props to payment components:
+
+```javascript
+// OpenSearch Component Configuration
+<OpenSearch
+  config={{
+    searchCriteria: ["connectionId", "billNumber", "consumerCode"],
+    tenantFilter: true,
+    dateRangeFilter: true,
+    statusFilter: ["pending", "paid", "failed"],
+    maxResults: 100,
+    enableExport: true
+  }}
+  onSearch={handlePaymentSearch}
+  tenantId="pg.citya"
+/>
+
+// OpenView Component Configuration
+<OpenView
+  config={{
+    showPaymentHistory: true,
+    showReceiptDownload: true,
+    showPrintOption: true,
+    enablePartialPayment: false,
+    paymentMethods: ["gateway", "cash", "cheque"],
+    receiptFormat: "standard"
+  }}
+  paymentData={paymentDetails}
+  onAction={handlePaymentAction}
+/>
+
+// Response Component Configuration
+<Response
+  config={{
+    redirectTimeout: 5000,
+    showTransactionDetails: true,
+    enableRetry: true,
+    showReceiptPreview: true,
+    autoRedirectOnSuccess: true,
+    errorRetryLimit: 3
+  }}
+  transactionId="TXN123456"
+  status="success"
+/>
+```
+
+### 3. MDMS Configuration
+
+Configuration stored in MDMS for dynamic payment behavior:
+
+```json
+{
+  "tenantId": "pg",
+  "moduleName": "open-payment-config",
+  "PaymentConfig": [
+    {
+      "module": "PaymentGateway",
+      "config": {
+        "supportedGateways": [
+          {
+            "code": "paygov",
+            "name": "PayGov",
+            "url": "https://paygov.treasury.gov",
+            "timeout": 30000,
+            "retryCount": 3
+          },
+          {
+            "code": "razorpay",
+            "name": "Razorpay",
+            "url": "https://api.razorpay.com",
+            "timeout": 45000,
+            "retryCount": 2
+          }
+        ],
+        "defaultGateway": "paygov",
+        "encryptionRequired": true
+      }
+    },
+    {
+      "module": "BillingIntegration",
+      "config": {
+        "billingServiceUrl": "/billing-service/bill/v2/_fetchbill",
+        "searchCriteria": {
+          "connectionId": {
+            "mandatory": true,
+            "validation": "^[A-Z0-9]+$"
+          },
+          "billNumber": {
+            "mandatory": false,
+            "validation": "^[0-9]+$"
+          }
+        },
+        "resultLimit": 50
+      }
+    },
+    {
+      "module": "TransactionManagement",
+      "config": {
+        "transactionStates": ["initiated", "processing", "success", "failed", "cancelled"],
+        "timeoutDuration": 300000,
+        "receiptGeneration": {
+          "autoGenerate": true,
+          "format": "pdf",
+          "template": "standard"
+        }
+      }
+    }
+  ]
+}
+```
+
+### 4. UI Customizations (Digit.Customizations)
+
+Customizations for payment components and workflows:
+
+```javascript
+// Open Payment Module Customizations
+Digit.Customizations = {
+  "open-payment": {
+    "OpenSearch": {
+      "searchForm": {
+        "fields": [
+          {
+            "key": "connectionId",
+            "label": "Connection ID",
+            "type": "text",
+            "validation": ["required", "alphanumeric"],
+            "placeholder": "Enter Connection ID"
+          },
+          {
+            "key": "billNumber",
+            "label": "Bill Number",
+            "type": "text",
+            "validation": ["numeric"],
+            "placeholder": "Enter Bill Number"
+          },
+          {
+            "key": "dateRange",
+            "label": "Bill Date Range",
+            "type": "daterange",
+            "validation": ["dateRange"]
+          }
+        ],
+        "submitButton": {
+          "text": "Search Bills",
+          "loading": "Searching...",
+          "disabled": false
+        }
+      },
+      "resultTable": {
+        "columns": [
+          {
+            "key": "billNumber",
+            "label": "Bill Number",
+            "sortable": true,
+            "searchable": true
+          },
+          {
+            "key": "amount",
+            "label": "Amount",
+            "formatter": "currency",
+            "sortable": true
+          },
+          {
+            "key": "dueDate",
+            "label": "Due Date",
+            "formatter": "date",
+            "sortable": true
+          },
+          {
+            "key": "status",
+            "label": "Status",
+            "formatter": "status"
+          }
+        ],
+        "actions": [
+          {
+            "key": "pay",
+            "label": "Pay Now",
+            "icon": "payment",
+            "primary": true
+          },
+          {
+            "key": "view",
+            "label": "View Details",
+            "icon": "view"
+          }
+        ]
+      }
+    },
+    "PaymentGateway": {
+      "gatewaySelection": {
+        "showGatewayLogos": true,
+        "allowGatewaySwitch": true,
+        "defaultGateway": "paygov",
+        "gatewayFeatures": {
+          "paygov": {
+            "name": "Pay.gov",
+            "logo": "/assets/paygov-logo.png",
+            "features": ["secure", "government", "instant"]
+          },
+          "razorpay": {
+            "name": "Razorpay",
+            "logo": "/assets/razorpay-logo.png",
+            "features": ["multiple_methods", "fast", "reliable"]
+          }
+        }
+      },
+      "paymentForm": {
+        "fields": [
+          {
+            "key": "amount",
+            "label": "Payment Amount",
+            "type": "currency",
+            "readonly": true
+          },
+          {
+            "key": "paymentMethod",
+            "label": "Payment Method",
+            "type": "select",
+            "options": ["card", "netbanking", "upi", "wallet"]
+          }
+        ],
+        "securityFeatures": {
+          "showSecurityBadges": true,
+          "encryptionNotice": true,
+          "sslIndicator": true
+        }
+      }
+    },
+    "PaymentResponse": {
+      "successPage": {
+        "showReceiptPreview": true,
+        "downloadOptions": ["pdf", "email"],
+        "redirectOptions": {
+          "autoRedirect": true,
+          "redirectDelay": 5000,
+          "showCountdown": true
+        },
+        "socialSharing": {
+          "enabled": false,
+          "platforms": ["email", "sms"]
+        }
+      },
+      "failurePage": {
+        "showErrorDetails": true,
+        "retryOptions": {
+          "enableRetry": true,
+          "maxRetries": 3,
+          "retryMethods": ["same_gateway", "different_gateway"]
+        },
+        "supportContact": {
+          "showHelpdesk": true,
+          "phone": "1800-XXX-XXXX",
+          "email": "support@example.com"
+        }
+      }
+    },
+    "TransactionTracking": {
+      "trackingDisplay": {
+        "showTimeline": true,
+        "showStatusUpdates": true,
+        "enableNotifications": true,
+        "updateInterval": 30000
+      },
+      "transactionDetails": {
+        "showTransactionId": true,
+        "showTimestamp": true,
+        "showGatewayReference": true,
+        "showPaymentMethod": true
+      }
+    }
   }
 };
 ```

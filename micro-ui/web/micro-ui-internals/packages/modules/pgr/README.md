@@ -101,9 +101,10 @@ npm install --save @egovernments/digit-ui-module-pgr@1.9.0
     - **Responsive Forms**: Better mobile form experience
     - **Validation System**: Real-time validation with error feedback
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+### Global Configuration (globalConfigs.getConfig)
+These configurations are accessed via `window.globalConfigs.getConfig(key)`:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|-------|
@@ -114,8 +115,38 @@ This module uses the following global configuration flags:
 | `PGR_MAX_COMPLAINT_IMAGES` | Number | `3` | Maximum images per complaint | Image upload limit |
 | `PGR_AUTO_ASSIGN_COMPLAINTS` | Boolean | `false` | Auto-assign complaints to employees | Workflow automation |
 
-### Configuration Example
+### Component Props Configuration
+These configurations are passed as props to components:
 
+| Config Key | Type | Default | Description | Usage |
+|------------|------|---------|-------------|--------|
+| `tenantId` | String | - | Tenant context for complaint operations | Multi-tenant complaint management |
+| `complaintData` | Object | `{}` | Complaint data for forms and display | Pre-populate complaint forms and details |
+| `config` | Object | `{}` | Form configuration for complaint creation | Dynamic form generation and validation |
+| `onSelect` | Function | - | Callback for form field selection | Handle user interactions in complaint forms |
+| `filters` | Object | `{}` | Filter configuration for complaint search | Advanced search and filtering options |
+| `searchParams` | Object | `{}` | Search parameters for complaint queries | Search state management |
+
+### MDMS Configuration
+These configurations are managed through MDMS:
+
+| Config Key | Module | Master | Description | Usage |
+|------------|--------|--------|-------------|-------|
+| `ServiceDefs` | `RAINMAKER-PGR` | `ServiceDefs` | Service type definitions for complaints | Complaint categorization and workflow |
+| `ComplaintTypes` | `PGR` | `ComplaintType` | Available complaint types and categories | Complaint classification |
+| `Boundary` | `egov-location` | `boundary-data` | Administrative boundaries for location mapping | Geographical complaint assignment |
+| `inboxConfigPGR` | `commonUiConfig` | `inboxConfigPGR` | Inbox configuration for PGR module | Inbox display and search configuration |
+
+### UI Customizations (Digit.Customizations)
+These configurations provide custom behavior through the customization framework:
+
+| Config Key | Path | Description | Usage |
+|------------|------|-------------|-------|
+| `PGR.complaintConfig` | `Digit.Customizations.PGR.complaintConfig` | Custom complaint form configuration | Customize complaint creation workflow and form fields |
+
+### Configuration Examples
+
+#### Global Configuration (globalConfigs.getConfig)
 ```javascript
 // In your globalConfigs
 const getConfig = (key) => {
@@ -134,6 +165,94 @@ const getConfig = (key) => {
       return true; // Enable auto-assignment workflow
     default:
       return undefined;
+  }
+};
+```
+
+#### Component Props Configuration
+```jsx
+// Complaint creation component usage
+<CreateComplaint
+  tenantId="pb.amritsar"
+  config={{
+    allowedComplaintTypes: ['water', 'sewerage', 'roads'],
+    maxImages: 3,
+    enableLocationPicker: true
+  }}
+  onSelect={handleComplaintFieldSelection}
+  complaintData={existingComplaintData}
+/>
+
+// Complaint search component usage
+<ComplaintInbox
+  tenantId="pb.amritsar"
+  filters={{
+    status: ['OPEN', 'ASSIGNED'],
+    serviceType: 'water'
+  }}
+  searchParams={currentSearchParams}
+  onFilter={handleFilterChange}
+/>
+```
+
+#### MDMS Configuration
+```json
+// In RAINMAKER-PGR/ServiceDefs.json
+{
+  "tenantId": "pb",
+  "moduleName": "RAINMAKER-PGR",
+  "ServiceDefs": [
+    {
+      "serviceCode": "NoWaterSupply",
+      "serviceName": "No Water Supply",
+      "categoryCode": "water",
+      "priority": "HIGH",
+      "slaHours": 24
+    },
+    {
+      "serviceCode": "SewerageOverflow", 
+      "serviceName": "Sewerage Overflow",
+      "categoryCode": "sewerage",
+      "priority": "CRITICAL",
+      "slaHours": 12
+    }
+  ]
+}
+```
+
+#### UI Customizations
+```javascript
+// In your customizations file
+window.Digit = {
+  ...window.Digit,
+  Customizations: {
+    ...window.Digit?.Customizations,
+    PGR: {
+      complaintConfig: {
+        // Custom form configuration for complaint creation
+        enablePhotography: true,
+        mandatoryFields: ['complaintType', 'description', 'address'],
+        customFields: [
+          {
+            name: 'priorityLevel',
+            type: 'dropdown',
+            options: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
+            required: true
+          }
+        ],
+        validation: {
+          description: {
+            minLength: 20,
+            maxLength: 500
+          }
+        },
+        workflow: {
+          autoAssign: true,
+          escalationEnabled: true,
+          slaTracking: true
+        }
+      }
+    }
   }
 };
 ```

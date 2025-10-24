@@ -85,21 +85,52 @@ npm install --save @egovernments/digit-ui-module-workbench@1.1.0
 - `JSONViewer` - Advanced JSON visualization
 - `BoundaryHierarchyTypeAdd` - Boundary management
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+### Global Configuration (globalConfigs.getConfig)
+These configurations are accessed via `window.globalConfigs.getConfig(key)`:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|--------|
-| `ENABLE_MDMS_BULK_UPLOAD` | Boolean | `false` | Enables bulk upload functionality for master data | Show/hide bulk upload features |
-| `ENABLE_MDMS_BULK_DOWNLOAD` | Boolean | `false` | Enables bulk download of master data | Show/hide bulk download features |
-| `ENABLE_JSON_EDIT` | Boolean | `false` | Enables JSON editor for schema data manipulation | Show/hide advanced JSON editing |
-| `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` | Boolean | `false` | Multi-tenant support for workbench operations | Tenant context switching |
-| `CORE_UI_MODULE_LOCALE_PREFIX` | String | - | Module prefix configuration for localization | Localization key generation |
+| `ENABLE_MDMS_BULK_UPLOAD` | Boolean | `false` | Enables bulk upload functionality for master data | Show/hide bulk upload features in forms |
+| `ENABLE_MDMS_BULK_DOWNLOAD` | Boolean | `false` | Enables bulk download of master data | Show/hide bulk download options in search |
+| `ENABLE_JSON_EDIT` | Boolean | `false` | Enables JSON editor for schema data manipulation | Show/hide advanced JSON editing capabilities |
+| `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` | Boolean | `false` | Multi-tenant support for workbench operations | Tenant context switching in MDMS operations |
+| `CORE_UI_MODULE_LOCALE_PREFIX` | String | - | Module prefix configuration for localization | Localization key generation for workbench |
 | `MDMS_SCHEMACODE_INACTION` | Boolean | `true` | Use modulename and mastername in MDMS v2 API | API data structure control |
 
-### Configuration Example
+### Component Props Configuration
+These configurations are passed as props to components:
 
+| Config Key | Type | Default | Description | Usage |
+|------------|------|---------|-------------|--------|
+| `moduleName` | String | - | MDMS module name for data operations | Module context for API calls |
+| `masterName` | String | - | MDMS master name for data operations | Master context for data manipulation |
+| `uniqueIdentifier` | String | - | Unique identifier for specific data records | Record identification in MDMS operations |
+| `tenantId` | String | - | Tenant context for multi-tenant operations | Tenant-specific data access |
+| `defaultFormData` | Object | `{}` | Default data for form initialization | Pre-populate forms with existing data |
+| `screenType` | String | - | Screen type (view, edit, add) | Controls form behavior and validation |
+
+### MDMS Configuration
+These configurations are managed through MDMS:
+
+| Config Key | Module | Master | Description | Usage |
+|------------|--------|--------|-------------|-------|
+| `UISchema` | `Workbench` | `UISchema` | UI schema definitions for dynamic form generation | Form structure and validation rules |
+| `StateInfo` | `common-masters` | `StateInfo` | State-level configuration for localization | State-specific settings and locale data |
+| `roles` | `ACCESSCONTROL-ROLES` | `roles` | User role definitions for access control | Role-based access to workbench features |
+
+### UI Customizations (Digit.Customizations)
+These configurations provide custom behavior through the customization framework:
+
+| Config Key | Path | Description | Usage |
+|------------|------|-------------|-------|
+| `ViewMdmsConfig.fetchActionItems` | `Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems` | Custom action items for MDMS view screens | Provides custom buttons and actions for MDMS records |
+| `ViewMdmsConfig.onActionSelect` | `Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect` | Custom action handler for MDMS operations | Handles custom actions like enable/disable, edit, delete |
+
+### Configuration Examples
+
+#### Global Configuration (globalConfigs.getConfig)
 ```javascript
 // In your globalConfigs
 const getConfig = (key) => {
@@ -116,6 +147,79 @@ const getConfig = (key) => {
       return 'WORKBENCH'; // Set localization prefix
     default:
       return undefined;
+  }
+};
+```
+
+#### Component Props Configuration
+```jsx
+// In MDMS component usage
+<MDMSAdd
+  moduleName="common-masters"
+  masterName="Department"
+  tenantId="pb.amritsar"
+  defaultFormData={existingData}
+  screenType="edit"
+  uniqueIdentifier="DEPT_001"
+/>
+```
+
+#### MDMS Configuration
+```json
+// In Workbench/UISchema.json
+{
+  "tenantId": "pb",
+  "moduleName": "Workbench",
+  "UISchema": [
+    {
+      "schemaCode": "common-masters.Department",
+      "schema": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string", "title": "Department Name" },
+          "code": { "type": "string", "title": "Department Code" }
+        }
+      }
+    }
+  ]
+}
+```
+
+#### UI Customizations
+```javascript
+// In your customizations file
+window.Digit = {
+  ...window.Digit,
+  Customizations: {
+    ...window.Digit?.Customizations,
+    commonUiConfig: {
+      ...window.Digit?.Customizations?.commonUiConfig,
+      ViewMdmsConfig: {
+        fetchActionItems: (data, props) => {
+          // Custom logic to determine available actions
+          const actions = [];
+          if (data?.isActive) {
+            actions.push({ action: "DISABLE", label: "Disable" });
+          } else {
+            actions.push({ action: "ENABLE", label: "Enable" });
+          }
+          actions.push({ action: "EDIT", label: "Edit" });
+          return actions;
+        },
+        onActionSelect: (action, props) => {
+          // Custom action handling logic
+          switch(action) {
+            case "ENABLE":
+            case "DISABLE":
+              props.handleEnableDisable(action);
+              break;
+            case "EDIT":
+              props.history.push(`../add?${new URLSearchParams(props.additionalParams).toString()}`);
+              break;
+          }
+        }
+      }
+    }
   }
 };
 ```

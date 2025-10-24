@@ -89,9 +89,10 @@ npm install --save @egovernments/digit-ui-module-dss@1.9.0
    - **Multiple Filter Types**: Support for various filter input types
    - **API Integration**: Dynamic filter options from external services
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+### Global Configuration (globalConfigs.getConfig)
+These configurations are accessed via `window.globalConfigs.getConfig(key)`:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|-------|
@@ -102,8 +103,30 @@ This module uses the following global configuration flags:
 | `DSS_ENABLE_REAL_TIME` | Boolean | `false` | Enable real-time data updates | Live dashboard refresh |
 | `DSS_CHART_EXPORT_ENABLED` | Boolean | `true` | Enable chart export functionality | Export charts and data |
 
-### Configuration Example
+### Component Props Configuration
+These configurations are passed as props to components:
 
+| Config Key | Type | Default | Description | Usage |
+|------------|------|---------|-------------|--------|
+| `tenantId` | String | - | Tenant context for dashboard operations | Multi-tenant analytics and reporting |
+| `dashboardConfig` | Object | `{}` | Dashboard configuration and layout | Dynamic dashboard generation |
+| `chartConfig` | Object | `{}` | Chart configuration for visualization | Chart customization and data display |
+| `filters` | Object | `{}` | Filter configuration for data analysis | Advanced filtering and data slicing |
+| `dateRange` | Object | `{}` | Date range for analytics queries | Time-based data analysis |
+| `onFilterChange` | Function | - | Callback for filter changes | Handle filter interactions |
+
+### MDMS Configuration
+These configurations are managed through MDMS:
+
+| Config Key | Module | Master | Description | Usage |
+|------------|--------|--------|-------------|-------|
+| `MasterDashboardConfig` | `DSS` | `MasterDashboardConfig` | Master dashboard configuration | Dashboard layout and component definitions |
+| `ChartApiConfig` | `DSS` | `ChartApiConfig` | Chart API configuration for data sources | Chart data endpoint configuration |
+| `RoleBasedDashboard` | `DSS` | `RoleBasedDashboard` | Role-based dashboard access control | User role to dashboard mapping |
+
+### Configuration Examples
+
+#### Global Configuration (globalConfigs.getConfig)
 ```javascript
 // In your globalConfigs
 const getConfig = (key) => {
@@ -124,6 +147,66 @@ const getConfig = (key) => {
       return undefined;
   }
 };
+```
+
+#### Component Props Configuration
+```jsx
+// Dashboard component usage
+<Dashboard
+  tenantId="pb.amritsar"
+  dashboardConfig={{
+    layout: 'grid',
+    refreshInterval: 30000,
+    enableExport: true
+  }}
+  chartConfig={{
+    theme: 'light',
+    responsive: true,
+    animations: true
+  }}
+  filters={{
+    dateRange: 'last30days',
+    department: 'all'
+  }}
+  onFilterChange={handleFilterChange}
+/>
+
+// Chart component usage
+<ChartComponent
+  config={chartConfiguration}
+  data={chartData}
+  filters={activeFilters}
+  dateRange={selectedDateRange}
+/>
+```
+
+#### MDMS Configuration
+```json
+// In DSS/MasterDashboardConfig.json
+{
+  "tenantId": "pb",
+  "moduleName": "DSS",
+  "MasterDashboardConfig": [
+    {
+      "id": "overview-dashboard",
+      "name": "City Overview",
+      "charts": [
+        {
+          "id": "complaints-by-type",
+          "type": "pie",
+          "title": "Complaints by Type",
+          "apiEndpoint": "/dss-dashboard/complaint-type/_get"
+        },
+        {
+          "id": "revenue-trend",
+          "type": "line",
+          "title": "Revenue Trend",
+          "apiEndpoint": "/dss-dashboard/revenue/_get"
+        }
+      ]
+    }
+  ]
+}
 ```
 
 ## 💻 Usage

@@ -95,9 +95,10 @@ npm install --save @egovernments/digit-ui-module-engagement@1.9.0
    - **Media Library**: Centralized media asset management
    - **Content Analytics**: Performance tracking for content engagement
 
-## 🔧 Global Configuration
+## 🔧 Configuration System
 
-This module uses the following global configuration flags:
+### Global Configuration (globalConfigs.getConfig)
+These configurations are accessed via `window.globalConfigs.getConfig(key)`:
 
 | Config Key | Type | Default | Description | Usage |
 |------------|------|---------|-------------|-------|
@@ -108,8 +109,31 @@ This module uses the following global configuration flags:
 | `ENGAGEMENT_NOTIFICATION_CHANNELS` | Array | `['EMAIL', 'SMS']` | Enabled notification channels | Communication channel selection |
 | `ENGAGEMENT_ANALYTICS_ENABLED` | Boolean | `true` | Enable engagement analytics | Analytics and reporting features |
 
-### Configuration Example
+### Component Props Configuration
+These configurations are passed as props to components:
 
+| Config Key | Type | Default | Description | Usage |
+|------------|------|---------|-------------|--------|
+| `tenantId` | String | - | Tenant context for engagement operations | Multi-tenant campaign and survey management |
+| `surveyConfig` | Object | `{}` | Survey configuration and setup | Dynamic survey form generation |
+| `eventData` | Object | `{}` | Event data for management | Event creation and management |
+| `participantFilters` | Object | `{}` | Participant filtering configuration | Target audience selection |
+| `notificationConfig` | Object | `{}` | Notification settings and channels | Communication preferences |
+| `onSurveySubmit` | Function | - | Callback for survey submission | Handle survey response data |
+
+### MDMS Configuration
+These configurations are managed through MDMS:
+
+| Config Key | Module | Master | Description | Usage |
+|------------|--------|--------|-------------|-------|
+| `SurveyConfig` | `Engagement` | `SurveyConfig` | Survey configuration and templates | Survey structure and question types |
+| `EventConfig` | `Engagement` | `EventConfig` | Event management configuration | Event types and scheduling |
+| `NotificationChannels` | `Engagement` | `NotificationChannels` | Available notification channels | Communication method definitions |
+| `EngagementRoles` | `ACCESSCONTROL-ROLES` | `roles` | Engagement-specific user roles | Role-based access to engagement features |
+
+### Configuration Examples
+
+#### Global Configuration (globalConfigs.getConfig)
 ```javascript
 // In your globalConfigs
 const getConfig = (key) => {
