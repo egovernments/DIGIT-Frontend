@@ -8,7 +8,7 @@
  */
 import React, { Suspense } from "react";
 import { initLibraries } from "@egovernments/digit-ui-libraries";
-import { UICustomizations } from "./Customisations/UICustomizations";
+import { UICustomizations } from "./Customizations/UICustomizations";
 import { initPropertyTaxComponents } from "@egovernments/digit-ui-module-pt";
 import { initBirthComponents } from "@egovernments/digit-ui-module-birth";
 import { initDeathComponents } from "@egovernments/digit-ui-module-death";
