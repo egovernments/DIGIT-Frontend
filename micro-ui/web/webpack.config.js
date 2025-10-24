@@ -9,9 +9,9 @@ module.exports = (env) => {
     mode: isProduction ? 'production' : 'development',
     entry: './src/index.js',
     output: {
-      path: path.resolve(__dirname, 'dist'),
+      path: path.resolve(__dirname, 'build'),
       filename: isProduction ? '[name].[contenthash].js' : '[name].js',
-      publicPath: '/',
+      publicPath: '/mSeva-ui/',
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],
@@ -58,15 +58,15 @@ module.exports = (env) => {
       }),
     ],
     devServer: {
-      contentBase: path.join(__dirname, 'dist'),
+      static: path.join(__dirname, 'build'),
       compress: true,
       port: 3000,
       historyApiFallback: true,
       hot: true,
       open: true,
     },
-  optimization: {
-    splitChunks: {
+    optimization: {
+      splitChunks: {
       chunks: 'all',
       minSize:20000,
       maxSize:50000,
