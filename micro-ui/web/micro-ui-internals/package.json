@@ -17,7 +17,7 @@
     "node": ">=14"
   },
   "scripts": {
-    "start": "SKIP_PREFLIGHT_CHECK=true run-s build start:dev",
+    "start": "SKIP_PREFLIGHT_CHECK=true  run-s build start:dev",
     "sprint": "SKIP_PREFLIGHT_CHECK=true run-s start:script",
     "start:dev": "run-p dev:**",
     "start:script": "./scripts/create.sh",
@@ -91,10 +91,8 @@
     "**/@babel/traverse": "7.25.9",
     "**/styled-components": "5.0.0",
     "fast-uri": "2.1.0",
-    "**/minimatch": "7.4.6",
-    "minimatch": "7.4.6",
-    "**/glob": "7.2.3",
-    "glob": "7.2.3"   
+    "**/minimatch": "^3.0.4",
+    "**/glob": "^7.1.2"
   },
   "devDependencies": {
     "husky": "7.0.4",

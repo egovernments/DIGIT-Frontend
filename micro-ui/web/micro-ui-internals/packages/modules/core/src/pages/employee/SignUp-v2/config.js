@@ -15,7 +15,7 @@ export const SignUpConfig = [
           name: "accountName",
           validation: {
             required: true,
-            pattern: /^[A-Za-z]+( [A-Za-z]+)*$/,
+            pattern: /^[A-Z]+( [A-Z]+)*$/,
             maxLength: 50,
           },
           error: "ERR_ACCOUNT_NAME_REQUIRED",

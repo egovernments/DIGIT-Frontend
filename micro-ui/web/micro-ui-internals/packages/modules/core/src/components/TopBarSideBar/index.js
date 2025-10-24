@@ -25,9 +25,23 @@ const TopBarSideBar = ({
     toggleSidebar(false);
     setShowDialog(true);
   };
-  const handleOnSubmit = () => {
-    Digit.UserService.logout();
-    setShowDialog(false);
+  const handleOnSubmit = async () => {
+    try {
+      const isSuperUserWithMultipleRootTenant = Digit?.UserService?.hasAccess("SUPERUSER") && Digit?.Utils?.getMultiRootTenant();
+      if (isSuperUserWithMultipleRootTenant) {
+        try {
+          await Digit.UserService.logoutUser();
+        } catch (e) {}
+        window.localStorage.clear();
+        window.sessionStorage.clear();
+        const ts = Date.now();
+        window.location.replace(`/${window?.globalPath}/user/login?ts=${ts}`);
+      } else {
+        Digit.UserService.logout();
+      }
+    } finally {
+      setShowDialog(false);
+    }
   };
   const handleOnCancel = () => {
     setShowDialog(false);

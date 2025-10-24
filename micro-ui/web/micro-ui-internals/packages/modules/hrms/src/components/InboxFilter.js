@@ -103,7 +103,17 @@ const Filter = ({ searchParams, onFilterChange, onSearch, removeParam, ...props 
   }, [isActive]);
   const clearAll = () => {
     onFilterChange({ delete: Object.keys(searchParams) });
-    settenantId(tenantIds.filter((ele) => ele.code == Digit.ULBService.getCurrentTenantId())[0]);
+    const currentTenantId = Digit.ULBService.getCurrentTenantId();
+    
+    // For multiroot tenant, use currentTenantId directly
+    if (Digit.Utils.getMultiRootTenant() || !tenantIds || tenantIds.length === 0) {
+      settenantId({ code: currentTenantId, name: currentTenantId });
+    } else {
+      // For single tenant, find from the list
+      const matchedTenant = tenantIds?.find((ele) => ele.code === currentTenantId);
+      settenantId(matchedTenant || tenantIds?.[0]);
+    }
+    
     setDepartments(null);
     setRoles(null);
     setIsactive(null);

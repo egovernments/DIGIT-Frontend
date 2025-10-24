@@ -11,7 +11,7 @@ const MetricData = ({ t, data, code }) => {
   const insight=data?.insight?.value?.replace(/[+-]/g, "")?.split('%');
   return (
     <div>
-      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px", whiteSpace: "nowrap" }}>
+      <p className="heading-m" style={{ textAlign: "right", paddingTop: "0px", whiteSpace: "nowrap", margin: "0px" }}>
         {code === "citizenAvgRating" ? (
           <Rating currentRating={Math.round(data?.headerValue * 10) / 10} styles={{ width: "unset" }} starStyles={{ width: "25px" }} />
         ) : (

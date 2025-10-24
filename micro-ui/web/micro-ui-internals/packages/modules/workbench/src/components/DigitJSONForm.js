@@ -340,8 +340,15 @@ const DigitJSONForm = ({
 
   const buildSecondFormatMessages = (additionalProperties, schemaCode, locale) => {
     const schemaCodeParts = schemaCode?.split(".") || [];
-    const firstPart = schemaCodeParts[0]?.toLowerCase() || "default";
+    const firstPartRaw = schemaCodeParts[0]?.toLowerCase() || "default";
+    // Use digit-tenants for RAINMAKER-PGR to fix localization issues in complaint creation
+    const firstPart = firstPartRaw === "rainmaker-pgr" ? "digit-tenants" : firstPartRaw;
     const secondPart = schemaCodeParts[1]?.toUpperCase() || "";
+
+    console.log('buildSecondFormatMessages - schemaCode:', schemaCode);
+    console.log('buildSecondFormatMessages - firstPartRaw:', firstPartRaw);
+    console.log('buildSecondFormatMessages - firstPart (module):', firstPart);
+    console.log('buildSecondFormatMessages - secondPart:', secondPart);
 
     const messages = [];
     for (const fieldName in additionalProperties) {
@@ -359,26 +366,39 @@ const DigitJSONForm = ({
         }
       }
     }
+    console.log('buildSecondFormatMessages - messages:', messages);
     return messages;
   };
 
   const onSubmitV2 = async ({ formData }, e) => {
+    console.log('=== DigitJSONForm onSubmitV2 called ===');
     const locale = Digit.StoreData.getCurrentLanguage();
     const transformedFormData = transformFormDataWithProperties(formData, additionalProperties);
     const secondFormatMessages = buildSecondFormatMessages(additionalProperties, schema?.code, locale);
+
+    console.log('onSubmitV2 - locale:', locale);
+    console.log('onSubmitV2 - additionalProperties:', additionalProperties);
+    console.log('onSubmitV2 - secondFormatMessages count:', secondFormatMessages.length);
+
     if (secondFormatMessages.length > 0) {
+      console.log('onSubmitV2 - Calling first localization upsert (DigitJSONForm)');
+      const localizationBody = {
+        tenantId: tenantId,
+        messages: secondFormatMessages,
+      };
+      console.log('First localization body:', JSON.stringify(localizationBody, null, 2));
+
       try {
         await secondFormatLocalizationMutation.mutateAsync({
           params: {},
-          body: {
-            tenantId: tenantId,
-            messages: secondFormatMessages,
-          },
+          body: localizationBody,
         });
+        console.log('onSubmitV2 - First localization upsert success');
       } catch (err) {
         console.error("Second format localization upsert failed:", err);
       }
     }
+    console.log('onSubmitV2 - Calling parent onSubmit (MDMSAddV2)');
     onSubmit && onSubmit(transformedFormData, additionalProperties);
   };
 

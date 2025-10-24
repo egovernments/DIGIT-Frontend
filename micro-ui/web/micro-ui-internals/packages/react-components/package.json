@@ -64,7 +64,9 @@
   },
   "resolutions": {
     "**/ajv": "8.11.2",
-    "fast-uri":"2.1.0"
+    "fast-uri":"2.1.0",
+    "**/minimatch": "^3.0.4",
+    "**/glob": "^7.1.2"
   },
   "browserslist": {
     "production": [

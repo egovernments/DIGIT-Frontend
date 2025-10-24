@@ -1,3 +1,5 @@
+import LZString from "lz-string";
+
 const localStoreSupport = () => {
   try {
     return "sessionStorage" in window && window["sessionStorage"] !== null;
@@ -52,4 +54,43 @@ const getStorage = (storageClass) => ({
 });
 
 export const Storage = getStorage(window.sessionStorage);
-export const PersistantStorage = getStorage(window.localStorage);
+export const PersistantStorage = {
+  get: (key) => {
+    try {
+      const value = localStorage.getItem(key);
+      if (!value) return null;
+      // Decompress and parse
+      const decompressed = LZString.decompress(value);
+      return decompressed ? JSON.parse(decompressed) : null;
+    } catch (e) {
+      console.error("Error reading from localStorage:", e);
+      return null;
+    }
+  },
+  set: (key, value) => {
+    try {
+      let dataToStore = value;
+      // Deduplicate if key is localization
+      if (key === "localization") {
+        const existing = PersistantStorage.get(key) || [];
+        const combined = [...existing, ...value];
+        // Remove duplicates based on 'code'
+        dataToStore = Array.from(
+          new Map(combined.map(item => [item.code, item])).values()
+        );
+      }
+      // Compress before storing
+      const compressed = LZString.compress(JSON.stringify(dataToStore));
+      localStorage.setItem(key, compressed);
+    } catch (e) {
+      console.error("Error writing to localStorage:", e);
+    }
+  },
+  remove: (key) => {
+    try {
+      localStorage.removeItem(key);
+    } catch (e) {
+      console.error("Error removing from localStorage:", e);
+    }
+  }
+};

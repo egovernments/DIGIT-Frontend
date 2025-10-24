@@ -7,7 +7,7 @@ import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
-  const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  // const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const [showToast, setShowToast] = useState(null);
@@ -26,12 +26,13 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onLogin = async (data) => {
+    const normalizedEmail = (data?.email || "").toLowerCase();
     await mutation.mutate(
       {
         body: {
           tenant: {
             name: data.accountName,
-            email: data.email,
+            email: normalizedEmail,
           },
         },
         config: {
@@ -88,6 +89,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     });
 
     setDisable(hasEmptyFields);
+    if (formData?.accountName !== formData?.accountName?.toUpperCase()){
+      setValue("accountName", formData?.accountName?.toUpperCase());
+    }
   };
 
   // Mobile detection (simple)
@@ -107,8 +111,13 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         flexDirection: "column",
       }}
     >
+      <style>{`
+        .sandbox-signup-form .label-container .info-icon:hover .infotext {
+          margin-left: -6.25rem !important;
+        }
+      `}</style>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
-        <BackLink onClick={() => window.history.back()} />
+        {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
       <FormComposerV2
         onSubmit={onLogin}
@@ -140,7 +149,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     </div>
   );
 
-  if (isLoading || isStoreLoading) return <Loader />;
+  if (isStoreLoading) return <Loader />;
 
   if (isMobile) {
     // On mobile return only form section

@@ -75,7 +75,7 @@ const MDMSView = ({ ...props }) => {
   const handleEnableDisable = async (action) => {
     const onSuccess = (resp) => {
       setShowToast({
-        label: `${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive ? "ENA" : "DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
+        label: `${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive ? "ENA" : "DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.uniqueIdentifier}`
       });
       closeToast()
       refetch()

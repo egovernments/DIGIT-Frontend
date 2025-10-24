@@ -139,7 +139,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   
     const onSuccess = async (resp) => {
       // After main MDMS add success
-      const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].id";
+      const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].uniqueIdentifier";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       setShowErrorToast(false);
   

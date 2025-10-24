@@ -86,6 +86,11 @@ const translateDummy = (text) => {
   return text;
 };
 
+const formatKey = (key) => {
+  // Remove underscores and replace with spaces
+  return key?.replace(/_/g, ' ') || key;
+};
+
 const Dropdown = (props) => {
   const user_type = Digit.SessionStorage.get("userType");
   const [dropdownStatus, setDropdownStatus] = useState(false);
@@ -236,7 +241,7 @@ const Dropdown = (props) => {
               <div className={`cp profile-dropdown--item display: flex `} key={"-1"} onClick={() => {
 
               }}>
-                {<span> {props.t ? props.t("CMN_NOOPTION") : "CMN_NOOPTION"}</span>}
+                {<span> {props.t ? props.t("CMN_NOOPTION") : formatKey(t("No_Options"))}</span>}
               </div>
             )}
           </div>

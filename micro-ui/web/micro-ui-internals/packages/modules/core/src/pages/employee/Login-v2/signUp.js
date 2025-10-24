@@ -8,7 +8,7 @@ import ImageComponent from "../../../components/ImageComponent";
 import Carousel from "../SignUp-v2/CarouselComponent/CarouselComponent";
 
 const Login = ({ config: propsConfig, t, isDisabled }) => {
-  const { data: cities, isLoading } = Digit.Hooks.useTenants();
+  // const { data: cities, isLoading } = Digit.Hooks.useTenants();
   const { data: storeData, isLoading: isStoreLoading } = Digit.Hooks.useStore.getInitData();
   const { stateInfo } = storeData || {};
   const [showToast, setShowToast] = useState(null);
@@ -36,7 +36,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCreate);
 
   const onLogin = async (data) => {
-    const inputEmail = data.email;
+    const inputEmail = (data?.email || "").toLowerCase();
     const tenantId = data.accountName;
     await mutation.mutate(
       {
@@ -45,7 +45,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
         },
         body: {
           otp: {
-            userName: data.email,
+            userName: inputEmail,
             type: "login",
             tenantId: tenantId,
             userType: "EMPLOYEE",
@@ -104,6 +104,9 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     });
 
     setDisable(hasEmptyFields);
+    if (formData?.accountName !== formData?.accountName?.toUpperCase()){
+      setValue("accountName", formData?.accountName?.toUpperCase());
+    }
   };
 
   // Mobile detection (simple check)
@@ -113,7 +116,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
   const renderFormSection = () => (
     <div style={{ padding: isMobile ? "1rem" : "2rem", width: isMobile ? "100%" : "30%", backgroundColor: "#fff", overflowY: "auto", justifyContent: "center", display: "flex", alignItems: "center", flexDirection: "column" }}>
       <div className="employeeBackbuttonAlign" style={{ alignSelf: "flex-start", marginBottom: "1rem" }}>
-        <BackLink onClick={() => window.history.back()} />
+        {!isMobile && <BackLink onClick={() => window.history.back()} /> }
       </div>
       <FormComposerV2
         onSubmit={onLogin}
@@ -145,7 +148,7 @@ const Login = ({ config: propsConfig, t, isDisabled }) => {
     </div>
   );
 
-  if (isLoading || isStoreLoading) return <Loader />;
+  if (isStoreLoading) return <Loader />;
 
   if (isMobile) {
     // Only form section on mobile

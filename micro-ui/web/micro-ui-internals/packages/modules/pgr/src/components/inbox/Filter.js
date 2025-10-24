@@ -37,7 +37,7 @@ const Filter = (props) => {
 
   const [wfFilters, setWfFilters] = useState(
     searchParams?.filters?.wfFilters || {
-      assignee: [{ code: uuid }],
+      assignee: [],
     }
   );
 

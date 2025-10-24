@@ -3,8 +3,15 @@ import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit
 import { subtract } from "lodash";
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
-  const { data: allCities, isLoading } = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
-  const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+  const { data: allCities, isLoading } = isMultiRootTenant ? Digit.Hooks.useTenants() : Digit.Hooks.pgr.useTenants();
+
+  // For multiRootTenant, always show all cities (ignore pincode filtering)
+  // For non-multiRootTenant, filter by pincode if provided
+  const cities = isMultiRootTenant
+    ? allCities
+    : (value?.pincode ? allCities?.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities);
+
   const language = JSON.parse(sessionStorage.getItem('Digit.locale'))?.value;
 
   const [selectedCity, setSelectedCity] = useState(() => {
@@ -47,8 +54,12 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
 
   useEffect(() => {
     if (selectedCity && fetchedLocalities) {
+      // For multiRootTenant, show all localities for the selected city (no pincode filtering)
+      // For non-multiRootTenant, filter localities by pincode if provided
       const { pincode } = value;
-      let __localityList = pincode ? fetchedLocalities.filter((city) => city["pincode"] == pincode) : fetchedLocalities;
+      let __localityList = isMultiRootTenant
+        ? fetchedLocalities
+        : (pincode ? fetchedLocalities.filter((city) => city["pincode"] == pincode) : fetchedLocalities);
       setLocalities(__localityList);
     }
   }, [selectedCity, fetchedLocalities]);
@@ -68,18 +79,24 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
   function onSubmit() {
     onSelect({ city_complaint: selectedCity, locality_complaint: selectedLocality });
   }
+
+  // Show loading if cities data is still loading
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <FormStep config={config} onSelect={onSubmit} t={t} isDisabled={selectedLocality ? false : true}>
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
-        {cities?.length < 5 ? (
-          <RadioButtons selectedOption={selectedCity} options={
-             cities
-          } optionsKey={"i18nKey"} onSelect={selectCity} />
+        {cities && cities.length > 0 ? (
+          cities.length < 5 ? (
+            <RadioButtons selectedOption={selectedCity} options={cities} optionsKey={"i18nKey"} onSelect={selectCity} />
+          ) : (
+            <Dropdown isMandatory selected={selectedCity} option={cities} select={selectCity} optionKey={"i18nKey"} t={t} />
+          )
         ) : (
-          <Dropdown isMandatory selected={selectedCity} option={
-             cities
-          } select={selectCity} optionKey={"i18nKey"} t={t} />
+          <div>No cities available</div>
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}
         {selectedCity && localities && (

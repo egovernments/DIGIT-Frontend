@@ -75,8 +75,13 @@ const DummyLoaderScreen = () => {
   const RoleLandingUrl = MdmsRes?.[0].url;
 
   const roleForLandingPage = (getUserRoles, MdmsRes) => {
+    MdmsRes
     const userRole = getUserRoles?.[0]?.code;
-    return userRole === "SUPERUSER" && MdmsRes.some((page) => page.rolesForLandingPage.includes("SUPERUSER"));
+    return (
+      userRole === "SUPERUSER" &&
+      Array.isArray(MdmsRes) &&
+      MdmsRes.some((page) => page.rolesForLandingPage.includes("SUPERUSER"))
+    );
   };
 
   const onButtonClick = () => {
