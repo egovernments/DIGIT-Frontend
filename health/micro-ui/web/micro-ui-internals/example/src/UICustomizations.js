@@ -1682,8 +1682,7 @@ export const UICustomizations = {
 
         data.body.inbox.moduleSearchCriteria.fromDate = fromDate;
         data.body.inbox.moduleSearchCriteria.toDate = toDate;
-      }
-      else {
+      } else {
         delete data.body.inbox.moduleSearchCriteria.fromDate;
         delete data.body.inbox.moduleSearchCriteria.toDate;
       }
@@ -1702,7 +1701,11 @@ export const UICustomizations = {
       if (assignee?.code === "ASSIGNED_TO_ME" || data?.state?.filterForm?.assignedToMe?.code === "ASSIGNED_TO_ME") {
         data.body.inbox.moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
       }
-    
+
+      if(data?.state?.filterForm){
+        window.Digit.SessionStorage.set("filtersForInbox",data?.state?.filterForm); 
+      }
+
       // --- Handle serviceCode ---
       let serviceCodes = _.clone(data.body.inbox.moduleSearchCriteria.serviceCode || null);
       serviceCodes = serviceCodes?.serviceCode;
@@ -1747,16 +1750,14 @@ export const UICustomizations = {
       switch (key) {
         case "CS_COMMON_COMPLAINT_NO":
           return (
-            <div style={{display:"grid"}}>
-            <span className="link" style={{display:"grid"}}>
-            <Link
-              to={ `/${window.contextPath}/employee/pgr/complaint-details/${value}`}
-            >
-              {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
-            </Link>
-          </span>
-          <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
-          </div>
+            <div style={{ display: "grid" }}>
+              <span className="link" style={{ display: "grid" }}>
+                <Link to={`/${window.contextPath}/employee/pgr/complaint-details/${value}`}>
+                  {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
+                </Link>
+              </span>
+              <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
+            </div>
           );
 
         case "WF_INBOX_HEADER_LOCALITY":
