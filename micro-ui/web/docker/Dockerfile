@@ -38,6 +38,7 @@ RUN yarn install
 
 # Build the project
 RUN yarn build:webpack
+RUN ls -lah
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
