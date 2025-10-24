@@ -51,7 +51,10 @@ const Urls = {
 
   attendee:{
     deenrollAttendee:`/${healthAttendanceContextPath}/attendee/v1/_delete`,
-     search: `/${healthIndividualContextPath}/v1/_search`,
+    search: `/${healthIndividualContextPath}/v1/_search`,
+    enrollAttendee:`/${healthAttendanceContextPath}/attendee/v1/_create`,
+    registerSearch:`/${healthAttendanceContextPath}/v1/_search`
+    
   }
 };
 

@@ -9,6 +9,7 @@
     "start": "react-scripts start"
   },
   "devDependencies": {
+    "@egovernments/digit-ui-module-health-payments": "0.2.0",
     "@egovernments/digit-ui-module-health-hrms":"0.0.1",
     "@egovernments/digit-ui-libraries": "1.8.17",
     "@egovernments/digit-ui-module-workbench": "1.0.23",
