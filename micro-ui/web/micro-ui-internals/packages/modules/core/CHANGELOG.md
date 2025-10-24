@@ -1,5 +1,111 @@
 # Changelog 
 
+## [1.9.0]  [23-October-2025]
+
+### 🚀 Major Feature Release - Enhanced Authentication & Multi-Tenant Support
+
+#### 🔐 Complete Authentication System Overhaul:
+- **Login v2 System**: New Login-v2 module with enhanced security and UX
+  - Advanced configuration system with config-v2.js
+  - Email and mobile number login flows with pattern validation
+  - OTP customization with OtpCustomComponent
+  - SignUp v2 with improved validation and user experience
+- **Enhanced OTP System**: 
+  - New Otp module with advanced customization options
+  - Better error handling and validation
+  - Support for email-based OTP verification
+- **Carousel Login Experience**: 
+  - New Carousel component for interactive login screens
+  - Dynamic banner rendering with conditional logic
+  - Improved visual hierarchy and user guidance
+
+#### 🏢 Multi-Tenant & Configuration Features:
+- **Advanced Multi-Tenant Support**: 
+  - `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` global config flag
+  - Enhanced ULB service for dynamic tenant switching
+  - Tenant-specific logo support with `logoUrlWhite` option
+  - Improved tenant context management across sessions
+- **Landing Page Configuration**: 
+  - New LandingPageConfig.js for customizable home screens
+  - Role-based employee home pages with RoleBasedEmployeeHome component
+  - Configurable default landing pages (`defaultLanding` parameter)
+- **User Type Restrictions**: 
+  - `allowedUserTypes` parameter for controlling access (citizen/employee)
+  - Enhanced routing based on user permissions
+  - Better security through access control
+
+#### 🎨 New UI Components & Features:
+- **SandBox Integration**: 
+  - New SandBoxHeader component with dedicated styling
+  - SandboxHeader.svg for branding consistency
+  - Sandbox-specific routing and configuration
+- **Enhanced Error Handling**: 
+  - CustomErrorComponent for better error messaging
+  - DummyLoader component for improved loading states
+  - Better error boundary management
+- **Privacy & Compliance**: 
+  - New PrivacyComponent for GDPR/privacy compliance
+  - Enhanced consent management
+  - Configurable privacy policies
+- **Utility Components**: 
+  - ImageComponent for optimized image handling
+  - ForgotOrganizationTooltip for better user guidance
+  - LoginSignupSelector for streamlined access
+
+#### 🔧 Advanced Hooks & Configuration:
+- **New Custom Hooks**: 
+  - useLoginConfig: MDMS-based login configuration management
+  - useTenantConfigSearch: Advanced tenant search and filtering
+  - Enhanced authentication state management
+- **Configuration Management**: 
+  - MDMS-based login screen configuration
+  - Module-specific privacy and compliance settings
+  - Dynamic component loading based on tenant settings
+
+#### 📱 Enhanced Mobile & Responsive Features:
+- **Improved Mobile Experience**: 
+  - Better responsive design for login flows
+  - Enhanced mobile-specific validations
+  - Improved touch interactions
+- **Search Enhancements**: 
+  - Enhanced MobileSearchApplication component
+  - Better search field configurations
+  - Improved search result handling
+
+#### 🔄 App Architecture Improvements:
+- **Enhanced App.js**: 
+  - Support for additional components injection
+  - Better route management with conditional rendering
+  - Enhanced props passing for customization
+- **Module System Enhancement**: 
+  - Better AppModules component with additional component support
+  - Enhanced module loading and initialization
+  - Improved error handling in module registration
+
+#### 🛡️ Security & Validation:
+- **Enhanced Validation**: 
+  - Pattern validation for email and mobile numbers
+  - Improved password security requirements
+  - Better input sanitization
+- **Access Control**: 
+  - Role-based access restrictions
+  - Enhanced permission checking
+  - Better security for sensitive operations
+
+### Technical Updates:
+- Enhanced CitizenSideBar and EmployeeSideBar components
+- Improved TopBarSideBar integration
+- Better state management across authentication flows
+- Enhanced error boundary implementations
+- Improved logo management with dual logo support
+
+### Global Config Integration:
+- `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT`: Multi-tenant context switching
+- `allowedUserTypes`: User access control
+- `defaultLanding`: Customizable landing page routing
+- MDMS-based configuration for login, privacy, and module settings
+
+
 ## [1.8.57]  [23-October-2025]
 
 ### New Features:

@@ -1,4 +1,83 @@
 
+
+## [1.9.0] [23-October-2025]
+
+### 🚀 Enhanced Dashboard & Analytics Platform
+
+#### 📊 Advanced Dashboard Components:
+- **KibanaCard Component**: New iframe-based Kibana integration
+  - Seamless IFrameInterface integration with utilities module
+  - State-aware filtering and tenant context support
+  - Mobile-responsive design with optimized layouts
+  - Enhanced wrapper and styling classes for better UX
+- **Enhanced Chart Components**: Major improvements across all chart types
+  - CustomAreaChart: Better data visualization and interactivity
+  - CustomHorizontalBarChart: Enhanced horizontal data representation
+  - CustomPieChart: Improved pie chart rendering and animations
+  - CustomTable: Advanced table features with better data handling
+  - GenericChart: Flexible chart component for various data types
+
+#### 🎛️ Improved Filtering & Navigation:
+- **Enhanced Filters Component**: Advanced filtering capabilities
+  - Better filter state management and persistence
+  - Dynamic filter options based on data context
+  - Improved performance for large datasets
+- **Layout Improvements**: Better dashboard organization
+  - Responsive grid layouts for different screen sizes
+  - Improved navigation and user experience
+  - Enhanced loading states and error handling
+
+#### 🗺️ Enhanced Mapping & Geospatial Features:
+- **MapChart Enhancements**: Improved geospatial data visualization
+  - Better map rendering performance
+  - Enhanced zoom and pan capabilities
+  - Improved data point visualization
+- **Updated SVG Assets**: Refreshed visual elements
+  - Updated Arrow_Right.svg for better navigation indicators
+  - Enhanced dashboards.svg for improved iconography
+
+#### 🏠 Home Page Redesign:
+- **Enhanced Home Component**: Improved dashboard home experience
+  - Better layout organization and card arrangements
+  - Enhanced navigation and quick access features
+  - Improved loading performance and user feedback
+
+### Technical Improvements:
+- **Module Architecture Enhancement**: 
+  - Better integration with utilities module for iframe support
+  - Enhanced component registration and exports
+  - Improved error boundaries and fallback components
+- **Performance Optimizations**: 
+  - Optimized chart rendering for large datasets
+  - Better memory management for dashboard components
+  - Reduced API calls through intelligent caching
+- **State Management**: 
+  - Enhanced filter state persistence
+  - Better component lifecycle management
+  - Improved data flow between dashboard components
+
+### Multi-Tenant & Integration Features:
+- **Advanced Multi-Tenant Support**: 
+  - Compatible with Core v1.9.0 multi-tenant architecture
+  - Supports `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` flag
+  - Tenant-specific dashboard configurations and filtering
+- **External System Integration**: 
+  - Enhanced Kibana integration through iframe interface
+  - Better authentication proxy handling
+  - Improved external dashboard embedding
+
+### Bug Fixes:
+- Fixed DSS issues found in PGR Ethiopia demo
+- Resolved iframe authentication and proxy issues
+- Improved chart rendering on different screen sizes
+- Enhanced error handling for failed data loads
+- Better handling of undefined data states
+
+### Global Config Integration:
+- Supports tenant-specific dashboard configurations
+- Dynamic metrics based on user permissions and tenant context
+- Enhanced iframe domain configuration for external dashboards
+
 ## [1.8.13] [23-October-2025]
 
 ### New Features:

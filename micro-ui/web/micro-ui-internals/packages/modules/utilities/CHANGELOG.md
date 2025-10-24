@@ -1,5 +1,90 @@
 # Changelog
 
+## [1.1.0]  [23-October-2025]
+
+### 🚀 Major Utility Suite Enhancement
+
+#### 📋 Advanced Form Development Tools:
+- **FormExplorer Component**: Interactive form builder and testing environment
+  - Real-time JSON configuration editor with GitHub dark theme
+  - Live form preview with FormComposerV2 integration
+  - Advanced field types: text, number, date, dropdown with MDMS integration
+  - Validation system with pattern matching and error handling
+  - Route-based form navigation with next/previous flow
+- **FormExplorerCitizen**: Citizen-specific form composer
+  - Tailored for citizen-facing form development
+  - Enhanced mobile responsiveness and accessibility
+  - Simplified configuration for citizen workflows
+
+#### 📊 Audit & History Tracking:
+- **AuditHistory Component**: Complete audit trail visualization
+  - User search integration with UUID-based lookup
+  - Diff visualization using react-diff-view for change tracking
+  - Module-specific data path handling (MDMS, etc.)
+  - Created/updated by user tracking with timestamps
+  - Split-view diff rendering for better change visualization
+  - Pagination support for large audit logs
+
+#### 📄 Document Management & Viewing:
+- **DocViewer Component**: Advanced document viewer with multi-format support
+  - Support for 15+ file formats: PDF, XLSX, CSV, DOC, DOCX, images, etc.
+  - Drag-drop file upload with validation
+  - Real-time document preview using @cyntler/react-doc-viewer
+  - Custom theming with DIGIT brand colors
+  - Remote and local file support
+  - Multiple file handling with upload management
+
+#### 🔧 Enhanced Dynamic Components:
+- **DynamicCreateComponent**: Improved form creation system
+  - Enhanced loader integration with new Loader component
+  - Better error handling and validation
+  - Improved FormComposer integration
+- **DynamicSearchComponent**: Advanced search capabilities
+  - Enhanced routing system with contextPath improvements
+  - Better action link handling and navigation
+  - Improved configuration management
+
+#### 🖥️ IFrame Integration:
+- **IFrameInterface Module**: Advanced iframe embedding
+  - Custom rendering capabilities with RenderCustom component
+  - Enhanced integration for external applications
+  - Better security and sandboxing features
+
+#### 📱 Sample & Testing Components:
+- **CitizenCreate Sample**: Template for citizen form development
+  - Best practices implementation for citizen workflows
+  - Validation patterns and error handling examples
+  - Mobile-optimized form layouts
+
+### Technical Improvements:
+- **Enhanced Module Architecture**: 
+  - Better component exports and registration
+  - Enhanced IFrameInterface integration
+  - Improved routing and navigation systems
+- **Advanced Validation**: 
+  - Pattern-based validation for different field types
+  - MDMS integration for dropdown options
+  - Real-time error handling and display
+- **Performance Optimizations**: 
+  - Lazy loading for document viewer
+  - Optimized diff rendering for audit trails
+  - Better memory management for large forms
+
+### Integration Features:
+- **Multi-Tenant Support**: 
+  - Compatible with Core v1.9.0 multi-tenant architecture
+  - Tenant-aware utility functions
+  - Enhanced configuration management across tenants
+- **Platform Integration**: 
+  - Seamless MDMS integration for master data
+  - User service integration for audit trails
+  - File service integration for document management
+
+### Global Config Integration:
+- Supports `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` flag
+- Enhanced tenant context handling
+- Better configuration management for multi-tenant scenarios
+
 ## [1.0.17]  [23-October-2025]
 
 ### New Features:

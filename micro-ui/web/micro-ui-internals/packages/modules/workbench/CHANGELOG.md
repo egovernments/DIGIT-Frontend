@@ -1,4 +1,81 @@
 
+## [1.1.0]  [23-October-2025]
+
+### 🚀 Major Features & UI/UX Redesign
+
+#### MDMS Interface Redesign:
+- **Card-Based Navigation**: Complete redesign from dropdown to interactive card-based interface
+  - Module selection cards with visual hierarchy
+  - Master details cards for selected modules
+  - Responsive grid layout (mobile, tablet, desktop)
+- **Real-Time Search Functionality**: 
+  - Filter modules and masters by name/translated value
+  - Case-insensitive search with instant results
+  - Dynamic placeholders (WBH_SEARCH_MODULES/WBH_SEARCH_MASTERS)
+  - No results message handling
+- **Text Truncation with Hover Display**: 
+  - Smart ellipsis for long module/master names
+  - Full text display on hover with visual feedback
+  - CSS class: `employee-card-sub-header`
+
+#### 📁 Bulk Upload System:
+- **Excel/JSON Bulk Upload**: New BulkModal component with progress tracking
+  - Support for XLSX, XLS, and JSON file formats
+  - Real-time progress bar with success/error tracking
+  - Batch processing with configurable delays
+  - Template generation and download functionality
+- **File Management**: Enhanced BulkUpload component with drag-drop interface
+  - Drag and drop file upload with validation
+  - File preview and deletion capabilities
+  - Error handling with toast notifications
+  - Submit confirmation with action bars
+
+#### 🔧 Advanced Form Features:
+- **Enhanced JSON Forms**: Major updates to DigitJSONForm component
+  - Localization support with MDMS code generation
+  - Custom widgets: CustomSwitch, improved CheckboxWidget
+  - Context-based state management with AdditionalPropertiesContext
+  - JSON viewer integration for data inspection
+  - PopUp modals for better user interaction
+- **Boundary Management**: New BoundaryHierarchyTypeAdd functionality
+  - Administrative boundary hierarchy creation
+  - Form composer integration for structured data entry
+  - Validation and error handling for boundary types
+
+#### Technical Improvements:
+- **Component Architecture Overhaul**: 
+  - New components: BulkModal, BulkUpload, CustomSwitch, LevelCards, JSONViewer
+  - Enhanced DigitJSONForm with context providers and advanced widgets
+  - Replaced Dropdown components with Card-based components (CardHeader, CardText, CardSubHeader)
+  - Added TextInput for real-time search functionality
+  - Updated imports from @egovernments/digit-ui-react-components and @egovernments/digit-ui-components
+- **Module System Enhancement**:
+  - Added HCM admin schemas support (`hcm-admin-schemas` moduleCode)
+  - TourProvider integration for guided user experience
+  - Enhanced component registration with better logging
+  - Module prefix configuration with `CORE_UI_MODULE_LOCALE_PREFIX`
+- **State Management Enhancement**: 
+  - Context-based state management with AdditionalPropertiesContext
+  - Replaced `currentSchema`, `masterName`, `moduleName` with `selectedModule`
+  - Added new state variables: `searchQuery`, `showModules`
+  - Implemented filtered data using `filteredModules`, `filteredMasters`
+  - Auto-clear search functionality on navigation transitions
+- **Utility Functions**: 
+  - New BulkUploadUtils for template generation and file processing
+  - Enhanced localization utilities with tranformLocModuleName
+  - Improved parsing utilities for data transformation
+
+#### Performance Improvements:
+- Increased schema limit from 200 to 500 for better data handling
+- Optimized filtering logic with useMemo hooks
+- Reduced component re-renders through efficient state management
+- Faster search response with debounced filtering
+
+#### Global Config Support:
+- Compatible with `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` flag
+- Supports multi-tenant MDMS configurations
+- Enhanced schema definition criteria handling
+
 ## [1.0.29]  [23-October-2025]
 
 ### 🚀 Major UI/UX Redesign - MDMS Manage Master Interface

@@ -1,3 +1,103 @@
+## [1.9.0] [23-October-2025]
+
+### 🚀 Enhanced HR Management System
+
+#### 💼 Employee Management Improvements:
+- **Enhanced Employee Actions**: Improved EmployeeAction component
+  - Better workflow management and action handling
+  - Enhanced status tracking and state management
+  - Improved error handling and user feedback
+- **Advanced Employee Creation**: Enhanced createEmployee workflow
+  - Better form validation and error prevention
+  - Improved data collection and processing
+  - Enhanced user experience for HR administrators
+
+#### 📅 Enhanced Form Components & UI:
+- **DatePicker Width Fixes**: Comprehensive styling improvements
+  - SelectDateofEmployment: Added maxWidth (36.25rem) and padding fixes
+  - EmployeeDOB: Enhanced date picker styling consistency
+  - Responsive design improvements across different screen sizes
+- **Email & Gender Components**: Enhanced form field components
+  - SelectEmailId: Better email validation and formatting
+  - SelectEmployeeGender: Improved dropdown styling and accessibility
+  - SelectEmployeeId: Enhanced ID field validation and display
+
+#### 🔍 Advanced Search & Filtering:
+- **Enhanced Inbox Filter**: Improved InboxFilter component
+  - Better search performance and filtering options
+  - Enhanced tenant-aware filtering capabilities
+  - Improved user interface for complex queries
+- **Responsive Design**: Better mobile and tablet experience
+  - Enhanced responsive layouts for form components
+  - Improved touch interactions and accessibility
+  - Better handling of different screen orientations
+
+#### ⚙️ Configuration & Workflow Enhancements:
+- **Enhanced Configuration**: Updated config.js with better defaults
+  - Improved form field configurations
+  - Better validation rules and error messages
+  - Enhanced workflow definitions and status management
+- **Utility Functions**: Enhanced Utils/index.js
+  - Better data processing and transformation utilities
+  - Improved error handling and validation functions
+  - Enhanced helper functions for common HRMS operations
+
+#### 👥 Employee Management Features:
+- **Assignment & Jurisdiction**: Enhanced assignment and jurisdiction components
+  - Better role assignment workflows
+  - Improved jurisdiction selection and validation
+  - Enhanced geographical boundary handling
+- **Employee Details & Editing**: Improved EmployeeDetails and EditForm
+  - Better data display and editing capabilities
+  - Enhanced validation during employee updates
+  - Improved user experience for HR operations
+
+#### 📱 Page-Level Enhancements:
+- **Response Page**: Enhanced Response component
+  - Better success/error feedback to users
+  - Improved workflow completion handling
+  - Enhanced user guidance and next steps
+- **Index Page**: Improved overall module structure
+  - Better routing and navigation
+  - Enhanced error boundaries and fallback states
+  - Improved loading states and user feedback
+
+### Technical Improvements:
+- **Module Architecture**: Enhanced Module.js structure
+  - Better component registration and organization
+  - Improved access control and permission handling
+  - Enhanced error boundaries and fallback mechanisms
+- **Form Validation**: Comprehensive validation improvements
+  - Better field-level validation with real-time feedback
+  - Enhanced cross-field validation for complex forms
+  - Improved accessibility and keyboard navigation
+- **Performance Optimizations**: 
+  - Better form rendering performance
+  - Optimized data loading and caching
+  - Improved memory management for large employee datasets
+
+### Multi-Tenant & Integration Features:
+- **Advanced Multi-Tenant Support**: 
+  - Compatible with Core v1.9.0 multi-tenant architecture
+  - Supports `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` flag
+  - Enhanced tenant auto-selection when only one tenant is available
+- **Better Integration**: 
+  - Enhanced integration with workflow service
+  - Better synchronization with user management
+  - Improved data consistency across modules
+
+### Bug Fixes:
+- Fixed date picker width issues across different screen sizes
+- Resolved form field alignment and spacing problems
+- Fixed responsive design issues on mobile devices
+- Improved localization support and key handling
+- Enhanced error handling for edge cases in employee workflows
+
+### Global Config Integration:
+- Supports dynamic tenant switching for HR administrators
+- Enhanced role-based access control integration
+- Better configuration management for multi-tenant deployments
+
 ## [1.8.18] [23-October-2025]
 
 ### New Features:
