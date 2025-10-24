@@ -133,6 +133,7 @@ const reducer = (state = initialState, action, updateLocalization) => {
                         type: action.payload.fieldData?.type?.fieldType,
                         appType: action.payload.fieldData?.type?.type,
                         label: action.payload.fieldData?.label,
+                        order: j.fields.length + 1,
                         active: true,
                         deleteFlag: true,
                       },
@@ -280,6 +281,30 @@ const reducer = (state = initialState, action, updateLocalization) => {
           },
         ],
       };
+    case "PATCH_PAGE_CONDITIONAL_NAV": {
+      const { pageName, data } = action; // data is the array from onConditionalNavigateChange
+
+      const patchArray = (arr) => {
+        if (!Array.isArray(arr) || arr.length === 0) return arr;
+
+        // If pageName is provided, try to patch by name
+        if (pageName) {
+          const idx = arr.findIndex((p) => p?.name === pageName);
+          if (idx !== -1) {
+            return arr.map((p, i) => (i === idx ? { ...p, conditionalNavigateTo: data } : p));
+          }
+        }
+
+        // Fallback: patch the first page (your “current page is first” invariant)
+        return arr;
+      };
+
+      return {
+        ...state,
+        screenConfig: patchArray(state.screenConfig),
+        screenData: patchArray(state.screenData),
+      };
+    }
     default:
       return state;
   }
@@ -287,7 +312,8 @@ const reducer = (state = initialState, action, updateLocalization) => {
 
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
-function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
+function AppConfigurationWrapper({ screenConfig, localeModule, pageTag , parentState, tabState,}) {
+    const useT = useCustomT();
     const queryClient = useQueryClient();
   const { locState, addMissingKey, updateLocalization, onSubmit, back, showBack, parentDispatch } = useAppLocalisationContext();
   const [state, dispatch] = useReducer((state, action) => reducer(state, action, updateLocalization), initialState);
@@ -298,7 +324,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   const [popupData, setPopupData] = useState(null);
   const [addFieldData, setAddFieldData] = useState(null);
   const addFieldDataLabel = useMemo(() => {
-    return addFieldData?.label ? useCustomT(addFieldData?.label) : null;
+    return addFieldData?.label ? useT(addFieldData?.label) : null;
   }, [addFieldData]);
   const searchParams = new URLSearchParams(location.search);
   const fieldMasterName = searchParams.get("fieldType");
@@ -554,7 +580,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
   return (
     <AppConfigContext.Provider value={{ state, dispatch, openAddFieldPopup }}>
       {loading && <Loader page={true} variant={"OverlayLoader"} loaderText={t("SAVING_CONFIG_IN_SERVER")} />}
-      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useCustomT} />
+      <AppPreview data={state?.screenData?.[0]} selectedField={state?.drawerField} t={useT} />
       <div className="appConfig-flex-action">
         <Button
           className="app-configure-action-button"
@@ -633,11 +659,11 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
                   })
                 }
               />
-              <DrawerFieldComposer />
+              <DrawerFieldComposer parentState={parentState} screenConfig={screenConfig} selectedField={state?.drawerField}/>
             </>
           ) : (
             <DndProvider backend={HTML5Backend}>
-              <AppFieldScreenWrapper />
+              <AppFieldScreenWrapper parentState={parentState} tabState={tabState}/>
             </DndProvider>
           )}
         </SidePanel>
@@ -727,7 +753,7 @@ function AppConfigurationWrapper({ screenConfig, localeModule, pageTag }) {
               required={true}
               type={"text"}
               label={`${t("ADD_FIELD_LABEL")}`}
-              value={addFieldData?.label ? useCustomT(addFieldData?.label) : ""}
+              value={addFieldData?.label ? useT(addFieldData?.label) : ""}
               config={{
                 step: "",
               }}
