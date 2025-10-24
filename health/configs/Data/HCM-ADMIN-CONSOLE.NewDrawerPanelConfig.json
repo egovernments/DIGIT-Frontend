@@ -1,0 +1,396 @@
+[
+  {
+    "id": "6499a30a-8df2-4915-94bb-e46a8046c698",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewDrawerPanelConfig",
+    "uniqueIdentifier": "NewPanelConfig",
+    "data": {
+      "label": "NewPanelConfig",
+      "content": [
+        {
+          "label": "fieldType",
+          "order": 1,
+          "fieldType": "fieldTypeDropdown",
+          "disableForRequired": true,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "label",
+          "label": "label",
+          "order": 2,
+          "bindTo": "label",
+          "fieldType": "text",
+          "defaultValue": "",
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "helpText",
+          "label": "helpText",
+          "order": 3,
+          "bindTo": "helpText",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "helpText"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "required",
+          "label": "Mandatory",
+          "order": 4,
+          "bindTo": "required",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "required.message"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "disableForRequired": true,
+          "visibilityEnabledFor": [
+            "checkbox",
+            "numeric",
+            "dob",
+            "date",
+            "select",
+            "dropdown",
+            "mobileNumber",
+            "number",
+            "textArea",
+            "text",
+            "latLng",
+            "administrativeArea",
+            "searchableDropdown"
+          ]
+        },
+        {
+          "id": "prefixText",
+          "label": "prefixText",
+          "order": 5,
+          "bindTo": "prefixText",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "prefixText"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["numeric", "mobileNumber", "number", "text", "latLng", "dropdown", "administrativeArea"]
+        },
+        {
+          "id": "suffixText",
+          "label": "suffixText",
+          "order": 6,
+          "bindTo": "suffixText",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "suffixText"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["numeric", "mobileNumber", "number", "textArea", "text", "latLng", "dropdown", "administrativeArea"]
+        },
+        {
+          "id": "minSearchChars",
+          "label": "minSearchChars",
+          "order": 7,
+          "bindTo": "toArray.minSearchChars",
+          "fieldType": "number",
+          "defaultValue": 0,
+          "conditionalField": [],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["searchBar"]
+        },
+        {
+          "id": "filter",
+          "label": "filter",
+          "order": 8,
+          "bindTo": "dropDownOptions",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "filters",
+              "label": "APPCONFIG_SELECT_SCHEMA",
+              "bindTo": "dropDownOptions",
+              "condition": true,
+              "mdmsOptions": [
+                {
+                  "masterName": "SEARCH_HOUSEHOLD_FILTERS",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                }
+              ]
+            },
+            {
+              "type": "options",
+              "bindTo": "dropDownOptions",
+              "condition": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["filter"]
+        },
+        {
+          "id": "tooltip",
+          "label": "tooltip",
+          "order": 9,
+          "bindTo": "tooltip",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "text",
+              "bindTo": "tooltip"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "readOnly",
+          "label": "readOnly",
+          "order": 10,
+          "bindTo": "readOnly",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "hidden",
+          "label": "hidden",
+          "order": 11,
+          "bindTo": "hidden",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [],
+          "showFieldOnToggle": false,
+          "visibilityEnabledFor": []
+        },
+        {
+          "label": "isMdms",
+          "order": 12,
+          "bindTo": "isMdms",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "dropdown",
+              "label": "APPCONFIG_SELECT_SCHEMA",
+              "bindTo": "schemaCode",
+              "options": [
+                {
+                  "masterName": "GenderType",
+                  "moduleName": "common-masters",
+                  "schemaCode": "common-masters.GenderType"
+                },
+                {
+                  "masterName": "HOUSE_STRUCTURE_TYPES",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.HOUSE_STRUCTURE_TYPES"
+                },
+                {
+                  "masterName": "ID_TYPE_OPTIONS_POPULATOR",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.ID_TYPE_OPTIONS_POPULATOR"
+                },
+                {
+                  "masterName": "DELIVERY_COMMENT_OPTIONS_POPULATOR",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.DELIVERY_COMMENT_OPTIONS_POPULATOR"
+                },
+                {
+                  "masterName": "ServiceDefs",
+                  "moduleName": "RAINMAKER-PGR",
+                  "schemaCode": "RAINMAKER-PGR.ServiceDefs"
+                },
+                {
+                  "masterName": "REFERRAL_REASONS",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.REFERRAL_REASONS"
+                },
+                {
+                  "masterName": "SEARCH_HOUSEHOLD_FILTERS",
+                  "moduleName": "HCM",
+                  "schemaCode": "HCM.SEARCH_HOUSEHOLD_FILTERS"
+                }
+              ],
+              "jsonPath": "schemaCode",
+              "condition": true
+            },
+            {
+              "type": "options",
+              "bindTo": "dropDownOptions",
+              "condition": false
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["dropdown", "radio", "select", "searchableDropdown"]
+        },
+        {
+          "id": "min",
+          "label": "min",
+          "order": 13,
+          "bindTo": "min",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "number",
+              "bindTo": "min"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "max",
+          "label": "max",
+          "order": 14,
+          "bindTo": "max",
+          "fieldType": "toggle",
+          "defaultValue": "",
+          "conditionalField": [
+            {
+              "type": "number",
+              "bindTo": "max"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": []
+        }
+      ],
+      "validation": [
+        {
+          "id": "scannerRegex",
+          "label": "ScannerRegexPattern",
+          "order": 1,
+          "bindTo": "toArray.pattern",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "text",
+              "label": "APPCONFIG_CUSTOM_PATTERN",
+              "bindTo": "toArray.pattern"
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "toArray.pattern.message"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["scanner"]
+        },
+        {
+          "id": "dependencyFieldWrapper",
+          "label": "dependencyFieldWrapper",
+          "order": 2,
+          "bindTo": "visibilityCondition.expression",
+          "fieldType": "toggle",
+          "defaultValue": false,
+          "conditionalField": [
+            {
+              "type": "dependencyFieldWrapper",
+              "bindTo": "visibilityCondition.expression"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": []
+        },
+        {
+          "id": "regex",
+          "label": "RegexPattern",
+          "order": 3,
+          "bindTo": "pattern",
+          "fieldType": "toggle",
+          "conditionalField": [
+            {
+              "type": "radioOptions",
+              "label": "APPCONFIG_PATTERN",
+              "bindTo": "pattern",
+              "options": [
+                {
+                  "code": "CHARACTERONLY",
+                  "pattern": "^[a-zA-Z]+$",
+                  "description": "Alphabets only (uppercase and lowercase)"
+                },
+                {
+                  "code": "NUMBERONLY",
+                  "pattern": "^\\d+$",
+                  "description": "Numbers only (0-9)"
+                },
+                {
+                  "code": "ALPHANUMERICONLY",
+                  "pattern": "^[a-zA-Z0-9]+$",
+                  "description": "Letters and numbers only (no special characters)"
+                }
+              ],
+              "jsonPath": "pattern"
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_CUSTOM_PATTERN",
+              "bindTo": "pattern"
+            },
+            {
+              "type": "text",
+              "label": "APPCONFIG_ERRORMESSAGE",
+              "bindTo": "pattern.message"
+            }
+          ],
+          "showFieldOnToggle": true,
+          "visibilityEnabledFor": ["text"]
+        },
+        {
+          "id": "range",
+          "label": "numberRange",
+          "order": 4,
+          "children": [
+            {
+              "id": "min",
+              "label": "Minimum",
+              "bindTo": "range.min",
+              "fieldType": "number"
+            },
+            {
+              "id": "max",
+              "label": "Maximum",
+              "bindTo": "range.max",
+              "fieldType": "number"
+            }
+          ],
+          "fieldType": "group",
+          "validationMessage": "APPCONFIG_MIN_LESS_EQUAL_MAX",
+          "validationExpression": "range.min <= range.max",
+          "visibilityEnabledFor": ["numeric", "number"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760288448713,
+      "lastModifiedTime": 1760288448713
+    }
+  }
+]
