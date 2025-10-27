@@ -2,7 +2,8 @@ import React, { Fragment } from "react";
 import { HeaderComponent, Card, CardText, CardHeader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import {  useLocation } from "react-router-dom";
-
+import { CustomSVG } from "@egovernments/digit-ui-components";
+const Components = require("@egovernments/digit-ui-svg-components");
 
 const renderContentItem = (item, itemIndex, module, t) => {
   switch (item.type) {
@@ -40,7 +41,7 @@ const ProductDetailsComponent = ({config,module}) => {
   const { t } = useTranslation();
 
   const moduleConfig = config?.find((item) => item.module === module) || {};
-  const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender(moduleConfig.icon,"#c84c0e"): null;
+  const IconComponent = moduleConfig.icon ? Digit.Utils.iconRender({iconName: moduleConfig.icon, iconFill: "#c84c0e",CustomSVG,Components}): null;
 
   const handleButtonClick = (action) => {
     const url = '/' + window.contextPath + action + "?from=sandbox";
@@ -90,7 +91,7 @@ const ProductDetailsComponent = ({config,module}) => {
         <div className="role-action-container">
           {moduleConfig?.cards
             ?.map((config, index) => {
-              const CardIconComponent = config?.icon ? Digit.Utils.iconRender(config.icon,"#c84c0e") : null;
+              const CardIconComponent = config?.icon ? Digit.Utils.iconRender({iconName: config.icon, iconFill: "#c84c0e",CustomSVG,Components}) : null;
               return (
                 <div key={index} className="role-card">
                   <div className="icon-container">

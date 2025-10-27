@@ -2,6 +2,8 @@ import React from "react";
 import { Card, Button, HeaderComponent, CardText } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import { CustomSVG } from "@egovernments/digit-ui-components";
+const Components = require("@egovernments/digit-ui-svg-components");
 
 const ProductsPageComponent = ({ detailsConfig }) => {
   const { t } = useTranslation();
@@ -45,7 +47,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             }
             <div className="product-header">
               <div className="icon-wrap">
-                {Digit.Utils.iconRender(product.icon, "#c84c0e")}
+                {Digit.Utils.iconRender({iconName: product.icon, iconFill: "#c84c0e",CustomSVG,Components})}
               </div>
               <div 
                 className="product-title"
