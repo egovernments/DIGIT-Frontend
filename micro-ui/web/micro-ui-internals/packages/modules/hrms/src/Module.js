@@ -31,7 +31,7 @@ export const HRMSModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   if (!Digit.Utils.hrmsAccess()) {
     return null;
-  }
+  } 
   if (userType === "employee") {
     return <EmployeeApp path={path} url={url} />;
   } else return null;

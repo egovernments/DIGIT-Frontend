@@ -104,6 +104,7 @@ import {
   PropertyHouse,
   PTIcon,
   ReceiptIcon,
+  ReceiptInboxIcon,
   RefreshIcon,
   RefreshSVG,
   RupeeIcon,
@@ -208,7 +209,15 @@ import {
   UploadIcon,
   FileIcon,
   DeleteIconv2,
-  InfoIconOutline
+  InfoIconOutline,
+  HelpOutlineIcon,
+  InputIcon,
+  TreatmentQualityIcon,
+  BarsChart,
+  Employee,
+  Calculate,
+  FeatureSearch,
+  HierarchyGraph
 } from "./atoms/svgindex";
 import Table from "./atoms/Table";
 import TelePhone from "./atoms/TelePhone";
@@ -268,6 +277,7 @@ import HorizontalNav from "./atoms/HorizontalNav";
 import NoResultsFound from "./atoms/NoResultsFound";
 import { ViewImages } from "./atoms/ViewImages";
 import InboxSearchComposer from "./hoc/InboxSearchComposer";
+import InboxSearchComposerV2 from "./hoc/InboxSearchComposerV2";
 import MobileSearchResults from "./hoc/MobileView/MobileSearchResults";
 import MobileSearchComponent from "./hoc/MobileView/MobileSearchComponent";
 import ResultsTable from "./hoc/ResultsTable";
@@ -278,11 +288,30 @@ import WorkflowActions from "./atoms/WorkflowActions";
 import Amount from "./atoms/Amount";
 import Paragraph from "./atoms/Paragraph";
 import CitizenConsentForm from "./atoms/CitizenConsentForm";
-
+import CloseButton from "./atoms/CloseButton";
+import LoaderWithGap from "./atoms/LoaderWithGap";
 // Importing From SVG Library
 import {SVG} from "./atoms/SVG";
 
+//Tutorial
+import Tutorial from "./hoc/Tutorial/Tutorial";
+import { useTourState,TourProvider } from "./hoc/Tutorial/TourProvider";
+import Help from "./hoc/Tutorial/Help";
+import FormComposerCitizen from "./hoc/FormComposerCitizen";
+
+//View Composer
+import ViewComposer from "./hoc/ViewComposer";
+import XlsPreview from "./atoms/XlsPreview";
 export {
+  XlsPreview,
+  ViewComposer,
+  HelpOutlineIcon,
+  InputIcon,
+  TreatmentQualityIcon,
+  Help,
+  Tutorial,
+  useTourState,
+  TourProvider,
   InputTextAmount,
   Button,
   ViewImages,
@@ -323,6 +352,7 @@ export {
   SubmitBar,
   ButtonSelector,
   LinkButton,
+  ReceiptInboxIcon,
   StatusTable,
   Row,
   LastRow,
@@ -380,6 +410,7 @@ export {
   HorizontalNav,
   NoResultsFound,
   Amount,
+  LoaderWithGap,
   // Icons
   GetApp,
   ArrowLeft,
@@ -440,9 +471,11 @@ export {
   FilterFormField,
   SortAction,
   CustomDropdown,
+  CloseButton,
   // hoc
   FormComposer,
   FormComposerV2,
+  FormComposerCitizen,
   RenderFormFields,
   WorkflowTimeline,
   WorkflowActions,
@@ -463,6 +496,7 @@ export {
   Details,
   InboxComposer,
   InboxSearchComposer,
+  InboxSearchComposerV2,
   MobileSearchResults,
   MobileSearchComponent,
   ResultsTable,
@@ -569,7 +603,11 @@ export {
   HistoryIcon,
   WarningIcon,
   AttentionListIcon,
-
+  BarsChart,
+  Employee,
+  Calculate,
+  FeatureSearch,
+  HierarchyGraph,
 
   // Exported all svgs from svg-component library
   SVG

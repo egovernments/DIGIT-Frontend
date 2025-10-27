@@ -14,6 +14,7 @@
 @import "./components/loader.scss";
 
 @import "./components/body.scss";
+@import "./components/Carousel.scss";
 @import "./components/navbar.scss";
 @import "./components/card.scss";
 @import "./components/buttons.scss";
@@ -110,6 +111,35 @@
 /* @import "./digitv2/typography.scss"; */
 @import "./components/inboxv2/index.scss";
 @import "./components//sidebar.scss";
+@import "./components/loaderWithGap.scss";
+@import "./pages/employee/sandbox.scss";
+
+.wbh-header-container {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  margin:1rem 0.5rem -0.5rem 0.3rem;
+}
+
+.wbh-header {
+  display: flex !important;
+  align-items: center;
+  justify-content: space-between;
+  margin:1rem 0.5rem -0.5rem 0.3rem;
+  .header-icon-container{
+    cursor: pointer;
+    h4{
+      margin:0px !important;
+    }
+    color:theme(colors.primary.main);
+    display: flex !important;
+    align-items: center;
+    svg {
+      margin:0 0 0 0.1rem;
+    }
+  }
+
+}
 
 .display-none {
   display: none;
@@ -165,10 +195,6 @@ h1, h2, h3, h4, h5, h6 {
   .mobile-only {
     @apply hidden;
   }
-}
-
-.dark {
-  @apply text-text-primary;
 }
 
 .mrlg {
@@ -459,6 +485,7 @@ input[type="number"] {
 
 .text-input {
   @apply relative w-full;
+  max-width: 540px;
   input {
     &:hover {
       @apply border-2 border-solid border-primary-main;
@@ -618,7 +645,7 @@ input[type="number"] {
   .citizen-form-wrapper {
     width: calc(100% - 219px);
     display: flex;
-    justify-content: center;
+    justify-content: flex-start !important;
     margin-top: 1rem;
     padding-left: 16px;
     padding-right: 16px;
@@ -658,8 +685,11 @@ input[type="number"] {
   }
 }
 .employee-app-wrapper {
-  min-height: calc(100vh - 8em);
+  min-height: calc(100vh - 4em);
+/*  margin: 70px; */
 }
+
+
 
 .ws-custom-wrapper {
   .submit {
@@ -701,13 +731,15 @@ input[type="number"] {
   }
 }
 
+.connection-details-new-value-wrapper {
+  flex: 1 1 auto;
+}
+
 .plumber-details-new-value-wrapper {
   flex: 2 1 auto;
 }
 
-.connection-details-new-value-wrapper {
-  flex: 1 1 auto;
-}
+
 
 .connection-details-old-value-wrapper,
 .plumber-details-old-value-wrapper {
@@ -760,3 +792,85 @@ input[type="number"] {
   max-height: 120px;
   margin-top: 90px;
 }
+.localisation-info {
+  max-width: 100%;
+  .info-banner-wrap {
+    max-width: 100%;
+    margin: 0%;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    line-height: unset;
+    align-content: baseline;
+    gap: 0.5rem;
+    height: 5rem;
+  }
+}
+
+.info-banner-wrap div{
+  align-items: center;
+}
+
+.xls-popup-module {
+  margin: auto;
+  width: calc(100% - 5rem);
+}
+.actionBarClass{
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row-reverse;
+}
+.previous-button{
+  margin-left: 4rem;
+}
+.view-composer-header-section{
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-iframe {
+  height: unset !important;
+}
+.app-iframe-wrapper.dss-kibana-iframe-wrapper {
+  left: unset !important;
+  top: unset !important;
+  position: unset !important;
+}
+
+.app-iframe.dss-kibana-iframe {
+  position: unset !important;
+}
+.employeeCard.kibana-card.chart-item {
+  width: 100%;
+}
+
+.localization-search-table{
+  margin-bottom: 2rem;
+
+  .pagination{
+    margin-bottom: 2rem;
+  }
+}
+
+.user-profile {
+
+  &.employee {
+    margin-top: 6rem;
+    margin-left: 4.5rem;
+  }
+
+  &.citizen {
+    margin-top: 1.5rem;
+    margin-left: 1.5rem;
+  }
+}
+
+.workbench-localization-add-popup{
+  .digit-popup-children-wrap{
+    overflow: visible !important;
+  }
+}
+   .pt-error h2 {
+    width: auto !important;
+  }

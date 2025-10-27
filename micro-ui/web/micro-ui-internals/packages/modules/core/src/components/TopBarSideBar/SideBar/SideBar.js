@@ -21,18 +21,6 @@ import { set } from "lodash";
 import { useHistory, useLocation, Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 
-const DIGIT_UI_CONTEXTS = [
-  "digit-ui",
-  "works-ui",
-  "workbench-ui",
-  "health-ui",
-  "sanitation-ui",
-  "core-ui",
-  "microplan-ui",
-  "pucar-ui",
-  "selco-ui",
-  "mgramseva-web",
-];
 
 // Function to recursively get the key of a nested object based on a parent key
 const getKey = (obj, parent) => {
@@ -73,11 +61,7 @@ Used to navigate to other mission's ui if user has access
 const navigateToRespectiveURL = (history = {}, url = "") => {
   if (url?.indexOf(`/${window?.contextPath}`) === -1) {
     const hostUrl = window.location.origin;
-    const updatedURL = DIGIT_UI_CONTEXTS?.every(
-      (e) => url?.indexOf(`/${e}`) === -1
-    )
-      ? hostUrl + "/employee/" + url
-      : hostUrl + url;
+    const updatedURL = hostUrl + url;
     window.location.href = updatedURL;
   } else {
     history.push(url);

@@ -13,9 +13,7 @@ const WorkbenchCard = () => {
   if (!Digit.Utils.didEmployeeHasAtleastOneRole(Object.values(ROLES).flatMap((e) => e))) {
     return null;
   }
-
   const { t } = useTranslation();
-  const tenantId = Digit.ULBService.getCurrentTenantId();
 
   let links = [
     {
@@ -28,6 +26,11 @@ const WorkbenchCard = () => {
       link: `/${window?.contextPath}/employee/workbench/localisation-search`,
       roles: ROLES.LOCALISATION,
     },
+    // {
+    //   label: t("ACTION_TEST_UPLOAD_BOUNDARY"),
+    //   link: `/${window?.contextPath}/employee/workbench/upload-boundary`,
+    //   roles: ROLES.LOCALISATION,
+    // },
     // {
     //   label: t("Sample Create master"),
     //   link: `/${window?.contextPath}/employee/workbench/mdms-add-v2?moduleName=common-masters&masterName=Sample`,
@@ -43,7 +46,7 @@ const WorkbenchCard = () => {
   links = links.filter((link) => (link?.roles && link?.roles?.length > 0 ? Digit.Utils.didEmployeeHasAtleastOneRole(link?.roles) : true));
 
   const propsForModuleCard = {
-    Icon: <WorksMgmtIcon />,
+    Icon: "Settings",
     moduleName: t("ACTION_TEST_WORKBENCH"),
     kpis: [],
     links: links,

@@ -10,8 +10,21 @@
     margin-left: 0 !important;
   }
 }
-
+.digit-page-based-input-wrapper {
+  .digit-page-based-submit-bar {
+    @apply hidden;
+  }
+  .digit-submit-bar-container {
+    z-index: 60;
+    @apply p-sm fixed w-full bottom-0 left-0 text-right bg-white;
+  }
+}
 @screen dt {
+  .digit-page-based-input-wrapper {
+    .digit-submit-bar-container {
+      @apply hidden;
+    }
+  }
   .PageBasedInputWrapper {
     .SubmitBar {
       @apply hidden;

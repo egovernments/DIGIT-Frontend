@@ -1,11 +1,37 @@
 import {
-  BackButton, CloseSvg, DetailsCard, DownloadBtnCommon, Header, Loader, PopUp, SearchAction, SearchForm
-} from "@egovernments/digit-ui-react-components";
-import React, { useCallback, useEffect, useMemo, useReducer, useState } from "react";
+  BackButton,
+  DetailsCard,
+  HeaderComponent,
+  Loader,
+  PopUp,
+  SearchAction,
+  SearchForm,
+  CloseSvg,
+  DownloadBtnCommon,
+} from "@egovernments/digit-ui-components";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from "react";
 import SearchFormFields from "./SearchFields";
 // import { convertEpochToDateDMY } from "../../utils";
 
-const MobileSearchApplication = ({ Controller, register, control, t, reset, previousPage, handleSubmit, tenantId, data, onSubmit, isLoading }) => {
+const MobileSearchApplication = ({
+  Controller,
+  register,
+  control,
+  t,
+  reset,
+  previousPage,
+  handleSubmit,
+  tenantId,
+  data,
+  onSubmit,
+  isLoading,
+}) => {
   function activateModal(state, action) {
     switch (action.type) {
       case "set":
@@ -34,11 +60,18 @@ const MobileSearchApplication = ({ Controller, register, control, t, reset, prev
       settabledata([
         data?.map((obj) => {
           let returnObject = {};
-          returnObject[t("AUDIT_DATE_LABEL")] = convertEpochToDate(obj?.timestamp);
-          returnObject[t("AUDIT_TIME_LABEL")] = convertEpochToTimeInHours(obj?.timestamp);
-          returnObject[t("AUDIT_DATAVIEWED_LABEL")] = obj?.dataView[0] + "," + obj?.dataView[1];
+          returnObject[t("AUDIT_DATE_LABEL")] = convertEpochToDate(
+            obj?.timestamp
+          );
+          returnObject[t("AUDIT_TIME_LABEL")] = convertEpochToTimeInHours(
+            obj?.timestamp
+          );
+          returnObject[t("AUDIT_DATAVIEWED_LABEL")] =
+            obj?.dataView[0] + "," + obj?.dataView[1];
           returnObject[t("AUDIT_DATAVIEWED_BY_LABEL")] = obj?.dataViewedBy;
-          returnObject[t("AUDIT_ROLE_LABEL")] = obj?.roles.map((obj) => obj.name).join(",");
+          returnObject[t("AUDIT_ROLE_LABEL")] = obj?.roles
+            .map((obj) => obj.name)
+            .join(",");
           return {
             ...returnObject,
           };
@@ -71,20 +104,38 @@ const MobileSearchApplication = ({ Controller, register, control, t, reset, prev
     min = (min > 9 ? "" : "0") + min;
     return `${hour}:${min} ${period}`;
   };
-  const [currentlyActiveMobileModal, setActiveMobileModal] = useReducer(activateModal, false);
+  const [currentlyActiveMobileModal, setActiveMobileModal] = useReducer(
+    activateModal,
+    false
+  );
 
   const closeMobilePopupModal = () => {
     setActiveMobileModal({ type: "remove" });
   };
 
   const MobilePopUpCloseButton = () => (
-    <div className="InboxMobilePopupCloseButtonWrapper" onClick={closeMobilePopupModal}>
+    <div
+      className="InboxMobilePopupCloseButtonWrapper"
+      onClick={closeMobilePopupModal}
+    >
       <CloseSvg />
     </div>
   );
-  const searchFormFieldsComponentProps = { Controller, register, control, t, reset, previousPage };
+  const searchFormFieldsComponentProps = {
+    Controller,
+    register,
+    control,
+    t,
+    reset,
+    previousPage,
+  };
 
-  const MobileComponentDirectory = ({ currentlyActiveMobileModal, searchFormFieldsComponentProps, tenantId, ...props }) => {
+  const MobileComponentDirectory = ({
+    currentlyActiveMobileModal,
+    searchFormFieldsComponentProps,
+    tenantId,
+    ...props
+  }) => {
     const { closeMobilePopupModal } = props;
     switch (currentlyActiveMobileModal) {
       case "SearchFormComponent":
@@ -94,7 +145,10 @@ const MobileSearchApplication = ({ Controller, register, control, t, reset, prev
             <div className="MobilePopupHeadingWrapper">
               <h2>{t("PRIVACY_AUDIT_REPORT")}:</h2>
             </div>
-            <SearchFormFields {...searchFormFieldsComponentProps} {...{ closeMobilePopupModal, tenantId, t }} />
+            <SearchFormFields
+              {...searchFormFieldsComponentProps}
+              {...{ closeMobilePopupModal, tenantId, t }}
+            />
             {/* <SearchField className="submit">
                         <SubmitBar label={t("ES_COMMON_SEARCH")} submit form="search-form"/>
                         <p onClick={onResetSearchForm}>{t(`ES_COMMON_CLEAR_ALL`)}</p>
@@ -106,8 +160,18 @@ const MobileSearchApplication = ({ Controller, register, control, t, reset, prev
     }
   };
   const CurrentMobileModalComponent = useCallback(
-    ({ currentlyActiveMobileModal, searchFormFieldsComponentProps, tenantId, ...props }) =>
-      MobileComponentDirectory({ currentlyActiveMobileModal, searchFormFieldsComponentProps, tenantId, ...props }),
+    ({
+      currentlyActiveMobileModal,
+      searchFormFieldsComponentProps,
+      tenantId,
+      ...props
+    }) =>
+      MobileComponentDirectory({
+        currentlyActiveMobileModal,
+        searchFormFieldsComponentProps,
+        tenantId,
+        ...props,
+      }),
     [currentlyActiveMobileModal]
   );
   let roles = [];
@@ -136,14 +200,25 @@ const MobileSearchApplication = ({ Controller, register, control, t, reset, prev
   return (
     <React.Fragment>
       <BackButton />
-      <div className="sideContent" style={{ marginLeft: "70%", marginTop: "-12%" }}>
-        <DownloadBtn className="mrlg cursorPointer" onClick={() => handleExcelDownload(tabledata)} />
+      <div
+        className="sideContent"
+        style={{ marginLeft: "70%", marginTop: "-12%" }}
+      >
+        <DownloadBtn
+          className="mrlg cursorPointer"
+          onClick={() => handleExcelDownload(tabledata)}
+        />
       </div>
-      <Header>{t("PRIVACY_AUDIT_REPORT")}:</Header>
-      <div className="searchBox">
+      <HeaderComponent>{t("PRIVACY_AUDIT_REPORT")}:</HeaderComponent>
+      <div className="digit-search-box">
         <SearchAction
           text={t("ES_COMMON_SEARCH")}
-          handleActionClick={() => setActiveMobileModal({ type: "set", payload: "SearchFormComponent" })}
+          handleActionClick={() =>
+            setActiveMobileModal({
+              type: "set",
+              payload: "SearchFormComponent",
+            })
+          }
           {...{ tenantId, t }}
         />
       </div>
@@ -157,7 +232,12 @@ const MobileSearchApplication = ({ Controller, register, control, t, reset, prev
             handleSubmit={handleSubmit}
             id="search-form"
             className="rm-mb form-field-flex-one inboxPopupMobileWrapper"
-            {...{ searchFormFieldsComponentProps, currentlyActiveMobileModal, closeMobilePopupModal, tenantId }}
+            {...{
+              searchFormFieldsComponentProps,
+              currentlyActiveMobileModal,
+              closeMobilePopupModal,
+              tenantId,
+            }}
           />
         </PopUp>
       ) : null}

@@ -87,9 +87,14 @@ export const convertToLocaleData = (dropdownValues = [], key = "", t) => {
  * @returns {Array} Returns the Array of object
  */
 export const getTransformedLocale = (label) => {
-  if (typeof label === "number") return label;
-  label = label?.trim();
-  return label && label.toUpperCase().replace(/[.:-\s\/]/g, "_");
+  if (typeof label === "number") {
+    return label;
+  } else if (typeof label === "string") {
+    label = label?.trim();
+    return label && label.toUpperCase().replace(/[.:-\s\/]/g, "_");
+  } else {
+    return null;
+  }
 };
 
 /**

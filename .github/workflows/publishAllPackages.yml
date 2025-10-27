@@ -1,17 +1,10 @@
-# name: Node.js Publish Health UI Packages
-name: Node.js Publish Health UI CSS Packages
+name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'develop','console', 'master']
+    branches: [ 'develop-upgrades' ]
     paths:
-      - 'health/micro-ui/web/micro-ui-internals/packages/css/**'
-      # - 'health/micro-ui/web/micro-ui-internals/**' disabling main since we target only for css
-    
-  pull_request:
-    branches: 
-      - 'dev-hcm'
-      # Push events to branches matching refs/heads/mona/octocat
+      - 'micro-ui/web/micro-ui-internals/**'
 
 jobs:
   build:
@@ -22,6 +15,6 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: cd health/micro-ui/web/micro-ui-internals/ && bash ./publish-develop.sh
+      - run: cd micro-ui/web/micro-ui-internals/ && bash ./publish-workbench.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}

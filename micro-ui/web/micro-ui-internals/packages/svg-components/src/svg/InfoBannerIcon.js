@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
 export const InfoBannerIcon = ({ className, height = "24", width = "24", style = {}, fill = "#3498DB", onClick = null }) => {
   return (
