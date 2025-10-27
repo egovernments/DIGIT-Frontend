@@ -6,6 +6,7 @@ import { DigitUI } from "@egovernments/digit-ui-module-core";
 import { UICustomizations } from "./Customisations/UICustomizations";
 import { initPaymentComponents } from "@egovernments/digit-ui-module-health-payments";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-health-hrms";
+import {initPGRComponents} from "@egovernments/digit-ui-module-pgr";
 
 
 const enabledModules = [
@@ -28,6 +29,7 @@ const initDigitUI = () => {
   });
   initPaymentComponents();
   initHRMSComponents();
+  initPGRComponents();
 
   window.Digit.Customizations = {
     PGR: {},

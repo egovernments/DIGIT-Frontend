@@ -9,7 +9,8 @@
   },
   "workspaces": [
     "micro-ui-internals/packages/modules/health-payments",
-    "micro-ui-internals/packages/modules/health-hrms"
+    "micro-ui-internals/packages/modules/health-hrms",
+    "micro-ui-internals/packages/modules/pgr"
   ],
   "homepage": "/payments-ui",
   "dependencies": {

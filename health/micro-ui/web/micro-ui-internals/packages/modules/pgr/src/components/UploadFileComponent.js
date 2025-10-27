@@ -17,6 +17,13 @@ const UploadedFileComponent = ({ config, onSelect }) => {
     (async () => {
       setError(null);
       if (file) {
+        // Added: Validate file type
+        const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg'];
+        if (!validTypes.includes(file.type)) {
+          setError(t("CS_INVALID_FILE_TYPE"));
+          return;
+        }
+
         if (file.size >= 5242880) {
           setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
         } else {
@@ -26,12 +33,10 @@ const UploadedFileComponent = ({ config, onSelect }) => {
             if (file.type === "image/jpeg" || file.type === "image/jpg") {
               fileToUpload = await convertImageToPdf(file);
             }
-
             const response = await Digit.UploadServices.Filestorage("property-upload", fileToUpload, tenantId);
             if (response?.data?.files?.length > 0) {
               const uploaded = response?.data?.files[0];
               setUploadedFile(uploaded);
-
               if (config?.key) {
                 const auditDetails = {
                   createdBy: user?.info?.uuid,
@@ -45,7 +50,12 @@ const UploadedFileComponent = ({ config, onSelect }) => {
               setError(t("CS_FILE_UPLOAD_ERROR"));
             }
           } catch (err) {
-            setError(t("CS_FILE_UPLOAD_ERROR"));
+            // Modified: Enhanced error handling for corrupted files
+            if (err.message && err.message.includes('corrupt')) {
+              setError(t("CS_FILE_CORRUPTED_ERROR"));
+            } else {
+              setError(t("CS_FILE_UPLOAD_ERROR"));
+            }
           }
         }
       }
@@ -60,31 +70,38 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   const convertImageToPdf = (imageFile) => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
+      
       reader.onload = (event) => {
         const img = new Image();
+        
         img.onload = () => {
           try {
             const pdf = new jsPDF();
             const imgWidth = 190;
             const imgHeight = (img.height * imgWidth) / img.width;
             pdf.addImage(img, 'JPEG', 10, 10, imgWidth, imgHeight);
-
+            
             // Convert PDF to Blob
             const pdfBlob = pdf.output('blob');
-
+            
             // Create new File object with .pdf extension
             const fileName = imageFile.name.replace(/\.(jpg|jpeg)$/i, '.pdf');
             const pdfFile = new File([pdfBlob], fileName, { type: 'application/pdf' });
-
+            
             resolve(pdfFile);
           } catch (error) {
-            reject(error);
+            // Modified: Reject with corrupted file error
+            reject(new Error('corrupt: Unable to process image file'));
           }
         };
-        img.onerror = reject;
+        
+        // Modified: Handle corrupted image files
+        img.onerror = () => reject(new Error('corrupt: Image file is corrupted or invalid'));
         img.src = event.target.result;
       };
-      reader.onerror = reject;
+      
+      // Modified: Handle corrupted file reading
+      reader.onerror = () => reject(new Error('corrupt: Unable to read file'));
       reader.readAsDataURL(imageFile);
     });
   };

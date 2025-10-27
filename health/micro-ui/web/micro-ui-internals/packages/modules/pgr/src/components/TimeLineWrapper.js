@@ -4,6 +4,7 @@ import { PopUp, Timeline, TimelineMolecule, Loader } from '@egovernments/digit-u
 import { useMyContext } from "../utils/context";
 import { convertEpochFormateToDate } from '../utils';
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
+import { DownloadIcon, FileIcon } from '@egovernments/digit-ui-react-components';
 
 const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPrefix="" }) => {
     const { state } = useMyContext();
@@ -40,6 +41,7 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
     useEffect(() => {
         if (workflowData && workflowData.ProcessInstances) {
             // Map API response to timeline steps
+            
             const steps = workflowData.ProcessInstances.map((instance, index) => ({
                 label: t(`${labelPrefix}${instance?.action}`),
                 variant: 'completed',
@@ -58,10 +60,24 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
                     (instance?.action === "ASSIGN" ? `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assignes?.[0]?.mobileNumber}` : `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assigner?.mobileNumber}`),
                     instance?.comment && `${t('CS_COMMON_EMPLOYEE_COMMENTS')} : "${instance.comment}"`,
                     ...(instance?.documents && instance.documents.length > 0
-                        ? instance.documents.map(
-                            (doc) =>
-                              `${t("ES_COMMON_FILE_UPLOADED")}: ${doc.fileStoreId}`
-                          )
+                        ? instance.documents.map((doc, docIndex) => 
+                        {   
+                            return(
+                            <div key={`doc-${index}-${docIndex}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '4px' }}>
+                              <FileIcon />
+                              <span>{doc.documentName || t("ES_COMMON_FILE_UPLOADED")}</span>
+                              <button
+                                onClick={() => handleDownloadDocument(doc.fileStoreId, doc.documentName || 'document')}
+                                className='pgr-download-button'
+                                title={t("CS_COMMON_DOWNLOAD")}
+                                aria-label={t("CS_COMMON_DOWNLOAD")}
+                              >
+                                <DownloadIcon />
+                              </button>
+                            </div>
+                            )}
+                          
+                        )
                         : []),
                 ].filter(Boolean),
                 showConnector: true
