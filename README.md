@@ -1,5 +1,6 @@
 
-# workbench ui 
+
+# DIGIT UI
 
 A React App built on top of DIGIT UI Core.
 
@@ -11,16 +12,13 @@ DIGIT (Digital Infrastructure for Governance, Impact & Transformation) is India'
 
 DIGIT platform is microservices based API platform enabling quick rebundling of services as per specific needs. This is a repo that lays down the core platform on top of which other mission services depend.
 
-
-# DIGIT UI 
-
+# DIGIT UI
 
 This repository contains source code for web implementation of the new Digit UI modules with dependencies and libraries.
 
 Workbench module is used to Manage the master data (MDMS V2 Service) used across the DIGIT Services / Applications
 
 It is also used to manage the Localisation data present in the system (Localisation service)
-
 
 ## Run Locally
 
@@ -31,6 +29,7 @@ Clone the project
 ```
 
 Go to the Sub directory to run UI
+
 ```bash
     cd into micro-ui/web/micro-ui-internals
 ```
@@ -42,6 +41,7 @@ Install dependencies
 ```
 
 Add .env file
+
 ```bash
     micro-ui/web/micro-ui-internals/example/.env
 ```
@@ -52,18 +52,17 @@ Start the server
   yarn start
 ```
 
-
 ## Environment Variables
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`REACT_APP_PROXY_API` ::  `{{server url}}`
+`REACT_APP_PROXY_API` :: `{{server url}}`
 
-`REACT_APP_GLOBAL`  ::  `{{server url}}`
+`REACT_APP_GLOBAL` :: `{{server url}}`
 
-`REACT_APP_PROXY_ASSETS`  ::  `{{server url}}`
+`REACT_APP_PROXY_ASSETS` :: `{{server url}}`
 
-`REACT_APP_USER_TYPE`  ::  `{{EMPLOYEE||CITIZEN}}`
+`REACT_APP_USER_TYPE` :: `{{EMPLOYEE||CITIZEN}}`
 
 `SKIP_PREFLIGHT_CHECK` :: `true`
 
@@ -71,7 +70,7 @@ To run this project, you will need to add the following environment variables to
 
 ## Tech Stack
 
-**Libraries:** 
+**Libraries:**
 
 [React](https://react.dev/)
 
@@ -87,21 +86,17 @@ To run this project, you will need to add the following environment variables to
 
 [MIT](https://choosealicense.com/licenses/mit/)
 
-
 ## Author
 
 - [@jagankumar-egov](https://www.github.com/jagankumar-egov)
-
 
 ## Documentation
 
 [Documentation](https://https://core.digit.org/guides/developer-guide/ui-developer-guide/digit-ui)
 
-
 ## Support
 
 For support, add the issues in https://github.com/egovernments/DIGIT-core/issues.
-
 
 ## Modules
 
@@ -111,21 +106,22 @@ For support, add the issues in https://github.com/egovernments/DIGIT-core/issues
     4. Dashboard
     5. Engagement
     6. Payment
+    
 
 ## Starting with Digit-UI App (Impelmentation Teams) - MICRO-UI
-
 
 Go to the Sub directory to run UI
 
 ```bash
     cd into micro-ui/web
 ```
-    
+
 ```bash
   yarn install
 ```
 
 Add .env file
+
 ```bash
     micro-ui/web/.env
 ```
@@ -136,6 +132,4 @@ Start the server
   yarn start
 ```
 
-
 ![Logo](https://s3.ap-south-1.amazonaws.com/works-dev-asset/mseva-white-logo.png)
-
