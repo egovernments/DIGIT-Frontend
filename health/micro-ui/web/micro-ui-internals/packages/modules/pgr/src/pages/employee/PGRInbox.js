@@ -111,7 +111,7 @@ const PGRSearchInbox = () => {
             className="digit-inbox-search-composer-header"
             styles={{ marginBottom: "1.5rem" }}
           >
-            {t("PGR_SEARCH_RESULTS_HEADINGD")}
+            {t("PGR_SEARCH_RESULTS_HEADING")}
           </HeaderComponent>
         }
       </div>

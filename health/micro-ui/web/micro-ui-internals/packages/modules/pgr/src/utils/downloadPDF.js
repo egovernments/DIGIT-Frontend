@@ -30,6 +30,10 @@ export const downloadPdfWithCustomName = ({ fileStoreId = null, customName = nul
           new Blob([res.data], { type: "application/pdf" }),
           customName ? customName : "download"
         );
+      })
+      .catch((error) => {
+        console.error("PDF download failed:", error);
+        alert("Failed to download PDF. Please try again.");
       });
   }
 };

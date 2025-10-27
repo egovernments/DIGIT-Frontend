@@ -163,7 +163,7 @@ export const CreateComplaint = ({ parentUrl }) => {
             name: "name",
             validation: {
               required: true,
-              pattern: /^[A-Za-z0-9]+$/,
+              pattern: /^[A-Za-z][A-Za-z\s]*$/,
             },
             error: t("CS_ADDCOMPLAINT_NAME_ERROR"),
           },
