@@ -8,7 +8,7 @@ const BirthCard = () => {
   const links = [
     {
       label: t("Birth Certificate"),
-      link: "https://sdc-uat.lgpunjab.gov.in/digit-ui/citizen/login",
+      link: "https://sdc-uat.lgpunjab.gov.in/employee/user/login",
     },
   ];
 

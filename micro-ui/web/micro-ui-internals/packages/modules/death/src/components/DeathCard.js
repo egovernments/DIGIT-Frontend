@@ -8,7 +8,7 @@ const DeathCard = () => {
   const links = [
     {
       label: t("Death Certificate"),
-      link: "https://sdc-uat.lgpunjab.gov.in/digit-ui/citizen/login",
+      link: "https://sdc-uat.lgpunjab.gov.in/employee/user/login",
     },
   ];
 
