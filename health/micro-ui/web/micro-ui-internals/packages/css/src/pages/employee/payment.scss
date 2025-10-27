@@ -1,0 +1,164 @@
+@import url("../../index.scss");
+
+/* Payment.css */
+
+.component-table-wrapper .pagination {
+    display: unset;
+    justify-content: unset;
+    background-color: unset;
+    border-top: unset;
+    padding: unset;
+    color: unset;
+
+    svg {
+        margin-left: 0rem !important;
+    }
+}
+
+.bottom-gap-card-payment {
+    margin-bottom: 1.5rem;
+}
+
+.inbox-header-text {
+    padding-left: 16px;
+    margin-top: 2px;
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.primary-2);
+}
+
+.custom-inbox-filter-heading {
+    padding-left: 16px;
+    margin-top: 2px;
+    @extend .typography.heading-m;
+    color: theme(digitv2.lightTheme.primary-2);
+}
+
+.custom-inbox-table-row {
+    border-right: 2px solid #787878;
+    width: 100%;
+    text-align: start;
+}
+
+/* Main Wrapper */
+.custom-register-inbox-screen {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Row Section - Ensures Both Sections Have the Same Height */
+.custom-register-inbox-screen .inner-div-row-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+    min-height: 80vh;
+    height: auto;
+    align-items: stretch;
+    /* Forces both sections to stay equal in height */
+}
+
+/* Filter Section - Fixed to 30% Width */
+.custom-register-inbox-screen .custom-inbox-filter-section {
+    flex: 0 0 20%;
+    /* Fixes width to 30%, prevents unwanted expansion */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Ensures it stretches with table */
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+/* Table Section - Takes Remaining 70% */
+.custom-register-inbox-screen .custom-inbox-outer-table-section {
+    flex: 1;
+    /* Takes remaining width (70%) */
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    /* Matches filter height */
+    min-height: 100%;
+    overflow-y: auto;
+}
+
+/* Inner Table Section */
+.custom-inbox-outer-table-section .inner-table-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    /* Makes sure table stretches */
+}
+
+/* Table Card Override */
+.custom-inbox-outer-table-section .card-overide {
+    max-width: 100%;
+    overflow: auto;
+    margin: 0px;
+    flex-grow: 1;
+    /* Makes sure the table always fills height */
+}
+
+/* Reset Proximity Icon */
+.on-icon-reset-proximity {
+    border: 1px solid #e0e0e0;
+    padding: 6px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+/* Bill Inbox */
+.custom-bill-inbox {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2.5rem;
+}
+
+.bill-container {
+    display: flex;
+    flex-direction: row;
+    gap: 1.5rem;
+}
+
+.bill-container-margin-bottom {
+    margin-bottom: 2.5rem;
+}
+
+.left-section {
+    width: 30%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.right-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.filter-container {
+    display: flex;
+    flex-direction: row;
+    height: 60vh;
+    overflow-y: auto;
+}
+
+.view-label-heading {
+    @extend .typography.heading-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 20%;
+    text-align: left;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+}
+
+.view-label-text {
+    @extend .typography.body-s;
+    color: theme(digitv2.lightTheme.text-primary);
+    width: 80%;
+}
