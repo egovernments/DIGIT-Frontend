@@ -2,12 +2,6 @@
   "name": "egovernments",
   "version": "1.0.0",
   "main": "index.js",
-  "workspaces": [
-    "packages/libraries",
-    "packages/react-components",
-    "packages/modules/core",
-    "packages/modules/workbench"
-  ],
   "author": "JaganKumar <jagan.kumar@egov.org.in>",
   "license": "MIT",
   "private": true,
