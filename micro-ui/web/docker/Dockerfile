@@ -42,7 +42,7 @@ RUN ls -lah
 
 FROM nginx:mainline-alpine
 #FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/mSeva-ui
+ENV WORK_DIR=/var/web/mseva-ui
 
 RUN mkdir -p ${WORK_DIR}
 

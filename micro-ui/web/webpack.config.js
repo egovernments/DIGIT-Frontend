@@ -11,7 +11,7 @@ module.exports = (env) => {
     output: {
       path: path.resolve(__dirname, 'build'),
       filename: isProduction ? '[name].[contenthash].js' : '[name].js',
-      publicPath: '/mSeva-ui/',
+      publicPath: '/mseva-ui/',
     },
     resolve: {
       extensions: ['.js', '.jsx', '.ts', '.tsx'],

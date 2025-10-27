@@ -57,7 +57,7 @@ const initTokens = (stateCode) => {
 };
 
 const initDigitUI = () => {
-  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "mSeva-ui" || "digit-ui";
+  window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH") || "mseva-ui" || "digit-ui";
   window.Digit.Customizations = {
     commonUiConfig: UICustomizations
   };
