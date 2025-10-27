@@ -108,6 +108,13 @@
 - **Citizen Interface**: Enhanced citizen-facing interface styling
 - **Employee Dashboard**: Improved employee interface styling
 
+
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.42] - [22-Sept-2025]
 
 - Sandbox ui style changes (Landing Page/Product Page/Details Page/OTP Carousel) / CCSD-833 

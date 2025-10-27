@@ -117,6 +117,12 @@
 - **Flexible Configuration**: Dynamic engagement rules and workflows based on tenant settings
 - **Enhanced Security**: Better data privacy and security for citizen engagement data
 
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.11] [23-October-2025]
 
 ### New Features:

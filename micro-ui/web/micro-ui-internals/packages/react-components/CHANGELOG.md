@@ -91,6 +91,12 @@
 - **Feature Flags**: Enhanced feature flag support in components
 - **Environment Adaptation**: Components adapt better to different environments
 
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.24]  [6-Aug-2025]
 - Added id attribute in submit bar
 

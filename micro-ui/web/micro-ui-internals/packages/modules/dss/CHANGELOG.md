@@ -78,6 +78,12 @@
 - Dynamic metrics based on user permissions and tenant context
 - Enhanced iframe domain configuration for external dashboards
 
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.13] [23-October-2025]
 
 ### New Features:

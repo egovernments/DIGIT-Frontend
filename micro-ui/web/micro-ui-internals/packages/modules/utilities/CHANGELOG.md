@@ -85,6 +85,13 @@
 - Enhanced tenant context handling
 - Better configuration management for multi-tenant scenarios
 
+
+## [1.1.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.1.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.0.17]  [23-October-2025]
 
 ### New Features:

@@ -98,6 +98,12 @@
 - Enhanced role-based access control integration
 - Better configuration management for multi-tenant deployments
 
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.18] [23-October-2025]
 
 ### New Features:

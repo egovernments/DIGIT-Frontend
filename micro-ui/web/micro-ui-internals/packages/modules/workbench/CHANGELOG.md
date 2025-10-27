@@ -76,6 +76,12 @@
 - Supports multi-tenant MDMS configurations
 - Enhanced schema definition criteria handling
 
+## [1.1.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.1.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.0.29]  [23-October-2025]
 
 ### 🚀 Major UI/UX Redesign - MDMS Manage Master Interface

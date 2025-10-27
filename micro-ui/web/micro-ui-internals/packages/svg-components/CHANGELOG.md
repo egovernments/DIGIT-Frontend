@@ -89,6 +89,12 @@
 - **Usage Examples**: Comprehensive usage documentation
 - **Search Functionality**: Easy icon discovery and selection
 
+## [1.1.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.1.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.0.23]  [30-June-2025]
 - Added BarsChart,Calculate,Employee,FeatureSearch and HierarchyGraph icons
 

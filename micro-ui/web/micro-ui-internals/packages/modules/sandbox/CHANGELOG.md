@@ -94,6 +94,12 @@
 - Comprehensive logging and debugging capabilities
 - Modular architecture for easy extension and customization
 
+## [0.1.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [0.1.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [0.0.4] [23-October-2025]
 
 ### New Features:

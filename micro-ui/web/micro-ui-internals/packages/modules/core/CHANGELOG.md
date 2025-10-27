@@ -105,6 +105,11 @@
 - `defaultLanding`: Customizable landing page routing
 - MDMS-based configuration for login, privacy, and module settings
 
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
 
 ## [1.8.57]  [23-October-2025]
 

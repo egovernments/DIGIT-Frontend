@@ -28,6 +28,12 @@
 - Supports all new global configuration options
 - Enhanced shared config management utilities
 
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.10]  [19-Nov-2024]
 - Fixed the module stablity & new components integrated republihsing the same due to component version issue, 
 

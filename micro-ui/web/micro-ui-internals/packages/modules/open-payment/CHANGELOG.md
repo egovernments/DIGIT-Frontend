@@ -96,6 +96,13 @@
 - **Service Integration**: Enhanced integration with billing and payment services
 - **Security Features**: Enhanced security and compliance for payment processing
 
+
+## [0.1.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [0.1.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [0.0.3] [23-October-2025]
 
 ### New Features:

@@ -66,6 +66,13 @@
 - **Environment Handling**: Improved environment-specific configuration
 - **Feature Flags**: Enhanced feature flag support and management
 
+
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
 ## [1.8.23] [8-sept-2025]
 - New PDF download logic added
 
