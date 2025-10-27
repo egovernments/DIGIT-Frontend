@@ -130,6 +130,12 @@ const AppConfigurationWrapper = ({
         setIsLoadingPageConfig(true);
         setPageConfigError(null);
 
+        // Clean up page name - if it contains a dot, take only the part after the dot
+        // e.g., "HOUSEHOLD.beneficiaryLocation" -> "beneficiaryLocation"
+        const cleanedPageName = pageName?.includes('.')
+          ? pageName.split('.').pop()
+          : pageName;
+
         // Fetch page configuration from MDMS
         const response = await Digit.CustomService.getResponse({
           url: "/mdms-v2/v2/_search",
@@ -140,7 +146,7 @@ const AppConfigurationWrapper = ({
               filters: {
                 flow: flow,
                 project: campaignNumber,
-                page: pageName,
+                page: cleanedPageName,
               },
               isActive: true,
             },
