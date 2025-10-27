@@ -146,7 +146,7 @@ export const CreateComplaintConfig = {
                 componentInFront: "+91",
                 validation: {
                   minLength: 0,
-                  min: 6000000000,
+                  min: 1000000000,
                   max: 9999999999,
                   error: "CORE_COMMON_MOBILE_ERROR",
                 }, // 10-digit phone number validation
