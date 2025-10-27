@@ -396,8 +396,6 @@ export const getFieldPanelMaster = createAsyncThunk(
       });
       const data = response?.MdmsRes?.[moduleName]?.[name] || [];
 
-      console.log("MDMS NewDrawerPanelConfig Response:", data);
-
       // Extract the actual config from the MDMS response
       // MDMS returns an array with an object containing label, content, and validation
       // We only want content and validation, not the label (which would show up as a tab)

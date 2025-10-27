@@ -17,21 +17,17 @@ const AppConfigurationWrapper = ({
   flowName,
   pageName = "beneficiaryLocation",
   campaignNumber,
-  localeModule = "hcm-registrationflow-CMP-2025-09-19-006993",
 }) => {
-  console.log("AppConfigurationWrapper Props:", {
-    flow,
-    flowName,
-    pageName,
-    campaignNumber,
-    localeModule,
-  });
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const dispatch = useDispatch();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+
+  // Generate unique localeModule based on flow, pageName, and campaignNumber
+  // Format: hcm-{flow}-{pageName}-{campaignNumber}
+  const localeModule = `hcm-${flow?.toLowerCase()?.replace(/_/g, '')}-${campaignNumber}`;
   const [newFieldType, setNewFieldType] = useState(null);
   const [isLoadingPageConfig, setIsLoadingPageConfig] = useState(true);
   const [pageConfigError, setPageConfigError] = useState(null);
@@ -43,7 +39,6 @@ const AppConfigurationWrapper = ({
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
-  console.log("currentDatacurrentData", currentData);
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
 
@@ -70,15 +65,11 @@ const AppConfigurationWrapper = ({
         },
       };
 
-      console.log("MDMS Update Payload:", updatePayload);
-
       // Make the update call
       const response = await Digit.CustomService.getResponse({
         url: `/mdms-v2/v2/_update/${MODULE_CONSTANTS}.AppConfigCache`,
         body: updatePayload,
       });
-
-      console.log("MDMS Update Response:", response);
 
       if (response) {
         // Show success message
@@ -153,14 +144,10 @@ const AppConfigurationWrapper = ({
           },
         });
 
-        console.log("MDMS NewFormConfig Response:", response);
 
         if (response?.mdms && response.mdms.length > 0) {
           const pageConfig = response.mdms[0].data;
           const responseData = response.mdms[0]; // Store full MDMS response for updates
-          console.log("Page Config from MDMS:", pageConfig, responseData);
-          console.log("Response Data from MDMS:", responseData);
-
           // Initialize config with the fetched data
           dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
@@ -207,7 +194,7 @@ const AppConfigurationWrapper = ({
         fetchLocalization({
           tenantId,
           localeModule,
-          enabledModules: [currentLocale],
+          currentLocale,
         })
       );
 
@@ -218,7 +205,6 @@ const AppConfigurationWrapper = ({
         setLocalizationData({
           localisationData: localizationData,
           currentLocale,
-          enabledModules: [currentLocale],
           localeModule,
         })
       );

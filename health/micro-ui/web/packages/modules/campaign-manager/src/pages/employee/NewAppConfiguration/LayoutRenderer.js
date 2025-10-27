@@ -150,12 +150,9 @@ const TagComponent = ({ field, t, fieldTypeConfig }) => {
 };
 // Main LayoutRenderer Component - matching AppPreview signature
 const LayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
-  console.log("Rendering LayoutRenderer with data:", data);
   // Get fieldTypeConfig from Redux
   const { byName } = useSelector((state) => state.fieldTypeMaster);
-  console.log("Field Type Master byName:", byName);
   const fieldTypeConfig = byName?.fieldTypeMappingConfig || [];
-  console.log("Field Type Config:", fieldTypeConfig);
   // Extract template components from fieldTypeConfig
   const templateComponents = useMemo(() => {
     return fieldTypeConfig.filter((item) => item?.metadata?.type === "template");

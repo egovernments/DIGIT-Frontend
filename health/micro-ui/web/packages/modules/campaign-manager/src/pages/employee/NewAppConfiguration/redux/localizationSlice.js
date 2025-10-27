@@ -3,54 +3,26 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
 
 // Async thunk to fetch localization data
-export const fetchLocalization = createAsyncThunk("localization/fetch", async ({ tenantId, localeModule, enabledModules }, { rejectWithValue }) => {
+export const fetchLocalization = createAsyncThunk("localization/fetch", async ({ tenantId, localeModule, currentLocale }, { rejectWithValue }) => {
   try {
-    const locale = enabledModules?.map((i) => i);
-    const isMultipleLocale = enabledModules?.length > 0;
+    // Get current locale from parameter or session storage
+    const locale = currentLocale || Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
+    const localeString = typeof locale === 'string' ? locale : String(locale);
 
-    if (isMultipleLocale && Array.isArray(locale)) {
-      // Parallel API calls for multiple locales
-      const promises = locale.map((loc) =>
-        Digit.CustomService.getResponse({
-          url: "/localization/messages/v1/_search",
-          params: { tenantId, module: localeModule, locale: loc },
-          body: {},
-        }).then((response) => ({ locale: loc, response: response?.messages }))
-      );
+    const response = await Digit.CustomService.getResponse({
+      url: "/localization/messages/v1/_search",
+      params: { tenantId, module: localeModule, locale: localeString },
+      body: {},
+    });
 
-      // Wait for all API calls to complete
-      const responses = await Promise.all(promises);
+    const result = [];
+    response?.messages?.forEach(({ code, message, module }) => {
+      let item = { code, module };
+      item[localeString] = message;
+      result.push(item);
+    });
 
-      const result = [];
-      responses.forEach(({ locale, response: translations }) => {
-        translations?.forEach(({ code, message, module }) => {
-          let item = result.find((obj) => obj.code === code);
-          if (!item) {
-            item = { code, module };
-            result.push(item);
-          }
-          item[locale] = message;
-        });
-      });
-
-      return result;
-    } else {
-      const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
-      const response = await Digit.CustomService.getResponse({
-        url: "/localization/messages/v1/_search",
-        params: { tenantId, module: localeModule, locale: currentLocale },
-        body: {},
-      });
-
-      const result = [];
-      response?.messages?.forEach(({ code, message, module }) => {
-        let item = { code, module };
-        item[currentLocale] = message;
-        result.push(item);
-      });
-
-      return result;
-    }
+    return result;
   } catch (error) {
     return rejectWithValue(error.message || "Failed to fetch localization data");
   }
@@ -106,7 +78,6 @@ const localizationSlice = createSlice({
   initialState: {
     data: [],
     appScreenConfig: null,
-    enabledModules: [],
     currentLocale: null,
     localeModule: null,
     status: "idle", // idle | loading | succeeded | failed
@@ -117,26 +88,32 @@ const localizationSlice = createSlice({
   reducers: {
     setLocalizationData(state, action) {
       state.data = action.payload.localisationData || [];
-      state.currentLocale = action.payload.currentLocale;
-      state.enabledModules = action.payload.enabledModules || [];
+      // Ensure currentLocale is a string
+      state.currentLocale = typeof action.payload.currentLocale === 'string'
+        ? action.payload.currentLocale
+        : String(action.payload.currentLocale);
       state.localeModule = action.payload.localeModule;
     },
     addMissingKey(state, action) {
-      const { code, enabledModules } = action.payload;
+      const { code } = action.payload;
       const existing = state.data.find((item) => item.code === code);
       if (!existing) {
-        const newEntry = enabledModules.reduce((acc, locale) => ({ ...acc, [locale]: "" }), { code });
+        // Use only currentLocale from state instead of enabledModules
+        const localeKey = typeof state.currentLocale === 'string' ? state.currentLocale : String(state.currentLocale);
+        const newEntry = { code, [localeKey]: "" };
         state.data.push(newEntry);
       }
     },
     updateLocalizationEntry(state, action) {
       const { code, locale, message } = action.payload;
+      // Ensure locale is a string
+      const localeKey = typeof locale === 'string' ? locale : String(locale);
       const existingIndex = state.data.findIndex((item) => item.code === code);
 
       if (existingIndex !== -1) {
-        state.data[existingIndex][locale] = message;
+        state.data[existingIndex][localeKey] = message;
       } else {
-        state.data.push({ code, [locale]: message });
+        state.data.push({ code, [localeKey]: message });
       }
     },
     removeLocalizationKey(state, action) {

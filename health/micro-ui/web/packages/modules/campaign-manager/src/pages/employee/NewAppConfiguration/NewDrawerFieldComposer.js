@@ -237,10 +237,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
           // only write to Redux if the bindTo already exists AND has a value
           // i.e., the user already persisted this setting earlier.
-          console.log("Handling toggle change for", bindTo, "with value", value , {panelItem, selectedField});
           const existing = getFieldValueByPath(selectedField, bindTo, undefined);
-          console.log("Existing value is", existing);
-
           if (existing !== undefined && existing !== null && existing !== "") {
             // safe to update existing field
             handleFieldChange(Boolean(value));
@@ -622,8 +619,6 @@ function NewDrawerFieldComposer() {
 
   // Get field type from field type master - using fixed key 'fieldTypeMappingConfig'
   const fieldType = useMemo(() => {
-    console.log("Calculating field type for:", selectedField);
-    console.log("Get from master data:", getFieldTypeFromMasterData(selectedField, fieldTypeMaster.fieldTypeMappingConfig));
     if (!selectedField || !fieldTypeMaster?.fieldTypeMappingConfig) {
       return selectedField?.type || "textInput";
     }

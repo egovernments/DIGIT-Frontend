@@ -73,7 +73,12 @@ const FullConfigWrapper = () => {
     setCurrentPageRoles(page?.roles || flow?.roles || []);
   }, [flowConfig, selectedFlow, selectedPageName]);
 
-  const handleFlowClick = (flow) => {
+  const handleFlowClick = async (flow) => {
+    // Call MDMS update for current screen before switching
+    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+      await window.__appConfig_onNext();
+    }
+
     setSelectedFlow(flow.id);
     // Set index route or first page as default when flow is clicked
     const defaultPage = flow.indexRoute || (flow.pages && flow.pages.length > 0 ? flow.pages[0].name : null);
@@ -82,7 +87,12 @@ const FullConfigWrapper = () => {
     }
   };
 
-  const handlePageClick = (page) => {
+  const handlePageClick = async (page) => {
+    // Call MDMS update for current screen before switching page
+    if (window.__appConfig_onNext && typeof window.__appConfig_onNext === "function") {
+      await window.__appConfig_onNext();
+    }
+
     setSelectedPageName(page.name);
   };
 
@@ -104,7 +114,6 @@ const FullConfigWrapper = () => {
 
       const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
       const transformedData = transformMdmsToAppConfig(fullData);
-      console.log("Transformed App Config:", fullData, transformedData);
 
       // Create single MDMS record for the transformed config
       const payload = {
@@ -121,10 +130,6 @@ const FullConfigWrapper = () => {
         url: "/mdms-v2/v2/_create/HCM-ADMIN-CONSOLE.NewAppConfig",
         body: payload,
       });
-      console.log(`Created app config for ${transformedData.name}:`, createResponse);
-
-      console.log("App config created successfully!");
-
       // Navigate to new-app-modules after successful API calls
       navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     } catch (error) {

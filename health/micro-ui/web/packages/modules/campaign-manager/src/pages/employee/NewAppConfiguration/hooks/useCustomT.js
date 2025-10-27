@@ -18,11 +18,8 @@ export const useCustomT = (code) => {
     const entry = locState.find((item) => item.code === code);
 
     if (!entry) {
-      // Get enabled modules from session storage
-      const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
-
-      // Add the missing key to Redux store with empty message
-      dispatch(addMissingKey({ code, enabledModules }));
+      // Add the missing key to Redux store with empty message for current locale
+      dispatch(addMissingKey({ code }));
 
       return ""; // Return empty string when entry not found
     }
@@ -54,11 +51,8 @@ export const useCustomTranslate = () => {
       const entry = locState?.find((item) => item.code === code);
 
       if (!entry) {
-        // Get enabled modules from session storage
-        const enabledModules = Digit?.SessionStorage.get("initData")?.languages || [];
-
-        // Add the missing key to Redux store with empty message
-        dispatch(addMissingKey({ code, enabledModules }));
+        // Add the missing key to Redux store with empty message for current locale
+        dispatch(addMissingKey({ code }));
 
         return ""; // Return empty string when entry not found
       }

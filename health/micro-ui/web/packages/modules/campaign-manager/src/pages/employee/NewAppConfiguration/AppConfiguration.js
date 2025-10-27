@@ -31,7 +31,6 @@ function AppConfiguration({ onNext, isUpdating }) {
     [dispatch]
   );
 
-  console.log("pageTypepageType", pageType);
   // Determine which preview to render based on pageType
   const isTemplateView = pageType === "template";
 

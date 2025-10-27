@@ -28,7 +28,6 @@ export const fetchFlowPages = createAsyncThunk(
         const registrationFlow = flows.find((flow) => flow?.id === flowId);
         const pages = registrationFlow?.pages || [];
         
-        console.log("Extracted Flow Pages:", pages);
         return pages;
       }
 
