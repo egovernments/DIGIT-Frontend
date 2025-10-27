@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AppConfigurationStore from "./AppConfigurationStore";
 import { Loader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
@@ -6,6 +7,11 @@ import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
 
 const FullConfigWrapper = () => {
   const { t } = useTranslation();
+  const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const campaignNumber = searchParams.get("campaignNumber") || "CMP-2025-08-04-004846";
+  const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
+
   const [selectedFlow, setSelectedFlow] = useState(null);
   const [selectedPageName, setSelectedPageName] = useState(null);
   const [currentPageRoles, setCurrentPageRoles] = useState([]);
@@ -25,7 +31,7 @@ const FullConfigWrapper = () => {
               tenantId: "mz",
               schemaCode: "HCM-ADMIN-CONSOLE.AppFlowConfig",
               filters: {
-                project: "CMP-2025-08-04-004846",
+                project: campaignNumber,
               },
               isActive: true,
             },
@@ -54,7 +60,7 @@ const FullConfigWrapper = () => {
     };
 
     fetchFlowConfig();
-  }, []);
+  }, [campaignNumber]);
 
   // Update currentPageRoles when page changes
   useEffect(() => {
@@ -89,7 +95,7 @@ const FullConfigWrapper = () => {
             tenantId: "mz",
             schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
             filters: {
-              project: "CMP-2025-08-04-004846",
+              project: campaignNumber,
             },
             isActive: true,
           },
@@ -100,30 +106,27 @@ const FullConfigWrapper = () => {
       const transformedData = transformMdmsToAppConfig(fullData);
       console.log("Transformed App Config:", fullData, transformedData);
 
-      // Loop through transformed data and create MDMS records
-      for (const configObj of transformedData) {
-        const payload = {
-          Mdms: {
-            tenantId: "mz",
-            schemaCode: "HCM-ADMIN-CONSOLE.NewAppConfig",
-            uniqueIdentifier: `${configObj.project}.${configObj.name}`,
-            data: configObj,
-            isActive: true
-          }
-        };
-
-        try {
-          const createResponse = await Digit.CustomService.getResponse({
-            url: "/mdms-v2/v2/_create",
-            body: payload,
-          });
-          console.log(`Created app config for ${configObj.name}:`, createResponse);
-        } catch (error) {
-          console.error(`Failed to create app config for ${configObj.name}:`, error);
+      // Create single MDMS record for the transformed config
+      const payload = {
+        Mdms: {
+          tenantId: "mz",
+          schemaCode: "HCM-ADMIN-CONSOLE.NewAppConfig",
+          uniqueIdentifier: `${transformedData.project}.${transformedData.name}`,
+          data: transformedData,
+          isActive: true
         }
-      }
+      };
 
-      console.log("All app configs created successfully!");
+      const createResponse = await Digit.CustomService.getResponse({
+        url: "/mdms-v2/v2/_create/HCM-ADMIN-CONSOLE.NewAppConfig",
+        body: payload,
+      });
+      console.log(`Created app config for ${transformedData.name}:`, createResponse);
+
+      console.log("App config created successfully!");
+
+      // Navigate to new-app-modules after successful API calls
+      navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     } catch (error) {
       console.error("Error in saveToAppConfig:", error);
     }

@@ -7,6 +7,8 @@ import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import HelpInfoCard from "../../components/HelpInfoCard";
 import FullConfigWrapper from "./NewAppConfiguration/FullConfigWrapper";
+import NewAppModule from "./NewCampaignCreate/NewAppModule";
+import DummyLoader from "./NewCampaignCreate/DummyLoader";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -366,8 +368,10 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`campaign-home`} element={<CampaignHome />} />
           <Route path={`view-details`} element={<CampaignDetails />} />
           <Route path={`app-modules`} element={<AppModule />} />
+          <Route path={`new-app-modules`} element={<NewAppModule />} />
           <Route path={`app-features`} element={<AppFeatures />} />
           <Route path={`upload-screen`} element={<NewUploadScreen />} />
+          <Route path={`dummy-loader`} element={<DummyLoader />} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>
       </AppContainer>
