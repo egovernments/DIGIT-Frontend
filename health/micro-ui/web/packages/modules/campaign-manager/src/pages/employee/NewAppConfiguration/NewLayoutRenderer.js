@@ -11,13 +11,14 @@ import { getFieldTypeFromMasterData } from "./helpers";
  * @returns {string|null} - Component name or null
  */
 const getComponentName = (field, fieldTypeMasterData) => {
+  console.log("Get ComponentName called with field:", {field, fieldTypeMasterData});
   if (!field || !fieldTypeMasterData || fieldTypeMasterData.length === 0) {
     return null;
   }
 
   // Find matching field type config by type and format
   const fieldTypeConfig = fieldTypeMasterData.find(
-    (item) => item?.metadata?.type === field?.type && item?.metadata?.format === field?.format && item?.fieldType === field?.fieldName
+    (item) =>  item?.metadata?.format === field?.format 
   );
 
   return fieldTypeConfig?.component || null;
@@ -33,8 +34,8 @@ const isFieldSelected = (field, selectedField) => {
   if (!selectedField || !field) return false;
 
   // Check by unique componentName
-  if (field.componentName && selectedField.componentName) {
-    return field.componentName === selectedField.componentName;
+  if (field.fieldName && selectedField.fieldName) {
+    return field.fieldName === selectedField.fieldName;
   }
 
   // Check by id
@@ -62,7 +63,7 @@ const renderTemplateComponent = (field, fieldTypeMasterData, selectedField, t, o
   if (!field || field.hidden) return null;
 
   const isSelected = isFieldSelected(field, selectedField);
-  const uniqueKey = field.id || field.componentName || `${sectionName}-${index}`;
+  const uniqueKey = field.id || field.fieldName || `${sectionName}-${index}`;
 
   // Get component name from field master
   const componentName = getComponentName(field, fieldTypeMasterData);
@@ -151,11 +152,9 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
 
   if (sectionName === "body") {
     // Body has nested structure: body[0].fields[]
-    section.forEach((card) => {
-      if (card.fields && Array.isArray(card.fields)) {
-        fieldsToRender = [...fieldsToRender, ...card.fields];
-      }
-    });
+    
+        fieldsToRender = section;
+ 
   } else {
     // Footer has direct structure: footer[]
     fieldsToRender = section;
@@ -172,7 +171,7 @@ const renderSection = (section, sectionName, fieldTypeMasterData, selectedField,
           // Ensure field has an id
           const fieldWithId = {
             ...field,
-            id: field.id || `${sectionName}-${field.componentName || field.format}-${index}`,
+            id: field.id || `${sectionName}-${field.fieldName || field.format}-${index}`,
           };
           return renderTemplateComponent(fieldWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, sectionName, index);
         })}
@@ -188,6 +187,8 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   // Get field type master data from Redux
   const { byName } = useSelector((state) => state.fieldTypeMaster);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
+
+  console.log("NewLayoutRenderer rendering with data:", {data, selectedField, fieldTypeMasterData});
 
   return (
     <MobileBezelFrame>
