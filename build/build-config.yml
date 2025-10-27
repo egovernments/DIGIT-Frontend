@@ -126,3 +126,9 @@ config:
       - work-dir: micro-ui/
         dockerfile: micro-ui/web/docker/Dockerfile
         image-name: meghalaya-ui
+
+  - name: builds/Digit-Frontend/mSeva-ui
+    build:
+      - work-dir: micro-ui/
+        dockerfile: micro-ui/web/docker/Dockerfile
+        image-name: mSeva-ui
