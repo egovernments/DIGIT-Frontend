@@ -11,7 +11,7 @@
     "micro-ui-internals/packages/css",
     "micro-ui-internals/packages/modules/*"
   ],
-  "homepage": "/mSeva-ui",
+  "homepage": "/mseva-ui",
   "dependencies": {
     "@egovernments/digit-ui-svg-components": "1.0.21",
     "@egovernments/digit-ui-libraries": "1.8.19",
