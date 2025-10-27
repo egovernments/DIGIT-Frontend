@@ -10,6 +10,7 @@ const FullConfigWrapper = () => {
   const navigate = useNavigate();
   const searchParams = new URLSearchParams(location.search);
   const campaignNumber = searchParams.get("campaignNumber") || "CMP-2025-08-04-004846";
+  const flowModule = searchParams.get("flow");
   const tenantId = searchParams.get("tenantId") || Digit?.ULBService?.getCurrentTenantId();
 
   const [selectedFlow, setSelectedFlow] = useState(null);
@@ -98,11 +99,12 @@ const FullConfigWrapper = () => {
 
   const saveToAppConfig = async () => {
     try {
+      // Step 1: Fetch NewFormConfig data and transform it
       const response = await Digit.CustomService.getResponse({
         url: "/mdms-v2/v2/_search",
         body: {
           MdmsCriteria: {
-            tenantId: "mz",
+            tenantId: tenantId,
             schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
             filters: {
               project: campaignNumber,
@@ -115,21 +117,47 @@ const FullConfigWrapper = () => {
       const fullData = response?.mdms && response?.mdms?.map((item) => item.data);
       const transformedData = transformMdmsToAppConfig(fullData);
 
-      // Create single MDMS record for the transformed config
-      const payload = {
-        Mdms: {
-          tenantId: "mz",
-          schemaCode: "HCM-ADMIN-CONSOLE.NewAppConfig",
-          uniqueIdentifier: `${transformedData.project}.${transformedData.name}`,
-          data: transformedData,
-          isActive: true
-        }
-      };
-
-      const createResponse = await Digit.CustomService.getResponse({
-        url: "/mdms-v2/v2/_create/HCM-ADMIN-CONSOLE.NewAppConfig",
-        body: payload,
+      // Step 2: Search for existing NewApkConfig with campaignNumber and flow
+      const appConfigResponse = await Digit.CustomService.getResponse({
+        url: "/mdms-v2/v2/_search",
+        body: {
+          MdmsCriteria: {
+            tenantId: tenantId,
+            schemaCode: "HCM-ADMIN-CONSOLE.NewApkConfig",
+            filters: {
+              project: campaignNumber,
+              name: flowModule,
+            },
+            isActive: true,
+          },
+        },
       });
+      // Step 3: Update the existing config's mdms property with transformedData
+      if (appConfigResponse?.mdms && appConfigResponse.mdms.length > 0) {
+        const existingConfig = appConfigResponse.mdms?.[0].data;
+
+        // Update the mdms property with transformed data
+        const updatedConfig = {
+          ...existingConfig,
+          flows: transformedData,
+        };
+
+        // Update the MDMS record
+        const updatePayload = {
+          Mdms: {
+            ...appConfigResponse.mdms?.[0],
+            data: updatedConfig,
+          },
+        };
+
+        await Digit.CustomService.getResponse({
+          url: "/mdms-v2/v2/_update/HCM-ADMIN-CONSOLE.FormConfig",
+          body: updatePayload,
+        });
+      } else {
+        console.error("No existing NewApkConfig found for campaignNumber and flow");
+      }
+
       // Navigate to new-app-modules after successful API calls
       navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
     } catch (error) {

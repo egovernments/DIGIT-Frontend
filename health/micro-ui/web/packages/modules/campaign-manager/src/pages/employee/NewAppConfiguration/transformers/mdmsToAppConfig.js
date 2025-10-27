@@ -1,199 +1,125 @@
 /**
- * Transform single MDMS screen data to App Config flow structure
- * @param {Object} screenData - Single MDMS screen configuration
- * @returns {Object} Transformed flow object
- */
-const transformSingleScreen = (screenData) => {
-  if (screenData.type === "template") {
-    return {
-      screenType: "TEMPLATE",
-      name: screenData.page,
-      heading: screenData.heading,
-      description: screenData.description,
-      body: transformTemplateBody(screenData.body),
-      footer: screenData.footer || [],
-      ...(screenData.navigateTo && { navigateTo: screenData.navigateTo })
-    };
-  } else if (screenData.type === "object") {
-    return {
-      screenType: "FORM",
-      name: screenData.flow,
-      project: screenData.project,
-      version: screenData.version,
-      disabled: false,
-      isSelected: true,
-      pages: [{
-        page: screenData.page,
-        type: screenData.type,
-        label: screenData.heading,
-        order: screenData.order,
-        description: screenData.description,
-        properties: transformFormProperties(screenData.body),
-        ...(screenData.navigateTo && { navigateTo: screenData.navigateTo }),
-        ...(screenData.footer && screenData.footer.length > 0 && { actionLabel: screenData.footer[0].label })
-      }],
-      ...(screenData.footer && screenData.footer.length > 0 && {
-        onAction: extractOnActions(screenData.footer)
-      })
-    };
-  }
-};
-
-/**
  * Transform MDMS data structure to App Config structure
  * @param {Array} fullData - Array of MDMS screen configurations
- * @returns {Array} Array of app config objects (one per unique flow)
+ * @returns {Array} Array of app config objects
  */
 export const transformMdmsToAppConfig = (fullData) => {
   if (!fullData || !Array.isArray(fullData) || fullData.length === 0) {
     throw new Error("Invalid fullData: Expected non-empty array");
   }
 
-  // Group data by flow
-  const flowGroups = {};
+  // Separate templates and forms
+  const templates = [];
+  const forms = {};
 
   fullData.forEach(item => {
-    const flowName = item.flow || "DEFAULT";
-    if (!flowGroups[flowName]) {
-      flowGroups[flowName] = {
-        project: item.project,
-        version: item.version,
-        templates: [],
-        formPages: []
-      };
-    }
+    // Check if it's a template (has screenType: TEMPLATE or type: template)
+    const isTemplate = item.screenType === "TEMPLATE" || item.type === "template" || (!item.type && !item.flow);
 
-    if (item.type === "template") {
-      flowGroups[flowName].templates.push(item);
-    } else if (item.type === "object") {
-      flowGroups[flowName].formPages.push(item);
-    }
-  });
-
-  // Create app config for each flow
-  const appConfigs = [];
-
-  Object.entries(flowGroups).forEach(([flowName, flowData]) => {
-    const { project, version, templates, formPages } = flowData;
-
-    // Sort by order
-    templates.sort((a, b) => (a.order || 0) - (b.order || 0));
-    formPages.sort((a, b) => (a.order || 0) - (b.order || 0));
-
-    const flows = [];
-
-    // Add template screens
-    templates.forEach(template => {
-      flows.push(transformSingleScreen(template));
-    });
-
-    // Add form screen if form pages exist
-    if (formPages.length > 0) {
-      flows.push({
-        screenType: "FORM",
-        name: flowName,
-        project: project,
-        version: version,
-        disabled: false,
-        isSelected: true,
-        pages: formPages.map(page => ({
-          page: page.page,
-          type: page.type,
-          label: page.heading,
-          order: page.order,
-          description: page.description,
-          properties: transformFormProperties(page.body),
-          ...(page.navigateTo && { navigateTo: page.navigateTo }),
-          ...(page.footer && page.footer.length > 0 && { actionLabel: page.footer[0].label })
-        })),
-        ...(formPages[formPages.length - 1]?.footer && {
-          onAction: extractOnActions(formPages[formPages.length - 1].footer)
-        })
-      });
-    }
-
-    appConfigs.push({
-      name: `${flowName}-${project}`,
-      initialPage: templates[0]?.page || formPages[0]?.page,
-      project: project,
-      version: version,
-      disabled: false,
-      isSelected: true,
-      flows: flows
-    });
-  });
-
-  return appConfigs;
-};
-
-/**
- * Transform template body fields
- */
-const transformTemplateBody = (body) => {
-  if (!body || !Array.isArray(body)) return [];
-
-  const transformedBody = [];
-
-  body.forEach(bodySection => {
-    if (bodySection.fields && Array.isArray(bodySection.fields)) {
-      bodySection.fields.forEach(field => {
-        const transformed = {
-          format: field.format,
-          label: field.label,
-          fieldName: field.fieldName,
-          order: field.order
+    if (isTemplate) {
+      // It's a template screen
+      templates.push(transformTemplate(item));
+    } else if (item.type === "object" && item.flow) {
+      // It's a form page - group pages by flow name
+      const flowName = item.flow;
+      if (!forms[flowName]) {
+        forms[flowName] = {
+          name: flowName,
+          project: item.project,
+          version: item.version,
+          disabled: item.disabled || false,
+          isSelected: item.isSelected !== undefined ? item.isSelected : true,
+          screenType: "FORM",
+          pages: [],
+          wrapperConfig: item.wrapperConfig
         };
+      }
+      // Add page to form
+      forms[flowName].pages.push(transformFormPage(item));
 
-        if (field.type && field.type !== "template") {
-          transformed.type = field.type;
-        }
-        if (field.value !== undefined && field.value !== "") {
-          transformed.value = field.value;
-        }
-        if (field.hidden !== undefined) {
-          transformed.hidden = field.hidden;
-        }
-        if (field.readOnly !== undefined) {
-          transformed.readOnly = field.readOnly;
-        }
-        if (field.required !== undefined) {
-          transformed.required = field.required;
-        }
-        if (field.enums) {
-          transformed.enums = field.enums;
-        }
-        if (field.tooltip) {
-          transformed.tooltip = field.tooltip;
-        }
-        if (field.helpText) {
-          transformed.helpText = field.helpText;
-        }
-        if (field.infoText) {
-          transformed.infoText = field.infoText;
-        }
-        if (field.errorMessage) {
-          transformed.errorMessage = field.errorMessage;
-        }
-        if (field["required.message"]) {
-          transformed.requiredMessage = field["required.message"];
-        }
-        if (field.systemDate !== undefined) {
-          transformed.systemDate = field.systemDate;
-        }
-        if (field.schemaCode) {
-          transformed.schemaCode = field.schemaCode;
-        }
-
-        transformedBody.push(transformed);
-      });
+      // Store onAction from the last page (or first one that has it)
+      if (item.onAction && (!forms[flowName].onAction || item.order >= forms[flowName].lastOrder)) {
+        forms[flowName].onAction = item.onAction;
+        forms[flowName].lastOrder = item.order;
+      }
     }
   });
 
-  return transformedBody;
+  // Clean up temporary fields
+  Object.values(forms).forEach(form => {
+    delete form.lastOrder;
+  });
+
+  // Combine templates and forms
+  const result = [
+    ...templates,
+    ...Object.values(forms)
+  ];
+
+  return result;
 };
 
 /**
- * Transform form properties from body
+ * Transform a template screen
+ */
+const transformTemplate = (screenData) => {
+  const template = {
+    body: screenData.body || []
+  };
+
+  // Add all relevant fields from screenData
+  if (screenData.flow) template.name = screenData.flow;
+  if (screenData.page) template.name = screenData.page; // page takes precedence if both exist
+  if (screenData.heading) template.heading = screenData.heading;
+  if (screenData.screenType) template.screenType = screenData.screenType;
+  if (screenData.description) template.description = screenData.description;
+  if (screenData.footer) template.footer = screenData.footer;
+  if (screenData.header) template.header = screenData.header;
+  if (screenData.navigateTo !== undefined) template.navigateTo = screenData.navigateTo;
+  if (screenData.initActions) template.initActions = screenData.initActions;
+  if (screenData.wrapperConfig) template.wrapperConfig = screenData.wrapperConfig;
+
+  // Default screenType to TEMPLATE if not set
+  if (!template.screenType) {
+    template.screenType = "TEMPLATE";
+  }
+
+  return template;
+};
+
+/**
+ * Transform a form page from MDMS format
+ */
+const transformFormPage = (pageData) => {
+  const page = {
+    page: pageData.page,
+    type: pageData.type,
+    label: pageData.heading,
+    order: pageData.order,
+    description: pageData.description,
+    properties: transformFormProperties(pageData.body)
+  };
+
+  // Add navigateTo if exists
+  if (pageData.navigateTo) {
+    page.navigateTo = pageData.navigateTo;
+  }
+
+  // Add actionLabel from footer if exists
+  if (pageData.footer && Array.isArray(pageData.footer) && pageData.footer.length > 0) {
+    page.actionLabel = pageData.footer[0].label;
+  }
+
+  // Add showAlertPopUp if exists
+  if (pageData.showAlertPopUp) {
+    page.showAlertPopUp = pageData.showAlertPopUp;
+  }
+
+  return page;
+};
+
+/**
+ * Transform form properties from body structure
  */
 const transformFormProperties = (body) => {
   if (!body || !Array.isArray(body)) return [];
@@ -223,12 +149,12 @@ const transformFormProperties = (body) => {
           isMultiSelect: field.isMultiSelect !== undefined ? field.isMultiSelect : false
         };
 
-        if (field.enums) {
-          property.enums = field.enums;
-        }
-        if (field.schemaCode) {
-          property.schemaCode = field.schemaCode;
-        }
+        // Add optional fields
+        if (field.enums) property.enums = field.enums;
+        if (field.schemaCode) property.schemaCode = field.schemaCode;
+        if (field.includeInForm !== undefined) property.includeInForm = field.includeInForm;
+        if (field.includeInSummary !== undefined) property.includeInSummary = field.includeInSummary;
+        if (field.visibilityCondition) property.visibilityCondition = field.visibilityCondition;
 
         properties.push(property);
       });
@@ -239,11 +165,12 @@ const transformFormProperties = (body) => {
 };
 
 /**
- * Build validations array from field
+ * Build validations array from field properties
  */
 const buildValidations = (field) => {
   const validations = [];
 
+  // Handle required validation
   if (field.required) {
     validations.push({
       type: "required",
@@ -252,23 +179,43 @@ const buildValidations = (field) => {
     });
   }
 
+  // Handle minLength validation
+  if (field.minLength) {
+    validations.push({
+      type: "minLength",
+      value: field.minLength,
+      message: field["minLength.message"] || `Minimum length is ${field.minLength}`
+    });
+  }
+
+  // Handle maxLength validation
+  if (field.maxLength) {
+    validations.push({
+      type: "maxLength",
+      value: field.maxLength,
+      message: field["maxLength.message"] || `Maximum length is ${field.maxLength}`
+    });
+  }
+
+  // Handle min validation
+  if (field.min !== undefined) {
+    validations.push({
+      type: "min",
+      value: field.min,
+      message: field["min.message"] || `Minimum value is ${field.min}`
+    });
+  }
+
+  // Handle max validation
+  if (field.max !== undefined) {
+    validations.push({
+      type: "max",
+      value: field.max,
+      message: field["max.message"] || `Maximum value is ${field.max}`
+    });
+  }
+
   return validations;
-};
-
-/**
- * Extract onAction from footer
- */
-const extractOnActions = (footer) => {
-  if (!footer || !Array.isArray(footer)) return [];
-
-  const actions = [];
-  footer.forEach(item => {
-    if (item.onAction && Array.isArray(item.onAction)) {
-      actions.push(...item.onAction);
-    }
-  });
-
-  return actions;
 };
 
 export default transformMdmsToAppConfig;
