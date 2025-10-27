@@ -178,6 +178,11 @@ const MDMSEdit = ({ ...props }) => {
           closeToast();
         },
         onSuccess: () => {
+          // Dispatch event to notify complaint page about localization update
+          if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+            window.dispatchEvent(new CustomEvent('pgr-localization-updated'));
+          }
+
           setShowToast({
             label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${transformedFormData?.code ? transformedFormData?.code : data?.
 uniqueIdentifier}`,

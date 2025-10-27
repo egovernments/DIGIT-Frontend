@@ -169,6 +169,12 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
               toggleSpinner(false);
               setSessionFormData({});
               setSession({});
+
+              // Dispatch event to notify complaint page about localization update
+              if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+                window.dispatchEvent(new CustomEvent('pgr-localization-updated'));
+              }
+
               closeToast();
               gotoView();
             },

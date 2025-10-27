@@ -215,11 +215,11 @@ const Otp = ({ isLogin = false }) => {
         cardStyle={{ maxWidth: "408px", margin: "auto" }}
         className="sandbox-onboarding-wrapper"
         buttonClassName="sandbox-otp-submit-button"
-        buttonStyle={{ 
-          width: "100%", 
+        buttonStyle={{
+          width: "100%",
           maxWidth: "408px",
-          backgroundColor: "#F47738",
-          borderColor: "#F47738",
+          backgroundColor: "#c84c0e",
+          borderColor: "#c84c0e",
           color: "#fff",
           fontWeight: "500",
           padding: "12px 24px",
