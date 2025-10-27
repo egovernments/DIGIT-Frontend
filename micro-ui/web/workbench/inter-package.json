@@ -43,17 +43,16 @@
     "deploy:jenkins": "./scripts/jenkins.sh",
     "clean": "rm -rf node_modules"
   },
-   "resolutions": {
+    "resolutions": {
     "**/@babel/runtime": "7.20.1",
-    "**/@babel/traverse":"7.25.9",
     "**/babel-preset-react-app": "10.0.0",
-    "**/babel-loader": "8.2.2",
-    "**/@babel/core": "7.14.0",
-    "**/@babel/preset-env": "7.14.0",
-    "**/@babel/plugin-transform-modules-commonjs": "7.14.0",
-    "**/@jridgewell/gen-mapping": "0.3.5",
-    "**/polished":"4.2.2",
-    "fast-uri":"2.1.0"
+    "**/@babel/traverse": "7.25.9",
+    "**/styled-components": "5.0.0",
+    "fast-uri": "2.1.0",
+    "**/minimatch": "7.4.6",
+    "minimatch": "7.4.6",
+    "**/glob": "7.2.3",
+    "glob": "7.2.3"   
   },
   "devDependencies": {
     "husky": "7.0.4",
@@ -66,11 +65,11 @@
     "*.{js,css,md}": "prettier --write"
   },
   "dependencies": {
+    "@egovernments/digit-ui-components": "0.2.3",
+    "@egovernments/digit-ui-react-components": "1.9.0-rc1",
+    "json-edit-react": "^1.22.6",
     "lodash": "4.17.21",
     "microbundle-crl": "0.13.11",
-    "@egovernments/digit-ui-react-components": "1.9.0-rc1",
-    "@egovernments/digit-ui-svg-components": "1.1.0",
-    "@egovernments/digit-ui-components": "0.2.3",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-hook-form": "6.15.8",
