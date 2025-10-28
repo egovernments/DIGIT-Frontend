@@ -1,4 +1,7 @@
 
+## [1.1.1]  [28-October-2025]
+- minor patch removed console log 
+
 ## [1.1.0]  [28-October-2025]
 
 ### 🚀 Major Features & UI/UX Redesign

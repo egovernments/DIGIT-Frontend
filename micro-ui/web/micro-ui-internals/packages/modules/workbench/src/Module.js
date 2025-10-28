@@ -93,7 +93,6 @@ const updateCustomConfigs = () => {
   updateCustomConfigs();
   
   Object.entries(componentsToRegister).forEach(([key, value]) => {
-    console.log(`Registering component: ${key}`);
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };
