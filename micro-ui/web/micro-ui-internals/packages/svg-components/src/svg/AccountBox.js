@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
-export const AccountBox = ({ className, height = "24", width = "24", style = {}, fill = "#F47738", onClick = null }) => {
+export const AccountBox = ({ className, height = "24", width = "24", style = {}, fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg
       width={width}

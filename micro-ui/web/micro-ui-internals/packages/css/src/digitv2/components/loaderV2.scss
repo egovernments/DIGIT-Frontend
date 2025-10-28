@@ -27,7 +27,9 @@
 }
 
 .digit-page-loader {
-  padding-top: 88px;
+  padding-top: 20%;
+  position: absolute;
+  left: 50%;
 }
 
 .digit-module-loader {
@@ -67,6 +69,13 @@
   background: none;
 }
 
+.digit-loadingio-spinner-rolling-frame {
+  width: 48px;
+  height: 48px;
+  display: inline-block;
+  overflow: hidden;
+  background: none;
+}
 .digit-ldio-pjg92h09b2o {
   width: 100%;
   height: 100%;

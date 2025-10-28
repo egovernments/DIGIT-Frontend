@@ -2,6 +2,8 @@ import ReactDOM from "react-dom";
 import html2canvas from "html2canvas";
 import XLSX from "xlsx";
 import domtoimage from "dom-to-image";
+import jsPDF from "jspdf";
+import pdfMake from 'pdfmake/build/pdfmake';
 
 const changeClasses=(class1,class2)=>{
   var elements = document.getElementsByClassName(class1)
@@ -164,7 +166,68 @@ const Download = {
     });
     */
   },
+  // PDF IS BEING DOWNLOADED AS IMAGE : TESTING WITH NEW PDF DOWNLOAD LOGIC
+  PDFMAIN: (node, fileName, share, resolve = null) => {
+    changeClasses("dss-white-pre-line", "dss-white-pre-temp");
+    applyCss();
 
+    const element = ReactDOM.findDOMNode(node.current);
+
+    return domtoimage
+      .toJpeg(element, {
+        quality: 1,
+        bgcolor: "white",
+        filter: (node) => !node?.className?.includes?.("divToBeHidden"),
+        style: { margin: "25px" },
+      })
+      .then((dataUrl) => {
+        // create PDF
+        const pdf = new jsPDF("l", "pt", [element.offsetWidth, element.offsetHeight]);
+        pdf.setFontSize?.(16);
+        pdf.text?.(40, 30, "Certificate");
+        pdf.addImage(dataUrl, "JPEG", 25, 50, element.offsetWidth, element.offsetHeight);
+
+        changeClasses("dss-white-pre-temp", "dss-white-pre-line");
+        revertCss();
+
+        if (share) {
+          // return PDF as File
+          const pdfBlob = pdf.output("blob");
+          return resolve(new File([pdfBlob], `${fileName}.pdf`, { type: "application/pdf" }));
+        } else {
+          // trigger download
+          pdf.save(`${fileName}.pdf`);
+        }
+      });
+  },
+  PDFMAIN2: (node, fileName, share, resolve = null) => {
+    const element = ReactDOM.findDOMNode(node.current);
+    return html2canvas(element, {
+      scrollY: -window.scrollY,
+      scrollX: 0,
+      useCORS: true,
+      scale: 1.5,
+      windowWidth: element.offsetWidth,
+      windowHeight: element.offsetHeight,
+    }).then(async (canvas) => {
+      const jpegImage = canvas.toDataURL("image/jpeg");
+      var docDefinition = {
+          content: [{
+              image: jpegImage,
+              width: 500,
+          }]
+      };
+      const pdf = pdfMake.createPdf(docDefinition);
+      if(share) {
+        await pdf.getBlob((blob) => {
+          resolve(new File([blob], `${fileName}.pdf`, { type: "application/pdf" }))
+        });
+        return;
+      }
+    
+      return pdf.download(`${fileName}.pdf`);
+    });  
+  },
   IndividualChartImage: (node, fileName, share, resolve = null) => {
     const saveAs = (uri, filename) => {
       if(window.mSewaApp && window.mSewaApp.isMsewaApp()){

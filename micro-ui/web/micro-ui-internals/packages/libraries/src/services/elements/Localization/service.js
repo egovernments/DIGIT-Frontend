@@ -47,6 +47,9 @@ const LocalizationStore = {
   get: (locale, modules) => {
     const storedModules = LocalizationStore.getList(locale);
     const newModules = modules.filter((module) => !storedModules.includes(module));
+    if (Digit.Utils.getMultiRootTenant()) {
+      newModules.push("digit-tenants");
+    }
     const messages = [];
     storedModules.forEach((module) => {
       messages.push(...LocalizationStore.getCaheData(LOCALE_MODULE(locale, module)));
@@ -60,6 +63,11 @@ const LocalizationStore = {
   },
 };
 
+function getUniqueData(data1, data2) {
+  const data1Codes = new Set(data1.map(item => item.code));
+  return data2.filter(item => !data1Codes.has(item.code));
+}
+
 export const LocalizationService = {
   getLocale: async ({ modules = [], locale = Digit.Utils.getDefaultLanguage(), tenantId }) => {
     if (locale.indexOf(Digit.Utils.getLocaleRegion()) === -1) {
@@ -71,6 +79,15 @@ export const LocalizationService = {
       messages.push(...data.messages);
       setTimeout(() => LocalizationStore.store(locale, newModules, data.messages), 100);
     }
+    LocalizationStore.updateResources(locale, messages);
+    return messages;
+  },
+  getUpdatedMessages: async ({ modules = [], locale = Digit.Utils.getDefaultLanguage(), tenantId }) => {
+    const [module, messages] = LocalizationStore.get(locale, modules);
+    const data = await Request({ url: Urls.localization, params: { module: modules.join(","), locale, tenantId }, useCache: false });
+    const uniques = getUniqueData(messages,data.messages);
+    messages.push(...uniques);
+    setTimeout(() => LocalizationStore.store(locale, modules, uniques), 100);
     LocalizationStore.updateResources(locale, messages);
     return messages;
   },

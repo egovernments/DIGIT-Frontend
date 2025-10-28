@@ -50,6 +50,9 @@
     }
     &.name-Profile {
       .label-text {
+        padding: 0 1rem;
+        word-break: break-word;
+        margin-bottom: 0.5rem;
         letter-spacing: 0.6px;
         font-weight: 700;
         font-size: 18px;
@@ -68,6 +71,7 @@
 
 .drawer-list {
   @apply pt-md;
+  margin-bottom: 2rem;
   position: relative;
   min-height: 1px;
   overflow: auto;
@@ -309,4 +313,9 @@
   img {
     @apply mr-sm;
   }
+}
+
+.sidebar-list-footer {
+  position: fixed;
+  bottom: 0;
 }

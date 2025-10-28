@@ -153,6 +153,7 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
                 onClick: handleSelectForRow
             }]
             Config.apiDetails.serviceName = `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
+
             setUpdatedConfig(Config)
         }
     }, [currentSchema]);
@@ -172,11 +173,11 @@ const MDMSSearchv2Popup = ({ masterNameInherited, moduleNameInherited, onClickSe
         <React.Fragment>
             {updatedConfig && (
                 <div className="inbox-search-wrapper">
-                    {/* <div className="add-new-container">
+                    <div className="add-new-container">
                         <span onClick={handleAddNewClick} className="add-new">
                             + Add New
                         </span>
-                    </div> */}
+                    </div>
                     <InboxSearchComposer
                         configs={updatedConfig}
                         additionalConfig={{

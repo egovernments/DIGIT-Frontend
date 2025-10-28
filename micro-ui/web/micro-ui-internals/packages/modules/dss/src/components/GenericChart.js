@@ -111,7 +111,7 @@ const GenericChart = ({
           {chip && chip.length > 1 && <Chip items={chip} onClick={updateChip} t={t} />}
           <span className="table-search-wrapper">
             {showSearch && (
-              <TextInput className="searchInput" placeholder="Search" signature={true} signatureImg={<SearchImg />} onChange={onChange} />
+              <TextInput className="searchInput" placeholder={t("CS_COMMON_SEARCH")} signature={true} signatureImg={<SearchImg />} onChange={onChange} />
             )}
             {showDownload && <DownloadIcon className="mrlg cursorPointer" fill="#f18f5e" onClick={handleExcelDownload} />}
           </span>

@@ -1,6 +1,6 @@
 @import url("../index.scss");
 
-.digit-action-bar-wrap {
+/*.digit-action-bar-wrap {
   @extend .light-text-color-primary;
   @extend .light-paper-primary;
   box-shadow: rgba(0, 0, 0, 0.16) 0 -2px 8px;
@@ -41,7 +41,6 @@
     z-index: 999;
 
     @apply fixed bottom-0 bg-white py-sm pr-lg text-right;
-    /* @extend .light-background; */
 
     div {
       width: calc(100% - 16px);
@@ -60,12 +59,11 @@
 
         &:hover {
           @apply bg-grey-mid w-full;
-          /* @extend .light-background; */
         }
       }
     }
   }
-}
+}*/
 
 .digit-action-bar-wrap-registry {
   div {
