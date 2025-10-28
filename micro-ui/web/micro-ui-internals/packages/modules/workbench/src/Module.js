@@ -1,6 +1,6 @@
 import { TourProvider } from "@egovernments/digit-ui-react-components";
 import React from "react";
-import { useRouteMatch } from "react-router-dom";
+import { useMatch } from "react-router-dom";
 import EmployeeApp from "./pages/employee";
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
@@ -14,9 +14,9 @@ import * as parsingUtils from "../src/utils/ParsingUtils"
 import CustomSwitch from "./components/CustomSwitch";
 
 const WorkbenchModule = ({ stateCode, userType, tenants }) => {
-  
   const moduleCode = ["workbench","mdms","schema","hcm-admin-schemas"];
-  const { path, url } = useRouteMatch();
+  const match = useMatch("/employee/workbench/*");
+  const path = match?.pathnameBase || "";
   const language = Digit.StoreData.getCurrentLanguage();
   const modulePrefix = window?.globalConfigs?.getConfig("CORE_UI_MODULE_LOCALE_PREFIX") || "rainmaker";
 
@@ -91,9 +91,7 @@ const updateCustomConfigs = () => {
  const initWorkbenchComponents = () => {
   overrideHooks();
   updateCustomConfigs();
-  
   Object.entries(componentsToRegister).forEach(([key, value]) => {
-    console.log(`Registering component: ${key}`);
     Digit.ComponentRegistryService.setComponent(key, value);
   });
 };

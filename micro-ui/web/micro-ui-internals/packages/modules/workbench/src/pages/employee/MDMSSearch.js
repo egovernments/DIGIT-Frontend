@@ -1,13 +1,13 @@
 import { AddFilled, Button, Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Config } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash"
 // works-ui/employee/dss/search/commonMuktaUiConfig/SearchEstimateConfig
 const MDMSSearch = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
   // const [pageConfig, setPageConfig] = useState(null);
   const tenant = Digit.ULBService.getStateId();
@@ -79,7 +79,7 @@ const MDMSSearch = () => {
             variation="secondary"
             icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
             onButtonClick={() => {
-              history.push(`/${window?.contextPath}/employee/${updatedConfig?.actionLink}` + "?moduleName=common-masters&masterName=StateInfo1");
+              navigate(`/${window?.contextPath}/employee/${updatedConfig?.actionLink}` + "?moduleName=common-masters&masterName=StateInfo1");
             }}
             type="button"
           />

@@ -1,14 +1,15 @@
 import React, { useState } from 'react'
 import MDMSAdd from './MDMSAddV2'
 import { Toast } from "@egovernments/digit-ui-components";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Button } from '@egovernments/digit-ui-components';
 import _ from "lodash";
 import { Loader } from "@egovernments/digit-ui-components";
 
+
 const MDMSView = ({ ...props }) => {
-  const history = useHistory()
+  const navigate = useNavigate()
   const { t } = useTranslation()
   const [showToast, setShowToast] = useState(false);
   const { moduleName, masterName, uniqueIdentifier } = Digit.Hooks.useQueryParams();
@@ -37,6 +38,7 @@ const MDMSView = ({ ...props }) => {
   };
 
   const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
+
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
@@ -83,7 +85,7 @@ const MDMSView = ({ ...props }) => {
     const onError = (resp) => {
       setShowToast({
         label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-        type: "error"
+        type:"error"
       });
       closeToast()
       refetch()
@@ -113,9 +115,9 @@ const MDMSView = ({ ...props }) => {
     tenantId,
     uniqueIdentifier,
     data,
-    history,
+    navigate,
     handleEnableDisable,
-    additionalParams
+    additionalParams,
   };
 
   const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);
@@ -130,9 +132,8 @@ const MDMSView = ({ ...props }) => {
 
   const tranformLocModuleName = (localModuleName) => {
     if (!localModuleName) return null;
-    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+      return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
   };
-
   const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`).toLowerCase();
 
   const createLocalizationCode = (fieldName, fieldValue) => {
@@ -145,12 +146,12 @@ const MDMSView = ({ ...props }) => {
   if (data?.data && localisableFields?.length > 0) {
     localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
   }
-
-  const locale = Digit.StoreData.getCurrentLanguage();
+  const locale=Digit.StoreData.getCurrentLanguage();
   const localizationReqCriteria = {
     url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
     params: {},
-    body: {},
+    body: {
+    },
     config: {
       enabled: !!data && !!MdmsRes && !!data?.schemaCode && !!tenantId && localizationCodes.length > 0,
       select: (respData) => {
@@ -167,6 +168,7 @@ const MDMSView = ({ ...props }) => {
 
   const { data: localizationMap, isLoading: isLocalizationLoading } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
 
+  // Transform data if localizationMap is available
   let finalData = data;
   if (data && data.data && localizationMap && localisableFields?.length > 0) {
     const updatedData = _.cloneDeep(data);
@@ -179,29 +181,7 @@ const MDMSView = ({ ...props }) => {
     finalData = updatedData;
   }
 
-  if (isLoading || isFetching || isLocalizationLoading) return <Loader page={true} variant={"PageLoader"} />;
-
-  // ✅ Function to render toast cleanly
-  const renderToast = () => {
-    if (!showToast) return null;
-    return (
-      <Toast
-        label={showToast?.label}
-        type={showToast?.type}
-        isDleteBtn={true}
-        onClose={() => setShowToast(null)}
-        style={{
-          position: "fixed",
-          bottom: "5rem",
-          left: "50%",
-          transform: "translateX(-50%)",
-          zIndex: 999999,
-          width: "max-content",
-          maxWidth: "90%",
-        }}
-      />
-    );
-  };
+  if (isLoading || isFetching || isLocalizationLoading)     return <Loader page={true} variant={"PageLoader"} />;
 
   return (
     <React.Fragment>
@@ -218,12 +198,12 @@ const MDMSView = ({ ...props }) => {
         variation="secondary"
         icon={"History"}
         onClick={() => {
-          history.push(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
+          navigate(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
       />
-      {renderToast()}
+      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
     </React.Fragment>
   )
-};
+}
 
-export default MDMSView;
+export default MDMSView

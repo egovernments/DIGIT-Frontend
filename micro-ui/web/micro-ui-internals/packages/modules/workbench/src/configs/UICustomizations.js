@@ -1,4 +1,4 @@
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import _ from "lodash";
 import React from 'react';
 import { Button } from "@egovernments/digit-ui-react-components";
@@ -913,7 +913,7 @@ export const UICustomizations = {
       //action===EDIT go to edit screen
       else if (actionSelected === "EDIT") {
         const additionalParamString = new URLSearchParams(props?.additionalParams).toString();
-        props?.history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}${additionalParamString ? "&" + additionalParamString : ""}`)
+        props?.navigate(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${props?.moduleName}&masterName=${props?.masterName}&uniqueIdentifier=${props?.uniqueIdentifier}${additionalParamString ? "&" + additionalParamString : ""}`)
       }
       //action===DISABLE || ENABLE call update api and show toast respectively
       else {

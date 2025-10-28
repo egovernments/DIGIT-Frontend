@@ -1,7 +1,7 @@
 import { Card,  SVG } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect, useRef  } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
 import _ from "lodash";
 import { buildLocalizationMessages } from "./localizationUtility";
@@ -36,7 +36,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   }, [defaultFormData]);
 
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
     params: {},
@@ -87,7 +87,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
 
   const gotoView = () => {
     setTimeout(() => {
-      history.push(
+      navigate(
         `/${window?.contextPath}/employee/workbench/mdms-search-v2?moduleName=${moduleName}&masterName=${masterName}${
           from ? `&from=${from}` : ""
         }`
@@ -209,7 +209,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const onFormValueChange = (updatedSchema, element) => {
     const { formData } = updatedSchema;
     if (!_.isEqual(session, formData)) {
-      setSession((prev) => ({ ...prev, ...formData }));
+      setSession({ ...session, ...formData });
     }
   };
 
@@ -243,21 +243,10 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     }
   }, [schema]);
 
-  const debouncedSave = useRef(_.debounce((newSession) => {
-  setSessionFormData((prev) => ({ ...prev, ...newSession }));
-}, 500)).current;
-
-useEffect(() => {
-  if (!_.isEqual(sessionFormData, session)) {
-    debouncedSave(session);
-  }
-}, [session]);
-
-
   useEffect(() => {
     if (!_.isEqual(sessionFormData, session)) {
       const timer = setTimeout(() => {
-        setSessionFormData((prev) => ({ ...prev, ...session }));
+        setSessionFormData({ ...sessionFormData, ...session });
       }, 1000);
       return () => {
         clearTimeout(timer);

@@ -1,5 +1,5 @@
 import React, { useState, useContext } from "react";
-import { useHistory, useLocation, Link } from "react-router-dom";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import {
   ArrowForward,
   ArrowVectorDown,
@@ -25,7 +25,7 @@ const SubMenu = ({ item }) => {
   const location = useLocation();
   const { pathname } = location;
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const showSubnav = () => setSubnav(!subnav);
   const IconsObject = {

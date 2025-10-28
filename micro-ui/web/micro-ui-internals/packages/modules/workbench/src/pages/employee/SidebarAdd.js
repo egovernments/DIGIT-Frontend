@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { useHistory } from "react-router-dom";
-// import { ActionBar } from "@egovernments/digit-ui-components";
+import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { FormComposerV2, Button, PopUp, TextInput, Toast } from "@egovernments/digit-ui-components";
 import SidebarAddEditConfig from "../../configs/SidebarAddEditConfig";
 
-const SidebarAddEditItems = () => {
+const SidebarAdd = () => {
 
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-    const history = useHistory();
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const searchParams = new URLSearchParams(location.search);
     const typeOfAction = searchParams.get("type");
@@ -30,9 +29,9 @@ const SidebarAddEditItems = () => {
             MdmsCriteria: {
                 tenantId: tenantId,
                 schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-                filters: {
-                    url: "url"
-                },
+                // filters: {
+                //     url: "url"
+                // },
                 uniqueIdentifiers: [id],
                 isActive: true
             }
@@ -256,7 +255,7 @@ const SidebarAddEditItems = () => {
             // Combine and execute all requests
             const results = await Promise.all([...newAddRequests, ...oldDelRequests]);
 
-            history.push(`/${window.contextPath}/employee/workbench/sidebar-items?id=${id}`, {
+            navigate(`/${window.contextPath}/employee/workbench/sidebar-view?id=${id}`, {
             });
 
         } catch (error) {
@@ -354,7 +353,7 @@ const SidebarAddEditItems = () => {
 
             // Wait for all API calls to finish
             const results = await Promise.all(apiRequests);
-            history.push(`/${window.contextPath}/employee/workbench/sidebar-items?id=${nId}`, {
+            navigate(`/${window.contextPath}/employee/workbench/sidebar-view?id=${nId}`, {
             });
         } catch (error) {
             console.error("Error during API calls:", error);
@@ -465,6 +464,7 @@ const SidebarAddEditItems = () => {
 
     return (
         <div>
+            
             {!isLoading && iconNames && defUsers && <FormComposerV2
                 showMultipleCardsWithoutNavs={false}
                 config={SidebarAddEditConfig({ t, typeOfAction: typeOfAction, icon: iconNames, users: USER_ROLE?.["ACCESSCONTROL-ROLES"]?.roles })}
@@ -526,4 +526,4 @@ const SidebarAddEditItems = () => {
         </div>
     )
 };
-export default SidebarAddEditItems;
+export default SidebarAdd;

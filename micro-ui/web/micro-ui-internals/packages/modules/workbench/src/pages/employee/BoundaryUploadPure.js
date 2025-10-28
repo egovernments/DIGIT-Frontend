@@ -5,7 +5,7 @@ import { CustomDropdown } from "@egovernments/digit-ui-react-components";
 import BulkUpload from "../../components/BulkUpload";
 import { Button } from "@egovernments/digit-ui-react-components";
 import GenerateXlsx from "../../components/GenerateXlsx";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Toast } from "@egovernments/digit-ui-components";
 import { COLOR_FILL } from "../../utils/contants";
 
@@ -14,7 +14,7 @@ const UploadBoundaryPure = () => {
   const inputRef = useRef(null);
   const stateId = Digit.ULBService.getStateId();
   const [selectedValue, setSelectedValue] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(null);
 
   const callInputClick = async (event) => {
@@ -22,7 +22,7 @@ const UploadBoundaryPure = () => {
   };
 
   const handleCreateNewHierarchyType = () => {
-    history.push(`/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`);
+    navigate(`/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`);
   };
 
   const handleHierarchyTypeChange = (selectedValue) => {
@@ -43,6 +43,7 @@ const UploadBoundaryPure = () => {
   };
   const { data: hierarchyTypeData } = Digit.Hooks.useCustomAPIHook(reqCriteriaBoundaryHierarchySearch);
 
+  // console.log("hhhh" , hierarchyTypeData);
 
   const filteredXlsxData = hierarchyTypeData?.BoundaryHierarchy?.filter((item) => {
     return item.hierarchyType === selectedValue?.hierarchyType;

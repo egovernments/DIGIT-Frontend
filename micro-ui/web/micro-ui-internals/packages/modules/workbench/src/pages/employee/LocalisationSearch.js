@@ -2,17 +2,17 @@ import { AddFilled, Button, Header, InboxSearchComposer, WorkflowModal,ActionBar
 import { Toast } from "@egovernments/digit-ui-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import _, { drop } from "lodash";
 import { Config } from "../../configs/LocalisationSearchConfig";
 import getEditModalConfig from "../../configs/EditModalConfig";
-import { useQueryClient } from "react-query";
+// import { useQueryClient } from "@tanstack/react-query";
 import { AlertCard } from "@egovernments/digit-ui-components";
 
 const LocalisationSearch = () => {
   const { t } = useTranslation();
-  const queryClient = useQueryClient()
-  const history = useHistory();
+  // const queryClient = useQueryClient()
+  const navigate = useNavigate();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [showToast, setShowToast] = useState(false);
   const [modalConfig, setModalConfig] = useState(null);
@@ -132,7 +132,7 @@ const LocalisationSearch = () => {
         Config && Digit.Utils.didEmployeeHasAtleastOneRole(Config?.actionRoles) &&
         <ActionBar >
           <SubmitBar disabled={false} className="mdms-add-btn"  onSubmit={() => {
-              history.push(`/${window?.contextPath}/employee/${Config?.actionLink}`);
+              navigate(`/${window?.contextPath}/employee/${Config?.actionLink}`);
             }} label={t("WBH_ADD_LOCALISATION")} />
         </ActionBar>
       }

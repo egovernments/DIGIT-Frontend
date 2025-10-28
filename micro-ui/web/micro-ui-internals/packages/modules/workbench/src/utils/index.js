@@ -182,11 +182,11 @@ const updateTitleToLocalisationCodeForObject = (definition, schemaCode) => {
   Object.keys(definition?.properties).map((key) => {
     const title = Digit.Utils.locale.getTransformedLocale(`${schemaCode}_${key}`);
     definition.properties[key] = { ...definition.properties[key], title: title };
-    if (definition?.properties?.[key]?.type == "object") {
-      Object.keys(definition?.properties?.[key]||{}).length>2&&updateTitleToLocalisationCodeForObject(definition?.properties?.[key], schemaCode);
+    if (definition.properties[key]?.type == "object") {
+      updateTitleToLocalisationCodeForObject(definition.properties[key], schemaCode);
     }
-    if (definition?.properties?.[key]?.type == "array" && definition?.properties?.[key]?.items?.type == "object") {
-      Object.keys(definition?.properties?.[key]?.items||{}).length>2&& updateTitleToLocalisationCodeForObject(definition?.properties?.[key]?.items, schemaCode);
+    if (definition.properties[key]?.type == "array" && definition.properties[key]?.items?.type == "object") {
+      updateTitleToLocalisationCodeForObject(definition.properties[key]?.items, schemaCode);
     }
   });
   return definition;

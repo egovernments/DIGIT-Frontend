@@ -1,16 +1,16 @@
 import React, { useState, useEffect, useMemo } from "react";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 // import { ActionBar } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { FormComposerV2, Button } from "@egovernments/digit-ui-components";
 import SidebarItemsConfig from "../../configs/SidebarItemsConfig";
 import { filter, isMatchWith } from "lodash";
 
-const SidebarItems = () => {
+const SidebarView = () => {
 
     const tenantId = Digit.ULBService.getCurrentTenantId();
     const mdms_context_path = window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
-    const history = useHistory();
+    const navigate = useNavigate();
     const { t } = useTranslation();
     const searchParams = new URLSearchParams(location.search);
     const id = searchParams.get("id");
@@ -24,9 +24,9 @@ const SidebarItems = () => {
             MdmsCriteria: {
                 tenantId: tenantId,
                 schemaCode: `ACCESSCONTROL-ACTIONS-TEST.actions-test`,
-                filters: {
-                    url: "url"
-                },
+                // filters: {
+                //     url: "url"
+                // },
                 uniqueIdentifiers: [id],
                 isActive: true
             }
@@ -50,7 +50,7 @@ const SidebarItems = () => {
         orderNumber: data?.data?.orderNumber
     });
     const onSubmit = async(data) => {
-        history.push(`/${window.contextPath}/employee/workbench/sidebar-manage?type=update&id=${id}`, {
+        navigate(`/${window.contextPath}/employee/workbench/sidebar-add?type=update&id=${id}`, {
         });
     }
 
@@ -65,7 +65,7 @@ const SidebarItems = () => {
                 noBreakLine={true}
                 onFormValueChange={() => { }}
                 actionClassName={"sidebaradd"}
-                noCardStyle={true}
+                // noCardStyle={true}
                 onSubmit={onSubmit}
                 showWrapperContainers={false}
                 inLine
@@ -83,4 +83,4 @@ const SidebarItems = () => {
         </div>
     )
 };
-export default SidebarItems;
+export default SidebarView;

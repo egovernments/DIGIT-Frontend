@@ -2,7 +2,7 @@ import React, { Fragment, useState } from "react";
 import { CardText, CardLabelError, Toast, CardLabel } from "@egovernments/digit-ui-components";
 import { OTPInput } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
-import { useRouteMatch, useHistory, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import useInterval from "../../../hooks/useInterval";
 import Background from "../../../components/Background";
 import { useEffect } from "react";
@@ -77,12 +77,11 @@ const OtpComponent = ({ onSelect, formData, control, formState, ...props }) => {
       }
     );
   };
-
   return (
     <>
-    <CardLabel className={"sandbox-custom-otp-subheader"}>{t("SANDBOX_ENTER_OTP")}</CardLabel>
     <CardLabel className={"sandbox-custom-otp-header"} >{t("CS_OTP_EMAIL")}</CardLabel>
-    <CardLabel className={"sandbox-custom-otp-email"} style={{fontWeight: 'bold'}}>{props?.props?.email}</CardLabel>
+    <CardLabel className={"sandbox-custom-otp-email"}>{props?.props?.email}</CardLabel>
+    <CardLabel className={"sandbox-custom-otp-subheader"}>{t("SANDBOX_ENTER_OTP")}</CardLabel>
       <OTPInput className={"sandbox-otp-input"} length={6} onChange={handleOtpChange} value={params?.otp} />
       {timeLeft > 0 ? (
         <CardText className={"sandbox-resend-otp"}>{`${t("CS_RESEND_ANOTHER_OTP")} ${timeLeft} ${t("CS_RESEND_SECONDS")}`}</CardText>

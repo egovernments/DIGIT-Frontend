@@ -1,4 +1,4 @@
-import { useQuery, useQueryClient } from "react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 
 const useMDMSPopupSearch = (criteria) => {
@@ -46,6 +46,7 @@ const useMDMSPopupSearch = (criteria) => {
       };
     }
   }
+
   // Update limit and offset
   if (updatedCriteria.state?.tableForm) {
     const { limit, offset } = updatedCriteria.state.tableForm;
@@ -68,45 +69,43 @@ const useMDMSPopupSearch = (criteria) => {
     }
   };
 
-  const { isLoading, data, isFetching, refetch, error } = useQuery(
-    [url, params, body, "popup"].filter((e) => e),
-    fetchData,
-    {
-      cacheTime: 0,
-      ...config,
-      select: (data) => {
-        const respData = data?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
+  const { isLoading, data, isFetching, refetch, error } = useQuery({
+    queryKey: [url, params, body, "popup"].filter((e) => e),
+    queryFn: fetchData,
+    cacheTime: 0,
+    ...config,
+    select: (data) => {
+      const respData = data?.mdms?.map((e) => ({ label: e?.uniqueIdentifier, value: e?.uniqueIdentifier }));
 
-        if (schema?.definition?.["x-ref-schema"]?.length > 0) {
-          schema?.definition?.["x-ref-schema"]?.map((dependent) => {
-            if (dependent?.fieldPath) {
-              let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
-              const property = _.get(schema?.definition?.properties, updatedPath);
-              if (property) {
-                const existingEnum = property.enum || [];
-                const newValues = respData?.map((e) => e.value).filter((value) => !existingEnum.includes(value));
-                if (newValues && newValues.length > 0) {
-                  const updatedEnum = [...existingEnum, ...newValues];
-                  _.set(schema?.definition?.properties, updatedPath, {
-                    ...property,
-                    enum: updatedEnum,
-                  });
-                }
+      if (schema?.definition?.["x-ref-schema"]?.length > 0) {
+        schema?.definition?.["x-ref-schema"]?.map((dependent) => {
+          if (dependent?.fieldPath) {
+            let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
+            const property = _.get(schema?.definition?.properties, updatedPath);
+            if (property) {
+              const existingEnum = property.enum || [];
+              const newValues = respData?.map((e) => e.value).filter((val) => !existingEnum.includes(val));
+              if (newValues?.length > 0) {
+                const updatedEnum = [...existingEnum, ...newValues];
+                _.set(schema?.definition?.properties, updatedPath, {
+                  ...property,
+                  enum: updatedEnum,
+                });
               }
             }
-          });
-        }
-        return data;
-      },
-    }
-  );
+          }
+        });
+      }
+      return data;
+    },
+  });
 
   return {
     isLoading,
     data,
     isFetching,
     revalidate: () => {
-      data && client.invalidateQueries([url].filter((e) => e));
+      data && client.invalidateQueries({ queryKey: [url].filter((e) => e) });
     },
     refetch,
     error,

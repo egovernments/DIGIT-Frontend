@@ -4,7 +4,7 @@ import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import BulkUpload from "../../components/BulkUpload";
 import GenerateXlsx from "../../components/GenerateXlsx";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import XLSX from "xlsx";
 import { COLOR_FILL } from "../../utils/contants";
 
@@ -14,7 +14,7 @@ const UploadBoundary = () => {
   const stateId = Digit.ULBService.getStateId();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const [selectedValue, setSelectedValue] = useState(null);
-  const history = useHistory();
+  const navigate = useNavigate();
   const [showToast, setShowToast] = useState(null);
   const [success , setSuccess] = useState(false);
 
@@ -23,7 +23,7 @@ const UploadBoundary = () => {
   };
 
   const handleCreateNewHierarchyType = () => {
-    history.push(`/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`);
+    navigate(`/${window?.contextPath}/employee/workbench/create-boundary-hierarchy-type`);
   };
 
   const handleHierarchyTypeChange = (selectedValue) => {

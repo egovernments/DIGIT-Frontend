@@ -2,7 +2,7 @@
 import { Loader } from "@egovernments/digit-ui-components";
 import React, { useState, Fragment, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
 import StaticCitizenSideBar from "./StaticCitizenSideBar";
@@ -86,7 +86,7 @@ export const CitizenSideBar = ({
   const { isLoading, data } = Digit.Hooks.useAccessControl();
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const stringReplaceAll = (str = "", searcher = "", replaceWith = "") => {
     if (searcher == "") return str;
@@ -145,11 +145,18 @@ export const CitizenSideBar = ({
     Digit.SessionStorage.set("Employee.tenantId", city?.value);
     Digit.UserService.setUser(loggedInData);
     setDropDownData(city);
-    if (window.location.href.includes(`/${window?.contextPath}/employee/`)) {
+    if (typeof window !== 'undefined' && window.location?.href?.includes(`/${window?.contextPath}/employee/`)) {
       const redirectPath = location.state?.from || `/${window?.contextPath}/employee`;
-      history.replace(redirectPath);
+      navigate(redirectPath,{replace:true});
     }
-    window.location.reload();
+    // Safe reload with error handling
+    try {
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
+    } catch (error) {
+      console.warn('Failed to reload page:', error);
+    }
   };
 
   const handleChangeLanguage = (language) => {
@@ -163,21 +170,23 @@ export const CitizenSideBar = ({
       updatedUrl = isEmployee
         ? url.replace("/sandbox-ui/employee", `/sandbox-ui/${tenantId}/employee`)
         : url.replace("/sandbox-ui/citizen", `/sandbox-ui/${tenantId}/citizen`);
-      history.push(updatedUrl);
+      navigate(updatedUrl);
       toggleSidebar();
     } else {
       url[0] === "/"
-        ? history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
-        : history.push(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`);
+        ? navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}${url}`)
+        : navigate(`/${window?.contextPath}/${isEmployee ? "employee" : "citizen"}/${url}`)
       toggleSidebar();
     }
   };
 
   const redirectToLoginPage = () => {
-    if (isEmployee) {
-      history.push(`/${window?.contextPath}/employee/user/language-selection`);
-    } else {
-      history.push(`/${window?.contextPath}/citizen/login`);
+    if(isEmployee){
+     navigate(`/${window?.contextPath}/employee/user/language-selection`);
+    }
+    else{
+      navigate(`/${window?.contextPath}/citizen/login`);
+
     }
     closeSidebar();
   };
@@ -254,7 +263,7 @@ export const CitizenSideBar = ({
           icon: configEmployeeSideBar[keys[i]][0]?.leftIcon,
           populators: {
             onClick: () => {
-              history.push(configEmployeeSideBar[keys[i]][0]?.navigationURL);
+              navigate(configEmployeeSideBar[keys[i]][0]?.navigationURL);
               closeSidebar();
             },
           },
@@ -287,7 +296,7 @@ export const CitizenSideBar = ({
   }
 
   /*  URL with openlink wont have sidebar and actions    */
-  if (history.location.pathname.includes("/openlink")) {
+  if (location.pathname.includes("/openlink")) {
     profileItem = <span></span>;
     menuItems = menuItems.filter((ele) => ele.element === "LANGUAGE");
   }
@@ -302,14 +311,13 @@ export const CitizenSideBar = ({
   if (Digit.Utils.getMultiRootTenant()) {
     city = t(`TENANT_TENANTS_${tenantId}`);
   } else {
-    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.ULBService.getCurrentTenantId(), ".", "_")?.toUpperCase()}`);
-    // city = "TEST";
+    city = t(`TENANT_TENANTS_${stringReplaceAll(Digit.SessionStorage.get("Employee.tenantId"), ".", "_")?.toUpperCase()}`);
   }
-  const goToHome = () => {
-    if (isEmployee) {
-      history.push(`/${window?.contextPath}/employee`);
-    } else {
-      history.push(`/${window?.contextPath}/citizen`);
+  const goToHome= () => {
+    if(isEmployee){
+      navigate(`/${window?.contextPath}/employee`);
+    }else{
+      navigate(`/${window?.contextPath}/citizen`);
     }
   };
   const onItemSelect = ({ item, index, parentIndex }) => {

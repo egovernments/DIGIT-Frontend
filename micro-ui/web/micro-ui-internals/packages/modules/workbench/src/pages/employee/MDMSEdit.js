@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import MDMSAdd from "./MDMSAddV2";
 import { Toast } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { buildLocalizationMessages } from "./localizationUtility";
 import _ from "lodash";
 import { Loader } from "@egovernments/digit-ui-components";
 
 
 const MDMSEdit = ({ ...props }) => {
-  const history = useHistory();
+  const navigate = useNavigate();
   const { t } = useTranslation();
   const { moduleName, masterName, tenantId, uniqueIdentifier, from } = Digit.Hooks.useQueryParams();
   const stateId = Digit.ULBService.getCurrentTenantId();
@@ -20,16 +20,14 @@ const MDMSEdit = ({ ...props }) => {
   const closeToast = () => {
     setTimeout(() => setShowToast(null), 5000);
   };
-  
 
   const gotoView = () => {
     setRenderLoader(true);
-    history.push(
+    navigate(
       `/${window?.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}${
         from ? `&from=${from}` : ""
       }`
     );
-
   };
 
   // Fetch MDMS Data
@@ -180,9 +178,7 @@ const MDMSEdit = ({ ...props }) => {
         },
         onSuccess: () => {
           setShowToast({ label: t("WBH_SUCCESS_UPD_MDMS_MSG") });
-          setTimeout(() => {
-             gotoView();
-          }, 1000);
+          gotoView();
         },
       }
     );

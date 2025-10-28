@@ -2,11 +2,11 @@ import { BackLink } from "@egovernments/digit-ui-components";
 import { CardHeader, CardLabelError, PageBasedInput, SearchOnRadioButtons } from "@egovernments/digit-ui-react-components";
 import React, { useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useHistory, useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 const LocationSelection = () => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const location = useLocation();
 const {
   data: { stateInfo, uiHomePage } = {},
@@ -49,12 +49,12 @@ const { data: cities, isLoading } = Digit.Hooks.useTenants();
       Digit.SessionStorage.set("CITIZEN.COMMON.HOME.CITY", selectedCity);
       const redirectBackTo = location.state?.redirectBackTo;
       if(redirectURL){
-        history.push(`/${window?.contextPath}/citizen/${redirectURL}`);
+        navigate(`/${window?.contextPath}/citizen/${redirectURL}`);
       }
       else{
       if (redirectBackTo) {
-        history.replace(redirectBackTo);
-      } else history.push(`/${window?.contextPath}/citizen`);
+        navigate(redirectBackTo, {replace:true});
+      } else navigate(`/${window?.contextPath}/citizen`);
     }
     } else {
       setShowError(true);

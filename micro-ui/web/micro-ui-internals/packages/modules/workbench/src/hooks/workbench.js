@@ -1,4 +1,4 @@
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 
 /**
@@ -75,7 +75,7 @@ const getMDMSContextPath = () => {
 };
 
 const isSchemaCodeInMDMSAction = () => {
-  return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION")===false?false : true;
+  return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION") === false ? false : true;
 };
 
 
@@ -104,17 +104,16 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       },
     },
   };
-  const { isLoading: schemaLoading, data: schemaData, error: schemaError } = useQuery(
-    ["API_SCHEMA", schemaCode, tenantId].filter((e) => e),
-    () => Digit.CustomService.getResponse({ ...reqCriteria }),
-    {
-      cacheTime: 0,
-      enabled: schemaCode && true,
-      select: (data) => {
-        return data?.SchemaDefinitions?.[0] || { noSchemaFound: true };
-      },
-    }
-  );
+  const { isLoading: schemaLoading, data: schemaData, error: schemaError } = useQuery({
+    queryKey: ["API_SCHEMA", schemaCode, tenantId].filter(Boolean),
+    queryFn: () => Digit.CustomService.getResponse({ ...reqCriteria }),
+    cacheTime: 0,
+    enabled: !!schemaCode,
+    select: (data) => {
+      return data?.SchemaDefinitions?.[0] || { noSchemaFound: true };
+    },
+  })
+
   const reqCriteriaData = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
@@ -128,23 +127,23 @@ const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantI
       },
     },
   };
-  const { isLoading: uiSchemaLoading, error, data } = useQuery(
-    ["UI_SCHEMA", schemaCode, tenantId],
-    () => Digit.CustomService.getResponse({ ...reqCriteriaData }),
-    {
-      cacheTime: 0,
-      enabled: schemaCode && true,
-      select: (data) => {
-        const customUiConfigs = data?.mdms?.[0]?.data;
-        const responseData = {};
-        if (customUiConfigs) {
-          responseData["customUiConfigs"] = customUiConfigs;
-          responseData["uiSchema"] = customUiConfigs?.order ? { "ui:order": [...customUiConfigs?.order, "*"] } : {};
-        }
-        return responseData;
-      },
-    }
+  const { isLoading: uiSchemaLoading, error, data } = useQuery({
+    queryKey: ["UI_SCHEMA", schemaCode, tenantId],
+    queryFn: () => Digit.CustomService.getResponse({ ...reqCriteriaData }),
+    cacheTime: 0,
+    enabled: schemaCode && true,
+    select: (data) => {
+      const customUiConfigs = data?.mdms?.[0]?.data;
+      const responseData = {};
+      if (customUiConfigs) {
+        responseData["customUiConfigs"] = customUiConfigs;
+        responseData["uiSchema"] = customUiConfigs?.order ? { "ui:order": [...customUiConfigs?.order, "*"] } : {};
+      }
+      return responseData;
+    },
+  }
   );
+
   let finalResponse = {};
   if (!uiSchemaLoading && !schemaLoading) {
     finalResponse = { ...data };

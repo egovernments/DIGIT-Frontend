@@ -22,8 +22,6 @@ import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
 
-const DEFAULT_TENANT=Digit?.ULBService?.getStateId?.();
-
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
   "/" +
@@ -48,7 +46,7 @@ const defaultImage =
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
 const defaultValidationConfig = {
-  tenantId: `${DEFAULT_TENANT}`,
+  tenantId: `${Digit.ULBService.getStateId()}`,
   UserProfileValidationConfig: [
     {
       name: "/^[a-zA-Z ]+$/i",
@@ -142,11 +140,12 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
   };
 
   React.useEffect(() => {
-    window.addEventListener("resize", () => setWindowWidth(window.innerWidth));
+    const handleResize = () => setWindowWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
     return () => {
-      window.removeEventListener("resize", () => setWindowWidth(window.innerWidth));
+      window.removeEventListener("resize", handleResize);
     };
-  });
+  }, []);
 
   useEffect(() => {
     setLoading(true);
@@ -552,7 +551,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>
                   {`${t("CORE_COMMON_PROFILE_NAME")}`}*
                 </CardLabel>
-                <div style={{ width: "100%", maxWidth: "960px" }}>
+                <div style={{ width: "40rem", maxWidth: "960px" }}>
                   <TextInput
                     t={t}
                     style={{ width: "100%" }}
@@ -592,7 +591,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_GENDER")}`}</CardLabel>
                 <Dropdown
-                  style={{ width: "100%", fontSize: "1rem" }}
+                  style={{ width: "40rem", fontSize: "1rem" }}
                   className="form-field profileDropdown"
                   selected={gender?.length === 1 ? gender[0] : gender}
                   disable={gender?.length === 1 || editScreen}
@@ -607,7 +606,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
 
               <LabelFieldPair>
                 <CardLabel className="user-profile" style={editScreen ? { color: "#B1B4B6" } : {}}>{`${t("CORE_COMMON_PROFILE_EMAIL")}`}</CardLabel>
-                <div style={{ width: "100%" }}>
+                <div style={{ width: "40rem" }}>
                   <TextInput
                     t={t}
                     style={{ width: "100%" }}
@@ -797,7 +796,7 @@ const UserProfile = ({ stateCode, userType, cityDetails }) => {
                       label={t("CORE_COMMON_CHANGE_PASSWORD")}
                       variation={"teritiary"}
                       onClick={TogleforPassword}
-                      style={{ paddingLeft: "20rem" }}
+                      style={{ paddingLeft: "0rem" }}
                     ></Button>
                   ) : null}
                   {changepassword ? (

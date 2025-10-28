@@ -1,4 +1,4 @@
-export const SidebarDataSearchConfig  = (tenantId, mdms_context_path, moduleName, masterName) => {
+export const SidebarDataSearchConfig  = (tenantId, mdms_context_path, moduleName, masterName,filterKey="url") => {
     return [
     {
         label: "Sidebar Data Search",
@@ -13,7 +13,7 @@ export const SidebarDataSearchConfig  = (tenantId, mdms_context_path, moduleName
                     tenantId: tenantId,
                     schemaCode: `${moduleName}.${masterName}`,
                     isActive: true,
-                    filters: { url: "url" }
+                    filters: { url: filterKey }
                 }
             },
             Pagination: {

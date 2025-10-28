@@ -34,6 +34,13 @@ https://rjsf-team.github.io/react-jsonschema-form/docs/
 const AdditionalPropertiesContext = createContext();
 export const useAdditionalProperties = () => useContext(AdditionalPropertiesContext);
 
+const checkForHybrid = (title, titleCode, label) => {
+  if (title == titleCode) {
+    return label;
+  }
+  return title;
+};
+
 const uiSchema = {
   "ui:title": " ",
   "ui:classNames": "my-class",
@@ -240,7 +247,7 @@ function CustomFieldTemplate(props) {
       <div className={classNames} style={style}>
         <label htmlFor={id} className="control-label" id={"label_" + id}>
           <span className="tooltip">
-            {t(titleCode)} {additionalCode}
+            {checkForHybrid(t(titleCode),titleCode,label)} {additionalCode}
             <span className="tooltiptext" style={{ maxWidth: "540px" }}>
               <span className="tooltiptextvalue">{t(`TIP_${titleCode}`)}</span>
             </span>
@@ -284,7 +291,7 @@ const DigitJSONForm = ({
   const [showPopUp, setShowPopUp] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-  const [internalFormData, setInternalFormData] = useState(formData);
+  const [updatedData, setUpdatedData] = useState(formData);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const enableBulkUpload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_UPLOAD")
     ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_UPLOAD")
@@ -394,12 +401,6 @@ const DigitJSONForm = ({
     setShowPopUp(false); 
   };
 
-  const onFormChangeInternal = ({ formData }) => {
-    setInternalFormData(formData);
-    onFormChange && onFormChange({ formData });
-  };
-  
-
   return (
     <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
       <React.Fragment>
@@ -432,9 +433,9 @@ const DigitJSONForm = ({
             schema={schema?.definition}
             validator={validator}
             showErrorList={false}
+            formData={formData}
             noHtml5Validate={true}
-            formData={internalFormData}
-            onChange={onFormChangeInternal}
+            onChange={onFormChange}
             formContext={{
               schemaCode: schema?.code,
               MdmsRes,
