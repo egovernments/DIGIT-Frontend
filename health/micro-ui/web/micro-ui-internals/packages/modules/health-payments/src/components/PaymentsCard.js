@@ -36,6 +36,7 @@ const PaymentsCard = () => {
   }
 
   let links = [
+    generateLink("ATTENDANCE_SETUP_PAYMENT_ATTRIBUTES", "payment-setup",ROLES.ATTENDANCE),
     generateLink("ATTENDANCE_REGISTERS", "project-selection"),
     generateLink("CS_COMMON_INBOX", "project-and-aggregation-selection", ROLES.BILLS),
     generateLink("CS_TITLE_MY_BILLS", "my-bills", ROLES.BILLS),

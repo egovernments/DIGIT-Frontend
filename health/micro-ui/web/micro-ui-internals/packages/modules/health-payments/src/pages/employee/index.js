@@ -12,6 +12,7 @@ import MyBills from "./my_bills";
 import ProjectSelect from "./project_selection";
 import EditRegister from "./EditRegister";
 import InboxAttendeesSearch from "./AttendeeSearchAssign";
+import PaymentSetUpPage from "./payment_setup";
 
 
 const ProjectBreadCrumb = ({ location }) => {
@@ -77,6 +78,9 @@ const App = ({ path, stateCode, userType, tenants }) => {
         <PrivateRoute path={`${path}/my-bills`} component={() => <MyBills />} />
         <PrivateRoute path={`${path}/project-selection`} component={() => <ProjectSelect />} />
         <PrivateRoute path={`${path}/project-and-aggregation-selection`} component={() => <ProjectSelect />} />
+        <PrivateRoute path={`${path}/payment-setup`} component={() => <PaymentSetUpPage />} />
+        <PrivateRoute path={`${path}/payment-setup-success`} component={() => <Response />} />
+        <PrivateRoute path={`${path}/payment-setup-failed`} component={() => <Response />} />
       </AppContainer>
     </Switch>
   );

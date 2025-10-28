@@ -24,13 +24,22 @@ const Response = () => {
         className=""
         customIcon=""
         description={t(state?.description)}
-        footerChildren={[
-          <Button label={t(`HCM_AM_VIEW_ANOTHER_REGISTER`)} onClick={
-            () => {
-              history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-            }
-          } variation="teritiary" icon="ArrowForward" isSuffix />
-        ]}
+        footerChildren={
+          state?.showFooter === false
+            ? []
+            : [
+                <Button
+                  key="view-another-register"
+                  label={t("HCM_AM_VIEW_ANOTHER_REGISTER")}
+                  onClick={() => {
+                    history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
+                  }}
+                  variation="teritiary"
+                  icon="ArrowForward"
+                  isSuffix
+                />,
+              ]
+        }
         footerStyles={{}}
         iconFill=""
         info={t(state?.info)}
