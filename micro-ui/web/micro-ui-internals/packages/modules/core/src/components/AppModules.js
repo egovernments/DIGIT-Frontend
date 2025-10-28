@@ -35,7 +35,13 @@ export const AppModules = ({ stateCode, userType, modules, appTenants, additiona
       </Route>
     );
   });
-  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+  // Check if user is in sandbox-ui context via URL
+  const isInSandboxUI = location.pathname.includes("/sandbox-ui/") || location.pathname.includes("/employee/sandbox") || window?.contextPath === "sandbox-ui";
+  let isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+  // If above check fails, check if user is in sandbox-ui context
+  if (!isSuperUserWithMultipleRootTenant && isInSandboxUI) {
+    isSuperUserWithMultipleRootTenant = true;
+  }
    const hideClass =
     location.pathname.includes(`${path}/productDetailsPage/`);
 
