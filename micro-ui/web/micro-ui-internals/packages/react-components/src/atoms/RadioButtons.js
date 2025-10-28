@@ -24,7 +24,7 @@ const RadioButtons = (props) => {
                   value={option}
                   checked={(props.isPTFlow && selected?.code === option.code) || isEqual(selected, option) ? 1 : 0}
                   onChange={() => selectOption(option)}
-                  disabled={props?.disabled}
+                  disabled={props?.disabled || props?.disable}
                   name={props.name}
                   ref={props.inputRef}
                 />
@@ -43,7 +43,7 @@ const RadioButtons = (props) => {
                   value={option}
                   checked={selected?.code === option.code ? 1 : 0}
                   onChange={() => selectOption(option)}
-                  disabled={props?.disabled}
+                  disabled={props?.disabled || props?.disable}
                   name={props.name}
                   ref={props.inputRef}
                 />
@@ -62,7 +62,7 @@ const RadioButtons = (props) => {
                   value={option}
                   checked={selected === option ? 1 : 0}
                   onChange={() => selectOption(option)}
-                  disabled={props?.disabled}
+                  disabled={props?.disabled || props?.disable}
                   name={props.name}
                   ref={props.inputRef}
                 />

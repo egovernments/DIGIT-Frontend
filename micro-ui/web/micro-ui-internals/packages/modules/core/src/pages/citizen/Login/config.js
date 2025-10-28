@@ -14,8 +14,8 @@ export const loginSteps = [
         error: "ERR_HRMS_INVALID_MOB_NO",
         validation: {
           required: true,
-          minLength: 10,
-          maxLength: 10,
+          minlength: 10,
+          maxlength: 10,
         },
       },
     ],
@@ -43,8 +43,11 @@ export const loginSteps = [
         error: "CORE_COMMON_NAME_VALIDMSG",
         validation: {
           required: true,
-          minLength: 1,
-          pattern: /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i,
+          minlength: 1,
+          maxlength: 50,
+          // pattern: /^[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}$/i,
+          // pattern: /^(?!\s)[^{0-9}^\$\"<>?\\\\~!@#$%^()+={}\[\]*,/_:;“”‘’]{1,50}(?!\s)$/i
+          pattern: "^[A-Za-z]+( [A-Za-z]+)*$",
         },
       },
     ],

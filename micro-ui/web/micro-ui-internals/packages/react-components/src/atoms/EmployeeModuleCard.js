@@ -1,54 +1,92 @@
+
+
+import { Button, LandingPageCard,  } from "@egovernments/digit-ui-components";
 import React, { Fragment } from "react";
 import { ArrowRightInbox } from "./svgindex";
 import { useHistory, useLocation, Link } from "react-router-dom";
 
 
-const EmployeeModuleCard = ({ Icon, moduleName, kpis = [], links = [], isCitizen = false, className, styles, longModuleName=false }) => {
+/**
+ * EmployeeModuleCard - A New reusable card component to display module information with KPIs, links, and actions.
+ *
+ * @param {Object} props - Component props
+ * @param {React.Element|string} Icon - Icon to display, can be a React component or a string identifier
+ * @param {string} moduleName - Name of the module
+ * @param {Array} kpis - Array of KPI objects to display metrics
+ * @param {Array} links - Array of link objects for navigation
+ * @param {string} className - Additional CSS class for the card
+ * @param {Array} otherLinks - Array of additional links rendered as buttons
+ * @param {string} buttonSize - Size of the buttons in otherLinks, defaults to "medium"
+ */
+const EmployeeModuleCard = ({
+  Icon,
+  moduleName,
+  kpis = [],
+  links = [],
+  className,
+  otherLinks = [],
+  buttonSize = "medium",
+}) => {
+  // Hook for navigation
   const history = useHistory();
 
-  return (
-    <div className={className ? className : "employeeCard customEmployeeCard card-home home-action-cards"} style={styles ? styles : {}}>
-      <div className="complaint-links-container">
-        <div className="header" style={isCitizen ? { padding: "0px" } : longModuleName ? {alignItems:"flex-start"}:{}}>
-          <span className="text removeHeight">{moduleName}</span>
-          <span className="logo removeBorderRadiusLogo">{Icon}</span>
-        </div>
-        <div className="body" style={{ margin: "0px", padding: "0px" }}>
-          {kpis.length !== 0 && (
-            <div className="flex-fit" style={isCitizen ? { paddingLeft: "17px" } : {}}>
-              {kpis.map(({ count, label, link }, index) => (
-                <div className="card-count" key={index}>
-                  <div>
-                    <span>{count || "-"}</span>
-                  </div>
-                  <div>
-                 
-                {link ? <span className="link" onClick={()=> history.push(`${link}`,{count})}>{label}</span> : null}
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-          <div className="links-wrapper" style={{ width: "80%" }}>
-            {links.map(({ count, label, link }, index) => (
-              <span className="link" key={index}>
-                {link ? <Link to={{ pathname:link, state: {count} }}>{label}</Link> : null}
-                {count ? (
-                  <>
-                    <span className={"inbox-total"} onClick={()=>history.push(`${link}`)}>{count || "-"}</span>
-                    <Link to={{ pathname:link, state: {count} }}>
-                      <ArrowRightInbox />
-                    </Link>
-                  </>
-                ) : null}
-              </span>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+  /**
+   * Handles navigation when a link is clicked.
+   * Uses React Router's history for internal navigation and window.location for external links.
+   * @param {string} link - The link to navigate to
+   */
+  const handleLinkClick = (link) => {
+    link?.includes(`${window?.contextPath}/`)
+      ? history?.push(link) // Internal navigation
+      : (window.location.href = link); // External navigation
+  };
+
+  // Configuration object for the LandingPageCard component
+  const propsForModuleCard = {
+    // Determines the icon to display. Defaults to "FactIcon" if not a string.
+    icon: typeof Icon === "string" ? Icon : "FactIcon",
+
+    // Module name to display
+    moduleName: moduleName,
+
+    // KPIs to display on the card
+    metrics: kpis,
+
+    // Maps links to include a default icon ("ArrowForward")
+    links: links?.map((linkObject) => ({ icon: "ArrowForward", ...linkObject })),
+
+    // Renders additional links as buttons in the center of the card
+    centreChildren: otherLinks?.filter(linkObj=>linkObj&&linkObj?.placement=="top")?.map((linkObj) => (
+      <Button
+        variation="tertiary"
+        label={linkObj?.label}
+        icon={linkObj?.icon}
+        type="button"
+        size={buttonSize}
+        onClick={() => handleLinkClick(linkObj?.link)}
+        style={{ padding: "0px" }}
+      />
+    )),
+
+    // Renders additional links as buttons at the end of the card
+    endChildren: otherLinks?.filter(linkObj=>linkObj&&linkObj?.placement=="bottom")?.map((linkObj) => (
+      <Button
+        variation="tertiary"
+        label={linkObj?.label}
+        icon={linkObj?.icon}
+        type="button"
+        size={buttonSize}
+        onClick={() => handleLinkClick(linkObj?.link)}
+        style={{ padding: "0px" }}
+      />
+    )),
+  };
+
+  // Render the card with the generated configuration
+  return <LandingPageCard className={className} buttonSize={buttonSize} {...propsForModuleCard} />;
 };
+
+
 
 const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, className, styles, headerStyle, subHeader, subHeaderLink }) => {
   return (
@@ -81,5 +119,6 @@ const ModuleCardFullWidth = ({ moduleName,  links = [], isCitizen = false, class
     </div>
   );
 };
+
 
 export { EmployeeModuleCard, ModuleCardFullWidth };

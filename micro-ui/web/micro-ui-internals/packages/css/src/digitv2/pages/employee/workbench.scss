@@ -1,561 +1,632 @@
 @import url("../../index.scss");
 
-.bread-crumb.workbench-bredcrumb{
-a{
-  color: theme(digitv2.lightTheme.primary);
+.bread-crumb.workbench-bredcrumb {
+  a {
+    color: theme(digitv2.lightTheme.primary);
+  }
 }
-}
-.workbench{
-.workbench-create-form {
-  display: inherit;
-  padding-top: 1.5rem;
-  .digit-form-composer-sub-header {
-    @extend .typography.text-heading-m;
-    padding-left: 1rem;
-    @media (max-width: theme(digitv2.screens.mobile)) {
-      padding-left: 0;
+
+.workbench {
+  &.app-container {
+    margin-top: 0.75rem;
+  }
+
+  .workbench-create-form {
+    display: inherit;
+    padding-top: 1.5rem;
+
+  .workbench-mdms-json-container{
+    position: relative;
+    .jk-digit-secondary-btn.action-bar-button {
+      position: absolute;
+      right: 0%;
     }
   }
 
-  form {
-    #label_digit_root {
-      display: none;
+    .digit-form-composer-sub-header {
+      @extend .typography.text-heading-m;
+      padding-left: 1rem;
+
+      @media (max-width: theme(digitv2.screens.mobile)) {
+        padding-left: 0;
+      }
     }
 
-    #digit_root {
-      width: 100%;
+    form {
+      #label_digit_root {
+        display: none;
+      }
 
-      .field-wrapper {
-        .form-group.field {
-          display: flex;
-          padding: 1em 0 0 1em;
+      #digit_root {
+        width: 100%;
 
-          @media (max-width: theme(digitv2.screens.mobile)) {
-            flex-direction: column;
-          }
+        .field-wrapper {
+          .form-group.field {
+            display: flex;
+            padding: 1em 0 0 1em;
 
-          &.field-error.has-error.has-danger {
+            @media (max-width: theme(digitv2.screens.mobile)) {
+              flex-direction: column;
+            }
+
+            &.field-error.has-error.has-danger {
+              .control-label {
+                @extend .alert-error;
+              }
+
+              .form-control {
+                @extend .alert-error-border;
+              }
+
+              .card-label-error {
+                display: inline;
+                position: relative;
+                margin: 0px;
+                padding: 0px;
+                top: -0.7rem;
+                font-weight: normal;
+
+              }
+            }
+
+            &.field-boolean.field-error.has-error.has-danger {
+
+              .card-label-error {
+                position: initial;
+                display: block;
+                margin-top: 0.5rem;
+
+              }
+            }
+
             .control-label {
-              @extend .alert-error;
-            }
-
-            .form-control {
-              @extend .alert-error-border;
-            }
-
-            .card-label-error {
-              display: inline;
-              position: relative;
-              margin: 0px;
-              padding: 0px;
-              top: -0.7rem;
-              font-weight: normal;
-
-            }
-          }
-
-          &.field-boolean.field-error.has-error.has-danger {
-
-            .card-label-error {
-              position: initial;
-              display: block;
-              margin-top: 0.5rem;
-
-            }
-          }
-
-          .control-label {
-            max-width: 12.5rem;
-            margin-right: 2.5rem;
-            @extend .card-label;
-            display: inline-flex;
-            /* align-self: center; */
-            line-height: 3rem;
-            @extend .typography.text-heading-s;
-            /* web view*/
-            @apply w-1/3;
-
-            /* tablet view*/
-
-            @media (max-width: theme(digitv2.screens.tablet)) {
-              max-width: 11rem;
-              margin-right: 1.5rem;
-
-            }
-
-            /* mobile view*/
-
-            @media (max-width: theme(digitv2.screens.mobile)) {
-              /*max-width: 10.2rem;*/
-              @apply w-full;
-
-            }
-
-          }
-
-          .all-input-field-wrapper {
-
-            @apply w-3/5;
-            @media (max-width: theme(digitv2.screens.mobile)) {
-              @apply w-full;
-            }
-
-            .form-control {
-              @extend .light-input-border;
-              @extend .employee-card-input;
-              font-style: inherit;
-              font-family: inherit;
+              max-width: 12.5rem;
+              margin-right: 2.5rem;
+              @extend .card-label;
+              display: inline-flex;
+              /* align-self: center; */
+              line-height: 3rem;
+              @extend .typography.text-heading-s;
               /* web view*/
-              max-width: 37.5rem;
-              min-width: 20.5rem;
-              margin-bottom: 1rem;
+              @apply w-1/3;
+
               /* tablet view*/
 
               @media (max-width: theme(digitv2.screens.tablet)) {
-                max-width: 27.5rem;
-                min-width: 12.5rem;
+                max-width: 11rem;
+                margin-right: 1.5rem;
 
               }
 
               /* mobile view*/
 
               @media (max-width: theme(digitv2.screens.mobile)) {
-                max-width: 20.5rem;
-                min-width: 9.5rem;
+                /*max-width: 10.2rem;*/
                 @apply w-full;
 
               }
 
-              &.form-select {
-                padding: 0%;
-                border: 0px;
+            }
 
-                .digit__control {
-                  @apply outline-none;
+            .all-input-field-wrapper {
 
-                  .digit__value-container:in-range {
+              @apply w-3/5;
+
+              @media (max-width: theme(digitv2.screens.mobile)) {
+                @apply w-full;
+              }
+
+              .form-control {
+                @extend .light-input-border;
+                @extend .employee-card-input;
+                font-style: inherit;
+                font-family: inherit;
+                /* web view*/
+                max-width: 37.5rem;
+                min-width: 20.5rem;
+                margin-bottom: 1rem;
+                /* tablet view*/
+
+                @media (max-width: theme(digitv2.screens.tablet)) {
+                  max-width: 27.5rem;
+                  min-width: 12.5rem;
+
+                }
+
+                /* mobile view*/
+
+                @media (max-width: theme(digitv2.screens.mobile)) {
+                  max-width: 20.5rem;
+                  min-width: 9.5rem;
+                  @apply w-full;
+
+                }
+
+                &.form-select {
+                  padding: 0%;
+                  border: 0px;
+
+                  .digit__control {
+                    @apply outline-none;
+
+                    .digit__value-container:in-range {
+                      border-color: unset;
+                      box-shadow: none;
+                      box-sizing: unset;
+                      @apply outline-none;
+                    }
+                  }
+
+                  .digit__control--is-focused {
+                    border-color: theme(digitv2.lightTheme.primary) !important;
+                    box-shadow: none;
+                    box-sizing: unset;
+                    @apply outline-none;
+                  }
+
+
+                  .digit__control:hover {
+
                     border-color: unset;
                     box-shadow: none;
                     box-sizing: unset;
                     @apply outline-none;
                   }
-                }
 
-                .digit__control--is-focused {
-                  border-color: theme(digitv2.lightTheme.primary) !important;
-                  box-shadow: none;
-                  box-sizing: unset;
-                  @apply outline-none;
-                }
-
-
-                .digit__control:hover {
-
-                  border-color: unset;
-                  box-shadow: none;
-                  box-sizing: unset;
-                  @apply outline-none;
-                }
-
-                .digit__control:focus {
-                  border-color: theme(digitv2.lightTheme.primary);
-
-                  .digit__value-container:focus {
+                  .digit__control:focus {
                     border-color: theme(digitv2.lightTheme.primary);
 
+                    .digit__value-container:focus {
+                      border-color: theme(digitv2.lightTheme.primary);
+
+                    }
+                  }
+                }
+
+                &.form-select:focus {
+                  @apply outline-none;
+                  border-color: theme(digitv2.lightTheme.primary);
+
+                }
+              }
+
+              .form-control:read-only {
+                background-color: theme(digitv2.lightTheme.background);
+                color: theme(digitv2.lightTheme["text-color-secondary"]);
+              }
+
+              .form-control:focus {
+
+                @apply outline-none;
+                border-color: theme(digitv2.lightTheme.primary);
+              }
+
+              textarea.form-control {
+                height: 5rem;
+              }
+            }
+
+            &.field-string {
+              align-self: center;
+            }
+
+            &.field-boolean {
+              padding-top: 0rem;
+              padding-bottom: 1rem;
+
+              .custom-checkbox {
+                display: inline-flex;
+                align-items: end;
+
+                &.custom-checkbox-disabled {
+                  pointer-events: none;
+                  opacity: 0.6;
+                }
+
+                .custom-checkbox-label {
+                  @extend .typography.text-body-s;
+                  @apply pl-sm;
+                }
+              }
+
+              .checkbox {
+                width: 28rem;
+
+                label {
+                  float: left;
+
+                  /* display: flex;
+            flex-direction: row-reverse;
+            */
+                  span {
+                    width: 17rem;
+                    display: none;
+                    @extend .card-label;
+                  }
+
+                  input[type="checkbox"] {
+                    @extend .light-input-border;
+                    @extend .employee-card-input;
+                    height: 1.5rem;
+                    /*              @apply ml-sm;*/
+                  }
+
+                  input[type="checkbox"]#digit_root_active {
+                    accent-color: theme(digitv2.lightTheme.primary);
+                  }
+
+                  input:checked,
+                  input:hover {
+                    @apply border-2;
+                    @extend .light-input-border;
                   }
                 }
               }
 
-              &.form-select:focus {
-                @apply outline-none;
-                border-color: theme(digitv2.lightTheme.primary);
+              .field-radio-group {
+                display: inline-flex;
+                height: 2.5rem;
+                align-items: center;
 
-              }
-            }
-
-            .form-control:read-only {
-              background-color: theme(digitv2.lightTheme.background);
-              color: theme(digitv2.lightTheme["text-color-secondary"]);
-            }
-
-            .form-control:focus {
-
-              @apply outline-none;
-              border-color: theme(digitv2.lightTheme.primary);
-            }
-
-            textarea.form-control {
-              height: 5rem;
-            }
-          }
-
-          &.field-string {
-            align-self: center;
-          }
-
-          &.field-boolean {
-            padding-top: 0rem;
-            padding-bottom: 1rem;
-
-            .custom-checkbox {
-              display: inline-flex;
-              align-items: end;
-
-              &.custom-checkbox-disabled {
-                pointer-events: none;
-                opacity: 0.6;
-              }
-
-              .custom-checkbox-label {
-                @extend .typography.text-body-s;
-                @apply pl-sm;
-              }
-            }
-
-            .checkbox {
-              width: 28rem;
-
-              label {
-                float: left;
-
-                /* display: flex;
-            flex-direction: row-reverse;
-            */
-                span {
-                  width: 17rem;
-                  display: none;
-                  @extend .card-label;
-                }
-
-                input[type="checkbox"] {
-                  @extend .light-input-border;
-                  @extend .employee-card-input;
-                  height: 1.5rem;
-                  /*              @apply ml-sm;*/
-                }
-         
-                input[type="checkbox"]#digit_root_active {
-                  accent-color: theme(digitv2.lightTheme.primary);
-                }
-
-                input:checked,
-                input:hover {
-                  @apply border-2;
-                  @extend .light-input-border;
+                .radio {
+                  @apply mr-sm;
                 }
               }
+
+
+
             }
 
-            .field-radio-group {
-              display: inline-flex;
-              height: 2.5rem;
-              align-items: center;
 
-              .radio {
-                @apply mr-sm;
+
+            &.field-object>.control-label {
+              margin-left: 0.5rem;
+            }
+
+            &.field-object {
+              display: block;
+              @extend .light-background;
+              @extend .light-paper-border;
+              padding: 1rem;
+              margin: 1rem;
+
+              .digit-expand-collapse-wrapper {
+                margin-top: 0px;
               }
-            }
 
-
-
-          }
-
-
-
-          &.field-object>.control-label {
-            margin-left: 0.5rem;
-          }
-
-          &.field-object {
-            display: block;
-            @extend .light-background;
-            @extend .light-paper-border;
-            padding: 1rem;
-            margin: 1rem;
-
-            .digit-expand-collapse-wrapper {
-              margin-top: 0px;
-            }
-
-            .digit-icon-toggle {
-              top: -1.5rem;
-              right: 1.5em;
-            }
-
-            .object-wrapper {
-              .array-remove-button-wrapper {
-                position: relative;
+              .digit-icon-toggle {
+                top: -1.5rem;
+                right: 1.5em;
               }
-            }
 
-            /* have to revisit for objects
+              .object-wrapper {
+                .array-remove-button-wrapper {
+                  position: relative;
+                }
+              }
+
+              /* have to revisit for objects
         [id^="root_"] {
           @extend .light-background;
         }
         */
-          }
+            }
 
-          &.field-array {
-            display: block;
-            @extend .light-paper-secondary;
-            @extend .light-paper-border;
-            padding: 2rem;
-            margin: 1rem;
-            padding-top: 1rem;
+            &.field-array {
+              display: block;
+              @extend .light-paper-secondary;
+              @extend .light-paper-border;
+              padding: 2rem;
+              margin: 1rem;
+              padding-top: 1rem;
 
-            .array-wrapper .array-item {
-              &.jk-array-objects>.array-remove-button-wrapper {
-                display: block;
-              }
-
-              &.jk-array-objects {
-                margin-bottom: 2rem;
-
-                .array-children>span .form-group.field.field-object {
-                  padding-bottom: 3rem;
+              .array-wrapper .array-item {
+                &.jk-array-objects>.array-remove-button-wrapper {
+                  display: block;
                 }
 
-                .array-obj {
-                  position: absolute;
-                  bottom: 1.5rem;
-                  left: 2rem;
+                &.jk-array-objects {
+                  margin-bottom: 2rem;
 
-                  >.array-remove-button-wrapper {
-                    position: unset;
-                  }
-                }
-
-              }
-
-              &.jk-array-of-non-objects>.array-remove-button-wrapper {
-                display: inline;
-                left: 38.5rem;
-                right: unset;
-                top: 0.7rem;
-              }
-
-              &.jk-array-of-non-objects .array-children {
-                span .form-group {
-                  padding-left: 0%;
-
-                  .control-label {
-                    display: none;
+                  .array-children>span .form-group.field.field-object {
+                    padding-bottom: 3rem;
                   }
 
-                }
-              }
+                  .array-obj {
+                    position: absolute;
+                    bottom: 1.5rem;
+                    left: 2rem;
 
-              /* it has been removed since we dont need diff color for array items @extend .light-background;*/
-              position: relative;
-
-              .field-object {
-                margin-left: 0;
-                margin-right: 0;
-              }
-
-
-              .array-remove-button-wrapper {
-                position: absolute;
-                right: 1.3em;
-                top: 1.3em;
-                background-color: inherit !important;
-
-                .array-remove-button {
-                  cursor: pointer;
-                  background-color: inherit !important;
-                  @media (max-width: theme(digitv2.screens.mobile)) {
-                    padding:0px;
-                  }  
-                  h2{
-                    @media (max-width: theme(digitv2.screens.mobile)) {
-                        display: none;
+                    >.array-remove-button-wrapper {
+                      position: unset;
                     }
                   }
-                  
+
+                }
+
+                &.jk-array-of-non-objects>.array-remove-button-wrapper {
+                  display: inline;
+                  left: 38.5rem;
+                  right: unset;
+                  top: 0.7rem;
+                }
+
+                &.jk-array-of-non-objects .array-children {
+                  span .form-group {
+                    padding-left: 0%;
+
+                    .control-label {
+                      display: none;
+                    }
+
+                  }
+                }
+
+                /* it has been removed since we dont need diff color for array items @extend .light-background;*/
+                position: relative;
+
+                .field-object {
+                  margin-left: 0;
+                  margin-right: 0;
+                }
+
+
+                .array-remove-button-wrapper {
+                  position: absolute;
+                  right: 1.3em;
+                  top: 1.3em;
+                  background-color: inherit !important;
+
+                  .array-remove-button {
+                    cursor: pointer;
+                    background-color: inherit !important;
+
+                    @media (max-width: theme(digitv2.screens.mobile)) {
+                      padding: 0px;
+                    }
+
+                    h2 {
+                      @media (max-width: theme(digitv2.screens.mobile)) {
+                        display: none;
+                      }
+                    }
+
+                  }
+                }
+
+                span.all-input-field-wrapper {
+                  @apply w-3/5;
+
+                  .form-control {
+                    @apply w-full;
+                  }
+                }
+
+                .control-label {
+                  @apply w-1/3;
+
                 }
               }
 
-              span.all-input-field-wrapper {
-                @apply w-3/5;
 
-                .form-control {
-                  @apply w-full;
+              .jk-digit-secondary-btn {
+                height: 1.7em;
+                margin-top: 0.5rem;
+
+                @media (max-width: theme(digitv2.screens.mobile)) {
+                  height: auto;
+                  width: 100%;
+                }
+
+                h2 {
+                  font-size: 1rem;
                 }
               }
 
-              .control-label {
-                @apply w-1/3;
-
+              .all-input-field-wrapper {
+                .card-label-error {
+                  position: unset !important;
+                }
               }
+
             }
 
-
-            .jk-digit-secondary-btn {
-              height: 1.7em;
-              margin-top: 0.5rem;
-
-              @media (max-width: theme(digitv2.screens.mobile)) {
-                height: auto;
-                width: 100%;
-              }
-
-              h2 {
-                font-size: 1rem;
-              }
+            .digit-expand-collapse-header {
+              border: 0;
+              background-color: inherit;
+              padding: 0;
             }
-
-            .all-input-field-wrapper {
-              .card-label-error {
-                position: unset !important;
-              }
-            }
-
-          }
-
-          .digit-expand-collapse-header {
-            border: 0;
-            background-color: inherit;
-            padding: 0;
           }
         }
       }
     }
-  }
 
-  div.action-bar-wrap {
-    @extend .action-bar-wrap;
+    div.action-bar-wrap {
+      @extend .action-bar-wrap;
 
-    .submit-bar {
-      @extend .submit-bar;
-      cursor: pointer;
-      @apply font-rc font-medium text-legend text-white leading-10;
+      .submit-bar {
+        @extend .submit-bar;
+        cursor: pointer;
+        @apply font-rc font-medium text-legend text-white leading-10;
+      }
+    }
+    .workbench-bulk-upload {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 1.5rem;
+      .workbench-download-template-btn {
+        margin-right: 1rem;
+      }
     }
   }
-}
 
-.workbench-no-schema-found {
-  @apply flex justify-items-center flex-col;
-  align-items: center;
-}
+  .workbench-no-schema-found {
+    @apply flex justify-items-center flex-col;
+    align-items: center;
+  }
 
-.jk-digit-loader {
-  position: absolute;
-  z-index: 10000;
-  width: 100vw;
-  background-color: rgba(189, 189, 189, 0.5);
-  height: 100vh;
-  left: 0;
-  top: 0;
+  .jk-digit-loader {
+    position: absolute;
+    z-index: 10000;
+    width: 100vw;
+    background-color: rgba(189, 189, 189, 0.5);
+    height: 100vh;
+    left: 0;
+    top: 0;
 
-  .jk-spinner-wrapper {
+    .jk-spinner-wrapper {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: 100%;
+
+      .jk-spinner {
+        border: 0.4em solid #fe7a51;
+        border-radius: 50%;
+        border-top: 0.4em solid #ffffff;
+        width: 4em;
+        height: 4em;
+        -webkit-animation: spin 2s linear infinite;
+        /* Safari */
+        animation: spin 1s linear infinite;
+      }
+    }
+  }
+
+  .jk-sm-inbox-loader {
+    border: 0.2em solid #fe7a51;
+    border-radius: 50%;
+    border-top: 0.2em solid #ffffff;
+    width: 2em;
+    height: 2em;
+    -webkit-animation: spin 2s linear infinite;
+    /* Safari */
+    animation: spin 1s linear infinite;
+  }
+
+  /* Safari */
+  @-webkit-keyframes spin {
+    0% {
+      -webkit-transform: rotate(0deg);
+    }
+
+    100% {
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .no-data-found {
+    height: 100%;
     width: 100%;
     display: flex;
-    align-items: center;
+    flex-direction: column;
     justify-content: center;
-    height: 100%;
+    align-items: center;
 
-    .jk-spinner {
-      border: 0.4em solid #fe7a51;
-      border-radius: 50%;
-      border-top: 0.4em solid #ffffff;
-      width: 4em;
-      height: 4em;
-      -webkit-animation: spin 2s linear infinite;
-      /* Safari */
-      animation: spin 1s linear infinite;
+    .digit-error-msg {
+      margin-top: 2rem;
     }
   }
-}
 
-.jk-sm-inbox-loader {
-  border: 0.2em solid #fe7a51;
-  border-radius: 50%;
-  border-top: 0.2em solid #ffffff;
-  width: 2em;
-  height: 2em;
-  -webkit-animation: spin 2s linear infinite;
-  /* Safari */
-  animation: spin 1s linear infinite;
-}
 
-/* Safari */
-@-webkit-keyframes spin {
-  0% {
-    -webkit-transform: rotate(0deg);
+  .tooltip .tooltiptext {
+
+    top: 2rem;
+    left: 0;
+    margin-left: 0rem;
+    width: fit-content;
+    height: max-content;
+    white-space: normal;
+
+    .tooltiptextvalue {
+      font-size: 14px;
+      font-weight: 400px;
+      color: white;
+    }
   }
 
-  100% {
-    -webkit-transform: rotate(360deg);
-  }
-}
+  .employeeCard.manage-master-wrapper {
+    width: 100%;
+    display: flex;
+    padding-top: 2.1rem;
 
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
+    @media (max-width: theme(digitv2.screens.mobile)) {
+      flex-direction: column;
+    }
+
+    .employee-select-wrap.form-field {
+      @apply w-1/4;
+      margin-right: 1rem;
+
+      @media (max-width: theme(digitv2.screens.mobile)) {
+        @apply w-full;
+      }
+    }
   }
 
-  100% {
-    transform: rotate(360deg);
-  }
-}
+  .table {
+    padding-left: 0.8rem;
+    padding-right: 0.8rem;
 
-.no-data-found {
-  height: 100%;
-  width: 100%;
+    &-row-mdms:hover {
+      background-color: theme(digitv2.lightTheme.primary-bg);
+      /* Change this to the desired hover color */
+      cursor: pointer;
+    }
+  }
+
+  .module-cards-header,
+  .master-details-header{
+    display: flex;
+    justify-content:space-between
+  }
+.module-cards-grid,
+.master-cards-grid {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  flex-flow: wrap;
 
-  .digit-error-msg {
-    margin-top: 2rem;
+  .module-card,
+  .master-card {
+    width: 22rem;
+    margin: 0.5rem;
+
+
+
+.employee-card-sub-header {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    overflow: visible;
+    white-space: normal;
+    word-wrap: break-word;
+    z-index: 10;
+    padding: 0.5rem;
+    margin: -0.5rem;
+    border-radius: 4px;
   }
 }
 
 
-.tooltip .tooltiptext {
-
-  top: 2rem;
-  left: 0;
-  margin-left: 0rem;
-  width: fit-content;
-  height: max-content;
-  white-space: normal;
-
-  .tooltiptextvalue {
-    font-size: 14px;
-    font-weight: 400px;
-    color: white;
-  }
-}
-.employeeCard.manage-master-wrapper {
-  width: 100%;
-  display: flex;
-  padding-top: 2.1rem;
-  @media (max-width: theme(digitv2.screens.mobile)) {
-    flex-direction: column; 
- }
- .employee-select-wrap.form-field{
-  @apply w-1/4;
-  margin-right:1rem ;
-  @media (max-width: theme(digitv2.screens.mobile)) {
-    @apply w-full;
- }
-  }
-}
-
-.table{
-  padding-left:0.8rem ;
-  padding-right:0.8rem ;
-  &-row-mdms:hover{
-    background-color:  theme(digitv2.lightTheme.primary-bg); /* Change this to the desired hover color */
-    cursor: pointer;
   }
 }
 }
 
-.header-btn{
+.header-btn {
   width: 12rem;
 }
 
@@ -563,7 +634,7 @@ a{
   background-color: #FAFAFA;
   border: 1.5px dashed #D6D5D4;
   border-radius: 5px;
-  margin:-1rem 1rem 1rem 1rem;
+  margin: -1rem 1rem 1rem 1rem;
   padding: 1rem 1rem 1rem 1rem;
   display: flex;
   align-items: center;
@@ -571,15 +642,17 @@ a{
 
   .drag-drop-text {
     text-decoration: none;
+
     .browse-text {
       text-decoration: none;
-      color: #F47738; 
+      color: theme(colors.primary.main);
       transition: color 0.3s;
     }
+
     .browse-text:hover {
-        color: #F47738; 
-        text-decoration: underline; 
-        cursor: pointer;
+      color: theme(colors.primary.main);
+      text-decoration: underline;
+      cursor: pointer;
     }
   }
 
@@ -589,7 +662,7 @@ a{
   background-color: #FAFAFA;
   border: 1.5px solid #D6D5D4;
   border-radius: 5px;
-  margin:0.5rem 1rem 2rem 1rem;
+  margin: 0.5rem 1rem 2rem 1rem;
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -599,7 +672,7 @@ a{
   .uploaded-file-container-sub {
     display: flex;
     align-items: center;
-    
+
     .icon:hover {
       cursor: pointer;
     }
@@ -613,7 +686,6 @@ button:hover {
 .popup-header-fix {
   margin-top: -0.5rem !important;
 }
-
 
 .option-details {
   position: fixed;
@@ -630,7 +702,6 @@ button:hover {
   flex-direction: column;
   width: 40%;
   min-width: 300px;
-
 
   .detail-container {
     margin-top: 20px;
@@ -649,16 +720,11 @@ button:hover {
         text-align: start !important;
       }
 
-
-
       .value {
         flex-basis: 70%;
         text-align: start !important;
       }
-
     }
-
-
 
     .separator {
       margin: 10px 0;
@@ -666,24 +732,18 @@ button:hover {
       border-bottom: 1px solid #ccc;
     }
 
-
-
     .view-more {
       display: flex;
       justify-content: flex-start;
       margin-top: 1.5em;
     }
 
-
-
     .select {
       display: flex;
       justify-content: flex-start;
       margin-top: 1.5em;
     }
-
   }
-
 }
 
 
@@ -698,10 +758,6 @@ button:hover {
   border: 1px solid black;
   margin-bottom: 20px;
 }
-
-
-
-
 
 
 
@@ -732,7 +788,6 @@ button:hover {
   /* Enable scrolling if content exceeds the viewport */
 }
 
-
 .modal-content {
   background-color: #fff;
   padding: 20px;
@@ -757,7 +812,7 @@ button:hover {
   width: calc(100% - 32px);
   background-color: initial;
   position: relative !important;
-  z-index: 10;
+  z-index: 8 !important; 
   width: 100%;
   height: 100%;
   outline: 2px solid transparent;
@@ -765,7 +820,18 @@ button:hover {
   padding-left: 8px;
 }
 
-
+.digit-dropdown-employee-select-wrap .digit-dropdown-select input[type=text], .digit-dropdown-employee-select-wrap .digit-dropdown-select .digit-checkbox-container .input-emp[type=text], .digit-checkbox-container .digit-dropdown-employee-select-wrap .digit-dropdown-select .input-emp[type=text] {
+  position: absolute;
+  z-index: 8 !important;
+  height: 100%;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: calc(100% - 1.75rem);
+  background-color: initial;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  padding-left: .75rem;
+  color: #363636; }
 
 .modal-content .employee-select-wrap .select-active {
   position: absolute;
@@ -773,11 +839,9 @@ button:hover {
   width: 100%;
   height: 2.5rem;
   --border-opacity: 1;
-  border: 1px solid #f47738;
+  border: 1px solid theme(colors.primary.main);
   border-color: rgba(244, 119, 56, var(--border-opacity));
 }
-
-
 
 .modal-content .label-field-pair {
   display: -ms-flexbox;
@@ -785,7 +849,6 @@ button:hover {
   -ms-flex-align: center;
   align-items: center;
 }
-
 
 .modal-content .employee-select-wrap {
   margin-bottom: 24px;
@@ -796,9 +859,10 @@ button:hover {
     width: 100%;
     display: flex;
     flex-direction: row-reverse;
+
     .add-new {
       position: relative;
-      color: #F47738;
+      color: theme(colors.primary.main);
       cursor: pointer;
       margin-right: 1em;
       font-weight: bolder;
@@ -806,8 +870,6 @@ button:hover {
     }
   }
 }
-
-
 
 .multiselect {
   display: flex;
@@ -825,8 +887,6 @@ button:hover {
     }
   }
 
-
-
   .info-icon-container {
     margin-left: 0.7em;
     margin-right: -2em;
@@ -835,15 +895,10 @@ button:hover {
     margin-bottom: 0.7em;
   }
 
-
-
   .info-icon-container .info-icon {
     cursor: pointer;
   }
-
 }
-
-
 
 .link-container {
   flex: 1;
@@ -852,32 +907,24 @@ button:hover {
   padding: 10px;
   background-color: #bdc5d1;
 
-
-
   .view-all-link {
     background-color: #bdc5d1;
-    color: #f47738;
+    color: theme(colors.primary.main);
     font-size: 16px;
     text-decoration: underline;
     cursor: pointer;
   }
-
 }
-
-
 
 .action-bar {
   display: flex;
   flex-direction: row;
   justify-content: flex-end;
 
-
   .action-bar-button {
     margin-right: 0.5em;
   }
 }
-
-
 
 .progressBarContainer {
   position: fixed;
@@ -890,7 +937,6 @@ button:hover {
   z-index: 9999;
   width: 25vw;
 
-
   @media (max-width: 768px) {
     width: 70vw;
     position: fixed;
@@ -899,8 +945,6 @@ button:hover {
     left: 50%;
     transform: translateX(-50%);
   }
-
-
 
   .progressBar {
     display: flex;
@@ -912,13 +956,9 @@ button:hover {
     background-color: #4CAF50;
   }
 
-
-
   .progressHeading {
     margin: 8px 0;
     font-size: 16px;
-
-
 
     .success-container {
       display: flex;
@@ -930,8 +970,6 @@ button:hover {
       width: fit-content;
       align-items: center;
 
-
-
       .success-count {
         background-color: #fff;
         color: #00703C;
@@ -939,12 +977,8 @@ button:hover {
         border-radius: 3px;
         margin-left: 5px;
       }
-
     }
-
   }
-
-
 
   .closeButton {
     position: absolute;
@@ -956,15 +990,10 @@ button:hover {
     border-radius: 1px;
   }
 
-
-
   .no-uploads {
     margin-top: 1em;
   }
-
 }
-
-
 
 .results-container-orange {
   max-height: 50vh;
@@ -975,15 +1004,10 @@ button:hover {
   padding: 1em;
   background-color: #ea8a3b !important;
 
-
-
   .no-errors {
     background-color: #ea8a3b !important;
   }
-
 }
-
-
 
 .results-container {
   max-height: 50vh;
@@ -993,23 +1017,17 @@ button:hover {
   border-radius: 4px;
   padding: 1em;
 
-
-
   .results-list-item {
     border-bottom: 1px solid #ddd;
     padding: 0.5em;
     cursor: pointer;
-
 
     &:hover {
       background-color: #D4351C;
       color: white;
       /* Yellowish color on hover */
     }
-
   }
-
-
 
   .results-details {
     white-space: pre-wrap;
@@ -1018,8 +1036,6 @@ button:hover {
     padding: 1em;
   }
 }
-
-
 
 .overlay {
   position: fixed;
@@ -1030,13 +1046,131 @@ button:hover {
   background-color: rgba(0, 0, 0, 0.3);
   z-index: 9998;
 }
-
-.CloseLevelButton {
+.CloseLevelButton{
   font-size: 1rem;
   margin-bottom: 24px;
   /* margin-left: 24px; */
   position: relative;
   right: auto;
   border: none;
+}
+
+.mdms-view-audit{
+visibility: hidden;
+}
+.audit-history{
+.diff{
+  table-layout: fixed;
+border-collapse: collapse;
+width: 100%;
+}
+.diff-gutter-col {
+width: 7ch;
+}
+.diff-code-delete {
+background-color: #fdeff0;
+}
+.diff-line {
+line-height: 1.5;
+font-family: Consolas, Courier, monospace;
+}
+.diff-gutter-delete {
+background-color: #fadde0;
+}
+.diff-gutter, .diff-gutter>a {
+padding: 0 1ch;
+text-align: right;
+cursor: pointer;
+user-select: none;
+}
+.diff-code {
+white-space: pre-wrap;
+word-wrap: break-word;
+word-break: break-all;
+padding: 0;
+padding-left: .5em;
+}
+.diff td {
+vertical-align: top;
+padding-top: 0;
+padding-bottom: 0;
+}
+.diff-gutter-insert {
+background-color: #d6fedb;
+}
+.diff-gutter, .diff-gutter>a {
+padding: 0 1ch;
+text-align: right;
+cursor: pointer;
+user-select: none;
+}
+.diff-code-insert {
+background-color: #eaffee;
+}
 
 }
+
+
+.code-details {
+  padding: 0.5rem 1.5rem;
+  background-color: #f9f9f9;
+  border: 0.125rem solid #e0e0e0;
+  border-radius: 0.25rem;
+}
+
+.code-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.code-key {
+  flex: 0 0 9rem; 
+  font-size: 0.9rem;
+  font-weight: bold;
+  color: #444;
+  text-align: left;
+  line-height: 1.2rem;
+}
+
+.code-value-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  margin-left: 0.5rem; 
+  align-items: flex-start; 
+}
+
+.code-value {
+  font-size: 0.9rem;
+  color: #555;
+  line-height: 1.2rem;
+}
+
+.workbench {
+  .mdms-search-bar-container {
+    margin-bottom: 1rem;
+
+    .mdms-search-input{
+      width: 100%;
+    
+    }
+  }
+
+  .no-results-message{
+width: 100%;
+  }
+}
+
+
+
+
+
+
+
+
+

@@ -1,16 +1,34 @@
-import { BackButton, DownloadBtnCommon, Header, Loader, SearchForm, Table } from "@egovernments/digit-ui-react-components";
+import {
+  DownloadBtnCommon,
+  Table,
+} from "@egovernments/digit-ui-react-components";
+import {
+  BackButton,
+  Loader,
+  SearchForm,
+  HeaderComponent
+} from "@egovernments/digit-ui-components";
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import MobileSearchApplication from "./MobileSearchApplication";
 import SearchFields from "./SearchFields";
 
 const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
-  const initialValues = Digit.SessionStorage.get("AUDIT_APPLICATION_DETAIL") || {
+  const initialValues = Digit.SessionStorage.get(
+    "AUDIT_APPLICATION_DETAIL"
+  ) || {
     offset: 0,
     limit: 5,
     sortOrder: "DESC",
   };
-  const { register, control, handleSubmit, setValue, getValues, reset } = useForm({
+  const {
+    register,
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    reset,
+  } = useForm({
     defaultValues: initialValues,
   });
   const convertEpochToDate = (dateEpoch) => {
@@ -61,11 +79,18 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
       settabledata([
         data?.map((obj) => {
           let returnObject = {};
-          returnObject[t("AUDIT_DATE_LABEL")] = convertEpochToDate(obj?.timestamp);
-          returnObject[t("AUDIT_TIME_LABEL")] = convertEpochToTimeInHours(obj?.timestamp);
-          returnObject[t("AUDIT_DATAVIEWED_LABEL")] = obj?.dataView[0] + "," + obj?.dataView[1];
+          returnObject[t("AUDIT_DATE_LABEL")] = convertEpochToDate(
+            obj?.timestamp
+          );
+          returnObject[t("AUDIT_TIME_LABEL")] = convertEpochToTimeInHours(
+            obj?.timestamp
+          );
+          returnObject[t("AUDIT_DATAVIEWED_LABEL")] =
+            obj?.dataView[0] + "," + obj?.dataView[1];
           returnObject[t("AUDIT_DATAVIEWED_BY_LABEL")] = obj?.dataViewedBy;
-          returnObject[t("AUDIT_ROLE_LABEL")] = obj?.roles.map((obj) => obj.name).join(",");
+          returnObject[t("AUDIT_ROLE_LABEL")] = obj?.roles
+            .map((obj) => obj.name)
+            .join(",");
           return {
             ...returnObject,
           };
@@ -95,7 +120,22 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
   const isMobile = window.Digit.Utils.browser.isMobile();
 
   if (isMobile) {
-    return <MobileSearchApplication {...{ Controller, register, control, t, reset, previousPage, handleSubmit, tenantId, data, onSubmit }} />;
+    return (
+      <MobileSearchApplication
+        {...{
+          Controller,
+          register,
+          control,
+          t,
+          reset,
+          previousPage,
+          handleSubmit,
+          tenantId,
+          data,
+          onSubmit,
+        }}
+      />
+    );
   }
 
   //need to get from workflow
@@ -106,7 +146,10 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
         Header: t("AUDIT_DATE_LABEL"),
         disableSortBy: true,
         accessor: (row) => {
-          const timestamp = row.timestamp === "NA" ? t("WS_NA") : convertEpochToDate(row.timestamp);
+          const timestamp =
+            row.timestamp === "NA"
+              ? t("WS_NA")
+              : convertEpochToDate(row.timestamp);
           return GetCell(`${timestamp}`);
         },
       },
@@ -114,19 +157,26 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
         Header: t("AUDIT_TIME_LABEL"),
         disableSortBy: true,
         accessor: (row) => {
-          const timestamp = row.timestamp === "NA" ? t("WS_NA") : convertEpochToTimeInHours(row.timestamp);
+          const timestamp =
+            row.timestamp === "NA"
+              ? t("WS_NA")
+              : convertEpochToTimeInHours(row.timestamp);
           return GetCell(`${timestamp}`);
         },
       },
       {
-        Header: isMobile ? t("AUDIT_DATAVIEWED_LABEL") : t("AUDIT_DATAVIEWED_PRIVACY"),
+        Header: isMobile
+          ? t("AUDIT_DATAVIEWED_LABEL")
+          : t("AUDIT_DATAVIEWED_PRIVACY"),
         disableSortBy: true,
         accessor: (row) => {
           return GetCell(`${row?.dataView}`);
         },
       },
       {
-        Header: isMobile ? t("AUDIT_DATAVIEWED_BY_LABEL") : t("AUDIT_DATAVIEWED_BY_PRIVACY"),
+        Header: isMobile
+          ? t("AUDIT_DATAVIEWED_BY_LABEL")
+          : t("AUDIT_DATAVIEWED_BY_PRIVACY"),
         disableSortBy: true,
         accessor: (row) => {
           return GetCell(`${row?.dataViewedBy}`);
@@ -151,14 +201,35 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
       </div>
       <div style={{ marginTop: "30px", marginLeft: "30px" }}>
         {" "}
-        <Header>{t("PRIVACY_AUDIT_REPORT")}</Header>{" "}
+        <HeaderComponent>{t("PRIVACY_AUDIT_REPORT")}</HeaderComponent>{" "}
       </div>
-      <SearchForm className="audit-card" onSubmit={onSubmit} handleSubmit={handleSubmit}>
-        <SearchFields {...{ register, control, reset, tenantId, t, previousPage }} />
+      <SearchForm
+        className="audit-card"
+        onSubmit={onSubmit}
+        handleSubmit={handleSubmit}
+      >
+        <SearchFields
+          {...{ register, control, reset, tenantId, t, previousPage }}
+        />
       </SearchForm>
-      <div style={{ marginTop: "240px", marginLeft: "-55%", maxWidth: "80%", marginRight: "52px" }}>
+      <div
+        style={{
+          marginTop: "240px",
+          marginLeft: "-55%",
+          maxWidth: "80%",
+          marginRight: "52px",
+        }}
+      >
         {data?.display ? (
-          <div style={{ marginTop: "20x", width: "1025px", marginLeft: "25px", backgroundColor: "white", height: "60px" }}>
+          <div
+            style={{
+              marginTop: "20x",
+              width: "1025px",
+              marginLeft: "25px",
+              backgroundColor: "white",
+              height: "60px",
+            }}
+          >
             {t(data.display)
               .split("\\n")
               .map((text, index) => (
@@ -168,9 +239,21 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
               ))}
           </div>
         ) : data !== "" ? (
-          <div style={{ backgroundColor: "white", marginRight: "-30px", marginLeft: "30px" }}>
-            <div className="sideContent" style={{ float: "right", padding: "10px 30px" }}>
-              <DownloadBtn className="mrlg cursorPointer" onClick={() => handleExcelDownload(tabledata)} />
+          <div
+            style={{
+              backgroundColor: "white",
+              marginRight: "-30px",
+              marginLeft: "30px",
+            }}
+          >
+            <div
+              className="sideContent"
+              style={{ float: "right", padding: "10px 30px" }}
+            >
+              <DownloadBtn
+                className="mrlg cursorPointer"
+                onClick={() => handleExcelDownload(tabledata)}
+              />
             </div>
             <Table
               t={t}
@@ -180,7 +263,10 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
               getCellProps={(cellInfo) => {
                 return {
                   style: {
-                    minWidth: cellInfo.column.Header === t("ES_INBOX_APPLICATION_NO") ? "240px" : "",
+                    minWidth:
+                      cellInfo.column.Header === t("ES_INBOX_APPLICATION_NO")
+                        ? "240px"
+                        : "",
                     padding: "20px 18px",
                     fontSize: "16px",
                   },
@@ -194,7 +280,12 @@ const SearchApplication = ({ tenantId, t, onSubmit, data, count }) => {
               pageSizeLimit={getValues("limit")}
               onSort={onSort}
               disableSort={false}
-              sortParams={[{ id: getValues("sortBy"), desc: getValues("sortOrder") === "DESC" ? true : false }]}
+              sortParams={[
+                {
+                  id: getValues("sortBy"),
+                  desc: getValues("sortOrder") === "DESC" ? true : false,
+                },
+              ]}
             />
           </div>
         ) : (

@@ -1,14 +1,24 @@
 import {
-  Calender, CardBasedOptions, CaseIcon, ComplaintIcon, DocumentIcon, HomeIcon, Loader, OBPSIcon, PTIcon, WhatsNewCard
+  Calender,
+  CardBasedOptions,
+  CaseIcon,
+  ComplaintIcon,
+  DocumentIcon,
+  HomeIcon,
+  OBPSIcon,
+  PTIcon,
+  Loader,
+  WhatsNewCard,
 } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import ImageComponent from "../../../components/ImageComponent";
 
 const Home = () => {
   const { t } = useTranslation();
   const history = useHistory();
-  const tenantId = Digit.ULBService.getCitizenCurrentTenant(true);
+  const tenantId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() : Digit.ULBService.getCitizenCurrentTenant(true);
   const { data: { stateInfo, uiHomePage } = {}, isLoading } = Digit.Hooks.useStore.getInitData();
   let isMobile = window.Digit.Utils.browser.isMobile();
 
@@ -42,8 +52,8 @@ const Home = () => {
   if (redirectURL) {
     history.push(`/${window?.contextPath}/citizen/${redirectURL}`);
   }
-  /* fix for sanitation ui */
-  if (window?.location?.href?.includes?.("sanitation-ui")) {
+  /* fix for sanitation ui & sandbox*/
+  if (window?.location?.href?.includes?.("sanitation-ui") || window?.location?.href?.includes?.("sandbox-ui")) {
     history.push(`/${window?.contextPath}/citizen/all-services`);
   }
 
@@ -84,7 +94,12 @@ const Home = () => {
         onClick: () => history.push(citizenServicesObj?.props?.[3]?.navigationUrl),
       },
     ],
-    styles: { display: "flex", flexWrap: "wrap", justifyContent: "flex-start", width: "100%" },
+    styles: {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "flex-start",
+      width: "100%",
+    },
   };
   const allInfoAndUpdatesProps = {
     header: t(infoAndUpdatesObj?.headerLabel),
@@ -118,7 +133,12 @@ const Home = () => {
       //     Icon: <HelpIcon/>
       // }
     ],
-    styles: { display: "flex", flexWrap: "wrap", justifyContent: "flex-start", width: "100%" },
+    styles: {
+      display: "flex",
+      flexWrap: "wrap",
+      justifyContent: "flex-start",
+      width: "100%",
+    },
   };
 
   return isLoading ? (
@@ -131,7 +151,11 @@ const Home = () => {
       <div className="HomePageWrapper">
         {
           <div className="BannerWithSearch">
-            {isMobile ? <img src={appBannerMobObj?.bannerUrl} /> : <img src={appBannerWebObj?.bannerUrl} />}
+            {isMobile ? (
+              <ImageComponent src={appBannerMobObj?.bannerUrl} alt="Banner Image" />
+            ) : (
+              <ImageComponent src={appBannerWebObj?.bannerUrl} alt="Banner Image" />
+            )}
             {/* <div className="Search">
             <StandaloneSearchBar placeholder={t("CS_COMMON_SEARCH_PLACEHOLDER")} />
           </div> */}
@@ -145,9 +169,17 @@ const Home = () => {
         {(whatsAppBannerMobObj || whatsAppBannerWebObj) && (
           <div className="WhatsAppBanner">
             {isMobile ? (
-              <img src={whatsAppBannerMobObj?.bannerUrl} onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerMobObj)} />
+              <ImageComponent
+                src={whatsAppBannerMobObj?.bannerUrl}
+                onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerMobObj)}
+                alt="Whatsapp Banner"
+              />
             ) : (
-              <img src={whatsAppBannerWebObj?.bannerUrl} onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerWebObj)} />
+              <ImageComponent
+                src={whatsAppBannerWebObj?.bannerUrl}
+                onClick={() => handleClickOnWhatsAppBanner(whatsAppBannerWebObj)}
+                alt="Whatsapp Banner"
+              />
             )}
           </div>
         )}

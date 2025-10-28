@@ -110,7 +110,7 @@
 .banner {
   @apply flex justify-center items-center;
   height: calc(100vh - 80px);
-  background: linear-gradient(rgba(11, 75, 102, 0.8), rgba(11, 75, 102, 0.8)), var(--banner-url) center center;
+  background: linear-gradient(rgba(11, 75, 102, 0.8), rgba(11, 75, 102, 0.8)), var(--banner-url) no-repeat center center / cover;
 
   .bannerCard {
     min-width: 400px;
@@ -121,7 +121,7 @@
     object-fit: contain;
     padding-right: 10px;
     margin-right: 10px;
-    border-right: 1px solid theme(colors.text.primary);
+    border-right: none !important;
   }
   .bannerHeader {
     @apply flex justify-center items-center;

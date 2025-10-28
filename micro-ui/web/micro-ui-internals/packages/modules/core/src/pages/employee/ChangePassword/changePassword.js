@@ -1,11 +1,12 @@
-import { BackButton, CardSubHeader, CardText, FormComposer, Toast } from "@egovernments/digit-ui-react-components";
+import { CardSubHeader, FormComposer,CardText} from "@egovernments/digit-ui-react-components";
+import { BackLink,Toast} from "@egovernments/digit-ui-components";
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import Background from "../../../components/Background";
 import Header from "../../../components/Header";
 import SelectOtp from "../../citizen/Login/SelectOtp";
-
+import ImageComponent from "../../../components/ImageComponent";
 
 const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   const [user, setUser] = useState(null);
@@ -107,7 +108,7 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
   return (
     <Background>
       <div className="employeeBackbuttonAlign">
-        <BackButton variant="white" style={{ borderBottom: "none" }} />
+        <BackLink variant="primary" style={{ borderBottom: "none" }} />
       </div>
       <FormComposer
         onSubmit={onChangePassword}
@@ -142,9 +143,9 @@ const ChangePasswordComponent = ({ config: propsConfig, t }) => {
           </div>
         </div> */}
       </FormComposer>
-      {showToast && <Toast error={true} label={t(showToast)} onClose={closeToast} />}
+      {showToast && <Toast type={"error"} label={t(showToast)} onClose={closeToast} />}
       <div className="EmployeeLoginFooter">
-        <img
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER_BW")}
           style={{ cursor: "pointer" }}

@@ -22,7 +22,7 @@ import _ from "lodash";
 import CustomDropdown from "../molecules/CustomDropdown";
 import MultiUploadWrapper from "../molecules/MultiUploadWrapper";
 import HorizontalNav  from "../atoms/HorizontalNav"
-import Toast from "../atoms/Toast";
+import { Toast } from "@egovernments/digit-ui-components";
 import UploadFileComposer from "./UploadFileComposer";
 import CheckBox from "../atoms/CheckBox";
 import MultiSelectDropdown from '../atoms/MultiSelectDropdown';
@@ -31,6 +31,7 @@ import InputTextAmount from "../atoms/InputTextAmount";
 import LocationDropdownWrapper from "../molecules/LocationDropdownWrapper";
 import ApiDropdown from "../molecules/ApiDropdown";
 import Header from "../atoms/Header";
+import Button from "../atoms/Button"
 
 import { yupResolver } from '@hookform/resolvers/yup';
 // import { validateResolver } from "./validateResolver";
@@ -66,7 +67,7 @@ const wrapperStyles = {
  * @example
  *
  * refer this implementation of sample file
- * frontend/micro-ui/web/micro-ui-internals/packages/modules/AttendenceMgmt/src/pages/citizen/Sample.js
+ * micro-ui/web/micro-ui-internals/packages/modules/utilities/src/pages/employee/Sample/Create.js
  *
  */
 
@@ -98,7 +99,6 @@ export const FormComposer = (props) => {
     clearErrors,
     unregister,
   } = useForm(inputProps);
-  // console.log(formState,'formState');
   const formData = watch();
   const selectedFormCategory = props?.currentFormCategory;
   const [showErrorToast, setShowErrorToast] = useState(false); 
@@ -134,9 +134,8 @@ export const FormComposer = (props) => {
   useEffect(()=>{
     setCustomToast(props?.customToast);
   },[props?.customToast])
-
   function onSubmit(data) {
-    props.onSubmit(data);
+    props.onSubmit(data,setValue);
   }
 
   function onSecondayActionClick(data) {
@@ -444,6 +443,7 @@ export const FormComposer = (props) => {
           <UploadFileComposer
             module={config?.module}
             config={config}
+            mdmsModuleName={config?.mdmsModuleName}
             Controller={Controller}
             register={register}
             formData={formData}
@@ -717,6 +717,9 @@ export const FormComposer = (props) => {
             );
           return (
             <Fragment>
+              {field?.withoutLabelFieldPair === true ? (
+                fieldSelector(field.type, field.populators, field.isMandatory, field?.disable, field?.component, field, sectionFormCategory)
+              ) : (
               <LabelFieldPair
                 key={index}
                 style={
@@ -736,7 +739,8 @@ export const FormComposer = (props) => {
                   >
                     {t(field.label)}
                     {field?.appendColon ? ' : ' : null}
-                    {field.isMandatory ? " * " : null}
+                    {field.isMandatory ? <span className="mandatory-span">*</span> : null}
+                    {field.labelChildren && field.labelChildren}
                   </CardLabel>
                 )}
                 <div style={field.withoutLabel ? { width: "100%", ...props?.fieldStyle } : { ...props?.fieldStyle }} className="field">
@@ -744,6 +748,7 @@ export const FormComposer = (props) => {
                   {field?.description && <CardText style={{ fontSize: "14px", marginTop: "-24px" }}>{t(field?.description)}</CardText>}
                 </div>
               </LabelFieldPair>
+              )}
               {field?.populators?.name && errors && errors[field?.populators?.name] && Object.keys(errors[field?.populators?.name]).length ? (
                 <CardLabelError style={{ width: "70%", marginLeft: "30%", fontSize: "12px", marginTop: "-21px" }}>
                   {t( errors?.[field?.populators?.name]?.message || field?.populators?.error)}
@@ -800,7 +805,7 @@ export const FormComposer = (props) => {
       <React.Fragment key={index}>
           {!props.childrenAtTheBottom && props.children}
           {props.heading && <CardSubHeader className={props?.cardSubHeaderClassName ? props?.cardSubHeaderClassName : ""} style={{ ...props.headingStyle }}> {props.heading} </CardSubHeader>}
-          {props.description && <CardLabelDesc className={"repos"}> {props.description} </CardLabelDesc>}
+          {props.description && <CardLabelDesc className={"repos"} style={{ ...props.descriptionStyle }}> {props.description} </CardLabelDesc>}
           {props.text && <CardText>{props.text}</CardText>}
           {formFields(section, index, array, sectionFormCategory)}
           {props.childrenAtTheBottom && props.children}
@@ -813,9 +818,10 @@ export const FormComposer = (props) => {
           </div>)}
       </React.Fragment>  
   );
+ const fieldId=Digit?.Utils?.getFieldIdName?.(props?.formId || props?.className || "form")||"NA";
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={props.formId} className={props.className}>        
+    <form onSubmit={handleSubmit(onSubmit)} onKeyDown={(e) => checkKeyDown(e)} id={fieldId} className={props.className}>        
               {props?.headerLabel&&<Header className="digit-form-composer-header">{ t(props.headerLabel)}</Header>}
 
       {props?.showMultipleCardsWithoutNavs ? (
@@ -871,13 +877,16 @@ export const FormComposer = (props) => {
         )
       }
       {!props.submitInForm && props.label && (
-        <ActionBar>
-          <SubmitBar label={t(props.label)} submit="submit" disabled={isDisabled} />
-          {props.onSkip && props.showSkip && <LinkButton style={props?.skipStyle} label={t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
+        <ActionBar className={props.actionClassName}>  
+          <SubmitBar  id={`${fieldId}-primary`} label={t(props.label)} submit="submit" disabled={isDisabled} submitIcon={props?.submitIcon}/>
+          {props.secondaryLabel && props.showSecondaryLabel && (
+            <Button  id={`${fieldId}-secondary`} className="previous-button"  variation="secondary" label={t(props.secondaryLabel)} onButtonClick={props.onSecondayActionClick} />
+          )}
+          {props.onSkip && props.showSkip && <LinkButton  id={`${fieldId}-skip`} style={props?.skipStyle} label={props?.skiplabel || t(`CS_SKIP_CONTINUE`)} onClick={props.onSkip} />}
         </ActionBar>
       )}
-      {showErrorToast && <Toast error={true} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
-      {customToast && <Toast error={customToast?.error} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
+      {showErrorToast && <Toast type={"error"} label={t("ES_COMMON_PLEASE_ENTER_ALL_MANDATORY_FIELDS")} isDleteBtn={true} onClose={closeToast} />}
+      {customToast && <Toast type={customToast?.type} label={t(customToast?.label)} isDleteBtn={true} onClose={closeToast} />}
 
     </form>
   );

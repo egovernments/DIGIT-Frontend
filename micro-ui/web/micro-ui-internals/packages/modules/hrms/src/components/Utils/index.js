@@ -63,8 +63,8 @@ export const getCityThatUserhasAccess = (cities = []) => {
   let roleObject = {};
   userInfo?.info?.roles.map((roleData) => { roleObject[roleData?.code] = roleObject[roleData?.code] ? [...roleObject[roleData?.code], roleData?.tenantId] : [roleData?.tenantId] });
   const tenant = Digit.ULBService.getCurrentTenantId();
-  if (roleObject[Digit.Utils?.hrmsRoles?.[0]].includes(Digit.ULBService.getStateId())) {
+  if (roleObject?.[Digit.Utils?.hrmsRoles?.[0]]?.includes(Digit.ULBService.getStateId())) {
     return cities;
   }
-  return cities.filter(city => roleObject[Digit.Utils?.hrmsRoles?.[0]]?.includes(city?.code));
+  return cities?.filter(city => roleObject?.[Digit.Utils?.hrmsRoles?.[0]]?.includes(city?.code));
 }

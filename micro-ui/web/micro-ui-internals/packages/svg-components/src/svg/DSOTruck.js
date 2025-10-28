@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
-export const DSOTruck = ({ className, width = "40", height = "40", style = {}, fill = "#F47738", onClick = null }) => {
+export const DSOTruck = ({ className, width = "40", height = "40", style = {}, fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path d="M1.61634 24.4922H7.52921C6.99795 25.1968 6.68241 26.0598 6.68241 27.0117H2.77371L1.61621 26.2073L1.61634 24.4922Z" fill={fill} />

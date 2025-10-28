@@ -15,6 +15,7 @@ import DetailsCard from "../../molecules/DetailsCard";
 import PopUp from "../../atoms/PopUp";
 import { CloseSvg } from "../../atoms/svgindex";
 import MobileComponentDirectory from "./MobileComponentDirectory";
+import { COLOR_FILL } from "../../atoms/contants";
 
 const InboxComposer = ({
   isInboxLoading,
@@ -191,7 +192,7 @@ const InboxComposer = ({
               searchFieldComponents={
                 <div style={window.location.href.includes("/citizen/obps") ? {display : "flex"} : {}}>
                   <SubmitBar label={t("ES_COMMON_SEARCH")} submit form="search-form" className="submit-bar-search" />
-                  <p onClick={onResetSearchForm} className="clear-search" style={{ paddingTop: "9px", color: " #f47738" }}>
+                  <p onClick={onResetSearchForm} className="clear-search" style={{ paddingTop: "9px", color: COLOR_FILL }}>
                     {t(`ES_COMMON_CLEAR_SEARCH`)}
                   </p>
                 </div>
