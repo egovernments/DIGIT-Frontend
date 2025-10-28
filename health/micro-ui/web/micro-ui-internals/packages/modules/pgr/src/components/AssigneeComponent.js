@@ -53,7 +53,6 @@ const AssigneeComponent = ({ config, onSelect, formState, defaultValues }) => {
           mobileNumber: employee.user?.mobileNumber,
           department: department
         });
-  
         return acc;
       }, {}) || {}
     );

@@ -18,6 +18,10 @@ const PGRCard = () => {
   //   Digit.SessionStorage.del("boundary");
   // }, []);
 
+   useEffect(() => {
+    Digit.SessionStorage.del("filtersForInbox");
+  }, []);
+
   const { t } = useTranslation();
   const userInfo = Digit.UserService.getUser();
   const userRoles = userInfo?.info?.roles?.map((roleData) => roleData?.code);

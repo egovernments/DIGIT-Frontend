@@ -114,7 +114,7 @@ export const CreateComplaintConfig = {
                 validation: {
                   minLength: 10,
                   maxLength: 10,
-                  min: 6000000000,
+                  min: 1000000000,
                   max: 9999999999
                 }, // 10-digit phone number validation
               },
@@ -146,7 +146,7 @@ export const CreateComplaintConfig = {
                 componentInFront: "+91",
                 validation: {
                   minLength: 0,
-                  min: 6000000000,
+                  min: 1000000000,
                   max: 9999999999,
                   error: "CORE_COMMON_MOBILE_ERROR",
                 }, // 10-digit phone number validation
@@ -170,6 +170,14 @@ export const CreateComplaintConfig = {
                 },
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
+            },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
             },
           ],
         },
