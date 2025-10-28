@@ -103,19 +103,12 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
 
   const { path, url } = useRouteMatch();
   const language = Digit.StoreData.getCurrentLanguage();
-  const tenant = Digit.ULBService.getCurrentTenantId();
-
-  stateCode = tenant;
-
   const { isLoading, data: store } = Digit.Services.useStore({
-    //tenant,
     stateCode,
     moduleCode,
     language,
     modulePrefix,
   });
-
-
 
   if (isLoading) {
     return <Loader page={true} variant={"PageLoader"} />;
@@ -192,23 +185,13 @@ const componentsToRegister = {
   HCMMyCampaignRowCard,
   MyCampaignNew,
   QRButton,
-  EqualHeightWrapper,
-  CampaignNameInfo
+EqualHeightWrapper,
+CampaignNameInfo
 
-
+  
 };
 
 const overrideHooks = () => {
-
-  // Save original method
-  const originalGetStateId = Digit.ULBService.getStateId();
-
-  // Override globally
-  window.Digit.ULBService.getStateId = () => {
-
-    return Digit.ULBService.getCurrentTenantId() || originalGetStateId;
-  };
-
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
       Object.keys(CustomisedHooks[ele]).map((hook) => {
