@@ -20,6 +20,10 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
 
+  useEffect(() => {
+    Digit.SessionStorage.del("filtersForInbox");
+  }, []);
+
   const { data: hierarchies,
     isLoading: isHierarchyLoading,
   } = Digit.Hooks.pgr.useFetchAllBoundaryHierarchies({ tenantId });
