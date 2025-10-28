@@ -181,7 +181,29 @@ const MDMSView = ({ ...props }) => {
     finalData = updatedData;
   }
 
-  if (isLoading || isFetching || isLocalizationLoading)     return <Loader page={true} variant={"PageLoader"} />;
+  if (isLoading || isFetching || isLocalizationLoading) return <Loader page={true} variant={"PageLoader"} />;
+
+  //to render toast cleanly
+  const renderToast = () => {
+    if (!showToast) return null;
+    return (
+      <Toast
+        label={showToast?.label}
+        type={showToast?.type}
+        isDleteBtn={true}
+        onClose={() => setShowToast(null)}
+        style={{
+          position: "fixed",
+          bottom: "5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 999999,
+          width: "max-content",
+          maxWidth: "90%",
+        }}
+      />
+    );
+  };
 
   return (
     <React.Fragment>
@@ -201,7 +223,7 @@ const MDMSView = ({ ...props }) => {
           navigate(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
         }}
       />
-      {showToast && <Toast label={showToast?.label} type={showToast?.type} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
+      {renderToast()}
     </React.Fragment>
   )
 }
