@@ -14,7 +14,6 @@ import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench
 import { initCampaignComponents } from "@egovernments/digit-ui-module-campaign-manager";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initWorkbenchHCMComponents } from "@egovernments/digit-ui-module-hcmworkbench";
-import {initPGRComponents} from "@egovernments/digit-ui-module-health-pgr";
 
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
@@ -70,7 +69,6 @@ const initDigitUI = () => {
     initWorkbenchComponents();
     initWorkbenchHCMComponents();
     initCampaignComponents();
-    initPGRComponents();
     updateCustomConfigs();
   } catch (error) {
     console.error('Failed to initialize DigitUI:', error);
