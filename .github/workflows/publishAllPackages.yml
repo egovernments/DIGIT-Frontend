@@ -2,9 +2,9 @@ name: Node.js Publish UI Packages
 
 on:
   push:
-    branches: [ 'dev-master-2' ]
+    branches: [  'console', 'master']
     paths:
-      - 'micro-ui/web/micro-ui-internals/**'
+      - 'health/micro-ui/web/micro-ui-internals/**'
 
 jobs:
   build:
@@ -15,6 +15,6 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: cd micro-ui/web/micro-ui-internals/ && bash ./publish-workbench.sh
+      - run: cd health/micro-ui/web/micro-ui-internals/ && bash ./publish-workbench.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
