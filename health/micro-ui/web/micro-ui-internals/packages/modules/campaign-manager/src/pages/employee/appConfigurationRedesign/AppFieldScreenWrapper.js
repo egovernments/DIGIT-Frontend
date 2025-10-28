@@ -192,7 +192,7 @@ function AppFieldScreenWrapper({ parentState, tabState }) {
         />
       )}
       <Divider className="app-config-drawer-action-divider" />
-        {currentCard?.type !== "template" && (
+        {currentCard?.type !== "template" && currentCard?.conditionalNavigateTo && (
         <>
           <div className="app-config-drawer-subheader">
             <div>{t("APPCONFIG_NAVIGATION_LOGIC")}</div>
@@ -213,7 +213,7 @@ function AppFieldScreenWrapper({ parentState, tabState }) {
           />)}
         </>
       )}
-      <Divider className="app-config-drawer-action-divider" />
+      {currentCard?.type !== "template" && currentCard?.conditionalNavigateTo && (<Divider className="app-config-drawer-action-divider" />)}
       {currentCard?.type !== "template" && (
         <>
           <div className="app-config-drawer-subheader">
