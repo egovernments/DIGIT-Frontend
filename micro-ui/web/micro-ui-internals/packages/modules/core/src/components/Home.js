@@ -195,8 +195,14 @@ export const AppHome = ({
     );
   }
   const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
+  // Check if URL contains 'sandbox-ui' for subtenant behavior
+  const isSandboxUI = location.pathname.includes('sandbox-ui');
+
+  // Set margin-top: 3rem if isSandboxUI is true and isSuperUserWithMultipleRootTenant is false, otherwise 6rem
+  const marginTopValue = (!isSuperUserWithMultipleRootTenant && isSandboxUI) ? "2rem" : "6rem";
+
   return Digit.Utils.getRoleBasedHomeCard() ? (
-    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""} style={{"marginTop":"6rem"}}>
+    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""} style={{"marginTop": marginTopValue}}>
       <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
       {isSuperUserWithMultipleRootTenant && !window.Digit.Utils.browser.isMobile() ? <QuickSetupConfigComponent /> : null}
     </div>

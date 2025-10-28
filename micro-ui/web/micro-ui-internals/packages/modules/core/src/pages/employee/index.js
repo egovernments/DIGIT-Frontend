@@ -48,13 +48,12 @@ const EmployeeApp = ({
   }, []);
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
-  // Check if user is in sandbox-ui context via URL
-  const isInSandboxUI = location.pathname.includes("/sandbox-ui/") || location.pathname.includes("/employee/sandbox") || window?.contextPath === "sandbox-ui";
+
   let isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
-  // If above check fails, check if user is in sandbox-ui context
-  if (!isSuperUserWithMultipleRootTenant && isInSandboxUI) {
-    isSuperUserWithMultipleRootTenant = true;
-  }
+
+  // Check if URL contains 'sandbox-ui' for subtenant behavior
+  const isSandboxUI = location.pathname.includes('sandbox-ui');
+
   const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPage/`);
   useEffect(() => {
     const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
@@ -137,9 +136,9 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+          <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
 
-            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
+            <div className={!noTopBar ? `${((isSuperUserWithMultipleRootTenant && hideClass) || isSandboxUI) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
               {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
               <ErrorBoundary initData={initData}>
                 <AppModules
