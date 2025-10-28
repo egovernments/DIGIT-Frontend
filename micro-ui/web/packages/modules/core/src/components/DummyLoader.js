@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, {useRef, useEffect, useState } from "react";
 import { CheckCircle } from "@egovernments/digit-ui-svg-components";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
@@ -21,42 +21,80 @@ const DummyLoaderScreen = () => {
     "SANDBOX_GUIDE_ALL_SETUP_DONE",
   ];
   useEffect(() => {
-    // Clear any existing intervals/timeouts on cleanup
-    let stepInterval;
-    let navigateTimeout;
+    const stepInterval = setInterval(() => {
+      if (currentStep < steps.length) {
+        setCurrentStep((prev) => prev + 1);
+      }
+    }, 2000); // 1 second delay for each step
 
-    if (currentStep < steps.length) {
-      stepInterval = setInterval(() => {
-        setCurrentStep((prev) => {
-          // Use functional update to avoid stale closure
-          if (prev < steps.length - 1) {
-            return prev + 1;
-          }
-          return prev;
-        });
-      }, 2000);
-    } else if (currentStep === steps.length) {
-      // Navigate after all steps are complete
-      navigateTimeout = setTimeout(() => {
-        // Add safety check for window object
-        const globalPath = typeof window !== 'undefined' ? window?.globalPath : '';
+    if (currentStep === steps.length) {
+      clearInterval(stepInterval); // Clear the interval to stop further updates
+       const globalPath = typeof window !== 'undefined' ? window?.globalPath : '';
+
+      const navigateTimeout = setTimeout(() => {
+        if (roleForLandingPage(getUserRoles, MdmsRes)) {
         navigate({
-          pathname: `/${globalPath}/user/url`,
+          pathname: `/${window?.globalPath}/${tenant}${RoleLandingUrl}`,
           state: { tenant: tenant },
         });
+
+        } else {
+          navigate({
+          pathname: `/${window?.globalPath}/${tenant}/employee`,
+          state: { tenant: tenant },
+        });
+        }
       }, 1000);
+
+      return () => clearTimeout(navigateTimeout); // Cleanup timeout
     }
 
-    // Cleanup function - always clear both timers
     return () => {
-      if (stepInterval) {
-        clearInterval(stepInterval);
-      }
-      if (navigateTimeout) {
-        clearTimeout(navigateTimeout);
-      }
+      clearInterval(stepInterval);
     };
-  }, [currentStep, steps.length, navigate, tenant]);
+  }, [currentStep]);
+
+  const ref = useRef(null);
+  const getUserRoles = Digit.SessionStorage.get("User")?.info?.roles;
+  const [buttonDisabled, setButtonDisabled] = useState(true);
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenant,
+    "SandBoxLanding",
+    [
+      {
+        name: "LandingPageRoles",
+      },
+    ],
+    {
+      enabled: true,
+      staleTime: 0,
+      cacheTime: 0,
+      select: (data) => {
+        return data?.["SandBoxLanding"]?.["LandingPageRoles"];
+      },
+    }
+  );
+
+  useEffect(() => {
+    if (MdmsRes?.[0].url) {
+      setButtonDisabled(false);
+    }
+  }, [MdmsRes]);
+
+  const RoleLandingUrl = MdmsRes?.[0].url;
+
+  const roleForLandingPage = (getUserRoles, MdmsRes) => {
+    const userRole = getUserRoles?.[0]?.code;
+    return userRole === "SUPERUSER" && MdmsRes.some((page) => page.rolesForLandingPage.includes("SUPERUSER"));
+  };
+
+  const onButtonClick = () => {
+    if (roleForLandingPage(getUserRoles, MdmsRes)) {
+      window.location.href = `/${window?.globalPath}/${tenant}${RoleLandingUrl}`;
+    } else {
+      window.location.href = `/${window?.globalPath}/${tenant}/employee`;
+    }
+  };
 
   return (
     <div className="sandbox-loader-screen">
