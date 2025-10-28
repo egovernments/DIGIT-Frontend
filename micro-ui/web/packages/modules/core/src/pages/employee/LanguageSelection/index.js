@@ -5,7 +5,11 @@ import { useTranslation } from "react-i18next";
 import { Navigate, useNavigate } from "react-router-dom";
 import Background from "../../../components/Background";
 import ImageComponent from "../../../components/ImageComponent";
-const defaultLanguage = { label: "English", value: Digit.Utils.getDefaultLanguage() };
+
+const DEFAULT_LOCALE=Digit?.Utils?.getDefaultLanguage?.();
+
+const defaultLanguage = { label: "English", value:  DEFAULT_LOCALE};
+
 const LanguageSelection = () => {
   const { data: storeData, isLoading } = Digit.Hooks.useStore.getInitData();
   const { t } = useTranslation();
@@ -21,11 +25,15 @@ const LanguageSelection = () => {
     setselected(language.value);
     Digit.LocalizationService.changeLanguage(language.value, stateInfo.code);
   };
-
+  function getContextPath(contextPath) {
+    if (!contextPath || typeof contextPath !== "string") return "";
+    return contextPath.split("/")[0];
+  }
+  
   const hasMultipleLanguages = languages?.length > 1;
 
   const handleSubmit = (event) => {
-    navigate(`/${window?.contextPath}/employee/user/login`);
+        navigate(`/${getContextPath(window.contextPath)}/user/login?ts=${Date.now()}`);
   };
 
   if (isLoading) return <Loader />;
