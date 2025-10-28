@@ -1678,7 +1678,7 @@ export const UICustomizations = {
 
       if (requestDate?.startDate && requestDate?.endDate) {
         const fromDate = new Date(requestDate.startDate).getTime();
-        const toDate = new Date(requestDate.endDate).getTime();
+        const toDate = new Date(new Date(requestDate.endDate).setHours(23,59,59,999)).getTime();
 
         data.body.inbox.moduleSearchCriteria.fromDate = fromDate;
         data.body.inbox.moduleSearchCriteria.toDate = toDate;
@@ -1756,7 +1756,11 @@ export const UICustomizations = {
                   {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
                 </Link>
               </span>
-              <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
+              <span>
+                {row?.businessObject?.service?.serviceCode
+                  ? t(`SERVICEDEFS.${row.businessObject.service.serviceCode.toUpperCase()}`)
+                  : t("ES_COMMON_NA")}
+              </span>
             </div>
           );
 
@@ -1768,14 +1772,11 @@ export const UICustomizations = {
             ? <span>{t(`WF_INBOX_${value}`)}</span>: <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
-          return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
+          return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CREATED_DATE":
-          return value > 0 ? (
-            <Tag label={new Date(value).toLocaleDateString()} showIcon={false} type="success" />
-          ) : (
-            <Tag label={new Date(value).toLocaleDateString()} showIcon={false} type="error" />
-          );
+          const dateLabel = Number.isFinite(value) && value > 0 ? new Date(value).toLocaleDateString() : t("ES_COMMON_NA");
+          return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
         default:
           return t("ES_COMMON_NA");
       }

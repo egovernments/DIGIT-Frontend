@@ -117,7 +117,7 @@ export const UICustomizations = {
             ? <span>{t(`WF_INBOX_${value}`)}</span>: <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
-          return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
+          return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CREATED_DATE":
           const dateLabel = Number.isFinite(value) && value > 0 ? new Date(value).toLocaleDateString() : t("ES_COMMON_NA");
