@@ -153,12 +153,20 @@ const MDMSEdit = ({ ...props }) => {
   
     try {
       if (messages.length > 0) {
+        console.log("🔄 [MDMS-EDIT] Upserting localization...", { moduleCount: messages.length });
         await localizationUpsertMutation.mutateAsync({
           body: { tenantId: stateId, messages },
         });
+        console.log("✅ [MDMS-EDIT] Localization upserted successfully");
+
+        // Dispatch event immediately after localization upsert
+        if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+          console.log("📡 [MDMS-EDIT] Dispatching localization update event");
+          window.dispatchEvent(new CustomEvent('pgr-localization-updated'));
+        }
       }
     } catch (err) {
-      console.error("Localization Upsert Failed:", err);
+      console.error("❌ [MDMS-EDIT] Localization Upsert Failed:", err);
       setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), type:"error" });
       closeToast();
       return;
