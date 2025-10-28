@@ -5,6 +5,8 @@ import { useNavigate } from "react-router-dom";
 import { Loader } from "@egovernments/digit-ui-components";
 
 
+import { CustomSVG } from "@egovernments/digit-ui-components";
+const Components = require("@egovernments/digit-ui-svg-components");
 
 export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
   const { isLoading, data } = Digit.Hooks.useAccessControl();
@@ -99,7 +101,7 @@ export const RoleBasedEmployeeHome = ({ modules, additionalComponent }) => {
         acc[module] = {
           module: module,
           kpis: [],
-          icon: item.leftIcon ? Digit.Utils.iconRender(item.leftIcon, "white") : "",
+          icon: item.leftIcon ? Digit.Utils.iconRender({iconName: item.leftIcon, iconFill: "white",CustomSVG,Components}) : "",
           label: Digit.Utils.locale.getTransformedLocale(`${module}_CARD_HEADER`),
           links: [],
         };
