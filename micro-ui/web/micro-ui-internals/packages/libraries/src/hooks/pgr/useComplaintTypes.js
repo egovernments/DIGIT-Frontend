@@ -4,19 +4,20 @@ import { useTranslation } from "react-i18next";
 const useComplaintTypes = ({ stateCode }) => {
   const [complaintTypes, setComplaintTypes] = useState(null);
   const { t, i18n, ready } = useTranslation();
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
 
   // Fetch menu function
-  const fetchMenu = async () => {
+  const fetchMenu = React.useCallback(async () => {
     console.log("🔄 [COMPLAINT-TYPES] Fetching menu with translations...");
     const res = await Digit.GetServiceDefinitions.getMenu(stateCode, t);
     let menu = res.filter((o) => o.key !== "");
     console.log(menu,"menu");
-    
+
     menu.push({ key: "Others", name: t("SERVICEDEFS.OTHERS") });
     setComplaintTypes(menu);
     console.log("✅ [COMPLAINT-TYPES] Menu loaded with", menu.length, "items");
     return menu;
-  };
+  }, [stateCode, t, refreshTrigger]);
 
   // Initial fetch - wait for i18next to be ready
   useEffect(() => {
@@ -26,7 +27,7 @@ const useComplaintTypes = ({ stateCode }) => {
     } else {
       console.log("⏳ [COMPLAINT-TYPES] Waiting for i18next to be ready...");
     }
-  }, [ready, stateCode, t]);
+  }, [ready, fetchMenu]);
 
   // Listen for updates from workbench - ONLY refetch when event is triggered
   useEffect(() => {
@@ -107,16 +108,17 @@ const useComplaintTypes = ({ stateCode }) => {
           localizationMap[msg.code] = msg.message;
 
           // Also create SERVICEDEFS keys that the complaint page expects
-          // Pattern: DIGIT-MDMS-RAINMAKER-PGR-SERVICEDEFS_SERVICECODE_XXX -> SERVICEDEFS.XXX
-          // Pattern: DIGIT-MDMS-RAINMAKER-PGR-SERVICEDEFS_MENUPATH_XXX -> SERVICEDEFS.XXX
-          if (msg.code.includes('SERVICEDEFS_SERVICECODE_')) {
-            const serviceCode = msg.code.split('SERVICEDEFS_SERVICECODE_')[1];
-            localizationMap[`SERVICEDEFS.${serviceCode}`] = msg.message;
-            console.log(`   🔗 Mapped: ${msg.code} → SERVICEDEFS.${serviceCode}`);
-          } else if (msg.code.includes('SERVICEDEFS_MENUPATH_')) {
-            const menuPath = msg.code.split('SERVICEDEFS_MENUPATH_')[1];
-            localizationMap[`SERVICEDEFS.${menuPath}`] = msg.message;
-            console.log(`   🔗 Mapped: ${msg.code} → SERVICEDEFS.${menuPath}`);
+          // Pattern: RAINMAKER-PGR-SERVICEDEFS-SERVICECODE-XXX -> SERVICEDEFS.XXX
+          // Pattern: RAINMAKER-PGR-SERVICEDEFS-MENUPATH-XXX -> SERVICEDEFS.XXX
+          const upperCode = msg.code.toUpperCase();
+          if (upperCode.includes('SERVICEDEFS-SERVICECODE-')) {
+            const serviceCode = msg.code.split(/SERVICEDEFS-SERVICECODE-/i)[1];
+            localizationMap[`SERVICEDEFS.${serviceCode.toUpperCase()}`] = msg.message;
+            console.log(`   🔗 Mapped: ${msg.code} → SERVICEDEFS.${serviceCode.toUpperCase()}`);
+          } else if (upperCode.includes('SERVICEDEFS-MENUPATH-')) {
+            const menuPath = msg.code.split(/SERVICEDEFS-MENUPATH-/i)[1];
+            localizationMap[`SERVICEDEFS.${menuPath.toUpperCase()}`] = msg.message;
+            console.log(`   🔗 Mapped: ${msg.code} → SERVICEDEFS.${menuPath.toUpperCase()}`);
           }
         });
 
@@ -142,8 +144,9 @@ const useComplaintTypes = ({ stateCode }) => {
         }
       }
 
-      // Refetch menu with fresh translations
-      await fetchMenu();
+      // Trigger a refresh by changing the refresh trigger
+      console.log("🔄 [COMPLAINT-TYPES] Triggering menu refresh...");
+      setRefreshTrigger(prev => prev + 1);
     };
 
     // Listen to window custom event (for same page updates)
@@ -174,7 +177,8 @@ const useComplaintTypes = ({ stateCode }) => {
       window.removeEventListener('pgr-localization-updated', handleWindowEvent);
       window.removeEventListener('storage', handleStorageEvent);
     };
-  }, [stateCode, fetchMenu]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []); // Only set up once on mount
 
   return complaintTypes;
 };
