@@ -336,7 +336,7 @@ useEffect(() => {
           };
         } else if (cacheData?.mdms?.find((x) => x?.data?.flow === i?.data?.name)?.data?.data) {
           const reverseData = reverseRestructure(
-            cacheData?.mdms?.find((x) => x.id === i.id)?.data?.data?.pages,
+            cacheData?.mdms?.find((x) => x?.data?.flow === i?.data?.name)?.data?.data,
             AppConfigMdmsData?.[fieldTypeMaster]
           );
           const reverseFormat = {
