@@ -24,7 +24,6 @@ const enabledModules = [
   "NDSS",
   "Utilities",
   // "HRMS",
-  "PGR",
   "Engagement",
   "Workbench",
   "HCMWORKBENCH",
