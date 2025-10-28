@@ -153,16 +153,36 @@ const MDMSEdit = ({ ...props }) => {
   
     try {
       if (messages.length > 0) {
-        console.log("🔄 [MDMS-EDIT] Upserting localization...", { moduleCount: messages.length });
+        console.log("🔄 [MDMS-EDIT] Upserting localization...", { messageCount: messages.length });
         await localizationUpsertMutation.mutateAsync({
           body: { tenantId: stateId, messages },
         });
         console.log("✅ [MDMS-EDIT] Localization upserted successfully");
 
-        // Dispatch event immediately after localization upsert
+        // Dispatch event with the upserted messages (for same page/tab)
         if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
-          console.log("📡 [MDMS-EDIT] Dispatching localization update event");
-          window.dispatchEvent(new CustomEvent('pgr-localization-updated'));
+          console.log("📡 [MDMS-EDIT] Dispatching localization update event with messages:", messages);
+
+          // 1. Dispatch custom event for same page
+          window.dispatchEvent(new CustomEvent('pgr-localization-updated', {
+            detail: { messages, locale }
+          }));
+
+          // 2. Use localStorage to trigger event across tabs/pages
+          const eventData = {
+            type: 'pgr-localization-updated',
+            messages,
+            locale,
+            timestamp: Date.now()
+          };
+          localStorage.setItem('pgr-localization-event', JSON.stringify(eventData));
+
+          // Clean up immediately to allow re-triggering
+          setTimeout(() => {
+            localStorage.removeItem('pgr-localization-event');
+          }, 100);
+
+          console.log("✅ [MDMS-EDIT] Event dispatched (both window event and localStorage)");
         }
       }
     } catch (err) {
