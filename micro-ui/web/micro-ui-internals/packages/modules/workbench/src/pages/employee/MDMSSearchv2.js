@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
-import { Loader } from "@egovernments/digit-ui-components";
+import { Loader ,AlertCard} from "@egovernments/digit-ui-components";
 import DownloadMaster from "../../components/DownloadMaster";
 
 const enableBulkDownload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_DOWNLOAD")
@@ -212,7 +212,7 @@ const MDMSSearchv2 = () => {
           <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>
       }
-
+      <AlertCard additionalElements={[]} label={t("WBH_MDMS_INFO")} text={t("WBH_MDMS_INFO_MESSAGE")} variant="default" style={{marginBottom:"1.5rem",maxWidth:"100%"}}/>
       {updatedConfig && <div className="inbox-search-wrapper">
         <InboxSearchComposer configs={updatedConfig} additionalConfig={{
           resultsTable: {
