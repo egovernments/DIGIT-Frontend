@@ -5,15 +5,6 @@ import { CustomisedHooks } from "../hooks";
 
 
 export const overrideHooks = () => {
-  // Save original method
-  const originalGetStateId = Digit.ULBService.getStateId();
-
-  // Override globally
-  window.Digit.ULBService.getStateId = () => {
-
-    return Digit.ULBService.getCurrentTenantId() || originalGetStateId;
-  };
-
   Object.keys(CustomisedHooks).map((ele) => {
     if (ele === "Hooks") {
       Object.keys(CustomisedHooks[ele]).map((hook) => {
@@ -170,7 +161,7 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
     "type": "EMPLOYEE",
     "tenantId": tenantId,
   } : user;
-  const additionalDetail = { supervisorName: formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber: formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
+  const additionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
   const timestamp = Date.now();
   let complaint = {
     "service": {
