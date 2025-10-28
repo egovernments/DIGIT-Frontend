@@ -22,8 +22,6 @@ import { useHistory } from "react-router-dom";
 import UploadDrawer from "./ImageUpload/UploadDrawer";
 import ImageComponent from "../../../components/ImageComponent";
 
-const DEFAULT_TENANT=Digit?.ULBService?.getStateId?.();
-
 const defaultImage =
   "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAO4AAADUCAMAAACs0e/bAAAAM1BMVEXK0eL" +
   "/" +
@@ -48,7 +46,7 @@ const defaultImage =
   "L+RGKCddCGmatiPyPB/+ekO/M/q/7uvbt22kTt3zEnXPzCV13T3Gel4/6NduDu66xRvlPNkM1RjjxUdv+4WhGx6TftD19Q/dfzpwcHO+rE3fAAAAAElFTkSuQmCC";
 
 const defaultValidationConfig = {
-  tenantId: `${DEFAULT_TENANT}`,
+  tenantId: `${Digit.ULBService.getStateId()}`,
   UserProfileValidationConfig: [
     {
       name: "/^[a-zA-Z ]+$/i",

@@ -1,5 +1,5 @@
 import { Card,  SVG } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
@@ -14,7 +14,6 @@ created the foem using rjfs json form
 https://rjsf-team.github.io/react-jsonschema-form/docs/
 
 */
-
 const onFormError = (errors) => console.log("I have", errors.length, "errors to fix");
 
 const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onViewActionsSelect, viewActions, onSubmitEditAction, ...props }) => {
@@ -210,7 +209,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const onFormValueChange = (updatedSchema, element) => {
     const { formData } = updatedSchema;
     if (!_.isEqual(session, formData)) {
-      setSession((prev) => ({ ...prev, ...formData }));
+      setSession({ ...session, ...formData });
     }
   };
 
@@ -247,23 +246,13 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   useEffect(() => {
     if (!_.isEqual(sessionFormData, session)) {
       const timer = setTimeout(() => {
-        setSessionFormData((prev) => ({ ...prev, ...session }));
+        setSessionFormData({ ...sessionFormData, ...session });
       }, 1000);
       return () => {
         clearTimeout(timer);
       };
     }
   }, [session]);
-
-     const debouncedSave = useRef(_.debounce((newSession) => {
-  setSessionFormData((prev) => ({ ...prev, ...newSession }));
-}, 500)).current;
-
-useEffect(() => {
-  if (!_.isEqual(sessionFormData, session)) {
-    debouncedSave(session);
-  }
-}, [session]);
 
   if (noSchema) {
     return (

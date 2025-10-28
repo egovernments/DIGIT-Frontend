@@ -291,7 +291,7 @@ const DigitJSONForm = ({
   const [showPopUp, setShowPopUp] = useState(false);
   const [showBulkUploadModal, setShowBulkUploadModal] = useState(false);
   const { moduleName, masterName } = Digit.Hooks.useQueryParams();
-  const [internalFormData, setInternalFormData] = useState(formData);
+  const [updatedData, setUpdatedData] = useState(formData);
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const enableBulkUpload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_UPLOAD")
     ? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_UPLOAD")
@@ -401,12 +401,6 @@ const DigitJSONForm = ({
     setShowPopUp(false); 
   };
 
-  const onFormChangeInternal = ({ formData }) => {
-    setInternalFormData(formData);
-    onFormChange && onFormChange({ formData });
-  };
-  
-
   return (
     <AdditionalPropertiesContext.Provider value={{ additionalProperties, updateAdditionalProperties: () => {} }}>
       <React.Fragment>
@@ -439,9 +433,9 @@ const DigitJSONForm = ({
             schema={schema?.definition}
             validator={validator}
             showErrorList={false}
+            formData={formData}
             noHtml5Validate={true}
-            formData={internalFormData}
-            onChange={onFormChangeInternal}
+            onChange={onFormChange}
             formContext={{
               schemaCode: schema?.code,
               MdmsRes,

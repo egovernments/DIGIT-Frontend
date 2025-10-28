@@ -19,6 +19,11 @@ const MDMSSearch = lazyWithFallback(
   { loaderText: "Loading MDMS Search..." }
 );
 
+const MDMSAdd = lazyWithFallback(
+  () => import(/* webpackChunkName: "workbench-mdms-add" */ "./MDMSAdd"),
+  () => require("./MDMSAdd").default,
+  { loaderText: "Loading MDMS Add..." }
+);
 
 const MDMSAddV2 = lazyWithFallback(
   () => import(/* webpackChunkName: "workbench-mdms-add-v2" */ "./MDMSAddV2"),
@@ -209,6 +214,7 @@ const App = ({ path }) => {
           <Route path="localisation-search" element={<PrivateRoute element={<LocalisationSearch />} />} />
           <Route path="mdms-search" element={<PrivateRoute element={<MDMSSearch />} />} />
           <Route path="mdms-search-v2" element={<PrivateRoute element={<MDMSSearchv2 parentRoute={path} />} />} />
+          <Route path="mdms-add" element={<PrivateRoute element={<MDMSAdd FormSession={MDMSCreateSession} parentRoute={path} />} />} />
           <Route path="mdms-add-v2" element={<PrivateRoute element={<MDMSAddV2 parentRoute={path} />} />} />
           <Route path="mdms-add-v4" element={<PrivateRoute element={<MDMSAddV4 parentRoute={path} />} />} />
           <Route path="mdms-view" element={<PrivateRoute element={<MDMSView parentRoute={path} />} />} />
