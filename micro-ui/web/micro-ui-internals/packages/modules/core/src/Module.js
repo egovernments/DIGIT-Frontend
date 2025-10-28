@@ -14,6 +14,8 @@ import ErrorBoundary from "./components/ErrorBoundaries";
 import getStore from "./redux/store";
 import PrivacyComponent from "./components/PrivacyComponent";
 import OtpComponent from "./pages/employee/Otp/OtpCustomComponent";
+import LoginSignupSelector from "./components/LoginSignupSelector";
+import ForgotOrganizationTooltip from "./components/ForgotOrganizationTooltip";
 
 // Create QueryClient instance outside component to prevent recreation
 const createQueryClient = () => new QueryClient({
@@ -166,6 +168,8 @@ const componentsToRegister = {
   ChangeLanguage,
   PrivacyComponent,
   OtpComponent,
+  ForgotOrganizationTooltip,
+  LoginSignupSelector
 };
 
 export const initCoreComponents = () => {
