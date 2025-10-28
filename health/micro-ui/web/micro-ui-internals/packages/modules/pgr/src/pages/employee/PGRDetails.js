@@ -24,7 +24,7 @@ const ACTION_CONFIGS = [
           body: [
             {
               type: "component",
-              isMandatory: false,
+              isMandatory: true,
               component: "PGRAssigneeComponent",
               key: "SelectedAssignee",
               label: "CS_COMMON_EMPLOYEE_NAME",
@@ -44,7 +44,7 @@ const ACTION_CONFIGS = [
             },
             {
               type: "component",
-              isMandatory: true,
+              isMandatory: false,
               component: "UploadFileComponent",
               key: "complaintFile",
               label: "CS_COMMON_COMPLAINT_FILE",
@@ -95,6 +95,14 @@ const ACTION_CONFIGS = [
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
             },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
+            },
           ],
         },
       ],
@@ -122,6 +130,14 @@ const ACTION_CONFIGS = [
                 validation: { required: true },
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
+            },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
             },
           ],
         },
@@ -438,7 +454,10 @@ const PGRDetails = () => {
           setSessionFormData={setSessionFormData}
           clearSessionFormData={clearSessionFormData}
           config={getUpdatedConfig(selectedAction, workflowData, ACTION_CONFIGS, serviceDefs, pgrData)}
-          closeModal={() => setOpenModal(false)}
+          closeModal={() => {
+            setOpenModal(false);
+            clearSessionFormData();
+          }}
           onSubmit={handleActionSubmit}
         />
       )}

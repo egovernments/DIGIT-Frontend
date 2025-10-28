@@ -171,6 +171,14 @@ export const CreateComplaintConfig = {
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
             },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
+            },
           ],
         },
         {

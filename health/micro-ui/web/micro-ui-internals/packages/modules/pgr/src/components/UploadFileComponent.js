@@ -3,6 +3,7 @@ import { Card, UploadFile, SubmitBar } from "@egovernments/digit-ui-react-compon
 import { useTranslation } from "react-i18next";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
 import jsPDF from "jspdf";
+import { Button} from "@egovernments/digit-ui-components";
 
 const UploadedFileComponent = ({ config, onSelect }) => {
   const { t } = useTranslation();
@@ -148,7 +149,14 @@ const UploadedFileComponent = ({ config, onSelect }) => {
         message={uploadedFile ? `1 ${t("CS_ACTION_FILEUPLOADED")}` : t("CS_ACTION_NO_FILEUPLOADED")}
       />
       {uploadedFile && (
-        <SubmitBar label={t("CS_ACTION_DOWNLOAD")} onSubmit={downloadFile} />
+        <Button
+            label={t("WBH_DOWNLOAD")}
+            variation="secondary"
+            type="button"
+            size={"medium"}
+            icon={t("DownloadIcon")}
+            onClick={downloadFile}
+          />
       )}
       {error && <p className="error">{error}</p>}
     </Card>

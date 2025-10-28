@@ -207,7 +207,9 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
       "action": "CREATE",
       "assignes": [],
       "hrmsAssignes": [],
-      "comments": ""
+      "comments": "",
+      // Include documents array if complaint file is provided
+      "verificationDocuments": formData?.complaintFile ? [formData.complaintFile] : null
     }
   }
 
