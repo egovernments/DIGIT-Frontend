@@ -9,6 +9,16 @@ import { FormComposer } from "../../../components/FormComposer";
 import { createComplaint } from "../../../redux/actions/index";
 
 export const CreateComplaint = ({ parentUrl }) => {
+  // Check for MDMS update flag and trigger hard reload
+  useEffect(() => {
+    const mdmsUpdated = window.sessionStorage.getItem('pgr_mdms_updated');
+    if (mdmsUpdated === 'true') {
+      console.log('PGR MDMS data was updated, triggering hard reload...');
+      window.sessionStorage.removeItem('pgr_mdms_updated');
+      window.location.reload();
+    }
+  }, []);
+
   const { data: cities, isLoading }  = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
   const [showToast, setShowToast] = useState(null);
   const { t } = useTranslation();

@@ -142,16 +142,16 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
       const jsonPath = api?.responseJson ? api?.responseJson : "mdms[0].uniqueIdentifier";
       setShowToast(`${t("WBH_SUCCESS_MDMS_MSG")} ${_.get(resp, jsonPath, "NA")}`);
       setShowErrorToast(false);
-  
+
       const locModuleName = `digit-mdms-${schema?.code}`;
       const messages = buildLocalizationMessages(additionalProperties, locModuleName, locale);
-  
+
       if (messages.length > 0) {
         const localizationBody = {
           tenantId: tenantId,
           messages: messages,
         };
-  
+
         // Perform localization upsert
         localizationMutation.mutate(
           {
@@ -161,6 +161,10 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
           {
             onError: (resp) => {
               toggleSpinner(false);
+              // Reset flag on localization error
+              if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+                window.sessionStorage.removeItem('pgr_mdms_updated');
+              }
               setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
               setShowErrorToast(true);
               closeToast();
@@ -170,9 +174,9 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
               setSessionFormData({});
               setSession({});
 
-              // Dispatch event to notify complaint page about localization update
+              // Set flag on successful MDMS add with localization
               if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
-                window.dispatchEvent(new CustomEvent('pgr-localization-updated'));
+                window.sessionStorage.setItem('pgr_mdms_updated', 'true');
               }
 
               closeToast();
@@ -185,6 +189,12 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
         toggleSpinner(false);
         setSessionFormData({});
         setSession({});
+
+        // Set flag on successful MDMS add without localization
+        if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+          window.sessionStorage.setItem('pgr_mdms_updated', 'true');
+        }
+
         closeToast();
         gotoView();
       }
@@ -192,6 +202,10 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   
     const onError = (resp) => {
       toggleSpinner(false);
+      // Reset flag on MDMS add error
+      if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+        window.sessionStorage.removeItem('pgr_mdms_updated');
+      }
       setShowToast(`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`);
       setShowErrorToast(true);
       closeToast();
