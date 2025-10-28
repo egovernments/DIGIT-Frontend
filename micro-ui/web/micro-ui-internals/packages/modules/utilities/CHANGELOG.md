@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0]  [23-October-2025]
+## [1.1.0]  [28-October-2025]
 
 ### 🚀 Major Utility Suite Enhancement
 
@@ -92,7 +92,7 @@
 ## [1.1.0-rc1]  [27-Oct-2025]
 - Test Build for release
 
-## [1.0.17]  [23-October-2025]
+## [1.0.17]  [28-October-2025]
 
 ### New Features:
 - **Enhanced Module Integration**: 

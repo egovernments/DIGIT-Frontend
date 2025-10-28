@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.9.0] [23-October-2025]
+## [1.9.0] [28-October-2025]
 
 ### 🚀 Enhanced React Component Library
 

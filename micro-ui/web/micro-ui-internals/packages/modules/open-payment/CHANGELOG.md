@@ -1,6 +1,6 @@
 # Changelog - Open Payment Module
 
-## [0.1.0] [23-October-2025]
+## [0.1.0] [28-October-2025]
 
 ### 🚀 Complete Open Payment System Implementation
 
@@ -103,7 +103,7 @@
 ## [0.1.0-rc1]  [27-Oct-2025]
 - Test Build for release
 
-## [0.0.3] [23-October-2025]
+## [0.0.3] [28-October-2025]
 
 ### New Features:
 - **Multi-Tenant Compatibility**: 

@@ -1,4 +1,4 @@
-## [1.9.0] [23-October-2025]
+## [1.9.0] [28-October-2025]
 
 ### 🚀 Enhanced HR Management System
 
@@ -104,7 +104,7 @@
 ## [1.9.0-rc1]  [27-Oct-2025]
 - Test Build for release
 
-## [1.8.18] [23-October-2025]
+## [1.8.18] [28-October-2025]
 
 ### New Features:
 - **Multi-Tenant Support**: 

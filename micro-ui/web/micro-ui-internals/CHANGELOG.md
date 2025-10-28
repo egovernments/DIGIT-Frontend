@@ -1,7 +1,7 @@
 # DIGIT Frontend - Micro UI Internals Changelog
 
-## Version: 2025.10.23 - Major Platform Release
-**Release Date:** October 23, 2025
+## Version: 2025.10.28 - Major Platform Release
+**Release Date:** October 28, 2025
 
 ---
 
@@ -43,16 +43,16 @@ This release represents a comprehensive enhancement of the DIGIT Frontend platfo
 
 | Module | Previous | New | Release Type | Key Features |
 |--------|----------|-----|--------------|--------------|
-| **Core** | 1.8.55 | **1.9.0** | Major | Authentication v2, Multi-tenant, SandBox support |
-| **Workbench** | 1.0.28 | **1.1.0** | Minor | MDMS redesign, Bulk upload, Form enhancements |
+| **Core** | 1.8.24 | **1.9.0** | Major | Authentication v2, Multi-tenant, SandBox support |
+| **Workbench** | 1.0.20 | **1.1.0** | Minor | MDMS redesign, Bulk upload, Form enhancements |
 | **HRMS** | 1.8.17 | **1.9.0** | Major | Employee management, DatePicker fixes |
 | **PGR** | 1.8.12 | **1.9.0** | Major | Grievance v2, Advanced inbox, Configuration-driven |
 | **DSS** | 1.8.12 | **1.9.0** | Major | Dashboard analytics, Kibana integration |
 | **Engagement** | 1.8.10 | **1.9.0** | Major | Citizen engagement, Survey management |
-| **Utilities** | 1.0.16 | **1.1.0** | Minor | Form explorer, Document viewer, Audit history |
+| **Utilities** | 1.0.0 | **1.1.0** | Minor | Form explorer, Document viewer, Audit history |
 | **Common** | 1.8.10 | **1.9.0** | Major | Shared components, Multi-tenant utilities |
-| **Sandbox** | 0.0.3 | **0.1.0** | Minor | **NEW MODULE** - Complete sandbox environment |
-| **Open Payment** | 0.0.2 | **0.1.0** | Minor | **NEW MODULE** - Payment gateway integration |
+| **Sandbox** | NA | **0.1.0** | Minor | **NEW MODULE** - Complete sandbox environment |
+| **Open Payment** | NA | **0.1.0** | Minor | **NEW MODULE** - Payment gateway integration |
 
 ---
 
@@ -369,7 +369,7 @@ This release marks a significant milestone in the DIGIT Frontend platform evolut
 
 ---
 
-**Release Date**: October 23, 2025  
+**Release Date**: October 28, 2025  
 **Document Version**: 1.0  
 **Total Modules Updated**: 10  
 **New Modules**: 2 (Sandbox, Open Payment)  

@@ -1,5 +1,5 @@
 
-## [1.1.0]  [23-October-2025]
+## [1.1.0]  [28-October-2025]
 
 ### 🚀 Major Features & UI/UX Redesign
 
@@ -82,7 +82,7 @@
 ## [1.1.0-rc1]  [27-Oct-2025]
 - Test Build for release
 
-## [1.0.29]  [23-October-2025]
+## [1.0.29]  [28-October-2025]
 
 ### 🚀 Major UI/UX Redesign - MDMS Manage Master Interface
 

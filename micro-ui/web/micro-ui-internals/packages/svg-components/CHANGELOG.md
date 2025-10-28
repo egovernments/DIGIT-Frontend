@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.1.0] [23-October-2025]
+## [1.1.0] [28-October-2025]
 
 ### 🚀 Enhanced SVG Icon Library
 

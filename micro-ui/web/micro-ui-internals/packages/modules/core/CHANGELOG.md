@@ -1,6 +1,6 @@
 # Changelog 
 
-## [1.9.0]  [23-October-2025]
+## [1.9.0]  [28-October-2025]
 
 ### 🚀 Major Feature Release - Enhanced Authentication & Multi-Tenant Support
 
@@ -111,7 +111,7 @@
 ## [1.9.0-rc1]  [27-Oct-2025]
 - Test Build for release
 
-## [1.8.57]  [23-October-2025]
+## [1.8.57]  [28-October-2025]
 
 ### New Features:
 - **Multi-Tenant Support Enhancement**: 

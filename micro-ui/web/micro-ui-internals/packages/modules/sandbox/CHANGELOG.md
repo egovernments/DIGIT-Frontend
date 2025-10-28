@@ -1,6 +1,6 @@
 # Changelog
 
-## [0.1.0] [23-October-2025]
+## [0.1.0] [28-October-2025]
 
 ### 🎉 COMPLETELY NEW MODULE - Sandbox Environment for DIGIT Platform
 
@@ -100,7 +100,7 @@
 ## [0.1.0-rc1]  [27-Oct-2025]
 - Test Build for release
 
-## [0.0.4] [23-October-2025]
+## [0.0.4] [28-October-2025]
 
 ### New Features:
 - **Module Navigation Enhancement**: 
