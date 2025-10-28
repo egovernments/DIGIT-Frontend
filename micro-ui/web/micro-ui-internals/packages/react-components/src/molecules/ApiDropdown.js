@@ -1,9 +1,10 @@
 import React, { Fragment, useState, useEffect } from "react";
 import MultiSelectDropdown from "../atoms/MultiSelectDropdown";
 import Dropdown from "../atoms/Dropdown";
-import { Loader } from "../atoms/Loader";
 import { useTranslation } from "react-i18next";
 import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
+
 const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
   //based on type (ward/locality) we will render dropdowns respectively
   //here we will render two types of dropdown based on allowMultiSelect boolean
@@ -13,16 +14,16 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
 
   const { t } = useTranslation();
 
-
-  const reqCriteria = Digit?.Customizations?.[populators?.masterName]?.[populators?.moduleName]?.[populators?.customfn]()
-
+  const reqCriteria = Digit?.Customizations?.[populators?.masterName]?.[populators?.moduleName]?.[populators?.customfn](populators)
+  
   const { isLoading: isApiLoading, data: apiData, revalidate, isFetching: isApiFetching } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   useEffect(() => {
     setOptions(apiData);
   }, [apiData]);
 
-  if (isApiLoading) return <Loader />;
+  if (isApiLoading) return <Loader page={false} variant={"Basic"} />;
+
 
   return (
     <>
@@ -43,9 +44,10 @@ const ApiDropdown = ({ populators, formData, props, inputRef, errors }) => {
               );
             }}
             selected={props?.value}
-            defaultLabel={t(populators?.defaultText)}
-            defaultUnit={t(populators?.selectedText)}
+            defaultLabel={t(populators?.defaultText) }
+            defaultUnit={t(populators?.selectedText) || t("COMMON_SELECTED")}
             config={populators}
+            
           />
         </div>
       )}

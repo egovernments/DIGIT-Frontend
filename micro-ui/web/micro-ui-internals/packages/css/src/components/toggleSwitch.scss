@@ -31,7 +31,7 @@
     box-shadow: 0 0 2px 0 rgba(10, 10, 10, 0.29);
   }
   
-  .react-switch-checkbox:checked + .react-switch-label .react-switch-button {
+  .react-switch-checkbox:checked + .react-switch-label .react-switch-button:not(.disabled) {
     left: calc(100% - 2px);
     transform: translateX(-100%);
   }

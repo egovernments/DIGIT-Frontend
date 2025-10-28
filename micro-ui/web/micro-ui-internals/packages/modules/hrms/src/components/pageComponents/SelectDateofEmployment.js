@@ -22,6 +22,12 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
     onSelect(config.key, { ...formData[config.key], [input]: value });
   }
 
+
+  const fieldStyle = {
+    maxWidth: "36.25rem",
+    paddingRight: "2.5rem",
+  };
+
   return (
     <div>
       {inputs?.map((input, index) => (
@@ -32,7 +38,7 @@ const SelectDateofEmployment = ({ t, config, onSelect, formData = {}, userType, 
               {t(input.label)}
               {input.isMandatory ? " * " : null}
             </CardLabel>
-            <div className="field">
+            <div className="field" style={fieldStyle}>
               <DatePicker
                 key={input.name}
                 min={formData?.SelectDateofBirthEmployment?.dob}

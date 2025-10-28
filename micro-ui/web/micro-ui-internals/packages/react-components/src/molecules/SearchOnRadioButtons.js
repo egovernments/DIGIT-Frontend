@@ -1,4 +1,4 @@
-import React, { useReducer } from "react"
+import React, { useEffect, useReducer } from "react"
 import RadioButtons from "../atoms/RadioButtons"
 import TextInput from "../atoms/TextInput"
 import { SearchIconSvg } from "../atoms/svgindex"
@@ -9,8 +9,17 @@ const SearchOnRadioButtons = ({options,optionsKey,additionalWrapperClass,onSelec
         switch (action.type){
             case "filter":
                 return action.options.filter(i => i[optionsKey].toUpperCase().includes(action.payload.toUpperCase()))
+            default:
+                return state;
+                
         }
     }
+
+    useEffect(()=>{
+        if(options){
+            optionsDispatch({type: "filter", payload: "", options})
+        }
+    },[options])
 
     const [ filteredOptions, optionsDispatch ] = useReducer(optionsReducer, options)
 
@@ -19,7 +28,7 @@ const SearchOnRadioButtons = ({options,optionsKey,additionalWrapperClass,onSelec
     }
 
     return <div className="SearchOnRadioButton">
-        <TextInput textInputStyle={{maxWidth:"100%"}} signature={true} signatureImg={<SignatureImage />} onChange={onSearchQueryChange || defaultSearchQueryChange} value={SearchQueryValue} placeholder={placeholder} />
+        <TextInput signature={true} signatureImg={<SignatureImage />} onChange={onSearchQueryChange || defaultSearchQueryChange} value={SearchQueryValue} placeholder={placeholder} />
         <RadioButtons {...{options: filteredOptions,optionsKey,additionalWrapperClass,onSelect,selectedOption}} />
     </div>
 }

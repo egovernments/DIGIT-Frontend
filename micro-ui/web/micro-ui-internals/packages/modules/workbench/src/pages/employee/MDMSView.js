@@ -1,53 +1,56 @@
-import React,{useState} from 'react'
+import React, { useState } from 'react'
 import MDMSAdd from './MDMSAddV2'
-import { Loader,Toast } from '@egovernments/digit-ui-react-components';
+import { Toast } from "@egovernments/digit-ui-components";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { Button } from '@egovernments/digit-ui-components';
+import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
 
-const MDMSView = ({...props}) => {
+const MDMSView = ({ ...props }) => {
   const history = useHistory()
   const { t } = useTranslation()
   const [showToast, setShowToast] = useState(false);
-  let { moduleName, masterName, tenantId,uniqueIdentifier } = Digit.Hooks.useQueryParams();
-  // const stateId = Digit.ULBService.getStateId();
-  tenantId = Digit.ULBService.getCurrentTenantId();
-  const fetchActionItems = (data) => {
-    let actionItems = [{
-      action:"EDIT",
-      label:"Edit Master"
-    }]
+  const { moduleName, masterName, uniqueIdentifier } = Digit.Hooks.useQueryParams();
+  const { from, screen, action } = Digit.Hooks.useQueryParams()
+  const tenantId = Digit.ULBService.getCurrentTenantId();
 
-    const isActive = data?.isActive
-    if(isActive) actionItems.push({
-      action:"DISABLE",
-      label:"Disable Master"
-    })
-    else actionItems.push({
-      action:"ENABLE",
-      label:"Enable Master"
-    })
+  const { data: MdmsRes } = Digit.Hooks.useCustomMDMS(
+    tenantId,
+    "Workbench",
+    [{ name: "UISchema" }],
+    {
+      select: (data) => data?.["Workbench"]?.["UISchema"],
+    }
+  );
 
-    return actionItems
-  }
+  const additionalParams = { from: from, screen: screen, action: action }
+  Object.keys(additionalParams).forEach(key => {
+    if (additionalParams[key] === undefined || additionalParams[key] === null) {
+      delete additionalParams[key];
+    }
+  });
 
-  
+  let propsToSendButtons = {
+    moduleName,
+    masterName,
+  };
+
+  const fetchActionItems = (data) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.fetchActionItems(data, propsToSendButtons);
 
   const reqCriteria = {
     url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
     params: {},
     body: {
       MdmsCriteria: {
-        tenantId: tenantId ,
-        uniqueIdentifiers:[uniqueIdentifier],
-        schemaCode:`${moduleName}.${masterName}`
+        tenantId: tenantId,
+        uniqueIdentifiers: [uniqueIdentifier],
+        schemaCode: `${moduleName}.${masterName}`
       },
     },
     config: {
       enabled: moduleName && masterName && true,
-      select: (data) => {
-        
-        return data?.mdms?.[0]
-      },
+      select: (data) => data?.mdms?.[0]
     },
   };
 
@@ -57,49 +60,43 @@ const MDMSView = ({...props}) => {
     }, 5000);
   }
 
-  const { isLoading, data, isFetching,refetch,revalidate } = Digit.Hooks.useCustomAPIHook(reqCriteria);
+  const { isLoading, data, isFetching, refetch } = Digit.Hooks.useCustomAPIHook(reqCriteria);
 
   const reqCriteriaUpdate = {
-    url: Digit.Utils.workbench.getMDMSActionURL(moduleName,masterName,"update"),
+    url: Digit.Utils.workbench.getMDMSActionURL(moduleName, masterName, "update"),
     params: {},
-    body: {
-      
-    },
+    body: {},
     config: {
       enabled: true,
     },
   };
   const mutation = Digit.Hooks.useCustomAPIMutationHook(reqCriteriaUpdate);
-  
-  const handleEnableDisable = async (action) => {
 
+  const handleEnableDisable = async (action) => {
     const onSuccess = (resp) => {
-      
       setShowToast({
-        label:`${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive?"ENA":"DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
+        label: `${t(`WBH_SUCCESS_${resp?.mdms?.[0]?.isActive ? "ENA" : "DIS"}_MDMS_MSG`)} ${resp?.mdms?.[0]?.id}`
       });
       closeToast()
       refetch()
     };
     const onError = (resp) => {
       setShowToast({
-        label:`${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
-        isError:true
+        label: `${t("WBH_ERROR_MDMS_DATA")} ${t(resp?.response?.data?.Errors?.[0]?.code)}`,
+        type: "error"
       });
-      
       closeToast()
       refetch()
     };
 
-
     mutation.mutate(
       {
-        url:reqCriteriaUpdate?.url,
+        url: reqCriteriaUpdate?.url,
         params: {},
         body: {
-          Mdms:{
+          Mdms: {
             ...data,
-            isActive:action==="ENABLE" ? true : false
+            isActive: action === "ENABLE"
           },
         },
       },
@@ -110,27 +107,123 @@ const MDMSView = ({...props}) => {
     );
   }
 
-  const onActionSelect = (action) => {
-    const {action:actionSelected} = action 
-    //action===EDIT go to edit screen 
-    if(actionSelected==="EDIT") {
-      history.push(`/${window?.contextPath}/employee/workbench/mdms-edit?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${uniqueIdentifier}`)
-    }
-    //action===DISABLE || ENABLE call update api and show toast respectively
-    else{
-      //call update mutation
-      handleEnableDisable(actionSelected)
-    }
+  let propsToSend = {
+    moduleName,
+    masterName,
+    tenantId,
+    uniqueIdentifier,
+    data,
+    history,
+    handleEnableDisable,
+    additionalParams
+  };
+
+  const onActionSelect = (action) => Digit?.Customizations?.["commonUiConfig"]?.["ViewMdmsConfig"]?.onActionSelect(action, propsToSend);
+
+  let localisableFields = [];
+  if (MdmsRes && Array.isArray(MdmsRes)) {
+    const schemaDef = MdmsRes.find(item => item.schemaCode === `${moduleName}.${masterName}`);
+    localisableFields = schemaDef?.localisation?.localisableFields || [];
   }
 
-  if(isLoading) return <Loader />
+  const rawSchemaCode = data?.schemaCode;
+
+  const tranformLocModuleName = (localModuleName) => {
+    if (!localModuleName) return null;
+    return localModuleName.replace(/[^a-zA-Z0-9]/g, "-").toUpperCase();
+  };
+
+  const localizationModule = tranformLocModuleName(`DIGIT-MDMS-${rawSchemaCode}`).toLowerCase();
+
+  const createLocalizationCode = (fieldName, fieldValue) => {
+    const upperFieldName = fieldName.toUpperCase();
+    const transformedValue = (fieldValue || "").replace(/\s+/g, "").toUpperCase();
+    return tranformLocModuleName(`${rawSchemaCode}_${upperFieldName}_${transformedValue}`);
+  };
+
+  let localizationCodes = [];
+  if (data?.data && localisableFields?.length > 0) {
+    localizationCodes = localisableFields.map(field => createLocalizationCode(field.fieldPath, data.data[field.fieldPath]));
+  }
+
+  const locale = Digit.StoreData.getCurrentLanguage();
+  const localizationReqCriteria = {
+    url: `/localization/messages/v1/_search?locale=${locale}&tenantId=${tenantId}&module=${localizationModule}`,
+    params: {},
+    body: {},
+    config: {
+      enabled: !!data && !!MdmsRes && !!data?.schemaCode && !!tenantId && localizationCodes.length > 0,
+      select: (respData) => {
+        const messageMap = {};
+        if (Array.isArray(respData?.messages)) {
+          respData.messages.forEach(msg => {
+            messageMap[msg.code] = msg.message;
+          });
+        }
+        return messageMap;
+      },
+    },
+  };
+
+  const { data: localizationMap, isLoading: isLocalizationLoading } = Digit.Hooks.useCustomAPIHook(localizationReqCriteria);
+
+  let finalData = data;
+  if (data && data.data && localizationMap && localisableFields?.length > 0) {
+    const updatedData = _.cloneDeep(data);
+    localisableFields.forEach(field => {
+      const code = createLocalizationCode(field.fieldPath, updatedData.data[field.fieldPath]);
+      if (localizationMap[code]) {
+        updatedData.data[field.fieldPath] = localizationMap[code];
+      }
+    });
+    finalData = updatedData;
+  }
+
+  if (isLoading || isFetching || isLocalizationLoading) return <Loader page={true} variant={"PageLoader"} />;
+
+  // ✅ Function to render toast cleanly
+  const renderToast = () => {
+    if (!showToast) return null;
+    return (
+      <Toast
+        label={showToast?.label}
+        type={showToast?.type}
+        isDleteBtn={true}
+        onClose={() => setShowToast(null)}
+        style={{
+          position: "fixed",
+          bottom: "5rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 999999,
+          width: "max-content",
+          maxWidth: "90%",
+        }}
+      />
+    );
+  };
 
   return (
     <React.Fragment>
-      <MDMSAdd defaultFormData = {data?.data} updatesToUISchema ={{"ui:readonly": true}} screenType={"view"} onViewActionsSelect={onActionSelect} viewActions={fetchActionItems(data)} />
-      {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=> setShowToast(null)}></Toast>}
+      <MDMSAdd
+        defaultFormData={finalData?.data}
+        updatesToUISchema={{ "ui:readonly": true }}
+        screenType={"view"}
+        onViewActionsSelect={onActionSelect}
+        viewActions={fetchActionItems(finalData)}
+      />
+      <Button
+        className={"mdms-view-audit"}
+        label="view audit"
+        variation="secondary"
+        icon={"History"}
+        onClick={() => {
+          history.push(`../utilities/audit-log?id=${finalData?.id}&tenantId=${tenantId}`);
+        }}
+      />
+      {renderToast()}
     </React.Fragment>
   )
-}
+};
 
-export default MDMSView
+export default MDMSView;

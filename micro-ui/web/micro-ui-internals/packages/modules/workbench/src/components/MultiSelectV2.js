@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from "react";
 import Select from "react-select";
 import { useTranslation } from "react-i18next";
-import { Loader } from "@egovernments/digit-ui-react-components";
 import _ from "lodash";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const customStyles = {
   control: (provided, state) => ({
     ...provided,
-    borderColor: state.isFocused ? "#f47738" : "#505a5f",
+    borderColor: state.isFocused ? "#c84c0e" : "#505a5f",
     borderRadius: "unset",
     "&:hover": {
-      borderColor: "#f47738",
+      borderColor: "#c84c0e",
     },
   }),
 };
@@ -53,9 +54,8 @@ useEffect(()=>{
   );
   const selectedOption = formattedOptions?.filter((obj) => (multiple ? value?.includes(obj.value) : obj.value == value));
   if (isLoading) {
-    return <Loader />;
+    return <Loader page={false} variant={"Basic"} />;
   }
-
   return (
     <Select
       className="form-control form-select"

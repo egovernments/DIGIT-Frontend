@@ -3,7 +3,8 @@
 
   thead {
     th {
-      padding: 16px;
+      background-color: #ffffff;
+      padding: 20px 18px;
       @apply font-bold align-middle text-left;
       &:first-child {
         min-width: 256px;
@@ -13,7 +14,6 @@
       }
     }
   }
-
 
   tbody {
     border: none;
@@ -102,7 +102,7 @@
       position: sticky;
       background: #fff;
       right: 0;
-      left:0;
+      left: 0;
       border-top-left-radius: 4px;
     }
   }
@@ -112,7 +112,7 @@
       background: #fff;
       color: theme(colors.primary.main);
       left: 0;
-      right:0;
+      right: 0;
     }
   }
 }
@@ -192,7 +192,7 @@
 .reports-table {
   margin-top: 2rem;
   thead {
-    th {      
+    th {
       &:first-child {
         min-width: unset;
       }

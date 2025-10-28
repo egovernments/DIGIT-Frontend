@@ -29,6 +29,7 @@ export const ULBService = {
    */
   getCurrentTenantId: () => {
     // TODO: change when setter is done.
+
     const user = UserService.getUser();
     if (user?.extraRoleInfo) {
       const isDsoRoute = Digit.Utils.detectDsoRoute(window.location.pathname);
@@ -36,6 +37,7 @@ export const ULBService = {
         return user.extraRoleInfo?.tenantId;
       }
     }
+
     //TODO: fix tenant id from userinfo
     const tenantId =
       user?.info?.type === "EMPLOYEE" && user?.info?.tenantId ? user?.info?.tenantId : window?.globalConfigs.getConfig("STATE_LEVEL_TENANT_ID");
@@ -52,7 +54,25 @@ export const ULBService = {
    * @returns {String}
    */
   getStateId: () => {
-    return window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+    const isMultiRootTenant = window?.globalConfigs?.getConfig("MULTI_ROOT_TENANT") || false;
+    const overrideRootTenant = window?.globalConfigs?.getConfig("OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT") || false;
+
+    const pathname = window.location.pathname;
+    const context = window?.globalConfigs?.getConfig("CONTEXT_PATH");
+    const start = pathname.indexOf(context) + context.length + 1;
+    const employeeIndex = pathname.indexOf("employee");
+    const citizenIndex = pathname.indexOf("citizen");
+    const end = employeeIndex !== -1 ? employeeIndex : citizenIndex !== -1 ? citizenIndex : -1;
+    const tenant = end > start ? pathname.substring(start, end).replace(/\/$/, "") : "";
+
+    const currentTenant = ULBService.getCurrentTenantId();
+    if (isMultiRootTenant && tenant) {
+      return tenant;
+    } else if (overrideRootTenant && currentTenant) {
+      return currentTenant;
+    } else {
+      return window?.globalConfigs?.getConfig("STATE_LEVEL_TENANT_ID");
+    }
   },
   /**
    * Custom method to get employee's current ulb object
@@ -67,8 +87,8 @@ export const ULBService = {
   getCurrentUlb: () => {
     const initData = StoreService.getInitData();
     const tenantId = ULBService.getCurrentTenantId();
-    return initData.tenants.find((tenant) => tenant.code === tenantId);
-  }
+    return initData?.tenants?.find((tenant) => tenant?.code === tenantId) || ULBService.getStateId();
+  },
   /**
    * Custom method to get citizen's current selected city
    *
@@ -78,15 +98,14 @@ export const ULBService = {
    * Digit.ULBService.getCitizenCurrentTenant() -> will return selected home city if not loggedin users city if not state tenant
    *
    * Digit.ULBService.getCitizenCurrentTenant(true) -> will return selected home city
-   * 
+   *
    * @returns {String}
-   */,
-  getCitizenCurrentTenant: (selectedCity=false) => {
-    const homeCity=Digit.SessionStorage.get("CITIZEN.COMMON.HOME.CITY")?.code;
-    if(selectedCity){
+   */ getCitizenCurrentTenant: (selectedCity = false) => {
+    const homeCity = Digit.SessionStorage.get("CITIZEN.COMMON.HOME.CITY")?.code;
+    if (selectedCity) {
       return homeCity;
     }
-    return homeCity|| Digit.UserService.getUser()?.info?.permanentCity || ULBService.getStateId();
+    return homeCity || Digit.UserService.getUser()?.info?.permanentCity || ULBService.getStateId();
   },
   /**
    * Custom method to get all ulb's which the loggedin employee has access to
@@ -144,5 +163,5 @@ export const ULBService = {
       });
       return filteredArray;
     }
-  }
+  },
 };

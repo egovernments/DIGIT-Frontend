@@ -12,7 +12,7 @@ const HRMSCard = () => {
   // const { isLoading, isError, error, data, ...rest } = Digit.Hooks.hrms.useHRMSCount(tenantId);
 
   const propsForModuleCard = {
-    Icon: <HRIcon />,
+    Icon: 'SupervisorAccount',
     moduleName: t("ACTION_TEST_9HRMS"),
     kpis: [
       // {

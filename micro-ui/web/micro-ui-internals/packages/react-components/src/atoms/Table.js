@@ -64,7 +64,8 @@ const Table = ({
   tableSelectionHandler = () => {},
   onClickRow= ()=>{},
   rowClassName = "",
-  noColumnBorder=false
+  noColumnBorder=false,
+  customPageSizesArray = null
 }) => {
   const {
     getTableProps,
@@ -227,11 +228,17 @@ const Table = ({
             style={{ marginRight: "15px" }}
             onChange={manualPagination ? onPageSizeChange : (e) => setPageSize(Number(e.target.value))}
           >
-            {[10, 20, 30, 40, 50].map((pageSize) => (
+            {customPageSizesArray ?
+              customPageSizesArray.map((pageSize) => (
+                <option key={pageSize} value={pageSize}>
+                  {pageSize}
+                </option>
+              )): 
+              [10, 20, 30, 40, 50].map((pageSize) => (
               <option key={pageSize} value={pageSize}>
                 {pageSize}
               </option>
-            ))}
+              ))}
           </select>
           <span>
             <span>

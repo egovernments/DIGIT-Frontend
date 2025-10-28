@@ -6,7 +6,40 @@ import { useTranslation } from "react-i18next";
 // import { CreateComplaint } from "./CreateComplaint";
 // import Inbox from "./Inbox";
 import { Employee } from "../../constants/Routes";
+import InboxV2 from "./new-inbox";
 // import Response from "./Response";
+
+const PGRBreadCrumb = ({ location, defaultPath }) => {
+  const { t } = useTranslation();
+  const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
+
+  const crumbs = [
+    {
+      path: `/${window?.contextPath}/employee`,
+      content: t("HOME"),
+      show: true,
+    },
+    {
+      path: "",
+      content: t("PGR_CREATE_CRUMB"),
+      show: pathVar.includes("pgr/complaint/create") ? true : false,
+    },
+    {
+      path: pathVar.includes("pgr/complaint/details") ? `/${window?.contextPath}/employee/pgr/inbox` : "",
+      content: t("PGR_INBOX_CRUMB"),
+      show: pathVar.includes("pgr/inbox") || pathVar.includes("pgr/complaint/details") ? true : false,
+    },
+    {
+      path: "",
+      content: t("PGR_DETAILS_CRUMB"),
+      show: pathVar.includes("pgr/complaint/details") ? true : false,
+    },
+  ];
+
+  const bredCrumbStyle = { maxWidth: "min-content" };
+
+  return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
+};
 
 const Complaint = () => {
   const [displayMenu, setDisplayMenu] = useState(false);
@@ -41,41 +74,22 @@ const Complaint = () => {
     setPopup(true);
   }
 
-  let location = useLocation().pathname;
-
-  const CreateComplaint = Digit?.ComponentRegistryService?.getComponent('PGRCreateComplaintEmp');
-  const ComplaintDetails = Digit?.ComponentRegistryService?.getComponent('PGRComplaintDetails');
-  const Inbox = Digit?.ComponentRegistryService?.getComponent('PGRInbox');
-  const Response = Digit?.ComponentRegistryService?.getComponent('PGRResponseEmp');
-
+  const CreateComplaint = Digit?.ComponentRegistryService?.getComponent("PGRCreateComplaintEmp");
+  const ComplaintDetails = Digit?.ComponentRegistryService?.getComponent("PGRComplaintDetails");
+  const Inbox = Digit?.ComponentRegistryService?.getComponent("PGRInbox");
+  const Response = Digit?.ComponentRegistryService?.getComponent("PGRResponseEmp");
   return (
     <React.Fragment>
       <div className="ground-container">
-        {!location.includes(Employee.Response) && (
-          <Switch>
-            <Route
-              path={match.url + Employee.CreateComplaint}
-              component={() => <BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.createComplaint]}></BreadCrumb>}
-            />
-            <Route
-              path={match.url + Employee.ComplaintDetails + ":id"}
-              component={() => <BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.inbox, breadcrumConfig.complaintDetails]}></BreadCrumb>}
-            />
-            <Route
-              path={match.url + Employee.Inbox}
-              component={() => <BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.inbox]}></BreadCrumb>}
-            />
-            <Route
-              path={match.url + Employee.Response}
-              component={<BreadCrumb crumbs={[breadcrumConfig.home, breadcrumConfig.response]}></BreadCrumb>}
-            />
-          </Switch>
-        )}
+        <React.Fragment>
+          <PGRBreadCrumb location={window.location} defaultPath={match} />
+        </React.Fragment>
         <Switch>
           <Route path={match.url + Employee.CreateComplaint} component={() => <CreateComplaint parentUrl={match.url} />} />
           <Route path={match.url + Employee.ComplaintDetails + ":id*"} component={() => <ComplaintDetails />} />
           <Route path={match.url + Employee.Inbox} component={Inbox} />
           <Route path={match.url + Employee.Response} component={Response} />
+          <Route path={match.url + Employee.InboxV2} component={InboxV2} />
         </Switch>
       </div>
       {/* <ActionBar>
