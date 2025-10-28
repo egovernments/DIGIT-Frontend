@@ -21,7 +21,7 @@ frontend/micro-ui/web/package.json
 ```
 
 ```json
-"@egovernments/digit-ui-module-health-pgr" :"0.0.1",
+"@egovernments/digit-ui-module-health-pgr" :"0.0.2",
 ```
 
 then navigate to App.js
