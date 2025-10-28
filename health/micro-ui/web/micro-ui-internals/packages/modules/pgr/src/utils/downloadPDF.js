@@ -8,7 +8,7 @@ export const downloadPdfWithCustomName = ({ fileStoreId = null, customName = nul
     document.body.append(link);
     link.click();
     link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   };
 
   if (fileStoreId) {
@@ -33,7 +33,12 @@ export const downloadPdfWithCustomName = ({ fileStoreId = null, customName = nul
       })
       .catch((error) => {
         console.error("PDF download failed:", error);
-        alert("Failed to download PDF. Please try again.");
+        const errorMessage = error.response?.status === 404 
+         ? "File not found. Please check the file ID."
+         : error.response?.status === 401 || error.response?.status === 403
+         ? "You don't have permission to download this file."
+         : "Failed to download PDF. Please try again.";
+         Digit.Utils.Toast.error(errorMessage);
       });
   }
 };

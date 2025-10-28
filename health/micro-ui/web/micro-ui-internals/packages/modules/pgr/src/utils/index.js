@@ -64,7 +64,7 @@ export const downloadFileWithName = ({ fileStoreId = null, customName = null, ty
     document.body.append(link);
     link.click();
     link.remove();
-    setTimeout(() => URL.revokeObjectURL(link.href), 7000);
+    setTimeout(() => URL.revokeObjectURL(link.href), 1000);
   };
 
   if (fileStoreId) {

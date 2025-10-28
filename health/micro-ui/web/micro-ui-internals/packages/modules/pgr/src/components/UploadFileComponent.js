@@ -136,11 +136,13 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   return (
     <Card>
       <UploadFile
-        id={"simple-doc"}
+        id={config?.key ? `upload-${config.key}` : "upload-doc"}
         accept=".pdf,.jpg,.jpeg"
         onUpload={selectFile}
         onDelete={() => {
           setUploadedFile(null);
+          setFile(null);
+          setError(null);
           if (config?.key) onSelect(config.key, null);
         }}
         message={uploadedFile ? `1 ${t("CS_ACTION_FILEUPLOADED")}` : t("CS_ACTION_NO_FILEUPLOADED")}

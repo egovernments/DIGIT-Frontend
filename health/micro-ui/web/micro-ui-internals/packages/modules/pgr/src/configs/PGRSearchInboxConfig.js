@@ -11,7 +11,7 @@ import Urls from "../utils/urls";
 
 const PGRSearchInboxConfig = () => {
   return {
-    label: "CS_COMMON_INBOXX",
+    label: "CS_COMMON_INBOX",
     type: 'inbox',
     apiDetails: {
         serviceName: Urls.pgr.inboxSearch,
@@ -134,7 +134,7 @@ const PGRSearchInboxConfig = () => {
                 hyperlink: true,
               },
                 ],
-                label: "CS_COMMON_HOME_COMPLAINTSS",
+                label: "CS_COMMON_HOME_COMPLAINTS",
                 logoIcon: {
                     component: "ReceiptInboxIcon",
                     customClass: "inbox-search-icon--projects"
