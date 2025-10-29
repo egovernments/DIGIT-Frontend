@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import {
   BreakLine,
@@ -49,15 +49,15 @@ export const FormComposer = (props) => {
             {section.body.map((field, index) => {
               return (
                 <React.Fragment key={index}>
-                  {errors[field.populators.name] && (field.populators?.validate ? errors[field.populators.validate] : true) && (
-                    <CardLabelError>{field.populators.error}</CardLabelError>
-                  )}
-                  <LabelFieldPair>
+                  <LabelFieldPair className={props?.fieldClassName ? props?.fieldClassName : ""}>
                     <CardLabel>
                       {field.label}
                       {field.isMandatory ? " * " : null}
                     </CardLabel>
-                    <div className="field">{fieldSelector(field.type, field.populators)}</div>
+                    <div style={{ display: "flex", flexDirection: "column", width: "100%" }}>
+                      <div className="field">{fieldSelector(field.type, field.populators)}</div>
+                      {errors[field.populators.name] ? <CardLabelError>{field.populators.error}</CardLabelError> : null}
+                    </div>
                   </LabelFieldPair>
                 </React.Fragment>
               );
@@ -66,7 +66,7 @@ export const FormComposer = (props) => {
           </React.Fragment>
         );
       }),
-    [props.config, errors]
+    [props.config, errors, errors?.mobileNumber, errors?.name]
   );
 
   const isDisabled = props.isDisabled || false;

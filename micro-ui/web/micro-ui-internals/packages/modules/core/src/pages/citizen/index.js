@@ -1,4 +1,4 @@
-import { BackButton, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-react-components";
+import { BackLink, CitizenHomeCard, CitizenInfoLabel } from "@egovernments/digit-ui-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
 import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
@@ -16,6 +16,7 @@ import HowItWorks from "./HowItWorks/howItWorks";
 import Login from "./Login";
 import Search from "./SearchApp";
 import StaticDynamicCard from "./StaticDynamicComponent/StaticDynamicCard";
+import ImageComponent from "../../components/ImageComponent";
 
 const sidebarHiddenFor = [
   `${window?.contextPath}/citizen/register/name`,
@@ -51,7 +52,7 @@ const Home = ({
     [
       {
         name: "actions-test",
-        filter: `[?(@.url == '${window.contextPath}-card')]`,
+        filter: `[?(@.url == '${Digit.Utils.getMultiRootTenant() ? window.globalPath : window.contextPath}-card')]`,
       },
     ],
     {
@@ -66,7 +67,6 @@ const Home = ({
       },
     }
   );
-
   const classname = Digit.Hooks.useRouteSubscription(pathname);
   const { t } = useTranslation();
   const { path } = useRouteMatch();
@@ -98,8 +98,9 @@ const Home = ({
       <React.Fragment>
         <Route key={index} path={`${path}/${code.toLowerCase()}-home`}>
           <div className="moduleLinkHomePage">
-            <img src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
-            <BackButton className="moduleLinkHomePageBackButton" />
+            <ImageComponent src={bannerImage || stateInfo?.bannerUrl} alt="noimagefound" />
+
+            <BackLink className="moduleLinkHomePageBackButton" onClick={() => window.history.back()} />
             <h1>{t("MODULE_" + code.toUpperCase())}</h1>
             <div className="moduleLinkHomePageModuleLinks">
               {mdmsDataObj && (
@@ -147,7 +148,7 @@ const Home = ({
         mobileView={mobileView}
         handleUserDropdownSelection={handleUserDropdownSelection}
         logoUrl={logoUrl}
-        showSidebar={true}
+        showSidebar={CITIZEN ? true : false}
         linkData={linkData}
         islinkDataLoading={islinkDataLoading}
       />
@@ -211,7 +212,7 @@ const Home = ({
         </Switch>
       </div>
       <div className="citizen-home-footer" style={window.location.href.includes("citizen/obps") ? { zIndex: "-1" } : {}}>
-        <img
+        <ImageComponent
           alt="Powered by DIGIT"
           src={window?.globalConfigs?.getConfig?.("DIGIT_FOOTER")}
           style={{ height: "1.2em", cursor: "pointer" }}

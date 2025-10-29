@@ -53,6 +53,8 @@ const initDigitUI = () => {
 2. Introduce bill generation feature.
 3. Enable bill download in PDF format.
 4. Enable bill download in Excel format.
+5. Enrolment of attendee in the attendance register
+6. Disabling the attendee in the attendance register
 
 
 ### Contributors

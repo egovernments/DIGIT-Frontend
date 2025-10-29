@@ -2,9 +2,12 @@ import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 
 const SubmitBar = forwardRef((props, ref) => {
+  const fieldId = props?.id||Digit?.Utils?.getFieldIdName?.( props?.label || props?.className || "submitbutton")||"NA";
+  
   return (
     <button
       ref={ref}
+      id={fieldId}
       disabled={props.disabled ? true : false}
       className={`${props.disabled ? "submit-bar-disabled" : "submit-bar"} ${props.className ? props.className : ""}`}
       type={props.submit ? "submit" : "button"}
@@ -12,7 +15,8 @@ const SubmitBar = forwardRef((props, ref) => {
       onClick={props.onSubmit}
       {... props.form ? {form: props.form} : {}}
     >
-      <header>{props.label}</header>
+      <header style={{...props?.headerStyle}}>{props.label}</header>
+      {props?.submitIcon}
     </button>
   );
 });
@@ -34,6 +38,10 @@ SubmitBar.propTypes = {
    * Optional click handler
    */
   onSubmit: PropTypes.func,
+  /**
+   * Submit icon
+   */
+  submitIcon: PropTypes.node,
 };
 
 SubmitBar.defaultProps = {};

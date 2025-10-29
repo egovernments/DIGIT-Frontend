@@ -68,7 +68,7 @@ const VennDiagramChart = ({data, isNational = false,}) => {
   const [chartKey, setChartKey] = useState(id);
 
   const { startDate, endDate, interval } = getInitialRange();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   let todayDate = today;
@@ -90,7 +90,7 @@ const VennDiagramChart = ({data, isNational = false,}) => {
             endDate: value?.range?.endDate?.getTime(),
           }
         : requestDate,
-    filters: { campaignId: campaignId },
+    filters: { campaignNumber: campaignNumber },
     moduleLevel: value?.moduleLevel,
     aggregationFactors: null,
   };

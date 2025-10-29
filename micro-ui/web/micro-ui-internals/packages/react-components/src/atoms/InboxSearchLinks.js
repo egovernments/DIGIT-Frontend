@@ -1,11 +1,37 @@
 import React, { useState, useEffect } from "react"
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
-import { PropertyHouse, BioMetricIcon,WorksMgmtIcon} from "./svgindex";
 
-const getIconComponent = (iconName="")=>{
-    return require("@egovernments/digit-ui-react-components")?.[iconName];
-}
+
+const iconComponents = {};
+
+const getIconComponent = (iconName = "") => {
+  if (typeof iconName !== "string") {
+    console.warn("Invalid iconName provided to getIconComponent");
+    return null;
+  }
+  
+  // Return cached component if available
+  if (iconComponents[iconName]) {
+    return iconComponents[iconName];
+  }
+  
+  try {
+    // Trying to get the icon from "digit-ui-react-components"
+    let IconComponent = require("@egovernments/digit-ui-react-components")?.[iconName];
+    // If the icon is not found, trying to get it from "digit-ui-svg-components"
+    if (!IconComponent) {
+      IconComponent = require("@egovernments/digit-ui-svg-components")?.[iconName];
+    }
+    // Cache the component
+    iconComponents[iconName] = IconComponent;
+    return IconComponent;
+  } catch (error) {
+    console.error(`Failed to load icon component: ${iconName}`, error);
+    return null;
+  }
+};
+  
 
 const InboxSearchLinks = ({headerText, links, businessService, customClass="", logoIcon}) => {
   

@@ -5,6 +5,7 @@ import { ArrowDown, Calender } from "../atoms/svgindex";
 import Modal from "../hoc/Modal";
 import { DateRange, createStaticRanges } from "react-date-range";
 import { format, addMonths, addHours, startOfToday, endOfToday, endOfYesterday, addMinutes, addSeconds, isEqual, subYears, startOfYesterday, startOfWeek, endOfWeek, startOfYear, endOfYear, startOfMonth, endOfMonth, startOfQuarter, endOfQuarter } from "date-fns";
+import { COLOR_FILL } from "../atoms/contants";
 
 function isEndDateFocused(focusNumber) {
     return focusNumber === 1;
@@ -14,13 +15,13 @@ function isStartDateFocused(focusNumber) {
     return focusNumber === 0;
 }
 
-const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyles, inputRef}) => {
+const DateRangeNew = ({populators, values, onFilterChange, t, labelClass, label, customStyles, inputRef}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [focusedRange, setFocusedRange] = useState([0, 0]);
     const [selectionRange, setSelectionRange] = useState({
         ...values,
-        startDate: values?.startDate,
-        endDate: values?.endDate
+        startDate: typeof values?.startDate === "string" ? new Date(values?.startDate) : values?.startDate,
+        endDate: typeof values?.endDate === "string" ? new Date(values?.endDate) : values?.endDate
     });
     const wrapperRef = useRef(inputRef);
 
@@ -41,7 +42,7 @@ const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyl
             const startDate = selectionRange?.startDate;
             const endDate = selectionRange?.endDate;
             const duration = getDuration(selectionRange?.startDate, selectionRange?.endDate);
-            const title = `${format(selectionRange?.startDate, "MMM d, yy")} - ${format(selectionRange?.endDate, "MMM d, yy")}`;
+            const title = `${format(selectionRange?.startDate, 'dd/MM/yyyy')} - ${format(selectionRange?.endDate, 'dd/MM/yyyy')}`;
             onFilterChange({ range: { startDate, endDate, duration, title }, requestDate: { startDate, endDate, duration, title } });
         }
     }, [selectionRange, isModalOpen]);
@@ -143,12 +144,12 @@ const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyl
                     <Calender className="cursorPointer" onClick={() => setIsModalOpen((prevState) => !prevState)} />
                 </div>
                 {isModalOpen && (
-                    <div className="options-card" style={{ overflow: "visible", width: "unset"}}>
+                    <div className="options-card date-range" style={{ overflow: "visible", width: "unset"}}>
                         <DateRange
                             className="pickerShadow"
                             focusedRange={focusedRange}
                             ranges={[selectionRange]}
-                            rangeColors={["#9E9E9E"]}
+                            rangeColors={[COLOR_FILL]}
                             onChange={handleSelect}
                             onRangeFocusChange={setFocusedRange}
                             retainEndDateOnFirstSelection={true}
@@ -156,6 +157,10 @@ const DateRangeNew = ({ values, onFilterChange, t, labelClass, label, customStyl
                             staticRanges={staticRanges}
                             inputRanges={[]}
                             weekStartsOn={1}
+                            maxDate={populators?.maxDate}
+                            minDate={populators?.minDate}
+                            startDatePlaceholder={t("EVENTS_START_DATE_LABEL")}
+                            endDatePlaceholder={t("EVENTS_END_DATE_LABEL")}
                         />
                     </div>
                 )}

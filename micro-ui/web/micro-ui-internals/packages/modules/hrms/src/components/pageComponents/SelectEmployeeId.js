@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { LabelFieldPair, CardLabel, TextInput, CardLabelError } from "@egovernments/digit-ui-react-components";
 import { useLocation } from "react-router-dom";
 
@@ -10,7 +10,9 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
       label: "HR_EMP_ID_LABEL",
       type: "text",
       name: "code",
+      isMandatory: true,
       validation: {
+        isRequired: true,
         title: t("CORE_COMMON_APPLICANT_NAME_INVALID"),
       },
     },
@@ -19,6 +21,13 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
   function setValue(value, input) {
     onSelect(config.key, { ...formData[config.key], [input]: value });
   }
+
+  //Introduce useEffect to call onSelect function for MutliRootTenant explicitly.
+  useEffect(() => {
+    if(Digit.Utils.getMultiRootTenant()){
+      onSelect(config.key, { ...formData[config.key], code: formData?.SelectEmployeeEmailId?.emailId });
+    }
+  },[formData?.SelectEmployeeEmailId?.emailId])
 
   return (
     <div>
@@ -33,9 +42,15 @@ const SelectEmployeeId = ({ t, config, onSelect, formData = {}, userType, regist
             <div className="field">
               <TextInput
                 key={input.name}
-                value={formData && formData[config.key] ? formData[config.key][input.name] : undefined}
+                value={
+                  Digit.Utils.getMultiRootTenant() && formData?.SelectEmployeeEmailId?.emailId
+                    ? formData?.SelectEmployeeEmailId?.emailId
+                    : formData && formData[config.key]
+                    ? formData[config.key][input.name]
+                    : undefined
+                }
                 onChange={(e) => setValue(e.target.value, input.name)}
-                disable={isEdit}
+                disable={Digit.Utils.getMultiRootTenant() ? true : isEdit}
                 defaultValue={undefined}
                 {...input.validation}
               />

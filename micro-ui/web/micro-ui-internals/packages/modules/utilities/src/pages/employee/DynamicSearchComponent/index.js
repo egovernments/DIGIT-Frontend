@@ -1,7 +1,8 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
+import { Loader } from "@egovernments/digit-ui-components";
 
 // works-ui/employee/dss/search/commonMuktaUiConfig/SearchEstimateConfig
 const DynamicSearchComponent = () => {
@@ -35,7 +36,8 @@ const DynamicSearchComponent = () => {
     setPageConfig(_.cloneDeep(configs));
   }, [data]);
 
-  if (isLoading || !pageConfig) return <Loader />;
+  if (isLoading || !pageConfig)    return  <Loader page={true} variant={"PageLoader"} />;
+
   return (
     <React.Fragment>
       <div className="jk-header-btn-wrapper">
@@ -46,7 +48,8 @@ const DynamicSearchComponent = () => {
             variation="secondary"
             icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
             onButtonClick={() => {
-              history.push(`/${window?.contextPath}/employee/${updatedConfig?.actionLink}`);
+              history.push(`/${updatedConfig?.actionLink}`);
+              // history.push(`/${window?.contextPath}/employee/${updatedConfig?.actionLink}`);
             }}
             type="button"
           />

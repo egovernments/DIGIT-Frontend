@@ -52,6 +52,11 @@
   @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
   @extend .light-input-border;
 }
+
+.employee-card-input {
+  max-width: 540px;
+}
+
 .employee-card-input:disabled {
   @apply border-grey-dark text-grey-dark !important;
   pointer-events: none !important;
@@ -80,6 +85,7 @@
 }
 .employee-card-textarea {
   @apply w-full;
+  max-width: 540px;
 }
 
 .citizen-card-input {

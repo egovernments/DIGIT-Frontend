@@ -1,9 +1,15 @@
-import { AddFilled, Button, Header, InboxSearchComposer, Loader, Dropdown,SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
+import { AddFilled, Button, Header, InboxSearchComposer, Dropdown,SubmitBar, ActionBar } from "@egovernments/digit-ui-react-components";
 import React, { useState, useEffect, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { Config as Configg } from "../../configs/searchMDMSConfig";
 import _, { drop } from "lodash";
+import { AlertCard, Loader } from "@egovernments/digit-ui-components";
+import DownloadMaster from "../../components/DownloadMaster";
+
+const enableBulkDownload = window?.globalConfigs?.getConfig?.("ENABLE_MDMS_BULK_DOWNLOAD")
+? window.globalConfigs.getConfig("ENABLE_MDMS_BULK_DOWNLOAD")
+: false;
 
 const toDropdownObj = (master = "", mod = "") => {
   return {
@@ -21,9 +27,21 @@ const toDropdownObj = (master = "", mod = "") => {
 const MDMSSearchv2 = () => {
   let Config = _.clone(Configg)
   const { t } = useTranslation();
-  const history = useHistory();
-  
+  const history = useHistory();  
   let {masterName:modulee,moduleName:master,tenantId} = Digit.Hooks.useQueryParams()
+  let {from, screen, action} = Digit.Hooks.useQueryParams()
+
+  const additionalParams = {
+    from: from,
+    screen: screen,
+    action: action
+  }
+  
+  Object.keys(additionalParams).forEach(key => {
+    if (additionalParams[key] === undefined || additionalParams[key] === null) {
+      delete additionalParams[key];
+    }
+  });
   
   const [availableSchemas, setAvailableSchemas] = useState([]);
   const [currentSchema, setCurrentSchema] = useState(null);
@@ -96,11 +114,11 @@ const MDMSSearchv2 = () => {
   
   useEffect(() => {
     if (currentSchema) {
-      const dropDownOptions = [];
+      let dropDownOptions = [];
       const {
         definition: { properties },
       } = currentSchema;
-      
+      const schemaCodeToValidate = `${master}.${modulee}`;
       Object.keys(properties)?.forEach((key) => {
         if (properties[key].type === "string" && !properties[key].format) {
           dropDownOptions.push({
@@ -111,7 +129,11 @@ const MDMSSearchv2 = () => {
           });
         }
       });
-
+      dropDownOptions =
+      dropDownOptions?.length > 0 &&
+      Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+        ? Digit?.Customizations?.["commonUiConfig"]?.["SearchMDMSv2Config"]?.[schemaCodeToValidate]?.sortValidDatesFirst(dropDownOptions)
+        : dropDownOptions;
       Config.sections.search.uiConfig.fields[0].populators.options = dropDownOptions;
       Config.actionLink=Config.actionLink+`?moduleName=${masterName?.name}&masterName=${moduleName?.name}`;
       // Config.apiDetails.serviceName = `/mdms-v2/v2/_search/${currentSchema.code}`
@@ -140,7 +162,8 @@ const MDMSSearchv2 = () => {
           label:option.i18nKey,
           i18nKey:option.i18nKey,
           jsonPath:`data.${option.code}`,
-          dontShowNA:true
+          dontShowNA:true,
+          additionalCustomization: currentSchema?.definition?.["x-ui-schema"]?.[option?.name]?.formatType === "EPOC" ? true : false // To show EPOC values in DATE format added customizations, so making additionalCustomization as true
         }
       }),{
         label:"WBH_ISACTIVE",
@@ -150,84 +173,40 @@ const MDMSSearchv2 = () => {
         // dontShowNA:true
       }]
       Config.apiDetails.serviceName=`/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`;
-        
       setUpdatedConfig(Config)
     }
   }, [currentSchema]);
 
   const handleAddMasterData = () => {
     let actionLink=updatedConfig?.actionLink
+    const additionalParamString = new URLSearchParams(additionalParams).toString();
     if(modulee&&master){
-      actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}`
+      actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}${additionalParamString ? "&"+additionalParamString : ""}`
     }
-    history.push(`/${window?.contextPath}/employee/${actionLink}`);
+    history.push(`/${window?.contextPath}/employee/${actionLink}${additionalParamString ? "&"+additionalParamString : ""}`);
   }
 
   const onClickRow = ({original:row}) => {
     const [moduleName,masterName] = row.schemaCode.split(".")
-    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}`)
+    const additionalParamString = new URLSearchParams(additionalParams).toString();
+    history.push(`/${window.contextPath}/employee/workbench/mdms-view?moduleName=${moduleName}&masterName=${masterName}&uniqueIdentifier=${row.uniqueIdentifier}${additionalParamString ? "&"+additionalParamString : ""}`)
   }
 
-  if (isLoading) return <Loader />;
+  if (isLoading) return <Loader page={true} variant={"PageLoader"} />;
   return (
     <React.Fragment>
-        {/* <Header className="works-header-search">{t(Config?.label)}</Header> */}
+      <div style={{display:"flex", justifyContent:"space-between"}}>
       <Header className="digit-form-composer-sub-header">{t(Digit.Utils.workbench.getMDMSLabel(`SCHEMA_` + currentSchema?.code))}</Header>
-      {/* <div className="jk-header-btn-wrapper">
-        <Dropdown
-          option={masterOptions}
-          style={{width:"25%",marginRight:"1rem" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master) : masterName}
-          select={(e) => {
-            setMasterName(e);
-            setModuleName(null)
-            setUpdatedConfig(null)
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MODULE_NAME")}
-          
-          disable={master ? true : false}
-        />
-        <Dropdown
-          option={moduleOptions}
-          style={{width:"25%",marginRight:"auto" }}
-          className={"form-field"}
-          optionKey="code"
-          selected={master && modulee ? toDropdownObj(master,modulee) : moduleName}
-          select={(e) => {
-            setModuleName(e);
-          }}
-          t={t}
-          // placeholder={t("WBH_MODULE_NAME")}
-          placeholder={t("WBH_MASTER_NAME")}
-          
-          disable = {modulee ? true : false}
-        />
-       {updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) && (
-          <Button
-            label={t(updatedConfig?.actionLabel)}
-            variation="secondary"
-            icon={<AddFilled style={{ height: "20px", width: "20px" }} />}
-            onButtonClick={() => {
-              let actionLink=updatedConfig?.actionLink
-              if(modulee&&master){
-                actionLink= `workbench/mdms-add-v2?moduleName=${master}&masterName=${modulee}`
-              }
-              history.push(`/${window?.contextPath}/employee/${actionLink}`);
-            }}
-            type="button"
-          />
-        )}
-      </div> */}
+      {enableBulkDownload&&<DownloadMaster />}
+      </div>
       {
-        updatedConfig && Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) &&
+        updatedConfig && Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles) && Digit.Utils.didEmployeeisAllowed(master,modulee) &&
         <ActionBar >
-          <SubmitBar disabled={false} onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
+          <SubmitBar disabled={false} className="mdms-add-btn" onSubmit={handleAddMasterData} label={t("WBH_ADD_MDMS")} />
         </ActionBar>
       }
+      <AlertCard additionalElements={[]} label={t("WBH_MDMS_INFO")} text={t("WBH_MDMS_INFO_MESSAGE")} variant="default" style={{marginBottom:"1.5rem",maxWidth:"100%"}}/>
+
       {updatedConfig && <div className="inbox-search-wrapper">
         <InboxSearchComposer configs={updatedConfig} additionalConfig = {{
           resultsTable:{

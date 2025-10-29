@@ -12,9 +12,9 @@ const Filters = ({
   isOpen,
   closeFilters,
   showDateRange = true,
-  showDDR = true,
-  showUlb = true,
-  showDenomination = true,
+  showDDR = Digit.Utils.getMultiRootTenant()? false : true,
+  showUlb = Digit.Utils.getMultiRootTenant()? false : true,
+  showDenomination = Digit.Utils.getMultiRootTenant()? false :true,
   showModuleFilter = true,
   isNational = false,
 }) => {

@@ -145,7 +145,7 @@ const L2Main = ({}) => {
   const boundaryValue = new URLSearchParams(location.search).get("boundaryValue");  
   const campaignData = Digit.SessionStorage.get("campaignSelected");
   const projectData= Digit.SessionStorage.get("projectSelected");
-  const campaignId = new URLSearchParams(location.search).get("campaignId");
+  const campaignNumber = new URLSearchParams(location.search).get("campaignNumber");
   const [filters, setFilters] = useState(() => {
     const {
       startDate,
@@ -174,7 +174,7 @@ const L2Main = ({}) => {
         campaignStartDate: startDate?.getTime()?.toString(),
         campaignEndDate: endDate?.getTime()?.toString(),
         projectTypeId: projectTypeId,
-        campaignId : campaignId,
+        campaignNumber : campaignNumber,
         ...dynamicBoundaryFilter,
    
       },

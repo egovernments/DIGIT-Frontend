@@ -1,21 +1,42 @@
 import React, { useEffect, useState, useRef } from "react";
 import { CardLabel, Dropdown, FormStep, RadioButtons } from "@egovernments/digit-ui-react-components";
+import { subtract } from "lodash";
 
 const SelectAddress = ({ t, config, onSelect, value }) => {
-  const allCities = Digit.Hooks.pgr.useTenants();
+  const { data: allCities, isLoading } = Digit.Utils.getMultiRootTenant()? Digit.Hooks.useTenants() :Digit.Hooks.pgr.useTenants();
   const cities = value?.pincode ? allCities.filter((city) => city?.pincode?.some((pin) => pin == value["pincode"])) : allCities;
+  const language = JSON.parse(sessionStorage.getItem('Digit.locale'))?.value;
 
   const [selectedCity, setSelectedCity] = useState(() => {
     const { city_complaint } = value;
-    return city_complaint ? city_complaint : null;
+    return city_complaint ? city_complaint : (cities?.length === 1 ? cities[0] : null);
   });
+
+  const { isLoading: hierarchyLOading, data:hierarchyType } = Digit.Hooks.useCustomMDMS(
+    Digit.ULBService.getStateId(),
+     "sandbox-ui",
+      [
+        { name: "ModuleMasterConfig",filter:'[?(@.module == "PGR")].master[?(@.type == "boundary")]' 
+
+        }
+      ],
+      {
+        select: (data) => {
+          const formattedData = data?.["sandbox-ui"]?.["ModuleMasterConfig"]
+          return formattedData?.[0]?.code;
+        },
+      }
+    );
+
+   const stateId = Digit.Utils.getMultiRootTenant() ? Digit.ULBService.getStateId() :  selectedCity?.code;
   const { data: fetchedLocalities } = Digit.Hooks.useBoundaryLocalities(
-    selectedCity?.code,
-    "admin",
+    stateId,
+     Digit.Utils.getMultiRootTenant() ? hierarchyType : "admin",
     {
-      enabled: !!selectedCity,
+      enabled: Digit.Utils.getMultiRootTenant() ? !!selectedCity && !!hierarchyType :  !!selectedCity,
     },
-    t
+    t,
+    language
   );
   const [localities, setLocalities] = useState(null);
 
@@ -52,9 +73,13 @@ const SelectAddress = ({ t, config, onSelect, value }) => {
       <div>
         <CardLabel>{t("MYCITY_CODE_LABEL")}</CardLabel>
         {cities?.length < 5 ? (
-          <RadioButtons selectedOption={selectedCity} options={cities} optionsKey="i18nKey" onSelect={selectCity} />
+          <RadioButtons selectedOption={selectedCity} options={
+             cities
+          } optionsKey={"i18nKey"} onSelect={selectCity} />
         ) : (
-          <Dropdown isMandatory selected={selectedCity} option={cities} select={selectCity} optionKey="i18nKey" t={t} />
+          <Dropdown isMandatory selected={selectedCity} option={
+             cities
+          } select={selectCity} optionKey={"i18nKey"} t={t} />
         )}
         {selectedCity && localities && <CardLabel>{t("CS_CREATECOMPLAINT_MOHALLA")}</CardLabel>}
         {selectedCity && localities && (

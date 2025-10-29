@@ -61,11 +61,11 @@ const EmployeeApp = ({ path }) => {
                 internalLink: `/${window?.contextPath}/employee/hrms/assign-campaign`,
                 show: location.pathname.includes("assign-campaign"),
               },
-              {
-                content: t("HR_EDIT_CAMPAIGN_ASSIGNMENT"),
-                internalLink: `/${window?.contextPath}/employee/hrms/update/assign-campaign`,
-                show: location.pathname.includes("update"),
-              },
+              // {
+              //   content: t("HR_EDIT_CAMPAIGN_ASSIGNMENT"),
+              //   internalLink: `/${window?.contextPath}/employee/hrms/update/assign-campaign`,
+              //   show: location.pathname.includes("update"),
+              // },
             ]}
           />
           <PrivateRoute path={`${path}/create`} component={() => <CreateEmployee />} />

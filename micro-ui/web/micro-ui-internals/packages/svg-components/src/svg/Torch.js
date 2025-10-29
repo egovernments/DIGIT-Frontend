@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { COLOR_FILL } from "./constants";
 
-export const Torch = ({ className, style = {}, height = "38", width = "38", fill = "#F47738", onClick = null }) => {
+export const Torch = ({ className, style = {}, height = "38", width = "38", fill = COLOR_FILL, onClick = null }) => {
   return (
     <svg width={width} height={height} className={className} onClick={onClick} style={style} viewBox="0 0 38 38" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

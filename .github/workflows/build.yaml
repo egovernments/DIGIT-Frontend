@@ -25,6 +25,7 @@ on:
           - hrms-ui
           - karnataka-ui
           - meghalaya-ui
+          - pgr-ui
 
 env:
   DOCKER_USERNAME: ${{ vars.DOCKER_USERNAME }}

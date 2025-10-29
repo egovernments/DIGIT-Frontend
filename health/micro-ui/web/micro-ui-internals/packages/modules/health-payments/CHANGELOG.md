@@ -1,6 +1,12 @@
 # Changelog
 All notable changes to this module will be documented in this file.
 
+## 0.2.0 - 2025-02-13
+### Attendance & Billing Module
+1. Enrolment of attendee in the attendance register
+2. Disabling the attendee in the attendance register
+
+
 ## 0.1.0 - 2025-03-19
 ### Attendance & Billing Module
   1. Fix reloading issue after refresh
@@ -13,3 +19,4 @@ All notable changes to this module will be documented in this file.
   2. Introduce bill generation feature.
   3. Enable bill download in PDF format.
   4. Enable bill download in Excel format.
+

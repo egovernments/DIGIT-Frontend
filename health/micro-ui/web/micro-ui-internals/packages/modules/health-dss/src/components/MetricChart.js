@@ -40,7 +40,7 @@ const MetricData = ({ t, data, code }) => {
 const MetricChartRow = ({ data, setChartDenomination, index }) => {
   const { id, chartType } = data;
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const { t } = useTranslation();
   const { value } = useContext(FilterContext);
   const [showDate, setShowDate] = useState({});
@@ -50,7 +50,7 @@ const MetricChartRow = ({ data, setChartDenomination, index }) => {
     visualizationType: chartType,
     queryType: "",
     requestDate: { ...value?.requestDate, startDate: value?.range?.startDate?.getTime(), endDate: value?.range?.endDate?.getTime() },
-    filters: { ...value?.filters, campaignId: campaignId },
+    filters: { ...value?.filters, campaignNumber: campaignNumber },
     moduleLevel: value?.moduleLevel,
     aggregationFactors: null,
   };

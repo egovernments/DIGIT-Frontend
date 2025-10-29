@@ -35,7 +35,7 @@ const EmployeeApp = ({ path, url, userType }) => {
       <React.Fragment>
         <div className="ground-container">
           <p className="breadcrumb" style={{ marginLeft: mobileView ? "1vw" : "0px" }}>
-            <Link to={`/${window?.contextPath}/employee`} style={{ cursor: "pointer", color: "#666" }}>
+            <Link to={ Digit.Utils.getMultiRootTenant() ?`/${window?.contextPath}/employee/sandbox/landing` : `/${window?.contextPath}/employee`} style={{ cursor: "pointer", color: "#666" }}>
               {t("HR_COMMON_BUTTON_HOME")}
             </Link>{" "}
             / <span>{location.pathname === `/${window?.contextPath}/employee/hrms/inbox` ? t("HR_COMMON_HEADER") : t("HR_COMMON_HEADER")}</span>

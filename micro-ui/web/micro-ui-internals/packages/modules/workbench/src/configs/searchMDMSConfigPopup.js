@@ -23,9 +23,11 @@ export const Config = {
         search: {
             uiConfig: {
                 searchWrapperStyles: {
-                    paddingTop: "0.5rem",
+                    flexDirection: "column-reverse",
+                    marginTop: "2rem",
                     alignItems: "center",
                     justifyContent: "end",
+                    gridColumn: "4"
                 },
                 // submitContainerStyles: {
                 //     flexDirection: "column-reverse",

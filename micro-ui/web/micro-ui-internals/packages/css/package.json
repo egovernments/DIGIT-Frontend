@@ -1,6 +1,6 @@
 {
   "name": "@egovernments/digit-ui-css",
-  "version": "1.0.73-campaign",
+  "version": "1.9.0",
   "license": "MIT",
   "main": "dist/index.css",
   "author": "Jagankumar <jagan.kumar@egov.org.in>",
@@ -46,6 +46,12 @@
     "postcss-preset-env": "6.7.1",
     "postcss-scss": "3.0.5",
     "sass": "^1.26.11"
+  },
+  "resolutions": {
+    "**/minimatch": "7.4.6",
+    "minimatch": "7.4.6",
+    "**/glob": "7.2.3",
+    "glob": "7.2.3"
   },
   "files": [
     "dist/index.min.css",

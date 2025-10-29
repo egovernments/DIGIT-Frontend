@@ -47,7 +47,7 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
   const { value, setValue, ulbTenants, fstpMdmsData } = useContext(FilterContext);
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const dssTenants = Digit.SessionStorage.get("DSS_TENANTS");
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const lastYearDate = {
     startDate: subYears(value?.range?.startDate, 1).getTime(),
     endDate: subYears(value?.range?.endDate, 1).getTime(),
@@ -63,12 +63,12 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       id === chartKey
         ? {
             ...value?.filters,
-            campaignId: campaignId,
+            campaignNumber: campaignNumber,
           }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            campaignId: campaignId,
+            campaignNumber: campaignNumber,
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,
@@ -84,12 +84,12 @@ const CustomTable = ({ data = {}, onSearch = { searchQuery }, setChartData, setC
       id === chartKey
         ? {
             ...value?.filters,
-            campaignId: campaignId,
+            campaignNumber: campaignNumber,
           }
         : {
             ...value?.filters,
             [filterStack[filterStack.length - 1]?.filterKey]: filterStack[filterStack.length - 1]?.filterValue,
-            campaignId: campaignId,
+            campaignNumber: campaignNumber,
           },
     addlFilter: filterStack[filterStack.length - 1]?.addlFilter,
     moduleLevel: value?.moduleLevel,

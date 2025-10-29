@@ -74,7 +74,7 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const [tooltipContent, settooltipContent] = useState("");
   const { startDate, endDate, interval } = getInitialRange();
-  const { campaignId } = Digit.Hooks.useQueryParams();
+  const { campaignNumber } = Digit.Hooks.useQueryParams();
   const requestDate = {
     startDate: startDate.getTime(),
     endDate: endDate.getTime(),
@@ -99,7 +99,7 @@ const MapChart = ({ data, drillDown = false, setselectedState, setdrilldownId, s
     visualizationType: "metric",
     queryType: "",
     requestDate: requestDate,
-    filters: { campaignId: campaignId },
+    filters: { campaignNumber: campaignNumber },
     aggregationFactors: null,
   };
   const { isLoading, data: response } = Digit.Hooks.DSS.useGetChartV2(aggregationRequestDto);
