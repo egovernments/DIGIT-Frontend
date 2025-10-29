@@ -60,7 +60,6 @@ import AppPreview from "./components/AppPreview";
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
-import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
 import QRButton from "./components/CreateCampaignComponents/QRButton";
 import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
 import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignNameInfo";
@@ -194,7 +193,6 @@ const componentsToRegister = {
   UploadDataMappingWrapper,
   DataUploadWrapper,
   AppPreview,
-  AppConfigurationParentRedesign: AppConfigurationTabLayer,
   DateSelection,
   ViewDetailComponent,
   CycleSelection,

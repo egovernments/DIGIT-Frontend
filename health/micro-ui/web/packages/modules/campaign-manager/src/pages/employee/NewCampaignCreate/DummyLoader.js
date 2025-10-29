@@ -46,6 +46,7 @@ const DummyLoader = () => {
                 schemaCode: "HCM-ADMIN-CONSOLE.NewFormConfig",
                 filters: {
                   project: campaignNumber,
+                  module: flow,
                 },
                 isActive: true,
               },
@@ -93,6 +94,7 @@ const DummyLoader = () => {
             schemaCode: "HCM-ADMIN-CONSOLE.AppFlowConfig",
             data: {
               project: campaignNumber,
+              name: flow,
               flows: flowConfig,
             },
             isActive: true,

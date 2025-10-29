@@ -131,17 +131,6 @@ const NewUploadScreen = lazyWithFallback(
   { loaderText: "Loading New Upload Screen..." }
 );
 
-const AppConfigurationTabLayer = lazyWithFallback(
-  () => import(/* webpackChunkName: "app-configuration-tab-layer" */ "./appConfigurationRedesign/AppConfigurationTabLayer"),
-  () => require("./appConfigurationRedesign/AppConfigurationTabLayer").default,
-  { loaderText: "Loading App Configuration..." }
-);
-const AppConfigurationStore = lazyWithFallback(
-  () => import(/* webpackChunkName: "app-configuration-store" */ "./NewAppConfiguration/AppConfigurationStore"),
-  () => require("./NewAppConfiguration/AppConfigurationStore").default,
-  { loaderText: "Loading App Configuration..." }
-);
-
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
