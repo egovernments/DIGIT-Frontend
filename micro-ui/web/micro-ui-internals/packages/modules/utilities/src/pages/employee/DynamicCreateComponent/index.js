@@ -1,6 +1,8 @@
-import { Loader,FormComposerV2 as FormComposer } from "@egovernments/digit-ui-react-components";
+import { FormComposerV2 as FormComposer } from "@egovernments/digit-ui-react-components";
 import React from "react";
 import { useTranslation } from "react-i18next";
+import { Loader } from "@egovernments/digit-ui-components";
+
 
 const CreateProject = () => {
   const { t } = useTranslation();
@@ -23,7 +25,8 @@ const CreateProject = () => {
     }
   );
 
-  if (isLoading) return <Loader />;
+  if (isLoading)     return  <Loader page={true} variant={"PageLoader"} />;
+
   return (
     <React.Fragment>
       <Header styles={{ fontSize: "32px" }}>{t("CREATE")}</Header>

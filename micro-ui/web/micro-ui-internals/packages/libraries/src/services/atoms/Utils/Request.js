@@ -56,7 +56,7 @@ export const Request = async ({
   headers = {},
   useCache = false,
   params = {},
-  auth,
+  auth=true,
   urlParams = {},
   userService,
   locale = true,
@@ -74,7 +74,8 @@ export const Request = async ({
     data.RequestInfo = {
       apiId: "Rainmaker",
     };
-    if (auth || !!Digit.UserService.getUser()?.access_token) {
+    
+    if (auth) {
       data.RequestInfo = { ...data.RequestInfo, ...requestInfo() };
     }
     if (userService) {

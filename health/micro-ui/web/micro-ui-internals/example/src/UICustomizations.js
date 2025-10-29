@@ -1672,21 +1672,25 @@ export const UICustomizations = {
     preProcess: (data) => {
       data.body.inbox.tenantId = Digit.ULBService.getCurrentTenantId();
       data.body.inbox.processSearchCriteria.tenantId = Digit.ULBService.getCurrentTenantId();
+      data.body.inbox.limit= data?.state?.tableForm?.limit;
 
       const requestDate = data?.body?.inbox?.moduleSearchCriteria?.range?.requestDate;
 
       if (requestDate?.startDate && requestDate?.endDate) {
         const fromDate = new Date(requestDate.startDate).getTime();
-        const toDate = new Date(requestDate.endDate).getTime();
+        const toDate = new Date(new Date(requestDate.endDate).setHours(23,59,59,999)).getTime();
 
         data.body.inbox.moduleSearchCriteria.fromDate = fromDate;
         data.body.inbox.moduleSearchCriteria.toDate = toDate;
-      }
-      else {
+      } else {
         delete data.body.inbox.moduleSearchCriteria.fromDate;
         delete data.body.inbox.moduleSearchCriteria.toDate;
       }
 
+      if (data?.state?.tableForm?.sortOrder) {
+        delete data.state.tableForm.sortOrder;
+      }
+      
       // Always delete the full range object if it exists
       delete data.body.inbox.moduleSearchCriteria.range;
 
@@ -1696,6 +1700,10 @@ export const UICustomizations = {
 
       if (assignee?.code === "ASSIGNED_TO_ME" || data?.state?.filterForm?.assignedToMe?.code === "ASSIGNED_TO_ME") {
         data.body.inbox.moduleSearchCriteria.assignedToMe = Digit.UserService.getUser().info.uuid;
+      }
+
+      if(data?.state?.filterForm){
+        window.Digit.SessionStorage.set("filtersForInbox",data?.state?.filterForm); 
       }
 
       // --- Handle serviceCode ---
@@ -1744,13 +1752,15 @@ export const UICustomizations = {
           return (
             <div style={{ display: "grid" }}>
               <span className="link" style={{ display: "grid" }}>
-                <Link
-                  to={`/${window.contextPath}/employee/pgr/complaint-details/${value}`}
-                >
+                <Link to={`/${window.contextPath}/employee/pgr/complaint-details/${value}`}>
                   {String(value ? (column.translate ? t(column.prefix ? `${column.prefix}${value}` : value) : value) : t("ES_COMMON_NA"))}
                 </Link>
               </span>
-              <span>{t(`SERVICEDEFS.${row?.businessObject?.service?.serviceCode.toUpperCase()}`)}</span>
+              <span>
+                {row?.businessObject?.service?.serviceCode
+                  ? t(`SERVICEDEFS.${row.businessObject.service.serviceCode.toUpperCase()}`)
+                  : t("ES_COMMON_NA")}
+              </span>
             </div>
           );
 
@@ -1758,14 +1768,15 @@ export const UICustomizations = {
           return value ? <span>{t(`${value}`)}</span> : <span>{t("NA")}</span>;
 
         case "CS_COMPLAINT_DETAILS_CURRENT_STATUS":
-          return <span>{t(`CS_COMMON_${value}`)}</span>;
+          return value && value?.length>0
+            ? <span>{t(`WF_INBOX_${value}`)}</span>: <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CURRENT_OWNER":
-          return value ? <span>{value?.[0]?.name}</span> : <span>{t("NA")}</span>;
+          return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
-        case "WF_INBOX_HEADER_SLA_DAYS_REMAINING":
-          return value > 0 ? <Tag label={value} showIcon={false} type="success" /> : <Tag label={value} showIcon={false} type="error" />;
-
+        case "WF_INBOX_HEADER_CREATED_DATE":
+          const dateLabel = Number.isFinite(value) && value > 0 ? new Date(value).toLocaleDateString() : t("ES_COMMON_NA");
+          return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
         default:
           return t("ES_COMMON_NA");
       }

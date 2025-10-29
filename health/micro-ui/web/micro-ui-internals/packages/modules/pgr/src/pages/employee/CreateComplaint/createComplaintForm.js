@@ -30,6 +30,7 @@ const CreateComplaintForm = ({
   const history = useHistory();
 
   const [toast, setToast] = useState({ show: false, label: "", type: "" }); // Toast UI state
+  const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state to prevent multiple clicks
 
 
   const user = Digit.UserService.getUser();
@@ -159,7 +160,7 @@ const CreateComplaintForm = ({
     const updatedData = { ...formData };
   
     if (selectedUser === "MYSELF") {
-      updatedData.ComplainantName = user?.info?.name || "";
+      updatedData.ComplainantName = user?.info?.userName || "";
       updatedData.ComplainantContactNumber = user?.info?.mobileNumber || "";
     } else if (selectedUser === "ANOTHER_USER") {
       updatedData.ComplainantName = "";
@@ -180,15 +181,25 @@ const CreateComplaintForm = ({
    * Handles form submission event
    */
   const onFormSubmit = (_data) => {
+    // Prevent multiple submissions
+    if (isSubmitting) {
+      return;
+    }
+
+    setIsSubmitting(true);
     const payload = formPayloadToCreateComplaint(_data, tenantId, user?.info);
     handleResponseForCreateComplaint(payload);
+
+    // Re-enable submit button after 3 seconds
+    setTimeout(() => {
+      setIsSubmitting(false);
+    }, 5000);
   };
 
   /**
    * Makes API call to create complaint and handles response
    */
   const handleResponseForCreateComplaint = async (payload) => {
-
     await CreateComplaintMutation(payload, {
       onError: async () => {
         setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
@@ -234,7 +245,7 @@ const CreateComplaintForm = ({
         config={updatedConfig?.form}
         className="custom-form"
         onFormValueChange={onFormValueChange}
-        isDisabled={false}
+        isDisabled={isSubmitting}
         label={t("CS_COMMON_SUBMIT")}
       />
 

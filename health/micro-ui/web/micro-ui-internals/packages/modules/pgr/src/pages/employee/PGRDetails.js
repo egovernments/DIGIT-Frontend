@@ -42,6 +42,14 @@ const ACTION_CONFIGS = [
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
             },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
+            },
           ],
         },
       ],
@@ -87,6 +95,14 @@ const ACTION_CONFIGS = [
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
             },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
+            },
           ],
         },
       ],
@@ -114,6 +130,14 @@ const ACTION_CONFIGS = [
                 validation: { required: true },
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
               },
+            },
+            {
+              type: "component",
+              isMandatory: false,
+              component: "UploadFileComponent",
+              key: "complaintFile",
+              label: "CS_COMMON_COMPLAINT_FILE",
+              populators: { name: "complaintFile" },
             },
           ],
         },
@@ -151,7 +175,6 @@ const PGRDetails = () => {
 
   // Fetch complaint details
   const { isLoading, isError, error, data: pgrData, revalidate: pgrSearchRevalidate } = Digit.Hooks.pgr.usePGRSearch({ serviceRequestId: id }, tenantId);
-
   // Hook to update the complaint
   const { mutate: UpdateComplaintMutation } = Digit.Hooks.pgr.usePGRUpdate(tenantId);
 
@@ -226,6 +249,8 @@ const PGRDetails = () => {
         assignes: _data?.SelectedAssignee?.userServiceUUID ? [_data?.SelectedAssignee?.userServiceUUID] : null,
         hrmsAssignes: _data?.SelectedAssignee?.uuid ? [_data?.SelectedAssignee?.uuid] : null,
         comments: _data?.SelectedComments || "",
+        // Include documents array if complaint file is provided
+        verificationDocuments: _data?.complaintFile ? [_data.complaintFile] : null
       },
     };
     handleResponseForUpdateComplaint(updateRequest);
@@ -254,6 +279,8 @@ const PGRDetails = () => {
       },
     });
   };
+
+
 
   // Enhance config with roles and department dynamically
   const getUpdatedConfig = (selectedAction, workflowData, configs, serviceDefs, complaintData) => {
@@ -341,7 +368,8 @@ const PGRDetails = () => {
                   {
                     inline: true,
                     label: t("CS_COMPLAINT_DETAILS_CURRENT_STATUS"),
-                    value: t(`CS_COMMON_PGR_STATE_${pgrData?.ServiceWrappers[0].service?.applicationStatus || "NA"}`),
+                    value: pgrData?.ServiceWrappers?.[0]?.workflow?.assignes?.length > 0
+                    ? t("WF_INBOX_ASSIGNED") : t("WF_INBOX_PENDING_ASSIGNMENT")
                   },
                   {
                     inline: true,
@@ -426,7 +454,10 @@ const PGRDetails = () => {
           setSessionFormData={setSessionFormData}
           clearSessionFormData={clearSessionFormData}
           config={getUpdatedConfig(selectedAction, workflowData, ACTION_CONFIGS, serviceDefs, pgrData)}
-          closeModal={() => setOpenModal(false)}
+          closeModal={() => {
+            setOpenModal(false);
+            clearSessionFormData();
+          }}
           onSubmit={handleActionSubmit}
         />
       )}

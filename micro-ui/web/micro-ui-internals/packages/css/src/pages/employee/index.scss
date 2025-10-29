@@ -111,11 +111,11 @@
   .sidebar {
     position: fixed;
     left: 0;
-    background: #0B4B66;
+    background: #0b4b66;
     height: 100%;
     color: theme(colors.white);
-    margin-top: 83px;
-    z-index: 10000;
+    margin-top: 60px;
+    z-index: 999;
     transition: 0.3s ease all;
     white-space: nowrap;
     height: calc(100vh - 36px);
@@ -146,10 +146,10 @@
       align-items: center;
       padding: 20px;
       font-size: 14px;
-      
+
       &.level-0 {
-        margin:0 0.3rem 0 0.3rem;
-        &.select-level{
+        margin: 0 0.3rem 0 0.3rem;
+        &.select-level {
           border-top: 1px solid;
           border-bottom: 1px solid;
         }
@@ -186,11 +186,9 @@
       }
 
       &:hover {
-        
-        background-color: #0B4B66;
+        background-color: #0b4b66;
 
         cursor: pointer;
-        
       }
       .search-icon-wrapper {
         border: 2px solid theme(colors.white);
@@ -226,7 +224,7 @@
         fill: theme(colors.white);
       }
       &:hover {
-        background-color: #6A8E9D;
+        background-color: #6a8e9d;
         opacity: 0.8;
         cursor: pointer;
         svg {
@@ -234,11 +232,9 @@
         }
       }
 
-
       &.active {
         border-left: 4px solid theme(colors.primary.main);
         &.level-0 {
-        
         }
         &.level-1 {
           border-left: 8.5px solid theme(colors.primary.main);
@@ -247,8 +243,7 @@
           border-left: 4px solid theme(colors.primary.main);
         }
 
-        &.level-3{
-
+        &.level-3 {
         }
         color: theme(colors.primary.main) !important;
         border-right: none;
@@ -388,6 +383,21 @@
       }
     }
   }
+  .digit-dropdown-employee-select-wrap.language-dropdown{
+    .header-dropdown-label{
+      .cp{
+        color: #fff
+      }
+      .header-dropdown-arrow{
+        path{
+          fill: #fff;
+        }
+      }
+    }
+    .header-dropdown-menu{
+      right: 1rem;
+    }
+  }
   .select-wrap {
     margin-bottom: unset;
     svg {
@@ -499,6 +509,10 @@
   }
   .hambuger-back-wrapper {
     display: flex;
+    h3{
+      margin-top: 0;
+      margin-bottom: 0;
+    }
     @media (min-width: 780px) {
       .hamburger-span {
         display: none;
@@ -523,50 +537,162 @@
 }
 
 .link {
-  a{
+  a {
     color: inherit;
-    text-decoration: inherit
-    }
+    text-decoration: inherit;
+  }
 }
 
 .breadcrumb {
-  a{
+  a {
     color: inherit;
-    text-decoration: inherit
-    }
+    text-decoration: inherit;
+  }
 }
 
-.sidebar-link.active{
-.custom-link{
-  text-decoration: none;
-  div{
-    span{
-      color: theme(colors.primary.main) !important;
-      text-decoration: none;
+.sidebar-link.active {
+  .custom-link {
+    text-decoration: none;
+    div {
+      span {
+        color: theme(colors.primary.main) !important;
+        text-decoration: none;
+      }
     }
   }
 }
-}
 .bread-crumb {
-  a{
+  a {
     color: inherit;
-    text-decoration: inherit
-    }
+    text-decoration: inherit;
+  }
 }
 
-.sidebar-link{
-  .custom-link{
+.sidebar-link {
+  .custom-link {
     text-decoration: none;
-    div{
-      span{
+    div {
+      span {
         color: theme(colors.white);
         text-decoration: none;
       }
     }
   }
-  }
-  
+}
+.mandatory-span {
+  margin-left: 0.5rem;
+  color: red !important;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
 /* TODO fix required NABEEL/ANIL for home screen card */
   .customEmployeeCard {
     @apply m-sm !important;
   }
+
+ /* .digit-toast-success.animate.digit-error {
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: 5rem;
+    animation: slideInFromBottom 0.5s ease forwards; 
+  }  
+
+  @keyframes slideInFromBottom {
+    0% {
+        transform: translateX(-50%) translateY(100%); 
+    }
+    100% {
+        transform: translateX(-50%) translateY(0); 
+    }
+}
+*/
+
+/*
+.main.digit-home-main{
+  padding: 0rem;
+  margin: 0rem;
+  margin-top: 1.5rem;
+  .employee-app-wrapper{
+    margin: 4rem;
+  }
+}
+
+
+*/
+.pgr-citizen-wrapper .applications-list-container {
+  .key-note-pair {
+    max-height: 6rem !important;
+    p {
+      line-height: 0px !important;
+    }
+    margin-bottom: 0px !important;
+  }
+  .h3 {
+    line-height: 0px !important;
+  }
+  .date-wrap {
+    p {
+      line-height: 0px !important;
+    }
+    margin-bottom: 0px !important; 
+
+  }
+
+}
+
+.pgr-citizen-wrapper .checkpoint-connect-wrap, .checkpoint {
+  @media (min-width: 400px) {
+    .typography.text-heading-xl, header {
+      font-size: 1rem; } }
+}
+
+.pgr-citizen-wrapper .employee-data-table .row .value, .employee-data-table .row h2 {
+    font-size: 16px;
+    line-height: 6px;
+    }
+
+
+.digit-dropdown-select-wrap .digit-dropdown-select input[type=text], .digit-dropdown-select-wrap .digit-dropdown-select .digit-checkbox-container .input-emp[type=text], .digit-checkbox-container .digit-dropdown-select-wrap .digit-dropdown-select .input-emp[type=text]
+ {
+    position: absolute;
+    z-index: 8 !important;
+    height: 100%;
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    width: calc(100% - 1.75rem);
+    background-color: initial;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+    padding-left: .75rem;
+    color: #363636;
+}
+
+
+.pgr-citizen-wrapper .digit-card-component .digit-label-field-pair .digit-field .digit-dropdown-select-wrap .digit-dropdown-select  {
+  position: relative !important;
+  display: block;
+  width: 100%;
+  height: 2.5rem;
+  --bg-opacity: 1;
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  border: .063rem solid #787878;
+  z-index: 0 !important;
+
+}
+
+
+/* Adjusting logo size in employee header for egov logo
+.digit-employee-header{
+  .digit-logo-ulb-wrapper{
+    .digit-topbar-logo{
+      height: unset !important;
+      img{
+        height: 5rem;
+        width: 5rem;
+      }
+    }
+  }
+}
+*/

@@ -9,6 +9,7 @@ import FilterContext from "./FilterContext";
 import GenericChart from "./GenericChart";
 import MetricChart from "./MetricChart";
 import Summary from "./Summary";
+import KibanaCard from "./KibanaCard";
 
 let index = 1;
 
@@ -57,6 +58,8 @@ const Layout = ({ rowData,forHome=false }) => {
         );
       case "bar":
         return <CustomHorizontalBarChart data={chart} title={title} yAxisLabel={showCustomLabel(title,t)} />;
+      case "kibanaComponent":
+        return <KibanaCard moduleName={chart?.moduleName} pageName={chart?.pageName} filters={value}></KibanaCard>;
       default:
         return null;
     }
@@ -111,6 +114,8 @@ const Layout = ({ rowData,forHome=false }) => {
       case "collection":
       case "module":
         return <Summary header={visualizer.name} className="metricsTable" key={key} value={value} data={visualizer} />;
+      case "kibanaScreen":
+        return <KibanaCard moduleName={visualizer?.moduleName} pageName={visualizer?.pageName} />;
       default:
         return null;
     }

@@ -4,23 +4,23 @@ import cleanup from "../Utils/cleanup";
 import { convertEpochToDate } from "../Utils/index";
 
 const makeDefaultValues = (sessionFormData) => {
-  return sessionFormData?.Assignments?.map((ele,index)=>{
+  return sessionFormData?.Assignments?.map((ele, index) => {
     return {
       key: index,
-      fromDate: ele.fromDate ? convertEpochToDate(ele.fromDate): null,
-      toDate: ele.toDate ? convertEpochToDate(ele.toDate):null,
+      fromDate: ele.fromDate ? convertEpochToDate(ele.fromDate) : null,
+      toDate: ele.toDate ? convertEpochToDate(ele.toDate) : null,
       isCurrentAssignment: ele?.isCurrentAssignment,
       designation: {
         code: ele?.designation,
-        i18key: ele.designation ? "COMMON_MASTERS_DESIGNATION_" + ele.designation:null,
+        i18key: ele.designation ? "COMMON_MASTERS_DESIGNATION_" + ele.designation : null,
       },
       department: {
         code: ele?.department,
-        i18key:ele.department ? "COMMON_MASTERS_DEPARTMENT_" + ele.department : null,
+        i18key: ele.department ? "COMMON_MASTERS_DEPARTMENT_" + ele.department : null,
       },
-    }
-  })
-}
+    };
+  });
+};
 
 const Assignments = ({ t, config, onSelect, userType, formData }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
@@ -28,20 +28,22 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
   const [currentassignemtDate, setCurrentAssiginmentDate] = useState(null);
 
   const employeeCreateSession = Digit.Hooks.useSessionStorage("NEW_EMPLOYEE_CREATE", {});
-  const [sessionFormData,setSessionFormData, clearSessionFormData] = employeeCreateSession;
-  const isEdit = window.location.href.includes("hrms/edit")
-  
+  const [sessionFormData, setSessionFormData, clearSessionFormData] = employeeCreateSession;
+  const isEdit = window.location.href.includes("hrms/edit");
+
   const [assignments, setassignments] = useState(
-    !isEdit && sessionFormData?.Assignments ? makeDefaultValues(sessionFormData) :  (formData?.Assignments || [
-      {
-        key: 1,
-        fromDate: undefined,
-        toDate: undefined,
-        isCurrentAssignment: false,
-        department: null,
-        designation: null,
-      },
-    ])
+    !isEdit && sessionFormData?.Assignments
+      ? makeDefaultValues(sessionFormData)
+      : formData?.Assignments || [
+          {
+            key: 1,
+            fromDate: undefined,
+            toDate: undefined,
+            isCurrentAssignment: false,
+            department: null,
+            designation: null,
+          },
+        ]
   );
   const reviseIndexKeys = () => {
     setassignments((prev) => prev.map((unit, index) => ({ ...unit, key: index })));
@@ -73,17 +75,17 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
     var promises = assignments?.map((assignment) => {
       return assignment
         ? cleanup({
-          id: assignment?.id,
-          position: assignment?.position,
-          govtOrderNumber: assignment?.govtOrderNumber,
-          tenantid: assignment?.tenantid,
-          auditDetails: assignment?.auditDetails,
-          fromDate: assignment?.fromDate ? new Date(assignment?.fromDate).getTime() : undefined,
-          toDate: assignment?.toDate ? new Date(assignment?.toDate).getTime() : undefined,
-          isCurrentAssignment: assignment?.isCurrentAssignment,
-          department: assignment?.department?.code,
-          designation: assignment?.designation?.code,
-        })
+            id: assignment?.id,
+            position: assignment?.position,
+            govtOrderNumber: assignment?.govtOrderNumber,
+            tenantid: assignment?.tenantid,
+            auditDetails: assignment?.auditDetails,
+            fromDate: assignment?.fromDate ? new Date(assignment?.fromDate).getTime() : undefined,
+            toDate: assignment?.toDate ? new Date(assignment?.toDate).getTime() : undefined,
+            isCurrentAssignment: assignment?.isCurrentAssignment,
+            department: assignment?.department?.code,
+            designation: assignment?.designation?.code,
+          })
         : [];
     });
 
@@ -106,13 +108,13 @@ const Assignments = ({ t, config, onSelect, userType, formData }) => {
   const [focusIndex, setFocusIndex] = useState(-1);
 
   function getdepartmentdata() {
-    return data?.MdmsRes?.["common-masters"]?.Department.map((ele) => {
+    return data?.MdmsRes?.["common-masters"]?.Department?.map((ele) => {
       ele["i18key"] = t("COMMON_MASTERS_DEPARTMENT_" + ele.code);
       return ele;
     });
   }
   function getdesignationdata() {
-    return data?.MdmsRes?.["common-masters"]?.Designation.map((ele) => {
+    return data?.MdmsRes?.["common-masters"]?.Designation?.map((ele) => {
       ele["i18key"] = t("COMMON_MASTERS_DESIGNATION_" + ele.code);
       return ele;
     });
@@ -182,9 +184,9 @@ function Assignment({
         pre.map((item) =>
           item.key === assignment.key
             ? {
-              ...item,
-              toDate: null,
-            }
+                ...item,
+                toDate: null,
+              }
             : item
         )
       );
@@ -204,6 +206,12 @@ function Assignment({
   const ValidateDatePickers = (value) => {
     assignments;
   };
+  const fieldStyle = {
+    maxWidth: "36.25rem",
+    paddingRight: "2.5rem",
+  };
+
+
   return (
     <div key={index + 1} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
@@ -222,7 +230,7 @@ function Assignment({
 
         <LabelFieldPair>
           <CardLabel className={assignment?.id ? "card-label-smaller" : "card-label-smaller"}> {`${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
-          <div className="field">
+          <div className="field" style={fieldStyle}>
             <DatePicker
               type="date"
               name="fromDate"
@@ -243,7 +251,7 @@ function Assignment({
             {t("HR_ASMT_TO_DATE_LABEL")}
             {assignment?.isCurrentAssignment ? "" : " * "}{" "}
           </CardLabel>
-          <div className="field">
+          <div className="field" style={fieldStyle}>
             <DatePicker
               type="date"
               name="toDate"
@@ -266,6 +274,7 @@ function Assignment({
           </CardLabel>
           <div className="field">
             <CheckBox
+              className="hrms-checkbox"
               onChange={(e) => onAssignmentChange(e.target.checked)}
               checked={assignment?.isCurrentAssignment}
               label={t("HR_CURRENTLY_ASSIGNED_HERE_SWITCH_LABEL")}
@@ -281,7 +290,7 @@ function Assignment({
             optionKey={"i18key"}
             option={getdepartmentdata(department) || []}
             select={selectDepartment}
-            optionCardStyles={{maxHeight:"300px"}}
+            optionCardStyles={{ maxHeight: "300px" }}
             t={t}
           />
         </LabelFieldPair>
@@ -294,7 +303,7 @@ function Assignment({
             disable={assignment?.id ? true : false}
             option={getdesignationdata(designation) || []}
             select={selectDesignation}
-            optionCardStyles={{maxHeight:"250px"}}
+            optionCardStyles={{ maxHeight: "250px" }}
             optionKey={"i18key"}
             t={t}
           />

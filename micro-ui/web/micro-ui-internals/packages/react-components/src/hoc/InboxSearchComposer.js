@@ -1,5 +1,5 @@
 import React, { useEffect, useReducer, useState,useMemo } from "react";
-import Toast from "../atoms/Toast";
+import { Toast } from "@egovernments/digit-ui-components";
 import ResultsTable from "./ResultsTable"
 import reducer, { initialInboxState } from "./InboxSearchComposerReducer";
 import InboxSearchLinks from "../atoms/InboxSearchLinks";
@@ -16,17 +16,21 @@ import Header from "../atoms/Header";
 import { useTranslation } from "react-i18next";
 
 
-const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{}}) => {
+const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueChange=()=>{},showTab,tabData,onTabChange}) => {
     const { t } = useTranslation();
 
     const [enable, setEnable] = useState(false);
-    const [state, dispatch] = useReducer(reducer, initialInboxState);
+    const [state, dispatch] = useReducer(reducer, initialInboxState(configs));
     const [showToast, setShowToast] = useState(false);
     //for mobile view
     const [type, setType] = useState("");
     const [popup, setPopup] = useState(false);
    
-    const apiDetails = configs?.apiDetails
+    const [apiDetails, setApiDetails] = useState(configs?.apiDetails);
+
+    useEffect(()=>{
+        setApiDetails(configs?.apiDetails)
+    },[configs])
 
     const mobileSearchSession = Digit.Hooks.useSessionStorage("MOBILE_SEARCH_MODAL_FORM", 
         {}
@@ -127,7 +131,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
 
     useEffect(() => {
         if(error){
-            setShowToast({ label:error?.message, isError: true });
+            setShowToast({ label:error?.message, type: "error" });
             closeToast()
         }
     }, [error])
@@ -172,13 +176,17 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                 }
                 {
                     configs?.type === 'search' && configs?.sections?.search?.show &&
-                        <div className="section search">
+                        <div className={`section search ${showTab ? "tab": ""}`}>
                             <SearchComponent 
                                 uiConfig={ configs?.sections?.search?.uiConfig} 
                                 header={configs?.sections?.search?.label} 
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTab={showTab}
+                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
+                                tabData={tabData}
+                                onTabChange={onTabChange}
                                 />
                         </div>
 
@@ -193,6 +201,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTabCount={configs?.sections?.filter?.uiConfig?.showTabCount}
                                 />
                         </div> 
                 }
@@ -206,6 +215,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTabCount={configs?.sections?.search?.uiConfig?.showTabCount}
                                 />
                         </div>
                      </MediaQuery>
@@ -220,6 +230,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                                 screenType={configs.type}
                                 fullConfig={configs}
                                 data={data}
+                                showTabCount={configs?.sections?.filter?.uiConfig?.showTabCount}
                                 />
                         </div> 
                     </MediaQuery>
@@ -250,7 +261,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                 }
                 {   
                     configs?.sections?.searchResult?.show &&
-                        <div className="" style={data?.[configs?.sections?.searchResult?.uiConfig?.resultsJsonPath]?.length > 0 ? (!(isLoading || isFetching) ?{ overflowX: "auto" }: {}) : {  }} >
+                        <div className={`results-table-wrapper ${configs?.sections?.searchResult?.uiConfig?.resultsWrapperClassName}`} style={data?.[configs?.sections?.searchResult?.uiConfig?.resultsJsonPath]?.length > 0 ? (!(isLoading || isFetching) ?{ overflowX: "auto" }: {}) : {  }} >
                             <MediaQuery minWidth={426}>
                     {/* configs?.sections?.searchResult?.show &&  
                         <div style={data?.[configs?.sections?.searchResult?.uiConfig?.resultsJsonPath]?.length > 0 ? (!(isLoading || isFetching) ?{ overflowX: "scroll", borderRadius : "4px" }: {}) : {  }} > */}
@@ -316,7 +327,7 @@ const InboxSearchComposer = ({configs,headerLabel,additionalConfig,onFormValueCh
                 {/* One can use this Parent to add additional sub parents to render more sections */}
             </div>
             </div>   
-            {showToast && <Toast label={showToast.label} error={showToast?.isError} isDleteBtn={true} onClose={()=>setShowToast(null)}></Toast>}
+            {showToast && <Toast label={showToast.label} type={showToast?.type} isDleteBtn={true} onClose={()=>setShowToast(null)}></Toast>}
         </InboxContext.Provider>
     )
 }

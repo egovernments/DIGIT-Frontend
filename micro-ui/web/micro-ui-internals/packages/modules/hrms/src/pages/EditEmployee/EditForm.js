@@ -1,4 +1,4 @@
-import { FormComposer, Toast,Loader } from "@egovernments/digit-ui-react-components";
+import { FormComposer, Toast, Loader } from "@egovernments/digit-ui-react-components";
 import React, { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -13,10 +13,13 @@ const EditForm = ({ tenantId, data }) => {
   const [mobileNumber, setMobileNumber] = useState(null);
   const [phonecheck, setPhonecheck] = useState(false);
   const [checkfield, setcheck] = useState(false);
-   const { data: mdmsData,isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
+  const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
+  const isMultiRootTenant = Digit.Utils.getMultiRootTenant();
+
+  const { data: mdmsData, isLoading } = Digit.Hooks.useCommonMDMS(Digit.ULBService.getStateId(), "egov-hrms", ["CommonFieldsConfig"], {
     select: (data) => {
-       return {
-        config: data?.MdmsRes?.['egov-hrms']?.CommonFieldsConfig
+      return {
+        config: data?.MdmsRes?.["egov-hrms"]?.CommonFieldsConfig,
       };
     },
     retry: false,
@@ -33,7 +36,7 @@ const EditForm = ({ tenantId, data }) => {
   }, []);
 
   useEffect(() => {
-    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern('MobileNo'))) {
+    if (mobileNumber && mobileNumber.length == 10 && mobileNumber.match(Digit.Utils.getPattern("MobileNo"))) {
       setShowToast(null);
       if (data.user.mobileNumber == mobileNumber) {
         setPhonecheck(true);
@@ -78,9 +81,9 @@ const EditForm = ({ tenantId, data }) => {
           code: ele.hierarchy,
           name: ele.hierarchy,
         },
-        boundaryType: { label: ele.boundaryType, i18text:`EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
+        boundaryType: { label: ele.boundaryType, i18text: `EGOV_LOCATION_BOUNDARYTYPE_${ele.boundaryType.toUpperCase()}` },
         boundary: { code: ele.boundary },
-        roles: data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
+        roles: isMultiRootTenant?data?.user?.roles:data?.user?.roles.filter((item) => item.tenantId == ele.boundary),
       });
     }),
     Assignments: data?.assignments.map((ele, index) => {
@@ -102,13 +105,12 @@ const EditForm = ({ tenantId, data }) => {
   };
 
   const checkMailNameNum = (formData) => {
-
-    const email = formData?.SelectEmployeeEmailId?.emailId || '';
-    const name = formData?.SelectEmployeeName?.employeeName || '';
-    const address = formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || '';
-    const validEmail = email.length == 0 ? true : email.match(Digit.Utils.getPattern('Email'));
-    return validEmail && name.match(Digit.Utils.getPattern('Name')) && address.match(Digit.Utils.getPattern('Address'));
-  }
+    const email = formData?.SelectEmployeeEmailId?.emailId || "";
+    const name = formData?.SelectEmployeeName?.employeeName || "";
+    const address = formData?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress || "";
+    const validEmail = email.length == 0 ? true : email.match(Digit.Utils.getPattern("Email"));
+    return validEmail && name.match(Digit.Utils.getPattern("Name")) && address.match(Digit.Utils.getPattern("Address"));
+  };
 
   const onFormValueChange = (setValue = true, formData) => {
     if (formData?.SelectEmployeePhoneNumber?.mobileNumber) {
@@ -159,23 +161,42 @@ const EditForm = ({ tenantId, data }) => {
     }
   };
 
+  const navigateToAcknowledgement = ({ id, message }) => {
+    history.replace(`/${window?.contextPath}/employee/hrms/response?isSuccess=true`, { id, message, showID: true, showChildren: false });
+  };
+
   const onSubmit = (input) => {
-    if (input.Jurisdictions.filter(juris => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
-      setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
-      return;
-    }
-    if (!Object.values(input.Jurisdictions.reduce((acc, sum) => {
-      if (sum && sum?.tenantId) {
-        acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
-      }
-      return acc;
-    }, {})).every(s => s == 1)) {
+    // if (input.Jurisdictions.filter((juris) => juris.tenantId == tenantId && juris.isActive !== false).length == 0) {
+    //   setShowToast({ key: true, label: "ERR_BASE_TENANT_MANDATORY" });
+    //   return;
+    // }
+    input.Jurisdictions = input?.Jurisdictions?.map((juris) => {
+      return {
+        ...juris,
+        tenantId: tenantId,
+      };
+    });
+    if (
+      !Object.values(
+        input.Jurisdictions.reduce((acc, sum) => {
+          if (sum && sum?.tenantId) {
+            acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
+          }
+          return acc;
+        }, {})
+      ).every((s) => s == 1)
+    ) {
       setShowToast({ key: true, label: "ERR_INVALID_JURISDICTION" });
       return;
     }
     let roles = input?.Jurisdictions?.map((ele) => {
       return ele.roles?.map((item) => {
-        item["tenantId"] = ele.boundary;
+        if(isMultiRootTenant){
+          item["tenantId"] = tenantId;
+        }
+        else{
+          item["tenantId"] = ele.boundary;
+        }
         return item;
       });
     });
@@ -191,20 +212,36 @@ const EditForm = ({ tenantId, data }) => {
     requestdata.user.mobileNumber = input?.SelectEmployeePhoneNumber?.mobileNumber;
     requestdata["user"]["name"] = input?.SelectEmployeeName?.employeeName;
     requestdata.user.correspondenceAddress = input?.SelectEmployeeCorrespondenceAddress?.correspondenceAddress;
-    requestdata.user.roles = roles.filter(role=>role&&role.name);
+    requestdata.user.roles = roles.filter((role) => role && role.name);
     let Employees = [requestdata];
 
     /* use customiseUpdateFormData hook to make some chnages to the Employee object */
-    Employees=Digit?.Customizations?.HRMS?.customiseUpdateFormData?Digit.Customizations.HRMS.customiseUpdateFormData(data,Employees):Employees;
+    Employees = Digit?.Customizations?.HRMS?.customiseUpdateFormData ? Digit.Customizations.HRMS.customiseUpdateFormData(data, Employees) : Employees;
 
+    mutationUpdate.mutate(
+      {
+        Employees: Employees,
+      },
+      {
+        onError: (error, variables) => {
+          setShowToast({
+            key: "error",
+            label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : "HRMS_CREATE_ERROR",
+          });
+        },
+        onSuccess: async (data) => {
+          navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+        },
+      }
+    );
 
-    history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "UPDATE" });
+    // history.replace(`/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "UPDATE" });
   };
   if (isLoading) {
     return <Loader />;
   }
 
-  const config =mdmsData?.config?mdmsData.config: newConfig;
+  const config = mdmsData?.config ? mdmsData.config : newConfig;
   return (
     <div>
       <FormComposer
@@ -221,7 +258,8 @@ const EditForm = ({ tenantId, data }) => {
         onSubmit={onSubmit}
         defaultValues={defaultValues}
         onFormValueChange={onFormValueChange}
-      /> {showToast && (
+      />
+      {showToast && (
         <Toast
           error={showToast.key}
           label={t(showToast.label)}

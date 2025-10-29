@@ -4,7 +4,7 @@ import useUpdateEvent from "./events/useUpdateEvent";
 import {
   useBulkPdfDetails, useDemandSearch, useFetchBillsForBuissnessService, useFetchCitizenBillsForBuissnessService, useFetchPayment, useGetPaymentRulesForBusinessServices, usePaymentSearch, usePaymentUpdate, useRecieptSearch
 } from "./payment";
-import { useInitStore } from "./store";
+import { useInitStore, useInitTenantConfig } from "./store";
 import useAccessControl from "./useAccessControl";
 import { useApplicationsForBusinessServiceSearch } from "./useApplicationForBillSearch";
 import useClickOutside from "./useClickOutside";
@@ -89,6 +89,7 @@ import useGetFAQsJSON from "./useGetFAQsJSON";
 import useGetHowItWorksJSON from "./useHowItWorksJSON";
 import { usePrivacyContext } from "./usePrivacyContext";
 import useStaticData from "./useStaticData";
+import { useTenantManagementSearch } from "./useTenantManagementSearch";
 
 
 
@@ -166,6 +167,7 @@ const Hooks = {
   useGetPaymentRulesForBusinessServices,
   useWorkflowDetails,
   useInitStore,
+  useInitTenantConfig,
   useClickOutside,
   useUserSearch,
   useApplicationsForBusinessServiceSearch,
@@ -210,7 +212,8 @@ const Hooks = {
   useStaticData,
   useDynamicData,
   useBulkPdfDetails,
-  useLocation
+  useLocation,
+  useTenantManagementSearch
 };
 
 export default Hooks;

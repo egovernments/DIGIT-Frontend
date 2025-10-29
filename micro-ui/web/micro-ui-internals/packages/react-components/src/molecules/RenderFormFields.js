@@ -14,8 +14,8 @@ import MultiSelectDropdown from '../atoms/MultiSelectDropdown';
 import LocationDropdownWrapper from './LocationDropdownWrapper';
 import WorkflowStatusFilter from './WorkflowStatusFilter';
 import ApiDropdown from './ApiDropdown';
+import ApiCheckboxes from './ApiCheckboxes';
 const RenderFormFields = ({data,...props}) => {
-  
     const { t } = useTranslation();
     const { fields, control, formData, errors, register, setValue, getValues, setError, clearErrors, apiDetails} = props
     
@@ -40,9 +40,11 @@ const RenderFormFields = ({data,...props}) => {
                             onChange={onChange}
                             inputRef={ref}
                             errorStyle={errors?.[populators.name]}
+                            min={populators.min}
                             max={populators.max}
+                            placeholder={populators.placeholder}
                             disable={disable}
-                            style={type === "date" ? { paddingRight: "3px" } : ""}
+                            style={type === "date" ? { paddingRight: "3px" } : populators?.style ? {...populators?.style} : {}}
                             maxlength={populators?.validation?.maxlength}
                             minlength={populators?.validation?.minlength}
                         />
@@ -160,6 +162,8 @@ const RenderFormFields = ({data,...props}) => {
                         config={populators}
                         disable={config?.disable}
                         errorStyle={errors?.[populators.name]}
+                        mdmsv2={populators.mdmsv2 ? populators.mdmsv2 : false }
+                        props={props}
                     />
                     )}
                     rules={{ required: isMandatory, ...populators.validation }}
@@ -198,7 +202,7 @@ const RenderFormFields = ({data,...props}) => {
                 />
               );
 
-          case "locationdropdown":
+            case "locationdropdown":
             return (
               <Controller
                 name={`${populators.name}`}
@@ -245,7 +249,28 @@ const RenderFormFields = ({data,...props}) => {
               />
             );
 
-
+            case "apicheckboxes":
+              return (
+                <Controller
+                  name={`${populators.name}`}
+                  control={control}
+                  defaultValue={formData?.[populators.name]}
+                  rules={{ required: populators?.isMandatory, ...populators.validation }}
+                  render={(props) => {
+                    return (
+                      <div style={{ display: "grid", gridAutoFlow: "row" }}>
+                        <ApiCheckboxes
+                          props={props}
+                          populators={populators}
+                          formData={formData}
+                          inputRef={props.ref}
+                          errors={errors}
+                        />
+                      </div>
+                    );
+                  }}
+                />
+              );
             case "workflowstatesfilter":
             return (
               <Controller
@@ -275,11 +300,25 @@ const RenderFormFields = ({data,...props}) => {
                     <DateRangeNew
                       t={t}
                       values={formData?.[populators.name]?.range}
+                      // values={
+                      //   typeof formData?.[populators.name]?.range?.startDate === "string" ?
+                      //   {
+                      //   duration: formData?.[populators.name]?.range?.duration,
+                      //   endDate: new Date(
+                      //     formData?.[populators.name]?.range?.endDate
+                      //   ),
+                      //   startDate: new Date(
+                      //     formData?.[populators.name]?.range?.startDate
+                      //   ),
+                      //   title:
+                      //     formData?.[populators.name]?.range?.startDate?.title,
+                      // }: formData?.[populators.name]?.range}
                       name={populators.name}
                       onFilterChange={props.onChange}
                       inputRef={props.ref}
                       errorStyle={errors?.[populators.name]}
-                    />                  
+                      populators={populators}
+                    />
                   )}
                   rules={{ required: isMandatory, ...populators.validation }}
                   defaultValue={formData?.[populators.name]}
@@ -309,6 +348,7 @@ const RenderFormFields = ({data,...props}) => {
                     control={control}
                     getValues={getValues}
                     responseData={data}
+                    populators={populators}
                   />
                 )}
                 name={config?.key}
@@ -325,7 +365,7 @@ const RenderFormFields = ({data,...props}) => {
       <React.Fragment>
         {fields?.map((item, index) => {
           return (
-            <LabelFieldPair key={index}>
+            <LabelFieldPair key={index} style={item.hideInForm ? {"display":"none"}:{}}>
                 { item.label && (
                   <CardLabel style={{...props.labelStyle,marginBottom:"0.4rem"}}>
                     {t(item.label)}{ item?.isMandatory ? " * " : null }
@@ -335,7 +375,7 @@ const RenderFormFields = ({data,...props}) => {
                 { fieldSelector(item.type, item.populators, item.isMandatory, item?.disable, item?.component, item) }
                 
                 { item?.populators?.name && errors && errors[item?.populators?.name] && Object.keys(errors[item?.populators?.name]).length ? (
-                  <CardLabelError style={{ fontSize: "12px", marginTop: "-20px" }}>
+                  <CardLabelError style={item?.populators?.validationErrorStyles ? { fontSize: "12px", marginTop: "-20px",...item?.populators?.validationErrorStyles }:{ fontSize: "12px", marginTop: "-20px"}} className={item?.populators?.validationErrorClassName}>
                     {t(item?.populators?.error)}
                   </CardLabelError> ) : null
                 }

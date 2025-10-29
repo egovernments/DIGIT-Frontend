@@ -1,3 +1,6 @@
+import { useQuery } from "react-query";
+import _ from "lodash";
+
 /**
  * Custom util to get the config based on the JSON Schema and UI Schema.
  *
@@ -68,11 +71,121 @@ const UICreateConfigGenerator = (MDMSSchema = {}, UISchema = {}) => {
  * @returns {Array<object>} Returns the Create screen config
  */
 const getMDMSContextPath = () => {
-  return window?.globalConfigs?.getConfig("MDMS_CONTEXT_PATH") || "mdms-v2";
+  return window?.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 };
 
 const isSchemaCodeInMDMSAction = () => {
   return window?.globalConfigs?.getConfig("MDMS_SCHEMACODE_INACTION")===false?false : true;
 };
 
-export { UICreateConfigGenerator, getMDMSContextPath,isSchemaCodeInMDMSAction };
+
+
+
+
+/**
+ * Custom function to get the schema of the screen to be rendered
+ *
+ * @author jagankumar-egov
+ *
+ * @example
+ *   Digit.Hooks.workbench.getMDMSSchema(schemaCode,tenantId)
+ *
+ * @returns schema object
+ */
+
+const getMDMSSchema = (schemaCode, tenantId = Digit.ULBService.getCurrentTenantId()) => {
+  const reqCriteria = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/schema/v1/_search`,
+    params: {},
+    body: {
+      SchemaDefCriteria: {
+        tenantId: tenantId,
+        codes: [schemaCode],
+      },
+    },
+  };
+  const { isLoading: schemaLoading, data: schemaData, error: schemaError } = useQuery(
+    ["API_SCHEMA", schemaCode, tenantId].filter((e) => e),
+    () => Digit.CustomService.getResponse({ ...reqCriteria }),
+    {
+      cacheTime: 0,
+      enabled: schemaCode && true,
+      select: (data) => {
+        return data?.SchemaDefinitions?.[0] || { noSchemaFound: true };
+      },
+    }
+  );
+  const reqCriteriaData = {
+    url: `/${Digit.Hooks.workbench.getMDMSContextPath()}/v2/_search`,
+    params: {},
+    body: {
+      MdmsCriteria: {
+        tenantId: tenantId,
+        filters: {
+          schemaCode: schemaCode,
+        },
+        schemaCode: "Workbench.UISchema",
+      },
+    },
+  };
+  const { isLoading: uiSchemaLoading, error, data } = useQuery(
+    ["UI_SCHEMA", schemaCode, tenantId],
+    () => Digit.CustomService.getResponse({ ...reqCriteriaData }),
+    {
+      cacheTime: 0,
+      enabled: schemaCode && true,
+      select: (data) => {
+        const customUiConfigs = data?.mdms?.[0]?.data;
+        const responseData = {};
+        if (customUiConfigs) {
+          responseData["customUiConfigs"] = customUiConfigs;
+          responseData["uiSchema"] = customUiConfigs?.order ? { "ui:order": [...customUiConfigs?.order, "*"] } : {};
+        }
+        return responseData;
+      },
+    }
+  );
+  let finalResponse = {};
+  if (!uiSchemaLoading && !schemaLoading) {
+    finalResponse = { ...data };
+    if (schemaData?.definition) {
+      schemaData.definition = Digit.Utils.workbench.updateTitleToLocalisationCodeForObject(schemaData?.definition, schemaData?.code);
+    }
+    if (schemaData?.definition?.["x-ref-schema"]?.length > 0) {
+      schemaData?.definition?.["x-ref-schema"]?.map((dependent) => {
+        if (dependent?.fieldPath) {
+          let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
+          if (_.get(schemaData?.definition?.properties, updatedPath)) {
+            _.set(schemaData?.definition?.properties, updatedPath, {
+              ..._.get(schemaData?.definition?.properties, updatedPath, {}),
+              enum: [],
+              schemaCode: dependent?.schemaCode,
+              fieldPath: dependent?.fieldPath,
+              tenantId,
+            });
+          }
+        }
+      });
+    }
+    if (schemaData && finalResponse?.customUiConfigs?.custom?.length > 0) {
+      finalResponse?.customUiConfigs?.custom?.map((dependent) => {
+        if (dependent?.fieldPath && dependent?.dataSource) {
+          let updatedPath = Digit.Utils.workbench.getUpdatedPath(dependent?.fieldPath);
+          if (_.get(schemaData?.definition?.properties, updatedPath)) {
+            _.set(schemaData?.definition?.properties, updatedPath, {
+              ..._.get(schemaData?.definition?.properties, updatedPath, {}),
+              enum: [{ label: "WBH_NULL", value: null }],
+              schemaCode: "CUSTOM",
+              fieldPath: dependent?.fieldPath,
+              tenantId,
+            });
+          }
+        }
+      });
+    }
+    finalResponse["schema"] = { ...schemaData };
+  }
+  return { isLoading: uiSchemaLoading || schemaLoading, error: schemaError || error, data: finalResponse };
+};
+
+export { UICreateConfigGenerator, getMDMSContextPath, getMDMSSchema, isSchemaCodeInMDMSAction };

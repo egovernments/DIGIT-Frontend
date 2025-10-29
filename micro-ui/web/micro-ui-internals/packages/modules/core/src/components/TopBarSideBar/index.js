@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { EditPencilIcon, LogoutIcon } from "@egovernments/digit-ui-react-components";
 import TopBar from "./TopBar";
 import { useHistory } from "react-router-dom";
 import SideBar from "./SideBar";
@@ -13,6 +12,7 @@ const TopBarSideBar = ({
   mobileView,
   handleUserDropdownSelection,
   logoUrl,
+  logoUrlWhite,
   showSidebar = true,
   showLanguageChange,
   linkData,
@@ -28,23 +28,28 @@ const TopBarSideBar = ({
   const handleOnSubmit = () => {
     Digit.UserService.logout();
     setShowDialog(false);
-  }
+  };
   const handleOnCancel = () => {
     setShowDialog(false);
-  }
+  };
+
+  const handleSidebar = () => {
+    toggleSidebar(!isSidebarOpen);
+  };
   const userProfile = () => {
-    history.push(`/${window?.contextPath}/employee/user/profile`);
+    CITIZEN ? history.push(`/${window?.contextPath}/citizen/user/profile`) : history.push(`/${window?.contextPath}/employee/user/profile`);
   };
   const userOptions = [
-    { name: t("EDIT_PROFILE"), icon: <EditPencilIcon className="icon" />, func: userProfile },
-    { name: t("CORE_COMMON_LOGOUT"), icon: <LogoutIcon className="icon" />, func: handleLogout },
+    { name: t("EDIT_PROFILE"), icon: "Edit", func: userProfile },
+    { name: t("CORE_COMMON_LOGOUT"), icon: "Logout", func: handleLogout },
   ];
+
   return (
     <React.Fragment>
       <TopBar
         t={t}
         stateInfo={stateInfo}
-        toggleSidebar={toggleSidebar}
+        toggleSidebar={handleSidebar}
         isSidebarOpen={isSidebarOpen}
         handleLogout={handleLogout}
         userDetails={userDetails}
@@ -54,24 +59,41 @@ const TopBarSideBar = ({
         userOptions={userOptions}
         handleUserDropdownSelection={handleUserDropdownSelection}
         logoUrl={logoUrl}
+        logoUrlWhite={logoUrlWhite}
         showLanguageChange={showLanguageChange}
       />
-      {showDialog && (
-        <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>
-      )}
-      {showSidebar && (
-        <SideBar
-          t={t}
-          CITIZEN={CITIZEN}
-          isSidebarOpen={isSidebarOpen}
-          toggleSidebar={toggleSidebar}
-          handleLogout={handleLogout}
-          mobileView={mobileView}
-          userDetails={userDetails}
-          linkData={linkData}
-          islinkDataLoading={islinkDataLoading}
-        />
-      )}
+      {showDialog && <LogoutDialog onSelect={handleOnSubmit} onCancel={handleOnCancel} onDismiss={handleOnCancel}></LogoutDialog>}
+      {!CITIZEN
+        ? showSidebar && (
+            <SideBar
+              t={t}
+              CITIZEN={CITIZEN}
+              isSidebarOpen={isSidebarOpen}
+              toggleSidebar={handleSidebar}
+              handleLogout={handleLogout}
+              mobileView={mobileView}
+              userDetails={userDetails}
+              linkData={linkData}
+              userProfile={userProfile}
+              islinkDataLoading={islinkDataLoading}
+            />
+          )
+        : CITIZEN
+        ? showSidebar && isSidebarOpen && (
+            <SideBar
+              t={t}
+              CITIZEN={CITIZEN}
+              isSidebarOpen={isSidebarOpen}
+              toggleSidebar={handleSidebar}
+              handleLogout={handleLogout}
+              mobileView={mobileView}
+              userDetails={userDetails}
+              linkData={linkData}
+              userProfile={userProfile}
+              islinkDataLoading={islinkDataLoading}
+            />
+          )
+        : null}
     </React.Fragment>
   );
 };

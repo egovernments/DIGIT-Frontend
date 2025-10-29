@@ -24,8 +24,7 @@ const DssBreadCrumb = ({ location }) => {
     {
       path: checkCurrentScreen() || window.location.href.includes("NURT_DASHBOARD") ? `/${window?.contextPath}/employee/dss/landing/NURT_DASHBOARD` : `/${window?.contextPath}/employee/dss/landing/home`,
       content: t("ES_LANDING_PAGE"),
-      show: landingPageHiddenIn?.includes(window?.contextPath)?false:true,
-    },
+      show: Digit.Utils.getMultiRootTenant()?false:(landingPageHiddenIn?.includes(window?.contextPath)?false:true),    },
     {
       path: fromModule?`/${window?.contextPath}/employee/dss/dashboard/${fromModule}`:`/${window?.contextPath}/employee/dss/dashboard/${Digit.Utils.dss.getCurrentModuleName()}`,
       content: t(`ES_COMMON_DSS_${Digit.Utils.locale.getTransformedLocale(fromModule?fromModule:moduleName)}`),

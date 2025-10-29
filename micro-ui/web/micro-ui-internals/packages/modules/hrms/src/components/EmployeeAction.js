@@ -14,6 +14,8 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
   const [Reasons, setReasons] = useState([]);
   const [selectedReason, selecteReason] = useState("");
   const tenant = Digit.ULBService.getStateId() || tenantId?.split(".")?.[0];
+  const mutationUpdate = Digit.Hooks.hrms.useHRMSUpdate(tenantId);
+
   const { isLoading, isError, errors, data, ...rest } = Digit.Hooks.hrms.useHrmsMDMS(tenant, "egov-hrms", "DeactivationReason");
 
   useEffect(() => {
@@ -129,6 +131,22 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       set(Employees[0], 'deactivationDetails[0].remarks', data?.remarks);
 
       Employees[0].isActive = false;
+      mutationUpdate.mutate(
+        {
+          Employees: Employees,
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({
+              key: "error",
+              label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : "HRMS_CREATE_ERROR",
+            });
+          },
+          onSuccess: async (data) => {
+            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+          },
+        }
+      );
       history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "DEACTIVATION" });
     } else {
       if (file) {
@@ -145,6 +163,23 @@ const EmployeeAction = ({ t, action, tenantId, closeModal, submitAction, applica
       set(Employees[0], 'reactivationDetails[0].reasonForDeactivation', data?.reasonForDeactivation);
       set(Employees[0], 'reactivationDetails[0].remarks', data?.remarks);
       Employees[0].isActive = true;
+
+      mutationUpdate.mutate(
+        {
+          Employees: Employees,
+        },
+        {
+          onError: (error, variables) => {
+            setShowToast({
+              key: "error",
+              label: error?.response?.data?.Errors?.[0]?.code ? error?.response?.data?.Errors?.[0]?.code : "HRMS_CREATE_ERROR",
+            });
+          },
+          onSuccess: async (data) => {
+            navigateToAcknowledgement({ id: data?.Employees?.[0]?.code, message: "HRMS_UPDATE_EMPLOYEE_RESPONSE_MESSAGE" });
+          },
+        }
+      );
 
       history.replace( `/${window?.contextPath}/employee/hrms/response`, { Employees, key: "UPDATE", action: "ACTIVATION" });
     }

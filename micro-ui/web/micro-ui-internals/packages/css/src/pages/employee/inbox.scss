@@ -530,20 +530,28 @@
 }
 
 .search-tabs-container {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  margin-bottom: 35px;
   display: flex;
   justify-content: space-between;
+  background-color: #eee;
 
   .search-tab-head {
     padding: 10px 35px;
+    font-weight: 700;
+    font-size: 1rem;
+    border: 1px solid #d6d5d4;
+    border-radius: 0.5rem 0.5rem 0 0;
   }
 
   .search-tab-head-selected {
     padding: 10px 35px;
     color: rgb(244, 119, 56);
+    background-color: #fff;
+    border: 1px solid theme(colors.primary.main);
+    border-radius: 0.5rem 0.5rem 0 0;
     border-bottom: 4px solid rgb(244, 119, 56);
-    font-weight: bold;
+    font-weight: 700;
+    font-size: 1.125rem;
+    margin-bottom: -1rem;
   }
 
   .search-tab-head-selected:focus {

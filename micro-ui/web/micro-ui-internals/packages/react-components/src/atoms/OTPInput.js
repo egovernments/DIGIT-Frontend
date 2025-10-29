@@ -18,7 +18,7 @@ const SingleInput = ({ isFocus, onChange, onFocus, value, ...rest }) => {
       onChange={onChange}
       onFocus={onFocus}
       ref={inputRef}
-      type="number"
+      type="text"  
       value={value ? value : ""}
       {...rest}
     />
@@ -29,7 +29,7 @@ const OTPInput = (props) => {
   const [activeInput, setActiveInput] = useState(0);
 
   const isInputValueValid = (value) => {
-    return typeof value === "string" && value.trim().length === 1;
+    return /^[0-9]$/.test(value); 
   };
 
   const changeCodeAtFocus = (value) => {
@@ -60,9 +60,12 @@ const OTPInput = (props) => {
 
   function inputChange(event) {
     const { value } = event.target;
-    changeCodeAtFocus(value);
+
     if (isInputValueValid(value)) {
+      changeCodeAtFocus(value);
       focusNextInput();
+    } else if (value === "") {
+      changeCodeAtFocus(""); // Handle clearing the input
     }
   }
 
@@ -84,7 +87,7 @@ const OTPInput = (props) => {
     );
   }
 
-  return <div className="input-otp-wrap">{OTPStack}</div>;
+  return <div className={`input-otp-wrap ${props?.className ? props?.className : ""}`}>{OTPStack}</div>;
 };
 
 OTPInput.propTypes = {

@@ -1,19 +1,15 @@
 import {
-  BackButton,
-  BillsIcon,
   CitizenHomeCard,
   CitizenInfoLabel,
-  FSMIcon,
   Loader,
-  MCollectIcon,
-  OBPSIcon,
-  PGRIcon,
-  PTIcon,
-  TLIcon,
-  WSICon,
 } from "@egovernments/digit-ui-react-components";
-import React from "react";
+
+import { BackLink, CustomSVG ,LandingPageWrapper } from "@egovernments/digit-ui-components";
+
+import React, { Fragment } from "react";
 import { useTranslation } from "react-i18next";
+import { RoleBasedEmployeeHome } from "./RoleBasedEmployeeHome";
+import QuickSetupConfigComponent from "../pages/employee/QuickStart/Config";
 
 /* 
 Feature :: Citizen All service screen cards
@@ -22,7 +18,12 @@ export const processLinkData = (newData, code, t) => {
   const obj = newData?.[`${code}`];
   if (obj) {
     obj.map((link) => {
-      (link.link = link["navigationURL"]), (link.i18nKey = t(link["name"]));
+      if (Digit.Utils.getMultiRootTenant()) {
+        link["navigationURL"] = link["navigationURL"].replace("/sandbox-ui/citizen", `/sandbox-ui/${Digit.ULBService.getStateId()}/citizen`);
+      }
+      link.link = link["navigationURL"];
+      link.i18nKey = t(link["name"]);
+
     });
   }
   const newObj = {
@@ -60,88 +61,127 @@ export const processLinkData = (newData, code, t) => {
 const iconSelector = (code) => {
   switch (code) {
     case "PT":
-      return <PTIcon className="fill-path-primary-main" />;
+      return <CustomSVG.PTIcon className="fill-path-primary-main" />;
     case "WS":
-      return <WSICon className="fill-path-primary-main" />;
+      return <CustomSVG.WSICon className="fill-path-primary-main" />;
     case "FSM":
-      return <FSMIcon className="fill-path-primary-main" />;
+      return <CustomSVG.FSMIcon className="fill-path-primary-main" />;
     case "MCollect":
-      return <MCollectIcon className="fill-path-primary-main" />;
+      return <CustomSVG.MCollectIcon className="fill-path-primary-main" />;
     case "PGR":
-      return <PGRIcon className="fill-path-primary-main" />;
+      return <CustomSVG.PGRIcon className="fill-path-primary-main" />;
     case "TL":
-      return <TLIcon className="fill-path-primary-main" />;
+      return <CustomSVG.TLIcon className="fill-path-primary-main" />;
     case "OBPS":
-      return <OBPSIcon className="fill-path-primary-main" />;
+      return <CustomSVG.OBPSIcon className="fill-path-primary-main" />;
     case "Bills":
-      return <BillsIcon className="fill-path-primary-main" />;
+      return <CustomSVG.BillsIcon className="fill-path-primary-main" />;
     default:
-      return <PTIcon className="fill-path-primary-main" />;
+      return <CustomSVG.PTIcon className="fill-path-primary-main" />;
   }
 };
-const CitizenHome = ({ modules, getCitizenMenu, fetchedCitizen, isLoading }) => {
-  const paymentModule = modules.filter(({ code }) => code === "Payment")[0];
-  const moduleArr = modules.filter(({ code }) => code !== "Payment");
-  const moduleArray = [paymentModule, ...moduleArr];
+const CitizenHome = ({ getCitizenMenu, isLoading }) => {
   const { t } = useTranslation();
+
   if (isLoading) {
     return <Loader />;
   }
 
-  return (
-    <React.Fragment>
-      <div className="citizen-all-services-wrapper">
-        {location.pathname.includes("sanitation-ui/citizen/all-services") ? null : <BackButton />}
-        <div className="citizenAllServiceGrid">
-          {moduleArray
-            .filter((mod) => mod)
-            .map(({ code }, index) => {
-              let mdmsDataObj;
-              if (fetchedCitizen) mdmsDataObj = fetchedCitizen ? processLinkData(getCitizenMenu, code, t) : undefined;
-              if (mdmsDataObj?.links?.length > 0) {
-                return (
-                  <CitizenHomeCard
-                    header={t(mdmsDataObj?.header)}
-                    links={mdmsDataObj?.links?.filter((ele) => ele?.link)?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
-                    Icon={() => iconSelector(code)}
-                    Info={
-                      code === "OBPS"
-                        ? () => (
-                            <CitizenInfoLabel
-                              style={{ margin: "0px", padding: "10px" }}
-                              info={t("CS_FILE_APPLICATION_INFO_LABEL")}
-                              text={t(`BPA_CITIZEN_HOME_STAKEHOLDER_INCLUDES_INFO_LABEL`)}
-                            />
-                          )
-                        : null
-                    }
-                    isInfo={code === "OBPS" ? true : false}
-                  />
-                );
-              } else return <React.Fragment />;
-            })}
-        </div>
-      </div>
-    </React.Fragment>
-  );
-};
+  // Instead of using modules, taking all parent keys from getCitizenMenu
+  const parentModules = Object.keys(getCitizenMenu || {});
 
-const EmployeeHome = ({ modules }) => {
   return (
-    <div className="employee-app-container">
-      <div className="ground-container moduleCardWrapper gridModuleWrapper">
-        {modules.map(({ code }, index) => {
-          const Card = Digit.ComponentRegistryService.getComponent(`${code}Card`) || (() => <React.Fragment />);
-          return <Card key={index} />;
+    <div className="citizen-all-services-wrapper">
+      {location.pathname.includes("sanitation-ui/citizen/all-services") ||
+      (location.pathname.includes("sandbox-ui") &&
+        location.pathname.includes("all-services")) || (location.pathname.includes("digit-studio") &&
+        location.pathname.includes("all-services")) ? null : (
+        <BackLink onClick={() => window.history.back()} />
+      )}
+
+      <div className="citizenAllServiceGrid">
+        {parentModules.map((code) => {
+          const mdmsDataObj = processLinkData(getCitizenMenu, code, t);
+
+          if (mdmsDataObj?.links?.length > 0) {
+            return (
+              <CitizenHomeCard
+                key={code}
+                header={t(mdmsDataObj?.header)}
+                links={mdmsDataObj?.links
+                  ?.filter((ele) => ele?.link)
+                  ?.sort((x, y) => x?.orderNumber - y?.orderNumber)}
+                Icon={() => iconSelector(code)}
+                Info={null}
+                isInfo={false}
+              />
+            );
+          }
+          return null;
         })}
       </div>
     </div>
   );
 };
 
-export const AppHome = ({ userType, modules, getCitizenMenu, fetchedCitizen, isLoading }) => {
+const EmployeeHome = ({ modules, additionalComponent }) => {
+  return (
+    <>
+      <div className="employee-app-container digit-home-employee-app">
+        {/* <div className="ground-container moduleCardWrapper gridModuleWrapper digit-home-moduleCardWrapper"> */}
+        <LandingPageWrapper>
+          {modules?.map(({ code }, index) => {
+            const Card =
+              Digit.ComponentRegistryService.getComponent(`${code}Card`) ||
+              (() => <React.Fragment />);
+            return <Card key={index} />;
+          })}
+          </LandingPageWrapper>
+        {/* </div> */}
+      </div>
+
+      {additionalComponent &&
+        additionalComponent?.length > 0 &&
+        additionalComponent.map((i) => {
+          const Component =
+            typeof i === "string"
+              ? Digit.ComponentRegistryService.getComponent(i)
+              : null;
+          return Component ? (
+            <div className="additional-component-wrapper">
+              <Component />
+            </div>
+          ) : null;
+        })}
+    </>
+  );
+};
+
+export const AppHome = ({
+  userType,
+  modules,
+  getCitizenMenu,
+  fetchedCitizen,
+  isLoading,
+  additionalComponent,
+}) => {
   if (userType === "citizen") {
-    return <CitizenHome modules={modules} getCitizenMenu={getCitizenMenu} fetchedCitizen={fetchedCitizen} isLoading={isLoading} />;
+    return (
+      <CitizenHome
+        modules={modules}
+        getCitizenMenu={getCitizenMenu}
+        fetchedCitizen={fetchedCitizen}
+        isLoading={isLoading}
+      />
+    );
   }
-  return <EmployeeHome modules={modules} />;
+  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant()
+  return Digit.Utils.getRoleBasedHomeCard() ? (
+    <div className={isSuperUserWithMultipleRootTenant ? "homeWrapper" : ""}>
+      <RoleBasedEmployeeHome modules={modules} additionalComponent={additionalComponent} />
+      {isSuperUserWithMultipleRootTenant && !window.Digit.Utils.browser.isMobile() ? <QuickSetupConfigComponent /> : null}
+    </div>
+  ) : (
+    <EmployeeHome modules={modules} additionalComponent={additionalComponent} />
+  );
 };

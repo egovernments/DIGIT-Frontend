@@ -69,12 +69,11 @@ const MDMSSearch = () => {
   // }, [data]);
 
   if (isLoading ) return <Loader />;
-
   return (
     <React.Fragment>
       <div className="jk-header-btn-wrapper">
         <Header styles={{ fontSize: "32px" }}>{t(updatedConfig?.label)}</Header>
-        {Digit.Utils.didEmployeeHasRole(updatedConfig?.actionRole) && (
+        {Digit.Utils.didEmployeeHasAtleastOneRole(updatedConfig?.actionRoles)    && (
           <Button
             label={t(updatedConfig?.actionLabel)}
             variation="secondary"

@@ -14,11 +14,15 @@ import CreateComplaint from "./pages/employee/CreateComplaint";
 import Response from "./components/Response";
 import BreadCrumbs from "./components/BreadCrumbs";
 import HierarchySelection from "./components/HierarchySelection";
+import UploadFileComponent from "./components/UploadFileComponent";
 
 export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
-  const [hierarchySelected, setHierarchySelected] = useState(null);
+
+  useEffect(() => {
+    Digit.SessionStorage.del("filtersForInbox");
+  }, []);
 
   const { data: hierarchies,
     isLoading: isHierarchyLoading,
@@ -26,9 +30,7 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
   const moduleCode = ["pgr",];
   const modulePrefix = "hcm";
   const language = Digit.StoreData.getCurrentLanguage();
-  useEffect(() => {
-    Digit.SessionStorage.del("HIERARCHY_TYPE_SELECTED");
-  }, []);
+
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
     moduleCode,
@@ -42,24 +44,13 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 
   if (isLoading  || isHierarchyLoading) {
     return <Loader />;
-  } 
-  if (!hierarchySelected) {
-    return (
-      <HierarchySelection
-        onHierarchyChosen={(hier) => {
-          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
-          setHierarchySelected(hier);
-        }}
-      />
-    );
   }
-  else {
-    return (
-      <ProviderContext>
-        <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
-      </ProviderContext>
-    );
-  }
+
+  return (
+    <ProviderContext>
+      <EmployeeApp path={path} stateCode={stateCode} userType={userType} tenants={tenants} />
+    </ProviderContext>
+  );
 };
 
 const componentsToRegister = {
@@ -74,6 +65,7 @@ const componentsToRegister = {
   PGRResponse: Response,
   PGRBreadCrumbs: BreadCrumbs,
   PGRHierarchySelection: HierarchySelection,
+  UploadFileComponent
 };
 
 export const initPGRComponents = () => {

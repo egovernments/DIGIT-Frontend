@@ -3,7 +3,6 @@ import {
   HomeIcon,
   EditPencilIcon,
   LogoutIcon,
-  Loader,
   AddressBookIcon,
   PropertyHouse,
   CaseIcon,
@@ -18,6 +17,7 @@ import {
   BirthIcon,
   DeathIcon,
   FirenocIcon,
+  Loader,
 } from "@egovernments/digit-ui-react-components";
 import { Link, useLocation } from "react-router-dom";
 import SideBarMenu from "../../../config/sidebar-menu";
@@ -26,7 +26,7 @@ import { useHistory } from "react-router-dom";
 import LogoutDialog from "../../Dialog/LogoutDialog";
 import ChangeCity from "../../ChangeCity";
 import { defaultImage } from "../../utils";
-
+import ImageComponent from "../../ImageComponent";
 
 /* 
 Feature :: Citizen Webview sidebar
@@ -34,7 +34,7 @@ Feature :: Citizen Webview sidebar
 const Profile = ({ info, stateName, t }) => (
   <div className="profile-section">
     <div className="imageloader imageloader-loaded">
-      <img className="img-responsive img-circle img-Profile" src={defaultImage} />
+      <ImageComponent className="img-responsive img-circle img-Profile" src={defaultImage} alt="Profile Logo" />
     </div>
     <div id="profile-name" className="label-container name-Profile">
       <div className="label-text"> {info?.name} </div>
@@ -90,8 +90,14 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
     setShowDialog(true);
   };
   const handleOnSubmit = () => {
-    Digit.UserService.logout();
-    setShowDialog(false);
+    if (Digit.Utils.getMultiRootTenant()) {
+      Digit.UserService.logout();
+      setShowDialog(false);
+      window.location.href = `/${window?.contextPath}/citizen/login`;
+    } else {
+      Digit.UserService.logout();
+      setShowDialog(false);
+    }
   };
   const handleOnCancel = () => {
     setShowDialog(false);
@@ -108,6 +114,10 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   };
   const showProfilePage = () => {
     history.push(`/${window?.contextPath}/citizen/user/profile`);
+  };
+
+  const closeSidebar = () => {
+    history.push(`/${window?.contextPath}/citizen/all-services`);
   };
 
   let menuItems = [...SideBarMenu(t, showProfilePage, redirectToLoginPage, isEmployee)];
@@ -149,11 +159,21 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
   };
   let profileItem;
 
-  if (isFetched && user && user.access_token) {
+  if (isFetched && user && user.access_token && user?.info?.type === "CITIZEN") {
     profileItem = <Profile info={user?.info} stateName={stateInfo?.name} t={t} />;
     menuItems = menuItems.filter((item) => item?.id !== "login-btn");
     menuItems = [
       ...menuItems,
+      {
+        type: "link",
+        icon: "HomeIcon",
+        element: "HOME",
+        text: t("COMMON_BOTTOM_NAVIGATION_HOME"),
+        link: isEmployee ? `/${window?.contextPath}/employee` : `/${window?.contextPath}/citizen`,
+        populators: {
+          onClick: closeSidebar,
+        },
+      },
       {
         text: t("EDIT_PROFILE"),
         element: "PROFILE",
@@ -173,19 +193,19 @@ const StaticCitizenSideBar = ({ linkData, islinkDataLoading }) => {
           <React.Fragment>
             {t("CS_COMMON_HELPLINE")}
             <div className="telephone" style={{ marginTop: "-10%" }}>
-              {storeData?.tenants.map((i) => {
+              {storeData?.tenants?.map((i) => {
                 i.code === tenantId ? (
                   <div className="link">
-                    <a href={`tel:${storeData?.tenants[i].contactNumber}`}>{storeData?.tenants[i].contactNumber}</a>
+                    <a href={`tel:${storeData?.tenants?.[i].contactNumber}`}>{storeData?.tenants?.[i].contactNumber}</a>
                   </div>
                 ) : (
                   <div className="link">
-                    <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                    <a href={`tel:${storeData?.tenants?.[0].contactNumber}`}>{storeData?.tenants?.[0].contactNumber}</a>
                   </div>
                 );
               })}
               <div className="link">
-                <a href={`tel:${storeData?.tenants[0].contactNumber}`}>{storeData?.tenants[0].contactNumber}</a>
+                <a href={`tel:${storeData?.tenants?.[0].contactNumber}`}>{storeData?.tenants?.[0].contactNumber}</a>
               </div>
             </div>
           </React.Fragment>

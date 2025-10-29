@@ -7,7 +7,7 @@ import FilterContext from "./FilterContext";
 import NoData from "./NoData";
 
 const barColors = ["#048BD0", "#FBC02D", "#8E29BF", "#EA8A3B", "#0BABDE" , "#6E8459", "#D4351C","#0CF7E4","#F80BF4","#22F80B"]
-const barColorsv2 = ["#048BD0","#5AD8A6","#F47738","#FBC02D","#2DD6FB"]
+const barColorsv2 = ["#048BD0","#5AD8A6","#c84c0e","#FBC02D","#2DD6FB"]
 
 const renderPlot = (plot,key,denomination) => {
   const plotValue = key?plot?.[key]:plot?.value || 0;
@@ -63,7 +63,7 @@ const CustomHorizontalBarChart = ({
       const row = data[i];
       for (let j = 0; j < row.plots.length; j++) {
         const plot = row.plots[j];
-        result[plot.name] = { ...result[plot.name], [t(row.headerName)]: renderPlot(plot,'value',denomination), name: t(plot.name) };
+        result[plot.name] = { ...result[plot.name], [t(row.headerName)]: renderPlot(plot,'value',denomination), name: t(Digit.Utils.locale.getTransformedLocale(plot.name)) };
       }
     }
     return Object.keys(result).map((key) => {
@@ -92,7 +92,7 @@ const CustomHorizontalBarChart = ({
 
   let chartData = useMemo(() => constructChartData(response?.responseData?.data,value?.denomination), [response,value?.denomination]);
 
-  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{value}</span>;
+  const renderLegend = (value) => <span style={{ fontSize: "14px", color: "#505A5F" }}>{t(`${Digit.Utils.locale.getTransformedLocale(value)}`)}</span>;
 
   const tickFormatter = (value) => {
     if (typeof value === "string") {
