@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.4.1 - 2025-10-29
+
+#### Admin console
+
+- **Enhanced Form Config with Navigation and Dependency Rule Support**  
+  Added functionality to define and manage navigation rules and dependency fields behavior within form configurations.
+
+
 ## 0.4 - 2025-7-10
 
 #### Admin console
