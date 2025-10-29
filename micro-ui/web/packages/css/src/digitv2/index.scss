@@ -1,0 +1,166 @@
+@import "./components/actionbarV2.scss";
+/* 
+    TODO NABEEL/ANIL Removed these since it creates issues in search screen and home screen
+@import "./components/cardV2.scss";
+*/
+
+@import "./components/checkboxV2.scss";
+@import "./components/FormComposerV2.scss";
+@import "./components/radiobtnV2.scss";
+@import "./components/selectdropdownV2.scss";
+// @import "./typography.scss";
+@import "./components/actionLinkV2.scss";
+@import "./components/appContainerV2.scss";
+@import "./components/bodyContainerV2.scss";
+@import "./components/bannerV2.scss";
+@import "./components/breakLineV2.scss";
+@import "./components/loaderV2.scss";
+@import "./components/headerV2.scss";
+@import "./components/checkpointV2.scss";
+@import "./components/backButtonV2.scss";
+@import "./components/infoBannerV2.scss";
+@import "./components/displayPhotosV2.scss";
+@import "./components/collapseAndExpandGroups.scss";
+@import "./components/dateWrapV2.scss";
+@import "./components/ErrorMessage.scss";
+@import "./components/ratingV2.scss";
+@import "./components/noresultsfoundV2.scss";
+@import "./components/mobileNumberV2.scss";
+@import "./components/tagV2.scss";
+@import "./components/popUpV2.scss";
+@import "./components/telephoneV2.scss";
+@import "./components/textareaV2.scss";
+@import "./components/textInputV2.scss";
+@import "./components/otpInputV2.scss";
+@import "./components/multiSelectDropdownV2.scss";
+@import "./components/uploadFileV2.scss";
+
+/* pages */
+@import "./pages/employee/index.scss";
+
+/* important to be remove after fixing the components */
+.light {
+  &-primary {
+    color: var(--digitv2-lightTheme-primary) !important;
+
+    &-button {
+      background-color: var(--digitv2-lightTheme-primary) !important;
+    }
+
+    &-bg {
+      background-color: var(--digitv2-lightTheme-primary-bg) !important;
+    }
+  }
+
+  &-text-color {
+    &-primary {
+      color: var(--digitv2-lightTheme-text-color-primary) !important;
+    }
+
+    &-secondary {
+      color: var(--digitv2-lightTheme-text-color-secondary) !important;
+    }
+
+    &-disabled {
+      color: var(--digitv2-lightTheme-text-color-disabled) !important;
+    }
+  }
+
+  &-background {
+    background-color: var(--digitv2-lightTheme-background) !important;
+  }
+
+  &-paper {
+    &-primary {
+      background-color: var(--digitv2-lightTheme-paper) !important;
+
+      &-color {
+        color: var(--digitv2-lightTheme-paper) !important;
+      }
+    }
+
+    &-secondary {
+      background-color: var(--digitv2-lightTheme-paper-secondary) !important;
+    }
+
+    &-border {
+      border-radius: 4px;
+      border-style: solid;
+      border-width: 1px;
+      border-color: var(--digitv2-lightTheme-divider);
+    }
+  }
+
+  &-divider {
+    background-color: var(--digitv2-lightTheme-divider) !important;
+  }
+
+  &-header-sidenav {
+    color: var(--digitv2-lightTheme-header-sidenav) !important;
+  }
+
+  &-input-border {
+    /* TODO Check why important added here @ANIL/NABEEL */
+    border-color: var(--digitv2-lightTheme-input-border);
+  }
+}
+
+.alert {
+  &-error {
+    color: var(--digitv2-alert-error) !important;
+
+    &-bg {
+      background-color: var(--digitv2-alert-error-bg) !important;
+    }
+
+    &-border {
+      border-color: var(--digitv2-alert-error) !important;
+    }
+  }
+
+  &-success {
+    color: var(--digitv2-alert-success) !important;
+
+    &-bg {
+      background-color: var(--digitv2-alert-success-bg) !important;
+    }
+  }
+
+  &-info {
+    color: var(--digitv2-alert-info) !important;
+
+    &-bg {
+      background-color: var(--digitv2-alert-info-bg) !important;
+    }
+  }
+}
+
+.chart {
+  &-item-1 {
+    color: var(--digitv2-chart-chart-1) !important;
+  }
+
+  &-item-1-gradient {
+    color: var(--digitv2-chart-chart-1-gradient) !important;
+  }
+
+  &-item-2 {
+    color: var(--digitv2-chart-chart-2) !important;
+  }
+
+  &-item-2-gradient {
+    color: var(--digitv2-chart-chart-2-gradient) !important;
+  }
+
+  &-item-3 {
+    color: var(--digitv2-chart-chart-3) !important;
+  }
+
+  &-item-4 {
+    color: var(--digitv2-chart-chart-4) !important;
+  }
+
+  &-item-5 {
+    color: var(--digitv2-chart-chart-5) !important;
+  }
+}

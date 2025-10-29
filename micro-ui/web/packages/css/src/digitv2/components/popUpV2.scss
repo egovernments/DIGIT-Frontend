@@ -1,0 +1,24 @@
+.digit-popup-wrap {
+  background: rgba(0, 0, 0, 0.7);
+  @apply flex  fixed w-full h-full overflow-auto top-0 left-0 min-h-screen;
+  z-index: 10000;
+}
+
+@screen dt {
+  .digit-popup-wrap {
+    background: rgba(0, 0, 0, 0.7);
+    @apply min-h-screen;
+  }
+}
+
+.digit-popup-close-icon {
+  @apply flex justify-end;
+}
+
+.digit-logout-popup-wrapper{
+  width: 31.25rem !important;
+
+  .logout-cancel-button{
+    height: 2.5rem;
+  }
+}

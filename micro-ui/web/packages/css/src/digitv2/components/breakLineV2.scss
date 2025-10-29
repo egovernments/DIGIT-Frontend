@@ -1,0 +1,7 @@
+
+
+.digit-break-line {
+  @apply border-solid border-2;
+  color: var(--digitv2-lightTheme-primary);
+  @extend .light-input-border;
+}
