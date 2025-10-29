@@ -385,6 +385,28 @@
   align-items: center;
   justify-content: end;
 
+  // Responsive fix for smaller screens
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    margin-top: 0.5rem !important;
+    padding-left: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    justify-content: center;
+    margin-top: 1rem !important;
+    padding: 0 1rem;
+    
+    button {
+      font-size: 0.875rem;
+    }
+  }
+
+  // Fix for very small screens and high DPI
+  @media (max-width: 375px), (max-height: 667px) and (min-device-pixel-ratio: 2) {
+    margin-top: 1.5rem !important;
+    justify-content: center;
+  }
 }
 
 .digit-card-component.signupCardClassName.sandbox-onboarding-wrapper {
