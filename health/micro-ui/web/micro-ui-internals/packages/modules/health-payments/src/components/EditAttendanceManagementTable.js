@@ -1,22 +1,10 @@
 import React, { useState, Fragment } from "react";
 import { useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import {
-  Loader,
-  Button,
-  TextInput,
-  Toast,
-  Tag,
-  CustomSVG,
-} from "@egovernments/digit-ui-components";
+import { Loader, Button, TextInput, Toast, Tag, CustomSVG } from "@egovernments/digit-ui-components";
 import DataTable from "react-data-table-component";
-import {
-  editAttendeetableCustomStyle,
-} from "./table_inbox_custom_style";
-import {
-  defaultPaginationValuesForEditAttendee,
-  defaultRowsPerPageForEditAttendee,
-} from "../utils/constants";
+import { editAttendeetableCustomStyle } from "./table_inbox_custom_style";
+import { defaultPaginationValuesForEditAttendee, defaultRowsPerPageForEditAttendee } from "../utils/constants";
 import { getCustomPaginationOptions } from "../utils";
 import AlertPopUp from "./alertPopUp";
 import { disableTimeWithSession } from "../utils/time_conversion";
@@ -39,9 +27,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
    */
   const [showToast, setShowToast] = useState(null); // Toast message state
   const [currentPage, setCurrentPage] = useState(1); // Active pagination page
-  const [rowsPerPage, setRowsPerPage] = useState(
-    defaultRowsPerPageForEditAttendee
-  ); // Rows per page
+  const [rowsPerPage, setRowsPerPage] = useState(defaultRowsPerPageForEditAttendee); // Rows per page
   const [selectedRowId, setSelectedRowId] = useState(null); // Selected attendee ID for disable action
   const [openAlertPopUp, setOpenAlertPopUp] = useState(false); // Confirmation popup state
 
@@ -50,18 +36,14 @@ const EditAttendanceManagementTable = ({ ...props }) => {
    * -----------------------------
    * Digit custom hook to disable (de-enroll) an attendee from the register.
    */
-  const { mutate: updateMapping } =
-    Digit.Hooks.payments.useDeleteAttendeeFromRegister(tenantId);
+  const { mutate: updateMapping } = Digit.Hooks.payments.useDeleteAttendeeFromRegister(tenantId);
 
   /** -----------------------------
    *  Pagination Logic
    * -----------------------------
    * Slices the full dataset to only show the current page items.
    */
-  const paginatedData = props.data.slice(
-    (currentPage - 1) * rowsPerPage,
-    currentPage * rowsPerPage
-  );
+  const paginatedData = props.data.slice((currentPage - 1) * rowsPerPage, currentPage * rowsPerPage);
 
   // Handles page number change
   const handlePageChange = (page) => {
@@ -93,11 +75,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
           {t(`HCM_AM_FRONTLINE_WORKER`)}
         </div>
       ),
-      selector: (row) => (
-        <span className="ellipsis-cell">
-          {String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}
-        </span>
-      ),
+      selector: (row) => <span className="ellipsis-cell">{String(row?.[1] ? row?.[1] : t("ES_COMMON_NA"))}</span>,
     },
 
     // Column 2: Worker ID
@@ -173,11 +151,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         <div className="ellipsis-cell" title={t(row?.[5] || "0")}>
           {/* Show 'Disabled' tag if attendee already disabled */}
           {row?.[5] == false ? (
-            <Tag
-              label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")}
-              type="error"
-              stroke={false}
-            />
+            <Tag label={t("HCM_AM_VIEW_REGISTER_DISABLED_TAG")} type="error" stroke={false} />
           ) : (
             // Show 'Disable User' button for active attendees
             <Button
@@ -198,6 +172,28 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         justifyContent: "flex-start",
       },
     });
+  } else {
+    columns.push(
+      // Column 5: Status
+      {
+        name: (
+          <div
+            style={{
+              borderRight: "2px solid #787878",
+              width: "100%",
+              textAlign: "start",
+            }}
+          >
+            {t("HCM_AM_STATUS_LABEL")}
+          </div>
+        ),
+        selector: (row) => (
+          <div className="ellipsis-cell" title={row?.[5] == false ? t("HCM_AM_VIEW_REGISTER_DISABLED_TAG") : t("HCM_AM_VIEW_REGISTER_ACTIVE")}>
+            {row?.[5] == false ? t("HCM_AM_VIEW_REGISTER_DISABLED_TAG") : t("HCM_AM_VIEW_REGISTER_ACTIVE")}
+          </div>
+        ),
+      }
+    );
   }
 
   /** -----------------------------
@@ -212,10 +208,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
       individualId: value,
       enrollmentDate: null,
       // Generate de-enrollment time based on session type
-      denrollmentDate: disableTimeWithSession(
-        props.sessionType,
-        new Date(Date.now()).getTime()
-      ),
+      denrollmentDate: disableTimeWithSession(props.sessionType, new Date(Date.now()).getTime()),
       tenantId: String(tenantId),
     };
 
@@ -265,13 +258,7 @@ const EditAttendanceManagementTable = ({ ...props }) => {
         onChangeRowsPerPage={handlePerRowsChange}
         paginationTotalRows={props?.data.length}
         paginationPerPage={defaultRowsPerPageForEditAttendee}
-        sortIcon={
-          <CustomSVG.SortUp
-            width={"16px"}
-            height={"16px"}
-            fill={"#0b4b66"}
-          />
-        }
+        sortIcon={<CustomSVG.SortUp width={"16px"} height={"16px"} fill={"#0b4b66"} />}
         paginationRowsPerPageOptions={defaultPaginationValuesForEditAttendee}
         fixedHeader={true}
         fixedHeaderScrollHeight={props.height ? props.height : "70vh"}
