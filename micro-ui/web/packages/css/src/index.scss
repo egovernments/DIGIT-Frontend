@@ -1,7 +1,8 @@
 /*@import 'normalize.css';*/
 
 /*@import url("https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;500;700&family=Roboto:wght@400;500;700&display=swap");*/
-
+@import "./theme-variables.css";
+@import "./typography.scss";
 @import "tailwindcss/base";
 
 @import "tailwindcss/components";
@@ -108,7 +109,6 @@
 @import "./pages/citizen/citizenDocument.scss";
 @import "./pages/employee/surveys.scss";
 @import "./digitv2/index.scss";
- @import "./typography.scss"; 
 @import "./components/inboxv2/index.scss";
 @import "./components//sidebar.scss";
 @import "./components/loaderWithGap.scss";
