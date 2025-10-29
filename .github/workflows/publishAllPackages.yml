@@ -15,6 +15,6 @@ jobs:
         with:
           node-version: 14
           registry-url: https://registry.npmjs.org/
-      - run: cd health/micro-ui/web/micro-ui-internals/ && bash ./publish-workbench.sh
+      - run: cd health/micro-ui/web/micro-ui-internals/ && bash ./publish-develop.sh
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
