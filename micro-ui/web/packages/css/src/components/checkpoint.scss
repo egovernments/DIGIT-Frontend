@@ -10,7 +10,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    @apply border-b border-solid border-primary-main bg-primary-main;
+    @apply border-b-2 border-solid border-primary-main bg-primary-main;
   }
 
   header {
@@ -31,7 +31,7 @@
     height: 24px;
     border-radius: 50%;
     --text-opacity: 1;
-    @apply border-b border-solid border-border bg-border;
+    @apply border-b-2 border-solid border-border bg-border;
   }
 
   header {
@@ -47,7 +47,7 @@
 .checkpoint-connect {
   margin-left: 12px;
   margin-top: 22px;
-  @apply absolute top-0 left-0 h-full border-l border-solid border-border;
+  @apply absolute top-0 left-0 h-full border-l-2 border-solid border-border;
 }
 
 .checkpoint-comments-wrap {

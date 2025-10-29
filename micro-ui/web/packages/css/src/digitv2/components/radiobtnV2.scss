@@ -1,4 +1,4 @@
-@import url("../index.scss");
+
 
 .digit-radio-wrap {
   @apply my-sm block leading-10 mb-lg;
@@ -22,7 +22,7 @@
 
   .digit-radio-btn-checkmark {
     @extend .light-input-border;
-    @apply h-10 w-10 border border-input-border border-solid rounded-full block;
+    @apply h-10 w-10 border-2 border-input-border border-solid rounded-full block;
   }
 
   label {

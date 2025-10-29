@@ -16,7 +16,7 @@
   .custom-checkbox {
     width: 38px;
     height: 38px;
-    @apply absolute top-0 left-0 border border-solid border-input-border z-0;
+    @apply absolute top-0 left-0 border-2 border-solid border-input-border z-0;
 
     img {
       @apply opacity-0;

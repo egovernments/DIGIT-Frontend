@@ -1,4 +1,3 @@
-@import url("../../index.scss");
 
 .bread-crumb.workbench-bredcrumb {
   a {
@@ -24,7 +23,8 @@
   }
 
     .digit-form-composer-sub-header {
-      @extend .typography.text-heading-m;
+      @extend .typography !optional;
+      @extend .text-heading-m !optional;
       padding-left: 1rem;
 
       @media (max-width: var(--digitv2-screens-mobile)) {
@@ -86,7 +86,8 @@
               display: inline-flex;
               /* align-self: center; */
               line-height: 3rem;
-              @extend .typography.text-heading-s;
+              @extend .typography !optional;
+              @extend .text-heading-s !optional;
               /* web view*/
               @apply w-1/3;
 
@@ -224,7 +225,8 @@
                 }
 
                 .custom-checkbox-label {
-                  @extend .typography.text-body-s;
+                  @extend .typography !optional;
+              @extend .text-body-s !optional;
                   @apply pl-sm;
                 }
               }

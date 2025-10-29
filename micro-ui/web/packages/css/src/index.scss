@@ -322,7 +322,7 @@ input[readonly] {
 }
 
 .card-date-input {
-  @apply absolute top-0 left-0 w-3/4 bg-white pl-sm border border-input-border border-solid border-r-0;
+  @apply absolute top-0 left-0 w-3/4 bg-white pl-sm border-2 border-input-border border-solid border-r-0;
   outline: transparent solid 1px;
   height: 2.5rem;
 }

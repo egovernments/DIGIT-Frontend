@@ -1,4 +1,4 @@
-@import url("../index.scss");
+
 
 .digit-mobile-number-container {
   @apply flex  items-center;
@@ -14,7 +14,7 @@
   }
 
   .digit-citizen-card-input {
-    @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+    @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
   }
 
   .digit-citizen-card-input--front {

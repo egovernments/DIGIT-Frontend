@@ -17,7 +17,7 @@ body {
 }
 
 .navbar-subheader{
-    @apply font-light px-sm border-solid border-l border-white border-opacity-100
+    @apply font-light px-sm border-solid border-l-2 border-white border-opacity-100
 }*/
 
 .h1 {
@@ -34,7 +34,7 @@ body {
 
 .back-btn {
   width: fit-content;
-  @apply block border-solid border-b border-text-primary font-rc text-text-primary text-text-btn ml-sm mt-md;
+  @apply block border-solid border-b-2 border-text-primary font-rc text-text-primary text-text-btn ml-sm mt-md;
 
   label {
     @apply inline mr-sm align-middle;
@@ -72,7 +72,7 @@ body {
 .back-btn2 {
   cursor: pointer;
   width: fit-content;
-  @apply flex border-solid border-b border-text-primary font-rc text-text-primary text-text-btn ml-sm mb-md;
+  @apply flex border-solid border-b-2 border-text-primary font-rc text-text-primary text-text-btn ml-sm mb-md;
 
   img {
     @apply flex;

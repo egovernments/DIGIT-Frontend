@@ -1,4 +1,4 @@
-@import url("../index.scss");
+
 
 .digit-banner-success-wrap,
 .digit-banner-emp-success-wrap {
@@ -13,14 +13,14 @@
       padding: 13.67px;
       margin-left: auto;
       margin-right: auto;
-      @apply border border-solid border-white rounded-full h-16 w-16 bg-white mb-md;
+      @apply border-2 border-solid border-white rounded-full h-16 w-16 bg-white mb-md;
     }
 
     svg {
       padding: 13.67px;
       margin-left: auto;
       margin-right: auto;
-      @apply border border-solid border-white rounded-full h-16 w-16 bg-white mb-md;
+      @apply border-2 border-solid border-white rounded-full h-16 w-16 bg-white mb-md;
     }
 
     svg.payment-svg {
@@ -52,14 +52,14 @@
     margin-left: auto;
     margin-right: auto;
     padding: 13.67px;
-    @apply border border-solid border-white rounded-full bg-white h-16 w-16 mb-md;
+    @apply border-2 border-solid border-white rounded-full bg-white h-16 w-16 mb-md;
   }
 
   svg {
     margin-left: auto;
     margin-right: auto;
     padding: 13.67px;
-    @apply border border-solid border-white rounded-full bg-white h-16 w-16 mb-md;
+    @apply border-2 border-solid border-white rounded-full bg-white h-16 w-16 mb-md;
   }
 }
 

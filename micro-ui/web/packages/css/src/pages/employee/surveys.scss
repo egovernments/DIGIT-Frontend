@@ -15,7 +15,7 @@
 }
 
 .newSurveyForm_wrapper {
-  @apply grid p-md bg-grey-light border border-border rounded gap-6 ;
+  @apply grid p-md bg-grey-light border-2 border-border rounded gap-6 ;
   .newSurveyForm_questions {
   }
   .newSurveyForm_answer {
@@ -27,7 +27,7 @@
     }
   }
   .newSurveyForm_seprator {
-    @apply w-px h-6 border border-border;
+    @apply w-px h-6 border-2 border-border;
   }
 }
 
@@ -225,7 +225,7 @@ border-left-width: calc(2px * calc(1 - var(--tw-divide-x-reverse)));
   }
 
   .newSurveyForm_wrapper {
-    @apply grid p-md bg-grey-light border border-border rounded;
+    @apply grid p-md bg-grey-light border-2 border-border rounded;
     grid-template-columns: 33% 1fr;
 
     .newSurveyForm_quesno {
@@ -257,7 +257,7 @@ border-left-width: calc(2px * calc(1 - var(--tw-divide-x-reverse)));
       }
     }
     .newSurveyForm_seprator {
-      @apply w-px h-6 border border-border;
+      @apply w-px h-6 border-2 border-border;
     }
   }
 

@@ -22,7 +22,7 @@
   }
 
   h3 {
-    @apply inline-block border-l border-solid border-white pl-sm ml-sm;
+    @apply inline-block border-l-2 border-solid border-white pl-sm ml-sm;
   }
 }
 
@@ -297,7 +297,7 @@
 }
 
 .navbar-subheader{
-    @apply font-light px-sm border-solid border-l border-white border-opacity-100
+    @apply font-light px-sm border-solid border-l-2 border-white border-opacity-100
 }*/
 
 .side-bar-footer {

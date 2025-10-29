@@ -1,4 +1,4 @@
-@import url("../index.scss");
+
 
 .field-container {
   display: flex;
@@ -18,7 +18,7 @@
 }
 
 .card-date-input {
-  @apply absolute top-0 left-0 w-3/4 bg-white pl-sm border border-input-border border-solid border-r-0;
+  @apply absolute top-0 left-0 w-3/4 bg-white pl-sm border-2 border-input-border border-solid border-r-0;
   outline: transparent solid 1px;
   height: 2.5rem;
   @extend .light-input-border;
@@ -49,7 +49,7 @@
 }
 
 .employee-card-input {
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
   @extend .light-input-border;
 }
 
@@ -80,7 +80,7 @@
 
 .card-textarea,
 .employee-card-textarea {
-  @apply block outline-none mt-md mb-lg border w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
+  @apply block outline-none mt-md mb-lg border-2 w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
   @extend .light-input-border;
 }
 .employee-card-textarea {
@@ -89,7 +89,7 @@
 }
 
 .citizen-card-input {
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
   @extend .light-input-border;
 }
 .citizen-card-input--front {

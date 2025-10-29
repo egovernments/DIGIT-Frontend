@@ -1,5 +1,5 @@
 .upload-wrap {
-  @apply flex w-full h-40 bg-grey-light relative mb-lg px-sm border border-border border-dashed;
+  @apply flex w-full h-40 bg-grey-light relative mb-lg px-sm border-2 border-border border-dashed;
   max-width: 540px;
 
   img {
@@ -79,7 +79,7 @@
 
 .upload-file {
   min-height: 56px;
-  @apply relative border border-input-border w-full;
+  @apply relative border-2 border-input-border w-full;
 
   div {
     @apply flex flex-row h-full items-center pl-md mt-sm flex-wrap;

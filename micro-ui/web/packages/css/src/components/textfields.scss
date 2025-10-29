@@ -1,5 +1,5 @@
 .card-input {
-  @apply mb-lg pl-sm outline-none mt-sm block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply mb-lg pl-sm outline-none mt-sm block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
 }
 
 .card-input-error {
@@ -7,7 +7,7 @@
 }
 
 .employee-card-input {
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
 }
 .employee-card-input:disabled {
   @apply border-grey-dark text-grey-dark !important;
@@ -27,7 +27,7 @@
 
 .card-textarea,
 .employee-card-textarea {
-  @apply block outline-none mt-md mb-lg border w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
+  @apply block outline-none mt-md mb-lg border-2 w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
 }
 
 .inputWrapper {
@@ -83,7 +83,7 @@
 }
 
 .citizen-card-input {
-  @apply mb-lg pl-sm outline-none block border w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
+  @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
 }
 
 .citizen-card-input--front {

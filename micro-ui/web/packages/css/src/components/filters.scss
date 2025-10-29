@@ -29,7 +29,7 @@
       border: 1px solid;
       padding: 6px 10px;
       display: block;
-      @apply border border-solid border-input-border;
+      @apply border-2 border-solid border-input-border;
       &:hover{
         @apply border-2 border-solid border-primary-main;
       }

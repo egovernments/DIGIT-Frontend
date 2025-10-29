@@ -2,7 +2,7 @@
   @apply bg-white;
   border-radius: 4px;
   .header {
-    @apply flex items-center border-b border-border justify-between;
+    @apply flex items-center border-b-2 border-border justify-between;
 
     .logo {
       width: 56px;
@@ -199,7 +199,7 @@
     @apply bg-white;
 
     .header {
-      @apply flex items-center border-b border-border;
+      @apply flex items-center border-b-2 border-border;
 
       .logo {
         @apply bg-focus;

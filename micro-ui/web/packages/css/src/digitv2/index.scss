@@ -1,42 +1,42 @@
-@import url("./components/actionbarV2.scss");
+@import "./components/actionbarV2.scss";
 /* 
     TODO NABEEL/ANIL Removed these since it creates issues in search screen and home screen
-@import url("./components/cardV2.scss");
+@import "./components/cardV2.scss";
 */
 
-@import url("./components/checkboxV2.scss");
-@import url("./components/FormComposerV2.scss");
-@import url("./components/radiobtnV2.scss");
-@import url("./components/selectdropdownV2.scss");
-// @import url("./typography.scss");
-@import url("./components/actionLinkV2.scss");
-@import url("./components/appContainerV2.scss");
-@import url("./components/bodyContainerV2.scss");
-@import url("./components/bannerV2.scss");
-@import url("./components/breakLineV2.scss");
-@import url("./components/loaderV2.scss");
-@import url("./components/headerV2.scss");
-@import url("./components/checkpointV2.scss");
-@import url("./components/backButtonV2.scss");
-@import url("./components/infoBannerV2.scss");
-@import url("./components/displayPhotosV2.scss");
-@import url("./components/collapseAndExpandGroups.scss");
-@import url("./components/dateWrapV2.scss");
-@import url("./components/ErrorMessage.scss");
-@import url("./components/ratingV2.scss");
-@import url("./components/noresultsfoundV2.scss");
-@import url("./components/mobileNumberV2.scss");
-@import url("./components/tagV2.scss");
-@import url("./components/popUpV2.scss");
-@import url("./components/telephoneV2.scss");
-@import url("./components/textareaV2.scss");
-@import url("./components/textInputV2.scss");
-@import url("./components/otpInputV2.scss");
-@import url("./components/multiSelectDropdownV2.scss");
-@import url("./components/uploadFileV2.scss");
+@import "./components/checkboxV2.scss";
+@import "./components/FormComposerV2.scss";
+@import "./components/radiobtnV2.scss";
+@import "./components/selectdropdownV2.scss";
+// @import "./typography.scss";
+@import "./components/actionLinkV2.scss";
+@import "./components/appContainerV2.scss";
+@import "./components/bodyContainerV2.scss";
+@import "./components/bannerV2.scss";
+@import "./components/breakLineV2.scss";
+@import "./components/loaderV2.scss";
+@import "./components/headerV2.scss";
+@import "./components/checkpointV2.scss";
+@import "./components/backButtonV2.scss";
+@import "./components/infoBannerV2.scss";
+@import "./components/displayPhotosV2.scss";
+@import "./components/collapseAndExpandGroups.scss";
+@import "./components/dateWrapV2.scss";
+@import "./components/ErrorMessage.scss";
+@import "./components/ratingV2.scss";
+@import "./components/noresultsfoundV2.scss";
+@import "./components/mobileNumberV2.scss";
+@import "./components/tagV2.scss";
+@import "./components/popUpV2.scss";
+@import "./components/telephoneV2.scss";
+@import "./components/textareaV2.scss";
+@import "./components/textInputV2.scss";
+@import "./components/otpInputV2.scss";
+@import "./components/multiSelectDropdownV2.scss";
+@import "./components/uploadFileV2.scss";
 
 /* pages */
-@import url("./pages/employee/index.scss");
+@import "./pages/employee/index.scss";
 
 /* important to be remove after fixing the components */
 .light {
@@ -107,30 +107,30 @@
 
 .alert {
   &-error {
-    color: var(--digitv2-alert-.error) !important;
+    color: var(--digitv2-alert-error) !important;
 
     &-bg {
-      background-color: var(--digitv2-alert-.error-bg) !important;
+      background-color: var(--digitv2-alert-error-bg) !important;
     }
 
     &-border {
-      border-color: var(--digitv2-alert-.error) !important;
+      border-color: var(--digitv2-alert-error) !important;
     }
   }
 
   &-success {
-    color: var(--digitv2-alert-.success) !important;
+    color: var(--digitv2-alert-success) !important;
 
     &-bg {
-      background-color: var(--digitv2-alert-.success-bg) !important;
+      background-color: var(--digitv2-alert-success-bg) !important;
     }
   }
 
   &-info {
-    color: var(--digitv2-alert-.info) !important;
+    color: var(--digitv2-alert-info) !important;
 
     &-bg {
-      background-color: var(--digitv2-alert-.info-bg) !important;
+      background-color: var(--digitv2-alert-info-bg) !important;
     }
   }
 }

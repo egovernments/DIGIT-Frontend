@@ -23,7 +23,7 @@
   max-width: 540px;
 
   .select {
-    @apply relative block w-full h-10 border border-solid border-input-border;
+    @apply relative block w-full h-10 border-2 border-solid border-input-border;
     &:hover {
       @apply border-2 border-solid border-primary-main;
     }
@@ -105,7 +105,7 @@
   max-width: 540px;
 
   .select {
-    @apply relative block w-full h-10 border border-solid border-input-border;
+    @apply relative block w-full h-10 border-2 border-solid border-input-border;
 
     input[type="text"] {
       width: calc(100% - 32px);
