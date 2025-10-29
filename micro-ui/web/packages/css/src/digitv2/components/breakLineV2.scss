@@ -1,0 +1,7 @@
+@import url("../index.scss");
+
+.digit-break-line {
+  @apply border-solid border-2;
+  color: theme(digitv2.lightTheme.primary);
+  @extend .light-input-border;
+}
