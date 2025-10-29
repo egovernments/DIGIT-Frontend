@@ -19,6 +19,9 @@ import { Loader } from "@egovernments/digit-ui-components";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initReceiptsComponents } from "@egovernments/digit-ui-module-receipts";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
+import { initBillsComponents } from "@egovernments/digit-ui-module-bills";
+import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+import { initFinanceComponents } from "@egovernments/digit-ui-module-finance";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
@@ -39,6 +42,10 @@ const enabledModules = [
   "WS",
   "RECEIPTS",
   "PGR",
+  "Bills",
+  "BillAmendement",
+  "Engagement",
+  "Finance"
 ];
 
 initLibraries().then(() => {
@@ -64,6 +71,9 @@ const initDigitUI = () => {
   initHRMSComponents();
   initReceiptsComponents();
   initPGRComponents();
+  initBillsComponents();
+  initEngagementComponents();
+  initFinanceComponents();
 };
 
 function App() {

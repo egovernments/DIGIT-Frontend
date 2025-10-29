@@ -5,7 +5,7 @@ import { initLibraries } from "@egovernments/digit-ui-libraries";
 
 import { Loader } from "@egovernments/digit-ui-components";
 import { UICustomizations } from "./UICustomizations";
-import "@egovernments/digit-ui-urban-css/example/index.css";
+import "@egovernments/digit-ui-mseva-css/example/index.css";
 import { initUtilitiesComponents } from "@egovernments/digit-ui-module-utilities";
 import { initPropertyTaxComponents } from "@egovernments/digit-ui-module-pt";
 import { initBirthComponents } from "@egovernments/digit-ui-module-birth";
@@ -16,6 +16,9 @@ import { initWSComponents } from "@egovernments/digit-ui-module-ws";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initPGRComponents } from "@egovernments/digit-ui-module-pgr";
 import { initReceiptsComponents } from "@egovernments/digit-ui-module-receipts";
+import { initBillsComponents } from "@egovernments/digit-ui-module-bills";
+import { initEngagementComponents } from "@egovernments/digit-ui-module-engagement";
+import { initFinanceComponents } from "@egovernments/digit-ui-module-finance";
 
 var Digit = window.Digit || {};
 
@@ -35,6 +38,10 @@ const enabledModules = [
   "HRMS",
   "PGR",
   "RECEIPTS",
+  "Bills",
+  "BillAmendement",
+  "Engagement",
+  "Finance"
 ];
 
 const initTokens = (stateCode) => {
@@ -73,6 +80,9 @@ const initDigitUI = () => {
   initPGRComponents();
   initWSComponents();
   initReceiptsComponents();
+  initBillsComponents();
+  initEngagementComponents();
+  initFinanceComponents();
 
   const moduleReducers = (initData) => initData;
 
