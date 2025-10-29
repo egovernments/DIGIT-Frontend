@@ -22,27 +22,197 @@
 - npm packages upgraded and syntax changed to make them react19 compatible
 - react, react-dom, react-router-dom and @tanstack/react-query are in peer dependencies now to avoid version conflict
 
-## [1.8.42]  [18-Jun-2025]
--Updated the loader logic in login page
 
-## [1.8.41]  [12-Jun-2025]
--Introduced new hook `useLoginConfig` for mdms call
+## [1.9.0]  [28-October-2025]
 
-## [1.8.40]  [11-Jun-2025]
+### 🚀 Major Feature Release - Enhanced Authentication & Multi-Tenant Support
+
+#### 🔐 Complete Authentication System Overhaul:
+- **Login v2 System**: New Login-v2 module with enhanced security and UX
+  - Advanced configuration system with config-v2.js
+  - Email and mobile number login flows with pattern validation
+  - OTP customization with OtpCustomComponent
+  - SignUp v2 with improved validation and user experience
+- **Enhanced OTP System**: 
+  - New Otp module with advanced customization options
+  - Better error handling and validation
+  - Support for email-based OTP verification
+- **Carousel Login Experience**: 
+  - New Carousel component for interactive login screens
+  - Dynamic banner rendering with conditional logic
+  - Improved visual hierarchy and user guidance
+
+#### 🏢 Multi-Tenant & Configuration Features:
+- **Advanced Multi-Tenant Support**: 
+  - `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` global config flag
+  - Enhanced ULB service for dynamic tenant switching
+  - Tenant-specific logo support with `logoUrlWhite` option
+  - Improved tenant context management across sessions
+- **Landing Page Configuration**: 
+  - New LandingPageConfig.js for customizable home screens
+  - Role-based employee home pages with RoleBasedEmployeeHome component
+  - Configurable default landing pages (`defaultLanding` parameter)
+- **User Type Restrictions**: 
+  - `allowedUserTypes` parameter for controlling access (citizen/employee)
+  - Enhanced routing based on user permissions
+  - Better security through access control
+
+#### 🎨 New UI Components & Features:
+- **SandBox Integration**: 
+  - New SandBoxHeader component with dedicated styling
+  - SandboxHeader.svg for branding consistency
+  - Sandbox-specific routing and configuration
+- **Enhanced Error Handling**: 
+  - CustomErrorComponent for better error messaging
+  - DummyLoader component for improved loading states
+  - Better error boundary management
+- **Privacy & Compliance**: 
+  - New PrivacyComponent for GDPR/privacy compliance
+  - Enhanced consent management
+  - Configurable privacy policies
+- **Utility Components**: 
+  - ImageComponent for optimized image handling
+  - ForgotOrganizationTooltip for better user guidance
+  - LoginSignupSelector for streamlined access
+
+#### 🔧 Advanced Hooks & Configuration:
+- **New Custom Hooks**: 
+  - useLoginConfig: MDMS-based login configuration management
+  - useTenantConfigSearch: Advanced tenant search and filtering
+  - Enhanced authentication state management
+- **Configuration Management**: 
+  - MDMS-based login screen configuration
+  - Module-specific privacy and compliance settings
+  - Dynamic component loading based on tenant settings
+
+#### 📱 Enhanced Mobile & Responsive Features:
+- **Improved Mobile Experience**: 
+  - Better responsive design for login flows
+  - Enhanced mobile-specific validations
+  - Improved touch interactions
+- **Search Enhancements**: 
+  - Enhanced MobileSearchApplication component
+  - Better search field configurations
+  - Improved search result handling
+
+#### 🔄 App Architecture Improvements:
+- **Enhanced App.js**: 
+  - Support for additional components injection
+  - Better route management with conditional rendering
+  - Enhanced props passing for customization
+- **Module System Enhancement**: 
+  - Better AppModules component with additional component support
+  - Enhanced module loading and initialization
+  - Improved error handling in module registration
+
+#### 🛡️ Security & Validation:
+- **Enhanced Validation**: 
+  - Pattern validation for email and mobile numbers
+  - Improved password security requirements
+  - Better input sanitization
+- **Access Control**: 
+  - Role-based access restrictions
+  - Enhanced permission checking
+  - Better security for sensitive operations
+
+### Technical Updates:
+- Enhanced CitizenSideBar and EmployeeSideBar components
+- Improved TopBarSideBar integration
+- Better state management across authentication flows
+- Enhanced error boundary implementations
+- Improved logo management with dual logo support
+
+### Global Config Integration:
+- `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT`: Multi-tenant context switching
+- `allowedUserTypes`: User access control
+- `defaultLanding`: Customizable landing page routing
+- MDMS-based configuration for login, privacy, and module settings
+
+## [1.9.0-rc2]  [27-Oct-2025]
+- Test Build for release after master merge
+
+## [1.9.0-rc1]  [27-Oct-2025]
+- Test Build for release
+
+## [1.8.57]  [28-October-2025]
+
+### New Features:
+- **Multi-Tenant Support Enhancement**: 
+  - Added support for `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT` global config flag
+  - Enables better multi-tenant use cases
+  - Improved tenant context switching logic
+- **Logo Fixes**: 
+  - Fixed logo rendering issues in header
+  - Updated logo URL configurations
+- **Login Flow Improvements**:
+  - Enhanced tenant selection flow
+  - Better state management for logged-in tenant context
+
+### Technical Updates:
+- Updated ULB service to handle override tenant configurations
+- Improved state management for tenant switching
+- Enhanced error handling in login flow
+
+### Global Config Integration:
+- Supports new flag: `OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT`
+- Backward compatible with existing tenant configurations
+
+## [1.8.55]  [8th-Oct-2025]
+- Updated the email and mobilenumber login flow with pattern validation, link instead of toggle and state management fixes
+
+## [1.8.54]  [8th-Oct-2025]
+- Updated the validation for email, css fix and email sending in payload while otp flow
+
+## [1.8.53]  [8th-Oct-2025]
+- Added dynamicLoginComponent (custom) to be displayed below login card
+
+## [1.8.52]  [7th-Oct-2025]
+- Added fix for privacy policy error
+
+## [1.8.51]  [6th-Oct-2025]
+- Added the redirection fix in citizen side after login and max length fix for mobile number
+
+## [1.8.50]  [3rd-Oct-2025]
+- updated the citizen home page to not to filter the cards using module, directly show citizen menu details
+
+## [1.8.49]  [22-Sep-2025]
+- updated the login componenet to handle email based login
+
+## [1.8.47]  [22-Sep-2025]
+- Carousel Transitions Added, OTP Page Text bold and minor ui tweeks
+
+## [1.8.46]  [13-Sep-2025]
+- Added new logic for language selection page
+
+## [1.8.44]  [15-July-2025]
+- Citizen login page continue button added 
+
+
+## [1.8.43]  [26-June-2025]
+- Login and SignUp Pages UI for Sandbox is updated
+- Sandbox Product Details Page Updated 
+
+## [1.8.42] [18-Jun-2025]
+- Updated the loader logic in login page
+
+## [1.8.41] [12-Jun-2025]
+- Introduced new hook useLoginConfig for mdms call
+
+## [1.8.40] [11-Jun-2025]
 - Added module name config for login and privacy screen
 
-## [1.8.39]  [11-Jun-2025]
+## [1.8.39] [11-Jun-2025]
 - integrated with updated version
 
 ## [1.8.38] - [06-June-2025]
-- Added `Fragment` wherever required as older version of react doesn't support <></>
-- PrivateRoute is using `component   as a prop in index.js file
+- Added Fragment wherever required as older version of react doesn't support <></>
+  PrivateRoute is using `component as a prop in index.js file
 
 ## [1.8.37] - [04-June-2025]
-- Added an additional component `Carousel.js`
-- config updated as per additional carousel component
-- Updated `FormComposer` usage in `login.js` with conditional banner rendering.
-- Leveraged newly added class `.login-form-container` for styling the Login page.
+- Added an additional component Carousel.js
+  config updated as per additional carousel component
+  Updated FormComposer usage in login.js with conditional banner rendering.
+  Leveraged newly added class .login-form-container for styling the Login page.
 
 ## [1.8.36]  [27-May-2025]
 - FEATURE/CCSD-216 : Privacy component alignment changes
