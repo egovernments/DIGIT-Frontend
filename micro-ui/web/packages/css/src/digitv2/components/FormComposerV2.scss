@@ -67,7 +67,7 @@
   width: fit-content !important;
   display: flex;
   align-items: center;
-  /* background: theme(colors.grey.mid); */
+  /* background: var(digitv2-lightTheme-background); */
   @extend .light-background;
   border-right: 0;
   padding-right: 5px;
@@ -97,7 +97,7 @@
   width: fit-content !important;
   display: flex;
   align-items: center;
-  /* background: theme(colors.grey.mid); */
+  /* background: var(digitv2-lightTheme-background); */
   border-right: 0;
   padding-right: 5px;
 }
@@ -112,7 +112,7 @@
   gap: 10px;
 
   svg {
-    fill: theme(colors.primary.main);
+    fill: var(--digitv2-lightTheme-primary);
   }
 
   @extend .light-primary;
@@ -122,5 +122,5 @@
 }
 
 .digit-form-composer-header{
-   font-size:theme(digitv2.fontSize.heading-l-dt);
+   font-size:var(--digitv2-fontSize-heading-l-desktop);
 }

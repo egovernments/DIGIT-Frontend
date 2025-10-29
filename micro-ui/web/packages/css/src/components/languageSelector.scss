@@ -10,7 +10,7 @@
   height: 2.5rem;
 }
 .bannerCard .customBtn {
-  border-color: theme(colors.text.secondary);
+  border-color: var(--digitv2-lightTheme-text-color-secondary);
 }
 .bannerCard .customBtn:focus {
   outline: none;

@@ -66,7 +66,7 @@ top: 0px;
 
 /* Light Theme / Paper */
 
-background: theme(colors.white);
+background: var(--digitv2-lightTheme-paper);
 box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
 
 /* Inside auto layout */
@@ -79,7 +79,7 @@ color: #B1B4B6;
 .table-switch-card-inactive:hover{
     background: #fffffc;
     font-size: 17px;
-    color: theme(colors.text.secondary);
+    color: var(--digitv2-lightTheme-text-color-secondary);
 }
 
 .table-switch-card-active{/* Frame 57 */
@@ -99,10 +99,10 @@ color: #B1B4B6;
     
     /* Light Theme / Paper */
     
-    background: theme(colors.white);
+    background: var(--digitv2-lightTheme-paper);
     /* Light Theme / Primary */
     
-    border: 1px solid theme(colors.primary.main);
+    border: 1px solid var(--digitv2-lightTheme-primary);
     box-sizing: border-box;
     box-shadow: 2px 2px 2px rgba(0, 0, 0, 0.1);
     

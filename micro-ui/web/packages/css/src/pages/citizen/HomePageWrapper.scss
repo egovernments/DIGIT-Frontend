@@ -60,7 +60,7 @@
 @media (min-width: 780px) {
   .SideBarStatic {
     width: 219px;
-    background: theme(colors.white);
+    background: var(--digitv2-lightTheme-paper);
   }
 }
 
@@ -97,7 +97,7 @@
     border: none;
     top: 76px;
     svg {
-      fill: theme(colors.white);
+      fill: var(--digitv2-lightTheme-paper);
     }
     @apply absolute text-white text-heading-s ml-md;
   }

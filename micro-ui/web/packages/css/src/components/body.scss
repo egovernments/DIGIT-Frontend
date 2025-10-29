@@ -47,7 +47,7 @@ body {
 
 .bread-crumb {
   font-size: 14px;
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
   display: flex;
   margin-bottom: 10px;
   list-style: none;
@@ -65,7 +65,7 @@ body {
   }
 
   .last {
-    color: theme(colors.text.primary);
+    color: var(--digitv2-lightTheme-text-color-primary);
   }
 }
 

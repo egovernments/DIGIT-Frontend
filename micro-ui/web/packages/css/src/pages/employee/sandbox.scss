@@ -73,7 +73,7 @@
 
   tbody {
     tr:hover {
-      background: rgba(theme(colors.primary.main), 0.12);
+      background: rgba(var(--digitv2-lightTheme-primary), 0.12);
     }
   }
 }
@@ -193,7 +193,7 @@
       align-self: flex-end;
       margin-top: 3rem;
       width: 100%;
-      background-color: theme(colors.primary.main);
+      background-color: var(--digitv2-lightTheme-primary);
     }
 
     .bannerHeader {
@@ -399,7 +399,7 @@
 }
 
 .submit-bar {
-  background-color: theme(colors.primary.main);
+  background-color: var(--digitv2-lightTheme-primary);
 }
 
 .digit-employee-card.card-sandbox {
@@ -671,7 +671,7 @@ digit-card-text.center {
 }
 
 .quickLink {
-  color: theme(colors.primary.main);
+  color: var(--digitv2-lightTheme-primary);
   text-decoration: none;
   font-weight: 500;
   font-size: 1rem;
@@ -1247,7 +1247,7 @@ digit-card-text.center {
     margin-bottom: unset !important;
 
     svg {
-      fill: theme(colors.white) !important;
+      fill: var(--digitv2-lightTheme-paper) !important;
     }
   }
 }

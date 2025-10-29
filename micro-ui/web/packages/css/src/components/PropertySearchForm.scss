@@ -15,19 +15,19 @@
   }
 
   .PropertySearchFormSwitcher{
-    border-bottom: 1px solid theme(colors.border);
+    border-bottom: 1px solid var(--digitv2-lightTheme-divider);
     cursor: pointer;
     margin-bottom: 20px;
     display: flex;
     .non-selected {
-      color: theme(colors.text.secondary);
+      color: var(--digitv2-lightTheme-text-color-secondary);
       font-weight: 400;
     }
     .selected {
-      color: theme(colors.primary.main);
+      color: var(--digitv2-lightTheme-primary);
       font-weight: 700;
       padding-bottom: 10px;
-      border-bottom: 2px solid theme(colors.primary.main);
+      border-bottom: 2px solid var(--digitv2-lightTheme-primary);
     }
     span {
       margin-right: 20px;

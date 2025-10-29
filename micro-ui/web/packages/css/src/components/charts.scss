@@ -20,7 +20,7 @@
 .signature-img{
   top: 8px;
   right: 8px;
-  fill: theme(colors.text.secondary);
+  fill: var(--digitv2-lightTheme-text-color-secondary);
   @apply absolute;
 }
 
@@ -107,7 +107,7 @@
 
 .showMore {
   @apply text-right cursor-pointer;
-  color: theme(colors.primary.main);
+  color: var(--digitv2-lightTheme-primary);
 }
 
 @media (max-width: 420px) { 
@@ -164,7 +164,7 @@
                 .signature-img{
                   top: 8px;
                   right: 8px;
-                  fill: theme(colors.text.secondary);
+                  fill: var(--digitv2-lightTheme-text-color-secondary);
                   @apply absolute;
                 }
               }

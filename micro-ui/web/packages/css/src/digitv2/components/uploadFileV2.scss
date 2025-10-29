@@ -24,7 +24,7 @@
     @apply absolute w-full h-full opacity-0 top-0;
   }
   .digit-cell-text {
-    color: theme(colors.text.secondary);
+    color: var(--digitv2-lightTheme-text-color-secondary);
     padding-top: 3px;
   }
 }
@@ -35,7 +35,7 @@
   div {
     display: block;
     position: relative;
-    background-color: theme(colors.grey.light);
+    background-color: var(--digitv2-lightTheme-paper-secondary);
     width: calc((100% - 16px) / 3);
     margin-right: 8px;
 
@@ -50,7 +50,7 @@
   }
 
   .digit-upload-img-container {
-    border: 1px dashed theme(colors.border);
+    border: 1px dashed var(--digitv2-lightTheme-divider);
     margin: 0 !important;
 
     img {

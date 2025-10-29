@@ -16,7 +16,7 @@
             align-items: center;
             justify-content: flex-start;
             .inbox-search-icon--projects {
-                fill : theme(colors.primary.main);
+                fill : var(--digitv2-lightTheme-primary);
                 height: 2rem;
                 width: 2rem;
             }
@@ -52,7 +52,7 @@
             @extend .light-primary;
             padding: 8px;
             --text-opacity: 1;
-            color: theme(colors.primary.main);
+            color: var(--digitv2-lightTheme-primary);
             color: rgba(244, 119, 56, var(--text-opacity));
         }
     }

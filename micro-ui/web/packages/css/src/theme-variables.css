@@ -1,9 +1,9 @@
 /* Auto-generated from tailwind.config.js */
-/* Generated: 2025-08-26T14:34:03.853Z */
+/* Generated: 2025-10-29T04:49:29.160Z */
 /* DO NOT EDIT MANUALLY - Run 'npm run generate-theme' to update */
 
 :root {
-  --digitv2-lightTheme-primary: #C84C0E;
+  --digitv2-lightTheme-primary: #c84c0e;
   --digitv2-lightTheme-primary-2: #0b4b66;
   --digitv2-lightTheme-text-color-primary: #0B0C0C;
   --digitv2-lightTheme-text-color-secondary: #505A5F;
@@ -18,6 +18,8 @@
   --digitv2-lightTheme-text-primary: #363636;
   --digitv2-lightTheme-error-v2: #D4351C;
   --digitv2-lightTheme-text-secondary: #787878;
+  --digitv2-link-normal: #1D70B8;
+  --digitv2-link-hover: #003078;
   --digitv2-alert-error: #b91900;
   --digitv2-alert-error-bg: #EFC7C1;
   --digitv2-alert-success: #00703C;

@@ -52,10 +52,10 @@
 .jk-digit-secondary-btn {
   width: auto;
   height: 40px;
-  background: theme(colors.white);
-  border: 1px solid theme(colors.primary.main);
+  background: var(--digitv2-lightTheme-paper);
+  border: 1px solid var(--digitv2-lightTheme-primary);
   padding: 12px;
-  color: theme(colors.primary.main);
+  color: var(--digitv2-lightTheme-primary);
   display: flex;
   align-items: center;
   font-size: 19px;
@@ -67,10 +67,10 @@
 .jk-digit-primary-btn {
   width: auto;
   height: 40px;
-  background: theme(colors.primary.main);
-  border: 1px solid theme(colors.primary.main);
+  background: var(--digitv2-lightTheme-primary);
+  border: 1px solid var(--digitv2-lightTheme-primary);
   padding: 6px;
-  color: theme(colors.white);
+  color: var(--digitv2-lightTheme-paper);
   display: flex;
   align-items: center;
   cursor: pointer;

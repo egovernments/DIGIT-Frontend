@@ -80,12 +80,12 @@
 }
 
 .search-icon-wrapper-new svg{
-          fill: theme(colors.white) !important;
+          fill: var(--digitv2-lightTheme-paper) !important;
           width: 21px;
           height: 21px;
 }
 .search-icon-wrapper-new svg path {
-            fill: theme(colors.white) !important;
+            fill: var(--digitv2-lightTheme-paper) !important;
           }
 
 .submenu-container {
@@ -110,13 +110,13 @@
     margin-left: 0.4rem;
   }
   &.selected-action-level-0 {
-    color: theme(colors.primary.main) !important;
+    color: var(--digitv2-lightTheme-primary) !important;
   }
   &.selected-action-level-1 {
-    border-left:4px solid theme(colors.primary.main);
+    border-left:4px solid var(--digitv2-lightTheme-primary);
     margin-left: -0.6rem;
     height: 2rem;
-    color: theme(colors.primary.main) !important;
+    color: var(--digitv2-lightTheme-primary) !important;
   }
 
   &.default-0 {

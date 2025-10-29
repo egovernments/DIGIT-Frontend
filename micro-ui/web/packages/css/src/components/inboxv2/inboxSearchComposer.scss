@@ -32,10 +32,10 @@
                         @extend .light-text-color-primary;
                     }
                     .inbox-links-icon{
-                        color:theme(colors.primary.main);
-                        fill:theme(colors.primary.main);
+                        color:var(--digitv2-lightTheme-primary);
+                        fill:var(--digitv2-lightTheme-primary);
                         path{
-                            fill:theme(colors.primary.main);
+                            fill:var(--digitv2-lightTheme-primary);
                         }
                     }
                 }
@@ -88,7 +88,7 @@
                 }
                 &.links {
                     height: 100%;
-                    color : theme(colors.primary.main);
+                    color : var(--digitv2-lightTheme-primary);
                     .inbox-search-links-component {
                         height: 100% !important;
                         width: 100%;

@@ -39,7 +39,7 @@
         top: unset;
         @apply relative text-text-primary !important;
         svg{
-            fill: theme(colors.text.secondary);
+            fill: var(--digitv2-lightTheme-text-color-secondary);
         }
         span{
             @apply text-text-primary !important;

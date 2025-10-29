@@ -39,7 +39,7 @@
     }
 
     .user-img-txt {
-      background: theme(colors.primary.main);
+      background: var(--digitv2-lightTheme-primary);
       padding: 10px 15px;
       border-radius: 50%;
       color: white;
@@ -131,10 +131,10 @@
   flex-direction: row;
   padding: 10px;
   column-gap: 10px;
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
 
   &:hover {
-    background: theme(colors.grey.mid);
+    background: var(digitv2-lightTheme-background);
   }
 }
 

@@ -29,7 +29,7 @@
   div {
     display: block;
     position: relative;
-    background-color: theme(colors.grey.light);
+    background-color: var(--digitv2-lightTheme-paper-secondary);
     width: calc((100% - 16px) / 3);
     margin-right: 8px;
 
@@ -44,7 +44,7 @@
   }
 
   .upload-img-container {
-    border: 1px dashed theme(colors.border);
+    border: 1px dashed var(--digitv2-lightTheme-divider);
     margin: 0 !important;
     display: flex !important;
 

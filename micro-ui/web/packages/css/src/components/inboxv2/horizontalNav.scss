@@ -59,16 +59,16 @@
 
             &.active {
                 font-weight: 600;
-                border-bottom: 3px solid theme(colors.primary.main);
+                border-bottom: 3px solid var(--digitv2-lightTheme-primary);
 
                 background-color: #FFFFFF;
 
                 .menu-label {
-                    color: theme(colors.primary.main);
+                    color: var(--digitv2-lightTheme-primary);
                 }
 
                 .icon {
-                    fill: theme(colors.primary.main);
+                    fill: var(--digitv2-lightTheme-primary);
                 }
             }
 
@@ -125,16 +125,16 @@
 
             &.active {
                 font-weight: 600;
-                border-bottom: 3px solid theme(colors.primary.main);
+                border-bottom: 3px solid var(--digitv2-lightTheme-primary);
 
                 background-color: #FFFFFF;
 
                 .menu-label {
-                    color: theme(colors.primary.main);
+                    color: var(--digitv2-lightTheme-primary);
                 }
 
                 .icon {
-                    fill: theme(colors.primary.main);
+                    fill: var(--digitv2-lightTheme-primary);
                 }
             }
 

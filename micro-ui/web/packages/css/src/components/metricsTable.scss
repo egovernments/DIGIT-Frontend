@@ -16,7 +16,7 @@
 
   .upper_green {
     @apply inline;
-    color: theme(colors.success);
+    color: var(--digitv2-alert-success);
   }
 }
 

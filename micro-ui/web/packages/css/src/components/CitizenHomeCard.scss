@@ -15,7 +15,7 @@
 
     a {
       @apply block pb-sm;
-      color: theme(colors.primary.main) !important;
+      color: var(--digitv2-lightTheme-primary) !important;
       text-decoration: none !important;
     }
   }
@@ -52,7 +52,7 @@
         overflow: hidden;
         text-overflow: ellipsis;
         min-width: 0;
-        color: theme(colors.primary.main) !important;
+        color: var(--digitv2-lightTheme-primary) !important;
         text-decoration: none !important;  
       }
     }

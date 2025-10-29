@@ -25,7 +25,7 @@
         svg {
           height: 20px;
           width: 20px;
-          fill: theme(colors.primary.main);
+          fill: var(--digitv2-lightTheme-primary);
           margin: auto;
         }
       }

@@ -36,7 +36,7 @@
   flex-direction: column;
   align-items: center;
   padding-top: 30px;
-  background-color: theme(colors.white);
+  background-color: var(--digitv2-lightTheme-paper);
 
   img {
     width: 89px;
@@ -56,12 +56,12 @@
         letter-spacing: 0.6px;
         font-weight: 700;
         font-size: 18px;
-        color: theme(colors.text.primary);
+        color: var(--digitv2-lightTheme-text-color-primary);
       }
     }
   }
   .profile-divider {
-    border-top: 1px solid theme(colors.border);
+    border-top: 1px solid var(--digitv2-lightTheme-divider);
     margin-left: 20px;
     margin-right: 20px;
     width: 90%;
@@ -115,12 +115,12 @@
     padding-right: 16px;
     padding-left: 16px;
     &.active {
-      border-left: 5px solid theme(colors.primary.main);
+      border-left: 5px solid var(--digitv2-lightTheme-primary);
       .menu-label {
-        color: theme(colors.primary.main);
+        color: var(--digitv2-lightTheme-primary);
       }
       .icon {
-        fill: theme(colors.primary.main);
+        fill: var(--digitv2-lightTheme-primary);
       }
     }
 
@@ -225,13 +225,13 @@
       padding-right: 16px;
       padding-left: 16px;
       &.active {
-        border-left: 5px solid theme(colors.primary.main);
+        border-left: 5px solid var(--digitv2-lightTheme-primary);
         padding-left: 11px;
         .menu-label {
-          color: theme(colors.primary.main);
+          color: var(--digitv2-lightTheme-primary);
         }
         .icon {
-          fill: theme(colors.primary.main);
+          fill: var(--digitv2-lightTheme-primary);
         }
       }
 

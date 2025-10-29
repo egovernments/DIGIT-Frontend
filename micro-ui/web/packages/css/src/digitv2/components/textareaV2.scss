@@ -7,5 +7,5 @@
   @apply w-full;
 }
 .digit-cell-text {
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
 }

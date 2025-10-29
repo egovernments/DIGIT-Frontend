@@ -69,7 +69,7 @@
 
 .employeeCard-info-box {
   @apply flex justify-end ml-md;
-  background-color: theme(colors.grey.light);
+  background-color: var(--digitv2-lightTheme-paper-secondary);
   div {
     margin-right: 32px;
     span:nth-child(2) {
@@ -101,7 +101,7 @@
       @apply font-bold text-heading-l flex gap-3;
       padding-bottom: 6px;
       svg {
-        fill: theme(colors.text.primary);
+        fill: var(--digitv2-lightTheme-text-color-primary);
       }
     }
     .sub-filter-label {
@@ -137,7 +137,7 @@
           @apply text-heading-m block flex gap-3 items-center;
           padding-bottom: 6px;
           svg {
-            fill: theme(colors.text.primary);
+            fill: var(--digitv2-lightTheme-text-color-primary);
           }
         }
 
@@ -160,7 +160,7 @@
             @apply text-focus;
             display: none;
             &:hover {
-              color: theme(colors.link.hover);
+              color: var(--digitv2-link-hover);
               cursor: pointer;
             }
           }
@@ -233,7 +233,7 @@
         @apply bg-white;
         svg {
           path {
-            fill: theme(colors.primary.main);
+            fill: var(--digitv2-lightTheme-primary);
           }
         }
       }
@@ -363,7 +363,7 @@
               @apply block;
               cursor: pointer;
               &:hover {
-                color: theme(colors.link.hover);
+                color: var(--digitv2-link-hover);
                 cursor: pointer;
               }
             }
@@ -401,18 +401,18 @@
 }
 
 .cell-text {
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
 }
 
 .sla-cell-error {
-  color: theme(colors.error);
+  color: var(--digitv2-lightTheme-error-v2);
   background-color: rgba(212, 53, 28, 0.12);
   padding: 0 24px;
   border-radius: 11px;
 }
 
 .sla-cell-success {
-  color: theme(colors.success);
+  color: var(--digitv2-alert-success);
   background-color: rgba(0, 112, 60, 0.12);
   padding: 0 24px;
   border-radius: 11px;
@@ -420,7 +420,7 @@
 
 .complain-no-cell-text {
   margin-top: "4px";
-  color: "theme(colors.text.secondary)";
+  color: "var(--digitv2-lightTheme-text-color-secondary)";
 }
 
 .search-error-label {
@@ -448,7 +448,7 @@
   }
 }
 .employeeTotalLink {
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
   font-size: 16px;
   text-decoration: none;
 }
@@ -465,7 +465,7 @@
           margin-right: 1rem;
           svg {
             path {
-              fill: theme(colors.primary.main);
+              fill: var(--digitv2-lightTheme-primary);
             }
           }
         }
@@ -473,7 +473,7 @@
           font-size: 24px;
           line-height: 28px;
           font-weight: 400;
-          color: theme(colors.primary.main);
+          color: var(--digitv2-lightTheme-primary);
         }
       }
     }
@@ -546,7 +546,7 @@
     padding: 10px 35px;
     color: rgb(244, 119, 56);
     background-color: #fff;
-    border: 1px solid theme(colors.primary.main);
+    border: 1px solid var(--digitv2-lightTheme-primary);
     border-radius: 0.5rem 0.5rem 0 0;
     border-bottom: 4px solid rgb(244, 119, 56);
     font-weight: 700;

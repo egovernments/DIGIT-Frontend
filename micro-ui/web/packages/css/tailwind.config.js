@@ -119,6 +119,10 @@ module.exports = {
         "error-v2": "#D4351C",
         "text-secondary": "#787878",
       },
+      link:{
+        normal: "#1D70B8",
+        hover: "#003078",
+      },
       alert: {
         error: "#b91900",
         "error-bg": "#EFC7C1",

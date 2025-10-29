@@ -82,7 +82,7 @@
   font-weight: normal;
   font-size: 16px;
   line-height: 19px;
-  color: theme(colors.text.primary);
+  color: var(--digitv2-lightTheme-text-color-primary);
   margin-top: 20px;
 }
 
@@ -94,7 +94,7 @@
   font-weight: normal;
   font-size: 16px;
   line-height: 19px;
-  color: theme(colors.text.primary);
+  color: var(--digitv2-lightTheme-text-color-primary);
 }
 
 .profile-label-margin {
@@ -105,14 +105,14 @@
   font-weight: normal;
   font-size: 16px;
   line-height: 24px;
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
   margin-top: 15px;
 }
 
 .employeeChangePassword .employeeCard .card-text {
   margin-bottom: 15px;
   font-size: 16px;
-  color: theme(colors.text.secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
 }
 
 @media screen and (max-width: 768px) {
@@ -247,18 +247,18 @@
     header.digit-header-content {
       &:not(.label) {
         text-align: center;
-        font-family: theme(digitv2.fontFamily.sans);
-        font-style: theme(digitv2.fontStyle.normal);
-        font-weight: theme(digitv2.fontWeight.bold);
-        line-height: theme(digitv2.lineHeight.lineheight1);
+        font-family: var(--digitv2-fontFamily-sans);
+        font-style: var(--digitv2-fontStyle-normal);
+        font-weight: var(--digitv2-fontWeight-bold);
+        line-height: var(--digitv2-lineHeight-line-height-body-s-desktop);
         @media (max-aspect-ratio: 9/16) {
-          font-size: theme(digitv2.fontSize.heading-m.mobile);
+          font-size: var(--digitv2-fontSize-heading-m-mobile);
         }
         @media (min-aspect-ratio: 9/16) and (max-aspect-ratio: 3/4) {
-          font-size: theme(digitv2.fontSize.heading-m.tablet);
+          font-size: var(--digitv2-fontSize-heading-m-tablet);
         }
         @media (min-aspect-ratio: 3/4) {
-          font-size: theme(digitv2.fontSize.heading-m.desktop);
+          font-size: var(--digitv2-fontSize-heading-m-desktop);
         }
       }
     }

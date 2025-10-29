@@ -31,17 +31,17 @@
   }
 }
 .fieldInspectionWrapper{
-  border: 1px solid theme(colors.border);
+  border: 1px solid var(--digitv2-lightTheme-divider);
   padding: 16px;
   margin-top: 8px;
-  background: theme(colors.grey.light);
+  background: var(--digitv2-lightTheme-paper-secondary);
 }
 
 .fieldInsepctionInsideWrapper {
-  border: 1px solid theme(colors.border);
+  border: 1px solid var(--digitv2-lightTheme-divider);
   padding: 16px;
   margin-top: 8px;
-  background: theme(colors.white);
+  background: var(--digitv2-lightTheme-paper);
   max-width: 70%;
   min-width: 280px;
 }

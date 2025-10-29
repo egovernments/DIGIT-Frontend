@@ -2,7 +2,7 @@
 
 .bread-crumb.workbench-bredcrumb {
   a {
-    color: theme(digitv2.lightTheme.primary);
+    color: var(--digitv2-lightTheme-primary);
   }
 }
 
@@ -27,7 +27,7 @@
       @extend .typography.text-heading-m;
       padding-left: 1rem;
 
-      @media (max-width: theme(digitv2.screens.mobile)) {
+      @media (max-width: var(--digitv2-screens-mobile)) {
         padding-left: 0;
       }
     }
@@ -45,7 +45,7 @@
             display: flex;
             padding: 1em 0 0 1em;
 
-            @media (max-width: theme(digitv2.screens.mobile)) {
+            @media (max-width: var(--digitv2-screens-mobile)) {
               flex-direction: column;
             }
 
@@ -92,7 +92,7 @@
 
               /* tablet view*/
 
-              @media (max-width: theme(digitv2.screens.tablet)) {
+              @media (max-width: var(--digitv2-screens-tablet)) {
                 max-width: 11rem;
                 margin-right: 1.5rem;
 
@@ -100,7 +100,7 @@
 
               /* mobile view*/
 
-              @media (max-width: theme(digitv2.screens.mobile)) {
+              @media (max-width: var(--digitv2-screens-mobile)) {
                 /*max-width: 10.2rem;*/
                 @apply w-full;
 
@@ -112,7 +112,7 @@
 
               @apply w-3/5;
 
-              @media (max-width: theme(digitv2.screens.mobile)) {
+              @media (max-width: var(--digitv2-screens-mobile)) {
                 @apply w-full;
               }
 
@@ -127,7 +127,7 @@
                 margin-bottom: 1rem;
                 /* tablet view*/
 
-                @media (max-width: theme(digitv2.screens.tablet)) {
+                @media (max-width: var(--digitv2-screens-tablet)) {
                   max-width: 27.5rem;
                   min-width: 12.5rem;
 
@@ -135,7 +135,7 @@
 
                 /* mobile view*/
 
-                @media (max-width: theme(digitv2.screens.mobile)) {
+                @media (max-width: var(--digitv2-screens-mobile)) {
                   max-width: 20.5rem;
                   min-width: 9.5rem;
                   @apply w-full;
@@ -158,7 +158,7 @@
                   }
 
                   .digit__control--is-focused {
-                    border-color: theme(digitv2.lightTheme.primary) !important;
+                    border-color: var(--digitv2-lightTheme-primary) !important;
                     box-shadow: none;
                     box-sizing: unset;
                     @apply outline-none;
@@ -174,10 +174,10 @@
                   }
 
                   .digit__control:focus {
-                    border-color: theme(digitv2.lightTheme.primary);
+                    border-color: var(--digitv2-lightTheme-primary);
 
                     .digit__value-container:focus {
-                      border-color: theme(digitv2.lightTheme.primary);
+                      border-color: var(--digitv2-lightTheme-primary);
 
                     }
                   }
@@ -185,20 +185,20 @@
 
                 &.form-select:focus {
                   @apply outline-none;
-                  border-color: theme(digitv2.lightTheme.primary);
+                  border-color: var(--digitv2-lightTheme-primary);
 
                 }
               }
 
               .form-control:read-only {
-                background-color: theme(digitv2.lightTheme.background);
-                color: theme(digitv2.lightTheme["text-color-secondary"]);
+                background-color: var(--digitv2-lightTheme-background);
+                color: var(--digitv2-lightTheme-text-color-secondary);
               }
 
               .form-control:focus {
 
                 @apply outline-none;
-                border-color: theme(digitv2.lightTheme.primary);
+                border-color: var(--digitv2-lightTheme-primary);
               }
 
               textarea.form-control {
@@ -252,7 +252,7 @@
                   }
 
                   input[type="checkbox"]#digit_root_active {
-                    accent-color: theme(digitv2.lightTheme.primary);
+                    accent-color: var(--digitv2-lightTheme-primary);
                   }
 
                   input:checked,
@@ -381,12 +381,12 @@
                     cursor: pointer;
                     background-color: inherit !important;
 
-                    @media (max-width: theme(digitv2.screens.mobile)) {
+                    @media (max-width: var(--digitv2-screens-mobile)) {
                       padding: 0px;
                     }
 
                     h2 {
-                      @media (max-width: theme(digitv2.screens.mobile)) {
+                      @media (max-width: var(--digitv2-screens-mobile)) {
                         display: none;
                       }
                     }
@@ -413,7 +413,7 @@
                 height: 1.7em;
                 margin-top: 0.5rem;
 
-                @media (max-width: theme(digitv2.screens.mobile)) {
+                @media (max-width: var(--digitv2-screens-mobile)) {
                   height: auto;
                   width: 100%;
                 }
@@ -561,7 +561,7 @@
     display: flex;
     padding-top: 2.1rem;
 
-    @media (max-width: theme(digitv2.screens.mobile)) {
+    @media (max-width: var(--digitv2-screens-mobile)) {
       flex-direction: column;
     }
 
@@ -569,7 +569,7 @@
       @apply w-1/4;
       margin-right: 1rem;
 
-      @media (max-width: theme(digitv2.screens.mobile)) {
+      @media (max-width: var(--digitv2-screens-mobile)) {
         @apply w-full;
       }
     }
@@ -580,7 +580,7 @@
     padding-right: 0.8rem;
 
     &-row-mdms:hover {
-      background-color: theme(digitv2.lightTheme.primary-bg);
+      background-color: var(--digitv2-lightTheme-primary-bg);
       /* Change this to the desired hover color */
       cursor: pointer;
     }
@@ -645,12 +645,12 @@
 
     .browse-text {
       text-decoration: none;
-      color: theme(colors.primary.main);
+      color: var(--digitv2-lightTheme-primary);
       transition: color 0.3s;
     }
 
     .browse-text:hover {
-      color: theme(colors.primary.main);
+      color: var(--digitv2-lightTheme-primary);
       text-decoration: underline;
       cursor: pointer;
     }
@@ -839,7 +839,7 @@ button:hover {
   width: 100%;
   height: 2.5rem;
   --border-opacity: 1;
-  border: 1px solid theme(colors.primary.main);
+  border: 1px solid var(--digitv2-lightTheme-primary);
   border-color: rgba(244, 119, 56, var(--border-opacity));
 }
 
@@ -862,7 +862,7 @@ button:hover {
 
     .add-new {
       position: relative;
-      color: theme(colors.primary.main);
+      color: var(--digitv2-lightTheme-primary);
       cursor: pointer;
       margin-right: 1em;
       font-weight: bolder;
@@ -909,7 +909,7 @@ button:hover {
 
   .view-all-link {
     background-color: #bdc5d1;
-    color: theme(colors.primary.main);
+    color: var(--digitv2-lightTheme-primary);
     font-size: 16px;
     text-decoration: underline;
     cursor: pointer;

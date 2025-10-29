@@ -29,7 +29,7 @@
   width: fit-content !important;
   display: flex;
   align-items: center;
-  background: theme(colors.grey.mid);
+  background: var(digitv2-lightTheme-background);
   border-right: 0;
   padding-right: 5px;
 }
@@ -102,7 +102,7 @@
   width: fit-content !important;
   display: flex;
   align-items: center;
-  background: theme(colors.grey.mid);
+  background: var(digitv2-lightTheme-background);
   border-right: 0;
   padding-right: 5px;
 }

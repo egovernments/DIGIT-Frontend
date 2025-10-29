@@ -108,7 +108,7 @@
 @import "./pages/citizen/citizenDocument.scss";
 @import "./pages/employee/surveys.scss";
 @import "./digitv2/index.scss";
-/* @import "./digitv2/typography.scss"; */
+ @import "./typography.scss"; 
 @import "./components/inboxv2/index.scss";
 @import "./components//sidebar.scss";
 @import "./components/loaderWithGap.scss";
@@ -131,7 +131,7 @@
     h4{
       margin:0px !important;
     }
-    color:theme(colors.primary.main);
+    color:var(--digitv2-lightTheme-primary);
     display: flex !important;
     align-items: center;
     svg {
@@ -221,12 +221,12 @@ h1, h2, h3, h4, h5, h6 {
   margin-bottom: 16px;
 
   a {
-    color: theme(colors.link.normal);
+    color: var(--digitv2-link-normal);
   }
 }
 
 .clear-search-label {
-  color: theme(colors.primary.main);
+  color: var(--digitv2-lightTheme-primary);
   cursor: pointer;
 }
 
@@ -239,7 +239,7 @@ h1, h2, h3, h4, h5, h6 {
   @apply flex justify-between items-center;
 
   .download-button {
-    color: theme(colors.primary.main);
+    color: var(--digitv2-lightTheme-primary);
     margin-left: 8px;
   }
 }
@@ -248,13 +248,13 @@ h1, h2, h3, h4, h5, h6 {
   @apply flex mb-sm;
 
   .download-button {
-    color: theme(colors.primary.main);
+    color: var(--digitv2-lightTheme-primary);
     margin-left: 8px;
   }
 }
 
 .check-page-link-button {
-  color: theme(colors.primary.main) !important;
+  color: var(--digitv2-lightTheme-primary) !important;
 }
 
 .pt-application-download-btn {
@@ -277,10 +277,10 @@ h1, h2, h3, h4, h5, h6 {
   gap: 10px;
 
   svg {
-    fill: theme(colors.primary.main);
+    fill: var(--digitv2-lightTheme-primary);
   }
 
-  color: theme(colors.primary.main);
+  color: var(--digitv2-lightTheme-primary);
 
   cursor: pointer;
   font-weight: 500;
@@ -288,14 +288,14 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 .primaryColor {
-  color: theme(colors.text.primary) !important;
+  color: var(--digitv2-lightTheme-text-color-primary) !important;
 }
 
 input[readonly] {
   @apply border-grey-dark !important;
-  background-color:  theme(digitv2.lightTheme.background);
-  border-color: theme(digitv2.lightTheme.text-color-secondary);
-  color: theme(digitv2.lightTheme.text-color-secondary);
+  background-color:  var(--digitv2-lightTheme-background);
+  border-color: var(--digitv2-lightTheme-text-color-secondary);
+  color: var(--digitv2-lightTheme-text-color-secondary);
 }
 
 .hide-input-type-file {
@@ -335,7 +335,7 @@ input[readonly] {
   width: 194px;
   height: 2.5rem;
   &__wrapper {
-    border: 2px solid theme(colors.text.primary);
+    border: 2px solid var(--digitv2-lightTheme-text-color-primary);
     padding-left: 16px;
   }
   &__inputGroup__input {
@@ -440,7 +440,7 @@ input[type="number"] {
 
 .cheque-date {
   @apply flex items-center mb-lg;
-  border: 2px solid theme(colors.text.primary);
+  border: 2px solid var(--digitv2-lightTheme-text-color-primary);
   border-radius: 2px;
 
   input {
@@ -465,7 +465,7 @@ input[type="number"] {
 
 .ifsc-field {
   @apply flex items-center mb-lg;
-  border: 2px solid theme(colors.text.primary);
+  border: 2px solid var(--digitv2-lightTheme-text-color-primary);
   border-radius: 2px;
 
   input {
@@ -590,7 +590,7 @@ input[type="number"] {
       padding: 8px 24px;
       color: white;
       cursor: pointer;
-      background-color: theme(colors.primary.main);
+      background-color: var(--digitv2-lightTheme-primary);
     }
   }
 }
@@ -763,7 +763,7 @@ input[type="number"] {
 .modal-body-ws {
   padding: 1rem;
   font-weight: 700;
-  color: theme(colors.text.primary);
+  color: var(--digitv2-lightTheme-text-color-primary);
   font-size: 24px;
   margin-bottom: 1rem;
 }
