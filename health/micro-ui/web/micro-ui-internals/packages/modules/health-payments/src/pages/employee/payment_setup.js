@@ -5,7 +5,6 @@ import { Card, LabelFieldPair, Dropdown, CardText, HeaderComponent, TextInput, B
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import RoleWageTable from "../../components/payment_setup/wageTable";
 
-
 export const HCM_BILLING_CONFIG_PAYMENT_SETUP = "HCM-BILLING-CONFIG-PAYMENT-SETUP";
 
 const PaymentSetUpPage = () => {
@@ -19,8 +18,35 @@ const PaymentSetUpPage = () => {
   const BillingCycle = "BillingCycle";
   const CampaignTypeskills = "CampaignTypeskills";
 
+  const CampaignSearchCri = {
+    url: `/project-factory/v1/project-type/search`,
+    body: {
+      CampaignDetails: {
+        tenantId: "dev",
+        status: ["creating", "created"],
+        isLikeSearch: true,
+        isOverrideDatesFromProject: true,
+        createdBy: "cfacf16d-2544-4285-9235-3bd29a547186",
+        campaignsIncludeDates: false,
+        startDate: 1761849000000,
+        pagination: {
+          sortBy: "createdTime",
+          sortOrder: "desc",
+          limit: 10,
+          offset: 0,
+        },
+      },
+    },
+    config: {
+    //  / enabled: project ? true : false,
+      select: (data) => {
+        return data;
+      },
+    },
+  };
 
-  
+  const { isLoading: isCampaignLoading, data: CampaignData } = Digit.Hooks.useCustomAPIHook(CampaignSearchCri);
+
   const { data: BillingCycles, isLoading: loadingBilling } = Digit.Hooks.useCustomMDMS(
     tenantId,
     HCM_BILLING_CONFIG_PAYMENT_SETUP,
@@ -33,13 +59,11 @@ const PaymentSetUpPage = () => {
     },
     { schemaCode: `${HCM_BILLING_CONFIG_PAYMENT_SETUP}.BillingCycle` }
   );
-//campaignType
+  //campaignType
   const { data: SkillsData, isLoading: loadingSkills } = Digit.Hooks.useCustomMDMS(
     tenantId,
     HCM_BILLING_CONFIG_PAYMENT_SETUP,
-    [{ name: CampaignTypeskills,
-      filter: `[?(@.campaignType=='${"IRS-mz"}')]`
-     }],
+    [{ name: CampaignTypeskills, filter: `[?(@.campaignType=='${"IRS-mz"}')]` }],
     {
       select: (MdmsRes) => {
         return MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.CampaignTypeskills || [];
@@ -188,14 +212,9 @@ const PaymentSetUpPage = () => {
         <HeaderComponent>{t("Setup role wages")}</HeaderComponent>
         <CardText>{t("for each role for a campaign. Workers will be paid based on the number of days worked.")}</CardText>
         {selectedCampaignData ? (
-          <RoleWageTable 
-            skills={selectedCampaignData.skills} 
-            rateBreakupSchema={selectedCampaignData.rateBreakupSchema}
-          />
+          <RoleWageTable skills={selectedCampaignData.skills} rateBreakupSchema={selectedCampaignData.rateBreakupSchema} />
         ) : (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
-            {t("Please select a campaign to view roles and wages")}
-          </div>
+          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("Please select a campaign to view roles and wages")}</div>
         )}
       </Card>
 
