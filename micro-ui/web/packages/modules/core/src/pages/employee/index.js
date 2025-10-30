@@ -118,7 +118,7 @@ const EmployeeApp = ({
                 <Route path="change-password" element={<ChangePassword />} />
                 <Route
                   path="profile"
-                  element={<PrivateRoute component={() => <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />} />}
+                  element={ <UserProfile stateCode={stateCode} userType={"employee"} cityDetails={cityDetails} />}
                 />
                 <Route
                   path="error"

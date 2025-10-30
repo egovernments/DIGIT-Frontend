@@ -4,6 +4,8 @@ import { Hooks } from "@egovernments/digit-ui-libraries";
 // import { BrowserRouter } from "react-router-dom";
 
 import { initLibraries } from "@egovernments/digit-ui-libraries";
+
+// import "../packages/css/dist/index.css"
 window.Digit = window.Digit || {};
 window.Digit.Hooks = Hooks;
 const DigitUILazy = lazy(() => import("@egovernments/digit-ui-module-core").then((module) => ({ default: module.DigitUI })));
