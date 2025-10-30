@@ -380,12 +380,13 @@
   }
 }
 
-.loginSignUpSelector{
+.loginSignUpSelector, .forgotPasswordSelector{
   display: flex;
   align-items: center;
   justify-content: end;
+  margin-top: -1rem !important;
 
-  // Responsive fix for smaller screens
+  /* Responsive fix for smaller screens */
   @media (max-width: 768px) {
     justify-content: flex-start;
     margin-top: 0.5rem !important;
@@ -402,9 +403,9 @@
     }
   }
 
-  // Fix for very small screens and high DPI
+  /*  Fix for very small screens and high DPI */ 
   @media (max-width: 375px), (max-height: 667px) and (min-device-pixel-ratio: 2) {
-    margin-top: 1.5rem !important;
+    margin-top: 0.65rem !important;
     justify-content: center;
   }
 }

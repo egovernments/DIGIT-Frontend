@@ -33,7 +33,7 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
             width <= 1366 ||
             (height <= 768 && window.devicePixelRatio > 1.0)
           ) {
-            return "-0.1rem";
+            return "-1.5rem";
           }
           // Large screens
           return "-2rem";
