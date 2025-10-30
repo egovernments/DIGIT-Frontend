@@ -1,4 +1,4 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useMemo, useCallback, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useLocation, useHistory } from "react-router-dom";
 import { Card, LabelFieldPair, Dropdown, CardText, HeaderComponent, TextInput, Button, Loader } from "@egovernments/digit-ui-components";
@@ -13,39 +13,57 @@ const PaymentSetUpPage = () => {
   const [selectedCampaign, setSelectedCampaign] = useState(null);
   const [billingCycle, setBillingCycle] = useState(null);
   const [customDays, setCustomDays] = useState("");
+  const [projectOptions, setProjectOptions] = useState([]);
+
+  const [shouldFetchSkills, setShouldFetchSkills] = useState(false);
 
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const BillingCycle = "BillingCycle";
   const CampaignTypeskills = "CampaignTypeskills";
 
-  const CampaignSearchCri = {
-    url: `/project-factory/v1/project-type/search`,
-    body: {
-      CampaignDetails: {
-        tenantId: "dev",
-        status: ["creating", "created"],
-        isLikeSearch: true,
-        isOverrideDatesFromProject: true,
-        createdBy: "cfacf16d-2544-4285-9235-3bd29a547186",
-        campaignsIncludeDates: false,
-        startDate: 1761849000000,
-        pagination: {
-          sortBy: "createdTime",
-          sortOrder: "desc",
-          limit: 10,
-          offset: 0,
+  const CampaignSearchCri = useMemo(
+    () => ({
+      url: `/project-factory/v1/project-type/search`,
+      body: {
+        CampaignDetails: {
+          tenantId,
+          status: ["creating", "created"],
+          isLikeSearch: true,
+          isOverrideDatesFromProject: true,
+          createdBy: "cfacf16d-2544-4285-9235-3bd29a547186",
+          campaignsIncludeDates: false,
+          startDate: 1761849000000,
+          pagination: {
+            sortBy: "createdTime",
+            sortOrder: "desc",
+            limit: 10,
+            offset: 0,
+          },
         },
       },
-    },
-    config: {
-    //  / enabled: project ? true : false,
-      select: (data) => {
-        return data;
+      config: {
+        enabled: true,
+        select: (data) => data,
       },
-    },
-  };
+    }),
+    [tenantId]
+  );
 
   const { isLoading: isCampaignLoading, data: CampaignData } = Digit.Hooks.useCustomAPIHook(CampaignSearchCri);
+
+  useEffect(() => {
+    if (CampaignData?.CampaignDetails?.length > 0) {
+      const mappedProjects = CampaignData.CampaignDetails.map((item) => ({
+        code: item?.id,
+        name: item?.campaignName,
+        projectType: item?.projectType,
+        projectId: item?.projectId,
+      }));
+      setProjectOptions(mappedProjects);
+    } else {
+      setProjectOptions([]);
+    }
+  }, [CampaignData]);
 
   const { data: BillingCycles, isLoading: loadingBilling } = Digit.Hooks.useCustomMDMS(
     tenantId,
@@ -59,12 +77,30 @@ const PaymentSetUpPage = () => {
     },
     { schemaCode: `${HCM_BILLING_CONFIG_PAYMENT_SETUP}.BillingCycle` }
   );
-  //campaignType
+
+  // CRITICAL: Memoize the projectType to prevent infinite loops
+  const selectedProjectType = useMemo(() => {
+    debugger
+    return selectedCampaign?.projectType || null;
+  }, [selectedCampaign?.projectType]);
+
+  // CRITICAL: Memoize the MDMS query array to maintain stable reference
+  const skillsMdmsQuery = useMemo(() => {
+    if (!selectedProjectType) return [];
+    return [{ 
+      name: CampaignTypeskills, 
+      filter: `[?(@.campaignType=='${selectedProjectType}')]` 
+    }];
+  }, [selectedProjectType, CampaignTypeskills]);
+
+  // Hook always runs but enabled flag controls API call
+  // shouldFetchSkills ensures no initial call until user selects dropdown
   const { data: SkillsData, isLoading: loadingSkills } = Digit.Hooks.useCustomMDMS(
     tenantId,
     HCM_BILLING_CONFIG_PAYMENT_SETUP,
-    [{ name: CampaignTypeskills, filter: `[?(@.campaignType=='${"IRS-mz"}')]` }],
+    skillsMdmsQuery,
     {
+      enabled: shouldFetchSkills && !!selectedProjectType, // Dual condition prevents initial call
       select: (MdmsRes) => {
         return MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.CampaignTypeskills || [];
       },
@@ -84,28 +120,32 @@ const PaymentSetUpPage = () => {
     }));
   }, [BillingCycles]);
 
-  // Memoize campaign options from skills data
+  // Memoize campaign options
   const campaignOptions = useMemo(() => {
-    if (!SkillsData || SkillsData.length === 0) {
-      return [];
-    }
-    return SkillsData.map((item) => ({
-      code: item.campaignType,
-      name: item.campaignType,
-    }));
-  }, [SkillsData]);
+    return projectOptions;
+  }, [projectOptions]);
 
-  // Get selected campaign's skills and rate breakup schema
+  // Get selected campaign's skills data
   const selectedCampaignData = useMemo(() => {
-    if (!selectedCampaign || !SkillsData) {
+    if (!selectedCampaign || !SkillsData || SkillsData.length === 0) {
       return null;
     }
-    return SkillsData.find((item) => item.campaignType === selectedCampaign.code);
+    
+    // Find the matching skills data for the selected campaign type
+    const matchingSkills = SkillsData.find(
+      skill => skill.campaignType === selectedCampaign.projectType
+    );
+    
+    return matchingSkills || null;
   }, [selectedCampaign, SkillsData]);
 
   // Memoized callback for campaign selection
   const handleCampaignSelect = useCallback((value) => {
     setSelectedCampaign(value);
+    // Enable API calls only after first dropdown selection
+    if (value) {
+      setShouldFetchSkills(true);
+    }
   }, []);
 
   // Memoized callback for billing cycle selection
@@ -156,7 +196,7 @@ const PaymentSetUpPage = () => {
   );
 
   // Show loading state
-  if (loadingBilling || loadingSkills) {
+  if (loadingBilling || isCampaignLoading) {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
@@ -173,7 +213,7 @@ const PaymentSetUpPage = () => {
             style={{ width: "100%" }}
             t={t}
             option={campaignOptions}
-            optionKey="code"
+            optionKey="name"
             selected={selectedCampaign}
             select={handleCampaignSelect}
           />
@@ -211,10 +251,23 @@ const PaymentSetUpPage = () => {
       <Card>
         <HeaderComponent>{t("Setup role wages")}</HeaderComponent>
         <CardText>{t("for each role for a campaign. Workers will be paid based on the number of days worked.")}</CardText>
-        {selectedCampaignData ? (
-          <RoleWageTable skills={selectedCampaignData.skills} rateBreakupSchema={selectedCampaignData.rateBreakupSchema} />
+        {loadingSkills ? (
+          <div style={{ padding: "1rem", textAlign: "center" }}>
+            <Loader />
+          </div>
+        ) : selectedCampaignData ? (
+          <RoleWageTable 
+            skills={selectedCampaignData.skills} 
+            rateBreakupSchema={selectedCampaignData.rateBreakupSchema} 
+          />
+        ) : selectedCampaign ? (
+          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
+            {t("No skills data available for this campaign type")}
+          </div>
         ) : (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("Please select a campaign to view roles and wages")}</div>
+          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
+            {t("Please select a campaign to view roles and wages")}
+          </div>
         )}
       </Card>
 
@@ -235,3 +288,6 @@ const PaymentSetUpPage = () => {
 };
 
 export default PaymentSetUpPage;
+
+
+
