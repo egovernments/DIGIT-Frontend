@@ -1,0 +1,104 @@
+[
+  {
+    "key": 7,
+    "code": "isPregnant",
+    "i18nKey": "CAMPAIGN_ISPREGNANT_LABEL",
+    "projectTypes": [
+      "NTD1",
+      "Oncho",
+      "Schisto"
+    ],
+    "valuesSchema": "HCM-ADMIN-CONSOLE.isPregnant",
+    "allowedOperators": [
+      "EQUAL_TO"
+    ]
+  },
+  {
+    "key": 2,
+    "code": "maxCount",
+    "i18nKey": "CAMPAIGN_MAXCOUNT_BEDNET_INDIVIDUAL_LABEL",
+    "projectTypes": [
+      "Bednets",
+      "DEFAULT"
+    ],
+    "allowedOperators": []
+  },
+  {
+    "key": 6,
+    "code": "gender",
+    "i18nKey": "CAMPAIGN_ATTRIBUTE_GENDER",
+    "projectTypes": [
+      "DEFAULT",
+      "MR-DN"
+    ],
+    "valuesSchema": "common-masters.GenderType",
+    "allowedOperators": [
+      "EQUAL_TO"
+    ]
+  },
+  {
+    "key": 5,
+    "code": "weight",
+    "i18nKey": "CAMPAIGN_ATTRIBUTE_WEIGHT",
+    "projectTypes": [
+      "DEFAULT",
+      "MR-DN",
+      "NTD1",
+      "Oncho",
+      "Schisto"
+    ],
+    "allowedOperators": []
+  },
+  {
+    "key": 4,
+    "code": "height",
+    "i18nKey": "CAMPAIGN_ATTRIBUTE_HEIGHT",
+    "projectTypes": [
+      "DEFAULT",
+      "MR-DN",
+      "NTD1",
+      "Oncho",
+      "Schisto"
+    ]
+  },
+  {
+    "key": 3,
+    "code": "age",
+    "i18nKey": "CAMPAIGN_ATTRIBUTE_AGE",
+    "projectTypes": [
+      "CO-DEL",
+      "MR-DN",
+      "POLIO",
+      "DEFAULT",
+      "NTD1",
+      "Oncho",
+      "Schisto"
+    ],
+    "allowedOperators": []
+  },
+  {
+    "key": 2,
+    "code": "type_of_structure",
+    "i18nKey": "TYPE_OF_STRUCTURE",
+    "projectTypes": [
+      "DEFAULT",
+      "IRS-mz"
+    ],
+    "valuesSchema": "HCM.HOUSE_STRUCTURE_TYPES",
+    "allowedOperators": [
+      "EQUAL_TO"
+    ]
+  },
+  {
+    "key": 1,
+    "code": "memberCount",
+    "i18nKey": "CAMPAIGN_BEDNET_INDIVIDUAL_LABEL",
+    "projectTypes": [
+      "LLIN-mz",
+      "DEFAULT",
+      "LLIN",
+      "Bednets"
+    ],
+    "allowedOperators": []
+  }
+]
