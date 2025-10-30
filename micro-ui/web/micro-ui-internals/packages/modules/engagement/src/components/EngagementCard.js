@@ -7,8 +7,9 @@ const EngagementCard = () => {
 
   const links = [
     {
-      label: t("Engagement"),
+      label: t("ENGAGEMENT"),
       link: "https://sdc-uat.lgpunjab.gov.in/employee/engagement/surveys/inbox",
+      hyperlink:true
     },
   ];
 

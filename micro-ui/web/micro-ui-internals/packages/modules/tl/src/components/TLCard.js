@@ -7,8 +7,13 @@ const TLCard = () => {
 
   const links = [
     {
-      label: t("Trade License"),
+      label: t("TRADE_LICENCE"),
       link: `https://sdc-uat.lgpunjab.gov.in/employee/report/rainmaker-tl/StateLevelTradeLicenseRegistryReport`,
+      hyperlink:true
+    },
+    {
+      label: t("TL_INBOX"),
+      link: `https://sdc-uat.lgpunjab.gov.in/employee/tl/inbox`,
       hyperlink:true
     },
   ];

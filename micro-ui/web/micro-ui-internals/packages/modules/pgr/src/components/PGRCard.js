@@ -11,6 +11,11 @@ const PGRCard = () => {
       link: `https://sdc-uat.lgpunjab.gov.in/employee/create-complaint`,
       hyperlink:true
     },
+    {
+      label: t("PGR_INBOX"),
+      link: `https://sdc-uat.lgpunjab.gov.in/employee/pgr/inbox`,
+      hyperlink:true
+    },
   ];
 
   const propsForModuleCard = {

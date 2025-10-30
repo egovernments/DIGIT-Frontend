@@ -7,8 +7,14 @@ const FirenocCard = () => {
 
   const links = [
     {
-      label: t("Fire NOC"),
+      label: t("FIRENOC"),
       link: "https://sdc-uat.lgpunjab.gov.in/employee/fire-noc/search",
+      hyperlink:true
+    },
+    {
+      label: t("FIRENOC_INBOX"),
+      link: "https://sdc-uat.lgpunjab.gov.in/employee/firenoc/inbox",
+      hyperlink:true
     },
   ];
 

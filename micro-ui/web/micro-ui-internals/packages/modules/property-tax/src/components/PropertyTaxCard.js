@@ -44,9 +44,14 @@ const PTCard = () => {
       label: t("INBOX"),
       link: `/${window?.contextPath}/employee/pt/inbox`,
     },
+    {
+      label: t("INBOX_OLD"),
+      link: `https://sdc-uat.lgpunjab.gov.in/employee/pt/inbox`,
+      hyperlink:true
+    },
   ];
 
-  const PT_CEMP = Digit.UserService.hasAccess(["PT_CEMP"]) || false;
+  // const PT_CEMP = Digit.UserService.hasAccess(["PT_CEMP"]) || false;
   const propsForModuleCard = {
     Icon: "PropertyHouse",
     moduleName: t("ES_TITLE_PROPERTY_TAX"),
@@ -62,7 +67,8 @@ const PTCard = () => {
     //     link: `/digit-ui/employee/property-tax/search`,
     //   },
     // ],
-    links: links.filter((link) => !link?.role || PT_CEMP),
+    // links: links.filter((link) => !link?.role),
+    links:links
   };
 
   return <EmployeeModuleCard {...propsForModuleCard} />;

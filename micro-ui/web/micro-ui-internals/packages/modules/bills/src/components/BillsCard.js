@@ -7,8 +7,9 @@ const BillsCard = () => {
 
   const links = [
     {
-      label: t("Bills Search"),
+      label: t("Bills_Search"),
       link: "https://sdc-uat.lgpunjab.gov.in/employee/bill-amend/search",
+      hyperlink:true
     },
   ];
 

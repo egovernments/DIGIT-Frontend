@@ -7,8 +7,9 @@ const FinanceCard = () => {
 
   const links = [
     {
-      label: t("Finance"),
+      label: t("FINANCE"),
       link: "https://sdc-uat.lgpunjab.gov.in/employee/services/EGF/inbox",
+      hyperlink:true
     },
   ];
 
