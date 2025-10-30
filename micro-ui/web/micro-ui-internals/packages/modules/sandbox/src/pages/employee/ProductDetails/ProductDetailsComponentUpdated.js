@@ -60,7 +60,20 @@ const HeroSection = ({ title, headline, img, t, onExploreClick }) => (
                         marginTop: '1.5rem', 
                         width: '40%',
                         fontSize: '1em',
-                        padding: '10px 14px'
+                        padding: '10px 14px',
+                        background: '#C84C0E',
+                        color: 'white',
+                        border: '1.5px solid #f26623',
+                        borderRadius: '4px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.background = '#B03A08';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.background = '#C84C0E';
                     }}>
                     {t("SB-Explore-Btn")} ➔
                 </button>
@@ -176,10 +189,7 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
             );
         })}
         <button
-
-            onClick=
-
-            {() => {
+            onClick={() => {
                 try {
                     if (config.isExternal) {
                         window.open(config?.action, "_blank");
@@ -190,7 +200,25 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
                     console.error("Error navigating to URL:", error);
                 }
             }}
-            className="cs-button"> {t(config.title)} ➔</button>
+            className="cs-button"
+            style={{
+                background: '#C84C0E',
+                color: 'white',
+                border: '1.5px solid #f26623',
+                borderRadius: '4px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                marginTop: '20px',
+                padding: '8px 12px',
+                fontSize: '15px'
+            }}
+            onMouseEnter={(e) => {
+                e.target.style.background = '#B03A08';
+            }}
+            onMouseLeave={(e) => {
+                e.target.style.background = '#C84C0E';
+            }}> {t(config.title)} ➔</button>
     </div>
 );
 

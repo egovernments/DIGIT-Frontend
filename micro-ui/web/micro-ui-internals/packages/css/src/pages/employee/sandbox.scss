@@ -2087,9 +2087,9 @@ digit-card-text.center {
 
 .cs-button {
   margin-top: 20px;
-  background: #C84C0E;
-  color: white;
-  border: 1.5px solid #f26623;
+  background: #C84C0E !important;
+  color: white !important;
+  border: 1.5px solid #f26623 !important;
   padding: 8px 12px;
   border-radius: 4px;
   font-weight: bold;
@@ -2099,7 +2099,7 @@ digit-card-text.center {
 }
 
 .cs-button:hover {
-  background: #C84C0E;
+  background: #C84C0E !important;
   color: white;
 }
 
