@@ -7,9 +7,19 @@ const WSCard = () => {
 
   const links = [
     {
-      label: t("Water and Sewerage"),
+      label: t("WATER_AND_SEWAGE"),
       link: `https://sdc-uat.lgpunjab.gov.in/employee/wns/search`,
-      hyperlink:true
+      hyperlink: true
+    },
+    {
+      label: t("WS_INBOX"),
+      link: `https://sdc-uat.lgpunjab.gov.in/employee/water-sewage/inbox`,
+      hyperlink: true
+    },
+    {
+      label: t("SW_INBOX"),
+      link: `https://sdc-uat.lgpunjab.gov.in/employee/sewage/inbox`,
+      hyperlink: true
     },
   ];
 
