@@ -1,6 +1,6 @@
 # Changelog
 
-## 2.0.0-rc1 - 2025-10-29
+## 2.0.0-dev-01 - 2025-10-29
 
 #### CSS Compilation Fixes
 1. **Fixed CSS calc() syntax errors**: Resolved missing spaces in calc() functions (e.g., `calc(100%-83px)` → `calc(100% - 83px)`) in employee/index.scss, citizen/HomePageWrapper.scss, and digitv2/components/dateWrapV2.scss
