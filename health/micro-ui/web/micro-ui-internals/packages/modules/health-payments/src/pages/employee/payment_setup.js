@@ -5,6 +5,7 @@ import { Card, LabelFieldPair, Dropdown, CardText, HeaderComponent, TextInput, B
 import { ActionBar } from "@egovernments/digit-ui-react-components";
 import RoleWageTable from "../../components/payment_setup/wageTable";
 
+
 export const HCM_BILLING_CONFIG_PAYMENT_SETUP = "HCM-BILLING-CONFIG-PAYMENT-SETUP";
 
 const PaymentSetUpPage = () => {
@@ -18,57 +19,65 @@ const PaymentSetUpPage = () => {
   const BillingCycle = "BillingCycle";
   const CampaignTypeskills = "CampaignTypeskills";
 
-  const { data: BillingCycles, isLoading: loading } = Digit.Hooks.useCustomMDMS(
+
+  
+  const { data: BillingCycles, isLoading: loadingBilling } = Digit.Hooks.useCustomMDMS(
     tenantId,
     HCM_BILLING_CONFIG_PAYMENT_SETUP,
     [{ name: BillingCycle }],
     {
       select: (MdmsRes) => {
         const billingCycles = MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.BillingCycle || [];
-        // Sort by order (ascending)
         return billingCycles.sort((a, b) => a.order - b.order);
       },
     },
     { schemaCode: `${HCM_BILLING_CONFIG_PAYMENT_SETUP}.BillingCycle` }
   );
-
-  // based on the campaign selection, need to call mdms to fetch the skillls types
-
-  const { data: SkillsData, isLoading: SkillLoading } = Digit.Hooks.useCustomMDMS(
+//campaignType
+  const { data: SkillsData, isLoading: loadingSkills } = Digit.Hooks.useCustomMDMS(
     tenantId,
     HCM_BILLING_CONFIG_PAYMENT_SETUP,
-    [{ name: CampaignTypeskills }],
+    [{ name: CampaignTypeskills,
+      filter: `[?(@.campaignType=='${"IRS-mz"}')]`
+     }],
     {
       select: (MdmsRes) => {
-        // const billingCycles = MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.BillingCycle || [];
-        // Sort by order (ascending)
-        return MdmsRes;
+        return MdmsRes?.["HCM-BILLING-CONFIG-PAYMENT-SETUP"]?.CampaignTypeskills || [];
       },
     },
     { schemaCode: `${HCM_BILLING_CONFIG_PAYMENT_SETUP}.CampaignTypeskills` }
   );
 
-
-  console.log(SkillsData)
-
-  // Memoize billing cycle options to prevent unnecessary re-renders
+  // Memoize billing cycle options
   const billingCycleOptions = useMemo(() => {
     if (!BillingCycles || BillingCycles.length === 0) {
       return [];
     }
-
-    // Transform MDMS data to dropdown format
     return BillingCycles.map((cycle) => ({
       code: cycle.code,
-      name: cycle.name || cycle.code, // Fallback to code if name not available
-      ...cycle, // Spread other properties if needed
+      name: cycle.name || cycle.code,
+      ...cycle,
     }));
   }, [BillingCycles]);
 
-  // Memoize campaign options (replace with actual campaign data when available)
+  // Memoize campaign options from skills data
   const campaignOptions = useMemo(() => {
-    return [{ code: "1", name: "USUSU" }];
-  }, []);
+    if (!SkillsData || SkillsData.length === 0) {
+      return [];
+    }
+    return SkillsData.map((item) => ({
+      code: item.campaignType,
+      name: item.campaignType,
+    }));
+  }, [SkillsData]);
+
+  // Get selected campaign's skills and rate breakup schema
+  const selectedCampaignData = useMemo(() => {
+    if (!selectedCampaign || !SkillsData) {
+      return null;
+    }
+    return SkillsData.find((item) => item.campaignType === selectedCampaign.code);
+  }, [selectedCampaign, SkillsData]);
 
   // Memoized callback for campaign selection
   const handleCampaignSelect = useCallback((value) => {
@@ -78,7 +87,6 @@ const PaymentSetUpPage = () => {
   // Memoized callback for billing cycle selection
   const handleBillingCycleSelect = useCallback((value) => {
     setBillingCycle(value);
-    // Clear custom days if not custom billing cycle
     if (value?.code !== "CUSTOM") {
       setCustomDays("");
     }
@@ -87,7 +95,6 @@ const PaymentSetUpPage = () => {
   // Memoized callback for custom days input
   const handleCustomDaysChange = useCallback((event) => {
     const value = event.target.value;
-    // Only allow numbers
     if (value === "" || /^\d+$/.test(value)) {
       setCustomDays(value);
     }
@@ -99,6 +106,7 @@ const PaymentSetUpPage = () => {
       selectedCampaign,
       billingCycle,
       customDays,
+      campaignData: selectedCampaignData,
     });
 
     history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
@@ -111,7 +119,7 @@ const PaymentSetUpPage = () => {
       backlink: `/${window.contextPath}/employee`,
       showFooter: false,
     });
-  }, [selectedCampaign, billingCycle, customDays, history, t]);
+  }, [selectedCampaign, billingCycle, customDays, selectedCampaignData, history, t]);
 
   const renderLabelPair = useCallback(
     (heading, content) => (
@@ -124,7 +132,7 @@ const PaymentSetUpPage = () => {
   );
 
   // Show loading state
-  if (loading) {
+  if (loadingBilling || loadingSkills) {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
   }
 
@@ -157,7 +165,7 @@ const PaymentSetUpPage = () => {
             optionKey="code"
             selected={billingCycle}
             select={handleBillingCycleSelect}
-            disabled={loading || billingCycleOptions.length === 0}
+            disabled={loadingBilling || billingCycleOptions.length === 0}
           />
         )}
 
@@ -179,7 +187,16 @@ const PaymentSetUpPage = () => {
       <Card>
         <HeaderComponent>{t("Setup role wages")}</HeaderComponent>
         <CardText>{t("for each role for a campaign. Workers will be paid based on the number of days worked.")}</CardText>
-        <RoleWageTable />
+        {selectedCampaignData ? (
+          <RoleWageTable 
+            skills={selectedCampaignData.skills} 
+            rateBreakupSchema={selectedCampaignData.rateBreakupSchema}
+          />
+        ) : (
+          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
+            {t("Please select a campaign to view roles and wages")}
+          </div>
+        )}
       </Card>
 
       <ActionBar className="mc_back">
