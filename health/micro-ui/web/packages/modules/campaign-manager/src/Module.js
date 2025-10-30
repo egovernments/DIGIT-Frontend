@@ -71,6 +71,11 @@ import PanelCardTemplate from "./pages/employee/NewAppConfiguration/components/P
 import SearchBar from "./pages/employee/NewAppConfiguration/components/SearchBar";
 import SwitchTemplate from "./pages/employee/NewAppConfiguration/components/SwitchTemplate";
 import TagTemplate from "./pages/employee/NewAppConfiguration/components/TagTemplate";
+import RowTemplate from "./pages/employee/NewAppConfiguration/components/RowTemplate";
+import ColumnTemplate from "./pages/employee/NewAppConfiguration/components/ColumnTemplate";
+import ListViewTemplate from "./pages/employee/NewAppConfiguration/components/ListViewTemplate";
+import TextTemplate from "./pages/employee/NewAppConfiguration/components/TextTemplate";
+import TableTemplate from "./pages/employee/NewAppConfiguration/components/TableTemplate";
 
 /**
  * MDMS Module name
@@ -208,11 +213,16 @@ const componentsToRegister = {
   ButtonTemplate,
   CardTemplate,
   Filter,
-  InfoCardTemplate,
-  PanelCardTemplate,
+  InfoCard: InfoCardTemplate,
+  PanelCard: PanelCardTemplate,
   SearchBar,
-  SwitchTemplate,
-  TagTemplate,
+  Switch: SwitchTemplate,
+  Tag: TagTemplate,
+  Row: RowTemplate,
+  Column: ColumnTemplate,
+  ListView: ListViewTemplate,
+  TextTemplate: TextTemplate,
+  TableTemplate: TableTemplate,
 };
 
 const overrideHooks = () => {

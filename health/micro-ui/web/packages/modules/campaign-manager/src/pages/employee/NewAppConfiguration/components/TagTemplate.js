@@ -1,15 +1,35 @@
 import React from "react";
 import { Tag } from "@egovernments/digit-ui-components";
-const TagTemplate = ({ field, t, fieldTypeConfig }) => {
-  const tagConfig = fieldTypeConfig?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "tag");
-  const tagTypes = tagConfig?.properties?.find((p) => p.code === "tagType")?.options || ["monochrome"];
-  const tagType = field?.additionalProps?.tagType || tagTypes[0];
+import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHelpers";
+
+const TagTemplate = ({ field, t, fieldTypeMasterData }) => {
+  // Get tagType from field with fallback to default from master config
+  const tagType = getFieldPropertyValue(field, "tagType", fieldTypeMasterData);
+  
+  // Get available tag types from master config
+  const availableTagTypes = getPropertyOptions(field?.format, "tagType", fieldTypeMasterData);
+  
+  console.log("TagTemplate rendering:", { 
+    fieldName: field.fieldName, 
+    tagType,
+    availableTagTypes,
+    value: field?.value
+  });
+
+  // Map tagType to variant for the Tag component
   const variantMap = {
     success: "success",
     error: "error",
     warning: "warning",
     monochrome: "default",
   };
-  return <Tag variant={variantMap[tagType] || "default"} label={field?.value || "Tag"} />;
+
+  return (
+    <Tag 
+      variant={variantMap[tagType] || "default"} 
+      label={field?.value || "Tag"} 
+    />
+  );
 };
+
 export default TagTemplate;

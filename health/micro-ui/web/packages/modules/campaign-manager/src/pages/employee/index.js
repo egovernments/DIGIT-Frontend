@@ -348,7 +348,6 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
-          <Route path={`app-configuration-redesign`} element={<AppConfigurationTabLayer />} />
           <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper />} />
           <Route
             path={`create-campaign`}

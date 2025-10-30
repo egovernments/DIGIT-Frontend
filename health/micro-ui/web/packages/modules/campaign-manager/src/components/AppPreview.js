@@ -21,7 +21,7 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                   ?.map((field, fieldIndex) => {
                     const isSelected =
                       selectedField &&
-                      ((selectedField.jsonPath && selectedField.jsonPath === field.jsonPath) ||
+                      ((selectedField.fieldName && selectedField.fieldName === field.fieldName) ||
                         (selectedField.id && selectedField.id === field.id));
 
                     return (

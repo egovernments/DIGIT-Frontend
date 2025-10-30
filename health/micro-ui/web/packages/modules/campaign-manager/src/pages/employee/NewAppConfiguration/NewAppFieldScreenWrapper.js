@@ -108,8 +108,8 @@ function NewAppFieldScreenWrapper() {
   );
 
   const handleHideField = useCallback(
-    (fieldIndex, cardIndex) => {
-      dispatch(hideField({ fieldIndex, cardIndex }));
+    (fieldName, cardIndex) => {
+      dispatch(hideField({ fieldName, cardIndex }));
     },
     [dispatch]
   );
@@ -131,6 +131,32 @@ function NewAppFieldScreenWrapper() {
   const handleAddSection = useCallback(() => {
     dispatch(addSection());
   }, [dispatch]);
+
+  const extractTemplateFields = (node) => {
+    if (!node) return [];
+
+    // If it's an array, flatten out recursively
+    if (Array.isArray(node)) {
+      return node.flatMap(extractTemplateFields);
+    }
+
+    // If it’s a template (like your fields), include it and also look inside for nested templates
+    if (typeof node === "object" && node.type === "template") {
+      return [
+        node,
+        ...extractTemplateFields(node.child),
+        ...extractTemplateFields(node.children),
+      ];
+    }
+
+    // If it has nested objects, scan through them for templates
+    if (typeof node === "object") {
+      return Object.values(node).flatMap(extractTemplateFields);
+    }
+
+    return [];
+  };
+
 
   if (!currentCard) {
     return (
@@ -174,19 +200,23 @@ function NewAppFieldScreenWrapper() {
         <div> {t("APPCONFIG_SUBHEAD_FIELDS")}</div>
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
-      {currentCard?.body?.map(({ fields }, index, card) => {
+      {currentCard?.body?.map((section, index, card) => {
+        const fields =
+          currentCard?.type === "template"
+            ? extractTemplateFields(section)
+            : section?.fields || [];
         return (
           <Fragment key={`card-${index}`}>
-            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag, ...rest }, i, c) => {
+            {fields?.map(({ type, label, active, required, Mandatory, deleteFlag,fieldName, ...rest }, i, c) => {
               return (
                 <NewDraggableField
                   type={type}
                   label={label}
                   active={active}
                   required={required}
-                  isDelete={deleteFlag === false ? false : true}
+                  isDelete={deleteFlag === true ? true : false}
                   onDelete={() => handleDeleteField(i, index)}
-                  onHide={() => handleHideField(i, index)}
+                  onHide={() => handleHideField(fieldName, index)}
                   onSelectField={() => handleSelectField(c[i], currentCard, card[index], index, i)}
                   config={c[i]}
                   Mandatory={Mandatory}
@@ -195,13 +225,13 @@ function NewAppFieldScreenWrapper() {
                   fieldIndex={i}
                   cardIndex={index}
                   indexOfCard={index}
-                  moveField={moveField}
+                  moveField={type !== "template" ? moveField : null}
                   key={`field-${i}`}
                   fields={c}
                 />
               );
             })}
-            <Button
+            {currentCard?.type !== "template" && (<Button
               className={"app-config-drawer-button"}
               type={"button"}
               size={"medium"}
@@ -209,7 +239,7 @@ function NewAppFieldScreenWrapper() {
               variation={"teritiary"}
               label={t("ADD_FIELD")}
               onClick={() => handleAddField(currentCard, card[index])}
-            />
+            />)}
           </Fragment>
         );
       })}

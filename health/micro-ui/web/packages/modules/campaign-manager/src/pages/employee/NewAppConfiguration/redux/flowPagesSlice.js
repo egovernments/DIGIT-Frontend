@@ -23,11 +23,19 @@ export const fetchFlowPages = createAsyncThunk(
       if (response?.mdms && response.mdms.length > 0) {
         // Extract all flows from MDMS response
         const flows = response.mdms?.[0]?.data?.flows || [];
-        
+
         // Find the REGISTRATION flow and return its pages
         const registrationFlow = flows.find((flow) => flow?.id === flowId);
-        const pages = registrationFlow?.pages || [];
-        
+        const pages = registrationFlow?.pages.map((page) => {
+          const name = page?.name?.includes('.')
+            ? page.name.split('.').pop() // take the part after the dot
+            : page?.name;
+          return {
+            ...page,
+            name: name
+          };
+        }) || [];
+
         return pages;
       }
 

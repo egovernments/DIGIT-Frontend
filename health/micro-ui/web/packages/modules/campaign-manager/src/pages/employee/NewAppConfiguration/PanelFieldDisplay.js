@@ -18,7 +18,7 @@ const ToggleVisibilityControl = ({ config, onToggle }) => {
       }}
       className="appConfigLabelField-toggleVisibility"
     >
-      <Switch label="" isCheckedInitially={config?.hidden === false} />
+      <Switch label="" isCheckedInitially={config?.hidden !== true} />
     </div>
   );
 };
@@ -74,7 +74,7 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
           </div>
           <Tag
             icon=""
-            label={t(getFieldTypeFromMasterData(rest?.field || { type, format: rest?.format }, fieldTypeMaster.fieldTypeMappingConfig))}
+            label={t(getFieldTypeFromMasterData(config || { type, format: rest?.format, fieldName: rest?.fieldName }, fieldTypeMaster.fieldTypeMappingConfig))}
             className="app-config-field-tag"
             labelStyle={{}}
             showIcon={false}

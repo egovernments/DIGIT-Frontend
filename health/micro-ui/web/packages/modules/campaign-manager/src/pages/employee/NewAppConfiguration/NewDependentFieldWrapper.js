@@ -83,7 +83,7 @@ function NewDependentFieldWrapper({ t }) {
     const masterName = "AppFlowConfig";
 
     const flowId = currentData?.flow || "REGISTRATION";
-    const campaignNumber = currentData?.project || "";
+    const campaignNumber = currentData?.project || ""; 
     const currentPageName = currentData?.page;
 
     // Fetch flows on mount or when campaign changes

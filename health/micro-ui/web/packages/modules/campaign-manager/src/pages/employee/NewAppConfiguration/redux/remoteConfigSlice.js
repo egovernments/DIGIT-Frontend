@@ -95,17 +95,41 @@ const remoteConfigSlice = createSlice({
       }
     },
     hideField(state, action) {
-      const { fieldIndex, cardIndex } = action.payload;
-      if (
-        state.currentData &&
-        state.currentData.body &&
-        state.currentData.body[cardIndex] &&
-        state.currentData.body[cardIndex].fields[fieldIndex]
-      ) {
-        state.currentData.body[cardIndex].fields[fieldIndex].hidden = !state.currentData.body[cardIndex].fields[fieldIndex].hidden;
-        // Ensure reactivity by creating new reference
-        state.currentData = { ...state.currentData };
+      const { fieldName, cardIndex } = action.payload;
+      const card = state.currentData?.body?.[cardIndex];
+      if (!card) return;
+
+      const toggleByFieldName = (node) => {
+        if (!node) return false;
+
+        if (Array.isArray(node)) {
+          for (const item of node) {
+            if (toggleByFieldName(item)) return true;
+          }
+          return false;
+        }
+
+        if (typeof node === "object") {
+          if (node.fieldName === fieldName) {
+            node.hidden = !node.hidden;
+            return true;
+          }
+
+          if (node.child && toggleByFieldName(node.child)) return true;
+          if (node.children && toggleByFieldName(node.children)) return true;
+        }
+
+        return false;
+      };
+
+      if (Array.isArray(card.fields)) {
+        const field = card.fields.find((f) => f.fieldName === fieldName);
+        if (field) field.hidden = !field.hidden;
+      } else if (card.type === "template") {
+        toggleByFieldName(card);
       }
+
+      state.currentData = { ...state.currentData };
     },
     reorderFields(state, action) {
       const { cardIndex, fromIndex, toIndex } = action.payload;
@@ -207,6 +231,15 @@ const remoteConfigSlice = createSlice({
         state.currentData = { ...state.currentData };
       }
     },
+    // Navigation logic actions
+    updatePageConditionalNav(state, action) {
+      const { data } = action.payload;
+      if (state.currentData) {
+        state.currentData.conditionalNavigateTo = data;
+        // Ensure reactivity by creating new reference
+        state.currentData = { ...state.currentData };
+      }
+    },
   },
 });
 
@@ -232,5 +265,6 @@ export const {
   updateActionLabel,
   updateHeaderProperty,
   handleShowAddFieldPopup,
+  updatePageConditionalNav,
 } = remoteConfigSlice.actions;
 export default remoteConfigSlice.reducer;
