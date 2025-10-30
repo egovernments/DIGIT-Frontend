@@ -46,14 +46,6 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
   const fieldTypeMasterData = byName?.fieldTypeMappingConfig || [];
 
-  console.log("NewLayoutRenderer rendering with:", {
-    data,
-    selectedField,
-    fieldTypeMasterData,
-    bodyLength: data?.body?.length,
-    footerLength: data?.footer?.length
-  });
-
   return (
     <MobileBezelFrame>
       <div className="mobile-bezel-child-container" style={{

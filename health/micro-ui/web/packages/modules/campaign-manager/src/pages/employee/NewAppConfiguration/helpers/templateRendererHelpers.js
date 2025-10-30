@@ -96,18 +96,20 @@ export const renderTemplateComponent = (
   const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
 
   return (
-    <div key={uniqueKey} onClick={handleClick} style={wrapperStyle}>
-      <FieldV1
-        type={fieldType}
-        label={t(field?.label)}
-        value={field?.value || ""}
-        placeholder={t(field?.innerLabel) || ""}
-        onChange={() => {}}
-        disabled={field?.readOnly || false}
-        populators={{
-          fieldPairClassName: "app-preview-field-pair",
-        }}
-      />
+        <div
+      key={uniqueKey}
+      onClick={handleClick}
+      style={{
+        ...wrapperStyle,
+        background: "#fafafa",
+        color: "#999",
+        fontStyle: "italic",
+        border: "1px dashed #ccc",
+        textAlign: "center",
+        padding: "8px",
+      }}
+    >
+      {`${fieldType} Component will be available soon...`}
     </div>
   );
 };
