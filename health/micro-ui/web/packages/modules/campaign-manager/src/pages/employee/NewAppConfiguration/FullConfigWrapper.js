@@ -34,6 +34,7 @@ const FullConfigWrapper = () => {
               schemaCode: "HCM-ADMIN-CONSOLE.AppFlowConfig",
               filters: {
                 project: campaignNumber,
+                name: flowModule,
               },
               isActive: true,
             },
