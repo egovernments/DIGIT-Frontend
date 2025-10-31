@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.4.2 - 2025-10-31
+
+#### Admin console
+
+- **BUG FIXES - Update Campaign**  
+  Bug Fixes related to Update campaign flow.
+
 ## 0.4.1 - 2025-10-29
 
 #### Admin console

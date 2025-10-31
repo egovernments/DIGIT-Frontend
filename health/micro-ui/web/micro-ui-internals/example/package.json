@@ -16,7 +16,7 @@
     "@egovernments/digit-ui-module-utilities": "1.1.0",
     "@egovernments/digit-ui-react-components": "1.9.0",
     "@egovernments/digit-ui-module-hcmworkbench": "0.1.5",
-    "@egovernments/digit-ui-module-campaign-manager": "0.4.1",
+    "@egovernments/digit-ui-module-campaign-manager": "0.4.2",
     "@egovernments/digit-ui-module-microplan": "0.2.0",
     "@egovernments/digit-ui-module-health-pgr": "0.0.2",
     "@egovernments/digit-ui-module-health-dss": "0.0.1",
