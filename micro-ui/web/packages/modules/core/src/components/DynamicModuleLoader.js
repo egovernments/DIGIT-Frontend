@@ -12,8 +12,8 @@ const DynamicModuleLoader = ({
   stateCode, 
   userType, 
   tenants, 
-  maxRetries = 3, 
-  retryDelay = 1000,
+  maxRetries = 5, 
+  retryDelay = 1500,
   initialDelay = 100 // Initial delay before first check to allow modules to register
 }) => {
   const [moduleState, setModuleState] = useState({

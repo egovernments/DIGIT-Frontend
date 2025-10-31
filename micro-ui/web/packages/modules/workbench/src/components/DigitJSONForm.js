@@ -397,7 +397,7 @@ const DigitJSONForm = ({
   const formDisabled = screenType === "view" ? true : disabled;
 
   const handleConfirm = () => {
-    Object.assign(formData, updatedData); 
+    Object.assign(formData, internalFormData); 
     setShowPopUp(false); 
   };
 
@@ -527,7 +527,7 @@ const DigitJSONForm = ({
             <JSONViewer 
             formData={formData} 
             screenType={screenType} 
-            onDataUpdate={setUpdatedData}
+            onDataUpdate={setInternalFormData}
             />
           </PopUp>
         )}
