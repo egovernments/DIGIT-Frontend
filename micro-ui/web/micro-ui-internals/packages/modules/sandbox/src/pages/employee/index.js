@@ -21,8 +21,11 @@ import RoleLanding from "./RoleLanding";
 const bredCrumbStyle = { maxWidth: "min-content" };
 
 const ProjectBreadCrumb = ({ location, defaultPath }) => {
-  
+
   const { t } = useTranslation();
+
+  // Check if we're on productPage to apply custom styling
+  const isProductPage = location.pathname.includes("/productPage");
   const searchParams = new URLSearchParams(location.search);
   const module = location.pathname.split('/').pop();
   const pathVar = location.pathname.replace(defaultPath + "/", "").split("?")?.[0];
@@ -58,7 +61,15 @@ const ProjectBreadCrumb = ({ location, defaultPath }) => {
     },
   ];
 
-  return <BreadCrumb crumbs={crumbs} spanStyle={bredCrumbStyle} />;
+  const breadcrumbWrapperStyle = isProductPage
+    ? { paddingLeft: "2rem" }
+    : {};
+
+  return (
+    <div style={breadcrumbWrapperStyle}>
+      <BreadCrumb className="product-page-breadcrumb" crumbs={crumbs} spanStyle={bredCrumbStyle} />
+    </div>
+  );
 };
 
 
@@ -68,8 +79,8 @@ const App = ({ path, stateCode, userType, tenants }) => {
 
   const hideClass =
     location.pathname.includes(`${path}/productDetailsPage/`);
-  
-  const hideBreadcrumb = location.pathname.includes(`${path}/landing`);
+
+  const hideBreadcrumb = location.pathname.includes(`${path}/landing`) || location.pathname.includes(`${path}/productPage`);
     
   return (
     <div className="employee-ui">
