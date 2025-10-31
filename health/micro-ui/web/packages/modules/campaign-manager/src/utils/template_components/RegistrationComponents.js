@@ -1,4 +1,14 @@
-import { ResultsDataTable, Button, Switch, FieldV1, CustomSVG, SummaryCardFieldPair, PanelCard, PopUp, SVG } from "@egovernments/digit-ui-components";
+import {
+  ResultsDataTable,
+  Button,
+  Switch,
+  FieldV1,
+  CustomSVG,
+  SummaryCardFieldPair,
+  PanelCard,
+  PopUp,
+  SVG,
+} from "@egovernments/digit-ui-components";
 import React, { useEffect, useMemo, useState } from "react";
 import { registerComponent } from "./RegistrationRegistry";
 import RenderSelectionField from "../../components/RenderSelectionField";
@@ -89,7 +99,14 @@ const Toggle = (props) => <Switch label={props.t(props.field?.label) || "LABEL"}
 // household
 
 const EditIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg" style={{ minWidth: "16px", minHeight: "16px" }}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 18 18"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    style={{ minWidth: "16px", minHeight: "16px" }}
+  >
     <path
       d="M9.126 5.12579L11.063 3.18879L14.81 6.93579L12.873 8.87379L9.126 5.12579ZM17.71 2.63079L15.37 0.290793C15.1826 0.104542 14.9292 0 14.665 0C14.4008 0 14.1474 0.104542 13.96 0.290793L12.13 2.12079L15.88 5.87079L17.71 4.00079C17.8844 3.81533 17.9815 3.57035 17.9815 3.31579C17.9815 3.06123 17.8844 2.81625 17.71 2.63079ZM5.63 8.63079L0 14.2508V18.0008H3.75L9.38 12.3808L12.873 8.87379L9.126 5.12579L5.63 8.63079Z"
       fill="#F47738"
@@ -205,7 +222,7 @@ const HouseholdOverViewMemberCard = (props) => {
           alignment={"flex-end"}
           label={props.t(props.editIndividual?.label || "")}
           hidden={props.editIndividual?.hidden}
-          onClick={() => console.log("Edit Individual")}
+          onClick={() => {}}
         />
       </div>
 
@@ -369,11 +386,23 @@ export const HouseHoldOverviewSection = ({ components = [], t }) => {
 
         {detailsCard?.hidden != true && <DetailsCardSection t={t} field={detailsCard} />}
 
-        <HouseholdOverViewMemberCard name="Joseph Sergio" editIndividual={editIndividual} primaryBtn={primaryBtn} secondaryBtn={secondaryBtn} t={t} />
+        <HouseholdOverViewMemberCard
+          name="Joseph Sergio"
+          editIndividual={editIndividual}
+          primaryBtn={primaryBtn}
+          secondaryBtn={secondaryBtn}
+          t={t}
+        />
 
         {addMember && (
           <div style={{ marginTop: "16px" }}>
-            <TextButton addMember={true} alignment="center" hidden={addMember?.hidden} label={t(addMember?.label || "")} onClick={() => {}} />
+            <TextButton
+              addMember={true}
+              alignment="center"
+              hidden={addMember?.hidden}
+              label={t(addMember?.label || "")}
+              onClick={() => {}}
+            />
           </div>
         )}
       </div>
@@ -597,7 +626,9 @@ const SimpleSearchFilterRow = ({
       <div style={cellStyle}>
         {/* Use currentColor so it won't disappear on white backgrounds */}
         <SVG.Search width={"20px"} height={"20px"} fill={"#C84C0E"} />
-        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>{t?.(searchIcon?.label || "")}</span>
+        <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
+          {t?.(searchIcon?.label || "")}
+        </span>
       </div>
 
       {/* Middle: Filter (full-width inside its cell) */}
@@ -611,7 +642,9 @@ const SimpleSearchFilterRow = ({
       <div style={cellStyle}>
         <SVG.ArrowDownward width={"20px"} height={"20px"} fill={"#C84C0E"} />
         {sortIcon?.label ? (
-          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>{t?.(sortIcon?.label || "")}</span>
+          <span style={{ whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis", color: "#C84C0E" }}>
+            {t?.(sortIcon?.label || "")}
+          </span>
         ) : null}
       </div>
     </div>

@@ -15,7 +15,7 @@ import { getPageFromConfig } from "./utils/configUtils";
 const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
-  const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
+  const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
   const MODULE_CONSTANTS = "HCM-ADMIN-CONSOLE";
   const dispatch = useDispatch();
   const currentLocale = Digit?.SessionStorage.get("locale") || Digit?.SessionStorage.get("initData")?.selectedLanguage;
@@ -34,7 +34,6 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
-  console.log("localizationData:", localizationData);
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
 
@@ -63,7 +62,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
       // Make the update call
       const response = await Digit.CustomService.getResponse({
-        url: `/mdms-v2/v2/_update/${MODULE_CONSTANTS}.AppConfigCache`,
+        url: `/${mdmsContext}/v2/_update/${MODULE_CONSTANTS}.AppConfigCache`,
         body: updatePayload,
       });
 
@@ -123,7 +122,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
 
         // Fetch page configuration from MDMS
         const response = await Digit.CustomService.getResponse({
-          url: "/mdms-v2/v2/_search",
+          url: `/${mdmsContext}/v2/_search`,
           body: {
             MdmsCriteria: {
               tenantId: tenantId,

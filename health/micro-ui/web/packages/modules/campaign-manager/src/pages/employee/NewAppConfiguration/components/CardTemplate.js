@@ -6,20 +6,11 @@ import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHe
 const CardTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldClick, data }) => {
   // Get cardType from field.properties or field.additionalProps with fallback to default
   const cardType = getFieldPropertyValue(field, "cardType", fieldTypeMasterData);
-  
+
   const children = field?.children || [];
-  
+
   // Get available card types from master config (for debugging/validation)
   const availableCardTypes = getPropertyOptions(field?.format, "cardType", fieldTypeMasterData);
-  
-  console.log("CardTemplate rendering:", { 
-    fieldName: field.fieldName, 
-    cardType,
-    availableCardTypes,
-    childrenCount: children.length,
-    fieldProperties: field.properties,
-    fieldAdditionalProps: field.additionalProps
-  });
 
   return (
     <Card
@@ -38,19 +29,10 @@ const CardTemplate = ({ field, t, fieldTypeMasterData, selectedField, onFieldCli
         // Ensure child has proper id
         const childWithId = {
           ...child,
-          id: child.id || child.fieldName || `card-${field.id}-child-${index}`
+          id: child.id || child.fieldName || `card-${field.id}-child-${index}`,
         };
-        
-        return renderTemplateComponent(
-          childWithId, 
-          fieldTypeMasterData, 
-          selectedField, 
-          t, 
-          onFieldClick, 
-          data, 
-          `card-${field.id}`, 
-          index
-        );
+
+        return renderTemplateComponent(childWithId, fieldTypeMasterData, selectedField, t, onFieldClick, data, `card-${field.id}`, index);
       })}
     </Card>
   );

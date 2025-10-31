@@ -1,12 +1,13 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 // Async thunk to fetch all pages in a flow
 export const fetchFlowPages = createAsyncThunk(
   "flowPages/fetch",
   async ({ tenantId, campaignNumber, flowId, moduleName = "HCM-ADMIN-CONSOLE", masterName = "AppFlowConfig" }, { rejectWithValue }) => {
     try {
       const response = await Digit.CustomService.getResponse({
-        url: "/mdms-v2/v2/_search",
+        url: `/${mdmsContext}/v2/_search`,
         body: {
           MdmsCriteria: {
             tenantId: tenantId,

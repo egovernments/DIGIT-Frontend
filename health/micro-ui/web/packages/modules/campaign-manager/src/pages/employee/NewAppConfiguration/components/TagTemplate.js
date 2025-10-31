@@ -5,16 +5,9 @@ import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHe
 const TagTemplate = ({ field, t, fieldTypeMasterData }) => {
   // Get tagType from field with fallback to default from master config
   const tagType = getFieldPropertyValue(field, "tagType", fieldTypeMasterData);
-  
+
   // Get available tag types from master config
   const availableTagTypes = getPropertyOptions(field?.format, "tagType", fieldTypeMasterData);
-  
-  console.log("TagTemplate rendering:", { 
-    fieldName: field.fieldName, 
-    tagType,
-    availableTagTypes,
-    value: field?.value
-  });
 
   // Map tagType to variant for the Tag component
   const variantMap = {
@@ -24,12 +17,7 @@ const TagTemplate = ({ field, t, fieldTypeMasterData }) => {
     monochrome: "default",
   };
 
-  return (
-    <Tag 
-      variant={variantMap[tagType] || "default"} 
-      label={field?.value || "Tag"} 
-    />
-  );
+  return <Tag variant={variantMap[tagType] || "default"} label={field?.value || "Tag"} />;
 };
 
 export default TagTemplate;

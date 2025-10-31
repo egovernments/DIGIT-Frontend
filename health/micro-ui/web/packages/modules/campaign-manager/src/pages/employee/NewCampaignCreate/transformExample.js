@@ -2,16 +2,12 @@
  * Example usage of the MDMS to App Config transformer
  */
 
-import { transformMdmsData, transformMdmsToAppConfig } from './transformMdmsConfig';
+import { transformMdmsData, transformMdmsToAppConfig } from "./transformMdmsConfig";
 
 // Example usage:
 export const useMdmsTransformation = (mdmsData) => {
   // Full transformation with metadata
   const transformedData = transformMdmsData(mdmsData);
-
-  console.log("Transformed App Config:", transformedData.appConfig);
-  console.log("Flow Metadata:", transformedData.flowMetadata);
-  console.log("Initial Page:", transformedData.initialPage);
 
   return transformedData;
 };
@@ -24,13 +20,13 @@ export const getAppConfigOnly = (mdmsData) => {
 // Example: Get config for a specific flow
 export const getFlowConfig = (mdmsData, flowName) => {
   const appConfig = transformMdmsToAppConfig(mdmsData);
-  return appConfig.filter(item => item.flow === flowName);
+  return appConfig.filter((item) => item.flow === flowName);
 };
 
 // Example: Get all pages for a specific flow
 export const getFlowPages = (mdmsData, flowName) => {
   const appConfig = transformMdmsToAppConfig(mdmsData);
-  return appConfig.filter(item => item.flow === flowName);
+  return appConfig.filter((item) => item.flow === flowName);
 };
 
 // Example: Merge transformed config with existing config
@@ -39,11 +35,9 @@ export const mergeWithExistingConfig = (existingConfig, mdmsData) => {
 
   // You can implement custom merge logic here
   // For example, replace existing flows or append new ones
-  const flowsInNew = new Set(newConfig.map(item => item.flow));
+  const flowsInNew = new Set(newConfig.map((item) => item.flow));
 
-  const filteredExisting = existingConfig.filter(
-    item => !flowsInNew.has(item.flow)
-  );
+  const filteredExisting = existingConfig.filter((item) => !flowsInNew.has(item.flow));
 
   return [...filteredExisting, ...newConfig];
 };

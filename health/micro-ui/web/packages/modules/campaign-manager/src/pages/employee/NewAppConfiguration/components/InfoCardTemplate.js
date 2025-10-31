@@ -1,7 +1,6 @@
 import React from "react";
 // import { InfoCard } from "@egovernments/digit-ui-components";
 const InfoCardTemplate = ({ field, t, fieldTypeMasterData }) => {
-  console.log("InfoCardTemplate field:", {field, fieldTypeMasterData});
   const infoConfig = fieldTypeMasterData?.find((item) => item?.metadata?.type === "template" && item?.metadata?.format === "infoCard");
   const infoTypes = infoConfig?.properties?.find((p) => p.code === "infoCardType")?.options || ["info"];
   const infoType = field?.properties?.infoCardType || infoTypes[0];
@@ -12,7 +11,7 @@ const InfoCardTemplate = ({ field, t, fieldTypeMasterData }) => {
     warning: "warning",
   };
   return (
-    <div/>
+    <div />
     // <InfoCard
     //   populators={{
     //     name: field?.fieldName || "infocard",

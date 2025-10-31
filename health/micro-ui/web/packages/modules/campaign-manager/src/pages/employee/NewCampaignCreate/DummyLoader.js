@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { transformMdmsToAppConfig, transformMdmsToFlowConfig } from "./transformMdmsConfig";
 
+const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const DummyLoader = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -33,13 +34,11 @@ const DummyLoader = () => {
 
   useEffect(() => {
     if (mdmsData && mdmsData.length > 0) {
-      console.log("MDMS Data loaded:", mdmsData);
-
       const processData = async () => {
         try {
           // First check if NewFormConfig data already exists
           const searchResponse = await Digit.CustomService.getResponse({
-            url: "/mdms-v2/v2/_search",
+            url: `/${mdmsContext}/v2/_search`,
             body: {
               MdmsCriteria: {
                 tenantId: tenantId,
@@ -56,7 +55,6 @@ const DummyLoader = () => {
 
           // If data already exists, directly navigate
           if (searchResponse?.mdms && searchResponse.mdms.length > 0) {
-            console.log("NewFormConfig data already exists, navigating directly");
             navigate(
               `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign?campaignNumber=${campaignNumber}&flow=${flow}`
             );
@@ -65,12 +63,9 @@ const DummyLoader = () => {
 
           // If no data exists, transform and create
           const appConfig = transformMdmsToAppConfig(mdmsData[0]);
-          console.log("Transformed App Config:", appConfig);
 
           const flowConfig = transformMdmsToFlowConfig(mdmsData[0]);
-          console.log("Transformed Flow Config:", flowConfig);
           // Create MDMS API calls for each config object in parallel
-          debugger;
           const apiCalls = appConfig.map((configData) => {
             const payload = {
               tenantId: tenantId,
@@ -80,7 +75,7 @@ const DummyLoader = () => {
             };
 
             return Digit.CustomService.getResponse({
-              url: "/mdms-v2/v2/_create/HCM-ADMIN-CONSOLE.FormConfig",
+              url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.FormConfig`,
               body: {
                 Mdms: payload,
               },
@@ -101,7 +96,7 @@ const DummyLoader = () => {
           };
 
           const flowConfigApiCall = Digit.CustomService.getResponse({
-            url: "/mdms-v2/v2/_create/HCM-ADMIN-CONSOLE.FormConfig",
+            url: `/${mdmsContext}/v2/_create/HCM-ADMIN-CONSOLE.FormConfig`,
             body: {
               Mdms: flowConfigPayload,
             },
@@ -110,7 +105,6 @@ const DummyLoader = () => {
 
           // Execute all API calls in parallel (appConfig + flowConfig)
           const results = await Promise.all([...apiCalls, flowConfigApiCall]);
-          console.log("MDMS Create API Results:", results);
 
           // Redirect to new-app-configuration after successful API calls
           navigate(

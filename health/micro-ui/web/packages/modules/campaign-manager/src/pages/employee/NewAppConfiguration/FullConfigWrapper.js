@@ -5,6 +5,7 @@ import { Loader, Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import transformMdmsToAppConfig from "./transformers/mdmsToAppConfig";
 
+const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 const FullConfigWrapper = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -26,7 +27,7 @@ const FullConfigWrapper = () => {
       try {
         setIsLoading(true);
         const response = await Digit.CustomService.getResponse({
-          url: "/mdms-v2/v2/_search",
+          url: `/${mdmsContext}/v2/_search`,
           body: {
             MdmsCriteria: {
               tenantId: "mz",
@@ -101,7 +102,7 @@ const FullConfigWrapper = () => {
     try {
       // Step 1: Fetch NewFormConfig data and transform it
       const response = await Digit.CustomService.getResponse({
-        url: "/mdms-v2/v2/_search",
+        url: `/${mdmsContext}/v2/_search`,
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -119,7 +120,7 @@ const FullConfigWrapper = () => {
 
       // Step 2: Search for existing NewApkConfig with campaignNumber and flow
       const appConfigResponse = await Digit.CustomService.getResponse({
-        url: "/mdms-v2/v2/_search",
+        url: `/${mdmsContext}/v2/_search`,
         body: {
           MdmsCriteria: {
             tenantId: tenantId,
@@ -151,7 +152,7 @@ const FullConfigWrapper = () => {
         };
 
         await Digit.CustomService.getResponse({
-          url: "/mdms-v2/v2/_update/HCM-ADMIN-CONSOLE.FormConfig",
+          url: `/${mdmsContext}/v2/_update/HCM-ADMIN-CONSOLE.FormConfig`,
           body: updatePayload,
         });
       } else {

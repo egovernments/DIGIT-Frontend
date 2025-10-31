@@ -1,4 +1,10 @@
-const pollForTemplateGeneration = async (functionToBePolledFor, conditionForTermination, pollInterval = 2500, maxRetries = 20,firstTimeWait=5000) => {
+const pollForTemplateGeneration = async (
+  functionToBePolledFor,
+  conditionForTermination,
+  pollInterval = 2500,
+  maxRetries = 20,
+  firstTimeWait = 5000
+) => {
   let retries = 0; // Initialize the retry counter
   if (!functionToBePolledFor || !conditionForTermination) {
     return null;
@@ -22,7 +28,7 @@ const pollForTemplateGeneration = async (functionToBePolledFor, conditionForTerm
         } else {
           // Increment retries and continue polling after the specified interval
           retries++;
-          setTimeout(poll, retries==1?firstTimeWait:pollInterval);
+          setTimeout(poll, retries == 1 ? firstTimeWait : pollInterval);
         }
       } catch (error) {
         // Handle errors by retrying after the specified interval
@@ -38,7 +44,6 @@ const pollForTemplateGeneration = async (functionToBePolledFor, conditionForTerm
     const timeoutDuration = (maxRetries + 1) * pollInterval;
     setTimeout(() => {
       if (retries < maxRetries) {
-        console.log("Polling timeout: Max retries reached");
         reject(new Error("Polling timeout: Max retries reached"));
       }
     }, timeoutDuration);
@@ -63,7 +68,12 @@ const downloadTemplate = async (hierarchyType, campaignId, tenantId, type) => {
   return downloadResponse?.GeneratedResource;
 };
 
-
-export const callTemplateDownloadByUntilCompleted =async(hierarchyType,campaignId,tenantId,type)=>{
-    await pollForTemplateGeneration(()=>downloadTemplate(hierarchyType,campaignId,tenantId,type),conditionForTermination,5000,10,10000);
-}
+export const callTemplateDownloadByUntilCompleted = async (hierarchyType, campaignId, tenantId, type) => {
+  await pollForTemplateGeneration(
+    () => downloadTemplate(hierarchyType, campaignId, tenantId, type),
+    conditionForTermination,
+    5000,
+    10,
+    10000
+  );
+};

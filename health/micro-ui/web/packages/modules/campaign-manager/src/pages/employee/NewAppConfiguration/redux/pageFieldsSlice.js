@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
+const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
 // Async thunk to fetch page configuration (fields and metadata)
 export const fetchPageFields = createAsyncThunk(
   "pageFields/fetch",
@@ -12,7 +13,7 @@ export const fetchPageFields = createAsyncThunk(
       }
 
       const response = await Digit.CustomService.getResponse({
-        url: "/mdms-v2/v2/_search",
+        url: `/${mdmsContext}/v2/_search`,
         body: {
           MdmsCriteria: {
             tenantId: tenantId,

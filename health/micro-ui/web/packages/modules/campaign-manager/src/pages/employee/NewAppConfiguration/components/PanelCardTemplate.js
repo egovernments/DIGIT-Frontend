@@ -5,17 +5,9 @@ import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHe
 const PanelCardTemplate = ({ field, t, fieldTypeMasterData }) => {
   // Get panelType from field with fallback to default
   const panelType = getFieldPropertyValue(field, "panelType", fieldTypeMasterData);
-  
+
   // Get available panel types from master config
   const availablePanelTypes = getPropertyOptions(field?.format, "panelType", fieldTypeMasterData);
-  
-  console.log("PanelCardTemplate rendering:", { 
-    fieldName: field.fieldName, 
-    panelType,
-    availablePanelTypes,
-    label: field?.label,
-    value: field?.value
-  });
 
   return (
     <PanelCard
