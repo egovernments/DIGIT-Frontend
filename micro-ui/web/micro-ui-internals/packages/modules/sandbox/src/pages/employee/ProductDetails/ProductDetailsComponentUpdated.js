@@ -53,17 +53,17 @@ const HeroSection = ({ title, headline, img, t, onExploreClick }) => (
                         <span key={i} style={{ color: segment.color }}>{segment.text} </span>
                     ))}
                 </p>
-                <button 
-                    className="cs-button" 
+                <button
+                    className="cs-button"
                     onClick={onExploreClick}
-                    style={{ 
-                        marginTop: '1.5rem', 
+                    style={{
+                        marginTop: '1.5rem',
                         width: '40%',
                         fontSize: '1em',
                         padding: '10px 14px',
                         background: '#C84C0E',
                         color: 'white',
-                        border: '1.5px solid #f26623',
+                        border: 'none',
                         borderRadius: '4px',
                         fontWeight: 'bold',
                         cursor: 'pointer',
@@ -204,7 +204,7 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
             style={{
                 background: '#C84C0E',
                 color: 'white',
-                border: '1.5px solid #f26623',
+                border: 'none',
                 borderRadius: '4px',
                 fontWeight: 'bold',
                 cursor: 'pointer',
