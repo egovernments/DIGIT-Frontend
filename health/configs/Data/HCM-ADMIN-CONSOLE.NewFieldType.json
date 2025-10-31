@@ -1,0 +1,540 @@
+[
+  {
+    "id": "196f2a50-6a56-4161-a45a-9d170fd5c214",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "qrscanner",
+    "data": {
+      "type": "qrscanner",
+      "order": 22,
+      "metadata": {
+        "type": "button",
+        "format": "button"
+      },
+      "component": "ButtonTemplate",
+      "fieldType": "Scanner"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+      "createdTime": 1760353169693,
+      "lastModifiedTime": 1760553844423
+    }
+  },
+  {
+    "id": "6fd283a5-f1f6-4678-be9b-4876b3eae481",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "PrimaryButton",
+    "data": {
+      "type": "PrimaryButton",
+      "order": 22,
+      "metadata": {
+        "type": "template",
+        "format": "button"
+      },
+      "component": "PrimaryButton",
+      "fieldType": "PrimaryButton"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+      "createdTime": 1760353060258,
+      "lastModifiedTime": 1760553630016
+    }
+  },
+  {
+    "id": "f06d5673-68fd-432a-9941-4466f2fbd8f8",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "searchByID",
+    "data": {
+      "type": "searchByID",
+      "order": 20,
+      "metadata": {
+        "type": "template",
+        "format": "toggle"
+      },
+      "component": "Toggle",
+      "fieldType": "searchByID"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+      "createdTime": 1760352931161,
+      "lastModifiedTime": 1760556722130
+    }
+  },
+  {
+    "id": "f917a92a-2984-4105-95f6-01aa22f22909",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "searchByProximity",
+    "data": {
+      "type": "searchByProximity",
+      "order": 20,
+      "metadata": {
+        "type": "template",
+        "format": "toggle"
+      },
+      "component": "Toggle",
+      "fieldType": "searchByProximity"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+      "createdTime": 1760352687150,
+      "lastModifiedTime": 1760556690050
+    }
+  },
+  {
+    "id": "dc801c65-54b5-4034-a469-f1f4854ccf4f",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "Row",
+    "data": {
+      "type": "Row",
+      "order": 19,
+      "metadata": {
+        "type": "template",
+        "format": "Row"
+      },
+      "properties": [
+        {
+          "code": "children",
+          "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346336379,
+      "lastModifiedTime": 1760346336379
+    }
+  },
+  {
+    "id": "1aa29e52-a229-4024-b3a3-fae221737944",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "Column",
+    "data": {
+      "type": "Column",
+      "order": 18,
+      "metadata": {
+        "type": "template",
+        "format": "Column"
+      },
+      "properties": [
+        {
+          "code": "children",
+          "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346318546,
+      "lastModifiedTime": 1760346318546
+    }
+  },
+  {
+    "id": "18be6baa-4ecd-433a-9f7f-31cbac15f62d",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "tag",
+    "data": {
+      "type": "tag",
+      "order": 17,
+      "metadata": {
+        "type": "template",
+        "format": "tag"
+      },
+      "properties": [
+        {
+          "code": "tagType",
+          "options": ["success", "error", "warning", "monochrome"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346291543,
+      "lastModifiedTime": 1760346291543
+    }
+  },
+  {
+    "id": "069118fc-8d21-4518-9415-a947d733c575",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "infoCard",
+    "data": {
+      "type": "infoCard",
+      "metadata": {
+        "type": "template",
+        "format": "infoCard"
+      },
+      "properties": [
+        {
+          "code": "infoCardType",
+          "options": ["info", "success", "error", "warning"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346270309,
+      "lastModifiedTime": 1760346270309
+    }
+  },
+  {
+    "id": "ccb6d532-77e9-4a0d-87ba-6941202d6be7",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "card",
+    "data": {
+      "type": "card",
+      "order": 16,
+      "metadata": {
+        "type": "template",
+        "format": "card"
+      },
+      "properties": [
+        {
+          "code": "cardType",
+          "options": ["primary", "secondary"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346244639,
+      "lastModifiedTime": 1760346244639
+    }
+  },
+  {
+    "id": "800221cf-f638-43d6-b49a-7156dd268fd7",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "panelCard",
+    "data": {
+      "type": "panelCard",
+      "order": 15,
+      "metadata": {
+        "type": "template",
+        "format": "panelCard"
+      },
+      "properties": [
+        {
+          "code": "panelType",
+          "options": ["success", "error"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346221773,
+      "lastModifiedTime": 1760346221773
+    }
+  },
+  {
+    "id": "50a45b38-daf8-4287-9049-7f7e047a9f99",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "buttonTemplate",
+    "data": {
+      "type": "buttonTemplate",
+      "order": 14,
+      "metadata": {
+        "type": "template",
+        "format": "button"
+      },
+      "component": "ButtonTemplate",
+      "fieldType": "component",
+      "properties": [
+        {
+          "code": "variation",
+          "options": ["primary", "secondary"]
+        },
+        {
+          "code": "icon",
+          "options": ["Add", "Edit", "Delete", "Search", "Download", "QrCodeScanner"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760346196864,
+      "lastModifiedTime": 1760358673891
+    }
+  },
+  {
+    "id": "4bfc3392-d75b-4aaf-9991-0861a746ce75",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "filter",
+    "data": {
+      "type": "filter",
+      "order": 13,
+      "metadata": {
+        "type": "template",
+        "format": "filter"
+      },
+      "component": "Filter",
+      "fieldType": "filter"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+      "createdTime": 1760346112998,
+      "lastModifiedTime": 1760553464068
+    }
+  },
+  {
+    "id": "44a5c954-aebb-4a00-8ccf-814a8ff58048",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "button",
+    "data": {
+      "type": "button",
+      "order": 12,
+      "metadata": {
+        "type": "template",
+        "format": "button"
+      },
+      "properties": [
+        {
+          "code": "variation",
+          "options": ["primary", "secondary"]
+        },
+        {
+          "code": "icon",
+          "options": ["Add", "Edit", "Delete", "Search", "Download", "QrCodeScanner"]
+        }
+      ]
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091293628,
+      "lastModifiedTime": 1760091293628
+    }
+  },
+  {
+    "id": "d6252cd3-43a1-49ee-a7ee-863802c4d109",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "searchBar",
+    "data": {
+      "type": "searchBar",
+      "order": 10,
+      "metadata": {
+        "type": "template",
+        "format": "searchBar"
+      },
+      "component": "SearchBar",
+      "fieldType": "searchBar"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "f4e90853-80b7-47cc-91e7-f8cd5ec00e20",
+      "createdTime": 1760091273325,
+      "lastModifiedTime": 1760553567396
+    }
+  },
+  {
+    "id": "09bc348a-ef29-4c76-a9a7-62c1d37f0c09",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "switch",
+    "data": {
+      "type": "switch",
+      "order": 9,
+      "metadata": {
+        "type": "template",
+        "format": "switch"
+      }
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091127161,
+      "lastModifiedTime": 1760091127161
+    }
+  },
+  {
+    "id": "0c3b1bc2-7d31-4820-a2d4-24df022920d3",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "mobileNumber",
+    "data": {
+      "type": "mobileNumber",
+      "order": 8,
+      "metadata": {
+        "type": "string",
+        "format": "text"
+      },
+      "fieldType": "mobileNumber"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091108775,
+      "lastModifiedTime": 1760091108775
+    }
+  },
+  {
+    "id": "db43e411-0ec1-4bc7-8819-ea258dc07b8e",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "number",
+    "data": {
+      "type": "number",
+      "order": 6,
+      "metadata": {
+        "type": "integer",
+        "format": "text"
+      },
+      "fieldType": "number"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091072197,
+      "lastModifiedTime": 1760091072197
+    }
+  },
+  {
+    "id": "f78a274e-257d-46b7-9c09-bfcbed5b66c9",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "dropdown",
+    "data": {
+      "type": "dropdown",
+      "order": 5,
+      "metadata": {
+        "type": "string",
+        "format": "dropdown"
+      },
+      "fieldType": "dropdown"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091060062,
+      "lastModifiedTime": 1760091060062
+    }
+  },
+  {
+    "id": "19aac343-908b-4fd7-908b-58a1ef8d0f93",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "date",
+    "data": {
+      "type": "date",
+      "order": 4,
+      "metadata": {
+        "type": "string",
+        "format": "date"
+      },
+      "fieldType": "date"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091050908,
+      "lastModifiedTime": 1760091050908
+    }
+  },
+  {
+    "id": "a9a7a3db-0279-41e6-9a91-7c001d7dc6cf",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "text",
+    "data": {
+      "type": "text",
+      "order": 3,
+      "metadata": {
+        "type": "string",
+        "format": "text"
+      },
+      "fieldType": "text"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091039919,
+      "lastModifiedTime": 1760091039919
+    }
+  },
+  {
+    "id": "645480a0-7689-4446-b476-2b6dba3b64aa",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "locality",
+    "data": {
+      "type": "locality",
+      "order": 2,
+      "metadata": {
+        "type": "string",
+        "format": "locality"
+      },
+      "fieldType": "text"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091031213,
+      "lastModifiedTime": 1760091031213
+    }
+  },
+  {
+    "id": "e53ae53e-abc7-4c0a-9c42-aa0b1add8489",
+    "tenantId": "mz",
+    "schemaCode": "HCM-ADMIN-CONSOLE.NewFieldType",
+    "uniqueIdentifier": "latLng",
+    "data": {
+      "type": "latLng",
+      "order": 1,
+      "metadata": {
+        "type": "string",
+        "format": "latLng"
+      },
+      "fieldType": "text"
+    },
+    "isActive": true,
+    "auditDetails": {
+      "createdBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "lastModifiedBy": "40dceade-992d-4a8f-8243-19dda76a4171",
+      "createdTime": 1760091016332,
+      "lastModifiedTime": 1760091016332
+    }
+  }
+]
