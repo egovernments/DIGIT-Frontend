@@ -72,7 +72,16 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             </CardText>
             <div className="products-list">
               {configurableProducts.map((product, index) => (
-                <Card key={index} className="product-card">
+                <Card
+                  key={index}
+                  className="product-card"
+                  style={{
+                    boxShadow: "0px 2px 7px 0px #00000026",
+                    borderRadius: "12px",
+                    height: "245px",
+                    minHeight: "245px"
+                  }}
+                >
                   <div className="product-header">
                     <div className="icon-wrap">
                       {Digit.Utils.iconRender(product.icon, "#c84c0e")}
@@ -117,7 +126,16 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             </CardText>
             <div className="products-list">
               {explorableProducts.map((product, index) => (
-                <Card key={index} className="product-card">
+                <Card
+                  key={index}
+                  className="product-card"
+                  style={{
+                    boxShadow: "0px 2px 7px 0px #00000026",
+                    borderRadius: "12px",
+                    height: "245px",
+                    minHeight: "245px"
+                  }}
+                >
                   <div className="product-header">
                     <div className="icon-wrap">
                       {Digit.Utils.iconRender(product.icon, "#c84c0e")}
