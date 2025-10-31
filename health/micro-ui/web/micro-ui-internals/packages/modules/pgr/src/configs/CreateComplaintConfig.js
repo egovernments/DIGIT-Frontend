@@ -96,7 +96,7 @@ export const CreateComplaintConfig = {
                 name: "ComplainantName",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 validation: {
-                  pattern: /^[A-Za-z]+$/i,
+                  pattern: /^[A-Za-z0-9-_]+$/i,
                   error: "CORE_COMMON_REQUIRED_ERRMSG"
                 }
               },
