@@ -445,12 +445,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 // Separate component for conditional fields to avoid hooks violations
 const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) => {
   const { t } = useTranslation();
-  const [conditionalLocalValue, setConditionalLocalValue] = useState(selectedField[cField.bindTo] || "");
+  const dispatch = useDispatch();
+  const { currentLocale } = useSelector((state) => state.localization);
+
+  // Get the raw value (localization code) from selectedField
+  const fieldValue = selectedField[cField.bindTo] || "";
+
+  // Get the translated value using useCustomT
+  const translatedValue = useCustomT(fieldValue);
+
+  const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue || "");
   const conditionalDebounceRef = useRef(null);
 
   useEffect(() => {
-    setConditionalLocalValue(selectedField[cField.bindTo] || "");
-  }, [selectedField, cField.bindTo]);
+    setConditionalLocalValue(translatedValue || "");
+  }, [translatedValue]);
 
   const handleConditionalChange = useCallback(
     (value) => {
@@ -459,22 +468,81 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       }
 
       conditionalDebounceRef.current = setTimeout(() => {
+        let finalValueToSave;
+
+        // Handle localization
+        if (fieldValue) {
+          // If a code already exists, update the localization entry
+          dispatch(
+            updateLocalizationEntry({
+              code: fieldValue,
+              locale: currentLocale || "en_IN",
+              message: value,
+            })
+          );
+          finalValueToSave = fieldValue; // Save the code instead of the value
+        } else if (value && typeof value === "string" && value.trim() !== "") {
+          // Create a unique code if no code is provided
+          const timestamp = Date.now();
+          const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
+          const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
+
+          // Update localization entry with the new code
+          dispatch(
+            updateLocalizationEntry({
+              code: uniqueCode,
+              locale: currentLocale || "en_IN",
+              message: value,
+            })
+          );
+          finalValueToSave = uniqueCode; // Save the generated code
+        }
+
         const newField = { ...selectedField };
-        newField[cField.bindTo] = value;
+        newField[cField.bindTo] = finalValueToSave;
         onFieldChange(newField);
       }, 800);
     },
-    [selectedField, cField.bindTo, onFieldChange]
+    [selectedField, cField.bindTo, onFieldChange, fieldValue, dispatch, currentLocale]
   );
 
   const handleConditionalBlur = useCallback(() => {
     if (conditionalDebounceRef.current) {
       clearTimeout(conditionalDebounceRef.current);
-      const newField = { ...selectedField };
-      newField[cField.bindTo] = conditionalLocalValue;
-      onFieldChange(newField);
+      conditionalDebounceRef.current = null;
     }
-  }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange]);
+
+    // Immediately dispatch the current value with localization handling
+    let finalValueToSave;
+
+    if (fieldValue) {
+      dispatch(
+        updateLocalizationEntry({
+          code: fieldValue,
+          locale: currentLocale || "en_IN",
+          message: conditionalLocalValue,
+        })
+      );
+      finalValueToSave = fieldValue;
+    } else if (conditionalLocalValue && typeof conditionalLocalValue === "string" && conditionalLocalValue.trim() !== "") {
+      const timestamp = Date.now();
+      const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
+      const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
+
+      dispatch(
+        updateLocalizationEntry({
+          code: uniqueCode,
+          locale: currentLocale || "en_IN",
+          message: conditionalLocalValue,
+        })
+      );
+      finalValueToSave = uniqueCode;
+    }
+
+    const newField = { ...selectedField };
+    newField[cField.bindTo] = finalValueToSave;
+    onFieldChange(newField);
+  }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange, fieldValue, dispatch, currentLocale]);
 
   switch (cField.type) {
     case "text":

@@ -16,7 +16,6 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
   // Get component from fieldTypeMasterData, fallback to null
   const component = fieldType === "component" ? getComponentFromMasterData(field, fieldTypeMasterData) : null;
 
-  console.log("component", fieldType, component);
   return (
     <FieldV1
       charCount={field?.charCount}
@@ -33,7 +32,7 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
       populators={{
         prefix: field?.prefixText || null,
         suffix: field?.suffixText || null,
-        t: field?.isMdms ? null : customT,
+        t: null,
         fieldPairClassName: `app-preview-field-pair ${
           selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
             ? `app-preview-selected`

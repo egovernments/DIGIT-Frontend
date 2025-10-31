@@ -12,12 +12,7 @@ import { useFieldDataLabel } from "./hooks/useCustomT";
 import fullParentConfig from "./configs/fullParentConfig.json";
 import { getPageFromConfig } from "./utils/configUtils";
 
-const AppConfigurationWrapper = ({
-  flow = "REGISTRATION-DELIVERY",
-  flowName,
-  pageName = "beneficiaryLocation",
-  campaignNumber,
-}) => {
+const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pageName = "beneficiaryLocation", campaignNumber }) => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
   const { t } = useTranslation();
   const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH");
@@ -27,7 +22,7 @@ const AppConfigurationWrapper = ({
 
   // Generate unique localeModule based on flow, pageName, and campaignNumber
   // Format: hcm-{flow}-{pageName}-{campaignNumber}
-  const localeModule = `hcm-${flow?.toLowerCase()?.replace(/_/g, '')}-${campaignNumber}`;
+  const localeModule = `hcm-${flow?.toLowerCase()?.replace(/_/g, "")}-${campaignNumber}`;
   const [newFieldType, setNewFieldType] = useState(null);
   const [isLoadingPageConfig, setIsLoadingPageConfig] = useState(true);
   const [pageConfigError, setPageConfigError] = useState(null);
@@ -39,6 +34,7 @@ const AppConfigurationWrapper = ({
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
+  console.log("localizationData:", localizationData);
   // Call hook at top level - always called, never conditionally
   const fieldDataLabel = useFieldDataLabel(newFieldType?.label);
 
@@ -123,9 +119,7 @@ const AppConfigurationWrapper = ({
 
         // Clean up page name - if it contains a dot, take only the part after the dot
         // e.g., "HOUSEHOLD.beneficiaryLocation" -> "beneficiaryLocation"
-        const cleanedPageName = pageName?.includes('.')
-          ? pageName.split('.').pop()
-          : pageName;
+        const cleanedPageName = pageName?.includes(".") ? pageName.split(".").pop() : pageName;
 
         // Fetch page configuration from MDMS
         const response = await Digit.CustomService.getResponse({
@@ -143,7 +137,6 @@ const AppConfigurationWrapper = ({
             },
           },
         });
-
 
         if (response?.mdms && response.mdms.length > 0) {
           const pageConfig = response.mdms[0].data;
@@ -234,9 +227,7 @@ const AppConfigurationWrapper = ({
 
   const handleFieldChange = (value) => {
     // Generate unique localization code: campaignNumber_flow_pageName_uuid
-    const locVal = newFieldType?.label
-      ? newFieldType?.label
-      : `${campaignNumber}_${flow}_${pageName}_${crypto.randomUUID()}`.toUpperCase();
+    const locVal = newFieldType?.label ? newFieldType?.label : `${campaignNumber}_${flow}_${pageName}_${crypto.randomUUID()}`.toUpperCase();
 
     dispatch(
       updateLocalizationEntry({
@@ -322,11 +313,7 @@ const AppConfigurationWrapper = ({
         </PopUp>
       )}
       {showToast && (
-        <Toast
-          type={showToast?.key === "error" ? "error" : "success"}
-          label={t(showToast?.label)}
-          onClose={() => setShowToast(null)}
-        />
+        <Toast type={showToast?.key === "error" ? "error" : "success"} label={t(showToast?.label)} onClose={() => setShowToast(null)} />
       )}
     </React.Fragment>
   );
