@@ -52,9 +52,19 @@ const CreateComplaintForm = ({
 
   // Validate phone number based on config
   const validatePhoneNumber = (value, config) => {
-    const { minLength, maxLength, min, max } = config?.populators?.validation || {};
+    const { minLength, maxLength, min, max, pattern } = config?.populators?.validation || {};
     const stringValue = String(value || "");
-  
+
+    // Check if value contains invalid characters like 'e', 'E', '+', '-'
+    if (/[eE+\-]/.test(stringValue)) {
+      return false;
+    }
+
+    // Check pattern if provided
+    if (pattern && !stringValue.match(new RegExp(pattern))) {
+      return false;
+    }
+
     if (
       (minLength && stringValue.length < minLength) ||
       (maxLength && stringValue.length > maxLength) ||
@@ -126,9 +136,13 @@ const CreateComplaintForm = ({
     const selectedUser = formData?.complaintUser?.code;
     const prevSelectedUser = sessionFormData?.complaintUser?.code;
     const ComplainantContactNumber = formData?.ComplainantContactNumber;
-  
-    // Validate name 
-    if (ComplainantName && !ComplainantName.match(Digit.Utils.getPattern("Name"))) {
+
+    // Validate name using pattern from config
+    const nameFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
+      .find(field => field?.populators?.name === "ComplainantName");
+    const namePattern = nameFieldConfig?.populators?.validation?.pattern;
+
+    if (ComplainantName && namePattern && !ComplainantName.match(new RegExp(namePattern))) {
       if (!formState.errors.ComplainantName) {
         setError("ComplainantName", {
           type: "custom",
