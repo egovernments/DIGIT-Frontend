@@ -112,6 +112,7 @@ export const CreateComplaintConfig = {
                 error: "CORE_COMMON_MOBILE_ERROR",
                 componentInFront: "+91",
                 validation: {
+                  pattern: "^[0-9]{10}$",
                   minLength: 10,
                   maxLength: 10,
                   min: 1000000000,
@@ -129,7 +130,7 @@ export const CreateComplaintConfig = {
                 name: "SupervisorName",
                 error: "CORE_COMMON_APPLICANT_NAME_INVALID",
                 validation: {
-                  pattern: /^[A-Za-z]+$/i,
+                  pattern: "^[A-Za-z ]+$",
                   error: "CORE_COMMON_APPLICANT_NAME_INVALID"
                 }
               },
@@ -229,7 +230,7 @@ export const CreateComplaintConfig = {
                 name: "postalCode",
                 maxlength: 6,
                 validation: {
-                  pattern: /^[1-9][0-9]{5}$/i,
+                  pattern: "^[1-9][0-9]{5}$",
                 },
               },
             }
