@@ -6,6 +6,9 @@ import { AppContainer, BreadCrumb } from "@egovernments/digit-ui-react-component
 import { lazyWithFallback } from "@egovernments/digit-ui-components";
 import AppHelpTutorial from "../../components/AppHelpTutorial";
 import HelpInfoCard from "../../components/HelpInfoCard";
+import FullConfigWrapper from "./NewAppConfiguration/FullConfigWrapper";
+import NewAppModule from "./NewCampaignCreate/NewAppModule";
+import DummyLoader from "./NewCampaignCreate/DummyLoader";
 
 // Create lazy components with fallbacks using the utility
 const SetupCampaign = lazyWithFallback(
@@ -128,11 +131,6 @@ const NewUploadScreen = lazyWithFallback(
   { loaderText: "Loading New Upload Screen..." }
 );
 
-const AppConfigurationTabLayer = lazyWithFallback(
-  () => import(/* webpackChunkName: "app-configuration-tab-layer" */ "./appConfigurationRedesign/AppConfigurationTabLayer"),
-  () => require("./appConfigurationRedesign/AppConfigurationTabLayer").default,
-  { loaderText: "Loading App Configuration..." }
-);
 /**
  * The CampaignBreadCrumb function generates breadcrumb navigation for a campaign setup page in a React
  * application.
@@ -317,7 +315,8 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
     <React.Fragment>
       <div className="wbh-header-container">
         {window?.location?.pathname === "/workbench-ui/employee/campaign/add-product" ||
-        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ? null : (
+        window?.location?.pathname === "/workbench-ui/employee/campaign/response" ||
+        window?.location?.pathname === "/workbench-ui/employee/campaign/new-app-configuration-redesign" ? null : (
           <CampaignBreadCrumb location={location} defaultPath={path} />
         )}
         <AppHelpTutorial appPath={path} location={location} buttonLabel="CAMP_HELP_TEXT" />
@@ -327,7 +326,10 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`create-campaign/upload-boundary-data`} element={<UploadBoundaryData />} />
           <Route path={`create-campaign/cycle-configure`} element={<CycleConfiguration />} />
           <Route path={`create-campaign/delivery-details`} element={<DeliveryRule />} />
-          <Route path={`setup-campaign`} element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+          <Route
+            path={`setup-campaign`}
+            element={<SetupCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
           <Route path={`my-campaign`} element={<MyCampaign />} />
           <Route path={`my-campaign-new`} element={<MyCampaignNew />} />
           <Route path={`fetch-from-microplan`} element={<FetchFromMicroplan />} />
@@ -346,13 +348,18 @@ const App = ({ path, BOUNDARY_HIERARCHY_TYPE: BoundaryHierarchy, hierarchyData: 
           <Route path={`boundary/data`} element={<ViewHierarchy />} />
           <Route path={`update-campaign`} element={<UpdateCampaign hierarchyData={hierarchyData} />} />
           <Route path={`setup-from-microplan`} element={<ApprovedMicroplans />} />
-          <Route path={`app-configuration-redesign`} element={<AppConfigurationTabLayer />} />
-          <Route path={`create-campaign`} element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />} />
+          <Route path={`new-app-configuration-redesign`} element={<FullConfigWrapper />} />
+          <Route
+            path={`create-campaign`}
+            element={<CreateCampaign hierarchyType={BOUNDARY_HIERARCHY_TYPE} hierarchyData={hierarchyData} />}
+          />
           <Route path={`campaign-home`} element={<CampaignHome />} />
           <Route path={`view-details`} element={<CampaignDetails />} />
           <Route path={`app-modules`} element={<AppModule />} />
+          <Route path={`new-app-modules`} element={<NewAppModule />} />
           <Route path={`app-features`} element={<AppFeatures />} />
           <Route path={`upload-screen`} element={<NewUploadScreen />} />
+          <Route path={`dummy-loader`} element={<DummyLoader />} />
           {/* <HelpInfoCard appPath={path} location={location} /> */}
         </Routes>
       </AppContainer>

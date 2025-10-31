@@ -3,7 +3,6 @@ import { Loader, lazyWithFallback } from "@egovernments/digit-ui-components";
 import React from "react";
 // import { useRouteMatch } from "react-router-dom";
 
-
 import { CustomisedHooks } from "./hooks";
 import { UICustomizations } from "./configs/UICustomizations";
 import CampaignCard from "./components/CampaignCard";
@@ -61,10 +60,23 @@ import AppPreview from "./components/AppPreview";
 import CycleSelection from "./components/CreateCampaignComponents/CycleSelection";
 import HCMMyCampaignRowCard from "./components/HCMMyCampaignRowCard";
 import MyCampaignNew from "./pages/employee/MyCampaignNew";
-import AppConfigurationTabLayer from "./pages/employee/appConfigurationRedesign/AppConfigurationTabLayer";
 import QRButton from "./components/CreateCampaignComponents/QRButton";
 import EqualHeightWrapper from "./components/CreateCampaignComponents/WrapperModuleCard";
 import CampaignNameInfo from "./components/CreateCampaignComponents/CampaignNameInfo";
+import ButtonTemplate from "./pages/employee/NewAppConfiguration/components/ButtonTemplate";
+import CardTemplate from "./pages/employee/NewAppConfiguration/components/CardTemplate";
+import Filter from "./pages/employee/NewAppConfiguration/components/Filter";
+import InfoCardTemplate from "./pages/employee/NewAppConfiguration/components/InfoCardTemplate";
+import PanelCardTemplate from "./pages/employee/NewAppConfiguration/components/PanelCardTemplate";
+import SearchBar from "./pages/employee/NewAppConfiguration/components/SearchBar";
+import SwitchTemplate from "./pages/employee/NewAppConfiguration/components/SwitchTemplate";
+import TagTemplate from "./pages/employee/NewAppConfiguration/components/TagTemplate";
+import RowTemplate from "./pages/employee/NewAppConfiguration/components/RowTemplate";
+import ColumnTemplate from "./pages/employee/NewAppConfiguration/components/ColumnTemplate";
+import ListViewTemplate from "./pages/employee/NewAppConfiguration/components/ListViewTemplate";
+import TextTemplate from "./pages/employee/NewAppConfiguration/components/TextTemplate";
+import TableTemplate from "./pages/employee/NewAppConfiguration/components/TableTemplate";
+
 /**
  * MDMS Module name
  */
@@ -126,7 +138,12 @@ const CampaignModule = React.memo(({ stateCode, userType, tenants }) => {
   return (
     <ErrorBoundary moduleName="CAMPAIGN">
       <TourProvider>
-        <EmployeeApp BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE} stateCode={stateCode} userType={userType} hierarchyData={hierarchyData} />
+        <EmployeeApp
+          BOUNDARY_HIERARCHY_TYPE={BOUNDARY_HIERARCHY_TYPE}
+          stateCode={stateCode}
+          userType={userType}
+          hierarchyData={hierarchyData}
+        />
       </TourProvider>
     </ErrorBoundary>
   );
@@ -181,7 +198,6 @@ const componentsToRegister = {
   UploadDataMappingWrapper,
   DataUploadWrapper,
   AppPreview,
-  AppConfigurationParentRedesign: AppConfigurationTabLayer,
   DateSelection,
   ViewDetailComponent,
   CycleSelection,
@@ -190,6 +206,23 @@ const componentsToRegister = {
   QRButton,
   EqualHeightWrapper,
   CampaignNameInfo,
+  Toggle: SwitchTemplate,
+  SearchByProximity: SwitchTemplate,
+  SearchByID: SwitchTemplate,
+  Button: ButtonTemplate,
+  ButtonTemplate,
+  CardTemplate,
+  Filter,
+  InfoCard: InfoCardTemplate,
+  PanelCard: PanelCardTemplate,
+  SearchBar,
+  Switch: SwitchTemplate,
+  Tag: TagTemplate,
+  Row: RowTemplate,
+  Column: ColumnTemplate,
+  ListView: ListViewTemplate,
+  TextTemplate: TextTemplate,
+  TableTemplate: TableTemplate,
 };
 
 const overrideHooks = () => {

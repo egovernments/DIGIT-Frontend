@@ -1,0 +1,200 @@
+[
+  {
+    "type": "latLng",
+    "order": 1,
+    "metadata": {
+      "type": "string",
+      "format": "latLng"
+    },
+    "fieldType": "text"
+  },
+  {
+    "type": "locality",
+    "order": 2,
+    "metadata": {
+      "type": "string",
+      "format": "locality"
+    },
+    "fieldType": "text"
+  },
+  {
+    "type": "text",
+    "order": 3,
+    "metadata": {
+      "type": "string",
+      "format": "text"
+    },
+    "fieldType": "text"
+  },
+  {
+    "type": "date",
+    "order": 4,
+    "metadata": {
+      "type": "string",
+      "format": "date"
+    },
+    "fieldType": "date"
+  },
+  {
+    "type": "dropdown",
+    "order": 5,
+    "metadata": {
+      "type": "string",
+      "format": "dropdown"
+    },
+    "fieldType": "dropdown"
+  },
+  {
+    "type": "number",
+    "order": 6,
+    "metadata": {
+      "type": "integer",
+      "format": "text"
+    },
+    "fieldType": "number"
+  },
+  {
+    "type": "email",
+    "order": 7,
+    "metadata": {
+      "type": "string",
+      "format": "email"
+    },
+    "fieldType": "email"
+  },
+  {
+    "type": "phone",
+    "order": 8,
+    "metadata": {
+      "type": "string",
+      "format": "phone"
+    },
+    "fieldType": "phone"
+  },
+  {
+    "type": "switch",
+    "order": 9,
+    "metadata": {
+      "type": "template",
+      "format": "switch"
+    }
+  },
+  {
+    "type": "searchBar",
+    "order": 10,
+    "metadata": {
+      "type": "template",
+      "format": "searchBar"
+    }
+  },
+  {
+    "type": "filter",
+    "order": 11,
+    "metadata": {
+      "type": "template",
+      "format": "filter"
+    }
+  },
+  {
+    "type": "button",
+    "order": 12,
+    "metadata": {
+      "type": "template",
+      "format": "button"
+    },
+    "properties": [
+      {
+        "code": "variation",
+        "options": ["primary", "secondary"]
+      },
+      {
+        "code": "icon",
+        "options": ["Add", "Edit", "Delete", "Search", "Download", "QrCodeScanner"]
+      }
+    ]
+  },
+  {
+    "type": "panelCard",
+    "order": 13,
+    "metadata": {
+      "type": "template",
+      "format": "panelCard"
+    },
+    "properties": [
+      {
+        "code": "panelType",
+        "options": ["success", "error"]
+      }
+    ]
+  },
+  {
+    "type": "card",
+    "order": 14,
+    "metadata": {
+      "type": "template",
+      "format": "card"
+    },
+    "properties": [
+      {
+        "code": "cardType",
+        "options": ["primary", "secondary"]
+      }
+    ]
+  },
+  {
+    "type": "infoCard",
+    "order": 15,
+    "metadata": {
+      "type": "template",
+      "format": "infoCard"
+    },
+    "properties": [
+      {
+        "code": "infoCardType",
+        "options": ["info", "success", "error", "warning"]
+      }
+    ]
+  },
+  {
+    "type": "tag",
+    "order": 16,
+    "metadata": {
+      "type": "template",
+      "format": "tag"
+    },
+    "properties": [
+      {
+        "code": "tagType",
+        "options": ["success", "error", "warning", "monochrome"]
+      }
+    ]
+  },
+  {
+    "type": "Column",
+    "order": 17,
+    "metadata": {
+      "type": "template",
+      "format": "Column"
+    },
+    "properties": [
+      {
+        "code": "children",
+        "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
+      }
+    ]
+  },
+  {
+    "type": "Row",
+    "order": 18,
+    "metadata": {
+      "type": "template",
+      "format": "Row"
+    },
+    "properties": [
+      {
+        "code": "children",
+        "options": ["Card", "infoCard", "panelCard", "button", "Row", "Column", "switch", "searchBar", "filter"]
+      }
+    ]
+  }
+]

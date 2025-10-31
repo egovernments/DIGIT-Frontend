@@ -360,7 +360,7 @@ const CampaignDetails = () => {
               // buttonLabel: modulesData?.length > 0 ? t("HCM_MOBILE_APP_BUTTON_EDIT") : t("HCM_MOBILE_APP_BUTTON"),
               // type: modulesData?.length > 0 ? "secondary" : "primary",
               type: hasVersionGreaterThanOne ? "secondary" : "primary",
-              navLink: `app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
+              navLink: `new-app-modules?projectType=${campaignData?.projectType}&campaignNumber=${campaignData?.campaignNumber}&tenantId=${tenantId}`,
               icon: <AdUnits fill={campaignData?.status === "created" && campaignData?.startDate < Date.now() ? "#c5c5c5" : "#C84C0E"} />,
               disabled: (campaignData?.status === "created" || campaignData?.parentId) && campaignData?.startDate < Date.now(),
             },
