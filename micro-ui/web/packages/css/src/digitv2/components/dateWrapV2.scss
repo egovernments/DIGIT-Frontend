@@ -5,7 +5,7 @@
   }
   .digit-employee-card-input {
     @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
     width: calc(100% - 62px);
     padding-right: 9px;
   }

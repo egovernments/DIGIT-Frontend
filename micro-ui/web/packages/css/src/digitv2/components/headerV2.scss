@@ -1,6 +1,6 @@
 
 
 .digit-header {
-  @extend .light-text-color-primary;
+  @extend .light-text-color-primary !optional;
   @apply text-heading-l font-bold mb-md ml-md;
 }

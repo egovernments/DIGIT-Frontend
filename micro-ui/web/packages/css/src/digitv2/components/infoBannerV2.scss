@@ -4,7 +4,7 @@
   @apply bg-opacity-25 m-sm p-md;
   max-width: 960px;
 
-  @extend .alert-info-bg;
+  @extend .alert-info-bg !optional;
   border-radius: 4px;
   svg {
     margin-top: 5px;

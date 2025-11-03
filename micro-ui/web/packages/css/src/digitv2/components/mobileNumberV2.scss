@@ -4,7 +4,7 @@
   @apply flex  items-center;
 
   .digit-citizen-card-input--front {
-    @extend .light-background;
+    @extend .light-background !optional;
     width: fit-content !important;
     display: flex;
     align-items: center;
@@ -27,7 +27,7 @@
   }
   .digit-employee-card-input-error {
     @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-solid bg-white leading-10 text-form-field text-text-primary;
-    @extend .light-input-border;
-    @extend .alert-error;
+    @extend .light-input-border !optional;
+    @extend .alert-error !optional;
   }
 }

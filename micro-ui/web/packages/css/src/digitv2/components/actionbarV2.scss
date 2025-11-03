@@ -1,8 +1,8 @@
 
 
 /*.digit-action-bar-wrap {
-  @extend .light-text-color-primary;
-  @extend .light-paper-primary;
+  @extend .light-text-color-primary !optional;
+  @extend .light-paper-primary !optional;
   box-shadow: rgba(0, 0, 0, 0.16) 0 -2px 8px;
   max-width: 100%;
   z-index: 100;
@@ -15,7 +15,7 @@
 
   .digit-menu-wrap {
     @apply absolute bg-white text-left mb-xs z-30 cursor-pointer;
-    @extend .light-background;
+    @extend .light-background !optional;
     bottom: 45px;
     box-shadow: rgba(0, 0, 0, 0.14) 0 8px 10px 1px, rgba(0, 0, 0, 0.12) 0 3px 14px 2px, rgba(0, 0, 0, 0.2) 0 5px 5px -3px;
     width: calc(100% - 16px);
@@ -23,11 +23,11 @@
 
     div {
       @apply h-12 pl-sm py-md text-body-l text-text-primary;
-      @extend .light-primary;
+      @extend .light-primary !optional;
 
       &:hover {
         @apply bg-grey-mid w-full;
-        @extend .light-background;
+        @extend .light-background !optional;
       }
     }
   }
@@ -74,28 +74,28 @@
     box-shadow: rgba(0, 0, 0, 0.14) 0 8px 10px 1px, rgba(0, 0, 0, 0.12) 0 3px 14px 2px, rgba(0, 0, 0, 0.2) 0 5px 5px -3px;
     width: 160px;
     right: 60px;
-    @extend .light-background;
+    @extend .light-background !optional;
 
     div {
       @apply h-12 pl-sm py-md text-body-l text-text-primary;
 
       &:hover {
         @apply bg-grey-mid w-full;
-        @extend .light-background;
+        @extend .light-background !optional;
       }
     }
   }
 
   .digit-search-add {
     padding: 12px 16px;
-    @extend .light-primary;
+    @extend .light-primary !optional;
     color: rgb(244, 119, 56);
     display: flex;
     cursor: pointer;
   }
 
   .digit-search-add-icon {
-    @extend .light-primary-button;
+    @extend .light-primary-button !optional;
     background: rgb(244, 119, 56);
     border-radius: 50%;
     height: 24px;

@@ -1,11 +1,11 @@
 
 
 body {
-  @extend .light-background;
+  @extend .light-background !optional;
 }
 
 .body-container {
-  @extend .light-background;
+  @extend .light-background !optional;
   @apply h-full min-h-screen overflow-x-hidden;
 }
 
@@ -14,16 +14,16 @@ body {
 }
 
 .h1 {
-  @extend .light-text-color-primary;
+  @extend .light-text-color-primary !optional;
   @apply text-heading-l font-bold mb-md ml-md;
 }
 
 .link-label {
-  @extend .light-primary;
+  @extend .light-primary !optional;
   @apply block mb-md ml-md cursor-pointer;
 
   &:hover {
-    @extend .light-text-color-primary;
+    @extend .light-text-color-primary !optional;
   }
 }
 

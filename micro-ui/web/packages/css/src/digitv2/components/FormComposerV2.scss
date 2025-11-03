@@ -8,8 +8,8 @@
 
   .component-in-front {
     @apply flex justify-center items-center;
-    @extend .light-background;
-    @extend .light-input-border;
+    @extend .light-background !optional;
+    @extend .light-input-border !optional;
     margin-top: 0;
     border: 1px solid;
     border-right: none;
@@ -21,7 +21,7 @@
   @apply absolute top-0 left-0 w-3/4 bg-white pl-sm border-2 border-input-border border-solid border-r-0;
   outline: transparent solid 1px;
   height: 2.5rem;
-  @extend .light-input-border;
+  @extend .light-input-border !optional;
 }
 .text-input-width {
   max-width: 540px;
@@ -33,24 +33,24 @@
     background-color: transparent;
     &:hover {
       @apply border-2 border-solid border-primary-main;
-      @extend .light-input-border;
+      @extend .light-input-border !optional;
     }
   }
 }
 .employee-card-input-error {
   @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
-  @extend .light-input-border;
-  @extend .alert-error;
+  @extend .light-input-border !optional;
+  @extend .alert-error !optional;
 }
 .card-input-error {
   @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
-  @extend .light-input-border;
-  @extend .alert-error;
+  @extend .light-input-border !optional;
+  @extend .alert-error !optional;
 }
 
 .employee-card-input {
   @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
-  @extend .light-input-border;
+  @extend .light-input-border !optional;
 }
 
 .employee-card-input {
@@ -60,28 +60,28 @@
 .employee-card-input:disabled {
   @apply border-grey-dark text-grey-dark !important;
   pointer-events: none !important;
-  @extend .light-input-border;
-  @extend .light-text-color-disabled;
+  @extend .light-input-border !optional;
+  @extend .light-text-color-disabled !optional;
 }
 .employee-card-input--front {
   width: fit-content !important;
   display: flex;
   align-items: center;
   /* background: var(digitv2-lightTheme-background); */
-  @extend .light-background;
+  @extend .light-background !optional;
   border-right: 0;
   padding-right: 5px;
 }
 .employee-card-input-error {
   @apply mb-lg pl-sm block w-full h-10 outline-none border-2 border-error border-solid bg-white leading-10 text-form-field text-text-primary;
-  @extend .light-input-border;
-  @extend .alert-error;
+  @extend .light-input-border !optional;
+  @extend .alert-error !optional;
 }
 
 .card-textarea,
 .employee-card-textarea {
   @apply block outline-none mt-md mb-lg border-2 w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
-  @extend .light-input-border;
+  @extend .light-input-border !optional;
 }
 .employee-card-textarea {
   @apply w-full;
@@ -90,10 +90,10 @@
 
 .citizen-card-input {
   @apply mb-lg pl-sm outline-none block border-2 w-full h-10 border-input-border border-solid bg-white leading-10 text-form-field text-text-primary;
-  @extend .light-input-border;
+  @extend .light-input-border !optional;
 }
 .citizen-card-input--front {
-  @extend .light-background;
+  @extend .light-background !optional;
   width: fit-content !important;
   display: flex;
   align-items: center;
@@ -103,7 +103,7 @@
 }
 
 .break-line {
-  @extend .light-input-border;
+  @extend .light-input-border !optional;
   @apply border-border my-lg;
 }
 
@@ -115,7 +115,7 @@
     fill: var(--digitv2-lightTheme-primary);
   }
 
-  @extend .light-primary;
+  @extend .light-primary !optional;
   cursor: pointer;
   font-weight: 500;
   width: fit-content;

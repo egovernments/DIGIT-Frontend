@@ -6,6 +6,6 @@
 }
 
 .customBtn-selected {
-  @extend .customBtn;
+  @extend .customBtn !optional;
   @apply bg-primary-main text-white font-medium;
 }

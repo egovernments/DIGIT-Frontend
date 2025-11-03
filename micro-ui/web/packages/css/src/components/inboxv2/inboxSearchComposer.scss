@@ -3,33 +3,33 @@
 .inbox-search-wrapper {
     /*
     TODO NABEEL/ANIL Removed these since it creates issues in search screen
-    @extend .light-background;
+    @extend .light-background !optional;
 
     */
     height: 100%;
     .inbox-search-component-wrapper {
  /*
     TODO NABEEL/ANIL Removed these since it creates issues in search screen
-    @extend .light-background;
+    @extend .light-background !optional;
 
     */        height: 100%;
         width: 100%;
         .sections-parent {
  /*
     TODO NABEEL/ANIL Removed these since it creates issues in search screen
-    @extend .light-background;
+    @extend .light-background !optional;
 
     */            height: 100%;
             display: grid;
             grid-template-columns: 20% 1fr;
             gap : 1rem;
             &.inbox {
-                @extend .light-text-color-primary;
+                @extend .light-text-color-primary !optional;
                 .links{
-                    @extend .light-primary;
-                    @extend .light-paper-primary;
+                    @extend .light-primary !optional;
+                    @extend .light-paper-primary !optional;
                     .text{
-                        @extend .light-text-color-primary;
+                        @extend .light-text-color-primary !optional;
                     }
                     .inbox-links-icon{
                         color:var(--digitv2-lightTheme-primary);
@@ -52,18 +52,18 @@
                     }
                 }
                 .search-wrapper {
-                    @extend .light-paper-primary;
+                    @extend .light-paper-primary !optional;
                     .search-field-wrapper.search.custom-both-clear-search{
                         .search-button-wrapper.search {
                             grid-column: initial;
                         }
                     .search-button-wrapper{
                         .link-label{
-                            @extend .light-primary;
+                            @extend .light-primary !optional;
                             white-space:initial;
                         }
                         .submit-bar {
-                            @extend .light-primary-button;
+                            @extend .light-primary-button !optional;
                             width: 60%;
                         }
                     }
@@ -74,8 +74,8 @@
                 grid-template-columns: 100%
             }
             .section {
-                @extend .light-paper-primary;
-                @extend .light-text-color-primary;
+                @extend .light-paper-primary !optional;
+                @extend .light-text-color-primary !optional;
                 min-height: 10rem;
                 /* background-color: white; */
                 display: flex;
@@ -95,8 +95,8 @@
                     }
                 }
                 &.filter {
-                    @extend .light-paper-primary;
-                    @extend .light-text-color-primary;
+                    @extend .light-paper-primary !optional;
+                    @extend .light-text-color-primary !optional;
                     height: fit-content;
                 }
                 &.tab{

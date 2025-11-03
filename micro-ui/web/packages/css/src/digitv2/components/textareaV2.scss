@@ -1,7 +1,7 @@
 .digit-card-textarea,
 .digit-employee-card-textarea {
   @apply block outline-none mt-md mb-lg border-2 w-full border-input-border border-solid bg-white h-24 text-form-field text-text-primary p-sm;
-  @extend .light-input-border;
+  @extend .light-input-border !optional;
 }
 .digit-employee-card-textarea {
   @apply w-full;

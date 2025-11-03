@@ -2,72 +2,72 @@
 
 .digit-card {
   @apply bg-white m-sm px-md pt-md pb-lg shadow-card;
-  @extend .light-paper-primary;
+  @extend .light-paper-primary !optional;
   border-radius: 4px;
   max-width: 960px;
 
   .digit-card-header {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-heading-xl font-bold font-rc align-middle text-left mb-md;
   }
 
   .digit-card-sub-header {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-caption-xl font-bold align-middle text-left mb-sm;
   }
 
   .digit-card-caption {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply text-caption-xl mb-sm;
   }
 
   .digit-card-text {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply text-body-l align-middle text-left mb-lg;
 
     span {
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
     }
   }
 
   .digit-card-text-primary {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-body-l;
   }
 
   .digit-card-text-button {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-text-btn;
   }
 
   .digit-card-label {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-legend mb-sm;
   }
 
   .digit-card-label-error {
-    @extend .alert-error;
+    @extend .alert-error !optional;
     @apply block text-body-s text-error mb-md;
   }
 
   .digit-card-label-desc {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply font-bold text-heading-s mb-md;
   }
 
   .digit-card-link {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply block text-center text-link mt-md cursor-pointer;
   }
 }
 
 .digit-validation-error {
-  @extend .alert-error;
+  @extend .alert-error !optional;
   @apply block text-body-s text-error;
 }
 
 .digit-docsDescription {
-  @extend .light-text-color-primary;
+  @extend .light-text-color-primary !optional;
 }
 
 .digit-field-container {
@@ -75,72 +75,72 @@
 }
 
 .digit-employee-card {
-  @extend .light-paper-primary;
+  @extend .light-paper-primary !optional;
   @apply shadow-card p-md mb-xl;
   border-radius: 4px;
 
   .digit-card-header {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-heading-xl font-bold font-rc align-middle text-left mb-md;
   }
 
   .digit-card-sub-header,
   .digit-employee-card-sub-header {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-caption-xl font-bold align-middle text-left;
   }
 
   .digit-card-section-header {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-heading-m font-bold;
   }
 
   .digit-card-section-sub-text {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-body-s;
   }
 
   .digit-card-caption {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply text-caption-xl mb-sm;
   }
 
   .digit-card-text {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply text-body-l align-middle text-left mb-lg;
 
     span {
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
     }
   }
 
   .card-text-primary {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-body-l;
   }
 
   .card-text-button {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-text-btn;
   }
 
   .card-label {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply text-legend mb-md;
   }
 
   .card-label-error {
-    @extend .alert-error;
+    @extend .alert-error !optional;
     @apply block text-body-s text-error mb-md;
   }
 
   .card-label-desc {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply font-bold text-heading-s mb-md;
   }
 
   .card-link {
-    @extend .light-primary;
+    @extend .light-primary !optional;
     @apply block text-center text-link text-link-normal mt-md;
   }
 
@@ -169,16 +169,16 @@
 }
 
 .card-emp {
-  @extend .card;
+  @extend .card !optional;
   padding-right: 0;
   padding-top: 0;
   padding-left: 0;
   @apply bg-white m-sm;
-  @extend .light-background;
+  @extend .light-background !optional;
 }
 
 .submit-bar {
-  @extend .light-primary-button;
+  @extend .light-primary-button !optional;
   @apply h-10 text-center w-full outline-none;
   box-shadow: inset 0px -2px 0px var(--digitv2-lightTheme-text-color-primary);
   cursor: pointer;
@@ -335,7 +335,7 @@
 }
 
 .digit-card-section-header {
-  @extend .light-text-color-primary;
+  @extend .light-text-color-primary !optional;
   @apply text-text-primary text-heading-m font-bold;
 }
 
@@ -348,7 +348,7 @@
 }
 
 .digit-card-label-error {
-  @extend .alert-error;
+  @extend .alert-error !optional;
   @apply block text-body-s text-error mb-md;
 }
 
@@ -367,7 +367,7 @@
 }
 
 .digit-employee-mulitlink-main-div {
-  @extend .light-primary;
+  @extend .light-primary !optional;
   z-index: 10 !important;
   max-width: 41% !important;
 }

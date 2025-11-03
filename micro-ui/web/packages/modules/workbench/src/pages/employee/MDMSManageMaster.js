@@ -160,7 +160,7 @@ const MDMSManageMaster = () => {
                       {module.displayName.startsWith("WBH_MDMS_") ? module.name : module.displayName}
                     </CardSubHeader>
                     <CardText>
-                      {t("WBH_MASTERS_COUNT", { count: module.masters.length })} | {t("WBH_CLICK_TO_VIEW_MASTERS")}
+                      {t(`WBH_MASTERS_COUNT - ${module?.masters?.length}`)} | {t("WBH_CLICK_TO_VIEW_MASTERS")}
                     </CardText>
                   </Card>
                 ))

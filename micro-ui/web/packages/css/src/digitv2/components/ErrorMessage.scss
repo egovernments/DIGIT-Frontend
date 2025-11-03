@@ -1,6 +1,6 @@
 
 
 .digit-error-message {
-  @extend .alert-error;
+  @extend .alert-error !optional;
   @apply block text-body-s mb-md;
 }

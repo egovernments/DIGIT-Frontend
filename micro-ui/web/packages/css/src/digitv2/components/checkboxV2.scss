@@ -7,7 +7,7 @@
     width: 38px;
     height: 38px;
     @apply opacity-0 absolute top-0 left-0 z-10;
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
   }
 
   .input-emp {
@@ -20,7 +20,7 @@
     width: 38px;
     height: 38px;
     @apply absolute top-0 left-0 border-2 border-solid border-input-border z-0;
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
 
     img {
       @apply opacity-0;
@@ -32,7 +32,7 @@
   }
 
   .digit-custom-checkbox-emp {
-    @extend .digit-custom-checkbox;
+    @extend .digit-custom-checkbox !optional;
     width: 24px;
     height: 24px;
   }
@@ -40,7 +40,7 @@
   input:checked ~ .digit-custom-checkbox,
   input:hover ~ .digit-custom-checkbox {
     @apply border-2 border-primary-main;
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
   }
 
   input:checked ~ .digit-custom-checkbox img {
@@ -56,6 +56,6 @@
   .label {
     margin-left: 56px;
     @apply text-form-field text-text-primary;
-    @extend .light-text-color-primary;
+    @extend .light-text-color-primary !optional;
   }
 }

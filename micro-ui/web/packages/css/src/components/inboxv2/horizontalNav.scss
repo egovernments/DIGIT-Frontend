@@ -1,8 +1,8 @@
 
 
 .horizontal-nav {
-    @extend .light-paper-primary;
-    @extend .light-text-color-primary;
+    @extend .light-paper-primary !optional;
+    @extend .light-text-color-primary !optional;
     overflow: auto;
     display: flex;
     margin-top: 3rem;
@@ -25,7 +25,7 @@
         background: none;
 
         .icon {
-            @extend .light-background;
+            @extend .light-background !optional;
             display: block;
             color: rgb(117, 117, 117);
             fill: rgb(117, 117, 117);

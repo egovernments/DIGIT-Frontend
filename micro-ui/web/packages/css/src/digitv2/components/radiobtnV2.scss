@@ -21,12 +21,12 @@
   }
 
   .digit-radio-btn-checkmark {
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
     @apply h-10 w-10 border-2 border-input-border border-solid rounded-full block;
   }
 
   label {
-    @extend .light-text-color-primary;
+    @extend .light-text-color-primary !optional;
     @apply text-text-primary text-form-field ml-md;
   }
 
@@ -35,12 +35,12 @@
   }
 
   .digit-radio-btn-wrap input:checked ~ .digit-radio-btn-checkmark {
-    /* @extend .light-input-border; */
+    /* @extend .light-input-border !optional; */
     @apply border-2 border-primary-main;
   }
 
   .digit-radio-btn-wrap input:checked ~ .digit-radio-btn-checkmark:after {
-    /* @extend .light-background; */
+    /* @extend .light-background !optional; */
     @apply block bg-primary-main h-5 w-5 rounded-full absolute top-10 left-10;
   }
 }

@@ -1,25 +1,25 @@
 
 
 .app-container {
-  @extend .light-background;
+  @extend .light-background !optional;
   width: 100%;
   form {
     .card {
       max-width: 960px;
       h2 {
-        @extend .light-text-color-primary;
+        @extend .light-text-color-primary !optional;
         text-align: left;
       }
       .field-container {
         max-width: 540px;
       }
       button {
-        @extend .light-primary-button;
+        @extend .light-primary-button !optional;
         max-width: 240px;
       }
       .input-otp-wrap,
       .card-text-button {
-        @extend .light-primary-button;
+        @extend .light-primary-button !optional;
         text-align: left;
       }
     }

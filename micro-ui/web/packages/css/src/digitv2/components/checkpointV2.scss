@@ -20,7 +20,7 @@
 
     p {
       margin-top: 4px;
-      @extend .light-text-color-secondary;
+      @extend .light-text-color-secondary !optional;
       @apply text-heading-s;
     }
   }
@@ -43,7 +43,7 @@
 
     p {
       margin-top: 4px;
-      @extend .light-text-color-secondary;
+      @extend .light-text-color-secondary !optional;
       @apply text-heading-s;
     }
   }
@@ -60,12 +60,12 @@
   @apply bg-grey-mid p-sm mt-sm;
 
   h4 {
-    @extend .light-text-color-primary;
+    @extend .light-text-color-primary !optional;
     @apply text-heading-s;
   }
 
   p {
-    @extend .light-text-color-secondary;
+    @extend .light-text-color-secondary !optional;
     @apply text-body-s-dt;
   }
 }

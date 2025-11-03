@@ -51,11 +51,11 @@
 
             &.field-error.has-error.has-danger {
               .control-label {
-                @extend .alert-error;
+                @extend .alert-error !optional;
               }
 
               .form-control {
-                @extend .alert-error-border;
+                @extend .alert-error-border !optional;
               }
 
               .card-label-error {
@@ -82,7 +82,7 @@
             .control-label {
               max-width: 12.5rem;
               margin-right: 2.5rem;
-              @extend .card-label;
+              @extend .card-label !optional;
               display: inline-flex;
               /* align-self: center; */
               line-height: 3rem;
@@ -118,8 +118,8 @@
               }
 
               .form-control {
-                @extend .light-input-border;
-                @extend .employee-card-input;
+                @extend .light-input-border !optional;
+                @extend .employee-card-input !optional;
                 font-style: inherit;
                 font-family: inherit;
                 /* web view*/
@@ -243,12 +243,12 @@
                   span {
                     width: 17rem;
                     display: none;
-                    @extend .card-label;
+                    @extend .card-label !optional;
                   }
 
                   input[type="checkbox"] {
-                    @extend .light-input-border;
-                    @extend .employee-card-input;
+                    @extend .light-input-border !optional;
+                    @extend .employee-card-input !optional;
                     height: 1.5rem;
                     /*              @apply ml-sm;*/
                   }
@@ -260,7 +260,7 @@
                   input:checked,
                   input:hover {
                     @apply border-2;
-                    @extend .light-input-border;
+                    @extend .light-input-border !optional;
                   }
                 }
               }
@@ -287,8 +287,8 @@
 
             &.field-object {
               display: block;
-              @extend .light-background;
-              @extend .light-paper-border;
+              @extend .light-background !optional;
+              @extend .light-paper-border !optional;
               padding: 1rem;
               margin: 1rem;
 
@@ -309,15 +309,15 @@
 
               /* have to revisit for objects
         [id^="root_"] {
-          @extend .light-background;
+          @extend .light-background !optional;
         }
         */
             }
 
             &.field-array {
               display: block;
-              @extend .light-paper-secondary;
-              @extend .light-paper-border;
+              @extend .light-paper-secondary !optional;
+              @extend .light-paper-border !optional;
               padding: 2rem;
               margin: 1rem;
               padding-top: 1rem;
@@ -364,7 +364,7 @@
                   }
                 }
 
-                /* it has been removed since we dont need diff color for array items @extend .light-background;*/
+                /* it has been removed since we dont need diff color for array items @extend .light-background !optional;*/
                 position: relative;
 
                 .field-object {
@@ -444,10 +444,10 @@
     }
 
     div.action-bar-wrap {
-      @extend .action-bar-wrap;
+      @extend .action-bar-wrap !optional;
 
       .submit-bar {
-        @extend .submit-bar;
+        @extend .submit-bar !optional;
         cursor: pointer;
         @apply font-rc font-medium text-legend text-white leading-10;
       }
@@ -606,7 +606,6 @@
 
 
 .employee-card-sub-header {
-  white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 100%;

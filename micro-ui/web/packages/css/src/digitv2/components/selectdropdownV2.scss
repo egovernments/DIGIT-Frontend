@@ -2,23 +2,23 @@
   @apply mb-lg relative;
 
   .digit-select {
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
     @apply relative block w-full h-10 border-2 border-solid border-input-border;
     &:hover {
-      @extend .light-input-border;
+      @extend .light-input-border !optional;
       @apply border-2 border-solid border-primary-main;
     }
     input[type="text"] {
       width: calc(100% - 32px);
       background-color: transparent;
-      @extend .light-input-border;
-      @extend .light-text-color-primary;
+      @extend .light-input-border !optional;
+      @extend .light-text-color-primary !optional;
       @apply absolute z-10 w-full h-full outline-none text-text-primary text-form-field pl-sm;
     }
 
     p {
       padding-top: 9px;
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply text-form-field text-text-primary float-left ml-sm;
     }
 
@@ -33,19 +33,19 @@
 
   .digit-select-active {
     @apply relative block w-full h-10 border-2 border-solid border-primary-main;
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
 
     input[type="text"] {
       width: calc(100% - 32px);
       background-color: transparent;
-      @extend .light-background;
-      @extend .light-text-color-primary;
+      @extend .light-background !optional;
+      @extend .light-text-color-primary !optional;
 
       @apply absolute z-10 w-full h-full outline-none text-text-primary text-form-field pl-sm;
     }
 
     p {
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply text-form-field text-text-primary float-left ml-sm;
     }
 
@@ -71,12 +71,12 @@
 
     p {
       padding-top: 14px;
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply w-full h-12 pl-sm text-text-primary text-form-field;
 
       &:hover {
         @apply bg-grey-mid;
-        @extend .light-background;
+        @extend .light-background !optional;
       }
     }
   }
@@ -95,18 +95,18 @@
 
   .digit-select {
     @apply relative block w-full h-10 border-2 border-solid border-input-border;
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
 
     input[type="text"] {
       width: calc(100% - 32px);
       background-color: transparent;
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply absolute z-10 w-full h-full outline-none text-text-primary text-form-field pl-sm;
     }
 
     p {
       padding-top: 9px;
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply text-form-field text-text-primary float-left ml-sm;
     }
 
@@ -120,18 +120,18 @@
   }
 
   .digit-select-active {
-    @extend .light-input-border;
+    @extend .light-input-border !optional;
     @apply relative block w-full h-10 border-2 border-solid border-primary-main;
 
     input[type="text"] {
       width: calc(100% - 32px);
       background-color: transparent;
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply absolute z-10 w-full h-full outline-none text-text-primary text-form-field pl-sm;
     }
 
     p {
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply text-form-field text-text-primary float-left ml-sm;
     }
 
@@ -151,12 +151,12 @@
   .digit-options-card {
     width: 100% !important;
     box-shadow: 0 8px 10px 1px rgba(0, 0, 0, 0.14), 0 3px 14px 2px rgba(0, 0, 0, 0.12), 0 5px 5px -3px rgba(0, 0, 0, 0.2);
-    @extend .light-background;
+    @extend .light-background !optional;
     @apply absolute z-20 mt-xs bg-white;
 
     p {
       padding-top: 14px;
-      @extend .light-text-color-primary;
+      @extend .light-text-color-primary !optional;
       @apply w-full h-12 pl-sm text-text-primary text-form-field;
 
       &:hover {

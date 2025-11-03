@@ -28,7 +28,7 @@
   }
 
   .custom-checkbox-emp {
-    @extend .custom-checkbox;
+    @extend .custom-checkbox !optional;
     width: 24px;
     height: 24px;
   }
