@@ -332,7 +332,6 @@ const WalkthroughSection = ({ activeTab, setActiveTab, t, employeeWTLink, citize
     );
 };
 
-
 const content = {
     heroTitle: "Local Business License Issuing System",
     heroHeadline: [

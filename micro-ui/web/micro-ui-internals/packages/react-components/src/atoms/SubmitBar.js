@@ -2,9 +2,12 @@ import React, { forwardRef } from "react";
 import PropTypes from "prop-types";
 
 const SubmitBar = forwardRef((props, ref) => {
+  const fieldId = props?.id||Digit?.Utils?.getFieldIdName?.( props?.label || props?.className || "submitbutton")||"NA";
+  
   return (
     <button
       ref={ref}
+      id={fieldId}
       disabled={props.disabled ? true : false}
       className={`${props.disabled ? "submit-bar-disabled" : "submit-bar"} ${props.className ? props.className : ""}`}
       type={props.submit ? "submit" : "button"}

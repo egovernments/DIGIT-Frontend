@@ -39,7 +39,6 @@ const LandingComponent = ({ config = {} }) => {
 
 
 
-
   // Destructure key config fields with fallback defaults
   const {
     heading = "Sandbox",

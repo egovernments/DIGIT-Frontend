@@ -10,7 +10,7 @@ import SelectOtp from "./SelectOtp";
 const TYPE_REGISTER = { type: "register" };
 const TYPE_LOGIN = { type: "login" };
 const DEFAULT_USER = "digit-user";
-const DEFAULT_REDIRECT_URL = `/${window?.contextPath}/citizen`;
+let DEFAULT_REDIRECT_URL = `/${window?.contextPath || window?.globalConfigs?.getConfig("CONTEXT_PATH")}/citizen`;
 
 /* set citizen details to enable backward compatiable */
 const setCitizenDetail = (userObject, token, tenantId) => {
@@ -74,7 +74,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     Digit.UserService.setUser(user);
     setCitizenDetail(user?.info, user?.access_token, stateCode);
     const redirectPath = location.state?.from || DEFAULT_REDIRECT_URL;
-    if (!Digit.ULBService.getCitizenCurrentTenant(true)) {
+    if (!Digit.ULBService.getCitizenCurrentTenant()) {
       history.replace(`/${window?.contextPath}/citizen/select-location`, {
         redirectBackTo: redirectPath,
       });
@@ -105,6 +105,11 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const handleMobileChange = (event) => {
     const { value } = event.target;
     setParmas({ ...params, mobileNumber: value });
+  };
+
+  const handleEmailChange = (event) => {
+    const { value } = event.target;
+    setParmas({ ...params, userName: value });
   };
 
   const selectMobileNumber = async (mobileNumber) => {
@@ -164,10 +169,10 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
     try {
       setIsOtpValid(true);
       setCanSubmitOtp(false);
-      const { mobileNumber, otp, name } = params;
+      const { mobileNumber, otp, name, userName } = params;
       if (isUserRegistered) {
         const requestData = {
-          username: mobileNumber,
+          username: mobileNumber || userName,
           password: otp,
           tenantId: stateCode,
           userType: getUserType(),
@@ -190,7 +195,7 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       } else if (!isUserRegistered) {
         const requestData = {
           name,
-          username: mobileNumber,
+          username: mobileNumber || userName,
           otpReference: otp,
           tenantId: stateCode,
         };
@@ -242,7 +247,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
               onSelect={selectMobileNumber}
               config={stepItems[0]}
               mobileNumber={params.mobileNumber || ""}
+              emailId={params.userName || ""}
               onMobileChange={handleMobileChange}
+              onEmailChange={handleEmailChange}
               canSubmit={canSubmitNo}
               showRegisterLink={isUserRegistered && !location.state?.role}
               t={t}

@@ -47,6 +47,12 @@
     "postcss-scss": "3.0.5",
     "sass": "^1.26.11"
   },
+  "resolutions": {
+    "**/minimatch": "7.4.6",
+    "minimatch": "7.4.6",
+    "**/glob": "7.2.3",
+    "glob": "7.2.3"
+  },
   "files": [
     "dist/index.min.css",
     "dist/index.css",

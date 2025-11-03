@@ -1,5 +1,5 @@
 import { Card,  SVG } from "@egovernments/digit-ui-react-components";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef  } from "react";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { DigitJSONForm } from "../../Module";
@@ -229,7 +229,7 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
   const onFormValueChange = (updatedSchema, element) => {
     const { formData } = updatedSchema;
     if (!_.isEqual(session, formData)) {
-      setSession({ ...session, ...formData });
+      setSession((prev) => ({ ...prev, ...formData }));
     }
   };
 
@@ -263,10 +263,21 @@ const MDMSAdd = ({ defaultFormData, updatesToUISchema, screenType = "add", onVie
     }
   }, [schema]);
 
+  const debouncedSave = useRef(_.debounce((newSession) => {
+  setSessionFormData((prev) => ({ ...prev, ...newSession }));
+}, 500)).current;
+
+useEffect(() => {
+  if (!_.isEqual(sessionFormData, session)) {
+    debouncedSave(session);
+  }
+}, [session]);
+
+
   useEffect(() => {
     if (!_.isEqual(sessionFormData, session)) {
       const timer = setTimeout(() => {
-        setSessionFormData({ ...sessionFormData, ...session });
+        setSessionFormData((prev) => ({ ...prev, ...session }));
       }, 1000);
       return () => {
         clearTimeout(timer);

@@ -773,13 +773,26 @@ button:hover {
   width: calc(100% - 32px);
   background-color: initial;
   position: relative !important;
-  z-index: 10;
+  z-index: 8 !important; 
   width: 100%;
   height: 100%;
   outline: 2px solid transparent;
   outline-offset: 2px;
   padding-left: 8px;
 }
+
+.digit-dropdown-employee-select-wrap .digit-dropdown-select input[type=text], .digit-dropdown-employee-select-wrap .digit-dropdown-select .digit-checkbox-container .input-emp[type=text], .digit-checkbox-container .digit-dropdown-employee-select-wrap .digit-dropdown-select .input-emp[type=text] {
+  position: absolute;
+  z-index: 8 !important;
+  height: 100%;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  width: calc(100% - 1.75rem);
+  background-color: initial;
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+  padding-left: .75rem;
+  color: #363636; }
 
 .modal-content .employee-select-wrap .select-active {
   position: absolute;
