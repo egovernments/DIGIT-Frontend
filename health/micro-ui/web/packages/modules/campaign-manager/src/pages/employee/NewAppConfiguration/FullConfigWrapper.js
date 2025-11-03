@@ -52,11 +52,11 @@ const FullConfigWrapper = () => {
             setSelectedPageName(firstFlow.indexRoute || firstFlow.pages?.[0]?.name);
           }
         } else {
-          setError("No flow configuration found");
+          setError(t("APP_CONFIG_NO_FLOW_CONFIG_FOUND"));
         }
       } catch (err) {
         console.error("Error fetching flow config:", err);
-        setError("Failed to fetch flow configuration");
+        setError(t("APP_CONFIG_FAILED_TO_FETCH_FLOW_CONFIG"));
       } finally {
         setIsLoading(false);
       }
@@ -179,8 +179,8 @@ const FullConfigWrapper = () => {
   if (error || !flowConfig) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "100vh", flexDirection: "column" }}>
-        <h2 style={{ color: "#d32f2f" }}>Error</h2>
-        <p>{error || "Failed to load flow configuration"}</p>
+        <h2 style={{ color: "#d32f2f" }}>{t("APP_CONFIG_ERROR")}</h2>
+        <p>{error || t("APP_CONFIG_FAILED_TO_LOAD_FLOW_CONFIG")}</p>
       </div>
     );
   }
@@ -215,22 +215,30 @@ const FullConfigWrapper = () => {
     sidebarSection: {
       display: "flex",
       flexDirection: "column",
-      gap: "8px",
     },
     sectionTitle: {
-      fontSize: "16px",
+      fontSize: "1.5rem",
       fontWeight: "700",
       color: "#0B4B66",
       marginBottom: "8px",
     },
     flowItem: {
-      padding: "10px 12px",
-      borderRadius: "4px",
+      padding: "1rem",
+      margin: "0 -1rem",
       cursor: "pointer",
       transition: "all 0.2s",
       fontSize: "14px",
       fontWeight: "400",
       backgroundColor: "transparent",
+      position: "relative",
+    },
+    flowItemBorder: {
+      position: "absolute",
+      bottom: 0,
+      left: "1rem",
+      right: "1rem",
+      height: "1px",
+      backgroundColor: "#D6D4D5",
     },
     roleItem: {
       padding: "8px 12px",
@@ -270,9 +278,9 @@ const FullConfigWrapper = () => {
     },
     pageTabActive: {
       padding: "16px 20px",
-      borderColor: "#F47738",
-      borderBottom: "3px solid #F47738",
-      color: "#F47738",
+      borderColor: "#C84C0E",
+      borderBottom: "3px solid #C84C0E",
+      color: "#C84C0E",
       fontWeight: "600",
       backgroundColor: "#FFFFFF",
       position: "relative",
@@ -317,32 +325,33 @@ const FullConfigWrapper = () => {
       {/* Left Sidebar - Roles and Flows */}
       <div style={styles.leftSidebar}>
         <div style={styles.sidebarSection}>
-          <div style={styles.sectionTitle}>Roles</div>
+          <div style={styles.sectionTitle}>{t("APP_CONFIG_ROLES")}</div>
           {currentPageRoles.length > 0 ? (
             currentPageRoles.map((role, index) => (
               <div key={index} style={styles.roleItem}>
-                {role}
+                {t(role)}
               </div>
             ))
           ) : (
-            <div style={{ fontSize: "13px", color: "#999", padding: "8px 0" }}>No roles assigned</div>
+            <div style={{ fontSize: "13px", color: "#999", padding: "8px 0" }}>{t("APP_CONFIG_NO_ROLES_ASSIGNED")}</div>
           )}
         </div>
 
         <div style={styles.sidebarSection}>
-          <div style={styles.sectionTitle}>Flows</div>
+          <div style={styles.sectionTitle}>{t("APP_CONFIG_FLOWS")}</div>
           {flowConfig.flows?.map((flow, index) => (
             <div
               key={index}
               style={{
                 ...styles.flowItem,
-                backgroundColor: selectedFlow === flow.id ? "#F47738" : "transparent",
-                color: selectedFlow === flow.id ? "#FFFFFF" : "#505A5F",
+                backgroundColor: selectedFlow === flow.id ? "#C84C0E08" : "transparent",
+                color: selectedFlow === flow.id ? "#0B4B66" : "#505A5F",
                 fontWeight: selectedFlow === flow.id ? "700" : "400",
               }}
               onClick={() => handleFlowClick(flow)}
             >
-              {flow.name}
+              {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_FLOW_${flow.name}`))}
+              <div style={styles.flowItemBorder} />
             </div>
           ))}
         </div>
@@ -361,7 +370,7 @@ const FullConfigWrapper = () => {
               }}
               onClick={() => handlePageClick(page)}
             >
-              {page.name}
+              {t(Digit.Utils.locale.getTransformedLocale(`APP_CONFIG_PAGE_${page.name}`))}
             </div>
           ))}
         </div>
@@ -430,7 +439,7 @@ const FullConfigWrapper = () => {
           icon="ArrowBack"
           onClick={() => {
             // Handle back navigation - could go to module selection or previous screen
-            window.history.back();
+            navigate(`/${window?.contextPath}/employee/campaign/new-app-modules?campaignNumber=${campaignNumber}&tenantId=${tenantId}`);
           }}
         />
         <Button

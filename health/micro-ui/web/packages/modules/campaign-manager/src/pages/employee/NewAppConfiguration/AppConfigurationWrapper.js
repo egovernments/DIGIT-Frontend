@@ -49,6 +49,36 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     try {
       setIsUpdating(true);
 
+      // Transform and filter localization data to match API format
+      const transformedLocalizationData = localizationData
+        .filter((item) => {
+          const code = item?.code;
+          const message = item?.[currentLocale];
+          return code && code.trim() !== "" && message && message.trim() !== "";
+        })
+        .map((item) => ({
+          code: item.code,
+          message: item[currentLocale],
+          module: localeModule,
+          locale: currentLocale,
+        }));
+
+      // Upsert localization data if there are valid entries
+      if (transformedLocalizationData.length > 0) {
+        try {
+          await Digit.CustomService.getResponse({
+            url: "/localization/messages/v1/_upsert",
+            body: {
+              tenantId: tenantId,
+              messages: transformedLocalizationData,
+            },
+          });
+        } catch (locError) {
+          console.error("Error upserting localization:", locError);
+          // Continue with MDMS update even if localization fails
+        }
+      }
+
       // Prepare the payload - use responseData structure but replace data with currentData
       const updatePayload = {
         Mdms: {
@@ -145,12 +175,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           // Initialize config with the fetched data
           dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
-          setPageConfigError("No page configuration found");
+          setPageConfigError(t("APP_CONFIG_NO_PAGE_CONFIG_FOUND"));
           console.error("No page configuration found for:", { flow, pageName, campaignNumber });
         }
       } catch (err) {
         console.error("Error fetching page config:", err);
-        setPageConfigError("Failed to fetch page configuration");
+        setPageConfigError(t("APP_CONFIG_FAILED_TO_FETCH_PAGE_CONFIG"));
       } finally {
         setIsLoadingPageConfig(false);
       }
@@ -220,7 +250,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   if (pageConfigError) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", flexDirection: "column" }}>
-        <h3 style={{ color: "#d32f2f" }}>Error Loading Configuration</h3>
+        <h3 style={{ color: "#d32f2f" }}>{t("APP_CONFIG_ERROR_LOADING_CONFIGURATION")}</h3>
         <p>{pageConfigError}</p>
       </div>
     );
@@ -247,7 +277,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} />
       {showAddFieldPopup && (
         <PopUp
-          className={"add-field-popup"}
+          className="app-config-add-field-popup"
           type={"default"}
           heading={t("ADD_FIELD")}
           onOverlayClick={() => {}}
