@@ -1,0 +1,26 @@
+
+
+.digit-back-button {
+  @extend .light-text-color-primary !optional;
+  @extend .light-input-border !optional;
+  width: fit-content;
+  @apply flex items-center cursor-pointer border-b-2 font-rc text-text-btn ml-sm mb-md;
+
+  img {
+    @apply flex;
+  }
+
+  svg {
+    @apply flex;
+  }
+
+  p {
+    @apply flex;
+  }
+}
+
+@screen dt {
+  .digit-back-button {
+    margin-left: 0;
+  }
+}

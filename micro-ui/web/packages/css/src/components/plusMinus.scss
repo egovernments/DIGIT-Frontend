@@ -1,0 +1,15 @@
+.PlusMinus {
+  text-align: center;
+  display: flex;
+  align-content: center;
+  justify-content: center;
+}
+.PlusMinusbutton{
+  border: 1px solid var(--digitv2-lightTheme-divider);
+  background-color: var(digitv2-lightTheme-background);
+  color: var(--digitv2-lightTheme-text-color-secondary);
+  font-size: 27px;
+  font-weight: 400;
+  text-align: center;
+  width: 40px;
+}

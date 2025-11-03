@@ -1,25 +1,44 @@
-# FROM egovio/alpine-node-builder-14:yarn AS build
-FROM node:14-alpine AS build
+# Multi-variant Dockerfile for different builds
+FROM node:20-alpine AS build
 RUN apk update && apk upgrade
 RUN apk add --no-cache git>2.30.0
+
+# Build argument to specify which variant to build
+ARG BUILD_VARIANT=core-ui
 ARG WORK_DIR
+
 WORKDIR /app
-ENV NODE_OPTIONS "--max-old-space-size=8168"
 
-COPY ${WORK_DIR} .
-RUN ls -lah
+# Copy the entire micro-ui directory into the container
+COPY micro-ui .
 
-#RUN node web/envs.js
-RUN cd web/ \
-    &&  ./install-deps.sh \
+# Copy variant-specific files (index.js, package.json) from builds folder
+COPY micro-ui/web/builds/${BUILD_VARIANT}/index.js ./web/src/index.js
+COPY micro-ui/web/builds/${BUILD_VARIANT}/package.json ./web/package.json
+
+# If variant has public folder files, copy them too
+# Using conditional copy with proper syntax
+RUN if [ -d "web/builds/${BUILD_VARIANT}/public" ]; then \
+        cp -r web/builds/${BUILD_VARIANT}/public/* web/public/; \
+    fi
+
+# Use WORKDIR instead of cd
+WORKDIR /app/web
+RUN ./install-deps.sh \
     && yarn install \
-    && yarn build:webpack 
+    && yarn build:webpack
 
+# Production stage
 FROM nginx:mainline-alpine
-#FROM ghcr.io/egovernments/nginx:mainline-alpine
-ENV WORK_DIR=/var/web/digit-ui
+ARG BUILD_VARIANT=core-ui
+ENV BUILD_VARIANT=${BUILD_VARIANT}
+ENV WORK_DIR=/var/web/${BUILD_VARIANT}
 
 RUN mkdir -p ${WORK_DIR}
 
 COPY --from=build /app/web/build ${WORK_DIR}/
-COPY --from=build /app/web/docker/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy the nginx template and substitute the BUILD_VARIANT
+COPY micro-ui/web/docker/nginx.conf.template /tmp/nginx.conf.template
+RUN envsubst '${BUILD_VARIANT}' < /tmp/nginx.conf.template > /etc/nginx/conf.d/default.conf \
+    && rm /tmp/nginx.conf.template
