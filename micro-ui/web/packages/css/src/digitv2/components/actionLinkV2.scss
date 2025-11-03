@@ -1,0 +1,7 @@
+
+
+.digit-action-links {
+  @extend .light-primary !optional;
+  @apply text-text-btn mr-lg !important;
+  cursor: pointer;
+}
