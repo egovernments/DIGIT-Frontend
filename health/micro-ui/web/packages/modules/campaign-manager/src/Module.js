@@ -76,6 +76,7 @@ import ColumnTemplate from "./pages/employee/NewAppConfiguration/components/Colu
 import ListViewTemplate from "./pages/employee/NewAppConfiguration/components/ListViewTemplate";
 import TextTemplate from "./pages/employee/NewAppConfiguration/components/TextTemplate";
 import TableTemplate from "./pages/employee/NewAppConfiguration/components/TableTemplate";
+import MenuCardTemplate from "./pages/employee/NewAppConfiguration/components/MenuCardTemplate";
 
 /**
  * MDMS Module name
@@ -223,6 +224,7 @@ const componentsToRegister = {
   ListView: ListViewTemplate,
   TextTemplate: TextTemplate,
   TableTemplate: TableTemplate,
+  MenuCardTemplate,
 };
 
 const overrideHooks = () => {
