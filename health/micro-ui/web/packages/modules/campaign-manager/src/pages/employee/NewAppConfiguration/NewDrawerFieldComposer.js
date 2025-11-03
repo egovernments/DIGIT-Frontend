@@ -232,17 +232,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const bindTo = panelItem.bindTo;
 
         const handleToggleChange = (value) => {
-          // always update local UI
+          // Update local UI
           setLocalToggle(Boolean(value));
 
-          // only write to Redux if the bindTo already exists AND has a value
-          // i.e., the user already persisted this setting earlier.
-          const existing = getFieldValueByPath(selectedField, bindTo, undefined);
-          if (existing !== undefined && existing !== null && existing !== "") {
-            // safe to update existing field
-            handleFieldChange(Boolean(value));
-          }
-          // else: do nothing — don't create new key/value
+          // Always update Redux store with the toggle value
+          handleFieldChange(Boolean(value));
         };
         return (
           <div>
@@ -471,8 +465,8 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
         let finalValueToSave;
 
         // Handle localization
-        if (fieldValue) {
-          // If a code already exists, update the localization entry
+        if (fieldValue && typeof fieldValue === "string") {
+          // If a code already exists (and it's a string, not a boolean), update the localization entry
           dispatch(
             updateLocalizationEntry({
               code: fieldValue,
@@ -515,7 +509,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
-    if (fieldValue) {
+    if (fieldValue && typeof fieldValue === "string") {
       dispatch(
         updateLocalizationEntry({
           code: fieldValue,

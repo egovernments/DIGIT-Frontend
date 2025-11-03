@@ -247,7 +247,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       <IntermediateWrapper onNext={handleUpdateMDMS} isUpdating={isUpdating} />
       {showAddFieldPopup && (
         <PopUp
-          className={"add-field-popup"}
+          className="app-config-add-field-popup"
           type={"default"}
           heading={t("ADD_FIELD")}
           onOverlayClick={() => {}}
