@@ -582,9 +582,9 @@ const CampaignDetails = () => {
                   isDisabled={
                     campaignData?.boundaries?.length === 0 ||
                     campaignData?.deliveryRules?.length === 0 ||
-                    campaignData?.resources?.length === 0 ||
+                    campaignData?.resources?.length === 0
                     // modulesData?.length === 0
-                    !hasVersionGreaterThanOne
+                    // !hasVersionGreaterThanOne
                   }
                   type="button"
                   variation="primary"

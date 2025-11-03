@@ -49,6 +49,36 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
     try {
       setIsUpdating(true);
 
+      // Transform and filter localization data to match API format
+      const transformedLocalizationData = localizationData
+        .filter((item) => {
+          const code = item?.code;
+          const message = item?.[currentLocale];
+          return code && code.trim() !== "" && message && message.trim() !== "";
+        })
+        .map((item) => ({
+          code: item.code,
+          message: item[currentLocale],
+          module: localeModule,
+          locale: currentLocale,
+        }));
+
+      // Upsert localization data if there are valid entries
+      if (transformedLocalizationData.length > 0) {
+        try {
+          await Digit.CustomService.getResponse({
+            url: "/localization/messages/v1/_upsert",
+            body: {
+              tenantId: tenantId,
+              messages: transformedLocalizationData,
+            },
+          });
+        } catch (locError) {
+          console.error("Error upserting localization:", locError);
+          // Continue with MDMS update even if localization fails
+        }
+      }
+
       // Prepare the payload - use responseData structure but replace data with currentData
       const updatePayload = {
         Mdms: {
