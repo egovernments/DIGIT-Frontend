@@ -302,85 +302,63 @@ export const transformMdmsToFlowConfig = (mdmsData) => {
   const flows = data.flows;
   const project = data.project;
 
-  // First, collect all pages with their global order for calculating next/previous routes
-  const allPagesWithFlowInfo = [];
+  // Process each flow separately to maintain flow-wise next/previous routes
+  const flowConfigs = [];
 
   flows.forEach((flow) => {
+    const flowPages = [];
+
     // Handle TEMPLATE screenType - single page flows
     if (flow.screenType === "TEMPLATE") {
-      allPagesWithFlowInfo.push({
-        flowId: flow.name,
-        flowName: flow.name,
-        pageName: flow.name,
+      flowPages.push({
+        name: flow.name,
         order: flow.order || 1,
-        roles: flow.roles || [],
+        nextRoute: flow.nextRoute || null,
+        previousRoute: flow.previousRoute || null,
       });
     }
 
     // Handle FORM screenType - multi-page flows
     if (flow.screenType === "FORM" && flow.pages) {
-      flow.pages.forEach((page) => {
-        allPagesWithFlowInfo.push({
-          flowId: flow.name,
-          flowName: flow.name,
-          pageName: `${flow.name}.${page.page}`,
-          order: page.order || 1,
-          roles: flow.roles || [],
+      flow.pages.forEach((page, pageIndex) => {
+        flowPages.push({
+          name: page.name || `${flow.name}.${page.page}`,
+          order: page.order || pageIndex + 1,
+          nextRoute: page.nextRoute || null,
+          previousRoute: page.previousRoute || null,
         });
       });
     }
-  });
 
-  // Sort all pages by order to establish global sequence
-  allPagesWithFlowInfo.sort((a, b) => a.order - b.order);
+    // Sort pages within this flow by order
+    flowPages.sort((a, b) => a.order - b.order);
 
-  // Create a map for quick next/previous lookup
-  const pageRouteMap = {};
-  allPagesWithFlowInfo.forEach((pageInfo, index) => {
-    const nextPage = allPagesWithFlowInfo[index + 1];
-    const previousPage = allPagesWithFlowInfo[index - 1];
+    // Calculate next/previous routes within this flow only (as fallback if not provided)
+    flowPages.forEach((page, index) => {
+      const nextPage = flowPages[index + 1];
+      const previousPage = flowPages[index - 1];
 
-    pageRouteMap[pageInfo.pageName] = {
-      order: index + 1,
-      nextRoute: nextPage ? nextPage.pageName : null,
-      previousRoute: previousPage ? previousPage.pageName : null,
-    };
-  });
+      // Use the original nextRoute/previousRoute from MDMS data if available, otherwise fallback to calculated within flow
+      if (page.nextRoute === null && nextPage) {
+        page.nextRoute = nextPage.name;
+      }
+      if (page.previousRoute === null && previousPage) {
+        page.previousRoute = previousPage.name;
+      }
+    });
 
-  // Group pages by flow to create flow configs
-  const flowConfigs = [];
-  const flowGroups = {};
-
-  allPagesWithFlowInfo.forEach((pageInfo) => {
-    if (!flowGroups[pageInfo.flowId]) {
-      flowGroups[pageInfo.flowId] = {
-        id: pageInfo.flowId,
-        name: pageInfo.flowName,
-        pages: [],
-        roles: pageInfo.roles,
+    // Create flow config
+    if (flowPages.length > 0) {
+      flowConfigs.push({
+        id: flow.name,
+        name: flow.name,
+        order: flow.order || 1,
+        pages: flowPages,
+        roles: flow.roles || [],
         project: project,
-      };
+        indexRoute: flowPages[0]?.name || null,
+      });
     }
-
-    flowGroups[pageInfo.flowId].pages.push({
-      name: pageInfo.pageName,
-      order: pageRouteMap[pageInfo.pageName].order,
-      nextRoute: pageRouteMap[pageInfo.pageName].nextRoute,
-      previousRoute: pageRouteMap[pageInfo.pageName].previousRoute,
-    });
-  });
-
-  // Convert flowGroups to array and set indexRoute
-  Object.values(flowGroups).forEach((flowGroup) => {
-    flowConfigs.push({
-      id: flowGroup.id,
-      name: flowGroup.name,
-      order: 1,
-      pages: flowGroup.pages,
-      roles: flowGroup.roles,
-      project: flowGroup.project,
-      indexRoute: flowGroup.pages[0]?.name || null,
-    });
   });
 
   return flowConfigs;
