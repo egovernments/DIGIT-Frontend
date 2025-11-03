@@ -375,6 +375,26 @@ const CampaignDetails = () => {
             component: "ViewDetailComponent",
             noCardStyle: true,
             props: {
+              headingName: t("HCM_UPLOAD_LOCALIZATION_DATA_HEADING"),
+              desc: t("HCM_UPLOAD_LOCALIZATION_DATA_DESC"),
+              buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
+              navLink: `localization-add?campaignNumber=${campaignData?.campaignNumber}`,
+              // navLink: `setup-campaign?key=10&summary=false&submit=true&campaignNumber=${campaignData?.campaignNumber}&id=${campaignData?.id}&draft=${isDraft}&isDraft=true`,
+              type: "primary",
+              icon: <UploadCloud fill={campaignData?.boundaries?.length <= 0 || campaignData?.status === "created" ? "#c5c5c5" : "#C84C0E"} />,
+              disabled: false,
+            },
+          },
+        ],
+      },
+      {
+        noCardStyle: true,
+        sections: [
+          {
+            type: "COMPONENT",
+            component: "ViewDetailComponent",
+            noCardStyle: true,
+            props: {
               headingName: t("HCM_UPLOAD_DATA_HEADING"),
               desc: t("HCM_UPLOAD_DATA_DESC"),
               buttonLabel: campaignData?.resources?.length > 0 ? t("HCM_EDIT_UPLOAD_DATA_BUTTON") : t("HCM_UPLOAD_DATA_BUTTON"),
@@ -567,7 +587,7 @@ const CampaignDetails = () => {
           <Edit width={"18"} height={"18"} />
         </div>
       </div>
-      <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div>
+      {/* <div className="detail-desc">{t("HCM_VIEW_DETAILS_DESCRIPTION")}</div> */}
       <div className="campaign-summary-container">
         <ViewComposer data={data} />
       </div>
