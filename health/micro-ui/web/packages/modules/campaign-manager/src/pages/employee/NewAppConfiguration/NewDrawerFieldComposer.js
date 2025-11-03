@@ -714,7 +714,7 @@ function NewDrawerFieldComposer() {
   if (!selectedField) {
     return (
       <div style={{ padding: "16px" }}>
-        <p>No field selected</p>
+        <p>{t("APP_CONFIG_NO_FIELD_SELECTED")}</p>
       </div>
     );
   }

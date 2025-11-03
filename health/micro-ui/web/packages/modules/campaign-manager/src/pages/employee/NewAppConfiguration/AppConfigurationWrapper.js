@@ -145,12 +145,12 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
           // Initialize config with the fetched data
           dispatch(initializeConfig({ pageConfig, responseData }));
         } else {
-          setPageConfigError("No page configuration found");
+          setPageConfigError(t("APP_CONFIG_NO_PAGE_CONFIG_FOUND"));
           console.error("No page configuration found for:", { flow, pageName, campaignNumber });
         }
       } catch (err) {
         console.error("Error fetching page config:", err);
-        setPageConfigError("Failed to fetch page configuration");
+        setPageConfigError(t("APP_CONFIG_FAILED_TO_FETCH_PAGE_CONFIG"));
       } finally {
         setIsLoadingPageConfig(false);
       }
@@ -220,7 +220,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   if (pageConfigError) {
     return (
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center", height: "50vh", flexDirection: "column" }}>
-        <h3 style={{ color: "#d32f2f" }}>Error Loading Configuration</h3>
+        <h3 style={{ color: "#d32f2f" }}>{t("APP_CONFIG_ERROR_LOADING_CONFIGURATION")}</h3>
         <p>{pageConfigError}</p>
       </div>
     );

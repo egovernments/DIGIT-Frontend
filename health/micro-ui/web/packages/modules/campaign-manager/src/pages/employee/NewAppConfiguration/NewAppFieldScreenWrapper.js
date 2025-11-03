@@ -161,7 +161,7 @@ function NewAppFieldScreenWrapper() {
   if (!currentCard) {
     return (
       <div style={{ padding: "16px" }}>
-        <p>No configuration data available.</p>
+        <p>{t("APP_CONFIG_NO_CONFIGURATION_DATA_AVAILABLE")}</p>
       </div>
     );
   }
