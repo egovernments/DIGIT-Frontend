@@ -1,6 +1,6 @@
 # Changelog 
 
-## ["2.0.0-dev-01"] [26-Sep-2025]
+## ["2.0.0-dev-01"] [3-Nov-2025]
 -Optimised packages of core with lazy implementation republish
 
 
