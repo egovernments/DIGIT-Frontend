@@ -4,3 +4,5 @@ accelerators/frontend/micro-ui-internals/node_modules/*
 index.lock
 utilities/project-factory/
 /micro-frontends
+*CLAUDE.md
+
