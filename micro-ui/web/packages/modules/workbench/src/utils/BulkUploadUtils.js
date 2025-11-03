@@ -1,5 +1,20 @@
 import XLSX from 'xlsx';
-export const onConfirm = (
+import { createDataValidator } from './FileSecurityValidator';
+
+// Create a data-specific security validator for bulk uploads
+const createBulkUploadValidator = () => {
+    return createDataValidator({
+        MAX_FILE_SIZE: 50 * 1024 * 1024, // 50MB for bulk uploads
+        ALLOWED_MIME_TYPES: [
+            'application/json',
+            'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            'application/vnd.ms-excel',
+            'text/csv'
+        ]
+    });
+};
+
+export const onConfirm = async (
     file,
     SchemaDefinitions,
     ajv,
@@ -13,6 +28,22 @@ export const onConfirm = (
     const validate = ajv.compile(SchemaDefinitions);
 
     try {
+        // SECURITY: Perform comprehensive security scan before processing
+        const validator = createBulkUploadValidator();
+        
+        try {
+            const securityResult = await validator.performSecurityScan(file, (progress, message) => {
+                setProgress(Math.floor(progress * 0.25)); // Use 25% of progress for security scan
+            });
+            
+            setProgress(25); // Security scan completed
+        } catch (securityError) {
+            console.error('Security scan failed:', securityError);
+            fileValidator(t('WBH_SECURITY_SCAN_FAILED') || `Security scan failed: ${securityError.message}`);
+            setProgress(0);
+            setShowBulkUploadModal(false);
+            return; // Stop processing if security scan fails
+        }
         if (file && file.type === 'application/json') {
             const reader = new FileReader();
 
@@ -20,20 +51,35 @@ export const onConfirm = (
                 var jsonContent = [];
                 try {
                     jsonContent = JSON.parse(event.target.result);
+                    setProgress(50); // File parsing completed
                 } catch (error) {
-                    fileValidator(error.message)
+                    console.error('JSON parsing error:', error);
+                    fileValidator(error.message);
+                    setProgress(0);
+                    return;
                 }
+                
                 var validationError = false;
+                const totalRecords = jsonContent.length;
+                
                 jsonContent.forEach((data, index) => {
                     const valid = validate(data);
                     if (!valid) {
                         validationError = true;
-                        fileValidator((validate?.errors[0]?.instancePath ? "InctancePath : " + validate.errors[0].instancePath + " " : "") + validate.errors[0]?.message + " on index " + index);
+                        const errorMsg = (validate?.errors[0]?.instancePath ? "InstancePath : " + validate.errors[0].instancePath + " " : "") + validate.errors[0]?.message + " on index " + index;
+                        console.error('Validation error:', errorMsg);
+                        fileValidator(errorMsg);
                         setProgress(0);
                         return;
                     }
+                    
+                    // Update progress during validation
+                    const progressPercent = 50 + (index / totalRecords) * 25; // 50-75% for validation
+                    setProgress(Math.floor(progressPercent));
                 });
+                
                 if (!validationError) {
+                    setProgress(75); // Validation completed
                     // Call onSubmitBulk with setProgress
                     onSubmitBulk(jsonContent, setProgress);
                 }
@@ -41,45 +87,92 @@ export const onConfirm = (
 
             reader.readAsText(file);
         }
-        else if (file && file.type ===
+        else if (file && (file.type ===
             'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' ||
-            'application/vnd.ms-excel'
+            file.type === 'application/vnd.ms-excel')
         ) {
 
             // Sheet would have first row as headings of columns and then each column contain values. Make array of objects from that sheet. Each object would have key as column name and value as column value
             const reader = new FileReader();
 
             reader.onload = (event) => {
-                const data = new Uint8Array(event.target.result);
-                const workbook = XLSX.read(data, { type: 'array' });
-                const sheetName = workbook.SheetNames[0]; // Assuming you are interested in the first sheet
-                const worksheet = workbook.Sheets[sheetName];
-                const jsonArray = XLSX.utils.sheet_to_json(worksheet);
-                var validationError = false;
-                jsonArray.forEach((data, index) => {
-                    const valid = validate(data);
-                    if (!valid) {
-                        validationError = true;
-                        fileValidator(validate.errors[0]?.message + " on index " + index);
-                        setProgress(0);
-                        return;
+                try {
+                    const data = new Uint8Array(event.target.result);
+                    const workbook = XLSX.read(data, { type: 'array' });
+                    setProgress(50); // File parsing completed
+                    
+                    if (!workbook.SheetNames || workbook.SheetNames.length === 0) {
+                        throw new Error('No sheets found in the Excel file');
                     }
-                });
-                if (!validationError) {
-                    // Call onSubmitBulk with setProgress
-                    onSubmitBulk(jsonArray, setProgress);
+                    
+                    const sheetName = workbook.SheetNames[0]; // Assuming you are interested in the first sheet
+                    const worksheet = workbook.Sheets[sheetName];
+                    const jsonArray = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    if (jsonArray.length === 0) {
+                        throw new Error('No data found in the Excel sheet');
+                    }
+                    
+                    var validationError = false;
+                    const totalRecords = jsonArray.length;
+                    
+                    jsonArray.forEach((data, index) => {
+                        const valid = validate(data);
+                        if (!valid) {
+                            validationError = true;
+                            const errorMsg = (validate?.errors[0]?.instancePath ? "InstancePath : " + validate.errors[0].instancePath + " " : "") + validate.errors[0]?.message + " on index " + index;
+                            console.error('Excel validation error:', errorMsg);
+                            fileValidator(errorMsg);
+                            setProgress(0);
+                            return;
+                        }
+                        
+                        // Update progress during validation
+                        const progressPercent = 50 + (index / totalRecords) * 25; // 50-75% for validation
+                        setProgress(Math.floor(progressPercent));
+                    });
+                    
+                    if (!validationError) {
+                        setProgress(75); // Validation completed
+                        // Call onSubmitBulk with setProgress
+                        onSubmitBulk(jsonArray, setProgress);
+                    }
+                } catch (error) {
+                    console.error('Excel processing error:', error);
+                    fileValidator(`Excel file processing failed: ${error.message}`);
+                    setProgress(0);
                 }
             }
             reader.readAsArrayBuffer(file);
         }
         else {
-            fileValidator(t('WBH_ERROR_FILE_NOT_SUPPORTED'));
+            console.error('Unsupported file type:', file.type);
+            fileValidator(t('WBH_ERROR_FILE_NOT_SUPPORTED') || 'File type not supported');
             setProgress(0);
         }
         setShowBulkUploadModal(false);
     } catch (error) {
-        fileValidator(error.message)
+        console.error('BulkUpload error:', error);
+        fileValidator(error.message);
         setShowBulkUploadModal(false);
+        setProgress(0);
+    }
+};
+
+// Export security configuration for external use
+export const getSecurityConfig = () => {
+    const validator = createBulkUploadValidator();
+    return validator.getConfiguration();
+};
+
+// Function to validate file before upload (can be called separately)
+export const validateFileBeforeUpload = async (file, onProgress = null) => {
+    try {
+        const validator = createBulkUploadValidator();
+        return await validator.performSecurityScan(file, onProgress);
+    } catch (error) {
+        console.error('Pre-upload validation failed:', error);
+        throw error;
     }
 };
 
