@@ -12,7 +12,21 @@ const PrivacyComponent = ({ onSelect, formData, control, formState, ...props }) 
 
   const { data: privacy } = Digit.Hooks.useCustomMDMS(tenantId, moduleName, [{ name: "PrivacyPolicy" }], {
     select: (data) => {
-      const filteredPrivacyPolicy = data?.[moduleName]?.PrivacyPolicy?.find(policy => policy.module === props?.props?.module);
+      const filteredPrivacyPolicy = data?.[moduleName]?.PrivacyPolicy.find(policy => policy.module === props?.props?.module);
+      
+      // Filter out Introduction (section 1) and Annexure (section 12)
+      if (filteredPrivacyPolicy?.contents) {
+        const filteredContents = filteredPrivacyPolicy.contents.filter(content => {
+          // Remove Introduction (PRIVACY_HEADER_1_SUB_1) and Annexure (PRIVACY_HEADER_12_SUB_12)
+          return content.header !== "PRIVACY_HEADER_1_SUB_1" && content.header !== "PRIVACY_HEADER_12_SUB_12";
+        });
+        
+        return {
+          ...filteredPrivacyPolicy,
+          contents: filteredContents
+        };
+      }
+      
       return filteredPrivacyPolicy;
     },
   });

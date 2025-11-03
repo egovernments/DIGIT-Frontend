@@ -48,7 +48,12 @@ const EmployeeApp = ({
   }, []);
 
   const additionalComponent = initData?.modules?.filter((i) => i?.additionalComponent)?.map((i) => i?.additionalComponent);
-  const isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+
+  let isSuperUserWithMultipleRootTenant = Digit.UserService.hasAccess("SUPERUSER") && Digit.Utils.getMultiRootTenant();
+
+  // Check if URL contains 'sandbox-ui' for subtenant behavior
+  const isSandboxUI = location.pathname.includes('sandbox-ui');
+
   const hideClass = location.pathname.includes(`employee/sandbox/productDetailsPage/`);
   useEffect(() => {
     const isDirectAccess = location.pathname === path || location.pathname === `${path}/`;
@@ -131,10 +136,9 @@ const EmployeeApp = ({
             logoUrlWhite={logoUrlWhite}
             modules={modules}
           />}
-          <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant) ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
+          <div className={!noTopBar ? `${isSuperUserWithMultipleRootTenant ? "" : "main"} ${DSO ? "m-auto" : ""} digit-home-main` : ""}>
 
-            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
-              {/* <div className="employee-app-wrapper digit-home-app-wrapper"> */}
+            <div className={!noTopBar ? `${(isSuperUserWithMultipleRootTenant && hideClass ) ?   "" :  (!isSuperUserWithMultipleRootTenant && isSandboxUI) ? "" : "employee-app-wrapper"} digit-home-app-wrapper` : ""}>
               <ErrorBoundary initData={initData}>
                 <AppModules
                   stateCode={stateCode}

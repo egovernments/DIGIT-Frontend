@@ -7,23 +7,49 @@ const ProductsPageComponent = ({ detailsConfig }) => {
   const { t } = useTranslation();
   const history = useHistory();
 
+  // Configurable modules list - easily modify this array to add/remove configurable modules
+  const CONFIGURABLE_MODULES = ["PGR"];
+
   const handleNavigate = (path) => {
     history.push(path);
   };
 
-    const Chip = ({ text = "Configure", color = "#215B730D", borderColor = "#215B73AD", textColor = "#215B73AD" }) => {
-    const chipStyle = {
-      padding: "2px 6px",
-      border: `1px solid ${borderColor}`,
-      backgroundColor: color,
-      color: textColor,
-      borderRadius: "4px",
-      fontSize: "12px",
-      fontWeight: "400",
-      cursor: "pointer",
-      display: "inline-block",
-    };
-    return <div style={chipStyle}>{text}</div>;
+  // Separate products into configurable and explorable
+  const configurableProducts = detailsConfig?.filter(product =>
+    CONFIGURABLE_MODULES.includes(product.module)
+  ) || [];
+
+  const explorableProducts = detailsConfig?.filter(product =>
+    !CONFIGURABLE_MODULES.includes(product.module)
+  ) || [];
+
+  // Common styles
+  const sectionContainerStyle = {
+    backgroundColor: "#FAFAFA",
+    padding: "1.5rem",
+    borderRadius: "12px",
+    marginBottom: "1.5rem",
+    boxShadow: "0px 2px 7px 0px #00000026"
+  };
+
+  const sectionHeadingStyle = {
+    fontFamily: "Roboto",
+    fontWeight: "700",
+    fontSize: "24px",
+    lineHeight: "100%",
+    letterSpacing: "0px",
+    margin: "0 0 1rem 0",
+    color: "#505050"
+  };
+
+  const sectionDescriptionStyle = {
+    marginBottom: "1rem",
+    color: "#505A5F",
+    fontFamily: "Roboto",
+    fontWeight: "400",
+    fontSize: "16px",
+    lineHeight: "24px",
+    letterSpacing: "0px"
   };
 
   return (
@@ -35,45 +61,113 @@ const ProductsPageComponent = ({ detailsConfig }) => {
           {t("SANDBOX_PRODUCT_HEADER_DESC")}
         </CardText>
 
-      {/* Product Cards Section */}
-      <div className="products-list">
-        {detailsConfig?.map((product, index) => {                    
-          return (
-          <Card key={index} className="product-card">
-            { 
-            ((product.module == "PGR") ? <Chip text="Configure" /> : <div></div>   )
-            }
-            <div className="product-header">
-              <div className="icon-wrap">
-                {Digit.Utils.iconRender(product.icon, "#c84c0e")}
-              </div>
-              <div 
-                className="product-title"
-                title={t(product.heading)}
-              >
-                {t(product.heading)}
-              </div>
+        {/* Configurable Products Section */}
+        {configurableProducts.length > 0 && (
+          <div style={sectionContainerStyle}>
+            <h2 style={sectionHeadingStyle}>
+              {t("SANDBOX_CONFIGURABLE_PRODUCTS")}
+            </h2>
+            <CardText style={sectionDescriptionStyle}>
+              {t("SANDBOX_CONFIGURABLE_PRODUCTS_DESC")}
+            </CardText>
+            <div className="products-list">
+              {configurableProducts.map((product, index) => (
+                <Card
+                  key={index}
+                  className="product-card"
+                  style={{
+                    boxShadow: "0px 2px 7px 0px #00000026",
+                    borderRadius: "12px",
+                    height: "245px",
+                    minHeight: "245px"
+                  }}
+                >
+                  <div className="product-header">
+                    <div className="icon-wrap">
+                      {Digit.Utils.iconRender(product.icon, "#c84c0e")}
+                    </div>
+                    <div
+                      className="product-title"
+                      title={t(product.heading)}
+                    >
+                      {t(product.heading)}
+                    </div>
+                  </div>
+                  <div
+                    className="product-description"
+                    title={t(product?.cardDescription)}
+                  >
+                    {t(product?.cardDescription)}
+                  </div>
+                  <Button
+                    className="explore-button-updated no-hover"
+                    size={"medium"}
+                    style={{
+                      padding: "0px", justifyContent: "start", display: "flex", height: "1rem"
+                    }}
+                    variation="secondary"
+                    label={`${t("COMMON_EXPLORE")} ➔`}
+                    onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
+                  />
+                </Card>
+              ))}
             </div>
-            <div 
-              className="product-description"
-              title={t(product?.cardDescription)}
-            >
-              {t(product?.cardDescription)}
+          </div>
+        )}
+
+        {/* Explorable Products Section */}
+        {explorableProducts.length > 0 && (
+          <div style={sectionContainerStyle}>
+            <h2 style={sectionHeadingStyle}>
+              {t("SANDBOX_EXPLORABLE_PRODUCTS")}
+            </h2>
+            <CardText style={sectionDescriptionStyle}>
+              {t("SANDBOX_EXPLORABLE_PRODUCTS_DESC")}
+            </CardText>
+            <div className="products-list">
+              {explorableProducts.map((product, index) => (
+                <Card
+                  key={index}
+                  className="product-card"
+                  style={{
+                    boxShadow: "0px 2px 7px 0px #00000026",
+                    borderRadius: "12px",
+                    height: "245px",
+                    minHeight: "245px"
+                  }}
+                >
+                  <div className="product-header">
+                    <div className="icon-wrap">
+                      {Digit.Utils.iconRender(product.icon, "#c84c0e")}
+                    </div>
+                    <div
+                      className="product-title"
+                      title={t(product.heading)}
+                    >
+                      {t(product.heading)}
+                    </div>
+                  </div>
+                  <div
+                    className="product-description"
+                    title={t(product?.cardDescription)}
+                  >
+                    {t(product?.cardDescription)}
+                  </div>
+                  <Button
+                    className="explore-button-updated no-hover"
+                    size={"medium"}
+                    style={{
+                      padding: "0px", justifyContent: "start", display: "flex", height: "1rem"
+                    }}
+                    variation="secondary"
+                    label={`${t("COMMON_EXPLORE")} ➔`}
+                    onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
+                  />
+                </Card>
+              ))}
             </div>
-            <Button
-              className="explore-button-updated no-hover"
-              size={"medium"}
-              style={{
-                padding: "0px", justifyContent: "start", display: "flex",height: "1rem"
-              }}
-              variation="secondary"
-              label={`${t("COMMON_EXPLORE")} ➔`}
-              onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
-            />
-          </Card>
+          </div>
         )}
-        )}
-      </div>
       </div>
     </div>
   );

@@ -380,11 +380,34 @@
   }
 }
 
-.loginSignUpSelector{
+.loginSignUpSelector, .forgotPasswordSelector{
   display: flex;
   align-items: center;
   justify-content: end;
+  margin-top: -1rem !important;
 
+  /* Responsive fix for smaller screens */
+  @media (max-width: 768px) {
+    justify-content: flex-start;
+    margin-top: 0.5rem !important;
+    padding-left: 1rem;
+  }
+
+  @media (max-width: 480px) {
+    justify-content: center;
+    margin-top: 1rem !important;
+    padding: 0 1rem;
+    
+    button {
+      font-size: 0.875rem;
+    }
+  }
+
+  /*  Fix for very small screens and high DPI */ 
+  @media (max-width: 375px), (max-height: 667px) and (min-device-pixel-ratio: 2) {
+    margin-top: 0.65rem !important;
+    justify-content: center;
+  }
 }
 
 .digit-card-component.signupCardClassName.sandbox-onboarding-wrapper {
@@ -1720,20 +1743,27 @@ digit-card-text.center {
 }
 
 .icon-wrap {
-  padding-top: 2px;
-  width: 35px;
-  height: 35px;
+  width: 32px !important;
+  height: 32px !important;
   display: flex;
   justify-content: center;
   align-items: center;
   flex-shrink: 0;
+  align-self: flex-start !important;
+  margin-top: 2px !important;
 }
 
 .icon-wrap svg {
-  width: 35px !important;
-  height: 35px !important;
-  max-width: 35px;
-  max-height: 35px;
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+}
+
+.icon-wrap svg path {
+  vector-effect: non-scaling-stroke !important;
 }
 
 .products-title {
@@ -1758,22 +1788,22 @@ digit-card-text.center {
 .product-card {
   flex: 1 1 calc(25% - 2rem);
   padding: 1.5rem;
-  border-radius: 8px;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  border-radius: 12px !important;
+  box-shadow: 0px 2px 7px 0px #00000026;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   background: #fff;
   flex-grow: revert;
-  min-height: 280px;
-  height: 280px;
+  min-height: 245px !important;
+  height: 245px !important;
   overflow: visible;
   position: relative;
 }
 
 .product-header {
   display: flex;
-  align-items: start;
+  align-items: center !important;
   gap: 0.5rem;
   margin-bottom: 0.5rem;
   position: relative;
@@ -2064,20 +2094,24 @@ digit-card-text.center {
 
 .cs-button {
   margin-top: 20px;
-  background: white;
-  color: #f26623;
-  border: 1.5px solid #f26623;
+  background: #C84C0E !important;
+  color: white !important;
   padding: 8px 12px;
   border-radius: 4px;
   font-weight: bold;
   font-size: 15px;
   cursor: pointer;
   transition: all 0.2s ease;
+  outline: none !important;
 }
 
 .cs-button:hover {
-  background: #f26623;
+  background: #C84C0E !important;
   color: white;
+}
+
+.cs-button:focus {
+  outline: none !important;
 }
 
 .cs-left {
@@ -2189,31 +2223,32 @@ digit-card-text.center {
   display: flex;
   align-items: center;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 700 !important;
   padding: 12px 16px;
   border-radius: 4px;
   margin: 20px 0;
 }
 
 .nav-breadcrumb a {
-  color: #e67e22 !important;
+  color: #C84C0E !important;
   text-decoration: none;
   transition: color 0.2s ease;
+  font-weight: 700 !important;
 }
 
 .nav-breadcrumb a:hover {
-  color: #d35400;
+  color: #a63d0a !important;
 }
 
 .nav-breadcrumb .separator {
   margin: 0 4px;
   color: #666;
-  font-weight: 500;
+  font-weight: 700 !important;
 }
 
 .nav-breadcrumb .current {
   color: #333;
-  font-weight: 500;
+  font-weight: 700 !important;
 }
 
 .nav-breadcrumb-wide {

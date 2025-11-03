@@ -17,13 +17,25 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
 
      useEffect(() => {
         const computeTopMargin = () => {
-          if (
-            window.screen.availWidth <= 1366 ||
-            (window.screen.availHeight <= 768 &&
-            window.devicePixelRatio > 1.0)
-          ) {
-            return "-0.1rem";
+          const width = window.innerWidth || window.screen.availWidth;
+          const height = window.innerHeight || window.screen.availHeight;
+          
+          // Very small screens (mobile)
+          if (width <= 480) {
+            return "0.5rem";
           }
+          // Small screens (tablet)
+          else if (width <= 768) {
+            return "0rem";
+          }
+          // Medium screens with high DPI
+          else if (
+            width <= 1366 ||
+            (height <= 768 && window.devicePixelRatio > 1.0)
+          ) {
+            return "-1.5rem";
+          }
+          // Large screens
           return "-2rem";
         };
     
@@ -51,7 +63,13 @@ const LoginSignupSelector = ({ onSelect, formData, control, formState, ...props 
                             size={"small"}
                             onClick={onButtonClickLogin}
                             // isSuffix={true}
-                            style={{ marginBottom: "0.5rem", paddingLeft: "0.2rem" }}
+                            style={{ 
+                                marginBottom: "0.5rem", 
+                                paddingLeft: "0.2rem",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis"
+                            }}
                         ></Button> :
                         <Button
                             label={t(`SB_DONT_HAVE_ACCOUNT`)}

@@ -149,10 +149,10 @@ const MDMSEdit = ({ ...props }) => {
 
     const transformedFormData = { ...transformedData };
     const locale = Digit.StoreData.getCurrentLanguage();
-  
+
     // Prepare Localization Messages using the utility function
     const messages = buildLocalizationMessages(additionalProperties, localizationModule, locale);
-  
+
     try {
       if (messages.length > 0) {
         await localizationUpsertMutation.mutateAsync({
@@ -161,6 +161,10 @@ const MDMSEdit = ({ ...props }) => {
       }
     } catch (err) {
       console.error("Localization Upsert Failed:", err);
+      // Reset flag on localization error
+      if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+        window.sessionStorage.removeItem('pgr_mdms_updated');
+      }
       setShowToast({ label: t("WBH_ERROR_LOCALIZATION"), type:"error" });
       closeToast();
       return;
@@ -176,10 +180,18 @@ const MDMSEdit = ({ ...props }) => {
       },
       {
         onError: (resp) => {
+          // Reset flag on MDMS update error
+          if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+            window.sessionStorage.removeItem('pgr_mdms_updated');
+          }
           setShowToast({ label: t("WBH_ERROR_MDMS_DATA"), type:"error" });
           closeToast();
         },
         onSuccess: () => {
+          // Set flag on successful MDMS update
+          if (moduleName === 'RAINMAKER-PGR' && masterName === 'ServiceDefs') {
+            window.sessionStorage.setItem('pgr_mdms_updated', 'true');
+          }
           setShowToast({
             label: `${t("WBH_SUCCESS_UPD_MDMS_MSG")} ${transformedFormData?.code ? transformedFormData?.code : data?.
 uniqueIdentifier}`,

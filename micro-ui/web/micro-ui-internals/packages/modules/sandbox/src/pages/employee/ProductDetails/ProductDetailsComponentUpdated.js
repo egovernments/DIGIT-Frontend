@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { SVG } from "@egovernments/digit-ui-components";
 import { ReactComponent as Graph } from '../../../../src/components/images/graph.svg';
 import { ReactComponent as FeatureSearch } from '../../../../src/components/images/feature_search.svg';
@@ -41,7 +41,7 @@ const Breadcrumb = ({ path }) => {
     );
   };
 
-const HeroSection = ({ title, headline, img }) => (
+const HeroSection = ({ title, headline, img, t, onExploreClick }) => (
     <div style={{
         width: '100%', backgroundColor: '#e4edf1', padding: '3rem 2rem 3rem 4rem', minHeight: '35rem'
     }}>
@@ -53,6 +53,30 @@ const HeroSection = ({ title, headline, img }) => (
                         <span key={i} style={{ color: segment.color }}>{segment.text} </span>
                     ))}
                 </p>
+                <button
+                    className="cs-button"
+                    onClick={onExploreClick}
+                    style={{
+                        marginTop: '1.5rem',
+                        width: '40%',
+                        fontSize: '1em',
+                        padding: '10px 14px',
+                        background: '#C84C0E',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        fontWeight: 'bold',
+                        cursor: 'pointer',
+                        transition: 'all 0.2s ease'
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.background = '#B03A08';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.background = '#C84C0E';
+                    }}>
+                    {t("SB-Explore-Btn")} ➔
+                </button>
             </div>
             <div style={{ width: '65%', display: 'flex', alignItems: 'center', justifyContent: 'flex-end' }}>
                 <img
@@ -165,10 +189,7 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
             );
         })}
         <button
-
-            onClick=
-
-            {() => {
+            onClick={() => {
                 try {
                     if (config.isExternal) {
                         window.open(config?.action, "_blank");
@@ -179,7 +200,25 @@ const RoleContent = ({ role, cards, config, t, module, permalink }) => (
                     console.error("Error navigating to URL:", error);
                 }
             }}
-            className="cs-button"> {t(config.title)} ➔</button>
+            className="cs-button"
+            style={{
+                background: '#C84C0E',
+                color: 'white',
+                border: 'none',
+                borderRadius: '4px',
+                fontWeight: 'bold',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+                marginTop: '20px',
+                padding: '8px 12px',
+                fontSize: '15px'
+            }}
+            onMouseEnter={(e) => {
+                e.target.style.background = '#B03A08';
+            }}
+            onMouseLeave={(e) => {
+                e.target.style.background = '#C84C0E';
+            }}> {t(config.title)} ➔</button>
     </div>
 );
 
@@ -391,6 +430,21 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     console.log(`*** LOG ***`,config);
 
     const { t } = useTranslation();
+    const experienceSectionRef = useRef(null);
+    
+    const scrollToExperience = () => {
+        if (experienceSectionRef.current) {
+            const element = experienceSectionRef.current;
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - (window.innerHeight * 0.05); // 5% above
+            
+            window.scrollTo({
+                top: offsetPosition,
+                behavior: 'smooth'
+            });
+        }
+    };
+    
     const getInitialActiveTab = (currentModule) => {
     if (currentModule === "OBPS") {
         return "stakeholder";
@@ -498,9 +552,11 @@ const ProductDetailsComponentUpdated = ({ config, module }) => {
     return (
         <div style={{ paddingLeft: '0.5rem' }}>
             <Breadcrumb path={`${t(config[0].heading)}`} />
-            <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} />
+            <HeroSection title={content.heroTitle} headline={content.heroHeadline} img={getImageByType(config, 'banner-image')} t={t} onExploreClick={scrollToExperience} />
             <AboutSection about={content.about} />
-            <ExperienceSection experience={content.experience} t={t} module={module} permalink={permalink} />
+            <div ref={experienceSectionRef}>
+                <ExperienceSection experience={content.experience} t={t} module={module} permalink={permalink} />
+            </div>
             <WalkthroughSection
                 activeTab={activeTab}
                 setActiveTab={setActiveTab}

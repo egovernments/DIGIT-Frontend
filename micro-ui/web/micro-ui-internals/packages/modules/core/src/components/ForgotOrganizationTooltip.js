@@ -9,23 +9,35 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
     const [topMargin, setTopMargin] = useState("-2rem");
 
     useEffect(() => {
-    const computeTopMargin = () => {
-      if (
-        window.screen.availWidth <= 1366 ||
-        (window.screen.availHeight <= 768 &&
-          window.devicePixelRatio > 1.0)
-      ) {
-        return "-0.1rem";
-      }
-      return "-2rem";
-    };
+        const computeTopMargin = () => {
+            const width = window.innerWidth || window.screen.availWidth;
+            const height = window.innerHeight || window.screen.availHeight;
 
-    setTopMargin(computeTopMargin());
+            // Very small screens (mobile)
+            if (width <= 480) {
+                return "0.5rem";
+            }
+            // Small screens (tablet)
+            else if (width <= 768) {
+                return "0rem";
+            }
+            // Medium screens with high DPI
+            else if (
+                width <= 1366 ||
+                (height <= 768 && window.devicePixelRatio > 1.0)
+            ) {
+                return "-1.5rem";
+            }
+            // Large screens
+            return "-2rem";
+        };
 
-    const handleResize = () => setTopMargin(computeTopMargin());
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
+        setTopMargin(computeTopMargin());
+
+        const handleResize = () => setTopMargin(computeTopMargin());
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         const handleClickOutside = (event) => {
@@ -39,17 +51,17 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
         };
     }, []);
     return (
-            <div ref={wrapperRef} className="loginSignUpSelector" style={{ position: "relative", marginTop: topMargin}}>
-                <Button
-                        label={t(`SB_FORGOTORGANIZATION_TOOLTIP`)}
-                        variation={"link"}
-                        size={"small"}
-                        onClick={() => setShowTip((prev) => !prev)}
-                        // isSuffix={true}
-                        style={{ marginBottom: "0.5rem", paddingLeft: "0.2rem" }}
-                ></Button>
-                {showTip && (
-                    <div
+        <div ref={wrapperRef} className="loginSignUpSelector" style={{ position: "relative", marginTop: topMargin }}>
+            <Button
+                label={t(`SB_FORGOTORGANIZATION_TOOLTIP`)}
+                variation={"link"}
+                size={"small"}
+                onClick={() => setShowTip((prev) => !prev)}
+                // isSuffix={true}
+                style={{ marginBottom: "0.5rem", paddingLeft: "0.2rem" }}
+            ></Button>
+            {showTip && (
+                <div
                     style={{
                         position: "absolute",
                         bottom: "100%",
@@ -65,11 +77,11 @@ const ForgotOrganizationTooltip = ({ onSelect }) => {
                         zIndex: 1000,
                         fontSize: "0.875rem"
                     }}
-                    >
+                >
                     {t("SB_FORGOTORGANIZATION_TOOLTIP_TEXT")}
-                    </div>
-                )}
-            </div>
+                </div>
+            )}
+        </div>
     );
 };
 
