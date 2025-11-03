@@ -126,25 +126,24 @@ OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT=true
 ## 🛠️ Tech Stack
 
 ### Core Framework
-- **[React 17.0.2](https://react.dev/)** - Modern React with hooks and concurrent features
-- **[React DOM 17.0.2](https://react.dev/)** - DOM rendering library
-- **[React Router DOM 5.3.0](https://reactrouter.com/)** - Client-side routing
+- **[React 19.0.0](https://react.dev/)** - Modern React with hooks and concurrent features
+- **[React DOM 19.0.0](https://react.dev/)** - DOM rendering library
+- **[React Router DOM 6.25.1](https://reactrouter.com/)** - Client-side routing
 
 ### State Management & Data Fetching
-- **[React Query 3.6.1](https://tanstack.com/query/v3/)** - Server state management and caching
+- **[Tanstack React Query 5.62.16](https://tanstack.com/query/v3/)** - Server state management and caching
 - **[Redux 4.1.2](https://redux.js.org/)** - Predictable state container
 - **[Redux Thunk 2.4.1](https://github.com/reduxjs/redux-thunk)** - Async action creators
-- **[React Redux 7.2.8](https://react-redux.js.org/)** - React bindings for Redux
+- **[React Redux 9.2.0](https://react-redux.js.org/)** - React bindings for Redux
 
 ### Form Management
-- **[React Hook Form 6.15.8](https://www.react-hook-form.com/)** - Performant forms with minimal re-renders
+- **[React Hook Form 7.52.2](https://www.react-hook-form.com/)** - Performant forms with minimal re-renders
 
 ### Internationalization
-- **[React i18next 11.16.2](https://react.i18next.com/)** - Internationalization framework
+- **[React i18next 15.0.0](https://react.i18next.com/)** - Internationalization framework
 
 ### Build Tools & Development
 - **[Webpack](https://webpack.js.org/)** - Module bundler and build tool
-- **[Microbundle CRL 0.13.11](https://github.com/developit/microbundle)** - Zero-configuration bundler
 - **[Yarn Workspaces](https://yarnpkg.com/features/workspaces)** - Monorepo management
 
 ### Styling & UI
@@ -158,11 +157,18 @@ OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT=true
 - **[Lint-staged 12.3.7](https://github.com/okonet/lint-staged)** - Pre-commit linting
 
 ### Package Versions (Latest Release: 2.0.0-dev-01)
+
+#### Core Packages (v2.0.0-dev-01)
 - **@egovernments/digit-ui-module-core**: 2.0.0-dev-01
 - **@egovernments/digit-ui-module-workbench**: 2.0.0-dev-01
 - **@egovernments/digit-ui-css**: 2.0.0-dev-01
-- **@egovernments/digit-ui-react-components**: 1.9.0
-- **@egovernments/digit-ui-components**: 0.2.3
+
+#### Component Libraries
+- **@egovernments/digit-ui-react-components**: 2.0.0-dev-01
+- **@egovernments/digit-ui-svg-components**: 2.0.0-dev-01
+- **@egovernments/digit-ui-components**: 2.0.0-dev-01
+- **@egovernments/digit-ui-libraries**: 2.0.0-dev-01
+
 
 ## License
 
@@ -174,19 +180,15 @@ OVERRIDE_ROOT_TENANT_WITH_LOGGEDIN_TENANT=true
 ```
 micro-ui/
 ├── web/
-│   ├── micro-ui-internals/          # Main development workspace
-│   │   ├── packages/
-│   │   │   ├── modules/             # Feature modules
-│   │   │   │   ├── core/           # Core module (2.0.0-dev-01)
-│   │   │   │   ├── workbench/      # Workbench module (2.0.0-dev-01)
-│   │   │   │   ├── hrms/           # HRMS module
-│   │   │   │   └── ...             # Other modules
-│   │   │   ├── css/                # CSS package (2.0.0-dev-01)
-│   │   │   ├── react-components/   # React components library
-│   │   │   ├── svg-components/     # SVG components
-│   │   │   └── libraries/          # Shared libraries
+│   ├── packages/
+│   │   ├── modules/             # Feature modules
+│   │   │  ├── core/           # Core module (2.0.0-dev-01)
+│   │   │  ├── workbench/      # Workbench module (2.0.0-dev-01)
+│   │   │  ├── hrms/           # HRMS module
+│   │   │  └── ...             # Other modules
+│   │   ├── css/                # CSS package (2.0.0-dev-01)
 │   │   ├── example/                # Example implementation
-│   │   └── scripts/                # Build and deployment scripts
+│   └── scripts/                # Build and deployment scripts
 │   └── public/                      # Static assets
 └── README.md
 ```
