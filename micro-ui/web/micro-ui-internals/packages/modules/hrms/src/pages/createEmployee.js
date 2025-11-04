@@ -8,6 +8,7 @@ import { Toast } from "@egovernments/digit-ui-components";
 
 const CreateEmployee = () => {
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const userInfo = Digit.UserService.getUser();
   const [canSubmit, setSubmitValve] = useState(false);
   const [mobileNumber, setMobileNumber] = useState(null);
   const [showToast, setShowToast] = useState(null);
@@ -144,6 +145,34 @@ const CreateEmployee = () => {
   };
 
 
+  const ToastOverlay = ({ showToast, t, onClose }) => {
+  if (!showToast) return null;
+  return (
+    <div style={{
+      position: "fixed",
+      bottom: "100px",
+      left: "50%",
+      transform: "translateX(-50%)",
+      zIndex: 9999,
+      maxWidth: "90%",
+    }}>
+      <Toast
+        type={showToast.key}
+        label={t(showToast.label)}
+        onClose={onClose}
+      />
+    </div>
+  );
+};
+
+function hasMatchingJurisdiction(jurisdictions = [], parentCity = "") {
+  if (!Array.isArray(jurisdictions) || !parentCity) return false;
+
+  return jurisdictions.some(j => j?.boundary === parentCity);
+}
+
+
+
 
   const onSubmit = async (data) => {
     const hasCurrentAssignment = data?.Assignments?.some(assignment => assignment?.isCurrentAssignment === true); 
@@ -157,10 +186,20 @@ const CreateEmployee = () => {
       };
     });
 
+    
+    if(!hasMatchingJurisdiction(data?.Jurisdictions,userInfo.info.tenantId)){
+      setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
+      return;
+    }
+
     if(!canSubmit){
       setShowToast({ key: "error", label: "ERR_ALL_MANDATORY_FIELDS" });
       return;
     }
+
+
+
+
     if (!hasCurrentAssignment) {
       setShowToast({ key: "error", label: "ERR_NO_CURRENT_ASSIGNMENT" });
       return;
@@ -169,9 +208,11 @@ const CreateEmployee = () => {
       setShowToast({ key: "error", label: "ERR_BASE_TENANT_MANDATORY" });
       return;
     }
+
+
     if (!Object.values(data.Jurisdictions.reduce((acc, sum) => {
-      if (sum && sum?.tenantId) {
-        acc[sum.tenantId] = acc[sum.tenantId] ? acc[sum.tenantId] + 1 : 1;
+      if (sum && sum?.boundary) {
+        acc[sum.boundary] = acc[sum.boundary] ? acc[sum.boundary] + 1 : 1;
       }
       return acc;
     }, {})).every(s => s == 1)) {
@@ -283,15 +324,8 @@ const CreateEmployee = () => {
         // isDisabled={!canSubmit}
         label={t("HR_COMMON_BUTTON_SUBMIT")}
       />
-      {showToast && (
-        <Toast
-          type={showToast.key}
-          label={t(showToast.label)}
-          onClose={() => {
-            setShowToast(null);
-          }}
-        />
-      )}
+
+      <ToastOverlay showToast={showToast} t={t} onClose={() => setShowToast(null)} />
     </div>
   );
 };

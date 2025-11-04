@@ -11,11 +11,14 @@ const ButtonSelector = (props) => {
       theme = "selector-button-primary";
       break;
   }
+  const fieldId = props?.id||Digit?.Utils?.getFieldIdName?.( props?.label || props?.className || "button")||"NA";
+  
   return (
     <button
       className={props.isDisabled ? "selector-button-primary-disabled" : theme}
       type={props.type || "submit"}
       form={props.formId}
+      id={fieldId}
       onClick={props.onSubmit}
       disabled={props.isDisabled}
       style={props.style ? props.style : null}

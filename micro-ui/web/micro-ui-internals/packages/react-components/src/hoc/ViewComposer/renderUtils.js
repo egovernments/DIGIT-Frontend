@@ -13,7 +13,7 @@ export const RenderDataSection = ({ section }) => {
   const { t } = useTranslation();
   return (
     <>
-      <div className="view-composer-header-section">
+      <div className="view-composer-header-section" id={`${section?.id}-header`}>
         {section.cardHeader && <CardSubHeader style={section?.cardHeader?.inlineStyles}>{section.cardHeader.value}</CardSubHeader>}
         {section.cardSecondaryAction ? section.cardSecondaryAction : null}
       </div>
@@ -84,11 +84,11 @@ export const RenderDocumentsSection = ({ section }) => {
   }, [filesArray]);
 
   return (
-    <div style={section?.inlineStyles}>
+    <div style={section?.inlineStyles} id={`${section?.id}-wrapper`}>
       {documents?.map((document, index) => (
         <React.Fragment key={index}>
           {document?.title ? <CardSectionHeader>{t(document?.title)}</CardSectionHeader> : null}
-          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }}>
+          <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "flex-start" }} id={`${section?.id}-item`}>
             {document?.values && document?.values.length > 0
               ? document?.values?.map((value, index) => (
                   <a

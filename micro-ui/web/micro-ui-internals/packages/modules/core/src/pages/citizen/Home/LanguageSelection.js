@@ -1,5 +1,5 @@
-import { PageBasedInput, Loader, RadioButtons, CardHeader } from "@egovernments/digit-ui-components";
 import React, { useMemo } from "react";
+import { PageBasedInput, Loader, RadioButtons, CardHeader } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -22,7 +22,7 @@ const LanguageSelection = () => {
     () => ({
       options: languages,
       optionsKey: "label",
-      additionalWrapperClass: "digit-reverse-radio-selection-wrapper",
+      additionalWrapperClass: "reverse-radio-selection-wrapper",
       onSelect: (language) => Digit.LocalizationService.changeLanguage(language.value, stateInfo.code),
       selectedOption: languages?.filter((i) => i.value === selectedLanguage)[0],
     }),
@@ -30,7 +30,7 @@ const LanguageSelection = () => {
   );
 
   function onSubmit() {
-    history.push(`/${window?.contextPath}/citizen/select-location`);
+    history.push(`/${window?.contextPath}/citizen/login`);
   }
 
   return isLoading ? (

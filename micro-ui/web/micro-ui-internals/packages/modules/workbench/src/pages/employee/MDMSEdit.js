@@ -20,6 +20,7 @@ const MDMSEdit = ({ ...props }) => {
   const closeToast = () => {
     setTimeout(() => setShowToast(null), 5000);
   };
+  
 
   const gotoView = () => {
     setRenderLoader(true);
@@ -28,6 +29,7 @@ const MDMSEdit = ({ ...props }) => {
         from ? `&from=${from}` : ""
       }`
     );
+
   };
 
   // Fetch MDMS Data

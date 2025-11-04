@@ -1,5 +1,32 @@
 # Changelog
 
+## [1.8.42] - [22-Sept-2025]
+
+- Sandbox ui style changes (Landing Page/Product Page/Details Page/OTP Carousel) / CCSD-833 
+
+## [1.8.41] - [26-Aug-2025]
+
+- Removed the extra margin below in inbox search of ws module
+
+## [1.8.40] - [25-Aug-2025]
+
+- Toast error message width issue in Property Tax module(sandbox)
+  
+## [1.8.39] - [19-Aug-2025]
+
+- Removed extra margin on employee pages in the sandbox
+
+
+
+## [1.8.38] - [14-Aug-2025]
+-Removed the login extra space in the sandbox
+
+## [1.8.37] - [12-Aug-2025]
+-Override citizen side styles CCSD-622,474,458 
+
+## [1.8.36] - 04-Aug-2025
+- Removed right border from `.bannerLogo` on the sandbox language-selection page.
+  
 ## [1.8.31] - [12-June-2025]
 -CSS changes for Forgot Password form
 -Font size changed to make it aligned with carousel

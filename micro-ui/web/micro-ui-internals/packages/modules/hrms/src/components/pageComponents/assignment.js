@@ -206,6 +206,12 @@ function Assignment({
   const ValidateDatePickers = (value) => {
     assignments;
   };
+  const fieldStyle = {
+    maxWidth: "36.25rem",
+    paddingRight: "2.5rem",
+  };
+
+
   return (
     <div key={index + 1} style={{ marginBottom: "16px" }}>
       <div style={{ border: "1px solid #E3E3E3", padding: "16px", marginTop: "8px" }}>
@@ -224,7 +230,7 @@ function Assignment({
 
         <LabelFieldPair>
           <CardLabel className={assignment?.id ? "card-label-smaller" : "card-label-smaller"}> {`${t("HR_ASMT_FROM_DATE_LABEL")} * `} </CardLabel>
-          <div className="field">
+          <div className="field" style={fieldStyle}>
             <DatePicker
               type="date"
               name="fromDate"
@@ -245,7 +251,7 @@ function Assignment({
             {t("HR_ASMT_TO_DATE_LABEL")}
             {assignment?.isCurrentAssignment ? "" : " * "}{" "}
           </CardLabel>
-          <div className="field">
+          <div className="field" style={fieldStyle}>
             <DatePicker
               type="date"
               name="toDate"

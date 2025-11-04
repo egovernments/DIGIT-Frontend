@@ -689,6 +689,11 @@ input[type="number"] {
   margin: 70px;
 }
 
+.employee-app-wrapper.margin-fix {
+    margin: -2px;
+   }
+   
+
 .ws-custom-wrapper {
   .submit {
     display: flex !important;
@@ -869,3 +874,6 @@ input[type="number"] {
     overflow: visible !important;
   }
 }
+   .pt-error h2 {
+    width: auto !important;
+  }

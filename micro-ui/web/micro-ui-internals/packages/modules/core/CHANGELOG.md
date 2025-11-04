@@ -1,5 +1,40 @@
 # Changelog 
 
+## [1.8.55]  [8th-Oct-2025]
+- Updated the email and mobilenumber login flow with pattern validation, link instead of toggle and state management fixes
+
+## [1.8.54]  [8th-Oct-2025]
+- Updated the validation for email, css fix and email sending in payload while otp flow
+
+## [1.8.53]  [8th-Oct-2025]
+- Added dynamicLoginComponent (custom) to be displayed below login card
+
+## [1.8.52]  [7th-Oct-2025]
+- Added fix for privacy policy error
+
+## [1.8.51]  [6th-Oct-2025]
+- Added the redirection fix in citizen side after login and max length fix for mobile number
+
+## [1.8.50]  [3rd-Oct-2025]
+- updated the citizen home page to not to filter the cards using module, directly show citizen menu details
+
+## [1.8.49]  [22-Sep-2025]
+- updated the login componenet to handle email based login
+
+## [1.8.47]  [22-Sep-2025]
+- Carousel Transitions Added, OTP Page Text bold and minor ui tweeks
+
+## [1.8.46]  [13-Sep-2025]
+- Added new logic for language selection page
+
+## [1.8.44]  [15-July-2025]
+- Citizen login page continue button added 
+
+
+## [1.8.43]  [26-June-2025]
+- Login and SignUp Pages UI for Sandbox is updated
+- Sandbox Product Details Page Updated 
+
 ## [1.8.42(Sandbox)] - [22-Sept-2025]
 - Sandbox ui style changes (Landing Page/Product Page/Details Page/OTP Carousel) / CCSD-833
 
