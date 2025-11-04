@@ -7,6 +7,8 @@ import useDeleteAttendeeFromRegister from "./attendance/delete_attendee_register
 import useCreateAttendeeFromRegister from "./attendance/create_attendee_register";
 import useSearchIndividualForRegister from "./attendance/search_individual";
 import { useSearchCampaign } from "./project/useCampaignSearch";
+import usePaymentSetUpForCampaign from "./payement_setup/payement_setup_create";
+import useMDMSRatesCreate from "./payement_setup/payment_mdms_rate_create";
 
 const payments = {
   useProjectSearch,
@@ -16,16 +18,19 @@ const payments = {
   useDeleteAttendeeFromRegister,
   useCreateAttendeeFromRegister,
   useSearchIndividualForRegister,
-  useSearchCampaign
+  useSearchCampaign,
+  // for payment setup
+  usePaymentSetUpForCampaign,
+  useMDMSRatesCreate,
 };
 
 const Hooks = {
-  payments
+  payments,
 };
 
 const Utils = {
   browser: {
-    payments: () => { },
+    payments: () => {},
   },
   payments: {
     ...utils,

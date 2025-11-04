@@ -4,7 +4,13 @@
 // import { TextInput } from "@egovernments/digit-ui-components";
 // import { tableCustomStyle } from "../table_inbox_custom_style";
 
-// const RoleWageTable = ({ skills = [], rateBreakupSchema = {} }) => {
+// const RoleWageTable = ({
+//   skills = [],
+//   rateBreakupSchema = {},
+//   campaignId = null,
+//   campaignName = "",
+//   onDataChange
+// }) => {
 //   const { t } = useTranslation();
 
 //   // Initialize roles state
@@ -15,12 +21,12 @@
 //     if (!rateBreakupSchema || Object.keys(rateBreakupSchema).length === 0) {
 //       return [];
 //     }
-    
+
 //     // Convert object to array: [{ key: 'FOOD', label: 'Food Allowance' }, ...]
 //     return Object.entries(rateBreakupSchema).map(([key, label]) => ({
 //       key: key,
 //       label: label,
-//       fieldName: key.toLowerCase(), // Use lowercase for state field names
+//       fieldName: key, // Keep original case for API payload
 //     }));
 //   }, [rateBreakupSchema]);
 
@@ -37,13 +43,18 @@
 //         id: index + 1,
 //         code: skill.code,
 //         role: skill.name,
+//         total: 0, // Initialize total
 //       };
 
 //       // Add dynamic rate fields from rateBreakupSchema
+//       let calculatedTotal = 0;
 //       rateColumns.forEach((column) => {
-//         // Check if skill has a default value for this rate type
-//         role[column.fieldName] = skill[column.fieldName] || 0;
+//         const value = skill[column.fieldName] || 0;
+//         role[column.fieldName] = value;
+//         calculatedTotal += Number(value) || 0;
 //       });
+
+//       role.total = calculatedTotal;
 
 //       return role;
 //     });
@@ -52,37 +63,91 @@
 //   }, [skills, rateColumns]);
 
 //   // Compute total for each row dynamically
-//   const computeTotal = useCallback(
-//     (row) => {
-//       let total = 0;
-//       rateColumns.forEach((column) => {
-//         total += Number(row[column.fieldName]) || 0;
-//       });
-//       return total;
-//     },
-//     [rateColumns]
-//   );
+//   const computeTotal = useCallback((row) => {
+//     return row.total || 0;
+//   }, []);
 
-//   // Handle input change with validation
+//   // Calculate total for a specific role
+//   const calculateRowTotal = useCallback((roleData) => {
+//     let total = 0;
+//     rateColumns.forEach((column) => {
+//       total += Number(roleData[column.fieldName]) || 0;
+//     });
+//     return total;
+//   }, [rateColumns]);
+
+//   // Convert roles to API payload format
+//   const generatePayload = useCallback((currentRoles) => {
+//     const tenantId = Digit?.ULBService?.getCurrentTenantId();
+
+//     const rates = currentRoles.map((role) => {
+//       const rateBreakup = {};
+
+//       // Build rateBreakup object dynamically
+//       rateColumns.forEach((column) => {
+//         rateBreakup[column.key] = Number(role[column.fieldName]) || 0;
+//       });
+
+//       return {
+//         skillCode: role.code,
+//         rateBreakup: rateBreakup,
+//       };
+//     });
+//  debugger
+//     return {
+//       Mdms: {
+//         schemaCode: "HCM.WORKER_RATES",
+//         tenantId: tenantId,
+//         data: {
+//           name: campaignName,
+//           eventType: "CAMPAIGN",
+//           currency: "USD",
+//           rates: rates,
+//           campaignId: campaignId,
+//         },
+//         isActive: true,
+//       },
+//     };
+//   }, [rateColumns, campaignId, campaignName]);
+
+//   // Notify parent component whenever roles change
+//   useEffect(() => {
+//     if (roles.length > 0 && onDataChange) {
+//       const payload = generatePayload(roles);
+//       onDataChange(payload);
+//     }
+//   }, [roles, generatePayload, onDataChange]);
+
+//   // Handle input change with validation and recalculate total
 //   const handleChange = useCallback((id, field, rawValue) => {
 //     let value = rawValue;
 
-//     // Prevent non-numeric input (except empty)
-//     if (!/^\d*$/.test(value)) return;
+//     // Allow decimal numbers
+//     if (!/^\d*\.?\d*$/.test(value)) return;
 
 //     // Empty input → treat as 0
 //     if (value === "") value = "0";
 
+//     const numericValue = parseFloat(value) || 0;
+
 //     setRoles((prevRoles) =>
-//       prevRoles.map((r) => (r.id === id ? { ...r, [field]: Number(value) } : r))
+//       prevRoles.map((r) => {
+//         if (r.id === id) {
+//           const updatedRole = { ...r, [field]: numericValue };
+//           // Recalculate total for this row
+//           updatedRole.total = calculateRowTotal(updatedRole);
+//           return updatedRole;
+//         }
+//         return r;
+//       })
 //     );
-//   }, []);
+//   }, [calculateRowTotal]);
 
 //   // Render numeric input for rate fields
 //   const renderNumericInput = useCallback(
 //     (row, field) => (
 //       <TextInput
-//         type="number"
+//         type="text"
 //         value={
 //           row[field] === 0
 //             ? "0"
@@ -143,7 +208,7 @@
 //       });
 //     });
 
-//     // Add Total column (fixed)
+//     // Add Total column (fixed) - now shows calculated total from state
 //     cols.push({
 //       name: (
 //         <div style={{ width: "100%", textAlign: "start" }}>
@@ -153,10 +218,10 @@
 //       selector: (row) => (
 //         <div
 //           className="ellipsis-cell"
-//           title={computeTotal(row)}
+//           title={row.total.toFixed(2)}
 //           style={{ fontWeight: 500, textAlign: "center" }}
 //         >
-//           {computeTotal(row)}
+//           {row.total.toFixed(2)}
 //         </div>
 //       ),
 //       style: { justifyContent: "flex-end" },
@@ -164,7 +229,7 @@
 //     });
 
 //     return cols;
-//   }, [t, rateColumns, renderNumericInput, computeTotal]);
+//   }, [t, rateColumns, renderNumericInput]);
 
 //   // Handle empty state
 //   if (!skills || skills.length === 0) {
@@ -198,41 +263,31 @@
 
 // export default RoleWageTable;
 
-
-
 import React, { useState, useMemo, useCallback, useEffect } from "react";
 import DataTable from "react-data-table-component";
 import { useTranslation } from "react-i18next";
 import { TextInput } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../table_inbox_custom_style";
 
-const RoleWageTable = ({ 
-  skills = [], 
-  rateBreakupSchema = {}, 
-  campaignId = null,
-  campaignName = "",
-  onDataChange 
-}) => {
+const RoleWageTable = ({ skills = [], rateBreakupSchema = {}, campaignId = null, campaignName = "", onDataChange, existingRatesData = null }) => {
   const { t } = useTranslation();
 
-  // Initialize roles state
   const [roles, setRoles] = useState([]);
 
-  // Convert rateBreakupSchema object to array of columns
+  /**  Convert rateBreakupSchema to dynamic columns */
   const rateColumns = useMemo(() => {
     if (!rateBreakupSchema || Object.keys(rateBreakupSchema).length === 0) {
       return [];
     }
-    
-    // Convert object to array: [{ key: 'FOOD', label: 'Food Allowance' }, ...]
+
     return Object.entries(rateBreakupSchema).map(([key, label]) => ({
-      key: key,
-      label: label,
-      fieldName: key, // Keep original case for API payload
+      key,
+      label,
+      fieldName: key,
     }));
   }, [rateBreakupSchema]);
 
-  // Initialize roles from skills prop with dynamic rate columns
+  /**  Initialize roles from skills */
   useEffect(() => {
     if (!skills || skills.length === 0) {
       setRoles([]);
@@ -240,123 +295,117 @@ const RoleWageTable = ({
     }
 
     const initialRoles = skills.map((skill, index) => {
-      // Create base role object
       const role = {
         id: index + 1,
         code: skill.code,
         role: skill.name,
-        total: 0, // Initialize total
+        total: 0,
       };
 
-      // Add dynamic rate fields from rateBreakupSchema
       let calculatedTotal = 0;
+
       rateColumns.forEach((column) => {
-        const value = skill[column.fieldName] || 0;
+        //  Safely read from rateBreakup
+        const value = skill?.rateBreakup?.[column.fieldName] !== undefined ? Number(skill.rateBreakup[column.fieldName]) : 0;
+
         role[column.fieldName] = value;
         calculatedTotal += Number(value) || 0;
       });
-      
-      role.total = calculatedTotal;
 
+      role.total = calculatedTotal;
       return role;
     });
 
     setRoles(initialRoles);
   }, [skills, rateColumns]);
 
-  // Compute total for each row dynamically
-  const computeTotal = useCallback((row) => {
-    return row.total || 0;
-  }, []);
-
-  // Calculate total for a specific role
-  const calculateRowTotal = useCallback((roleData) => {
-    let total = 0;
-    rateColumns.forEach((column) => {
-      total += Number(roleData[column.fieldName]) || 0;
-    });
-    return total;
-  }, [rateColumns]);
-
-  // Convert roles to API payload format
-  const generatePayload = useCallback((currentRoles) => {
-    const tenantId = Digit?.ULBService?.getCurrentTenantId();
-    
-    const rates = currentRoles.map((role) => {
-      const rateBreakup = {};
-      
-      // Build rateBreakup object dynamically
+  /**  Calculate row total */
+  const calculateRowTotal = useCallback(
+    (roleData) => {
+      let total = 0;
       rateColumns.forEach((column) => {
-        rateBreakup[column.key] = Number(role[column.fieldName]) || 0;
+        total += Number(roleData[column.fieldName]) || 0;
+      });
+      return total;
+    },
+    [rateColumns]
+  );
+
+  /**  Prepare payload to send upward */
+  const generatePayload = useCallback(
+    (currentRoles) => {
+      const tenantId = Digit?.ULBService?.getCurrentTenantId();
+
+      const rates = currentRoles.map((role) => {
+        const rateBreakup = {};
+        rateColumns.forEach((column) => {
+          rateBreakup[column.key] = Number(role[column.fieldName]) || 0;
+        });
+
+        return {
+          skillCode: role.code,
+          rateBreakup,
+        };
       });
 
       return {
-        skillCode: role.code,
-        rateBreakup: rateBreakup,
-      };
-    });
- debugger
-    return {
-      Mdms: {
-        schemaCode: "HCM.WORKER_RATES",
-        tenantId: tenantId,
-        data: {
-          name: campaignName,
-          eventType: "CAMPAIGN",
-          currency: "USD",
-          rates: rates,
-          campaignId: campaignId,
+        Mdms: {
+          schemaCode: "HCM.WORKER_RATES",
+          tenantId,
+          data: {
+            name: campaignName,
+            eventType: "CAMPAIGN",
+            currency: "USD",
+            rates,
+            campaignId,
+          },
+          isActive: true,
+          ...(existingRatesData && { auditDetails: existingRatesData.auditDetails }),
         },
-        isActive: true,
-      },
-    };
-  }, [rateColumns, campaignId, campaignName]);
+      };
+    },
+    [rateColumns, campaignId, campaignName]
+  );
 
-  // Notify parent component whenever roles change
+  /**  Emit to parent when roles change */
   useEffect(() => {
     if (roles.length > 0 && onDataChange) {
       const payload = generatePayload(roles);
+      debugger;
       onDataChange(payload);
     }
   }, [roles, generatePayload, onDataChange]);
 
-  // Handle input change with validation and recalculate total
-  const handleChange = useCallback((id, field, rawValue) => {
-    let value = rawValue;
+  /** 🖊 Handle field edits */
+  const handleChange = useCallback(
+    (id, field, rawValue) => {
+      let value = rawValue;
 
-    // Allow decimal numbers
-    if (!/^\d*\.?\d*$/.test(value)) return;
+      if (!/^\d*\.?\d*$/.test(value)) return; // numeric only
+      if (value === "") value = "0";
 
-    // Empty input → treat as 0
-    if (value === "") value = "0";
+      const numericValue = parseFloat(value) || 0;
 
-    const numericValue = parseFloat(value) || 0;
+      setRoles((prevRoles) =>
+        prevRoles.map((r) => {
+          if (r.id === id) {
+            const updatedRole = { ...r, [field]: numericValue };
+            updatedRole.total = calculateRowTotal(updatedRole);
+            return updatedRole;
+          }
+          return r;
+        })
+      );
+    },
+    [calculateRowTotal]
+  );
 
-    setRoles((prevRoles) =>
-      prevRoles.map((r) => {
-        if (r.id === id) {
-          const updatedRole = { ...r, [field]: numericValue };
-          // Recalculate total for this row
-          updatedRole.total = calculateRowTotal(updatedRole);
-          return updatedRole;
-        }
-        return r;
-      })
-    );
-  }, [calculateRowTotal]);
-
-  // Render numeric input for rate fields
+  /**  Render text inputs for rate columns */
   const renderNumericInput = useCallback(
     (row, field) => (
       <TextInput
         type="text"
-        value={
-          row[field] === 0
-            ? "0"
-            : row[field] !== undefined && row[field] !== null
-            ? String(row[field])
-            : "0"
-        }
+        value={row[field] === 0 ? "0" : row[field] !== undefined && row[field] !== null ? String(row[field]) : "0"}
         onChange={(e) => handleChange(row.id, field, e.target.value)}
         populators={{ disableTextField: false }}
         style={{ width: "100%" }}
@@ -365,10 +414,9 @@ const RoleWageTable = ({
     [handleChange]
   );
 
-  // Generate columns dynamically
+  /**  Define dynamic DataTable columns */
   const columns = useMemo(() => {
     const cols = [
-      // Role column (fixed)
       {
         name: (
           <div
@@ -390,8 +438,8 @@ const RoleWageTable = ({
       },
     ];
 
-    // Add dynamic rate columns from rateBreakupSchema
-    rateColumns.forEach((column, index) => {
+    // Dynamic rate fields
+    rateColumns.forEach((column) => {
       cols.push({
         name: (
           <div
@@ -410,19 +458,11 @@ const RoleWageTable = ({
       });
     });
 
-    // Add Total column (fixed) - now shows calculated total from state
+    // Total column
     cols.push({
-      name: (
-        <div style={{ width: "100%", textAlign: "start" }}>
-          {t("Total Wage (in $)")}
-        </div>
-      ),
+      name: <div style={{ width: "100%", textAlign: "start" }}>{t("Total Wage (in $)")}</div>,
       selector: (row) => (
-        <div
-          className="ellipsis-cell"
-          title={row.total.toFixed(2)}
-          style={{ fontWeight: 500, textAlign: "center" }}
-        >
+        <div className="ellipsis-cell" title={row.total.toFixed(2)} style={{ fontWeight: 500, textAlign: "center" }}>
           {row.total.toFixed(2)}
         </div>
       ),
@@ -433,32 +473,19 @@ const RoleWageTable = ({
     return cols;
   }, [t, rateColumns, renderNumericInput]);
 
-  // Handle empty state
+  /**  Empty State Handling */
   if (!skills || skills.length === 0) {
-    return (
-      <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
-        {t("No roles available for the selected campaign")}
-      </div>
-    );
+    return <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("No roles available for the selected campaign")}</div>;
   }
 
   if (!rateBreakupSchema || Object.keys(rateBreakupSchema).length === 0) {
-    return (
-      <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
-        {t("No rate breakup schema available")}
-      </div>
-    );
+    return <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("No rate breakup schema available")}</div>;
   }
 
+  /** 🧾 Render table */
   return (
     <div style={{ marginTop: "1rem" }}>
-      <DataTable
-        columns={columns}
-        data={roles}
-        customStyles={tableCustomStyle(false)}
-        highlightOnHover
-        dense
-      />
+      <DataTable columns={columns} data={roles} customStyles={tableCustomStyle(false)} highlightOnHover dense />
     </div>
   );
 };

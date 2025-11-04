@@ -1,14 +1,14 @@
 import Urls from "../../urls";
 import { Request } from "@egovernments/digit-ui-libraries";
 const AttendeeService = {
-  search: (tenantId, filters, searchParams,data) =>
+  search: (tenantId, filters, searchParams, data) =>
     Request({
       url: Urls.attendee.search,
       useCache: false,
       method: "POST",
       auth: true,
       userService: true,
-      data:data,
+      data: data,
       params: { tenantId, ...filters, ...searchParams },
     }),
   create: (data, tenantId) =>
@@ -21,18 +21,18 @@ const AttendeeService = {
       userService: true,
       params: { tenantId },
     }),
-//   update: (data, tenantId) =>
-//     Request({
-//       data: data,
-//       url: Urls.hrms.update,
-//       useCache: false,
-//       method: "POST",
-//       auth: true,
-//       userService: true,
-//       params: { tenantId },
-//     }),
- 
-delete: (data, tenantId) =>
+  //   update: (data, tenantId) =>
+  //     Request({
+  //       data: data,
+  //       url: Urls.hrms.update,
+  //       useCache: false,
+  //       method: "POST",
+  //       auth: true,
+  //       userService: true,
+  //       params: { tenantId },
+  //     }),
+
+  delete: (data, tenantId) =>
     Request({
       data: data,
       url: Urls.attendee.deenrollAttendee,
@@ -40,9 +40,30 @@ delete: (data, tenantId) =>
       method: "POST",
       auth: true,
       userService: true,
-      params: {  },
+      params: {},
     }),
 
+  paymentSetUpCreate: (data, tenantId) =>
+    Request({
+      data: data,
+      url: Urls.paymentSetUp.create,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: {},
+    }),
+
+  mdmsRatesCreate: (data, tenantId) =>
+    Request({
+      data: data,
+      url: Urls.paymentSetUp.mdmsRatesCreate,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: {},
+    }),
 };
 
 export default AttendeeService;

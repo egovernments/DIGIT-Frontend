@@ -115,6 +115,10 @@ module.exports = function (app) {
     "/health-attendance/attendee/v1/_delete",
     "/health-attendance/attendee/v1/_create",
     "/health-hrms/employees/_search",
+    // payment v2
+    "/health-expense-calculator/billing-config/v1/_search",
+    "/health-expense-calculator/billing-config/v1/_create"
+    
   ].forEach((location) => app.use(location, createProxy));
   ["/pb-egov-assets"].forEach((location) => app.use(location, assetsProxy));
   ["/mdms-v2/v2/_create"].forEach((location) => app.use(location, mdmsProxy));
