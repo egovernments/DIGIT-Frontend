@@ -52,7 +52,19 @@ const CreateComplaintForm = ({
   // Validate phone number based on config
   const validatePhoneNumber = (value, config) => {
     const { minLength, maxLength, min, max, pattern } = config?.populators?.validation || {};
+    const { minLength, maxLength, min, max, pattern } = config?.populators?.validation || {};
     const stringValue = String(value || "");
+
+    // Check if value contains invalid characters like 'e', 'E', '+', '-'
+    if (/[eE+\-]/.test(stringValue)) {
+      return false;
+    }
+
+    // Check pattern if provided
+    if (pattern && !stringValue.match(new RegExp(pattern))) {
+      return false;
+    }
+
 
     // Check if value contains invalid characters like 'e', 'E', '+', '-'
     if (/[eE+\-]/.test(stringValue)) {
