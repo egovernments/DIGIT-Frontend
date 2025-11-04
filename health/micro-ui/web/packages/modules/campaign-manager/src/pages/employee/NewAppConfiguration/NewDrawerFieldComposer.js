@@ -15,6 +15,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
+  const { pageType } = useSelector((state) => state.remoteConfig);
 
   // Local state for immediate UI feedback
   const [localValue, setLocalValue] = useState("");
@@ -372,9 +373,21 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
 
         // Find current selected field type based on type and format
-        const currentSelectedFieldType = fieldTypeOptions.find(
-          (item) => item?.metadata?.type === selectedField?.type && item?.metadata?.format === selectedField?.format
-        );
+        const currentSelectedFieldType = fieldTypeOptions.find((item) => {
+          const typeMatches = item?.metadata?.type === selectedField?.type;
+          const formatMatches = item?.metadata?.format === selectedField?.format;
+
+          // Handle different matching scenarios:
+          // 1. If field has both type and format, match both
+          if (selectedField?.format) {
+            return typeMatches && formatMatches;
+          }
+          // 2. If field only has type, try to match where format equals the field's type
+          // (e.g., field.type = "text" should match metadata: {type: "string", format: "text"})
+          else {
+            return typeMatches || item?.metadata?.format === selectedField?.type;
+          }
+        });
 
         // Get current field's metadata type
         const metadataType = currentSelectedFieldType?.metadata?.type;
@@ -412,9 +425,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               populators={{
                 title: t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`)),
                 fieldPairClassName: "drawer-toggle-conditional-field",
-                options: fieldTypeOptions
-                  .filter((item) => item?.metadata?.type !== "template" && item?.metadata?.type !== "dynamic")
-                  ?.sort((a, b) => a?.order - b?.order),
+                options: fieldTypeOptions.filter((item) => {
+                  // Always filter out dynamic types
+                  if (item?.metadata?.type === "dynamic") return false;
+                  // Filter out template types only for forms (pageType === "object")
+                  if (pageType === "object" && item?.metadata?.type === "template") return false;
+                  return true;
+                }),
                 optionsKey: "type",
               }}
               type={"dropdown"}

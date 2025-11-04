@@ -37,7 +37,15 @@ export const getFieldMaster = createAsyncThunk(
     } catch (err) {
       // Fallback to dummy data on error
       console.error("Failed to fetch from MDMS, using fallback:", err);
-      return dummyFieldTypeConfig;
+      // Sort the fallback data alphabetically by type
+      const sortedFallback = Array.isArray(dummyFieldTypeConfig)
+        ? [...dummyFieldTypeConfig].sort((a, b) => {
+            const typeA = a?.type?.toLowerCase() || "";
+            const typeB = b?.type?.toLowerCase() || "";
+            return typeA.localeCompare(typeB);
+          })
+        : dummyFieldTypeConfig;
+      return sortedFallback;
     }
   }
 );
@@ -63,8 +71,16 @@ const fieldMasterSlice = createSlice({
       })
       .addCase(getFieldMaster.fulfilled, (state, action) => {
         state.status = "succeeded";
+        // Sort the payload alphabetically by type before saving
+        const sortedPayload = Array.isArray(action.payload)
+          ? [...action.payload].sort((a, b) => {
+              const typeA = a?.type?.toLowerCase() || "";
+              const typeB = b?.type?.toLowerCase() || "";
+              return typeA.localeCompare(typeB);
+            })
+          : action.payload;
         // Always save as 'fieldTypeMappingConfig' regardless of the master name
-        state.byName.fieldTypeMappingConfig = action.payload;
+        state.byName.fieldTypeMappingConfig = sortedPayload;
       })
       .addCase(getFieldMaster.rejected, (state, action) => {
         state.status = "failed";
