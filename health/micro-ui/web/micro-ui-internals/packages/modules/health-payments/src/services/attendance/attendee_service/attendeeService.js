@@ -54,10 +54,32 @@ const AttendeeService = {
       params: {},
     }),
 
+  paymentSetUpUpdate: (data, tenantId) =>
+    Request({
+      data: data,
+      url: Urls.paymentSetUp.update,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: {},
+    }),
+
   mdmsRatesCreate: (data, tenantId) =>
     Request({
       data: data,
       url: Urls.paymentSetUp.mdmsRatesCreate,
+      useCache: false,
+      method: "POST",
+      auth: true,
+      userService: true,
+      params: {},
+    }),
+
+  mdmsRatesUpdate: (data, tenantId) =>
+    Request({
+      data: data,
+      url: Urls.paymentSetUp.mdmsRatesUpdate,
       useCache: false,
       method: "POST",
       auth: true,

@@ -9,6 +9,8 @@ import useSearchIndividualForRegister from "./attendance/search_individual";
 import { useSearchCampaign } from "./project/useCampaignSearch";
 import usePaymentSetUpForCampaign from "./payement_setup/payement_setup_create";
 import useMDMSRatesCreate from "./payement_setup/payment_mdms_rate_create";
+import useMDMSRatesUpdate from "./payement_setup/payment_mdms_rate_update";
+import usePaymentSetUpForCampaignUpdate from "./payement_setup/payment_setup_update";
 
 const payments = {
   useProjectSearch,
@@ -22,6 +24,8 @@ const payments = {
   // for payment setup
   usePaymentSetUpForCampaign,
   useMDMSRatesCreate,
+  useMDMSRatesUpdate,
+  usePaymentSetUpForCampaignUpdate,
 };
 
 const Hooks = {

@@ -60,7 +60,9 @@ const Urls = {
     //search: `/${healthIndividualContextPath}/v1/_search`,
     //enrollAttendee:`/${healthAttendanceContextPath}/attendee/v1/_create`,
     create: `/health-expense-calculator/billing-config/v1/_create`,
+    update: `/health-expense-calculator/billing-config/v1/_update`,
     mdmsRatesCreate: `/egov-mdms-service/v2/_create/HCM.WORKER_RATES`,
+    mdmsRatesUpdate: `/egov-mdms-service/v2/_update/HCM.WORKER_RATES`,
   },
 };
 
