@@ -22,3 +22,12 @@ export const getFieldTypeFromMasterData = (field, fieldTypeMasterData) => {
 
   return matched?.fieldType || "text";
 };
+
+export const getFieldTypeFromMasterData2 = (field, fieldTypeMasterData) => {
+  if (!fieldTypeMasterData || !Array.isArray(fieldTypeMasterData)) {
+    return "text";
+  }
+  // Find matching field type based on type, format, and fieldName
+  const matched = fieldTypeMasterData.find((item) => item?.metadata?.type === field.type && item?.metadata?.format === field.format);
+  return matched?.type || "text";
+};
