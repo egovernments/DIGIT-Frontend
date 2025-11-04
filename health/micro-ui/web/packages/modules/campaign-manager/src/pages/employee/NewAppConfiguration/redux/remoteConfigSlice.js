@@ -99,34 +99,50 @@ const remoteConfigSlice = createSlice({
       const card = state.currentData?.body?.[cardIndex];
       if (!card) return;
 
-      const toggleByFieldName = (node) => {
-        if (!node) return false;
+      // Check if this is a template type page
+      const isTemplate = state.currentData?.type === "template";
 
-        if (Array.isArray(node)) {
-          for (const item of node) {
-            if (toggleByFieldName(item)) return true;
+      if (isTemplate) {
+        // Recursive function to toggle visibility in nested template structures
+        const toggleByFieldName = (node) => {
+          if (!node) return false;
+
+          // Handle arrays
+          if (Array.isArray(node)) {
+            for (const item of node) {
+              if (toggleByFieldName(item)) return true;
+            }
+            return false;
           }
+
+          // Handle objects
+          if (typeof node === "object") {
+            // Check if this node has the matching fieldName
+            if (node.fieldName === fieldName) {
+              node.hidden = !node.hidden;
+              return true;
+            }
+
+            // Recursively search in child and children (template-specific)
+            if (node.child && toggleByFieldName(node.child)) return true;
+            if (node.children && toggleByFieldName(node.children)) return true;
+          }
+
           return false;
-        }
+        };
 
-        if (typeof node === "object") {
-          if (node.fieldName === fieldName) {
-            node.hidden = !node.hidden;
-            return true;
+        // Search through fields recursively for templates
+        if (Array.isArray(card.fields)) {
+          toggleByFieldName(card.fields);
+        }
+      } else {
+        // For non-template types (forms), use simple direct search
+        if (Array.isArray(card.fields)) {
+          const field = card.fields.find((f) => f.fieldName === fieldName);
+          if (field) {
+            field.hidden = !field.hidden;
           }
-
-          if (node.child && toggleByFieldName(node.child)) return true;
-          if (node.children && toggleByFieldName(node.children)) return true;
         }
-
-        return false;
-      };
-
-      if (Array.isArray(card.fields)) {
-        const field = card.fields.find((f) => f.fieldName === fieldName);
-        if (field) field.hidden = !field.hidden;
-      } else if (card.type === "template") {
-        toggleByFieldName(card);
       }
 
       state.currentData = { ...state.currentData };

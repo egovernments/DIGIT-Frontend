@@ -32,7 +32,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
   const [showToast, setShowToast] = useState(null);
 
   // Redux selectors
-  const { currentData, showAddFieldPopup, responseData } = useSelector((state) => state.remoteConfig);
+  const { currentData, showAddFieldPopup, responseData, pageType } = useSelector((state) => state.remoteConfig);
   const { status: localizationStatus, data: localizationData } = useSelector((state) => state.localization);
   const { byName: fieldTypeMaster } = useSelector((state) => state.fieldTypeMaster);
 
@@ -212,8 +212,8 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
       })
     );
 
-    // Fetch localization data if locale module is provided
-    if (localeModule) {
+    // Fetch localization data only if not already loaded
+    if (localeModule && localizationStatus === "idle") {
       dispatch(
         fetchLocalization({
           tenantId,
@@ -233,7 +233,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         })
       );
     }
-  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale]);
+  }, [dispatch, flow, pageName, campaignNumber, localeModule, tenantId, mdmsContext, currentLocale, localizationStatus]);
 
   // Auto-close toast after 10 seconds
   useEffect(() => {
@@ -308,7 +308,13 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                 {t("FIELD_TYPE")} <span style={{ color: "red" }}>*</span>
               </span>
               <Dropdown
-                option={fieldTypeMaster?.fieldTypeMappingConfig}
+                option={fieldTypeMaster?.fieldTypeMappingConfig?.filter((item) => {
+                  // Always filter out dynamic types
+                  if (item?.metadata?.type === "dynamic") return false;
+                  // Filter out template types only for forms (pageType === "object")
+                  if (pageType === "object" && item?.metadata?.type === "template") return false;
+                  return true;
+                })}
                 optionKey="type"
                 selected={newFieldType?.field || null}
                 select={(value) => {
@@ -317,6 +323,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
                   setNewFieldType(updatedData);
                 }}
                 placeholder={t("SELECT_FIELD_TYPE")}
+                t={t}
               />
             </LabelFieldPair>
 

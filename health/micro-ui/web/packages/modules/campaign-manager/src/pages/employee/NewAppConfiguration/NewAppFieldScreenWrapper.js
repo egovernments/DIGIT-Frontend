@@ -201,10 +201,13 @@ function NewAppFieldScreenWrapper() {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
       {currentCard?.body?.map((section, index, card) => {
+
         const fields =
           currentCard?.type === "template"
-            ? extractTemplateFields(section)
+            ? extractTemplateFields(section?.fields)
             : section?.fields || [];
+
+
         return (
           <Fragment key={`card-${index}`}>
             {fields?.map(({ type, label, active, required, Mandatory, deleteFlag,fieldName, ...rest }, i, c) => {
