@@ -40,26 +40,30 @@ const GenerateXlsx = ({
 
     // ✅ Export separate XLSX file for each locale
     allLocales.forEach((locale) => {
-      const localeMessages = allMessages.filter((m) => m.locale === locale);
+      try {
+        const localeMessages = allMessages.filter((m) => m.locale === locale);
 
-      const sheetData =
-        localeMessages.length > 0
-          ? localeMessages
-          : [
-              {
-                code: "",
-                message: "",
-                module: sheetName,
-                locale,
-              },
-            ];
+        const sheetData =
+          localeMessages.length > 0
+            ? localeMessages
+            : [
+                {
+                  code: "",
+                  message: "",
+                  module: sheetName,
+                  locale,
+                },
+              ];
 
-      const ws = XLSX.utils.json_to_sheet(sheetData, { skipHeader });
-      const wb = XLSX.utils.book_new();
-      XLSX.utils.book_append_sheet(wb, ws, safeName(locale));
+        const ws = XLSX.utils.json_to_sheet(sheetData, { skipHeader });
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, safeName(locale));
 
-      const fileName = `${sheetName}_${locale}.xlsx`;
-      XLSX.writeFile(wb, fileName);
+        const fileName = `${sheetName}_${locale}.xlsx`;
+        XLSX.writeFile(wb, fileName);
+      } catch (error) {
+        console.error(`Failed to generate XLSX for locale ${locale}:`, error);
+      }
     });
 
     console.log("✅ Exported XLSX files for all locales");
