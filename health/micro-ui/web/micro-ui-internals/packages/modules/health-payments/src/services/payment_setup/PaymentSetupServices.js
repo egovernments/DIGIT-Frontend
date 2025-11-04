@@ -12,7 +12,6 @@ export const PaymentSetUpService = {
         body,
         params,
       });
-      debugger;
       return response;
     } catch (error) {
       if (error?.response?.data?.Errors) {

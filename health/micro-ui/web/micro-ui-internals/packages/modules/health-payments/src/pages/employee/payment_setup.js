@@ -147,18 +147,9 @@ const PaymentSetUpPage = () => {
   const fetchUserConfiguredRates = useCallback(
     async (campaignId) => {
       if (!campaignId) return null;
-      debugger;
+
       try {
         const body = {
-          // MdmsCriteria: {
-          //   tenantId: tenantId,
-          //   filters: {
-          //     campaignId: projectId,
-          //     campaignType: projectType,
-          //   },
-          //   schemaCode: "HCM.WORKER_RATES",
-          // },
-
           MdmsCriteria: {
             tenantId: tenantId,
 
@@ -169,9 +160,9 @@ const PaymentSetUpPage = () => {
             },
           },
         };
-        debugger;
+
         const response = await PaymentSetUpService.mdmsSkillWageRatesSearch({ body: body });
-        debugger;
+
         if (response && response.length > 0) {
           return response[0]; // Return the first matching rate configuration
         }
@@ -260,8 +251,8 @@ const PaymentSetUpPage = () => {
           const defaultSkills = await fetchDefaultSkillsData(value.projectType);
 
           // Step 3: Fetch user-configured rates
-          const userRatesData = await fetchUserConfiguredRates(value.code);
-          debugger;
+          const userRatesData = await fetchUserConfiguredRates(value.projectId);
+
           // Step 4: Merge both (if user rates exist)
           const finalSkillsData =
             userRatesData && userRatesData.data?.rates?.length > 0 ? mergeUserConfiguredRates(defaultSkills, userRatesData) : defaultSkills;
@@ -334,6 +325,16 @@ const PaymentSetUpPage = () => {
         {
           onError: (error) => {
             console.error("Error creating MDMS rates:", error);
+            history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+              state: "error",
+              info: "",
+              fileName: "",
+              description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+              message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+              back: t("GO_BACK_TO_HOME"),
+              backlink: `/${window.contextPath}/employee`,
+              showFooter: false,
+            });
           },
           onSuccess: (responseData) => {
             console.log("MDMS rates created successfully:", responseData);
@@ -354,6 +355,16 @@ const PaymentSetUpPage = () => {
       );
     } catch (err) {
       console.error("Unexpected error while creating MDMS rates:", err);
+      history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+        state: "error",
+        info: "",
+        fileName: "",
+        description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+        message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+        back: t("GO_BACK_TO_HOME"),
+        backlink: `/${window.contextPath}/employee`,
+        showFooter: false,
+      });
     }
   };
 
@@ -365,6 +376,16 @@ const PaymentSetUpPage = () => {
         {
           onError: (error) => {
             console.error("Error creating MDMS rates:", error);
+            history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+              state: "error",
+              info: "",
+              fileName: "",
+              description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+              message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+              back: t("GO_BACK_TO_HOME"),
+              backlink: `/${window.contextPath}/employee`,
+              showFooter: false,
+            });
           },
           onSuccess: (responseData) => {
             console.log("MDMS rates created successfully:", responseData);
@@ -385,6 +406,16 @@ const PaymentSetUpPage = () => {
       );
     } catch (err) {
       console.error("Unexpected error while creating MDMS rates:", err);
+      history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+        state: "error",
+        info: "",
+        fileName: "",
+        description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+        message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+        back: t("GO_BACK_TO_HOME"),
+        backlink: `/${window.contextPath}/employee`,
+        showFooter: false,
+      });
     }
   };
 
@@ -407,17 +438,30 @@ const PaymentSetUpPage = () => {
       projectEndDate: selectedCampaign?.endDate,
       status: "ACTIVE",
       createdBy: Digit.UserService.getUser().info.uuid,
+      id: billingCycle?.id,
     };
 
     try {
       //  Call the billing config creation first
 
       if (update) {
+        debugger;
+
         await updateBillConfig(
           { billingConfig },
           {
             onError: (error) => {
               console.error("Billing Config updation failed:", error);
+              history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+                state: "error",
+                info: "",
+                fileName: "",
+                description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+                message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
+              });
             },
             onSuccess: async (responseData) => {
               console.log("Billing Config updated successfully:", responseData);
@@ -425,6 +469,7 @@ const PaymentSetUpPage = () => {
               //  Only after billingConfig succeeds, create MDMS Rates
 
               if (skillsData.existingRatesData != null) {
+                debugger;
                 await updateRates();
               } else {
                 await createRates();
@@ -433,11 +478,22 @@ const PaymentSetUpPage = () => {
           }
         );
       } else {
+        debugger;
         await createBillConfig(
           { billingConfig },
           {
             onError: (error) => {
               console.error("Billing Config creation failed:", error);
+              history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+                state: "error",
+                info: "",
+                fileName: "",
+                description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+                message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+                back: t("GO_BACK_TO_HOME"),
+                backlink: `/${window.contextPath}/employee`,
+                showFooter: false,
+              });
             },
             onSuccess: async (responseData) => {
               console.log("Billing Config created successfully:", responseData);
@@ -455,8 +511,18 @@ const PaymentSetUpPage = () => {
       }
     } catch (err) {
       console.error("Unexpected error during form submission:", err);
+      history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
+        state: "error",
+        info: "",
+        fileName: "",
+        description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
+        message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+        back: t("GO_BACK_TO_HOME"),
+        backlink: `/${window.contextPath}/employee`,
+        showFooter: false,
+      });
     }
-  }, [selectedCampaign, billingCycle, customDays, skillsData, billingConfigData, wagePayload, history, t]);
+  }, [update, selectedCampaign, billingCycle, customDays, skillsData, billingConfigData, wagePayload, history, t]);
 
   // Render Label Pair Helper
   const renderLabelPair = useCallback(
@@ -554,7 +620,7 @@ const PaymentSetUpPage = () => {
             skills={skillsData.skills}
             rateBreakupSchema={skillsData.rateBreakupSchema}
             onDataChange={handleWageDataChange}
-            campaignId={selectedCampaign?.code}
+            campaignId={selectedCampaign?.projectId}
             campaignName={selectedCampaign?.name}
             existingRatesData={skillsData ? skillsData.existingRatesData : null}
           />
@@ -574,6 +640,7 @@ const PaymentSetUpPage = () => {
           title={edit ? t("EDIT") : update ? t("UPDATE") : t("SUBMIT")}
           onClick={() => {
             if (edit) {
+              debugger;
               setEdit(false);
               setUpdate(true);
             } else {
