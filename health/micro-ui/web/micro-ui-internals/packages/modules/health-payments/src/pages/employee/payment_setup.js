@@ -669,7 +669,7 @@ const PaymentSetUpPage = () => {
           }}
           icon={"ArrowForward"}
           isSuffix
-          disabled={!selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData}
+          isDisabled={!selectedCampaign || !billingCycle || (billingCycle?.code === "CUSTOM" && !customDays) || !skillsData}
         />
       </ActionBar>
       {popup && (
