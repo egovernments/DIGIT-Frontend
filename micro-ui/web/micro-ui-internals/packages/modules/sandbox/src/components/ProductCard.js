@@ -1,10 +1,12 @@
 import React from "react";
+import { useState } from "react";
 import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 const ProductCard = ({ product }) => {
   const { t } = useTranslation();
+  const [isHovered, setIsHovered] = useState(false);
   const history = useHistory();
 
   const handleNavigate = (path) => {
@@ -20,13 +22,16 @@ const ProductCard = ({ product }) => {
         gap: '0.3rem',
         padding: '1rem',
         borderRadius: '12px',
-        boxShadow: '0px 2px 7px 0px #00000026',
-        background: '#fff',
+        boxShadow: isHovered ? '0px 4px 12px 0px #00000033' : '0px 2px 7px 0px #00000026',
+        border: isHovered ? '1px solid #0b4b66' : '1px solid transparent',
+        background: isHovered ? '#f8fafb' : '#fff',
         height: 'fit-content',
         width: '100%',
         minWidth: '250px',
-        transition: 'box-shadow 0.2s ease'
+        transition: 'all 0.2s ease'
       }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       {/* Row 1: Icon + Heading (max 2 lines) */}
       <div 
@@ -55,7 +60,7 @@ const ProductCard = ({ product }) => {
           style={{
             fontSize: '16px',
             fontWeight: '600',
-            color: '#0b4b66',
+            color: isHovered ? '#0b4b66' : '#0b4b66',
             lineHeight: '1.25',
             margin: '0',
             display: '-webkit-box',
@@ -87,7 +92,7 @@ const ProductCard = ({ product }) => {
           title={t(product?.cardDescription)}
           style={{
             fontSize: '14px',
-            color: '#555',
+            color: isHovered ? '#333' : '#555',
             lineHeight: '1.5',
             margin: '0',
             display: '-webkit-box',

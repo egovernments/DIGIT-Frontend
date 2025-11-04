@@ -67,7 +67,12 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             </CardText>
             <div 
               className="products-list"
-              style={{}}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gap: '1.5rem',
+                width: '100%'
+              }}
             >
               {configurableProducts.map((product, index) => (
                 <ProductCard key={index} product={product} />
@@ -87,7 +92,12 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             </CardText>
             <div 
               className="products-list"
-              style={{}}
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
+                gap: '1.5rem',
+                width: '100%'
+              }}
             >
               {explorableProducts.map((product, index) => (
                 <ProductCard key={index} product={product} />
