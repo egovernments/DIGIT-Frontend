@@ -33,6 +33,8 @@ const PaymentSetUpPage = () => {
   // for opening the popup screen
   const [popup, setPopUp] = useState(false);
 
+  const [loading, setLoading] = useState(false);
+
   // Constants
   const tenantId = Digit?.ULBService?.getCurrentTenantId();
   const BillingCycle = "BillingCycle";
@@ -262,6 +264,9 @@ const PaymentSetUpPage = () => {
 
         // end
         else {
+          setEdit(false);
+          setUpdate(false);
+          setBillingCycle(null);
           // Step 5: If no billing config, call default MDMS skills API
           const defaultSkills = await fetchDefaultSkillsData(value.projectType);
           setSkillsData(defaultSkills);
@@ -271,6 +276,9 @@ const PaymentSetUpPage = () => {
 
         // Fallback: Try to fetch default skills data on error
         try {
+          setEdit(false);
+          setUpdate(false);
+          setBillingCycle(null);
           const defaultSkills = await fetchDefaultSkillsData(value.projectType);
           setSkillsData(defaultSkills);
         } catch (fallbackError) {
@@ -281,7 +289,7 @@ const PaymentSetUpPage = () => {
         setLoadingSkills(false);
       }
     },
-    [tenantId, fetchUserConfiguredRates, fetchDefaultSkillsData]
+    [tenantId, fetchUserConfiguredRates, fetchDefaultSkillsData, edit]
   );
 
   // Memoize billing cycle options
@@ -445,8 +453,6 @@ const PaymentSetUpPage = () => {
       //  Call the billing config creation first
 
       if (update) {
-        debugger;
-
         await updateBillConfig(
           { billingConfig },
           {
@@ -469,7 +475,6 @@ const PaymentSetUpPage = () => {
               //  Only after billingConfig succeeds, create MDMS Rates
 
               if (skillsData.existingRatesData != null) {
-                debugger;
                 await updateRates();
               } else {
                 await createRates();
@@ -478,7 +483,6 @@ const PaymentSetUpPage = () => {
           }
         );
       } else {
-        debugger;
         await createBillConfig(
           { billingConfig },
           {
@@ -543,6 +547,10 @@ const PaymentSetUpPage = () => {
   // Show loading state
   if (loadingBilling || isCampaignLoading) {
     return <Loader variant={"PageLoader"} className={"digit-center-loader"} />;
+  }
+
+  if (loading) {
+    return <Loader variant={"OverlayLoader"} className={"digit-center-loader"} />;
   }
 
   return (
@@ -641,9 +649,20 @@ const PaymentSetUpPage = () => {
           title={edit ? t("EDIT") : update ? t("UPDATE") : t("SUBMIT")}
           onClick={() => {
             if (edit) {
-              debugger;
-              setEdit(false);
-              setUpdate(true);
+              // setEdit(false);
+              // setUpdate(true);
+
+              // Step 1: show loader
+              setLoading(true);
+
+              // Step 2: wait 500ms, then update states
+              setTimeout(() => {
+                setEdit(false);
+                setUpdate(true);
+
+                // Step 3: hide loader after state updates
+                setLoading(false);
+              }, 500);
             } else {
               setPopUp(true);
             }
