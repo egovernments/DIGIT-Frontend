@@ -1,18 +1,14 @@
-import React from "react";
-import { Card, Button, HeaderComponent, CardText } from "@egovernments/digit-ui-components";
+import React, { useState, useEffect } from "react";
+import { HeaderComponent, CardText } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
+import ProductCard from "../../../components/ProductCard";
 
 const ProductsPageComponent = ({ detailsConfig }) => {
   const { t } = useTranslation();
-  const history = useHistory();
+  const [isLargeScreen, setIsLargeScreen] = useState(false);
 
   // Configurable modules list - easily modify this array to add/remove configurable modules
   const CONFIGURABLE_MODULES = ["PGR"];
-
-  const handleNavigate = (path) => {
-    history.push(path);
-  };
 
   // Separate products into configurable and explorable
   const configurableProducts = detailsConfig?.filter(product =>
@@ -23,15 +19,60 @@ const ProductsPageComponent = ({ detailsConfig }) => {
     !CONFIGURABLE_MODULES.includes(product.module)
   ) || [];
 
-  // Common styles
+  // Handle responsive padding for custom-products-card
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setIsLargeScreen(window.innerWidth >= 1281);
+    };
+    
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
+  // Container styles
+  const containerStyle = {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "flex-start",
+    padding: "1rem 0 0 0",
+  };
+
+  // Card wrapper styles with responsive padding
+  const cardWrapperStyle = {
+    minWidth: "75rem",
+    width: "100%",
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "flex-start",
+    paddingLeft: isLargeScreen ? "0" : "2.5rem",
+  };
+
+  // Product title styles
+  const productTitleStyle = {
+    fontSize: "2.5rem",
+    fontWeight: "bold",
+    color: "#0B4B66",
+  };
+
+  // Product description styles
+  const productDescriptionStyle = {
+    fontSize: "1rem",
+    color: "#666",
+    marginBottom: "2rem",
+    maxWidth: "100%",
+  };
+
+  // Section container styles
   const sectionContainerStyle = {
     backgroundColor: "#FAFAFA",
     padding: "1.5rem",
     borderRadius: "12px",
     marginBottom: "1.5rem",
-    boxShadow: "0px 2px 7px 0px #00000026"
+    boxShadow: "0px 2px 7px 0px #00000026",
   };
 
+  // Section heading styles
   const sectionHeadingStyle = {
     fontFamily: "Roboto",
     fontWeight: "700",
@@ -39,9 +80,10 @@ const ProductsPageComponent = ({ detailsConfig }) => {
     lineHeight: "100%",
     letterSpacing: "0px",
     margin: "0 0 1rem 0",
-    color: "#505050"
+    color: "#505050",
   };
 
+  // Section description styles
   const sectionDescriptionStyle = {
     marginBottom: "1rem",
     color: "#505A5F",
@@ -49,15 +91,29 @@ const ProductsPageComponent = ({ detailsConfig }) => {
     fontWeight: "400",
     fontSize: "16px",
     lineHeight: "24px",
-    letterSpacing: "0px"
+    letterSpacing: "0px",
+  };
+
+  // Products list grid styles
+  const productsListStyle = {
+    display: "grid",
+    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gap: "1rem",
+    width: "100%",
+    maxWidth: "none",
+    margin: "0 auto",
+    justifyContent: "flex-start",
+    padding: 0,
   };
 
   return (
-    <div className="custom-products-container">
-      <div className="custom-products-card">
+    <div className="custom-products-container" style={containerStyle}>
+      <div className="custom-products-card" style={cardWrapperStyle}>
         {/* Header Section */}
-        <HeaderComponent className="products-title">{t("SANDBOX_PRODUCT_HEADER")}</HeaderComponent>
-        <CardText className="products-description">
+        <HeaderComponent className="products-title" style={productTitleStyle}>
+          {t("SANDBOX_PRODUCT_HEADER")}
+        </HeaderComponent>
+        <CardText className="products-description" style={productDescriptionStyle}>
           {t("SANDBOX_PRODUCT_HEADER_DESC")}
         </CardText>
 
@@ -70,46 +126,9 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             <CardText style={sectionDescriptionStyle}>
               {t("SANDBOX_CONFIGURABLE_PRODUCTS_DESC")}
             </CardText>
-            <div className="products-list">
+            <div className="products-list" style={productsListStyle}>
               {configurableProducts.map((product, index) => (
-                <Card
-                  key={index}
-                  className="product-card"
-                  style={{
-                    boxShadow: "0px 2px 7px 0px #00000026",
-                    borderRadius: "12px",
-                    height: "245px",
-                    minHeight: "245px"
-                  }}
-                >
-                  <div className="product-header">
-                    <div className="icon-wrap">
-                      {Digit.Utils.iconRender(product.icon, "#c84c0e")}
-                    </div>
-                    <div
-                      className="product-title"
-                      title={t(product.heading)}
-                    >
-                      {t(product.heading)}
-                    </div>
-                  </div>
-                  <div
-                    className="product-description"
-                    title={t(product?.cardDescription)}
-                  >
-                    {t(product?.cardDescription)}
-                  </div>
-                  <Button
-                    className="explore-button-updated no-hover"
-                    size={"medium"}
-                    style={{
-                      padding: "0px", justifyContent: "start", display: "flex", height: "1rem"
-                    }}
-                    variation="secondary"
-                    label={`${t("COMMON_EXPLORE")} ➔`}
-                    onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
-                  />
-                </Card>
+                <ProductCard key={index} product={product} />
               ))}
             </div>
           </div>
@@ -124,46 +143,9 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             <CardText style={sectionDescriptionStyle}>
               {t("SANDBOX_EXPLORABLE_PRODUCTS_DESC")}
             </CardText>
-            <div className="products-list">
+            <div className="products-list" style={productsListStyle}>
               {explorableProducts.map((product, index) => (
-                <Card
-                  key={index}
-                  className="product-card"
-                  style={{
-                    boxShadow: "0px 2px 7px 0px #00000026",
-                    borderRadius: "12px",
-                    height: "245px",
-                    minHeight: "245px"
-                  }}
-                >
-                  <div className="product-header">
-                    <div className="icon-wrap">
-                      {Digit.Utils.iconRender(product.icon, "#c84c0e")}
-                    </div>
-                    <div
-                      className="product-title"
-                      title={t(product.heading)}
-                    >
-                      {t(product.heading)}
-                    </div>
-                  </div>
-                  <div
-                    className="product-description"
-                    title={t(product?.cardDescription)}
-                  >
-                    {t(product?.cardDescription)}
-                  </div>
-                  <Button
-                    className="explore-button-updated no-hover"
-                    size={"medium"}
-                    style={{
-                      padding: "0px", justifyContent: "start", display: "flex", height: "1rem"
-                    }}
-                    variation="secondary"
-                    label={`${t("COMMON_EXPLORE")} ➔`}
-                    onClick={() => handleNavigate(`/${window?.contextPath}/employee/sandbox/productDetailsPage/${product?.module}`)}
-                  />
-                </Card>
+                <ProductCard key={index} product={product} />
               ))}
             </div>
           </div>

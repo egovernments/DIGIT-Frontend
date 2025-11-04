@@ -59,28 +59,28 @@ const LandingComponent = ({ config = {} }) => {
     history.push(redirectPathOtpLogin);
   };
 
-  // Logic to split stepsSection.title into two parts
-  const splitStepsTitle = () => {
-    const title = t(stepsSection.title);
-    const words = title.split(' ');
-    
-    if (words.length <= 1) {
-      return { firstPart: title, lastPart: '' };
-    }
-    
-    // Get the last word (end part)
-    const lastPart = words[words.length - 1];
-    // Get remaining words (everything except the last word)
-    const firstPart = words.slice(0, -1).join(' ');
-    
-    return { firstPart, lastPart };
-  };
+ // Logic to split stepsSection.title into two parts (last 2 words as highlight)
+ const splitStepsTitle = () => {
+  const title = t(stepsSection.title)?.trim();
+  if (!title) return { firstPart: "", lastPart: "" };
+
+  const words = title.split(" ").filter(Boolean);
+
+  if (words.length <= 2) {
+    // If title has only 1–2 words, keep them as is
+    return { firstPart: words.slice(0, -1).join(" "), lastPart: words.slice(-1).join(" ") };
+  }
+
+  // Get last two words as the highlighted part
+  const lastPart = words.slice(-2).join(" ");
+  const firstPart = words.slice(0, -2).join(" ");
+
+
+  return { firstPart, lastPart };
+};
 
   const { firstPart, lastPart } = splitStepsTitle();
 
-  console.log("*** Log ===> ", stepsSection.title);
-  console.log("*** First Part ===> ", firstPart);
-  console.log("*** Last Part ===> ", lastPart);
 
   return (
     <div className="" style={{ "padding": "0px" }}>
