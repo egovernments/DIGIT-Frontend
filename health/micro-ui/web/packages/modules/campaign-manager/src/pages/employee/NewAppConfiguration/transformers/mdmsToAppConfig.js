@@ -22,6 +22,7 @@ export const transformMdmsToAppConfig = (fullData) => {
       // It's a template screen
       templates.push(transformTemplate(item));
     } else if (item.type === "object" && item.flow) {
+      console.log("Processing form page:", item.flow);
       // It's a form page - group pages by flow name
       const flowName = item.flow;
       if (!forms[flowName]) {
@@ -33,6 +34,7 @@ export const transformMdmsToAppConfig = (fullData) => {
           isSelected: item.isSelected !== undefined ? item.isSelected : true,
           screenType: "FORM",
           pages: [],
+          onAction: item.onAction,
           wrapperConfig: item.wrapperConfig
         };
       }
@@ -40,8 +42,7 @@ export const transformMdmsToAppConfig = (fullData) => {
       forms[flowName].pages.push(transformFormPage(item));
 
       // Store onAction from the last page (or first one that has it)
-      if (item.onAction && (!forms[flowName].onAction || item.order >= forms[flowName].lastOrder)) {
-        forms[flowName].onAction = item.onAction;
+      if (item.order >= forms[flowName].lastOrder) {
         forms[flowName].lastOrder = item.order;
       }
     }
