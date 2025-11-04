@@ -3,7 +3,7 @@ import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, isSingleCard }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [isHovered, setIsHovered] = useState(false);
@@ -27,7 +27,7 @@ const ProductCard = ({ product }) => {
     minHeight: "220px",
     width: "100%",
     minWidth: "250px",
-    maxWidth: "380px",
+    maxWidth: isSingleCard ? "calc(25% - 0.75rem)" : "none", // Single card matches size of one card in 4-card layout
     position: "relative",
     top: isHovered ? "-4px" : "0px",
     transition: "all 0.2s ease-out",

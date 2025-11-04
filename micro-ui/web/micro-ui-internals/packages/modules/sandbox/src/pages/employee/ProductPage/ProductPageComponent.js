@@ -36,7 +36,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
   // Calculate grid columns based on screen width - max 4 cards per row
   const getGridColumns = () => {
     if (screenWidth >= 1280) {
-      return "repeat(4, minmax(250px, 1fr))"; // Max 4 cards on large desktop
+      return "repeat(4, 1fr)"; // Max 4 cards on large desktop - cards expand to fill space
     } else if (screenWidth >= 1024) {
       return "repeat(3, minmax(250px, 1fr))"; // 3 cards on small desktop
     } else if (screenWidth >= 768) {
@@ -111,15 +111,17 @@ const ProductsPageComponent = ({ detailsConfig }) => {
   };
 
   // Products list grid styles with max 4 cards limit
-  const productsListStyle = {
-    display: "grid",
-    gridTemplateColumns: getGridColumns(),
-    gap: "1rem",
-    width: "100%",
-    maxWidth: "none",
-    margin: "0 auto",
-    justifyContent: "flex-start",
-    padding: 0,
+  const getProductsListStyle = (cardCount) => {
+    return {
+      display: "grid",
+      gridTemplateColumns: getGridColumns(),
+      gap: "1rem",
+      width: "100%",
+      maxWidth: "none",
+      margin: "0 auto",
+      justifyContent: "flex-start",
+      padding: 0,
+    };
   };
 
   return (
@@ -142,9 +144,13 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             <CardText style={sectionDescriptionStyle}>
               {t("SANDBOX_CONFIGURABLE_PRODUCTS_DESC")}
             </CardText>
-            <div className="products-list" style={productsListStyle}>
+            <div className="products-list" style={getProductsListStyle(configurableProducts.length)}>
               {configurableProducts.map((product, index) => (
-                <ProductCard key={index} product={product} />
+                <ProductCard 
+                  key={index} 
+                  product={product} 
+                  isSingleCard={configurableProducts.length === 1}
+                />
               ))}
             </div>
           </div>
@@ -159,9 +165,13 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             <CardText style={sectionDescriptionStyle}>
               {t("SANDBOX_EXPLORABLE_PRODUCTS_DESC")}
             </CardText>
-            <div className="products-list" style={productsListStyle}>
+            <div className="products-list" style={getProductsListStyle(explorableProducts.length)}>
               {explorableProducts.map((product, index) => (
-                <ProductCard key={index} product={product} />
+                <ProductCard 
+                  key={index} 
+                  product={product} 
+                  isSingleCard={explorableProducts.length === 1}
+                />
               ))}
             </div>
           </div>
