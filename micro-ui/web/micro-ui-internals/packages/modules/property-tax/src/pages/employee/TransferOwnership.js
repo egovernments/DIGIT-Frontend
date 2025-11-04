@@ -468,7 +468,7 @@ const TransferOwnership = () => {
       if (response && response.Properties && response.Properties.length > 0) {
         const acknowledgementNumber = response.Properties[0].acknowldgementNumber;
         // Clear session storage on successful submission
-        Digit.SessionStorage.delete(sessionKey);
+        Digit.SessionStorage.del(sessionKey);
 
         setShowToast({
           key: "success",
@@ -498,7 +498,7 @@ const TransferOwnership = () => {
   const onSecondayActionClick = () => {
     if (currentKey === 1) {
       // Clear session storage when leaving the mutation flow
-      Digit.SessionStorage.delete(sessionKey);
+      Digit.SessionStorage.del(sessionKey);
       history.goBack();
       return;
     }

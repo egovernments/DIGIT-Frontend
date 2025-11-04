@@ -24,6 +24,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   const [units, setUnits] = useState(formData?.conditionalFields?.units || []);
   const [unitsData, setUnitsData] = useState(formData?.conditionalFields?.units || []);
   const [plotSize, setPlotSize] = useState(formData?.conditionalFields?.plotSize || "");
+  const [noOfFloors, setNoOfFloors] = useState(formData?.conditionalFields?.noOfFloors || null);
   const [previousUsageCategory, setPreviousUsageCategory] = useState(null);
   const [previousPropertyType, setPreviousPropertyType] = useState(null);
   const [renderKey, setRenderKey] = useState(0);
@@ -122,12 +123,12 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   useEffect(() => {
     const allData = {
       plotSize,
-      noOfFloors: formData?.conditionalFields?.noOfFloors,
+      noOfFloors,
       floors: floorsData,
       units: unitsData
     };
     onSelect("conditionalFields", allData);
-  }, [plotSize, floorsData, unitsData, formData?.conditionalFields?.noOfFloors]);
+  }, [plotSize, noOfFloors,floorsData, unitsData]);
 
   const handleFieldChange = (fieldName, value) => {
     // Don't call onSelect directly anymore - let the useEffect handle it
@@ -279,7 +280,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
 
   // Handle floor count change for Independent property
   const handleFloorCountChange = (value) => {
-    handleFieldChange("noOfFloors", value);
+    setNoOfFloors(value);
     const floorCount = parseInt(value?.code || value);
 
     // Generate floor cards based on floor count
@@ -803,7 +804,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
     }
 
     if (missingFields.length > 0) {
-      const message = `${t("PT_VALIDATION_MISSING_FIELDS") || "Please fill all mandatory fields"}`;
+      const message = `${t("PT_VALIDATION_MISSING_FIELDS") || "Please fill all mandatory fields"} ${missingFields} are missing`;
       setShowToast({ type: "error", label: message });
       return false;
     }

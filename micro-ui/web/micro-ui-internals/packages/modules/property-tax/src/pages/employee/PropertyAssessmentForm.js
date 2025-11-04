@@ -1208,21 +1208,17 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
 
   const handlePopupClose = () => {
     // Clear session storage when leaving the form
-    Digit.SessionStorage.delete(sessionKey);
-    Digit.SessionStorage.delete(popupSeenKey);
+    Digit.SessionStorage.del(sessionKey);
+    Digit.SessionStorage.del(popupSeenKey);
     setShowRequiredDocsPopup(false);
     window.history.back();
-  };
-
-  const handlePrint = () => {
-    window.print();
   };
 
   const onSecondaryActionClick = () => {
     if (currentStep === 0) {
       // Clear session storage when leaving the form from first step
-      Digit.SessionStorage.delete(sessionKey);
-      Digit.SessionStorage.delete(popupSeenKey);
+      Digit.SessionStorage.del(sessionKey);
+      Digit.SessionStorage.del(popupSeenKey);
       history.goBack();
       return;
     }
