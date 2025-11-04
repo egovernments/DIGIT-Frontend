@@ -155,7 +155,12 @@ const LocalisationBulkUpload = () => {
         message: row.message?.trim() || "",
         module: row.module?.trim() || choosenModule?.value,
         locale: row.locale?.trim() || "default",
-      }));
+      })).filter(entry => entry.code && entry.code.length > 0);
+
+      if (payload.length === 0) {
+        setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
+        return;
+      }
 
       console.log("📤 Payload to /_upsert:", payload);
 
