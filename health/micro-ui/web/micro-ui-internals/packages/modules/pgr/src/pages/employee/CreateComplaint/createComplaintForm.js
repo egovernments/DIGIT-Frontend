@@ -52,7 +52,6 @@ const CreateComplaintForm = ({
   // Validate phone number based on config
   const validatePhoneNumber = (value, config) => {
     const { minLength, maxLength, min, max, pattern } = config?.populators?.validation || {};
-    const { minLength, maxLength, min, max, pattern } = config?.populators?.validation || {};
     const stringValue = String(value || "");
 
     // Check if value contains invalid characters like 'e', 'E', '+', '-'
