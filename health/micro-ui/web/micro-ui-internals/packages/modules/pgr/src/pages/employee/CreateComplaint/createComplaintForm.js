@@ -20,9 +20,7 @@ import { formPayloadToCreateComplaint } from "../../../utils";
 
 const CreateComplaintForm = ({
   createComplaintConfig,      // Form configuration for Create Complaint screen
-  sessionFormData,            // Cached form data from session (used for persistence)
-  setSessionFormData,         // Setter for session form data
-  clearSessionFormData,       // Clears form session data
+  sessionFormData,            // Cached form data from session (used only for defaultValues)
   tenantId,                   // Current tenant ID
   preProcessData              // Any preprocessing logic for form config or data
 }) => {
@@ -31,7 +29,8 @@ const CreateComplaintForm = ({
 
   const [toast, setToast] = useState({ show: false, label: "", type: "" }); // Toast UI state
   const [isSubmitting, setIsSubmitting] = useState(false); // Track submission state to prevent multiple clicks
-
+  const [complaintUserCode, setComplaintUserCode] = useState(null); // Track complaint user selection
+  const [prevSelectedUser, setPrevSelectedUser] = useState(null); // Track previous user selection
 
   const user = Digit.UserService.getUser();
 
@@ -78,7 +77,6 @@ const CreateComplaintForm = ({
 
   // Determine which fields should be disabled based on complaintUser code
   const disabledFields = useMemo(() => {
-    const complaintUserCode = sessionFormData?.complaintUser?.code;
     if (complaintUserCode === "MYSELF") {
       return {
         ComplainantName: true,
@@ -89,7 +87,7 @@ const CreateComplaintForm = ({
       ComplainantName: false,
       ComplainantContactNumber: false,
     };
-  }, [sessionFormData?.complaintUser?.code]);
+  }, [complaintUserCode]);
 
   const updatedConfig = useMemo(() => {
     const baseConfig = Digit.Utils.preProcessMDMSConfig(
@@ -134,8 +132,12 @@ const CreateComplaintForm = ({
   const onFormValueChange = (setValue, formData, formState, reset, setError, clearErrors) => {
     const ComplainantName = formData?.ComplainantName;
     const selectedUser = formData?.complaintUser?.code;
-    const prevSelectedUser = sessionFormData?.complaintUser?.code;
     const ComplainantContactNumber = formData?.ComplainantContactNumber;
+
+    // Update complaint user code if changed
+    if (selectedUser !== complaintUserCode) {
+      setComplaintUserCode(selectedUser);
+    }
 
     // Validate name using pattern from config
     const nameFieldConfig = updatedConfig?.form?.flatMap(section => section?.body || [])
@@ -149,7 +151,7 @@ const CreateComplaintForm = ({
           message: t("CORE_COMMON_APPLICANT_NAME_INVALID")
         }, { shouldFocus: false });
       }
-    } else if (formState.errors.ComplainantName) {
+    } else if (ComplainantName && formState.errors.ComplainantName) {
       clearErrors("ComplainantName");
     }
 
@@ -164,15 +166,15 @@ const CreateComplaintForm = ({
           message: t("CORE_COMMON_APPLICANT_MOBILE_NUMBER_INVALID")
         }, { shouldFocus: false });
       }
-    } else if (formState.errors.ComplainantContactNumber) {
+    } else if (ComplainantContactNumber && formState.errors.ComplainantContactNumber) {
       clearErrors("ComplainantContactNumber");
     }
-  
+
     // Early return if complaintUser hasn't changed
     if (selectedUser === prevSelectedUser) return;
-  
+
     const updatedData = { ...formData };
-  
+
     if (selectedUser === "MYSELF") {
       updatedData.ComplainantName = user?.info?.userName || "";
       updatedData.ComplainantContactNumber = user?.info?.mobileNumber || "";
@@ -180,11 +182,11 @@ const CreateComplaintForm = ({
       updatedData.ComplainantName = "";
       updatedData.ComplainantContactNumber = "";
     }
-  
-    // Set form values and update session state
+
+    // Set form values and update previous selected user
     setValue("ComplainantName", updatedData.ComplainantName);
     setValue("ComplainantContactNumber", updatedData.ComplainantContactNumber);
-    setSessionFormData(updatedData);
+    setPrevSelectedUser(selectedUser);
   };
 
   const handleToastClose = () => {
@@ -228,7 +230,6 @@ const CreateComplaintForm = ({
             "CS_PGR_COMPLAINT_NUMBER",
             responseData?.ServiceWrappers?.[0]?.service?.serviceRequestId
           );
-          clearSessionFormData();
         }
       },
     });
@@ -257,7 +258,7 @@ const CreateComplaintForm = ({
         defaultValues={sessionFormData}
         heading={t("")}
         config={updatedConfig?.form}
-        className="custom-form"
+        className="custom-form-complaints"
         onFormValueChange={onFormValueChange}
         isDisabled={isSubmitting}
         label={t("CS_COMMON_SUBMIT")}

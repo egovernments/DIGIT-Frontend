@@ -34,8 +34,8 @@ export const CreateComplaintConfig = {
               },
               populators: {
                 name: "ComplaintDate",
-                required: true,
                 validation:{
+                  required: true,
                   max: "currentDate"
                 },
                 error: "CORE_COMMON_REQUIRED_ERRMSG"
@@ -49,6 +49,10 @@ export const CreateComplaintConfig = {
               label: "Boundary",
               populators: {
                 name: "SelectedBoundary",
+                error: "CORE_COMMON_REQUIRED_ERRMSG",
+                validation: {
+                  required: true
+                }
               },
             }
           ],
@@ -96,6 +100,7 @@ export const CreateComplaintConfig = {
                 name: "ComplainantName",
                 error: "CORE_COMMON_REQUIRED_ERRMSG",
                 validation: {
+                  required: true,
                   pattern: /^[A-Za-z0-9-_]+$/i,
                   error: "CORE_COMMON_REQUIRED_ERRMSG"
                 }
@@ -112,6 +117,7 @@ export const CreateComplaintConfig = {
                 error: "CORE_COMMON_MOBILE_ERROR",
                 componentInFront: "+91",
                 validation: {
+                  required: true,
                   pattern: "^[0-9]{10}$",
                   minLength: 10,
                   maxLength: 10,
