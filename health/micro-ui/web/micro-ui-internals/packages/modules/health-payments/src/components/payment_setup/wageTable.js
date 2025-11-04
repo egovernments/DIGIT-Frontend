@@ -4,7 +4,15 @@ import { useTranslation } from "react-i18next";
 import { TextInput } from "@egovernments/digit-ui-components";
 import { tableCustomStyle } from "../table_inbox_custom_style";
 
-const RoleWageTable = ({ skills = [], rateBreakupSchema = {}, campaignId = null, campaignName = "", onDataChange, existingRatesData = null }) => {
+const RoleWageTable = ({
+  skills = [],
+  rateBreakupSchema = {},
+  campaignId = null,
+  campaignName = "",
+  onDataChange,
+  existingRatesData = null,
+  disabled = false,
+}) => {
   const { t } = useTranslation();
 
   const [roles, setRoles] = useState([]);
@@ -140,6 +148,7 @@ const RoleWageTable = ({ skills = [], rateBreakupSchema = {}, campaignId = null,
   const renderNumericInput = useCallback(
     (row, field) => (
       <TextInput
+        disabled={disabled}
         type="text"
         value={row[field] === 0 ? "0" : row[field] !== undefined && row[field] !== null ? String(row[field]) : "0"}
         onChange={(e) => handleChange(row.id, field, e.target.value)}
@@ -147,7 +156,7 @@ const RoleWageTable = ({ skills = [], rateBreakupSchema = {}, campaignId = null,
         style={{ width: "100%" }}
       />
     ),
-    [handleChange]
+    [handleChange,disabled]
   );
 
   /**  Define dynamic DataTable columns */

@@ -586,7 +586,7 @@ const PaymentSetUpPage = () => {
             optionKey="code"
             selected={billingCycle}
             select={handleBillingCycleSelect}
-            disabled={loadingBilling || billingCycleOptions.length === 0}
+            disabled={edit || loadingBilling || billingCycleOptions.length === 0}
           />
         )}
 
@@ -617,6 +617,7 @@ const PaymentSetUpPage = () => {
           </div>
         ) : skillsData ? (
           <RoleWageTable
+            disabled={edit ? true : false}
             skills={skillsData.skills}
             rateBreakupSchema={skillsData.rateBreakupSchema}
             onDataChange={handleWageDataChange}
