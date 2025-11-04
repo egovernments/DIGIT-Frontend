@@ -2,6 +2,8 @@ import React from "react";
 import { HeaderComponent, CardText } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import ProductCard from "../../../components/ProductCard";
+import "../../../components/product-inline.css";
+
 
 const ProductsPageComponent = ({ detailsConfig }) => {
   const { t } = useTranslation();
@@ -67,12 +69,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             </CardText>
             <div 
               className="products-list"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: '1.5rem',
-                width: '100%'
-              }}
+              style={{}}
             >
               {configurableProducts.map((product, index) => (
                 <ProductCard key={index} product={product} />
@@ -92,12 +89,7 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             </CardText>
             <div 
               className="products-list"
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))',
-                gap: '1.5rem',
-                width: '100%'
-              }}
+              style={{}}
             >
               {explorableProducts.map((product, index) => (
                 <ProductCard key={index} product={product} />

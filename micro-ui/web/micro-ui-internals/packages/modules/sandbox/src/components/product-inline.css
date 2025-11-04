@@ -1,0 +1,261 @@
+/* Products grid responsive layout with dynamic width and max 4 cards per row */
+.products-list {
+  display: grid !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+/* Mobile: 1 card per row with full width */
+@media (max-width: 767px) {
+  .products-list {
+    grid-template-columns: minmax(250px, 1fr) !important;
+  }
+}
+
+/* Tablet: 2 cards per row sharing width equally */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .products-list {
+    grid-template-columns: repeat(2, minmax(250px, 1fr)) !important;
+  }
+}
+
+/* Small desktop: 3 cards per row sharing width equally */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .products-list {
+    grid-template-columns: repeat(3, minmax(250px, 1fr)) !important;
+  }
+}
+
+/* Large desktop: 4 cards per row sharing width equally */
+@media (min-width: 1280px) {
+  .products-list {
+    grid-template-columns: repeat(4, minmax(250px, 1fr)) !important;
+  }
+}
+
+/* Force card width to be dynamic */
+.new-product-card {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 250px !important;
+}
+
+/* Force perfect icon alignment */
+.card-icon-wrapper svg {
+  display: block !important;
+  margin: 0 auto !important;
+  vertical-align: middle !important;
+  transform: translate(0, 0) !important;
+}
+.card-icon-wrapper * {
+  vertical-align: middle !important;
+}
+
+/* Card hover transition effect similar to card2 */
+.new-product-card {
+  position: relative !important;
+  top: 0px !important;
+  transition: all 0.2s ease-out !important;
+  border: 1px solid transparent !important;
+}
+.new-product-card:hover {
+  top: -4px !important;
+  box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2) !important;
+  border: 1px solid #0b4b66 !important;
+  background-color: #f8fafb !important;
+}
+.new-product-card:hover .card-title {
+  color: #0b4b66 !important;
+  transition: color 0.2s ease-out !important;
+}
+.new-product-card:hover .card-description {
+  color: #333 !important;
+  transition: color 0.2s ease-out !important;
+}
+.new-product-card:hover .card-icon-wrapper {
+  background-color: transparent !important;
+  border-color: transparent !important;
+  transition: all 0.2s ease-out !important;
+}
+
+/* Remove hover effects from explore button */
+.card-explore-button {
+  transition: none !important;
+}
+.card-explore-button:hover,
+.card-explore-button:focus,
+.card-explore-button:active {
+  background: transparent !important;
+  border: 1px solid transparent !important;
+  color: #c84c0e !important;
+  box-shadow: none !important;
+  transform: none !important;
+}
+
+/* Ensure inner label/content of the button aligns left */
+.card-explore-button .icon-label-container,
+.card-explore-button .digit-button-label {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  width: 100%;
+  padding-left: 0 !important;
+}
+
+
+/* --- Inline-style equivalents migrated from sandbox.scss --- */
+
+/* Table styling */
+.table.sandbox-application-table {
+  border-collapse: collapse;
+  border-color: transparent;
+  border-width: 0 1.5rem;
+}
+.table.sandbox-application-table thead tr th {
+  background-color: #ffffff !important;
+}
+.table.sandbox-application-table tbody tr:hover {
+  background: rgba(200, 76, 14, 0.12); /* theme(colors.primary.main) ≈ #C84C0E */
+}
+
+/* Submit bar primary background */
+.submit-bar {
+  background-color: #C84C0E; /* theme(colors.primary.main) */
+}
+
+/* Signup form info tooltip behavior */
+.sandbox-signup-form .label-container .info-icon {
+  position: relative;
+  display: inline-flex;
+}
+.sandbox-signup-form .label-container .info-icon:hover .infotext {
+  visibility: visible;
+  opacity: 1;
+}
+.sandbox-signup-form .label-container .info-icon .infotext {
+  visibility: hidden;
+  opacity: 0;
+  transition: opacity 0.3s;
+  position: absolute;
+  width: 15rem;
+  background-color: #555;
+  color: #fff;
+  font-family: Roboto, sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  text-align: center;
+  line-height: 1.25rem;
+  padding: 0.5rem;
+  border-radius: 0.375rem;
+  z-index: 10;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -10.3rem;
+}
+
+/* Smaller error message in signup form */
+.sandbox-signup-form .digit-field .digit-error-message {
+  font-size: 0.8rem !important;
+}
+
+/* Login/Signup selector responsive alignment */
+.loginSignUpSelector,
+.forgotPasswordSelector {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  margin-top: -1rem !important;
+}
+@media (max-width: 768px) {
+  .loginSignUpSelector,
+  .forgotPasswordSelector {
+    justify-content: flex-start;
+    margin-top: 0.5rem !important;
+    padding-left: 1rem;
+  }
+}
+@media (max-width: 480px) {
+  .loginSignUpSelector,
+  .forgotPasswordSelector {
+    justify-content: center;
+    margin-top: 1rem !important;
+    padding: 0 1rem;
+  }
+  .loginSignUpSelector button,
+  .forgotPasswordSelector button {
+    font-size: 0.875rem;
+  }
+}
+@media (max-width: 375px), (max-height: 667px) and (min-device-pixel-ratio: 2) {
+  .loginSignUpSelector,
+  .forgotPasswordSelector {
+    margin-top: 0.65rem !important;
+    justify-content: center;
+  }
+}
+
+/* Topbar select white icon fill override */
+.RightMostTopBarOptions .select-wrap svg {
+  fill: #ffffff !important; /* theme(colors.white) */
+}
+
+/* Quick link primary color inline */
+.quickLink {
+  color: #C84C0E; /* theme(colors.primary.main) */
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+/* Icon helpers (inline port) */
+.icon-wrap {
+  width: 32px !important;
+  height: 32px !important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-shrink: 0;
+  align-self: flex-start !important;
+  margin-top: 2px !important;
+}
+.icon-wrap svg {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+  min-width: 32px !important;
+  min-height: 32px !important;
+}
+.icon-wrap svg path {
+  vector-effect: non-scaling-stroke !important;
+}
+
+/* Breadcrumb styles */
+.nav-breadcrumb {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  font-weight: 700 !important;
+  padding: 12px 16px;
+  border-radius: 4px;
+  margin: 20px 0;
+}
+.nav-breadcrumb a {
+  color: #C84C0E !important;
+  text-decoration: none;
+  transition: color 0.2s ease;
+  font-weight: 700 !important;
+}
+.nav-breadcrumb a:hover {
+  color: #a63d0a !important;
+}
+.nav-breadcrumb .separator {
+  margin: 0 4px;
+  color: #666;
+  font-weight: 700 !important;
+}
+.nav-breadcrumb .current {
+  color: #333;
+  font-weight: 700 !important;
+}
