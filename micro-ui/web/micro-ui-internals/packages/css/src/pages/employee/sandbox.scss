@@ -27,6 +27,117 @@
   }
 }
 
+/* Products grid responsive layout with dynamic width and max 4 cards per row */
+.products-list {
+  display: grid !important;
+  gap: 1rem !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+}
+
+/* Mobile: 1 card per row with full width */
+@media (max-width: 767px) {
+  .products-list {
+    grid-template-columns: minmax(250px, 1fr) !important;
+  }
+}
+
+/* Tablet: 2 cards per row sharing width equally */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .products-list {
+    grid-template-columns: repeat(2, minmax(250px, 1fr)) !important;
+  }
+}
+
+/* Small desktop: 3 cards per row sharing width equally */
+@media (min-width: 1024px) and (max-width: 1279px) {
+  .products-list {
+    grid-template-columns: repeat(3, minmax(250px, 1fr)) !important;
+  }
+}
+
+/* Large desktop: 4 cards per row sharing width equally */
+@media (min-width: 1280px) {
+  .products-list {
+    grid-template-columns: repeat(4, minmax(250px, 1fr)) !important;
+  }
+}
+
+/* Force card width to be dynamic */
+.new-product-card {
+  width: 100% !important;
+  max-width: none !important;
+  min-width: 250px !important;
+}
+
+/* Force perfect icon alignment */
+.card-icon-wrapper {
+  svg {
+    display: block !important;
+    margin: 0 auto !important;
+    vertical-align: middle !important;
+    transform: translate(0, 0) !important;
+  }
+  
+  * {
+    vertical-align: middle !important;
+  }
+}
+
+/* Card hover transition effect similar to card2 */
+.new-product-card {
+  position: relative !important;
+  top: 0px !important;
+  transition: all 0.2s ease-out !important;
+  border: 1px solid transparent !important;
+  
+  &:hover {
+    top: -4px !important;
+    box-shadow: 0px 4px 8px rgba(38, 38, 38, 0.2) !important;
+    border: 1px solid #0b4b66 !important;
+    background-color: #f8fafb !important;
+    
+    .card-title {
+      color: #0b4b66 !important;
+      transition: color 0.2s ease-out !important;
+    }
+    
+    .card-description {
+      color: #333 !important;
+      transition: color 0.2s ease-out !important;
+    }
+    
+    .card-icon-wrapper {
+      background-color: transparent !important;
+      border-color: transparent !important;
+      transition: all 0.2s ease-out !important;
+    }
+  }
+}
+
+/* Remove hover effects from explore button */
+.card-explore-button {
+  transition: none !important;
+  
+  &:hover, &:focus, &:active {
+    background: transparent !important;
+    border: 1px solid transparent !important;
+    color: #c84c0e !important;
+    box-shadow: none !important;
+    transform: none !important;
+  }
+}
+
+/* Ensure inner label/content of the button aligns left */
+.card-explore-button .icon-label-container,
+.card-explore-button .digit-button-label {
+  justify-content: flex-start !important;
+  text-align: left !important;
+  width: 100%;
+  padding-left: 0 !important;
+}
+
 .sandbox-module-container {
   display: flex;
   flex-direction: row;
@@ -1779,26 +1890,275 @@ digit-card-text.center {
   max-width: 100%;
 }
 
+/* New Products Grid Layout - Default for mobile and small screens */
 .products-list {
-  display: flex;
-  gap: 2rem;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  width: 100%;
+  max-width: none;
+  margin: 0 auto;
+  justify-content: flex-start;
 }
 
-.product-card {
-  flex: 1 1 calc(25% - 2rem);
-  padding: 1.5rem;
-  border-radius: 12px !important;
+/* Flexible grid for all screen sizes */
+@supports (display: grid) {
+  .products-list {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* New Product Card Structure */
+.new-product-card {
+  display: grid;
+  grid-template-rows: 70px 90px auto;
+  gap: 0.8rem;
+  padding: 1.3rem;
+  border-radius: 12px;
   box-shadow: 0px 2px 7px 0px #00000026;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
   background: #fff;
-  flex-grow: revert;
-  min-height: 245px !important;
-  height: 245px !important;
-  overflow: visible;
-  position: relative;
+  height: 270px;
+  width: 100%;
+  min-width: 250px;
+  max-width: 380px;
+  transition: box-shadow 0.2s ease;
+}
+
+.new-product-card:hover {
+  box-shadow: 0px 4px 12px 0px #00000033;
+}
+
+/* Card Header Section (Icon + Title) */
+.card-header-section {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.6rem;
+  height: 70px; /* Fixed height for consistent alignment */
+  min-height: 70px;
+}
+
+.card-icon-wrapper {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.card-icon-wrapper svg {
+  width: 32px !important;
+  height: 32px !important;
+  max-width: 32px !important;
+  max-height: 32px !important;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #0b4b66;
+  line-height: 1.25;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  hyphens: auto;
+  flex: 1;
+}
+
+/* Card Description Section */
+.card-description-section {
+  display: flex;
+  align-items: flex-start;
+  height: 90px; /* Fixed height for consistent alignment */
+  min-height: 90px;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+}
+
+/* Card Button Section */
+.card-button-section {
+  display: flex;
+  align-items: flex-end;
+  margin-top: 0;
+}
+
+.card-explore-button {
+  width: auto;
+  align-self: flex-start;
+  padding: 0.5rem 1rem 0.5rem 0;
+  border: 1px solid transparent;
+  background: transparent;
+  color: #c84c0e;
+  font-weight: 500;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.card-explore-button:hover {
+  background-color: #f8f9fa;
+  color: #a63d0a;
+}
+
+.card-explore-button:focus {
+  outline: 2px solid #c84c0e;
+  outline-offset: 2px;
+}
+
+/* Responsive Breakpoints for New Product Cards */
+/* Large screens - flexible cards per row */
+@media (min-width: 1200px) {
+  .products-list {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+    max-width: none;
+    justify-content: flex-start;
+  }
+  
+  .new-product-card {
+    max-width: 400px;
+  }
+}
+
+/* Medium-large screens - flexible cards per row */
+@media (min-width: 768px) and (max-width: 1199px) {
+  .products-list {
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+    justify-content: flex-start;
+  }
+  
+  .new-product-card {
+    max-width: 350px;
+    min-height: 260px;
+  }
+  
+  .card-title {
+    font-size: 16px;
+  }
+  
+  .card-description {
+    font-size: 13px;
+  }
+}
+
+/* Small-medium screens - 2 cards per row */
+@media (min-width: 480px) and (max-width: 767px) {
+  .products-list {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  .new-product-card {
+    min-height: 240px;
+    padding: 1rem;
+  }
+  
+  .card-header-section {
+    min-height: 56px;
+    gap: 0.5rem;
+  }
+  
+  .card-icon-wrapper {
+    width: 28px;
+    height: 28px;
+  }
+  
+  .card-icon-wrapper svg {
+    width: 28px !important;
+    height: 28px !important;
+    max-width: 28px !important;
+    max-height: 28px !important;
+  }
+  
+  .card-title {
+    font-size: 15px;
+    line-height: 1.25;
+  }
+  
+  .card-description-section {
+    min-height: 60px;
+  }
+  
+  .card-description {
+    font-size: 12px;
+    -webkit-line-clamp: 3;
+  }
+  
+  .card-explore-button {
+    font-size: 13px;
+    padding: 0.4rem 0.8rem;
+  }
+}
+
+/* Mobile screens - 1 card per row */
+@media (max-width: 479px) {
+  .products-list {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    padding: 0 0.5rem;
+  }
+  
+  .new-product-card {
+    min-height: 220px;
+    padding: 1rem;
+  }
+  
+  .card-header-section {
+    min-height: 48px;
+    gap: 0.5rem;
+  }
+  
+  .card-icon-wrapper {
+    width: 24px;
+    height: 24px;
+  }
+  
+  .card-icon-wrapper svg {
+    width: 24px !important;
+    height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+  }
+  
+  .card-title {
+    font-size: 14px;
+    line-height: 1.2;
+  }
+  
+  .card-description-section {
+    min-height: 50px;
+  }
+  
+  .card-description {
+    font-size: 12px;
+    -webkit-line-clamp: 3;
+  }
+  
+  .card-explore-button {
+    font-size: 12px;
+    padding: 0.4rem 0.6rem;
+  }
 }
 
 .product-header {
