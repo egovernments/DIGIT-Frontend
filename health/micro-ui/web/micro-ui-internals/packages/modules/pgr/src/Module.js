@@ -19,7 +19,11 @@ import UploadFileComponent from "./components/UploadFileComponent";
 export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
   const tenantId = Digit.ULBService.getCurrentTenantId();
+  const [hierarchySelected, setHierarchySelected] = useState(null);
 
+  // Get HierarchySelection component
+  const HierarchySelection = Digit?.ComponentRegistryService?.getComponent("PGRHierarchySelection");
+   
   useEffect(() => {
     Digit.SessionStorage.del("filtersForInbox");
   }, []);
@@ -44,6 +48,20 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 
   if (isLoading  || isHierarchyLoading) {
     return <Loader />;
+  }
+
+  /**
+   * Show HierarchySelection if not selected yet
+   */
+  if (!hierarchySelected) {
+    return (
+      <HierarchySelection
+        onHierarchyChosen={(hier) => {
+          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
+          setHierarchySelected(hier);
+        }}
+      />
+    );
   }
 
   return (
