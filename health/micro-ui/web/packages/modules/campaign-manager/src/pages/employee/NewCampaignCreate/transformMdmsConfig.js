@@ -3,6 +3,8 @@
  * @param {Object} mdmsData - The MDMS data object containing flows
  * @returns {Array} - Transformed app config array
  */
+
+//iNTITIAL TRANSFORMATION
 export const transformMdmsToAppConfig = (mdmsData) => {
   if (!mdmsData?.data?.flows) {
     console.error("Invalid MDMS data structure");
@@ -18,10 +20,16 @@ export const transformMdmsToAppConfig = (mdmsData) => {
     const version = flow.version || mdmsData.data.version || 1;
     const flowName = flow.name; // Individual flow name like "HOUSEHOLD", "ADD_MEMBER", "DELIVERY"
 
+    console.log("Transforming flow:", {transformedBody: transformBodyForTemplate(flow.body)});
+
     // Handle TEMPLATE screenType (like searchBeneficiary, householdOverview)
     if (flow.screenType === "TEMPLATE") {
       const transformedFlow = {
-        body: transformBodyForTemplate(flow.body),
+        body: [
+          {
+            fields: transformBodyForTemplate(flow.body)
+          }
+        ],
         module: moduleName,
         flow: flowName,
         page: flow.name,
@@ -91,6 +99,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
  * Transform body array for TEMPLATE screens
  */
 const transformBodyForTemplate = (body) => {
+  console.log("Transforming body for TEMPLATE:", body);
   if (!body || !Array.isArray(body)) return [];
 
   return body.map((item) => {

@@ -2,7 +2,7 @@ import React from "react";
 import { Tag } from "@egovernments/digit-ui-components";
 import { getFieldPropertyValue, getPropertyOptions } from "../helpers/propertyHelpers";
 
-const TagTemplate = ({ field, t, fieldTypeMasterData }) => {
+const TagTemplate = ({ field, t, fieldTypeMasterData, }) => {
   // Get tagType from field with fallback to default from master config
   const tagType = getFieldPropertyValue(field, "tagType", fieldTypeMasterData);
 
@@ -14,10 +14,10 @@ const TagTemplate = ({ field, t, fieldTypeMasterData }) => {
     success: "success",
     error: "error",
     warning: "warning",
-    monochrome: "default",
+    monochrome: "monochrome",
   };
 
-  return <Tag variant={variantMap[tagType] || "default"} label={field?.value || "Tag"} />;
+  return <Tag className={"campaign-tag"} variant={variantMap[tagType] || "default"} label={t(field?.fieldName) || "Tag"} stroke={true} icon={"Info"}/>;
 };
 
 export default TagTemplate;

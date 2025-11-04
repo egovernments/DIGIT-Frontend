@@ -64,8 +64,8 @@ const NewLayoutRenderer = ({ data = {}, selectedField, t, onFieldClick }) => {
           {data?.description && <CardText className="app-preview-sub-heading">{t(data.description)}</CardText>}
 
           {/* BODY */}
-          {data?.body && renderSection(
-            data.body,
+          {data?.body && data?.body?.[0]?.fields && renderSection(
+            data?.body?.[0]?.fields,
             "body",
             fieldTypeMasterData,
             selectedField,

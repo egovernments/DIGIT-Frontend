@@ -27,7 +27,7 @@ const MenuCardTemplate = ({ field, t, fieldTypeMasterData }) => {
 
   return (
     <MenuCard
-      icon={properties.icon}
+      icon={"ShippingTruck"}
       menuName={t(field?.label) || t(heading)} // MenuCard uses menuName prop, not heading
       description={t(field?.description)} // MenuCard uses description prop
       onClick={() => {}}
