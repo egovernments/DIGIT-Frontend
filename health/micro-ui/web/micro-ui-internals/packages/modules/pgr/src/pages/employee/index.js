@@ -54,7 +54,7 @@ const EmployeeApp = ({ path, stateCode, userType, tenants }) => {
               {
                 internalLink: `/${window?.contextPath}/employee/pgr/inbox-v2`,
                 content: t("PGR_INBOX"),
-                show: location.pathname.includes("inbox"),
+                show: location.pathname.includes("inbox") || location.pathname.includes("complaint-details"),
               },
               {
                 internalLink: `/${window?.contextPath}/employee/pgr/complaint-details`,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Card, UploadFile, SubmitBar } from "@egovernments/digit-ui-react-components";
+import { UploadFile, SubmitBar } from "@egovernments/digit-ui-react-components";
 import { useTranslation } from "react-i18next";
 import { downloadFileWithCustomName } from "../utils/downloadFileWithCustomName";
 import jsPDF from "jspdf";
@@ -135,7 +135,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   }
 
   return (
-    <Card>
+    <div style={{ maxWidth: "37.5rem" }}>
       <UploadFile
         id={config?.key ? `upload-${config.key}` : "upload-doc"}
         accept=".pdf,.jpg,.jpeg"
@@ -159,7 +159,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
           />
       )}
       {error && <p className="error">{error}</p>}
-    </Card>
+    </div>
   );
 };
 

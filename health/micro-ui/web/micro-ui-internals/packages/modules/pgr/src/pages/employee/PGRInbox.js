@@ -28,6 +28,10 @@ import { useLocation } from "react-router-dom";
 
 const PGRSearchInbox = () => {
   const { t } = useTranslation();
+  const [hierarchySelected, setHierarchySelected] = useState(null);
+
+  // Get HierarchySelection component
+  const HierarchySelection = Digit?.ComponentRegistryService?.getComponent("PGRHierarchySelection");
 
   // Detect if the user is on a mobile device
   const isMobile = window.Digit.Utils.browser.isMobile();
@@ -84,6 +88,16 @@ const PGRSearchInbox = () => {
   );
 
   /**
+   * Check if hierarchy was already selected in session storage
+   */
+  useEffect(() => {
+    const storedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+    if (storedHierarchy) {
+      setHierarchySelected(storedHierarchy);
+    }
+  }, []);
+
+  /**
    * Reset or refresh config when the route changes
    */
   useEffect(() => {
@@ -95,6 +109,20 @@ const PGRSearchInbox = () => {
    */
   if (isLoading || !pageConfig || serviceDefs?.length === 0) {
     return <Loader />;
+  }
+
+  /**
+   * Show HierarchySelection if not selected yet
+   */
+  if (!hierarchySelected) {
+    return (
+      <HierarchySelection
+        onHierarchyChosen={(hier) => {
+          Digit.SessionStorage.set("HIERARCHY_TYPE_SELECTED", hier);
+          setHierarchySelected(hier);
+        }}
+      />
+    );
   }
 
   return (
@@ -117,7 +145,7 @@ const PGRSearchInbox = () => {
       </div>
 
       {/* Complaint search and filter interface */}
-      <div className="digit-inbox-search-wrapper">
+      <div className="digit-inbox-search-wrapper pgr-inbox-wrapper">
         <InboxSearchComposer configs={updatedConfig} />
       </div>
     </div>
