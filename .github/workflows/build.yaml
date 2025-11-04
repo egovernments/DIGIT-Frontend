@@ -115,6 +115,7 @@ jobs:
           BRANCH="${GITHUB_REF##*/}"
           COMMIT_HASH=$(git rev-parse --short HEAD)
           SERVICE_NAME="${{ env.SERVICE_IMAGE_NAME }}"
+          RUN_NUMBER="${{ github.run_number }}"
 
           TOKEN=$(curl -s -X POST "https://hub.docker.com/v2/users/login/" \
             -H "Content-Type: application/json" \
@@ -132,16 +133,16 @@ jobs:
             "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$SERVICE_NAME/")
 
           if [ "$HTTP_CODE" -ne 200 ]; then
-            NEXT_TAG="${BRANCH}-${COMMIT_HASH}"
+            NEXT_TAG="${BRANCH}-${COMMIT_HASH}-${RUN_NUMBER}"
           else
             EXISTING_TAGS=$(curl -s -H "Authorization: JWT $TOKEN" \
               "https://hub.docker.com/v2/repositories/$DOCKER_USERNAME/$SERVICE_NAME/tags?page_size=100" \
               | jq -r '.results[].name')
             LATEST_TAG=$(echo "$EXISTING_TAGS" \
-              | grep "^${BRANCH}-${COMMIT_HASH}" || true \
+              | grep "^${BRANCH}-${COMMIT_HASH}-${RUN_NUMBER}" || true \
               | sort -V \
               | tail -n 1)
-            NEXT_TAG="${LATEST_TAG:-${BRANCH}-${COMMIT_HASH}}"
+            NEXT_TAG="${LATEST_TAG:-${BRANCH}-${COMMIT_HASH}-${RUN_NUMBER}}"
           fi
 
           echo "tag=$NEXT_TAG" >> "$GITHUB_OUTPUT"
