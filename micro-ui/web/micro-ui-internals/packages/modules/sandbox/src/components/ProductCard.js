@@ -17,6 +17,7 @@ const ProductCard = ({ product }) => {
     display: "grid",
     gridTemplateRows: "auto auto auto",
     gap: "0.1rem", // Further reduced spacing between sections
+    padding: "1rem",
     borderRadius: "12px",
     boxShadow: isHovered 
       ? "0px 4px 8px rgba(38, 38, 38, 0.2)" 

@@ -6,6 +6,7 @@ import ProductCard from "../../../components/ProductCard";
 const ProductsPageComponent = ({ detailsConfig }) => {
   const { t } = useTranslation();
   const [isLargeScreen, setIsLargeScreen] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(typeof window !== "undefined" ? window.innerWidth : 1280);
 
   // Configurable modules list - easily modify this array to add/remove configurable modules
   const CONFIGURABLE_MODULES = ["PGR"];
@@ -19,16 +20,31 @@ const ProductsPageComponent = ({ detailsConfig }) => {
     !CONFIGURABLE_MODULES.includes(product.module)
   ) || [];
 
-  // Handle responsive padding for custom-products-card
+  // Handle responsive padding for custom-products-card and grid columns
   useEffect(() => {
     const checkScreenSize = () => {
-      setIsLargeScreen(window.innerWidth >= 1281);
+      const width = window.innerWidth;
+      setScreenWidth(width);
+      setIsLargeScreen(width >= 1281);
     };
     
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
+
+  // Calculate grid columns based on screen width - max 4 cards per row
+  const getGridColumns = () => {
+    if (screenWidth >= 1280) {
+      return "repeat(4, minmax(250px, 1fr))"; // Max 4 cards on large desktop
+    } else if (screenWidth >= 1024) {
+      return "repeat(3, minmax(250px, 1fr))"; // 3 cards on small desktop
+    } else if (screenWidth >= 768) {
+      return "repeat(2, minmax(250px, 1fr))"; // 2 cards on tablet
+    } else {
+      return "minmax(250px, 1fr)"; // 1 card on mobile
+    }
+  };
 
   // Container styles
   const containerStyle = {
@@ -94,10 +110,10 @@ const ProductsPageComponent = ({ detailsConfig }) => {
     letterSpacing: "0px",
   };
 
-  // Products list grid styles
+  // Products list grid styles with max 4 cards limit
   const productsListStyle = {
     display: "grid",
-    gridTemplateColumns: "repeat(auto-fill, minmax(250px, 1fr))",
+    gridTemplateColumns: getGridColumns(),
     gap: "1rem",
     width: "100%",
     maxWidth: "none",
