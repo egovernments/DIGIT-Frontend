@@ -126,8 +126,6 @@ const LocalisationBulkUpload = () => {
         return;
       }
 
-      console.log("📁 Uploading file:", file.name);
-      console.log("📦 Module:", choosenModule.value);
 
       const parseFn = Digit?.Utils?.parsingUtils?.parseXlsToJsonMultipleSheetsFile;
       if (!parseFn) {
