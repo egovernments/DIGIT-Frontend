@@ -1,7 +1,7 @@
 import React, { Fragment, useMemo, useState, useCallback, useRef, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { useSelector, useDispatch } from "react-redux";
-import { FieldV1, Switch, TextBlock, Tag, Divider } from "@egovernments/digit-ui-components";
+import { FieldV1, Switch, TextBlock, Tag, Divider, MultiSelectDropdown } from "@egovernments/digit-ui-components";
 import { updateSelectedField } from "./redux/remoteConfigSlice";
 import { updateLocalizationEntry } from "./redux/localizationSlice";
 import { useCustomT } from "./hooks/useCustomT";
@@ -9,6 +9,7 @@ import { getFieldTypeFromMasterData, getFieldValueByPath } from "./helpers";
 import { TextInput, Button } from "@egovernments/digit-ui-components";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
+import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 
 const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
   const { t } = useTranslation();
@@ -113,6 +114,13 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       onFieldChange({ ...selectedField, [bindTo]: value });
     }
   };
+
+  useEffect(() => {
+    if (panelItem.fieldType === "labelPairList") {
+      const tenantId = Digit.ULBService.getCurrentTenantId();
+      dispatch(getLabelFieldPairConfig({ tenantId }));
+    }
+  }, [panelItem.fieldType, dispatch]);
 
   // Debounced handler for text fields with localization
   const handleFieldChangeWithLoc = useCallback(
@@ -424,6 +432,147 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           </div>
         );
       }
+      //TODO: Implement labelPairList field renderer
+      // case "labelPairList": {
+      //   const switchRef = useRef(null);
+      //   const [showTooltip, setShowTooltip] = useState(false);
+
+      //   // Fetch labelPairConfig from Redux
+      //   const labelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
+
+      //   // Get currently selected data from selectedField.data
+      //   const selectedData = selectedField?.data || [];
+
+      //   // Create nested options structure for MultiSelectDropdown
+      //   const nestedOptions = labelPairConfig.map((category) => ({
+      //     code: category.entity,
+      //     name: category.entity,
+      //     options: (category.labelFields || []).map((field) => ({
+      //       ...field,
+      //       code: `${category.entity}.${field.fieldKey}`,
+      //       name: field.name,
+      //       fieldKey: field.fieldKey,
+      //       jsonPath: field.jsonPath,
+      //     })),
+      //   }));
+
+      //   // Convert selectedField.data to the format expected by MultiSelectDropdown
+      //   // Format: [[category, option], [category, option], ...]
+      //   const selected = selectedData.map((item) => {
+      //     // Find which entity this belongs to
+      //     for (const category of nestedOptions) {
+      //       const option = category.options.find((opt) => opt.name === item.key);
+      //       if (option) {
+      //         // Return [category, option] pair
+      //         return [category, option];
+      //       }
+      //     }
+      //     return null;
+      //   }).filter(Boolean);
+
+      //   console.log("Nested Options:", nestedOptions);
+      //   console.log("Selected Data:", selectedData);
+      //   console.log("Selected for Dropdown:", selected);
+
+      //   return (
+      //     <>
+      //       <div
+      //         ref={switchRef}
+      //         className="drawer-container-tooltip"
+      //         onMouseEnter={() => setShowTooltip(true)}
+      //         onMouseLeave={() => setShowTooltip(false)}
+      //       >
+      //         <div style={{ display: "flex" }}>
+      //           <label>
+      //             {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+      //           </label>
+      //           <span className="mandatory-span">*</span>
+      //         </div>
+
+      //         <MultiSelectDropdown
+      //           name={panelItem?.label}
+      //           options={nestedOptions}
+      //           optionsKey="name"
+      //           chipsKey="code"
+      //           type="multiselectdropdown"
+      //           variant="nestedmultiselect"
+      //           selectAllLabel={t("SELECT_ALL")}
+      //           clearLabel={t("CLEAR_ALL")}
+      //           config={{ isDropdownWithChip: true }}
+      //           selected={selected}
+      //           onSelect={(selectedArray) => { }}
+      //           onClose={(selectedArray) => {
+      //             console.log("OnClose Selected Array:", selectedArray);
+
+      //             // selectedArray is an array of [category, option] pairs
+      //             const mappedData = selectedArray
+      //               ?.map((arr) => {
+      //                 const option = arr?.[1]; // Get the option from [category, option]
+      //                 if (!option) return null;
+      //                 return {
+      //                   key: option.name,
+      //                   value: option.jsonPath,
+      //                 };
+      //               })
+      //               ?.filter(Boolean) || [];
+
+      //             console.log("Mapped Data:", mappedData);
+
+      //             // Update selectedField with the new data - call onFieldChange directly
+      //             onFieldChange({
+      //               ...selectedField,
+      //               data: mappedData,
+      //             });
+      //           }}
+      //           disabled={false}
+      //           t={t}
+      //         />
+
+      //         {/* Display selected fields with localization inputs */}
+      //         {Array.isArray(selectedData) && selectedData.length > 0 &&
+      //           selectedData.map((item, index) => {
+      //             // Get the localized value for the key
+      //             const localizedKey = useCustomT(item.key) || item.key;
+
+      //             // Find entity name for display
+      //             let entityName = "";
+      //             for (const entity of labelPairConfig) {
+      //               const field = entity.labelFields.find((f) => f.name === item.key);
+      //               if (field) {
+      //                 entityName = entity.entity;
+      //                 break;
+      //               }
+      //             }
+
+      //             return (
+      //               <div key={`${item.key}-${index}`} style={{ marginTop: "16px" }}>
+      //                 <FieldV1
+      //                   label={`${t(entityName || 'ENTITY')} - ${item.key}`}
+      //                   value={localizedKey}
+      //                   type="text"
+      //                   placeholder={t("ADD_LABEL_LOCALIZATION")}
+      //                   onChange={(e) => {
+      //                     const val = e.target.value;
+      //                     // Update localization for the key
+      //                     dispatch(
+      //                       updateLocalizationEntry({
+      //                         code: item.key,
+      //                         locale: currentLocale || "en_IN",
+      //                         message: val,
+      //                       })
+      //                     );
+      //                   }}
+      //                   populators={{
+      //                     fieldPairClassName: "drawer-toggle-conditional-field",
+      //                   }}
+      //                 />
+      //               </div>
+      //             );
+      //           })}
+      //       </div>
+      //     </>
+      //   );
+      // }
       default:
         return null;
     }

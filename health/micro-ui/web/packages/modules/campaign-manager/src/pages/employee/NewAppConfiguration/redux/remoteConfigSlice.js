@@ -100,7 +100,9 @@ const remoteConfigSlice = createSlice({
       if (!card) return;
 
       const toggleByFieldName = (node) => {
+        console.log("Toggling field visibility for:", node);
         if (!node) return false;
+      
 
         if (Array.isArray(node)) {
           for (const item of node) {

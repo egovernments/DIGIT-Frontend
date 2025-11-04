@@ -21,6 +21,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
         ...field?.secondaryAction.properties,
         variation: "secondary", // Make it secondary style button
         size: "large",
+        type: "secondary",
         style: { width: "100%", marginBottom: "8px" }
       }
     };
@@ -48,6 +49,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
       id: field?.primaryAction.id || field?.primaryAction.fieldName || `${field?.fieldName}-primary-action`,
       properties: {
         ...field?.primaryAction.properties,
+        type: "primary",
         variation: "primary", // Make it primary style button
         size: "large",
         style: { width: "100%" }
@@ -73,7 +75,7 @@ const PanelCardTemplate = ({ field, t, selectedField, fieldTypeMasterData, onFie
   return (
     <PanelCard
       type={panelType || "success"}
-      message={t(field?.label) || "Panel Title"}
+      message={t(field?.heading) || "Panel Title"}
       description={t(field?.description) || "Panel content"}
       footerChildren={footerChildren}
       showAsSvg={true}

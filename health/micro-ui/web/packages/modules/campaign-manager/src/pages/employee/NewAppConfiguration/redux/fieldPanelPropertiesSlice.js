@@ -103,6 +103,19 @@ const dummyPanelConfig = {
       visibilityEnabledFor: ["numeric", "mobileNumber", "number", "textArea", "text", "latLng", "dropdown", "administrativeArea"],
     },
     {
+      "id": "labelPairList",
+      "label": "labelPairList",
+      "order": 3,
+      "bindTo": "data",
+      "fieldType": "labelPairList",
+      "defaultValue": "",
+      "conditionalField": [],
+      "showFieldOnToggle": false,
+      "visibilityEnabledFor": [
+        "labelPairList"
+      ]
+    },
+    {
       id: "minSearchChars",
       label: "minSearchChars",
       order: 7,

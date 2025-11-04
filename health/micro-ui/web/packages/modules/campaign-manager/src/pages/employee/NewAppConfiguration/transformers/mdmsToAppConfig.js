@@ -3,6 +3,8 @@
  * @param {Array} fullData - Array of MDMS screen configurations
  * @returns {Array} Array of app config objects
  */
+
+//Final TransformaTION
 export const transformMdmsToAppConfig = (fullData) => {
   if (!fullData || !Array.isArray(fullData) || fullData.length === 0) {
     throw new Error("Invalid fullData: Expected non-empty array");
@@ -63,8 +65,20 @@ export const transformMdmsToAppConfig = (fullData) => {
  * Transform a template screen
  */
 const transformTemplate = (screenData) => {
+
+
+ const transformedFields = (screenData.body?.[0]?.fields || []).map(field => {
+    if (field.format === "textTemplate") {
+      return {
+        ...field,
+        format: "text"
+      };
+    }
+    return field;
+  });
+
   const template = {
-    body: screenData.body || []
+    body: transformedFields || []
   };
 
   // Add all relevant fields from screenData
