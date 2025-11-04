@@ -17,7 +17,7 @@ const TagTemplate = ({ field, t, fieldTypeMasterData, }) => {
     monochrome: "monochrome",
   };
 
-  return <Tag className={"campaign-tag"} variant={variantMap[tagType] || "default"} label={field?.fieldName || "Tag"} stroke={true} icon={"Info"}/>;
+  return <Tag className={"campaign-tag"} variant={variantMap[tagType] || "default"} label={t(field?.fieldName) || "Tag"} stroke={true} icon={"Info"}/>;
 };
 
 export default TagTemplate;

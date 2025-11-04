@@ -1,7 +1,7 @@
 import React from "react";
 
 const TextTemplate = ({ field, t }) => {
-  const label = field?.label ? field.label : field?.fieldName || "Text";
+  const label =  field?.fieldName || "Text";
   return (
     <div
       style={{
@@ -10,7 +10,7 @@ const TextTemplate = ({ field, t }) => {
         padding: "4px 0",
       }}
     >
-      {label}
+      {t(label) || "LABEL"}
     </div>
   );
 };

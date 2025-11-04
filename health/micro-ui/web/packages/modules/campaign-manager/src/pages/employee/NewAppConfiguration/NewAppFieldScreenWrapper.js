@@ -201,6 +201,7 @@ function NewAppFieldScreenWrapper() {
         <ConsoleTooltip className="app-config-tooltip" toolTipContent={t("TIP_APPCONFIG_SUBHEAD_FIELDS")} />
       </div>
       {currentCard?.body?.map((section, index, card) => {
+
         const fields =
           currentCard?.type === "template"
             ? extractTemplateFields(section?.fields)
@@ -210,7 +211,6 @@ function NewAppFieldScreenWrapper() {
         return (
           <Fragment key={`card-${index}`}>
             {fields?.map(({ type, label, active, required, Mandatory, deleteFlag,fieldName, ...rest }, i, c) => {
-              console.log("Rendering field:", { type, label, active, required, deleteFlag, fieldName, index, i });
               return (
                 <NewDraggableField
                   type={type}
