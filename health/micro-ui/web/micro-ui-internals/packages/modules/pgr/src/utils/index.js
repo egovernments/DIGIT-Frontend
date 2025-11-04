@@ -163,7 +163,8 @@ export const formPayloadToCreateComplaint = (formData, tenantId, user) => {
     "type": "EMPLOYEE",
     "tenantId": tenantId,
   } : user;
-  const additionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
+  const safeAdditionalDetail = { supervisorName : formData?.SupervisorName?.trim()?.length > 0 ? formData?.SupervisorName?.trim() : null, supervisorContactNumber : formData?.SupervisorContactNumber?.trim()?.length > 0 ? formData?.SupervisorContactNumber?.trim() : null };
+  const additionalDetail= JSON.stringify(safeAdditionalDetail);
   const timestamp = Date.now();
   let complaint = {
     "service": {
