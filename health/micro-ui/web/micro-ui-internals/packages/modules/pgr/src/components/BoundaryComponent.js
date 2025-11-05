@@ -69,7 +69,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
 
   return (
     <React.Fragment>
-
+      <div className="boundary-dropdown-container">
         {boundaryHierarchy.map((key) => {
           if (value[key]?.length > 0) {
             return (
@@ -84,6 +84,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
           }
           return null;
         })}
+      </div>
     </React.Fragment>
   );
 };

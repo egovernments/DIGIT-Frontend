@@ -28,6 +28,7 @@ import { useLocation } from "react-router-dom";
 
 const PGRSearchInbox = () => {
   const { t } = useTranslation();
+ 
 
   // Detect if the user is on a mobile device
   const isMobile = window.Digit.Utils.browser.isMobile();
@@ -83,6 +84,8 @@ const PGRSearchInbox = () => {
     [pageConfig, serviceDefs]
   );
 
+ 
+
   /**
    * Reset or refresh config when the route changes
    */
@@ -96,6 +99,8 @@ const PGRSearchInbox = () => {
   if (isLoading || !pageConfig || serviceDefs?.length === 0) {
     return <Loader />;
   }
+
+  
 
   return (
     <div style={{ marginBottom: "80px" }}>
@@ -117,7 +122,7 @@ const PGRSearchInbox = () => {
       </div>
 
       {/* Complaint search and filter interface */}
-      <div className="digit-inbox-search-wrapper">
+      <div className="digit-inbox-search-wrapper pgr-inbox-wrapper">
         <InboxSearchComposer configs={updatedConfig} />
       </div>
     </div>
