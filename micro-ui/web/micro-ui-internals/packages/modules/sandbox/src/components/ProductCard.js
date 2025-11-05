@@ -122,8 +122,8 @@ const ProductCard = ({ product }) => {
     alignSelf: "flex-start",
     padding: "0.3rem 0.8rem 0.3rem 0", // Reduced padding
     margin: "0",
-    border: "1px solid transparent",
-    background: "transparent",
+    border: "none !important",
+    background: "transparent !important",
     color: "#c84c0e",
     fontWeight: "500",
     fontSize: "14px",
@@ -132,6 +132,8 @@ const ProductCard = ({ product }) => {
     justifyContent: "flex-start",
     borderRadius: "6px",
     transition: "none",
+    textDecoration: "none",
+    boxShadow: "none",
   };
 
   return (

@@ -119,13 +119,17 @@
 /* Remove hover effects from explore button */
 .card-explore-button {
   transition: none !important;
-  
+  border: none !important;
+  text-decoration: none !important;
+
   &:hover, &:focus, &:active {
     background: transparent !important;
-    border: 1px solid transparent !important;
+    border: none !important;
     color: #c84c0e !important;
     box-shadow: none !important;
     transform: none !important;
+    text-decoration: none !important;
+    outline: none !important;
   }
 }
 
@@ -2002,8 +2006,8 @@ digit-card-text.center {
   width: auto;
   align-self: flex-start;
   padding: 0.5rem 1rem 0.5rem 0;
-  border: 1px solid transparent;
-  background: transparent;
+  border: none !important;
+  background: transparent !important;
   color: #c84c0e;
   font-weight: 500;
   font-size: 14px;
@@ -2011,17 +2015,22 @@ digit-card-text.center {
   align-items: center;
   justify-content: flex-start;
   border-radius: 6px;
-  transition: all 0.2s ease;
+  transition: none !important;
+  text-decoration: none !important;
 }
 
 .card-explore-button:hover {
-  background-color: #f8f9fa;
-  color: #a63d0a;
+  background: transparent !important;
+  color: #c84c0e !important;
+  border: none !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
 }
 
 .card-explore-button:focus {
-  outline: 2px solid #c84c0e;
-  outline-offset: 2px;
+  outline: none !important;
+  border: none !important;
+  text-decoration: none !important;
 }
 
 /* Responsive Breakpoints for New Product Cards */
