@@ -22,6 +22,7 @@ export const transformMdmsToAppConfig = (fullData) => {
       // It's a template screen
       templates.push(transformTemplate(item));
     } else if (item.type === "object" && item.flow) {
+      console.log("Processing form page:", item.flow);
       // It's a form page - group pages by flow name
       const flowName = item.flow;
       if (!forms[flowName]) {
