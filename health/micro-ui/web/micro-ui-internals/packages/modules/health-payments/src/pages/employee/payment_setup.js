@@ -558,9 +558,9 @@ const PaymentSetUpPage = () => {
       {/* Payment Setup Card */}
       <Card type="primary" className="bottom-gap-card-payment">
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-          <HeaderComponent>{t("Caption Setup payment for campaign")}</HeaderComponent>
+          <HeaderComponent>{t("HCM_AM_PAYEMENT_SETUP_HEAD")}</HeaderComponent>
           <Button
-            label={"View audit logs"}
+            label={t("HCM_AM_PAYEMENT_SETUP_VIEW_AUDIT")}
             onButtonClick={(e) => {
               e.stopPropagation();
             }}
@@ -569,11 +569,11 @@ const PaymentSetUpPage = () => {
           />
         </div>
 
-        <CardText>{t("Setup billing cycles for a campaign")}</CardText>
+        <CardText>{t("HCM_AM_PAYEMENT_SETUP_SUB_HEAD")}</CardText>
 
         {/* Campaign Dropdown */}
         {renderLabelPair(
-          "Select a campaign",
+          "HCM_AM_PAYEMENT_SELECT_CAMPAIGN_LABEL",
           <Dropdown
             style={{ width: "100%" }}
             t={t}
@@ -586,7 +586,7 @@ const PaymentSetUpPage = () => {
 
         {/* Billing Cycle Dropdown */}
         {renderLabelPair(
-          "Billing cycle",
+          "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_LABEL",
           <Dropdown
             style={{ width: "100%" }}
             t={t}
@@ -601,12 +601,12 @@ const PaymentSetUpPage = () => {
         {/* Custom Days Input */}
         {billingCycle?.code === "CUSTOM" &&
           renderLabelPair(
-            "Enter the days to generate the bills",
+            "HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_LABEL",
             <TextInput
               name="customDays"
               value={customDays}
               onChange={handleCustomDaysChange}
-              placeholder={t("Enter number of days")}
+              placeholder={t("HCM_AM_PAYEMENT_SELECT_BILLING_CYCLE_CUSTOM_NO_DAYS")}
               type="text"
               inputMode="numeric"
             />
@@ -615,8 +615,8 @@ const PaymentSetUpPage = () => {
 
       {/* Role Wages Setup Card */}
       <Card>
-        <HeaderComponent>{t("Setup role wages")}</HeaderComponent>
-        <CardText>{t("for each role for a campaign. Workers will be paid based on the number of days worked.")}</CardText>
+        <HeaderComponent>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_HEAD")}</HeaderComponent>
+        <CardText>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_SUB_HEAD")}</CardText>
 
         {/* Conditional Rendering */}
         {loadingSkills ? (
@@ -634,9 +634,9 @@ const PaymentSetUpPage = () => {
             existingRatesData={skillsData ? skillsData.existingRatesData : null}
           />
         ) : selectedCampaign ? (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("No skills data available for this campaign type")}</div>
+          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_ERR_NO_SKILL")}</div>
         ) : (
-          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("Please select a campaign to view roles and wages")}</div>
+          <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>{t("HCM_AM_PAYEMENT_SETUP_WAGE_ROLE_INFO_SELECT_CAMPAIGN")}</div>
         )}
       </Card>
 
@@ -645,8 +645,8 @@ const PaymentSetUpPage = () => {
         <Button
           style={{ margin: "0.5rem", marginLeft: "4rem", minWidth: "12rem" }}
           variation="primary"
-          label={edit ? t("EDIT") : update ? t("UPDATE") : t("SUBMIT")}
-          title={edit ? t("EDIT") : update ? t("UPDATE") : t("SUBMIT")}
+          label={edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
+          title={edit ? t("HCM_AM_BTN_EDIT") : update ? t("HCM_AM_BTN_UPDATE") : t("HCM_AM_BTN_SUBMIT")}
           onClick={() => {
             if (edit) {
               // setEdit(false);
@@ -674,7 +674,8 @@ const PaymentSetUpPage = () => {
       </ActionBar>
       {popup && (
         <ActionPopUp
-          headingMsg="Action needed for create"
+          headingMsg={t("HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_HEADER")}
+          description={t("HCM_AM_PAYMENT_SETUP_CONFIRM_ALERT_CREATE_DES")}
           onSubmit={handleSubmit}
           onClose={() => {
             setPopUp(false);
