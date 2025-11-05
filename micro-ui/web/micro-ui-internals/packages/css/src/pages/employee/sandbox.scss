@@ -120,11 +120,14 @@
 .card-explore-button {
   transition: none !important;
   border: none !important;
+  border-width: 0 !important;
   text-decoration: none !important;
+  outline: none !important;
 
-  &:hover, &:focus, &:active {
+  &:hover, &:focus, &:active, &:visited {
     background: transparent !important;
     border: none !important;
+    border-width: 0 !important;
     color: #c84c0e !important;
     box-shadow: none !important;
     transform: none !important;
@@ -140,6 +143,29 @@
   text-align: left !important;
   width: 100%;
   padding-left: 0 !important;
+  border: none !important;
+  outline: none !important;
+}
+
+/* Remove all borders from button and nested elements */
+.card-explore-button,
+.card-explore-button *,
+.card-explore-button button,
+.card-explore-button.digit-button-secondary,
+button.card-explore-button {
+  border: none !important;
+  border-width: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  background: transparent !important;
+
+  &:hover, &:focus, &:active {
+    border: none !important;
+    border-width: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: transparent !important;
+  }
 }
 
 .sandbox-module-container {
@@ -2007,6 +2033,7 @@ digit-card-text.center {
   align-self: flex-start;
   padding: 0.5rem 1rem 0.5rem 0;
   border: none !important;
+  border-width: 0 !important;
   background: transparent !important;
   color: #c84c0e;
   font-weight: 500;
@@ -2017,20 +2044,36 @@ digit-card-text.center {
   border-radius: 6px;
   transition: none !important;
   text-decoration: none !important;
+  outline: none !important;
+  box-shadow: none !important;
 }
 
 .card-explore-button:hover {
   background: transparent !important;
   color: #c84c0e !important;
   border: none !important;
+  border-width: 0 !important;
   text-decoration: none !important;
   box-shadow: none !important;
+  outline: none !important;
 }
 
 .card-explore-button:focus {
   outline: none !important;
   border: none !important;
+  border-width: 0 !important;
   text-decoration: none !important;
+  box-shadow: none !important;
+}
+
+.card-explore-button:active {
+  background: transparent !important;
+  color: #c84c0e !important;
+  border: none !important;
+  border-width: 0 !important;
+  text-decoration: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* Responsive Breakpoints for New Product Cards */
