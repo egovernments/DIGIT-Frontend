@@ -911,7 +911,13 @@ tbody {
 }
 /* APP CONFIG CSS REDESIGN */
 .configure-app-tabs {
+  display: flex;
+  gap: 0rem;
+  width: 100%;
   .configure-app-tab-head {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     border: 1px solid #d6d5d4;
     border-radius: 0px;
     padding: 0.5rem 1rem;
