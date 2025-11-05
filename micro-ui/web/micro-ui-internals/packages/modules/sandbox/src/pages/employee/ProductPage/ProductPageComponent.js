@@ -110,17 +110,22 @@ const ProductsPageComponent = ({ detailsConfig }) => {
     letterSpacing: "0px",
   };
 
-  // Products list grid styles with max 4 cards limit
-  const getProductsListStyle = (cardCount) => {
+  // Products list grid styles - ensure consistent sizing for both sections
+  const getProductsListStyle = () => {
+    // Use same grid configuration for both configurable and explorable sections
+    // This ensures cards are the same size regardless of count
+    const gridColumns = getGridColumns();
     return {
       display: "grid",
-      gridTemplateColumns: getGridColumns(),
+      gridTemplateColumns: gridColumns,
       gap: "1rem",
       width: "100%",
       maxWidth: "none",
       margin: "0 auto",
       justifyContent: "flex-start",
       padding: 0,
+      // Ensure cards maintain consistent width even with single item
+      gridAutoColumns: "minmax(250px, 1fr)",
     };
   };
 
@@ -144,12 +149,11 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             <CardText style={sectionDescriptionStyle}>
               {t("SANDBOX_CONFIGURABLE_PRODUCTS_DESC")}
             </CardText>
-            <div className="products-list" style={getProductsListStyle(configurableProducts.length)}>
+            <div className="products-list" style={getProductsListStyle()}>
               {configurableProducts.map((product, index) => (
                 <ProductCard 
                   key={index} 
                   product={product} 
-                  isSingleCard={configurableProducts.length === 1}
                 />
               ))}
             </div>
@@ -165,12 +169,11 @@ const ProductsPageComponent = ({ detailsConfig }) => {
             <CardText style={sectionDescriptionStyle}>
               {t("SANDBOX_EXPLORABLE_PRODUCTS_DESC")}
             </CardText>
-            <div className="products-list" style={getProductsListStyle(explorableProducts.length)}>
+            <div className="products-list" style={getProductsListStyle()}>
               {explorableProducts.map((product, index) => (
                 <ProductCard 
                   key={index} 
                   product={product} 
-                  isSingleCard={explorableProducts.length === 1}
                 />
               ))}
             </div>

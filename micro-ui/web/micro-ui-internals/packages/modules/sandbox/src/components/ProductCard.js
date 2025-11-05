@@ -3,7 +3,7 @@ import { Button } from "@egovernments/digit-ui-components";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
-const ProductCard = ({ product, isSingleCard }) => {
+const ProductCard = ({ product }) => {
   const { t } = useTranslation();
   const history = useHistory();
   const [isHovered, setIsHovered] = useState(false);
@@ -12,11 +12,11 @@ const ProductCard = ({ product, isSingleCard }) => {
     history.push(path);
   };
 
-  // Card container styles with hover state
+  // Card container styles with hover state - ensure consistent sizing regardless of section
   const cardStyle = {
     display: "grid",
     gridTemplateRows: "auto auto auto",
-    gap: "0.1rem", // Further reduced spacing between sections
+    gap: "0.1rem",
     padding: "1rem",
     borderRadius: "12px",
     boxShadow: isHovered 
@@ -27,7 +27,7 @@ const ProductCard = ({ product, isSingleCard }) => {
     minHeight: "220px",
     width: "100%",
     minWidth: "250px",
-    maxWidth: isSingleCard ? "calc(25% - 0.75rem)" : "none", // Single card matches size of one card in 4-card layout
+    // Remove maxWidth constraint - let grid handle sizing consistently
     position: "relative",
     top: isHovered ? "-4px" : "0px",
     transition: "all 0.2s ease-out",
