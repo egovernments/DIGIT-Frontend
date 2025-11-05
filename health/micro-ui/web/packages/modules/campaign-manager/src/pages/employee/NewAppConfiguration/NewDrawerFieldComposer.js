@@ -386,16 +386,11 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
-        console.log("Field Type Options:", fieldTypeOptions);
 
         // Find current selected field type based on type and format
         const currentSelectedFieldType = fieldTypeOptions.find((item) => {
           const typeMatches = item?.metadata?.type === selectedField?.type;
           const formatMatches = item?.metadata?.format === selectedField?.format;
-
-          console.log("Matching field type:", currentSelectedFieldType);
-
-          console.log("Selected Field Type Match Check:", selectedField);
 
           // Handle different matching scenarios:
           // 1. If field has both type and format, match both

@@ -2,13 +2,7 @@ import React from "react";
 import * as XLSX from "xlsx";
 import { useTranslation } from "react-i18next";
 
-const GenerateXlsx = ({
-  inputRef,
-  jsonData = [],
-  localeData = [],
-  skipHeader = false,
-  sheetName = "template",
-}) => {
+const GenerateXlsx = ({ inputRef, jsonData = [], localeData = [], skipHeader = false, sheetName = "template" }) => {
   const { t } = useTranslation();
 
   const handleExport = () => {
@@ -29,14 +23,10 @@ const GenerateXlsx = ({
     const allMessages = Array.isArray(data[0]) ? data[0] : data;
 
     // ✅ Get all locales — prefer from localeData
-    const allLocales =
-      localeData?.length > 0
-        ? localeData.map((l) => l.value)
-        : [...new Set(allMessages.map((m) => m.locale))];
+    const allLocales = localeData?.length > 0 ? localeData.map((l) => l.value) : [...new Set(allMessages.map((m) => m.locale))];
 
     // ✅ Sanitize name for Excel
-    const safeName = (name) =>
-      name?.replace(/[:\\/?*\[\]]/g, "").substring(0, 31) || "Sheet1";
+    const safeName = (name) => name?.replace(/[:\\/?*\[\]]/g, "").substring(0, 31) || "Sheet1";
 
     // ✅ Export separate XLSX file for each locale
     allLocales.forEach((locale) => {
@@ -65,8 +55,6 @@ const GenerateXlsx = ({
         console.error(`Failed to generate XLSX for locale ${locale}:`, error);
       }
     });
-
-    console.log("✅ Exported XLSX files for all locales");
   };
 
   return (

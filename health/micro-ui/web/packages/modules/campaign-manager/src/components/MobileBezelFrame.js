@@ -37,7 +37,7 @@ const MobileBezelFrame = ({ children }) => {
 
   return (
     <div className="mobile-bezel-flexContainer">
-      <div className="mobile-bezel-zoom-container">
+      {/* <div className="mobile-bezel-zoom-container">
         <button className="item zoom-button" onClick={zoomOut}>
           <ZoomOut />
         </button>
@@ -45,7 +45,7 @@ const MobileBezelFrame = ({ children }) => {
         <button className="item zoom-button" onClick={zoomIn}>
           <ZoomIn />
         </button>
-      </div>
+      </div> */}
       <div className="mobile-bezel-outerWrapper" style={styles.outerWrapper}>
         <div className="mobile-bezel-deviceWrapper" style={styles.deviceWrapper}>
           <div className="mobile-bezel-camera" style={styles.camera}></div>
