@@ -30,14 +30,14 @@ const AppPreview = ({ data = {}, selectedField, t, onFieldClick }) => {
                         onClick={() => onFieldClick && onFieldClick(field, data, card, index, fieldIndex)}
                         style={{
                           cursor: "pointer",
-                          border: isSelected ? "2px solid #C84C0E08" : "2px solid transparent",
-                          borderRadius: "4px",
-                          padding: "8px",
-                          margin: "4px 0",
-                          backgroundColor: isSelected ? "#C84C0E" : "transparent",
+                          // border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
+                          // borderRadius: "4px",
+                          // padding: "8px",
+                          // margin: "4px 0",
+                          // backgroundColor: isSelected ? "#C84C0E08" : "transparent",
                         }}
                       >
-                        <ComponentToRender field={field} t={t} selectedField={selectedField} />
+                        <ComponentToRender field={field} t={t} selectedField={selectedField} isSelected={isSelected} />
                       </div>
                     );
                   })}

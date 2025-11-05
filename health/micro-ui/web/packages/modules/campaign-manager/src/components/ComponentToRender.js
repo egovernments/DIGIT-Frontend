@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useSelector } from "react-redux";
 import { getFieldTypeFromMasterData, getComponentFromMasterData } from "../pages/employee/NewAppConfiguration/helpers";
 
-const ComponentToRender = ({ field, t: customT, selectedField }) => {
+const ComponentToRender = ({ field, t: customT, selectedField, isSelected }) => {
   const { byName } = useSelector((state) => state.fieldTypeMaster);
   const { t } = useTranslation();
   // Get field type mapping from the field master data
@@ -37,6 +37,8 @@ const ComponentToRender = ({ field, t: customT, selectedField }) => {
           selectedField?.jsonPath && selectedField?.jsonPath === field?.jsonPath
             ? `app-preview-selected`
             : selectedField?.id && selectedField?.id === field?.id
+            ? `app-preview-selected`
+            : isSelected
             ? `app-preview-selected`
             : ``
         }`,
