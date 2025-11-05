@@ -17,12 +17,7 @@ import {
   InfoIconOutline,
 } from "@egovernments/digit-ui-react-components";
 
-import {
-  Toast,
-  PopUp,
-  Dropdown,
-  Button as ButtonNew,
-} from "@egovernments/digit-ui-components";
+import { Toast, PopUp, Dropdown, Button as ButtonNew } from "@egovernments/digit-ui-components";
 
 import { useTranslation } from "react-i18next";
 import { useLocation } from "react-router-dom";
@@ -47,18 +42,13 @@ const LocalisationBulkUpload = () => {
   const campaignNumber = searchParams.get("campaignNumber");
 
   // Load locale data
-  const { data: localeData = [] } = Digit.Hooks.useCustomMDMS(
-    stateId,
-    "common-masters",
-    [{ name: "StateInfo" }],
-    {
-      select: (data) => {
-        const languages = data["common-masters"].StateInfo?.[0]?.languages || [];
-        const defaultLanguage = { label: t("DIGIT_DEFAULT_MESSAGE"), value: "default" };
-        return [defaultLanguage, ...languages];
-      },
-    }
-  );
+  const { data: localeData = [] } = Digit.Hooks.useCustomMDMS(stateId, "common-masters", [{ name: "StateInfo" }], {
+    select: (data) => {
+      const languages = data["common-masters"].StateInfo?.[0]?.languages || [];
+      const defaultLanguage = { label: t("DIGIT_DEFAULT_MESSAGE"), value: "default" };
+      return [defaultLanguage, ...languages];
+    },
+  });
 
   // Module options
   const regexOption = [
@@ -126,7 +116,6 @@ const LocalisationBulkUpload = () => {
         return;
       }
 
-
       const parseFn = Digit?.Utils?.parsingUtils?.parseXlsToJsonMultipleSheetsFile;
       if (!parseFn) {
         setShowToast({ label: t("DIGIT_LOC_PARSER_NOT_AVAILABLE"), type: "error" });
@@ -150,19 +139,19 @@ const LocalisationBulkUpload = () => {
       });
 
       // Build payload
-      const payload = normalizedResult.map((row) => ({
-        code: row.code?.trim(),
-        message: row.message?.trim() || "",
-        module: row.module?.trim() || choosenModule?.value,
-        locale: row.locale?.trim() || "default",
-      })).filter(entry => entry.code && entry.code.length > 0);
+      const payload = normalizedResult
+        .map((row) => ({
+          code: row.code?.trim(),
+          message: row.message?.trim() || "",
+          module: row.module?.trim() || choosenModule?.value,
+          locale: row.locale?.trim() || "default",
+        }))
+        .filter((entry) => entry.code && entry.code.length > 0);
 
       if (payload.length === 0) {
         setShowToast({ label: t("DIGIT_LOC_NO_VALID_ENTRIES"), type: "error" });
         return;
       }
-
-      console.log("📤 Payload to /_upsert:", payload);
 
       await mutation.mutateAsync({
         body: { tenantId: stateId, messages: payload },
@@ -172,10 +161,7 @@ const LocalisationBulkUpload = () => {
       setShowBulkUploadModal(false);
     } catch (error) {
       console.error("❌ Upload error:", error);
-      const msg =
-        error?.response?.data?.Errors?.[0]?.message ||
-        error?.message ||
-        t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR");
+      const msg = error?.response?.data?.Errors?.[0]?.message || error?.message || t("DIGIT_LOC_UPLOAD_UNKNOWN_ERROR");
       setShowToast({ label: msg, type: "error" });
     }
   };
@@ -219,12 +205,7 @@ const LocalisationBulkUpload = () => {
       </Card>
 
       {/* Hidden XLSX generator */}
-      <GenerateXlsxNew
-        sheetName={choosenModule?.value}
-        inputRef={inputRef}
-        jsonData={jsonResult}
-        localeData={localeData}
-      />
+      <GenerateXlsxNew sheetName={choosenModule?.value} inputRef={inputRef} jsonData={jsonResult} localeData={localeData} />
 
       {/* 📤 File Upload Popup */}
       {showBulkUploadModal && (
@@ -239,14 +220,7 @@ const LocalisationBulkUpload = () => {
       )}
 
       {/* Toast */}
-      {showToast && (
-        <Toast
-          label={showToast.label}
-          type={showToast.type}
-          isDleteBtn
-          onClose={() => setShowToast(null)}
-        />
-      )}
+      {showToast && <Toast label={showToast.label} type={showToast.type} isDleteBtn onClose={() => setShowToast(null)} />}
     </React.Fragment>
   );
 };

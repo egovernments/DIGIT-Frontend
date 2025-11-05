@@ -242,15 +242,20 @@ const UploadData = ({ formData, onSelect, ...props }) => {
     async function useeffectuploaddata1() {
       if (Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema && (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)) {
         const facility = await convertIntoSchema(
-          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "facility" && item.campaignType === "all")?.[0]
+          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+            (item) => item.title === "facility" && item.campaignType === "all"
+          )?.[0]
         );
         const boundary = await convertIntoSchema(
           Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
-            (item) => item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
+            (item) =>
+              item.title === "boundaryWithTarget" && item.campaignType === (totalData?.HCM_CAMPAIGN_TYPE?.projectType?.code || projectType)
           )?.[0]
         );
         const user = await convertIntoSchema(
-          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter((item) => item.title === "user" && item.campaignType === "all")?.[0]
+          Schemas?.MdmsRes?.[CONSOLE_MDMS_MODULENAME]?.adminSchema?.filter(
+            (item) => item.title === "user" && item.campaignType === "all"
+          )?.[0]
         );
         const schema = {
           boundary: boundary,
@@ -368,7 +373,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         setDownloadError(false);
         setIsError(false);
         setIsSuccess(props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.isSuccess || null);
-        setShowPopUp(!downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length);
+        setShowPopUp(
+          !downloadedTemplates[type] && !props?.props?.sessionData?.HCM_CAMPAIGN_UPLOAD_USER_DATA?.uploadUser?.uploadedFile.length
+        );
         break;
     }
   }, [type, props?.props?.sessionData]);
@@ -503,7 +510,9 @@ const UploadData = ({ formData, onSelect, ...props }) => {
                 return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_INVALID")} at ${sheetName}`;
               }
               if (error.keyword === "maximum") {
-                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t("HCM_IS_MAXIMUM_VALUE")} at ${sheetName}`;
+                return `${t("HCM_DATA_AT_ROW")} ${index} ${t("HCM_IN_COLUMN")} ${instancePath} ${t(
+                  "HCM_IS_MAXIMUM_VALUE"
+                )} at ${sheetName}`;
               }
               let formattedError = `${t("HCM_IN_COLUMN")} '${instancePath}' ${error.message}`;
               if (error.keyword === "enum" && error.params && error.params.allowedValues) {
@@ -822,7 +831,6 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             }
           }
         } catch (error) {
-          console.log("error", error);
           reject("HCM_FILE_UNAVAILABLE");
         }
       };
@@ -848,7 +856,13 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         const id = fileUrl?.[0]?.id;
         // const fileType = type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type;
         const fileType =
-          type === "facilityWithBoundary" ? "facility" : type === "userWithBoundary" ? "user" : type === "boundary" ? "boundaryWithTarget" : type;
+          type === "facilityWithBoundary"
+            ? "facility"
+            : type === "userWithBoundary"
+            ? "user"
+            : type === "boundary"
+            ? "boundaryWithTarget"
+            : type;
         return {
           // ...i,
           filestoreId: id,
@@ -1067,7 +1081,8 @@ const UploadData = ({ formData, onSelect, ...props }) => {
           const fileData = fileUrl?.map((i) => {
             const urlParts = i?.url?.split("/");
             // const fileName = urlParts[urlParts?.length - 1]?.split("?")?.[0];
-            const fileName = type === "boundary" ? "Target Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
+            const fileName =
+              type === "boundary" ? "Target Template" : type === "facilityWithBoundary" ? "Facility Template" : "User Template";
             return {
               ...i,
               filename: fileName,
@@ -1164,7 +1179,11 @@ const UploadData = ({ formData, onSelect, ...props }) => {
             </div>
             <div className="campaign-bulk-upload">
               <HeaderComponent className="digit-form-composer-sub-header update-boundary-header">
-                {type === "boundary" ? t("WBH_UPLOAD_TARGET") : type === "facilityWithBoundary" ? t("WBH_UPLOAD_FACILITY") : t("WBH_UPLOAD_USER")}
+                {type === "boundary"
+                  ? t("WBH_UPLOAD_TARGET")
+                  : type === "facilityWithBoundary"
+                  ? t("WBH_UPLOAD_FACILITY")
+                  : t("WBH_UPLOAD_USER")}
               </HeaderComponent>
             </div>
             {uploadedFile.length === 0 && (
@@ -1280,7 +1299,15 @@ const UploadData = ({ formData, onSelect, ...props }) => {
         )}
         {showToast && (uploadedFile?.length > 0 || downloadError) && (
           <Toast
-            type={showToast?.key === "error" ? "error" : showToast?.key === "info" ? "info" : showToast?.key === "warning" ? "warning" : "success"}
+            type={
+              showToast?.key === "error"
+                ? "error"
+                : showToast?.key === "info"
+                ? "info"
+                : showToast?.key === "warning"
+                ? "warning"
+                : "success"
+            }
             // error={showToast.key === "error" ? true : false}
             // warning={showToast.key === "warning" ? true : false}
             // info={showToast.key === "info" ? true : false}
