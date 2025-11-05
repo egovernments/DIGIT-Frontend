@@ -248,7 +248,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           handleFieldChange(Boolean(value));
         };
         return (
-          <div>
+          <>
             <Switch
               label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
               onToggle={handleToggleChange}
@@ -256,15 +256,16 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               shapeOnOff
             />
             {/* Render Conditional Fields */}
-            {localToggle && getConditionalFields().map((cField, index) => (
-              <ConditionalField
-                key={`${cField.bindTo}-${index}`}
-                cField={cField}
-                selectedField={selectedField}
-                onFieldChange={onFieldChange}
-              />
-            ))}
-          </div>
+            {localToggle &&
+              getConditionalFields().map((cField, index) => (
+                <ConditionalField
+                  key={`${cField.bindTo}-${index}`}
+                  cField={cField}
+                  selectedField={selectedField}
+                  onFieldChange={onFieldChange}
+                />
+              ))}
+          </>
         );
       }
 
@@ -280,7 +281,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-field" }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           />
         );
 
@@ -297,7 +298,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             }}
             onBlur={handleBlur}
             placeholder={t(panelItem.innerLabel) || ""}
-            populators={{ fieldPairClassName: "drawer-field" }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           />
         );
 
@@ -328,18 +329,22 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Render group with children
         return (
-          <div style={{
-            border: `1px solid ${isValid ? "#e0e0e0" : "#d32f2f"}`,
-            borderRadius: "4px",
-            padding: "12px",
-            marginBottom: "8px",
-            backgroundColor: isValid ? "#f9f9f9" : "#fff4f4"
-          }}>
-            <div style={{
-              fontWeight: "600",
-              marginBottom: "12px",
-              fontSize: "14px"
-            }}>
+          <div
+            style={{
+              border: `1px solid ${isValid ? "#e0e0e0" : "#d32f2f"}`,
+              borderRadius: "4px",
+              padding: "12px",
+              marginBottom: "8px",
+              backgroundColor: isValid ? "#f9f9f9" : "#fff4f4",
+            }}
+          >
+            <div
+              style={{
+                fontWeight: "600",
+                marginBottom: "12px",
+                fontSize: "14px",
+              }}
+            >
               {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             </div>
             <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
@@ -356,15 +361,17 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             </div>
             {/* Show validation message if validation fails */}
             {panelItem.validationMessage && !isValid && (
-              <div style={{
-                marginTop: "8px",
-                fontSize: "12px",
-                color: "#d32f2f",
-                fontWeight: "500",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px"
-              }}>
+              <div
+                style={{
+                  marginTop: "8px",
+                  fontSize: "12px",
+                  color: "#d32f2f",
+                  fontWeight: "500",
+                  display: "flex",
+                  alignItems: "center",
+                  gap: "4px",
+                }}
+              >
                 <span style={{ fontSize: "14px" }}>⚠</span>
                 {t(panelItem.validationMessage)}
               </div>
@@ -379,11 +386,16 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
+        console.log("Field Type Options:", fieldTypeOptions);
 
         // Find current selected field type based on type and format
         const currentSelectedFieldType = fieldTypeOptions.find((item) => {
           const typeMatches = item?.metadata?.type === selectedField?.type;
           const formatMatches = item?.metadata?.format === selectedField?.format;
+
+          console.log("Matching field type:", currentSelectedFieldType);
+
+          console.log("Selected Field Type Match Check:", selectedField);
 
           // Handle different matching scenarios:
           // 1. If field has both type and format, match both
@@ -595,11 +607,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     }
   };
 
-  return (
-    <div>
-      {renderMainField()}
-    </div>
-  );
+  return <div className="drawer-container-tooltip">{renderMainField()}</div>;
 });
 
 // Separate component for conditional fields to avoid hooks violations
@@ -707,7 +715,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
   switch (cField.type) {
     case "text":
       return (
-        <div style={{ marginTop: "8px" }}>
+        <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
           <FieldV1
             type="text"
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${cField.label}`)) : null}
@@ -718,7 +726,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             }}
             onBlur={handleConditionalBlur}
             placeholder={cField.innerLabel ? t(cField.innerLabel) : null}
-            populators={{ fieldPairClassName: "drawer-field" }}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           />
         </div>
       );
@@ -785,7 +793,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       const dropdownOptionKey = cField.optionKey || "schemaCode";
       const bindValue = selectedField[cField.bindTo];
       return (
-        <div style={{ marginTop: "8px" }}>
+        <div className="drawer-container-tooltip" style={{ marginTop: "8px" }}>
           <FieldV1
             type="dropdown"
             label={cField.label ? t(Digit.Utils.locale.getTransformedLocale(`${cField.label}`)) : null}
@@ -795,18 +803,14 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             populators={{
               options: cField.options || [],
               optionsKey: dropdownOptionKey,
-              fieldPairClassName: "drawer-field",
+              fieldPairClassName: "drawer-toggle-conditional-field",
             }}
           />
         </div>
       );
 
     case "dependencyFieldWrapper":
-      return (
-        <NewDependentFieldWrapper
-          t={t}
-        />
-      );
+      return <NewDependentFieldWrapper t={t} />;
 
     default:
       return null;
@@ -821,7 +825,7 @@ const Tabs = React.memo(({ tabs, activeTab, onTabChange }) => {
     <div className="configure-app-tabs">
       {tabs.map((tab) => (
         <button key={tab} className={`configure-app-tab-head ${activeTab === tab ? "active" : ""} hover`} onClick={() => onTabChange(tab)}>
-          {t(`TAB_${tab.toUpperCase()}`)}
+          <p style={{ margin: 0, position: "relative", top: "-0 .1rem" }}>{t(`TAB_${tab.toUpperCase()}`)}</p>
         </button>
       ))}
     </div>
@@ -908,13 +912,8 @@ function NewDrawerFieldComposer() {
       {/* Field Properties */}
       <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
         {visibleTabProperties.map((panelItem) => (
-          <div key={panelItem.id} className="drawer-field-container">
-            <RenderField
-              panelItem={panelItem}
-              selectedField={selectedField}
-              onFieldChange={handleFieldChange}
-              fieldType={fieldType}
-            />
+          <div key={panelItem.id} className="drawer-toggle-field-container">
+            <RenderField panelItem={panelItem} selectedField={selectedField} onFieldChange={handleFieldChange} fieldType={fieldType} />
           </div>
         ))}
 

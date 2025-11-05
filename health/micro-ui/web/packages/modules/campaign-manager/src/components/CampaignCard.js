@@ -55,12 +55,12 @@ const CampaignCard = () => {
       roles: ROLES.CAMPAIGN_MANAGER,
       // count: isLoading?"-":data
     },
-    {
-      label: t("NEW APP CONFIGURATION"),
-      link: `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign`,
-      roles: ROLES.CAMPAIGN_MANAGER,
-      // count: isLoading?"-":data
-    },
+    // {
+    //   label: t("NEW APP CONFIGURATION"),
+    //   link: `/${window?.contextPath}/employee/campaign/new-app-configuration-redesign`,
+    //   roles: ROLES.CAMPAIGN_MANAGER,
+    //   // count: isLoading?"-":data
+    // },
     {
       label: t("ACTION_TEST_SETUP_CAMPAIGN_FROM_MICROPLAN"),
       link: `/${window?.contextPath}/employee/campaign/setup-from-microplan?status=${microplanStatus}`,

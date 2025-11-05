@@ -79,6 +79,7 @@ import TableTemplate from "./pages/employee/NewAppConfiguration/components/Table
 import MenuCardTemplate from "./pages/employee/NewAppConfiguration/components/MenuCardTemplate";
 import { CaptureImage } from "./pages/employee/NewAppConfiguration/components/CaptureImage";
 import LabelFieldPairTemplate from "./pages/employee/NewAppConfiguration/components/LabelFieldPairTemplate";
+import QRScanner from "./pages/employee/NewAppConfiguration/components/Scanner";
 
 /**
  * MDMS Module name
@@ -217,6 +218,7 @@ const componentsToRegister = {
   CardTemplate,
   Filter,
   InfoCard: InfoCardTemplate,
+  QRScanner,
   PanelCard: PanelCardTemplate,
   SearchBar,
   Switch: SwitchTemplate,

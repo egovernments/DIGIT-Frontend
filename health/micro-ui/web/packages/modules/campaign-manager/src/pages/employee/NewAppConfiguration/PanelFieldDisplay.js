@@ -5,6 +5,7 @@ import { useSelector } from "react-redux";
 import { PRIMARY_COLOR } from "../../../utils";
 import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import { getFieldTypeFromMasterData } from "./helpers";
+import { getFieldTypeFromMasterData2 } from "./helpers/getFieldTypeFromMasterData";
 
 // Component to toggle visibility of a field if it is not mandatory and not marked for deletion
 const ToggleVisibilityControl = ({ config, onToggle }) => {
@@ -74,7 +75,12 @@ const PanelFieldDisplay = ({ type, label, config, onHide: onToggle, isDelete, on
           </div>
           <Tag
             icon=""
-            label={t(getFieldTypeFromMasterData(config || { type, format: rest?.format, fieldName: rest?.fieldName }, fieldTypeMaster.fieldTypeMappingConfig))}
+            label={t(
+              getFieldTypeFromMasterData2(
+                config || { type, format: rest?.format, fieldName: rest?.fieldName },
+                fieldTypeMaster.fieldTypeMappingConfig
+              )
+            )}
             className="app-config-field-tag"
             labelStyle={{}}
             showIcon={false}

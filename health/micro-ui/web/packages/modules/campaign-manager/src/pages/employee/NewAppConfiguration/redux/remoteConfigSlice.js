@@ -73,15 +73,62 @@ const remoteConfigSlice = createSlice({
       const updates = action.payload;
       const { cardIndex, fieldIndex } = state.selectedFieldPath;
 
-      // Update selected field
+      // Update the selectedField reference
       for (const key in updates) {
         state.selectedField[key] = updates[key];
       }
 
-      // Also update the field in currentData using stored path (O(1) instead of O(n*m))
-      if (state.currentData?.body && cardIndex !== null && cardIndex !== -1 && fieldIndex !== null && fieldIndex !== -1) {
-        for (const key in updates) {
-          state.currentData.body[cardIndex].fields[fieldIndex][key] = updates[key];
+      // Check if this is a template type page
+      const isTemplate = state.currentData?.type === "template";
+
+      if (isTemplate) {
+        // Recursive function to find and update the field in nested template structures
+        const updateFieldInTree = (node) => {
+          if (!node) return false;
+
+          // Handle arrays
+          if (Array.isArray(node)) {
+            for (const item of node) {
+              if (updateFieldInTree(item)) return true;
+            }
+            return false;
+          }
+
+          // Handle objects
+          if (typeof node === "object") {
+            // Check if this is the selected field (by reference or fieldName)
+            if (node === state.selectedField || node.fieldName === state.selectedField.fieldName) {
+              // Update all properties
+              for (const key in updates) {
+                node[key] = updates[key];
+              }
+              return true;
+            }
+
+            // Recursively search in child and children (template-specific)
+            if (node.child && updateFieldInTree(node.child)) return true;
+            if (node.children && updateFieldInTree(node.children)) return true;
+          }
+
+          return false;
+        };
+
+        // Search through fields recursively for templates
+        if (state.currentData?.body && cardIndex !== null && cardIndex !== -1) {
+          const card = state.currentData.body[cardIndex];
+          if (Array.isArray(card?.fields)) {
+            updateFieldInTree(card.fields);
+          }
+        }
+      } else {
+        // For non-template types (forms), use simple direct path access
+        if (state.currentData?.body && cardIndex !== null && cardIndex !== -1 && fieldIndex !== null && fieldIndex !== -1) {
+          const card = state.currentData.body[cardIndex];
+          if (Array.isArray(card?.fields) && card.fields[fieldIndex]) {
+            for (const key in updates) {
+              card.fields[fieldIndex][key] = updates[key];
+            }
+          }
         }
       }
     },

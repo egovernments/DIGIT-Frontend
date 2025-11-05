@@ -54,7 +54,7 @@ const AppConfigurationWrapper = ({ flow = "REGISTRATION-DELIVERY", flowName, pag
         .filter((item) => {
           const code = item?.code;
           const message = item?.[currentLocale];
-          return code && code.trim() !== "" && message && message.trim() !== "";
+          return code && code?.trim() !== "" && message && message?.trim() !== "";
         })
         .map((item) => ({
           code: item.code,
