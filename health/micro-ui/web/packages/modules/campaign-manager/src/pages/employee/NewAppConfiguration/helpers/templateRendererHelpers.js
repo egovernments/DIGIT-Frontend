@@ -37,13 +37,13 @@ export const isFieldSelected = (field, selectedField) => {
  * This is the core rendering function that all components use
  */
 export const renderTemplateComponent = (
-  field, 
-  fieldTypeMasterData, 
-  selectedField, 
-  t, 
-  onFieldClick, 
-  data, 
-  sectionName = "body", 
+  field,
+  fieldTypeMasterData,
+  selectedField,
+  t,
+  onFieldClick,
+  data,
+  sectionName = "body",
   index = 0
 ) => {
   if (!field || field.hidden) return null;
@@ -63,11 +63,11 @@ export const renderTemplateComponent = (
   // Wrapper with selection highlighting and click handling
   const wrapperStyle = {
     cursor: "pointer",
-    border: isSelected ? "2px solid #0B4B66" : "2px solid transparent",
+    border: isSelected ? "2px solid #C84C0E" : "2px solid transparent",
     borderRadius: "4px",
     padding: "4px",
     // margin: "4px 0",
-    backgroundColor: isSelected ? "#f0f8ff" : "transparent",
+    backgroundColor: isSelected ? "#C84C0E08" : "transparent",
     transition: "all 0.2s ease",
   };
 
@@ -80,9 +80,9 @@ export const renderTemplateComponent = (
   if (Component) {
     return (
       <div key={uniqueKey} onClick={handleClick} style={wrapperStyle}>
-        <Component 
-          field={field} 
-          t={t} 
+        <Component
+          field={field}
+          t={t}
           fieldTypeMasterData={fieldTypeMasterData}
           selectedField={selectedField}
           onFieldClick={onFieldClick}
@@ -96,7 +96,7 @@ export const renderTemplateComponent = (
   const fieldType = getFieldTypeFromMasterData(field, fieldTypeMasterData);
 
   return (
-        <div
+    <div
       key={uniqueKey}
       onClick={handleClick}
       style={{
