@@ -14,6 +14,18 @@ const PTAcknowledgmentEmployee = () => {
   const tenantId = queryParams.get("tenantId");
   const acknowldgementNumber = queryParams.get("secondNumber");
   const isSuccess = status === "success";
+
+  // Clear session storage for the property form when acknowledgment page loads
+  useEffect(() => {
+    if (tenantId && propertyId) {
+      const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${purpose === 'create' ? 'new' : propertyId}`;
+      const popupSeenKey = `PT_POPUP_SEEN_${tenantId}`;
+
+      // Clear the session storage to ensure fresh form on next visit
+      Digit.SessionStorage.del(sessionKey);
+      Digit.SessionStorage.del(popupSeenKey);
+    }
+  }, [tenantId, propertyId, purpose]);
   const handleViewProperty = () => {
     history.push(`/${window.contextPath}/employee/pt/property/${propertyId}?tenantId=${tenantId}`);
   };

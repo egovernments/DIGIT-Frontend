@@ -47,7 +47,24 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         };
       }
 
+      // Check if coming from a fresh URL without any referrer context
+      // If user navigates directly to assessment-form (not from within the app flow),
+      // clear any stale session data
+      const isDirectNavigation = !document.referrer ||
+                                  !document.referrer.includes('assessment-form') ||
+                                  document.referrer.includes('pt-acknowledgment');
+
       const savedData = Digit.SessionStorage.get(sessionKey);
+
+      // Clear stale data if user is coming from acknowledgment page or direct navigation to step 1
+      if (isDirectNavigation && (!stepFromUrl || stepFromUrl === '1')) {
+        Digit.SessionStorage.del(sessionKey);
+        Digit.SessionStorage.del(popupSeenKey);
+        return {
+          currentStep: 0,
+          formData: {},
+        };
+      }
 
       // If URL has step parameter, use it
       if (stepFromUrl) {
