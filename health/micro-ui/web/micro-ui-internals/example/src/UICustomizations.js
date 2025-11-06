@@ -1775,8 +1775,8 @@ export const UICustomizations = {
           return value ? <span>{value}</span> : <span>{t("NA")}</span>;
 
         case "WF_INBOX_HEADER_CREATED_DATE":
-          const dateLabel = Number.isFinite(value) && value > 0 ? new Date(value).toLocaleDateString() : t("ES_COMMON_NA");
-          return <Tag label={dateLabel} showIcon={false} type={dateLabel === t("ES_COMMON_NA") ? "error" : "success"} />;
+          const dateLabel = value ? Digit.DateUtils.ConvertEpochToDate(value) : "NA";
+          return <Tag label={t(dateLabel)} showIcon={false} type={value ? "success" : "error"} />;
         default:
           return t("ES_COMMON_NA");
       }
