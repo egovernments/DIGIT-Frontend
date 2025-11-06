@@ -216,11 +216,6 @@ const CreateComplaintForm = ({
     setIsSubmitting(true);
     const payload = formPayloadToCreateComplaint(_data, tenantId, user?.info);
     handleResponseForCreateComplaint(payload);
-
-    // Re-enable submit button after 3 seconds
-    setTimeout(() => {
-      setIsSubmitting(false);
-    }, 5000);
   };
 
   /**
@@ -230,10 +225,12 @@ const CreateComplaintForm = ({
     await CreateComplaintMutation(payload, {
       onError: async () => {
         setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
+        setIsSubmitting(false);
       },
       onSuccess: async (responseData) => {
         if (responseData?.ResponseInfo?.Errors) {
           setToast({ show: true, label: t("FAILED_TO_CREATE_COMPLAINT"), type: "error" });
+          setIsSubmitting(false);
         } else {
           sendDataToResponsePage(
             "CS_COMMON_COMPLAINT_SUBMITTED",

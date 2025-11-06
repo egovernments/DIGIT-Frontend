@@ -152,13 +152,12 @@ const PGRSearchInboxConfig = () => {
                 secondaryLabel: 'ES_CLEAR_ALL',
                 minReqFields: 0,
                 defaultValues: {
-                    assignedToMe: { code: "ASSIGNED_TO_ALL", name: "ASSIGNED_TO_ALL" },
-      
-                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.serviceCode && { 
-                      serviceCode: window.Digit.SessionStorage.get("filtersForInbox").serviceCode 
-                    }),
-                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.status && { 
-                      status: window.Digit.SessionStorage.get("filtersForInbox").status 
+                    assignedToMe: null,
+                    locality: null,
+                    status: [],
+
+                    ...(window?.Digit?.SessionStorage?.get("filtersForInbox")?.serviceCode && {
+                      serviceCode: window.Digit.SessionStorage.get("filtersForInbox").serviceCode
                     })
                   },
                   

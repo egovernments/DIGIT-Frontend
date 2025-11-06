@@ -110,20 +110,21 @@ export const CreateComplaintConfig = {
               inline: true,
               label: "COMPLAINTS_COMPLAINANT_CONTACT_NUMBER",
               isMandatory: true,
-              type: "number",
+              type: "mobileNumber",
               disable: false,
               populators: {
                 name: "ComplainantContactNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
-                componentInFront: "+91",
+                hideSpan: true,
+                maxLength: 10,
                 validation: {
                   required: true,
-                  pattern: "^[0-9]{10}$",
-                  minLength: 10,
-                  maxLength: 10,
-                  min: 1000000000,
-                  max: 9999999999
-                }, // 10-digit phone number validation
+                  pattern: /^[0-9]{10}$/,
+                  validate: (value) => {
+                    if (!value || value === "") return false; // Required field
+                    return /^[0-9]{10}$/.test(value); // Must be exactly 10 digits
+                  }
+                }
               },
             },
             {
@@ -145,18 +146,20 @@ export const CreateComplaintConfig = {
               inline: true,
               label: "COMPLAINTS_SUPERVISOR_CONTACT_NUMBER",
               isMandatory: false,
-              type: "number",
+              type: "mobileNumber",
               disable: false,
               populators: {
                 name: "SupervisorContactNumber",
                 error: "CORE_COMMON_MOBILE_ERROR",
-                componentInFront: "+91",
+                hideSpan: true,
+                maxLength: 10,
                 validation: {
-                  minLength: 0,
-                  min: 1000000000,
-                  max: 9999999999,
-                  error: "CORE_COMMON_MOBILE_ERROR",
-                }, // 10-digit phone number validation
+                  pattern: /^[0-9]{10}$/,
+                  validate: (value) => {
+                    if (!value || value === "") return true; // Allow empty since not mandatory
+                    return /^[0-9]{10}$/.test(value); // Must be exactly 10 digits if provided
+                  }
+                }
               },
             }
           ],
