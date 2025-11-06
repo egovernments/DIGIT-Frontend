@@ -1338,8 +1338,8 @@ tbody {
 
 /* Custom styling for PGR Inbox date range field - targets the 3rd search field */
 .pgr-inbox-wrapper {
-  .search-field-wrapper .digit-label-field-pair.digit-inbox-search-composer-label-pair.vertical:nth-child(3) {
-    row-gap: 0.5rem !important;
+  .digit-date-range-label-field {
+    gap: 0.25rem !important;
   }
 }
 
@@ -1363,7 +1363,7 @@ tbody {
 .custom-form-complaints {
   .digit-card-section-header:not(:first-of-type) {
     border-top: 0.2rem solid #D6D5D5;
-    padding-top: 1rem;
+    padding-top: 2rem;
   }
 
   .digit-card-section-header {
