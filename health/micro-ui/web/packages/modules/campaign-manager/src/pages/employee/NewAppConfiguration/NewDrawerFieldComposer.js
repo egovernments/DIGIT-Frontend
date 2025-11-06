@@ -101,9 +101,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     const toggleValue = Boolean(getFieldValue());
 
     return panelItem.conditionalField.filter((cField) => {
-      // If no condition specified, always show the field
+      // If no condition specified, show only when toggle is true
       if (cField.condition === undefined) {
-        return true;
+        return toggleValue;
       }
       // Show field only if its condition matches the current toggle value
       return cField.condition === toggleValue;
