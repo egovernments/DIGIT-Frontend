@@ -16,7 +16,6 @@ export const transformMdmsToAppConfig = (mdmsData) => {
   const moduleName = mdmsData.data.name; // Overall module name like "REGISTRATION-DELIVERY"
 
   flows.forEach((flow) => {
-    console.log("Processing flow:", flow);
     const project = flow.project || mdmsData.data.project;
     const version = flow.version || mdmsData.data.version || 1;
     const flowName = flow.name;
@@ -52,9 +51,7 @@ export const transformMdmsToAppConfig = (mdmsData) => {
 
     // Handle FORM screenType (like HOUSEHOLD, ADD_MEMBER, DELIVERY)
     if (flow.screenType === "FORM" && flow.pages) {
-      console.log("Processing FORM flow:", flow);
       flow.pages.forEach((page, pageIndex) => {
-        console.log("Transforming form page:", page);
         const transformedPage = {
           body: [
             {

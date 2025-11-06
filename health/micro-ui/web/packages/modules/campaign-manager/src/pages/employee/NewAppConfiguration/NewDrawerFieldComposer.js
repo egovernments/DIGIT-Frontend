@@ -11,6 +11,21 @@ import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 
+// Utility functions for date conversion
+const convertEpochToDateString = (epoch) => {
+  if (!epoch) return "";
+  const date = new Date(epoch);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const convertDateStringToEpoch = (dateString) => {
+  if (!dateString) return null;
+  return new Date(dateString).getTime();
+};
+
 const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -62,7 +77,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     if (panelItem.fieldType === "text") {
       setLocalValue(localizedFieldValue || "");
     } else if (panelItem.fieldType === "number") {
-      setLocalValue(getFieldValue() || 0);
+      const value = getFieldValue();
+      setLocalValue(value !== undefined && value !== null && value !== "" ? value : "");
     }
   }, [selectedField, panelItem.bindTo, panelItem.fieldType]);
 
@@ -99,9 +115,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
     // Update the field with the code (or value if no localization)
     if (bindTo.includes(".")) {
-      // Handle nested properties
+      // Handle nested properties with deep copy to avoid frozen object issues
       const keys = bindTo.split(".");
-      const newField = { ...selectedField };
+      const newField = JSON.parse(JSON.stringify(selectedField));
       let current = newField;
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
@@ -167,9 +183,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Update the field with the code (or value if no localization)
         if (bindTo.includes(".")) {
-          // Handle nested properties
+          // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = { ...selectedField };
+          const newField = JSON.parse(JSON.stringify(selectedField));
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -200,9 +216,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       // Debounce the Redux dispatch
       debounceTimerRef.current = setTimeout(() => {
         if (bindTo.includes(".")) {
-          // Handle nested properties
+          // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = { ...selectedField };
+          const newField = JSON.parse(JSON.stringify(selectedField));
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -292,11 +308,35 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
-              const value = parseInt(event.target.value) || 0;
-              setLocalValue(value);
-              handleNumberChange(value);
+              const inputValue = event.target.value;
+              // Allow empty string to clear the field
+              if (inputValue === "" || inputValue === null || inputValue === undefined) {
+                setLocalValue("");
+                handleNumberChange(null);
+              } else {
+                const value = parseInt(inputValue);
+                // Only set if it's a valid number
+                if (!isNaN(value)) {
+                  setLocalValue(value);
+                  handleNumberChange(value);
+                }
+              }
             }}
             onBlur={handleBlur}
+            placeholder={t(panelItem.innerLabel) || ""}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+          />
+        );
+
+      case "date":
+        return (
+          <FieldV1
+            type="date"
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+            value={getFieldValue() ? convertEpochToDateString(getFieldValue()) : ""}
+            onChange={(event) => {
+              handleFieldChange(convertDateStringToEpoch(event.target.value));
+            }}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           />
@@ -310,15 +350,18 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           }
 
           try {
-            // Create a safe evaluation context with only the selectedField data
-            const evalContext = { ...selectedField };
-
-            // Replace property paths in expression with actual values
             const expression = panelItem.validationExpression;
-
-            // Use Function constructor for safe evaluation (safer than eval)
-            const func = new Function(...Object.keys(evalContext), `return ${expression}`);
-            return func(...Object.values(evalContext));
+            // Create a plain object copy to avoid "object is not extensible" errors
+            // This allows expressions to reference properties directly (e.g., "range.max > range.min")
+            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            // Get all property names and values from the plain copy
+            // Replace dots in property names with underscores to make them valid JS parameter names
+            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
+            const paramValues = Object.values(plainFieldCopy);
+            // Create function with all property names as parameters
+            const func = new Function(...paramNames, `return ${expression}`);
+            const result = func(...paramValues);
+            return result;
           } catch (error) {
             console.error("Validation expression error:", error);
             return true; // Return true on error to avoid blocking
@@ -326,18 +369,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         };
 
         const isValid = evaluateValidation();
-
         // Render group with children
         return (
-          <div
-            style={{
-              border: `1px solid ${isValid ? "#e0e0e0" : "#d32f2f"}`,
-              borderRadius: "4px",
-              padding: "12px",
-              marginBottom: "8px",
-              backgroundColor: isValid ? "#f9f9f9" : "#fff4f4",
-            }}
-          >
+          <>
             <div
               style={{
                 fontWeight: "600",
@@ -376,7 +410,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 {t(panelItem.validationMessage)}
               </div>
             )}
-          </div>
+          </>
         );
       }
 
@@ -386,17 +420,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
-        console.log("Field Type Options:", fieldTypeOptions);
-
         // Find current selected field type based on type and format
         const currentSelectedFieldType = fieldTypeOptions.find((item) => {
           const typeMatches = item?.metadata?.type === selectedField?.type;
           const formatMatches = item?.metadata?.format === selectedField?.format;
-
-          console.log("Matching field type:", currentSelectedFieldType);
-
-          console.log("Selected Field Type Match Check:", selectedField);
-
           // Handle different matching scenarios:
           // 1. If field has both type and format, match both
           if (selectedField?.format) {
@@ -498,11 +525,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //     }
       //     return null;
       //   }).filter(Boolean);
-
-      //   console.log("Nested Options:", nestedOptions);
-      //   console.log("Selected Data:", selectedData);
-      //   console.log("Selected for Dropdown:", selected);
-
       //   return (
       //     <>
       //       <div
@@ -531,8 +553,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //           selected={selected}
       //           onSelect={(selectedArray) => { }}
       //           onClose={(selectedArray) => {
-      //             console.log("OnClose Selected Array:", selectedArray);
-
       //             // selectedArray is an array of [category, option] pairs
       //             const mappedData = selectedArray
       //               ?.map((arr) => {
@@ -544,9 +564,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //                 };
       //               })
       //               ?.filter(Boolean) || [];
-
-      //             console.log("Mapped Data:", mappedData);
-
       //             // Update selectedField with the new data - call onFieldChange directly
       //             onFieldChange({
       //               ...selectedField,
