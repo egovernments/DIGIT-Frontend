@@ -138,7 +138,6 @@ const PaymentSetUpPage = () => {
 
         return matchingSkills || null;
       } catch (error) {
-        console.error("Error fetching default skills data:", error);
         return null;
       }
     },
@@ -170,7 +169,6 @@ const PaymentSetUpPage = () => {
         }
         return null;
       } catch (error) {
-        console.error("Error fetching user-configured rates:", error);
         return null;
       }
     },
@@ -231,7 +229,7 @@ const PaymentSetUpPage = () => {
         const billingConfigBody = {
           searchCriteria: {
             tenantId: tenantId,
-            projectId: value.campaignNumber,
+            campaignNumber: value.campaignNumber,
             includePeriods: true,
           },
         };
@@ -272,8 +270,6 @@ const PaymentSetUpPage = () => {
           setSkillsData(defaultSkills);
         }
       } catch (error) {
-        console.error("Error in campaign selection flow:", error);
-
         // Fallback: Try to fetch default skills data on error
         try {
           setEdit(false);
@@ -282,7 +278,6 @@ const PaymentSetUpPage = () => {
           const defaultSkills = await fetchDefaultSkillsData(value.projectType);
           setSkillsData(defaultSkills);
         } catch (fallbackError) {
-          console.error("Error fetching fallback skills data:", fallbackError);
           setSkillsData(null);
         }
       } finally {
@@ -332,28 +327,25 @@ const PaymentSetUpPage = () => {
         { Mdms: wagePayload.Mdms },
         {
           onError: (error) => {
-            console.error("Error creating MDMS rates:", error);
             history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
               state: "error",
               info: "",
               fileName: "",
-              description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-              message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+              description: "",
+              message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
               showFooter: false,
             });
           },
           onSuccess: (responseData) => {
-            console.log("MDMS rates created successfully:", responseData);
-
             //  Navigate to success screen
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
               fileName: "",
-              description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-              message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+              description: t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS"),
+              message: t("HCM_AM_PAYMENT_SETUP_HEADER_SUCCESS"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
               showFooter: false,
@@ -362,13 +354,12 @@ const PaymentSetUpPage = () => {
         }
       );
     } catch (err) {
-      console.error("Unexpected error while creating MDMS rates:", err);
       history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
         state: "error",
         info: "",
         fileName: "",
-        description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-        message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+        description: "",
+        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
         back: t("GO_BACK_TO_HOME"),
         backlink: `/${window.contextPath}/employee`,
         showFooter: false,
@@ -383,28 +374,25 @@ const PaymentSetUpPage = () => {
         { Mdms: wagePayload.Mdms },
         {
           onError: (error) => {
-            console.error("Error creating MDMS rates:", error);
             history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
               state: "error",
               info: "",
               fileName: "",
-              description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-              message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+              description: "",
+              message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
               showFooter: false,
             });
           },
           onSuccess: (responseData) => {
-            console.log("MDMS rates created successfully:", responseData);
-
             //  Navigate to success screen
             history.push(`/${window.contextPath}/employee/payments/payment-setup-success`, {
               state: "success",
               info: "",
               fileName: "",
-              description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-              message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+              description: t("HCM_AM_PAYMENT_SETUP_DESC_SUCCESS"),
+              message: t("HCM_AM_PAYMENT_SETUP_UPDATE_HEADER_SUCCESS"),
               back: t("GO_BACK_TO_HOME"),
               backlink: `/${window.contextPath}/employee`,
               showFooter: false,
@@ -413,13 +401,12 @@ const PaymentSetUpPage = () => {
         }
       );
     } catch (err) {
-      console.error("Unexpected error while creating MDMS rates:", err);
       history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
         state: "error",
         info: "",
         fileName: "",
-        description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-        message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+        description: "",
+        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
         back: t("GO_BACK_TO_HOME"),
         backlink: `/${window.contextPath}/employee`,
         showFooter: false,
@@ -438,40 +425,38 @@ const PaymentSetUpPage = () => {
       wageData: wagePayload,
     });
 
-    const billingConfig = {
-      tenantId: tenantId,
-      projectId: selectedCampaign?.campaignNumber,
-      billingFrequency: billingCycle?.code,
-      projectStartDate: selectedCampaign?.startDate,
-      projectEndDate: selectedCampaign?.endDate,
-      status: "ACTIVE",
-      createdBy: Digit.UserService.getUser().info.uuid,
-      id: billingCycle?.id,
-    };
-
     try {
       //  Call the billing config creation first
 
       if (update) {
+        const billingConfig = {
+          tenantId: tenantId,
+          campaignNumber: selectedCampaign?.campaignNumber,
+          billingFrequency: billingCycle?.code,
+          projectStartDate: selectedCampaign?.startDate,
+          projectEndDate: selectedCampaign?.endDate,
+          status: "ACTIVE",
+          createdBy: Digit.UserService.getUser().info.uuid,
+          projectId: selectedCampaign?.projectId,
+          id: billingCycle?.id,
+          ...(billingCycle?.code === "CUSTOM" && { customFrequencyDays: customDays }),
+        };
         await updateBillConfig(
           { billingConfig },
           {
             onError: (error) => {
-              console.error("Billing Config updation failed:", error);
               history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
                 state: "error",
                 info: "",
                 fileName: "",
-                description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-                message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+                description: "",
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
                 back: t("GO_BACK_TO_HOME"),
                 backlink: `/${window.contextPath}/employee`,
                 showFooter: false,
               });
             },
             onSuccess: async (responseData) => {
-              console.log("Billing Config updated successfully:", responseData);
-
               //  Only after billingConfig succeeds, create MDMS Rates
 
               if (skillsData.existingRatesData != null) {
@@ -483,25 +468,34 @@ const PaymentSetUpPage = () => {
           }
         );
       } else {
+        const billingConfig = {
+          tenantId: tenantId,
+          campaignNumber: selectedCampaign?.campaignNumber,
+          billingFrequency: billingCycle?.code,
+          projectStartDate: selectedCampaign?.startDate,
+          projectEndDate: selectedCampaign?.endDate,
+          status: "ACTIVE",
+          createdBy: Digit.UserService.getUser().info.uuid,
+          projectId: selectedCampaign?.projectId,
+          //id: billingCycle?.id,
+          ...(billingCycle?.code === "CUSTOM" && { customFrequencyDays: customDays }),
+        };
         await createBillConfig(
           { billingConfig },
           {
             onError: (error) => {
-              console.error("Billing Config creation failed:", error);
               history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
                 state: "error",
                 info: "",
                 fileName: "",
-                description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-                message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+                description: "",
+                message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
                 back: t("GO_BACK_TO_HOME"),
                 backlink: `/${window.contextPath}/employee`,
                 showFooter: false,
               });
             },
             onSuccess: async (responseData) => {
-              console.log("Billing Config created successfully:", responseData);
-
               //  Only after billingConfig succeeds, create MDMS Rates
 
               if (skillsData.existingRatesData != null) {
@@ -514,13 +508,12 @@ const PaymentSetUpPage = () => {
         );
       }
     } catch (err) {
-      console.error("Unexpected error during form submission:", err);
       history.push(`/${window.contextPath}/employee/payments/payment-setup-failed`, {
         state: "error",
         info: "",
         fileName: "",
-        description: t("HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION"),
-        message: t("HCM_AM_ATTENDANCE_APPROVE_SUCCESS"),
+        description: "",
+        message: t("HCM_AM_PAYMENT_SETUP_HEADER_ERROR"),
         back: t("GO_BACK_TO_HOME"),
         backlink: `/${window.contextPath}/employee`,
         showFooter: false,
