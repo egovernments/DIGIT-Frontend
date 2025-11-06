@@ -1,4 +1,4 @@
-import { Loader } from "@egovernments/digit-ui-react-components";
+import { Loader } from "@egovernments/digit-ui-components";
 import React, { useEffect, useState } from "react";
 import { useRouteMatch } from "react-router-dom";
 import { default as EmployeeApp } from "./pages/employee";
@@ -47,7 +47,9 @@ export const PGRModule = ({ stateCode, userType, tenants }) => {
 
 
   if (isLoading  || isHierarchyLoading) {
-    return <Loader />;
+    return (
+      <Loader variant={"PageLoader"} className={"digit-center-loader"} />
+    );
   }
 
   /**

@@ -64,7 +64,7 @@ const BoundaryComponent = ({ t, config, onSelect, userType, formData }) => {
    */
 
   if (isBoundaryLoading) {
-    return <Loader />;
+    return <Loader variant={"PageLoader"} className={"digit-center-loader"} />
   }
 
   return (
