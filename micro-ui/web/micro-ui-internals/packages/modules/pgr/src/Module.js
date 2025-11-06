@@ -9,7 +9,7 @@ import { updateCustomConfigs } from "./utils";
 export const PGRModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
-  const moduleCode = ["PGR"];
+  const moduleCode = ["PGR","pgr"];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
