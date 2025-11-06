@@ -9,7 +9,7 @@ import { updateCustomConfigs } from "./utils";
 export const BillsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
-  const moduleCode = ["bill-amend"];
+  const moduleCode = ["bill-amend","pt-new"];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
