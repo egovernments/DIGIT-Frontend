@@ -26,7 +26,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
         }
 
         if (file.size >= 5242880) {
-          setError(t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED"));
+          setError(`${t("CS_MAXIMUM_UPLOAD_SIZE_EXCEEDED")} (${t("MAX_FILE_SIZE")}: 5 MB)`);
         } else {
           try {
             // Convert JPEG/JPG to PDF before uploading
@@ -158,7 +158,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
             onClick={downloadFile}
           />
       )}
-      {error && <p className="error">{error}</p>}
+      {error && <p className="pgr-upload-error">{error}</p>}
     </div>
   );
 };

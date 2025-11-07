@@ -58,7 +58,7 @@ const TimelineWrapper = ({ businessId, isWorkFlowLoading, workflowData, labelPre
                             .join(", ") || t('NA')
                     }`),
                     (instance?.action === "ASSIGN" ? `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assignes?.[0]?.mobileNumber}` : `${t("ES_COMMON_CONTACT_DETAILS")}: ${instance?.assigner?.mobileNumber}`),
-                    instance?.comment && `${t('CS_COMMON_EMPLOYEE_COMMENTS')} : "${instance.comment}"`,
+                    instance?.comment && `${t('CS_COMMON_EMPLOYEE_COMMENTS')} : ${instance.comment}`,
                     ...(instance?.documents && instance.documents.length > 0
                         ? instance.documents.map((doc, docIndex) => 
                         {   
