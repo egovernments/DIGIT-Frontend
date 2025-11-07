@@ -501,7 +501,14 @@ export const ComplaintDetails = (props) => {
       {!workflowDetails?.isLoading && workflowDetails?.data?.nextActions?.length > 0 && (
         <ActionBar>
           {displayMenu && workflowDetails?.data?.nextActions ? (
-            <Menu options={workflowDetails?.data?.nextActions.map((action) => action.action)} textStyles={{marginTop:"-2px"}} t={t} onSelect={onActionSelect} />
+            <Menu
+              options={workflowDetails?.data?.nextActions.map((action) => action.action)}
+              textStyles={{marginTop:"-2px"}}
+              optionCardStyles={{width: "100%"}}
+              showSearch={false}
+              t={t}
+              onSelect={onActionSelect}
+            />
           ) : null}
           <SubmitBar label={t("WF_TAKE_ACTION")} onSubmit={() => setDisplayMenu(!displayMenu)} />
         </ActionBar>

@@ -135,7 +135,7 @@ const UploadedFileComponent = ({ config, onSelect }) => {
   }
 
   return (
-    <div style={{ maxWidth: "37.5rem" }}>
+    <div className="pgr-upload-file-wrapper" style={{ maxWidth: "37.5rem" }}>
       <UploadFile
         id={config?.key ? `upload-${config.key}` : "upload-doc"}
         accept=".pdf,.jpg,.jpeg"

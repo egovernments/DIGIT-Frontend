@@ -417,12 +417,14 @@ const PGRDetails = () => {
       {/* Footer Action Bar */}
       <Footer
       actionFields={[
-        <Button 
+        <Button
           className="custom-class"
-          isSearchable 
+          isSearchable={false}
           onClick={function noRefCheck() {}}
           menuStyles={{
                   bottom: "40px",
+                  maxWidth: "fit-content",
+                  minWidth: "100%"
                 }}
           isDisabled={getNextActionOptions(workflowData, businessServiceData?.BusinessServices?.[0]).length === 0}
           key="action-button"
