@@ -10,7 +10,7 @@ const TextTemplate = ({ field, t }) => {
         padding: "4px 0",
       }}
     >
-      {t(label) || "LABEL"}
+      {`${t(label) || "LABEL"} : ********`}
     </div>
   );
 };

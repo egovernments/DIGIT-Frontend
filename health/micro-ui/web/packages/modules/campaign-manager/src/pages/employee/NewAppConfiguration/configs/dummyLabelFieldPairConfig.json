@@ -29,29 +29,35 @@
                         "jsonPath": "{{item.wayBillNumber}}",
                         "mandatory": "false",
                         "additionalField": "true"
+                    },
+                         {
+                        "name": "BATCH_NUMBER",
+                        "fieldKey": "wayBillNumber",
+                        "jsonPath": "{{item.wayBillNumber}}",
+                        "mandatory": "false",
+                        "additionalField": "true"
                     }
                 ]
             },
-             {
+            {
                 "entity": "IndividualModel",
                 "labelFields": [
                     {
-                        "name": "RESOURCE",
-                        "fieldKey": "sku",
-                        "jsonPath": "{{item.additionalFields.fields.sku}}",
-                        "mandatory": "false",
-                        "additionalField": "true"
-                    },
-                    {
-                        "name":  "RECEIVED_FROM",
-                        "fieldKey": "receiverId",
-                        "jsonPath": "{{item.receiverId}}",
+                        "name": "HOUSEHOLD_HEAD_NAME",
+                        "fieldKey": "givenName",
+                        "jsonPath": "{{contextData.0.headIndividual.IndividualModel.name.givenName}}",
                         "mandatory": "false"
                     },
                     {
-                        "name": "MRN_NUMBER",
+                        "name":  "LOCALITY",
+                        "fieldKey": "receiverId",
+                        "jsonPath": "{{contextData.0.household.HouseholdModel.address.locality.code}}",
+                        "mandatory": "false"
+                    },
+                    {
+                        "name": "MEMBER_COUNT",
                         "fieldKey": "mrnNumber",
-                        "jsonPath": "{{item.additionalFields.fields.mrnNumber}}",
+                        "jsonPath": "{{contextData.0.household.HouseholdModel.memberCount}}",
                         "mandatory": "false"
                     },
                     {
