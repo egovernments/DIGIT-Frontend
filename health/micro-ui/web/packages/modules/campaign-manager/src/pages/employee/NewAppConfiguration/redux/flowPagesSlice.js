@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const mdmsContext = window.globalConfigs?.getConfig("MDMS_V2_CONTEXT_PATH") || "mdms-v2";
+
 // Async thunk to fetch all pages in a flow
 export const fetchFlowPages = createAsyncThunk(
   "flowPages/fetch",
@@ -13,33 +14,47 @@ export const fetchFlowPages = createAsyncThunk(
             tenantId: tenantId,
             schemaCode: `${moduleName}.${masterName}`,
             filters: {
-              project: campaignNumber, // FIXED: Use parameter instead of hardcoding
+              project: campaignNumber, 
             },
             isActive: true,
           },
         },
       });
 
-
       if (response?.mdms && response.mdms.length > 0) {
-        // Extract all flows from MDMS response
-        const flows = response.mdms?.[0]?.data?.flows || [];
-
-        // Find the REGISTRATION flow and return its pages
-        const registrationFlow = flows.find((flow) => flow?.id === flowId);
-        const pages = registrationFlow?.pages.map((page) => {
-          const name = page?.name?.includes('.')
-            ? page.name.split('.').pop() // take the part after the dot
-            : page?.name;
-          return {
-            ...page,
-            name: name
-          };
-        }) || [];
-
-        return pages;
+        // Find the flow object with matching flowId in data.name
+        const targetFlow = response.mdms.find((item) => item?.data?.name === flowId);
+        
+        if (targetFlow && targetFlow.data && targetFlow.data.flows) {
+          // Extract flows (not individual pages) as options
+          const flowOptions = targetFlow.data.flows.map((subFlow) => {
+            return {
+              name: subFlow.name || subFlow.id, // Use flow name
+              displayName: subFlow.name || subFlow.id,
+              type: subFlow.type || "form", // Default to "form" if type not specified
+              order: subFlow.order || 999,
+              flowId: subFlow.id,
+              // Include other flow-level properties
+              roles: subFlow.roles || [],
+              project: subFlow.project,
+              indexRoute: subFlow.indexRoute,
+              // Store the pages array in case needed for reference
+              pages: subFlow.pages || []
+            };
+          });
+          
+          // Sort flows by order if order property exists
+          flowOptions.sort((a, b) => {
+            const orderA = a.order || 999;
+            const orderB = b.order || 999;
+            return orderA - orderB;
+          });
+          
+          return flowOptions;
+        }
       }
 
+      console.warn(`No flow found with id: ${flowId}`);
       return [];
     } catch (err) {
       console.error("Error fetching flow pages:", err);
@@ -51,7 +66,7 @@ export const fetchFlowPages = createAsyncThunk(
 const flowPagesSlice = createSlice({
   name: "flowPages",
   initialState: {
-    pages: [],
+    pages: [], // Note: This will now contain flows, not individual pages
     status: "idle", // idle | loading | succeeded | failed
     error: null,
   },
