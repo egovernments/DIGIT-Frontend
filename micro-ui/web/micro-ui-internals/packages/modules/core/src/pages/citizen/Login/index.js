@@ -49,6 +49,9 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
   const [canSubmitOtp, setCanSubmitOtp] = useState(true);
   const [canSubmitNo, setCanSubmitNo] = useState(true);
 
+  // Check if individual service context path is configured
+  const individualServicePath = window?.globalConfigs?.getConfig("INDIVIDUAL_SERVICE_CONTEXT_PATH");
+
   useEffect(() => {
     let errorTimeout;
     if (error) {
@@ -145,105 +148,147 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
         setError(location.state?.role === "FSM_DSO" ? t("ES_ERROR_DSO_LOGIN") : "User not registered.");
       }
     } else {
-      // REGISTER FLOW: Go directly to name screen (no sendOtp call)
-      setCanSubmitNo(true);
-      history.replace(`${path}/name`, { 
-        from: getFromLocation(location.state, searchParams),
-        data: data 
-      });
+      // REGISTER FLOW
+      if (individualServicePath) {
+        // NEW FLOW: Go directly to name screen
+        setCanSubmitNo(true);
+        history.replace(`${path}/name`, { 
+          from: getFromLocation(location.state, searchParams),
+          data: data 
+        });
+      } else {
+        // OLD FLOW: Send OTP first
+        const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
+        if (!err) {
+          setCanSubmitNo(true);
+          history.replace(`${path}/otp`, { 
+            from: getFromLocation(location.state, searchParams) 
+          });
+          return;
+        }
+        setCanSubmitNo(true);
+      }
     }
   };
 
   const selectName = async (name) => {
-  setCanSubmitName(true);
-  
-  const userData = {
-    ...params,
-    ...name,
-  };
-  
-  setParmas(userData);
-  
-  if (!isUserRegistered) {
-    // REGISTER FLOW: Call the register API using Digit.CustomService
-    const requestData = {
-      IndividualRegister: {
-        tenantId: stateCode,
-        name: userData.name,
-        emailId: userData.userName || "",
-        mobileNumber: userData.mobileNumber || "",
-        requestType: "Register"
-      },
+    setCanSubmitName(true);
+    
+    const userData = {
+      ...params,
+      ...name,
     };
+    
+    setParmas(userData);
+    
+    if (!isUserRegistered && individualServicePath) {
+      // NEW FLOW: Call the custom register API using Digit.CustomService
+      const registerURL = `${individualServicePath}/v1/_register`;
+      
+      const requestData = {
+        IndividualRegister: {
+          tenantId: stateCode,
+          name: userData.name,
+          emailId: userData.userName || "",
+          mobileNumber: userData.mobileNumber || "",
+          requestType: "Register"
+        }
+      };
 
-    try {
-      // Call the register API using Digit.CustomService
-      const registerResponse = await Digit.CustomService.getResponse({
-        url: "/health-individual/v1/_register",
-        body: requestData,
-        useCache: false,
-        method: "POST",
-        userService: false,
-        params: {}
-      });
+      try {
+        const registerResponse = await Digit.CustomService.getResponse({
+          url: registerURL,
+          body: requestData,
+          useCache: false,
+          method: "POST",
+          userService: false,
+          auth: false,
+          params: {}
+        });
 
-      if (!registerResponse) {
-        throw new Error("Registration API failed");
+        if (!registerResponse) {
+          throw new Error("Registration API failed");
+        }
+        
+        setCanSubmitName(false);
+        // After registration, go to OTP screen
+        history.replace(`${path}/otp`, { 
+          from: getFromLocation(location.state, searchParams) 
+        });
+        
+      } catch (err) {
+        console.error("Registration error:", err);
+        setCanSubmitName(false);
+        setError(t("REGISTRATION_FAILED") || "Registration failed. Please try again.");
       }
-      
-      setCanSubmitName(false);
-      // After registration, go to OTP screen
-      history.replace(`${path}/otp`, { 
-        from: getFromLocation(location.state, searchParams) 
-      });
-      
-    } catch (err) {
-      console.error("Registration error:", err);
-      setCanSubmitName(false);
-      setError(t("REGISTRATION_FAILED") || "Registration failed. Please try again.");
-    }
-  } else {
-    // LOGIN FLOW (if user lands on name screen from login)
-    const [res, err] = await sendOtp({ otp: { ...userData, ...TYPE_REGISTER } });
-    if (res) {
-      setCanSubmitName(false);
-      history.replace(`${path}/otp`, { from: getFromLocation(location.state, searchParams) });
     } else {
-      setCanSubmitName(false);
+      // OLD FLOW: Send OTP
+      const data = {
+        ...params,
+        tenantId: stateCode,
+        userType: getUserType(),
+        ...name,
+      };
+      const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
+      if (res) {
+        setCanSubmitName(false);
+        history.replace(`${path}/otp`, { 
+          from: getFromLocation(location.state, searchParams) 
+        });
+      } else {
+        setCanSubmitName(false);
+      }
     }
-  }
-};
+  };
 
   const selectOtp = async () => {
     try {
       setIsOtpValid(true);
       setCanSubmitOtp(false);
-      const { mobileNumber, otp, userName } = params;
+      const { mobileNumber, otp, name, userName } = params;
       
-      // Both LOGIN and REGISTER: Authenticate with OTP
-      const requestData = {
-        username: mobileNumber || userName,
-        password: otp,
-        tenantId: stateCode,
-        userType: getUserType(),
-      };
-      
-      const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
+      if (isUserRegistered || individualServicePath) {
+        // LOGIN FLOW or NEW REGISTER FLOW: Authenticate with OTP
+        const requestData = {
+          username: mobileNumber || userName,
+          password: otp,
+          tenantId: stateCode,
+          userType: getUserType(),
+        };
+        
+        const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.authenticate(requestData);
 
-      if (location.state?.role) {
-        const roleInfo = info.roles.find((userRole) => userRole.code === location.state.role);
-        if (!roleInfo || !roleInfo.code) {
-          setError(t("ES_ERROR_USER_NOT_PERMITTED"));
-          setTimeout(() => history.replace(DEFAULT_REDIRECT_URL), 5000);
-          return;
+        if (location.state?.role) {
+          const roleInfo = info.roles.find((userRole) => userRole.code === location.state.role);
+          if (!roleInfo || !roleInfo.code) {
+            setError(t("ES_ERROR_USER_NOT_PERMITTED"));
+            setTimeout(() => history.replace(DEFAULT_REDIRECT_URL), 5000);
+            return;
+          }
         }
-      }
-      
-      if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
-        info.tenantId = Digit.ULBService.getStateId();
-      }
+        
+        if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
+          info.tenantId = Digit.ULBService.getStateId();
+        }
 
-      setUser({ info, ...tokens });
+        setUser({ info, ...tokens });
+      } else {
+        // OLD REGISTER FLOW: Register user with OTP
+        const requestData = {
+          name,
+          username: mobileNumber || userName,
+          otpReference: otp,
+          tenantId: stateCode,
+        };
+        
+        const { ResponseInfo, UserRequest: info, ...tokens } = await Digit.UserService.registerUser(requestData, stateCode);
+        
+        if (window?.globalConfigs?.getConfig("ENABLE_SINGLEINSTANCE")) {
+          info.tenantId = Digit.ULBService.getStateId();
+        }
+
+        setUser({ info, ...tokens });
+      }
       
     } catch (err) {
       setCanSubmitOtp(true);
@@ -261,12 +306,17 @@ const Login = ({ stateCode, isUserRegistered = true }) => {
       userType: getUserType(),
     };
     
-    if (!isUserRegistered) {
-      // REGISTER FLOW: Cannot resend during registration
-      // The register API should have sent OTP already
+    if (!isUserRegistered && individualServicePath) {
+      // NEW REGISTER FLOW: Cannot resend
       setError(t("PLEASE_COMPLETE_REGISTRATION") || "Please enter the OTP sent during registration.");
+    } else if (!isUserRegistered) {
+      // OLD REGISTER FLOW: Resend OTP
+      const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_REGISTER } });
+      if (err) {
+        setError(t("OTP_RESEND_ERROR") || "Failed to resend OTP");
+      }
     } else {
-      // LOGIN FLOW: Normal resend OTP
+      // LOGIN FLOW: Resend OTP
       const [res, err] = await sendOtp({ otp: { ...data, ...TYPE_LOGIN } });
       if (err) {
         setError(t("OTP_RESEND_ERROR") || "Failed to resend OTP");
