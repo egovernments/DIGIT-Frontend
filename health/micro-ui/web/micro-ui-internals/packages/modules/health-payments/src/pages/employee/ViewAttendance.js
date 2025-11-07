@@ -2,7 +2,18 @@ import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useHistory } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Header, LoaderWithGap, ActionBar } from "@egovernments/digit-ui-react-components";
-import { Loader, Divider, Button, PopUp, Card, Link, ViewCardFieldPair, Toast, LoaderScreen, LoaderComponent } from "@egovernments/digit-ui-components";
+import {
+  Loader,
+  Divider,
+  Button,
+  PopUp,
+  Card,
+  Link,
+  ViewCardFieldPair,
+  Toast,
+  LoaderScreen,
+  LoaderComponent,
+} from "@egovernments/digit-ui-components";
 import AttendanceManagementTable from "../../components/attendanceManagementTable";
 import AlertPopUp from "../../components/alertPopUp";
 import ApproveCommentPopUp from "../../components/approveCommentPopUp";
@@ -53,17 +64,20 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const [showLogs, setShowLogs] = useState(false);
   const [showCommentLogPopup, setShowCommentLogPopup] = useState(false);
 
+  const selectedPeriod = Digit.SessionStorage.get("selectedPeriod");
+
+  const pId = selectedPeriod?.id;
+
   // INFO:: de-enroll attendee
   const [showDeEnrollPopup, setShowDeEnrollPopup] = useState(false);
 
   const project = Digit?.SessionStorage.get("staffProjects");
 
-
   const AttendancereqCri = {
     url: `/${attendanceContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
-      registerNumber: registerNumber
+      registerNumber: registerNumber,
     },
     config: {
       enabled: registerNumber ? true : false,
@@ -89,7 +103,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         setDisabledAction(true);
       }
     }
-  }, [AttendanceData])
+  }, [AttendanceData]);
 
   const reqCri = {
     url: `/${musterRollContextPath}/v1/_estimate`,
@@ -98,8 +112,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
         tenantId: tenantId,
         registerId: AttendanceData?.attendanceRegister[0]?.id,
         startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-        endDate: AttendanceData?.attendanceRegister[0]?.endDate
-      }
+        endDate: AttendanceData?.attendanceRegister[0]?.endDate,
+        billingPeriodId: pId,
+      },
     },
     config: {
       enabled: triggerEstimate,
@@ -118,17 +133,20 @@ const ViewAttendance = ({ editAttendance = false }) => {
     url: `/${musterRollContextPath}/v1/_search`,
     params: {
       tenantId: tenantId,
-      registerId: AttendanceData?.attendanceRegister?.[0]?.id
+      registerId: AttendanceData?.attendanceRegister?.[0]?.id,
+      billingPeriodId: pId,
     },
     config: {
-      enabled: (AttendanceData?.attendanceRegister.length === 1 ? true : false),
+      enabled: AttendanceData?.attendanceRegister.length === 1 ? true : false,
       select: (data) => {
         return data;
       },
-    }
+    },
   };
 
-  const { isLoading: isMusterRollLoading, isrefetching, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(searchReqCri);
+  const { isLoading: isMusterRollLoading, isrefetching, data: MusterRollData, refetch: refetchMusterRoll } = Digit.Hooks.useCustomAPIHook(
+    searchReqCri
+  );
 
   useEffect(() => {
     if (MusterRollData?.count === 0) {
@@ -150,6 +168,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           }
         } else {
           setTriggerCreate(true);
+          // TODO: commenting the muster roll trigger call to create muster roll temporarily
           triggerMusterRollCreate();
         }
       }
@@ -162,7 +181,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
     } else if (estimateMusterRollData) {
       setData(estimateMusterRollData?.musterRolls);
     }
-
   }, [estimateMusterRollData, MusterRollData]);
 
   useEffect(() => {
@@ -173,13 +191,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
         setShowLogs(false);
       }
       // Extract individual IDs
-      const ids = data.flatMap((muster) =>
-        muster.individualEntries.map((entry) => entry.individualId)
-      );
+      const ids = data.flatMap((muster) => muster.individualEntries.map((entry) => entry.individualId));
       setIndividualIds(ids);
     }
   }, [data]);
 
+  //TODO:: commenting the old muster roll create API
   const mutation = Digit.Hooks.useCustomAPIMutationHook({
     url: `/${musterRollContextPath}/v1/_create`,
   });
@@ -197,11 +214,11 @@ const ViewAttendance = ({ editAttendance = false }) => {
       await approveMutation.mutateAsync(
         {
           body: {
-            musterRoll: data?.[0],
+            musterRoll: { ...data?.[0], billingPeriodId: selectedPeriod.id },
             workflow: {
               action: "APPROVE",
               comments: comment,
-            }
+            },
           },
         },
         {
@@ -213,7 +230,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
               description: t(`HCM_AM_ATTENDANCE_SUCCESS_DESCRIPTION`),
               message: t(`HCM_AM_ATTENDANCE_APPROVE_SUCCESS`),
               back: t(`GO_BACK_TO_HOME`),
-              backlink: `/${window.contextPath}/employee`
+              backlink: `/${window.contextPath}/employee`,
             });
           },
           onError: (error) => {
@@ -221,9 +238,9 @@ const ViewAttendance = ({ editAttendance = false }) => {
               state: "error",
               message: t(`HCM_AM_ATTENDANCE_APPROVE_FAILED`),
               back: t(`GO_BACK_TO_HOME`),
-              backlink: `/${window.contextPath}/employee`
+              backlink: `/${window.contextPath}/employee`,
             });
-          }
+          },
         }
       );
     } catch (error) {
@@ -239,14 +256,13 @@ const ViewAttendance = ({ editAttendance = false }) => {
             musterRoll: {
               ...data[0], // Spread the existing data
               individualEntries: data[0].individualEntries.map((entry) => {
-                const updatedAttendance = attendanceSummary.find(
-                  ([id,]) => id === entry.individualId
-                )?.[4]; // Extract the updated actualTotalAttendance
+                const updatedAttendance = attendanceSummary.find(([id]) => id === entry.individualId)?.[4]; // Extract the updated actualTotalAttendance
                 return {
                   ...entry,
                   modifiedTotalAttendance: updatedAttendance || entry.actualTotalAttendance,
                 };
               }),
+              billingPeriodId: selectedPeriod.id,
             },
             workflow: {
               action: "EDIT",
@@ -265,7 +281,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
           onError: (error) => {
             setUpdateDisabled(false);
             setShowToast({ key: "error", label: t(error?.response?.data?.Errors?.[0]?.message), transitionTime: 3000 });
-          }
+          },
         }
       );
     } catch (error) {
@@ -274,21 +290,37 @@ const ViewAttendance = ({ editAttendance = false }) => {
   };
 
   const triggerMusterRollCreate = async () => {
-
     try {
       await mutation.mutateAsync(
         {
+          //TODO:: commenting the old payload
           body: {
             musterRoll: {
+              billingPeriodId: selectedPeriod.id,
               tenantId: tenantId,
               registerId: AttendanceData?.attendanceRegister[0]?.id,
               startDate: AttendanceData?.attendanceRegister[0]?.startDate,
-              endDate: AttendanceData?.attendanceRegister[0]?.endDate
+              endDate: AttendanceData?.attendanceRegister[0]?.endDate,
             },
             workflow: {
               action: "SUBMIT",
-            }
+            },
           },
+
+          // body: {
+          //   tenantId: tenantId,
+          //   registerIds: [AttendanceData?.attendanceRegister[0]?.id],
+          //   billingPeriod: {
+          //     id: selectedPeriod.id,
+          //     periodNumber: selectedPeriod.periodNumber,
+          //     periodStartDate: selectedPeriod.periodStartDate,
+          //     periodEndDate: selectedPeriod.periodEndDate,
+          //     campaignNumber: Digit.SessionStorage.get("selectedProject").referenceID || selectedPeriod.campaignNumber,
+          //   },
+          //   workflow: {
+          //     action: "SUBMIT",
+          //   },
+          // },
         },
         {
           onSuccess: (data) => {
@@ -300,13 +332,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
           },
           onError: (error) => {
             setTriggerEstimate(true);
-          }
+          },
         }
       );
     } catch (error) {
       setTriggerEstimate(true);
     }
-
   };
 
   const allIndividualReqCriteria = {
@@ -318,8 +349,8 @@ const ViewAttendance = ({ editAttendance = false }) => {
     },
     body: {
       Individual: {
-        id: individualIds
-      }
+        id: individualIds,
+      },
     },
     config: {
       enabled: individualIds.length > 0 ? true : false,
@@ -327,7 +358,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
         return data;
       },
     },
-    changeQueryName: "allIndividuals"
+    changeQueryName: "allIndividuals",
   };
 
   const { isLoading: isAllIndividualsLoading, data: AllIndividualsData } = Digit.Hooks.useCustomAPIHook(allIndividualReqCriteria);
@@ -341,15 +372,15 @@ const ViewAttendance = ({ editAttendance = false }) => {
     },
     body: {
       Individual: {
-        id: [AttendanceData?.attendanceRegister[0]?.staff?.find(
-          (staff) => staff?.staffType?.includes("OWNER")
-        )?.userId]
-      }
+        id: [AttendanceData?.attendanceRegister[0]?.staff?.find((staff) => staff?.staffType?.includes("OWNER"))?.userId],
+      },
     },
     config: {
-      enabled: AttendanceData?.attendanceRegister.length === 1 && AttendanceData?.attendanceRegister[0]?.staff?.find(
-        (staff) => staff?.staffType?.includes("OWNER")
-      )?.userId ? true : false,
+      enabled:
+        AttendanceData?.attendanceRegister.length === 1 &&
+        AttendanceData?.attendanceRegister[0]?.staff?.find((staff) => staff?.staffType?.includes("OWNER"))?.userId
+          ? true
+          : false,
       select: (data) => {
         return data;
       },
@@ -361,15 +392,12 @@ const ViewAttendance = ({ editAttendance = false }) => {
   function getUserAttendanceSummary(data, individualsData, t) {
     const attendanceLogData = data[0].individualEntries.map((individualEntry) => {
       const individualId = individualEntry.individualId;
-      const matchingIndividual = individualsData?.Individual?.find(
-        (individual) => individual.id === individualId
-      );
+      const matchingIndividual = individualsData?.Individual?.find((individual) => individual.id === individualId);
 
       if (matchingIndividual) {
         const userName = matchingIndividual.name?.givenName || t("NA");
         const userId = matchingIndividual?.userDetails?.username || t("NA");
-        const userRole =
-          t(matchingIndividual.skills?.[0]?.type) || t("NA");
+        const userRole = t(matchingIndividual.skills?.[0]?.type) || t("NA");
         const noOfDaysWorked = individualEntry?.modifiedTotalAttendance || individualEntry.actualTotalAttendance || 0;
         const id = individualEntry.individualId || 0;
 
@@ -391,13 +419,10 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   // Populate attendanceSummary when AttendanceData changes
   useEffect(() => {
-
     if (data.length > 0 && AllIndividualsData) {
       setAttendanceSummary(getUserAttendanceSummary(data, AllIndividualsData, t));
     }
-
   }, [AllIndividualsData, data]); /// need to update dependency
-
 
   useEffect(() => {
     if (attendanceSummary.length > 0 && initialAttendanceSummary.length === 0) {
@@ -408,7 +433,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
 
   useEffect(() => {
     if (attendanceSummary.length > 0 && initialAttendanceSummary.length > 0) {
-
       // Compare the current attendanceSummary with the initialAttendanceSummary using Lodash
       const hasChanged = !_.isEqual(attendanceSummary, initialAttendanceSummary);
 
@@ -422,7 +446,6 @@ const ViewAttendance = ({ editAttendance = false }) => {
         }
       }
     }
-
   }, [attendanceSummary]);
 
   const closeActionBarPopUp = () => {
@@ -437,7 +460,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
     setShowCommentLogPopup(false);
   };
 
-  // INFO:: To de-enroll , add new attendee 
+  // INFO:: To de-enroll , add new attendee
   const handleDeEnrollClick = () => {
     setShowDeEnrollPopup(true);
   };
@@ -445,7 +468,7 @@ const ViewAttendance = ({ editAttendance = false }) => {
   const onDeEnrollClose = () => {
     setShowDeEnrollPopup(false);
   };
-  // 
+  //
 
   const renderLabelPair = (heading, text) => (
     <div className="label-pair">
@@ -455,32 +478,40 @@ const ViewAttendance = ({ editAttendance = false }) => {
   );
 
   if (updateMutation.isLoading) {
-    return <Loader variant={"OverlayLoader"} />
-
+    return <Loader variant={"OverlayLoader"} />;
   }
 
-  if (loading || isAttendanceLoading || isEstimateMusterRollLoading || isIndividualsLoading || isMusterRollLoading || isAllIndividualsLoading || mutation.isLoading || isrefetching) {
-    return <Loader />
+  if (
+    loading ||
+    isAttendanceLoading ||
+    isEstimateMusterRollLoading ||
+    isIndividualsLoading ||
+    isMusterRollLoading ||
+    isAllIndividualsLoading ||
+    mutation.isLoading ||
+    isrefetching
+  ) {
+    return <Loader />;
   }
 
   return (
     <React.Fragment>
       <div style={{ marginBottom: "2.5rem" }}>
         <Header styles={{ marginBottom: "1rem" }} className="pop-inbox-header">
-          {editAttendance ? t('HCM_AM_EDIT_ATTENDANCE') : t('HCM_AM_VIEW_ATTENDANCE')}
+          {editAttendance ? t("HCM_AM_EDIT_ATTENDANCE") : t("HCM_AM_VIEW_ATTENDANCE")}
         </Header>
         <Card type="primary" className="bottom-gap-card-payment">
-          {renderLabelPair('HCM_AM_ATTENDANCE_ID', t(registerNumber))}
-          {renderLabelPair('HCM_AM_CAMPAIGN_NAME', t(project?.[0]?.name || 'NA'))}
-          {renderLabelPair('HCM_AM_PROJECT_TYPE', t(project?.[0]?.projectType || 'NA'))}
-          {renderLabelPair('HCM_AM_BOUNDARY_CODE', t(boundaryCode || 'NA'))}
-          {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER', individualsData?.Individual?.[0]?.name?.givenName)}
-          {renderLabelPair('HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER', individualsData?.Individual?.[0]?.mobileNumber)}
-          {renderLabelPair('HCM_AM_NO_OF_ATTENDEE', AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
-          {renderLabelPair('HCM_AM_CAMPAIGN_START_DATE', formatTimestampToDate(project?.[0]?.startDate))}
-          {renderLabelPair('HCM_AM_CAMPAIGN_END_DATE', formatTimestampToDate(project?.[0]?.endDate))}
-          {renderLabelPair('HCM_AM_EVENT_DURATION', attendanceDuration || 0)}
-          {renderLabelPair('HCM_AM_STATUS', t(data?.[0]?.musterRollStatus) || t('APPROVAL_PENDING'))}
+          {renderLabelPair("HCM_AM_ATTENDANCE_ID", t(registerNumber))}
+          {renderLabelPair("HCM_AM_CAMPAIGN_NAME", t(project?.[0]?.name || "NA"))}
+          {renderLabelPair("HCM_AM_PROJECT_TYPE", t(project?.[0]?.projectType || "NA"))}
+          {renderLabelPair("HCM_AM_BOUNDARY_CODE", t(boundaryCode || "NA"))}
+          {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER", individualsData?.Individual?.[0]?.name?.givenName)}
+          {renderLabelPair("HCM_AM_ATTENDANCE_OFFICER_CONTACT_NUMBER", individualsData?.Individual?.[0]?.mobileNumber)}
+          {renderLabelPair("HCM_AM_NO_OF_ATTENDEE", AttendanceData?.attendanceRegister[0]?.attendees?.length || 0)}
+          {renderLabelPair("HCM_AM_CAMPAIGN_START_DATE", formatTimestampToDate(project?.[0]?.startDate))}
+          {renderLabelPair("HCM_AM_CAMPAIGN_END_DATE", formatTimestampToDate(project?.[0]?.endDate))}
+          {renderLabelPair("HCM_AM_EVENT_DURATION", attendanceDuration || 0)}
+          {renderLabelPair("HCM_AM_STATUS", t(data?.[0]?.musterRollStatus) || t("APPROVAL_PENDING"))}
         </Card>
         <Card className="bottom-gap-card-payment">
           {/*  INFO:: commenting it as it is handled in edit register screen
@@ -500,33 +531,36 @@ const ViewAttendance = ({ editAttendance = false }) => {
               variation="secondary"
             />
             </div>} */}
-          <AttendanceManagementTable data={attendanceSummary} setAttendanceSummary={setAttendanceSummary} duration={attendanceDuration} editAttendance={editAttendance} />
+          <AttendanceManagementTable
+            data={attendanceSummary}
+            setAttendanceSummary={setAttendanceSummary}
+            duration={attendanceDuration}
+            editAttendance={editAttendance}
+          />
         </Card>
-        {showLogs && <Card >
-          <div className="card-heading">
-            <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
-            <Button
-              className="custom-class"
-              icon="Visibility"
-              iconFill=""
-              label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
-              onClick={handleCommentLogClick}
-              options={[]}
-              optionsKey=""
-              size=""
-              style={{}}
-              title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
-              variation="secondary"
-            />
-          </div>
-        </Card>}
+        {showLogs && (
+          <Card>
+            <div className="card-heading">
+              <h2 className="card-heading-title">{t(`HCM_AM_COMMENT_LOG_HEADING`)}</h2>
+              <Button
+                className="custom-class"
+                icon="Visibility"
+                iconFill=""
+                label={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+                onClick={handleCommentLogClick}
+                options={[]}
+                optionsKey=""
+                size=""
+                style={{}}
+                title={t(`HCM_AM_COMMENT_LOG_VIEW_LINK_LABEL`)}
+                variation="secondary"
+              />
+            </div>
+          </Card>
+        )}
 
         {showCommentLogPopup && (
-          <CommentPopUp
-            onClose={onCommentLogClose}
-            businessId={data?.[0]?.musterRollNumber}
-            heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`}
-          />
+          <CommentPopUp onClose={onCommentLogClose} businessId={data?.[0]?.musterRollNumber} heading={`${t("HCM_AM_STATUS_LOG_FOR_LABEL")}`} />
         )}
 
         {/* To DeEnroll Attendee*/}
@@ -537,128 +571,127 @@ const ViewAttendance = ({ editAttendance = false }) => {
             heading={`${t("Edit Attendance Register")}`}
           />
         )} */}
-
       </div>
 
       {/* Alert Pop-Up for edit */}
-      {openEditAlertPopUp && <AlertPopUp
-        onClose={closeActionBarPopUp}
-        alertHeading={t(`HCM_AM_ALERT_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_PROCEED`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
-        onPrimaryAction={() => {
-          history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
-        }}
-      />}
+      {openEditAlertPopUp && (
+        <AlertPopUp
+          onClose={closeActionBarPopUp}
+          alertHeading={t(`HCM_AM_ALERT_HEADING`)}
+          alertMessage={t(`HCM_AM_ALERT_EDIT_DESCRIPTION`)}
+          submitLabel={t(`HCM_AM_PROCEED`)}
+          cancelLabel={t(`HCM_AM_CANCEL`)}
+          onPrimaryAction={() => {
+            history.push(`/${window.contextPath}/employee/payments/edit-attendance?registerNumber=${registerNumber}&boundaryCode=${boundaryCode}`);
+          }}
+        />
+      )}
 
       {/* Alert Pop-Up for approve */}
-      {openApproveAlertPopUp && <AlertPopUp
-        onClose={() => {
-          setOpenApproveAlertPopUp(false);
-        }}
-        alertHeading={t(`HCM_AM_ALERT_APPROVE_HEADING`)}
-        alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
-        submitLabel={t(`HCM_AM_APPROVE`)}
-        cancelLabel={t(`HCM_AM_CANCEL`)}
-        onPrimaryAction={() => {
-          triggerMusterRollApprove();
-        }}
-      />}
+      {openApproveAlertPopUp && (
+        <AlertPopUp
+          onClose={() => {
+            setOpenApproveAlertPopUp(false);
+          }}
+          alertHeading={t(`HCM_AM_ALERT_APPROVE_HEADING`)}
+          alertMessage={t(`HCM_AM_ALERT_APPROVE_DESCRIPTION`)}
+          submitLabel={t(`HCM_AM_APPROVE`)}
+          cancelLabel={t(`HCM_AM_CANCEL`)}
+          onPrimaryAction={() => {
+            triggerMusterRollApprove();
+          }}
+        />
+      )}
 
       {/* approve comment pop-up*/}
-      {openApproveCommentPopUp && <ApproveCommentPopUp
-        onClose={() => {
-          setOpenApproveCommentPopUp(false);
-        }}
-        onSubmit={(comment) => {
-          setComment(comment);
-          setOpenApproveCommentPopUp(false);
-          setOpenApproveAlertPopUp(true);
-        }}
-      />}
+      {openApproveCommentPopUp && (
+        <ApproveCommentPopUp
+          onClose={() => {
+            setOpenApproveCommentPopUp(false);
+          }}
+          onSubmit={(comment) => {
+            setComment(comment);
+            setOpenApproveCommentPopUp(false);
+            setOpenApproveAlertPopUp(true);
+          }}
+        />
+      )}
 
       {/* action bar for bill generation*/}
-      {<ActionBar className="mc_back"
-
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          alignItems: "center",
-          width: "100%",
-          gap: "1rem",
-        }}
-
-      >
-
-        {disabledAction ? (
-          <Button
-            label={t(`HCM_AM_GO_BACK`)}
-            title={t(`HCM_AM_GO_BACK`)}
-            onClick={() => {
-              fromCampaignSupervisor
-                ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
-                  fromViewScreen: true,
-                })
-                : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
-            }}
-            type="button"
-            style={{ minWidth: "14rem" }}
-            variation="primary"
-          />
-        ) : editAttendance ? (
-          <Button
-            label={t(`HCM_AM_SUBMIT_LABEL`)}
-            title={t(`HCM_AM_SUBMIT_LABEL`)}
-            onClick={() => {
-              setUpdateDisabled(true);
-              triggerMusterRollUpdate();
-            }}
-            style={{ minWidth: "14rem" }}
-            type="button"
-            variation="primary"
-            isDisabled={
-              updateMutation.isLoading || updateDisabled || !isSubmitEnabled
-            }
-          />
-        ) : (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              alignItems: "center",
-              width: "15%",
-
-            }}
-          >
+      {
+        <ActionBar
+          className="mc_back"
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            alignItems: "center",
+            width: "100%",
+            gap: "1rem",
+          }}
+        >
+          {disabledAction ? (
             <Button
-              className="custom-class"
-              iconFill=""
-              label={t(`HCM_AM_ACTIONS`)}
-              menuStyles={{ bottom: "40px" }}
-              onOptionSelect={(value) => {
-                if (value.code === "EDIT_ATTENDANCE") setOpenEditAlertPopUp(true);
-                if (value.code === "APPROVE") setOpenApproveCommentPopUp(true);
+              label={t(`HCM_AM_GO_BACK`)}
+              title={t(`HCM_AM_GO_BACK`)}
+              onClick={() => {
+                fromCampaignSupervisor
+                  ? history.push(`/${window.contextPath}/employee/payments/generate-bill`, {
+                      fromViewScreen: true,
+                    })
+                  : history.push(`/${window.contextPath}/employee/payments/registers-inbox`);
               }}
-              options={[
-                {
-                  code: "EDIT_ATTENDANCE",
-                  name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`),
-                },
-                {
-                  code: "APPROVE",
-                  name: t(`HCM_AM_ACTIONS_APPROVE`),
-                },
-              ]}
-              optionsKey="name"
+              type="button"
               style={{ minWidth: "14rem" }}
-              type="actionButton"
+              variation="primary"
             />
-          </div>
-        )}
-
-      </ActionBar>
-
+          ) : editAttendance ? (
+            <Button
+              label={t(`HCM_AM_SUBMIT_LABEL`)}
+              title={t(`HCM_AM_SUBMIT_LABEL`)}
+              onClick={() => {
+                setUpdateDisabled(true);
+                triggerMusterRollUpdate();
+              }}
+              style={{ minWidth: "14rem" }}
+              type="button"
+              variation="primary"
+              isDisabled={updateMutation.isLoading || updateDisabled || !isSubmitEnabled}
+            />
+          ) : (
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "flex-end",
+                alignItems: "center",
+                width: "15%",
+              }}
+            >
+              <Button
+                className="custom-class"
+                iconFill=""
+                label={t(`HCM_AM_ACTIONS`)}
+                menuStyles={{ bottom: "40px" }}
+                onOptionSelect={(value) => {
+                  if (value.code === "EDIT_ATTENDANCE") setOpenEditAlertPopUp(true);
+                  if (value.code === "APPROVE") setOpenApproveCommentPopUp(true);
+                }}
+                options={[
+                  {
+                    code: "EDIT_ATTENDANCE",
+                    name: t(`HCM_AM_ACTIONS_EDIT_ATTENDANCE`),
+                  },
+                  {
+                    code: "APPROVE",
+                    name: t(`HCM_AM_ACTIONS_APPROVE`),
+                  },
+                ]}
+                optionsKey="name"
+                style={{ minWidth: "14rem" }}
+                type="actionButton"
+              />
+            </div>
+          )}
+        </ActionBar>
       }
 
       {showToast && (
