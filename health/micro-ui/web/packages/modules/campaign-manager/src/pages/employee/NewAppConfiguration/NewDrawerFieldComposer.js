@@ -11,6 +11,21 @@ import { DustbinIcon } from "../../../components/icons/DustbinIcon";
 import NewDependentFieldWrapper from "./NewDependentFieldWrapper";
 import { getLabelFieldPairConfig } from "./redux/labelFieldPairSlice";
 
+// Utility functions for date conversion
+const convertEpochToDateString = (epoch) => {
+  if (!epoch) return "";
+  const date = new Date(epoch);
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const convertDateStringToEpoch = (dateString) => {
+  if (!dateString) return null;
+  return new Date(dateString).getTime();
+};
+
 const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, fieldType, isGroupChild = false }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
@@ -62,7 +77,8 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     if (panelItem.fieldType === "text") {
       setLocalValue(localizedFieldValue || "");
     } else if (panelItem.fieldType === "number") {
-      setLocalValue(getFieldValue() || 0);
+      const value = getFieldValue();
+      setLocalValue(value !== undefined && value !== null && value !== "" ? value : "");
     }
   }, [selectedField, panelItem.bindTo, panelItem.fieldType]);
 
@@ -85,9 +101,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
     const toggleValue = Boolean(getFieldValue());
 
     return panelItem.conditionalField.filter((cField) => {
-      // If no condition specified, always show the field
+      // If no condition specified, show only when toggle is true
       if (cField.condition === undefined) {
-        return true;
+        return toggleValue;
       }
       // Show field only if its condition matches the current toggle value
       return cField.condition === toggleValue;
@@ -99,9 +115,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
     // Update the field with the code (or value if no localization)
     if (bindTo.includes(".")) {
-      // Handle nested properties
+      // Handle nested properties with deep copy to avoid frozen object issues
       const keys = bindTo.split(".");
-      const newField = { ...selectedField };
+      const newField = JSON.parse(JSON.stringify(selectedField));
       let current = newField;
       for (let i = 0; i < keys.length - 1; i++) {
         if (!current[keys[i]]) {
@@ -167,9 +183,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Update the field with the code (or value if no localization)
         if (bindTo.includes(".")) {
-          // Handle nested properties
+          // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = { ...selectedField };
+          const newField = JSON.parse(JSON.stringify(selectedField));
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -200,9 +216,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       // Debounce the Redux dispatch
       debounceTimerRef.current = setTimeout(() => {
         if (bindTo.includes(".")) {
-          // Handle nested properties
+          // Handle nested properties with deep copy to avoid frozen object issues
           const keys = bindTo.split(".");
-          const newField = { ...selectedField };
+          const newField = JSON.parse(JSON.stringify(selectedField));
           let current = newField;
           for (let i = 0; i < keys.length - 1; i++) {
             if (!current[keys[i]]) {
@@ -255,16 +271,15 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
               isCheckedInitially={localToggle}
               shapeOnOff
             />
-            {/* Render Conditional Fields */}
-            {localToggle &&
-              getConditionalFields().map((cField, index) => (
-                <ConditionalField
-                  key={`${cField.bindTo}-${index}`}
-                  cField={cField}
-                  selectedField={selectedField}
-                  onFieldChange={onFieldChange}
-                />
-              ))}
+            {/* Render Conditional Fields based on condition property */}
+            {getConditionalFields().map((cField, index) => (
+              <ConditionalField
+                key={`${cField.bindTo}-${index}`}
+                cField={cField}
+                selectedField={selectedField}
+                onFieldChange={onFieldChange}
+              />
+            ))}
           </>
         );
       }
@@ -292,11 +307,35 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
             label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
             value={localValue}
             onChange={(event) => {
-              const value = parseInt(event.target.value) || 0;
-              setLocalValue(value);
-              handleNumberChange(value);
+              const inputValue = event.target.value;
+              // Allow empty string to clear the field
+              if (inputValue === "" || inputValue === null || inputValue === undefined) {
+                setLocalValue("");
+                handleNumberChange(null);
+              } else {
+                const value = parseInt(inputValue);
+                // Only set if it's a valid number
+                if (!isNaN(value)) {
+                  setLocalValue(value);
+                  handleNumberChange(value);
+                }
+              }
             }}
             onBlur={handleBlur}
+            placeholder={t(panelItem.innerLabel) || ""}
+            populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
+          />
+        );
+
+      case "date":
+        return (
+          <FieldV1
+            type="date"
+            label={t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem.label}`))}
+            value={getFieldValue() ? convertEpochToDateString(getFieldValue()) : ""}
+            onChange={(event) => {
+              handleFieldChange(convertDateStringToEpoch(event.target.value));
+            }}
             placeholder={t(panelItem.innerLabel) || ""}
             populators={{ fieldPairClassName: "drawer-toggle-conditional-field" }}
           />
@@ -310,15 +349,18 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
           }
 
           try {
-            // Create a safe evaluation context with only the selectedField data
-            const evalContext = { ...selectedField };
-
-            // Replace property paths in expression with actual values
             const expression = panelItem.validationExpression;
-
-            // Use Function constructor for safe evaluation (safer than eval)
-            const func = new Function(...Object.keys(evalContext), `return ${expression}`);
-            return func(...Object.values(evalContext));
+            // Create a plain object copy to avoid "object is not extensible" errors
+            // This allows expressions to reference properties directly (e.g., "range.max > range.min")
+            const plainFieldCopy = JSON.parse(JSON.stringify(selectedField));
+            // Get all property names and values from the plain copy
+            // Replace dots in property names with underscores to make them valid JS parameter names
+            const paramNames = Object.keys(plainFieldCopy).map((key) => key.replace(/\./g, "_"));
+            const paramValues = Object.values(plainFieldCopy);
+            // Create function with all property names as parameters
+            const func = new Function(...paramNames, `return ${expression}`);
+            const result = func(...paramValues);
+            return result;
           } catch (error) {
             console.error("Validation expression error:", error);
             return true; // Return true on error to avoid blocking
@@ -326,18 +368,9 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         };
 
         const isValid = evaluateValidation();
-
         // Render group with children
         return (
-          <div
-            style={{
-              border: `1px solid ${isValid ? "#e0e0e0" : "#d32f2f"}`,
-              borderRadius: "4px",
-              padding: "12px",
-              marginBottom: "8px",
-              backgroundColor: isValid ? "#f9f9f9" : "#fff4f4",
-            }}
-          >
+          <>
             <div
               style={{
                 fontWeight: "600",
@@ -376,7 +409,7 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
                 {t(panelItem.validationMessage)}
               </div>
             )}
-          </div>
+          </>
         );
       }
 
@@ -386,17 +419,10 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
 
         // Get field type options from Redux - using fixed key 'fieldTypeMappingConfig'
         const fieldTypeOptions = fieldTypeMaster?.fieldTypeMappingConfig || [];
-        console.log("Field Type Options:", fieldTypeOptions);
-
         // Find current selected field type based on type and format
         const currentSelectedFieldType = fieldTypeOptions.find((item) => {
           const typeMatches = item?.metadata?.type === selectedField?.type;
           const formatMatches = item?.metadata?.format === selectedField?.format;
-
-          console.log("Matching field type:", currentSelectedFieldType);
-
-          console.log("Selected Field Type Match Check:", selectedField);
-
           // Handle different matching scenarios:
           // 1. If field has both type and format, match both
           if (selectedField?.format) {
@@ -498,11 +524,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //     }
       //     return null;
       //   }).filter(Boolean);
-
-      //   console.log("Nested Options:", nestedOptions);
-      //   console.log("Selected Data:", selectedData);
-      //   console.log("Selected for Dropdown:", selected);
-
       //   return (
       //     <>
       //       <div
@@ -531,8 +552,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //           selected={selected}
       //           onSelect={(selectedArray) => { }}
       //           onClose={(selectedArray) => {
-      //             console.log("OnClose Selected Array:", selectedArray);
-
       //             // selectedArray is an array of [category, option] pairs
       //             const mappedData = selectedArray
       //               ?.map((arr) => {
@@ -544,9 +563,6 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
       //                 };
       //               })
       //               ?.filter(Boolean) || [];
-
-      //             console.log("Mapped Data:", mappedData);
-
       //             // Update selectedField with the new data - call onFieldChange directly
       //             onFieldChange({
       //               ...selectedField,
@@ -610,17 +626,86 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
   return <div className="drawer-container-tooltip">{renderMainField()}</div>;
 });
 
+// Separate component for option items to avoid hooks violations
+const OptionItem = React.memo(({ item, cField, selectedField, onFieldChange, onDelete }) => {
+  const { t } = useTranslation();
+  const dispatch = useDispatch();
+  const { currentLocale } = useSelector((state) => state.localization);
+
+  // Get translated value for display
+  const translatedOptionValue = useCustomT(item.name);
+
+  const handleChange = (e) => {
+    const newValue = e.target.value;
+
+    // Handle localization for the option name
+    let localizationCode = item.name;
+
+    if (localizationCode && typeof localizationCode === "string") {
+      // Update existing localization entry
+      dispatch(
+        updateLocalizationEntry({
+          code: localizationCode,
+          locale: currentLocale || "en_IN",
+          message: newValue,
+        })
+      );
+    } else if (newValue && newValue.trim() !== "") {
+      // Create new localization code
+      const timestamp = Date.now();
+      localizationCode = `OPTION_${item.code}_${timestamp}`;
+
+      dispatch(
+        updateLocalizationEntry({
+          code: localizationCode,
+          locale: currentLocale || "en_IN",
+          message: newValue,
+        })
+      );
+    }
+
+    // Update the option with the localization code
+    const updated = (selectedField[cField.bindTo] || []).map((i) => (i.code === item.code ? { ...i, name: localizationCode } : i));
+    onFieldChange({ ...selectedField, [cField.bindTo]: updated });
+  };
+
+  return (
+    <div style={{ display: "flex", gap: "1rem" }}>
+      <TextInput type="text" value={translatedOptionValue || ""} placeholder={t("OPTION_PLACEHOLDER")} onChange={handleChange} />
+      <div
+        onClick={onDelete}
+        style={{
+          cursor: "pointer",
+          fontWeight: "600",
+          marginLeft: "1rem",
+          fontSize: "1rem",
+          color: "#c84c0e",
+          display: "flex",
+          gap: "0.5rem",
+          alignItems: "center",
+          marginTop: "1rem",
+        }}
+      >
+        <DustbinIcon />
+      </div>
+    </div>
+  );
+});
+
 // Separate component for conditional fields to avoid hooks violations
 const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) => {
   const { t } = useTranslation();
   const dispatch = useDispatch();
   const { currentLocale } = useSelector((state) => state.localization);
 
+  // Check if this field should skip localization
+  const shouldSkipLocalization = cField.bindTo === "prefixText" || cField.bindTo === "suffixText";
+
   // Get the raw value (localization code) from selectedField
   const fieldValue = selectedField[cField.bindTo] || "";
 
-  // Get the translated value using useCustomT
-  const translatedValue = useCustomT(fieldValue);
+  // Get the translated value using useCustomT (skip if prefixText/suffixText)
+  const translatedValue = shouldSkipLocalization ? fieldValue : useCustomT(fieldValue);
 
   const [conditionalLocalValue, setConditionalLocalValue] = useState(translatedValue || "");
   const conditionalDebounceRef = useRef(null);
@@ -638,32 +723,37 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
       conditionalDebounceRef.current = setTimeout(() => {
         let finalValueToSave;
 
-        // Handle localization
-        if (fieldValue && typeof fieldValue === "string") {
-          // If a code already exists (and it's a string, not a boolean), update the localization entry
-          dispatch(
-            updateLocalizationEntry({
-              code: fieldValue,
-              locale: currentLocale || "en_IN",
-              message: value,
-            })
-          );
-          finalValueToSave = fieldValue; // Save the code instead of the value
-        } else if (value && typeof value === "string" && value.trim() !== "") {
-          // Create a unique code if no code is provided
-          const timestamp = Date.now();
-          const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
-          const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
+        // Skip localization for prefixText and suffixText
+        if (shouldSkipLocalization) {
+          finalValueToSave = value; // Save the raw value directly
+        } else {
+          // Handle localization
+          if (fieldValue && typeof fieldValue === "string") {
+            // If a code already exists (and it's a string, not a boolean), update the localization entry
+            dispatch(
+              updateLocalizationEntry({
+                code: fieldValue,
+                locale: currentLocale || "en_IN",
+                message: value,
+              })
+            );
+            finalValueToSave = fieldValue; // Save the code instead of the value
+          } else if (value && typeof value === "string" && value.trim() !== "") {
+            // Create a unique code if no code is provided
+            const timestamp = Date.now();
+            const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
+            const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
 
-          // Update localization entry with the new code
-          dispatch(
-            updateLocalizationEntry({
-              code: uniqueCode,
-              locale: currentLocale || "en_IN",
-              message: value,
-            })
-          );
-          finalValueToSave = uniqueCode; // Save the generated code
+            // Update localization entry with the new code
+            dispatch(
+              updateLocalizationEntry({
+                code: uniqueCode,
+                locale: currentLocale || "en_IN",
+                message: value,
+              })
+            );
+            finalValueToSave = uniqueCode; // Save the generated code
+          }
         }
 
         const newField = { ...selectedField };
@@ -671,7 +761,7 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
         onFieldChange(newField);
       }, 800);
     },
-    [selectedField, cField.bindTo, onFieldChange, fieldValue, dispatch, currentLocale]
+    [selectedField, cField.bindTo, onFieldChange, fieldValue, dispatch, currentLocale, shouldSkipLocalization]
   );
 
   const handleConditionalBlur = useCallback(() => {
@@ -683,34 +773,39 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
     // Immediately dispatch the current value with localization handling
     let finalValueToSave;
 
-    if (fieldValue && typeof fieldValue === "string") {
-      dispatch(
-        updateLocalizationEntry({
-          code: fieldValue,
-          locale: currentLocale || "en_IN",
-          message: conditionalLocalValue,
-        })
-      );
-      finalValueToSave = fieldValue;
-    } else if (conditionalLocalValue && typeof conditionalLocalValue === "string" && conditionalLocalValue.trim() !== "") {
-      const timestamp = Date.now();
-      const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
-      const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
+    // Skip localization for prefixText and suffixText
+    if (shouldSkipLocalization) {
+      finalValueToSave = conditionalLocalValue; // Save the raw value directly
+    } else {
+      if (fieldValue && typeof fieldValue === "string") {
+        dispatch(
+          updateLocalizationEntry({
+            code: fieldValue,
+            locale: currentLocale || "en_IN",
+            message: conditionalLocalValue,
+          })
+        );
+        finalValueToSave = fieldValue;
+      } else if (conditionalLocalValue && typeof conditionalLocalValue === "string" && conditionalLocalValue.trim() !== "") {
+        const timestamp = Date.now();
+        const fieldName = cField.bindTo.replace(/\./g, "_").toUpperCase();
+        const uniqueCode = `FIELD_${fieldName}_${timestamp}`;
 
-      dispatch(
-        updateLocalizationEntry({
-          code: uniqueCode,
-          locale: currentLocale || "en_IN",
-          message: conditionalLocalValue,
-        })
-      );
-      finalValueToSave = uniqueCode;
+        dispatch(
+          updateLocalizationEntry({
+            code: uniqueCode,
+            locale: currentLocale || "en_IN",
+            message: conditionalLocalValue,
+          })
+        );
+        finalValueToSave = uniqueCode;
+      }
     }
 
     const newField = { ...selectedField };
     newField[cField.bindTo] = finalValueToSave;
     onFieldChange(newField);
-  }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange, fieldValue, dispatch, currentLocale]);
+  }, [selectedField, cField.bindTo, conditionalLocalValue, onFieldChange, fieldValue, dispatch, currentLocale, shouldSkipLocalization]);
 
   switch (cField.type) {
     case "text":
@@ -743,35 +838,17 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
           }}
         >
           {(selectedField[cField.bindTo] || []).map((item, index) => (
-            <div key={item.code || index} style={{ display: "flex", gap: "1rem", alignItems: "center" }}>
-              <TextInput
-                type="text"
-                value={item.name || ""}
-                placeholder={t("OPTION_PLACEHOLDER")}
-                onChange={(e) => {
-                  const updated = (selectedField[cField.bindTo] || []).map((i) =>
-                    i.code === item.code ? { ...i, name: e.target.value } : i
-                  );
-                  onFieldChange({ ...selectedField, [cField.bindTo]: updated });
-                }}
-              />
-              <div
-                onClick={() => {
-                  const filtered = (selectedField[cField.bindTo] || []).filter((i) => i.code !== item.code);
-                  onFieldChange({ ...selectedField, [cField.bindTo]: filtered });
-                }}
-                style={{
-                  cursor: "pointer",
-                  color: "#c84c0e",
-                  fontWeight: 600,
-                  display: "flex",
-                  alignItems: "center",
-                  gap: "0.5rem",
-                }}
-              >
-                <DustbinIcon />
-              </div>
-            </div>
+            <OptionItem
+              key={item.code || index}
+              item={item}
+              cField={cField}
+              selectedField={selectedField}
+              onFieldChange={onFieldChange}
+              onDelete={() => {
+                const filtered = (selectedField[cField.bindTo] || []).filter((i) => i.code !== item.code);
+                onFieldChange({ ...selectedField, [cField.bindTo]: filtered });
+              }}
+            />
           ))}
 
           <Button
@@ -780,6 +857,9 @@ const ConditionalField = React.memo(({ cField, selectedField, onFieldChange }) =
             size="small"
             variation="tertiary"
             label={t("ADD_OPTIONS")}
+            className={`app-config-add-option-button`}
+            style={{ color: "#c84c0e", height: "1.5rem", width: "fit-content" }}
+            textStyles={{ color: "#c84c0e", fontSize: "0.875rem" }}
             onClick={() => {
               const newOption = { code: crypto.randomUUID(), name: "" };
               const updated = selectedField[cField.bindTo] ? [...selectedField[cField.bindTo], newOption] : [newOption];
