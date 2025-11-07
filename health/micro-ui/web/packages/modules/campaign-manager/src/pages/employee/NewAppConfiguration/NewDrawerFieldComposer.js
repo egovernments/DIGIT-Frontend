@@ -488,142 +488,222 @@ const RenderField = React.memo(({ panelItem, selectedField, onFieldChange, field
         );
       }
       //TODO: Implement labelPairList field renderer
-      // case "labelPairList": {
-      //   const switchRef = useRef(null);
-      //   const [showTooltip, setShowTooltip] = useState(false);
+      case "labelPairList": {
+        const switchRef = useRef(null);
 
-      //   // Fetch labelPairConfig from Redux
-      //   const labelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
+        // Fetch labelPairConfig from Redux
+        const labelPairConfig = useSelector((state) => state?.labelFieldPair?.config || []);
 
-      //   // Get currently selected data from selectedField.data
-      //   const selectedData = selectedField?.data || [];
+        // Get currently selected data from selectedField.data
+        const selectedData = selectedField?.data || [];
 
-      //   // Create nested options structure for MultiSelectDropdown
-      //   const nestedOptions = labelPairConfig.map((category) => ({
-      //     code: category.entity,
-      //     name: category.entity,
-      //     options: (category.labelFields || []).map((field) => ({
-      //       ...field,
-      //       code: `${category.entity}.${field.fieldKey}`,
-      //       name: field.name,
-      //       fieldKey: field.fieldKey,
-      //       jsonPath: field.jsonPath,
-      //     })),
-      //   }));
+        // Create nested options structure for MultiSelectDropdown
+        const nestedOptions = labelPairConfig.map((category) => ({
+          code: category.entity,
+          name: category.entity,
+          options: (category.labelFields || []).map((field) => ({
+            ...field,
+            code: `${category.entity}.${field.name}`,
+            name: field.name,
+            fieldKey: field.fieldKey,
+            jsonPath: field.jsonPath,
+          })),
+        }));
 
-      //   // Convert selectedField.data to the format expected by MultiSelectDropdown
-      //   // Format: [[category, option], [category, option], ...]
-      //   const selected = selectedData.map((item) => {
-      //     // Find which entity this belongs to
-      //     for (const category of nestedOptions) {
-      //       const option = category.options.find((opt) => opt.name === item.key);
-      //       if (option) {
-      //         // Return [category, option] pair
-      //         return [category, option];
-      //       }
-      //     }
-      //     return null;
-      //   }).filter(Boolean);
-      //   return (
-      //     <>
-      //       <div
-      //         ref={switchRef}
-      //         className="drawer-container-tooltip"
-      //         onMouseEnter={() => setShowTooltip(true)}
-      //         onMouseLeave={() => setShowTooltip(false)}
-      //       >
-      //         <div style={{ display: "flex" }}>
-      //           <label>
-      //             {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
-      //           </label>
-      //           <span className="mandatory-span">*</span>
-      //         </div>
+        // Convert selectedField.data [{key, value}] to option objects for MultiSelectDropdown
+        const selectedOptions = selectedData
+          .map((item) => {
+            if (!item || !item.key) return null;
 
-      //         <MultiSelectDropdown
-      //           name={panelItem?.label}
-      //           options={nestedOptions}
-      //           optionsKey="name"
-      //           chipsKey="code"
-      //           type="multiselectdropdown"
-      //           variant="nestedmultiselect"
-      //           selectAllLabel={t("SELECT_ALL")}
-      //           clearLabel={t("CLEAR_ALL")}
-      //           config={{ isDropdownWithChip: true }}
-      //           selected={selected}
-      //           onSelect={(selectedArray) => { }}
-      //           onClose={(selectedArray) => {
-      //             // selectedArray is an array of [category, option] pairs
-      //             const mappedData = selectedArray
-      //               ?.map((arr) => {
-      //                 const option = arr?.[1]; // Get the option from [category, option]
-      //                 if (!option) return null;
-      //                 return {
-      //                   key: option.name,
-      //                   value: option.jsonPath,
-      //                 };
-      //               })
-      //               ?.filter(Boolean) || [];
-      //             // Update selectedField with the new data - call onFieldChange directly
-      //             onFieldChange({
-      //               ...selectedField,
-      //               data: mappedData,
-      //             });
-      //           }}
-      //           disabled={false}
-      //           t={t}
-      //         />
+            // Find the matching option from nestedOptions
+            for (const category of nestedOptions) {
+              const option = category.options.find((opt) => opt.name === item.key);
+              if (option) {
+                return option; // Return the actual option object
+              }
+            }
+            return null;
+          })
+          .filter(Boolean);
 
-      //         {/* Display selected fields with localization inputs */}
-      //         {Array.isArray(selectedData) && selectedData.length > 0 &&
-      //           selectedData.map((item, index) => {
-      //             // Get the localized value for the key
-      //             const localizedKey = useCustomT(item.key) || item.key;
+        return (
+          <>
+            <div ref={switchRef} className="drawer-container-tooltip">
+              <div style={{ display: "flex" }}>
+                <label>
+                  {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+                </label>
+                <span className="mandatory-span">*</span>
+              </div>
 
-      //             // Find entity name for display
-      //             let entityName = "";
-      //             for (const entity of labelPairConfig) {
-      //               const field = entity.labelFields.find((f) => f.name === item.key);
-      //               if (field) {
-      //                 entityName = entity.entity;
-      //                 break;
-      //               }
-      //             }
+              <MultiSelectDropdown
+                name={panelItem?.label}
+                options={nestedOptions}
+                optionsKey="name"
+                chipsKey="code"
+                type="multiselectdropdown"
+                variant="nestedmultiselect"
+                selectAllLabel={t("SELECT_ALL")}
+                clearLabel={t("CLEAR_ALL")}
+                config={{ isDropdownWithChip: true }}
+                selected={selectedOptions}  // Pass actual option objects directly
+                onSelect={(selectedArray) => {
+                }}
+                onClose={(selectedArray) => {
 
-      //             return (
-      //               <div key={`${item.key}-${index}`} style={{ marginTop: "16px" }}>
-      //                 <FieldV1
-      //                   label={`${t(entityName || 'ENTITY')} - ${item.key}`}
-      //                   value={localizedKey}
-      //                   type="text"
-      //                   placeholder={t("ADD_LABEL_LOCALIZATION")}
-      //                   onChange={(e) => {
-      //                     const val = e.target.value;
-      //                     // Update localization for the key
-      //                     dispatch(
-      //                       updateLocalizationEntry({
-      //                         code: item.key,
-      //                         locale: currentLocale || "en_IN",
-      //                         message: val,
-      //                       })
-      //                     );
-      //                   }}
-      //                   populators={{
-      //                     fieldPairClassName: "drawer-toggle-conditional-field",
-      //                   }}
-      //                 />
-      //               </div>
-      //             );
-      //           })}
-      //       </div>
-      //     </>
-      //   );
-      // }
+                  // Extract options from the array pairs: [null, [category, option]] -> option
+                  const extractedOptions = selectedArray?.map((arr) => arr?.[1]) || [];
+
+                  // Transform to {key, value} format for storage
+                  const mappedData = extractedOptions
+                    .map((item) => {
+                      // Handle nested format [category, option]
+                      let option;
+                      if (Array.isArray(item) && item.length >= 2) {
+                        option = item[1]; // Extract option from [category, option]
+                      } else if (item?.name && item?.jsonPath) {
+                        option = item; // Already an option object
+                      } else {
+                        console.warn("Invalid item:", item);
+                        return null;
+                      }
+
+                      if (!option?.name || !option?.jsonPath) {
+                        console.warn("Invalid option:", option);
+                        return null;
+                      }
+
+                      return {
+                        key: option.name,
+                        value: option.jsonPath,
+                      };
+                    })
+                    .filter(Boolean);
+
+                  // Only update if data actually changed
+                  const currentStr = JSON.stringify(selectedData);
+                  const newStr = JSON.stringify(mappedData);
+
+                  if (currentStr === newStr) {
+                    return;
+                  }
+
+                  onFieldChange({
+                    ...selectedField,
+                    data: mappedData,
+                  });
+                }}
+                disabled={false}
+                t={t}
+              />
+
+              {/* Display selected fields with localization inputs */}
+              {selectedData.length > 0 && (
+                <div style={{ marginTop: "16px", display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {selectedData.map((item, index) => {
+                    // Find entity name for this field
+                    let entityName = "";
+                    for (const entity of labelPairConfig) {
+                      const field = entity.labelFields?.find((f) => f.name === item.key);
+                      if (field) {
+                        entityName = entity.entity;
+                        break;
+                      }
+                    }
+
+                    return (
+                      <LocalizationInput
+                        key={`${item.key}-${index}`}
+                        code={item.key}
+                        // item={item}
+                        label={`${t(entityName || 'ENTITY')} - ${item.key}`}
+                        // entityName={entityName}
+                        selectedField={selectedField}
+                        currentLocale={currentLocale}
+                        dispatch={dispatch}
+                        t={t}
+                      />
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          </>
+        );
+      }
+      case "table": {
+        // Get columns from selectedField.data.columns
+        const columns = selectedField?.data?.columns || [];
+
+        return (
+          <>
+            <div className="drawer-container-tooltip">
+              <div style={{ display: "flex", marginBottom: "12px" }}>
+                <label>
+                  {t(Digit.Utils.locale.getTransformedLocale(`FIELD_DRAWER_LABEL_${panelItem?.label}`))}
+                </label>
+              </div>
+
+              {/* Display header localization inputs for each column */}
+              {columns.length > 0 && (
+                <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                  {columns.map((column, index) => (
+                    <LocalizationInput
+                      key={`${column.header}-${index}`}
+                      code={column.header}
+                      label={`${t("COLUMN")} ${index + 1} - ${column.header}`}
+                      currentLocale={currentLocale}
+                      dispatch={dispatch}
+                      t={t}
+                      placeholder={t("ADD_HEADER_LOCALIZATION")}
+                    />
+                  ))}
+                </div>
+              )}
+
+              {columns.length === 0 && (
+                <div style={{ marginTop: "8px", fontSize: "14px", color: "#666" }}>
+                  {t("NO_TABLE_COLUMNS_FOUND")}
+                </div>
+              )}
+            </div>
+          </>
+        );
+      }
       default:
         return null;
     }
   };
 
   return <div className="drawer-container-tooltip">{renderMainField()}</div>;
+});
+
+const LocalizationInput = React.memo(({ code, label, currentLocale, dispatch, t, placeholder }) => {
+  // Get the localized value
+  const localizedValue = useCustomT(code) || code;
+
+  return (
+    <FieldV1
+      label={label}
+      value={localizedValue}
+      type="text"
+      placeholder={placeholder || t("ADD_LOCALIZATION")}
+      onChange={(e) => {
+        const val = e.target.value;
+        // Update localization for the code
+        dispatch(
+          updateLocalizationEntry({
+            code: code,
+            locale: currentLocale || "en_IN",
+            message: val,
+          })
+        );
+      }}
+      populators={{
+        fieldPairClassName: "drawer-toggle-conditional-field",
+      }}
+    />
+  );
 });
 
 // Separate component for option items to avoid hooks violations

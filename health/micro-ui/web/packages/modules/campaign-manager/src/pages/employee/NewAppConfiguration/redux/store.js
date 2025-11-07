@@ -5,6 +5,7 @@ import fieldPropertiesReducer from "./fieldPanelPropertiesSlice";
 import localizationReducer from "./localizationSlice";
 import flowPagesReducer from "./flowPagesSlice";
 import pageFieldsReducer from "./pageFieldsSlice";
+import labelFieldPairReducer from "./labelFieldPairSlice";
 
 export const store = configureStore({
   reducer: {
@@ -14,6 +15,7 @@ export const store = configureStore({
     localization: localizationReducer,
     flowPages: flowPagesReducer,
     pageFields: pageFieldsReducer,
+    labelFieldPair: labelFieldPairReducer ,
   },
 });
 

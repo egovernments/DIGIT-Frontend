@@ -141,10 +141,10 @@ const LocalisationBulkUpload = () => {
       // Build payload
       const payload = normalizedResult
         .map((row) => ({
-          code: row.code?.trim(),
-          message: row.message?.trim() || "",
-          module: row.module?.trim() || choosenModule?.value,
-          locale: row.locale?.trim() || "default",
+          code: row?.code?.trim(),
+          message: row?.message?.trim() || "",
+          module: row?.module?.trim() || choosenModule?.value,
+          locale: row?.locale?.trim() || "default",
         }))
         .filter((entry) => entry.code && entry.code.length > 0);
 
