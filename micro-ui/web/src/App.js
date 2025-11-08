@@ -7,6 +7,9 @@ import { initOpenPaymentComponents } from "@egovernments/digit-ui-module-open-pa
 import { initServiceDesignerComponents } from "@egovernments/digit-ui-module-service-designer";
 import { initHRMSComponents } from "@egovernments/digit-ui-module-hrms";
 import { initWorkbenchComponents } from "@egovernments/digit-ui-module-workbench";
+import "@egovernments/digit-ui-css/src/index.scss";
+import "@egovernments/digit-ui-sample-css/example/index.css";
+import "./index.css";
 
 window.contextPath = window?.globalConfigs?.getConfig("CONTEXT_PATH");
 
