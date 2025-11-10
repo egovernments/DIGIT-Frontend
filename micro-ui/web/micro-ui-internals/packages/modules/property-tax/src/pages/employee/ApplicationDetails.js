@@ -32,8 +32,7 @@ const ApplicationDetails = () => {
       url: "/property-services/property/_search",
       params: {
         tenantId,
-        acknowldgementNumbers: applicationNo,
-        audit: true
+        acknowledgementIds: applicationNo
       },
       config: {
         enabled: !!(applicationNo && tenantId),
