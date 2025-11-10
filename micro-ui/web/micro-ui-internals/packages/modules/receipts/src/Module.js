@@ -9,7 +9,7 @@ import { updateCustomConfigs } from "./utils";
 export const ReceiptsModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
-  const moduleCode = ["Receipts"];
+  const moduleCode = ["Receipts","receipts"];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,

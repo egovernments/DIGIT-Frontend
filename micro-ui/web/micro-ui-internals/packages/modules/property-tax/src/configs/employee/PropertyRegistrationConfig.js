@@ -3,7 +3,7 @@ const currentMonth = new Date().getMonth() + 1; // Jan = 1, Dec = 12
 const financialYearEnd = currentMonth > 3 ? currentYear : currentYear - 1; // FY starts in April
 
 export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessmentProps = {}) => {
-  const { isReassessMode, taxCalculation, existingAssessment, financialYear, assessmentId, importantDates, billingSlabs, isCitizen, termsAccepted, termsError, onTermsChange } = reassessmentProps;
+  const { isReassessMode, taxCalculation, existingAssessment, financialYear, assessmentId, importantDates, billingSlabs, isCitizen, termsAccepted, termsError, onTermsChange, allFormData } = reassessmentProps;
 
   return [
     // Step 1: Property Address
@@ -320,6 +320,9 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
           type: "component",
           component: "PTOwnershipDetails",
           withoutLabel: true,
+          customProps: {
+            allFormData: allFormData || formData // Pass entire formData to access property address
+          },
           populators: {
             name: "ownershipDetails",
             validation: {}

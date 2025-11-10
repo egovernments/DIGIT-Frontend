@@ -9,7 +9,7 @@ import { updateCustomConfigs } from "./utils";
 export const FirenocModule = ({ stateCode, userType, tenants }) => {
   const { path, url } = useRouteMatch();
 
-  const moduleCode = ["FIRENOC"];
+  const moduleCode = ["FIRENOC","noc"];
   const language = Digit.StoreData.getCurrentLanguage();
   const { isLoading, data: store } = Digit.Services.useStore({
     stateCode,
