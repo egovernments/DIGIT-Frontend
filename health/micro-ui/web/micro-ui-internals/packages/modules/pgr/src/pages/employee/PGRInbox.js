@@ -49,7 +49,10 @@ const PGRSearchInbox = () => {
   const location = useLocation();
 
   // Get selected hierarchy from session storage
-  const selectedHierarchy = Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED");
+  // Get selected hierarchy from session storage
+  const [selectedHierarchy, setSelectedHierarchy] = useState(
+  Digit.SessionStorage.get("HIERARCHY_TYPE_SELECTED") || null
+  );
 
   // Construct module code for localization fetch
   const moduleCode = selectedHierarchy
