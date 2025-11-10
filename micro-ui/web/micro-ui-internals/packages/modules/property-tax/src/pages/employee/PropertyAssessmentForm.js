@@ -138,7 +138,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
       if (checked) {
         setTermsError("");
       }
-    }
+    },
+    allFormData: formData // Pass entire formData for components that need data from other steps
   });
   const currentConfig = config[currentStep];
 
@@ -868,15 +869,31 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
 
     // Get property type - handle both string and object
     let propertyTypeCode = assessmentInfo.propertyType;
+    let propertyTypeMajor = null;
+
     if (Array.isArray(assessmentInfo.propertyType)) {
-      propertyTypeCode = assessmentInfo.propertyType[0]?.code || assessmentInfo.propertyType[0];
+      const propertyTypeObj = assessmentInfo.propertyType[0];
+      propertyTypeCode = propertyTypeObj?.code || propertyTypeObj;
+      propertyTypeMajor = propertyTypeObj?.propertyType; // Get major category if available
     } else if (typeof assessmentInfo.propertyType === 'object' && assessmentInfo.propertyType !== null) {
       propertyTypeCode = assessmentInfo.propertyType.code || assessmentInfo.propertyType.value;
+      propertyTypeMajor = assessmentInfo.propertyType.propertyType;
     }
 
-    // Get the property type major category from MDMS if needed
-    // For now, assume BUILTUP as default major category
-    const propertyTypeFull = propertyTypeCode?.includes('.') ? propertyTypeCode : `BUILTUP.${propertyTypeCode}`;
+    // Construct full property type
+    // VACANT is standalone, others are under BUILTUP
+    let propertyTypeFull;
+    if (propertyTypeCode?.includes('.')) {
+      // Already has dot notation
+      propertyTypeFull = propertyTypeCode;
+    } else if (propertyTypeCode === 'VACANT') {
+      // VACANT is standalone, not under BUILTUP
+      propertyTypeFull = 'VACANT';
+    } else {
+      // Use propertyTypeMajor if available, otherwise default to BUILTUP
+      const majorCategory = propertyTypeMajor || 'BUILTUP';
+      propertyTypeFull = `${majorCategory}.${propertyTypeCode}`;
+    }
 
     // Extract usage category - combine major and minor parts
     const usageCategoryObj = assessmentInfo.usageCategory?.[0] || assessmentInfo.usageCategory || {};
@@ -1274,7 +1291,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
       <div style={{ fontWeight: "400", color: "#505a5f", fontSize: "16px", fontFamily: "Roboto", marginBottom: "24px" }}>{t(currentConfig?.message)}</div>
       {currentConfig && (
         <FormComposerV2
-          key={`${currentStep}-${(isUpdateMode || isReassessMode) ? isPropertyDataLoaded : 'create'}-${JSON.stringify(formData[currentConfig.key])}`}
+          key={`${currentConfig.key}-${currentStep}-${(isUpdateMode || isReassessMode) ? isPropertyDataLoaded : 'create'}`}
           config={[currentConfig]}
           onSubmit={handleFormSubmit}
           defaultValues={formData[currentConfig.key] || defaultValues}
@@ -1301,9 +1318,9 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         />
       )}
 
-      {/* Required Documents Popup */}
+      {/* Required Documents Popup - Only show on first step */}
       <AddPropertyPopup
-        isOpen={showRequiredDocsPopup}
+        isOpen={showRequiredDocsPopup && currentStep === 0}
         onClose={handlePopupClose}
         onProceed={handlePopupProceed}
       />

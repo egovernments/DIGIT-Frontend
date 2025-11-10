@@ -1,7 +1,7 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Card, HeaderComponent, LabelFieldPair, Dropdown, TextInput, RadioButtons, CardLabel, Button, CheckBox, Toast, ErrorMessage } from "@egovernments/digit-ui-components";
 
-const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, userType, register }) => {
+const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, userType, register, allFormData }) => {
   const ownershipType = formData?.ownershipType;
   const ownershipTypeCode = ownershipType?.[0]?.code || "";
   const isSingleOwner = ownershipTypeCode === "SINGLEOWNER";
@@ -11,6 +11,8 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
   const tenantId = Digit.ULBService.getCurrentTenantId();
   // Toast state
   const [showToast, setShowToast] = useState(null);
+  // Get complete formData (including all steps) - check both locations
+  const completeFormData = allFormData || config?.customProps?.allFormData || {};
 
   // Get saved data from ownershipDetails key
   const savedData = formData?.ownershipDetails || {};
@@ -224,6 +226,40 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
     documentIdType, documentId, owners
   ]);
 
+  // Helper function to get property address from completeFormData
+  const getPropertyAddress = () => {
+    const propertyAddress = completeFormData?.["property-address"] || {};
+    const addressParts = [];
+
+    if (propertyAddress.doorNo) addressParts.push(propertyAddress.doorNo);
+    if (propertyAddress.buildingName) addressParts.push(propertyAddress.buildingName);
+    if (propertyAddress.street) addressParts.push(propertyAddress.street);
+
+    // Handle locality - it can be array or object
+    if (propertyAddress.locality) {
+      if (Array.isArray(propertyAddress.locality)) {
+        addressParts.push(propertyAddress.locality[0]?.name || propertyAddress.locality[0]?.area || "");
+      } else if (typeof propertyAddress.locality === 'object') {
+        addressParts.push(propertyAddress.locality.name || propertyAddress.locality.area || "");
+      } else {
+        addressParts.push(propertyAddress.locality);
+      }
+    }
+
+    // Add city from tenantId (e.g., "pb.amritsar" -> "Amritsar")
+    const cityTenantId = propertyAddress.tenantId || tenantId;
+    if (cityTenantId) {
+      const cityCode = cityTenantId.split('.').pop(); // Get last part after dot
+      // Capitalize first letter
+      const cityName = cityCode.charAt(0).toUpperCase() + cityCode.slice(1).toLowerCase();
+      addressParts.push(cityName);
+    }
+
+    if (propertyAddress.pincode) addressParts.push(propertyAddress.pincode);
+
+    return addressParts.filter(Boolean).join(", ");
+  };
+
   const handleFieldChange = (fieldName, value, shouldValidate = false) => {
     // Update local state only
     switch (fieldName) {
@@ -258,7 +294,18 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
         setCorrespondenceAddress(value);
         if (shouldValidate) validateField("correspondenceAddress", value);
         break;
-      case "sameAsPropertyAddress": setSameAsPropertyAddress(value); break;
+      case "sameAsPropertyAddress":
+        setSameAsPropertyAddress(value);
+        // When checked, auto-fill correspondence address with property address
+        if (value === true) {
+          const propertyAddr = getPropertyAddress();
+          setCorrespondenceAddress(propertyAddr);
+        }
+        // When unchecked, clear correspondence address
+        if (value === false) {
+          setCorrespondenceAddress("");
+        }
+        break;
       case "documentIdType": setDocumentIdType(value); break;
       case "documentId": setDocumentId(value); break;
       default: break;
@@ -270,7 +317,23 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
     if (!updatedOwners[ownerIndex]) {
       updatedOwners[ownerIndex] = {};
     }
-    updatedOwners[ownerIndex][fieldName] = value;
+
+    // Handle sameAsPropertyAddress checkbox for multiple owners
+    if (fieldName === "sameAsPropertyAddress") {
+      updatedOwners[ownerIndex][fieldName] = value;
+      // When checked, auto-fill correspondence address with property address
+      if (value === true) {
+        const propertyAddr = getPropertyAddress();
+        updatedOwners[ownerIndex].correspondenceAddress = propertyAddr;
+      }
+      // When unchecked, clear correspondence address
+      if (value === false) {
+        updatedOwners[ownerIndex].correspondenceAddress = "";
+      }
+    } else {
+      updatedOwners[ownerIndex][fieldName] = value;
+    }
+
     setOwners(updatedOwners);
   };
 
@@ -687,6 +750,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 if (!isMultipleOwners) validateField("correspondenceAddress", e.target.value);
               }}
               placeholder={t("PT_FORM3_CORRESPONDENCE_ADDRESS_PLACEHOLDER")}
+              disabled={ownerData?.sameAsPropertyAddress || false}
             />
             {!isMultipleOwners && fieldErrors.correspondenceAddress && (
               <ErrorMessage message={fieldErrors.correspondenceAddress} showIcon={true} />
@@ -699,7 +763,10 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
           <CheckBox
             label={t("PT_FORM3_ADDRESS_CHECKBOX")}
             checked={ownerData?.sameAsPropertyAddress || false}
-            onChange={(value) => updateField("sameAsPropertyAddress", value)}
+            onChange={(e) => {
+              const isChecked = e?.target?.checked !== undefined ? e.target.checked : e;
+              updateField("sameAsPropertyAddress", isChecked);
+            }}
           />
         </LabelFieldPair>
       </>
@@ -879,6 +946,7 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
                 validateField("correspondenceAddress", e.target.value);
               }}
               placeholder={t("PT_FORM3_CORRESPONDENCE_ADDRESS_PLACEHOLDER")}
+              disabled={sameAsPropertyAddress}
             />
             {fieldErrors.correspondenceAddress && (
               <ErrorMessage message={fieldErrors.correspondenceAddress} showIcon={true} />
@@ -891,7 +959,10 @@ const PTOwnershipDetails = ({ t, config, onSelect, formData = {}, errors = {}, u
           <CheckBox
             label={t("PT_FORM3_ADDRESS_CHECKBOX")}
             checked={sameAsPropertyAddress}
-            onChange={(value) => handleFieldChange("sameAsPropertyAddress", value)}
+            onChange={(e) => {
+              const isChecked = e?.target?.checked !== undefined ? e.target.checked : e;
+              handleFieldChange("sameAsPropertyAddress", isChecked);
+            }}
           />
         </LabelFieldPair>
       </>
