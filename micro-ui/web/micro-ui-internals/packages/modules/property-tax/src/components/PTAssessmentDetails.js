@@ -12,7 +12,21 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   // 3. SHAREDPROPERTY: Show only unit details with floor selection
 
   const propertyTypeCode = propertyType?.[0]?.code || "";
-  const usageCategoryCode = usageCategory?.[0]?.code || "";
+
+  // Construct full usage category code from major + minor
+  // usageCategory[0] has: { code: "COMMERCIAL", usageCategoryMajor: "NONRESIDENTIAL" }
+  // We need: "NONRESIDENTIAL.COMMERCIAL"
+  const usageCategoryObj = usageCategory?.[0] || {};
+  const usageCategoryMinorCode = usageCategoryObj?.code || "";
+  const usageCategoryMajorCode = usageCategoryObj?.usageCategoryMajor || "";
+
+  let usageCategoryCode = "";
+  if (usageCategoryMajorCode && usageCategoryMinorCode) {
+    usageCategoryCode = `${usageCategoryMajorCode}.${usageCategoryMinorCode}`;
+  } else if (usageCategoryMinorCode) {
+    // For single-level categories like "RESIDENTIAL"
+    usageCategoryCode = usageCategoryMinorCode;
+  }
 
   const isVacant = propertyTypeCode === "VACANT";
   const isIndependent = propertyTypeCode === "INDEPENDENTPROPERTY";
@@ -34,6 +48,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
 
   // MDMS data for dropdowns
   const { data: mdmsData } = Digit.Hooks.useCommonMDMS(tenantId, "PropertyTax", [
+    "UsageCategory",
     "UsageCategoryDetail",
     "UsageCategorySubMinor",
     "UsageCategoryMinor",
@@ -42,6 +57,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
     "Floor"
   ]);
 
+  const usageCategoryFullData = mdmsData?.PropertyTax?.UsageCategory || [];
   const usageCategoryDetailData = mdmsData?.PropertyTax?.UsageCategoryDetail || [];
   const usageCategorySubMinorData = mdmsData?.PropertyTax?.UsageCategorySubMinor || [];
   const usageCategoryMinorData = mdmsData?.PropertyTax?.UsageCategoryMinor || [];
@@ -49,75 +65,53 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   const usageCategoryMajorData = mdmsData?.PropertyTax?.UsageCategoryMajor || [];
   const floorMasterData = mdmsData?.PropertyTax?.Floor || [];
 
-  // Filter sub usage type based on selected usage category (matching mono-ui logic)
-  const getFilteredSubUsageType = () => {
-    if (!usageCategoryCode) return [];
+  // Build subUsageType from UsageCategory (matching mono-ui logic)
+  const subUsageTypeMasterData = React.useMemo(() => {
+    let array1 = [];
+    let array2 = [];
 
-    // Get the minor category for the selected major category
-    const usageCategoryMinor = usageCategoryMinorData.find(
-      minor => minor.code === usageCategoryCode
-    );
-
-    if (!usageCategoryMinor) return [];
-
-    // Filter UsageCategorySubMinor based on usageCategoryMinor
-    const filteredSubMinor = usageCategorySubMinorData.filter(
-      subMinor => subMinor.usageCategoryMinor === usageCategoryMinor.code
-    );
-
-    if (filteredSubMinor.length === 0) return [];
-
-    // Filter UsageCategoryDetail based on filtered SubMinor
-    const subMinorCodes = filteredSubMinor.map(sm => sm.code);
-    const filteredDetails = usageCategoryDetailData.filter(
-      detail => subMinorCodes.includes(detail.usageCategorySubMinor)
-    );
-
-    // Merge SubMinor and Detail data
-    const merged = [
-      ...filteredSubMinor.map(sm => ({
-        code: sm.code,
-        name: sm.name,
-        i18nKey: sm.code,
-        usageCategorySubMinor: sm.code
-      })),
-      ...filteredDetails.map(detail => ({
-        code: detail.code,
-        name: detail.name,
-        i18nKey: detail.code,
-        usageCategorySubMinor: detail.usageCategorySubMinor
-      }))
-    ];
-
-    // Remove duplicates
-    const uniqueData = merged.reduce((acc, current) => {
-      const exists = acc.find(item => item.code === current.code);
-      if (!exists) {
-        acc.push(current);
+    usageCategoryFullData.forEach(item => {
+      if (!item || !item.code) return;
+      const itemCode = item.code.split(".");
+      const codeLength = itemCode.length;
+      if (codeLength > 3) {
+        array1.push(item);
+      } else if (codeLength === 3) {
+        array2.push(item);
       }
-      return acc;
-    }, []);
+    });
 
-    return uniqueData;
-  };
+    array1.forEach(item => {
+      array2 = array2.filter(item1 => {
+        return (!(item.code.includes(item1.code)));
+      });
+    });
 
-  const subUsageTypeData = getFilteredSubUsageType();
+    const result = array2.concat(array1);
+    return result;
+  }, [usageCategoryFullData]);
+
+  // Filter sub usage type based on selected usage category (matching mono-ui logic)
+  const subUsageTypeData = React.useMemo(() => {
+    if (!usageCategoryCode) {
+      return [];
+    }
+
+    // Mono-ui approach: filter subUsageType master where code starts with usageCategoryCode
+    // usageCategoryCode = "NONRESIDENTIAL.COMMERCIAL"
+    // Filter for codes like "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL", "NONRESIDENTIAL.COMMERCIAL.BANK.BANK", etc.
+    const filtered = subUsageTypeMasterData.filter(item => {
+      return item.code && item.code.startsWith(usageCategoryCode);
+    });
+
+    return filtered;
+  }, [usageCategoryCode, subUsageTypeMasterData]);
 
   const floorCountOptions = Array.from({ length: 25 }, (_, i) => ({
     code: (i + 1).toString(),
     name: (i + 1).toString(),
     i18nKey: (i + 1).toString()
   }));
-
-  const floorOptions = [
-    { code: "-1", name: "Basement", i18nKey: "PROPERTYTAX_FLOOR_BASEMENT" },
-    { code: "0", name: "Ground Floor", i18nKey: "PROPERTYTAX_FLOOR_GROUNDFLOOR" },
-    ...Array.from({ length: 15 }, (_, i) => ({
-      code: (i + 1).toString(),
-      name: `Floor ${i + 1}`,
-      i18nKey: `PROPERTYTAX_FLOOR_${i + 1}`
-    }))
-  ];
 
   // Sync all data to parent under "conditionalFields" key whenever any field changes
   useEffect(() => {
@@ -311,10 +305,18 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
     newFloors[floorIndex].units.push({ id: unitId });
     setFloors(newFloors);
 
-    // Update formData with the new unit structure
-    const currentFloorData = formData?.floors?.[floorIndex] || { floorNo: floorIndex.toString(), units: [] };
-    const updatedUnits = [...(currentFloorData.units || []), {}];
-    handleFieldChange(`floors[${floorIndex}].units`, updatedUnits);
+    // Update floorsData with the new unit structure (use floorsData not formData)
+    const updatedFloorsData = [...floorsData];
+    if (!updatedFloorsData[floorIndex]) {
+      updatedFloorsData[floorIndex] = { floorNo: floorIndex.toString(), units: [] };
+    }
+    if (!updatedFloorsData[floorIndex].units) {
+      updatedFloorsData[floorIndex].units = [];
+    }
+    updatedFloorsData[floorIndex].units.push({});
+    setFloorsData(updatedFloorsData);
+    // Sync to parent formData
+    handleFieldChange("floors", updatedFloorsData);
   };
 
   // Remove unit from a specific floor
@@ -324,25 +326,39 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
       newFloors[floorIndex].units.splice(unitIndex, 1);
       setFloors(newFloors);
 
-      // Update formData after removing unit
-      const currentFloorData = formData?.floors?.[floorIndex] || { floorNo: floorIndex.toString(), units: [] };
-      const updatedUnits = (currentFloorData.units || []).filter((_, idx) => idx !== unitIndex);
-      handleFieldChange(`floors[${floorIndex}].units`, updatedUnits);
+      // Update floorsData after removing unit (use floorsData not formData)
+      const updatedFloorsData = [...floorsData];
+      if (updatedFloorsData[floorIndex] && updatedFloorsData[floorIndex].units) {
+        updatedFloorsData[floorIndex].units = updatedFloorsData[floorIndex].units.filter((_, idx) => idx !== unitIndex);
+        setFloorsData(updatedFloorsData);
+        // Sync to parent formData
+        handleFieldChange("floors", updatedFloorsData);
+      }
     }
   };
 
   // Add unit for Shared property
   const handleAddSharedUnit = () => {
+    // Update UI state
     setUnits([...units, {}]);
-    handleFieldChange("units", [...units, {}]);
+    // Update data state
+    const updatedUnitsData = [...unitsData, {}];
+    setUnitsData(updatedUnitsData);
+    // Sync to parent formData
+    handleFieldChange("units", updatedUnitsData);
   };
 
   // Remove unit for Shared property
   const handleRemoveSharedUnit = (unitIndex) => {
     if (units.length > 1) {
+      // Update UI state
       const newUnits = units.filter((_, idx) => idx !== unitIndex);
       setUnits(newUnits);
-      handleFieldChange("units", newUnits);
+      // Update data state
+      const newUnitsData = unitsData.filter((_, idx) => idx !== unitIndex);
+      setUnitsData(newUnitsData);
+      // Sync to parent formData
+      handleFieldChange("units", newUnitsData);
     }
   };
 
@@ -483,50 +499,27 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
   const getSubUsageTypeForUnitUsage = (unitUsageTypeCode) => {
     if (!unitUsageTypeCode) return [];
 
-    // Find the minor category for the selected unit usage type
-    const usageCategoryMinor = usageCategoryMinorData.find(
-      minor => minor.code === unitUsageTypeCode
-    );
-
-    if (!usageCategoryMinor) return [];
-
-    // Filter UsageCategorySubMinor based on usageCategoryMinor
-    const filteredSubMinor = usageCategorySubMinorData.filter(
-      subMinor => subMinor.usageCategoryMinor === usageCategoryMinor.code
-    );
-
-    if (filteredSubMinor.length === 0) return [];
-
-    // Filter UsageCategoryDetail based on filtered SubMinor
-    const subMinorCodes = filteredSubMinor.map(sm => sm.code);
-    const filteredDetails = usageCategoryDetailData.filter(
-      detail => subMinorCodes.includes(detail.usageCategorySubMinor)
-    );
-
-    // Merge SubMinor and Detail data
-    const merged = [
-      ...filteredSubMinor.map(sm => ({
-        code: sm.code,
-        name: sm.name,
-        i18nKey: sm.code,
-        usageCategorySubMinor: sm.code
-      })),
-      ...filteredDetails.map(detail => ({
-        code: detail.code,
-        name: detail.name,
-        i18nKey: detail.code,
-        usageCategorySubMinor: detail.usageCategorySubMinor
-      }))
-    ];
-
-    // Remove duplicates
-    return merged.reduce((acc, current) => {
-      const exists = acc.find(item => item.code === current.code);
-      if (!exists) {
-        acc.push(current);
+    // Mono-ui approach: filter subUsageType master where code starts with unitUsageTypeCode
+    // For MIXED property: unitUsageTypeCode could be "COMMERCIAL", "RESIDENTIAL", "INDUSTRIAL", etc.
+    // We need to handle both simple codes and full paths
+    // If unitUsageTypeCode is just "COMMERCIAL", we need to construct possible prefixes
+    // Check if it's already a full path or just a minor category
+    const filtered = subUsageTypeMasterData.filter(item => {
+      if (!item.code) return false;
+      // Check if it starts with the unitUsageTypeCode directly
+      if (item.code.startsWith(unitUsageTypeCode)) {
+        return true;
       }
-      return acc;
-    }, []);
+      // Also check if it matches when we add NONRESIDENTIAL prefix
+      // This handles cases where unitUsageTypeCode = "COMMERCIAL" but codes are "NONRESIDENTIAL.COMMERCIAL.*"
+      if (item.code.startsWith(`NONRESIDENTIAL.${unitUsageTypeCode}`)) {
+        return true;
+      }
+
+      return false;
+    });
+
+    return filtered;
   };
 
   // Render unit fields based on usage category
@@ -586,7 +579,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
             </HeaderComponent>
             <Dropdown
               t={t}
-              option={floorOptions}
+              option={floorMasterData || []}
               optionKey="name"
               optionCardStyles={{ maxHeight: "15vh" }}
               selected={unitsData?.[unitIndex]?.floorNo}
@@ -643,7 +636,7 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
             <Dropdown
               t={t}
               option={unitSubUsageTypeData || []}
-              optionKey="code"
+              optionKey="name"
               selected={
                 isSharedProp
                   ? unitsData?.[unitIndex]?.subUsageType
@@ -678,7 +671,84 @@ const PTAssessmentDetails = ({ t, config, onSelect, formData = {}, errors, userT
             placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
           />
         </LabelFieldPair>
-
+        {/* Show ARV and rented fields when occupancy is RENTED */}
+        {((isSharedProp && unitsData?.[unitIndex]?.occupancy?.code === "RENTED") ||
+          (!isSharedProp && floorsData?.[floorIndex]?.units?.[unitIndex]?.occupancy?.code === "RENTED")) && (
+          <>
+            {/* ARV (Annual Rental Value) */}
+            <LabelFieldPair style={{ marginBottom: "8px" }}>
+              <HeaderComponent className="label" style={{ margin: "0rem" }}>
+                <div className={`label-container`}>
+                  <label className={`label-styles`}>
+                    {t("PT_FORM2_TOTAL_ANNUAL_RENT")}
+                  </label>
+                  <div style={{ color: "#B91900" }}>{" * "}</div>
+                </div>
+              </HeaderComponent>
+              <div className="digit-field">
+                <TextInput
+                  type="number"
+                  t={t}
+                  value={
+                    isSharedProp
+                      ? unitsData?.[unitIndex]?.arv || ""
+                      : floorsData?.[floorIndex]?.units?.[unitIndex]?.arv || ""
+                  }
+                  onChange={(e) => handleUnitFieldChange(floorIndex, unitIndex, "arv", e.target.value)}
+                  placeholder={t("PT_FORM2_TOTAL_ANNUAL_RENT_PLACEHOLDER")}
+                />
+              </div>
+            </LabelFieldPair>
+            {/* Rented for Months */}
+            <LabelFieldPair style={{ marginBottom: "8px" }}>
+              <HeaderComponent className="label" style={{ margin: "0rem" }}>
+                <div className={`label-container`}>
+                  <label className={`label-styles`}>
+                    {t("PT_FORM2_RENTED_FOR_MONTHS")}
+                  </label>
+                </div>
+              </HeaderComponent>
+              <div className="digit-field">
+                <TextInput
+                  type="number"
+                  t={t}
+                  value={
+                    isSharedProp
+                      ? unitsData?.[unitIndex]?.rentedForMonths || ""
+                      : floorsData?.[floorIndex]?.units?.[unitIndex]?.rentedForMonths || ""
+                  }
+                  onChange={(e) => handleUnitFieldChange(floorIndex, unitIndex, "rentedForMonths", e.target.value)}
+                  placeholder={t("PT_FORM2_RENTED_FOR_MONTHS_PLACEHOLDER")}
+                />
+              </div>
+            </LabelFieldPair>
+            {/* Usage for Due Months (Dropdown) */}
+            <LabelFieldPair style={{ marginBottom: "8px" }}>
+              <HeaderComponent className="label" style={{ margin: "0rem" }}>
+                <div className={`label-container`}>
+                  <label className={`label-styles`}>
+                    {t("PT_FORM2_USAGE_FOR_DUE_MONTHS")}
+                  </label>
+                </div>
+              </HeaderComponent>
+              <Dropdown
+                t={t}
+                option={[
+                  { code: "UNOCCUPIED", name: t("PT_UNOCCUPIED") || "Unoccupied" },
+                  { code: "SELFOCCUPIED", name: t("PT_SELFOCCUPIED") || "Self Occupied" }
+                ]}
+                optionKey="name"
+                selected={
+                  isSharedProp
+                    ? unitsData?.[unitIndex]?.usageForDueMonths
+                    : floorsData?.[floorIndex]?.units?.[unitIndex]?.usageForDueMonths
+                }
+                select={(value) => handleUnitFieldChange(floorIndex, unitIndex, "usageForDueMonths", value)}
+                placeholder={t("PT_COMMONS_SELECT_PLACEHOLDER")}
+              />
+            </LabelFieldPair>
+          </>
+        )}
         {/* Built Area */}
         <LabelFieldPair>
           <HeaderComponent className="label" style={{ margin: "0rem" }}>

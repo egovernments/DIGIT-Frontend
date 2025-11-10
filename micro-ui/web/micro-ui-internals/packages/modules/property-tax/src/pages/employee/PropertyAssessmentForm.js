@@ -20,17 +20,18 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
 
   const isUpdateMode = !!(purpose === 'update' && propertyIdFromUrl);
   const isReassessMode = !!(purpose === 'reassess' && propertyIdFromUrl && assessmentIdFromUrl);
+  const isAssessMode = !!(purpose === 'assess' && propertyIdFromUrl); // New assessment for existing property
   const isCitizen = userType === "citizen";
 
   // Session storage key for this form
-  const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${(isUpdateMode || isReassessMode) ? propertyIdFromUrl : 'new'}`;
+  const sessionKey = `PT_PROPERTY_REGISTRATION_${tenantId}_${(isUpdateMode || isReassessMode || isAssessMode) ? propertyIdFromUrl : 'new'}`;
   const popupSeenKey = `PT_POPUP_SEEN_${tenantId}`;
 
   // Initialize state from URL or session storage
   const getInitialState = () => {
     try {
-      // In reassess mode, always start at step 4 (summary) unless step is specified
-      if (isReassessMode) {
+      // In reassess or assess mode, always start at step 4 (summary) unless step is specified
+      if (isReassessMode || isAssessMode) {
         const stepNumber = stepFromUrl ? parseInt(stepFromUrl) - 1 : 4; // Default to summary step
         return {
           currentStep: stepNumber >= 0 && stepNumber < 5 ? stepNumber : 4,
@@ -106,7 +107,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   const [formData, setFormData] = useState(initialState.formData);
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
-  const [showRequiredDocsPopup, setShowRequiredDocsPopup] = useState(!isUpdateMode && !isReassessMode && !hasSeenPopup());
+  const [showRequiredDocsPopup, setShowRequiredDocsPopup] = useState(!isUpdateMode && !isReassessMode && !isAssessMode && !hasSeenPopup());
   const [submitTrigger, setSubmitTrigger] = useState(false);
   const [propertyData, setPropertyData] = useState(null);
   const [fetchedPropertyData, setFetchedPropertyData] = useState(null);
@@ -123,7 +124,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   const [termsError, setTermsError] = useState("");
 
   const config = PropertyRegistrationConfig(t, formData, loading, {
-    isReassessMode,
+    isReassessMode: isReassessMode || isAssessMode, // Treat assess mode same as reassess for config
     taxCalculation,
     existingAssessment,
     financialYear: financialYearFromUrl,
@@ -143,8 +144,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
   });
   const currentConfig = config[currentStep];
 
-  // API hook for fetching property details in update or reassess mode
-  const { isLoading: isFetchingProperty, data: propertyResponse } = (isUpdateMode || isReassessMode)
+  // API hook for fetching property details in update, reassess, or assess mode
+  const { isLoading: isFetchingProperty, data: propertyResponse } = (isUpdateMode || isReassessMode || isAssessMode)
     ? Digit.Hooks.useCustomAPIHook({
         url: "/property-services/property/_search",
         params: {
@@ -153,23 +154,43 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
           audit: false
         },
         config: {
-          enabled: !!((isUpdateMode || isReassessMode) && propertyIdFromUrl && tenantId),
+          enabled: !!((isUpdateMode || isReassessMode || isAssessMode) && propertyIdFromUrl && tenantId),
           select: (data) => data?.Properties || [],
         },
       })
     : { isLoading: false, data: null };
 
   // API hook for fetching existing assessment in reassess mode
-  const { isLoading: isFetchingAssessment, data: assessmentResponse } = isReassessMode && assessmentIdFromUrl
+  // In reassess mode: fetch specific assessment by assessment number
+  // In assess mode: fetch all assessments for the property to get latest one for reference
+  const { isLoading: isFetchingAssessment, data: assessmentResponse } = (isReassessMode && assessmentIdFromUrl) || (isAssessMode && propertyIdFromUrl)
     ? Digit.Hooks.useCustomAPIHook({
         url: "/property-services/assessment/_search",
-        params: {
-          tenantId: tenantId,
-          assessmentNumbers: assessmentIdFromUrl
-        },
+        params: isReassessMode
+          ? {
+              tenantId: tenantId,
+              assessmentNumbers: assessmentIdFromUrl
+            }
+          : {
+              tenantId: tenantId,
+              propertyIds: propertyIdFromUrl
+            },
         config: {
-          enabled: !!(isReassessMode && assessmentIdFromUrl && tenantId),
-          select: (data) => data?.Assessments || [],
+          enabled: !!((isReassessMode && assessmentIdFromUrl && tenantId) || (isAssessMode && propertyIdFromUrl && tenantId)),
+          select: (data) => {
+            const assessments = data?.Assessments || [];
+            // In assess mode, get the most recent active assessment for reference
+            if (isAssessMode && assessments.length > 0) {
+              const activeAssessments = assessments.filter(a => a.status === 'ACTIVE');
+              // Sort by date to get latest
+              return activeAssessments.sort((a, b) => {
+                const dateA = a.assessmentDate || a.auditDetails?.createdTime || 0;
+                const dateB = b.assessmentDate || b.auditDetails?.createdTime || 0;
+                return new Date(dateB) - new Date(dateA);
+              });
+            }
+            return assessments;
+          },
         },
       })
     : { isLoading: false, data: null };
@@ -196,9 +217,32 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     },
   });
 
-  // Load property data in update or reassess mode
+  // API hook for tax calculation/estimation in reassess or assess mode
+  const { isLoading: isFetchingTaxCalculation, data: taxCalculationResponse } = (isReassessMode || isAssessMode) && propertyIdFromUrl && financialYearFromUrl
+    ? Digit.Hooks.useCustomAPIHook({
+        url: "/pt-calculator-v2/propertytax/v2/_estimate",
+        params: {
+          tenantId: tenantId
+        },
+        body: {
+          Assessment: {
+            financialYear: financialYearFromUrl,
+            propertyId: propertyIdFromUrl,
+            tenantId: tenantId,
+            source: "MUNICIPAL_RECORDS",
+            channel: "CFC_COUNTER"
+          }
+        },
+        config: {
+          enabled: !!((isReassessMode || isAssessMode) && propertyIdFromUrl && tenantId && financialYearFromUrl && isPropertyDataLoaded),
+          select: (data) => data?.Calculation?.[0] || null,
+        },
+      })
+    : { isLoading: false, data: null };
+
+  // Load property data in update, reassess, or assess mode
   useEffect(() => {
-    if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode) && !isPropertyDataLoaded) {
+    if (propertyResponse && propertyResponse.length > 0 && (isUpdateMode || isReassessMode || isAssessMode) && !isPropertyDataLoaded) {
       const property = propertyResponse[0];
       setFetchedPropertyData(property);
       // Transform property data to form data format
@@ -206,26 +250,31 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
       setFormData(transformedFormData);
       setIsPropertyDataLoaded(true);
     }
-  }, [propertyResponse, isUpdateMode, isReassessMode, isPropertyDataLoaded]);
+  }, [propertyResponse, isUpdateMode, isReassessMode, isAssessMode, isPropertyDataLoaded]);
 
-  // Load existing assessment data in reassess mode
+  // Load existing assessment data in reassess or assess mode
   useEffect(() => {
-    if (assessmentResponse && assessmentResponse.length > 0 && isReassessMode) {
+    if (assessmentResponse && assessmentResponse.length > 0 && (isReassessMode || isAssessMode)) {
       const assessment = assessmentResponse[0];
       setExistingAssessment(assessment);
 
-      // Initialize adhoc penalty and rebate from existing assessment
-      if (assessment.additionalDetails) {
+      // Initialize adhoc penalty and rebate from existing assessment (only for reassess of same year)
+      if (isReassessMode && assessment.additionalDetails) {
         setAdhocPenalty(assessment.additionalDetails.adhocPenalty || 0);
         setAdhocRebate(assessment.additionalDetails.adhocExemption || 0);
       }
+      // In assess mode, start fresh with 0 values for new financial year
+      else if (isAssessMode) {
+        setAdhocPenalty(0);
+        setAdhocRebate(0);
+      }
     }
-  }, [assessmentResponse, isReassessMode]);
+  }, [assessmentResponse, isReassessMode, isAssessMode]);
 
   // Fetch Important Dates from MDMS
   useEffect(() => {
     const fetchImportantDates = async () => {
-      if (isReassessMode && tenantId && financialYearFromUrl) {
+      if ((isReassessMode || isAssessMode) && tenantId && financialYearFromUrl) {
         try {
           const mdmsResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["Rebate", "Penalty", "Interest", "FireCess"]);
 
@@ -252,69 +301,37 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     };
 
     fetchImportantDates();
-  }, [isReassessMode, tenantId, financialYearFromUrl]);
+  }, [isReassessMode, isAssessMode, tenantId, financialYearFromUrl]);
 
-  // Fetch tax calculation for reassessment when property data is loaded
+  // Process tax calculation response
   useEffect(() => {
-    const fetchTaxCalculation = async () => {
-      if (isReassessMode && propertyIdFromUrl && tenantId && isPropertyDataLoaded) {
+    const fetchBillingSlabs = async (calculation) => {
+      if (calculation?.billingSlabIds && calculation.billingSlabIds.length > 0) {
         try {
-          setLoading(true);
+          const billingSlabResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["PropertyTaxSlabs"]);
 
-          // Call PT calculator API to get demand/calculation
-          const result = await Digit.CustomService.getResponse({
-            url: "/pt-calculator-v2/propertytax/v2/_estimate",
-            method: "POST",
-            body: {
-              Assessment: {
-                financialYear: financialYearFromUrl || "2024-25",
-                propertyId: propertyIdFromUrl,
-                tenantId: tenantId,
-                source: "MUNICIPAL_RECORDS",
-                channel: "COUNTER"
-              }
-            }
-          });
+          if (billingSlabResponse?.PropertyTax?.PropertyTaxSlabs) {
+            const allSlabs = billingSlabResponse.PropertyTax.PropertyTaxSlabs;
 
-          if (result?.Calculation && result.Calculation.length > 0) {
-            const calculation = result.Calculation[0];
-            setTaxCalculation(calculation);
+            // Match billing slab IDs with actual slab data
+            const matchedSlabs = calculation.billingSlabIds.map(slabId => {
+              const id = slabId.split("|")[0]; // Extract ID before pipe
+              return allSlabs.find(slab => slab.id === id);
+            }).filter(Boolean);
 
-            // Fetch billing slab details if billingSlabIds exist
-            if (calculation.billingSlabIds && calculation.billingSlabIds.length > 0) {
-              try {
-                const billingSlabResponse = await Digit.MDMSService.getMultipleTypes(tenantId, "PropertyTax", ["PropertyTaxSlabs"]);
-
-                if (billingSlabResponse?.PropertyTax?.PropertyTaxSlabs) {
-                  const allSlabs = billingSlabResponse.PropertyTax.PropertyTaxSlabs;
-
-                  // Match billing slab IDs with actual slab data
-                  const matchedSlabs = calculation.billingSlabIds.map(slabId => {
-                    const id = slabId.split("|")[0]; // Extract ID before pipe
-                    return allSlabs.find(slab => slab.id === id);
-                  }).filter(Boolean);
-
-                  setBillingSlabs(matchedSlabs);
-                }
-              } catch (slabError) {
-                console.error("Billing slab fetch error:", slabError);
-              }
-            }
+            setBillingSlabs(matchedSlabs);
           }
-        } catch (error) {
-          console.error("Tax calculation fetch error:", error);
-          setToast({
-            label: t("PT_TAX_CALCULATION_FETCH_FAILED"),
-            type: "error"
-          });
-        } finally {
-          setLoading(false);
+        } catch (slabError) {
+          console.error("Billing slab fetch error:", slabError);
         }
       }
     };
 
-    fetchTaxCalculation();
-  }, [isReassessMode, propertyIdFromUrl, tenantId, isPropertyDataLoaded, financialYearFromUrl, t]);
+    if (taxCalculationResponse) {
+      setTaxCalculation(taxCalculationResponse);
+      fetchBillingSlabs(taxCalculationResponse);
+    }
+  }, [taxCalculationResponse, tenantId]);
 
   // Handle create API response
   useEffect(() => {
@@ -512,8 +529,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     // Transform form data to API format
     const apiPayload = transformFormDataToAPIFormat(formData);
 
-    // For reassessment, update the existing assessment (matching mono-ui flow)
-    if (isReassessMode) {
+    // For reassessment or new assessment, create/update assessment (matching mono-ui flow)
+    if (isReassessMode || isAssessMode) {
       try {
         setLoading(true);
 
@@ -966,7 +983,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         ownershipCategory: ownershipCategory,
         source: "MUNICIPAL_RECORDS",
         channel: "CFC_COUNTER",
-        creationReason: isReassessMode ? "REASSESSMENT" : (isUpdateMode ? "UPDATE" : "CREATE"),
+        creationReason: (isReassessMode || isAssessMode) ? "REASSESSMENT" : (isUpdateMode ? "UPDATE" : "CREATE"),
         noOfFloors: parseInt(conditionalFields.noOfFloors?.code || conditionalFields.noOfFloors || assessmentInfo.noOfFloors?.code || assessmentInfo.noOfFloors) || 1,
         landArea: String(parseFloat(conditionalFields.plotSize) || 0),
         superBuiltUpArea: null,
@@ -1155,41 +1172,85 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
         units: (() => {
           const existingUnits = isUpdateMode && fetchedPropertyData ? fetchedPropertyData.units || [] : [];
 
-          const newUnits = (conditionalFields.floors?.flatMap((floor) =>
-            floor.units?.map((unit, unitIndex) => {
-              // Try to find matching existing unit by floor and index
-              const existingUnit = existingUnits.find(eu =>
-                eu.floorNo === String(parseInt(floor.floorNo?.code || floor.floorNo) || 0)
-              ) || existingUnits[unitIndex] || {};
+          // Try floors first (for INDEPENDENTPROPERTY), then units (for SHAREDPROPERTY)
+          let newUnits = [];
 
-              const occupancy = unit.occupancy?.code || unit.occupancy || "OWNER";
-              return {
-                ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
-                floorNo: String(parseInt(floor.floorNo?.code || floor.floorNo) || 0),
-                unitType: unit.usageType?.code || unit.usageType || usageCategoryCode,
-                usageCategory: unit.subUsageType?.code || unit.usageType?.code || usageCategoryCode,
-                occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
-                additionalDetails: {
-                  usageForDueMonths: unit.usageForDueMonths || "UNOCCUPIED",
-                  rentedformonths: parseInt(unit.rentedForMonths) || null
-                },
-                arv: String(parseFloat(unit.arv) || 0),
-                constructionDetail: {
-                  ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
-                  builtUpArea: parseFloat(unit.builtUpArea) || 0
+          if (conditionalFields.floors && conditionalFields.floors.length > 0) {
+            // INDEPENDENTPROPERTY: map from floors
+            newUnits = conditionalFields.floors.flatMap((floor) =>
+              (floor.units || []).map((unit, unitIndex) => {
+                // Try to find matching existing unit by floor and index
+                const existingUnit = existingUnits.find(eu =>
+                  eu.floorNo === String(parseInt(floor.floorNo?.code || floor.floorNo) || 0)
+                ) || existingUnits[unitIndex] || {};
+
+                const occupancy = unit.occupancy?.code || unit.occupancy || "OWNER";
+
+                // Extract unitType and usageCategory from subUsageType (full hierarchical path)
+                // subUsageType.code = "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL"
+                // unitType should be "RETAIL" (last segment)
+                // usageCategory should be full path "NONRESIDENTIAL.COMMERCIAL.RETAIL.RETAIL"
+                let finalUnitType, finalUsageCategory;
+
+                if (unit.subUsageType) {
+                  const subUsageCode = unit.subUsageType?.code || unit.subUsageType;
+                  finalUsageCategory = subUsageCode;
+                  // Extract last segment for unitType
+                  const pathParts = subUsageCode.split('.');
+                  finalUnitType = pathParts[pathParts.length - 1];
+                } else {
+                  // Fallback: use property-level usageCategory
+                  finalUsageCategory = usageCategoryCode;
+                  finalUnitType = usageCategoryCode;
                 }
-              };
-            }) || []).filter(Boolean)) || (conditionalFields.units?.map((unit, unitIndex) => {
+
+                return {
+                  ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
+                  floorNo: String(parseInt(floor.floorNo?.code || floor.floorNo) || 0),
+                  unitType: finalUnitType,
+                  usageCategory: finalUsageCategory,
+                  occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
+                  additionalDetails: {
+                    usageForDueMonths: unit.usageForDueMonths?.code || unit.usageForDueMonths || "UNOCCUPIED",
+                    rentedformonths: parseInt(unit.rentedForMonths) || null
+                  },
+                  arv: String(parseFloat(unit.arv) || 0),
+                  constructionDetail: {
+                    ...(isUpdateMode && existingUnit.constructionDetail?.id ? { id: existingUnit.constructionDetail.id } : {}),
+                    builtUpArea: parseFloat(unit.builtUpArea) || 0
+                  }
+                };
+              })
+            ).filter(Boolean);
+          } else if (conditionalFields.units && conditionalFields.units.length > 0) {
+            // SHAREDPROPERTY: map from units directly
+            newUnits = conditionalFields.units.map((unit, unitIndex) => {
               const existingUnit = existingUnits[unitIndex] || {};
               const occupancy = unit.occupancy?.code || unit.occupancy || "OWNER";
+
+              // Extract unitType and usageCategory from subUsageType (full hierarchical path)
+              let finalUnitType, finalUsageCategory;
+
+              if (unit.subUsageType) {
+                const subUsageCode = unit.subUsageType?.code || unit.subUsageType;
+                finalUsageCategory = subUsageCode;
+                // Extract last segment for unitType
+                const pathParts = subUsageCode.split('.');
+                finalUnitType = pathParts[pathParts.length - 1];
+              } else {
+                // Fallback: use property-level usageCategory
+                finalUsageCategory = usageCategoryCode;
+                finalUnitType = usageCategoryCode;
+              }
+
               return {
                 ...(isUpdateMode && existingUnit.id ? { id: existingUnit.id } : {}),
                 floorNo: String(parseInt(unit.floorNo?.code || unit.floorNo) || 0),
-                unitType: unit.usageType?.code || unit.usageType || usageCategoryCode,
-                usageCategory: unit.subUsageType?.code || unit.usageType?.code || usageCategoryCode,
+                unitType: finalUnitType,
+                usageCategory: finalUsageCategory,
                 occupancyType: occupancy === "OWNER" ? "SELFOCCUPIED" : occupancy,
                 additionalDetails: {
-                  usageForDueMonths: unit.usageForDueMonths || "UNOCCUPIED",
+                  usageForDueMonths: unit.usageForDueMonths?.code || unit.usageForDueMonths || "UNOCCUPIED",
                   rentedformonths: parseInt(unit.rentedForMonths) || null
                 },
                 arv: String(parseFloat(unit.arv) || 0),
@@ -1198,7 +1259,8 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
                   builtUpArea: parseFloat(unit.builtUpArea) || 0
                 }
               };
-            }) || []);
+            }).filter(Boolean);
+          }
 
           return newUnits;
         })(),
@@ -1275,7 +1337,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
     <div className="property-assessment-form">
       <HeaderComponent styles={textStyles}>
         <div styles={textStyles}>
-          {isReassessMode ? t("PT_REASSESSMENT") : (isUpdateMode ? t("PT_PROPERTY_UPDATE") : t("PT_PROPERTY_REGISTRATION"))}
+          {isReassessMode ? t("PT_REASSESSMENT") : isAssessMode ? t("PT_ASSESSMENT") : (isUpdateMode ? t("PT_PROPERTY_UPDATE") : t("PT_PROPERTY_REGISTRATION"))}
         </div>
       </HeaderComponent>
 
@@ -1291,7 +1353,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
       <div style={{ fontWeight: "400", color: "#505a5f", fontSize: "16px", fontFamily: "Roboto", marginBottom: "24px" }}>{t(currentConfig?.message)}</div>
       {currentConfig && (
         <FormComposerV2
-          key={`${currentConfig.key}-${currentStep}-${(isUpdateMode || isReassessMode) ? isPropertyDataLoaded : 'create'}`}
+          key={`${currentConfig.key}-${currentStep}-${(isUpdateMode || isReassessMode || isAssessMode) ? isPropertyDataLoaded : 'create'}`}
           config={[currentConfig]}
           onSubmit={handleFormSubmit}
           defaultValues={formData[currentConfig.key] || defaultValues}
@@ -1299,7 +1361,7 @@ const PropertyAssessmentForm = ({ userType = "employee" }) => {
           secondaryLabel={t("PT_BACK")}
           secondaryActionIcon={"ArrowBack"}
           onSecondayActionClick={onSecondaryActionClick}
-          label={currentStep === config.length - 1 ? (isReassessMode ? t("PT_SUBMIT_REASSESSMENT") : t("PT_SUBMIT")) : t("PT_NEXT")}
+          label={currentStep === config.length - 1 ? (isReassessMode ? t("PT_SUBMIT_REASSESSMENT") : isAssessMode ? t("PT_ASSESS_PROPERTY") : t("PT_SUBMIT")) : t("PT_NEXT")}
           isSubmitting={loading}
           className="assessment-form"
           cardClassName="assessment-form-card"

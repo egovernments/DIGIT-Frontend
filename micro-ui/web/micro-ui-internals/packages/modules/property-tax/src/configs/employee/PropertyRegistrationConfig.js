@@ -370,7 +370,7 @@ export const PropertyRegistrationConfig = (t, formData, isSubmitting, reassessme
             name:"summary"
           },
           customProps: {
-            sessionData: formData,
+            sessionData: allFormData || formData, // Use allFormData (all steps) instead of formData (current step only)
             isReassessMode: isReassessMode || false,
             taxCalculation: taxCalculation || null,
             existingAssessment: existingAssessment || null,

@@ -312,7 +312,7 @@ const ApplicationDetails = () => {
               {
                 inline: true,
                 label: t("PT_PROPERTY_TYPE"),
-                value: applicationData.propertyDetails.propertyType || t("ES_COMMON_NA")
+                value: applicationData.propertyDetails.propertyType ? t(`COMMON_PROPTYPE_${applicationData.propertyDetails.propertyType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
               },
               {
                 inline: true,

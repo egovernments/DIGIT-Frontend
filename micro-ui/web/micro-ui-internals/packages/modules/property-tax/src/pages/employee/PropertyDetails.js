@@ -203,16 +203,16 @@ const PropertyDetails = () => {
           landArea: property.landArea,
           buildUpArea: propertyDetails.buildUpArea,
           noOfFloors: property.noOfFloors,
-          yearOfConstruction: propertyDetails.additionalDetails?.yearOfConstruction,
-          vasikaNo: propertyDetails.additionalDetails?.vasikaNo,
-          vasikaDate: propertyDetails.additionalDetails?.vasikaDate,
-          allotmentNo: propertyDetails.additionalDetails?.allotmentNo,
-          allotmentDate: propertyDetails.additionalDetails?.allotmentDate,
+          yearOfConstruction: property.additionalDetails?.yearConstruction || propertyDetails.additionalDetails?.yearOfConstruction,
+          vasikaNo: property.additionalDetails?.vasikaNo || propertyDetails.additionalDetails?.vasikaNo,
+          vasikaDate: property.additionalDetails?.vasikaDate || propertyDetails.additionalDetails?.vasikaDate,
+          allotmentNo: property.additionalDetails?.allotmentNo || propertyDetails.additionalDetails?.allotmentNo,
+          allotmentDate: property.additionalDetails?.allotmentDate || propertyDetails.additionalDetails?.allotmentDate,
           businessName: property.additionalDetails?.businessName,
-          remarks: propertyDetails.additionalDetails?.remarks,
-          inflammableMaterial: propertyDetails.additionalDetails?.inflammableMaterial,
-          heightMoreThan36Feet: propertyDetails.additionalDetails?.heightMoreThan36Feet,
-          yearConstruction: propertyDetails?.additionalDetails?.yearConstruction
+          remarks: property.additionalDetails?.remarks || propertyDetails.additionalDetails?.remarks,
+          inflammableMaterial: property.additionalDetails?.inflammable || propertyDetails.additionalDetails?.inflammableMaterial,
+          heightMoreThan36Feet: property.additionalDetails?.heightAbove36Feet || propertyDetails.additionalDetails?.heightMoreThan36Feet,
+          yearConstruction: property.additionalDetails?.yearConstruction || propertyDetails.additionalDetails?.yearConstruction
         },
         owners: owners.map(owner => ({
           name: owner.name,
@@ -337,14 +337,10 @@ const PropertyDetails = () => {
       return;
     }
 
-    // Get the latest assessment number from assessments
-    const latestAssessment = assessmentResponse && assessmentResponse.length > 0 ? assessmentResponse[0] : null;
-    const assessmentNo = latestAssessment ? latestAssessment.assessmentNumber : 0;
-
-    // Navigate to assessment screen matching mono-ui pattern exactly
-    // mono-ui uses: getPropertyLink(propertyId, tenantId, PROPERTY_FORM_PURPOSE.ASSESS, -1, assessmentNo) then appends &FY=${selectedYear}
-    // which creates: /property-tax/assessment-form?FY=-1&assessmentId={assessmentNo}&purpose=assess&propertyId={propertyId}&tenantId={tenantId}&FY={selectedYear}
-    const assessmentUrl = `/${window.contextPath}/${userType}/pt/assessment-form?FY=-1&assessmentId=${assessmentNo}&purpose=assess&propertyId=${propertyId}&tenantId=${tenantId}&FY=${selectedFinancialYear}`;
+    // Always use purpose=assess with assessmentId=0 (matching mono-ui behavior exactly)
+    // Mono-ui URL pattern: ?assessmentId=0&purpose=assess&propertyId=...&tenantId=...&FY=...
+    // This works for both: existing assessments and new financial years
+    const assessmentUrl = `/${window.contextPath}/${userType}/pt/assessment-form?assessmentId=0&purpose=assess&propertyId=${propertyId}&tenantId=${tenantId}&FY=${selectedFinancialYear}`;
 
     // Close popup and navigate
     setShowFinancialYearPopup(false);
@@ -982,36 +978,76 @@ const PropertyDetails = () => {
       if (paymentSearchResponse?.Payments && paymentSearchResponse.Payments.length > 0) {
         const payment = paymentSearchResponse.Payments[0];
         const fileStoreId = payment.fileStoreId;
+
         if (fileStoreId) {
+          // If fileStoreId exists, download from filestore
           try {
-            // Call filestore API to get the actual file path from the fileStoreId
             const fileResponse = await Digit.UploadServices.Filefetch([fileStoreId], Digit?.ULBService?.getStateId());
             if (fileResponse?.data?.fileStoreIds && fileResponse.data.fileStoreIds.length > 0) {
               const fileUrl = fileResponse.data.fileStoreIds[0].url;
-              const link = document.createElement("a");
-              link.href = fileUrl;
-              link.target = "_blank";
-              link.download = ""; // optional, will force download if set
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
+              window.open(fileUrl, "_blank");
               setToast({
-                label: t("PT_RECEIPT_OPENED_SUCCESSFULLY"),
+                label: t("PT_RECEIPT_DOWNLOADED_SUCCESSFULLY"),
                 type: "success"
               });
+            } else {
+              setToast({
+                label: t("PT_RECEIPT_FILE_NOT_FOUND"),
+                type: "error"
+              });
             }
-          }
-          catch (fileError) {
+          } catch (fileError) {
+            console.error("File fetch error:", fileError);
             setToast({
               label: t("PT_RECEIPT_NOT_OPENED"),
               type: "error"
             });
           }
         } else {
-          setToast({
-            label: t("PT_RECEIPT_FILESTOREID_NOT_FOUND"),
-            type: "success"
-          });
+          // If no fileStoreId, generate receipt PDF via collection-services
+          try {
+            const pdfResponse = await Digit.CustomService.getResponse({
+              url: "/pdf-service/v1/_create",
+              useCache: false,
+              method: "POST",
+              params: {
+                tenantId: tenantId,
+                key: "consolidatedreceipt"
+              },
+              body: {
+                Payments: [payment]
+              },
+              config: {
+                responseType: 'arraybuffer'
+              }
+            });
+
+            if (pdfResponse?.filestoreIds && pdfResponse.filestoreIds.length > 0) {
+              // Download the generated receipt
+              for (const generatedFileStoreId of pdfResponse.filestoreIds) {
+                const fileResponse = await Digit.UploadServices.Filefetch([generatedFileStoreId], Digit?.ULBService?.getStateId());
+                if (fileResponse?.data?.fileStoreIds && fileResponse.data.fileStoreIds.length > 0) {
+                  const fileUrl = fileResponse.data.fileStoreIds[0].url;
+                  window.open(fileUrl, "_blank");
+                }
+              }
+              setToast({
+                label: t("PT_RECEIPT_DOWNLOADED_SUCCESSFULLY"),
+                type: "success"
+              });
+            } else {
+              setToast({
+                label: t("PT_RECEIPT_GENERATION_FAILED"),
+                type: "error"
+              });
+            }
+          } catch (pdfError) {
+            console.error("PDF generation error:", pdfError);
+            setToast({
+              label: t("PT_RECEIPT_GENERATION_FAILED"),
+              type: "error"
+            });
+          }
         }
       } else {
         setToast({
@@ -1250,12 +1286,12 @@ const PropertyDetails = () => {
               {
                 inline: true,
                 label: t("PT_ASSESMENT_INFO_USAGE_TYPE"),
-                value: propertyData.usageCategory || t("ES_COMMON_NA")
+                value: propertyData.usageCategory ? t(`COMMON_PROPUSGTYPE_${propertyData.usageCategory.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
               },
               {
                 inline: true,
                 label: t("PT_ASSESMENT_INFO_TYPE_OF_BUILDING"),
-                value: propertyData.propertyDetails.propertyType || t("ES_COMMON_NA")
+                value: propertyData.propertyDetails.propertyType ? t(`COMMON_PROPTYPE_${propertyData.propertyDetails.propertyType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
               },
               {
                 inline: true,
@@ -1317,17 +1353,17 @@ const PropertyDetails = () => {
                 {
                   inline: true,
                   label: t("PT_USAGE_CATEGORY"),
-                  value: unit.usageCategory || t("ES_COMMON_NA")
+                  value: unit.usageCategory ? t(`COMMON_PROPSUBUSGTYPE_${unit.usageCategory.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
                 },
                 {
                   inline: true,
                   label: t("PT_UNIT_TYPE"),
-                  value: unit.unitType || t("ES_COMMON_NA")
+                  value: unit.unitType && unit.unitType !== "NA" ? t(`PROPERTYTAX_BILLING_SLAB_${unit.unitType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
                 },
                 {
                   inline: true,
                   label: t("PT_ASSESMENT_INFO_OCCUPLANCY"),
-                  value: unit.occupancyType || t("ES_COMMON_NA")
+                  value: unit.occupancyType ? t(`PROPERTYTAX_OCCUPANCYTYPE_${unit.occupancyType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
                 },
                 {
                   inline: true,
