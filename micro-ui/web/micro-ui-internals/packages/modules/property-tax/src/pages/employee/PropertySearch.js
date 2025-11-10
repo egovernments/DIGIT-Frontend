@@ -8,6 +8,7 @@ const PropertySearch = ({initialActiveIndex =0}) => {
   const [config, setConfig] = useState(SearchConfig?.SearchConfig?.[0]);
   const [selectedTabIndex, setSelectedTabIndex] = useState(null);
   const [isConfigReady, setIsConfigReady] = useState(false);
+  const [clearSearchTrigger, setClearSearchTrigger] = useState(0);
   const [tabData, setTabData] = useState(
     SearchConfig?.SearchConfig?.map((configItem, index) => ({
       key: index,
@@ -36,6 +37,8 @@ const PropertySearch = ({initialActiveIndex =0}) => {
     setSelectedTabIndex(n);
     setTabData((prev) => prev?.map((i, c) => ({ ...i, active: c === n })));
     setConfig(SearchConfig?.SearchConfig?.[n]);
+    // Also trigger clear when changing tabs to reset results
+    setClearSearchTrigger(prev => prev + 1);
   };
 
   if (!isConfigReady || !config) {
@@ -46,7 +49,7 @@ const PropertySearch = ({initialActiveIndex =0}) => {
     <React.Fragment>
       <div className="digit-inbox-search-wrapper">
         <InboxSearchComposer
-          key={`pt-search-tab-${selectedTabIndex}`}
+          key={`pt-search-tab-${selectedTabIndex}-clear-${clearSearchTrigger}`}
           configs={config}
           showTab={true}
           tabData={tabData}
