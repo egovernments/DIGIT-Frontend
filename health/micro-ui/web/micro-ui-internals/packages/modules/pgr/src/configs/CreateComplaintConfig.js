@@ -70,8 +70,14 @@ export const CreateComplaintConfig = {
                 name: "complaintUser",
                 optionsKey: "name",
                 styles : {
-                  maxWidth : "37.5rem"
+                  maxWidth : "18.5rem",
+                  gap: "2.5rem",
+                  flexDirection: "row"
                   },
+                innerStyles: {
+                  display: "flex",
+                  gap: "2.5rem"
+                },
                 validation: {
                   required: true,
                 },

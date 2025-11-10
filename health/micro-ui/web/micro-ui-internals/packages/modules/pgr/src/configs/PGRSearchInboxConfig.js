@@ -112,7 +112,7 @@ const PGRSearchInboxConfig = () => {
               },
               {
                 label: "WF_INBOX_HEADER_CREATED_DATE",
-                jsonPath: "businessObject.service.auditDetails.createdTime",
+                jsonPath: "businessObject.auditDetails.createdTime",
                 additionalCustomization: true,
                 key: "state",
               },
