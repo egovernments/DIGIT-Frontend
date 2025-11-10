@@ -1,6 +1,7 @@
 const path = require("path");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const { CleanWebpackPlugin } = require("clean-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 // const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 
 module.exports = {
@@ -50,5 +51,16 @@ module.exports = {
     new CleanWebpackPlugin(),
     // new BundleAnalyzerPlugin(),
     new HtmlWebpackPlugin({ inject: true, template: "public/index.html" }),
+    new CopyPlugin({
+      patterns: [
+        {
+          from: "public",
+          to: "",
+          globOptions: {
+            ignore: ["**/index.html"], // Don't copy index.html as HtmlWebpackPlugin handles it
+          },
+        },
+      ],
+    }),
   ],
 };
