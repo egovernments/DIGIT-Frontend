@@ -389,12 +389,12 @@ const ApplicationPreview = () => {
               {
                 inline: true,
                 label: t("PT_USAGE_TYPE"),
-                value: applicationData.usageCategory || t("ES_COMMON_NA")
+                value: applicationData.usageCategory ? t(`COMMON_PROPUSGTYPE_${applicationData.usageCategory.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
               },
               {
                 inline: true,
                 label: t("PT_PROPERTY_TYPE"),
-                value: applicationData.propertyDetails.propertyType || t("ES_COMMON_NA")
+                value: applicationData.propertyDetails.propertyType ? t(`COMMON_PROPTYPE_${applicationData.propertyDetails.propertyType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
               },
               {
                 inline: true,
@@ -458,17 +458,17 @@ const ApplicationPreview = () => {
                 {
                   inline: true,
                   label: t("PT_USAGE_CATEGORY"),
-                  value: unit.usageCategory || t("ES_COMMON_NA")
+                  value: unit.usageCategory ? t(`COMMON_PROPSUBUSGTYPE_${unit.usageCategory.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
                 },
                 {
                   inline: true,
                   label: t("PT_UNIT_TYPE"),
-                  value: unit.unitType || t("ES_COMMON_NA")
+                  value: unit.unitType && unit.unitType !== "NA" ? t(`PROPERTYTAX_BILLING_SLAB_${unit.unitType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
                 },
                 {
                   inline: true,
                   label: t("PT_OCCUPANCY_TYPE"),
-                  value: unit.occupancyType || t("ES_COMMON_NA")
+                  value: unit.occupancyType ? t(`PROPERTYTAX_OCCUPANCYTYPE_${unit.occupancyType.replace(/\./g, "_")}`) : t("ES_COMMON_NA")
                 },
                 {
                   inline: true,

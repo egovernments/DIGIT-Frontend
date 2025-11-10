@@ -80,10 +80,40 @@ const PaymentAcknowledgement = () => {
           // Step 3: Fetch file URL from filestore and download
           await downloadReceiptFromFilestoreID(fileStoreId, "download");
         } else {
-          setToast({
-            label: t("PT_RECEIPT_NOT_AVAILABLE") || "Receipt not available for download.",
-            type: "error"
-          });
+          // If no fileStoreId, generate receipt PDF via pdf-service
+          try {
+            const pdfResponse = await Digit.CustomService.getResponse({
+              url: "/pdf-service/v1/_create",
+              useCache: false,
+              method: "POST",
+              params: {
+                tenantId: tenantId,
+                key: "consolidatedreceipt"
+              },
+              body: {
+                Payments: [payment]
+              },
+              config: {
+                responseType: 'arraybuffer'
+              }
+            });
+
+            if (pdfResponse?.filestoreIds && pdfResponse.filestoreIds.length > 0) {
+              // Download the generated receipt
+              await downloadReceiptFromFilestoreID(pdfResponse.filestoreIds[0], "download");
+            } else {
+              setToast({
+                label: t("PT_RECEIPT_GENERATION_FAILED") || "Failed to generate receipt.",
+                type: "error"
+              });
+            }
+          } catch (pdfError) {
+            console.error("PDF generation error:", pdfError);
+            setToast({
+              label: t("PT_RECEIPT_GENERATION_FAILED") || "Failed to generate receipt.",
+              type: "error"
+            });
+          }
         }
       } else {
         setToast({
@@ -136,10 +166,40 @@ const PaymentAcknowledgement = () => {
           // Step 3: Fetch file URL from filestore and print
           await downloadReceiptFromFilestoreID(fileStoreId, "print");
         } else {
-          setToast({
-            label: t("PT_RECEIPT_NOT_AVAILABLE") || "Receipt not available for printing.",
-            type: "error"
-          });
+          // If no fileStoreId, generate receipt PDF via pdf-service
+          try {
+            const pdfResponse = await Digit.CustomService.getResponse({
+              url: "/pdf-service/v1/_create",
+              useCache: false,
+              method: "POST",
+              params: {
+                tenantId: tenantId,
+                key: "consolidatedreceipt"
+              },
+              body: {
+                Payments: [payment]
+              },
+              config: {
+                responseType: 'arraybuffer'
+              }
+            });
+
+            if (pdfResponse?.filestoreIds && pdfResponse.filestoreIds.length > 0) {
+              // Print the generated receipt
+              await downloadReceiptFromFilestoreID(pdfResponse.filestoreIds[0], "print");
+            } else {
+              setToast({
+                label: t("PT_RECEIPT_GENERATION_FAILED") || "Failed to generate receipt.",
+                type: "error"
+              });
+            }
+          } catch (pdfError) {
+            console.error("PDF generation error:", pdfError);
+            setToast({
+              label: t("PT_RECEIPT_GENERATION_FAILED") || "Failed to generate receipt.",
+              type: "error"
+            });
+          }
         }
       } else {
         setToast({
