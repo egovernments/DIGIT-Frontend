@@ -26,14 +26,13 @@ const ApplicationPreview = () => {
   const [toast, setToast] = useState(null);
   const [workflowHistory, setWorkflowHistory] = useState([]);
 
-  // API hook for fetching application details with audit enabled
+  // API hook for fetching application details
   const { isLoading, data: applicationResponse, error } = applicationNumber && tenantId
     ? Digit.Hooks.useCustomAPIHook({
       url: "/property-services/property/_search",
       params: {
         tenantId,
-        acknowldgementNumbers: applicationNumber,
-        audit: true  // Enable audit to get workflow history
+        acknowledgementIds: applicationNumber
       },
       config: {
         enabled: !!(applicationNumber && tenantId),
