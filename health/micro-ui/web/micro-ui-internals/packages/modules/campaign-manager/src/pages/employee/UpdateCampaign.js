@@ -39,7 +39,7 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
   const { mutate } = Digit.Hooks.campaign.useCreateCampaign(tenantId);
   const { mutate: updateCampaign } = Digit.Hooks.campaign.useUpdateCampaign(tenantId);
   const searchParams = new URLSearchParams(location.search);
-  const id = searchParams.get("id");
+  const [id,setId] = useState(searchParams.get("id"));
   const isDraftCampaign = searchParams.get("isDraftCampaign") === "true";
   const parentId = searchParams.get("parentId");
   const isPreview = searchParams.get("preview");
@@ -86,7 +86,7 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
     body: {
       CampaignDetails: {
         tenantId: tenantId,
-        ids: [parentId],
+        ids: [id?id:parentId],
         ...(isDraftCampaign && { status: ["drafted"] }),
       },
     },
@@ -267,6 +267,15 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
           payloadData.action = "create";
           payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.parentId;
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
+
+          if(parentId){
+          payloadData.parentId =parentId;
+          }
+
+          if(id){
+          payloadData.id =id;
+          }
+
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             const temp = restructureBoundaryData(
               totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
@@ -336,7 +345,10 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
           payloadData.startDate = CampaignData?.CampaignDetails?.[0]?.startDate;
           payloadData.tenantId = tenantId;
           payloadData.action = "draft";
-          payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.id;
+          payloadData.parentId = parentId;
+          if(id){
+          payloadData.id =id;
+          }
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             const temp = restructureBoundaryData(
@@ -379,7 +391,9 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
             },
             onSuccess: async (data) => {
               updateUrlParams({ id: data?.CampaignDetails?.id });
+              setId(data?.CampaignDetails?.id);
               setIsDraftCreated(true);
+              
               draftRefetch();
               if (filteredConfig?.[0]?.form?.[0]?.body?.[0]?.mandatoryOnAPI) {
                 setCurrentKey(currentKey + 1);
@@ -404,6 +418,14 @@ const UpdateCampaign = ({ hierarchyData, ...props }) => {
           payloadData.action = "draft";
           payloadData.parentId = CampaignData?.CampaignDetails?.[0]?.parentId;
           payloadData.campaignName = CampaignData?.CampaignDetails?.[0]?.campaignName;
+          if(parentId){
+          payloadData.parentId =parentId;
+          }
+
+          if(id){
+          payloadData.id =id;
+          }
+
           if (totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData) {
             const temp = restructureBoundaryData(
               totalFormData?.HCM_CAMPAIGN_SELECTING_BOUNDARY_DATA?.boundaryType?.selectedData,
